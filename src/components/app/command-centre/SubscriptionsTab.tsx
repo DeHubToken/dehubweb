@@ -1,239 +1,197 @@
 import { useState } from 'react';
-import { TrendingDown, Info, Settings2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { TrendingDown, TrendingUp, Info, Star, Loader2, ExternalLink, Calendar, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useAuth } from '@/contexts/AuthContext';
+import { useMySubscriptions, useCreatorPlans } from '@/hooks/use-subscriptions';
+import { getMediaUrl, type Subscription } from '@/lib/api/dehub';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { format, isPast, differenceInDays } from 'date-fns';
 
-const topSubscriptions = [
-  { date: '12 Aug', username: 'Username', tier: 'Tier name', duration: '6m', amount: '450 DH' },
-  { date: '04 Dec', username: 'Username', tier: 'Tier name', duration: '1m', amount: '150 DH' },
-  { date: '21 Jan', username: 'Username', tier: 'Tier name', duration: '1m', amount: '120 DH' },
-];
+function formatDuration(days: number): string {
+  if (days === 7) return '1 week';
+  if (days === 30) return '1 month';
+  if (days === 90) return '3 months';
+  if (days === 365) return '1 year';
+  return `${days} days`;
+}
 
-const transactionHistory = [
-  { date: '21 Feb', description: 'Subscribed to Username - Tiername', amount: '100', status: 'Paid' },
-  { date: '18 Feb', description: 'Paused subscription for Username - Tiername', amount: '-', status: 'Paused' },
-  { date: '16 Feb', description: 'Cancelled subscription for Username - Tiername', amount: '-', status: 'Cancelled' },
-  { date: '10 Feb', description: 'Subscribed to Username - Tiername', amount: '60', status: 'Paid' },
-  { date: '3 Jan', description: 'Subscribed to Username - Tiername', amount: '100', status: 'Paid' },
-  { date: '2 Jan', description: 'Subscribed to Username - Tiername', amount: '100', status: 'Paid' },
-];
+function SubscriptionRow({ sub, index }: { sub: Subscription; index: number }) {
+  const isExpired = isPast(new Date(sub.endDate));
+  const daysLeft = differenceInDays(new Date(sub.endDate), new Date());
+  const planName = sub.plan?.name || 'Plan';
+  const planPrice = sub.plan?.price;
+  const planDuration = sub.plan?.duration;
+  const creatorShort = sub.creatorAddress
+    ? `${sub.creatorAddress.slice(0, 6)}...${sub.creatorAddress.slice(-4)}`
+    : 'Unknown';
 
-const subscriptionList = [
-  { id: '01', creator: 'Username', tier: 'Tier name', description: 'Tier Description. Description about the tire goes here.', amount: 'Amount', dateFrom: '12 Mar 25', dateTo: '12 Apr 25', status: 'Active' },
-  { id: '01', creator: 'Username', tier: 'Tier name', description: 'Tier Description. Description about the tire goes here.', amount: 'Amount', dateFrom: '12 Mar 25', dateTo: '12 Apr 25', status: 'Active' },
-  { id: '01', creator: 'Username', tier: 'Tier name', description: 'Tier Description. Description about the tire goes here.', amount: 'Amount', dateFrom: '12 Mar 25', dateTo: '12 Apr 25', status: 'Active' },
-  { id: '01', creator: 'Username', tier: 'Tier name', description: 'Tier Description. Description about the tire goes here.', amount: 'Amount', dateFrom: '12 Mar 25', dateTo: '12 Apr 25', status: 'Active' },
-];
+  return (
+    <tr className="text-zinc-400 hover:bg-white/[0.02] transition-colors">
+      <td className="py-4 text-zinc-500">{String(index + 1).padStart(2, '0')}</td>
+      <td className="py-4">
+        <div className="flex items-center gap-3">
+          <Avatar className="w-8 h-8">
+            <AvatarFallback className="bg-zinc-700 text-white text-xs">
+              {creatorShort.slice(2, 4).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-white text-sm font-medium">{creatorShort}</span>
+        </div>
+      </td>
+      <td className="py-4">
+        <div>
+          <p className="text-white text-sm">{planName}</p>
+          {sub.plan?.description && (
+            <p className="text-zinc-500 text-xs truncate max-w-[200px]">{sub.plan.description}</p>
+          )}
+        </div>
+      </td>
+      <td className="py-4">
+        {planPrice !== undefined ? (
+          <span className="flex items-center gap-1 text-white text-sm">
+            {planPrice}
+            <img src={dehubCoin} alt="DHB" className="w-3.5 h-3.5" />
+          </span>
+        ) : (
+          <span className="text-zinc-500">—</span>
+        )}
+      </td>
+      <td className="py-4 text-sm">
+        <p>{format(new Date(sub.startDate), 'dd MMM yy')}</p>
+        <p className="text-zinc-600">to</p>
+        <p>{format(new Date(sub.endDate), 'dd MMM yy')}</p>
+      </td>
+      <td className="py-4">
+        {isExpired ? (
+          <span className="text-red-400 text-sm">Expired</span>
+        ) : sub.isActive ? (
+          <span className="text-emerald-400 text-sm">Active</span>
+        ) : (
+          <span className="text-zinc-500 text-sm">Inactive</span>
+        )}
+      </td>
+      <td className="py-4 text-sm">
+        {!isExpired && sub.isActive ? (
+          <span className="text-zinc-400 flex items-center gap-1">
+            <Clock className="w-3 h-3" />
+            {daysLeft}d left
+          </span>
+        ) : (
+          <span className="text-zinc-600">—</span>
+        )}
+      </td>
+    </tr>
+  );
+}
 
 export function SubscriptionsTab() {
-  const [activeSubTab, setActiveSubTab] = useState<'subscribers' | 'subscriptions'>('subscriptions');
+  const { isAuthenticated, walletAddress } = useAuth();
+  const { subscriptions, isLoading: isLoadingSubs } = useMySubscriptions();
+  const { plans: myPlans, isLoading: isLoadingPlans } = useCreatorPlans(walletAddress || undefined);
+
+  const activeSubscriptions = subscriptions.filter(s => s.isActive && !isPast(new Date(s.endDate)));
+  const expiredSubscriptions = subscriptions.filter(s => !s.isActive || isPast(new Date(s.endDate)));
+
+  const totalMonthlySpend = activeSubscriptions.reduce((sum, sub) => {
+    const price = sub.plan?.price || 0;
+    const duration = sub.plan?.duration || 30;
+    // Normalize to monthly cost
+    return sum + (price / duration) * 30;
+  }, 0);
+
+  const isLoading = isLoadingSubs || isLoadingPlans;
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16">
+        <Loader2 className="w-8 h-8 text-zinc-400 animate-spin mb-3" />
+        <p className="text-zinc-500 text-sm">Loading subscriptions...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <Star className="w-12 h-12 text-zinc-600 mb-3" />
+        <p className="text-zinc-400 text-lg font-medium">Sign in to view subscriptions</p>
+        <p className="text-zinc-500 text-sm mt-1">Connect your wallet to see your subscription activity</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">Your subscriptions</h2>
-        <div className="flex gap-2 bg-zinc-900 rounded-full p-1 border border-zinc-800">
-          <button 
-            onClick={() => setActiveSubTab('subscribers')}
-            className={`px-4 py-1.5 text-sm rounded-full transition-colors ${
-              activeSubTab === 'subscribers' ? 'bg-zinc-800 text-white' : 'text-zinc-400'
-            }`}
-          >
-            Your subscribers
-          </button>
-          <button 
-            onClick={() => setActiveSubTab('subscriptions')}
-            className={`px-4 py-1.5 text-sm rounded-full transition-colors ${
-              activeSubTab === 'subscriptions' ? 'bg-zinc-800 text-white' : 'text-zinc-400'
-            }`}
-          >
-            Your subscriptions
-          </button>
-        </div>
-      </div>
+      <h2 className="text-lg font-semibold text-white">Your subscriptions</h2>
 
-      {/* Top Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Expenditures Card */}
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Active count */}
         <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-zinc-400 text-sm">Projected monthly expenditures</span>
-            <span className="bg-red-500/20 text-red-400 text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
-              <TrendingDown className="w-3 h-3" />
-              Decreased by 30%
-            </span>
-            <Info className="w-4 h-4 text-zinc-500" />
-            <Settings2 className="w-4 h-4 text-zinc-500" />
-          </div>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-3xl font-bold text-white">7670</span>
-            <img src={dehubCoin} alt="DeHub" className="w-5 h-5" />
-          </div>
-          <p className="text-zinc-500 text-sm mb-6">You are subscribed to <span className="text-white">16 users</span></p>
-
-          {/* Top Subscriptions */}
-          <div className="mt-4">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-zinc-400 text-sm">Top subscriptions</span>
-              <div className="flex items-center gap-2">
-                <span className="text-zinc-500 text-xs">01 of 02</span>
-                <button className="p-1 rounded-full border border-zinc-700 text-zinc-400 hover:text-white">
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button className="p-1 rounded-full border border-zinc-700 bg-white text-black">
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="text-zinc-500 text-xs">
-                    <th className="text-left font-normal pb-2">Date</th>
-                    <th className="text-left font-normal pb-2">Username</th>
-                    <th className="text-left font-normal pb-2">Tier</th>
-                    <th className="text-left font-normal pb-2">Duration</th>
-                    <th className="text-left font-normal pb-2">Amount</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-800">
-                  {topSubscriptions.map((sub, index) => (
-                    <tr key={index} className="text-zinc-400">
-                      <td className="py-2">{sub.date}</td>
-                      <td className="py-2 text-emerald-400">{sub.username}</td>
-                      <td className="py-2">{sub.tier}</td>
-                      <td className="py-2">{sub.duration}</td>
-                      <td className="py-2 text-white">{sub.amount}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+          <span className="text-zinc-400 text-sm">Active Subscriptions</span>
+          <div className="flex items-baseline gap-2 mt-2">
+            <span className="text-3xl font-bold text-white">{activeSubscriptions.length}</span>
+            <span className="text-zinc-500 text-sm">creators</span>
           </div>
         </div>
 
-        {/* Transaction History Card */}
+        {/* Monthly spend */}
         <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <span className="text-zinc-400 text-sm">Transactions</span>
-              <p className="text-zinc-500 text-xs">(last 30 days)</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-zinc-500 text-xs">01 of 03</span>
-              <button className="p-1 rounded-full border border-zinc-700 text-zinc-400 hover:text-white">
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button className="p-1 rounded-full border border-zinc-700 bg-white text-black">
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
+          <span className="text-zinc-400 text-sm">Est. Monthly Spend</span>
+          <div className="flex items-center gap-2 mt-2">
+            <span className="text-3xl font-bold text-white">{Math.round(totalMonthlySpend)}</span>
+            <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
           </div>
+        </div>
 
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-zinc-500 text-xs border-b border-zinc-800">
-                <th className="text-left font-normal pb-2">Date</th>
-                <th className="text-left font-normal pb-2">Description</th>
-                <th className="text-left font-normal pb-2">Amount</th>
-                <th className="text-left font-normal pb-2">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-800">
-              {transactionHistory.map((tx, index) => (
-                <tr key={index} className="text-zinc-400">
-                  <td className="py-2">{tx.date}</td>
-                  <td className="py-2">{tx.description}</td>
-                  <td className="py-2">
-                    {tx.amount !== '-' && (
-                      <span className="flex items-center gap-1">
-                        {tx.amount} <img src={dehubCoin} alt="DeHub" className="w-3 h-3" />
-                      </span>
-                    )}
-                    {tx.amount === '-' && '-'}
-                  </td>
-                  <td className="py-2">
-                    <span className={`${
-                      tx.status === 'Paid' ? 'text-emerald-400' : 
-                      tx.status === 'Paused' ? 'text-yellow-400' : 'text-zinc-500'
-                    }`}>
-                      {tx.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* My plans count */}
+        <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+          <span className="text-zinc-400 text-sm">Your Plans (as creator)</span>
+          <div className="flex items-baseline gap-2 mt-2">
+            <span className="text-3xl font-bold text-white">{myPlans.length}</span>
+            <span className="text-zinc-500 text-sm">plans</span>
+          </div>
         </div>
       </div>
 
       {/* Subscription List */}
-      <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-white font-semibold">Subscription list</span>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-8 rounded-full bg-transparent">
-              Sort ▼
-            </Button>
-            <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-8 rounded-full bg-transparent">
-              Export CSV
-            </Button>
+      {subscriptions.length === 0 ? (
+        <div className="bg-zinc-900 rounded-2xl p-8 border border-zinc-800 text-center">
+          <Star className="w-12 h-12 text-zinc-600 mb-3 mx-auto" />
+          <p className="text-zinc-400 text-lg font-medium">No subscriptions yet</p>
+          <p className="text-zinc-500 text-sm mt-1">Subscribe to creators to see your activity here</p>
+        </div>
+      ) : (
+        <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-white font-semibold">Subscription list</span>
+            <span className="text-zinc-500 text-sm">{subscriptions.length} total</span>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-zinc-500 text-xs border-b border-zinc-800">
+                  <th className="text-left font-normal pb-3">#</th>
+                  <th className="text-left font-normal pb-3">Creator</th>
+                  <th className="text-left font-normal pb-3">Plan</th>
+                  <th className="text-left font-normal pb-3">Price</th>
+                  <th className="text-left font-normal pb-3">Period</th>
+                  <th className="text-left font-normal pb-3">Status</th>
+                  <th className="text-left font-normal pb-3">Remaining</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-800">
+                {subscriptions.map((sub, index) => (
+                  <SubscriptionRow key={sub._id || sub.id || index} sub={sub} index={index} />
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-zinc-500 text-xs border-b border-zinc-800">
-                <th className="text-left font-normal pb-3">#</th>
-                <th className="text-left font-normal pb-3">Creators</th>
-                <th className="text-left font-normal pb-3">Tier</th>
-                <th className="text-left font-normal pb-3">Amount</th>
-                <th className="text-left font-normal pb-3">Date</th>
-                <th className="text-left font-normal pb-3">Status</th>
-                <th className="text-left font-normal pb-3">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-800">
-              {subscriptionList.map((sub, index) => (
-                <tr key={index} className="text-zinc-400">
-                  <td className="py-4">{sub.id}</td>
-                  <td className="py-4">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="w-10 h-10">
-                        <AvatarImage src="" />
-                        <AvatarFallback className="bg-zinc-700 text-white text-xs">U</AvatarFallback>
-                      </Avatar>
-                      <span className="text-white">{sub.creator}</span>
-                    </div>
-                  </td>
-                  <td className="py-4">
-                    <div>
-                      <p className="text-white">{sub.tier}</p>
-                      <p className="text-zinc-500 text-xs">{sub.description}</p>
-                    </div>
-                  </td>
-                  <td className="py-4 text-white">{sub.amount}</td>
-                  <td className="py-4">
-                    <p>{sub.dateFrom}</p>
-                    <p className="text-zinc-500">to</p>
-                    <p>{sub.dateTo}</p>
-                  </td>
-                  <td className="py-4 text-emerald-400">{sub.status}</td>
-                  <td className="py-4">
-                    <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-7 rounded-full bg-transparent">
-                      Edit
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

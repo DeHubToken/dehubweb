@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type } from 'lucide-react';
+import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Paperclip, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -7,6 +7,9 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
+import { GoLiveModal } from '@/components/app/modals';
+import { AudioSpacesModal } from '@/components/app/spaces';
+import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
 import type { LiveMode } from '../types';
 
 interface PostActionBarProps {
@@ -20,14 +23,19 @@ interface PostActionBarProps {
   liveMode: LiveMode;
   setLiveMode: (value: LiveMode) => void;
   onInsertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
+  onInsertEmoji: (emoji: string) => void;
+  onInsertGif: (gifUrl: string) => void;
+  onCameraCapture: () => void;
   onEnhanceWithAI: (mode: 'spellcheck' | 'grammar' | 'style', style?: string) => void;
   onPost: () => void;
   canPost: boolean;
   isEnhancing: boolean;
+  isPosting?: boolean;
   hasText: boolean;
   hasImage?: boolean;
   hasVideo?: boolean;
   isScheduled?: boolean;
+  onCloseModal?: () => void;
 }
 
 export function PostActionBar({
@@ -41,25 +49,37 @@ export function PostActionBar({
   liveMode,
   setLiveMode,
   onInsertFormatting,
+  onInsertEmoji,
+  onInsertGif,
+  onCameraCapture,
   onEnhanceWithAI,
   onPost,
   canPost,
   isEnhancing,
+  isPosting,
   hasText,
   hasImage,
   hasVideo,
   isScheduled,
+  onCloseModal,
 }: PostActionBarProps) {
+  const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
-  const [uploadTooltipOpen, setUploadTooltipOpen] = useState(false);
-  const [recordTooltipOpen, setRecordTooltipOpen] = useState(false);
+  const [goLiveModalOpen, setGoLiveModalOpen] = useState(false);
+  const [audioSpacesModalOpen, setAudioSpacesModalOpen] = useState(false);
   const isLive = liveMode !== null;
 
   const handleSelectLiveMode = (mode: LiveMode) => {
     setLiveMode(mode);
     setLivePopoverOpen(false);
+    // Open the appropriate modal based on mode
+    if (mode === 'townhall') {
+      setAudioSpacesModalOpen(true);
+    } else {
+      setGoLiveModalOpen(true);
+    }
   };
 
   const handleSpellCheck = () => {
@@ -138,20 +158,83 @@ export function PostActionBar({
     </div>
   );
 
+  const handleGoLiveClick = () => {
+    if (isLive) {
+      // Open the Go Live modal
+      setGoLiveModalOpen(true);
+    }
+  };
+
+  const handleGoLiveModalClose = () => {
+    setGoLiveModalOpen(false);
+    setLiveMode(null);
+    // Close the parent post modal if provided
+    onCloseModal?.();
+  };
+
+  const handleAudioSpacesModalClose = () => {
+    setAudioSpacesModalOpen(false);
+    setLiveMode(null);
+    // Close the parent post modal if provided
+    onCloseModal?.();
+  };
+
   return (
+    <>
+      <GoLiveModal
+        isOpen={goLiveModalOpen}
+        onClose={handleGoLiveModalClose}
+      />
+      <AudioSpacesModal
+        isOpen={audioSpacesModalOpen}
+        onClose={handleAudioSpacesModalClose}
+      />
     <div className="px-4 py-2 border-t border-white/10 flex items-center justify-between">
       <div className="flex items-center gap-0.5">
         <input ref={imageInputRef} type="file" accept="image/*" multiple onChange={onImageSelect} className="hidden" />
         <input ref={videoInputRef} type="file" accept="video/*" onChange={onVideoSelect} className="hidden" />
         <input ref={audioInputRef} type="file" accept="audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/m4a,audio/*" onChange={onAudioSelect} className="hidden" />
         
+        {/* Camera button for recording - leftmost position */}
+        {!isLive && !hasVideo && !hasImage && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                type="button" 
+                onClick={onCameraCapture} 
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
+              >
+                <Camera className="w-5 h-5 text-white" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Record video</TooltipContent>
+          </Tooltip>
+        )}
+
+        {/* Mobile: Combined attachment button for image/video */}
+        {!isLive && !hasVideo && !hasImage && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                type="button" 
+                onClick={() => imageInputRef.current?.click()} 
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors sm:hidden"
+              >
+                <Paperclip className="w-5 h-5 text-white" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Add media</TooltipContent>
+          </Tooltip>
+        )}
+
+        {/* Desktop: Separate image button */}
         {!isLive && !hasVideo && (
           <Tooltip>
             <TooltipTrigger asChild>
               <button 
                 type="button" 
                 onClick={() => imageInputRef.current?.click()} 
-                className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors hidden sm:block"
               >
                 <Image className="w-5 h-5 text-white" />
               </button>
@@ -160,13 +243,14 @@ export function PostActionBar({
           </Tooltip>
         )}
         
+        {/* Desktop: Separate video button */}
         {!hasImage && !isLive && (
           <Tooltip>
             <TooltipTrigger asChild>
               <button 
                 type="button" 
                 onClick={() => videoInputRef.current?.click()} 
-                className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors hidden sm:block"
               >
                 <Film className="w-5 h-5 text-white" />
               </button>
@@ -177,113 +261,88 @@ export function PostActionBar({
 
         {/* Audio button with popover for upload/record options */}
         {!isLive && (
-          <Popover>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <PopoverTrigger asChild>
-                  <button 
-                    type="button" 
-                    className="p-2 hover:bg-white/10 rounded-full transition-colors"
-                  >
-                    <Music className="w-5 h-5 text-white" />
-                  </button>
-                </PopoverTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Add audio</TooltipContent>
-            </Tooltip>
+          <Popover open={audioPopoverOpen} onOpenChange={setAudioPopoverOpen} modal={true}>
+            <PopoverTrigger asChild>
+              <button 
+                type="button" 
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
+              >
+                <Music className="w-5 h-5 text-white" />
+              </button>
+            </PopoverTrigger>
             <PopoverContent 
-              className="w-auto p-1 bg-transparent border-none shadow-none" 
+              className="w-auto p-1 bg-zinc-900/90 backdrop-blur-xl border border-white/10 shadow-xl rounded-xl z-[150]" 
               align="center"
               side="top"
-              sideOffset={4}
+              sideOffset={8}
             >
               <div className="flex flex-col items-center gap-1.5">
-                <Tooltip open={uploadTooltipOpen}>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={() => audioInputRef.current?.click()}
-                      onMouseEnter={() => setUploadTooltipOpen(true)}
-                      onMouseLeave={() => setUploadTooltipOpen(false)}
-                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                    >
-                      <Upload className="w-5 h-5 text-white" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">Upload Audio</TooltipContent>
-                </Tooltip>
-                <Tooltip open={recordTooltipOpen}>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={onStartRecording}
-                      onMouseEnter={() => setRecordTooltipOpen(true)}
-                      onMouseLeave={() => setRecordTooltipOpen(false)}
-                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                    >
-                      <Mic className="w-5 h-5 text-white" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">Record Audio</TooltipContent>
-                </Tooltip>
+                <button
+                  type="button"
+                  onClick={() => {
+                    audioInputRef.current?.click();
+                    setAudioPopoverOpen(false);
+                  }}
+                  className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
+                  title="Upload Audio"
+                >
+                  <Upload className="w-5 h-5 text-white" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onStartRecording();
+                    setAudioPopoverOpen(false);
+                  }}
+                  className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
+                  title="Record Audio"
+                >
+                  <Mic className="w-5 h-5 text-white" />
+                </button>
               </div>
             </PopoverContent>
           </Popover>
         )}
         
         {!hasImage && (
-          <Popover open={livePopoverOpen} onOpenChange={setLivePopoverOpen}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <PopoverTrigger asChild>
-                  <button 
-                    type="button" 
-                    onClick={() => {
-                      if (isLive) {
-                        setLiveMode(null);
-                      } else {
-                        setLivePopoverOpen(true);
-                      }
-                    }}
-                    className={cn("p-2 hover:bg-white/10 rounded-full transition-colors", isLive && "bg-white/20")}
-                  >
-                    <Radio className={cn("w-5 h-5", isLive ? "text-white" : "text-white")} />
-                  </button>
-                </PopoverTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Go live</TooltipContent>
-            </Tooltip>
+          <Popover open={livePopoverOpen} onOpenChange={setLivePopoverOpen} modal={true}>
+            <PopoverTrigger asChild>
+              <button 
+                type="button" 
+                onClick={() => {
+                  if (isLive) {
+                    setLiveMode(null);
+                  }
+                }}
+                className={cn("p-2 hover:bg-white/10 rounded-xl transition-colors", isLive && "bg-white/20")}
+                title="Go live"
+              >
+                <Radio className={cn("w-5 h-5", isLive ? "text-white" : "text-white")} />
+              </button>
+            </PopoverTrigger>
             <PopoverContent 
-              className="w-auto p-1 bg-transparent border-none shadow-none" 
+              className="w-auto p-1 bg-zinc-900/90 backdrop-blur-xl border border-white/10 shadow-xl rounded-xl z-[150]" 
               align="center"
               side="top"
-              sideOffset={4}
+              sideOffset={8}
             >
               <div className="flex flex-col items-center gap-1.5">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={() => handleSelectLiveMode('video')}
-                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                    >
-                      <Video className="w-5 h-5 text-white" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">Live Video</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={() => handleSelectLiveMode('townhall')}
-                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                    >
-                      <Mic className="w-5 h-5 text-white" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">Town Hall</TooltipContent>
-                </Tooltip>
+                <button
+                  type="button"
+                  onClick={() => handleSelectLiveMode('video')}
+                  className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
+                  title="Live Video"
+                >
+                  <Video className="w-5 h-5 text-white" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSelectLiveMode('townhall')}
+                  className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
+                  title="Town Hall"
+                >
+                  <Mic className="w-5 h-5 text-white" />
+                </button>
               </div>
             </PopoverContent>
           </Popover>
@@ -293,43 +352,11 @@ export function PostActionBar({
 
         <div className="w-px h-4 bg-white/10 mx-1" />
 
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button 
-              type="button" 
-              onClick={() => onInsertFormatting('bold')} 
-              className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
-            >
-              <Bold className="w-4 h-4 text-zinc-400" />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent>Bold</TooltipContent>
-        </Tooltip>
-        
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button 
-              type="button" 
-              onClick={() => onInsertFormatting('italic')} 
-              className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
-            >
-              <Italic className="w-4 h-4 text-zinc-400" />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent>Italic</TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button 
-              type="button" 
-              className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
-            >
-              <Smile className="w-4 h-4 text-zinc-400" />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent>Emoji</TooltipContent>
-        </Tooltip>
+        {/* Emoji/GIF picker - single working button */}
+        <EmojiGifPicker 
+          onEmojiSelect={onInsertEmoji}
+          onGifSelect={onInsertGif}
+        />
       </div>
 
       <div className="flex items-center gap-2">
@@ -339,7 +366,7 @@ export function PostActionBar({
           size="sm"
           disabled={!hasText || isEnhancing}
           onClick={() => setEnhanceSheetOpen(true)}
-          className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8"
+          className="rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8"
         >
           {isEnhancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
           <span className="hidden sm:inline">{isEnhancing ? 'Enhancing...' : 'Enhance'}</span>
@@ -368,10 +395,10 @@ export function PostActionBar({
         </Drawer>
         
         <Button
-          onClick={onPost}
-          disabled={!canPost}
+          onClick={isLive ? handleGoLiveClick : onPost}
+          disabled={(!canPost && !isLive) || isPosting}
           className={cn(
-            "rounded-full px-3 h-8 sm:px-4 font-semibold disabled:opacity-50 text-sm",
+            "rounded-xl px-3 h-8 sm:px-4 font-semibold disabled:opacity-50 text-sm",
             isLive 
               ? "bg-red-500 text-white hover:bg-red-600" 
               : isScheduled
@@ -379,12 +406,19 @@ export function PostActionBar({
                 : "bg-white text-black hover:bg-zinc-200"
           )}
         >
-          <span className="hidden sm:inline">
-            {isLive ? 'Go Live' : isScheduled ? 'Schedule' : 'Post'}
-          </span>
-          {isLive ? <Radio className="w-4 h-4 sm:hidden" /> : <Send className="w-4 h-4 sm:hidden" />}
+          {isPosting ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <>
+              <span className="hidden sm:inline">
+                {isLive ? 'Go Live' : isScheduled ? 'Schedule' : 'Post'}
+              </span>
+              {isLive ? <Radio className="w-4 h-4 sm:hidden" /> : <Send className="w-4 h-4 sm:hidden" />}
+            </>
+          )}
         </Button>
       </div>
     </div>
+    </>
   );
 }

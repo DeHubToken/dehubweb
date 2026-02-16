@@ -1,66 +1,72 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
+import searchIcon from '@/assets/icons/search-icon.png';
+import search3dIcon from '@/assets/icons/search-3d-icon.png';
+import trendingFireIcon from '@/assets/icons/trending-fire-icon.png';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check } from 'lucide-react';
+import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check, Clock, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { EXPLORE_TABS, RECENT_SEARCHES, EXPLORE_TRENDING, SUGGESTED_USERS } from '@/constants/app.constants';
+import { EXPLORE_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useAuth } from '@/contexts/AuthContext';
+import { AuthGate } from '@/components/app/AuthGate';
 import { 
   useDeHubSearch, 
+  useSearchAnalytics,
+  getTypeForTab,
   getPostTypeForTab, 
-  extractUniqueCreators, 
-  flattenSearchResults,
+  extractUniqueCreators,
+  mapAccountToCreator,
+  flattenSearchAccounts,
+  flattenSearchVideos,
   type SearchCreator 
 } from '@/hooks/use-dehub-search';
+import { useSearchHistory } from '@/hooks/use-search-history';
 import { useDeHubUserSearch } from '@/hooks/use-dehub-user-search';
-import { getMediaUrl } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
+import { getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
+import { VideoCard, ImageCard, PostCard } from '@/components/app/cards';
+import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
+import type { VideoItem, ImagePost } from '@/types/feed.types';
 
 const DATE_OPTIONS = ['Any time', 'Today', 'This week', 'This month', 'This year'];
 const ENGAGEMENT_OPTIONS = ['Any', '100+', '1K+', '10K+', '100K+', '1M+'];
 const SEARCH_CATEGORIES = ['All', 'Gaming', 'Music', 'Art', 'Programming', 'Crypto', 'Entertainment'];
 const COUNTRY_OPTIONS = [
   'Global',
-  'United States',
-  'United Kingdom',
-  'Canada',
-  'Australia',
-  'Germany',
-  'France',
-  'Spain',
-  'Italy',
-  'Brazil',
-  'Mexico',
-  'Japan',
-  'South Korea',
-  'India',
-  'Netherlands',
-  'Sweden',
-  'Norway',
-  'Denmark',
-  'Finland',
-  'Poland',
-  'Russia',
-  'China',
-  'Singapore',
-  'Philippines',
-  'Indonesia',
-  'Thailand',
-  'Vietnam',
-  'South Africa',
-  'Nigeria',
-  'Egypt',
-  'UAE',
-  'Saudi Arabia',
-  'Turkey',
-  'Argentina',
-  'Colombia',
-  'Chile',
+  'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan',
+  'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi',
+  'Cambodia', 'Cameroon', 'Canada', 'Cape Verde', 'Central African Republic', 'Chad', 'Chile', 'China', 'Colombia', 'Comoros', 'Congo', 'Costa Rica', 'Croatia', 'Cuba', 'Cyprus', 'Czech Republic',
+  'Democratic Republic of the Congo', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic',
+  'East Timor', 'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Eswatini', 'Ethiopia',
+  'Fiji', 'Finland', 'France',
+  'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Greece', 'Grenada', 'Guatemala', 'Guinea', 'Guinea-Bissau', 'Guyana',
+  'Haiti', 'Honduras', 'Hungary',
+  'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Israel', 'Italy', 'Ivory Coast',
+  'Jamaica', 'Japan', 'Jordan',
+  'Kazakhstan', 'Kenya', 'Kiribati', 'Kosovo', 'Kuwait', 'Kyrgyzstan',
+  'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg',
+  'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Marshall Islands', 'Mauritania', 'Mauritius', 'Mexico', 'Micronesia', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Morocco', 'Mozambique', 'Myanmar',
+  'Namibia', 'Nauru', 'Nepal', 'Netherlands', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'North Korea', 'North Macedonia', 'Norway',
+  'Oman',
+  'Pakistan', 'Palau', 'Palestine', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Poland', 'Portugal',
+  'Qatar',
+  'Romania', 'Russia', 'Rwanda',
+  'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Vincent and the Grenadines', 'Samoa', 'San Marino', 'Sao Tome and Principe', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa', 'South Korea', 'South Sudan', 'Spain', 'Sri Lanka', 'Sudan', 'Suriname', 'Sweden', 'Switzerland', 'Syria',
+  'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', 'Togo', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Tuvalu',
+  'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan',
+  'Vanuatu', 'Vatican City', 'Venezuela', 'Vietnam',
+  'Yemen',
+  'Zambia', 'Zimbabwe',
 ];
+
+// Brand-related search terms where @d should be pinned first
+const BRAND_QUERIES = ['d', 'de', 'deh', 'dehu', 'dehub'];
 
 type FilterState = {
   w2e: boolean;
@@ -188,133 +194,96 @@ const FilterDropdown = ({
   );
 };
 
-// Search result card for content items
-const SearchResultCard = ({ 
-  item 
+// User result card
+const UserResultCard = ({ 
+  user, 
+  onProfileClick 
 }: { 
-  item: {
-    id: string;
-    title?: string;
-    description?: string;
-    thumbnail?: string;
-    media_type?: string;
-    minter?: string;
-    mintername?: string;
-    minterDisplayName?: string;
-    minterAvatarUrl?: string;
-    createdAt?: string;
-    like_count?: number;
-    comment_count?: number;
-  }
+  user: SearchCreator; 
+  onProfileClick?: (handle: string) => void;
 }) => {
   const navigate = useNavigate();
-  const thumbnailUrl = item.thumbnail ? getMediaUrl(item.thumbnail) : undefined;
-  const avatarUrl = item.minterAvatarUrl ? getMediaUrl(item.minterAvatarUrl) : undefined;
-  const displayName = item.minterDisplayName || item.mintername || 'User';
-  const handle = item.mintername ? `@${item.mintername}` : item.minter?.slice(0, 8);
-  const timeAgo = item.createdAt 
-    ? new Date(item.createdAt).toLocaleDateString() 
-    : '';
+  const { walletAddress } = useAuth();
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // user.avatar is already a fully built URL from mapAccountToCreator/extractUniqueCreators
+  const avatarUrl = user.avatar;
+  
+  const handleClick = () => {
+    const cleanHandle = user.handle.replace('@', '');
+    onProfileClick?.(cleanHandle);
+    navigate(`/${cleanHandle}`);
+  };
 
-  return (
-    <div 
-      className="p-3 bg-zinc-800 rounded-xl cursor-pointer hover:bg-zinc-700/80 transition-colors"
-      onClick={() => navigate(`/app/post/${item.id}`)}
-    >
-      <div className="flex gap-3">
-        {thumbnailUrl && (
-          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-zinc-700">
-            <img 
-              src={thumbnailUrl} 
-              alt="" 
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-        )}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <Avatar className="w-5 h-5">
-              <AvatarImage src={avatarUrl} className="object-cover" />
-              <AvatarFallback className="bg-zinc-600 text-[10px]">{displayName[0]}</AvatarFallback>
-            </Avatar>
-            <span className="text-white text-sm font-medium truncate">{displayName}</span>
-            <span className="text-zinc-500 text-xs">{handle}</span>
-            {timeAgo && (
-              <>
-                <span className="text-zinc-600">·</span>
-                <span className="text-zinc-500 text-xs">{timeAgo}</span>
-              </>
-            )}
-          </div>
-          {item.title && (
-            <p className="text-zinc-300 text-sm line-clamp-2">{item.title}</p>
-          )}
-          {item.description && !item.title && (
-            <p className="text-zinc-400 text-sm line-clamp-2">{item.description}</p>
-          )}
-          <div className="flex items-center gap-3 mt-2 text-xs text-zinc-500">
-            {item.like_count !== undefined && (
-              <span>{item.like_count.toLocaleString()} likes</span>
-            )}
-            {item.comment_count !== undefined && (
-              <span>{item.comment_count.toLocaleString()} comments</span>
-            )}
-            {item.media_type && (
-              <span className="px-1.5 py-0.5 bg-zinc-700 rounded text-[10px] uppercase">
-                {item.media_type}
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+  const handleFollow = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (!walletAddress) {
+      // Could show login modal here
+      return;
+    }
 
-// User result card
-const UserResultCard = ({ user }: { user: SearchCreator }) => {
-  const navigate = useNavigate();
+    if (!user.id || isLoading) return;
+
+    setIsLoading(true);
+    try {
+      const { followUser } = await import('@/lib/api/dehub');
+      await followUser(user.id);
+      setIsFollowing(true);
+    } catch (error) {
+      console.error('Failed to follow:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   
   return (
     <div 
       className="flex items-center justify-between cursor-pointer hover:bg-zinc-800/50 rounded-lg p-2 -mx-2 transition-colors"
-      onClick={() => navigate(`/app/profile/${user.handle.replace('@', '')}`)}
+      onClick={handleClick}
     >
-      <div className="flex items-center gap-3">
-        <Avatar className="w-10 h-10">
-          <AvatarImage src={user.avatar} className="object-cover" />
-          <AvatarFallback className="bg-zinc-700">{user.name[0]}</AvatarFallback>
+      <div className="flex items-center gap-3 min-w-0 flex-1">
+        <Avatar className="w-10 h-10 rounded-xl flex-shrink-0">
+          {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover rounded-xl" />}
+          <AvatarFallback className="bg-zinc-700 rounded-xl">{user.name[0]}</AvatarFallback>
         </Avatar>
-        <div>
-          <p className="text-white font-medium flex items-center gap-1">
-            {user.name}
-            {user.verified && <VerifiedBadge className="w-3.5 h-3.5" />}
-          </p>
-          <p className="text-zinc-500 text-sm">{user.handle}</p>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5">
+            <p className="text-white font-medium flex items-center gap-1.5 truncate">
+              <span className="truncate">{user.name}</span>
+              {user.verified && <VerifiedBadge className="w-3.5 h-3.5 flex-shrink-0" />}
+            </p>
+            <span className="text-zinc-500 font-normal text-sm truncate">
+              {user.handle.replace('@', '').startsWith('0x') && user.handle.length > 14
+                ? `@${user.handle.replace('@', '').slice(0, 6)}...${user.handle.replace('@', '').slice(-4)}`
+                : user.handle}
+            </span>
+          </div>
           {user.bio && (
-            <p className="text-zinc-400 text-xs line-clamp-1 mt-0.5">{user.bio}</p>
+            <p className="text-zinc-400 text-xs line-clamp-1 mt-0.5 hidden md:block">{user.bio}</p>
           )}
         </div>
       </div>
-      <Button
-        variant="outline"
-        size="sm"
-        className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
-        onClick={(e) => {
-          e.stopPropagation();
-          // TODO: Implement follow functionality
-        }}
-      >
-        Follow
-      </Button>
+      {!isFollowing && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex-shrink-0 ml-2"
+          onClick={handleFollow}
+          disabled={isLoading || !walletAddress}
+        >
+          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Follow'}
+        </Button>
+      )}
     </div>
   );
 };
 
 export default function ExplorePage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { walletAddress } = useAuth();
+  const { walletAddress, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
@@ -330,6 +299,41 @@ export default function ExplorePage() {
   });
   const [selectedCountry, setSelectedCountry] = useState('Global');
 
+  // Search history hook
+  const { recentSearches, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
+  
+  // Search analytics mutation
+  const { mutate: logSearch } = useSearchAnalytics();
+
+  // Scroll to top on mount unless there's an active search with cached scroll
+  // CRITICAL: Use useLayoutEffect to reset scroll BEFORE browser paints (prevents flash of wrong position)
+  useLayoutEffect(() => {
+    const urlQuery = searchParams.get('q') || '';
+    const cachedScroll = sessionStorage.getItem('EXPLORE_SCROLL_POSITION');
+    
+    // Helper to reset all scroll contexts
+    const scrollTo = (value: number) => {
+      window.scrollTo(0, value);
+      document.documentElement.scrollTop = value;
+      document.body.scrollTop = value;
+    };
+    
+    if (urlQuery && cachedScroll) {
+      // Restore scroll only if there's an active search query
+      const scrollY = parseInt(cachedScroll, 10);
+      scrollTo(scrollY);
+      // Extra attempt after paint for lazy content
+      requestAnimationFrame(() => scrollTo(scrollY));
+    } else {
+      // Always start at top when no search query
+      scrollTo(0);
+      sessionStorage.removeItem('EXPLORE_SCROLL_POSITION');
+      // Extra attempts to fight browser restoration
+      requestAnimationFrame(() => scrollTo(0));
+      setTimeout(() => scrollTo(0), 0);
+    }
+  }, []); // Only run on mount
+
   // Sync search query with URL
   useEffect(() => {
     const urlQuery = searchParams.get('q') || '';
@@ -338,7 +342,7 @@ export default function ExplorePage() {
     }
   }, [searchParams]);
 
-  // Update URL when search query changes
+  // Update URL when search query changes and log to history
   useEffect(() => {
     if (searchQuery.trim().length >= 3) {
       setSearchParams({ q: searchQuery.trim() }, { replace: true });
@@ -347,9 +351,52 @@ export default function ExplorePage() {
     }
   }, [searchQuery, setSearchParams, searchParams]);
 
-  const isSearching = searchQuery.trim().length >= 3;
+  // Add to history and log analytics only after 1.5 seconds of inactivity (complete words)
+  const stableQuery = useDebouncedValue(searchQuery, 1500);
+  const hasLoggedRef = useRef<string | null>(null);
+  
+  useEffect(() => {
+    if (stableQuery.trim().length >= 3 && hasLoggedRef.current !== stableQuery.trim()) {
+      hasLoggedRef.current = stableQuery.trim();
+      // Add to local history
+      addToHistory(stableQuery.trim());
+      // Log analytics (fire and forget)
+      logSearch({ 
+        query: stableQuery.trim(), 
+        type: getTypeForTab(activeTab) || 'all',
+      });
+    }
+  }, [stableQuery, activeTab, addToHistory, logSearch]);
 
-  // API search hook
+  // Debounced query for short searches (1 second wait for 1-2 chars)
+  const debouncedShortQuery = useDebouncedValue(searchQuery, 1000);
+  
+  // Determine search mode based on query length
+  const trimmedQuery = searchQuery.trim();
+  const isShortSearch = trimmedQuery.length >= 1 && trimmedQuery.length <= 2 && debouncedShortQuery.trim().length >= 1;
+  const isFullSearch = trimmedQuery.length >= 3;
+  const isSearching = isFullSearch || isShortSearch;
+  
+  // For short queries (1-2 chars), only search people
+  const effectiveSearchType = isShortSearch ? 'accounts' : getTypeForTab(activeTab);
+  const effectiveQuery = isShortSearch ? debouncedShortQuery : searchQuery;
+
+  // Save scroll position only when there's an active search
+  useEffect(() => {
+    if (!isSearching) {
+      sessionStorage.removeItem('EXPLORE_SCROLL_POSITION');
+      return;
+    }
+
+    const handleScroll = () => {
+      sessionStorage.setItem('EXPLORE_SCROLL_POSITION', String(window.scrollY));
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isSearching]);
+
+  // API search hook - using new universal search
   const {
     data: searchData,
     isLoading: isSearchLoading,
@@ -358,43 +405,130 @@ export default function ExplorePage() {
     isFetchingNextPage,
     error: searchError,
   } = useDeHubSearch({
-    query: searchQuery,
-    postType: getPostTypeForTab(activeTab),
-    category: selectedCategory !== 'All' ? selectedCategory.toLowerCase() : undefined,
+    query: effectiveQuery,
+    type: effectiveSearchType,
+    postType: isShortSearch ? undefined : getPostTypeForTab(activeTab),
     address: walletAddress || undefined,
     enabled: isSearching,
+    minQueryLength: isShortSearch ? 1 : 3,
   });
 
-  // Exact username lookup for @username queries
+  // Additional account search specifically for "All" tab
+  // The main search above only returns content when type is undefined (All tab)
+  // This parallel search fetches accounts to merge into results
+  const {
+    data: allTabAccountData,
+  } = useDeHubSearch({
+    query: effectiveQuery,
+    type: 'accounts',
+    address: walletAddress || undefined,
+    enabled: isSearching && activeTab === 'all' && !isShortSearch,
+    minQueryLength: 3,
+  });
+
+  // Exact username lookup - always try exact match to prioritize @username
   const {
     data: exactUser,
     isLoading: isUserLoading,
     isUsernameQuery,
   } = useDeHubUserSearch({
-    query: searchQuery,
+    query: effectiveQuery,
     enabled: isSearching && (activeTab === 'all' || activeTab === 'people'),
+    forceExactLookup: true, // Always try exact lookup to surface @username matches first
   });
 
-  // Process search results
+  // Check if this is a brand-related search term
+  const isBrandQuery = BRAND_QUERIES.includes(effectiveQuery.trim().toLowerCase());
+
+  // Always fetch @d specifically for brand queries (d, de, deh, dehu, dehub)
+  const {
+    data: brandUser,
+  } = useDeHubUserSearch({
+    query: 'd', // Always look up the actual @d account
+    enabled: isSearching && isBrandQuery && (activeTab === 'all' || activeTab === 'people'),
+    forceExactLookup: true,
+  });
+
+  // Process search results from the new universal search API
   const searchResults = useMemo(() => {
-    const allItems = flattenSearchResults(searchData) || [];
-    const creators = extractUniqueCreators(allItems) || [];
+    // Get accounts directly from universal search (People tab or when type=accounts)
+    const accounts = flattenSearchAccounts(searchData) || [];
     
-    // Add exact user match to top if found and not already in list
-    let peopleResults = creators;
-    if (exactUser && exactUser.id) {
-      const exists = creators.some(c => c.id === exactUser.id);
-      if (!exists) {
-        peopleResults = [exactUser, ...creators];
-      }
+    // Get accounts from the dedicated All-tab account search
+    const allTabAccounts = flattenSearchAccounts(allTabAccountData) || [];
+    
+    // For short search, don't include video results
+    const videos = isShortSearch ? [] : (flattenSearchVideos(searchData) || []);
+    
+    // Map both account sources to SearchCreator format
+    const accountCreators = accounts.map(mapAccountToCreator);
+    const allTabAccountCreators = allTabAccounts.map(mapAccountToCreator);
+    
+    // Also extract creators from video results for backwards compatibility (not for short search)
+    const videoCreators = isShortSearch ? [] : extractUniqueCreators(videos) || [];
+    
+    // Combine and dedupe users by ID AND handle (same user may have different IDs from different sources)
+    const userMap = new Map<string, SearchCreator>();
+    const seenHandles = new Set<string>();
+    
+    const addUser = (u: SearchCreator) => {
+      if (!u || !u.id) return;
+      const handleLower = u.handle.toLowerCase();
+      // Skip if we already have this user by ID or handle
+      if (userMap.has(u.id) || seenHandles.has(handleLower)) return;
+      userMap.set(u.id, u);
+      seenHandles.add(handleLower);
+    };
+    
+    accountCreators.forEach(addUser);
+    allTabAccountCreators.forEach(addUser);
+    videoCreators.forEach(addUser);
+    
+    // Add exact user match if found
+    if (exactUser) {
+      addUser(exactUser);
+    }
+    
+    // Check if this is a brand-related search
+    const queryLower = effectiveQuery.trim().toLowerCase();
+    const isBrandQueryLocal = BRAND_QUERIES.includes(queryLower);
+    
+    // For brand queries, ensure the real @d (from brandUser lookup) is in the map
+    if (isBrandQueryLocal && brandUser && brandUser.id) {
+      // Override with brandUser data if present (force add even if duplicate)
+      const handleLower = brandUser.handle.toLowerCase();
+      userMap.set(brandUser.id, brandUser);
+      seenHandles.add(handleLower);
+    }
+    
+    // Convert to array and sort
+    let peopleResults = Array.from(userMap.values());
+    
+    // For brand queries, pin @d at the top
+    if (isBrandQueryLocal && brandUser && brandUser.id) {
+      peopleResults = peopleResults.filter(u => u.id !== brandUser.id);
+      peopleResults = [brandUser, ...peopleResults];
+    } else {
+      // Normal sorting: exact username match first
+      peopleResults.sort((a, b) => {
+        const aHandle = a.handle.replace('@', '').toLowerCase();
+        const bHandle = b.handle.replace('@', '').toLowerCase();
+        // Exact match goes first
+        if (aHandle === queryLower && bHandle !== queryLower) return -1;
+        if (bHandle === queryLower && aHandle !== queryLower) return 1;
+        // Then by handle starting with query
+        if (aHandle.startsWith(queryLower) && !bHandle.startsWith(queryLower)) return -1;
+        if (bHandle.startsWith(queryLower) && !aHandle.startsWith(queryLower)) return 1;
+        return 0;
+      });
     }
     
     return {
       users: peopleResults.filter(u => u && u.id),
-      posts: allItems.filter(p => p && (p.id || p.tokenId)),
+      posts: videos.filter(p => p && (p.id || p.tokenId)),
       total: searchData?.pages?.[0]?.total || 0,
     };
-  }, [searchData, exactUser]);
+  }, [searchData, allTabAccountData, exactUser, brandUser, isShortSearch, effectiveQuery]);
 
   const activeFilterCount = [
     filters.w2e,
@@ -417,16 +551,58 @@ export default function ExplorePage() {
     setSelectedCategory('All');
   };
 
-  const handleLoadMore = useCallback(() => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+  // Infinite scroll ref
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+  const isFetchingRef = useRef(false);
+
+  // Infinite scroll observer
+  useEffect(() => {
+    if (!isSearching || activeTab === 'people') return;
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (first.isIntersecting && hasNextPage && !isFetchingRef.current) {
+          isFetchingRef.current = true;
+          fetchNextPage().finally(() => {
+            isFetchingRef.current = false;
+          });
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+
+    const currentRef = loadMoreRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+    return () => {
+      if (currentRef) observer.unobserve(currentRef);
+    };
+  }, [isSearching, activeTab, hasNextPage, fetchNextPage]);
+
+  // Map NFTs to feed items
+  const mappedFeedItems = useMemo(() => {
+    return searchResults.posts.map((nft, index) => {
+      const contentType = getContentType(nft);
+      if (contentType === 'video' || contentType === 'audio') {
+        return { type: 'video' as const, item: mapNFTToVideoItem(nft, index) };
+      } else {
+        return { type: 'image' as const, item: mapNFTToImagePost(nft, index) };
+      }
+    });
+  }, [searchResults.posts]);
 
   const showLoading = isSearchLoading || isUserLoading;
   const showResults = isSearching && !showLoading && (searchResults.users.length > 0 || searchResults.posts.length > 0);
   const showNoResults = isSearching && !showLoading && searchResults.users.length === 0 && searchResults.posts.length === 0;
-  const showMinCharsHint = searchQuery.length > 0 && searchQuery.length < 3;
+
+  if (!isAuthenticated) {
+    return (
+      <AuthGate description="Log in to explore and discover trending posts, creators, and communities on DeHub." />
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -468,12 +644,6 @@ export default function ExplorePage() {
             </button>
           </div>
           
-          {/* Min chars hint */}
-          {showMinCharsHint && (
-            <p className="text-zinc-500 text-xs mt-2 pl-1">
-              Type at least 3 characters to search
-            </p>
-          )}
         </div>
 
         {/* Filters Panel */}
@@ -622,7 +792,7 @@ export default function ExplorePage() {
               <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h2 className="text-lg sm:text-xl font-bold text-white">
+                    <h2 className="text-lg sm:text-xl font-bold text-white break-all">
                       Results for "{searchQuery}"
                     </h2>
                     {!showLoading && searchResults.total > 0 && (
@@ -672,7 +842,11 @@ export default function ExplorePage() {
                     </h3>
                     <div className="space-y-1">
                       {searchResults.users.slice(0, activeTab === 'people' ? undefined : 5).map((user, idx) => (
-                        <UserResultCard key={user.id || `user-${idx}`} user={user} />
+                        <UserResultCard 
+                          key={user.id || `user-${idx}`} 
+                          user={user} 
+                          onProfileClick={(handle) => addToHistory(`@${handle}`, 'user')}
+                        />
                       ))}
                     </div>
                     {activeTab === 'all' && searchResults.users.length > 5 && (
@@ -686,52 +860,48 @@ export default function ExplorePage() {
                   </div>
                 )}
 
-                {/* Content Results */}
-                {showResults && activeTab !== 'people' && searchResults.posts.length > 0 && (
-                  <div>
+                {/* Content Results - Using Feed Cards */}
+                {showResults && activeTab !== 'people' && mappedFeedItems.length > 0 && (
+                  <div className="space-y-4">
                     <h3 className="text-sm text-zinc-400 uppercase tracking-wider mb-3">
-                      {activeTab === 'all' ? 'Content' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} ({searchResults.posts.length})
+                      {activeTab === 'all' ? 'Content' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} ({mappedFeedItems.length}{hasNextPage ? '+' : ''})
                     </h3>
-                    <div className="space-y-3">
-                      {searchResults.posts.map((post) => (
-                        <SearchResultCard key={post.id || post.tokenId} item={{
-                          id: String(post.id || post.tokenId),
-                          title: post.title || post.name,
-                          description: post.description,
-                          thumbnail: post.imageUrl || post.thumbnail_url,
-                          media_type: post.media_type || post.postType,
-                          minter: post.minter,
-                          mintername: post.mintername,
-                          minterDisplayName: post.minterDisplayName,
-                          minterAvatarUrl: post.minterAvatarUrl,
-                          createdAt: post.createdAt || post.created_at,
-                          like_count: post.like_count,
-                          comment_count: post.comment_count || post.commentCount,
-                        }} />
-                      ))}
+                    
+                    {/* Feed Cards */}
+                    <div className="space-y-4">
+                      {mappedFeedItems.map((feedItem, index) => {
+                        if (feedItem.type === 'video') {
+                          const video = feedItem.item as VideoItem;
+                          return (
+                            <VideoCard
+                              key={video.id}
+                              video={video}
+                            />
+                          );
+                        } else {
+                          const image = feedItem.item as ImagePost;
+                          return (
+                            <ImageCard
+                              key={image.id}
+                              post={image}
+                            />
+                          );
+                        }
+                      })}
                     </div>
 
-                    {/* Load More */}
-                    {hasNextPage && (
-                      <div className="flex justify-center mt-4">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={handleLoadMore}
-                          disabled={isFetchingNextPage}
-                          className="border-zinc-700 text-white hover:bg-zinc-800"
-                        >
-                          {isFetchingNextPage ? (
-                            <>
-                              <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                              Loading...
-                            </>
-                          ) : (
-                            'Load More'
-                          )}
-                        </Button>
-                      </div>
-                    )}
+                    {/* Infinite scroll trigger */}
+                    <div ref={loadMoreRef} className="h-10 flex items-center justify-center">
+                      {isFetchingNextPage && (
+                        <div className="flex items-center gap-2 text-zinc-400">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span className="text-sm">Loading more...</span>
+                        </div>
+                      )}
+                      {!hasNextPage && mappedFeedItems.length > 0 && (
+                        <p className="text-zinc-500 text-sm">No more results</p>
+                      )}
+                    </div>
                   </div>
                 )}
 
@@ -759,24 +929,58 @@ export default function ExplorePage() {
             >
               {/* Recent Searches Bento */}
               <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-                <h2 className="text-lg sm:text-xl font-bold text-white mb-4">Recent Searches</h2>
-                <div className="flex flex-wrap gap-2">
-                  {RECENT_SEARCHES.map((term) => (
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                    <img src={search3dIcon} alt="Search" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
+                    Recent Searches
+                  </h2>
+                  {recentSearches.length > 0 && (
                     <button
-                      key={term}
-                      onClick={() => setSearchQuery(term)}
-                      className="px-3 sm:px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl transition-colors text-sm"
+                      onClick={clearHistory}
+                      className="text-zinc-500 hover:text-white text-sm flex items-center gap-1 transition-colors"
                     >
-                      {term}
+                      <Trash2 className="w-4 h-4" />
+                      Clear
                     </button>
-                  ))}
+                  )}
                 </div>
+                {recentSearches.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {recentSearches.map((term) => (
+                      <div
+                        key={term}
+                        className="group flex items-center bg-zinc-800 hover:bg-zinc-700 rounded-xl transition-colors max-w-full"
+                      >
+                        <button
+                          onClick={() => setSearchQuery(term)}
+                          className="px-3 sm:px-4 py-2 text-white text-sm text-left break-all"
+                        >
+                          {term}
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeFromHistory(term);
+                          }}
+                          className="pr-3 pl-1 py-2 text-zinc-500 hover:text-white transition-colors"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-zinc-500 text-sm">No recent searches yet. Start exploring!</p>
+                )}
               </div>
 
               {/* Trending Bento */}
               <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mt-[6px]">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg sm:text-xl font-bold text-white">Trending</h2>
+                  <div className="flex items-center gap-2">
+                    <img src={trendingFireIcon} alt="" className="w-[35px] h-[35px] object-contain" />
+                    <h2 className="text-lg sm:text-xl font-bold text-white">Trending</h2>
+                  </div>
                   <FilterDropdown
                     label="Country"
                     value={selectedCountry}
@@ -784,26 +988,7 @@ export default function ExplorePage() {
                     onChange={setSelectedCountry}
                   />
                 </div>
-                <div className="space-y-3">
-                  {EXPLORE_TRENDING.map((item) => (
-                    <div
-                      key={item.tag}
-                      className="flex items-center justify-between gap-4"
-                    >
-                      <div className="min-w-0">
-                        <p className="font-semibold text-white truncate">{item.tag}</p>
-                        <p className="text-zinc-500 text-sm">{item.postCount}</p>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex-shrink-0"
-                      >
-                        Follow
-                      </Button>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-zinc-500 text-sm">Nothing trending yet! Check back soon.</p>
               </div>
             </motion.div>
           )}

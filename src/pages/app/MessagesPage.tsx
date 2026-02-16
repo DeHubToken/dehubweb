@@ -1,94 +1,198 @@
-import { useState } from 'react';
-import { Search, Plus } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Search, Plus, MessageCircle, RefreshCw } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { PublicChat } from '@/components/app/chat';
+import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector, CreateGroupModal } from '@/components/app/chat';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
+import { useConversations, useUserOnlineStatus, useCreateConversation } from '@/hooks/use-messages';
+import { getMediaUrl, type DeHubConversation } from '@/lib/api/dehub';
+import { formatDistanceToNow } from 'date-fns';
+import { Skeleton } from '@/components/ui/skeleton';
+import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
+import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
+import dehubLogo from '@/assets/dehub-logo.png';
 
-interface Conversation {
-  id: string;
-  name: string;
-  avatar?: string;
-  lastMessage: string;
-  time: string;
-  unread?: number;
-  isLive?: boolean;
-  liveCount?: string;
-  isPinned?: boolean;
+function ConversationsSkeleton() {
+  return (
+    <div className="space-y-1">
+      {[...Array(5)].map((_, i) => (
+        <div key={i} className="flex items-center gap-3 p-4">
+          <Skeleton className="w-12 h-12 rounded-xl bg-white/[0.06]" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-4 w-32 bg-white/[0.06]" />
+            <Skeleton className="h-3 w-48 bg-white/[0.06]" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
-const conversations: Conversation[] = [
-  {
-    id: '1',
-    name: 'Public Chat',
-    lastMessage: 'Welcome to the commu...',
-    time: '',
-    isLive: true,
-    liveCount: '2.3k',
-    isPinned: true,
-  },
-  {
-    id: '2',
-    name: 'Alice Cooper',
-    lastMessage: 'Hey! How are you doing ...',
-    time: '2m',
-    unread: 2,
-  },
-  {
-    id: '3',
-    name: 'Tech Guru',
-    lastMessage: 'That new project looks a...',
-    time: '1h',
-  },
-  {
-    id: '4',
-    name: 'Design Master',
-    lastMessage: 'Can we schedule a call t...',
-    time: '3h',
-    unread: 1,
-  },
-];
+function ConversationItem({ 
+  conversation, 
+  onClick, 
+  isSelected,
+}: { 
+  conversation: DeHubConversation; 
+  onClick: () => void;
+  isSelected: boolean;
+}) {
+  const otherUser = conversation.otherUser || conversation.participants?.[0];
+  const avatarUrl = getMediaUrl(otherUser?.avatarImageUrl || otherUser?.avatarUrl);
+  const displayName = otherUser?.displayName || otherUser?.display_name || otherUser?.username ||
+    (otherUser?.address ? `${otherUser.address.slice(0, 6)}...${otherUser.address.slice(-4)}` : 'User');
+  const lastMessagePreview = conversation.lastMessage?.content || 'No messages yet';
+  const lastMessageTime = conversation.lastMessage?.createdAt 
+    ? formatDistanceToNow(new Date(conversation.lastMessage.createdAt), { addSuffix: false })
+    : '';
+
+  // Online status via React Query (cached + deduplicated)
+  const otherAddress = otherUser?.address;
+  const { data: onlineStatus } = useUserOnlineStatus(otherAddress || null);
+  const isOnline = onlineStatus?.online ?? false;
+
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full flex items-center gap-3 p-4 hover:bg-zinc-800/50 transition-colors text-left ${
+        isSelected ? 'bg-zinc-800' : ''
+      }`}
+    >
+      <div className="relative">
+        <Avatar className="w-12 h-12">
+          {avatarUrl && <AvatarImage src={avatarUrl} />}
+          <AvatarFallback className="bg-zinc-700 text-white font-medium">
+            {(displayName.startsWith('0x') ? displayName.charAt(2) : displayName.charAt(0)).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        {/* Online indicator */}
+        {isOnline && (
+          <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-zinc-900" />
+        )}
+      </div>
+      
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <span className="font-semibold text-white truncate">{displayName}</span>
+          {lastMessageTime && (
+            <span className="text-zinc-500 text-sm ml-auto flex-shrink-0">{lastMessageTime}</span>
+          )}
+        </div>
+        <p className="text-zinc-500 text-sm truncate">
+          {conversation.lastMessage?.type === 'image' ? '📷 Photo' : 
+           conversation.lastMessage?.type === 'gif' ? '🎞️ GIF' : 
+           lastMessagePreview}
+        </p>
+      </div>
+      
+      {conversation.unreadCount > 0 && (
+        <div className="w-5 h-5 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+          <span className="text-primary-foreground text-xs font-bold">
+            {conversation.unreadCount > 9 ? '9+' : conversation.unreadCount}
+          </span>
+        </div>
+      )}
+    </button>
+  );
+}
 
 export default function MessagesPage() {
-  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
+  const location = useLocation();
+  const [selectedConversation, setSelectedConversation] = useState<DeHubConversation | null>(null);
+  const [showPublicChat, setShowPublicChat] = useState(false);
+  const [showMessageSelector, setShowMessageSelector] = useState(false);
+  const [showNewConversation, setShowNewConversation] = useState(false);
+  const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
 
-  // Block access for unauthenticated users (AuthGate handles loading state internally)
+  const{ 
+    conversations, 
+    isLoading, 
+    isError, 
+    refetch, 
+    isRefetching,
+  } = useConversations(searchQuery);
+
+  const createConversation = useCreateConversation();
+
+  // Handle incoming "open DM with" navigation from profile page
+  useEffect(() => {
+    const state = location.state as { openDmWith?: string; username?: string } | null;
+    if (!state?.openDmWith || !isAuthenticated) return;
+    
+    const targetAddress = state.openDmWith.toLowerCase();
+    const existing = conversations?.find(c => 
+      c.otherUser?.address?.toLowerCase() === targetAddress
+    );
+    
+    if (existing) {
+      setSelectedConversation(existing);
+    } else if (!isLoading) {
+      createConversation.mutateAsync({
+        recipientAddress: state.openDmWith,
+        recipientUser: { address: state.openDmWith, username: state.username } as any,
+      }).then(conv => setSelectedConversation(conv)).catch(() => {});
+    }
+    
+    window.history.replaceState({}, document.title);
+  }, [location.state, isAuthenticated, conversations, isLoading]);
+
+  // Block access for unauthenticated users
   if (!isAuthenticated) {
     return (
       <AuthGate description="Log in to access your messages and chat with others." />
     );
   }
 
-  // Check if Public Chat is selected
-  const isPublicChatOpen = selectedConversation === '1';
-  const selectedConv = conversations.find(c => c.id === selectedConversation);
-
   // If Public Chat is open, show full-screen chat
-  if (isPublicChatOpen) {
+  if (showPublicChat) {
     return (
-      <div className="min-h-screen p-3 sm:p-4">
-        <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)]">
-          <PublicChat 
-            onBack={() => setSelectedConversation(null)} 
-            liveCount={selectedConv?.liveCount}
-          />
-        </div>
+      <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] p-3 sm:p-4 overflow-x-hidden">
+        <PublicChat
+          onBack={() => setShowPublicChat(false)}
+        />
+      </div>
+    );
+  }
+
+  // If a DM conversation is selected, show it
+  if (selectedConversation) {
+    return (
+      <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] p-3 sm:p-4">
+        <DirectMessageChat
+          conversation={selectedConversation}
+          onBack={() => setSelectedConversation(null)}
+        />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-3 sm:p-4">
-      <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)]">
+    <div className="h-full p-3 sm:p-4 overflow-hidden">
+      <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] max-h-full">
         {/* Full Width Messages Panel */}
         <div className="w-full h-full bg-zinc-900 rounded-2xl flex flex-col">
           {/* Header */}
           <div className="p-4">
-            <h1 className="text-xl font-bold text-white mb-4">Messages</h1>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <img src={messagesBubbleIcon} alt="Messages" className="w-10 h-10 object-contain" />
+                <h1 className="text-xl font-bold text-white">Messages</h1>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => refetch()}
+                disabled={isRefetching}
+                className="text-zinc-400 hover:text-white"
+              >
+                <RefreshCw className={`w-4 h-4 ${isRefetching ? 'animate-spin' : ''}`} />
+              </Button>
+            </div>
             <div className="relative flex items-center">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <Input
@@ -99,7 +203,8 @@ export default function MessagesPage() {
               />
               <Button 
                 size="icon" 
-                className="absolute right-1.5 w-7 h-7 rounded-lg bg-zinc-700 hover:bg-zinc-600"
+                onClick={() => setShowMessageSelector(true)}
+                className="absolute right-1.5 w-7 h-7 rounded-xl bg-zinc-800 hover:bg-zinc-700 border-0"
               >
                 <Plus className="w-4 h-4 text-white" />
               </Button>
@@ -108,49 +213,82 @@ export default function MessagesPage() {
 
           {/* Conversation List */}
           <div className="flex-1 overflow-y-auto">
-            {conversations.map((conv) => (
-              <button
+            {/* Public Chat (pinned) */}
+            <button
+              onClick={() => setShowPublicChat(true)}
+              className="w-full flex items-center gap-3 p-4 hover:bg-zinc-800/50 transition-colors text-left"
+            >
+              <div className="w-12 h-12 rounded-xl bg-black flex items-center justify-center flex-shrink-0">
+                <img 
+                  src={dehubLogo} 
+                  alt="Public Chat" 
+                  className="w-8 h-8 object-contain"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="font-semibold text-white truncate block">Public Chat</span>
+                <p className="text-zinc-500 text-sm truncate">Join the community conversation</p>
+              </div>
+            </button>
+
+            {/* Loading State */}
+            {isLoading && <ConversationsSkeleton />}
+
+            {/* Error State */}
+            {isError && (
+              <div className="flex flex-col items-center justify-center py-12 text-center px-4">
+                <MessageCircle className="w-12 h-12 text-zinc-600 mb-4" />
+                <p className="text-zinc-400 mb-4">Failed to load conversations</p>
+                <Button 
+                  variant="outline" 
+                  onClick={() => refetch()}
+                  className="border-zinc-700 text-white hover:bg-zinc-800"
+                >
+                  Try Again
+                </Button>
+              </div>
+            )}
+
+
+
+            {/* Conversations */}
+            {!isLoading && !isError && conversations.map((conv) => (
+              <ConversationItem
                 key={conv.id}
-                onClick={() => setSelectedConversation(conv.id)}
-                className={`w-full flex items-center gap-3 p-4 hover:bg-zinc-800/50 transition-colors text-left ${
-                  selectedConversation === conv.id ? 'bg-zinc-800' : ''
-                }`}
-              >
-                <div className="relative">
-                  <Avatar className="w-12 h-12">
-                    <AvatarFallback className="bg-zinc-700 text-white font-medium">
-                      {conv.name.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  {conv.isPinned && (
-                    <div className="absolute -top-1 -left-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-[10px]">📌</span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-white truncate">{conv.name}</span>
-                    {conv.isLive && (
-                      <>
-                        <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">LIVE</span>
-                        <span className="text-zinc-500 text-sm">{conv.liveCount}</span>
-                      </>
-                    )}
-                    {conv.time && <span className="text-zinc-500 text-sm ml-auto">{conv.time}</span>}
-                  </div>
-                  <p className="text-zinc-500 text-sm truncate">{conv.lastMessage}</p>
-                </div>
-                {conv.unread && (
-                  <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-white text-xs font-bold">{conv.unread}</span>
-                  </div>
-                )}
-              </button>
+                conversation={conv}
+                onClick={() => setSelectedConversation(conv)}
+                isSelected={selectedConversation?.id === conv.id}
+              />
             ))}
           </div>
         </div>
       </div>
+
+      {/* Message Type Selector */}
+      <NewMessageSelector
+        open={showMessageSelector}
+        onOpenChange={setShowMessageSelector}
+        onSelectDM={() => setShowNewConversation(true)}
+        onSelectGroup={() => setShowCreateGroup(true)}
+      />
+
+      {/* New DM Conversation Modal */}
+      <NewConversationModal
+        open={showNewConversation}
+        onOpenChange={setShowNewConversation}
+        onConversationCreated={(conversation) => {
+          setSelectedConversation(conversation);
+        }}
+      />
+
+      {/* Create Group Modal */}
+      <CreateGroupModal
+        open={showCreateGroup}
+        onOpenChange={setShowCreateGroup}
+        onGroupCreated={(conversation) => {
+          setSelectedConversation(conversation);
+        }}
+      />
     </div>
   );
 }

@@ -1,83 +1,116 @@
 /**
  * Home Feed Component
  * ===================
- * Mixed content feed with infinite scroll for the home tab.
- * Fetches content from DeHub API with sorting options.
+ * Mixed content feed with custom content ordering pattern.
+ * Fetches videos, images, and text posts separately then interleaves
+ * according to a 50-item repeating pattern.
  * 
  * @module components/app/feeds/HomeFeed
  */
 
-import { useEffect, useRef, useMemo, useState } from 'react';
-import { Loader2, RefreshCw } from 'lucide-react';
+import { useEffect, useRef, useMemo, useCallback, useState } from 'react';
+import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
+import { useQuery } from '@tanstack/react-query';
+import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
+import { HomeFeedSkeleton, StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, applySorting, filterByDate, filterByContentType, getApiSortMode, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
+import { toast } from 'sonner';
+import { 
+  SORT_OPTIONS, 
+  DATE_FILTER_OPTIONS, 
+  CONTENT_TYPE_FILTERS, 
+  POST_TYPE_FILTERS, 
+  formatCount, 
+  formatViews, 
+  formatDuration, 
+  formatTimeAgo, 
+  CONTENT_PATTERN,
+  interleaveByPattern,
+  limitCreatorDiversity,
+  DEFAULT_MAX_POSTS_PER_CREATOR,
+  DEFAULT_MIN_CREATOR_SPACING,
+  type SortOption, 
+  type DateFilterOption, 
+  type ContentTypeFilters, 
+  type PostTypeFilterValue 
+} from '@/lib/feed-utils';
 
 // Card components
 import { 
   PostCard, 
   VideoCard, 
   ImageCard, 
-  LiveCard, 
   ShortsReel, 
   StoriesBar 
 } from '@/components/app/cards';
 
-// DeHub API hook
-import { useDeHubFeed, useDeHubStoryUsers, useDeHubVideos, useDeHubImages, mapNFTToVideoItem, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
-import { getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
-import { useAuth } from '@/contexts/AuthContext';
 
-import type { VideoItem, ImagePost, TextPost, LiveStream, ShortVideo } from '@/types/feed.types';
+import { 
+  useUnifiedFeed, 
+  mapToVideoItem, 
+  mapToImagePost, 
+  mapToTextPost,
+} from '@/hooks/use-unified-feed';
+import { useDeHubStoryUsers } from '@/hooks/use-dehub-feed';
+import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
+import { getMediaUrl, getNFTInfo, getAccountInfo, getCategories } from '@/lib/api/dehub';
+import type { DeHubCategory } from '@/lib/api/dehub';
+import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { useAuth } from '@/contexts/AuthContext';
+import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
+import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
+import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
+import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
+
+import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.types';
 
 // ============================================================================
 // TYPES & CONSTANTS
 // ============================================================================
 
-type UnifiedFeedItem = 
+type FeedItemType = 
   | { type: 'post'; data: TextPost }
   | { type: 'video'; data: VideoItem }
   | { type: 'image'; data: ImagePost }
-  | { type: 'live'; data: LiveStream }
   | { type: 'shorts'; data: ShortVideo[] };
 
-// Sort options are imported from feed-utils
-
-const PAGE_SIZE = 15;
-const SHORTS_INSERT_INTERVAL = 6;
+const PAGE_SIZE = 20;
+const SHORTS_INSERT_INTERVAL = 5;
+const RADIO_INSERT_AFTER = 12;
+/** Insert an all-time most-liked post every N items in trending feed */
+const CLASSIC_INSERT_INTERVAL = 6;
 
 interface HomeFeedProps {
   shuffleKey: number;
   isRefreshing: boolean;
   showFilters?: boolean;
+  /** Optional post ID to pin at the top of the feed */
+  pinnedPostId?: string;
 }
 
 // ============================================================================
 // HELPERS
 // ============================================================================
 
-function formatCount(count: number): string {
-  if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
-  if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
-  return count.toString();
-}
 
-function mapNFTToShortVideo(nft: any): ShortVideo {
-  const id = String(nft.tokenId || nft.id || nft.token_id);
-  
-  return {
-    id,
-    type: 'short',
-    username: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'user',
-    verified: nft.creator?.is_verified || false,
-    likes: formatCount(nft.totalVotes?.for || nft.like_count || 0),
-    thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
-    videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || '',
-    description: nft.description || nft.name || nft.title || '',
-    sound: 'Original Sound',
-    comments: formatCount(nft.commentCount || nft.comment_count || 0),
-    shares: formatCount(Math.floor(Math.random() * 1000)),
-  };
+/**
+ * Map date filter to API range parameter
+ */
+function getDateRange(dateValue: string): 'day' | 'week' | 'month' | 'year' | undefined {
+  switch (dateValue) {
+    case 'today':
+      return 'day';
+    case 'week':
+      return 'week';
+    case 'month':
+      return 'month';
+    case 'year':
+      return 'year';
+    default:
+      return undefined; // all time
+  }
 }
 
 // ============================================================================
@@ -87,84 +120,217 @@ function mapNFTToShortVideo(nft: any): ShortVideo {
 interface FilterSectionProps {
   selectedSort: SortOption;
   onSortSelect: (o: SortOption) => void;
+  selectedCategory: string;
+  onCategorySelect: (category: string) => void;
+  categories: DeHubCategory[];
   selectedDate: DateFilterOption;
   onDateSelect: (o: DateFilterOption) => void;
+  selectedPostType: PostTypeFilterValue;
+  onPostTypeSelect: (v: PostTypeFilterValue) => void;
   contentFilters: ContentTypeFilters;
   onContentFilterToggle: (filter: keyof ContentTypeFilters) => void;
+  onReset: () => void;
 }
 
 function SortFilterSection({ 
   selectedSort, 
-  onSortSelect, 
+  onSortSelect,
+  selectedCategory,
+  onCategorySelect,
+  categories,
   selectedDate, 
   onDateSelect,
+  selectedPostType,
+  onPostTypeSelect,
   contentFilters,
   onContentFilterToggle,
+  onReset,
 }: FilterSectionProps) {
+  const [categorySearch, setCategorySearch] = useState('');
+
+  // Find the currently selected category object (if not 'all')
+  const selectedCategoryObj = useMemo(() => {
+    if (selectedCategory === 'all') return null;
+    return categories.find(cat => cat.id === selectedCategory) || null;
+  }, [categories, selectedCategory]);
+
+  const filteredCategories = useMemo(() => {
+    let filtered = categories;
+    if (categorySearch.trim()) {
+      const q = categorySearch.toLowerCase();
+      filtered = categories.filter(cat => cat.name.toLowerCase().includes(q));
+    }
+    // Remove selected category from the list (it will be pinned separately)
+    if (selectedCategoryObj) {
+      filtered = filtered.filter(cat => cat.id !== selectedCategory);
+    }
+    return filtered;
+  }, [categories, categorySearch, selectedCategory, selectedCategoryObj]);
+
+  const activeFilterClass = 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]';
+  const inactiveFilterClass = 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700';
+
   return (
-    <div className="flex flex-col gap-4">
+    <div className="relative flex flex-col gap-4">
       {/* Sort Options */}
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
-        <div className="flex gap-1.5 flex-wrap">
-          {SORT_OPTIONS.map((option) => (
+        <div className="relative">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+            {SORT_OPTIONS.map((option) => (
+              <button
+                key={option.label}
+                onClick={() => onSortSelect(option)}
+                className={cn(
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                  selectedSort.label === option.label
+                    ? activeFilterClass
+                    : inactiveFilterClass
+                )}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+        </div>
+      </div>
+
+      {/* Category Filter */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">Category</span>
+        <input
+          type="text"
+          value={categorySearch}
+          onChange={e => setCategorySearch(e.target.value)}
+          placeholder="Search categories..."
+          className="w-full px-3 py-1.5 rounded-lg text-xs bg-zinc-800 text-zinc-200 placeholder-zinc-500 border border-zinc-700 focus:border-zinc-500 focus:outline-none transition-colors mb-1"
+        />
+        <div className="relative">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+            {/* Pinned selected category chip (before All) */}
+            {selectedCategoryObj && (
+              <button
+                onClick={() => { onCategorySelect('all'); setCategorySearch(''); }}
+                className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", activeFilterClass)}
+              >
+                {selectedCategoryObj.name}
+                <span className="ml-0.5 text-white/50 hover:text-white">✕</span>
+              </button>
+            )}
             <button
-              key={option.label}
-              onClick={() => onSortSelect(option)}
+              onClick={() => { onCategorySelect('all'); setCategorySearch(''); }}
               className={cn(
-                'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-                selectedSort.label === option.label
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                selectedCategory === 'all'
+                  ? activeFilterClass
+                  : inactiveFilterClass
               )}
             >
-              {option.label}
+              All
             </button>
-          ))}
+            {filteredCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => { onCategorySelect(cat.id); setCategorySearch(''); }}
+                className={cn(
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                  selectedCategory === cat.id
+                    ? activeFilterClass
+                    : inactiveFilterClass
+                )}
+              >
+                {cat.name}
+              </button>
+            ))}
+            {filteredCategories.length === 0 && categorySearch.trim() && (
+              <span className="text-xs text-zinc-500 py-1.5">No matches</span>
+            )}
+          </div>
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
         </div>
       </div>
       
       {/* Date Filter Options */}
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
-        <div className="flex gap-1.5 flex-wrap">
-          {DATE_FILTER_OPTIONS.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => onDateSelect(option)}
-              className={cn(
-                'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-                selectedDate.value === option.value
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              )}
-            >
-              {option.label}
-            </button>
-          ))}
+        <div className="relative">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+            {DATE_FILTER_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => onDateSelect(option)}
+                className={cn(
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                  selectedDate.value === option.value
+                    ? activeFilterClass
+                    : inactiveFilterClass
+                )}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+        </div>
+      </div>
+
+      {/* Post Type Filter */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">Post Type</span>
+        <div className="relative">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+            {POST_TYPE_FILTERS.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => onPostTypeSelect(option.value)}
+                className={cn(
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                  selectedPostType === option.value
+                    ? activeFilterClass
+                    : inactiveFilterClass
+                )}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
         </div>
       </div>
 
       {/* Content Type Filters */}
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
-        <div className="flex gap-1.5 flex-wrap">
-          {CONTENT_TYPE_FILTERS.map((filter) => (
-            <button
-              key={filter.value}
-              onClick={() => onContentFilterToggle(filter.value)}
-              className={cn(
-                'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-                contentFilters[filter.value]
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              )}
-            >
-              {filter.label}
-            </button>
-          ))}
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Access</span>
+        <div className="relative">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+            {CONTENT_TYPE_FILTERS.map((filter) => (
+              <button
+                key={filter.value}
+                onClick={() => onContentFilterToggle(filter.value)}
+                className={cn(
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                  contentFilters[filter.value]
+                    ? activeFilterClass
+                    : inactiveFilterClass
+                )}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
         </div>
       </div>
+
+      {/* Reset filters - bottom right */}
+      <button
+        onClick={onReset}
+        className="absolute bottom-0 right-0 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+        aria-label="Reset filters"
+      >
+        <RefreshCw className="w-3.5 h-3.5" />
+      </button>
     </div>
   );
 }
@@ -173,132 +339,523 @@ function SortFilterSection({
 // MAIN COMPONENT
 // ============================================================================
 
-export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: HomeFeedProps) {
+export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
-  const [selectedDate, setSelectedDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
-  const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
-    ppv: false,
-    w2e: false,
-    locked: false,
+  const bentoRef = useRef<HTMLDivElement>(null);
+
+  // Native touch event listeners on bento wrapper to reliably block propagation
+  useEffect(() => {
+    const el = bentoRef.current;
+    if (!el) return;
+
+    const stop = (e: TouchEvent) => {
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+    };
+
+    el.addEventListener('touchstart', stop, { passive: true });
+    el.addEventListener('touchmove', stop, { passive: true });
+    el.addEventListener('touchend', stop, { passive: true });
+
+    return () => {
+      el.removeEventListener('touchstart', stop);
+      el.removeEventListener('touchmove', stop);
+      el.removeEventListener('touchend', stop);
+    };
+  }, [showFilters]);
+  const isFetchingRef = useRef(false);
+  
+  // Default to Trending (first option) - persisted to sessionStorage
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('home', 'sort', SORT_OPTIONS[0]);
+  const [selectedDate, setSelectedDate] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
+  const [selectedPostType, setSelectedPostType] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
+  const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('home');
+  const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string>('home', 'category', 'all');
+
+  // Listen for external category changes (e.g. from Talk of the Town sidebar)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const categoryId = (e as CustomEvent).detail;
+      if (categoryId) setSelectedCategory(categoryId);
+    };
+    window.addEventListener('category-filter-changed', handler);
+    return () => window.removeEventListener('category-filter-changed', handler);
+  }, [setSelectedCategory]);
+
+  // Fetch categories
+  const { data: categories = [] } = useQuery({
+    queryKey: ['dehub-categories'],
+    queryFn: getCategories,
+    staleTime: 5 * 60 * 1000,
   });
 
-  const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
-    setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
-  };
-
-  const { walletAddress } = useAuth();
+  const { walletAddress, isAuthenticated } = useAuth();
+  const { optimisticPosts, clearOptimisticPosts } = useOptimisticPosts();
 
   // Fetch story users from API
   const { storyUsers } = useDeHubStoryUsers(10);
 
-  // Fetch videos from DeHub API - pass sortMode based on selected filter
-  const {
-    data: videosData,
-    fetchNextPage: fetchNextVideos,
-    hasNextPage: hasNextVideos,
-    isFetchingNextPage: isFetchingNextVideos,
-    isLoading: isVideosLoading,
-    isError: isVideosError,
-    refetch: refetchVideos,
-    error: videosError,
-  } = useDeHubFeed({
-    unit: PAGE_SIZE,
-    sortMode: getApiSortMode(selectedSort.value),
-    address: walletAddress || undefined,
+  // Fetch current user's following list for "Following" feed filter
+  const { data: currentUserData } = useQuery({
+    queryKey: ['current-user-followings', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return null;
+      return getAccountInfo(walletAddress);
+    },
+    enabled: isAuthenticated && !!walletAddress && selectedSort.value === 'following',
+    staleTime: 30000,
   });
 
-  // Fetch images from DeHub API - pass same sortMode for consistent sorting
-  const {
-    data: imagesData,
-    fetchNextPage: fetchNextImages,
-    hasNextPage: hasNextImages,
-    isFetchingNextPage: isFetchingNextImages,
-    isLoading: isImagesLoading,
-    isError: isImagesError,
-    refetch: refetchImages,
-  } = useDeHubImages({
-    unit: PAGE_SIZE,
-    sortMode: getApiSortMode(selectedSort.value),
-    address: walletAddress || undefined,
-  });
+  // Get following list as a Set for O(1) lookups
+  const followingSet = useMemo(() => {
+    const followings = currentUserData?.followings;
+    if (!followings || !Array.isArray(followings)) return new Set<string>();
+    return new Set(followings.map(addr => addr.toLowerCase()));
+  }, [currentUserData?.followings]);
 
-  // Fetch shorts separately for the carousel
-  const { data: shortsData } = useDeHubVideos({
-    unit: 10,
-    address: walletAddress || undefined,
-  });
-
-  // Refetch when shuffleKey changes (pull-to-refresh)
-  useEffect(() => {
-    if (shuffleKey > 0) {
-      refetchVideos();
-      refetchImages();
+  // Handle sort selection with special logic for "Subscribed" (coming soon)
+  const handleSortSelect = useCallback((option: SortOption) => {
+    if (option.value === 'subscribed') {
+      toast.info('Subscribed feed coming soon!');
+      return;
     }
-  }, [shuffleKey, refetchVideos, refetchImages]);
+    if (option.value === 'following' && !isAuthenticated) {
+      toast.info('Log in to see followed creators');
+      return;
+    }
+    setSelectedSort(option);
+  }, [isAuthenticated]);
 
-  // Map shorts data
+  // Build API params from filters
+  // For trending, we fetch by recency (last month) then sort client-side
+  const sortBy = useMemo(() => {
+    switch (selectedSort.value) {
+      case 'following': // Following uses latest sort, filtered client-side
+        return 'createdAt' as const;
+      case 'most-liked':
+        return 'likes' as const;
+      case 'most-viewed':
+        return 'views' as const;
+      case 'most-comments':
+        return 'comments' as const;
+      case 'random':
+        return 'random' as const;
+      case 'latest':
+      default:
+        return 'createdAt' as const;
+    }
+  }, [selectedSort.value]);
+
+  const sortOrder: 'asc' | 'desc' = 'desc'; // Always sort descending (highest first)
+  
+  // For following and random, don't limit range
+  const range = useMemo(() => {
+    if (selectedSort.value === 'following' || selectedSort.value === 'random') {
+      return undefined; // No range limit
+    }
+    return getDateRange(selectedDate.value);
+  }, [selectedSort.value, selectedDate.value]);
+
+  // Common API params for all three feeds
+  const commonParams = useMemo(() => ({
+    limit: PAGE_SIZE,
+    sortBy,
+    sortOrder,
+    range,
+    status: 'minted' as const,
+    category: selectedCategory !== 'all' ? selectedCategory : undefined,
+    isPPV: contentFilters.ppv ? true : undefined,
+    hasBounty: contentFilters.w2e ? true : undefined,
+    isLocked: contentFilters.locked ? true : undefined,
+  }), [sortBy, sortOrder, range, selectedCategory, contentFilters]);
+
+  // ============================================================================
+  // THREE SEPARATE FEED QUERIES
+  // ============================================================================
+
+  // For "Most Liked", "Trending", or "Following" sorting, we need global ranking across all types
+  // So we use a single unified feed instead of three separate type feeds
+  const useSingleFeedForGlobalSort = selectedSort.value === 'most-liked' || selectedSort.value === 'following' || selectedSort.value === 'random';
+  const hasContentFilter = contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
+  const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort && !hasContentFilter;
+
+  // Fetch videos
+  const videosFeed = useUnifiedFeed({
+    ...commonParams,
+    postType: 'video',
+    enabled: useInterleavedFeed,
+  });
+
+  // Fetch images
+  const imagesFeed = useUnifiedFeed({
+    ...commonParams,
+    postType: 'feed-images',
+    enabled: useInterleavedFeed,
+  });
+
+  // Fetch text posts
+  const textsFeed = useUnifiedFeed({
+    ...commonParams,
+    postType: 'feed-simple',
+    enabled: useInterleavedFeed,
+  });
+
+  // Fallback: single unified feed when post type filter is active OR using global sort
+  const singleFeed = useUnifiedFeed({
+    ...commonParams,
+    postType: selectedPostType === 'all' ? undefined : selectedPostType,
+    enabled: !useInterleavedFeed,
+  });
+
+  // Classics feed no longer needed (trending removed)
+  const classicsFeed = { data: undefined } as any;
+
+  // Fetch latest videos for the Scroll carousel using unified feed
+  const scrollFeed = useUnifiedFeed({
+    limit: 10,
+    postType: 'video',
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    status: 'minted',
+  });
+
+  // Map unified feed items to ShortVideo format
   const shorts = useMemo((): ShortVideo[] => {
-    if (!shortsData?.pages) return [];
-    const allNFTs = shortsData.pages.flatMap(page => page.data || []);
-    return allNFTs.slice(0, 10).map(mapNFTToShortVideo);
-  }, [shortsData]);
+    if (!scrollFeed.data?.pages) return [];
+    const allItems = scrollFeed.data.pages.flatMap(page => page.items || []);
+    return allItems.slice(0, 10).map((item) => {
+      const id = String(item.tokenId);
+      const minterAddress = item.minter || '';
+      const avatarUrl = item.minterAvatarUrl
+        ? (item.minterAvatarUrl.startsWith('http') ? item.minterAvatarUrl : buildAvatarUrl(minterAddress, item.minterAvatarUrl))
+        : undefined;
 
-  // Helper to determine content type from NFT
-  const getContentType = (nft: DeHubNFT): 'video' | 'image' => {
-    const postType = (nft as any).postType || '';
-    if (postType === 'feed-images' || postType.includes('image')) return 'image';
-    return 'video';
-  };
-
-  // Map API data to feed items - COMBINE all NFTs first, then sort together
-  const items = useMemo((): UnifiedFeedItem[] => {
-    // Get raw NFTs and tag them with their source type
-    const rawVideoNFTs: DeHubNFT[] = videosData?.pages?.flatMap(page => page.data || []) || [];
-    const rawImageNFTs: DeHubNFT[] = imagesData?.pages?.flatMap(page => page.data || []) || [];
-    
-    // Combine ALL NFTs into a single array
-    const allNFTs: DeHubNFT[] = [...rawVideoNFTs, ...rawImageNFTs];
-    
-    // Apply date filtering to the combined array
-    const dateFiltered = filterByDate(allNFTs, selectedDate.value);
-    
-    // Apply content type filtering (PPV, W2E, Locked)
-    const contentFiltered = filterByContentType(dateFiltered, contentFilters);
-    
-    // Apply sorting to the COMBINED filtered results - this ensures global ordering
-    const sortedNFTs = applySorting(contentFiltered, selectedSort.value);
-    
-    // Map each NFT to its correct type based on postType
-    return sortedNFTs.map((nft, index) => {
-      const contentType = getContentType(nft);
-      if (contentType === 'image') {
-        return {
-          type: 'image' as const,
-          data: mapNFTToImagePost(nft, index),
-        };
-      }
       return {
-        type: 'video' as const,
-        data: mapNFTToVideoItem(nft, index),
+        id,
+        type: 'short' as const,
+        username: item.minterDisplayName || item.minterUsername || 'user',
+        verified: (item as any).minterUser?.isVerified || false,
+        avatar: avatarUrl || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
+        likes: String(item.totalVotes?.for || 0),
+        thumbnail: getMediaUrl(item.imageUrl) || '',
+        videoUrl: item.videoUrl
+          ? (item.videoUrl.startsWith('http') ? item.videoUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.videoUrl}`)
+          : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4`,
+        description: item.description || item.name || '',
+        sound: 'Original Sound',
+        comments: formatCount(item.commentCount || 0),
+        shares: '0',
+        views: formatCount(item.views || 0),
+        creatorUsername: item.minterUsername || 'user',
+        creatorId: minterAddress,
+        displayName: item.minterDisplayName || undefined,
       };
     });
-  }, [videosData, imagesData, selectedSort.value, selectedDate.value, contentFilters]);
+  }, [scrollFeed.data]);
+
+  // Fetch curated radio stations for carousel
+  const { data: radioStations = [] } = useQuery({
+    queryKey: ['radio-stations-curated'],
+    queryFn: () => getCuratedCarouselStations(),
+    staleTime: 10 * 60 * 1000,
+  });
+
+  // Fetch pinned post if provided
+  const { data: pinnedPost, isLoading: isPinnedLoading } = useQuery({
+    queryKey: ['pinned-post', pinnedPostId],
+    queryFn: () => getNFTInfo(pinnedPostId!),
+    enabled: !!pinnedPostId,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Convert pinned post (DeHubNFT) to feed item format
+  const pinnedItem = useMemo((): FeedItemType | null => {
+    if (!pinnedPost) return null;
+    
+    const id = String(pinnedPost.tokenId);
+    const views = pinnedPost.views || pinnedPost.view_count || 0;
+    const timeAgo = pinnedPost.createdAt ? formatTimeAgo(pinnedPost.createdAt) : 'Just now';
+    
+    const nftPostType = pinnedPost.postType || 'video';
+    
+    if (nftPostType === 'image' || (pinnedPost.imageUrls && pinnedPost.imageUrls.length > 0 && !pinnedPost.videoUrl)) {
+      const imageUrls = buildFeedImageUrls(pinnedPost.imageUrls);
+      const image = imageUrls?.[0] || buildImageUrl(pinnedPost.tokenId, pinnedPost.imageUrl);
+      const avatar = pinnedPost.minterAvatarUrl 
+        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || 'user'
+        : 'user';
+      
+      const imagePost: ImagePost = {
+        id,
+        type: 'image',
+        username: pinnedPost.minterDisplayName || pinnedPost.mintername || 'unknown',
+        verified: false,
+        avatar,
+        image,
+        imageUrls,
+        title: pinnedPost.name,
+        description: pinnedPost.description,
+        likes: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
+        caption: pinnedPost.description || pinnedPost.name || '',
+        comments: pinnedPost.commentCount || pinnedPost.comment_count || 0,
+        views: formatViews(views),
+        timeAgo,
+        creatorId: pinnedPost.minter,
+        creatorUsername: pinnedPost.mintername,
+        isLiked: pinnedPost.isLiked ?? false,
+      };
+      return { type: 'image', data: imagePost };
+    } else if (pinnedPost.videoUrl || pinnedPost.media_url) {
+      const thumbnail = buildImageUrl(pinnedPost.tokenId, pinnedPost.imageUrl);
+      const videoUrl = buildVideoUrl(pinnedPost.tokenId);
+      const channelAvatar = pinnedPost.minterAvatarUrl 
+        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || 'user'
+        : 'user';
+      
+      const videoItem: VideoItem = {
+        id,
+        type: 'video',
+        thumbnail,
+        videoUrl,
+        duration: formatDuration(pinnedPost.videoDuration || pinnedPost.duration || 0),
+        title: pinnedPost.name || 'Untitled',
+        channel: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown Creator',
+        channelAvatar,
+        verified: false,
+        views: formatViews(views),
+        uploadedAgo: timeAgo,
+        creatorId: pinnedPost.minter,
+        creatorUsername: pinnedPost.mintername,
+        isLiked: pinnedPost.isLiked ?? false,
+        likeCount: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
+        dislikeCount: pinnedPost.totalVotes?.against || pinnedPost.dislike_count || 0,
+        commentCount: pinnedPost.commentCount || pinnedPost.comment_count || 0,
+        isPPV: pinnedPost.is_ppv ?? false,
+        isW2E: pinnedPost.is_w2e ?? false,
+        isLocked: pinnedPost.is_locked ?? false,
+      };
+      return { type: 'video', data: videoItem };
+    } else {
+      const avatarUrl = pinnedPost.minterAvatarUrl 
+        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || pinnedPost.minter
+        : pinnedPost.minter;
+      
+      const textPost: TextPost = {
+        id,
+        type: 'post',
+        author: {
+          id: pinnedPost.minter,
+          name: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown',
+          handle: pinnedPost.mintername || pinnedPost.minter,
+          avatarSeed: avatarUrl,
+          verified: false,
+        },
+        content: pinnedPost.description || pinnedPost.name || '',
+        createdAt: timeAgo,
+        views: formatViews(views),
+        stats: {
+          comments: pinnedPost.commentCount || pinnedPost.comment_count || 0,
+          reposts: 0,
+          likes: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
+        },
+      };
+      return { type: 'post', data: textPost };
+    }
+  }, [pinnedPost]);
+
+  // ============================================================================
+  // INTERLEAVED ITEMS (from three separate feeds)
+  // ============================================================================
+
+  const interleavedItems = useMemo((): FeedItemType[] => {
+    if (!useInterleavedFeed) return [];
+    
+    // Extract all items from each feed
+    const allVideos = videosFeed.data?.pages.flatMap(page => page.items || []) || [];
+    const allImages = imagesFeed.data?.pages.flatMap(page => page.items || []) || [];
+    const allTexts = textsFeed.data?.pages.flatMap(page => page.items || []) || [];
+    
+    // Filter out pinned post from all feeds
+    const filterPinned = (items: any[]) => 
+      pinnedPostId ? items.filter(item => String(item.tokenId) !== String(pinnedPostId)) : items;
+    
+    const filteredVideos = filterPinned(allVideos);
+    const filteredImages = filterPinned(allImages);
+    const filteredTexts = filterPinned(allTexts);
+    
+    // Map to component types
+    const mappedVideos = filteredVideos.map((item, i) => mapToVideoItem(item, i));
+    const mappedImages = filteredImages.map((item, i) => mapToImagePost(item, i));
+    const mappedTexts = filteredTexts.map((item, i) => mapToTextPost(item, i));
+    
+    // Interleave according to pattern
+    const interleaved = interleaveByPattern(mappedVideos, mappedImages, mappedTexts, CONTENT_PATTERN);
+    
+    // Convert to FeedItemType
+    return interleaved.map(item => {
+      switch (item.type) {
+        case 'video':
+          return { type: 'video' as const, data: item.data };
+        case 'image':
+          return { type: 'image' as const, data: item.data };
+        case 'text':
+          return { type: 'post' as const, data: item.data };
+      }
+    });
+  }, [useInterleavedFeed, videosFeed.data, imagesFeed.data, textsFeed.data, pinnedPostId]);
+
+  // ============================================================================
+  // SINGLE FEED ITEMS (when post type filter is active OR global sort mode)
+  // ============================================================================
+
+  const singleFeedItems = useMemo((): FeedItemType[] => {
+    if (useInterleavedFeed || !singleFeed.data?.pages) return [];
+    
+    let allItems = singleFeed.data.pages.flatMap(page => page.items || []);
+    
+    // Filter out pinned post
+    const filteredItems = pinnedPostId 
+      ? allItems.filter(item => String(item.tokenId) !== String(pinnedPostId))
+      : allItems;
+    
+    // Map to feed item types
+    const mapItem = (item: any, index: number): FeedItemType => {
+      const inferredType = item.postType || (
+        item.videoUrl ? 'video' :
+        (item.imageUrls && item.imageUrls.length > 0) ? 'feed-images' :
+        'feed-simple'
+      );
+      
+      switch (inferredType) {
+        case 'feed-images':
+          return { type: 'image', data: mapToImagePost(item, index) };
+        case 'feed-simple':
+          return { type: 'post', data: mapToTextPost(item, index) };
+        case 'video':
+        default:
+          return { type: 'video', data: mapToVideoItem(item, index) };
+      }
+    };
+    
+    return filteredItems.map(mapItem);
+  }, [useInterleavedFeed, singleFeed.data, pinnedPostId, selectedSort.value]);
+
+  // Final items to render with creator diversity limiting
+  // This ensures users see content from a variety of creators (max 2 per creator in view)
+  const rawItems = useInterleavedFeed ? interleavedItems : singleFeedItems;
+  
+  const items = useMemo(() => {
+    let filteredItems = rawItems;
+    
+    // For "Following" mode, filter to only show posts from followed creators
+    if (selectedSort.value === 'following' && followingSet.size > 0) {
+      filteredItems = rawItems.filter((item) => {
+        let creatorId: string | undefined;
+        switch (item.type) {
+          case 'post':
+            creatorId = item.data.author?.id;
+            break;
+          case 'video':
+            creatorId = item.data.creatorId;
+            break;
+          case 'image':
+            creatorId = item.data.creatorId;
+            break;
+          default:
+            return true; // Keep shorts bundles
+        }
+        return creatorId ? followingSet.has(creatorId.toLowerCase()) : false;
+      });
+    }
+    
+    return limitCreatorDiversity(
+      filteredItems,
+      DEFAULT_MAX_POSTS_PER_CREATOR,
+      (item) => {
+        // Extract creator ID based on item type
+        switch (item.type) {
+          case 'post':
+            return item.data.author?.id;
+          case 'video':
+            return item.data.creatorId;
+          case 'image':
+            return item.data.creatorId;
+          case 'shorts':
+            // Shorts are a bundle, no single creator
+            return undefined;
+          default:
+            return undefined;
+        }
+      },
+      DEFAULT_MIN_CREATOR_SPACING
+    );
+  }, [rawItems, selectedSort.value, followingSet]);
+
+  // ============================================================================
+  // INFINITE SCROLL
+  // ============================================================================
+
+  // Determine if any feed has more content
+  const hasNextPage = useInterleavedFeed 
+    ? (videosFeed.hasNextPage || imagesFeed.hasNextPage || textsFeed.hasNextPage)
+    : singleFeed.hasNextPage;
+
+  const isFetchingNextPage = useInterleavedFeed
+    ? (videosFeed.isFetchingNextPage || imagesFeed.isFetchingNextPage || textsFeed.isFetchingNextPage)
+    : singleFeed.isFetchingNextPage;
+
+  const isLoading = useInterleavedFeed
+    ? (videosFeed.isLoading || imagesFeed.isLoading || textsFeed.isLoading)
+    : singleFeed.isLoading;
+
+  const isError = useInterleavedFeed
+    ? (videosFeed.isError || imagesFeed.isError || textsFeed.isError)
+    : singleFeed.isError;
+
+  const refetch = useCallback(() => {
+    if (useInterleavedFeed) {
+      videosFeed.refetch();
+      imagesFeed.refetch();
+      textsFeed.refetch();
+    } else {
+      singleFeed.refetch();
+    }
+  }, [useInterleavedFeed, videosFeed, imagesFeed, textsFeed, singleFeed]);
+
+  // Fetch next page from all feeds that have more content
+  const fetchNextPage = useCallback(() => {
+    const promises: Promise<any>[] = [];
+    
+    if (useInterleavedFeed) {
+      if (videosFeed.hasNextPage && !videosFeed.isFetchingNextPage) {
+        promises.push(videosFeed.fetchNextPage());
+      }
+      if (imagesFeed.hasNextPage && !imagesFeed.isFetchingNextPage) {
+        promises.push(imagesFeed.fetchNextPage());
+      }
+      if (textsFeed.hasNextPage && !textsFeed.isFetchingNextPage) {
+        promises.push(textsFeed.fetchNextPage());
+      }
+    } else {
+      if (singleFeed.hasNextPage && !singleFeed.isFetchingNextPage) {
+        promises.push(singleFeed.fetchNextPage());
+      }
+    }
+    
+    return Promise.all(promises);
+  }, [useInterleavedFeed, videosFeed, imagesFeed, textsFeed, singleFeed]);
 
   // Infinite scroll observer
   useEffect(() => {
-    if (!loaderRef.current) return;
-    
-    const hasNextPage = hasNextVideos || hasNextImages;
-    const isFetchingNextPage = isFetchingNextVideos || isFetchingNextImages;
-
-    if (!hasNextPage) return;
+    if (!loaderRef.current || !hasNextPage) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isFetchingNextPage) {
-          if (hasNextVideos) fetchNextVideos();
-          if (hasNextImages) fetchNextImages();
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingRef.current) {
+          isFetchingRef.current = true;
+          fetchNextPage().finally(() => {
+            isFetchingRef.current = false;
+          });
         }
       },
       { threshold: 0.1, rootMargin: '100px' }
@@ -306,50 +863,108 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasNextVideos, hasNextImages, isFetchingNextVideos, isFetchingNextImages, fetchNextVideos, fetchNextImages]);
+  }, [hasNextPage, fetchNextPage]);
 
-  // Derived loading states
-  const isApiLoading = isVideosLoading || isImagesLoading;
-  const isError = isVideosError || isImagesError;
-  const error = videosError;
-  const hasNextPage = hasNextVideos || hasNextImages;
-  const isFetchingNextPage = isFetchingNextVideos || isFetchingNextImages;
+  // ============================================================================
+  // RENDER HELPERS
+  // ============================================================================
 
-  const renderFeedItem = (item: UnifiedFeedItem, index: number) => {
-    switch (item.type) {
-      case 'post':
-        return <PostCard key={`post-${item.data.id}-${index}`} post={item.data} />;
-      case 'video':
-        return <VideoCard key={`video-${item.data.id}-${index}`} video={item.data} />;
-      case 'image':
-        return <ImageCard key={`image-${item.data.id}-${index}`} post={item.data} />;
-      case 'live':
-        return <LiveCard key={`live-${item.data.id}-${index}`} stream={item.data} />;
-      case 'shorts':
-        return <ShortsReel key={`shorts-${index}`} shorts={item.data} />;
-      default:
-        return null;
-    }
+  const renderFeedItem = (item: FeedItemType, index: number) => {
+    const card = (() => {
+      switch (item.type) {
+        case 'post':
+          return <PostCard key={`post-${item.data.id}`} post={item.data} />;
+        case 'video':
+          return <VideoCard key={`video-${item.data.id}`} video={item.data} />;
+        case 'image':
+          return <ImageCard key={`image-${item.data.id}`} post={item.data} />;
+        case 'shorts':
+          return <ShortsReel key={`shorts-${index}`} shorts={item.data} />;
+        default:
+          return null;
+      }
+    })();
+
+    // Wrap non-shorts items in a bento container
+    if (item.type === 'shorts' || !card) return card;
+
+    const key = item.type === 'post' ? `bento-post-${item.data.id}`
+              : item.type === 'video' ? `bento-video-${(item.data as VideoItem).id}`
+              : `bento-image-${(item.data as ImagePost).id}`;
+
+    return (
+      <div key={key} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+        {card}
+      </div>
+    );
   };
 
-  // Render feed items with shorts carousel inserted after every N posts
+  // Radio carousel component for home feed
+  const RadioCarouselSection = () => {
+    if (radioStations.length === 0) return null;
+    
+    return (
+      <div className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/[0.08] rounded-xl p-3">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-bold text-white flex items-center gap-2">
+            <Radio className="w-5 h-5" />
+            Radio Stations
+            <span className="text-zinc-500 font-normal text-sm">(50K)</span>
+          </h3>
+          <button className="text-zinc-400 text-sm hover:text-white flex items-center gap-1">
+            See all <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+        <div className="relative">
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black/40 to-transparent pointer-events-none z-10" />
+          <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
+            {radioStations.slice(0, 10).map((station) => (
+              <div key={station.stationuuid} className="flex-shrink-0 w-[280px]">
+                <RadioStationCard station={station} />
+              </div>
+            ))}
+          </SwipeableCarousel>
+        </div>
+      </div>
+    );
+  };
+
+  // Render feed items with shorts and radio carousels inserted
   const renderFeedWithShorts = () => {
     const elements: React.ReactNode[] = [];
     let shortsInserted = false;
+    let radioInserted = false;
+    let whoToFollowInserted = false;
 
     items.forEach((item, index) => {
       elements.push(renderFeedItem(item, index));
 
-      // Insert shorts carousel after every SHORTS_INSERT_INTERVAL posts
-      if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0) {
+      // Insert Who to Follow carousel after 3 posts (mobile/tablet only)
+      if ((index + 1) === 3 && !whoToFollowInserted) {
+        elements.push(
+          <MobileWhoToFollowCarousel key={`who-to-follow-${index}`} />
+        );
+        whoToFollowInserted = true;
+      }
+
+      // Insert shorts carousel after every SHORTS_INSERT_INTERVAL posts (5)
+      if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0 && !shortsInserted) {
         elements.push(
           <ShortsReel key={`shorts-carousel-${index}`} shorts={shorts} />
         );
         shortsInserted = true;
       }
+
+      // Insert radio carousel after RADIO_INSERT_AFTER posts (15)
+      if ((index + 1) === RADIO_INSERT_AFTER && radioStations.length > 0 && !radioInserted) {
+        elements.push(
+          <RadioCarouselSection key={`radio-carousel-${index}`} />
+        );
+        radioInserted = true;
+      }
     });
 
-    // If we have items but haven't inserted shorts yet (less than 6 items), add at the end
+    // If we have items but haven't inserted shorts yet (less than 5 items), add at the end
     if (items.length > 0 && items.length < SHORTS_INSERT_INTERVAL && shorts.length > 0 && !shortsInserted) {
       elements.push(
         <ShortsReel key="shorts-carousel-end" shorts={shorts} />
@@ -359,34 +974,61 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     return elements;
   };
 
-  const isLoading = isApiLoading || isRefreshing;
+  // Determine loading state
+  const hasQueryData = useInterleavedFeed
+    ? (videosFeed.data?.pages?.length || imagesFeed.data?.pages?.length || textsFeed.data?.pages?.length)
+    : (singleFeed.data?.pages?.length);
+  const hasCachedData = hasQueryData && items.length > 0;
+  const isLoadingState = !hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading));
 
-  const EmptyState = () => (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center mb-4">
-        <RefreshCw className="w-8 h-8 text-zinc-500" />
+  const { isAutoRetrying } = useAutoRetryFeed({
+    itemCount: items.length,
+    isLoading: isLoadingState,
+    isError,
+    refetch,
+  });
+
+  const EmptyState = () => {
+    // Custom message for Following feed
+    const isFollowingMode = selectedSort.value === 'following';
+    const hasNoFollowings = followingSet.size === 0;
+    
+    let title = 'No Content Yet';
+    let description = isError 
+      ? 'Unable to load feed. Please try again.'
+      : 'Be the first to share something amazing!';
+    
+    if (isFollowingMode) {
+      if (hasNoFollowings) {
+        title = 'No Followed Creators';
+        description = 'Follow some creators to see their posts here!';
+      } else {
+        title = 'No Posts Yet';
+        description = 'The creators you follow haven\'t posted anything recently.';
+      }
+    }
+    
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
+          <RefreshCw className="w-8 h-8 text-zinc-500" />
+        </div>
+        <h3 className="text-white font-semibold text-lg mb-2">{title}</h3>
+        <p className="text-zinc-400 text-sm max-w-xs mb-4">{description}</p>
+        <button 
+          onClick={refetch}
+          className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
+        >
+          Refresh
+        </button>
       </div>
-      <h3 className="text-white font-semibold text-lg mb-2">No Content Yet</h3>
-      <p className="text-zinc-400 text-sm max-w-xs mb-4">
-        {isError 
-          ? `Unable to load feed. ${error?.message || 'Please try again.'}`
-          : 'Be the first to share something amazing!'}
-      </p>
-      <button 
-        onClick={() => { refetchVideos(); refetchImages(); }}
-        className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
-      >
-        Refresh
-      </button>
-    </div>
-  );
+    );
+  };
 
   return (
-    <div className="p-2 sm:p-3 space-y-3">
-      {isLoading ? (
-        <div className="flex items-center justify-center py-32">
-          <Loader2 className="w-10 h-10 text-white animate-spin" />
-        </div>
+    <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
+      {(isLoadingState || isAutoRetrying) ? (
+        <HomeFeedSkeleton />
       ) : (
         <>
           {/* Filters */}
@@ -399,33 +1041,60 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
                 transition={{ duration: 0.25, ease: 'easeOut' }}
                 className="overflow-hidden"
               >
-                <div className="bg-zinc-900 rounded-2xl p-4 mb-3">
+                <div ref={bentoRef} data-no-swipe className="bg-zinc-900 rounded-2xl p-4 mb-3">
                   <SortFilterSection 
                     selectedSort={selectedSort} 
-                    onSortSelect={setSelectedSort}
+                    onSortSelect={handleSortSelect}
+                    selectedCategory={selectedCategory}
+                    onCategorySelect={setSelectedCategory}
+                    categories={categories}
                     selectedDate={selectedDate}
                     onDateSelect={setSelectedDate}
+                    selectedPostType={selectedPostType}
+                    onPostTypeSelect={setSelectedPostType}
                     contentFilters={contentFilters}
                     onContentFilterToggle={toggleContentFilter}
+                    onReset={() => {
+                      setSelectedSort(SORT_OPTIONS[0]);
+                      setSelectedCategory('all');
+                      setSelectedDate(DATE_FILTER_OPTIONS[0]);
+                      setSelectedPostType('all');
+                      resetContentFilters();
+                    }}
                   />
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          <StoriesBar users={storyUsers} />
+          <div className="pt-2">
+            <StoriesBar users={storyUsers} shorts={shorts} />
+          </div>
           
-          {items.length === 0 ? (
+          {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
           ) : (
-            <div key={`${selectedSort.value}-${selectedDate.value}`} className="space-y-3">
+            <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`} className="space-y-3">
+              {/* Render optimistic posts first (newly created, not yet minted) */}
+              {optimisticPosts.map((op) => {
+                const feedItem: FeedItemType = { 
+                  type: op.type, 
+                  data: op.data as any 
+                };
+                return renderFeedItem(feedItem, -999);
+              })}
+              
+              {/* Render pinned post if available */}
+              {pinnedItem && renderFeedItem(pinnedItem, -1)}
+              
+              {/* Rest of the feed */}
               {renderFeedWithShorts()}
               
               {/* Infinite scroll loader */}
               <div ref={loaderRef} className="py-4 flex justify-center">
                 {isFetchingNextPage && (
                   <div className="flex items-center gap-2 text-zinc-400">
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <div className="w-5 h-5 border-2 border-zinc-500 border-t-white rounded-full animate-spin" />
                     <span className="text-sm">Loading more...</span>
                   </div>
                 )}

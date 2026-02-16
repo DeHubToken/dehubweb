@@ -65,7 +65,7 @@ export function DraftsSheet({
       >
         <DrawerHeader className="relative pb-4 border-b border-white/10 shrink-0 px-0">
           <div className="flex items-center justify-between">
-            <button onClick={onClose} className="p-2 -ml-2 hover:bg-white/10 rounded-full transition-colors">
+            <button onClick={onClose} className="p-2 -ml-2 hover:bg-white/10 rounded-xl transition-colors">
               <X className="w-5 h-5 text-zinc-400" />
             </button>
             <DrawerTitle className="text-white font-semibold absolute left-1/2 -translate-x-1/2">
@@ -75,7 +75,7 @@ export function DraftsSheet({
               onClick={handleSave}
               disabled={!canSave}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all",
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all",
                 canSave
                   ? "bg-white/10 text-white border border-white/20 hover:bg-white/20"
                   : "bg-white/5 text-zinc-500 border border-white/10 cursor-not-allowed"
@@ -90,7 +90,7 @@ export function DraftsSheet({
         <div className="relative flex-1 overflow-y-auto pt-4">
           {drafts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
+              <div className="w-16 h-16 rounded-xl bg-white/5 flex items-center justify-center mb-4">
                 <FileText className="w-8 h-8 text-zinc-500" />
               </div>
               <p className="text-zinc-400 font-medium">No drafts yet</p>
@@ -148,7 +148,7 @@ export function DraftsSheet({
                           e.stopPropagation();
                           handleDelete(draft.id);
                         }}
-                        className="p-2 rounded-full text-zinc-500 hover:text-red-400 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all"
+                        className="p-2 rounded-xl text-zinc-500 hover:text-red-400 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>

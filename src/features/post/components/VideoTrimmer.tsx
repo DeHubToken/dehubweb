@@ -279,7 +279,7 @@ export function VideoTrimmer({
           <span className="text-white font-semibold">Trim Video</span>
           <button
             onClick={handleApply}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-white text-xs font-medium transition-all duration-300 hover:scale-105
               bg-white/10 backdrop-blur-xl border border-white/20
               hover:bg-white/20 hover:border-white/40"
           >
@@ -295,7 +295,7 @@ export function VideoTrimmer({
             <div className="flex items-center gap-2 mb-4 p-3 rounded-xl
               bg-gradient-to-br from-white/5 via-white/[0.02] to-transparent
               border border-white/10">
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
                 <Film className="w-4 h-4 text-white" />
               </div>
               <div className="min-w-0 flex-1">
@@ -323,13 +323,13 @@ export function VideoTrimmer({
               className="absolute inset-0 flex items-center justify-center group"
             >
               <div className={cn(
-                "w-14 h-14 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center transition-all",
+                "w-14 h-14 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 transition-all",
                 isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
               )}>
                 {isPlaying ? (
-                  <Pause className="w-7 h-7 text-white" />
+                  <Pause className="w-7 h-7 text-white fill-white" />
                 ) : (
-                  <Play className="w-7 h-7 text-white fill-white" />
+                  <Play className="w-7 h-7 text-white fill-white ml-0.5" />
                 )}
               </div>
             </button>
@@ -371,7 +371,7 @@ export function VideoTrimmer({
             <span className="text-zinc-400">
               Select trim range
             </span>
-            <span className="font-medium px-2 py-0.5 rounded-full text-xs bg-white/10 text-white border border-white/20">
+            <span className="font-medium px-2 py-0.5 rounded-xl text-xs bg-white/10 text-white border border-white/20">
               {formatTime(selectionDuration)} selected
             </span>
           </div>
@@ -472,7 +472,7 @@ export function VideoTrimmer({
                   key={speed}
                   onClick={() => setPlaybackSpeed(speed)}
                   className={cn(
-                    "px-2 py-1 rounded-full text-xs font-medium transition-all",
+                    "px-2 py-1 rounded-lg text-xs font-medium transition-all",
                     playbackSpeed === speed
                       ? 'bg-white text-black'
                       : 'bg-white/10 text-white hover:bg-white/20'

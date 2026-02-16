@@ -6,17 +6,24 @@ import { LinkPreviews } from './LinkPreviews';
 import type { MediaFile, AudioFile, LiveMode } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import { useEffect, useCallback, useRef, useState } from 'react';
-import { Upload, Calendar, Save, Clock, Mic, Square } from 'lucide-react';
+import { Upload, Calendar, Save, Clock, Mic, Square, Plus, X } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ScheduleSheet } from './ScheduleSheet';
 import { DraftsSheet, type Draft } from './DraftsSheet';
 import { format } from 'date-fns';
 import { UserMentionDropdown, searchUsers, type MentionUser } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
+import { useAuth } from '@/contexts/AuthContext';
+import { buildAvatarUrl } from '@/lib/media-url';
+import { ChainSelector, type ChainId } from '@/components/app/ChainSelector';
 
 interface PostContentAreaProps {
   text: string;
   setText: (text: string) => void;
+  description: string;
+  setDescription: (description: string) => void;
+  showDescription: boolean;
+  setShowDescription: (show: boolean) => void;
   editorRef: React.RefObject<HTMLDivElement>;
   media: MediaFile[];
   onRemoveMedia: (index: number) => void;
@@ -48,6 +55,9 @@ interface PostContentAreaProps {
   isRecording?: boolean;
   recordingTime?: number;
   onStopRecording?: () => void;
+  // Chain selector props
+  chainId: ChainId;
+  onChainChange: (chainId: ChainId) => void;
 }
 
 // URL regex pattern - create fresh each time to avoid state issues with global flag
@@ -59,7 +69,7 @@ function createLinkChip(url: string): HTMLSpanElement {
   chip.setAttribute('data-link-chip', 'true');
   chip.setAttribute('data-url', url);
   chip.contentEditable = 'false';
-  chip.className = 'inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 bg-primary/20 text-primary rounded-full text-sm cursor-pointer hover:bg-primary/30 transition-colors';
+  chip.className = 'inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 bg-primary/20 text-primary rounded-lg text-sm cursor-pointer hover:bg-primary/30 transition-colors';
   chip.innerHTML = `🔗`;
   chip.title = url;
   chip.onclick = (e) => {
@@ -73,6 +83,10 @@ function createLinkChip(url: string): HTMLSpanElement {
 export function PostContentArea({
   text,
   setText,
+  description,
+  setDescription,
+  showDescription,
+  setShowDescription,
   editorRef,
   media,
   onRemoveMedia,
@@ -102,6 +116,8 @@ export function PostContentArea({
   isRecording,
   recordingTime,
   onStopRecording,
+  chainId,
+  onChainChange,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
   const isProcessingLinks = useRef(false);
@@ -109,6 +125,13 @@ export function PostContentArea({
   const dragCounterRef = useRef(0);
   const [showSchedule, setShowSchedule] = useState(false);
   const [showDrafts, setShowDrafts] = useState(false);
+  
+  // Get user info for avatar - exactly like DesktopSidebar
+  const { user } = useAuth();
+  const displayName = user?.displayName || user?.username || 'Anonymous';
+  const userAvatarUrl = user?.avatarImageUrl && user?.address
+    ? buildAvatarUrl(user.address, user.avatarImageUrl)
+    : null;
   
   // Mention hook - handles @mention detection and dropdown
   const mention = useMention({
@@ -257,31 +280,53 @@ export function PostContentArea({
     }
   }, [editorRef, saveCursorPosition, restoreCursorPosition]);
 
-  // Handle input changes
+  // Handle input changes - preserve line breaks from contentEditable
   const handleInput = useCallback((e?: React.FormEvent<HTMLDivElement>) => {
     const editor = e?.currentTarget || editorRef.current;
     if (!editor) return;
     
-    // Get plain text including URLs from chips
+    // Get plain text including URLs from chips and preserving line breaks
     let plainText = '';
-    const walker = document.createTreeWalker(
-      editor,
-      NodeFilter.SHOW_ALL,
-      null
-    );
     
-    while (walker.nextNode()) {
-      const node = walker.currentNode;
+    const processNode = (node: Node, isFirst: boolean = false) => {
       if (node.nodeType === Node.TEXT_NODE) {
-        plainText += node.textContent;
+        plainText += node.textContent || '';
       } else if (node.nodeType === Node.ELEMENT_NODE) {
         const el = node as HTMLElement;
+        const tagName = el.tagName.toUpperCase();
+        
+        // Handle link chips specially - skip their children
         if (el.hasAttribute('data-link-chip')) {
           plainText += el.getAttribute('data-url') || '';
-          // Skip children of link chip
-          walker.nextSibling();
+          return;
+        }
+        
+        // BR elements become newlines
+        if (tagName === 'BR') {
+          plainText += '\n';
+          return;
+        }
+        
+        // Block elements (DIV, P) add newline before (except first)
+        const isBlock = tagName === 'DIV' || tagName === 'P';
+        if (isBlock && !isFirst && plainText.length > 0 && !plainText.endsWith('\n')) {
+          plainText += '\n';
+        }
+        
+        // Process children recursively
+        let first = true;
+        for (const child of el.childNodes) {
+          processNode(child, first && isFirst);
+          first = false;
         }
       }
+    };
+    
+    // Process all children of editor
+    let first = true;
+    for (const child of editor.childNodes) {
+      processNode(child, first);
+      first = false;
     }
     
     setText(plainText);
@@ -401,14 +446,22 @@ export function PostContentArea({
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
-        {/* Schedule/Drafts buttons - top right corner */}
+        {/* Mobile: Avatar in absolute top left */}
+        <div className="absolute top-3 left-4 z-10 sm:hidden">
+          <Avatar className="w-8 h-8 rounded-xl">
+            <AvatarImage src={userAvatarUrl || undefined} className="rounded-xl" />
+            <AvatarFallback className="rounded-xl">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
+          </Avatar>
+        </div>
+
+        {/* Schedule/Drafts/Chain buttons - top right corner */}
         <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
           {/* Schedule indicator */}
           {scheduledDate && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-400 text-xs font-medium"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-400 text-xs font-medium"
             >
               <Clock className="w-3 h-3" />
               {format(scheduledDate, 'MMM d, h:mm a')}
@@ -422,6 +475,13 @@ export function PostContentArea({
             </span>
           )}
 
+          {/* Chain selector button */}
+          <ChainSelector
+            selectedChainId={chainId}
+            onChainChange={onChainChange}
+            variant="icon"
+          />
+
           {/* Schedule button */}
           <Tooltip>
             <TooltipTrigger asChild>
@@ -430,7 +490,7 @@ export function PostContentArea({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={cn(
-                  "w-9 h-9 rounded-full flex items-center justify-center transition-all",
+                  "w-9 h-9 rounded-xl flex items-center justify-center transition-all",
                   "bg-white/10 backdrop-blur-xl border border-white/20",
                   "hover:bg-white/20 hover:border-white/40",
                   scheduledDate && "bg-amber-500/20 border-amber-500/40"
@@ -452,7 +512,7 @@ export function PostContentArea({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={cn(
-                  "w-9 h-9 rounded-full flex items-center justify-center transition-all relative",
+                  "w-9 h-9 rounded-xl flex items-center justify-center transition-all relative",
                   "bg-white/10 backdrop-blur-xl border border-white/20",
                   "hover:bg-white/20 hover:border-white/40"
                 )}
@@ -515,7 +575,7 @@ export function PostContentArea({
                 onClick={onStopRecording}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-black text-sm font-medium hover:bg-white/90 transition-colors ml-auto"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10 text-sm font-medium transition-colors ml-auto"
               >
                 <Square className="w-3 h-3 fill-current" />
                 Stop
@@ -523,12 +583,9 @@ export function PostContentArea({
             </motion.div>
           )}
         </AnimatePresence>
-        {/* Mobile: Avatar in top left, below buttons row */}
-        <div className="flex items-start gap-3 sm:hidden mb-2 mt-8">
-          <Avatar className="w-8 h-8 flex-shrink-0">
-            <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" />
-            <AvatarFallback>U</AvatarFallback>
-          </Avatar>
+        {/* Mobile: Text input below avatar (avatar is absolute positioned) */}
+        <div className="flex flex-col sm:hidden mt-12">
+          {/* Title input */}
           <div
             ref={editorRef}
             contentEditable
@@ -545,19 +602,20 @@ export function PostContentArea({
                 }
               }
             }}
-            data-placeholder={hasVideo ? "Add a caption..." : "What's happening?"}
-            className="flex-1 bg-transparent text-white text-base resize-none outline-none min-h-[48px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 empty:before:pointer-events-none"
+            data-placeholder={hasVideo ? "Add a title..." : "What's happening?"}
+            className="bg-transparent text-white text-base resize-none outline-none min-h-[48px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 empty:before:pointer-events-none"
             style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
           />
         </div>
 
         {/* Desktop: Avatar + text side by side */}
         <div className="hidden sm:flex gap-3">
-          <Avatar className="w-10 h-10 flex-shrink-0">
-            <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" />
-            <AvatarFallback>U</AvatarFallback>
+          <Avatar className="w-10 h-10 flex-shrink-0 rounded-xl">
+            <AvatarImage src={userAvatarUrl || undefined} className="rounded-xl" />
+            <AvatarFallback className="rounded-xl">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
+            {/* Title input */}
             <div
               contentEditable
               onInput={handleInput}
@@ -573,8 +631,8 @@ export function PostContentArea({
                   }
                 }
               }}
-              data-placeholder={hasVideo ? "This first line is used for thumbnail titles..." : "What's happening?"}
-              className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[92px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
+              data-placeholder={hasVideo ? "Add a title..." : "What's happening?"}
+              className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[60px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
             />
           </div>
@@ -632,13 +690,7 @@ export function PostContentArea({
                   {destinations.map(dest => (
                     <span
                       key={dest}
-                      className={cn(
-                        "text-xs px-1.5 py-0.5 rounded-full",
-                        dest === 'Shorts' ? 'bg-emerald-500/20 text-emerald-400' :
-                        dest === 'Live' ? 'bg-red-500/20 text-red-400' :
-                        dest === 'Music' ? 'bg-purple-500/20 text-purple-400' :
-                        'bg-zinc-800 text-zinc-400'
-                      )}
+                      className="text-xs px-1.5 py-0.5 rounded-lg bg-white/10 text-zinc-300"
                     >
                       {dest}
                     </span>

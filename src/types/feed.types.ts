@@ -28,6 +28,8 @@ export interface ContentBadge {
 export interface BaseFeedItem {
   id: string;
   createdAt?: string;
+  /** Whether this is an optimistic (processing) post not yet minted */
+  isOptimistic?: boolean;
 }
 
 /**
@@ -37,11 +39,19 @@ export interface TextPost extends BaseFeedItem {
   type: 'post';
   author: User;
   content: string;
+  /** Formatted view count string (e.g., "1.2K") */
+  views?: string;
+  /** Mint status: 'minted' | 'signed' (pending) */
+  status?: 'minted' | 'signed' | string;
   stats: {
     comments: number;
     reposts: number;
     likes: number;
   };
+  /** Whether the current user has liked this item */
+  isLiked?: boolean;
+  /** Whether the current user has disliked this item */
+  isDisliked?: boolean;
 }
 
 /**
@@ -51,13 +61,20 @@ export interface VideoItem extends BaseFeedItem {
   type: 'video';
   thumbnail: string;
   videoUrl?: string;
+  /** Formatted duration string (e.g., "1:23") */
   duration: string;
+  /** Raw duration in seconds for caching/filtering */
+  durationSeconds?: number;
   title: string;
+  /** Video description/body text */
+  description?: string;
   channel: string;
   channelAvatar: string;
   verified: boolean;
   views: string;
   uploadedAgo: string;
+  /** Mint status: 'minted' | 'signed' (pending) */
+  status?: 'minted' | 'signed' | string;
   /** Creator's user ID for navigation */
   creatorId?: string;
   /** Creator's username for URL-based navigation */
@@ -82,6 +99,18 @@ export interface VideoItem extends BaseFeedItem {
   isW2E?: boolean;
   /** Whether content is subscriber-only locked */
   isLocked?: boolean;
+  /** Locked: price to unlock */
+  lockedPrice?: number;
+  /** Locked: currency (DHB, USDC) */
+  lockedCurrency?: string;
+  /** Bounty: number of viewers to reward */
+  bountyViews?: number;
+  /** Bounty: number of commenters to reward */
+  bountyComments?: number;
+  /** Bounty: total reward amount */
+  bountyAmount?: number;
+  /** Bounty: reward currency (DHB, USDC) */
+  bountyCurrency?: string;
 }
 
 /**
@@ -104,6 +133,8 @@ export interface ImagePost extends BaseFeedItem {
   /** @deprecated Use title/description instead */
   caption: string;
   comments: number;
+  /** Mint status: 'minted' | 'signed' (pending) */
+  status?: 'minted' | 'signed' | string;
   /** Formatted view count string (e.g., "1.2K") */
   views: string;
   timeAgo: string;
@@ -115,6 +146,28 @@ export interface ImagePost extends BaseFeedItem {
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
   isDisliked?: boolean;
+  /** Whether content is pay-per-view */
+  isPPV?: boolean;
+  /** PPV price amount */
+  ppvPrice?: number;
+  /** PPV currency (e.g., "USDC", "DHB") */
+  ppvCurrency?: string;
+  /** Whether content is watch-to-earn/bounty */
+  isW2E?: boolean;
+  /** Whether content is subscriber-only locked */
+  isLocked?: boolean;
+  /** Locked: price to unlock */
+  lockedPrice?: number;
+  /** Locked: currency (DHB, USDC) */
+  lockedCurrency?: string;
+  /** Bounty: number of viewers to reward */
+  bountyViews?: number;
+  /** Bounty: number of commenters to reward */
+  bountyComments?: number;
+  /** Bounty: total reward amount */
+  bountyAmount?: number;
+  /** Bounty: reward currency (DHB, USDC) */
+  bountyCurrency?: string;
 }
 
 /**
@@ -130,6 +183,8 @@ export interface LiveStream extends BaseFeedItem {
   thumbnail: string;
   tags: string[];
   isLive: boolean;
+  /** HLS playback URL (.m3u8) */
+  playbackUrl?: string;
   /** Creator's user ID for navigation */
   creatorId?: string;
   /** Creator's username for URL-based navigation */
@@ -147,6 +202,8 @@ export interface ShortVideo extends BaseFeedItem {
   type: 'short';
   username: string;
   verified: boolean;
+  /** Creator's avatar URL */
+  avatar?: string;
   likes: string;
   thumbnail: string;
   videoUrl: string;
@@ -154,10 +211,18 @@ export interface ShortVideo extends BaseFeedItem {
   sound?: string;
   comments?: string;
   shares?: string;
+  /** Formatted view count string (e.g., "1.2K") */
+  views?: string;
   /** Creator's user ID for navigation */
   creatorId?: string;
   /** Creator's username for URL-based navigation */
   creatorUsername?: string;
+  /** Creator's display name */
+  displayName?: string;
+  /** Whether the current user has liked this item */
+  isLiked?: boolean;
+  /** Whether the current user has disliked this item */
+  isDisliked?: boolean;
 }
 
 /**

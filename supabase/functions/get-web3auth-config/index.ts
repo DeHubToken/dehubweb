@@ -13,7 +13,7 @@ serve(async (req) => {
 
   try {
     const clientId = Deno.env.get('WEB3AUTH_CLIENT_ID');
-    
+
     if (!clientId) {
       return new Response(
         JSON.stringify({ error: 'Web3Auth client ID not configured' }),
@@ -21,8 +21,24 @@ serve(async (req) => {
       );
     }
 
+    // Aggregate verifier config (optional — only returned if env vars are set)
+    const aggregateVerifier = Deno.env.get('WEB3AUTH_AGGREGATE_VERIFIER') || null;
+    const googleSubVerifier = Deno.env.get('WEB3AUTH_GOOGLE_SUB_VERIFIER') || null;
+    const emailSubVerifier = Deno.env.get('WEB3AUTH_EMAIL_SUB_VERIFIER') || null;
+    const googleClientId = Deno.env.get('GOOGLE_OAUTH_CLIENT_ID') || null;
+
+    const response: Record<string, unknown> = { clientId };
+
+    // Only include aggregate config if all required vars are set
+    if (aggregateVerifier && googleSubVerifier && emailSubVerifier && googleClientId) {
+      response.aggregateVerifier = aggregateVerifier;
+      response.googleSubVerifier = googleSubVerifier;
+      response.emailSubVerifier = emailSubVerifier;
+      response.googleClientId = googleClientId;
+    }
+
     return new Response(
-      JSON.stringify({ clientId }),
+      JSON.stringify(response),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error: unknown) {

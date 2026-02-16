@@ -11,14 +11,16 @@
  */
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { useNavigate } from 'react-router-dom';
+import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
+import { formatTimeAgo } from '@/lib/feed-utils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, ChevronDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,7 +30,8 @@ import {
 import { TranslatableText } from '../TranslatableText';
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
-import { getNFTComments, postComment, type ApiCommentResponse } from '@/lib/api/dehub';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { getNFTComments, postComment, toggleCommentLike, editComment, addCommentWithImage, uploadChatImage, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 
 // ============================================================================
@@ -43,11 +46,12 @@ export interface VoiceNote {
 export interface Comment {
   id: string;
   username: string;
-  avatar: string;
+  avatar?: string;
   text: string;
   likes: number;
   dislikes: number;
   timeAgo: string;
+  createdAt: Date; // For sorting
   isLiked?: boolean;
   isDisliked?: boolean;
   voiceNote?: VoiceNote;
@@ -60,45 +64,39 @@ interface CommentsSectionProps {
   onClose: () => void;
 }
 
-// ============================================================================
-// HELPERS
-// ============================================================================
-
-function formatTimeAgo(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  
-  if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins}m ago`;
-  
-  const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}h ago`;
-  
-  const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 7) return `${diffDays}d ago`;
-  
-  const diffWeeks = Math.floor(diffDays / 7);
-  return `${diffWeeks}w ago`;
-}
+// formatTimeAgo is now imported from @/lib/feed-utils
 
 function mapApiComment(apiComment: ApiCommentResponse): Comment {
+  const address = apiComment.address;
+  // Use centralized utility for avatar field extraction
+  const rawAvatarPath = extractAvatarPath(apiComment.writor);
+  
+  // Build avatar URL - use buildAvatarUrl for proper CDN path resolution
+  const resolvedAvatar = address && rawAvatarPath 
+    ? buildAvatarUrl(address, rawAvatarPath) 
+    : undefined;
+  
+  // Parse createdAt for sorting - fallback to current time if parsing fails
+  const createdAt = apiComment.createdAt ? new Date(apiComment.createdAt) : new Date();
+  
   return {
     id: String(apiComment.id),
     username: apiComment.writor?.username || 'Anonymous',
-    avatar: apiComment.writor?.avatarUrl || undefined, // No fallback - use initial
-    text: apiComment.content,
-    likes: 0,
+    avatar: resolvedAvatar,
+    text: apiComment.content || (apiComment as any).text || (apiComment as any).body || '',
+    likes: apiComment.likeCount ?? 0,
     dislikes: 0,
     timeAgo: formatTimeAgo(apiComment.createdAt),
+    createdAt,
+    isLiked: apiComment.isLiked ?? false,
     replyToId: apiComment.parentId ? String(apiComment.parentId) : undefined,
-    address: apiComment.address,
+    address,
   };
 }
 
 const SORT_OPTIONS = [
   { value: 'recent', label: 'Most Recent' },
+  { value: 'oldest', label: 'Oldest' },
   { value: 'liked', label: 'Most Liked' },
 ];
 
@@ -108,13 +106,16 @@ const SORT_OPTIONS = [
 
 interface CommentItemProps {
   comment: Comment;
+  tokenId: string;
   onLike: (id: string) => void;
   onDislike: (id: string) => void;
   onReply: (id: string) => void;
   onShare: (id: string) => void;
   onBookmark: (id: string) => void;
+  onEdit: (id: string, newContent: string) => void;
   onUserPress: (username: string) => void;
   isReply?: boolean;
+  isOwnComment?: boolean;
 }
 
 interface VoiceNotePlayerProps {
@@ -161,8 +162,12 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
-function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark, onUserPress, isReply }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onBookmark, onEdit, onUserPress, isReply, isOwnComment }: CommentItemProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(comment.text);
+  // Avatar URL is already resolved via buildAvatarUrl in mapApiComment
+  const avatarUrl = comment.avatar;
 
   const handleBookmark = () => {
     setIsBookmarked(!isBookmarked);
@@ -173,12 +178,14 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={cn("flex gap-3 py-3", isReply && "ml-8")}
+      className={cn("flex items-start gap-3 py-3", isReply && "ml-8")}
     >
-      <Avatar className="w-8 h-8 flex-shrink-0">
-        <AvatarImage src={comment.avatar} className="object-cover" />
-        <AvatarFallback className="bg-zinc-700">{comment.username[0].toUpperCase()}</AvatarFallback>
-      </Avatar>
+      <button onClick={() => onUserPress(comment.username)} className="flex-shrink-0">
+        <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
+          {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover" />}
+          <AvatarFallback className="bg-zinc-700">{comment.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
+        </Avatar>
+      </button>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
           <button 
@@ -189,25 +196,60 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
           </button>
           <span className="text-zinc-500 text-xs">{comment.timeAgo}</span>
         </div>
-        {comment.text && (
-          <TranslatableText text={comment.text} className="text-zinc-300 text-sm leading-relaxed break-words" as="p" />
-        )}
-        {comment.voiceNote && (
-          <div className="mt-1">
-            <VoiceNotePlayer voiceNote={comment.voiceNote} />
+        {isEditing ? (
+          <div className="flex items-center gap-2 mt-1">
+            <input
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              className="flex-1 bg-zinc-800 text-white text-sm rounded-lg px-3 py-1.5 border border-zinc-700 focus:outline-none focus:border-zinc-500"
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  onEdit(comment.id, editText);
+                  setIsEditing(false);
+                } else if (e.key === 'Escape') {
+                  setEditText(comment.text);
+                  setIsEditing(false);
+                }
+              }}
+            />
+            <button
+              onClick={() => { onEdit(comment.id, editText); setIsEditing(false); }}
+              className="text-green-400 hover:text-green-300 transition-colors"
+            >
+              <Check className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => { setEditText(comment.text); setIsEditing(false); }}
+              className="text-zinc-400 hover:text-white transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
+        ) : (
+          <>
+            {comment.text && (
+              <TranslatableText text={comment.text} className="text-zinc-300 text-sm leading-relaxed break-words" as="p" />
+            )}
+            {comment.voiceNote && (
+              <div className="mt-1">
+                <VoiceNotePlayer voiceNote={comment.voiceNote} />
+              </div>
+            )}
+          </>
         )}
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center gap-4">
             <button
               onClick={() => onLike(comment.id)}
               className={cn(
-                "transition-colors",
-                comment.isLiked ? "text-zinc-400" : "text-white hover:text-zinc-400"
+                "flex items-center gap-1 transition-colors",
+                comment.isLiked ? "text-blue-400" : "text-white hover:text-zinc-400"
               )}
               aria-label="Like"
             >
-              <ThumbsUp className="w-4 h-4" />
+              <ThumbsUp className={cn("w-4 h-4", comment.isLiked && "fill-current")} />
+              {comment.likes > 0 && <span className="text-xs">{comment.likes}</span>}
             </button>
             <button
               onClick={() => onDislike(comment.id)}
@@ -228,6 +270,15 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
                 <MessageSquare className="w-4 h-4" />
               </button>
             )}
+            {isOwnComment && !isEditing && (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="text-white hover:text-zinc-400 transition-colors"
+                aria-label="Edit"
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
+            )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
@@ -239,7 +290,18 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="min-w-[160px]">
                 <DropdownMenuItem
-                  onClick={() => onShare(comment.id)}
+                  onClick={() => {
+                    const url = `${window.location.origin}/app/post/${tokenId}?comment=${comment.id}`;
+                    navigator.clipboard.writeText(url);
+                    toast.success(`Copied: ${url}`);
+                  }}
+                  className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
+                >
+                  <Link className="w-4 h-4" />
+                  Copy Link
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => toast.info('Bug reported, fix will be live soon!')}
                   className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
                 >
                   <Repeat2 className="w-4 h-4" />
@@ -248,10 +310,11 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
                 <DropdownMenuItem
                   onClick={() => {
                     navigator.clipboard.writeText(comment.text);
+                    toast.success('Comment text copied');
                   }}
                   className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
                 >
-                  <Link className="w-4 h-4" />
+                  <Quote className="w-4 h-4" />
                   Copy Text
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -280,15 +343,18 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
 export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, walletAddress } = useAuth();
+  const isMobile = useIsMobile();
   
-  const [activeTab, setActiveTab] = useState<'replies' | 'quotes'>('replies');
+  const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'search'>('replies');
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'recent' | 'liked'>('recent');
+  const [sortBy, setSortBy] = useState<'recent' | 'oldest' | 'liked'>('recent');
   const [newComment, setNewComment] = useState('');
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
+  // Track like/dislike state overrides for optimistic updates
+  const [likeOverrides, setLikeOverrides] = useState<Map<string, { isLiked: boolean; isDisliked: boolean; likes: number }>>(new Map());
   
   // Voice note recording state
   const [isRecording, setIsRecording] = useState(false);
@@ -300,24 +366,36 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const recordingTimeRef = useRef(0);
   const playbackAudioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlayingPreview, setIsPlayingPreview] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [commentImage, setCommentImage] = useState<File | null>(null);
+  const [commentImagePreview, setCommentImagePreview] = useState<string | null>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const MAX_VOICE_DURATION = 30;
 
   // Fetch comments from API
   const { data: apiComments, isLoading, error } = useQuery({
-    queryKey: ['comments', tokenId],
-    queryFn: () => getNFTComments(tokenId),
+    queryKey: ['comments', tokenId, walletAddress],
+    queryFn: () => getNFTComments(tokenId, 0, 20, walletAddress?.toLowerCase()),
     staleTime: 30000,
   });
 
-  // Combine API comments with optimistic ones
+  // Combine API comments with optimistic ones and apply like overrides
   const allComments = useMemo(() => {
     const mapped = apiComments?.map(mapApiComment) || [];
     const apiIds = new Set(mapped.map(c => c.id));
     const pending = optimisticComments.filter(c => !apiIds.has(c.id) && c.id.startsWith('temp-'));
-    return [...pending, ...mapped];
-  }, [apiComments, optimisticComments]);
+    const combined = [...pending, ...mapped];
+    
+    // Apply like/dislike overrides
+    return combined.map(c => {
+      const override = likeOverrides.get(c.id);
+      if (override) {
+        return { ...c, ...override };
+      }
+      return c;
+    });
+  }, [apiComments, optimisticComments, likeOverrides]);
 
   // Group comments: top-level and replies
   const groupedComments = useMemo(() => {
@@ -403,6 +481,30 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     }
   };
 
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Image must be under 10MB');
+      return;
+    }
+    setCommentImage(file);
+    setCommentImagePreview(URL.createObjectURL(file));
+  };
+
+  const removeCommentImage = () => {
+    if (commentImagePreview) {
+      URL.revokeObjectURL(commentImagePreview);
+    }
+    setCommentImage(null);
+    setCommentImagePreview(null);
+    if (imageInputRef.current) imageInputRef.current.value = '';
+  };
+
   const togglePreviewPlayback = () => {
     if (!voiceNote) return;
 
@@ -437,9 +539,15 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
     return [...filtered].sort((a, b) => {
       if (sortBy === 'liked') {
+        // Sort by likes (most liked first)
         return b.comment.likes - a.comment.likes;
       }
-      return 0;
+      if (sortBy === 'oldest') {
+        // Sort by oldest first
+        return a.comment.createdAt.getTime() - b.comment.createdAt.getTime();
+      }
+      // Default: sort by most recent (newest first)
+      return b.comment.createdAt.getTime() - a.comment.createdAt.getTime();
     });
   }, [groupedComments, searchQuery, sortBy]);
 
@@ -448,12 +556,77 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     navigate(`/${username}`);
   }, [navigate, onClose]);
 
-  const handleLike = (commentId: string) => {
-    // Optimistic update for local state
+  const handleLike = async (commentId: string) => {
+    if (!isAuthenticated) {
+      toast.error('Please connect your wallet to like comments');
+      return;
+    }
+    
+    // Find current comment state
+    const comment = allComments.find(c => c.id === commentId);
+    if (!comment) return;
+    
+    const wasLiked = comment.isLiked;
+    const newLikes = wasLiked ? comment.likes - 1 : comment.likes + 1;
+    
+    // Optimistic update using overrides
+    setLikeOverrides(prev => {
+      const next = new Map(prev);
+      next.set(commentId, {
+        isLiked: !wasLiked,
+        isDisliked: false,
+        likes: newLikes,
+      });
+      return next;
+    });
+    
+    try {
+      const result = await toggleCommentLike({ commentId });
+      // Update override with server-confirmed state
+      if (result.likeCount !== undefined) {
+        setLikeOverrides(prev => {
+          const next = new Map(prev);
+          next.set(commentId, {
+            isLiked: result.isLiked,
+            isDisliked: false,
+            likes: result.likeCount ?? newLikes,
+          });
+          return next;
+        });
+      }
+    } catch (error) {
+      // Revert on error
+      setLikeOverrides(prev => {
+        const next = new Map(prev);
+        next.delete(commentId);
+        return next;
+      });
+      toast.error('Failed to like comment');
+    }
   };
 
   const handleDislike = (commentId: string) => {
-    // Optimistic update for local state
+    if (!isAuthenticated) {
+      toast.error('Please connect your wallet to dislike comments');
+      return;
+    }
+    
+    // Find current comment state
+    const comment = allComments.find(c => c.id === commentId);
+    if (!comment) return;
+    
+    // Optimistic update - toggle dislike state
+    setLikeOverrides(prev => {
+      const next = new Map(prev);
+      next.set(commentId, {
+        isLiked: false,
+        isDisliked: !comment.isDisliked,
+        likes: comment.isLiked ? comment.likes - 1 : comment.likes, // Decrease if was liked
+      });
+      return next;
+    });
+    // Note: DeHub API doesn't have a separate dislike_comment endpoint
+    // This is UI-only for now
   };
 
   const handleReply = (commentId: string) => {
@@ -461,9 +634,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     if (found) {
       setReplyTo(found);
       setNewComment(`@${found.username} `);
+      // Just focus - let mobile browsers handle keyboard viewport adjustment natively
+      // Manual scrollIntoView causes ugly content cutoff on mobile
       setTimeout(() => {
         inputRef.current?.focus();
-        inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 100);
     }
   };
@@ -473,8 +647,20 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     setNewComment('');
   };
 
+  const handleEditComment = async (commentId: string, newContent: string) => {
+    if (!newContent.trim()) return;
+    try {
+      await editComment({ commentId, content: newContent });
+      queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
+      toast.success('Comment updated');
+    } catch (err) {
+      console.error('Edit comment error:', err);
+      toast.error('Failed to edit comment');
+    }
+  };
+
   const handlePostComment = useCallback(async () => {
-    if ((!newComment.trim() && !voiceNote) || isSubmitting) return;
+    if ((!newComment.trim() && !voiceNote && !commentImage) || isSubmitting) return;
     
     if (!isAuthenticated || !user) {
       toast.error('Please connect your wallet to comment');
@@ -482,29 +668,50 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     }
 
     const tempId = `temp-${Date.now()}`;
+    const userAddress = user.address || user.wallet_address || '';
+    const rawAvatarPath = extractAvatarPath(user);
+    const resolvedAvatar = userAddress && rawAvatarPath 
+      ? buildAvatarUrl(userAddress, rawAvatarPath) 
+      : undefined;
+
     const tempComment: Comment = {
       id: tempId,
       username: user.username || 'you',
-      avatar: user.avatarImageUrl || user.avatarUrl || undefined,
+      avatar: resolvedAvatar,
       text: newComment,
       likes: 0,
       dislikes: 0,
       timeAgo: 'Just now',
+      createdAt: new Date(),
       voiceNote: voiceNote || undefined,
       replyToId: replyTo?.id,
-      address: user.address || user.wallet_address || '',
+      address: userAddress,
     };
 
     setOptimisticComments(prev => [tempComment, ...prev]);
     const replyTarget = replyTo;
+    const imageFile = commentImage;
     setReplyTo(null);
     setNewComment('');
     setVoiceNote(null);
+    removeCommentImage();
     setIsSubmitting(true);
 
     try {
-      await postComment(tokenId, newComment, replyTarget?.id);
-      queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
+      if (imageFile) {
+        // Upload image first, then post comment with image
+        const { url: imageUrl } = await uploadChatImage(imageFile);
+        await addCommentWithImage({
+          tokenId: parseInt(tokenId, 10),
+          content: newComment,
+          imageUrl,
+          parentId: replyTarget?.id,
+        });
+      } else {
+        await postComment(tokenId, newComment, replyTarget?.id);
+      }
+      await queryClient.refetchQueries({ queryKey: ['comments', tokenId] });
+      setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
     } catch (err) {
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
       toast.error('Failed to post comment');
@@ -512,81 +719,124 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     } finally {
       setIsSubmitting(false);
     }
-  }, [newComment, voiceNote, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient]);
+  }, [newComment, voiceNote, commentImage, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient]);
 
-  const canPost = (newComment.trim() || voiceNote) && !isSubmitting;
+  const canPost = (newComment.trim() || voiceNote || commentImage) && !isSubmitting;
 
-  const currentSortLabel = SORT_OPTIONS.find((o) => o.value === sortBy)?.label;
+  
 
   return (
     <motion.div
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: 'auto' }}
-      exit={{ opacity: 0, height: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="mt-3 pt-3 border-t border-zinc-800"
+      className="flex flex-col min-h-[400px] max-h-[600px] p-4 mt-3"
     >
 
-      {/* Search & Sort - moved above tabs */}
-      <div className="flex gap-2 mb-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-          <Input
-            placeholder="Search comments..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 bg-zinc-800 border-zinc-700 text-white text-sm h-9"
-          />
-        </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-1.5 px-3 py-2 bg-zinc-800 rounded-lg text-sm text-zinc-300 hover:bg-zinc-700 transition-colors">
-              <ArrowUpDown className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{currentSortLabel}</span>
-              <ChevronDown className="w-3 h-3" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-zinc-900 border border-zinc-800 rounded-xl p-1">
-            {SORT_OPTIONS.map((option) => (
-              <DropdownMenuItem
-                key={option.value}
-                onClick={() => setSortBy(option.value as 'recent' | 'liked')}
-                className={cn(
-                  "text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white",
-                  sortBy === option.value && "text-white"
-                )}
+      {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
+      <div className="flex justify-between items-center gap-1 mb-3">
+        {/* Left side - Tab buttons */}
+        <div className="flex gap-1">
+          <button
+            type="button"
+            onClick={() => setActiveTab('replies')}
+            className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
+              activeTab === 'replies'
+                ? 'text-white bg-zinc-800'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+            }`}
+          >
+            <MessageSquare className="w-5 h-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('quotes')}
+            className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
+              activeTab === 'quotes'
+                ? 'text-white bg-zinc-800'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+            }`}
+          >
+            <Quote className="w-5 h-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('search')}
+            className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
+              activeTab === 'search'
+                ? 'text-white bg-zinc-800'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+            }`}
+          >
+            <Search className="w-5 h-5" />
+          </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={() => setSortBy(prev => prev === 'recent' ? 'oldest' : prev === 'oldest' ? 'liked' : 'recent')}
+                className="px-4 py-2 flex items-center justify-center gap-2 transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
               >
-                {option.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                <ArrowUpDown className="w-5 h-5" />
+                <span className="text-xs">{sortBy === 'recent' ? 'Recent' : sortBy === 'oldest' ? 'Oldest' : 'Liked'}</span>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{sortBy === 'recent' ? 'Sorted by Most Recent' : sortBy === 'oldest' ? 'Sorted by Oldest' : 'Sorted by Most Liked'}</TooltipContent>
+          </Tooltip>
+        </div>
+
+        {/* Right side - Post action buttons (desktop/tablet only) */}
+        {!isMobile && (
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              className="px-4 py-2 flex items-center justify-center transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              aria-label="Like post"
+            >
+              <ThumbsUp className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              className="px-4 py-2 flex items-center justify-center transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              aria-label="Dislike post"
+            >
+              <ThumbsDown className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              className="px-4 py-2 flex items-center justify-center transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              aria-label="Bookmark post"
+            >
+              <Bookmark className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              className="px-4 py-2 flex items-center justify-center transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              aria-label="Share post"
+            >
+              <Share2 className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'replies' | 'quotes')}>
-        <TabsList className="w-full bg-zinc-800 p-1 rounded-lg mb-3">
-          <TabsTrigger
-            value="replies"
-            className="flex-1 data-[state=active]:bg-zinc-700 data-[state=active]:text-white text-zinc-400 rounded-md py-1.5 text-sm gap-1.5"
-          >
-            <MessageSquare className="w-3.5 h-3.5" />
-            Replies
-            <span className="text-xs text-zinc-500 ml-1">({allComments.length})</span>
-          </TabsTrigger>
-          <TabsTrigger
-            value="quotes"
-            className="flex-1 data-[state=active]:bg-zinc-700 data-[state=active]:text-white text-zinc-400 rounded-md py-1.5 text-sm gap-1.5"
-          >
-            <Quote className="w-3.5 h-3.5" />
-            Quotes
-            <span className="text-xs text-zinc-500 ml-1">(0)</span>
-          </TabsTrigger>
-        </TabsList>
+      {/* Search Input - always rendered but hidden when not on search tab to maintain consistent height */}
+      <div className={`mb-3 ${activeTab === 'search' ? 'visible' : 'invisible h-0 mb-0 overflow-hidden'}`}>
+        <Input
+          placeholder="Search comments & quotes..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
+          autoFocus={activeTab === 'search'}
+        />
+      </div>
 
-        {/* Comments List */}
-        <TabsContent value="replies" className="mt-0">
-          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
+      {/* Content Area - scrollable, takes remaining space */}
+      <div className={`relative flex-1 min-h-0 ${activeTab === 'search' ? 'max-h-[272px]' : ''}`}>
+        {/* Replies Tab */}
+        {activeTab === 'replies' && (
+          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
@@ -599,25 +849,31 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                   filteredGroupedComments.map(({ comment, replies }) => (
                     <div key={comment.id}>
                       <CommentItem 
-                        comment={comment} 
+                        comment={comment}
+                        tokenId={tokenId}
                         onLike={handleLike} 
                         onDislike={handleDislike} 
                         onReply={handleReply} 
                         onShare={() => {}} 
                         onBookmark={() => {}}
+                        onEdit={handleEditComment}
                         onUserPress={handleUserPress}
+                        isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
                       />
                       {replies.map(reply => (
                         <CommentItem 
                           key={reply.id}
-                          comment={reply} 
+                          comment={reply}
+                          tokenId={tokenId}
                           onLike={handleLike} 
                           onDislike={handleDislike} 
                           onReply={handleReply} 
                           onShare={() => {}} 
                           onBookmark={() => {}}
+                          onEdit={handleEditComment}
                           onUserPress={handleUserPress}
                           isReply
+                          isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
                         />
                       ))}
                     </div>
@@ -628,16 +884,17 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                     animate={{ opacity: 1 }}
                     className="text-zinc-500 text-sm py-6 text-center"
                   >
-                    {searchQuery ? 'No replies found' : 'No replies yet. Be the first!'}
+                    No replies yet. Be the first!
                   </motion.p>
                 )}
               </AnimatePresence>
             )}
           </div>
-        </TabsContent>
+        )}
 
-        <TabsContent value="quotes" className="mt-0">
-          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
+        {/* Quotes Tab */}
+        {activeTab === 'quotes' && (
+          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -646,13 +903,70 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
               No quotes yet. Be the first!
             </motion.p>
           </div>
-        </TabsContent>
+        )}
 
-        {/* New Comment Input - at the bottom */}
-        <div className="mt-3 pt-3 border-t border-zinc-800">
+        {/* Search Tab */}
+        {activeTab === 'search' && (
+          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
+            {isLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+              </div>
+            ) : (
+              <AnimatePresence mode="popLayout">
+                {filteredGroupedComments.length > 0 ? (
+                  filteredGroupedComments.map(({ comment, replies }) => (
+                    <div key={comment.id}>
+                      <CommentItem 
+                        comment={comment}
+                        tokenId={tokenId}
+                        onLike={handleLike} 
+                        onDislike={handleDislike} 
+                        onReply={handleReply} 
+                        onShare={() => {}} 
+                        onBookmark={() => {}}
+                        onEdit={handleEditComment}
+                        onUserPress={handleUserPress}
+                        isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
+                      />
+                      {replies.map(reply => (
+                        <CommentItem 
+                          key={reply.id}
+                          comment={reply}
+                          tokenId={tokenId}
+                          onLike={handleLike} 
+                          onDislike={handleDislike} 
+                          onReply={handleReply} 
+                          onShare={() => {}} 
+                          onBookmark={() => {}}
+                          onEdit={handleEditComment}
+                          onUserPress={handleUserPress}
+                          isReply
+                          isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
+                        />
+                      ))}
+                    </div>
+                  ))
+                ) : (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-zinc-500 text-sm py-6 text-center"
+                  >
+                    {searchQuery ? 'No results found' : 'No comments or quotes yet'}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            )}
+          </div>
+        )}
+      </div>
+
+        {/* New Comment Input - sticky at bottom, clean minimal style */}
+        <div className="mt-auto pt-3">
           {/* Reply indicator */}
           {replyTo && (
-            <div className="flex items-center gap-2 mb-2 px-2 py-1.5 bg-zinc-800/50 rounded-lg">
+            <div className="flex items-center gap-2 mb-2 px-3 py-2 bg-zinc-800 rounded-xl">
               <Reply className="w-3.5 h-3.5 text-zinc-400" />
               <span className="text-xs text-zinc-400">Replying to @{replyTo.username}</span>
               <button 
@@ -666,7 +980,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
           {/* Voice note preview with visualizer */}
           {voiceNote && (
-            <div className="mb-3 w-full md:max-w-[320px] rounded-xl overflow-hidden bg-zinc-800/50">
+            <div className="mb-3 w-full md:max-w-[320px] rounded-xl overflow-hidden bg-zinc-800">
               <AudioVisualizer
                 audioUrl={voiceNote.url}
                 isPlaying={isPlayingPreview}
@@ -674,7 +988,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                 className="w-full h-32"
                 showStylePicker={true}
               />
-              <div className="flex items-center justify-between px-3 py-2 bg-zinc-800/80">
+              <div className="flex items-center justify-between px-3 py-2 bg-zinc-800">
                 <span className="text-xs text-zinc-400">{voiceNote.duration}s voice note</span>
                 <button
                   onClick={removeVoiceNote}
@@ -687,77 +1001,105 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
             </div>
           )}
 
-          <div className="flex gap-2 pb-4">
-            <Avatar className="w-8 h-8 flex-shrink-0">
-              {(user?.avatarImageUrl || user?.avatarUrl) && (
-                <AvatarImage src={user?.avatarImageUrl || user?.avatarUrl} />
-              )}
-              <AvatarFallback className="bg-zinc-700 text-white font-medium">{user?.username?.[0]?.toUpperCase() || 'U'}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 flex gap-2">
-              {isRecording ? (
-                /* Recording indicator inside input area */
-                <div className="flex-1 flex items-center gap-2 bg-red-500/20 border border-red-500/30 rounded-lg px-3 h-9">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                  <span className="text-sm text-red-400 flex-1">{recordingTime}s / {MAX_VOICE_DURATION}s</span>
-                  <button
-                    onClick={stopRecording}
-                    className="flex items-center gap-1 text-red-400 hover:text-red-300 text-xs font-medium"
-                  >
-                    <Square className="w-3 h-3 fill-current" />
-                    Stop
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <Input
+          {/* Image preview */}
+          {commentImagePreview && (
+            <div className="mb-3 relative inline-block">
+              <img 
+                src={commentImagePreview} 
+                alt="Comment attachment" 
+                className="max-h-32 rounded-xl object-cover"
+              />
+              <button
+                onClick={removeCommentImage}
+                className="absolute top-1 right-1 w-6 h-6 bg-black/60 rounded-lg flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+
+          {/* Hidden file input */}
+          <input
+            ref={imageInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageSelect}
+          />
+
+          <div className="flex items-center gap-2 pb-1 -ml-2 mt-2.5">
+            {isRecording ? (
+              /* Recording indicator */
+              <div className="flex-1 flex items-center gap-2 bg-red-500/10 rounded-xl px-4 h-10">
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                <span className="text-sm text-red-400 flex-1">{recordingTime}s / {MAX_VOICE_DURATION}s</span>
+                <button
+                  onClick={stopRecording}
+                  className="flex items-center gap-1 text-red-400 hover:text-red-300 text-xs font-medium"
+                >
+                  <Square className="w-3 h-3 fill-current" />
+                  Stop
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="flex-1 flex items-center bg-zinc-800 rounded-xl px-3 min-h-[40px]">
+                  <textarea
                     ref={inputRef}
                     placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Add a reply...'}
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
-                    className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
+                    className="flex-1 bg-transparent text-white text-sm py-2.5 min-h-[40px] max-h-[120px] resize-none focus:outline-none placeholder:text-zinc-500"
+                    rows={1}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                      if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
-                        handlePostComment();
+                        if (canPost) handlePostComment();
                       } else if (e.key === 'Escape') {
                         handleClearReply();
-                        inputRef.current?.blur();
+                        (e.target as HTMLTextAreaElement).blur();
                       }
                     }}
-                    onFocus={(e) => {
-                      setTimeout(() => {
-                        e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      }, 100);
+                    onInput={(e) => {
+                      const target = e.target as HTMLTextAreaElement;
+                      target.style.height = 'auto';
+                      target.style.height = Math.min(target.scrollHeight, 120) + 'px';
                     }}
                   />
-                  {!voiceNote && (
-                    <button
-                      onClick={startRecording}
-                      className="w-9 h-9 flex-shrink-0 flex items-center justify-center bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
-                      aria-label="Record voice note"
-                    >
-                      <Mic className="w-4 h-4" />
-                    </button>
-                  )}
-                </>
-              )}
-              <button
-                onClick={handlePostComment}
-                disabled={!canPost}
-                className={cn(
-                  "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex-shrink-0",
-                  canPost
-                    ? "bg-zinc-700 text-white hover:bg-zinc-600"
-                    : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                </div>
+                {/* Image attach button */}
+                <button
+                  onClick={() => imageInputRef.current?.click()}
+                  className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-colors"
+                  aria-label="Attach image"
+                >
+                  <ImagePlus className="w-5 h-5" />
+                </button>
+                {!voiceNote && (
+                  <button
+                    onClick={startRecording}
+                    className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 rounded-xl text-zinc-400 hover:text-red-400 transition-colors"
+                    aria-label="Record voice note"
+                  >
+                    <Mic className="w-5 h-5" />
+                  </button>
                 )}
-              >
-                {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Post'}
-              </button>
-            </div>
+              </>
+            )}
+            <button
+              onClick={handlePostComment}
+              disabled={!canPost}
+              className={cn(
+                "h-10 px-4 rounded-xl text-sm font-medium transition-colors flex-shrink-0",
+                canPost
+                  ? "bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
+                  : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+              )}
+            >
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Post'}
+            </button>
           </div>
         </div>
-      </Tabs>
     </motion.div>
   );
 }

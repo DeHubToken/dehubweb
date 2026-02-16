@@ -1,8 +1,8 @@
 /**
  * Translate Text Edge Function
  * ============================
- * Uses free translation APIs (MyMemory, Lingva) for translations.
- * Falls back between endpoints if one fails.
+ * Uses free translation APIs (MyMemory) for translations with AI fallback.
+ * Falls back to Lovable AI (Gemini) when free APIs fail.
  */
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
@@ -11,6 +11,21 @@ const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Server-side translation cache to avoid repeated API/AI calls for identical text
+const translationCache = new Map<string, TranslateResponse>();
+const MAX_CACHE_SIZE = 500;
+
+function getCacheKey(text: string, targetLang: string): string {
+  // Hash first 200 chars + target lang
+  const sample = text.slice(0, 200).trim();
+  let hash = 0;
+  for (let i = 0; i < sample.length; i++) {
+    hash = ((hash << 5) - hash) + sample.charCodeAt(i);
+    hash = hash & hash;
+  }
+  return `${hash.toString(36)}_${targetLang}`;
+}
 
 interface TranslateRequest {
   text: string;
@@ -40,7 +55,25 @@ const langCodeMap: Record<string, string> = {
   'zh': 'zh-CN',
   'ar': 'ar',
   'hi': 'hi',
+  'ms': 'ms',
   'auto': 'autodetect',
+};
+
+// Map language codes to full names for AI translation
+const langNameMap: Record<string, string> = {
+  'en': 'English',
+  'es': 'Spanish',
+  'fr': 'French',
+  'de': 'German',
+  'it': 'Italian',
+  'pt': 'Portuguese',
+  'ru': 'Russian',
+  'ja': 'Japanese',
+  'ko': 'Korean',
+  'zh': 'Chinese',
+  'ar': 'Arabic',
+  'hi': 'Hindi',
+  'ms': 'Malay',
 };
 
 /**
@@ -75,10 +108,19 @@ async function translateWithMyMemory(
       return null;
     }
     
+    const translatedText = data.responseData.translatedText;
+    
+    // If the translated text is identical to the input, consider it a failure
+    // This happens when MyMemory can't actually translate the text
+    if (translatedText.trim().toLowerCase() === text.trim().toLowerCase()) {
+      console.log('MyMemory returned same text as input, treating as failure');
+      return null;
+    }
+    
     console.log('Translation successful from MyMemory');
     
     return {
-      translatedText: data.responseData.translatedText,
+      translatedText,
       detectedLanguage: data.responseData.detectedLanguage ? {
         language: data.responseData.detectedLanguage,
         confidence: 1.0,
@@ -91,64 +133,73 @@ async function translateWithMyMemory(
 }
 
 /**
- * Lingva Translate - Free, open-source Google Translate proxy
- * https://github.com/thedaviddelta/lingva-translate
+ * Lovable AI Translation - Uses Gemini as reliable fallback
  */
-async function translateWithLingva(
+async function translateWithAI(
   text: string,
-  targetLang: string,
-  sourceLang: string = 'auto'
+  targetLang: string
 ): Promise<TranslateResponse | null> {
   try {
-    console.log('Attempting translation with Lingva');
+    console.log('Attempting translation with Lovable AI');
     
-    const source = sourceLang === 'auto' ? 'auto' : sourceLang;
-    const target = targetLang;
+    const targetLanguageName = langNameMap[targetLang] || targetLang;
     
-    // List of Lingva instances
-    const lingvaInstances = [
-      'https://lingva.ml',
-      'https://translate.plausibility.cloud',
-      'https://lingva.pussthecat.org',
-    ];
-    
-    for (const instance of lingvaInstances) {
-      try {
-        const url = `${instance}/api/v1/${source}/${target}/${encodeURIComponent(text)}`;
-        console.log(`Trying Lingva instance: ${instance}`);
-        
-        const response = await fetch(url, {
-          headers: {
-            'Accept': 'application/json',
-          },
-        });
-        
-        if (!response.ok) {
-          console.log(`Lingva instance ${instance} returned status: ${response.status}`);
-          continue;
-        }
-
-        const data = await response.json();
-        
-        if (data.translation) {
-          console.log(`Translation successful from Lingva (${instance})`);
-          return {
-            translatedText: data.translation,
-            detectedLanguage: data.info?.detectedSource ? {
-              language: data.info.detectedSource,
-              confidence: 1.0,
-            } : undefined,
-          };
-        }
-      } catch (e) {
-        console.log(`Lingva instance ${instance} failed:`, e instanceof Error ? e.message : 'Unknown error');
-        continue;
-      }
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) {
+      console.log('LOVABLE_API_KEY not configured');
+      return null;
     }
     
-    return null;
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash-lite',
+        messages: [
+          {
+            role: 'system',
+            content: `You are a translator. Translate the user's text to ${targetLanguageName}. 
+IMPORTANT: Reply with ONLY the translated text, no explanations, no quotes, no additional text.
+If the text is already in ${targetLanguageName}, still output it as-is.`
+          },
+          {
+            role: 'user',
+            content: text
+          }
+        ],
+        temperature: 0.1,
+        max_tokens: 1000,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.log(`Lovable AI returned status: ${response.status}, error: ${errorText}`);
+      return null;
+    }
+
+    const data = await response.json();
+    const translatedText = data.choices?.[0]?.message?.content?.trim();
+    
+    if (!translatedText) {
+      console.log('Lovable AI returned empty response');
+      return null;
+    }
+    
+    console.log('Translation successful from Lovable AI');
+    
+    return {
+      translatedText,
+      detectedLanguage: {
+        language: 'auto',
+        confidence: 0.9,
+      },
+    };
   } catch (error) {
-    console.log('Lingva failed:', error instanceof Error ? error.message : 'Unknown error');
+    console.log('Lovable AI failed:', error instanceof Error ? error.message : 'Unknown error');
     return null;
   }
 }
@@ -171,18 +222,41 @@ serve(async (req) => {
 
     console.log(`Translating to ${targetLang}: "${text.substring(0, 50)}..."`);
 
-    // Try MyMemory first (most reliable)
+    // Check server-side cache first
+    const cacheKey = getCacheKey(text, targetLang);
+    const cached = translationCache.get(cacheKey);
+    if (cached) {
+      console.log('Translation cache hit');
+      return new Response(
+        JSON.stringify({ ...cached, cached: true }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Try MyMemory first (most reliable free option)
     let result = await translateWithMyMemory(text, targetLang, sourceLang);
     if (result) {
+      // Cache the result
+      if (translationCache.size >= MAX_CACHE_SIZE) {
+        const firstKey = translationCache.keys().next().value;
+        if (firstKey) translationCache.delete(firstKey);
+      }
+      translationCache.set(cacheKey, result);
       return new Response(
         JSON.stringify(result),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Fallback to Lingva
-    result = await translateWithLingva(text, targetLang, sourceLang);
+    // Fallback to Lovable AI (Gemini) - reliable but uses AI credits
+    result = await translateWithAI(text, targetLang);
     if (result) {
+      // Cache AI result too
+      if (translationCache.size >= MAX_CACHE_SIZE) {
+        const firstKey = translationCache.keys().next().value;
+        if (firstKey) translationCache.delete(firstKey);
+      }
+      translationCache.set(cacheKey, result);
       return new Response(
         JSON.stringify(result),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

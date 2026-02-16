@@ -2,24 +2,39 @@ import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Image, Send, Sparkles, Loader2, X } from 'lucide-react';
-import { EmojiPicker } from './EmojiPicker';
-import { GifPicker } from './GifPicker';
+import { EmojiGifPicker } from './EmojiGifPicker';
+import { VoiceRecorder } from './VoiceRecorder';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ChatInputProps {
-  onSendMessage: (content: string, type: 'text' | 'image' | 'gif', imageUrl?: string) => void;
+  onSendMessage: (content: string, type: 'text' | 'image' | 'gif' | 'audio', imageUrl?: string) => void;
 }
 
 export function ChatInput({ onSendMessage }: ChatInputProps) {
   const [message, setMessage] = useState('');
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [audioPreview, setAudioPreview] = useState<{ blob: Blob; duration: number } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSend = () => {
+    // Handle audio message
+    if (audioPreview) {
+      // Convert blob to base64 data URL for sending
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+        onSendMessage(`🎤 Voice message (${audioPreview.duration}s)`, 'audio', dataUrl);
+        setAudioPreview(null);
+        setMessage('');
+      };
+      reader.readAsDataURL(audioPreview.blob);
+      return;
+    }
+
     if (imagePreview) {
       onSendMessage(message.trim(), 'image', imagePreview);
       setImagePreview(null);
@@ -59,9 +74,16 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target?.result as string);
+        setAudioPreview(null); // Clear audio if image is added
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleVoiceRecordingComplete = (blob: Blob, duration: number) => {
+    setAudioPreview({ blob, duration });
+    setImagePreview(null); // Clear image if audio is recorded
+    toast.success(`Recording saved (${duration}s)`);
   };
 
   const handleEnhanceText = async () => {
@@ -105,8 +127,18 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
     }
   };
 
+  const removeAudioPreview = () => {
+    setAudioPreview(null);
+  };
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
-    <div className="p-3 border-t border-zinc-700 bg-zinc-900">
+    <div className="p-3 lg:pl-4 border-t border-transparent bg-zinc-900">
       {/* Image Preview */}
       {imagePreview && (
         <div className="mb-2 relative inline-block">
@@ -118,6 +150,22 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
           <button
             onClick={removeImagePreview}
             className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+          >
+            <X className="w-3 h-3 text-white" />
+          </button>
+        </div>
+      )}
+
+      {/* Audio Preview */}
+      {audioPreview && (
+        <div className="mb-2 relative inline-flex items-center gap-2 px-3 py-2 bg-zinc-800 rounded-lg">
+          <div className="w-2 h-2 rounded-full bg-green-500" />
+          <span className="text-sm text-white">
+            🎤 Voice message ({formatDuration(audioPreview.duration)})
+          </span>
+          <button
+            onClick={removeAudioPreview}
+            className="ml-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
           >
             <X className="w-3 h-3 text-white" />
           </button>
@@ -140,9 +188,10 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
         
         {/* Action buttons */}
         <div className="flex items-center gap-1">
-          <EmojiPicker onEmojiSelect={handleEmojiSelect} />
-          
-          <GifPicker onGifSelect={handleGifSelect} />
+          <EmojiGifPicker 
+            onEmojiSelect={handleEmojiSelect} 
+            onGifSelect={handleGifSelect}
+          />
           
           <Button
             type="button"
@@ -159,6 +208,11 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
             accept="image/*"
             onChange={handleImageUpload}
             className="hidden"
+          />
+
+          <VoiceRecorder 
+            onRecordingComplete={handleVoiceRecordingComplete}
+            disabled={!!imagePreview}
           />
           
           <Tooltip>
@@ -187,7 +241,7 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
             size="icon"
             className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
             onClick={handleSend}
-            disabled={!message.trim() && !imagePreview}
+            disabled={!message.trim() && !imagePreview && !audioPreview}
           >
             <Send className="w-5 h-5" />
           </Button>

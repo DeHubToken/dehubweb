@@ -83,8 +83,11 @@ function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleI
 
   return (
     <div 
-      className="relative overflow-hidden"
+      className="relative overflow-hidden pointer-events-auto"
       style={{ height: containerHeight }}
+      onPointerDown={(e) => e.stopPropagation()}
+      onTouchStart={(e) => e.stopPropagation()}
+      onWheel={(e) => e.stopPropagation()}
     >
       {/* Selection highlight bar - subtle transparent */}
       <div 
@@ -98,12 +101,13 @@ function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleI
       {/* Scrollable area */}
       <div
         ref={containerRef}
-        className="h-full overflow-y-auto scrollbar-hide snap-y snap-mandatory"
+        className="h-full overflow-y-auto scrollbar-hide snap-y snap-mandatory touch-pan-y"
         style={{ 
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
           paddingTop: centerOffset * itemHeight,
           paddingBottom: centerOffset * itemHeight,
+          WebkitOverflowScrolling: 'touch',
         }}
         onScroll={handleScroll}
       >
@@ -116,13 +120,14 @@ function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleI
           return (
             <div
               key={index}
-              className="flex items-center justify-center snap-center cursor-pointer transition-all duration-200"
+              className="flex items-center justify-center snap-center cursor-pointer transition-all duration-200 pointer-events-auto"
               style={{ 
                 height: itemHeight,
                 opacity,
                 transform: `scale(${scale})`,
               }}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 onSelect(index);
                 if (containerRef.current) {
                   containerRef.current.scrollTo({
@@ -264,11 +269,11 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
       <DrawerContent 
         glass
         hideHandle
-        className="max-h-[85vh] overflow-y-auto px-4 pb-6"
+        className="px-4 pb-2 sm:max-w-md sm:mx-auto"
       >
         <DrawerHeader className="relative pb-4 border-b border-white/10 px-0">
           <div className="flex items-center justify-between">
-            <button onClick={onClose} className="p-2 -ml-2 hover:bg-white/10 rounded-full transition-colors">
+            <button onClick={onClose} className="p-2 -ml-2 hover:bg-white/10 rounded-xl transition-colors">
               <X className="w-5 h-5 text-zinc-400" />
             </button>
             <DrawerTitle className="text-white font-semibold absolute left-1/2 -translate-x-1/2">
@@ -278,7 +283,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
               onClick={handleConfirm}
               disabled={!selectedDate}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all",
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all",
                 selectedDate
                   ? "bg-white/10 text-white border border-white/20 hover:bg-white/20"
                   : "bg-white/5 text-zinc-500 border border-white/10 cursor-not-allowed"
@@ -290,37 +295,37 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
           </div>
         </DrawerHeader>
 
-        <div className="relative pt-6 space-y-6">
+        <div className="relative pt-3 space-y-2 sm:space-y-2">
           {/* Calendar Header */}
           <div className="flex items-center justify-between px-2">
             <button
               onClick={handlePrevMonth}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors"
+              className="p-1.5 hover:bg-white/10 rounded-xl transition-colors"
             >
-              <ChevronLeft className="w-5 h-5 text-white" />
+              <ChevronLeft className="w-4 h-4 text-white" />
             </button>
-            <h3 className="text-white font-semibold">
+            <h3 className="text-white font-semibold text-sm">
               {format(currentMonth, 'MMMM yyyy')}
             </h3>
             <button
               onClick={handleNextMonth}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors"
+              className="p-1.5 hover:bg-white/10 rounded-xl transition-colors"
             >
-              <ChevronRight className="w-5 h-5 text-white" />
+              <ChevronRight className="w-4 h-4 text-white" />
             </button>
           </div>
 
           {/* Day labels */}
-          <div className="grid grid-cols-7 gap-1 px-2">
+          <div className="grid grid-cols-7 gap-0.5 px-2">
             {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
-              <div key={day} className="text-center text-xs text-zinc-500 py-2">
+              <div key={day} className="text-center text-xs text-zinc-500 py-1">
                 {day}
               </div>
             ))}
           </div>
 
           {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-1 px-2">
+          <div className="grid grid-cols-7 gap-0.5 px-2">
             {paddedDays.map((day, i) => {
               if (!day) return <div key={`empty-${i}`} />;
               
@@ -335,7 +340,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
                   disabled={isPast}
                   whileTap={{ scale: 0.95 }}
                   className={cn(
-                    "aspect-square flex items-center justify-center rounded-full text-sm font-medium transition-all",
+                    "aspect-square flex items-center justify-center rounded-full text-xs font-medium transition-all",
                     isPast && "text-zinc-600 cursor-not-allowed",
                     !isPast && !isSelected && "text-white hover:bg-white/10",
                     isToday && !isSelected && "ring-1 ring-white/30",
@@ -349,12 +354,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
           </div>
 
           {/* iOS-style Time Wheel Picker */}
-          <div className="border-t border-white/10 pt-6">
-            <div className="flex items-center gap-2 mb-4 px-2">
-              <Clock className="w-4 h-4 text-zinc-400" />
-              <span className="text-sm text-zinc-400">Select time</span>
-            </div>
-            
+          <div className="border-t border-white/10 pt-2">
             <WheelTimePicker
               hour={selectedHour12}
               minute={selectedMinute}
@@ -365,32 +365,22 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
             />
           </div>
 
-          {/* Preview */}
-          {selectedDate && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mx-2 p-4 rounded-xl bg-white/5 border border-white/10"
-            >
-              <p className="text-zinc-400 text-xs mb-1">Scheduled for</p>
-              <p className="text-white font-semibold">
-                {format(selectedDate, 'EEEE, MMMM d, yyyy')} at {formatTimeDisplay()}
-              </p>
-            </motion.div>
-          )}
 
           {/* Clear button */}
           {scheduledDate && (
             <button
-              onClick={handleClear}
-              className="w-full py-3 text-red-400 hover:text-red-300 text-sm font-medium transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClear();
+              }}
+              className="w-full py-3 text-red-400 hover:text-red-300 text-sm font-medium transition-colors pointer-events-auto"
             >
               Remove Schedule
             </button>
           )}
 
-          {/* Safe area padding */}
-          <div className="h-[env(safe-area-inset-bottom,16px)]" />
+          {/* Safe area padding for notched devices */}
+          <div className="h-[env(safe-area-inset-bottom,0px)]" />
         </div>
       </DrawerContent>
     </Drawer>

@@ -83,3 +83,10 @@ export const MONETIZATION_DEFAULTS = {
   W2E_MIN_VIEWS: 1,
   W2E_MIN_COMMENTS: 0,
 } as const;
+
+/**
+ * Blocked post IDs - these posts are filtered out from all feeds
+ */
+export const BLOCKED_POST_IDS: number[] = [
+  2726,
+];

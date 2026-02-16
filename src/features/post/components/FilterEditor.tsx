@@ -156,7 +156,7 @@ export function FilterEditor({
                     style={{ filter: filterCSS }}
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors rounded-lg">
-                    <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform">
                       <Play className="w-6 h-6 text-white fill-white ml-0.5" />
                     </div>
                   </div>

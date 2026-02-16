@@ -1,19 +1,20 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { SquareUserRound, Trophy, MessagesSquare } from 'lucide-react';
 import { WhoToFollow } from '../WhoToFollow';
-import { SidebarLeaderboard } from './SidebarLeaderboard';
+import { SidebarLeaderboard, type SidebarLeaderboardHandle } from './SidebarLeaderboard';
 import { SidebarChat } from './SidebarChat';
 
-type TabType = 'follow' | 'leaderboard' | 'chat';
+type TabType = 'leaderboard' | 'follow' | 'chat';
 
 const tabs: { id: TabType; icon: typeof SquareUserRound }[] = [
-  { id: 'follow', icon: SquareUserRound },
   { id: 'leaderboard', icon: Trophy },
+  { id: 'follow', icon: SquareUserRound },
   { id: 'chat', icon: MessagesSquare },
 ];
 
 export function TabbedSidePanel() {
-  const [activeTab, setActiveTab] = useState<TabType>('follow');
+  const [activeTab, setActiveTab] = useState<TabType>('leaderboard');
+  const leaderboardRef = useRef<SidebarLeaderboardHandle>(null);
 
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
@@ -42,10 +43,16 @@ export function TabbedSidePanel() {
       </div>
 
       {/* Tab Content */}
-      <div className="px-0 py-4 h-[400px]">
-        {activeTab === 'follow' && <WhoToFollow />}
-        {activeTab === 'leaderboard' && <SidebarLeaderboard />}
-        {activeTab === 'chat' && <SidebarChat />}
+      <div className="px-0 py-4 h-[400px] overflow-x-hidden">
+        <div style={{ display: activeTab === 'leaderboard' ? 'block' : 'none' }} className="h-full">
+          <SidebarLeaderboard ref={leaderboardRef} />
+        </div>
+        <div style={{ display: activeTab === 'follow' ? 'block' : 'none' }} className="h-full">
+          <WhoToFollow />
+        </div>
+        <div style={{ display: activeTab === 'chat' ? 'block' : 'none' }} className="h-full">
+          <SidebarChat />
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { PenSquare, LogIn } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { PenSquare, LogIn, LogOut } from 'lucide-react';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { MobileHeader } from './navigation/MobileHeader';
 import { DesktopSidebar } from './navigation/DesktopSidebar';
@@ -16,11 +16,23 @@ interface AppSidebarProps {
 
 export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, disconnect } = useAuth();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
 
   const mobileNavContent = (
     <>
+      {/* Log in Button - shown at top when not authenticated */}
+      {!isAuthenticated && (
+        <div className="mb-4 pb-4">
+          <LiquidGlassBubble shimmer noBorder className="w-full cursor-pointer" onClick={() => setIsPostModalOpen(true)}>
+            <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
+              <LogIn className="w-5 h-5" />
+              Log in
+            </div>
+          </LiquidGlassBubble>
+        </div>
+      )}
+
       {/* Navigation Items */}
       <nav className="space-y-1">
         {NAV_ITEMS.map((item) => {
@@ -43,25 +55,24 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
         })}
       </nav>
 
-      {/* Post Button */}
-      <div className="mt-4 pt-4 border-t border-zinc-700/50">
-        <Button 
-          onClick={() => setIsPostModalOpen(true)}
-          className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-6 text-base gap-2"
-        >
-          {isAuthenticated ? (
-            <>
+      {/* Post Button - only shown when authenticated */}
+      {isAuthenticated && (
+        <div className="mt-4 pt-4 space-y-3">
+          <LiquidGlassBubble shimmer className="w-full cursor-pointer" onClick={() => setIsPostModalOpen(true)}>
+            <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
               <PenSquare className="w-5 h-5" />
               Post
-            </>
-          ) : (
-            <>
-              <LogIn className="w-5 h-5" />
-              Log in
-            </>
-          )}
-        </Button>
-      </div>
+            </div>
+          </LiquidGlassBubble>
+          <button
+            onClick={() => { onToggle(); disconnect(); }}
+            className="w-full flex items-center justify-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors py-2"
+          >
+            <LogOut className="w-4 h-4" />
+            Log out
+          </button>
+        </div>
+      )}
     </>
   );
 

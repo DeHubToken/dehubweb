@@ -7,15 +7,23 @@
  * @module components/app/feeds/ImagesFeed
  */
 
-import { useRef, useMemo, useEffect } from 'react';
-import { Heart, MessageCircle, Loader2, RefreshCw, ImageIcon } from 'lucide-react';
+import { useRef, useMemo, useEffect, useCallback } from 'react';
+import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
+import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, ImageIcon, Grid3x3, Loader2, Ticket } from 'lucide-react';
+import { ImagesFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ImageCard } from '@/components/app/cards';
 import { useAuth } from '@/contexts/AuthContext';
+import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
+import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
 
 import { useDeHubImages, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
+import { useUnifiedFeed, mapToImagePost } from '@/hooks/use-unified-feed';
 import type { ImagePost } from '@/types/feed.types';
+
+/** Number of pages to pre-fetch for random mode cross-page shuffling */
+const RANDOM_PREFETCH_PAGES = 5;
 
 // ============================================================================
 // TYPES
@@ -23,32 +31,135 @@ import type { ImagePost } from '@/types/feed.types';
 
 interface ImagesFeedProps {
   showCollage?: boolean;
+  showFilters?: boolean;
   isRefreshing?: boolean;
   refreshKey?: number;
+  /** When set, switches to feed mode starting from this post */
+  selectedPostId?: string | null;
+  /** Callback to clear selected post and switch modes */
+  onPostSelected?: (postId: string | null) => void;
+  /** Callback to return to collage view from feed */
+  onBackToCollage?: () => void;
+}
+
+// ============================================================================
+// FILTER COMPONENTS
+// ============================================================================
+
+function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSelect: (o: SortOption) => void }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
+      <div className="relative">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+          {SORT_OPTIONS.map((option) => (
+            <button
+              key={option.label}
+              onClick={() => onSelect(option)}
+              className={cn(
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                selected.label === option.label
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+      </div>
+    </div>
+  );
+}
+
+function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterOption; onSelect: (o: DateFilterOption) => void }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
+      <div className="relative">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+          {DATE_FILTER_OPTIONS.map((option) => (
+            <button
+              key={option.label}
+              onClick={() => onSelect(option)}
+              className={cn(
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                selected.label === option.label
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+      </div>
+    </div>
+  );
+}
+
+function ContentTypeFilterSection({ 
+  filters, 
+  onToggle 
+}: { 
+  filters: ContentTypeFilters; 
+  onToggle: (filter: keyof ContentTypeFilters) => void 
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
+      <div className="relative">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+          {CONTENT_TYPE_FILTERS.map((filter) => (
+            <button
+              key={filter.value}
+              onClick={() => onToggle(filter.value)}
+              className={cn(
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                filters[filter.value]
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+      </div>
+    </div>
+  );
 }
 
 // ============================================================================
 // SUB-COMPONENTS
 // ============================================================================
 
-function CollageView({ posts }: { posts: ImagePost[] }) {
-  // Create a masonry-style layout that never leaves top corners blank
-  // Using CSS grid-auto-flow: dense ensures gaps are filled
-  
+interface CollageViewProps {
+  posts: ImagePost[];
+  onImageClick: (postId: string) => void;
+  loaderRef: React.RefObject<HTMLDivElement>;
+  isFetchingNextPage: boolean;
+  hasNextPage: boolean;
+}
+
+function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNextPage }: CollageViewProps) {
   return (
-    <div className="p-1 sm:p-2">
+    <div className="p-1 sm:p-2 pt-0 sm:pt-0">
       <div 
-        className="grid grid-cols-3 gap-0.5 sm:gap-1"
+        className="grid grid-cols-3 gap-0.5 sm:gap-1 overflow-hidden rounded-t-2xl"
         style={{ gridAutoFlow: 'dense' }}
       >
         {posts.map((post, index) => {
           // Make every 4th item (starting from 0) a large tile: 0, 4, 8, 12...
-          // This creates a balanced pattern with dense packing
           const isLargeTile = index % 4 === 0;
           
           return (
             <div
               key={post.id}
+              onClick={() => onImageClick(post.id)}
               className={cn(
                 'relative aspect-square bg-zinc-800 overflow-hidden group cursor-pointer',
                 isLargeTile && 'col-span-2 row-span-2'
@@ -57,41 +168,111 @@ function CollageView({ posts }: { posts: ImagePost[] }) {
               <img
                 src={post.image}
                 alt=""
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                className={cn(
+                  "w-full h-full object-cover transition-transform duration-300 group-hover:scale-105",
+                  post.isPPV && "blur-lg"
+                )}
               />
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 sm:gap-6">
-                <div className="flex items-center gap-1 sm:gap-2 text-white">
-                  <Heart className="w-4 h-4 sm:w-6 sm:h-6 fill-white" />
-                  <span className="font-semibold text-xs sm:text-base">{post.likes.toLocaleString()}</span>
+              {/* PPV overlay in collage */}
+              {post.isPPV && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                  <div className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+                    <Ticket className="h-5 w-5 text-white" />
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 sm:gap-2 text-white">
-                  <MessageCircle className="w-4 h-4 sm:w-6 sm:h-6 fill-white" />
-                  <span className="font-semibold text-xs sm:text-base">{post.comments}</span>
+              )}
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 sm:gap-5">
+                <div className="flex items-center gap-1 sm:gap-1.5 text-white">
+                  <ThumbsUp className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="font-semibold text-xs sm:text-sm">{post.likes.toLocaleString()}</span>
+                </div>
+                <div className="flex items-center gap-1 sm:gap-1.5 text-white">
+                  <ThumbsDown className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                <div className="flex items-center gap-1 sm:gap-1.5 text-white">
+                  <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="font-semibold text-xs sm:text-sm">{post.comments}</span>
                 </div>
               </div>
             </div>
           );
         })}
       </div>
+      
+      {/* Infinite scroll loader for collage */}
+      <div ref={loaderRef} className="py-4 flex justify-center">
+        {isFetchingNextPage && (
+          <div className="flex items-center gap-2 text-zinc-400">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span className="text-sm">Loading more...</span>
+          </div>
+        )}
+        {!hasNextPage && posts.length > 0 && (
+          <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
+        )}
+      </div>
     </div>
   );
+}
+
+interface EndlessScrollViewProps {
+  posts: ImagePost[];
+  loaderRef: React.RefObject<HTMLDivElement>;
+  isFetchingNextPage: boolean;
+  hasNextPage: boolean;
+  startFromId?: string | null;
+  onBackToCollage?: () => void;
 }
 
 function EndlessScrollView({ 
   posts, 
   loaderRef, 
   isFetchingNextPage, 
-  hasNextPage 
-}: { 
-  posts: ImagePost[];
-  loaderRef: React.RefObject<HTMLDivElement>;
-  isFetchingNextPage: boolean;
-  hasNextPage: boolean;
-}) {
+  hasNextPage,
+  startFromId,
+  onBackToCollage,
+}: EndlessScrollViewProps) {
+  const scrollTargetRef = useRef<HTMLDivElement>(null);
+  
+  // Reorder posts to start from selected image
+  const orderedPosts = useMemo(() => {
+    if (!startFromId) return posts;
+    
+    const selectedIndex = posts.findIndex(p => p.id === startFromId);
+    if (selectedIndex <= 0) return posts;
+    
+    // Move selected post to the top, keep rest in order after it
+    return [
+      ...posts.slice(selectedIndex),
+      ...posts.slice(0, selectedIndex),
+    ];
+  }, [posts, startFromId]);
+  
+  // Scroll to top when entering feed view from collage
+  useEffect(() => {
+    if (startFromId) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [startFromId]);
+
   return (
-    <div className="p-2 sm:p-3 space-y-3">
-      {posts.map((post) => (
-        <ImageCard key={post.id} post={post} />
+    <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3 relative">
+      {/* Back to Grid Button - Bottom center, above mobile nav */}
+      {onBackToCollage && (
+        <button
+          onClick={onBackToCollage}
+          className="fixed bottom-[72px] lg:bottom-8 left-1/2 -translate-x-1/2 lg:-translate-x-[calc(50%+30px)] z-20 p-3 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded-xl border border-white/10 shadow-lg hover:bg-black/60 transition-colors"
+          aria-label="Back to grid view"
+        >
+          <Grid3x3 className="w-5 h-5 text-white" />
+        </button>
+      )}
+      
+      <div ref={scrollTargetRef} />
+      {orderedPosts.map((post) => (
+        <div key={post.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+          <ImageCard post={post} />
+        </div>
       ))}
       
       {/* Infinite scroll loader */}
@@ -114,27 +295,73 @@ function EndlessScrollView({
 // MAIN COMPONENT
 // ============================================================================
 
-export function ImagesFeed({ showCollage = false, isRefreshing = false, refreshKey = 0 }: ImagesFeedProps) {
+export function ImagesFeed({ 
+  showCollage = true, 
+  showFilters = false,
+  isRefreshing = false, 
+  refreshKey = 0,
+  selectedPostId = null,
+  onPostSelected,
+  onBackToCollage,
+}: ImagesFeedProps) {
   const hasAnimated = useRef(false);
   const loaderRef = useRef<HTMLDivElement>(null);
+  const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
+  
+  // Filter states - default to "Latest" - persisted to sessionStorage
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('images', 'sort', SORT_OPTIONS[0]);
+  const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('images', 'date', DATE_FILTER_OPTIONS[0]);
+  const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('images');
+  
   
   // Get wallet address for authenticated requests
   const { walletAddress } = useAuth();
+
+  // Determine if premium content filters are active
+  const isPremiumFilterActive = contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
   
-  // Fetch from DeHub API
+  // Fetch from DeHub API (default - no content filters)
   const {
     data: apiData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading: isApiLoading,
-    isError,
-    refetch,
+    fetchNextPage: fetchNextPageDefault,
+    hasNextPage: hasNextPageDefault,
+    isFetchingNextPage: isFetchingNextPageDefault,
+    isLoading: isApiLoadingDefault,
+    isError: isErrorDefault,
+    refetch: refetchDefault,
   } = useDeHubImages({
-    unit: 15,
-    sortMode: 'new',
-    address: walletAddress || undefined,
+    unit: 12,
+    sortMode: selectedSort.value === 'most-liked' ? 'popular' : 'new',
   });
+
+  // Fetch from unified feed API (when content filters are active)
+  const {
+    data: unifiedData,
+    fetchNextPage: fetchNextPageUnified,
+    hasNextPage: hasNextPageUnified,
+    isFetchingNextPage: isFetchingNextPageUnified,
+    isLoading: isApiLoadingUnified,
+    isError: isErrorUnified,
+    refetch: refetchUnified,
+  } = useUnifiedFeed({
+    postType: 'feed-images',
+    isPPV: contentFilters.ppv || undefined,
+    hasBounty: contentFilters.w2e || undefined,
+    isLocked: contentFilters.locked || undefined,
+    limit: 12,
+    status: 'minted',
+    sortBy: selectedSort.value === 'most-liked' ? 'likes' : 'createdAt',
+    sortOrder: 'desc',
+    enabled: isPremiumFilterActive,
+  });
+
+  // Select the active data source based on filter state
+  const fetchNextPage = isPremiumFilterActive ? fetchNextPageUnified : fetchNextPageDefault;
+  const hasNextPage = isPremiumFilterActive ? hasNextPageUnified : hasNextPageDefault;
+  const isFetchingNextPage = isPremiumFilterActive ? isFetchingNextPageUnified : isFetchingNextPageDefault;
+  const isApiLoading = isPremiumFilterActive ? isApiLoadingUnified : isApiLoadingDefault;
+  const isError = isPremiumFilterActive ? isErrorUnified : isErrorDefault;
+  const refetch = isPremiumFilterActive ? refetchUnified : refetchDefault;
 
   // Refetch when refreshKey changes
   useEffect(() => {
@@ -145,38 +372,62 @@ export function ImagesFeed({ showCollage = false, isRefreshing = false, refreshK
 
   // Map API data to ImagePost array
   const imagePosts = useMemo(() => {
+    if (isPremiumFilterActive) {
+      if (!unifiedData?.pages) return [];
+      const allItems = unifiedData.pages.flatMap(page => page.items || []);
+      return allItems.map((item, index) => mapToImagePost(item, index));
+    }
     if (!apiData?.pages) return [];
     const allNFTs = apiData.pages.flatMap(page => page.data || []);
     return allNFTs.map((nft, index) => mapNFTToImagePost(nft, index));
-  }, [apiData]);
+  }, [apiData, unifiedData, isPremiumFilterActive]);
 
-  // Infinite scroll observer
+  // Handle image click in collage - switch to feed view
+  const handleImageClick = (postId: string) => {
+    onPostSelected?.(postId);
+  };
+
+  // Infinite scroll observer - uses ref-based guard to prevent race conditions
+  // Now works in BOTH collage and feed view
+  // Store hasNextPage in a ref to avoid stale closures in the observer callback
+  const hasNextPageRef = useRef(hasNextPage);
+  hasNextPageRef.current = hasNextPage;
+  
   useEffect(() => {
-    if (!loaderRef.current || !hasNextPage || showCollage) return;
+    if (!loaderRef.current) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isFetchingNextPage) {
-          fetchNextPage();
+        // Use refs for synchronous check - prevents multiple fetches from stale closures
+        if (entries[0].isIntersecting && hasNextPageRef.current && !isFetchingRef.current) {
+          isFetchingRef.current = true;
+          fetchNextPage().finally(() => {
+            isFetchingRef.current = false;
+          });
         }
       },
-      { threshold: 0.1, rootMargin: '100px' }
+      { threshold: 0.1, rootMargin: '200px' }
     );
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage, showCollage]);
+  }, [fetchNextPage, showCollage, selectedPostId]); // Re-attach when view mode changes
   
   // Only animate after first render (when switching views)
   const shouldAnimate = hasAnimated.current;
   hasAnimated.current = true;
 
+  // Show loading during initial load
   const isLoading = isApiLoading || isRefreshing;
+  
+  // Determine if we should show collage or feed
+  // Show feed if: collage is off, OR user clicked an image from collage
+  const showFeedView = !showCollage || selectedPostId;
 
   // Empty state component
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
         <ImageIcon className="w-8 h-8 text-zinc-500" />
       </div>
       <h3 className="text-white font-semibold text-lg mb-2">No Images Yet</h3>
@@ -195,12 +446,17 @@ export function ImagesFeed({ showCollage = false, isRefreshing = false, refreshK
     </div>
   );
 
-  if (isLoading) {
+  const { isAutoRetrying } = useAutoRetryFeed({
+    itemCount: imagePosts.length,
+    isLoading: isApiLoading,
+    isError,
+    refetch,
+  });
+
+  if (isLoading || isAutoRetrying) {
     return (
-      <div className="p-2 sm:p-3">
-        <div className="flex items-center justify-center py-32">
-          <Loader2 className="w-10 h-10 text-white animate-spin" />
-        </div>
+      <div className="p-2 sm:p-3 pt-0 sm:pt-0">
+        <ImagesFeedSkeleton />
       </div>
     );
   }
@@ -210,33 +466,84 @@ export function ImagesFeed({ showCollage = false, isRefreshing = false, refreshK
   }
 
   return (
-    <AnimatePresence mode="wait">
-      {showCollage ? (
-        <motion.div
-          key={`collage-${refreshKey}`}
-          initial={shouldAnimate ? { opacity: 0, scale: 0.95 } : false}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-        >
-          <CollageView posts={imagePosts} />
-        </motion.div>
+    <div>
+      {/* Filter Section */}
+      <AnimatePresence>
+        {showFilters && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="relative p-3 sm:p-4 space-y-4 bg-zinc-900 mx-2 sm:mx-3 rounded-2xl mb-2">
+              <SortFilterSection 
+                selected={selectedSort} 
+                onSelect={setSelectedSort} 
+              />
+              <UploadDateFilterSection 
+                selected={selectedUploadDate} 
+                onSelect={setSelectedUploadDate} 
+              />
+              <div className="flex flex-col gap-2">
+                <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
+                <div className="relative">
+                  <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+                    {CONTENT_TYPE_FILTERS.map((filter) => (
+                      <button
+                        key={filter.value}
+                        onClick={() => toggleContentFilter(filter.value)}
+                        className={cn(
+                          'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                          contentFilters[filter.value]
+                            ? 'bg-white text-black'
+                            : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                        )}
+                      >
+                        {filter.label}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+                </div>
+              </div>
+              {/* Reset filters - bottom right */}
+              <button
+                onClick={() => {
+                  setSelectedSort(SORT_OPTIONS[0]);
+                  setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
+                  resetContentFilters();
+                }}
+                className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+                aria-label="Reset filters"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Content */}
+      {showFeedView ? (
+        <EndlessScrollView 
+          posts={imagePosts} 
+          loaderRef={loaderRef}
+          isFetchingNextPage={isFetchingNextPage}
+          hasNextPage={hasNextPage ?? false}
+          startFromId={selectedPostId}
+          onBackToCollage={onBackToCollage}
+        />
       ) : (
-        <motion.div
-          key={`endless-${refreshKey}`}
-          initial={shouldAnimate ? { opacity: 0, scale: 0.95 } : false}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-        >
-          <EndlessScrollView 
-            posts={imagePosts} 
-            loaderRef={loaderRef}
-            isFetchingNextPage={isFetchingNextPage}
-            hasNextPage={hasNextPage ?? false}
-          />
-        </motion.div>
+        <CollageView 
+          posts={imagePosts} 
+          onImageClick={handleImageClick}
+          loaderRef={loaderRef}
+          isFetchingNextPage={isFetchingNextPage}
+          hasNextPage={hasNextPage ?? false}
+        />
       )}
-    </AnimatePresence>
+    </div>
   );
 }

@@ -1,9 +1,15 @@
 project_id = "aigxuutjaqsywioxjefr"
 
+[functions.batch-avatars]
+verify_jwt = false
+
 [functions.enhance-text]
 verify_jwt = false
 
 [functions.translate-text]
+verify_jwt = false
+
+[functions.translate-image]
 verify_jwt = false
 
 [functions.general-ai-chat]
@@ -31,4 +37,67 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.get-rpc-endpoints]
+verify_jwt = false
+
+[functions.proxy-stream]
+verify_jwt = false
+
+[functions.agora-token]
+verify_jwt = false
+
+[functions.refresh-feed-cache]
+verify_jwt = false
+
+[functions.refresh-leaderboard-cache]
+verify_jwt = false
+
+[functions.stories-api]
+verify_jwt = false
+
+[functions.dehub-mcp]
+verify_jwt = false
+
+[functions.validate-tv-channels]
+verify_jwt = false
+
+[functions.report-broken-channel]
+verify_jwt = false
+
+[functions.register-template-agents]
+verify_jwt = false
+
+[functions.update-agent-avatars]
+verify_jwt = false
+
+[functions.update-agent-banners]
+verify_jwt = false
+
+[functions.batch-follow]
+verify_jwt = false
+
+[functions.ssr-seo]
+verify_jwt = false
+
+[functions.get-badge-balance]
+verify_jwt = false
+
+[functions.backfill-leaderboard-snapshots]
+verify_jwt = false
+
+[functions.livechat-send]
+verify_jwt = false
+
+[functions.backfill-tip-snapshots]
+verify_jwt = false
+
+[functions.dm-send]
+verify_jwt = false
+
+[functions.dm-upload-media]
+verify_jwt = false
+
+[functions.client-logs]
+verify_jwt = false
+
+[functions.refresh-leaderboard-user]
 verify_jwt = false

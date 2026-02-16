@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
-import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon, Loader2, Paintbrush, Crop, Scissors } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, Loader2, Paintbrush, Crop, Scissors } from 'lucide-react';
+import nailIcon from '@/assets/icons/nail-icon.png';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -77,6 +78,8 @@ export function PostMediaPreview({
   const [filterEditorIndex, setFilterEditorIndex] = useState<number | null>(null);
   const [cropEditorIndex, setCropEditorIndex] = useState<number | null>(null);
   const [videoTrimmerIndex, setVideoTrimmerIndex] = useState<number | null>(null);
+  const [videoFrames, setVideoFrames] = useState<Map<number, string[]>>(new Map());
+  const [extractingFrames, setExtractingFrames] = useState<Set<number>>(new Set());
   const [fullscreenPreview, setFullscreenPreview] = useState<{ index: number; src: string; type: 'image' | 'video'; filterSettings?: FilterSettings; cropSettings?: CropSettings; currentTime?: number } | null>(null);
   const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
   const [audioTrimmerData, setAudioTrimmerData] = useState<{
@@ -273,6 +276,170 @@ export function PostMediaPreview({
     thumbnailInputRef.current?.click();
   };
 
+  // Extract frames from video for thumbnail selection
+  const extractVideoFrames = useCallback(async (videoUrl: string, index: number) => {
+    if (extractingFrames.has(index)) return;
+    
+    setExtractingFrames(prev => new Set(prev).add(index));
+    
+    try {
+      const video = document.createElement('video');
+      video.src = videoUrl;
+      // Only set crossOrigin for non-blob URLs (external resources)
+      // Blob URLs are same-origin and don't need CORS handling
+      if (!videoUrl.startsWith('blob:')) {
+        video.crossOrigin = 'anonymous';
+      }
+      video.preload = 'auto'; // Use 'auto' instead of 'metadata' for better compatibility
+      video.muted = true; // Required for autoplay policies
+      
+      // Wait for video to be ready to play (better for WebM/recorded videos)
+      await new Promise<void>((resolve, reject) => {
+        const handleCanPlay = () => {
+          video.removeEventListener('canplaythrough', handleCanPlay);
+          video.removeEventListener('error', handleError);
+          resolve();
+        };
+        const handleError = () => {
+          video.removeEventListener('canplaythrough', handleCanPlay);
+          video.removeEventListener('error', handleError);
+          reject(new Error('Failed to load video'));
+        };
+        video.addEventListener('canplaythrough', handleCanPlay);
+        video.addEventListener('error', handleError);
+        video.load();
+        setTimeout(() => {
+          video.removeEventListener('canplaythrough', handleCanPlay);
+          video.removeEventListener('error', handleError);
+          reject(new Error('Video load timeout'));
+        }, 15000);
+      });
+      
+      const duration = video.duration;
+      if (!duration || duration <= 0 || !isFinite(duration)) {
+        throw new Error('Invalid video duration');
+      }
+      
+      const frameCount = 20;
+      const frames: string[] = [];
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      if (!ctx) {
+        throw new Error('Failed to get canvas context');
+      }
+      
+      canvas.width = 640;
+      canvas.height = 360;
+      
+      for (let i = 0; i < frameCount; i++) {
+        // Include first frame (time 0) and distribute remaining frames evenly
+        const time = i === 0 ? 0.01 : (duration / (frameCount - 1)) * i; // Use 0.01 instead of 0 for better compatibility
+        video.currentTime = Math.min(time, duration - 0.1); // Don't seek past the end
+        
+        await new Promise<void>((resolve) => {
+          const handleSeeked = () => {
+            video.removeEventListener('seeked', handleSeeked);
+            // Small delay to ensure frame is rendered
+            setTimeout(resolve, 50);
+          };
+          video.addEventListener('seeked', handleSeeked);
+          // Fallback timeout in case seeked never fires (common with some WebM)
+          setTimeout(() => {
+            video.removeEventListener('seeked', handleSeeked);
+            resolve();
+          }, 500);
+        });
+        
+        // Check if video has valid dimensions
+        if (video.videoWidth > 0 && video.videoHeight > 0) {
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          
+          const blob = await new Promise<Blob | null>(resolve => 
+            canvas.toBlob(resolve, 'image/jpeg', 0.7)
+          );
+          
+          if (blob && blob.size > 1000) { // Only add if blob has actual content
+            frames.push(URL.createObjectURL(blob));
+          }
+        }
+      }
+      
+      // Only set frames if we got at least some
+      if (frames.length > 0) {
+        setVideoFrames(prev => new Map(prev).set(index, frames));
+      } else {
+        console.warn('No frames could be extracted from video');
+      }
+    } catch (error) {
+      console.error('Failed to extract video frames:', error);
+    } finally {
+      setExtractingFrames(prev => {
+        const next = new Set(prev);
+        next.delete(index);
+        return next;
+      });
+    }
+  }, [extractingFrames]);
+
+  // Track video URLs to detect changes
+  const videoUrlsRef = useRef<Map<number, string>>(new Map());
+
+  // Trigger frame extraction when video is added or changed
+  useEffect(() => {
+    const currentUrls = new Map<number, string>();
+    
+    media.forEach((m, index) => {
+      if (m.type === 'video') {
+        currentUrls.set(index, m.preview);
+        const previousUrl = videoUrlsRef.current.get(index);
+        
+        // If video changed or is new, clear old frames and extract new ones
+        if (previousUrl !== m.preview) {
+          // Revoke old frame URLs if they exist
+          const oldFrames = videoFrames.get(index);
+          if (oldFrames) {
+            oldFrames.forEach(url => URL.revokeObjectURL(url));
+            setVideoFrames(prev => {
+              const next = new Map(prev);
+              next.delete(index);
+              return next;
+            });
+          }
+        }
+        
+        // Extract frames if not already done
+        if (!videoFrames.has(index) && !extractingFrames.has(index)) {
+          extractVideoFrames(m.preview, index);
+        }
+      }
+    });
+    
+    // Update tracked URLs
+    videoUrlsRef.current = currentUrls;
+    
+    // Clean up frames for removed videos
+    videoFrames.forEach((frames, index) => {
+      if (!currentUrls.has(index)) {
+        frames.forEach(url => URL.revokeObjectURL(url));
+        setVideoFrames(prev => {
+          const next = new Map(prev);
+          next.delete(index);
+          return next;
+        });
+      }
+    });
+  }, [media, extractVideoFrames, videoFrames, extractingFrames]);
+
+  // Cleanup blob URLs when component unmounts
+  useEffect(() => {
+    return () => {
+      videoFrames.forEach(frames => {
+        frames.forEach(url => URL.revokeObjectURL(url));
+      });
+    };
+  }, []);
+
   if (media.length === 0) return null;
 
   return (
@@ -306,249 +473,208 @@ export function PostMediaPreview({
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
           >
             {media.map((m, index) => (
-              <div 
-                key={index} 
-                className={`relative rounded-2xl overflow-hidden bg-zinc-900 flex-shrink-0 snap-center ${
-                  m.type === 'video' ? 'aspect-video w-full sm:w-[356px] md:w-[426px]' : 
-                  m.type === 'audio' ? 'w-full sm:w-[320px] md:w-[360px]' :
-                  'h-[160px] sm:h-[200px] md:h-[240px]'
-                }`}
-              >
+              <div key={index} className="relative flex-shrink-0 snap-center">
                 {m.type === 'image' ? (
-                  <div className="relative h-full flex items-center justify-center">
-                    <img 
-                      src={m.preview} 
-                      alt="" 
-                      className="h-full w-auto max-w-none object-contain rounded-2xl cursor-pointer" 
-                      style={{ 
-                        filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
-                        transform: generateCropTransform(m.cropSettings),
-                      }}
-                      onClick={() => setFullscreenPreview({ 
-                        index, 
-                        src: m.preview, 
-                        type: 'image',
-                        filterSettings: m.filterSettings,
-                        cropSettings: m.cropSettings
-                      })}
-                    />
-                  
-                  {/* Top left: Filter + Crop + Audio buttons */}
-                  <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
-                    {/* Filter button - consistent style */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
-                          className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
-                            bg-white/10 backdrop-blur-xl border border-white/20
-                            hover:bg-white/20 hover:border-white/40"
-                        >
-                          <Paintbrush className="w-3 h-3 text-white" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>Edit filters</TooltipContent>
-                    </Tooltip>
-                    
-                    {/* Crop button - consistent style */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
-                          className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
-                            bg-white/10 backdrop-blur-xl border border-white/20
-                            hover:bg-white/20 hover:border-white/40"
-                        >
-                          <Crop className="w-3 h-3 text-white" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>Crop & rotate</TooltipContent>
-                    </Tooltip>
-                    
-                    {/* Audio controls */}
-                    {recordingIndex === index ? (
-                      // Recording in progress
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); stopRecording(); }}
-                        className="flex items-center gap-2 bg-red-500 px-3 py-1.5 rounded-full text-white text-xs font-medium animate-pulse"
-                      >
-                        <Square className="w-3 h-3 fill-white" />
-                        {recordingTime}s / {MAX_DURATION}s
-                      </button>
-                    ) : m.audio ? (
-                      // Audio attached - show playback controls
-                      <div className="flex items-center gap-2 bg-black/70 backdrop-blur-sm px-2 py-1 rounded-full" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); playingIndex === index ? stopAudio() : playAudio(m.audio!.url, index); }}
-                          className="w-6 h-6 flex items-center justify-center text-white"
-                        >
-                          {playingIndex === index ? (
-                            <Pause className="w-4 h-4" />
-                          ) : (
-                            <Play className="w-4 h-4" />
-                          )}
-                        </button>
-                        <span className="text-white text-xs">{m.audio.duration}s</span>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); onRemoveAudio(index); }}
-                          className="w-5 h-5 flex items-center justify-center text-red-400 hover:text-red-300"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-                    ) : showAudioOptions === index ? (
-                      // Show upload/record options with liquid glass effect
-                      <>
-                        <Tooltip delayDuration={300}>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); triggerAudioUpload(index); }}
-                              className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
-                                bg-gradient-to-br from-white/20 via-white/10 to-white/5
-                                backdrop-blur-xl border border-white/20
-                                shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
-                                hover:shadow-[0_8px_32px_rgba(59,130,246,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]
-                                hover:border-blue-400/40 hover:from-blue-500/20 hover:via-blue-400/10 hover:to-transparent"
-                            >
-                              <Upload className="w-3 h-3" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>Upload audio</TooltipContent>
-                        </Tooltip>
-                        <Tooltip delayDuration={300}>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); handleStartRecording(index); }}
-                              className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
-                                bg-gradient-to-br from-white/20 via-white/10 to-white/5
-                                backdrop-blur-xl border border-white/20
-                                shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
-                                hover:shadow-[0_8px_32px_rgba(239,68,68,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]
-                                hover:border-red-400/40 hover:from-red-500/20 hover:via-red-400/10 hover:to-transparent"
-                            >
-                              <Mic className="w-3 h-3 text-white" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>Record audio</TooltipContent>
-                        </Tooltip>
-                        <Tooltip delayDuration={300}>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); setShowAudioOptions(null); }}
-                              className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
-                                bg-gradient-to-br from-white/20 via-white/10 to-white/5
-                                backdrop-blur-xl border border-white/20
-                                shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
-                                hover:border-white/40"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>Cancel</TooltipContent>
-                        </Tooltip>
-                      </>
-                    ) : (
-                      <Tooltip delayDuration={300}>
-                        <TooltipTrigger asChild>
-                          <button
-                            type="button"
-                            onClick={(e) => { e.stopPropagation(); setShowAudioOptions(index); }}
-                            className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
-                              bg-white/10 backdrop-blur-xl border border-white/20
-                              hover:bg-white/20 hover:border-white/40"
-                          >
-                            <Music className="w-3 h-3" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>Add audio</TooltipContent>
-                      </Tooltip>
-                    )}
-                  </div>
-                </div>
-              ) : m.type === 'audio' ? (
-                // Standalone audio post preview with visualizer - matching image container style
-                <div className="relative h-full flex items-center justify-center">
-                  {/* Visualizer background */}
-                  <AudioVisualizer
-                    audioUrl={m.preview}
-                    isPlaying={playingIndex === index}
-                    onPlayPause={() => {
-                      if (playingIndex === index) {
-                        setPlayingIndex(null);
-                      } else {
-                        setPlayingIndex(index);
-                      }
-                    }}
-                    className="h-full w-auto min-w-[200px] aspect-[2/1]"
-                    showStylePicker={true}
-                  />
-                  
-                  {/* Track info overlay */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center gap-3 pointer-events-none">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/40 to-blue-500/40 backdrop-blur-sm flex items-center justify-center border border-white/20">
-                      <Music className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-white font-medium text-sm truncate drop-shadow-lg">{m.file.name}</p>
-                      <p className="text-white/70 text-xs drop-shadow">
-                        {m.duration ? `${Math.floor(m.duration / 60)}:${String(Math.floor(m.duration % 60)).padStart(2, '0')}` : 'Audio'}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="relative">
-                  {/* Processing overlay */}
-                  {processingVideos.has(index) && (
-                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 rounded-2xl">
-                      <Loader2 className="w-8 h-8 text-white animate-spin mb-3" />
-                      <p className="text-white text-sm font-medium mb-2">Processing video...</p>
-                      <div className="w-3/4 max-w-[200px]">
-                        <Progress value={processingVideos.get(index) ?? 0} className="h-2" />
-                      </div>
-                      <p className="text-zinc-400 text-xs mt-1">{Math.round(processingVideos.get(index) ?? 0)}%</p>
-                    </div>
-                  )}
-                  
-                  {/* Show thumbnail if set, otherwise show video */}
-                  {m.thumbnail ? (
-                    <div className="relative">
+                  /* ==================== IMAGE PREVIEW ==================== */
+                  <div className="relative h-[160px] sm:h-[200px] md:h-[240px] rounded-2xl overflow-hidden bg-zinc-900">
+                    <div className="relative h-full flex items-center justify-center">
                       <img 
-                        src={m.thumbnail} 
-                        alt="Video thumbnail" 
-                        className="w-full h-auto max-h-80 object-cover rounded-2xl"
+                        src={m.preview} 
+                        alt="" 
+                        className="h-full w-auto max-w-none object-contain rounded-2xl cursor-pointer" 
                         style={{ 
                           filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
                           transform: generateCropTransform(m.cropSettings),
                         }}
+                        onClick={() => setFullscreenPreview({ 
+                          index, 
+                          src: m.preview, 
+                          type: 'image',
+                          filterSettings: m.filterSettings,
+                          cropSettings: m.cropSettings
+                        })}
                       />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-12 h-12 rounded-full bg-black/60 flex items-center justify-center">
-                          <Play className="w-6 h-6 text-white fill-white" />
-                        </div>
-                      </div>
-                      {/* Remove thumbnail button */}
-                      <Tooltip>
-                        <TooltipTrigger asChild>
+                    
+                      {/* Top left: Filter + Crop + Audio buttons */}
+                      <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
+                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                bg-black/60 backdrop-blur-xl border border-white/20
+                                hover:bg-black/70 hover:border-white/40"
+                            >
+                              <Paintbrush className="w-3 h-3 text-white" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Edit filters</TooltipContent>
+                        </Tooltip>
+                        
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
+                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                bg-black/60 backdrop-blur-xl border border-white/20
+                                hover:bg-black/70 hover:border-white/40"
+                            >
+                              <Crop className="w-3 h-3 text-white" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Crop & rotate</TooltipContent>
+                        </Tooltip>
+                        
+                        {/* Audio controls for images */}
+                        {recordingIndex === index ? (
                           <button
                             type="button"
-                            onClick={() => onRemoveThumbnail?.(index)}
-                            className="absolute top-2 left-2 p-1.5 bg-black/70 hover:bg-red-500/80 rounded-full transition-colors"
+                            onClick={(e) => { e.stopPropagation(); stopRecording(); }}
+                            className="flex items-center gap-2 bg-red-500 px-3 py-1.5 rounded-xl text-white text-xs font-medium animate-pulse"
                           >
-                            <Trash2 className="w-3 h-3 text-white" />
+                            <Square className="w-3 h-3 fill-white" />
+                            {recordingTime}s / {MAX_DURATION}s
                           </button>
-                        </TooltipTrigger>
-                        <TooltipContent>Remove thumbnail</TooltipContent>
-                      </Tooltip>
+                        ) : m.audio ? (
+                          <div className="flex items-center gap-2 bg-black/70 backdrop-blur-sm px-2 py-1 rounded-xl" onClick={(e) => e.stopPropagation()}>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); playingIndex === index ? stopAudio() : playAudio(m.audio!.url, index); }}
+                              className="w-6 h-6 flex items-center justify-center text-white"
+                            >
+                              {playingIndex === index ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                            </button>
+                            <span className="text-white text-xs">{m.audio.duration}s</span>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); onRemoveAudio(index); }}
+                              className="w-5 h-5 flex items-center justify-center text-red-400 hover:text-red-300"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ) : showAudioOptions === index ? (
+                          <>
+                            <Tooltip delayDuration={300}>
+                              <TooltipTrigger asChild>
+                                <button
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); triggerAudioUpload(index); }}
+                                  className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                    bg-black/60 backdrop-blur-xl border border-white/20
+                                    hover:bg-blue-500/40 hover:border-blue-400/40"
+                                >
+                                  <Upload className="w-3 h-3" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>Upload audio</TooltipContent>
+                            </Tooltip>
+                            <Tooltip delayDuration={300}>
+                              <TooltipTrigger asChild>
+                                <button
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); handleStartRecording(index); }}
+                                  className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                    bg-black/60 backdrop-blur-xl border border-white/20
+                                    hover:bg-red-500/40 hover:border-red-400/40"
+                                >
+                                  <Mic className="w-3 h-3 text-white" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>Record audio</TooltipContent>
+                            </Tooltip>
+                            <Tooltip delayDuration={300}>
+                              <TooltipTrigger asChild>
+                                <button
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); setShowAudioOptions(null); }}
+                                  className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                    bg-black/60 backdrop-blur-xl border border-white/20
+                                    hover:bg-black/70 hover:border-white/40"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>Cancel</TooltipContent>
+                            </Tooltip>
+                          </>
+                        ) : (
+                          <Tooltip delayDuration={300}>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); setShowAudioOptions(index); }}
+                                className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                  bg-black/60 backdrop-blur-xl border border-white/20
+                                  hover:bg-black/70 hover:border-white/40"
+                              >
+                                <Music className="w-3 h-3" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>Add audio</TooltipContent>
+                          </Tooltip>
+                        )}
+                      </div>
+                      
+                      {/* Remove button */}
+                      <button
+                        onClick={() => onRemove(index)}
+                        className="absolute top-2 right-2 p-1.5 bg-black/70 hover:bg-black rounded-xl transition-colors"
+                      >
+                        <X className="w-4 h-4 text-white" />
+                      </button>
                     </div>
-                  ) : (
-                    <div className="relative w-full h-full flex items-center justify-center">
+                  </div>
+                ) : m.type === 'audio' ? (
+                  /* ==================== AUDIO PREVIEW ==================== */
+                  <div className="relative w-full sm:w-[320px] md:w-[360px] rounded-2xl overflow-hidden bg-zinc-900">
+                    <div className="relative h-full flex items-center justify-center">
+                      <AudioVisualizer
+                        audioUrl={m.preview}
+                        isPlaying={playingIndex === index}
+                        onPlayPause={() => setPlayingIndex(prev => prev === index ? null : index)}
+                        className="h-full w-auto min-w-[200px] aspect-[2/1]"
+                        showStylePicker={true}
+                      />
+                      
+                      <div className="absolute top-3 left-3 right-3 flex items-center gap-3 pointer-events-none">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/40 to-blue-500/40 backdrop-blur-sm flex items-center justify-center border border-white/20">
+                          <Music className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-white font-medium text-sm truncate drop-shadow-lg">{m.file.name}</p>
+                          <p className="text-white/70 text-xs drop-shadow">
+                            {m.duration ? `${Math.floor(m.duration / 60)}:${String(Math.floor(m.duration % 60)).padStart(2, '0')}` : 'Audio'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <button
+                        onClick={() => onRemove(index)}
+                        className="absolute top-2 right-2 p-1.5 bg-black/70 hover:bg-black rounded-xl transition-colors"
+                      >
+                        <X className="w-4 h-4 text-white" />
+                      </button>
+                    </div>
+                  </div>
+                ) : m.type === 'video' ? (
+                  /* ==================== VIDEO + THUMBNAIL STACKED ==================== */
+                  <div className="flex flex-col gap-3">
+                    {/* Video preview container */}
+                    <div className="relative aspect-video w-[280px] sm:w-[320px] md:w-[380px] rounded-2xl overflow-hidden bg-zinc-900">
+                      {/* Processing overlay */}
+                      {processingVideos.has(index) && (
+                        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 rounded-2xl">
+                          <Loader2 className="w-8 h-8 text-white animate-spin mb-3" />
+                          <p className="text-white text-sm font-medium mb-2">Processing video...</p>
+                          <div className="w-3/4 max-w-[200px]">
+                            <Progress value={processingVideos.get(index) ?? 0} className="h-2" />
+                          </div>
+                          <p className="text-zinc-400 text-xs mt-1">{Math.round(processingVideos.get(index) ?? 0)}%</p>
+                        </div>
+                      )}
+                      
+                      {/* Always show video */}
                       <video 
                         ref={(el) => {
                           if (el) videoRefs.current.set(index, el);
@@ -564,7 +690,8 @@ export function PostMediaPreview({
                           if (playingVideoIndex === index) setPlayingVideoIndex(null);
                         }}
                       />
-                      {/* Play/Pause overlay - double click for fullscreen */}
+                      
+                      {/* Play/Pause overlay */}
                       {!processingVideos.has(index) && (
                         <button
                           type="button"
@@ -588,10 +715,7 @@ export function PostMediaPreview({
                             e.stopPropagation();
                             const video = videoRefs.current.get(index);
                             const currentTime = video?.currentTime || 0;
-                            // Pause the thumbnail video
-                            if (video) {
-                              video.pause();
-                            }
+                            if (video) video.pause();
                             setPlayingVideoIndex(null);
                             setFullscreenPreview({ 
                               index, 
@@ -604,7 +728,7 @@ export function PostMediaPreview({
                           }}
                           className="absolute inset-0 flex items-center justify-center group cursor-pointer"
                         >
-                          <div className={`w-12 h-12 rounded-full bg-black/60 flex items-center justify-center transition-opacity ${
+                          <div className={`w-12 h-12 rounded-xl bg-black/60 flex items-center justify-center transition-opacity ${
                             playingVideoIndex === index ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
                           }`}>
                             {playingVideoIndex === index ? (
@@ -615,117 +739,191 @@ export function PostMediaPreview({
                           </div>
                         </button>
                       )}
+                      
+                      {/* Top left: Filter + Crop + Trim buttons */}
+                      <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
+                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                bg-black/60 backdrop-blur-xl border border-white/20
+                                hover:bg-black/70 hover:border-white/40"
+                            >
+                              <Paintbrush className="w-3 h-3 text-white" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Edit filters</TooltipContent>
+                        </Tooltip>
+                        
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
+                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                bg-black/60 backdrop-blur-xl border border-white/20
+                                hover:bg-black/70 hover:border-white/40"
+                            >
+                              <Crop className="w-3 h-3 text-white" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Crop & rotate</TooltipContent>
+                        </Tooltip>
+                        
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setVideoTrimmerIndex(index); }}
+                              className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
+                                ${m.trimStart !== undefined || m.trimEnd !== undefined
+                                  ? 'bg-black/70 text-white backdrop-blur-xl border border-white/40'
+                                  : 'bg-black/60 backdrop-blur-xl border border-white/20 text-white hover:bg-black/70 hover:border-white/40'
+                                }`}
+                            >
+                              <Scissors className="w-3 h-3 text-white" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Trim video</TooltipContent>
+                        </Tooltip>
+                      </div>
+                      
+                      {/* Duration badge */}
+                      {m.duration && (
+                        <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white pointer-events-none">
+                          {Math.floor(m.duration / 60)}:{String(Math.floor(m.duration % 60)).padStart(2, '0')}
+                          {m.duration < 90 && <span className="ml-1 text-emerald-400">• Short</span>}
+                        </div>
+                      )}
+                      
+                      {/* Bottom right: Music Video Toggle */}
+                      <div className="absolute bottom-2 right-2 flex items-center gap-1.5">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); onToggleMusicVideo?.(index); }}
+                              className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
+                                ${m.isMusicVideo 
+                                  ? 'bg-white/20 text-white backdrop-blur-xl border border-white/30' 
+                                  : 'bg-black/60 backdrop-blur-xl border border-white/20 text-white hover:bg-black/70 hover:border-white/40'
+                                }`}
+                            >
+                              <Music className="w-3 h-3" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Mark as music video</TooltipContent>
+                        </Tooltip>
+                      </div>
+                      
+                      {/* Remove button */}
+                      <button
+                        onClick={() => onRemove(index)}
+                        className="absolute top-2 right-2 p-1.5 bg-black/70 hover:bg-black rounded-xl transition-colors"
+                      >
+                        <X className="w-4 h-4 text-white" />
+                      </button>
                     </div>
-                  )}
-                  
-                  {/* Top left: Filter + Crop + Trim buttons - liquid glass style */}
-                  <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
-                    {/* Filter button */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
-                          className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
-                            bg-white/10 backdrop-blur-xl border border-white/20
-                            hover:bg-white/20 hover:border-white/40"
-                        >
-                          <Paintbrush className="w-3 h-3 text-white" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>Edit filters</TooltipContent>
-                    </Tooltip>
                     
-                    {/* Crop button */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
-                          className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
-                            bg-white/10 backdrop-blur-xl border border-white/20
-                            hover:bg-white/20 hover:border-white/40"
-                        >
-                          <Crop className="w-3 h-3 text-white" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>Crop & rotate</TooltipContent>
-                    </Tooltip>
-                    
-                    {/* Trim button */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); setVideoTrimmerIndex(index); }}
-                          className={`flex items-center justify-center w-7 h-7 rounded-full transition-all duration-300 hover:scale-105
-                            ${m.trimStart !== undefined || m.trimEnd !== undefined
-                              ? 'bg-white/25 text-white backdrop-blur-xl border border-white/40'
-                              : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
-                            }`}
-                        >
-                          <Scissors className="w-3 h-3 text-white" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>Trim video</TooltipContent>
-                    </Tooltip>
-                  </div>
-                  
-                  {m.duration && (
-                    <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white pointer-events-none">
-                      {Math.floor(m.duration / 60)}:{String(Math.floor(m.duration % 60)).padStart(2, '0')}
-                      {m.duration < 90 && <span className="ml-1 text-emerald-400">• Short</span>}
+                    {/* Thumbnail preview - same dimensions as video with drag & drop */}
+                    <div 
+                      className="relative aspect-video w-[280px] sm:w-[320px] md:w-[380px] rounded-2xl overflow-hidden bg-zinc-900 border-2 border-dashed border-white/20 hover:border-white/40 transition-colors cursor-pointer group"
+                      onClick={() => triggerThumbnailUpload(index)}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.currentTarget.classList.add('border-white', 'bg-white/10');
+                      }}
+                      onDragLeave={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.currentTarget.classList.remove('border-white', 'bg-white/10');
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.currentTarget.classList.remove('border-white', 'bg-white/10');
+                        const file = e.dataTransfer.files?.[0];
+                        if (file && file.type.startsWith('image/')) {
+                          const url = URL.createObjectURL(file);
+                          onAddThumbnail?.(index, url);
+                        } else if (file) {
+                          toast.error('Please drop an image file');
+                        }
+                      }}
+                    >
+                      {m.thumbnail ? (
+                        <>
+                          <img 
+                            src={m.thumbnail} 
+                            alt="Thumbnail" 
+                            className="w-full h-full object-cover"
+                          />
+                          {/* Overlay on hover */}
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <Upload className="w-6 h-6 text-white" />
+                          </div>
+                          {/* Remove thumbnail */}
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); onRemoveThumbnail?.(index); }}
+                            className="absolute top-2 right-2 p-1.5 bg-black/70 hover:bg-red-500/80 rounded-xl transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4 text-white" />
+                          </button>
+                        </>
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-white/50">
+                          <Upload className="w-8 h-8" />
+                          <span className="text-sm">Drop image or click</span>
+                        </div>
+                      )}
+                      {/* Label */}
+                      <div className="absolute bottom-2 left-2">
+                        <span className="text-xs text-white/70 font-medium bg-black/60 px-2 py-1 rounded-lg">Thumbnail</span>
+                      </div>
                     </div>
-                  )}
-                  
-                  {/* Video action buttons - liquid glass style */}
-                  <div className="absolute bottom-2 right-2 flex items-center gap-1.5">
-                    {/* Thumbnail button */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); triggerThumbnailUpload(index); }}
-                          className={`flex items-center justify-center w-7 h-7 rounded-full transition-all duration-300 hover:scale-105
-                            ${m.thumbnail 
-                              ? 'bg-white/25 text-white backdrop-blur-xl border border-white/40' 
-                              : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
-                            }`}
-                        >
-                          <ImageIcon className="w-3 h-3" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>Add custom thumbnail</TooltipContent>
-                    </Tooltip>
                     
-                    {/* Music Video Toggle */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
+                    {/* Frame Selection Strip */}
+                    <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1 w-[280px] sm:w-[320px] md:w-[380px]">
+                      {/* Upload button */}
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); triggerThumbnailUpload(index); }}
+                        className="flex-shrink-0 w-16 h-9 rounded-lg bg-zinc-800 border border-white/20 hover:border-white/40 flex items-center justify-center transition-colors"
+                      >
+                        <Upload className="w-4 h-4 text-white/60" />
+                      </button>
+                      
+                      {/* Loading indicator */}
+                      {extractingFrames.has(index) && (
+                        <div className="flex-shrink-0 w-16 h-9 rounded-lg bg-zinc-800 border border-white/20 flex items-center justify-center">
+                          <Loader2 className="w-4 h-4 text-white/60 animate-spin" />
+                        </div>
+                      )}
+                      
+                      {/* Frame thumbnails */}
+                      {videoFrames.get(index)?.map((frameUrl, frameIndex) => (
                         <button
+                          key={frameIndex}
                           type="button"
-                          onClick={(e) => { e.stopPropagation(); onToggleMusicVideo?.(index); }}
-                          className={`flex items-center justify-center w-7 h-7 rounded-full transition-all duration-300 hover:scale-105
-                            ${m.isMusicVideo 
-                              ? 'bg-emerald-500/30 text-white backdrop-blur-xl border border-emerald-400/40' 
-                              : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
-                            }`}
+                          onClick={(e) => { e.stopPropagation(); onAddThumbnail?.(index, frameUrl); }}
+                          className={`flex-shrink-0 w-16 h-9 rounded-lg overflow-hidden border-2 transition-colors ${
+                            m.thumbnail === frameUrl 
+                              ? 'border-white' 
+                              : 'border-transparent hover:border-white/50'
+                          }`}
                         >
-                          <Music className="w-3 h-3" />
+                          <img src={frameUrl} alt={`Frame ${frameIndex + 1}`} className="w-full h-full object-cover" />
                         </button>
-                      </TooltipTrigger>
-                      <TooltipContent>Mark as music video</TooltipContent>
-                    </Tooltip>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
-              <button
-                onClick={() => onRemove(index)}
-                className="absolute top-2 right-2 p-1 bg-black/70 hover:bg-black rounded-full transition-colors"
-              >
-                <X className="w-3 h-3 text-white" />
-              </button>
-            </div>
-          ))}
+                ) : null}
+              </div>
+            ))}
           </div>
         </motion.div>
       </AnimatePresence>
@@ -871,7 +1069,7 @@ export function PostMediaPreview({
             </motion.div>
 
             {/* Image counter */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white text-sm">
               {fullscreenPreview.index + 1} / {media.length}
             </div>
           </motion.div>

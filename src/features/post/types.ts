@@ -24,7 +24,12 @@ export interface MediaFile {
   duration?: number;
   audio?: AudioFile;
   isMusicVideo?: boolean;
+  /** Display URL for thumbnail (blob URL or external) */
   thumbnail?: string;
+  /** Blob for uploading thumbnail to backend */
+  thumbnailBlob?: Blob;
+  /** Whether the thumbnail was auto-generated (vs custom uploaded) */
+  isAutoThumbnail?: boolean;
   filterSettings?: FilterSettings;
   filterPresetId?: string;
   cropSettings?: CropSettings;
@@ -38,6 +43,8 @@ export type LiveMode = 'video' | 'townhall' | null;
 
 export interface PostFormState {
   text: string;
+  description: string;
+  showDescription: boolean;
   media: MediaFile[];
   isSubscribersOnly: boolean;
   isPPV: boolean;
@@ -53,10 +60,13 @@ export interface PostFormState {
   tokenAmount: string;
   liveMode: LiveMode;
   isEnhancing: boolean;
+  isPosting: boolean;
 }
 
 export interface PostFormActions {
   setText: (text: string) => void;
+  setDescription: (description: string) => void;
+  setShowDescription: (show: boolean) => void;
   setMedia: React.Dispatch<React.SetStateAction<MediaFile[]>>;
   setIsSubscribersOnly: (value: boolean) => void;
   setIsPPV: (value: boolean) => void;
@@ -79,7 +89,7 @@ export interface PostFormActions {
   addAudioToMedia: (index: number, audio: AudioFile) => void;
   removeAudioFromMedia: (index: number) => void;
   toggleMusicVideo: (index: number) => void;
-  addThumbnailToMedia: (index: number, thumbnailUrl: string) => void;
+  addThumbnailToMedia: (index: number, thumbnailUrl: string) => Promise<void>;
   removeThumbnailFromMedia: (index: number) => void;
   applyFilterToMedia: (index: number, settings: FilterSettings, presetId?: string) => void;
   clearFilterFromMedia: (index: number) => void;

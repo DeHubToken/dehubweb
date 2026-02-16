@@ -4,28 +4,25 @@
  * Universal header for all feed card types.
  * Displays avatar with gradient ring, username, verified badge, and content type label.
  * Clickable to navigate to creator's profile.
- * 
- * @example
- * ```tsx
- * <CardHeader
- *   username="TechGuru"
- *   avatarSeed="tech"
- *   verified={true}
- *   contentType="video"
- *   creatorId="123"
- *   creatorUsername="techguru"
- * />
- * ```
+ * Badge is fetched on-chain via useBadgeBalance hook.
  */
 
+import { useState } from 'react';
 import { CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
+import { getAgentAvatarFallback } from '@/constants/agent-avatars.constants';
+import { getBadgeUrl } from '@/lib/staking-badges';
+import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
+
 import type { ContentType } from '@/types/feed.types';
 
 interface CardHeaderProps {
   /** Display name or username */
   username: string;
+  /** @handle for the user (optional, shown greyed next to username) */
+  handle?: string;
   /** Seed for generating avatar image or actual avatar URL */
   avatarSeed: string;
   /** Whether user is verified */
@@ -38,6 +35,10 @@ interface CardHeaderProps {
   creatorId?: string;
   /** Creator's username for URL-based navigation */
   creatorUsername?: string;
+  /** Timestamp to show next to username (e.g., "2h") */
+  timestamp?: string;
+  /** View count to show next to timestamp */
+  viewCount?: string | number;
 }
 
 /**
@@ -53,19 +54,31 @@ const CONTENT_BADGES: Record<ContentType, { label: string; className: string }> 
 
 export function CardHeader({ 
   username, 
+  handle,
   avatarSeed, 
   verified = false, 
   contentType,
   isLive = false,
   creatorId,
   creatorUsername,
+  timestamp,
+  viewCount,
 }: CardHeaderProps) {
   const navigate = useNavigate();
+  const [imageError, setImageError] = useState(false);
   const badge = CONTENT_BADGES[contentType];
 
-  // Only use avatarSeed as image source if it's a real URL
-  const hasRealAvatar = avatarSeed.startsWith('http');
-  const avatarSrc = hasRealAvatar ? avatarSeed : undefined;
+  // Use live avatar from cache, falling back to feed-provided avatar
+  const liveAvatarUrl = useProfileAvatar(creatorId, avatarSeed);
+  const agentFallback = getAgentAvatarFallback(creatorId);
+  
+  // Badge balance from batch context (single request per feed page)
+  const { badgeBalance } = useBatchedBadgeBalance(creatorId);
+  const badgeUrl = getBadgeUrl(badgeBalance);
+  
+  // Only use avatarSeed as image source if it's a real URL and hasn't errored
+  const hasRealAvatar = liveAvatarUrl && liveAvatarUrl.startsWith('http') && !imageError;
+  const avatarSrc = hasRealAvatar ? liveAvatarUrl : agentFallback;
 
   const handleProfileClick = () => {
     // Prefer username-based navigation, fallback to ID
@@ -78,33 +91,39 @@ export function CardHeader({
   };
 
   const isClickable = !!(creatorId || creatorUsername);
+  
+  // Format handle to ensure it starts with @
+  const formattedHandle = handle ? (handle.startsWith('@') ? handle : `@${handle}`) : null;
 
   return (
-    <div className="flex items-center gap-3 p-3">
+    <div className="flex items-center gap-3 pb-3 pr-3 flex-1 min-w-0">
       <button
         onClick={handleProfileClick}
         disabled={!isClickable}
-        className={`flex items-center gap-3 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
+        className={`flex items-center gap-3 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
       >
-        {isLive ? (
-          <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-            <div className="p-0.5 bg-zinc-900 rounded-full">
-              <Avatar className="w-8 h-8">
-                {avatarSrc && <AvatarImage src={avatarSrc} />}
-                <AvatarFallback className="bg-zinc-700 text-white font-medium">{username[0]?.toUpperCase()}</AvatarFallback>
-              </Avatar>
-            </div>
+        <Avatar className="w-9 h-9 rounded-md">
+          {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-md" />}
+          <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-md">{username[0]?.toUpperCase()}</AvatarFallback>
+        </Avatar>
+        <div className="flex flex-col min-w-0">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="relative inline-flex items-baseline shrink min-w-0">
+              <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
+              {badgeUrl && (
+                <img 
+                  src={badgeUrl} 
+                  alt="Badge" 
+                  className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" 
+                />
+              )}
+            </span>
+            {verified && <CheckCircle className="w-3.5 h-3.5 text-blue-500 shrink-0" />}
+            
           </div>
-        ) : (
-          <Avatar className="w-8 h-8">
-            {avatarSrc && <AvatarImage src={avatarSrc} />}
-            <AvatarFallback className="bg-zinc-700 text-white font-medium">{username[0]?.toUpperCase()}</AvatarFallback>
-          </Avatar>
-        )}
-        <div className="flex items-center gap-1">
-          <span className="font-semibold text-white text-sm">{username}</span>
-          {verified && <CheckCircle className="w-4 h-4 text-blue-500" />}
-          {isLive && <span className="ml-2 w-2 h-2 bg-red-500 rounded-full animate-pulse" />}
+          {formattedHandle && (
+            <span className="text-zinc-500 text-xs truncate max-w-[160px] sm:max-w-none">{formattedHandle}</span>
+          )}
         </div>
       </button>
     </div>

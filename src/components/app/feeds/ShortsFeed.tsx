@@ -7,13 +7,17 @@
  */
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { Loader2, RefreshCw, Play, Filter } from 'lucide-react';
+import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
+import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
+import { RefreshCw, Play, Filter, Eye, Loader2 } from 'lucide-react';
+import { ShortsFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
-import { useDeHubVideos } from '@/hooks/use-dehub-feed';
+import { useDeHubFeed } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { SORT_OPTIONS, DATE_FILTER_OPTIONS, applySorting, filterByDate, getApiSortMode, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
@@ -47,6 +51,10 @@ const FALLBACK_CATEGORIES: DeHubCategory[] = [
 ];
 
 type DurationFilter = typeof DURATION_FILTERS[number];
+
+// Shared filter pill styles
+const ACTIVE_FILTER_CLASS = 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]';
+const INACTIVE_FILTER_CLASS = 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700';
 
 // ============================================================================
 // HELPERS
@@ -92,23 +100,42 @@ function parseTimeAgoToDate(timeAgo: string): Date {
 // Map video NFT to ShortVideo format
 function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSeconds: number; uploadedAgo: string } {
   const id = String(nft.tokenId || nft.id || nft.token_id);
-  const durationStr = nft.duration || '0:30';
+  // Use videoDuration (number in seconds) directly if available, fallback to string parsing
+  const durationSeconds = typeof nft.videoDuration === 'number' 
+    ? nft.videoDuration 
+    : parseDurationToSeconds(nft.duration || '0:00');
+  const viewCount = nft.views || nft.view_count || 0;
+  const minterAddress = nft.minter || nft.creator?.id || nft.creator?.address || '';
+  
+  // Try all possible avatar fields - same pattern as leaderboard/profile
+  const rawAvatarUrl = nft.minterAvatarUrl || nft.minterAvatarImg || nft.avatarUrl || nft.avatarImg ||
+                       nft.creator?.avatar_url || nft.creator?.avatarImg || nft.creator?.avatarUrl;
+  const avatarUrl = rawAvatarUrl?.startsWith('http') 
+    ? rawAvatarUrl 
+    : buildAvatarUrl(minterAddress, rawAvatarUrl);
   
   return {
     id,
     type: 'short',
-    username: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'user',
+    username: nft.minterDisplayName || nft.minterUsername || nft.mintername || nft.creator?.username || 'user',
+    // Use minterUsername for the @handle, not display name
+    handle: nft.minterUsername || nft.mintername || nft.creator?.username || 'user',
     verified: nft.creator?.is_verified || false,
-    likes: formatLikes(nft.totalVotes?.for || nft.like_count || 0),
+    avatar: avatarUrl || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
+    likes: String(nft.totalVotes?.for || nft.like_count || 0),
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
-    videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || '',
+    videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || (id ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4` : ''),
     description: nft.description || nft.name || nft.title || '',
     sound: 'Original Sound',
     comments: formatLikes(nft.commentCount || nft.comment_count || 0),
     shares: '0',
-    durationSeconds: parseDurationToSeconds(durationStr),
+    views: formatLikes(viewCount),
+    durationSeconds: Math.round(durationSeconds),
     uploadedAgo: nft.uploadedAgo || nft.createdAt || '1d ago',
-  };
+    creatorUsername: nft.minterUsername || nft.mintername || nft.creator?.username || 'user',
+    creatorId: minterAddress,
+    displayName: nft.minterDisplayName || undefined,
+  } as ShortVideo & { durationSeconds: number; uploadedAgo: string; handle: string };
 }
 
 // ============================================================================
@@ -119,21 +146,24 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
-      <div className="flex gap-1.5 flex-wrap">
-        {SORT_OPTIONS.map((option) => (
-          <button
-            key={option.label}
-            onClick={() => onSelect(option)}
-            className={cn(
-              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-              selected.label === option.label
-                ? 'bg-white text-black'
-                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-            )}
-          >
-            {option.label}
-          </button>
-        ))}
+      <div className="relative">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+          {SORT_OPTIONS.map((option) => (
+            <button
+              key={option.label}
+              onClick={() => onSelect(option)}
+              className={cn(
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                selected.label === option.label
+                  ? ACTIVE_FILTER_CLASS
+                  : INACTIVE_FILTER_CLASS
+              )}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
       </div>
     </div>
   );
@@ -143,21 +173,119 @@ function DurationFilterSection({ selected, onSelect }: { selected: DurationFilte
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">Duration</span>
-      <div className="flex gap-1.5 flex-wrap">
-        {DURATION_FILTERS.map((option) => (
+      <div className="relative">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+          {DURATION_FILTERS.map((option) => (
+            <button
+              key={option.label}
+              onClick={() => onSelect(option)}
+              className={cn(
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                selected.label === option.label
+                  ? ACTIVE_FILTER_CLASS
+                  : INACTIVE_FILTER_CLASS
+              )}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+      </div>
+    </div>
+  );
+}
+
+// Category Filter Section with search
+function CategoryFilterSection({ 
+  categories, 
+  selectedCategory, 
+  onSelect,
+  isLoading 
+}: { 
+  categories: DeHubCategory[]; 
+  selectedCategory: string | null; 
+  onSelect: (cat: string | null) => void;
+  isLoading?: boolean;
+}) {
+  const [search, setSearch] = useState('');
+  
+  const selectedObj = useMemo(() => {
+    if (!selectedCategory) return null;
+    return categories.find(c => c.id === selectedCategory) || null;
+  }, [categories, selectedCategory]);
+
+  const filtered = useMemo(() => {
+    let list = categories;
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter(c => c.name.toLowerCase().includes(q));
+    }
+    if (selectedObj) {
+      list = list.filter(c => c.id !== selectedCategory);
+    }
+    return list;
+  }, [categories, search, selectedCategory, selectedObj]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">Category</span>
+        <div className="flex items-center justify-center py-3">
+          <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
+          <span className="text-xs text-zinc-500 ml-2">Loading categories...</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">Category</span>
+      <input
+        type="text"
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        placeholder="Search categories..."
+        className="w-full px-3 py-1.5 rounded-lg text-xs bg-zinc-800 text-zinc-200 placeholder-zinc-500 border border-zinc-700 focus:border-zinc-500 focus:outline-none transition-colors mb-1"
+      />
+      <div className="relative">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+          {selectedObj && (
+            <button
+              onClick={() => { onSelect(null); setSearch(''); }}
+              className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", ACTIVE_FILTER_CLASS)}
+            >
+              {selectedObj.name}
+              <span className="ml-0.5 text-white/50 hover:text-white">✕</span>
+            </button>
+          )}
           <button
-            key={option.label}
-            onClick={() => onSelect(option)}
+            onClick={() => { onSelect(null); setSearch(''); }}
             className={cn(
-              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-              selected.label === option.label
-                ? 'bg-white text-black'
-                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+              selectedCategory === null ? ACTIVE_FILTER_CLASS : INACTIVE_FILTER_CLASS
             )}
           >
-            {option.label}
+            All
           </button>
-        ))}
+          {filtered.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => { onSelect(cat.id); setSearch(''); }}
+              className={cn(
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                selectedCategory === cat.id ? ACTIVE_FILTER_CLASS : INACTIVE_FILTER_CLASS
+              )}
+            >
+              {cat.name}
+            </button>
+          ))}
+          {filtered.length === 0 && search.trim() && (
+            <span className="text-xs text-zinc-500 py-1.5">No matches</span>
+          )}
+        </div>
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
       </div>
     </div>
   );
@@ -167,21 +295,24 @@ function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterO
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
-      <div className="flex gap-1.5 flex-wrap">
-        {DATE_FILTER_OPTIONS.map((option) => (
-          <button
-            key={option.label}
-            onClick={() => onSelect(option)}
-            className={cn(
-              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-              selected.label === option.label
-                ? 'bg-white text-black'
-                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-            )}
-          >
-            {option.label}
-          </button>
-        ))}
+      <div className="relative">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+          {DATE_FILTER_OPTIONS.map((option) => (
+            <button
+              key={option.label}
+              onClick={() => onSelect(option)}
+              className={cn(
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                selected.label === option.label
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
       </div>
     </div>
   );
@@ -198,12 +329,12 @@ interface ShortsFeedProps {
 }
 
 export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: ShortsFeedProps) {
-  // Sort is now client-side
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
-  // Duration and upload date are client-side filters
-  const [selectedDuration, setSelectedDuration] = useState(DURATION_FILTERS[0]);
-  const [selectedUploadDate, setSelectedUploadDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  // Sort is now client-side - default to "Latest" instead of "Random" to avoid 5-page prefetch - persisted
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('shorts', 'sort', SORT_OPTIONS[0]);
+  // Duration and upload date are client-side filters - persisted
+  const [selectedDuration, setSelectedDuration] = usePersistedFeedFilter<typeof DURATION_FILTERS[number]>('shorts', 'duration', DURATION_FILTERS[0]);
+  const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('shorts', 'date', DATE_FILTER_OPTIONS[0]);
+  const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('shorts', 'category', null);
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const loaderRef = useRef<HTMLDivElement>(null);
@@ -211,11 +342,12 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const { walletAddress } = useAuth();
 
   // Fetch categories from API
-  const { data: apiCategories } = useQuery({
+  const { data: apiCategories, isLoading: categoriesLoading } = useQuery({
     queryKey: ['dehub-categories'],
     queryFn: getCategories,
     staleTime: 1000 * 60 * 30,
     retry: 2,
+    enabled: showFilters,
   });
 
   // Use API categories with fallback
@@ -235,11 +367,11 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     isLoading: isApiLoading,
     isError,
     refetch,
-  } = useDeHubVideos({
-    unit: 15,
+  } = useDeHubFeed({
+    unit: 12,
     sortMode: getApiSortMode(selectedSort.value),
     category: selectedCategory || undefined,
-    address: walletAddress || undefined,
+    postType: 'video',
   });
 
   // Refetch when refreshKey changes
@@ -257,6 +389,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   // Apply date filter on raw NFTs, then sort and map to ShortVideo array
   const allShorts = useMemo(() => {
+    // API now returns only videos (postType: 'video'), no client-side filter needed
     const dateFiltered = filterByDate(allRawNFTs, selectedUploadDate.value);
     const sorted = applySorting(dateFiltered, selectedSort.value);
     return sorted.map((nft, index) => mapToShortVideo(nft, index));
@@ -309,7 +442,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
         <Play className="w-8 h-8 text-zinc-500" />
       </div>
       <h3 className="text-white font-semibold text-lg mb-2">No Shorts Yet</h3>
@@ -320,7 +453,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
       </p>
       <button 
         onClick={() => refetch()}
-        className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors flex items-center gap-2"
+        className="px-4 py-2 rounded-xl bg-white/10 text-white text-sm hover:bg-white/20 transition-colors flex items-center gap-2"
       >
         <RefreshCw className="w-4 h-4" />
         Refresh
@@ -330,7 +463,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   const FilteredEmptyState = () => (
     <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-3">
+      <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
         <Filter className="w-6 h-6 text-zinc-500" />
       </div>
       <h3 className="text-white font-semibold mb-1">No matches</h3>
@@ -346,17 +479,24 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     </div>
   );
 
-  if (isLoading) {
+  const { isAutoRetrying } = useAutoRetryFeed({
+    itemCount: allShorts.length,
+    isLoading: isApiLoading,
+    isError,
+    refetch,
+  });
+
+  if (isLoading || isAutoRetrying) {
     return (
-      <div className="p-2 sm:p-3 flex items-center justify-center py-32">
-        <Loader2 className="w-10 h-10 text-white animate-spin" />
+      <div className="p-2 sm:p-3 pt-0 sm:pt-0">
+        <ShortsFeedSkeleton />
       </div>
     );
   }
 
   return (
     <>
-      <div className="p-2 sm:p-3">
+      <div className="p-2 sm:p-3 pt-0 sm:pt-0">
         {/* Filters */}
         <AnimatePresence>
           {showFilters && (
@@ -367,45 +507,54 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
               transition={{ duration: 0.25, ease: 'easeOut' }}
               className="overflow-hidden"
             >
-              <div className="bg-zinc-900 rounded-2xl p-4 mb-3 space-y-4">
+              <div data-no-swipe className="relative bg-zinc-900 rounded-2xl p-4 mb-3 space-y-4">
                 <SortFilterSection selected={selectedSort} onSelect={setSelectedSort} />
+                <CategoryFilterSection 
+                  categories={categories} 
+                  selectedCategory={selectedCategory} 
+                  onSelect={setSelectedCategory}
+                  isLoading={categoriesLoading}
+                />
                 <DurationFilterSection selected={selectedDuration} onSelect={setSelectedDuration} />
-                <UploadDateFilterSection selected={selectedUploadDate} onSelect={setSelectedUploadDate} />
+                <div className="flex flex-col gap-2">
+                  <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
+                  <div className="relative">
+                    <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+                      {DATE_FILTER_OPTIONS.map((option) => (
+                        <button
+                          key={option.label}
+                          onClick={() => setSelectedUploadDate(option)}
+                          className={cn(
+                            'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                            selectedUploadDate.label === option.label
+                              ? ACTIVE_FILTER_CLASS
+                              : INACTIVE_FILTER_CLASS
+                          )}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+                  </div>
+                </div>
+                {/* Reset filters - bottom right */}
+                <button
+                  onClick={() => {
+                    setSelectedSort(SORT_OPTIONS[1]);
+                    setSelectedCategory(null);
+                    setSelectedDuration(DURATION_FILTERS[0]);
+                    setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
+                  }}
+                  className="absolute bottom-4 right-4 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+                  aria-label="Reset filters"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                </button>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Category Pills */}
-        <div className="bg-zinc-900 rounded-2xl p-3 mb-3">
-          <div className="relative">
-            <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
-            
-            <SwipeableCarousel className="flex gap-2 overflow-x-auto scrollbar-hide px-1">
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className={cn(
-                  'px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
-                  selectedCategory === null ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                )}
-              >
-                All
-              </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={cn(
-                    'px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
-                    selectedCategory === cat.id ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                  )}
-                >
-                  {cat.name}
-                </button>
-              ))}
-            </SwipeableCarousel>
-          </div>
-        </div>
 
         {/* Shorts Grid or Empty State */}
         {allShorts.length === 0 ? (
@@ -417,11 +566,8 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
             {/* Shorts Grid - TikTok Style */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
               {shorts.map((short, index) => (
-                <motion.div
+                <div
                   key={short.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: (index % 9) * 0.05 }}
                   onClick={() => handleShortClick(index)}
                   className="relative aspect-[9/16] bg-zinc-900 rounded-xl overflow-hidden cursor-pointer group"
                 >
@@ -436,27 +582,53 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
                   {/* Bottom Info */}
-                  <div className="absolute bottom-2 left-2 right-2">
-                    <div className="flex items-center gap-1 mb-1">
-                      <span className="font-semibold text-white text-sm">@{short.username}</span>
-                      {short.verified && (
-                        <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                        </svg>
-                      )}
+                  <div className="absolute bottom-2 left-2 right-2 flex items-end justify-between">
+                    <div className="flex items-center gap-2">
+                      {/* Creator Avatar */}
+                      <div className="w-7 h-7 rounded-md bg-zinc-700 flex-shrink-0 overflow-hidden">
+                        {short.avatar ? (
+                          <img 
+                            src={short.avatar} 
+                            alt="" 
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none';
+                              (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                            }}
+                          />
+                        ) : null}
+                        <span className={`w-full h-full flex items-center justify-center text-white text-[10px] font-medium ${short.avatar ? 'hidden' : ''}`}>
+                          {short.username?.[0]?.toUpperCase()}
+                        </span>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-1">
+                          <span className="font-semibold text-white text-sm">@{(short as any).handle || short.creatorUsername || short.username}</span>
+                          {short.verified && (
+                            <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                          )}
+                        </div>
+                        <p className="text-white text-xs">{short.likes} {short.likes === '1' ? 'like' : 'likes'}</p>
+                      </div>
                     </div>
-                    <p className="text-white text-xs">{short.likes} likes</p>
+                    {/* View count - bottom right */}
+                    <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-md px-1.5 py-0.5">
+                      <Eye className="w-3 h-3 text-white" />
+                      <span className="text-white text-xs font-medium">{short.views || '0'}</span>
+                    </div>
                   </div>
 
                   {/* Play indicator on hover */}
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                    <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
                       <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z" />
                       </svg>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
 
@@ -483,6 +655,9 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
             shorts={shorts}
             initialIndex={selectedIndex}
             onClose={() => setViewerOpen(false)}
+            onLoadMore={() => fetchNextPage()}
+            hasMore={hasNextPage ?? false}
+            isLoadingMore={isFetchingNextPage}
           />
         )}
       </AnimatePresence>

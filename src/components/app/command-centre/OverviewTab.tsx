@@ -12,10 +12,10 @@ export function OverviewTab() {
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-white">Overview</h2>
         <div className="flex gap-2">
-          <Button className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm h-9 px-4 rounded-full">
+          <Button variant="glass" className="text-sm h-9 px-4 rounded-xl">
             Add funds
           </Button>
-          <Button variant="outline" className="border-zinc-700 text-white text-sm h-9 px-4 rounded-full bg-transparent hover:bg-zinc-800">
+          <Button variant="glass" className="text-sm h-9 px-4 rounded-xl">
             Withdraw
           </Button>
         </div>

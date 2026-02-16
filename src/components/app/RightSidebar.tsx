@@ -4,6 +4,7 @@ import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { TabbedSidePanel } from './sidebar';
 import { WhatsHappening } from './WhatsHappening';
+import { useSearchHistory } from '@/hooks/use-search-history';
 
 interface RightSidebarProps {
   showSearch?: boolean;
@@ -12,16 +13,19 @@ interface RightSidebarProps {
 export function RightSidebar({ showSearch = true }: RightSidebarProps) {
   const [searchValue, setSearchValue] = useState('');
   const navigate = useNavigate();
+  const { addToHistory } = useSearchHistory();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchValue.trim()) {
+      // Add to search history before navigating
+      addToHistory(searchValue.trim());
       navigate(`/app/explore?q=${encodeURIComponent(searchValue.trim())}`);
       setSearchValue('');
     }
   };
 
   return (
-    <aside className="hidden xl:block w-80 h-screen sticky top-0 p-4 space-y-4 overflow-y-auto scrollbar-invisible">
+    <aside className="hidden lg:block w-72 xl:w-80 h-screen sticky top-0 p-4 overflow-y-auto scrollbar-invisible">
       {showSearch && (
         <div className="bg-zinc-900 rounded-2xl p-2 -mt-[5px]">
           <div className="relative">
@@ -36,8 +40,10 @@ export function RightSidebar({ showSearch = true }: RightSidebarProps) {
           </div>
         </div>
       )}
-      <TabbedSidePanel />
-      <WhatsHappening />
+      <div className="mt-[11px] space-y-4">
+        <TabbedSidePanel />
+        <WhatsHappening />
+      </div>
     </aside>
   );
 }

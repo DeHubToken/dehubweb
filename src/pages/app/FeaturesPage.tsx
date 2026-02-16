@@ -1,0 +1,618 @@
+/**
+ * Feature Requests Page
+ * =====================
+ * Community-driven feature request board.
+ * Users can submit ideas and vote on existing ones.
+ */
+
+import { useState, useMemo, useCallback } from 'react';
+import { Lightbulb, Search, ChevronUp, ChevronDown, Plus, X, Loader2, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { UserAvatar } from '@/components/app/UserAvatar';
+import { useAuth } from '@/contexts/AuthContext';
+import { buildAvatarUrl } from '@/lib/media-url';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
+import {
+  useFeatureRequests,
+  useShippedFeatures,
+  useUserVotes,
+  useSubmitFeatureRequest,
+  useVoteFeatureRequest,
+  CATEGORY_LABELS,
+  STATUS_LABELS,
+  type FeatureCategory,
+  type FeatureSort,
+  type FeatureRequest,
+  type FeatureStatus,
+} from '@/hooks/use-feature-requests';
+import { z } from 'zod';
+
+const featureSchema = z.object({
+  title: z.string().trim().min(1, 'Title is required').max(100, 'Title must be under 100 characters'),
+  description: z.string().trim().min(1, 'Description is required').max(1000, 'Description must be under 1,000 characters'),
+  category: z.enum(['ui_ux', 'performance', 'new_feature', 'bug_fix', 'integration', 'other']),
+});
+
+const CATEGORIES: { id: FeatureCategory | 'all'; label: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'ui_ux', label: 'UI/UX' },
+  { id: 'performance', label: 'Performance' },
+  { id: 'new_feature', label: 'New Feature' },
+  { id: 'bug_fix', label: 'Bug Fix' },
+  { id: 'integration', label: 'Integration' },
+  { id: 'other', label: 'Other' },
+];
+
+type PageTab = 'requests' | 'shipped';
+
+const SORTS: { id: FeatureSort; label: string }[] = [
+  { id: 'most_voted', label: 'Most Voted' },
+  { id: 'newest', label: 'Newest' },
+];
+
+const STATUS_COLORS: Record<FeatureStatus, string> = {
+  open: 'bg-zinc-700 text-zinc-300',
+  under_review: 'bg-amber-900/40 text-amber-400',
+  planned: 'bg-blue-900/40 text-blue-400',
+  in_progress: 'bg-purple-900/40 text-purple-400',
+  completed: 'bg-emerald-900/40 text-emerald-400',
+  declined: 'bg-red-900/40 text-red-400',
+};
+
+function formatTimeAgo(dateStr: string): string {
+  const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if (seconds < 60) return 'just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  const months = Math.floor(days / 30);
+  return `${months}mo ago`;
+}
+
+// ──────────────────────────────────────────────────
+// Vote Button Component
+// ──────────────────────────────────────────────────
+function VoteButtons({
+  featureId,
+  voteCount,
+  currentVote,
+  onVote,
+  disabled,
+}: {
+  featureId: string;
+  voteCount: number;
+  currentVote: number | undefined;
+  onVote: (featureId: string, voteType: 1 | -1, currentVote: number | undefined) => void;
+  disabled: boolean;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-0.5 min-w-[40px]">
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); onVote(featureId, 1, currentVote); }}
+        disabled={disabled}
+        className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${
+          currentVote === 1
+            ? 'bg-white text-black'
+            : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
+        }`}
+        aria-label="Upvote"
+      >
+        <ChevronUp className="w-4 h-4" />
+      </button>
+      <span className={`text-sm font-bold tabular-nums ${voteCount > 0 ? 'text-white' : voteCount < 0 ? 'text-zinc-500' : 'text-zinc-400'}`}>
+        {voteCount}
+      </span>
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); onVote(featureId, -1, currentVote); }}
+        disabled={disabled}
+        className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${
+          currentVote === -1
+            ? 'bg-white text-black'
+            : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
+        }`}
+        aria-label="Downvote"
+      >
+        <ChevronDown className="w-4 h-4" />
+      </button>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────
+// Feature Card Component
+// ──────────────────────────────────────────────────
+function FeatureCard({
+  feature,
+  currentVote,
+  onVote,
+  voteDisabled,
+}: {
+  feature: FeatureRequest;
+  currentVote: number | undefined;
+  onVote: (featureId: string, voteType: 1 | -1, currentVote: number | undefined) => void;
+  voteDisabled: boolean;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  const avatarUrl = feature.author_avatar && feature.author_wallet_address
+    ? buildAvatarUrl(feature.author_wallet_address, feature.author_avatar)
+    : null;
+
+  const displayName = feature.author_username
+    ? `@${feature.author_username}`
+    : `${feature.author_wallet_address.slice(0, 6)}...${feature.author_wallet_address.slice(-4)}`;
+
+  return (
+    <div
+      className="bg-zinc-900 rounded-2xl p-4 flex gap-3 cursor-pointer hover:bg-zinc-800/70 transition-colors"
+      onClick={() => setExpanded(!expanded)}
+    >
+      <VoteButtons
+        featureId={feature.id}
+        voteCount={feature.vote_count}
+        currentVote={currentVote}
+        onVote={onVote}
+        disabled={voteDisabled}
+      />
+
+      <div className="flex-1 min-w-0">
+        {/* Title and status */}
+        <div className="flex items-start gap-2 mb-1.5">
+          <h3 className="text-white font-semibold text-sm leading-tight flex-1 min-w-0">
+            {feature.title}
+          </h3>
+          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 ${STATUS_COLORS[feature.status]}`}>
+            {STATUS_LABELS[feature.status]}
+          </span>
+        </div>
+
+        {/* Description */}
+        <p className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`}>
+          {feature.description}
+        </p>
+
+        {/* Footer: author + category + time */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-1.5">
+            <UserAvatar
+              name={feature.author_username || feature.author_wallet_address.slice(0, 6)}
+              handle={feature.author_username || feature.author_wallet_address}
+              size="sm"
+            />
+            <span className="text-zinc-500 text-[11px]">{displayName}</span>
+          </div>
+          <span className="text-zinc-700 text-[11px]">·</span>
+          <span className="text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded-lg text-[10px] font-medium">
+            {CATEGORY_LABELS[feature.category]}
+          </span>
+          <span className="text-zinc-700 text-[11px]">·</span>
+          <span className="text-zinc-500 text-[11px]">{formatTimeAgo(feature.created_at)}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────
+// Submit Feature Drawer
+// ──────────────────────────────────────────────────
+function SubmitFeatureDrawer({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState<FeatureCategory>('new_feature');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const submitMutation = useSubmitFeatureRequest();
+
+  const handleSubmit = () => {
+    const result = featureSchema.safeParse({ title, description, category });
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      for (const issue of result.error.issues) {
+        fieldErrors[issue.path[0] as string] = issue.message;
+      }
+      setErrors(fieldErrors);
+      return;
+    }
+    setErrors({});
+    submitMutation.mutate(
+      { title: result.data.title, description: result.data.description, category: result.data.category as FeatureCategory },
+      {
+        onSuccess: () => {
+          setTitle('');
+          setDescription('');
+          setCategory('new_feature');
+          onOpenChange(false);
+        },
+      }
+    );
+  };
+
+  return (
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[85vh]">
+        <DrawerHeader className="relative">
+          <DrawerTitle className="text-white text-lg font-bold">Submit Feature Request</DrawerTitle>
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            className="absolute right-4 top-4 w-8 h-8 flex items-center justify-center rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </DrawerHeader>
+
+        <div className="px-4 pb-6 space-y-4">
+          {/* Title */}
+          <div>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">Title</label>
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Brief title for your idea..."
+              maxLength={100}
+              className="bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl"
+            />
+            <div className="flex justify-between mt-1">
+              {errors.title && <span className="text-red-400 text-[11px]">{errors.title}</span>}
+              <span className="text-zinc-600 text-[11px] ml-auto">{title.length}/100</span>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Describe your feature idea in detail..."
+              maxLength={1000}
+              rows={4}
+              className="w-full bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
+            />
+            <div className="flex justify-between mt-1">
+              {errors.description && <span className="text-red-400 text-[11px]">{errors.description}</span>}
+              <span className="text-zinc-600 text-[11px] ml-auto">{description.length}/1000</span>
+            </div>
+          </div>
+
+          {/* Category */}
+          <div>
+            <label className="text-zinc-400 text-xs font-medium mb-2 block">Category</label>
+            <div className="flex flex-wrap gap-2">
+              {CATEGORIES.filter((c) => c.id !== 'all').map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setCategory(cat.id as FeatureCategory)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
+                    category === cat.id
+                      ? 'bg-white text-black'
+                      : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Submit */}
+          <Button
+            onClick={handleSubmit}
+            disabled={submitMutation.isPending}
+            variant="glass"
+            className="w-full rounded-xl font-semibold"
+          >
+            {submitMutation.isPending ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4" />
+                Submit Request
+              </>
+            )}
+          </Button>
+        </div>
+      </DrawerContent>
+    </Drawer>
+  );
+}
+
+// ──────────────────────────────────────────────────
+// Skeleton Loader
+// ──────────────────────────────────────────────────
+function FeatureSkeletons() {
+  return (
+    <div className="space-y-3">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="bg-zinc-900 rounded-2xl p-4 flex gap-3 animate-pulse">
+          <div className="flex flex-col items-center gap-1 min-w-[40px]">
+            <div className="w-8 h-8 rounded-lg bg-zinc-800" />
+            <div className="w-5 h-4 rounded bg-zinc-800" />
+            <div className="w-8 h-8 rounded-lg bg-zinc-800" />
+          </div>
+          <div className="flex-1 space-y-2">
+            <div className="h-4 w-3/4 rounded bg-zinc-800" />
+            <div className="h-3 w-full rounded bg-zinc-800" />
+            <div className="h-3 w-1/2 rounded bg-zinc-800" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────
+// Shipped Feature Card (simpler, no voting)
+// ──────────────────────────────────────────────────
+function ShippedCard({ feature }: { feature: FeatureRequest }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div
+      className="bg-zinc-900 rounded-2xl p-4 flex gap-3 cursor-pointer hover:bg-zinc-800/70 transition-colors"
+      onClick={() => setExpanded(!expanded)}
+    >
+      <div className="flex flex-col items-center justify-center min-w-[40px]">
+        <div className="w-8 h-8 rounded-lg bg-emerald-900/40 flex items-center justify-center">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+        </div>
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <div className="flex items-start gap-2 mb-1.5">
+          <h3 className="text-white font-semibold text-sm leading-tight flex-1 min-w-0">
+            {feature.title}
+          </h3>
+          <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 bg-emerald-900/40 text-emerald-400">
+            Shipped
+          </span>
+        </div>
+
+        <p className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`}>
+          {feature.description}
+        </p>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded-lg text-[10px] font-medium">
+            {CATEGORY_LABELS[feature.category]}
+          </span>
+          <span className="text-zinc-700 text-[11px]">·</span>
+          <span className="text-zinc-500 text-[11px]">{formatTimeAgo(feature.updated_at)}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────
+// Main Page
+// ──────────────────────────────────────────────────
+export default function FeaturesPage() {
+  const { isAuthenticated, openLoginModal } = useAuth();
+  const [activeTab, setActiveTab] = useState<PageTab>('requests');
+  const [sort, setSort] = useState<FeatureSort>('most_voted');
+  const [category, setCategory] = useState<FeatureCategory | 'all'>('all');
+  const [searchInput, setSearchInput] = useState('');
+  const search = useDebouncedValue(searchInput, 300);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const { data: features, isLoading } = useFeatureRequests(sort, category, search);
+  const { data: shippedFeatures, isLoading: isLoadingShipped } = useShippedFeatures();
+  const { data: userVotes } = useUserVotes();
+  const voteMutation = useVoteFeatureRequest();
+
+  const handleVote = useCallback(
+    (featureId: string, voteType: 1 | -1, currentVote: number | undefined) => {
+      if (!isAuthenticated) {
+        openLoginModal();
+        return;
+      }
+      voteMutation.mutate({ featureRequestId: featureId, voteType, currentVote });
+    },
+    [isAuthenticated, openLoginModal, voteMutation]
+  );
+
+  const handleSubmitClick = () => {
+    if (!isAuthenticated) {
+      openLoginModal();
+      return;
+    }
+    setDrawerOpen(true);
+  };
+
+  const totalCount = features?.length ?? 0;
+  const shippedCount = shippedFeatures?.length ?? 0;
+
+  return (
+    <div className="min-h-screen p-3 sm:p-4">
+      {/* Header */}
+      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-zinc-800 flex items-center justify-center">
+              <Lightbulb className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-white">Feature Requests</h1>
+              <p className="text-zinc-500 text-sm">{totalCount} {totalCount === 1 ? 'idea' : 'ideas'} submitted</p>
+            </div>
+          </div>
+          <Button
+            onClick={handleSubmitClick}
+            variant="glass"
+            className="rounded-xl font-semibold text-sm"
+            size="sm"
+          >
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">Submit</span>
+          </Button>
+        </div>
+
+        {/* Search */}
+        <div className="relative mb-3">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+          <Input
+            placeholder="Search feature requests..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
+          />
+        </div>
+
+        {/* Page Tabs: Requests / Shipped */}
+        <div className="flex gap-1 bg-zinc-800 rounded-xl p-1 mb-3">
+          <button
+            type="button"
+            onClick={() => setActiveTab('requests')}
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+              activeTab === 'requests'
+                ? 'bg-zinc-700 text-white'
+                : 'text-zinc-500 hover:text-zinc-300'
+            }`}
+          >
+            Requests
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('shipped')}
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1.5 ${
+              activeTab === 'shipped'
+                ? 'bg-zinc-700 text-white'
+                : 'text-zinc-500 hover:text-zinc-300'
+            }`}
+          >
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            Shipped
+            {shippedCount > 0 && (
+              <span className="text-[10px] bg-emerald-900/40 text-emerald-400 px-1.5 py-0.5 rounded-md font-semibold">
+                {shippedCount}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Filters (only shown on requests tab) */}
+        {activeTab === 'requests' && (
+          <>
+            {/* Category Pills */}
+            <div className="relative mb-3">
+              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+              <div className="flex gap-2 overflow-x-auto scrollbar-invisible pb-1">
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setCategory(cat.id)}
+                    className={`px-3 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
+                      category === cat.id
+                        ? 'bg-white text-black'
+                        : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Sort Tabs */}
+            <div className="flex gap-1.5 overflow-x-auto scrollbar-invisible">
+              {SORTS.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => setSort(s.id)}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                    sort === s.id
+                      ? 'bg-zinc-700 text-white'
+                      : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
+                  }`}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Feature List (Requests Tab) */}
+      {activeTab === 'requests' && (
+        <>
+          {isLoading ? (
+            <FeatureSkeletons />
+          ) : features && features.length > 0 ? (
+            <div className="space-y-3">
+              {features.map((feature) => (
+                <FeatureCard
+                  key={feature.id}
+                  feature={feature}
+                  currentVote={userVotes?.[feature.id]}
+                  onVote={handleVote}
+                  voteDisabled={voteMutation.isPending}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-zinc-900 rounded-2xl p-8 text-center">
+              <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
+                <Lightbulb className="w-8 h-8 text-zinc-600" />
+              </div>
+              <h3 className="text-white font-semibold mb-1">No feature requests yet</h3>
+              <p className="text-zinc-500 text-sm mb-4">Be the first to suggest an idea!</p>
+              <Button
+                onClick={handleSubmitClick}
+                variant="glass"
+                className="rounded-xl font-semibold"
+              >
+                <Plus className="w-4 h-4" />
+                Submit Feature Request
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Shipped Features Tab */}
+      {activeTab === 'shipped' && (
+        <>
+          {isLoadingShipped ? (
+            <FeatureSkeletons />
+          ) : shippedFeatures && shippedFeatures.length > 0 ? (
+            <div className="space-y-3">
+              {shippedFeatures.map((feature) => (
+                <ShippedCard key={feature.id} feature={feature} />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-zinc-900 rounded-2xl p-8 text-center">
+              <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 className="w-8 h-8 text-zinc-600" />
+              </div>
+              <h3 className="text-white font-semibold mb-1">No shipped features yet</h3>
+              <p className="text-zinc-500 text-sm">Completed features will appear here.</p>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Submit Drawer */}
+      <SubmitFeatureDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
+    </div>
+  );
+}

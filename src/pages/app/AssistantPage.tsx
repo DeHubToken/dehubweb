@@ -10,7 +10,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap, History } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
@@ -19,7 +19,8 @@ import { useMention } from '@/hooks/use-mention';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import ftvLogoSymbol from '@/assets/ftv-logo-symbol.png';
-import assistantAvatar from '@/assets/assistant-avatar.png';
+import assistantAvatar from '@/assets/ai-assistant-avatar.png';
+import aiSparkleIcon from '@/assets/icons/ai-sparkle-icon.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -38,6 +39,9 @@ import { OverviewTab } from '@/components/app/command-centre';
 import { AuthPrompt } from '@/components/app/AuthPrompt';
 import { AuthGate } from '@/components/app/AuthGate';
 import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
+import { ConversationHistoryDrawer } from '@/components/app/assistant/ConversationHistoryDrawer';
+import { useAIConversation } from '@/hooks/use-ai-conversation';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 
 // Simulation data for token transactions
 interface SimulationData {
@@ -337,6 +341,7 @@ export default function AssistantPage() {
   const [autoApproveMode, setAutoApproveMode] = useState(false); // Auto-approve transfers without confirmation
   const [showPinModal, setShowPinModal] = useState(false); // PIN setup modal
   const [pinInput, setPinInput] = useState(''); // PIN input value
+  const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false); // History drawer state
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -346,6 +351,15 @@ export default function AssistantPage() {
 
   const { isAuthenticated } = useAuth();
   const isMobile = useIsMobile();
+  
+  // Conversation persistence hook
+  const { 
+    conversationId, 
+    isSaving, 
+    queueMessage, 
+    startNewConversation, 
+    loadConversation 
+  } = useAIConversation();
 
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
@@ -708,6 +722,9 @@ export default function AssistantPage() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    // Save user message to conversation
+    queueMessage(userMessage);
+    
     const currentInput = messageToSend;
     const currentAttachedImage = attachedImage;
     setInput('');
@@ -733,6 +750,7 @@ export default function AssistantPage() {
           imageUrl: ftvLogoSymbol
         };
         setMessages(prev => [...prev, assistantMessage]);
+        queueMessage(assistantMessage);
         setIsLoading(false);
         
         if (alwaysSpeakReplies) {
@@ -837,6 +855,7 @@ export default function AssistantPage() {
         };
 
         setMessages(prev => [...prev, assistantMessage]);
+        queueMessage(assistantMessage);
       } else {
         // Regular chat - use general-ai-chat endpoint
         const { data, error } = await supabase.functions.invoke('general-ai-chat', {
@@ -878,6 +897,7 @@ export default function AssistantPage() {
           };
 
           setMessages(prev => [...prev, assistantMessage]);
+          queueMessage(assistantMessage);
           
           // Auto-speak the response if always speak replies is enabled
           if (alwaysSpeakReplies) {
@@ -1036,50 +1056,44 @@ export default function AssistantPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h1 className="text-lg font-semibold text-white">AI Assistant</h1>
-          </div>
+          <img src={aiSparkleIcon} alt="AI" className="w-10 h-10 object-contain" />
+          <h1 className="text-lg font-semibold text-white leading-none mt-0.5">AI Assistant</h1>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           {/* Command Centre Toggle */}
-          <Button
-            variant="outline"
-            size="sm"
+          <button
             onClick={() => setShowCommandCentre(!showCommandCentre)}
-            className={`rounded-full border-white/20 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8 transition-colors ${
-              showCommandCentre ? 'bg-white/20' : 'bg-white/5'
+            className={`p-1.5 rounded-xl transition-colors ${
+              showCommandCentre ? 'text-white' : 'text-white/60 hover:text-white'
             }`}
           >
-            <LayoutDashboard className="w-3.5 h-3.5 text-white/70" />
-            <span className="hidden sm:inline text-xs">Command Centre</span>
-          </Button>
+            <LayoutDashboard className="w-5 h-5" />
+          </button>
+
+          {/* History Button */}
+          <button
+            onClick={() => setHistoryDrawerOpen(true)}
+            className="p-1.5 rounded-xl text-white/60 hover:text-white transition-colors"
+          >
+            <History className="w-5 h-5" />
+          </button>
 
           {/* Settings Button */}
-          <Button
-            variant="outline"
-            size="sm"
+          <button
             onClick={() => setSettingsSheetOpen(true)}
-            className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8"
+            className="p-1.5 rounded-xl text-white/60 hover:text-white transition-colors"
           >
-            <Settings className="w-3.5 h-3.5 text-white/70" />
-            <span className="hidden sm:inline text-xs">Settings</span>
-          </Button>
+            <Settings className="w-5 h-5" />
+          </button>
 
           {/* Style Selector Button */}
-          <Button
-            variant="outline"
-            size="sm"
+          <button
             onClick={() => setStyleSheetOpen(true)}
-            className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8"
+            className="p-1.5 rounded-xl text-white/60 hover:text-white transition-colors text-xl"
           >
-            <span>{currentStyle.emoji}</span>
-            <span className="hidden sm:inline">{currentStyle.label}</span>
-            <ChevronDown className="w-3 h-3 text-white/50" />
-          </Button>
+            {currentStyle.emoji}
+          </button>
         </div>
 
         {/* Style Drawer */}
@@ -1247,12 +1261,12 @@ export default function AssistantPage() {
                   <button
                     type="button"
                     onClick={() => setAlwaysSpeakReplies(!alwaysSpeakReplies)}
-                    className={`relative w-11 h-6 rounded-full transition-colors ${
+                    className={`relative w-11 h-6 rounded-lg transition-colors ${
                       alwaysSpeakReplies ? 'bg-white/50' : 'bg-white/20'
                     }`}
                   >
                     <span
-                      className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
+                      className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-lg bg-white transition-transform ${
                         alwaysSpeakReplies ? 'translate-x-5' : 'translate-x-0'
                       }`}
                     />
@@ -1282,12 +1296,19 @@ export default function AssistantPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start gap-2'}`}
                   >
+                    {/* AI Avatar for assistant messages - hide for initial welcome message */}
+                    {message.role === 'assistant' && message.id !== 'initial' && (
+                      <img 
+                        src={assistantAvatar} 
+                        alt="" 
+                        className="w-7 h-7 rounded-full shrink-0 mt-0.5"
+                      />
+                    )}
                     {message.role === 'assistant' && message.videoUrl ? (
                       /* Video messages */
                       <div className="max-w-[85%] flex flex-col gap-2">
-                        {/* Video container with controls */}
                         <div className="relative rounded-lg overflow-hidden">
                           <video 
                             src={message.videoUrl}
@@ -1312,7 +1333,7 @@ export default function AssistantPage() {
                               download="dehub-video.mp4"
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
                                 bg-gradient-to-br from-white/25 via-white/15 to-white/5
                                 backdrop-blur-xl border border-white/30
                                 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
@@ -1324,7 +1345,7 @@ export default function AssistantPage() {
                             {/* Post button */}
                             <button
                               onClick={() => handlePostVideo(message.videoUrl!)}
-                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
                                 bg-gradient-to-br from-white/25 via-white/15 to-white/5
                                 backdrop-blur-xl border border-white/30
                                 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
@@ -1396,7 +1417,7 @@ export default function AssistantPage() {
                                 inputRef.current?.focus();
                                 toast.success('Image attached - describe your edits');
                               }}
-                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
                                 bg-gradient-to-br from-white/25 via-white/15 to-white/5
                                 backdrop-blur-xl border border-white/30
                                 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
@@ -1419,7 +1440,7 @@ export default function AssistantPage() {
                                   toast.error('Failed to copy image');
                                 }
                               }}
-                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
                                 bg-gradient-to-br from-white/25 via-white/15 to-white/5
                                 backdrop-blur-xl border border-white/30
                                 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
@@ -1431,7 +1452,7 @@ export default function AssistantPage() {
                             {/* Post button */}
                             <button
                               onClick={() => handlePostImage(message.imageUrl!)}
-                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
                                 bg-gradient-to-br from-white/25 via-white/15 to-white/5
                                 backdrop-blur-xl border border-white/30
                                 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
@@ -1544,26 +1565,9 @@ export default function AssistantPage() {
                         )}
                         {message.role === 'user' ? (
                           /* User message with liquid glass bubble */
-                          <div className="relative group">
-                            {/* Liquid glass bubble */}
-                            <div className="relative px-4 py-2.5 rounded-2xl rounded-br-md overflow-hidden
-                              bg-gradient-to-br from-white/20 via-white/10 to-white/5
-                              backdrop-blur-xl border border-white/30
-                              shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]
-                              before:absolute before:inset-0 before:rounded-2xl before:rounded-br-md
-                              before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-transparent
-                              before:pointer-events-none
-                              after:absolute after:inset-[1px] after:rounded-2xl after:rounded-br-md
-                              after:bg-gradient-to-b after:from-white/5 after:to-transparent
-                              after:pointer-events-none"
-                            >
-                              {/* Shimmer effect on hover */}
-                              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500
-                                bg-gradient-to-r from-transparent via-white/10 to-transparent
-                                -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                              <p className="text-sm whitespace-pre-wrap text-white relative z-10">{message.content}</p>
-                            </div>
-                          </div>
+                          <LiquidGlassBubble tail="right">
+                            <p className="text-sm whitespace-pre-wrap text-white">{message.content}</p>
+                          </LiquidGlassBubble>
                         ) : (
                           /* Assistant message - no bubble */
                           <div className="text-white">
@@ -1581,46 +1585,54 @@ export default function AssistantPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex flex-wrap gap-1.5 mt-4"
+                  className="relative mt-4 -mx-4 px-4 lg:mx-0 lg:px-0"
                 >
-                  <button
-                    onClick={() => {
-                      handleSend("What's happening in the news today?");
+                  <div 
+                    className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1 pr-8 lg:pr-0 lg:flex-wrap lg:overflow-visible lg:mask-none"
+                    style={{
+                      maskImage: 'linear-gradient(to right, black 85%, transparent 100%)',
+                      WebkitMaskImage: 'linear-gradient(to right, black 85%, transparent 100%)'
                     }}
-                    className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
                   >
-                    📰 What's new?
-                  </button>
-                  <button
-                    onClick={() => {
-                      setInput("Generate an image of ");
-                      inputRef.current?.focus();
-                      setInputGlow(true);
-                      setTimeout(() => setInputGlow(false), 2000);
-                    }}
-                    className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
-                  >
-                    🎨 Generate an image
-                  </button>
-                  <button
-                    onClick={() => {
-                      fileInputRef.current?.click();
-                    }}
-                    className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
-                  >
-                    🖼️ Edit an image
-                  </button>
-                  <button
-                    onClick={() => {
-                      setInput("Generate a video of ");
-                      inputRef.current?.focus();
-                      setInputGlow(true);
-                      setTimeout(() => setInputGlow(false), 2000);
-                    }}
-                    className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
-                  >
-                    🎬 Generate a video
-                  </button>
+                    <button
+                      onClick={() => {
+                        handleSend("What's happening in the news today?");
+                      }}
+                      className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
+                    >
+                      What's new?
+                    </button>
+                    <button
+                      onClick={() => {
+                        setInput("Generate an image of ");
+                        inputRef.current?.focus();
+                        setInputGlow(true);
+                        setTimeout(() => setInputGlow(false), 2000);
+                      }}
+                      className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
+                    >
+                      Generate an image
+                    </button>
+                    <button
+                      onClick={() => {
+                        fileInputRef.current?.click();
+                      }}
+                      className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
+                    >
+                      Edit an image
+                    </button>
+                    <button
+                      onClick={() => {
+                        setInput("Generate a video of ");
+                        inputRef.current?.focus();
+                        setInputGlow(true);
+                        setTimeout(() => setInputGlow(false), 2000);
+                      }}
+                      className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
+                    >
+                      Generate a video
+                    </button>
+                  </div>
                 </motion.div>
               )}
               {isImageLoading && (
@@ -1630,10 +1642,16 @@ export default function AssistantPage() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="flex justify-start"
+                  className="flex justify-start gap-2"
                 >
-                  <div className="bg-white/10 rounded-2xl px-4 py-3">
+                  <img 
+                    src={assistantAvatar} 
+                    alt="" 
+                    className="w-7 h-7 rounded-full shrink-0"
+                  />
+                  <div className="bg-white/10 rounded-2xl px-4 py-3 flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-white/60" />
+                    <span className="text-sm text-white/60">Thinking...</span>
                   </div>
                 </motion.div>
               )}
@@ -1843,6 +1861,17 @@ export default function AssistantPage() {
         />
       )}
 
+      {/* Conversation History Drawer */}
+      <ConversationHistoryDrawer
+        open={historyDrawerOpen}
+        onOpenChange={setHistoryDrawerOpen}
+        onLoadConversation={(id, loadedMessages) => {
+          loadConversation(id);
+          setMessages(loadedMessages);
+        }}
+        currentConversationId={conversationId}
+      />
+
       {/* Auth Prompt for transaction simulation */}
       <AuthPrompt 
         isOpen={showAuthPrompt} 
@@ -1867,7 +1896,7 @@ export default function AssistantPage() {
               className="w-full max-w-sm bg-zinc-900 border border-white/10 rounded-2xl p-6"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
                   <Lock className="w-5 h-5 text-white" />
                 </div>
                 <div>

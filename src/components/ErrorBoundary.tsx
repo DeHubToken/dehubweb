@@ -2,7 +2,7 @@
  * Error Boundary Component
  * =========================
  * Catches JavaScript errors anywhere in the child component tree,
- * logs errors, and displays a fallback UI.
+ * logs errors, and displays a fallback UI matching the AI assistant aesthetic.
  * 
  * @example
  * ```tsx
@@ -13,8 +13,9 @@
  */
 
 import { Component, type ReactNode, type ErrorInfo } from 'react';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import assistantAvatar from '@/assets/ai-assistant-avatar.png';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -48,6 +49,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     this.setState({ hasError: false, error: null });
   };
 
+  handleGoHome = (): void => {
+    window.location.href = '/app';
+  };
+
   render(): ReactNode {
     if (this.state.hasError) {
       if (this.props.fallback) {
@@ -55,39 +60,94 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       }
 
       return (
-        <div className="flex flex-col items-center justify-center min-h-[400px] p-8 text-center">
-          <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mb-4">
-            <AlertTriangle className="w-8 h-8 text-red-500" />
+        <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6">
+          {/* Ambient glow effects */}
+          <div className="fixed inset-0 pointer-events-none overflow-hidden">
+            <div 
+              className="absolute top-1/4 left-1/4 w-96 h-96 opacity-20"
+              style={{
+                background: 'radial-gradient(ellipse at center, rgba(239, 68, 68, 0.4) 0%, transparent 70%)',
+                filter: 'blur(60px)',
+              }}
+            />
+            <div 
+              className="absolute bottom-1/4 right-1/4 w-80 h-80 opacity-15"
+              style={{
+                background: 'radial-gradient(ellipse at center, rgba(251, 146, 60, 0.4) 0%, transparent 70%)',
+                filter: 'blur(50px)',
+              }}
+            />
           </div>
-          <h2 className="text-xl font-semibold text-white mb-2">
-            Something went wrong
-          </h2>
-          <p className="text-zinc-400 mb-6 max-w-md">
-            An unexpected error occurred. Please try refreshing the page or contact support if the problem persists.
-          </p>
-          <div className="flex gap-3">
-            <Button 
-              onClick={this.handleReset}
-              variant="outline"
-              className="gap-2"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Try Again
-            </Button>
-            <Button 
+
+          {/* Content */}
+          <div className="relative z-10 flex flex-col items-center text-center max-w-md">
+            {/* Avatar with error indicator */}
+            <div className="relative mb-6">
+              <img 
+                src={assistantAvatar} 
+                alt="Assistant" 
+                className="w-24 h-24 object-contain opacity-80"
+              />
+              <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-red-500/20 backdrop-blur-xl border border-red-500/30 flex items-center justify-center">
+                <AlertTriangle className="w-4 h-4 text-red-400" />
+              </div>
+            </div>
+
+            {/* Title */}
+            <h1 className="text-2xl font-semibold text-white mb-3">
+              Something went wrong
+            </h1>
+
+            {/* Description */}
+            <p className="text-zinc-400 text-sm leading-relaxed mb-8">
+              An unexpected error occurred. Don't worry, your data is safe. 
+              Try refreshing the page or head back to the home feed.
+            </p>
+
+            {/* Action buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 w-full">
+              <Button 
+                onClick={this.handleReset}
+                variant="glass"
+                className="flex-1 h-12 rounded-xl gap-2"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Try Again
+              </Button>
+              <Button 
+                onClick={this.handleGoHome}
+                variant="glass"
+                className="flex-1 h-12 rounded-xl gap-2"
+              >
+                <Home className="w-4 h-4" />
+                Go Home
+              </Button>
+            </div>
+
+            {/* Full refresh option */}
+            <button 
               onClick={() => window.location.reload()}
-              className="gap-2"
+              className="mt-4 text-zinc-500 text-xs hover:text-zinc-300 transition-colors"
             >
-              Refresh Page
-            </Button>
+              Or refresh the entire page
+            </button>
+
+            {/* Dev-only error details */}
+            {process.env.NODE_ENV === 'development' && this.state.error && (
+              <div className="mt-8 w-full">
+                <div className="p-4 bg-red-500/5 border border-red-500/20 rounded-xl text-left overflow-auto max-h-48">
+                  <p className="text-xs text-red-400 font-mono whitespace-pre-wrap break-all">
+                    {this.state.error.message}
+                  </p>
+                  {this.state.error.stack && (
+                    <p className="text-xs text-red-400/60 font-mono mt-2 whitespace-pre-wrap break-all">
+                      {this.state.error.stack.split('\n').slice(1, 6).join('\n')}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
-          {process.env.NODE_ENV === 'development' && this.state.error && (
-            <pre className="mt-6 p-4 bg-zinc-900 rounded-lg text-left text-xs text-red-400 max-w-full overflow-auto">
-              {this.state.error.message}
-              {'\n\n'}
-              {this.state.error.stack}
-            </pre>
-          )}
         </div>
       );
     }

@@ -7,9 +7,12 @@
  */
 
 import { useCallback, useEffect, useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Languages } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
+import { ImageTranslationSheet } from './ImageTranslationSheet';
+import { useImageTranslation } from '@/hooks/use-image-translation';
 
 interface FullscreenImageViewerProps {
   images: string[];
@@ -31,12 +34,29 @@ export function FullscreenImageViewer({
     startIndex: initialIndex 
   });
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [showTranslationSheet, setShowTranslationSheet] = useState(false);
+  
+  // Image translation hook
+  const { isLoading: isTranslating, error: translationError, result: translationResult, translateImage, clearResult } = useImageTranslation();
   
   // Drag state for swipe-down-to-close
   const [dragOffset, setDragOffset] = useState(0);
   const isDragging = useRef(false);
   const dragStartY = useRef(0);
   const dragStartX = useRef(0);
+  
+  const handleTranslateImage = useCallback(async () => {
+    const imageUrl = images[currentIndex];
+    if (!imageUrl) return;
+    
+    setShowTranslationSheet(true);
+    await translateImage(imageUrl);
+  }, [images, currentIndex, translateImage]);
+  
+  const handleCloseTranslation = useCallback(() => {
+    setShowTranslationSheet(false);
+    clearResult();
+  }, [clearResult]);
 
   // Sync carousel to initial index when opening
   useEffect(() => {
@@ -148,7 +168,7 @@ export function FullscreenImageViewer({
   // Calculate opacity based on drag offset
   const bgOpacity = Math.max(0.3, 1 - dragOffset / 300);
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -156,7 +176,7 @@ export function FullscreenImageViewer({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-50 flex items-center justify-center"
+          className="fixed inset-0 z-[60] flex items-center justify-center"
           style={{ backgroundColor: `rgba(0, 0, 0, ${bgOpacity * 0.95})` }}
           onClick={onClose}
           onWheel={handleWheel}
@@ -164,15 +184,27 @@ export function FullscreenImageViewer({
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-zinc-800/80 flex items-center justify-center text-white hover:bg-zinc-700 transition-colors"
+            className="absolute top-4 right-4 z-10 w-10 h-10 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
             aria-label="Close fullscreen"
           >
             <X className="w-5 h-5" />
           </button>
+          
+          {/* Translate button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleTranslateImage();
+            }}
+            className="absolute top-4 right-16 z-10 w-10 h-10 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+            aria-label="Translate image text"
+          >
+            <Languages className="w-5 h-5" />
+          </button>
 
           {/* Image counter */}
           {hasMultiple && (
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-3 py-1.5 rounded-full bg-zinc-800/80 text-white text-sm font-medium">
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 text-white text-sm font-medium">
               {currentIndex + 1} / {images.length}
             </div>
           )}
@@ -185,7 +217,6 @@ export function FullscreenImageViewer({
               transform: `translateY(${dragOffset}px)`,
               opacity: Math.max(0.5, 1 - dragOffset / 200)
             }}
-            onClick={(e) => e.stopPropagation()}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
@@ -199,12 +230,14 @@ export function FullscreenImageViewer({
                 <div 
                   key={idx} 
                   className="flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
+                  onClick={onClose}
                 >
                   <img
                     src={img}
                     alt=""
-                    className="max-w-full max-h-full object-contain select-none pointer-events-none"
+                    className="max-w-full max-h-full object-contain select-none"
                     draggable={false}
+                    onClick={(e) => e.stopPropagation()}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/placeholder.svg';
                     }}
@@ -214,7 +247,7 @@ export function FullscreenImageViewer({
             </div>
           </motion.div>
 
-          {/* Navigation arrows */}
+          {/* Navigation arrows – hidden on mobile/tablet, swipe to navigate instead */}
           {hasMultiple && (
             <>
               {currentIndex > 0 && (
@@ -223,7 +256,7 @@ export function FullscreenImageViewer({
                     e.stopPropagation();
                     scrollPrev();
                   }}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-zinc-800/80 flex items-center justify-center text-white hover:bg-zinc-700 transition-colors"
+                  className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 items-center justify-center text-white hover:bg-black/80 transition-colors"
                   aria-label="Previous image"
                 >
                   <ChevronLeft className="w-6 h-6" />
@@ -235,7 +268,7 @@ export function FullscreenImageViewer({
                     e.stopPropagation();
                     scrollNext();
                   }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-zinc-800/80 flex items-center justify-center text-white hover:bg-zinc-700 transition-colors"
+                  className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 items-center justify-center text-white hover:bg-black/80 transition-colors"
                   aria-label="Next image"
                 >
                   <ChevronRight className="w-6 h-6" />
@@ -264,8 +297,18 @@ export function FullscreenImageViewer({
               ))}
             </div>
           )}
+          
+          {/* Image Translation Sheet */}
+          <ImageTranslationSheet
+            isOpen={showTranslationSheet}
+            onClose={handleCloseTranslation}
+            isLoading={isTranslating}
+            error={translationError}
+            result={translationResult}
+          />
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

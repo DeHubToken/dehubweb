@@ -15,9 +15,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, UserCircle, LogOut, AlertCircle, Check, X } from 'lucide-react';
+import { Loader2, LogOut, AlertCircle, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import profileIcon from '@/assets/profile-icon.png';
 
 // Debounce helper
 function useDebounce<T>(value: T, delay: number): T {
@@ -160,6 +161,11 @@ export function UsernameRequiredModal() {
       
       setRequiresUsername(false);
       
+      // Navigate to home feed if not already there (avoid staying on settings after profile creation)
+      if (window.location.pathname !== '/app') {
+        window.location.href = '/app';
+      }
+      
       toast.success('Profile created successfully!');
     } catch (err) {
       console.error('Failed to update profile:', err);
@@ -193,17 +199,19 @@ export function UsernameRequiredModal() {
   return (
     <Dialog open={requiresUsername} onOpenChange={() => {}}>
       <DialogContent 
-        className="sm:max-w-md border-zinc-700/50 bg-zinc-900/95 backdrop-blur-xl"
+        className="sm:max-w-md border border-white/10 bg-black/60 backdrop-blur-[24px] saturate-[180%] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
         hideCloseButton
       >
         <DialogHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 border border-primary/20">
-            <UserCircle className="h-8 w-8 text-primary" />
-          </div>
-          <DialogTitle className="text-xl text-white">Complete Your Profile</DialogTitle>
-          <DialogDescription className="text-zinc-400">
+          <img 
+            src={profileIcon} 
+            alt="Profile" 
+            className="mx-auto mb-4 h-20 w-20 object-contain"
+          />
+          <DialogTitle className="text-xl text-white text-center">Complete Your Profile</DialogTitle>
+          <DialogDescription className="text-zinc-400 text-center">
             Choose a username and display name to get started on DeHub.
           </DialogDescription>
         </DialogHeader>
@@ -276,7 +284,7 @@ export function UsernameRequiredModal() {
           <div className="flex flex-col gap-2 pt-2">
             <Button 
               type="submit" 
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="w-full bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white hover:bg-white/10 rounded-xl h-12"
               disabled={isSubmitting || !canSubmit}
             >
               {isSubmitting ? (

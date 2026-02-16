@@ -4,7 +4,11 @@ import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCoinPlacement } from '@/hooks/use-coin-placement';
+import { useUnreadNotificationCount } from '@/hooks/use-notifications';
+import { buildAvatarUrl } from '@/lib/media-url';
 import dehubLogo from '@/assets/dehub-logo-white.png';
+import { useCallback } from 'react';
 
 interface MobileHeaderProps {
   isOpen: boolean;
@@ -15,82 +19,108 @@ interface MobileHeaderProps {
 export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, openLoginModal } = useAuth();
+  const { stickToBanner } = useCoinPlacement();
+  const { data: unreadCount } = useUnreadNotificationCount();
 
-  // TODO: Replace with actual balance from auth/wallet state
-  const coinBalance = 0;
+  // Coin balance
+  const coinBalance = 0; // TODO: Get from user wallet
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (location.pathname.startsWith('/app')) {
-      window.dispatchEvent(new CustomEvent('home-refresh'));
+    
+    if (location.pathname === '/app') {
+      // Already on home - just scroll to top, don't trigger full refresh
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Coming from another app page - navigate without refresh
+      navigate('/app');
     }
-    navigate('/app');
   };
 
   const isNotificationsActive = location.pathname === '/app/notifications';
+  const handleMenuClick = useCallback(() => {
+    if (!isAuthenticated) {
+      openLoginModal();
+    }
+  }, [isAuthenticated, openLoginModal]);
 
   return (
-    <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 py-1.5 flex items-center justify-between">
-      <div className="flex items-center gap-3">
+    <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 h-11 flex items-center justify-between">
+      <div className="flex items-center gap-3 ml-[-8px]">
         <button onClick={handleLogoClick} className="block cursor-pointer">
-          <img src={dehubLogo} alt="dehub" className="h-6 md:h-7 w-auto" />
+          <img src={dehubLogo} alt="dehub" className="h-7 md:h-7 w-auto" />
         </button>
-        
-        {/* Authenticated User Avatar & Name */}
-        {isAuthenticated && user && (
-          <button 
-            onClick={() => navigate('/app/profile')}
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-          >
-            <Avatar className="w-7 h-7">
-              {user.avatar_url && (
-                <AvatarImage
-                  src={user.avatar_url}
-                  alt={`${user.display_name || user.username}'s avatar`}
-                  className="object-cover"
-                />
-              )}
-              <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
-                {(user.display_name || user.username)?.charAt(0).toUpperCase() || 'U'}
-              </AvatarFallback>
-            </Avatar>
-            <span className="text-sm text-white font-medium truncate max-w-[80px]">
-              {user.display_name || user.username || 'User'}
-            </span>
-          </button>
-        )}
       </div>
       
-      <div className="flex items-center gap-2">
-        {/* Coin Balance */}
-        <CoinBalanceMenu balance={coinBalance} variant="mobile" />
+      <div className="flex items-center gap-3">
+        {/* Coin Balance (when stickToBanner is enabled and user is logged in) */}
+        {isAuthenticated && stickToBanner && (
+          <CoinBalanceMenu balance={coinBalance} variant="mobile" />
+        )}
         
-        {/* Notifications Button */}
-        <button
-          onClick={() => navigate('/app/notifications')}
-          className={`p-2 rounded-full transition-colors ${isNotificationsActive ? 'bg-zinc-800 text-white' : 'text-zinc-400'}`}
-          aria-label="Notifications"
-        >
-          <Bell className="w-5 h-5" />
-        </button>
+        {/* Notifications Button - only visible when logged in */}
+        {isAuthenticated && (
+          <button
+            onClick={() => navigate('/app/notifications')}
+            className={`relative flex items-center justify-center transition-colors ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
+            aria-label="Notifications"
+          >
+            <Bell className="w-[26px] h-[26px]" />
+            {unreadCount?.total !== undefined && unreadCount.total > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full">
+                {unreadCount.total > 99 ? '99+' : unreadCount.total}
+              </span>
+            )}
+          </button>
+        )}
         
-        {/* Menu Button */}
-        <Drawer open={isOpen} onOpenChange={onToggle}>
-          <DrawerTrigger asChild>
-            <button
-              className="p-2 rounded-full transition-colors"
-              aria-label="Toggle menu"
-            >
-              <Menu className="w-6 h-6 text-zinc-400" />
-            </button>
-          </DrawerTrigger>
-          <DrawerContent glass className="max-h-[85vh]">
-            <div className="p-4 pb-8 overflow-y-auto">
-              {children}
-            </div>
-          </DrawerContent>
-        </Drawer>
+        {/* Menu Button - Avatar drawer when authenticated, login prompt when not */}
+        {isAuthenticated ? (
+          <Drawer open={isOpen} onOpenChange={onToggle}>
+            <DrawerTrigger asChild>
+              {user ? (
+                <button
+                  className="hover:opacity-80 transition-opacity"
+                  aria-label="Toggle menu"
+                >
+                  <Avatar className="w-[27px] h-[27px]">
+                    {user.avatarImageUrl && user.address && (
+                      <AvatarImage
+                        src={buildAvatarUrl(user.address, user.avatarImageUrl)}
+                        alt={`${user.displayName || user.username}'s avatar`}
+                        className="object-cover"
+                      />
+                    )}
+                    <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
+                      {(user.displayName || user.username)?.charAt(0).toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+              ) : (
+                <button
+                  className="p-2 rounded-full transition-colors mr-[-16.5px]"
+                  aria-label="Toggle menu"
+                >
+                  <Menu className="w-[33px] h-[33px] text-zinc-400" />
+                </button>
+              )}
+            </DrawerTrigger>
+            <DrawerContent glass className="max-h-[85vh]">
+              <div className="p-4 pb-8 overflow-y-auto">
+                {children}
+              </div>
+            </DrawerContent>
+          </Drawer>
+        ) : (
+          <button
+            onClick={handleMenuClick}
+            className="p-2 rounded-full transition-colors mr-[-16.5px]"
+            aria-label="Log in"
+          >
+            <Menu className="w-[33px] h-[33px] text-zinc-400" />
+          </button>
+        )}
       </div>
     </header>
   );

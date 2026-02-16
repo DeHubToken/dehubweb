@@ -30,3 +30,16 @@ export type {
 
 // Common utility types
 export type { WithChildren, WithClassName, WithId, Nullable } from './common.types';
+
+// Audio Spaces types
+export type {
+  SpaceRole,
+  SpaceStatus,
+  HandRequestStatus,
+  AudioSpace,
+  SpaceParticipant,
+  RaiseHandRequest,
+  AgoraTokenResponse,
+  CreateSpacePayload,
+  JoinSpacePayload
+} from './audio-spaces.types';

@@ -6,10 +6,13 @@
  * @module hooks/use-dehub-profile
  */
 
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { getAccountInfo, getAccountByUsername, getUserNFTs, getMediaUrl, type DeHubUser, type DeHubNFT } from '@/lib/api/dehub';
-import { mapNFTToVideoItem, mapNFTToImagePost } from './use-dehub-feed';
+import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { getAccountInfo, getAccountByUsername, getAuthToken, type DeHubUser } from '@/lib/api/dehub';
+import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
+import { mapToVideoItem, mapToImagePost, mapToTextPost, type UnifiedFeedItem } from './use-unified-feed';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
+
+const DEHUB_API_BASE = "https://api.dehub.io";
 
 export interface ProfileData {
   id: string;
@@ -24,6 +27,21 @@ export interface ProfileData {
   followers: number;
   postsCount: number;
   walletAddress?: string;
+  /** Whether the current viewer follows this user */
+  isFollowing?: boolean;
+  /** Whether this user follows the current viewer */
+  followsYou?: boolean;
+  /** Whether a follow request is pending (for private accounts) */
+  isPending?: boolean;
+  /** Whether this account is private (requires follow approval) */
+  isPrivate?: boolean;
+  /** Raw array of follower wallet addresses (for list display) */
+  followersList?: string[];
+  /** Raw array of following wallet addresses (for list display) */
+  followingsList?: string[];
+  /** Raw customs data from API */
+  /** Raw customs data from API */
+  customs?: Record<string, unknown>;
 }
 
 /**
@@ -40,22 +58,33 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
   // Calculate follower/following counts - handle both number and array types
   const followerCount = user.follower_count ?? 
     (typeof user.followers === 'number' ? user.followers : user.followers?.length) ?? 0;
-  const followingCount = user.following_count ?? user.followings?.length ?? 0;
+  const followingCount = user.following_count ?? 
+    (typeof user.followings === 'number' ? user.followings : user.followings?.length) ?? 0;
 
   // Get raw avatar/cover paths (API uses avatarImageUrl/coverImageUrl)
   const rawAvatarUrl = user.avatarImageUrl || user.avatarUrl || user.avatar_url;
   const rawCoverUrl = user.coverImageUrl || user.coverUrl || user.cover_url;
   
-  // Resolve to full CDN URLs if they're relative paths
-  const avatarUrl = rawAvatarUrl ? getMediaUrl(rawAvatarUrl) : undefined;
-  const coverUrl = rawCoverUrl ? getMediaUrl(rawCoverUrl) : undefined;
+  // Get user address for canonical URL construction
+  const address = user.address || user.wallet_address || '';
+  
+  // Build canonical CDN URLs (strips statics/ or other prefixes)
+  const avatarUrl = buildAvatarUrl(address, rawAvatarUrl);
+  const coverUrl = buildCoverUrl(address, rawCoverUrl);
+
+  // Preserve raw arrays for list display (if available)
+  const followersList = Array.isArray(user.followers) ? user.followers : undefined;
+  const followingsList = Array.isArray(user.followings) ? user.followings : undefined;
+  
+  // Get customs data for isPrivate fallback
+  const customs = user.customs as Record<string, unknown> | undefined;
 
   return {
     id: user._id || user.id || '',
     name: user.displayName || user.display_name || user.username || 'Unknown User',
     handle: user.username ? `@${user.username.replace('@', '')}` : '@unknown',
     verified: user.isVerified || user.is_verified || false,
-    bio: user.bio || '',
+    bio: user.bio || user.aboutMe || '',
     avatarUrl,
     coverUrl,
     joinedDate: joinDate,
@@ -63,6 +92,13 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     followers: followerCount,
     postsCount: user.post_count || user.uploads || 0,
     walletAddress: user.address || user.wallet_address,
+    isFollowing: user.isFollowing,
+    followsYou: user.followsYou,
+    isPending: user.isPending,
+    isPrivate: user.isPrivate || customs?.isPrivate === 'true' || customs?.isPrivate === true,
+    followersList,
+    followingsList,
+    customs: user.customs as Record<string, unknown> | undefined,
   };
 }
 
@@ -71,25 +107,30 @@ interface UseDeHubProfileOptions {
   userId?: string;
   /** Username for lookup (alternative to userId) */
   username?: string;
+  /** Current viewer's wallet address to get follow status */
+  address?: string;
   enabled?: boolean;
 }
 
 /**
  * Hook to fetch user profile data
  * Supports both userId and username lookups
+ * Pass address to get isFollowing/followsYou status
  */
-export function useDeHubProfile({ userId, username, enabled = true }: UseDeHubProfileOptions = {}) {
-  return useQuery({
-    queryKey: ['dehub-profile', userId || username],
+export function useDeHubProfile({ userId, username, address, enabled = true }: UseDeHubProfileOptions = {}) {
+  const queryClient = useQueryClient();
+  
+  const query = useQuery({
+    queryKey: ['dehub-profile', userId || username, address],
     queryFn: async () => {
       let user: DeHubUser;
       
       if (username) {
         // Use username-based lookup
-        user = await getAccountByUsername(username);
+        user = await getAccountByUsername(username, address);
       } else if (userId) {
         // Use ID-based lookup
-        user = await getAccountInfo(userId);
+        user = await getAccountInfo(userId, address);
       } else {
         throw new Error('Either userId or username is required');
       }
@@ -100,6 +141,23 @@ export function useDeHubProfile({ userId, username, enabled = true }: UseDeHubPr
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 2,
   });
+
+  // Helper to update follow status optimistically
+  const setFollowStatus = (isFollowing: boolean) => {
+    queryClient.setQueryData(['dehub-profile', userId || username, address], (old: ProfileData | undefined) => {
+      if (!old) return old;
+      return {
+        ...old,
+        isFollowing,
+        followers: isFollowing ? old.followers + 1 : Math.max(0, old.followers - 1),
+      };
+    });
+  };
+
+  return {
+    ...query,
+    setFollowStatus,
+  };
 }
 
 /**
@@ -111,20 +169,57 @@ export function useDeHubProfileByUsername(username?: string, enabled = true) {
 
 interface UseDeHubUserContentOptions {
   userId?: string;
+  /** @deprecated Viewer context is now extracted from JWT Bearer token */
+  viewerAddress?: string;
   enabled?: boolean;
   limit?: number;
 }
 
 /**
  * Hook to fetch user's NFT content (videos/images)
+ * Uses the /api/feed endpoint with minter filter for reliable content fetching
+ * Pass viewerAddress to get isLiked/isSaved state for the logged-in user
  */
-export function useDeHubUserContent({ userId, enabled = true, limit = 20 }: UseDeHubUserContentOptions = {}) {
+export function useDeHubUserContent({ userId, viewerAddress, enabled = true, limit = 50 }: UseDeHubUserContentOptions = {}) {
   return useInfiniteQuery({
-    queryKey: ['dehub-user-content', userId],
+    queryKey: ['dehub-user-content', userId, viewerAddress],
     queryFn: async ({ pageParam = 1 }) => {
-      if (!userId) throw new Error('User ID is required');
-      const result = await getUserNFTs(userId, pageParam, limit);
-      return result;
+      if (!userId) throw new Error('User ID (wallet address) is required');
+      
+      // Use /api/feed with minter parameter - the same API that powers the home feed
+      const url = new URL('/api/feed', DEHUB_API_BASE);
+      url.searchParams.set('page', String(pageParam));
+      url.searchParams.set('limit', String(limit));
+      url.searchParams.set('minter', userId);
+      url.searchParams.set('sortBy', 'createdAt');
+      url.searchParams.set('sortOrder', 'desc');
+      // Only show minted (confirmed on-chain) content
+      url.searchParams.set('status', 'minted');
+      // address param is deprecated - viewer context comes from JWT token
+      
+      const token = getAuthToken();
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      const response = await fetch(url.toString(), { headers });
+      
+      if (!response.ok) {
+        throw new Error(`Feed API error: ${response.status}`);
+      }
+      
+      const json = await response.json();
+      
+      return {
+        data: json.result || [],
+        page: pageParam,
+        has_more: json.pagination?.hasMore ?? false,
+        total: json.pagination?.totalCount ?? 0,
+      };
     },
     getNextPageParam: (lastPage) => {
       if (lastPage.has_more) {
@@ -134,21 +229,19 @@ export function useDeHubUserContent({ userId, enabled = true, limit = 20 }: UseD
     },
     initialPageParam: 1,
     enabled: enabled && !!userId,
-    staleTime: 1000 * 60 * 5,
-    retry: (failureCount, error) => {
-      // Don't retry on 404 - user might not have any content
-      if (error?.message?.includes('404') || error?.message?.includes('Not Found')) {
-        return false;
-      }
-      return failureCount < 2;
-    },
+    staleTime: 1000 * 60 * 10, // 10 minutes - data is fresh for longer
+    gcTime: 1000 * 60 * 30, // Keep in cache for 30 minutes
+    refetchOnWindowFocus: false, // Don't refetch when tab switching
+    refetchOnMount: false, // Don't refetch when component remounts
+    retry: 2,
   });
 }
 
 /**
- * Separate user content into videos and images
+ * Separate user content into videos, images, and text posts
+ * Uses postType from the unified feed API, with fallback detection for older posts
  */
-export function separateUserContent(nfts: DeHubNFT[]): {
+export function separateUserContent(items: UnifiedFeedItem[]): {
   videos: VideoItem[];
   images: ImagePost[];
   posts: TextPost[];
@@ -157,11 +250,30 @@ export function separateUserContent(nfts: DeHubNFT[]): {
   const images: ImagePost[] = [];
   const posts: TextPost[] = [];
 
-  nfts.forEach((nft, index) => {
-    if (nft.media_type === 'video' || nft.media_type === 'audio') {
-      videos.push(mapNFTToVideoItem(nft, index));
-    } else if (nft.media_type === 'image') {
-      images.push(mapNFTToImagePost(nft, index));
+  items.forEach((item, index) => {
+    // Determine content type - some older posts don't have postType set
+    let contentType: 'video' | 'image' | 'text' = 'image'; // default
+    
+    if (item.postType === 'video') {
+      contentType = 'video';
+    } else if (item.postType === 'feed-images') {
+      contentType = 'image';
+    } else if (item.postType === 'feed-simple') {
+      contentType = 'text';
+    } else if (item.videoUrl) {
+      // Fallback: if no postType but has videoUrl, it's a video
+      contentType = 'video';
+    } else if (item.imageUrl || item.imageUrls?.length) {
+      // Fallback: if no postType but has images, it's an image post
+      contentType = 'image';
+    }
+    
+    if (contentType === 'video') {
+      videos.push(mapToVideoItem(item, index));
+    } else if (contentType === 'image') {
+      images.push(mapToImagePost(item, index));
+    } else if (contentType === 'text') {
+      posts.push(mapToTextPost(item, index));
     }
   });
 

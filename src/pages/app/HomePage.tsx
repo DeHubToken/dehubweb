@@ -3,17 +3,22 @@
  * =========
  * Main feed page with tab-based navigation between content types.
  * Features swipe gestures for mobile navigation and pull-to-refresh.
+ * Prefetches all feed tabs in background for instant switching.
  * 
  * @module pages/app/HomePage
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { flushSync } from 'react-dom';
+import { useSearchParams, useNavigationType } from 'react-router-dom';
 import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { setTabSwitchTime } from '@/lib/gesture-state';
+import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
+import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
+import { BadgeBalanceProvider } from '@/contexts/BadgeBalanceContext';
 
 // Feed components
 import {
@@ -28,8 +33,7 @@ import {
 } from '@/components/app/feeds';
 
 // Modal components
-import { FeedSettingsModal, type FeedFilters } from '@/components/app/modals';
-
+import { AudioSpacesModal } from '@/components/app/spaces/AudioSpacesModal';
 // ============================================================================
 // CONSTANTS
 // ============================================================================
@@ -40,33 +44,74 @@ const PULL_THRESHOLD = 80;
 /** Minimum trackpad delta to trigger tab change */
 const TRACKPAD_THRESHOLD = 60;
 /** Lock duration after gesture trigger - covers trackpad inertia */
-const GESTURE_LOCK_DURATION = 400;
+const GESTURE_LOCK_DURATION = 300;
 
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
 
+// Session storage key for persisting tab state across navigation
+const HOME_STATE_STORAGE_KEY = 'home-feed-state';
+
 export default function HomePage() {
-  // Tab state
-  const [activeTab, setActiveTab] = useState('home');
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  // Detect back navigation for tab-change scroll logic
+  // Note: Actual scroll position restoration is handled by AppLayout
+  const navigationType = useNavigationType();
+  const isBackNavigation = navigationType === 'POP';
+  
+  // Extract pinned post ID from URL params (one-time view)
+  const pinnedPostId = searchParams.get('post') || undefined;
+  
+  // Clear the post param from URL after initial render (so refresh shows normal feed)
+  useEffect(() => {
+    if (pinnedPostId) {
+      // Use replace to avoid adding to browser history
+      setSearchParams({}, { replace: true });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  
+  // Initialize tab state - restore from sessionStorage on back navigation
+  const getInitialTab = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = sessionStorage.getItem(HOME_STATE_STORAGE_KEY);
+        if (saved) {
+          const { tab } = JSON.parse(saved);
+          if (tab) return tab;
+        }
+      } catch {
+        // Ignore parse errors
+      }
+    }
+    return 'home';
+  };
+  
+  // Tab state - initialized from sessionStorage for back navigation
+  const [activeTab, setActiveTab] = useState(getInitialTab);
   const [refreshKey, setRefreshKey] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
   
   // Filter states for each feed type
   const [showHomeFilters, setShowHomeFilters] = useState(false);
   const [showShortsFilters, setShowShortsFilters] = useState(false);
-  const [showImagesCollage, setShowImagesCollage] = useState(false);
+  const [showImagesCollage, setShowImagesCollage] = useState(true); // Default to collage
+  const [showImagesFilters, setShowImagesFilters] = useState(false);
+  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [showMusicFilters, setShowMusicFilters] = useState(false);
+  const [showStagesModal, setShowStagesModal] = useState(false);
   
-  // Settings modal
-  const [showFeedSettings, setShowFeedSettings] = useState(false);
-  const [feedFilters, setFeedFilters] = useState<FeedFilters>({
-    followed: true,
-    subscribed: true,
-    trending: true,
-    latest: false,
-  });
+  // Save tab state to sessionStorage whenever it changes
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: activeTab }));
+    } catch {
+      // Ignore storage errors
+    }
+  }, [activeTab]);
+  
   
   // Mobile touch gesture refs
   const touchStartX = useRef<number | null>(null);
@@ -74,6 +119,7 @@ export default function HomePage() {
   const touchStartY = useRef<number | null>(null);
   const touchEndY = useRef<number | null>(null);
   const touchGestureTriggered = useRef(false);
+  const touchInsideNoSwipe = useRef(false);
   
   // Trackpad gesture - simple lock approach
   const gestureTriggered = useRef(false);
@@ -81,6 +127,10 @@ export default function HomePage() {
   
   // Feed container ref for pull-to-refresh constraint
   const feedContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Debounce guard for home-refresh events to prevent rapid succession
+  const lastRefreshTime = useRef<number>(0);
+  const REFRESH_DEBOUNCE_MS = 1000;
 
   // --------------------------------------------------------------------------
   // REFRESH HANDLER
@@ -89,7 +139,18 @@ export default function HomePage() {
   const triggerRefresh = useCallback(() => {
     if (isRefreshing) return;
     
+    // Debounce rapid refresh calls (e.g., multiple home-refresh events)
+    const now = Date.now();
+    if (now - lastRefreshTime.current < REFRESH_DEBOUNCE_MS) return;
+    lastRefreshTime.current = now;
+    
     setIsRefreshing(true);
+    
+    // Clear prefetch state so feeds will be re-fetched
+    clearPrefetchState();
+    
+    // Clear persisted filter states so filters reset to defaults
+    clearPersistedFeedFilters();
     
     // Scroll to top
     document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
@@ -104,12 +165,23 @@ export default function HomePage() {
       }, 300);
     }, 800);
   }, [isRefreshing]);
+  
+  // Track when home feed has loaded for prefetching other tabs
+  const [isHomeFeedLoaded, setIsHomeFeedLoaded] = useState(false);
+  
+  // Prefetch all other feeds in background once home feed loads
+  useFeedPrefetch(isHomeFeedLoaded);
+  
+  // Trigger prefetch immediately on mount
+  useEffect(() => {
+    setIsHomeFeedLoaded(true);
+  }, []);
 
   // --------------------------------------------------------------------------
   // PULL-TO-REFRESH HOOK
   // --------------------------------------------------------------------------
 
-  const { pullDistance, handlers: pullHandlers } = usePullToRefresh({
+  const { pullDistance, isPulling, isHoldingAtThreshold, holdProgress, handlers: pullHandlers } = usePullToRefresh({
     pullThreshold: PULL_THRESHOLD,
     onRefresh: triggerRefresh,
     isRefreshing,
@@ -130,8 +202,18 @@ export default function HomePage() {
       triggerRefresh();
     };
 
+    const handleCategoryFilter = () => {
+      // Switch to home tab and refresh feed when a category is selected from sidebar
+      setActiveTab('home');
+      triggerRefresh();
+    };
+
     window.addEventListener('home-refresh', handleHomeRefresh);
-    return () => window.removeEventListener('home-refresh', handleHomeRefresh);
+    window.addEventListener('category-filter-changed', handleCategoryFilter);
+    return () => {
+      window.removeEventListener('home-refresh', handleHomeRefresh);
+      window.removeEventListener('category-filter-changed', handleCategoryFilter);
+    };
   }, [triggerRefresh]);
 
   /**
@@ -140,7 +222,9 @@ export default function HomePage() {
   const resetFilters = () => {
     setShowHomeFilters(false);
     setShowShortsFilters(false);
-    setShowImagesCollage(false);
+    setShowImagesCollage(true); // Reset to collage view
+    setShowImagesFilters(false);
+    setSelectedImageId(null);
     setShowVideosFilters(false);
     setShowMusicFilters(false);
   };
@@ -162,8 +246,8 @@ export default function HomePage() {
       } else if (tabValue === 'shorts') {
         setShowShortsFilters(prev => !prev);
       } else if (tabValue === 'images') {
-        setShowImagesCollage(prev => !prev);
-        triggerRefresh();
+        // Double-tap on images toggles filters (like other tabs)
+        setShowImagesFilters(prev => !prev);
       } else if (tabValue === 'videos') {
         setShowVideosFilters(prev => !prev);
       } else if (tabValue === 'music') {
@@ -176,9 +260,52 @@ export default function HomePage() {
   };
 
   /**
-   * Reset scroll position when tab changes.
+   * Handle when user selects an image from collage view.
+   * Switches to feed view starting from that image.
    */
+  const handleImageSelected = (postId: string | null) => {
+    setSelectedImageId(postId);
+    if (postId) {
+      // When an image is selected, switch out of collage mode
+      setShowImagesCollage(false);
+    }
+  };
+
+  /**
+   * Handle returning from feed view back to collage view.
+   */
+  const handleBackToCollage = () => {
+    setSelectedImageId(null);
+    setShowImagesCollage(true);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  /**
+   * Reset scroll position when tab changes (but not when returning from post page).
+   */
+  const prevTabRef = useRef<string | null>(null);
+  const hasInitializedRef = useRef(false);
+  
   useEffect(() => {
+    // Skip scroll-to-top if:
+    // 1. First mount AND we're returning via back navigation (browser back button)
+    // 2. Tab hasn't actually changed
+    if (!hasInitializedRef.current) {
+      hasInitializedRef.current = true;
+      prevTabRef.current = activeTab;
+      
+      // On back navigation, don't scroll to top - let scroll restoration handle it
+      if (isBackNavigation) {
+        return;
+      }
+    }
+    
+    if (prevTabRef.current === activeTab) {
+      return;
+    }
+    
+    prevTabRef.current = activeTab;
+    
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
@@ -188,22 +315,29 @@ export default function HomePage() {
     if (mainContent) {
       mainContent.scrollTop = 0;
     }
-  }, [activeTab]);
+  }, [activeTab, isBackNavigation]);
 
   // --------------------------------------------------------------------------
   // SWIPE GESTURE HANDLERS
   // --------------------------------------------------------------------------
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    // Skip entire gesture if touch originated inside a no-swipe zone (filter panel)
+    const target = e.target as HTMLElement;
+    touchInsideNoSwipe.current = !!target.closest('[data-no-swipe]');
+    if (touchInsideNoSwipe.current) return;
+
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     touchEndX.current = null;
     touchEndY.current = null;
-    touchGestureTriggered.current = false; // New gesture starting
+    touchGestureTriggered.current = false;
     pullHandlers.onTouchStart(e);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchInsideNoSwipe.current) return;
+
     touchEndX.current = e.touches[0].clientX;
     touchEndY.current = e.touches[0].clientY;
     pullHandlers.onTouchMove(e);
@@ -215,6 +349,11 @@ export default function HomePage() {
   };
 
   const handleTouchEnd = () => {
+    if (touchInsideNoSwipe.current) {
+      touchInsideNoSwipe.current = false;
+      return;
+    }
+
     pullHandlers.onTouchEnd();
     
     // Already triggered this gesture? Reset and exit
@@ -282,6 +421,10 @@ export default function HomePage() {
     // LOCKED? Ignore all wheel events until lock expires (covers inertia)
     if (gestureTriggered.current) return;
     
+    // Skip if wheel originated inside a no-swipe zone (filter panel)
+    const target = e.target as HTMLElement;
+    if (target.closest('[data-no-swipe]')) return;
+    
     const absDeltaX = Math.abs(e.deltaX);
     const absDeltaY = Math.abs(e.deltaY);
     
@@ -319,26 +462,7 @@ export default function HomePage() {
   // RENDER FEED BASED ON ACTIVE TAB
   // --------------------------------------------------------------------------
 
-  const renderFeed = () => {
-    switch (activeTab) {
-      case 'ppv':
-        return <PPVFeed />;
-      case 'w2e':
-        return <W2EFeed />;
-      case 'images':
-        return <ImagesFeed showCollage={showImagesCollage} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
-      case 'videos':
-        return <VideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
-      case 'shorts':
-        return <ShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
-      case 'live':
-        return <LiveFeed key={refreshKey} isRefreshing={isRefreshing} />;
-      case 'music':
-        return <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
-      default:
-        return <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} />;
-    }
-  };
+  // Feeds are rendered persistently below using CSS display toggle
 
   // --------------------------------------------------------------------------
   // RENDER
@@ -348,7 +472,7 @@ export default function HomePage() {
     <div>
       {/* Tab Navigation */}
       <div className="sticky top-11 lg:top-0 bg-black z-10 p-2 sm:p-3 lg:mt-0">
-        <div className="bg-zinc-900 rounded-2xl p-2">
+        <div className="bg-zinc-900 rounded-2xl p-1">
           <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
             {FEED_TABS.map((tab) => {
               const isActive = activeTab === tab.value;
@@ -368,9 +492,9 @@ export default function HomePage() {
               );
             })}
             
-            {/* Settings Button */}
+            {/* Settings Button - toggles current tab's filters */}
             <button
-              onClick={() => setShowFeedSettings(true)}
+              onClick={() => handleTabClick(activeTab)}
               className="flex items-center justify-center px-3 py-2 rounded-xl text-white hover:bg-white/5"
               aria-label="Feed settings"
             >
@@ -392,16 +516,88 @@ export default function HomePage() {
         onMouseUp={pullHandlers.onMouseUp}
         onMouseLeave={pullHandlers.onMouseLeave}
       >
-        {renderFeed()}
+        {/* Pull-to-refresh indicator with hold progress */}
+        {pullDistance > 0 && (
+          <div 
+            className="flex items-center justify-center transition-all duration-150"
+            style={{ height: pullDistance, minHeight: pullDistance > 0 ? 20 : 0 }}
+          >
+            <div className="relative">
+              {/* Background circle (track) */}
+              <svg className="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
+                <circle
+                  cx="16"
+                  cy="16"
+                  r="14"
+                  fill="none"
+                  stroke="rgba(255,255,255,0.2)"
+                  strokeWidth="2"
+                />
+                {/* Progress arc - shows hold progress when at threshold */}
+                <circle
+                  cx="16"
+                  cy="16"
+                  r="14"
+                  fill="none"
+                  stroke="white"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeDasharray={2 * Math.PI * 14}
+                  strokeDashoffset={2 * Math.PI * 14 * (1 - (isHoldingAtThreshold ? holdProgress : Math.min(pullDistance / PULL_THRESHOLD, 1)))}
+                  className="transition-all duration-75"
+                />
+              </svg>
+              {/* Center dot that appears when holding */}
+              {isHoldingAtThreshold && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div 
+                    className="w-3 h-3 bg-white rounded-full animate-pulse"
+                    style={{ opacity: holdProgress }}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        <BadgeBalanceProvider>
+        {/* All feeds mounted persistently, only active one visible */}
+        <div style={{ display: activeTab === 'home' ? 'block' : 'none' }}>
+          <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} pinnedPostId={pinnedPostId} />
+        </div>
+        <div style={{ display: activeTab === 'videos' ? 'block' : 'none' }}>
+          <VideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+        </div>
+        <div style={{ display: activeTab === 'images' ? 'block' : 'none' }}>
+          <ImagesFeed 
+            showCollage={showImagesCollage} 
+            showFilters={showImagesFilters}
+            isRefreshing={isRefreshing} 
+            refreshKey={refreshKey}
+            selectedPostId={selectedImageId}
+            onPostSelected={handleImageSelected}
+            onBackToCollage={handleBackToCollage}
+          />
+        </div>
+        <div style={{ display: activeTab === 'shorts' ? 'block' : 'none' }}>
+          <ShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+        </div>
+        <div style={{ display: activeTab === 'live' ? 'block' : 'none' }}>
+          <LiveFeed key={refreshKey} isRefreshing={isRefreshing} />
+        </div>
+        <div style={{ display: activeTab === 'music' ? 'block' : 'none' }}>
+          <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+        </div>
+        <div style={{ display: activeTab === 'ppv' ? 'block' : 'none' }}>
+          <PPVFeed />
+        </div>
+        <div style={{ display: activeTab === 'w2e' ? 'block' : 'none' }}>
+          <W2EFeed />
+        </div>
+        </BadgeBalanceProvider>
       </div>
 
-      {/* Settings Modal */}
-      <FeedSettingsModal
-        open={showFeedSettings}
-        onOpenChange={setShowFeedSettings}
-        filters={feedFilters}
-        onFiltersChange={setFeedFilters}
-      />
+      {/* Stages Modal */}
+      <AudioSpacesModal isOpen={showStagesModal} onClose={() => setShowStagesModal(false)} />
     </div>
   );
 }

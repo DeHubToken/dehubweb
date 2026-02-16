@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 import { X } from 'lucide-react';
+import { useNebulaPrefetch } from '@/hooks/use-nebula-prefetch';
+import { cn } from '@/lib/utils';
 import dehubLogoCenter from '@/assets/dehub-logo-center.png';
 
 // Shared modules
@@ -31,6 +33,31 @@ export const FuturisticAlienHero = () => {
   const mountRef = useRef<HTMLCanvasElement>(null);
   const navigate = useNavigate();
   const { masterGlitch, corruptedTitle, corruptedSubtitle, showPixelCorruption } = useGlitchEffect();
+  const [isCloseButtonGlitching, setIsCloseButtonGlitching] = useState(false);
+  
+  // Prefetch app data on first user interaction (mousemove/touch/scroll)
+  useNebulaPrefetch();
+  
+  // Close button glitch effect - triggers every 4-6 seconds
+  useEffect(() => {
+    const triggerGlitch = () => {
+      setIsCloseButtonGlitching(true);
+      setTimeout(() => setIsCloseButtonGlitching(false), 400);
+    };
+    
+    // Initial glitch after 2 seconds
+    const initialTimer = setTimeout(triggerGlitch, 2000);
+    
+    // Recurring glitch every 4-6 seconds
+    const interval = setInterval(() => {
+      triggerGlitch();
+    }, 4000 + Math.random() * 2000);
+    
+    return () => {
+      clearTimeout(initialTimer);
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleEnterApp = () => {
     // Save preference to skip landing next time
@@ -156,10 +183,20 @@ export const FuturisticAlienHero = () => {
       {/* Close/Enter App Button */}
       <button
         onClick={handleEnterApp}
-        className="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors group"
+        className={cn(
+          "absolute top-4 right-4 z-20 p-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-200 group",
+          isCloseButtonGlitching && "animate-close-button-glitch"
+        )}
         aria-label="Enter App"
+        style={isCloseButtonGlitching ? {
+          boxShadow: '0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(139, 92, 246, 0.4), 0 0 60px rgba(139, 92, 246, 0.2)',
+          borderColor: 'rgba(255, 255, 255, 0.5)',
+        } : undefined}
       >
-        <X className="w-6 h-6 text-white/70 group-hover:text-white transition-colors" />
+        <X className={cn(
+          "w-6 h-6 text-white/70 group-hover:text-white transition-colors",
+          isCloseButtonGlitching && "text-white"
+        )} />
       </button>
       
       <section className="relative h-screen flex items-center justify-center overflow-hidden z-10">

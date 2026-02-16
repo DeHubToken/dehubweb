@@ -9,19 +9,25 @@
  * ```
  */
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell } from 'lucide-react';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
-import { CommentsSheet } from '../comments';
+import { CommentsSection } from './CommentsSection';
 import { PostAIChat } from './PostAIChat';
+import { ReportModal } from '../modals/ReportModal';
+import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useStreamActions } from '@/hooks/use-livestream';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 import type { LiveStream } from '@/types/feed.types';
 
 interface LiveCardProps {
@@ -31,20 +37,51 @@ interface LiveCardProps {
 export function LiveCard({ stream }: LiveCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const { like, isLiking } = useStreamActions();
+
+  // Navigate to single post page when clicking non-interactive areas
+  const handleCardClick = useCallback((e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
+    if (isInteractive) return;
+    navigate(`/app/post/${stream.id}`);
+  }, [navigate, stream.id]);
+
+  const handleLike = useCallback(async () => {
+    if (!isAuthenticated) {
+      toast.error('Sign in to like');
+      return;
+    }
+    try {
+      await like(stream.id);
+      setIsLiked(true);
+      toast.success('Stream liked!');
+    } catch {
+      toast.error('Failed to like');
+    }
+  }, [stream.id, isAuthenticated, like]);
 
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+    <div 
+      onClick={handleCardClick}
+      className="rounded-xl border border-white/[0.08] bg-transparent p-3 cursor-pointer isolate"
+    >
       {/* Header with AI and menu buttons */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between">
         <CardHeader
           username={stream.streamer}
+          handle={stream.creatorUsername}
           avatarSeed={stream.avatar}
           contentType="live"
           isLive
           creatorId={stream.creatorId}
           creatorUsername={stream.creatorUsername}
         />
-        <div className="flex items-center gap-1 pr-3">
+        <div className="flex items-center gap-1">
           <motion.button
             onClick={() => setShowAIChat(true)}
             className="text-zinc-400 hover:text-white transition-colors"
@@ -56,7 +93,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           </motion.button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+              <button className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
                 <MoreVertical className="w-5 h-5" />
               </button>
             </DropdownMenuTrigger>
@@ -64,7 +101,10 @@ export function LiveCard({ stream }: LiveCardProps) {
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
                 <Bell className="w-4 h-4" /> Notify When Live
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+              <DropdownMenuItem 
+                onClick={() => setShowReportModal(true)}
+                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+              >
                 <Flag className="w-4 h-4" /> Report
               </DropdownMenuItem>
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
@@ -79,12 +119,12 @@ export function LiveCard({ stream }: LiveCardProps) {
       </div>
 
       {/* Thumbnail */}
-      <div className="aspect-video bg-zinc-800">
+      <div className="aspect-video bg-zinc-800 rounded-lg overflow-hidden" data-no-navigate>
         <img src={stream.thumbnail} alt="" className="w-full h-full object-cover" />
       </div>
 
       {/* Info & Actions */}
-      <div className="p-3">
+      <div className="pt-3">
         <ActionBar 
           postId={stream.id} 
           className="p-0 mb-2" 
@@ -92,18 +132,22 @@ export function LiveCard({ stream }: LiveCardProps) {
           likeCount={stream.likeCount}
           commentCount={stream.commentCount}
         />
-        <p className="font-semibold text-white text-sm">{stream.viewers} watching</p>
+        <p className="font-semibold text-white text-sm">{stream.viewers} tuned in</p>
         <h3 className="text-white text-sm mt-1">{stream.title}</h3>
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
       </div>
 
-      {/* Comments Sheet */}
-      {showComments && (
-        <CommentsSheet
-          tokenId={stream.id}
-          onClose={() => setShowComments(false)}
-        />
-      )}
+      {/* Comments - Always use Drawer for consistent liquid glass style */}
+      <Drawer open={showComments} onOpenChange={setShowComments}>
+        <DrawerContent glass hideHandle className="max-h-[70vh] flex flex-col overflow-hidden">
+          <div className="flex-1 min-h-0 px-4 pb-4 pt-2">
+            <CommentsSection
+              tokenId={stream.id}
+              onClose={() => setShowComments(false)}
+            />
+          </div>
+        </DrawerContent>
+      </Drawer>
 
       {/* AI Chat */}
       <PostAIChat
@@ -116,6 +160,14 @@ export function LiveCard({ stream }: LiveCardProps) {
           caption: `Playing ${stream.game} with ${stream.viewers} viewers`,
           imageUrl: stream.thumbnail
         }}
+      />
+
+      {/* Report Modal */}
+      <ReportModal
+        open={showReportModal}
+        onOpenChange={setShowReportModal}
+        tokenId={stream.id}
+        contentType="video"
       />
     </div>
   );

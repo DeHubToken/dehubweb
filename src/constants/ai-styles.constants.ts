@@ -38,7 +38,7 @@ export const AI_STYLE_OPTIONS = [
   { id: 'feminist', label: 'Feminist', emoji: '♀️' },
   { id: 'progressive', label: 'Progressive', emoji: '🌈' },
   { id: 'nationalist', label: 'Nationalist', emoji: '🏳️' },
-  { id: 'communist', label: 'Communist', emoji: '☭' },
+  { id: 'communist', label: 'Communist', emoji: '🚩' },
 ] as const;
 
 // For AI Assistant - includes "Normal" as first option

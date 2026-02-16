@@ -5,6 +5,8 @@ import { usePostForm } from './hooks/usePostForm';
 import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
+import { CameraCaptureModal } from './components/CameraCaptureModal';
+import { cn } from '@/lib/utils';
 
 interface PostModalProps {
   isOpen: boolean;
@@ -35,6 +37,10 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
       <PostContentArea
         text={state.text}
         setText={actions.setText}
+        description={state.description}
+        setDescription={actions.setDescription}
+        showDescription={state.showDescription}
+        setShowDescription={actions.setShowDescription}
         editorRef={refs.editorRef}
         media={state.media}
         onRemoveMedia={actions.removeMedia}
@@ -64,6 +70,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         isRecording={state.isRecording}
         recordingTime={state.recordingTime}
         onStopRecording={actions.stopRecording}
+        chainId={state.chainId}
+        onChainChange={actions.setChainId}
       />
 
       <PostAccessToggles
@@ -91,6 +99,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         setTokenContract={actions.setTokenContract}
         tokenAmount={state.tokenAmount}
         setTokenAmount={actions.setTokenAmount}
+        selectedCategory={state.selectedCategory}
+        setSelectedCategory={actions.setSelectedCategory}
       />
 
       <PostActionBar
@@ -104,10 +114,14 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         liveMode={state.liveMode}
         setLiveMode={actions.setLiveMode}
         onInsertFormatting={actions.insertFormatting}
+        onInsertEmoji={actions.insertEmoji}
+        onInsertGif={actions.insertGif}
+        onCameraCapture={actions.openCameraCapture}
         onEnhanceWithAI={actions.handleEnhanceWithAI}
         onPost={actions.handlePost}
         canPost={computed.canPost}
         isEnhancing={state.isEnhancing}
+        isPosting={state.isPosting}
         hasText={!!state.text.trim()}
         hasImage={computed.hasImage}
         hasVideo={computed.hasVideo}
@@ -116,15 +130,37 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
     </>
   );
 
+  // Prevent drawer from closing when camera is open
+  const handleDrawerChange = (open: boolean) => {
+    if (!open && state.isCameraModalOpen) return; // Don't close if camera is active
+    if (!open) handleClose();
+  };
+
   // Use Drawer/Sheet on ALL devices (mobile, tablet, desktop)
   return (
-    <Drawer open={isOpen} onOpenChange={handleClose}>
-      <DrawerContent glass hideHandle className="max-h-[90vh] max-h-[90dvh]">
-        <VisuallyHidden>
-          <DrawerTitle>Create a post</DrawerTitle>
-        </VisuallyHidden>
-        {modalContent}
-      </DrawerContent>
-    </Drawer>
+    <>
+      <Drawer open={isOpen} onOpenChange={handleDrawerChange}>
+        <DrawerContent 
+          glass 
+          hideHandle 
+          className={cn(
+            "max-h-[90vh] max-h-[90dvh]",
+            state.isCameraModalOpen && "invisible pointer-events-none"
+          )}
+        >
+          <VisuallyHidden>
+            <DrawerTitle>Create a post</DrawerTitle>
+          </VisuallyHidden>
+          {modalContent}
+        </DrawerContent>
+      </Drawer>
+
+      <CameraCaptureModal
+        isOpen={state.isCameraModalOpen}
+        onClose={actions.closeCameraCapture}
+        onVideoRecorded={actions.handleCameraVideoRecorded}
+        onPhotoCaptured={actions.handleCameraPhotoCaptured}
+      />
+    </>
   );
 }

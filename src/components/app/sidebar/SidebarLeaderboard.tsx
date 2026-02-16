@@ -1,12 +1,33 @@
+import { useState, useEffect, useCallback, useRef, forwardRef, useImperativeHandle } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { Button } from '@/components/ui/button';
-import { getLeaderboard, getMediaUrl, type LeaderboardEntry } from '@/lib/api/dehub';
+import { getLeaderboard, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
+import { useBatchBadgeBalances } from '@/hooks/use-badge-balance';
+import { getBadgeUrl } from '@/lib/staking-badges';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
+import medal4 from '@/assets/medal-4.png';
+import medal5 from '@/assets/medal-5.png';
+import medal6 from '@/assets/medal-6.png';
+import medal7 from '@/assets/medal-7.png';
+import medal8 from '@/assets/medal-8.png';
+import medal9 from '@/assets/medal-9.png';
+import medal10 from '@/assets/medal-10.png';
+
+const PERIODS = ['1d', '1w', '1m', '1y', 'All'] as const;
+const PERIOD_MAP: Record<string, string> = {
+  '1d': 'day',
+  '1w': 'week',
+  '1m': 'month',
+  '1y': 'year',
+  'All': 'all',
+};
 
 const formatNumber = (num: number | undefined): string => {
   if (num === undefined || num === null) return '0';
@@ -16,24 +37,97 @@ const formatNumber = (num: number | undefined): string => {
 };
 
 const formatDHB = (num: number): string => {
-  return `${formatNumber(num)} DHB`;
+  return formatNumber(num);
 };
 
-export function SidebarLeaderboard() {
+export interface SidebarLeaderboardHandle {
+  /** Try to swipe the period. Returns true if consumed, false if at edge. */
+  swipePeriod: (direction: 1 | -1) => boolean;
+}
+
+export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function SidebarLeaderboard(_props, ref) {
   const navigate = useNavigate();
+  const [activePeriod, setActivePeriod] = useState<string>('All');
+  const [isAutoRotating, setIsAutoRotating] = useState(true);
+  const [shimmerKey, setShimmerKey] = useState(0);
+  const directionRef = useRef(1);
+
+  useImperativeHandle(ref, () => ({
+    swipePeriod(direction: 1 | -1): boolean {
+      const idx = PERIODS.indexOf(activePeriod as typeof PERIODS[number]);
+      const newIdx = idx + direction;
+      if (newIdx < 0 || newIdx >= PERIODS.length) return false; // at edge
+      directionRef.current = direction;
+      setActivePeriod(PERIODS[newIdx]);
+      setIsAutoRotating(false);
+      setShimmerKey(k => k + 1);
+      setTimeout(() => setIsAutoRotating(true), 30000);
+      return true;
+    },
+  }), [activePeriod]);
+
+  const apiPeriod = PERIOD_MAP[activePeriod] || 'all';
 
   const { data, isLoading } = useQuery({
-    queryKey: ['sidebar-leaderboard', 'holdings', 'all'],
-    queryFn: () => getLeaderboard('holdings', 'all'),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
+    queryKey: ['sidebar-leaderboard', 'holdings', apiPeriod],
+    queryFn: () => getLeaderboard('holdings', apiPeriod as LeaderboardPeriod),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
   });
 
-  const entries = data?.result?.byWalletBalance?.slice(0, 50) || [];
+  // Auto-rotate through periods every 5 seconds
+  useEffect(() => {
+    if (!isAutoRotating) return;
+    const interval = setInterval(() => {
+      directionRef.current = 1;
+      setActivePeriod(prev => {
+        const idx = PERIODS.indexOf(prev as typeof PERIODS[number]);
+        return PERIODS[(idx + 1) % PERIODS.length];
+      });
+      setShimmerKey(k => k + 1);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isAutoRotating]);
+
+  const handlePeriodClick = useCallback((period: string) => {
+    const oldIdx = PERIODS.indexOf(activePeriod as typeof PERIODS[number]);
+    const newIdx = PERIODS.indexOf(period as typeof PERIODS[number]);
+    directionRef.current = newIdx >= oldIdx ? 1 : -1;
+    setActivePeriod(period);
+    setIsAutoRotating(false);
+    setShimmerKey(k => k + 1);
+    setTimeout(() => setIsAutoRotating(true), 30000);
+  }, [activePeriod]);
+
+  const balanceOverrides: Record<string, number> = {
+    maldoteth: 273298163.18321,
+  };
+  const badgeBalanceOverrides: Record<string, number> = {
+    maldoteth: 273298163.18321,
+  };
+  const blockedLeaderboardUsers: string[] = [];
+
+  const entries = (data?.result?.byWalletBalance || [])
+    .filter((entry: LeaderboardEntry) => entry.username && !blockedLeaderboardUsers.includes(entry.username.toLowerCase()))
+    .map((entry: LeaderboardEntry) => {
+      const uname = entry.username?.toLowerCase();
+      const totalOverride = uname ? balanceOverrides[uname] : undefined;
+      const badgeOverride = uname ? badgeBalanceOverrides[uname] : undefined;
+      return {
+        ...entry,
+        ...(totalOverride !== undefined ? { total: totalOverride } : {}),
+        ...(badgeOverride !== undefined ? { badgeBalance: badgeOverride } : {}),
+      };
+    })
+    .sort((a, b) => (b.total ?? 0) - (a.total ?? 0))
+    .slice(0, 50);
+
+  const walletAddresses = entries.map((e: LeaderboardEntry) => e.account);
+  const { balances: badgeBalances } = useBatchBadgeBalances(walletAddresses);
 
   const getAvatarUrl = (entry: LeaderboardEntry) => {
-    if (entry.avatarUrl) {
-      return getMediaUrl(entry.avatarUrl);
+    if (entry.avatarUrl && entry.account) {
+      return buildAvatarUrl(entry.account, entry.avatarUrl);
     }
     return null;
   };
@@ -53,7 +147,7 @@ export function SidebarLeaderboard() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading && entries.length === 0) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
@@ -61,10 +155,10 @@ export function SidebarLeaderboard() {
     );
   }
 
-  if (entries.length === 0) {
+  if (!isLoading && entries.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
-        <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-3">
+        <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
           <Trophy className="w-6 h-6 text-zinc-500" />
         </div>
         <p className="text-zinc-400 text-sm">No leaderboard data yet</p>
@@ -74,58 +168,111 @@ export function SidebarLeaderboard() {
 
   return (
     <div className="flex flex-col h-full">
+      {/* Period filter row */}
+      <div className="flex items-center justify-between px-4 py-2">
+        {PERIODS.map((period) => (
+          <button
+            key={period}
+            onClick={() => handlePeriodClick(period)}
+            className={`text-xs font-medium transition-colors ${
+              activePeriod === period
+                ? 'text-white'
+                : 'text-white/40 hover:text-white/70'
+            }`}
+          >
+            {period}
+          </button>
+        ))}
+      </div>
+
       {/* Scrollable list */}
-      <div className="flex-1 overflow-y-auto space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
-        {entries.map((entry, index) => {
-          const rank = index + 1;
-          return (
-            <div
-              key={entry.account}
-              onClick={() => handleUserClick(entry)}
-              className="flex items-center gap-3 py-2 px-4 hover:bg-zinc-800/50 transition-colors cursor-pointer"
-            >
-              {/* Rank */}
-              <div className="w-7 flex-shrink-0 flex items-center justify-center">
-                {rank <= 3 ? (
-                  <div className="medal-shine-container w-6 h-6">
-                    <img 
-                      src={rank === 1 ? medal1 : rank === 2 ? medal2 : medal3} 
-                      alt={`Rank ${rank}`} 
-                      className="w-6 h-6 object-contain"
-                    />
-                    <div 
-                      className="medal-shine-overlay"
-                      style={{ '--medal-mask': `url(${rank === 1 ? medal1 : rank === 2 ? medal2 : medal3})` } as React.CSSProperties}
-                    />
+      <div className="flex-1 overflow-hidden relative">
+        <AnimatePresence mode="popLayout" initial={false} custom={directionRef.current}>
+          <motion.div
+            key={activePeriod}
+            custom={directionRef.current}
+            variants={{
+              enter: (d: number) => ({ x: `${d * 100}%`, opacity: 0 }),
+              center: { x: 0, opacity: 1 },
+              exit: (d: number) => ({ x: `${d * -100}%`, opacity: 0 }),
+            }}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
+            className="overflow-y-auto space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent h-full"
+          >
+            {entries.map((entry, index) => {
+              const rank = index + 1;
+              return (
+                <div
+                  key={entry.account}
+                  onClick={() => handleUserClick(entry)}
+                  className="flex items-center gap-3 py-2 px-4 hover:bg-zinc-800/50 transition-colors cursor-pointer"
+                >
+                  {/* Rank */}
+                  <div className="w-7 flex-shrink-0 flex items-center justify-center">
+                    {rank <= 10 ? (
+                      <div className={`medal-shine-container ${rank <= 3 ? 'w-10 h-10' : 'w-6 h-6'}`}>
+                        <img 
+                          src={[medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10][rank - 1]} 
+                          alt={`Rank ${rank}`} 
+                          className={`${rank <= 3 ? 'w-10 h-10' : 'w-6 h-6'} object-contain`}
+                        />
+                        <div 
+                          key={shimmerKey}
+                          className="medal-shine-overlay"
+                          style={{ '--medal-mask': `url(${[medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10][rank - 1]})` } as React.CSSProperties}
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-5 h-5 rounded-lg bg-zinc-700 flex items-center justify-center text-xs font-bold text-white">
+                        {rank}
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <div className="w-5 h-5 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold text-white">
-                    {rank}
+
+                  {/* Avatar */}
+                  <LeaderboardUserAvatar
+                    avatarUrl={getAvatarUrl(entry)}
+                    fallbackSeed={entry.account}
+                    displayName={getDisplayName(entry)}
+                    size="sm"
+                  />
+
+                  {/* User Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-0 min-w-0">
+                      <span className="relative inline-flex items-baseline shrink min-w-0">
+                        <span className="font-semibold text-white text-sm truncate min-w-0">
+                          {getDisplayName(entry)}
+                        </span>
+                        {(() => {
+                          const badgeUrl = getBadgeUrl(entry.badgeBalance ?? badgeBalances[entry.account.toLowerCase()]);
+                          return badgeUrl ? (
+                            <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />
+                          ) : null;
+                        })()}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <span className="text-zinc-500 truncate">{getHandle(entry)}</span>
+                      <span className="flex-1" />
+                      <span className="text-zinc-400 shrink-0 tabular-nums">
+                        {(() => {
+                          const isTimeDelta = activePeriod !== 'All';
+                          const displayValue = isTimeDelta && entry.delta !== undefined ? entry.delta : (entry.total ?? 0);
+                          const prefix = isTimeDelta && entry.delta !== undefined && entry.delta > 0 ? '+' : '';
+                          return `${prefix}${formatDHB(displayValue)}`;
+                        })()}
+                      </span>
+                    </div>
                   </div>
-                )}
-              </div>
-
-              {/* Avatar */}
-              <LeaderboardUserAvatar
-                avatarUrl={getAvatarUrl(entry)}
-                fallbackSeed={entry.account}
-                displayName={getDisplayName(entry)}
-                size="sm"
-              />
-
-              {/* User Info */}
-              <div className="flex-1 min-w-0">
-                <div className="font-semibold text-white text-sm truncate">{getDisplayName(entry)}</div>
-                <div className="text-zinc-500 text-xs truncate">{getHandle(entry)}</div>
-              </div>
-
-              {/* Value */}
-              <div className="text-right flex-shrink-0">
-                <span className="text-zinc-400 text-xs">{formatDHB(entry.total ?? 0)}</span>
-              </div>
-            </div>
-          );
-        })}
+                </div>
+              );
+            })}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Bottom fade gradient */}
@@ -134,11 +281,11 @@ export function SidebarLeaderboard() {
         <Button
           variant="ghost"
           onClick={() => navigate('/app/leaderboard')}
-          className="w-full mt-2 text-white/70 hover:text-white hover:bg-zinc-800/50"
+          className="w-full mt-2 text-white/50 hover:text-white hover:bg-transparent"
         >
           View All
         </Button>
       </div>
     </div>
   );
-}
+});

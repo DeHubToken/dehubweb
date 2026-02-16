@@ -11,19 +11,29 @@
 
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus } from 'lucide-react';
+import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio } from 'lucide-react';
 import { toast } from 'sonner';
-import { useQuery } from '@tanstack/react-query';
-import { getNFTInfo, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getNFTInfo, DeHubNFT, updateTokenVisibility, TokenVisibility } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { getTokenHolders, TOTAL_FRACTIONS, truncateAddress as truncateAddr } from '@/lib/api/token-holders';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
+import { EditPostModal } from '@/components/app/modals/EditPostModal';
+
+// Visibility options configuration
+const VISIBILITY_OPTIONS: { value: TokenVisibility; label: string; icon: React.ReactNode; description: string }[] = [
+  { value: 'public', label: 'Public', icon: <Globe className="w-4 h-4" />, description: 'Anyone can see this post' },
+  { value: 'unlisted', label: 'Unlisted', icon: <EyeOff className="w-4 h-4" />, description: 'Only people with the link can see' },
+  { value: 'private', label: 'Private', icon: <Lock className="w-4 h-4" />, description: 'Only you can see this post' },
+];
 
 // Types for listings and offers (data will come from API)
 interface Listing {
@@ -176,6 +186,8 @@ const getChainInfo = (chainId: number) => {
 export default function PostInfoPage() {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
+  const { walletAddress } = useAuth();
+  const queryClient = useQueryClient();
   
   // Fetch NFT info with React Query
   const { 
@@ -202,6 +214,31 @@ export default function PostInfoPage() {
     gcTime: 30 * 60 * 1000, // 30 minutes in cache
   });
   
+  // Check if current user is the owner/minter
+  const isOwner = walletAddress && nftInfo?.minter?.toLowerCase() === walletAddress.toLowerCase();
+  const [showEditModal, setShowEditModal] = useState(false);
+  
+  // Current visibility state (default to 'public' if not set)
+  const currentVisibility: TokenVisibility = (nftInfo as any)?.visibility || 'public';
+  
+  // Visibility mutation
+  const visibilityMutation = useMutation({
+    mutationFn: (newVisibility: TokenVisibility) => 
+      updateTokenVisibility(nftInfo!.tokenId, newVisibility),
+    onSuccess: (_, newVisibility) => {
+      toast.success(`Visibility updated to ${newVisibility}`);
+      // Invalidate the NFT info query to refetch
+      queryClient.invalidateQueries({ queryKey: ['nft-info', postId] });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to update visibility');
+    },
+  });
+  
+  const handleVisibilityChange = (newVisibility: TokenVisibility) => {
+    if (!nftInfo?.tokenId) return;
+    visibilityMutation.mutate(newVisibility);
+  };
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
     toast.success(`${label} copied to clipboard`);
@@ -231,6 +268,57 @@ export default function PostInfoPage() {
     if (!address) return 'Unknown';
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
+  
+  // Optimistic post - still being minted
+  const isOptimisticPost = postId?.startsWith('optimistic-');
+  
+  if (isOptimisticPost) {
+    return (
+      <div className="min-h-screen bg-black">
+        <div className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-white/10">
+          <div className="flex items-center gap-4 p-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2 -ml-2 text-white hover:text-white/70 transition-colors"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <h1 className="text-lg font-semibold text-white">Post Info</h1>
+          </div>
+        </div>
+        
+        <div className="flex flex-col items-center justify-center p-8 text-center max-w-md mx-auto mt-16">
+          {/* Animated processing indicator */}
+          <div className="relative mb-6">
+            <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+              <Loader2 className="w-10 h-10 text-primary animate-spin" />
+            </div>
+            <div className="absolute inset-0 rounded-xl bg-primary/10 animate-ping" />
+          </div>
+          
+          <h2 className="text-xl font-semibold text-white mb-3">
+            Processing...
+          </h2>
+          
+          <p className="text-white/60 text-sm leading-relaxed mb-4">
+            Your post is being minted on public decentralized databases and our system is validating everything before it goes live on user feeds.
+          </p>
+          
+          <p className="text-white/40 text-xs leading-relaxed">
+            Your post metadata is permanently stored on-chain but you can hide content from feeds at any time should you need to.
+          </p>
+          
+          <button
+            onClick={() => navigate(-1)}
+            className="mt-8 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl text-sm font-medium transition-colors"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
   
   // Loading state
   if (isLoading) {
@@ -283,7 +371,7 @@ export default function PostInfoPage() {
   
   // Get creator info
   const creatorName = nftInfo.minterDisplayName || nftInfo.mintername || truncateAddress(nftInfo.minter);
-  const creatorAvatar = getMediaUrl(nftInfo.minterAvatarUrl);
+  const creatorAvatar = buildAvatarUrl(nftInfo.minter, nftInfo.minterAvatarUrl);
 
   return (
     <div className="min-h-screen bg-black">
@@ -298,7 +386,16 @@ export default function PostInfoPage() {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <h1 className="text-lg font-semibold text-white">Post Info</h1>
-          <span className="ml-auto px-2.5 py-1 text-xs font-medium bg-white/10 rounded-full text-white/80">
+          {isOwner && (
+            <button
+              onClick={() => setShowEditModal(true)}
+              className="ml-auto p-2 text-white/60 hover:text-white transition-colors"
+              aria-label="Edit post"
+            >
+              <Pencil className="w-4 h-4" />
+            </button>
+          )}
+          <span className={`${isOwner ? '' : 'ml-auto '}px-2.5 py-1 text-xs font-medium bg-white/10 rounded-lg text-white/80`}>
             {chainInfo.name}
           </span>
         </div>
@@ -314,7 +411,7 @@ export default function PostInfoPage() {
                 <p className="text-xl font-bold text-white">#{nftInfo.tokenId}</p>
               </div>
               {nftInfo.status && (
-                <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${
+                <span className={`px-2.5 py-1 text-xs font-medium rounded-lg ${
                   nftInfo.status === 'minted' 
                     ? 'bg-green-500/20 text-green-400' 
                     : 'bg-yellow-500/20 text-yellow-400'
@@ -363,6 +460,35 @@ export default function PostInfoPage() {
             )}
           </section>
 
+          {/* Live Stream Info - shown for live content */}
+          {((nftInfo as any).postType === 'live' || (nftInfo as any).isLive !== undefined) && (
+            <section className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h2 className="text-sm font-medium text-white/60 mb-3">Stream Info</h2>
+              <div className="flex items-center gap-3 mb-3">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${(nftInfo as any).isLive ? 'bg-red-500/20' : 'bg-white/5'}`}>
+                  <Radio className={`w-5 h-5 ${(nftInfo as any).isLive ? 'text-red-400' : 'text-zinc-500'}`} />
+                </div>
+                <div>
+                  <p className="text-white font-medium">
+                    {(nftInfo as any).isLive ? 'Currently Live' : 'Stream Offline'}
+                  </p>
+                  <p className="text-xs text-white/60">
+                    {(nftInfo as any).totalViews ?? nftInfo.views ?? 0} total views
+                  </p>
+                </div>
+              </div>
+              {(nftInfo as any).categories && (nftInfo as any).categories.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {(nftInfo as any).categories.map((cat: string, i: number) => (
+                    <span key={i} className="px-2 py-1 text-xs bg-white/10 rounded-lg text-white/70">
+                      {cat}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
+
           {/* Creator Info */}
           <section className="bg-white/5 rounded-xl p-4 border border-white/10">
             <h2 className="text-sm font-medium text-white/60 mb-3">Creator</h2>
@@ -371,10 +497,10 @@ export default function PostInfoPage() {
                 <img 
                   src={creatorAvatar} 
                   alt={creatorName}
-                  className="w-12 h-12 rounded-full object-cover bg-white/10"
+                  className="w-12 h-12 rounded-xl object-cover bg-white/10"
                 />
               ) : (
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
                   <User className="w-6 h-6 text-white/60" />
                 </div>
               )}
@@ -393,6 +519,45 @@ export default function PostInfoPage() {
               </button>
             </div>
           </section>
+
+          {/* Visibility Settings - Only shown to owner */}
+          {isOwner && (
+            <section className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h2 className="text-sm font-medium text-white/60 mb-3">Visibility</h2>
+              <Select 
+                value={currentVisibility} 
+                onValueChange={(value: TokenVisibility) => handleVisibilityChange(value)}
+                disabled={visibilityMutation.isPending}
+              >
+                <SelectTrigger className="w-full bg-white/5 border-white/10 text-white">
+                  <SelectValue>
+                    <div className="flex items-center gap-2">
+                      {VISIBILITY_OPTIONS.find(opt => opt.value === currentVisibility)?.icon}
+                      <span>{VISIBILITY_OPTIONS.find(opt => opt.value === currentVisibility)?.label}</span>
+                      {visibilityMutation.isPending && <Loader2 className="w-4 h-4 animate-spin ml-auto" />}
+                    </div>
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent className="bg-zinc-900 border-white/10">
+                  {VISIBILITY_OPTIONS.map((option) => (
+                    <SelectItem 
+                      key={option.value} 
+                      value={option.value}
+                      className="text-white hover:bg-white/10 focus:bg-white/10"
+                    >
+                      <div className="flex items-center gap-3">
+                        {option.icon}
+                        <div>
+                          <p className="font-medium">{option.label}</p>
+                          <p className="text-xs text-white/60">{option.description}</p>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </section>
+          )}
 
           {/* Listings & Offers Tabs */}
           <FractionMarketplace 
@@ -434,7 +599,7 @@ export default function PostInfoPage() {
                 <>
                   {[1, 2, 3].map((i) => (
                     <div key={i} className="flex items-center gap-3">
-                      <Skeleton className="w-10 h-10 rounded-full" />
+                      <Skeleton className="w-10 h-10 rounded-md" />
                       <div className="flex-1 space-y-1.5">
                         <Skeleton className="h-4 w-24" />
                         <Skeleton className="h-3 w-32" />
@@ -461,7 +626,7 @@ export default function PostInfoPage() {
                           />
                         </div>
                       ) : (
-                        <div className="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-xl bg-zinc-700 flex items-center justify-center shrink-0">
                           <span className="text-sm font-bold text-white">{rank}</span>
                         </div>
                       )}
@@ -486,7 +651,7 @@ export default function PostInfoPage() {
               ) : (
                 // Fallback: Show creator as 100% owner
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
                     <Users className="w-5 h-5 text-white/60" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -578,7 +743,7 @@ export default function PostInfoPage() {
               {nftInfo.category && (
                 <div className="mt-3 flex flex-wrap gap-2">
                   {(Array.isArray(nftInfo.category) ? nftInfo.category : [nftInfo.category]).map((cat, i) => (
-                    <span key={i} className="px-2 py-1 text-xs bg-white/10 rounded-full text-white/70">
+                    <span key={i} className="px-2 py-1 text-xs bg-white/10 rounded-lg text-white/70">
                       {cat}
                     </span>
                   ))}
@@ -604,6 +769,19 @@ export default function PostInfoPage() {
           </div>
         </div>
       </div>
+
+      {/* Edit Post Modal */}
+      {isOwner && nftInfo && (
+        <EditPostModal
+          open={showEditModal}
+          onOpenChange={setShowEditModal}
+          tokenId={nftInfo.tokenId}
+          currentTitle={nftInfo.title || nftInfo.name || ''}
+          currentDescription={nftInfo.description || ''}
+          currentCategories={Array.isArray(nftInfo.category) ? nftInfo.category : nftInfo.category ? [nftInfo.category] : []}
+          onSuccess={() => queryClient.invalidateQueries({ queryKey: ['nft-info', postId] })}
+        />
+      )}
     </div>
   );
 }

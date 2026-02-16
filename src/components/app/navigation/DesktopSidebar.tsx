@@ -1,21 +1,19 @@
 import { useState } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
-import { PenSquare, Sparkles, LogOut, ChevronUp, LogIn } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
+import { PenSquare, Sparkles, LogIn } from 'lucide-react';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { SidebarNavItem } from './SidebarNavItem';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
-import { UserAvatar } from '../UserAvatar';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCoinPlacement } from '@/hooks/use-coin-placement';
+import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import dehubLogo from '@/assets/dehub-logo-white.png';
+import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
 import { cn } from '@/lib/utils';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { toast } from 'sonner';
+import { buildAvatarUrl } from '@/lib/media-url';
 
 interface DesktopSidebarProps {
   onPostClick: () => void;
@@ -24,24 +22,42 @@ interface DesktopSidebarProps {
 export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, user, walletAddress, disconnect } = useAuth();
+  const { t } = useTranslation();
+  const { isAuthenticated, user, walletAddress, connect, isConnecting, needsSignature } = useAuth();
+  const { stickToBanner } = useCoinPlacement();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
+  const { data: unreadCount } = useUnreadNotificationCount();
 
   // Get balance from user or default to 0
   const coinBalance = 0; // TODO: Get from user wallet
 
-  const handleLogoClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (location.pathname.startsWith('/app')) {
-      window.dispatchEvent(new CustomEvent('home-refresh'));
-    }
-    navigate('/app');
-  };
-
-  const handlePostClick = () => {
+  const handleCoinClick = () => {
     if (!isAuthenticated) {
       setShowAuthPrompt(true);
+      return false;
+    }
+    return true;
+  };
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    if (location.pathname === '/app') {
+      // Already on home - just scroll to top, don't trigger full refresh
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Coming from another app page - navigate without refresh
+      navigate('/app');
+    }
+  };
+
+  const handlePostClick = async () => {
+    if (!isAuthenticated) {
+      try {
+        await connect();
+      } catch {
+        // Error is already toasted in AuthContext
+      }
       return;
     }
     onPostClick();
@@ -55,72 +71,64 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     }
   };
 
-  const handleCoinClick = () => {
-    if (!isAuthenticated) {
-      setShowAuthPrompt(true);
-      return false;
-    }
-    return true;
-  };
-
-
-  const handleLogout = async () => {
-    try {
-      await disconnect();
-      setShowUserMenu(false);
-      toast.success('Logged out successfully');
-    } catch (error) {
-      toast.error('Failed to logout');
-    }
-  };
-
   // Filter out Assistant item - we'll render it specially as a NavLink
   const navItemsWithoutAI = NAV_ITEMS.filter((item) => item.path !== '/app' && item.label !== 'Assistant');
   const isAIActive = location.pathname === '/app/assistant';
 
-  // Get user display info
+  // Get user display info for avatar
   const displayName = user?.displayName || user?.username || 'Anonymous';
-  const username = user?.username || (walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : '');
+  const userAvatarUrl = user?.avatarImageUrl && user?.address
+    ? buildAvatarUrl(user.address, user.avatarImageUrl)
+    : null;
 
   return (
     <>
-      <aside className="hidden lg:flex sticky top-0 h-screen w-[231px] p-[18px] flex-col overflow-y-auto scrollbar-invisible">
+      <aside className="hidden lg:flex sticky top-0 h-screen w-[60px] xl:w-[231px] px-2 xl:px-[18px] pt-[2px] pb-2 flex-col overflow-y-auto overflow-x-hidden scrollbar-invisible items-center xl:items-stretch transition-all duration-200">
         {/* Logo & Coin Balance */}
-        <div className="mb-6 flex items-center justify-between">
-          <button onClick={handleLogoClick} className="block cursor-pointer">
-            <img src={dehubLogo} alt="dehub" className="h-[46.2px] w-auto" />
+        <div className="mb-6 flex items-center justify-between w-full">
+          <button onClick={handleLogoClick} className="block cursor-pointer mt-[10px] mx-auto xl:mx-0">
+            <img src={dehubLogo} alt="dehub" className="h-[50.8px] w-auto hidden xl:block" />
+            <img src={dehubLogoCompact} alt="dehub" className="h-[28px] w-auto xl:hidden" />
           </button>
-          <CoinBalanceMenu 
-            balance={coinBalance} 
-            variant="desktop" 
-            onAuthRequired={handleCoinClick}
-          />
+          {isAuthenticated && stickToBanner && (
+            <div className="mt-[10px] hidden xl:block">
+              <CoinBalanceMenu 
+                balance={coinBalance} 
+                variant="desktop" 
+                onAuthRequired={handleCoinClick}
+              />
+            </div>
+          )}
         </div>
 
-        {/* Navigation Bento - reduced padding */}
-        <div className="bg-zinc-900 rounded-2xl p-2.5 space-y-[2px]">
+        {/* Navigation Bento */}
+        <div className="-mt-[8.5px] bg-zinc-900 rounded-2xl p-1 xl:p-2.5 space-y-2 xl:space-y-[2px] flex flex-col items-center xl:items-stretch">
           {navItemsWithoutAI.map((item) => {
             const isActive = !item.external && location.pathname.startsWith(item.path);
             const isProfileItem = item.label === 'Profile';
-            
-            // Insert AI link after Messages
+            const isNotificationsItem = item.label === 'Notifications';
             const isAfterMessages = item.label === 'Messages';
 
             return (
-              <div key={item.label}>
+              <div key={item.label} className="w-full flex flex-col items-center xl:items-stretch">
                 <SidebarNavItem
                   item={item}
                   isActive={isActive}
                   isHome={false}
                   currentPath={location.pathname}
                   variant="desktop"
+                  collapsed={true}
                   onClick={isProfileItem ? handleProfileClick : undefined}
+                  avatarUrl={isProfileItem && isAuthenticated ? userAvatarUrl : undefined}
+                  avatarFallback={isProfileItem && isAuthenticated ? displayName.charAt(0).toUpperCase() : undefined}
+                  notificationCount={isNotificationsItem ? unreadCount?.total : undefined}
                 />
                 {isAfterMessages && (
                   <NavLink
                     to="/app/assistant"
                     className={cn(
-                      'flex items-center gap-3 w-full px-2.5 py-2.5 rounded-xl text-left transition-colors text-[13.5px]',
+                      'flex items-center rounded-xl text-left transition-colors text-[15px]',
+                      'w-9 h-9 xl:w-full xl:h-auto justify-center xl:justify-start xl:px-2.5 xl:py-2.5 xl:gap-3',
                       isAIActive
                         ? 'bg-zinc-800 font-semibold text-white'
                         : 'text-white hover:bg-zinc-800/50'
@@ -128,11 +136,12 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   >
                     <div className={cn(
                       "w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
-                      isAIActive ? "bg-zinc-700" : "bg-zinc-800"
+                      "xl:w-9 xl:h-9",
+                      isAIActive ? "bg-zinc-700" : "xl:bg-zinc-800 bg-transparent"
                     )}>
                       <Sparkles className="w-5 h-5" />
                     </div>
-                    <span className="truncate">Assistant</span>
+                    <span className="truncate hidden xl:inline">{t('nav.assistant')}</span>
                   </NavLink>
                 )}
               </div>
@@ -140,64 +149,42 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           })}
         </div>
 
-        {/* Post Button Bento - reduced padding and button size */}
-        <div className="mt-3 bg-zinc-900 rounded-2xl p-2.5">
-          <Button 
+        {/* Post / Login Button */}
+        <div className="mt-3 flex items-center justify-center xl:block">
+          <LiquidGlassBubble 
+            shimmer
+            noBorder
+            className={cn("cursor-pointer w-full [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent", isConnecting && "opacity-70 pointer-events-none")}
             onClick={handlePostClick}
-            className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-5 text-[13.5px] gap-2"
           >
-            {isAuthenticated ? (
-              <>
-                <PenSquare className="w-[18px] h-[18px]" />
-                Post
-              </>
-            ) : (
-              <>
-                <LogIn className="w-[18px] h-[18px]" />
-                Log in
-              </>
-            )}
-          </Button>
+            <div className={cn(
+              "flex items-center gap-2 font-semibold text-white justify-center",
+              "py-[7px] xl:py-3 text-[13.5px]"
+            )}>
+              {isAuthenticated ? (
+                <>
+                  <PenSquare className="w-[18px] h-[18px] flex-shrink-0" />
+                  <span className="hidden xl:inline">{t('nav.create')}</span>
+                </>
+              ) : isConnecting ? (
+                <>
+                  <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin flex-shrink-0" />
+                  <span className="hidden xl:inline">{t('nav.connecting')}</span>
+                </>
+              ) : needsSignature ? (
+                <>
+                  <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
+                  <span className="hidden xl:inline">{t('nav.signMessage')}</span>
+                </>
+              ) : (
+                <>
+                  <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
+                  <span className="hidden xl:inline">{t('nav.login')}</span>
+                </>
+              )}
+            </div>
+          </LiquidGlassBubble>
         </div>
-
-        {/* Spacer to push auth section to bottom */}
-        <div className="flex-1" />
-
-        {/* Auth/Profile Section at bottom - only show when authenticated */}
-        {isAuthenticated && (
-          <div className="mt-3 bg-zinc-900 rounded-2xl p-2.5">
-            <Popover open={showUserMenu} onOpenChange={setShowUserMenu}>
-              <PopoverTrigger asChild>
-                <button className="w-full flex items-center gap-3 px-2.5 py-2 rounded-xl hover:bg-zinc-800/50 transition-colors text-left">
-                  <UserAvatar
-                    name={displayName}
-                    handle={username}
-                    size="sm"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white text-[13px] font-medium truncate">{displayName}</p>
-                    <p className="text-zinc-400 text-[11px] truncate">@{username}</p>
-                  </div>
-                  <ChevronUp className="w-4 h-4 text-zinc-400 flex-shrink-0" />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent 
-                className="w-[195px] p-2 bg-zinc-900 border-zinc-800" 
-                align="start" 
-                side="top"
-                sideOffset={8}
-              >
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-white hover:bg-zinc-800 transition-colors text-[13px]"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Log out</span>
-                </button>
-              </PopoverContent>
-            </Popover>
-          </div>
-        )}
       </aside>
 
       {/* Auth Prompt Dialog */}

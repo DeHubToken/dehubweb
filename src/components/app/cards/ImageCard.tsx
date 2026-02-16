@@ -9,25 +9,55 @@
  * ```
  */
 
-import { useState, memo, useCallback, useEffect, useRef } from 'react';
-import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Pencil, Trash2, Ticket, Gift, Lock, MessageCircle } from 'lucide-react';
+import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
+import dehubCoinSmall from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
-import { TranslatableGroup } from '../TranslatableText';
+import { PostMetadata } from './PostMetadata';
+import { useTranslation, LANGUAGE_NAMES } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
+import { ReportModal } from '../modals/ReportModal';
+import { EditPostModal } from '../modals/EditPostModal';
+import { DeletePostModal } from '../modals/DeletePostModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
+import { ImageTranslationSheet } from './ImageTranslationSheet';
+import { useFeedViewTracking } from '@/hooks/use-view-tracking';
+import { useImageTranslation } from '@/hooks/use-image-translation';
+import { useAuth } from '@/contexts/AuthContext';
+import { updateTokenVisibility, type TokenVisibility } from '@/lib/api/dehub';
+import { cacheImageForNavigation } from '@/lib/post-cache';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
 import type { ImagePost } from '@/types/feed.types';
+
+// Use lg breakpoint (1024px) to determine if we show drawer vs inline
+function useIsTabletOrMobile() {
+  const [isTabletOrMobile, setIsTabletOrMobile] = useState(false);
+  
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 1023px)');
+    const onChange = () => setIsTabletOrMobile(mql.matches);
+    mql.addEventListener('change', onChange);
+    setIsTabletOrMobile(mql.matches);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+  
+  return isTabletOrMobile;
+}
 
 interface ImageCardProps {
   post: ImagePost;
@@ -111,20 +141,33 @@ function ImageCarousel({
   const hasMultiple = images.length > 1;
   
   return (
-    <div className="relative" onWheel={handleWheel}>
+    <div className="relative rounded-md overflow-hidden" onWheel={handleWheel} data-no-navigate>
       {/* Carousel container */}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {images.map((img, idx) => (
             <div key={idx} className="flex-[0_0_100%] min-w-0">
               <div 
-                className="aspect-square bg-zinc-800 cursor-pointer"
-                onClick={() => onImageClick(idx)}
+                className="relative cursor-pointer max-h-[600px] overflow-hidden"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onImageClick(idx);
+                }}
               >
+                {/* Blurred background fill - liquid glass effect from image colors */}
                 <img 
                   src={img} 
                   alt="" 
-                  className="w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover scale-110 blur-[24px] saturate-[180%] opacity-60"
+                  aria-hidden="true"
+                />
+                <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
+                {/* Actual image - natural aspect ratio */}
+                <img 
+                  src={img} 
+                  alt="" 
+                  className="relative w-full max-h-[600px] object-contain"
+                  loading="lazy"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/placeholder.svg';
                   }}
@@ -141,7 +184,7 @@ function ImageCarousel({
           {currentIndex > 0 && (
             <button
               onClick={scrollPrev}
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+              className="hidden lg:flex absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 items-center justify-center text-white hover:bg-black/60 transition-colors"
               aria-label="Previous image"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -150,7 +193,7 @@ function ImageCarousel({
           {currentIndex < images.length - 1 && (
             <button
               onClick={scrollNext}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+              className="hidden lg:flex absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 items-center justify-center text-white hover:bg-black/60 transition-colors"
               aria-label="Next image"
             >
               <ChevronRight className="w-5 h-5" />
@@ -177,69 +220,74 @@ function ImageCarousel({
         </div>
       )}
       
-      {/* Image counter badge - only show if multiple images */}
-      {hasMultiple && (
-        <div className="absolute top-3 right-3 px-2 py-1 rounded-full bg-black/60 text-white text-xs font-medium">
-          {currentIndex + 1}/{images.length}
-        </div>
-      )}
     </div>
   );
 }
 
 /**
  * Feed description component with expandable text
- * Uses TranslatableGroup to show a single translate control below all text
+ * Uses useTranslation hook directly to properly display translated content
  */
 function FeedDescription({ 
   title, 
-  description 
+  description,
+  isTranslated,
+  translatedText,
 }: { 
   title?: string; 
   description?: string;
+  isTranslated?: boolean;
+  translatedText?: string;
 }) {
   const [expanded, setExpanded] = useState(false);
   const MAX_LENGTH = 150;
   
-  const hasLongDescription = description && description.length > MAX_LENGTH;
-  const displayDescription = expanded || !hasLongDescription 
-    ? description 
-    : `${description.slice(0, MAX_LENGTH)}...`;
-  
   if (!title && !description) return null;
   
-  // Combine texts for language detection
-  const fullText = [title, description].filter(Boolean).join(' ');
+  // Parse translated text back into title/description
+  const [displayTitle, displayDescription] = useMemo(() => {
+    if (isTranslated && translatedText) {
+      const parts = translatedText.split('\n\n');
+      if (title && description) {
+        return [parts[0] || title, parts.slice(1).join('\n\n') || description];
+      }
+      return title ? [translatedText, undefined] : [undefined, translatedText];
+    }
+    return [title, description];
+  }, [isTranslated, translatedText, title, description]);
+  
+  const hasLongDescription = displayDescription && displayDescription.length > MAX_LENGTH;
+  const shownDescription = expanded || !hasLongDescription 
+    ? displayDescription 
+    : `${displayDescription.slice(0, MAX_LENGTH)}...`;
   
   return (
-    <TranslatableGroup text={fullText}>
-      <div className="space-y-1">
-        {title && (
-          <h3 className="text-white text-sm font-semibold leading-tight">
-            {title}
-          </h3>
-        )}
-        {description && (
-          <div>
-            <p className="text-zinc-300 text-sm leading-relaxed">
-              {displayDescription}
-            </p>
-            {hasLongDescription && (
-              <button 
-                onClick={() => setExpanded(!expanded)}
-                className="text-zinc-500 text-xs flex items-center gap-0.5 mt-1 hover:text-zinc-400 transition-colors"
-              >
-                {expanded ? (
-                  <>Show less <ChevronUp className="w-3 h-3" /></>
-                ) : (
-                  <>Show more <ChevronDown className="w-3 h-3" /></>
-                )}
-              </button>
-            )}
-          </div>
-        )}
-      </div>
-    </TranslatableGroup>
+    <div className="space-y-1">
+      {displayTitle && (
+        <h3 className="text-white text-sm font-semibold leading-tight">
+          {displayTitle}
+        </h3>
+      )}
+      {displayDescription && (
+        <div>
+          <p className="text-zinc-300 text-sm leading-relaxed">
+            {shownDescription}
+          </p>
+          {hasLongDescription && (
+            <button 
+              onClick={() => setExpanded(!expanded)}
+              className="text-zinc-500 text-xs flex items-center gap-0.5 mt-1 hover:text-zinc-400 transition-colors"
+            >
+              {expanded ? (
+                <>Show less <ChevronUp className="w-3 h-3" /></>
+              ) : (
+                <>Show more <ChevronDown className="w-3 h-3" /></>
+              )}
+            </button>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -248,6 +296,47 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [showAIChat, setShowAIChat] = useState(false);
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showTranslationSheet, setShowTranslationSheet] = useState(false);
+  const [visibility, setVisibility] = useState<TokenVisibility>('public');
+  const [showPPVDrawer, setShowPPVDrawer] = useState(false);
+  const [showBountyDrawer, setShowBountyDrawer] = useState(false);
+  const [showLockedDrawer, setShowLockedDrawer] = useState(false);
+  const isTabletOrMobile = useIsTabletOrMobile();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { walletAddress } = useAuth();
+  const isOwnPost = walletAddress && post.creatorId?.toLowerCase() === walletAddress.toLowerCase();
+  
+  // PPV/Bounty/Locked status
+  const isPPV = post.isPPV || false;
+  const isW2E = post.isW2E || false;
+  const isLocked = post.isLocked || false;
+  const hasBadges = isPPV || isW2E || isLocked;
+
+  // Format numbers with abbreviations (1K, 1M, etc.)
+  const formatCompact = (num: number): string => {
+    if (num >= 1000000) return `${Math.floor(num / 1000000)}M`;
+    if (num >= 1000) return `${Math.floor(num / 1000)}K`;
+    return String(num);
+  };
+  
+  // View tracking - batches views when post is visible for 2+ seconds
+  const viewRef = useFeedViewTracking(post.id);
+  
+  // Translation hook for text content
+  const descriptionText = [post.title, post.description].filter(Boolean).join('\n\n');
+  const {
+    isTranslated,
+    translatedText,
+    isLoading: isTranslateLoading,
+    error: translateError,
+    handleTranslate,
+    handleShowOriginal,
+  } = useTranslation(descriptionText);
+  const { isLoading: isTranslating, error: translationError, result: translationResult, translateImage, clearResult } = useImageTranslation();
 
   // Get images array - use imageUrls if available, otherwise fall back to single image
   const images = post.imageUrls && post.imageUrls.length > 0 
@@ -258,97 +347,283 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
     setFullscreenIndex(index);
     setFullscreenOpen(true);
   };
+  
+  const handleTranslateImage = useCallback(async () => {
+    // Use the first image for translation (or could allow selecting which image)
+    const imageUrl = images[0];
+    if (!imageUrl) return;
+    
+    setShowTranslationSheet(true);
+    await translateImage(imageUrl);
+  }, [images, translateImage]);
+  
+  const handleCloseTranslation = useCallback(() => {
+    setShowTranslationSheet(false);
+    clearResult();
+  }, [clearResult]);
+
+  // Navigate to single post page when clicking non-interactive areas
+  // Pre-cache post data for instant display on the single post page
+  const handleCardClick = useCallback((e: React.MouseEvent) => {
+    // Don't navigate if a drawer is open (PPV/Bounty/Locked)
+    if (showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
+    
+    const target = e.target as HTMLElement;
+    const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
+    if (isInteractive) return;
+    
+    // Cache the post data before navigation for instant display
+    cacheImageForNavigation(queryClient, post);
+    navigate(`/app/post/${post.id}`);
+  }, [navigate, post.id, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
 
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+    <div 
+      ref={viewRef} 
+      onClick={handleCardClick}
+      className="overflow-hidden cursor-pointer isolate"
+    >
       {/* Header with AI and menu buttons */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between">
         <CardHeader
           username={post.username}
+          handle={post.creatorUsername}
           avatarSeed={post.avatar}
           verified={post.verified}
           contentType="image"
           creatorId={post.creatorId}
           creatorUsername={post.creatorUsername}
         />
-        <div className="flex items-center gap-1 pr-3">
-          <motion.button
+        <div className="flex items-center gap-1">
+          <button
             onClick={() => setShowAIChat(true)}
-            className="text-zinc-400 hover:text-white transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
+            className="text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all"
             aria-label="Ask AI about this post"
           >
             <Sparkles className="w-5 h-5" />
-          </motion.button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+          </button>
+          <Drawer>
+            <DrawerTrigger asChild>
+              <button className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
                 <MoreVertical className="w-5 h-5" />
               </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Download className="w-4 h-4" /> Download
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Flag className="w-4 h-4" /> Report
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Ban className="w-4 h-4" /> Block Creator
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <EyeOff className="w-4 h-4" /> See Less Like This
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </DrawerTrigger>
+            <DrawerContent glass className="px-4 pb-6">
+              <DrawerHeader className="pb-2">
+                <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
+              </DrawerHeader>
+              <div className="flex flex-col gap-1">
+                <button
+                  onClick={handleTranslateImage}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Languages className="w-5 h-5" /> Translate Image
+                </button>
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <Download className="w-5 h-5" /> Download
+                </button>
+                <button
+                  onClick={() => setShowReportModal(true)}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Flag className="w-5 h-5" /> Report
+                </button>
+                <button
+                  onClick={() => {
+                    const url = `${window.location.origin}/app/post/${post.id}`;
+                    navigator.clipboard.writeText(url);
+                    toast.success('Post URL copied to clipboard');
+                  }}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Link2 className="w-5 h-5" /> Copy Post URL
+                </button>
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <Ban className="w-5 h-5" /> Block Creator
+                </button>
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <EyeOff className="w-5 h-5" /> See Less Like This
+                </button>
+                {isOwnPost && (
+                  <>
+                    <div className="border-t border-white/10 my-1" />
+                    <button
+                      onClick={() => setShowEditModal(true)}
+                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                    >
+                      <Pencil className="w-5 h-5" /> Edit Post
+                    </button>
+                    <button
+                      onClick={() => setShowDeleteModal(true)}
+                      className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-white/10 rounded-xl transition-colors text-left"
+                    >
+                      <Trash2 className="w-5 h-5" /> Delete Post
+                    </button>
+                    <button
+                      onClick={async () => {
+                        const next: TokenVisibility = visibility === 'public' ? 'private' : 'public';
+                        try {
+                          await updateTokenVisibility(post.id, next);
+                          setVisibility(next);
+                          toast.success(`Post set to ${next}`);
+                        } catch { toast.error('Failed to update visibility'); }
+                      }}
+                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                    >
+                      {visibility === 'public' ? <EyeOff className="w-5 h-5" /> : <Globe className="w-5 h-5" />}
+                      {visibility === 'public' ? 'Make Private' : 'Make Public'}
+                    </button>
+                  </>
+                )}
+              </div>
+            </DrawerContent>
+          </Drawer>
         </div>
       </div>
 
       {/* Image Carousel - wrapped to prevent tab switching on swipe */}
-      <SwipeableCarousel>
-        <ImageCarousel images={images} onImageClick={handleImageClick} />
-      </SwipeableCarousel>
+      <div className="relative">
+        {isPPV ? (
+          <>
+            {/* PPV: show blurred image with ticket overlay */}
+            <div className="relative rounded-md overflow-hidden">
+              <img 
+                src={images[0]} 
+                alt="" 
+                className="w-full max-h-[600px] object-cover blur-lg"
+                loading="lazy"
+              />
+              <div 
+                className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
+                onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
+                onTouchStart={(e) => {
+                  (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                }}
+                onTouchEnd={(e) => {
+                  e.stopPropagation();
+                  const start = (e.currentTarget as any)._touchStart;
+                  if (!start) return;
+                  const touch = e.changedTouches[0];
+                  const dx = Math.abs(touch.clientX - start.x);
+                  const dy = Math.abs(touch.clientY - start.y);
+                  if (dx < 10 && dy < 10) {
+                    e.preventDefault();
+                    setShowPPVDrawer(true);
+                  }
+                }}
+              >
+                <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+                  <Ticket className="h-7 w-7 text-white" />
+                </div>
+                <p className="text-white font-semibold text-sm mb-1">Pay-Per-View Content</p>
+                <p className="text-white/70 text-xs">
+                  Unlock for {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
+                </p>
+              </div>
+            </div>
+          </>
+        ) : (
+          <SwipeableCarousel>
+            <ImageCarousel images={images} onImageClick={handleImageClick} />
+          </SwipeableCarousel>
+        )}
+
+        {/* Content Type Badges - PPV/Bounty/Locked */}
+        {hasBadges && (
+          <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5">
+            {/* PPV Badge */}
+            {isPPV && post.ppvPrice && (
+              <button 
+                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
+              >
+                <Ticket className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">
+                  {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
+                </span>
+              </button>
+            )}
+            
+            {/* Bounty Badge */}
+            {isW2E && (
+              <button 
+                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
+              >
+                <Gift className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">
+                  {post.bountyAmount && post.bountyAmount > 0 
+                    ? `${formatCompact(post.bountyAmount)} ${post.bountyCurrency || 'DHB'}` 
+                    : 'Bounty'}
+                </span>
+              </button>
+            )}
+            
+            {/* Locked/Gated Badge */}
+            {isLocked && (
+              <button 
+                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
+              >
+                <Lock className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">
+                  {post.lockedPrice && post.lockedPrice > 0 
+                    ? `${formatCompact(post.lockedPrice)} ${post.lockedCurrency || 'DHB'}` 
+                    : ''}
+                </span>
+              </button>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Info & Actions */}
-      <div className="p-3 space-y-2">
+      <div className="pt-3 space-y-2">
+        {/* Title & Description */}
+        <FeedDescription 
+          title={post.title} 
+          description={post.description}
+          isTranslated={isTranslated}
+          translatedText={translatedText}
+        />
+        
+        {/* Metadata: timestamp and views */}
+        <PostMetadata 
+          timestamp={post.timeAgo} 
+          viewCount={post.views}
+          translateControl={{
+            isTranslated,
+            isLoading: isTranslateLoading,
+            error: translateError,
+            onTranslate: handleTranslate,
+            onShowOriginal: handleShowOriginal,
+          }}
+        />
+        
         <ActionBar 
           postId={post.id} 
           className="p-0" 
           onComment={() => setShowComments(true)} 
           isLiked={post.isLiked} 
           isDisliked={post.isDisliked}
-          hideDislike
           likeCount={post.likes}
           commentCount={post.comments}
+          isOptimistic={post.isOptimistic}
         />
         
-        
-        
-        {/* Title & Description */}
-        <FeedDescription 
-          title={post.title} 
-          description={post.description} 
-        />
-        
-        <div className="flex items-center gap-3">
-          <span className="text-zinc-500 text-xs">{post.timeAgo}</span>
-          <span className="inline-flex items-center gap-1 text-zinc-500 text-xs leading-none">
-            <Eye className="w-3 h-3 shrink-0 translate-y-[0.5px]" />
-            <span className="leading-none">{post.views || '0'}</span>
-          </span>
-        </div>
-      </div>
 
-      {/* Inline Comments Section */}
-      <AnimatePresence>
-        {showComments && (
-          <CommentsSection
-            tokenId={post.id}
-            onClose={() => setShowComments(false)}
-          />
-        )}
-      </AnimatePresence>
+        {/* Comments - Always use Drawer for consistent liquid glass style */}
+        <Drawer open={showComments} onOpenChange={setShowComments}>
+          <DrawerContent glass hideHandle className="max-h-[70vh] flex flex-col overflow-hidden">
+            <div className="flex-1 min-h-0 px-4 pb-4 pt-2">
+              <CommentsSection
+                tokenId={post.id}
+                onClose={() => setShowComments(false)}
+              />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      </div>
 
       {/* AI Chat */}
       <PostAIChat
@@ -369,6 +644,152 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         isOpen={fullscreenOpen}
         onClose={() => setFullscreenOpen(false)}
       />
+
+      {/* Image Translation Sheet */}
+      <ImageTranslationSheet
+        isOpen={showTranslationSheet}
+        onClose={handleCloseTranslation}
+        isLoading={isTranslating}
+        error={translationError}
+        result={translationResult}
+      />
+
+      {/* Report Modal */}
+      <ReportModal
+        open={showReportModal}
+        onOpenChange={setShowReportModal}
+        tokenId={post.id}
+        contentType="image"
+      />
+
+      {/* Edit Post Modal */}
+      <EditPostModal
+        open={showEditModal}
+        onOpenChange={setShowEditModal}
+        tokenId={post.id}
+        currentTitle={post.title}
+        currentDescription={post.description}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+          queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+        }}
+      />
+
+      {/* Delete Post Modal */}
+      <DeletePostModal
+        open={showDeleteModal}
+        onOpenChange={setShowDeleteModal}
+        tokenId={post.id}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+          queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+        }}
+      />
+
+      {/* PPV Drawer - controlled, rendered at root level for mobile compatibility */}
+      {isPPV && post.ppvPrice && (
+        <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
+          <DrawerContent glass className="px-4 pb-6">
+            <DrawerHeader className="pb-3">
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                <Ticket className="w-5 h-5 text-white" />
+                Pay-Per-View Content
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                <span className="text-white text-sm">Unlock Price</span>
+                <span className="text-white text-lg font-bold">
+                  {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
+                </span>
+              </div>
+              <p className="text-center text-white/60 text-sm">
+                Pay once to unlock this exclusive content forever! 💎
+              </p>
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
+
+      {/* Bounty Drawer - controlled, rendered at root level for mobile compatibility */}
+      {isW2E && (
+        <Drawer open={showBountyDrawer} onOpenChange={setShowBountyDrawer}>
+          <DrawerContent glass className="px-4 pb-6">
+            <DrawerHeader className="pb-3">
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                <Gift className="w-5 h-5 text-white" />
+                Bounty Rewards
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4">
+              <div className="space-y-3">
+                {post.bountyViews && post.bountyViews > 0 && (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
+                    <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                      <Eye className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white text-sm font-medium">First {post.bountyViews} views</p>
+                      <p className="text-zinc-400 text-xs">Get rewarded for watching</p>
+                    </div>
+                  </div>
+                )}
+                {post.bountyComments && post.bountyComments > 0 && (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
+                    <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                      <MessageCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white text-sm font-medium">First {post.bountyComments} comments</p>
+                      <p className="text-zinc-400 text-xs">Get rewarded for engaging</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {post.bountyAmount && post.bountyAmount > 0 && (
+                <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                  <span className="text-white text-sm">Reward per User</span>
+                  <div className="flex items-center gap-2">
+                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
+                    <span className="text-white text-lg font-bold">{post.bountyAmount} {post.bountyCurrency || 'DHB'}</span>
+                  </div>
+                </div>
+              )}
+              <p className="text-center text-white/60 text-sm">
+                Watch and engage to earn rewards! 🎁
+              </p>
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
+
+      {/* Locked Drawer - controlled, rendered at root level for mobile compatibility */}
+      {isLocked && (
+        <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
+          <DrawerContent glass className="px-4 pb-6">
+            <DrawerHeader className="pb-3">
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                <Lock className="w-5 h-5 text-white" />
+                Gated Content
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4">
+              {post.lockedPrice && post.lockedPrice > 0 && (
+                <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                  <span className="text-white text-sm">Must hold to view</span>
+                  <div className="flex items-center gap-2">
+                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
+                    <span className="text-white text-lg font-bold">{formatCompact(post.lockedPrice)} {post.lockedCurrency || 'DHB'}</span>
+                  </div>
+                </div>
+              )}
+              <p className="text-center text-white/60 text-sm">
+                Hold the required tokens to view this content! 🔓
+              </p>
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
     </div>
   );
 });

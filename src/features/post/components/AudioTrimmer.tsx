@@ -448,11 +448,8 @@ export function AudioTrimmer({
             <button
               onClick={togglePlayPause}
               disabled={isLoading}
-              className="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105
-                bg-gradient-to-br from-white/30 via-white/20 to-white/10
-                backdrop-blur-xl border border-white/40
-                shadow-[0_8px_32px_rgba(255,255,255,0.15),inset_0_1px_0_rgba(255,255,255,0.3)]
-                hover:shadow-[0_12px_40px_rgba(255,255,255,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]
+              className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-105
+                bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10
                 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {isPlaying ? (
