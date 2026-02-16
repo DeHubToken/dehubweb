@@ -163,8 +163,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
 
           if (stream?.streamKey) {
             streamKey = stream.streamKey;
-            streamId = stream.streamId || tokenId;
-            logger.info('Stream credentials obtained', { streamId, hasKey: true, attempt: retryCount + 1 });
+            // Try to get the MongoDB ObjectId from stream (needed for some API calls)
+            const streamObj = stream as Record<string, unknown>;
+            streamId = (streamObj._id as string) || (streamObj.id as string) || stream.streamId || tokenId;
+            logger.info('Stream credentials obtained', { streamId, playbackId: stream.playbackId, hasKey: true, attempt: retryCount + 1 });
             break;
           }
 
@@ -180,26 +182,22 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         throw new Error('Stream key not available yet. The backend may still be provisioning your stream. Please try again in a moment.');
       }
 
-      // Step 5: Fetch the ingest URL from the API
+      // Step 5: Determine the RTMP ingest URL
+      // Try API first, fall back to standard Livepeer RTMP URL
+      const LIVEPEER_RTMP_URL = 'rtmp://rtmp.livepeer.com/live';
       let ingestUrl = '';
       try {
-        logger.info('Fetching ingest URL...', { streamId });
+        logger.info('Fetching ingest URL from API...', { streamId });
         const ingestRes = await getStreamIngestUrl(streamId);
         ingestUrl = ingestRes?.result?.ingestUrl || '';
         logger.info('Ingest URL obtained from API', { ingestUrl });
       } catch (e) {
-        logger.warn('Failed to get ingest URL from API, trying with tokenId...', e);
-        try {
-          const ingestRes = await getStreamIngestUrl(tokenId);
-          ingestUrl = ingestRes?.result?.ingestUrl || '';
-          logger.info('Ingest URL obtained with tokenId', { ingestUrl });
-        } catch {
-          logger.warn('Could not fetch ingest URL');
-        }
+        logger.warn('API ingest URL failed (expected if streamId is not a MongoDB ObjectId), using Livepeer default', e);
       }
 
       if (!ingestUrl) {
-        throw new Error('Could not obtain the RTMP ingest URL from the server. Please try again.');
+        ingestUrl = LIVEPEER_RTMP_URL;
+        logger.info('Using standard Livepeer RTMP ingest URL', { ingestUrl });
       }
 
       const resultData = {
@@ -216,13 +214,16 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     } catch (error) {
       toast.dismiss('golive-progress');
       logger.error('Failed to start stream', { title, selectedCategory }, error);
-      const isWeb3AuthError = error instanceof Error && error.message.includes('Web3Auth');
+      const errorMsg = error instanceof Error ? error.message : '';
+      const isWeb3AuthError = errorMsg.includes('Web3Auth');
+      const isOverflowError = errorMsg.includes('overflow') || errorMsg.includes('INVALID_ARGUMENT');
 
       if (isWeb3AuthError) {
         toast.error('Web3Auth service is currently slow or timing out. Please check your internet or try refreshing.');
+      } else if (isOverflowError) {
+        toast.error('Transaction signing failed. Please refresh the page and try again.');
       } else {
-        const message = error instanceof Error ? error.message : 'Failed to create stream';
-        toast.error(message);
+        toast.error(errorMsg || 'Failed to create stream');
       }
     } finally {
       setIsLoading(false);
