@@ -5,8 +5,8 @@
  * Supports both immediate live and scheduled streams.
  */
 
-import { useState } from 'react';
-import { Radio, Loader2, Copy, Check, ExternalLink } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Radio, Loader2, Copy, Check, ExternalLink, Tag, Search, X, Plus, Save } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,6 +14,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { createLiveStream, startLiveStream, getStreamKey, getStreamIngestUrl, type StartLiveStreamResponse } from '@/lib/api/dehub';
+import { getCategories } from '@/lib/api/dehub/feed';
+import type { DeHubCategory } from '@/lib/api/dehub/types';
 
 
 interface GoLiveModalProps {
@@ -23,21 +25,73 @@ interface GoLiveModalProps {
 
 type Step = 'setup' | 'ready' | 'streaming';
 
+const MAX_CATEGORIES = 5;
+
 export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const [step, setStep] = useState<Step>('setup');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [streamData, setStreamData] = useState<StartLiveStreamResponse['result'] | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
+  // Category drawer state
+  const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
+  const [categories, setCategories] = useState<DeHubCategory[]>([]);
+  const [categorySearch, setCategorySearch] = useState('');
+  const [loadingCategories, setLoadingCategories] = useState(false);
+
+  // Load saved default categories
+  useEffect(() => {
+    if (isOpen && !selectedCategory) {
+      const saved = localStorage.getItem('post_default_categories');
+      if (saved) setSelectedCategory(saved);
+    }
+  }, [isOpen]);
+
+  // Fetch categories when drawer opens
+  useEffect(() => {
+    if (categoryDrawerOpen && categories.length === 0) {
+      setLoadingCategories(true);
+      getCategories()
+        .then(setCategories)
+        .catch(console.error)
+        .finally(() => setLoadingCategories(false));
+    }
+  }, [categoryDrawerOpen, categories.length]);
+
+  const selectedCategoriesArray = useMemo(() =>
+    selectedCategory ? selectedCategory.split('|||').filter(Boolean) : [],
+    [selectedCategory]
+  );
+
+  const filteredCategories = useMemo(() => {
+    if (!categorySearch.trim()) return categories;
+    const q = categorySearch.toLowerCase();
+    return categories.filter(c => c.name.toLowerCase().includes(q));
+  }, [categories, categorySearch]);
+
+  const toggleCategory = (name: string) => {
+    const current = selectedCategoriesArray;
+    if (current.includes(name)) {
+      const next = current.filter(c => c !== name);
+      setSelectedCategory(next.join('|||'));
+    } else if (current.length < MAX_CATEGORIES) {
+      setSelectedCategory([...current, name].join('|||'));
+    }
+  };
+
+  const removeCategory = (name: string) => {
+    const next = selectedCategoriesArray.filter(c => c !== name);
+    setSelectedCategory(next.join('|||'));
+  };
+
   const handleClose = () => {
-    // Reset state when closing
     setStep('setup');
     setTitle('');
     setDescription('');
-    setCategory('');
+    setSelectedCategory('');
     setStreamData(null);
     onClose();
   };
@@ -50,11 +104,15 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
 
     setIsLoading(true);
     try {
-      // Step 1: Create the stream first
+      // Send first category to API (API accepts single category string)
+      const categoryForApi = selectedCategoriesArray.length > 0
+        ? selectedCategoriesArray[0]
+        : undefined;
+
       const createResponse = await createLiveStream({
         title: title.trim(),
         description: description.trim() || undefined,
-        category: category.trim() || undefined,
+        category: categoryForApi,
       });
 
       const streamId = createResponse.result?.streamId;
@@ -63,12 +121,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         throw new Error('Failed to create stream - no stream ID returned');
       }
 
-      // Step 2: Start the stream to get RTMP credentials
       const startResponse = await startLiveStream({ streamId });
 
       let resultData = startResponse.result;
 
-      // Step 3: If startLiveStream didn't return credentials, fetch them explicitly
       if (!resultData?.streamKey || !resultData?.ingestUrl) {
         const [keyRes, ingestRes] = await Promise.all([
           getStreamKey(streamId).catch(() => null),
@@ -111,16 +167,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     }
   };
 
-  const categories = [
-    'Just Chatting',
-    'Gaming',
-    'Music',
-    'Creative',
-    'Sports',
-    'Education',
-    'Talk Show',
-    'Other',
-  ];
+  const inputClass = "w-full h-12 px-4 text-base bg-zinc-800/50 border border-white/20 rounded-xl text-white placeholder:text-zinc-500 outline-none focus:border-white/50";
 
   return (
     <Drawer open={isOpen} onOpenChange={handleClose}>
@@ -160,25 +207,48 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
               />
             </div>
 
-            {/* Category */}
+            {/* Category - matching PostAccessToggles pattern */}
             <div className="space-y-2">
-              <label className="text-sm text-zinc-400">Category</label>
-              <div className="flex flex-wrap gap-2">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setCategory(cat === category ? '' : cat)}
-                    className={cn(
-                      'px-3 py-1.5 rounded-lg text-sm transition-colors',
-                      category === cat
-                        ? 'bg-white text-black'
-                        : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                    )}
-                  >
-                    {cat}
-                  </button>
-                ))}
+              <div className="flex items-center justify-between">
+                <label className="text-sm text-zinc-400 flex items-center gap-2">
+                  <Tag className="w-4 h-4" />
+                  Category
+                </label>
+                <button
+                  type="button"
+                  onClick={() => { setCategorySearch(''); setCategoryDrawerOpen(true); }}
+                  className="text-xs text-white/50 hover:text-white transition-colors"
+                >
+                  {selectedCategoriesArray.length > 0 ? 'Edit' : 'Add'}
+                </button>
               </div>
+              {selectedCategoriesArray.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {selectedCategoriesArray.length < MAX_CATEGORIES && (
+                    <button type="button" onClick={() => { setCategorySearch(''); setCategoryDrawerOpen(true); }} className="text-xs text-white/50 hover:text-white">
+                      <Plus className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                  {selectedCategoriesArray.map((cat) => (
+                    <span key={cat} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-white/10 text-white/80 border border-white/10">
+                      {cat}
+                      <button type="button" onClick={() => removeCategory(cat)} className="hover:text-red-400 transition-colors">
+                        <X className="w-2.5 h-2.5" />
+                      </button>
+                    </span>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      localStorage.setItem('post_default_categories', selectedCategory);
+                      toast.success('Default categories saved');
+                    }}
+                    className="text-xs text-white/50 hover:text-white"
+                  >
+                    <Save className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Start Button */}
@@ -318,6 +388,105 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           </div>
         )}
       </DrawerContent>
+
+      {/* Category Drawer - matching PostAccessToggles pattern */}
+      <Drawer open={categoryDrawerOpen} onOpenChange={setCategoryDrawerOpen}>
+        <DrawerContent glass hideHandle>
+          <div className="flex items-center justify-between px-4 pt-4 pb-2">
+            <div className="flex items-center gap-2 text-white font-medium">
+              <Tag className="w-5 h-5" />
+              Select Categories
+            </div>
+            <button type="button" onClick={() => setCategoryDrawerOpen(false)} className="text-sm text-white/60 hover:text-white transition-colors">
+              Done
+            </button>
+          </div>
+          <div className="px-4 pb-4 space-y-3">
+            {/* Selected chips */}
+            {selectedCategoriesArray.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {selectedCategoriesArray.map((cat) => (
+                  <span key={cat} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs bg-white/15 text-white border border-white/20">
+                    {cat}
+                    <button type="button" onClick={() => removeCategory(cat)} className="hover:text-red-400 transition-colors">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+            {/* Search input */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <input
+                type="text"
+                value={categorySearch}
+                onChange={(e) => setCategorySearch(e.target.value)}
+                placeholder="Search categories..."
+                className={cn(inputClass, "pl-10")}
+                autoFocus
+              />
+              {categorySearch && (
+                <button
+                  type="button"
+                  onClick={() => setCategorySearch('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Category list */}
+            <div className="max-h-[40vh] overflow-y-auto space-y-1 scrollbar-hide">
+              {loadingCategories ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                </div>
+              ) : (
+                <>
+                  {/* Custom category option */}
+                  {categorySearch.trim().length >= 3 && !categories.some(c => c.name.toLowerCase() === categorySearch.trim().toLowerCase()) && selectedCategoriesArray.length < MAX_CATEGORIES && (
+                    <button
+                      type="button"
+                      onClick={() => { toggleCategory(categorySearch.trim()); setCategorySearch(''); }}
+                      className="w-full flex items-center gap-2 px-4 py-3 rounded-xl text-sm transition-colors text-white bg-white/10 hover:bg-white/15 border border-dashed border-white/20 mb-1"
+                    >
+                      <Plus className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span>Create "<span className="font-medium">{categorySearch.trim()}</span>"</span>
+                    </button>
+                  )}
+                  {filteredCategories.length === 0 && !categorySearch.trim() ? (
+                    <p className="text-center text-sm text-zinc-500 py-8">No categories found</p>
+                  ) : (
+                    filteredCategories.map((cat) => (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => toggleCategory(cat.name)}
+                        disabled={!selectedCategoriesArray.includes(cat.name) && selectedCategoriesArray.length >= MAX_CATEGORIES}
+                        className={cn(
+                          "w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-colors",
+                          selectedCategoriesArray.includes(cat.name)
+                            ? "bg-white/15 text-white border border-white/20"
+                            : selectedCategoriesArray.length >= MAX_CATEGORIES
+                              ? "text-zinc-600 border border-transparent cursor-not-allowed"
+                              : "text-zinc-300 hover:bg-white/5 border border-transparent"
+                        )}
+                      >
+                        <span>{cat.name}</span>
+                        {selectedCategoriesArray.includes(cat.name) && (
+                          <Check className="w-4 h-4 text-white" />
+                        )}
+                      </button>
+                    ))
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </Drawer>
   );
 }
