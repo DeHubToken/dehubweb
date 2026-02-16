@@ -129,19 +129,42 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         throw new Error('Failed to create stream - no token ID returned');
       }
 
-      // Step 2: Fetch stream credentials
+      // Step 2: Activate the stream (Optional but recommended by DeHub common patterns)
+      logger.info('Activating stream...', { streamId });
+      try {
+        await startLiveStream({ streamId });
+        logger.info('Stream activation call sent (POST /api/live/start)');
+      } catch (err) {
+        // We log it but continue, as some environments might not need this explicitly
+        logger.warn('Stream activation call failed or not found, continuing to fetch keys', err);
+      }
+
+      // Step 3: Fetch stream credentials (RTMP info) with Retries
+      // Sometimes the server needs a few seconds to initialize RTMP after minting.
       logger.info('Fetching stream credentials...', { streamId });
       
-      const [keyRes, ingestRes] = await Promise.all([
-        getStreamKey(streamId).catch((err) => {
-          logger.error('Failed to get stream key', { streamId }, err);
-          return null;
-        }),
-        getStreamIngestUrl(streamId).catch((err) => {
-          logger.error('Failed to get ingest URL', { streamId }, err);
-          return null;
-        }),
-      ]);
+      let keyRes = null;
+      let ingestRes = null;
+      let retryCount = 0;
+      const MAX_RETRIES = 3;
+
+      while (retryCount < MAX_RETRIES) {
+        try {
+          [keyRes, ingestRes] = await Promise.all([
+            getStreamKey(streamId),
+            getStreamIngestUrl(streamId),
+          ]);
+          
+          if (keyRes?.result?.streamKey && ingestRes?.result?.ingestUrl) {
+            break; // Success!
+          }
+        } catch (err) {
+          retryCount++;
+          logger.warn(`Fetch credentials attempt ${retryCount} failed. Retrying...`, err);
+          if (retryCount >= MAX_RETRIES) throw err;
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds before retry
+        }
+      }
 
       const resultData: StartLiveStreamResponse['result'] = {
         streamId,
@@ -149,6 +172,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         ingestUrl: ingestRes?.result?.ingestUrl || '',
         playbackUrl: `https://dehub.io/app/post/${streamId}`,
       };
+
+      if (!resultData.streamKey) {
+        throw new Error('Server returned empty stream key. Please try again in a moment.');
+      }
 
       setStreamData(resultData);
       setStep('ready');
