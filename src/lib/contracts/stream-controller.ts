@@ -177,7 +177,7 @@ export async function mintWithBounty(params: MintWithBountyParams): Promise<stri
         params.countOfCommentors,
         chainConfig.dhbToken,
       ],
-      { context: 'mint with bounty' }
+      { context: 'mint with bounty', chainId }
     );
     
     console.log('[StreamController] Transaction submitted:', result.hash);

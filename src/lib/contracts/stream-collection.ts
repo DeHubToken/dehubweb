@@ -108,7 +108,7 @@ export async function mintOnChain(params: MintParams): Promise<string> {
       streamCollectionInterface,
       'mint',
       [tokenId, timestamp, v, r, s, fees, supply, uri],
-      { context: 'mint NFT' }
+      { context: 'mint NFT', chainId }
     );
     
     console.log('[StreamCollection] Transaction submitted:', result.hash);
