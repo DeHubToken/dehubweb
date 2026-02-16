@@ -36,7 +36,7 @@ export function AuthGate({ description }: AuthGateProps) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8">
+    <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8 -mt-[30px] lg:-mt-[50px]">
       {/* Hidden image to preload */}
       <img 
         src={assistantAvatar} 
