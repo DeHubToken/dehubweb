@@ -24,6 +24,7 @@ import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { PostMetadata } from './PostMetadata';
 import { PPVDrawerContent } from './PPVDrawerContent';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { TranslatableText, SharedTranslationProvider, useTranslation } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
