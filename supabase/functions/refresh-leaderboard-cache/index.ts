@@ -36,14 +36,8 @@ const PERIODS = ["day", "week", "month", "year", "all"] as const;
 // Minimum DHB balance to include from discovery (10,000 DHB)
 const DISCOVERY_MIN_BALANCE = 10_000;
 
-// Search prefixes for API-based profile discovery (two-character combos for broader coverage)
-const SEARCH_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("");
-const SEARCH_PREFIXES: string[] = [];
-for (const a of SEARCH_CHARS) {
-  for (const b of SEARCH_CHARS) {
-    SEARCH_PREFIXES.push(a + b);
-  }
-}
+// Search prefixes for API-based profile discovery (single chars with pagination for full coverage)
+const SEARCH_PREFIXES = "abcdefghijklmnopqrstuvwxyz0123456789".split("");
 
 // Period to days-ago mapping for snapshot deltas
 const PERIOD_DAYS: Record<string, number> = {
@@ -398,7 +392,7 @@ async function discoverProfileHolders(
 
     // 2. Batch-query on-chain balances for discovered addresses
     const addresses = [...profileMap.keys()];
-    const BATCH = 10;
+    const BATCH = 2;
     const significantHolders: { address: string; balance: number; profile: Record<string, unknown> }[] = [];
 
     for (let i = 0; i < addresses.length; i += BATCH) {
@@ -412,7 +406,7 @@ async function discoverProfileHolders(
         }
       });
       if (i + BATCH < addresses.length) {
-        await new Promise((r) => setTimeout(r, 200));
+        await new Promise((r) => setTimeout(r, 500));
       }
     }
 
@@ -496,7 +490,7 @@ Deno.serve(async (req) => {
       const rawEntries = dehubData?.result?.byWalletBalance ?? [];
       console.log(`Got ${rawEntries.length} addresses from DeHub`);
 
-      const BATCH_SIZE = 10;
+      const BATCH_SIZE = 5;
       const enriched: EnrichedEntry[] = [];
 
       for (let i = 0; i < rawEntries.length; i += BATCH_SIZE) {
@@ -528,7 +522,7 @@ Deno.serve(async (req) => {
         });
 
         if (i + BATCH_SIZE < rawEntries.length) {
-          await new Promise((r) => setTimeout(r, 200));
+          await new Promise((r) => setTimeout(r, 500));
         }
       }
 
