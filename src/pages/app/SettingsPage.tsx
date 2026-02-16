@@ -66,6 +66,8 @@ import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import { FollowRequestsDrawer } from '@/components/app/profile/FollowRequestsDrawer';
 import dehubCoin from '@/assets/dehub-coin.png';
 import settingsIcon from '@/assets/icons/settings-icon.png';
+import { useUserLanguage } from '@/hooks/use-user-language';
+import { SUPPORTED_LANGUAGES } from '@/i18n';
 
 const tabs = [
   { icon: User, value: 'profile', label: 'Profile' },
@@ -912,7 +914,23 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
         </div>
       </div>
 
-      {/* Layout */}
+      {/* Language */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">Language</h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Globe className="w-5 h-5 text-zinc-500" />
+              <div>
+                <p className="text-white font-medium">Language</p>
+                <p className="text-zinc-500 text-sm">Choose your preferred language</p>
+              </div>
+            </div>
+            <LanguageSelector />
+          </div>
+        </div>
+      </div>
+
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">Layout</h3>
         <div className="space-y-4">
@@ -988,6 +1006,22 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
         </Button>
       </div>
     </div>
+  );
+}
+
+function LanguageSelector() {
+  const { language, setPreferredLanguage } = useUserLanguage();
+  return (
+    <SettingDrawerSelect
+      value={language}
+      onValueChange={setPreferredLanguage}
+      title="Language"
+      options={SUPPORTED_LANGUAGES.map(l => ({
+        value: l.code,
+        label: `${l.nativeName}`,
+        description: l.name,
+      }))}
+    />
   );
 }
 

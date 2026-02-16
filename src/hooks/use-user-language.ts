@@ -5,7 +5,8 @@
  * Caches result in localStorage for consistency.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import i18n from '@/i18n';
 
 const STORAGE_KEY = 'user-preferred-language';
 
@@ -29,10 +30,12 @@ export function useUserLanguage() {
     setIsLoading(false);
   }, []);
 
-  const setPreferredLanguage = (lang: string) => {
+  const setPreferredLanguage = useCallback((lang: string) => {
     setLanguage(lang);
     localStorage.setItem(STORAGE_KEY, lang);
-  };
+    // Sync with i18next
+    i18n.changeLanguage(lang);
+  }, []);
 
   return { language, isLoading, setPreferredLanguage };
 }
