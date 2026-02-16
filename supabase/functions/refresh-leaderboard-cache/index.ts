@@ -36,9 +36,6 @@ const PERIODS = ["day", "week", "month", "year", "all"] as const;
 // Minimum DHB balance to include from discovery (10,000 DHB)
 const DISCOVERY_MIN_BALANCE = 10_000;
 
-// Search prefixes for API-based profile discovery (single chars with pagination for full coverage)
-const SEARCH_PREFIXES = "abcdefghijklmnopqrstuvwxyz0123456789".split("");
-
 // Period to days-ago mapping for snapshot deltas
 const PERIOD_DAYS: Record<string, number> = {
   day: 1,
@@ -321,123 +318,6 @@ const EXTRA_WALLETS: Record<string, { wallet: string; displayName?: string; avat
   waifu: { wallet: "0xb4ba0e4b4596b7e8a074fe6156d4f666ebdba000", displayName: "waifu" },
 };
 
-// ── API-based profile discovery ─────────────────────────────────────
-
-/** Search DeHub API for registered accounts using a prefix, with pagination */
-const SEARCH_LIMIT = 100;
-
-async function searchProfiles(prefix: string): Promise<Array<Record<string, unknown>>> {
-  const allItems: Array<Record<string, unknown>> = [];
-  let page = 1;
-
-  try {
-    while (true) {
-      const res = await fetch(
-        `${DEHUB_API_BASE}/api/feed?type=accounts&search=${encodeURIComponent(prefix)}&limit=${SEARCH_LIMIT}&page=${page}`,
-        { headers: { "Content-Type": "application/json" } }
-      );
-      if (!res.ok) break;
-      const data = await res.json();
-      const items = data?.result?.items || data?.result || [];
-      const pageItems = Array.isArray(items) ? items : [];
-      allItems.push(...pageItems);
-
-      // If we got fewer than the limit, we've reached the end
-      if (pageItems.length < SEARCH_LIMIT) break;
-
-      // Otherwise fetch next page
-      page++;
-      await new Promise((r) => setTimeout(r, 100));
-    }
-  } catch {
-    // Return whatever we collected so far
-  }
-
-  return allItems;
-}
-
-/** Discover holders by searching all registered DeHub profiles, then checking on-chain balances */
-async function discoverProfileHolders(
-  baseRpc: string,
-  bnbRpc: string,
-  existingAddresses: Set<string>,
-): Promise<EnrichedEntry[]> {
-  console.log("[Discovery] Starting API-based profile discovery...");
-  const discovered: EnrichedEntry[] = [];
-
-  try {
-    // 1. Search DeHub API with all prefixes to gather registered accounts
-    const profileMap = new Map<string, Record<string, unknown>>();
-
-    // Process prefixes in batches of 4 to avoid hammering the API
-    const PREFIX_BATCH = 4;
-    for (let i = 0; i < SEARCH_PREFIXES.length; i += PREFIX_BATCH) {
-      const batch = SEARCH_PREFIXES.slice(i, i + PREFIX_BATCH);
-      const results = await Promise.all(batch.map(searchProfiles));
-      for (const items of results) {
-        for (const item of items) {
-          const addr = ((item.account || item.address || item.walletAddress || "") as string).toLowerCase();
-          if (addr && addr.startsWith("0x") && !existingAddresses.has(addr)) {
-            profileMap.set(addr, item);
-          }
-        }
-      }
-      if (i + PREFIX_BATCH < SEARCH_PREFIXES.length) {
-        await new Promise((r) => setTimeout(r, 500));
-      }
-    }
-
-    console.log(`[Discovery] Found ${profileMap.size} new unique profiles from API search`);
-    if (profileMap.size === 0) return [];
-
-    // 2. Batch-query on-chain balances for discovered addresses
-    const addresses = [...profileMap.keys()];
-    const BATCH = 2;
-    const significantHolders: { address: string; balance: number; profile: Record<string, unknown> }[] = [];
-
-    for (let i = 0; i < addresses.length; i += BATCH) {
-      const batch = addresses.slice(i, i + BATCH);
-      const balances = await Promise.all(
-        batch.map((addr) => getOnChainBalance(addr, baseRpc, bnbRpc))
-      );
-      batch.forEach((addr, idx) => {
-        if (balances[idx] >= DISCOVERY_MIN_BALANCE) {
-          significantHolders.push({ address: addr, balance: balances[idx], profile: profileMap.get(addr)! });
-        }
-      });
-      if (i + BATCH < addresses.length) {
-        await new Promise((r) => setTimeout(r, 500));
-      }
-    }
-
-    console.log(`[Discovery] ${significantHolders.length} profiles with balance >= ${DISCOVERY_MIN_BALANCE} DHB`);
-
-    // 3. Build enriched entries from discovered holders
-    for (const holder of significantHolders) {
-      const p = holder.profile;
-      discovered.push({
-        account: holder.address,
-        total: holder.balance,
-        username: (p.username as string) || undefined,
-        userDisplayName: (p.userDisplayName as string) || (p.displayName as string) || undefined,
-        avatarUrl: (p.avatarUrl as string) || undefined,
-        followers: (p.followers as number) ?? undefined,
-        likes: (p.likes as number) ?? undefined,
-        subscribers: (p.subscribers as number) ?? undefined,
-        sentTips: (p.sentTips as number) ?? 0,
-        receivedTips: (p.receivedTips as number) ?? 0,
-        badgeBalance: holder.balance,
-      });
-    }
-
-    console.log(`[Discovery] Resolved ${discovered.length} new holders for leaderboard`);
-  } catch (err) {
-    console.error("[Discovery] Error during profile discovery:", err);
-  }
-
-  return discovered;
-}
-
 // ── Main handler ────────────────────────────────────────────────────
 
 Deno.serve(async (req) => {
@@ -551,17 +431,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      // ── Auto-discover holders via API profile search ─────────────
-      const existingAccountsForDiscovery = new Set(enriched.map(e => e.account.toLowerCase()));
-      try {
-        const discoveredHolders = await discoverProfileHolders(baseRpc, bnbRpc, existingAccountsForDiscovery);
-        if (discoveredHolders.length > 0) {
-          enriched.push(...discoveredHolders);
-          console.log(`Added ${discoveredHolders.length} API-discovered holders`);
-        }
-      } catch (discErr) {
-        console.error("Discovery step failed (non-fatal):", discErr);
-      }
+      // Note: Profile discovery removed — users can self-add via the manual refresh button
 
       enriched.sort((a, b) => b.total - a.total);
       const nonZero = enriched; // Include all users, even with 0 balance
@@ -601,10 +471,6 @@ Deno.serve(async (req) => {
           console.error("Tip event query failed (non-fatal):", tipErr);
         }
       }
-
-
-
-
       if (!snapshotCount || snapshotCount === 0) {
         console.log(`Creating daily snapshot for ${today}...`);
         const snapshotRows = nonZero.map((e) => ({
