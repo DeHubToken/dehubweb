@@ -314,7 +314,9 @@
     "minimumDhb": "Mínimo de DHB requerido",
     "minimumAmount": "Monto mínimo",
     "cancel": "Cancelar",
-    "confirm": "Confirmar"
+    "confirm": "Confirmar",
+    "paying": "Pagando...",
+    "payAmount": "Pagar {{amount}} {{currency}}"
   },
   "assistant": {
     "title": "Asistente IA",
