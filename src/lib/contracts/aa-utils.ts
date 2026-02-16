@@ -21,14 +21,16 @@ type Hex = `0x${string}`;
 /**
  * Get the active EIP-1193 provider - Web3Auth (social login) or wagmi (wallet)
  */
-async function getActiveProvider(): Promise<any> {
+async function getActiveProvider(chainId?: number): Promise<any> {
   // Try Web3Auth first (social login sessions)
   const web3authProvider = getWeb3AuthProvider();
   if (web3authProvider) return web3authProvider;
 
   // Fall back to wagmi (external wallet via AppKit)
   try {
-    const client = await getConnectorClient(wagmiConfig);
+    const client = await getConnectorClient(wagmiConfig, {
+      ...(chainId ? { chainId: chainId as any } : {}),
+    });
     // viem WalletClient supports EIP-1193 .request() method
     return client;
   } catch {
@@ -50,7 +52,7 @@ export async function switchChain(chainId: ChainId): Promise<void> {
   // Ensure we have Alchemy RPC URLs before switching
   await initChainRpcUrls();
 
-  const provider = await getActiveProvider();
+  const provider = await getActiveProvider(chainId);
   
   const chainConfig = CHAIN_CONFIGS[chainId];
   if (!chainConfig) {
@@ -270,9 +272,10 @@ export async function writeContractAA(
     value?: string | number | bigint;
     gasLimit?: string | number | bigint;
     context?: string;
+    chainId?: number;
   }
 ): Promise<AAWriteResult> {
-  const provider = await getActiveProvider();
+  const provider = await getActiveProvider(options?.chainId);
   const context = options?.context || 'send transaction';
   
   // Encode the function call
