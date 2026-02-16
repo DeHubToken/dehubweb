@@ -231,7 +231,8 @@
     "search": "Rechercher",
     "goBack": "Retour",
     "showOriginal": "Afficher l'original",
-    "translating": "Traduction..."
+    "translating": "Traduction...",
+    "close": "Fermer"
   },
   "drawers": {
     "ppvTitle": "Contenu à la carte",

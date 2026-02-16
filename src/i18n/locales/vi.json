@@ -19,7 +19,7 @@
     "storage": "Lưu trữ", "storageUsed": "Đã sử dụng", "storageAmount": "2,1 GB / 5 GB", "messagesStorage": "Tin nhắn: 1,2 GB", "mediaStorage": "Phương tiện: 900 MB", "upgradeStorage": "Tăng cổ phần hoặc nâng cấp premium để có thêm lưu trữ", "quickActions": "Thao tác nhanh", "archivedChats": "Trò chuyện đã lưu trữ", "exportChats": "Xuất trò chuyện",
     "notConnected": "Chưa kết nối", "manage": "Quản lý →", "fractionsOwn": "Phần bạn sở hữu", "noFractions": "Bạn chưa sở hữu phần nào", "usernamesOwn": "Tên người dùng bạn sở hữu", "noUsernames": "Bạn chưa sở hữu tên người dùng nào", "offersMade": "Đề nghị đã gửi", "noOffers": "Bạn chưa gửi đề nghị nào", "walletCopied": "Đã sao chép địa chỉ ví!", "note": "Ghi chú"
   },
-  "common": { "save": "Lưu", "cancel": "Hủy", "delete": "Xóa", "edit": "Chỉnh sửa", "loading": "Đang tải...", "search": "Tìm kiếm", "goBack": "Quay lại", "showOriginal": "Hiện bản gốc", "translating": "Đang dịch..." },
+  "common": { "save": "Lưu", "cancel": "Hủy", "delete": "Xóa", "edit": "Chỉnh sửa", "loading": "Đang tải...", "search": "Tìm kiếm", "goBack": "Quay lại", "showOriginal": "Hiện bản gốc", "translating": "Đang dịch...", "close": "Đóng" },
   "drawers": {
     "ppvTitle": "Nội dung trả phí xem",
     "unlockPrice": "Giá mở khóa",

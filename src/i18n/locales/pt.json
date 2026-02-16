@@ -231,7 +231,8 @@
     "search": "Buscar",
     "goBack": "Voltar",
     "showOriginal": "Mostrar original",
-    "translating": "Traduzindo..."
+    "translating": "Traduzindo...",
+    "close": "Fechar"
   },
   "drawers": {
     "ppvTitle": "Conteúdo Pay-Per-View",

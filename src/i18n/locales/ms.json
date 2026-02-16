@@ -19,7 +19,7 @@
     "storage": "Storan", "storageUsed": "Storan Digunakan", "storageAmount": "2.1 GB daripada 5 GB", "messagesStorage": "Mesej: 1.2 GB", "mediaStorage": "Media: 900 MB", "upgradeStorage": "Tingkatkan pegangan anda atau naik taraf ke premium untuk lebih storan", "quickActions": "Tindakan Pantas", "archivedChats": "Sembang Diarkib", "exportChats": "Eksport Sembang",
     "notConnected": "Tidak disambungkan", "manage": "Urus →", "fractionsOwn": "Pecahan yang anda miliki", "noFractions": "Anda belum memiliki pecahan", "usernamesOwn": "Nama pengguna yang anda miliki", "noUsernames": "Anda belum memiliki nama pengguna", "offersMade": "Tawaran yang dibuat", "noOffers": "Anda belum membuat tawaran", "walletCopied": "Alamat dompet disalin!", "note": "Nota"
   },
-  "common": { "save": "Simpan", "cancel": "Batal", "delete": "Padam", "edit": "Sunting", "loading": "Memuatkan...", "search": "Cari", "goBack": "Kembali", "showOriginal": "Tunjuk asal", "translating": "Menterjemah..." },
+  "common": { "save": "Simpan", "cancel": "Batal", "delete": "Padam", "edit": "Sunting", "loading": "Memuatkan...", "search": "Cari", "goBack": "Kembali", "showOriginal": "Tunjuk asal", "translating": "Menterjemah...", "close": "Tutup" },
   "drawers": {
     "ppvTitle": "Kandungan Bayar-Per-Tontonan",
     "unlockPrice": "Harga Buka Kunci",

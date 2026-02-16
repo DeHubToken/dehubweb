@@ -231,7 +231,8 @@
     "search": "Поиск",
     "goBack": "Назад",
     "showOriginal": "Показать оригинал",
-    "translating": "Перевод..."
+    "translating": "Перевод...",
+    "close": "Закрыть"
   },
   "drawers": {
     "ppvTitle": "Платный контент",

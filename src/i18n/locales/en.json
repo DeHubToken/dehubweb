@@ -238,7 +238,8 @@
     "search": "Search",
     "goBack": "Go back",
     "showOriginal": "Show original",
-    "translating": "Translating..."
+    "translating": "Translating...",
+    "close": "Close"
   },
   "postOptions": {
     "options": "Options",

@@ -231,7 +231,8 @@
     "search": "खोजें",
     "goBack": "वापस जाएँ",
     "showOriginal": "मूल दिखाएँ",
-    "translating": "अनुवाद हो रहा है..."
+    "translating": "अनुवाद हो रहा है...",
+    "close": "बंद करें"
   },
   "drawers": {
     "ppvTitle": "पे-पर-व्यू सामग्री",

@@ -231,7 +231,8 @@
     "search": "Caută",
     "goBack": "Înapoi",
     "showOriginal": "Arată originalul",
-    "translating": "Se traduce..."
+    "translating": "Se traduce...",
+    "close": "Închide"
   },
   "drawers": {
     "ppvTitle": "Conținut Pay-Per-View",

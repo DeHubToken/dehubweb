@@ -19,7 +19,7 @@
     "storage": "Сховище", "storageUsed": "Використано сховища", "storageAmount": "2,1 ГБ з 5 ГБ", "messagesStorage": "Повідомлення: 1,2 ГБ", "mediaStorage": "Медіа: 900 МБ", "upgradeStorage": "Збільште свої частки або перейдіть на преміум для більшого сховища", "quickActions": "Швидкі дії", "archivedChats": "Архівовані чати", "exportChats": "Експорт чатів",
     "notConnected": "Не підключено", "manage": "Керувати →", "fractionsOwn": "Ваші частки", "noFractions": "У вас ще немає часток", "usernamesOwn": "Ваші імена користувачів", "noUsernames": "У вас ще немає імен користувачів", "offersMade": "Ваші пропозиції", "noOffers": "Ви ще не робили пропозицій", "walletCopied": "Адресу гаманця скопійовано!", "note": "Нотатка"
   },
-  "common": { "save": "Зберегти", "cancel": "Скасувати", "delete": "Видалити", "edit": "Редагувати", "loading": "Завантаження...", "search": "Пошук", "goBack": "Назад", "showOriginal": "Показати оригінал", "translating": "Перекладається..." },
+  "common": { "save": "Зберегти", "cancel": "Скасувати", "delete": "Видалити", "edit": "Редагувати", "loading": "Завантаження...", "search": "Пошук", "goBack": "Назад", "showOriginal": "Показати оригінал", "translating": "Перекладається...", "close": "Закрити" },
   "drawers": {
     "ppvTitle": "Платний контент",
     "unlockPrice": "Ціна розблокування",

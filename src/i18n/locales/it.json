@@ -19,7 +19,7 @@
     "storage": "Archiviazione", "storageUsed": "Spazio utilizzato", "storageAmount": "2,1 GB di 5 GB", "messagesStorage": "Messaggi: 1,2 GB", "mediaStorage": "Media: 900 MB", "upgradeStorage": "Aumenta le tue partecipazioni o passa a premium per più spazio", "quickActions": "Azioni rapide", "archivedChats": "Chat archiviate", "exportChats": "Esporta chat",
     "notConnected": "Non connesso", "manage": "Gestisci →", "fractionsOwn": "Frazioni possedute", "noFractions": "Non possiedi ancora frazioni", "usernamesOwn": "Nomi utente posseduti", "noUsernames": "Non possiedi ancora nomi utente", "offersMade": "Offerte fatte", "noOffers": "Non hai ancora fatto offerte", "walletCopied": "Indirizzo portafoglio copiato!", "note": "Nota"
   },
-  "common": { "save": "Salva", "cancel": "Annulla", "delete": "Elimina", "edit": "Modifica", "loading": "Caricamento...", "search": "Cerca", "goBack": "Torna indietro", "showOriginal": "Mostra originale", "translating": "Traduzione..." },
+  "common": { "save": "Salva", "cancel": "Annulla", "delete": "Elimina", "edit": "Modifica", "loading": "Caricamento...", "search": "Cerca", "goBack": "Torna indietro", "showOriginal": "Mostra originale", "translating": "Traduzione...", "close": "Chiudi" },
   "drawers": {
     "ppvTitle": "Contenuto Pay-Per-View",
     "unlockPrice": "Prezzo di sblocco",

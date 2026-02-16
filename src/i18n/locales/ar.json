@@ -231,7 +231,8 @@
     "search": "بحث",
     "goBack": "رجوع",
     "showOriginal": "عرض الأصلي",
-    "translating": "جاري الترجمة..."
+    "translating": "جاري الترجمة...",
+    "close": "إغلاق"
   },
   "drawers": {
     "ppvTitle": "محتوى الدفع لكل مشاهدة",
