@@ -22,6 +22,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { PostMetadata } from './PostMetadata';
+import { PPVDrawerContent } from './PPVDrawerContent';
 import { TranslatableText, SharedTranslationProvider, useTranslation } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
@@ -68,6 +69,7 @@ interface MobileCreatorInfoProps {
   channelAvatar?: string;
   creatorUsername?: string;
   creatorId?: string;
+  tokenId?: string;
   verified?: boolean;
   onAIClick?: () => void;
   onMenuClick?: () => void;
@@ -89,6 +91,7 @@ function MobileCreatorInfo({
   channelAvatar,
   creatorUsername,
   creatorId,
+  tokenId,
   verified = false,
   onAIClick,
   onMenuClick,
@@ -300,26 +303,15 @@ function MobileCreatorInfo({
 
       {/* PPV Drawer */}
       <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
-        <DrawerContent glass className="px-4 pb-6">
-          <DrawerHeader className="pb-3">
-              <DrawerTitle className="text-white text-lg flex items-center gap-2">
-                <Ticket className="w-5 h-5 text-white" />
-                {t('drawers.ppvTitle')}
-              </DrawerTitle>
-            </DrawerHeader>
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-                <span className="text-white text-sm">{t('drawers.unlockPrice')}</span>
-                <span className="text-white text-lg font-bold">
-                  {formatCompact(Number(ppvPrice))} {ppvCurrency || 'USDC'}
-                </span>
-              </div>
-              <p className="text-center text-white/60 text-sm">
-                {t('drawers.ppvDescription')}
-              </p>
-            </div>
-          </DrawerContent>
-        </Drawer>
+        <PPVDrawerContent
+          tokenId={tokenId || ''}
+          price={Number(ppvPrice)}
+          currency={ppvCurrency || 'DHB'}
+          creatorAddress={creatorId}
+          onClose={() => setShowPPVDrawer(false)}
+          formatCompact={formatCompact}
+        />
+      </Drawer>
 
       {/* Gated Content Drawer */}
       <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
@@ -1222,6 +1214,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             onAIClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
             onMenuClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
             isPPV={video.isPPV}
+            tokenId={video.id}
             ppvPrice={video.ppvPrice}
             ppvCurrency={video.ppvCurrency}
             isW2E={video.isW2E}
@@ -1385,29 +1378,17 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
         }}
       />
-
       {/* PPV Drawer - controlled, rendered at root level for mobile compatibility */}
       {video.isPPV && video.ppvPrice && (
         <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
-          <DrawerContent glass className="px-4 pb-6">
-            <DrawerHeader className="pb-3">
-              <DrawerTitle className="text-white text-lg flex items-center gap-2">
-                <Ticket className="w-5 h-5 text-white" />
-                {t('drawers.ppvTitle')}
-              </DrawerTitle>
-            </DrawerHeader>
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-                <span className="text-white text-sm">{t('drawers.unlockPrice')}</span>
-                <span className="text-white text-lg font-bold">
-                  {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
-                </span>
-              </div>
-              <p className="text-center text-white/60 text-sm">
-                {t('drawers.ppvDescription')}
-              </p>
-            </div>
-          </DrawerContent>
+          <PPVDrawerContent
+            tokenId={video.id}
+            price={Number(video.ppvPrice)}
+            currency={video.ppvCurrency || 'DHB'}
+            creatorAddress={video.creatorId}
+            onClose={() => setShowPPVDrawer(false)}
+            formatCompact={formatCompact}
+          />
         </Drawer>
       )}
 
