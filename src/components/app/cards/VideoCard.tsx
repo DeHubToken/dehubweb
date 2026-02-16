@@ -1055,36 +1055,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         )}
         
         {/* Content Type Badges - PPV/Bounty/Locked - show all that apply - hide in immersive mode */}
-        {!isImmersive && (video.isPPV || video.isW2E || video.isLocked) && (
+        {!isImmersive && (video.isLocked) && (
           <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5">
-            {/* PPV Badge */}
-            {video.isPPV && video.ppvPrice && (
-              <button 
-                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
-                onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
-              >
-                <Ticket className="w-3 h-3 text-white" />
-                <span className="text-white text-xs font-medium">
-                  {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
-                </span>
-              </button>
-            )}
-            
-            {/* Bounty Badge */}
-            {video.isW2E && (
-              <button 
-                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
-                onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
-              >
-                <Gift className="w-3 h-3 text-white" />
-                <span className="text-white text-xs font-medium">
-                  {video.bountyAmount && video.bountyAmount > 0 
-                    ? `${formatCompact(video.bountyAmount)} ${video.bountyCurrency || 'DHB'}` 
-                    : 'Bounty'}
-                </span>
-              </button>
-            )}
-            
             {/* Locked/Gated Badge */}
             {video.isLocked && (
               <button 
@@ -1480,26 +1452,30 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               <p className="text-center text-white/60 text-sm">
                 {t('drawers.bountyDescription')}
               </p>
-              {/* View / Close action buttons */}
+              {/* Close / View action buttons */}
               <div className="flex items-center gap-3">
-                <Button
-                  variant="glass"
-                  className="flex-1 rounded-xl font-semibold"
+                <LiquidGlassBubble
+                  shimmer={false}
+                  className="flex-1 cursor-pointer"
+                  onClick={() => setShowBountyDrawer(false)}
+                >
+                  <span className="block text-center text-white text-sm font-medium">
+                    {t('drawers.bountyClose')}
+                  </span>
+                </LiquidGlassBubble>
+                <LiquidGlassBubble
+                  shimmer={false}
+                  className="flex-1 cursor-pointer"
                   onClick={() => {
                     setShowBountyDrawer(false);
                     cacheVideoForNavigation(queryClient, video);
                     navigate(`/app/post/${video.id}`);
                   }}
                 >
-                  {t('drawers.bountyView')}
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="flex-1 rounded-xl font-semibold text-zinc-400 hover:text-white"
-                  onClick={() => setShowBountyDrawer(false)}
-                >
-                  {t('drawers.bountyClose')}
-                </Button>
+                  <span className="block text-center text-white text-sm font-medium">
+                    {t('drawers.bountyView')}
+                  </span>
+                </LiquidGlassBubble>
               </div>
             </div>
           </DrawerContent>
