@@ -69,7 +69,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const hlsRef = useRef<Hls | null>(null);
   const videoId = `live-${stream.id}`;
 
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const isStreamOwner = walletAddress && stream.creatorId && 
     walletAddress.toLowerCase() === stream.creatorId.toLowerCase();
   const { like, gift, end, isLiking, isSendingGift, isEnding } = useStreamActions();
@@ -320,7 +320,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
             </motion.button>
           )}
           <motion.button
-            onClick={() => setShowAIChat(true)}
+            onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
             className="text-zinc-400 hover:text-white transition-colors"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
@@ -330,7 +330,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
           </motion.button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
                 <MoreVertical className="w-5 h-5" />
               </button>
             </DropdownMenuTrigger>

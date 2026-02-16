@@ -68,7 +68,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { walletAddress } = useAuth();
+  const { walletAddress, openLoginModal } = useAuth();
   
   const isOwnPost = walletAddress && post.author.id?.toLowerCase() === walletAddress.toLowerCase();
   
@@ -116,7 +116,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       {/* AI Button and Options Drawer - positioned in header area */}
       <div className="absolute top-0 right-0 z-10 flex items-center gap-2">
         <motion.button
-          onClick={() => setShowAIChat(true)}
+          onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
           className="text-zinc-400 hover:text-white transition-colors"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
@@ -127,7 +127,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         
         <Drawer>
           <DrawerTrigger asChild>
-            <button className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
+            <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); openLoginModal(); } }} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
               <MoreVertical className="w-5 h-5" />
             </button>
           </DrawerTrigger>

@@ -438,7 +438,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { walletAddress } = useAuth();
+  const { walletAddress, openLoginModal } = useAuth();
   const isOwnPost = walletAddress && video.creatorId?.toLowerCase() === walletAddress.toLowerCase();
   const [isMuted, setIsMuted] = useState(() => videoPlaybackManager.globalMuted);
   const [showControls, setShowControls] = useState(false);
@@ -859,7 +859,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           />
           <div className="flex items-center gap-1">
             <motion.button
-              onClick={() => setShowAIChat(true)}
+              onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
               className="text-zinc-400 hover:text-white transition-colors"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -869,7 +869,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             </motion.button>
             <Drawer>
               <DrawerTrigger asChild>
-              <button className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
+              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); openLoginModal(); } }} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
                 <MoreVertical className="w-5 h-5" />
                 </button>
               </DrawerTrigger>
@@ -1219,8 +1219,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             creatorUsername={video.creatorUsername}
             creatorId={video.creatorId}
             verified={video.verified}
-            onAIClick={() => setShowAIChat(true)}
-            onMenuClick={() => setShowOptionsDrawer(true)}
+            onAIClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
+            onMenuClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
             isPPV={video.isPPV}
             ppvPrice={video.ppvPrice}
             ppvCurrency={video.ppvCurrency}
