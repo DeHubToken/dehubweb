@@ -151,7 +151,7 @@ function MobileCreatorInfo({
             <img 
               src={channelAvatar} 
               alt={channel}
-              className="w-9 h-9 rounded-xl object-cover shrink-0"
+              className="w-9 h-9 rounded-md object-cover shrink-0"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = '/placeholder.svg';
               }}
