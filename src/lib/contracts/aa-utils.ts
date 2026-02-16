@@ -9,9 +9,8 @@
 
 import { Interface, parseUnits, formatUnits } from 'ethers';
 import { getWeb3AuthProvider, getOrInitWeb3Auth } from '@/lib/web3auth';
-import { getConnectorClient } from '@wagmi/core';
 import { getAccount } from '@wagmi/core';
-import { sendTransaction, waitForTransactionReceipt } from '@wagmi/core';
+import { sendTransaction, waitForTransactionReceipt, switchChain as wagmiSwitchChain } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { CHAIN_CONFIGS, BASE_CHAIN_ID, BNB_CHAIN_ID, initChainRpcUrls } from './dhb-token';
@@ -21,22 +20,20 @@ type Hex = `0x${string}`;
 
 /**
  * Get the active EIP-1193 provider - Web3Auth (social login) or wagmi (wallet).
- * Returns a flag indicating whether it's Web3Auth so callers can branch logic.
+ * For external wallets, provider is null -- callers use wagmi actions or public RPC instead.
  */
 async function getActiveProvider(chainId?: number): Promise<{ provider: any; isWeb3Auth: boolean }> {
   // Try Web3Auth first (social login sessions)
   const web3authProvider = getWeb3AuthProvider();
   if (web3authProvider) return { provider: web3authProvider, isWeb3Auth: true };
 
-  // Fall back to wagmi (external wallet)
-  try {
-    const client = await getConnectorClient(wagmiConfig, {
-      ...(chainId ? { chainId: chainId as any } : {}),
-    });
-    return { provider: client, isWeb3Auth: false };
-  } catch {
-    throw new Error('No wallet connected. Please sign in first.');
+  // Check wagmi (external wallet) -- use getAccount instead of getConnectorClient
+  const account = getAccount(wagmiConfig);
+  if (account.isConnected) {
+    return { provider: null, isWeb3Auth: false };
   }
+
+  throw new Error('No wallet connected. Please sign in first.');
 }
 
 /**
@@ -47,19 +44,59 @@ function chainIdToHex(chainId: ChainId): Hex {
 }
 
 /**
+ * Get RPC URL for a given chain ID
+ */
+function getRpcUrl(chainId?: number): string {
+  const cid = chainId || BASE_CHAIN_ID;
+  const chainConfig = CHAIN_CONFIGS[cid];
+  return chainConfig?.rpcUrl || 'https://base-rpc.publicnode.com';
+}
+
+/**
+ * Make a JSON-RPC call to a public RPC endpoint (no wallet needed)
+ */
+async function publicRpcCall(rpcUrl: string, method: string, params: unknown[]): Promise<any> {
+  const response = await fetch(rpcUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
+  });
+  const result = await response.json();
+  if (result.error) {
+    throw new Error(result.error.message || JSON.stringify(result.error));
+  }
+  return result.result;
+}
+
+/**
  * Switch the wallet to a different chain
  */
 export async function switchChain(chainId: ChainId): Promise<void> {
   // Ensure we have Alchemy RPC URLs before switching
   await initChainRpcUrls();
 
-  const { provider } = await getActiveProvider(chainId);
+  const { provider, isWeb3Auth } = await getActiveProvider(chainId);
   
   const chainConfig = CHAIN_CONFIGS[chainId];
   if (!chainConfig) {
     throw new Error(`Unsupported chain ID: ${chainId}`);
   }
-  
+
+  // External wallet: use wagmi's switchChain action
+  if (!isWeb3Auth) {
+    try {
+      await wagmiSwitchChain(wagmiConfig, { chainId: chainId as any });
+      console.log('[AA] Switched chain via wagmi:', chainConfig.name);
+      return;
+    } catch (error) {
+      console.warn('[AA] wagmi switchChain failed:', error);
+      // Wagmi config only has Base -- if already on Base, ignore
+      if (chainId === BASE_CHAIN_ID) return;
+      throw new Error(`Please switch to ${chainConfig.name} network in your wallet app.`);
+    }
+  }
+
+  // Web3Auth path: use raw provider.request
   const targetChainHex = chainIdToHex(chainId);
 
   // 1. Check current chain -- skip if already correct
@@ -263,7 +300,7 @@ export interface AAWriteResult {
  * 
  * For EOA wallets (wagmi/external):
  * - Uses wagmi's sendTransaction to properly route through the wallet connector
- * - Raw provider.request would hit the HTTP transport (public RPC) which doesn't hold keys
+ * - Gas estimation uses public RPC (no wallet needed for reads)
  */
 export async function writeContractAA(
   contractAddress: string,
@@ -284,19 +321,33 @@ export async function writeContractAA(
   const data = contractInterface.encodeFunctionData(functionName, args) as Hex;
   const fromAddress = await getWalletAddress();
   
-  // Estimate gas (use provider for both paths - reads work fine against public RPC)
+  // Estimate gas
   let gasLimit: Hex | undefined;
   let gasLimitBigInt: bigint | undefined;
   try {
-    const gasEstimate = await provider.request({
-      method: 'eth_estimateGas',
-      params: [{
+    let gasEstimate: string;
+
+    if (isWeb3Auth) {
+      // Web3Auth: use provider directly
+      gasEstimate = await provider.request({
+        method: 'eth_estimateGas',
+        params: [{
+          from: fromAddress,
+          to: contractAddress,
+          data,
+          value: toHex(options?.value ?? 0),
+        }],
+      }) as string;
+    } else {
+      // External wallet: use public RPC for read-only gas estimation
+      const rpcUrl = getRpcUrl(options?.chainId);
+      gasEstimate = await publicRpcCall(rpcUrl, 'eth_estimateGas', [{
         from: fromAddress,
         to: contractAddress,
         data,
         value: toHex(options?.value ?? 0),
-      }],
-    }) as string;
+      }]);
+    }
     
     const estimateBigInt = BigInt(gasEstimate);
     gasLimitBigInt = applyGasMargin(estimateBigInt);
@@ -404,24 +455,23 @@ export async function writeContractAA(
 }
 
 /**
- * Make a read-only contract call
+ * Make a read-only contract call (uses public RPC -- no wallet needed)
  */
 export async function readContract<T>(
   contractAddress: string,
   contractInterface: Interface,
   functionName: string,
-  args: unknown[] = []
+  args: unknown[] = [],
+  chainId?: ChainId
 ): Promise<T> {
-  const { provider } = await getActiveProvider();
+  await initChainRpcUrls();
   const data = contractInterface.encodeFunctionData(functionName, args);
-  
-  const result = await provider.request({
-    method: 'eth_call',
-    params: [{
-      to: contractAddress,
-      data,
-    }, 'latest'],
-  }) as string;
+  const rpcUrl = getRpcUrl(chainId);
+
+  const result = await publicRpcCall(rpcUrl, 'eth_call', [
+    { to: contractAddress, data },
+    'latest',
+  ]);
   
   const decoded = contractInterface.decodeFunctionResult(functionName, result);
   return decoded[0] as T;
