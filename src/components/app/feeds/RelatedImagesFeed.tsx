@@ -19,7 +19,7 @@ import type { VideoItem } from '@/types/feed.types';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 
 const AD_POST_ID = '2008';
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 12;
 
 interface RelatedImagesFeedProps {
   /** Current image post ID to exclude from the feed */
@@ -88,19 +88,17 @@ export function RelatedImagesFeed({ currentPostId }: RelatedImagesFeedProps) {
       const response = await searchNFTs({
         sortMode: 'new',
         status: 'minted',
+        postType: 'feed-images',
         page: pageParam,
         unit: ITEMS_PER_PAGE,
       });
       
       const rawData = (response as any).result || response.data || [];
       
-      // Filter out current post and ad, keep only images
+      // Filter out current post and ad
       const filtered = rawData.filter((nft: any) => {
         const id = String(nft.tokenId || nft.id);
-        if (id === currentPostId || id === AD_POST_ID) return false;
-        const postType = nft.postType || nft.media_type;
-        return postType === 'image' || postType === 'feed-images' || 
-          ((nft.imageUrls?.length > 0 || nft.imageUrl) && !nft.videoUrl && postType !== 'video');
+        return id !== currentPostId && id !== AD_POST_ID;
       });
       
       return {
