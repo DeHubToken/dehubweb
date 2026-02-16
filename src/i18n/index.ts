@@ -19,6 +19,18 @@ import ko from './locales/ko.json';
 import ru from './locales/ru.json';
 import ar from './locales/ar.json';
 import hi from './locales/hi.json';
+import tr from './locales/tr.json';
+import ro from './locales/ro.json';
+import bn from './locales/bn.json';
+import id from './locales/id.json';
+import vi from './locales/vi.json';
+import th from './locales/th.json';
+import it from './locales/it.json';
+import nl from './locales/nl.json';
+import pl from './locales/pl.json';
+import uk from './locales/uk.json';
+import tl from './locales/tl.json';
+import ms from './locales/ms.json';
 
 const STORAGE_KEY = 'user-preferred-language';
 
@@ -39,6 +51,18 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'ru', name: 'Russian', nativeName: 'Русский' },
   { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
   { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी' },
+  { code: 'tr', name: 'Turkish', nativeName: 'Türkçe' },
+  { code: 'ro', name: 'Romanian', nativeName: 'Română' },
+  { code: 'bn', name: 'Bengali', nativeName: 'বাংলা' },
+  { code: 'id', name: 'Indonesian', nativeName: 'Bahasa Indonesia' },
+  { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt' },
+  { code: 'th', name: 'Thai', nativeName: 'ไทย' },
+  { code: 'it', name: 'Italian', nativeName: 'Italiano' },
+  { code: 'nl', name: 'Dutch', nativeName: 'Nederlands' },
+  { code: 'pl', name: 'Polish', nativeName: 'Polski' },
+  { code: 'uk', name: 'Ukrainian', nativeName: 'Українська' },
+  { code: 'tl', name: 'Tagalog', nativeName: 'Tagalog' },
+  { code: 'ms', name: 'Malay', nativeName: 'Bahasa Melayu' },
 ];
 
 i18n.use(initReactI18next).init({
@@ -54,6 +78,18 @@ i18n.use(initReactI18next).init({
     ru: { translation: ru },
     ar: { translation: ar },
     hi: { translation: hi },
+    tr: { translation: tr },
+    ro: { translation: ro },
+    bn: { translation: bn },
+    id: { translation: id },
+    vi: { translation: vi },
+    th: { translation: th },
+    it: { translation: it },
+    nl: { translation: nl },
+    pl: { translation: pl },
+    uk: { translation: uk },
+    tl: { translation: tl },
+    ms: { translation: ms },
   },
   lng: defaultLang,
   fallbackLng: 'en',
