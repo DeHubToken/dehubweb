@@ -358,10 +358,26 @@ export async function getMessages(
     console.log('[DM API] Fetching messages from Supabase for:', conversationId);
     let supabaseMessages: DeHubDMMessage[] = [];
 
-    const { data: sData, error: sError } = await (supabase as any)
+    // Get current user's wallet address to properly filter messages
+    const currentUserAddress = localStorage.getItem('dehub_wallet')?.toLowerCase();
+    const isWalletConvId = conversationId.startsWith('0x');
+
+    let supabaseQuery = (supabase as any)
       .from('direct_messages')
-      .select('*')
-      .or(`conversation_id.eq.${conversationId},sender_address.eq.${conversationId},receiver_address.eq.${conversationId}`)
+      .select('*');
+
+    if (isWalletConvId && currentUserAddress) {
+      // For wallet-address-based conversations, filter to only messages between
+      // the current user and the other user (prevents mixing conversations)
+      const otherAddress = conversationId.toLowerCase();
+      supabaseQuery = supabaseQuery.or(
+        `and(sender_address.eq.${currentUserAddress},receiver_address.eq.${otherAddress}),and(sender_address.eq.${otherAddress},receiver_address.eq.${currentUserAddress}),conversation_id.eq.${conversationId}`
+      );
+    } else {
+      supabaseQuery = supabaseQuery.eq('conversation_id', conversationId);
+    }
+
+    const { data: sData, error: sError } = await supabaseQuery
       .order('created_at', { ascending: false })
       .range(page * limit, (page + 1) * limit - 1);
 

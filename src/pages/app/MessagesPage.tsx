@@ -151,9 +151,9 @@ export default function MessagesPage() {
   // If Public Chat is open, show full-screen chat
   if (showPublicChat) {
     return (
-      <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)] p-3 sm:p-4 overflow-x-hidden">
-        <PublicChat 
-          onBack={() => setShowPublicChat(false)} 
+      <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] p-3 sm:p-4 overflow-x-hidden">
+        <PublicChat
+          onBack={() => setShowPublicChat(false)}
         />
       </div>
     );
@@ -162,10 +162,10 @@ export default function MessagesPage() {
   // If a DM conversation is selected, show it
   if (selectedConversation) {
     return (
-      <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)] p-3 sm:p-4">
-        <DirectMessageChat 
+      <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] p-3 sm:p-4">
+        <DirectMessageChat
           conversation={selectedConversation}
-          onBack={() => setSelectedConversation(null)} 
+          onBack={() => setSelectedConversation(null)}
         />
       </div>
     );
@@ -173,7 +173,7 @@ export default function MessagesPage() {
 
   return (
     <div className="h-full p-3 sm:p-4 overflow-hidden">
-      <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)] max-h-full">
+      <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] max-h-full">
         {/* Full Width Messages Panel */}
         <div className="w-full h-full bg-zinc-900 rounded-2xl flex flex-col">
           {/* Header */}
