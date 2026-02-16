@@ -15,6 +15,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { toast } from 'sonner';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useUserLanguage } from '@/hooks/use-user-language';
 import { useMention } from '@/hooks/use-mention';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
@@ -351,6 +352,7 @@ export default function AssistantPage() {
 
   const { isAuthenticated } = useAuth();
   const isMobile = useIsMobile();
+  const { language: userLanguage } = useUserLanguage();
   
   // Conversation persistence hook
   const { 
@@ -436,7 +438,8 @@ export default function AssistantPage() {
             content: m.content
           })),
           style: selectedStyle,
-          model: selectedChatModel
+          model: selectedChatModel,
+          userLanguage
         }
       });
 
@@ -866,7 +869,8 @@ export default function AssistantPage() {
             })),
             style: selectedStyle,
             model: selectedChatModel,
-            isAuthenticated // Pass auth status for transaction simulation
+            isAuthenticated, // Pass auth status for transaction simulation
+            userLanguage
           }
         });
 
