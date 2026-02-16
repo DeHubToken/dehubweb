@@ -1,12 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Radio, Loader2, Copy, Check, ExternalLink, Tag, Search, X, Plus, Save } from 'lucide-react';
+import { Radio, Loader2, Copy, Check, ExternalLink, Tag, Search, X, Plus } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { createLiveStream, startLiveStream, getStreamKey, getStreamIngestUrl, type StartLiveStreamResponse } from '@/lib/api/dehub';
+import { startLiveStream, getStreamKey, getStreamIngestUrl, type StartLiveStreamResponse } from '@/lib/api/dehub';
+import { mintPost } from '@/lib/api/dehub/content';
+import { getWeb3AuthSigner, BASE_CHAIN_ID } from '@/lib/contracts';
 import { getCategories } from '@/lib/api/dehub/feed';
 import type { DeHubCategory } from '@/lib/api/dehub/types';
 import { createLogger } from '@/lib/logger';
@@ -99,66 +101,63 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     }
 
     setIsLoading(true);
-    logger.info('User initiated "Go Live"', { title, category });
+    logger.info('User initiated "Go Live"', { title, selectedCategoriesArray });
     try {
-      // Send first category to API (API accepts single category string)
-      const categoryForApi = selectedCategoriesArray.length > 0
-        ? selectedCategoriesArray[0]
-        : undefined;
+      // Get user's wallet address for minting
+      const minterAddress = await getWeb3AuthSigner();
+      logger.info('Minter address obtained', { minterAddress });
 
-      const createResponse = await createLiveStream({
-        title: title.trim(),
-        description: description.trim() || undefined,
-        category: categoryForApi,
+      // Step 1: Create (Mint) the stream post
+      const mintResponse = await mintPost({
+        name: title.trim(),
+        description: description.trim(),
+        postType: 'live',
+        chainId: BASE_CHAIN_ID,
+        category: selectedCategoriesArray.length > 0 ? selectedCategoriesArray : ['General'],
+        minterAddress,
+        streamInfo: {
+          isLockContent: false,
+          isPayPerView: false,
+          isAddBounty: false,
+        },
       });
 
-      const streamId = createResponse.result?.streamId;
-      logger.info('Stream creation response received', { streamId });
+      const streamId = mintResponse.createdTokenId;
+      logger.info('Stream minted successfully (via mintPost)', { streamId });
 
       if (!streamId) {
-        throw new Error('Failed to create stream - no stream ID returned');
+        throw new Error('Failed to create stream - no token ID returned');
       }
 
-      const startResponse = await startLiveStream({ streamId });
-      logger.info('Start stream response received', { hasResult: !!startResponse.result });
+      // Step 2: Fetch stream credentials
+      logger.info('Fetching stream credentials...', { streamId });
+      
+      const [keyRes, ingestRes] = await Promise.all([
+        getStreamKey(streamId).catch((err) => {
+          logger.error('Failed to get stream key', { streamId }, err);
+          return null;
+        }),
+        getStreamIngestUrl(streamId).catch((err) => {
+          logger.error('Failed to get ingest URL', { streamId }, err);
+          return null;
+        }),
+      ]);
 
-      let resultData = startResponse.result;
-
-      if (!resultData?.streamKey || !resultData?.ingestUrl) {
-        logger.warn('Start stream response missing credentials, fetching explicitly');
-        const [keyRes, ingestRes] = await Promise.all([
-          getStreamKey(streamId).catch((err) => {
-            logger.error('Failed to get stream key', { streamId }, err);
-            return null;
-          }),
-          getStreamIngestUrl(streamId).catch((err) => {
-            logger.error('Failed to get ingest URL', { streamId }, err);
-            return null;
-          }),
-        ]);
-        resultData = {
-          streamId,
-          streamKey: resultData?.streamKey || keyRes?.result?.streamKey || '',
-          ingestUrl: resultData?.ingestUrl || keyRes?.result?.ingestUrl || ingestRes?.result?.ingestUrl || '',
-          playbackUrl: resultData?.playbackUrl || '',
-        };
-      }
+      const resultData: StartLiveStreamResponse['result'] = {
+        streamId,
+        streamKey: keyRes?.result?.streamKey || '',
+        ingestUrl: ingestRes?.result?.ingestUrl || '',
+        playbackUrl: `https://dehub.io/app/post/${streamId}`,
+      };
 
       setStreamData(resultData);
       setStep('ready');
       logger.info('Stream setup ready', { streamId, hasKey: !!resultData.streamKey });
-      toast.success('Stream created! Copy your stream key to start broadcasting.');
+      toast.success('Stream created! Copy your credentials to start broadcasting.');
     } catch (error) {
-      logger.error('Failed to start stream', { title, category }, error);
-      console.error('Failed to start stream:', error);
+      logger.error('Failed to start stream', { title, selectedCategory }, error);
       const message = error instanceof Error ? error.message : 'Failed to create stream';
-      if (message.includes('401') || message.toLowerCase().includes('unauthorized')) {
-        toast.error('Session expired. Please log in again.');
-      } else if (message.includes('400')) {
-        toast.error('Invalid request. Please check your input.');
-      } else {
-        toast.error(message);
-      }
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -183,319 +182,160 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         <DrawerHeader className="border-b border-white/10 mb-4">
           <DrawerTitle className="text-white flex items-center gap-2">
             <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-            {step === 'setup' ? 'Go Live' : step === 'ready' ? 'Ready to Stream' : 'Live Now'}
+            {step === 'setup' ? 'Go Live' : 'Stream Ready'}
           </DrawerTitle>
           <DrawerDescription className="sr-only">
-            Configure your livestream settings including title and category.
+            Configure your livestream settings or get your RTMP credentials.
           </DrawerDescription>
         </DrawerHeader>
 
-        <div className="overflow-y-auto max-h-[70vh] px-1 pb-12 custom-scrollbar">
-          {step === 'setup' && (
-            <div className="space-y-4">
-            {/* Title */}
-            <div className="space-y-2">
-              <label className="text-sm text-zinc-400">Stream Title *</label>
-              <Input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="What's your stream about?"
-                className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
-                maxLength={100}
-              />
-              <p className="text-xs text-zinc-500 text-right">{title.length}/100</p>
-            </div>
-
-            {/* Description */}
-            <div className="space-y-2">
-              <label className="text-sm text-zinc-400">Description</label>
-              <Textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Tell viewers what to expect..."
-                className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 resize-none"
-                rows={3}
-                maxLength={500}
-              />
-            </div>
-
-            {/* Category - matching PostAccessToggles pattern */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-sm text-zinc-400 flex items-center gap-2">
-                  <Tag className="w-4 h-4" />
-                  Category
-                </label>
-                <button
-                  type="button"
-                  onClick={() => { setCategorySearch(''); setCategoryDrawerOpen(true); }}
-                  className="text-xs text-white/50 hover:text-white transition-colors"
-                >
-                  {selectedCategoriesArray.length > 0 ? 'Edit' : 'Add'}
-                </button>
+        <div className="flex-1 overflow-y-auto px-1 custom-scrollbar">
+          {step === 'setup' ? (
+            <div className="space-y-4 pb-4">
+              <div className="space-y-2">
+                <label className="text-sm text-zinc-400">Stream Title *</label>
+                <Input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="What's your stream about?"
+                  className="bg-zinc-800 border-zinc-700 text-white"
+                  maxLength={100}
+                />
               </div>
-              {selectedCategoriesArray.length > 0 && (
-                <div className="flex flex-wrap items-center gap-1.5">
-                  {selectedCategoriesArray.length < MAX_CATEGORIES && (
-                    <button type="button" onClick={() => { setCategorySearch(''); setCategoryDrawerOpen(true); }} className="text-xs text-white/50 hover:text-white">
-                      <Plus className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                  {selectedCategoriesArray.map((cat) => (
-                    <span key={cat} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-white/10 text-white/80 border border-white/10">
-                      {cat}
-                      <button type="button" onClick={() => removeCategory(cat)} className="hover:text-red-400 transition-colors">
-                        <X className="w-2.5 h-2.5" />
-                      </button>
-                    </span>
-                  ))}
+
+              <div className="space-y-2">
+                <label className="text-sm text-zinc-400">Description</label>
+                <Textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Tell viewers what to expect..."
+                  className="bg-zinc-800 border-zinc-700 text-white resize-none"
+                  rows={3}
+                  maxLength={500}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm text-zinc-400 flex items-center gap-2">
+                    <Tag className="w-4 h-4" />
+                    Category
+                  </label>
                   <button
                     type="button"
-                    onClick={() => {
-                      localStorage.setItem('post_default_categories', selectedCategory);
-                      toast.success('Default categories saved');
-                    }}
+                    onClick={() => setCategoryDrawerOpen(true)}
                     className="text-xs text-white/50 hover:text-white"
                   >
-                    <Save className="w-3.5 h-3.5" />
+                    {selectedCategoriesArray.length > 0 ? 'Edit' : 'Add'}
                   </button>
                 </div>
+                {selectedCategoriesArray.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {selectedCategoriesArray.map((cat) => (
+                      <span key={cat} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-white/10 text-white border border-white/10">
+                        {cat}
+                        <button type="button" onClick={() => removeCategory(cat)}>
+                          <X className="w-2.5 h-2.5" />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4 pb-4">
+              {streamData && (
+                <>
+                  <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4 text-center">
+                    <p className="text-green-400 font-medium text-sm">Stream created successfully!</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm text-zinc-400">Stream Key</label>
+                    <div className="flex gap-2">
+                      <Input value={streamData.streamKey} readOnly type="password" className="bg-zinc-800 border-zinc-700 font-mono" />
+                      <Button variant="outline" size="icon" onClick={() => copyToClipboard(streamData.streamKey, 'key')}>
+                        {copiedField === 'key' ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm text-zinc-400">Ingest URL</label>
+                    <div className="flex gap-2">
+                      <Input value={streamData.ingestUrl} readOnly className="bg-zinc-800 border-zinc-700 font-mono text-xs" />
+                      <Button variant="outline" size="icon" onClick={() => copyToClipboard(streamData.ingestUrl, 'url')}>
+                        {copiedField === 'url' ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="bg-zinc-800/50 rounded-xl p-4 space-y-2">
+                    <p className="text-white font-medium text-xs uppercase tracking-wider">Quick Setup Guide:</p>
+                    <ol className="text-xs text-zinc-400 space-y-1 list-decimal list-inside">
+                      <li>Open OBS → Settings → Stream</li>
+                      <li>Select "Custom" Service</li>
+                      <li>Paste Ingest URL & Stream Key</li>
+                      <li>Click "Start Streaming"</li>
+                    </ol>
+                  </div>
+                </>
               )}
             </div>
+          )}
+        </div>
 
-            {/* Start Button */}
+        <div className="pt-4 mt-2 border-t border-white/10 bg-zinc-900">
+          {step === 'setup' ? (
             <Button
               onClick={handleStartStream}
               disabled={!title.trim() || isLoading}
-              className="w-full bg-red-500 hover:bg-red-600 text-white py-6 text-lg font-semibold rounded-xl"
+              className="w-full bg-red-500 hover:bg-red-600 h-14 text-lg font-bold"
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Creating Stream...
-                </>
-              ) : (
-                <>
-                  <Radio className="w-5 h-5 mr-2" />
-                  Go Live
-                </>
-              )}
+              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Radio className="w-5 h-5 mr-2" /> Go Live</>}
             </Button>
-          </div>
-        )}
-
-        {step === 'ready' && streamData && (
-          <div className="space-y-4">
-            <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4 text-center">
-              <p className="text-green-400 font-medium">Stream created successfully!</p>
-              <p className="text-sm text-zinc-400 mt-1">
-                Use the info below to start broadcasting with OBS, Streamlabs, or any RTMP software.
-              </p>
-            </div>
-
-            {/* Stream Key */}
-            <div className="space-y-2">
-              <label className="text-sm text-zinc-400">Stream Key</label>
-              <div className="flex gap-2">
-                <Input
-                  value={streamData.streamKey}
-                  readOnly
-                  type="password"
-                  className="bg-zinc-800 border-zinc-700 text-white font-mono"
-                />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => copyToClipboard(streamData.streamKey, 'key')}
-                  className="shrink-0 border-zinc-700"
-                >
-                  {copiedField === 'key' ? (
-                    <Check className="w-4 h-4 text-green-500" />
-                  ) : (
-                    <Copy className="w-4 h-4" />
-                  )}
-                </Button>
-              </div>
-              <p className="text-xs text-amber-400">⚠️ Keep this secret! Don't share it with anyone.</p>
-            </div>
-
-            {/* Ingest URL */}
-            <div className="space-y-2">
-              <label className="text-sm text-zinc-400">Server / Ingest URL</label>
-              <div className="flex gap-2">
-                <Input
-                  value={streamData.ingestUrl}
-                  readOnly
-                  className="bg-zinc-800 border-zinc-700 text-white font-mono text-sm"
-                />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => copyToClipboard(streamData.ingestUrl, 'url')}
-                  className="shrink-0 border-zinc-700"
-                >
-                  {copiedField === 'url' ? (
-                    <Check className="w-4 h-4 text-green-500" />
-                  ) : (
-                    <Copy className="w-4 h-4" />
-                  )}
-                </Button>
-              </div>
-            </div>
-
-            {/* Playback URL */}
-            <div className="space-y-2">
-              <label className="text-sm text-zinc-400">Playback URL (share with viewers)</label>
-              <div className="flex gap-2">
-                <Input
-                  value={streamData.playbackUrl}
-                  readOnly
-                  className="bg-zinc-800 border-zinc-700 text-white font-mono text-sm"
-                />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => copyToClipboard(streamData.playbackUrl, 'playback')}
-                  className="shrink-0 border-zinc-700"
-                >
-                  {copiedField === 'playback' ? (
-                    <Check className="w-4 h-4 text-green-500" />
-                  ) : (
-                    <Copy className="w-4 h-4" />
-                  )}
-                </Button>
-              </div>
-            </div>
-
-            {/* Instructions */}
-            <div className="bg-zinc-800/50 rounded-xl p-4 space-y-2">
-              <p className="text-white font-medium text-sm">How to go live:</p>
-              <ol className="text-sm text-zinc-400 space-y-1 list-decimal list-inside">
-                <li>Open OBS Studio or your streaming software</li>
-                <li>Go to Settings → Stream</li>
-                <li>Select "Custom" as the service</li>
-                <li>Paste the Server URL above</li>
-                <li>Paste the Stream Key</li>
-                <li>Click "Start Streaming"</li>
-              </ol>
-            </div>
-
+          ) : (
             <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={handleClose}
-                className="flex-1 border-zinc-700"
-              >
-                Close
-              </Button>
-              <Button
-                onClick={() => window.open(streamData.playbackUrl, '_blank')}
-                variant="glass"
-                className="flex-1"
-              >
-                <ExternalLink className="w-4 h-4 mr-2" />
-                View Stream
+              <Button variant="outline" onClick={handleClose} className="flex-1 h-14 border-zinc-700">Close</Button>
+              <Button onClick={() => window.open(streamData?.playbackUrl, '_blank')} variant="glass" className="flex-1 h-14">
+                <ExternalLink className="w-4 h-4 mr-2" /> View Stream
               </Button>
             </div>
-          </div>
-        )}
+          )}
         </div>
       </DrawerContent>
 
-      {/* Category Drawer - matching PostAccessToggles pattern */}
       <Drawer open={categoryDrawerOpen} onOpenChange={setCategoryDrawerOpen}>
-        <DrawerContent glass hideHandle>
-          <div className="flex items-center justify-between px-4 pt-4 pb-2">
-            <div className="flex items-center gap-2 text-white font-medium">
-              <Tag className="w-5 h-5" />
-              Select Categories
+        <DrawerContent glass hideHandle className="max-h-[60vh]">
+          <div className="p-4 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-white font-medium">Categories</h3>
+              <button onClick={() => setCategoryDrawerOpen(false)} className="text-sm text-zinc-400 hover:text-white">Done</button>
             </div>
-            <button type="button" onClick={() => setCategoryDrawerOpen(false)} className="text-sm text-white/60 hover:text-white transition-colors">
-              Done
-            </button>
-          </div>
-          <div className="px-4 pb-4 space-y-3">
-            {/* Selected chips */}
-            {selectedCategoriesArray.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
-                {selectedCategoriesArray.map((cat) => (
-                  <span key={cat} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs bg-white/15 text-white border border-white/20">
-                    {cat}
-                    <button type="button" onClick={() => removeCategory(cat)} className="hover:text-red-400 transition-colors">
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
-                ))}
-              </div>
-            )}
-            {/* Search input */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <input
-                type="text"
                 value={categorySearch}
                 onChange={(e) => setCategorySearch(e.target.value)}
-                placeholder="Search categories..."
-                className={cn(inputClass, "pl-10")}
-                autoFocus
+                placeholder="Search..."
+                className="w-full h-11 bg-zinc-800 border border-white/10 rounded-xl pl-10 pr-4 text-white text-sm outline-none focus:border-white/20"
               />
-              {categorySearch && (
-                <button
-                  type="button"
-                  onClick={() => setCategorySearch('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
             </div>
-
-            {/* Category list */}
-            <div className="max-h-[40vh] overflow-y-auto space-y-1 scrollbar-hide">
-              {loadingCategories ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                </div>
-              ) : (
-                <>
-                  {/* Custom category option */}
-                  {categorySearch.trim().length >= 3 && !categories.some(c => c.name.toLowerCase() === categorySearch.trim().toLowerCase()) && selectedCategoriesArray.length < MAX_CATEGORIES && (
-                    <button
-                      type="button"
-                      onClick={() => { toggleCategory(categorySearch.trim()); setCategorySearch(''); }}
-                      className="w-full flex items-center gap-2 px-4 py-3 rounded-xl text-sm transition-colors text-white bg-white/10 hover:bg-white/15 border border-dashed border-white/20 mb-1"
-                    >
-                      <Plus className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Create "<span className="font-medium">{categorySearch.trim()}</span>"</span>
-                    </button>
+            <div className="overflow-y-auto max-h-[30vh] space-y-1">
+              {filteredCategories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => toggleCategory(cat.name)}
+                  className={cn(
+                    "w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-colors",
+                    selectedCategoriesArray.includes(cat.name) ? "bg-white/10 text-white" : "text-zinc-400 hover:bg-white/5"
                   )}
-                  {filteredCategories.length === 0 && !categorySearch.trim() ? (
-                    <p className="text-center text-sm text-zinc-500 py-8">No categories found</p>
-                  ) : (
-                    filteredCategories.map((cat) => (
-                      <button
-                        key={cat.id}
-                        type="button"
-                        onClick={() => toggleCategory(cat.name)}
-                        disabled={!selectedCategoriesArray.includes(cat.name) && selectedCategoriesArray.length >= MAX_CATEGORIES}
-                        className={cn(
-                          "w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-colors",
-                          selectedCategoriesArray.includes(cat.name)
-                            ? "bg-white/15 text-white border border-white/20"
-                            : selectedCategoriesArray.length >= MAX_CATEGORIES
-                              ? "text-zinc-600 border border-transparent cursor-not-allowed"
-                              : "text-zinc-300 hover:bg-white/5 border border-transparent"
-                        )}
-                      >
-                        <span>{cat.name}</span>
-                        {selectedCategoriesArray.includes(cat.name) && (
-                          <Check className="w-4 h-4 text-white" />
-                        )}
-                      </button>
-                    ))
-                  )}
-                </>
-              )}
+                >
+                  {cat.name}
+                  {selectedCategoriesArray.includes(cat.name) && <Check className="w-4 h-4" />}
+                </button>
+              ))}
             </div>
           </div>
         </DrawerContent>
