@@ -111,6 +111,8 @@ export interface VideoItem extends BaseFeedItem {
   bountyAmount?: number;
   /** Bounty: reward currency (DHB, USDC) */
   bountyCurrency?: string;
+  /** Whether this is an ad/sponsored post */
+  isAd?: boolean;
 }
 
 /**
