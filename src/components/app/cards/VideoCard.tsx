@@ -171,7 +171,7 @@ function MobileCreatorInfo({
         </button>
         
         {/* Action buttons and badges */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-0.5">
           {/* Content Type Badges - PPV/Bounty/Locked */}
           {hasBadges && (
             <div className="flex items-center gap-1">
