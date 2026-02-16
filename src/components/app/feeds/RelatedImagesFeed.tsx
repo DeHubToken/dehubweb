@@ -19,7 +19,7 @@ import type { VideoItem } from '@/types/feed.types';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 
 const AD_POST_ID = '2008';
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 6;
 
 interface RelatedImagesFeedProps {
   /** Current image post ID to exclude from the feed */
