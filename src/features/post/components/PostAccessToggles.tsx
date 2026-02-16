@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation as useI18n } from 'react-i18next';
 import { Lock, Ticket, Gift, Shield, Eye, MessageCircle, Check, Info, Tag, Search, X, Plus, Save } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
@@ -70,6 +71,7 @@ export function PostAccessToggles({
   selectedCategory,
   setSelectedCategory,
 }: PostAccessTogglesProps) {
+  const { t } = useI18n();
   // Mobile drawer states
   const [ppvDrawerOpen, setPpvDrawerOpen] = useState(false);
   const [bountyDrawerOpen, setBountyDrawerOpen] = useState(false);
@@ -401,13 +403,13 @@ export function PostAccessToggles({
           <DrawerHeader className="text-left">
             <DrawerTitle className="flex items-center gap-2 text-white">
               <Ticket className="w-5 h-5" />
-              Set PPV Price
+              {t('drawers.setPpvPrice')}
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-4 space-y-4">
             {/* Currency selector */}
             <div className="space-y-2">
-              <label className="text-sm text-white/70">Currency</label>
+              <label className="text-sm text-white/70">{t('drawers.currency')}</label>
               <div className="flex gap-2">
                 {(['USD', 'DHB'] as Currency[]).map((cur) => (
                   <button
@@ -427,7 +429,7 @@ export function PostAccessToggles({
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-sm text-white/70">Price ({tempPpvCurrency})</label>
+              <label className="text-sm text-white/70">{t('drawers.price')} ({tempPpvCurrency})</label>
               <input
                 type="number"
                 value={tempPpvAmount}
@@ -439,13 +441,13 @@ export function PostAccessToggles({
             <div className="flex items-center gap-2 p-3 rounded-lg bg-zinc-800/30 border border-white/10">
               <Info className="w-4 h-4 text-white/50 shrink-0" />
               <span className="text-xs text-white/50">
-                {tempPpvCurrency === 'DHB' ? 'Payments are in DHB on Base chain' : 'Payments are in USD'}
+                {tempPpvCurrency === 'DHB' ? t('drawers.ppvDhbInfo') : t('drawers.ppvUsdInfo')}
               </span>
             </div>
           </div>
           <DrawerFooter className="flex-row gap-2">
             <Button variant="glass" onClick={cancelPpv} className="flex-1 rounded-xl">
-              Cancel
+              {t('drawers.cancel')}
             </Button>
             <Button 
               onClick={confirmPpv} 
@@ -454,7 +456,7 @@ export function PostAccessToggles({
               className="flex-1 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Check className="w-4 h-4 mr-2" />
-              Confirm
+              {t('drawers.confirm')}
             </Button>
           </DrawerFooter>
         </DrawerContent>
@@ -466,43 +468,43 @@ export function PostAccessToggles({
           <DrawerHeader className="text-left">
             <DrawerTitle className="flex items-center gap-2 text-white">
               <Gift className="w-5 h-5" />
-              Set Up Bounty
+              {t('drawers.setupBounty')}
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-4 space-y-4">
             <div className="space-y-2">
               <label className="flex items-center gap-2 text-sm text-white/70">
                 <Eye className="w-4 h-4" />
-                Viewers to reward
+                {t('drawers.viewersToReward')}
               </label>
               <input
                 type="number"
                 value={tempW2eViews}
                 onChange={(e) => setTempW2eViews(e.target.value)}
-                placeholder="Number of viewers"
+                placeholder={t('drawers.numberOfViewers')}
                 className={cn(inputClass, "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none")}
               />
             </div>
             <div className="space-y-2">
               <label className="flex items-center gap-2 text-sm text-white/70">
                 <MessageCircle className="w-4 h-4" />
-                Commenters to reward
+                {t('drawers.commentersToReward')}
               </label>
               <input
                 type="number"
                 value={tempW2eComments}
                 onChange={(e) => setTempW2eComments(e.target.value)}
-                placeholder="Number of commenters"
+                placeholder={t('drawers.numberOfCommenters')}
                 className={cn(inputClass, "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none")}
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm text-white/70">Reward per person (DHB)</label>
+              <label className="text-sm text-white/70">{t('drawers.rewardPerPerson')}</label>
               <input
                 type="number"
                 value={tempW2eTotal}
                 onChange={(e) => setTempW2eTotal(e.target.value)}
-                placeholder="Amount per person"
+                placeholder={t('drawers.amountPerPerson')}
                 className={cn(inputClass, "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none")}
               />
             </div>
@@ -510,14 +512,14 @@ export function PostAccessToggles({
               <div className="flex items-center gap-2 p-3 rounded-lg bg-zinc-800/30 border border-white/10">
                 <Info className="w-4 h-4 text-white/50 shrink-0" />
                 <span className="text-xs text-white/50">
-                  Total: {totalBounty.toFixed(2)} DHB will be locked for rewards
+                  {t('drawers.totalLocked', { amount: totalBounty.toFixed(2) })}
                 </span>
               </div>
             )}
           </div>
           <DrawerFooter className="flex-row gap-2">
             <Button variant="glass" onClick={cancelBounty} className="flex-1 rounded-xl">
-              Cancel
+              {t('drawers.cancel')}
             </Button>
             <Button 
               onClick={confirmBounty} 
@@ -526,7 +528,7 @@ export function PostAccessToggles({
               className="flex-1 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Check className="w-4 h-4 mr-2" />
-              Confirm
+              {t('drawers.confirm')}
             </Button>
           </DrawerFooter>
         </DrawerContent>
@@ -538,30 +540,30 @@ export function PostAccessToggles({
           <DrawerHeader className="text-left">
             <DrawerTitle className="flex items-center gap-2 text-white">
               <Shield className="w-5 h-5" />
-              Token Gate Settings
+              {t('drawers.tokenGateSettings')}
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-4 space-y-4">
             <div className="flex items-center gap-2 p-3 rounded-lg bg-zinc-800/30 border border-white/10">
               <Info className="w-4 h-4 text-white/50 shrink-0" />
               <span className="text-xs text-white/50">
-                Requires DHB tokens on Base chain ({DHB_INFO.address.slice(0, 8)}...)
+                {t('drawers.requiresDhb')} ({DHB_INFO.address.slice(0, 8)}...)
               </span>
             </div>
             <div className="space-y-2">
-              <label className="text-sm text-white/70">Minimum DHB Required</label>
+              <label className="text-sm text-white/70">{t('drawers.minimumDhb')}</label>
               <input
                 type="number"
                 value={tempTokenAmount}
                 onChange={(e) => setTempTokenAmount(e.target.value)}
-                placeholder="Minimum amount"
+                placeholder={t('drawers.minimumAmount')}
                 className={cn(inputClass, "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none")}
               />
             </div>
           </div>
           <DrawerFooter className="flex-row gap-2">
             <Button variant="glass" onClick={cancelToken} className="flex-1 rounded-xl">
-              Cancel
+              {t('drawers.cancel')}
             </Button>
             <Button 
               onClick={confirmToken} 
@@ -570,7 +572,7 @@ export function PostAccessToggles({
               className="flex-1 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Check className="w-4 h-4 mr-2" />
-              Confirm
+              {t('drawers.confirm')}
             </Button>
           </DrawerFooter>
         </DrawerContent>

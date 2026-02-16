@@ -695,18 +695,18 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
             <DrawerHeader className="pb-3">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Ticket className="w-5 h-5 text-white" />
-                Pay-Per-View Content
+                {t('drawers.ppvTitle')}
               </DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-                <span className="text-white text-sm">Unlock Price</span>
+                <span className="text-white text-sm">{t('drawers.unlockPrice')}</span>
                 <span className="text-white text-lg font-bold">
                   {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
                 </span>
               </div>
               <p className="text-center text-white/60 text-sm">
-                Pay once to unlock this exclusive content forever! 💎
+                {t('drawers.ppvDescription')}
               </p>
             </div>
           </DrawerContent>
@@ -720,7 +720,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
             <DrawerHeader className="pb-3">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Gift className="w-5 h-5 text-white" />
-                Bounty Rewards
+                {t('drawers.bountyTitle')}
               </DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-col gap-4">
@@ -731,8 +731,8 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                       <Eye className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <p className="text-white text-sm font-medium">First {post.bountyViews} views</p>
-                      <p className="text-zinc-400 text-xs">Get rewarded for watching</p>
+                      <p className="text-white text-sm font-medium">{t('drawers.firstViews', { count: post.bountyViews })}</p>
+                      <p className="text-zinc-400 text-xs">{t('drawers.rewardedWatching')}</p>
                     </div>
                   </div>
                 )}
@@ -742,15 +742,15 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                       <MessageCircle className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <p className="text-white text-sm font-medium">First {post.bountyComments} comments</p>
-                      <p className="text-zinc-400 text-xs">Get rewarded for engaging</p>
+                      <p className="text-white text-sm font-medium">{t('drawers.firstComments', { count: post.bountyComments })}</p>
+                      <p className="text-zinc-400 text-xs">{t('drawers.rewardedEngaging')}</p>
                     </div>
                   </div>
                 )}
               </div>
               {post.bountyAmount && post.bountyAmount > 0 && (
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-                  <span className="text-white text-sm">Reward per User</span>
+                  <span className="text-white text-sm">{t('drawers.rewardPerUser')}</span>
                   <div className="flex items-center gap-2">
                     <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
                     <span className="text-white text-lg font-bold">{post.bountyAmount} {post.bountyCurrency || 'DHB'}</span>
@@ -758,7 +758,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                 </div>
               )}
               <p className="text-center text-white/60 text-sm">
-                Watch and engage to earn rewards! 🎁
+                {t('drawers.bountyDescription')}
               </p>
             </div>
           </DrawerContent>
@@ -772,13 +772,13 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
             <DrawerHeader className="pb-3">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Lock className="w-5 h-5 text-white" />
-                Gated Content
+                {t('drawers.gatedTitle')}
               </DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-col gap-4">
               {post.lockedPrice && post.lockedPrice > 0 && (
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-                  <span className="text-white text-sm">Must hold to view</span>
+                  <span className="text-white text-sm">{t('drawers.mustHoldToView')}</span>
                   <div className="flex items-center gap-2">
                     <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
                     <span className="text-white text-lg font-bold">{formatCompact(post.lockedPrice)} {post.lockedCurrency || 'DHB'}</span>
@@ -786,7 +786,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                 </div>
               )}
               <p className="text-center text-white/60 text-sm">
-                Hold the required tokens to view this content! 🔓
+                {t('drawers.gatedDescription')}
               </p>
             </div>
           </DrawerContent>

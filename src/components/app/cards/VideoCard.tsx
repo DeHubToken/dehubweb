@@ -105,6 +105,7 @@ function MobileCreatorInfo({
   lockedCurrency,
 }: MobileCreatorInfoProps) {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [showBountyDrawer, setShowBountyDrawer] = useState(false);
   const [showPPVDrawer, setShowPPVDrawer] = useState(false);
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
@@ -239,116 +240,112 @@ function MobileCreatorInfo({
       <Drawer open={showBountyDrawer} onOpenChange={setShowBountyDrawer}>
         <DrawerContent glass className="px-4 pb-6">
           <DrawerHeader className="pb-3">
-            <DrawerTitle className="text-white text-lg flex items-center gap-2">
-              <Gift className="w-5 h-5 text-white" />
-              Bounty Rewards
-            </DrawerTitle>
-          </DrawerHeader>
-          <div className="flex flex-col gap-4">
-            {/* Reward Criteria */}
-            <div className="space-y-3">
-            {bountyViews && bountyViews > 0 && (
-                <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
-                  <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
-                    <Eye className="w-4 h-4 text-white" />
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                <Gift className="w-5 h-5 text-white" />
+                {t('drawers.bountyTitle')}
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4">
+              <div className="space-y-3">
+              {bountyViews && bountyViews > 0 && (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
+                    <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                      <Eye className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white text-sm font-medium">{t('drawers.firstViews', { count: bountyViews })}</p>
+                      <p className="text-zinc-400 text-xs">{t('drawers.rewardedWatching')}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-white text-sm font-medium">First {bountyViews} views</p>
-                    <p className="text-zinc-400 text-xs">Get rewarded for watching</p>
+                )}
+                {bountyComments && bountyComments > 0 && (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
+                    <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                      <MessageCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white text-sm font-medium">{t('drawers.firstComments', { count: bountyComments })}</p>
+                      <p className="text-zinc-400 text-xs">{t('drawers.rewardedEngaging')}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {bountyAmount && bountyAmount > 0 && (
+                <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                  <span className="text-white text-sm">{t('drawers.rewardPerUser')}</span>
+                  <div className="flex items-center gap-2">
+                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
+                    <span className="text-white text-lg font-bold">{formatCompact(bountyAmount)} {bountyCurrency || 'DHB'}</span>
                   </div>
                 </div>
               )}
-              {bountyComments && bountyComments > 0 && (
-                <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
-                  <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
-                    <MessageCircle className="w-4 h-4 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-white text-sm font-medium">First {bountyComments} comments</p>
-                    <p className="text-zinc-400 text-xs">Get rewarded for engaging</p>
+              
+              {totalBountyPool > 0 && (
+                <div className="flex items-center justify-between px-4 py-3 bg-white/5 rounded-xl border border-white/10">
+                  <span className="text-white text-sm">{t('drawers.totalBountyPool')}</span>
+                  <div className="flex items-center gap-2">
+                    <img src={dehubCoinSmall} alt="DHB" className="w-4 h-4" />
+                    <span className="text-white text-sm font-medium">{formatCompact(totalBountyPool)} {bountyCurrency || 'DHB'}</span>
                   </div>
                 </div>
               )}
+              
+              <p className="text-center text-white/60 text-sm">
+                {t('drawers.bountyDescription')}
+              </p>
             </div>
-            
-            {/* Reward per User */}
-            {bountyAmount && bountyAmount > 0 && (
-              <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-                <span className="text-white text-sm">Reward per User</span>
-                <div className="flex items-center gap-2">
-                  <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                  <span className="text-white text-lg font-bold">{formatCompact(bountyAmount)} {bountyCurrency || 'DHB'}</span>
-                </div>
-              </div>
-            )}
-            
-            {/* Total Bounty Pool */}
-            {totalBountyPool > 0 && (
-              <div className="flex items-center justify-between px-4 py-3 bg-white/5 rounded-xl border border-white/10">
-                <span className="text-white text-sm">Total Bounty Pool</span>
-                <div className="flex items-center gap-2">
-                  <img src={dehubCoinSmall} alt="DHB" className="w-4 h-4" />
-                  <span className="text-white text-sm font-medium">{formatCompact(totalBountyPool)} {bountyCurrency || 'DHB'}</span>
-                </div>
-              </div>
-            )}
-            
-            {/* Call to Action */}
-            <p className="text-center text-white/60 text-sm">
-              Watch and engage to earn rewards! 🎁
-            </p>
-          </div>
-        </DrawerContent>
-      </Drawer>
+          </DrawerContent>
+        </Drawer>
 
       {/* PPV Drawer */}
       <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
         <DrawerContent glass className="px-4 pb-6">
           <DrawerHeader className="pb-3">
-            <DrawerTitle className="text-white text-lg flex items-center gap-2">
-              <Ticket className="w-5 h-5 text-white" />
-              Pay-Per-View Content
-            </DrawerTitle>
-          </DrawerHeader>
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-              <span className="text-white text-sm">Unlock Price</span>
-              <span className="text-white text-lg font-bold">
-                {formatCompact(Number(ppvPrice))} {ppvCurrency || 'USDC'}
-              </span>
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                <Ticket className="w-5 h-5 text-white" />
+                {t('drawers.ppvTitle')}
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                <span className="text-white text-sm">{t('drawers.unlockPrice')}</span>
+                <span className="text-white text-lg font-bold">
+                  {formatCompact(Number(ppvPrice))} {ppvCurrency || 'USDC'}
+                </span>
+              </div>
+              <p className="text-center text-white/60 text-sm">
+                {t('drawers.ppvDescription')}
+              </p>
             </div>
-            <p className="text-center text-white/60 text-sm">
-              Pay once to unlock this exclusive content forever! 💎
-            </p>
-          </div>
-        </DrawerContent>
-      </Drawer>
+          </DrawerContent>
+        </Drawer>
 
       {/* Gated Content Drawer */}
       <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
         <DrawerContent glass className="px-4 pb-6">
           <DrawerHeader className="pb-3">
-            <DrawerTitle className="text-white text-lg flex items-center gap-2">
-              <Lock className="w-5 h-5 text-white" />
-              Gated Content
-            </DrawerTitle>
-          </DrawerHeader>
-          <div className="flex flex-col gap-4">
-            {lockedPrice && lockedPrice > 0 && (
-              <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-                <span className="text-white text-sm">Must hold to view</span>
-                <div className="flex items-center gap-2">
-                  <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                  <span className="text-white text-lg font-bold">{formatCompact(lockedPrice)} {lockedCurrency || 'DHB'}</span>
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                <Lock className="w-5 h-5 text-white" />
+                {t('drawers.gatedTitle')}
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4">
+              {lockedPrice && lockedPrice > 0 && (
+                <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                  <span className="text-white text-sm">{t('drawers.mustHoldToView')}</span>
+                  <div className="flex items-center gap-2">
+                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
+                    <span className="text-white text-lg font-bold">{formatCompact(lockedPrice)} {lockedCurrency || 'DHB'}</span>
+                  </div>
                 </div>
-              </div>
-            )}
-            <p className="text-center text-white/60 text-sm">
-              Hold the required tokens to view this content! 🔓
-            </p>
-          </div>
-        </DrawerContent>
-      </Drawer>
+              )}
+              <p className="text-center text-white/60 text-sm">
+                {t('drawers.gatedDescription')}
+              </p>
+            </div>
+          </DrawerContent>
+        </Drawer>
     </>
   );
 }
@@ -990,9 +987,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                 <Ticket className="h-7 w-7 text-white" />
               </div>
-              <p className="text-white font-semibold text-sm mb-1">Pay-Per-View Content</p>
+              <p className="text-white font-semibold text-sm mb-1">{t('drawers.ppvTitle')}</p>
               <p className="text-white/70 text-xs">
-                Unlock for {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
+                {t('drawers.unlockFor')} {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
               </p>
             </div>
           </>
@@ -1395,18 +1392,18 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             <DrawerHeader className="pb-3">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Ticket className="w-5 h-5 text-white" />
-                Pay-Per-View Content
+                {t('drawers.ppvTitle')}
               </DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-                <span className="text-white text-sm">Unlock Price</span>
+                <span className="text-white text-sm">{t('drawers.unlockPrice')}</span>
                 <span className="text-white text-lg font-bold">
                   {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
                 </span>
               </div>
               <p className="text-center text-white/60 text-sm">
-                Pay once to unlock this exclusive content forever! 💎
+                {t('drawers.ppvDescription')}
               </p>
             </div>
           </DrawerContent>
@@ -1420,7 +1417,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             <DrawerHeader className="pb-3">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Gift className="w-5 h-5 text-white" />
-                Bounty Rewards
+                {t('drawers.bountyTitle')}
               </DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-col gap-4">
@@ -1431,8 +1428,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                       <Eye className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <p className="text-white text-sm font-medium">First {video.bountyViews} views</p>
-                      <p className="text-zinc-400 text-xs">Get rewarded for watching</p>
+                      <p className="text-white text-sm font-medium">{t('drawers.firstViews', { count: video.bountyViews })}</p>
+                      <p className="text-zinc-400 text-xs">{t('drawers.rewardedWatching')}</p>
                     </div>
                   </div>
                 )}
@@ -1442,15 +1439,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                       <MessageCircle className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <p className="text-white text-sm font-medium">First {video.bountyComments} comments</p>
-                      <p className="text-zinc-400 text-xs">Get rewarded for engaging</p>
+                      <p className="text-white text-sm font-medium">{t('drawers.firstComments', { count: video.bountyComments })}</p>
+                      <p className="text-zinc-400 text-xs">{t('drawers.rewardedEngaging')}</p>
                     </div>
                   </div>
                 )}
               </div>
               {video.bountyAmount && video.bountyAmount > 0 && (
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-                  <span className="text-white text-sm">Reward per User</span>
+                  <span className="text-white text-sm">{t('drawers.rewardPerUser')}</span>
                   <div className="flex items-center gap-2">
                     <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
                     <span className="text-white text-lg font-bold">{video.bountyAmount} {video.bountyCurrency || 'DHB'}</span>
@@ -1458,7 +1455,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                 </div>
               )}
               <p className="text-center text-white/60 text-sm">
-                Watch and engage to earn rewards! 🎁
+                {t('drawers.bountyDescription')}
               </p>
             </div>
           </DrawerContent>
@@ -1472,13 +1469,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             <DrawerHeader className="pb-3">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Lock className="w-5 h-5 text-white" />
-                Gated Content
+                {t('drawers.gatedTitle')}
               </DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-col gap-4">
               {video.lockedPrice && video.lockedPrice > 0 && (
                 <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-                  <span className="text-white text-sm">Must hold to view</span>
+                  <span className="text-white text-sm">{t('drawers.mustHoldToView')}</span>
                   <div className="flex items-center gap-2">
                     <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
                     <span className="text-white text-lg font-bold">{formatCompact(video.lockedPrice)} {video.lockedCurrency || 'DHB'}</span>
@@ -1486,7 +1483,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                 </div>
               )}
               <p className="text-center text-white/60 text-sm">
-                Hold the required tokens to view this content! 🔓
+                {t('drawers.gatedDescription')}
               </p>
             </div>
           </DrawerContent>
