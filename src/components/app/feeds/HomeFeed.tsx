@@ -475,9 +475,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // THREE SEPARATE FEED QUERIES
   // ============================================================================
 
-  // For "Most Liked", "Trending", or "Following" sorting, we need global ranking across all types
+  // For "Most Liked", "Trending", "Following", "Random", or default "Latest" sorting, we need global ranking across all types
   // So we use a single unified feed instead of three separate type feeds
-  const useSingleFeedForGlobalSort = selectedSort.value === 'most-liked' || selectedSort.value === 'following' || selectedSort.value === 'random';
+  // "Latest" must also use a single feed to maintain true chronological order across all post types
+  const useSingleFeedForGlobalSort = selectedSort.value === 'latest' || selectedSort.value === 'most-liked' || selectedSort.value === 'following' || selectedSort.value === 'random';
   const hasContentFilter = contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
   const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort && !hasContentFilter;
 
