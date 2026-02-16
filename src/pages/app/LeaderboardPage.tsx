@@ -5,8 +5,9 @@
  */
 
 import { useState, useMemo, useCallback, useLayoutEffect, useEffect, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp } from 'lucide-react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw } from 'lucide-react';
+import { toast } from 'sonner';
 import trophyIcon from '@/assets/trophy-icon.png';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
@@ -21,6 +22,9 @@ import medal10 from '@/assets/medal-10.png';
 
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
+import { useAuth } from '@/contexts/AuthContext';
+import { useAuthPrompt, AuthPrompt } from '@/components/app/AuthPrompt';
+import { supabase } from '@/integrations/supabase/client';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -102,11 +106,60 @@ export default function LeaderboardPage() {
   const [shimmerKey, setShimmerKey] = useState(0);
   const [sortDirection, setSortDirection] = useState<'desc' | 'asc'>('desc');
   const [visibleCount, setVisibleCount] = useState(25);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshCooldown, setRefreshCooldown] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { isAuthenticated, walletAddress } = useAuth();
+  const { isOpen: isAuthOpen, requireAuth, close: closeAuth } = useAuthPrompt();
 
   // Map category to API sort mode
   const apiSortMode = categories.find(c => c.id === category)?.apiSort || 'holdings';
+
+  const handleRefreshMe = useCallback(async () => {
+    if (refreshCooldown || isRefreshing) return;
+
+    requireAuth(async () => {
+      if (!walletAddress) {
+        toast.error('No wallet address found');
+        return;
+      }
+
+      setIsRefreshing(true);
+      try {
+        const { data: { publicUrl } } = supabase.storage.from('stories').getPublicUrl('');
+        const baseUrl = publicUrl.replace('/storage/v1/object/public/stories/', '');
+        const fnUrl = `${baseUrl}/functions/v1/refresh-leaderboard-user?address=${walletAddress}`;
+        
+        const res = await fetch(fnUrl);
+        const result = await res.json();
+
+        if (!res.ok || !result.success) {
+          toast.error(result.error || 'Failed to refresh');
+          return;
+        }
+
+        if (result.added) {
+          toast.success(`You've been added! Balance: ${(result.balance as number).toLocaleString()} DHB`);
+        } else {
+          toast.info(result.reason || `Balance too low (${(result.balance as number).toLocaleString()} DHB)`);
+        }
+
+        // Refetch leaderboard data
+        queryClient.invalidateQueries({ queryKey: ['leaderboard'] });
+
+        // Start cooldown
+        setRefreshCooldown(true);
+        setTimeout(() => setRefreshCooldown(false), 30_000);
+      } catch (err) {
+        console.error('Refresh failed:', err);
+        toast.error('Something went wrong');
+      } finally {
+        setIsRefreshing(false);
+      }
+    });
+  }, [refreshCooldown, isRefreshing, requireAuth, walletAddress, queryClient]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['leaderboard', apiSortMode, timePeriod],
@@ -331,15 +384,26 @@ export default function LeaderboardPage() {
           </button>
         </div>
 
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-          <Input
-            placeholder="Search users..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
-          />
+        {/* Search + Refresh */}
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <Input
+              placeholder="Search users..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleRefreshMe}
+            disabled={isRefreshing || refreshCooldown}
+            className="flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+            title={refreshCooldown ? 'Cooldown active (30s)' : 'Refresh my position'}
+          >
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          </button>
         </div>
       </div>
 
@@ -451,6 +515,8 @@ export default function LeaderboardPage() {
           </div>
         )}
       </div>
+
+      <AuthPrompt isOpen={isAuthOpen} onClose={closeAuth} />
     </div>
   );
 }

@@ -98,3 +98,6 @@ verify_jwt = false
 
 [functions.client-logs]
 verify_jwt = false
+
+[functions.refresh-leaderboard-user]
+verify_jwt = false
