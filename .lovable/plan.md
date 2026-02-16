@@ -1,53 +1,47 @@
 
-# Wire Translation Keys Into All Settings Sub-Components
+
+# Fix: Follow Suggestions Empty for Users Following Many People
 
 ## Problem
-Translation keys exist in all 23 locale JSON files, but every settings sub-component uses hardcoded English strings instead of `t()` calls. The `useTranslation()` hook is only used in the parent `SettingsPage` -- none of the child components (`AppearanceSettings`, `NotificationSettings`, `PrivacySettings`, `ContentSettings`, `MessagesSettings`, `AssetsSettings`, `ProfileSettings`) call it.
+The follow suggestions system fetches only 2 pages of NFTs (200 items) from the `searchNFTs` API. After extracting unique creators (~100-150 users), it filters out the 170 people you already follow, your own account, and users without avatars. This leaves zero or near-zero suggestions.
 
 ## Solution
-Add `const { t } = useTranslation();` to each sub-component and replace every hardcoded string with the corresponding `t('settings.xxx')` call.
+Automatically fetch additional batches when the filtered suggestion pool is too small after the initial load. This ensures users who follow many people still see a healthy list of suggestions.
 
-## File Changed
-**`src/pages/app/SettingsPage.tsx`** -- single file, ~200+ string replacements across 7 sub-components.
+### Changes in `src/components/app/WhoToFollow.tsx`
+- After the initial data loads, check if filtered `suggestions.length` is below a minimum threshold (e.g., 5)
+- If so, automatically trigger `fetchNextPage()` up to a reasonable limit (e.g., 5 total batches / 1000 NFTs)
+- Add a `useEffect` that watches `suggestions.length` and `data?.pages?.length` to auto-fetch more when needed
 
-### Component-by-component changes:
+### Changes in `src/components/app/mobile/MobileWhoToFollowCarousel.tsx`
+- Apply the same auto-fetch logic so the mobile carousel also backfills when suggestions are sparse
 
-**1. ProfileSettings** (lines 173-568)
-- Add `useTranslation()` hook
-- Replace: "Profile Settings", "Save Changes", "Profile Picture", "Click the camera icon to upload", "Display Name", "Enter your display name", "Username", "username", "3-30 characters...", "Bio", "Tell us about yourself...", "Social Links"
-- Replace toast messages: "Profile updated successfully", "Failed to load profile data", "Image must be less than 5MB/10MB", "Failed to update profile"
+## Technical Detail
 
-**2. NotificationSettings** (lines 571-639)
-- Add `useTranslation()` hook
-- Replace: "Notification Settings", "General", "Email Notifications", "Receive notifications via email", "Push Notifications", "Receive push notifications in browser", "Activity", "Likes", "Comments", "New Followers", "Direct Messages", "Quiet Hours", "Enable Quiet Hours" and all descriptions
+Both components will get a new `useEffect` like:
 
-**3. PrivacySettings** (lines 642-879)
-- Add `useTranslation()` hook
-- Replace: "Privacy & Security", "Profile Visibility", "Private Account", "Public Profile", "Follow Visibility", "Show Activity Status", "Search Engine Indexing", "Post Visibility", "Default Post Visibility", "Messaging", "Who can message you", "Account Security", "Two-Factor Authentication", "Enable", "Your Data", "Extract Data", "Download", "Geo-Blocking", all descriptions, all drawer option labels/descriptions, toast messages, and the note text
+```typescript
+// Auto-fetch more batches if suggestions are sparse after filtering
+useEffect(() => {
+  const pagesLoaded = data?.pages?.length ?? 0;
+  const MAX_AUTO_BATCHES = 5; // up to 1000 NFTs total
+  const MIN_SUGGESTIONS = 5;
 
-**4. AppearanceSettings** (lines 882-1030)
-- Add `useTranslation()` hook
-- Replace: "Appearance", "Theme", "Language", "Choose your preferred language", "Layout", "Feed Layout", "Choose how posts are displayed", "Comfortable"/"Compact" and their descriptions, "Compact Mode", "Media", "Auto-play Videos", "Show Animations", "Coin Placement", "Stick coin to banner", "Apply Changes", "Coming soon" toast
-- Replace theme labels: System, Light, Dark, Cosmic, Christmas, Island, Hacker, Horror
+  if (
+    suggestions.length < MIN_SUGGESTIONS &&
+    hasNextPage &&
+    !isFetchingNextPage &&
+    pagesLoaded < MAX_AUTO_BATCHES &&
+    !isLoadingInitial
+  ) {
+    fetchNextPage();
+  }
+}, [suggestions.length, hasNextPage, isFetchingNextPage, data?.pages?.length, isLoadingInitial]);
+```
 
-**5. ContentSettings** (lines 1049-1133)
-- Add `useTranslation()` hook
-- Replace: "Content Preferences", "Post Settings", "Default Post Visibility", "Auto-save Drafts", "Content Filtering", "Filter Explicit Content", "Show Sensitive Content", "Enable Content Warnings", "Feed Preferences", "Show Reposts", "Save Preferences" and all descriptions
+This ensures the system keeps pulling more creator data until it finds enough unfollowed users to display, capped at 5 batches to avoid excessive API calls.
 
-**6. MessagesSettings** (lines 1308-1416)
-- Add `useTranslation()` hook
-- Replace: "Message Settings", "Direct Message Access", "Allow Direct Messages", "Control who can send you DMs", all DM option labels/descriptions, help text, "Preferences", "Message Notifications", "Read Receipts", "End-to-End Encryption", "Filter Message Requests", "Storage", "Storage Used", storage amounts, "Quick Actions", "Archived Chats", "Export Chats"
+## Files Modified
+- `src/components/app/WhoToFollow.tsx` -- add auto-fetch effect
+- `src/components/app/mobile/MobileWhoToFollowCarousel.tsx` -- add auto-fetch effect
 
-**7. AssetsSettings** (lines 1200-1306)
-- Add `useTranslation()` hook
-- Replace: "Assets", "Not connected", "Manage", "Fractions You Own", "You don't own any fractions yet", "Usernames You Own", "You don't own any usernames yet", "Offers You've Made", "You haven't made any offers yet", "Wallet address copied!" toast
-
-**8. GeoBlockingSelector** (lines 1473-1599)
-- Add `useTranslation()` hook
-- Replace: "Select countries to block...", "country blocked"/"countries blocked", "Block Countries", "Search countries...", "No countries found"
-
-**9. LanguageSelector** (line 1033-1047)
-- Add `useTranslation()` hook
-- Replace drawer title "Language" with `t('settings.language')`
-
-No new translation keys needed -- all keys already exist in all 23 locale files.
