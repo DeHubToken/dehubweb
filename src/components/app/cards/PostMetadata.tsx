@@ -12,6 +12,8 @@ import { cn } from '@/lib/utils';
 interface PostMetadataProps {
   timestamp?: string;
   viewCount?: string | number;
+  /** Whether this is an ad/sponsored post */
+  isAd?: boolean;
   /** On-demand translation control */
   translateControl?: {
     isTranslated: boolean;
@@ -22,7 +24,7 @@ interface PostMetadataProps {
   };
 }
 
-export function PostMetadata({ timestamp, viewCount, translateControl }: PostMetadataProps) {
+export function PostMetadata({ timestamp, viewCount, isAd, translateControl }: PostMetadataProps) {
   // Format timestamp - if it's an ISO string, convert to relative time
   const formattedTimestamp = timestamp ? (
     timestamp.includes('T') || timestamp.includes('-') 
@@ -72,10 +74,16 @@ export function PostMetadata({ timestamp, viewCount, translateControl }: PostMet
     );
   };
 
-  if (!hasMetadata && !translateControl) return null;
+  if (!hasMetadata && !translateControl && !isAd) return null;
 
   return (
     <div className="flex items-center gap-2 text-zinc-500 text-xs flex-wrap">
+      {isAd && (
+        <span className="px-1.5 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded">
+          AD
+        </span>
+      )}
+      {isAd && hasMetadata && <span>•</span>}
       {formattedTimestamp && <span>{formattedTimestamp}</span>}
       {formattedTimestamp && viewCount && <span>•</span>}
       {viewCount && (

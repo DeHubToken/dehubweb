@@ -59,16 +59,6 @@ function toVideoItem(nft: any): VideoItem {
   };
 }
 
-/**
- * Ad label overlay component - positioned at bottom left of video thumbnail (opposite to duration)
- */
-function AdLabel() {
-  return (
-    <div className="absolute bottom-[107px] left-[7px] z-10 px-1.5 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded">
-      AD
-    </div>
-  );
-}
 
 export function RelatedVideosFeed({ currentVideoId, scrollContainerRef }: RelatedVideosFeedProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
@@ -177,8 +167,7 @@ export function RelatedVideosFeed({ currentVideoId, scrollContainerRef }: Relate
       {/* Ad Video - First Slot */}
       {adVideo && (
         <div className="relative rounded-xl border border-white/[0.08] bg-transparent p-3">
-          <AdLabel />
-          <VideoCard video={toVideoItem(adVideo)} />
+          <VideoCard video={{ ...toVideoItem(adVideo), isAd: true }} />
         </div>
       )}
 
