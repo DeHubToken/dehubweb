@@ -367,11 +367,13 @@ export async function getMessages(
       .select('*');
 
     if (isWalletConvId && currentUserAddress) {
-      // For wallet-address-based conversations, filter to only messages between
-      // the current user and the other user (prevents mixing conversations)
+      // For wallet-address-based conversations, filter to ONLY messages between
+      // the current user and the other user. Do NOT use conversation_id here because
+      // conversation_id = receiver address, so other users' messages to the same
+      // receiver would also match, causing message mixing across conversations.
       const otherAddress = conversationId.toLowerCase();
       supabaseQuery = supabaseQuery.or(
-        `and(sender_address.eq.${currentUserAddress},receiver_address.eq.${otherAddress}),and(sender_address.eq.${otherAddress},receiver_address.eq.${currentUserAddress}),conversation_id.eq.${conversationId}`
+        `and(sender_address.eq.${currentUserAddress},receiver_address.eq.${otherAddress}),and(sender_address.eq.${otherAddress},receiver_address.eq.${currentUserAddress})`
       );
     } else {
       supabaseQuery = supabaseQuery.eq('conversation_id', conversationId);
