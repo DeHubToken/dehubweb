@@ -185,41 +185,43 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       }
 
       // Step 5: Activate the stream and get the RTMP ingest URL
-      // Call /api/live/start to activate, which returns ingestUrl + playbackUrl
+      // Call /api/live/{streamId}/start to activate
       const LIVEPEER_RTMP_URL = 'rtmp://rtmp.livepeer.com/live';
       let ingestUrl = '';
       let playbackUrl = '';
 
-      // Try startLiveStream first — this activates the stream on the backend
+      // Try startLiveStream — this activates the stream on the backend
       try {
-        logger.info('Activating stream via /api/live/start...', { streamId });
-        const startRes = await startLiveStream({ streamId, title: title.trim() });
+        logger.info('Activating stream session...', { streamId });
+        // Passing streamId ensures the correct route /api/live/{id}/start is used
+        const startRes = await startLiveStream({ 
+          streamId, 
+          title: title.trim() 
+        });
+        
         ingestUrl = startRes?.result?.ingestUrl || '';
         playbackUrl = startRes?.result?.playbackUrl || '';
-        logger.info('Stream activated via /api/live/start', { ingestUrl, playbackUrl, startRes: startRes?.result });
+        logger.info('Stream activated successfully', { ingestUrl, playbackUrl });
       } catch (e) {
-        logger.warn('startLiveStream failed, trying getStreamIngestUrl...', e);
-      }
-
-      // Fallback: try the ingest URL endpoint
-      if (!ingestUrl) {
+        logger.warn('Initial activation attempt failed, checking for ingest URL directly...', e);
+        
+        // Try getting ingest URL if start call failed but session might be active
         try {
-          logger.info('Fetching ingest URL from API...', { streamId });
           const ingestRes = await getStreamIngestUrl(streamId);
           ingestUrl = ingestRes?.result?.ingestUrl || '';
-          logger.info('Ingest URL from getStreamIngestUrl', { ingestUrl });
-        } catch (e) {
-          logger.warn('getStreamIngestUrl failed', e);
+        } catch (innerE) {
+          logger.error('Failed to get ingest URL for stream', { streamId }, innerE);
         }
       }
 
-      // Final fallback: standard Livepeer RTMP URL
+      // Final fallback: standard Livepeer RTMP URL if ingestUrl is still empty
       if (!ingestUrl) {
         ingestUrl = LIVEPEER_RTMP_URL;
-        logger.info('Using standard Livepeer RTMP ingest URL', { ingestUrl });
+        logger.info('Using standard RTMP ingest URL');
       }
 
       const hlsUrl = playbackId ? `https://livepeercdn.studio/hls/${playbackId}/index.m3u8` : '';
+      
       const resultData = {
         streamId,
         streamKey,
@@ -235,14 +237,16 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     } catch (error) {
       toast.dismiss('golive-progress');
       logger.error('Failed to start stream', { title, selectedCategory }, error);
+      
       const errorMsg = error instanceof Error ? error.message : '';
       const isWeb3AuthError = errorMsg.includes('Web3Auth');
-      const isOverflowError = errorMsg.includes('overflow') || errorMsg.includes('INVALID_ARGUMENT');
+      // "overflow" or "INVALID_ARGUMENT" often happen during gas calculation or signing
+      const isSigningError = errorMsg.includes('overflow') || errorMsg.includes('INVALID_ARGUMENT') || errorMsg.includes('user rejected');
 
       if (isWeb3AuthError) {
         toast.error('Web3Auth service is currently slow or timing out. Please check your internet or try refreshing.');
-      } else if (isOverflowError) {
-        toast.error('Transaction signing failed. Please refresh the page and try again.');
+      } else if (isSigningError) {
+        toast.error('Blockchain signing failed. Please check your wallet or refresh the page.');
       } else {
         toast.error(errorMsg || 'Failed to create stream');
       }

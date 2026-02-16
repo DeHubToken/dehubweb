@@ -128,11 +128,26 @@ export async function getStreamIngestUrl(streamId: string): Promise<{ result: { 
 }
 
 export async function startLiveStream(data: StartLiveStreamData = {}): Promise<StartLiveStreamResponse> {
-  return apiCall<StartLiveStreamResponse>("/api/live/start", {
-    method: "POST",
-    body: { ...data },
-    requiresAuth: true,
-  });
+  // If we have a streamId, try the specific resource endpoint first
+  const endpoint = data.streamId ? `/api/live/${data.streamId}/start` : "/api/live/start";
+
+  try {
+    return await apiCall<StartLiveStreamResponse>(endpoint, {
+      method: "POST",
+      body: { ...data },
+      requiresAuth: true,
+    });
+  } catch (error) {
+    // If the ID-based endpoint fails and we haven't tried the generic one, try the generic one
+    if (data.streamId && endpoint !== "/api/live/start") {
+      return apiCall<StartLiveStreamResponse>("/api/live/start", {
+        method: "POST",
+        body: { ...data },
+        requiresAuth: true,
+      });
+    }
+    throw error;
+  }
 }
 
 export async function likeLiveStream(streamId: string): Promise<{ result: boolean }> {

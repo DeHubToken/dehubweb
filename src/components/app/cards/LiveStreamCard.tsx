@@ -138,9 +138,20 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       hls.on(Hls.Events.ERROR, (_, data) => {
         if (data.fatal) {
           logger.error('HLS Fatal Error', { type: data.type, details: data.details }, data);
+          
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-            setError('Stream unavailable');
-            setStreamEnded(true);
+            // Live streams often take 30-60s to warm up on Livepeer.
+            // We retry a few times before giving up.
+            const retryCount = (hls as any)._networkRetryCount || 0;
+            if (retryCount < 10) {
+              (hls as any)._networkRetryCount = retryCount + 1;
+              logger.info(`Network error, retrying in 5s... (Attempt ${retryCount + 1}/10)`);
+              setError('Connecting to stream...');
+              setTimeout(() => hls.startLoad(), 5000);
+            } else {
+              setError('Stream unavailable');
+              setStreamEnded(true);
+            }
           } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
             logger.info('Attempting media error recovery...');
             hls.recoverMediaError();
