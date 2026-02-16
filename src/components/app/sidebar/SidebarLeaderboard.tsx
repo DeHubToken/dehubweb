@@ -155,16 +155,17 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
     );
   }
 
-  if (!isLoading && entries.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-8 text-center">
-        <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
-          <Trophy className="w-6 h-6 text-zinc-500" />
-        </div>
-        <p className="text-zinc-400 text-sm">No leaderboard data yet</p>
-      </div>
-    );
-  }
+  // Build placeholder entries when no data exists for a period
+  const displayEntries = entries.length > 0 ? entries : Array.from({ length: 10 }, (_, i) => ({
+    account: `placeholder-${i}`,
+    total: 0,
+    username: undefined,
+    userDisplayName: undefined,
+    avatarUrl: undefined,
+    sentTips: 0,
+    receivedTips: 0,
+    _isPlaceholder: true,
+  })) as (LeaderboardEntry & { _isPlaceholder?: boolean })[];
 
   return (
     <div className="flex flex-col h-full">
@@ -202,13 +203,14 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
             transition={{ duration: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
             className="overflow-y-auto space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent h-full"
           >
-            {entries.map((entry, index) => {
+            {displayEntries.map((entry, index) => {
               const rank = index + 1;
+              const isPlaceholder = (entry as any)._isPlaceholder === true;
               return (
                 <div
                   key={entry.account}
-                  onClick={() => handleUserClick(entry)}
-                  className="flex items-center gap-3 py-2 px-4 hover:bg-zinc-800/50 transition-colors cursor-pointer"
+                  onClick={() => !isPlaceholder && handleUserClick(entry)}
+                  className={`flex items-center gap-3 py-2 px-4 transition-colors ${isPlaceholder ? 'opacity-40' : 'hover:bg-zinc-800/50 cursor-pointer'}`}
                 >
                   {/* Rank */}
                   <div className="w-7 flex-shrink-0 flex items-center justify-center">
@@ -233,21 +235,25 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
                   </div>
 
                   {/* Avatar */}
-                  <LeaderboardUserAvatar
-                    avatarUrl={getAvatarUrl(entry)}
-                    fallbackSeed={entry.account}
-                    displayName={getDisplayName(entry)}
-                    size="sm"
-                  />
+                  {isPlaceholder ? (
+                    <div className="w-8 h-8 rounded-md bg-zinc-700/50 flex-shrink-0" />
+                  ) : (
+                    <LeaderboardUserAvatar
+                      avatarUrl={getAvatarUrl(entry)}
+                      fallbackSeed={entry.account}
+                      displayName={getDisplayName(entry)}
+                      size="sm"
+                    />
+                  )}
 
                   {/* User Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-0 min-w-0">
                       <span className="relative inline-flex items-baseline shrink min-w-0">
                         <span className="font-semibold text-white text-sm truncate min-w-0">
-                          {getDisplayName(entry)}
+                          {isPlaceholder ? '—' : getDisplayName(entry)}
                         </span>
-                        {(() => {
+                        {!isPlaceholder && (() => {
                           const badgeUrl = getBadgeUrl(entry.badgeBalance ?? badgeBalances[entry.account.toLowerCase()]);
                           return badgeUrl ? (
                             <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />
@@ -256,10 +262,10 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5 text-xs">
-                      <span className="text-zinc-500 truncate">{getHandle(entry)}</span>
+                      <span className="text-zinc-500 truncate">{isPlaceholder ? '—' : getHandle(entry)}</span>
                       <span className="flex-1" />
                       <span className="text-zinc-400 shrink-0 tabular-nums">
-                        {(() => {
+                        {isPlaceholder ? '—' : (() => {
                           const isTimeDelta = activePeriod !== 'All';
                           const displayValue = isTimeDelta && entry.delta !== undefined ? entry.delta : (entry.total ?? 0);
                           const prefix = isTimeDelta && entry.delta !== undefined && entry.delta > 0 ? '+' : '';
