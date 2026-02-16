@@ -11,6 +11,7 @@ import { Interface, parseUnits, formatUnits } from 'ethers';
 import { getWeb3AuthProvider, getOrInitWeb3Auth } from '@/lib/web3auth';
 import { getConnectorClient } from '@wagmi/core';
 import { getAccount } from '@wagmi/core';
+import { sendTransaction, waitForTransactionReceipt } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { CHAIN_CONFIGS, BASE_CHAIN_ID, BNB_CHAIN_ID, initChainRpcUrls } from './dhb-token';
@@ -19,20 +20,20 @@ import { CHAIN_CONFIGS, BASE_CHAIN_ID, BNB_CHAIN_ID, initChainRpcUrls } from './
 type Hex = `0x${string}`;
 
 /**
- * Get the active EIP-1193 provider - Web3Auth (social login) or wagmi (wallet)
+ * Get the active EIP-1193 provider - Web3Auth (social login) or wagmi (wallet).
+ * Returns a flag indicating whether it's Web3Auth so callers can branch logic.
  */
-async function getActiveProvider(chainId?: number): Promise<any> {
+async function getActiveProvider(chainId?: number): Promise<{ provider: any; isWeb3Auth: boolean }> {
   // Try Web3Auth first (social login sessions)
   const web3authProvider = getWeb3AuthProvider();
-  if (web3authProvider) return web3authProvider;
+  if (web3authProvider) return { provider: web3authProvider, isWeb3Auth: true };
 
-  // Fall back to wagmi (external wallet via AppKit)
+  // Fall back to wagmi (external wallet)
   try {
     const client = await getConnectorClient(wagmiConfig, {
       ...(chainId ? { chainId: chainId as any } : {}),
     });
-    // viem WalletClient supports EIP-1193 .request() method
-    return client;
+    return { provider: client, isWeb3Auth: false };
   } catch {
     throw new Error('No wallet connected. Please sign in first.');
   }
@@ -52,7 +53,7 @@ export async function switchChain(chainId: ChainId): Promise<void> {
   // Ensure we have Alchemy RPC URLs before switching
   await initChainRpcUrls();
 
-  const provider = await getActiveProvider(chainId);
+  const { provider } = await getActiveProvider(chainId);
   
   const chainConfig = CHAIN_CONFIGS[chainId];
   if (!chainConfig) {
@@ -257,11 +258,12 @@ export interface AAWriteResult {
  * Generic AA-aware contract write helper
  * 
  * For smart accounts (Web3Auth social login):
- * - Encodes calldata and sends via eth_sendTransaction
+ * - Encodes calldata and sends via eth_sendTransaction through Web3Auth provider
  * - The AA provider handles bundler/paymaster internally
  * 
- * For EOA wallets:
- * - Uses standard eth_sendTransaction
+ * For EOA wallets (wagmi/external):
+ * - Uses wagmi's sendTransaction to properly route through the wallet connector
+ * - Raw provider.request would hit the HTTP transport (public RPC) which doesn't hold keys
  */
 export async function writeContractAA(
   contractAddress: string,
@@ -275,15 +277,16 @@ export async function writeContractAA(
     chainId?: number;
   }
 ): Promise<AAWriteResult> {
-  const provider = await getActiveProvider(options?.chainId);
+  const { provider, isWeb3Auth } = await getActiveProvider(options?.chainId);
   const context = options?.context || 'send transaction';
   
   // Encode the function call
   const data = contractInterface.encodeFunctionData(functionName, args) as Hex;
   const fromAddress = await getWalletAddress();
   
-  // Estimate gas
+  // Estimate gas (use provider for both paths - reads work fine against public RPC)
   let gasLimit: Hex | undefined;
+  let gasLimitBigInt: bigint | undefined;
   try {
     const gasEstimate = await provider.request({
       method: 'eth_estimateGas',
@@ -296,37 +299,51 @@ export async function writeContractAA(
     }) as string;
     
     const estimateBigInt = BigInt(gasEstimate);
-    gasLimit = toHex(applyGasMargin(estimateBigInt));
+    gasLimitBigInt = applyGasMargin(estimateBigInt);
+    gasLimit = toHex(gasLimitBigInt);
   } catch (estimateError) {
     console.warn('[AA] Gas estimation failed, using default:', estimateError);
-    // Use a conservative default gas limit
-    gasLimit = toHex(BigInt(500_000));
-  }
-  
-  // Build transaction params
-  const txParams: Record<string, unknown> = {
-    from: fromAddress,
-    to: contractAddress,
-    data,
-    gas: gasLimit,
-  };
-  
-  if (options?.value && BigInt(options.value) > BigInt(0)) {
-    txParams.value = toHex(options.value);
+    gasLimitBigInt = BigInt(500_000);
+    gasLimit = toHex(gasLimitBigInt);
   }
   
   console.log(`[AA] Sending transaction to ${contractAddress}:`, {
     function: functionName,
     gasLimit,
     hasValue: !!options?.value,
+    isWeb3Auth,
   });
   
   try {
-    // Send transaction via provider - works for both AA and EOA
-    const txHash = await provider.request({
-      method: 'eth_sendTransaction',
-      params: [txParams],
-    }) as string;
+    let txHash: string;
+
+    if (isWeb3Auth) {
+      // Web3Auth EIP-1193 provider -- raw request works because it handles signing internally
+      const txParams: Record<string, unknown> = {
+        from: fromAddress,
+        to: contractAddress,
+        data,
+        gas: gasLimit,
+      };
+      if (options?.value && BigInt(options.value) > BigInt(0)) {
+        txParams.value = toHex(options.value);
+      }
+
+      txHash = await provider.request({
+        method: 'eth_sendTransaction',
+        params: [txParams],
+      }) as string;
+    } else {
+      // External wallet via wagmi -- use wagmi's sendTransaction
+      // which properly routes through the wallet connector for signing
+      txHash = await sendTransaction(wagmiConfig, {
+        to: contractAddress as `0x${string}`,
+        data: data as `0x${string}`,
+        gas: gasLimitBigInt,
+        value: options?.value ? BigInt(options.value) : undefined,
+        ...(options?.chainId ? { chainId: options.chainId as any } : {}),
+      });
+    }
     
     console.log('[AA] Transaction submitted:', txHash);
     
@@ -334,7 +351,25 @@ export async function writeContractAA(
     return {
       hash: txHash,
       wait: async (confirmations = 1) => {
-        // Poll for receipt
+        if (!isWeb3Auth) {
+          // For external wallets, use wagmi's waitForTransactionReceipt
+          try {
+            const receipt = await waitForTransactionReceipt(wagmiConfig, {
+              hash: txHash as `0x${string}`,
+              confirmations,
+              ...(options?.chainId ? { chainId: options.chainId as any } : {}),
+            });
+            return {
+              status: receipt.status === 'success' ? 1 : 0,
+              hash: receipt.transactionHash,
+            };
+          } catch (receiptError) {
+            console.error('[AA] waitForTransactionReceipt failed:', receiptError);
+            throw new Error('Transaction not confirmed within timeout');
+          }
+        }
+
+        // Web3Auth: poll via provider
         const maxAttempts = 60;
         const pollInterval = 2000;
         
@@ -377,7 +412,7 @@ export async function readContract<T>(
   functionName: string,
   args: unknown[] = []
 ): Promise<T> {
-  const provider = await getActiveProvider();
+  const { provider } = await getActiveProvider();
   const data = contractInterface.encodeFunctionData(functionName, args);
   
   const result = await provider.request({
