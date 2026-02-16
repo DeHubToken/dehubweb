@@ -135,6 +135,23 @@ export function WhoToFollow() {
     });
   }, [allUsers, walletAddress, followingSet, followedUsers]);
 
+  // Auto-fetch more batches if suggestions are sparse after filtering
+  useEffect(() => {
+    const pagesLoaded = data?.pages?.length ?? 0;
+    const MAX_AUTO_BATCHES = 5;
+    const MIN_SUGGESTIONS = 5;
+
+    if (
+      suggestions.length < MIN_SUGGESTIONS &&
+      hasNextPage &&
+      !isFetchingNextPage &&
+      pagesLoaded < MAX_AUTO_BATCHES &&
+      !isLoadingInitial
+    ) {
+      fetchNextPage();
+    }
+  }, [suggestions.length, hasNextPage, isFetchingNextPage, data?.pages?.length, isLoadingInitial, fetchNextPage]);
+
   const visibleSuggestions = suggestions.slice(0, visibleCount);
   const hasMoreToShow = visibleCount < suggestions.length || hasNextPage;
 
