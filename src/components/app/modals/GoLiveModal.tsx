@@ -107,74 +107,46 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       const minterAddress = await getWeb3AuthSigner();
       logger.info('Minter address obtained', { minterAddress });
 
-      // Step 1: Create (Mint) the stream post
-      const mintResponse = await mintPost({
-        name: title.trim(),
+      // Step 1: Create the actual Live Stream on the streaming server
+      // Calling startLiveStream without a streamId tells the server to create a NEW one
+      // and return the MongoDB ObjectId we need for the key/ingest endpoints.
+      logger.info('Creating new stream session...', { title });
+      
+      const startResponse = await startLiveStream({
+        title: title.trim(),
         description: description.trim(),
-        postType: 'live',
-        chainId: BASE_CHAIN_ID,
-        category: selectedCategoriesArray.length > 0 ? selectedCategoriesArray : ['General'],
-        minterAddress,
-        streamInfo: {
-          isLockContent: false,
-          isPayPerView: false,
-          isAddBounty: false,
-        },
+        category: selectedCategoriesArray.length > 0 ? selectedCategoriesArray[0] : 'General',
       });
 
-      const streamId = mintResponse.createdTokenId;
-      logger.info('Stream minted successfully (via mintPost)', { streamId });
-
-      if (!streamId) {
-        throw new Error('Failed to create stream - no token ID returned');
-      }
-
-      // Step 2: Activate the stream (Optional but recommended by DeHub common patterns)
-      logger.info('Activating stream...', { streamId });
-      try {
-        await startLiveStream({ streamId });
-        logger.info('Stream activation call sent (POST /api/live/start)');
-      } catch (err) {
-        // We log it but continue, as some environments might not need this explicitly
-        logger.warn('Stream activation call failed or not found, continuing to fetch keys', err);
-      }
-
-      // Step 3: Fetch stream credentials (RTMP info) with Retries
-      // Sometimes the server needs a few seconds to initialize RTMP after minting.
-      logger.info('Fetching stream credentials...', { streamId });
+      const resultData = startResponse.result;
       
-      let keyRes = null;
-      let ingestRes = null;
-      let retryCount = 0;
-      const MAX_RETRIES = 3;
-
-      while (retryCount < MAX_RETRIES) {
-        try {
-          [keyRes, ingestRes] = await Promise.all([
-            getStreamKey(streamId),
-            getStreamIngestUrl(streamId),
-          ]);
-          
-          if (keyRes?.result?.streamKey && ingestRes?.result?.ingestUrl) {
-            break; // Success!
-          }
-        } catch (err) {
-          retryCount++;
-          logger.warn(`Fetch credentials attempt ${retryCount} failed. Retrying...`, err);
-          if (retryCount >= MAX_RETRIES) throw err;
-          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds before retry
-        }
+      if (!resultData?.streamId || !resultData?.streamKey) {
+        throw new Error('Failed to create stream session - no credentials returned');
       }
 
-      const resultData: StartLiveStreamResponse['result'] = {
-        streamId,
-        streamKey: keyRes?.result?.streamKey || '',
-        ingestUrl: ingestRes?.result?.ingestUrl || '',
-        playbackUrl: `https://dehub.io/app/post/${streamId}`,
-      };
+      const mongoStreamId = resultData.streamId;
+      logger.info('Streaming session created (MongoDB ID)', { mongoStreamId });
 
-      if (!resultData.streamKey) {
-        throw new Error('Server returned empty stream key. Please try again in a moment.');
+      // Step 2: (Optional/Parallel) Mint the NFT/Post so it shows up in the feed
+      // We do this so the post exists on-chain and in the social feed
+      try {
+        await mintPost({
+          name: title.trim(),
+          description: description.trim(),
+          postType: 'live',
+          chainId: BASE_CHAIN_ID,
+          category: selectedCategoriesArray.length > 0 ? selectedCategoriesArray : ['General'],
+          minterAddress,
+          streamInfo: {
+            isLockContent: false,
+            isPayPerView: false,
+            isAddBounty: false,
+          },
+        });
+        logger.info('NFT Post minted for the stream');
+      } catch (mintErr) {
+        // We log mint error but don't block the stream, as the user primarily needs the keys
+        logger.warn('Minting post failed, but stream is created', mintErr);
       }
 
       setStreamData(resultData);
