@@ -1,64 +1,74 @@
 
-
-# Fix: "Unknown Account" Error for External Wallet Posts
+# Fix: "Unknown Account" Error for External Wallet Transactions
 
 ## Problem
-After fixing the chain switching, Bill's post now fails with `"unknown account"` (error code `-32000`). This happens because `getConnectorClient(wagmiConfig)` is called **without a `chainId` parameter**, so wagmi may return a client bound to the wrong chain or a stale transport. The RPC node then rejects `eth_sendTransaction` because it doesn't hold the private key for the `from` address.
+The `writeContractAA` function sends transactions using raw `provider.request({ method: 'eth_sendTransaction' })` on the viem `WalletClient` returned by `getConnectorClient`. For external wallets (WalletConnect/injected), this routes the request through the **HTTP transport** (public RPC node) instead of the wallet connector. The public RPC doesn't hold the user's private key, so it returns "unknown account."
 
-## Root Cause
-In `getActiveProvider()` (line 31), the call:
-```
-const client = await getConnectorClient(wagmiConfig);
-```
-...doesn't specify which chain to use. Wagmi docs confirm that `getConnectorClient` accepts a `chainId` option to bind the returned client to the correct chain. Without it, the client may use the default chain's transport (public RPC) instead of routing through the wallet connector on the target chain.
+This works fine for Web3Auth because its provider is a proper EIP-1193 provider that handles signing internally. But the viem WalletClient from wagmi requires using wagmi's `sendTransaction` action to properly route through the wallet connector.
 
 ## Solution
-Thread the target `chainId` through the provider acquisition so wagmi returns a properly-configured client.
+Split the transaction sending path in `writeContractAA`:
+1. **Web3Auth provider** (social login): Keep using raw `provider.request({ method: 'eth_sendTransaction' })` -- this works correctly
+2. **External wallets** (wagmi): Use `sendTransaction` from `@wagmi/core`, which properly routes through the wallet connector
 
 ## Technical Details
 
 ### File: `src/lib/contracts/aa-utils.ts`
 
-**Change 1** - Update `getActiveProvider` to accept an optional `chainId`:
+**Change 1** -- Update `getActiveProvider` to also return a flag indicating the provider type:
+
 ```typescript
-async function getActiveProvider(chainId?: number): Promise<any> {
+async function getActiveProvider(chainId?: number): Promise<{ provider: any; isWeb3Auth: boolean }> {
   const web3authProvider = getWeb3AuthProvider();
-  if (web3authProvider) return web3authProvider;
+  if (web3authProvider) return { provider: web3authProvider, isWeb3Auth: true };
 
   try {
     const client = await getConnectorClient(wagmiConfig, {
-      ...(chainId ? { chainId } : {}),
+      ...(chainId ? { chainId: chainId as any } : {}),
     });
-    return client;
+    return { provider: client, isWeb3Auth: false };
   } catch {
     throw new Error('No wallet connected. Please sign in first.');
   }
 }
 ```
 
-**Change 2** - Update `writeContractAA` to accept and pass `chainId`:
-- Add `chainId?: number` to the options parameter
-- Pass it to `getActiveProvider(options?.chainId)`
+**Change 2** -- In `writeContractAA`, branch on provider type:
 
-**Change 3** - Update `switchChain` to pass `chainId` to `getActiveProvider`:
 ```typescript
-const provider = await getActiveProvider(chainId);
+import { sendTransaction } from '@wagmi/core';
+
+// Inside writeContractAA, replace the eth_sendTransaction call:
+
+let txHash: string;
+
+if (isWeb3Auth) {
+  // Web3Auth EIP-1193 provider -- raw request works
+  txHash = await provider.request({
+    method: 'eth_sendTransaction',
+    params: [txParams],
+  }) as string;
+} else {
+  // External wallet via wagmi -- use wagmi's sendTransaction
+  // which properly routes through the wallet connector
+  txHash = await sendTransaction(wagmiConfig, {
+    to: contractAddress as `0x${string}`,
+    data: data,
+    gas: gasLimit ? BigInt(gasLimit) : undefined,
+    value: options?.value ? BigInt(options.value) : undefined,
+    ...(options?.chainId ? { chainId: options.chainId as any } : {}),
+  });
+}
 ```
 
-**Change 4** - Update callers in `stream-collection.ts` and `stream-controller.ts`:
-- Pass `chainId` in the options when calling `writeContractAA`:
-```typescript
-const result = await writeContractAA(
-  chainConfig.streamCollection,
-  streamCollectionInterface,
-  'mint',
-  [...args],
-  { context: 'mint NFT', chainId }
-);
-```
+**Change 3** -- For the receipt polling, similarly branch:
+
+- Web3Auth: keep using `provider.request({ method: 'eth_getTransactionReceipt' })`
+- External wallets: use `waitForTransactionReceipt` from `@wagmi/core` (or keep raw polling against a public provider, which is fine for reads)
+
+**Change 4** -- Update all other callers of `getActiveProvider` (`switchChain`, `readContract`, gas estimation) to destructure the new return type.
 
 ### What This Fixes
-- External wallets (WalletConnect) get a properly chain-bound connector client
-- The `eth_sendTransaction` call routes through the wallet app instead of hitting a public RPC
-- No impact on Web3Auth/smart wallet users (they use Web3Auth provider, not wagmi)
-
+- External wallet transactions (WalletConnect, MetaMask, etc.) will properly route `eth_sendTransaction` through the wallet for signing
+- Web3Auth/smart wallet users are completely unaffected (same code path as before)
+- The "unknown account" error is eliminated because the transaction is no longer sent to a public RPC node that doesn't hold keys
