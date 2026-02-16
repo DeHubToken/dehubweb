@@ -12,6 +12,7 @@ import {
   Play, Volume2, VolumeX, Maximize, Radio,
   Heart, Gift, StopCircle, Activity, Loader2
 } from 'lucide-react';
+import { useTranslation as useI18n } from 'react-i18next';
 import Hls from 'hls.js';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
@@ -47,6 +48,7 @@ interface LiveStreamCardProps {
 
 export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const [showComments, setShowComments] = useState(false);
+  const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showActivityLog, setShowActivityLog] = useState(false);
@@ -337,22 +339,22 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
                 onClick={() => setShowActivityLog(true)}
                 className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
               >
-                <Activity className="w-4 h-4" /> Activity Log
+                <Activity className="w-4 h-4" /> {t('postOptions.activityLog')}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Bell className="w-4 h-4" /> Notify When Live
+                <Bell className="w-4 h-4" /> {t('postOptions.notifyWhenLive')}
               </DropdownMenuItem>
               <DropdownMenuItem 
                 onClick={() => setShowReportModal(true)}
                 className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
               >
-                <Flag className="w-4 h-4" /> Report
+                <Flag className="w-4 h-4" /> {t('postOptions.report')}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Ban className="w-4 h-4" /> Block Creator
+                <Ban className="w-4 h-4" /> {t('postOptions.blockCreator')}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <EyeOff className="w-4 h-4" /> See Less Like This
+                <EyeOff className="w-4 h-4" /> {t('postOptions.seeLessLikeThis')}
               </DropdownMenuItem>
               {/* End stream - only for the stream creator while live */}
               {!streamEnded && isAuthenticated && isStreamOwner && (
@@ -362,7 +364,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
                   className="text-red-400 hover:bg-zinc-700 cursor-pointer gap-2"
                 >
                   {isEnding ? <Loader2 className="w-4 h-4 animate-spin" /> : <StopCircle className="w-4 h-4" />}
-                  End Stream
+                  {t('postOptions.endStream')}
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>

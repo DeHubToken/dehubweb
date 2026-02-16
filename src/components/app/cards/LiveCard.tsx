@@ -13,6 +13,7 @@ import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell } from 'lucide-react';
+import { useTranslation as useI18n } from 'react-i18next';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
@@ -36,6 +37,7 @@ interface LiveCardProps {
 
 export function LiveCard({ stream }: LiveCardProps) {
   const [showComments, setShowComments] = useState(false);
+  const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
@@ -99,19 +101,19 @@ export function LiveCard({ stream }: LiveCardProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Bell className="w-4 h-4" /> Notify When Live
+                <Bell className="w-4 h-4" /> {t('postOptions.notifyWhenLive')}
               </DropdownMenuItem>
               <DropdownMenuItem 
                 onClick={() => setShowReportModal(true)}
                 className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
               >
-                <Flag className="w-4 h-4" /> Report
+                <Flag className="w-4 h-4" /> {t('postOptions.report')}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Ban className="w-4 h-4" /> Block Creator
+                <Ban className="w-4 h-4" /> {t('postOptions.blockCreator')}
               </DropdownMenuItem>
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <EyeOff className="w-4 h-4" /> See Less Like This
+                <EyeOff className="w-4 h-4" /> {t('postOptions.seeLessLikeThis')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -15,6 +15,7 @@ import { useParams, useNavigationType, useNavigate, useLocation } from 'react-ro
 import { useQuery } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef } from 'react';
 import { AlertCircle, Clock, ArrowLeft, Sparkles, MoreVertical, ListPlus, Flag, Download, Link2 } from 'lucide-react';
+import { useTranslation as useI18n } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -432,6 +433,7 @@ function DesktopCreatorInfo({
 
 export default function SinglePostPage() {
   const { postId, tokenId } = useParams<{ postId?: string; tokenId?: string }>();
+  const { t } = useI18n();
   const id = postId || tokenId;
   const navigationType = useNavigationType();
   const location = useLocation();
@@ -628,17 +630,17 @@ export default function SinglePostPage() {
         <Drawer open={showDesktopOptionsDrawer} onOpenChange={setShowDesktopOptionsDrawer}>
           <DrawerContent glass className="px-4 pb-6">
             <DrawerHeader className="pb-2">
-              <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
+              <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-col gap-1">
               <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> Send Tip
+                <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> {t('postOptions.sendTip')}
               </button>
               <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                <ListPlus className="w-5 h-5" /> Queue
+                <ListPlus className="w-5 h-5" /> {t('postOptions.queue')}
               </button>
               <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                <Clock className="w-5 h-5" /> Watch List
+                <Clock className="w-5 h-5" /> {t('postOptions.watchList')}
               </button>
               <button 
                 onClick={() => {
@@ -647,21 +649,21 @@ export default function SinglePostPage() {
                 }}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
               >
-                <Flag className="w-5 h-5" /> Report
+                <Flag className="w-5 h-5" /> {t('postOptions.report')}
               </button>
               <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                <Download className="w-5 h-5" /> Download
+                <Download className="w-5 h-5" /> {t('postOptions.download')}
               </button>
               <button 
                 onClick={() => {
                   const url = `${window.location.origin}/app/post/${id}`;
                   navigator.clipboard.writeText(url);
-                  toast.success('Link copied to clipboard');
+                  toast.success(t('postOptions.linkCopied'));
                   setShowDesktopOptionsDrawer(false);
                 }}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
               >
-                <Link2 className="w-5 h-5" /> Copy Link
+                <Link2 className="w-5 h-5" /> {t('postOptions.copyLink')}
               </button>
             </div>
           </DrawerContent>

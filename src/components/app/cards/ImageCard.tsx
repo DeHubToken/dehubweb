@@ -22,6 +22,7 @@ import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
 import { PostMetadata } from './PostMetadata';
 import { useTranslation, LANGUAGE_NAMES } from '../TranslatableText';
+import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
@@ -293,6 +294,7 @@ function FeedDescription({
 
 export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [showComments, setShowComments] = useState(false);
+  const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
@@ -410,39 +412,39 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
             </DrawerTrigger>
             <DrawerContent glass className="px-4 pb-6">
               <DrawerHeader className="pb-2">
-                <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
+                <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
               </DrawerHeader>
               <div className="flex flex-col gap-1">
                 <button
                   onClick={handleTranslateImage}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                 >
-                  <Languages className="w-5 h-5" /> Translate Image
+                  <Languages className="w-5 h-5" /> {t('postOptions.translateImage')}
                 </button>
                 <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                  <Download className="w-5 h-5" /> Download
+                  <Download className="w-5 h-5" /> {t('postOptions.download')}
                 </button>
                 <button
                   onClick={() => setShowReportModal(true)}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                 >
-                  <Flag className="w-5 h-5" /> Report
+                  <Flag className="w-5 h-5" /> {t('postOptions.report')}
                 </button>
                 <button
                   onClick={() => {
                     const url = `${window.location.origin}/app/post/${post.id}`;
                     navigator.clipboard.writeText(url);
-                    toast.success('Post URL copied to clipboard');
+                    toast.success(t('postOptions.postUrlCopied'));
                   }}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                 >
-                  <Link2 className="w-5 h-5" /> Copy Post URL
+                  <Link2 className="w-5 h-5" /> {t('postOptions.copyPostUrl')}
                 </button>
                 <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                  <Ban className="w-5 h-5" /> Block Creator
+                  <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
                 </button>
                 <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                  <EyeOff className="w-5 h-5" /> See Less Like This
+                  <EyeOff className="w-5 h-5" /> {t('postOptions.seeLessLikeThis')}
                 </button>
                 {isOwnPost && (
                   <>
@@ -451,13 +453,13 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                       onClick={() => setShowEditModal(true)}
                       className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                     >
-                      <Pencil className="w-5 h-5" /> Edit Post
+                      <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
                     </button>
                     <button
                       onClick={() => setShowDeleteModal(true)}
                       className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-white/10 rounded-xl transition-colors text-left"
                     >
-                      <Trash2 className="w-5 h-5" /> Delete Post
+                      <Trash2 className="w-5 h-5" /> {t('postOptions.deletePost')}
                     </button>
                     <button
                       onClick={async () => {
