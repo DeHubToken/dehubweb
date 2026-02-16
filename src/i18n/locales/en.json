@@ -321,7 +321,9 @@
     "minimumDhb": "Minimum DHB Required",
     "minimumAmount": "Minimum amount",
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "paying": "Paying...",
+    "payAmount": "Pay {{amount}} {{currency}}"
   },
   "assistant": {
     "title": "AI Assistant",
