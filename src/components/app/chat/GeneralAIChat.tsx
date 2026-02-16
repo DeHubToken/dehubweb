@@ -18,6 +18,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { MarkdownText } from '@/lib/markdown';
 import { PostModal } from '@/features/post';
 import ftvLogoSymbol from '@/assets/ftv-logo-symbol.png';
@@ -93,6 +94,7 @@ interface GeneralAIChatProps {
 }
 
 export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
+  const { walletAddress } = useAuth();
   const isMobile = useIsMobile();
   const { t } = useI18n();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -415,6 +417,11 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
       </div>
     </div>
   );
+
+  // Don't render if not authenticated
+  if (!walletAddress) {
+    return null;
+  }
 
   if (isMobile) {
     return (
