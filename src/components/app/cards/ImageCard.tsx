@@ -309,7 +309,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { walletAddress } = useAuth();
+  const { walletAddress, openLoginModal } = useAuth();
   const isOwnPost = walletAddress && post.creatorId?.toLowerCase() === walletAddress.toLowerCase();
   
   // PPV/Bounty/Locked status
@@ -398,7 +398,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         />
         <div className="flex items-center gap-1">
           <button
-            onClick={() => setShowAIChat(true)}
+            onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
             className="text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all"
             aria-label="Ask AI about this post"
           >
@@ -406,7 +406,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           </button>
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
+              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); openLoginModal(); } }} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
                 <MoreVertical className="w-5 h-5" />
               </button>
             </DrawerTrigger>

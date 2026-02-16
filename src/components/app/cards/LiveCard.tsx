@@ -42,7 +42,7 @@ export function LiveCard({ stream }: LiveCardProps) {
   const [showReportModal, setShowReportModal] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
   const { like, isLiking } = useStreamActions();
 
   // Navigate to single post page when clicking non-interactive areas
@@ -85,7 +85,7 @@ export function LiveCard({ stream }: LiveCardProps) {
         />
         <div className="flex items-center gap-1">
           <motion.button
-            onClick={() => setShowAIChat(true)}
+            onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
             className="text-zinc-400 hover:text-white transition-colors"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
@@ -95,7 +95,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           </motion.button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
+              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
                 <MoreVertical className="w-5 h-5" />
               </button>
             </DropdownMenuTrigger>
