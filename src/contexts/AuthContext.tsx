@@ -31,6 +31,7 @@ import {
   hasRedirectResult,
   isSocialLoginConnected,
   setLastConnectedConnector,
+  getEoaPrivateKey,
   AUTH_CONNECTION,
   WALLET_CONNECTORS,
   getOrInitWeb3Auth,
@@ -512,8 +513,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    console.log('[Auth] [REDIRECT] Signing message with personal_sign...');
+    // Redirect flow is always social login — try EOA private key approach first
     let signature: string;
+    console.log('[Auth] [REDIRECT] Attempting EOA private key signing...');
+    try {
+      const privateKey = await getEoaPrivateKey();
+      const { Wallet } = await import('ethers');
+      const wallet = new Wallet(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
+      const eoaAddress = wallet.address.toLowerCase();
+      console.log('[Auth] [REDIRECT] EOA address from private key:', eoaAddress);
+
+      const eoaMessage = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${eoaAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+
+      signature = await wallet.signMessage(eoaMessage);
+      console.log('[Auth] [REDIRECT] Direct ECDSA signature, length:', signature?.length);
+
+      const BASE_CHAIN_ID = 8453;
+      const authResponse = await authenticateWallet(
+        eoaAddress,
+        signature,
+        timestamp,
+        BASE_CHAIN_ID
+      );
+
+      const normalizedUser = normalizeUser(authResponse.user, eoaAddress);
+
+      localStorage.setItem('dehub_wallet', eoaAddress);
+      localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
+
+      setWalletAddress(eoaAddress);
+      setUser(normalizedUser);
+
+      if (!normalizedUser.username) {
+        setRequiresUsername(true);
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+      queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+      queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+
+      toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
+      console.log('[Auth] ✓ DeHub authentication complete (redirect, EOA key)');
+      return;
+    } catch (pkError) {
+      console.warn('[Auth] [REDIRECT] EOA private key failed, falling back to personal_sign:', pkError);
+    }
+
+    // Fallback: personal_sign
+    console.log('[Auth] [REDIRECT] Signing message with personal_sign...');
     try {
       signature = await signingProvider.request({
         method: 'personal_sign',
@@ -600,9 +647,64 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    console.log('[Auth] Signing message with personal_sign...');
-    
     let signature: string;
+
+    if (isSocial) {
+      // Social login: AA provider wraps personal_sign with ERC-6492 which the backend
+      // can't verify. Instead, export the raw EOA private key from a temporary non-AA
+      // Web3Auth instance and sign with ethers Wallet for a standard ECDSA signature.
+      console.log('[Auth] Social login — exporting EOA private key for direct signing...');
+      try {
+        const privateKey = await getEoaPrivateKey();
+        const { Wallet } = await import('ethers');
+        const wallet = new Wallet(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
+        const eoaAddress = wallet.address.toLowerCase();
+        console.log('[Auth] EOA address from private key:', eoaAddress);
+
+        // Re-derive message with EOA address (may differ from AA Smart Account address)
+        const eoaMessage = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${eoaAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+
+        signature = await wallet.signMessage(eoaMessage);
+        console.log('[Auth] Direct ECDSA signature, length:', signature?.length);
+
+        // Use EOA address for auth (matches the signature)
+        const BASE_CHAIN_ID = 8453;
+        console.log(`[Auth] Authenticating with backend for EOA address ${eoaAddress}...`);
+
+        const authResponse = await authenticateWallet(
+          eoaAddress,
+          signature,
+          timestamp,
+          BASE_CHAIN_ID
+        );
+
+        const normalizedUser = normalizeUser(authResponse.user, eoaAddress);
+
+        localStorage.setItem('dehub_wallet', eoaAddress);
+        localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
+
+        setWalletAddress(eoaAddress);
+        setUser(normalizedUser);
+
+        if (!normalizedUser.username) {
+          setRequiresUsername(true);
+        }
+
+        queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+        queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+        queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+
+        toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
+        console.log('[Auth] ✓ DeHub authentication complete (EOA private key)');
+        return;
+      } catch (pkError) {
+        console.warn('[Auth] EOA private key approach failed, falling back to personal_sign:', pkError);
+        // Fall through to personal_sign below
+      }
+    }
+
+    // Fallback: use personal_sign (works for external wallets, or if private key export fails)
+    console.log('[Auth] Signing message with personal_sign...');
     try {
       signature = await signingProvider.request({
         method: 'personal_sign',
