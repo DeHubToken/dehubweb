@@ -12,10 +12,10 @@
  */
 
 import {
-  Web3AuthNoModal as Web3Auth,
+  Web3Auth,
   CHAIN_NAMESPACES,
   WEB3AUTH_NETWORK,
-} from "@web3auth/no-modal";
+} from "@web3auth/modal";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
@@ -46,7 +46,8 @@ export const CONFIRMATION_STRATEGY = {
   NONE: "none",
 } as const;
 
-export const authConnector = (config: any) => config;
+// Note: authConnector and other adapters should be configured via addAdapter/configureAdapter
+// if using NoModal SDK, or they are included by default in the Modal SDK.
 
 /**
  * Detect if running on a mobile device based on user agent + touch support.
@@ -284,10 +285,6 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       console.log("[Web3Auth] UX Mode:", useRedirect ? "REDIRECT" : "POPUP");
       console.log("[Web3Auth] forceRedirect:", forceRedirectMode);
 
-      // Create Web3Auth instance with      // Use modal: false to bypass Web3Auth modal UI
-      // Modal is hidden - we use connectTo() for direct provider access
-      console.log("[Web3Auth] Creating Web3Auth v10 instance (AA ENABLED - will deploy on first login)...");
-
       web3authInstance = new Web3Auth({
         clientId,
         chains: [chainConfig],
@@ -308,23 +305,15 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           ],
         },
         useAAWithExternalWallet: false,
-        connectors: [
-          authConnector({
-            connectorSettings: {
-              uxMode: useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP,
-              redirectUrl: window.location.origin + window.location.pathname,
-            }
-          })
-        ],
         walletServicesConfig: {
           confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
           modalZIndex: 99999,
           whiteLabel: {
             showWidgetButton: false,
           },
-        } as unknown as ConstructorParameters<typeof Web3Auth>[0]["walletServicesConfig"],
+        } as any,
       });
-      console.log("[Web3Auth] Instance created (NO-MODAL SDK)");
+      console.log("[Web3Auth] Instance created (MODAL SDK - HEADLESS MODE)");
 
       // Initialize with timeout to prevent hanging on mobile
       console.log("[Web3Auth] Calling init()...");
