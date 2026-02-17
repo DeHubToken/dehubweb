@@ -402,6 +402,12 @@ export async function connectToSocialProvider(
     uxMode: useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP,
   };
 
+  // For redirect mode, must explicitly pass redirectUrl in connectTo params
+  // (authConnector config alone is not sufficient for some SDK versions)
+  if (useRedirect) {
+    params.redirectUrl = `${window.location.origin}/app`;
+  }
+
   // Add login hint for email/sms passwordless
   if (loginHint) {
     params.loginHint = loginHint;
@@ -430,6 +436,9 @@ export async function connectToSocialProvider(
       web3auth = await initWeb3Auth();
 
       console.log('[Web3Auth] Re-initialized with REDIRECT mode, retrying connectTo...');
+      // Ensure redirectUrl is in params for the retry
+      params.uxMode = UX_MODE.REDIRECT;
+      params.redirectUrl = `${window.location.origin}/app`;
       // This will redirect the browser (won't return on mobile)
       provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, params);
       lastConnectedConnector = WALLET_CONNECTORS.AUTH;

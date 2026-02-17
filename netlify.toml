@@ -24,11 +24,19 @@
   for = "/*"
   [headers.values]
     # Security headers
-    X-Frame-Options = "DENY"
+    # NOTE: X-Frame-Options set to SAMEORIGIN (not DENY) because Web3Auth
+    # uses iframes for session management. DENY blocks those iframes.
+    X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    
+
+    # Cross-Origin policies for Web3Auth compatibility
+    # unsafe-none allows Web3Auth's cross-origin popup/redirect communication
+    Cross-Origin-Opener-Policy = "unsafe-none"
+    Cross-Origin-Embedder-Policy = "unsafe-none"
+    Cross-Origin-Resource-Policy = "cross-origin"
+
     # CORS headers (adjust as needed)
     Access-Control-Allow-Origin = "*"
     Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"

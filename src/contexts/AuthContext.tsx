@@ -29,6 +29,7 @@ import {
   forceCleanupWeb3Auth,
   connectToSocialProvider,
   hasRedirectResult,
+  isMobileDevice,
   isSocialLoginConnected,
   setLastConnectedConnector,
   AUTH_CONNECTION,
@@ -813,7 +814,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '';
 
-      // Always force cleanup after any error to ensure clean state for retry
+      // On mobile with redirect mode, the browser navigates away during connectTo().
+      // Any error at that point is just the page unloading — don't cleanup or show errors.
+      if (isMobileDevice()) {
+        console.log('[Auth] Mobile: ignoring error during redirect navigation:', errorMessage);
+        return;
+      }
+
+      // Force cleanup after any error to ensure clean state for retry
       try {
         await forceCleanupWeb3Auth();
       } catch (e) {
@@ -857,6 +865,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '';
 
+      if (isMobileDevice()) {
+        console.log('[Auth] Mobile: ignoring error during redirect navigation:', errorMessage);
+        return;
+      }
+
       try {
         await forceCleanupWeb3Auth();
       } catch (e) {
@@ -899,6 +912,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('[Auth] ✓ SMS connection complete!');
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '';
+
+      if (isMobileDevice()) {
+        console.log('[Auth] Mobile: ignoring error during redirect navigation:', errorMessage);
+        return;
+      }
 
       try {
         await forceCleanupWeb3Auth();
