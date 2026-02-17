@@ -31,7 +31,6 @@ import {
   hasRedirectResult,
   isSocialLoginConnected,
   setLastConnectedConnector,
-  getEoaPrivateKey,
   AUTH_CONNECTION,
   WALLET_CONNECTORS,
   getOrInitWeb3Auth,
@@ -517,7 +516,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let signature: string;
     console.log('[Auth] [REDIRECT] Attempting EOA private key signing...');
     try {
-      const privateKey = await getEoaPrivateKey();
+      const privateKey = await signingProvider.request({ 
+        method: 'eth_private_key' 
+      }) as string;
+      
+      console.log('[Auth] [REDIRECT] Private key exported successfully');
+      
       const { Wallet } = await import('ethers');
       const wallet = new Wallet(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
       const eoaAddress = wallet.address.toLowerCase();
@@ -655,7 +659,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Web3Auth instance and sign with ethers Wallet for a standard ECDSA signature.
       console.log('[Auth] Social login — exporting EOA private key for direct signing...');
       try {
-        const privateKey = await getEoaPrivateKey();
+        // Request private key directly from Web3Auth provider
+        // This works even when AA is disabled in config
+        const privateKey = await signingProvider.request({ 
+          method: 'eth_private_key' 
+        }) as string;
+        
+        console.log('[Auth] Private key exported successfully');
+        
         const { Wallet } = await import('ethers');
         const wallet = new Wallet(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
         const eoaAddress = wallet.address.toLowerCase();
