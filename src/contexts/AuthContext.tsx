@@ -433,8 +433,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
 
-    const signingProvider = provider;
-
     try {
       const w3a = await getOrInitWeb3Auth();
       const userInfo = await w3a.getUserInfo();
@@ -445,36 +443,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.warn('[Auth] [DIAG-REDIRECT] getUserInfo failed:', e);
     }
 
-    // Get EOA address (redirect is always social login)
-    await new Promise(r => setTimeout(r, 500));
-    let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-    if (!accounts?.length) {
-      await new Promise(r => setTimeout(r, 1000));
-      accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+    // Use web3auth.provider (AA-wrapped) for redirect flow too
+    let signingProvider = provider;
+    const w3a = await getOrInitWeb3Auth();
+    if (w3a.provider) {
+      signingProvider = w3a.provider;
+      console.log('[Auth] [REDIRECT] Using web3auth.provider (AA-wrapped) for signing');
     }
+
+    // Wait for AA init and get Smart Account address
+    let accounts: string[] = [];
+    for (let attempt = 0; attempt < 5; attempt++) {
+      if (attempt > 0) {
+        const delay = attempt * 1000;
+        console.log(`[Auth] [REDIRECT] Waiting ${delay}ms for AA init (attempt ${attempt + 1})...`);
+        await new Promise(r => setTimeout(r, delay));
+      }
+      accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+      console.log(`[Auth] [REDIRECT] eth_accounts attempt ${attempt + 1}:`, JSON.stringify(accounts));
+      if (accounts && accounts.length >= 2) {
+        console.log('[Auth] [REDIRECT] AA provider initialized — got Smart Account + EOA');
+        break;
+      }
+    }
+
     if (!accounts?.length) throw new Error('No accounts available from provider after redirect');
     const authAddress = accounts[0].toLowerCase();
-    console.log('[Auth] Redirect EOA address:', authAddress);
+    const isSmartAccount = accounts.length >= 2;
+    console.log('[Auth] Redirect auth address:', authAddress, isSmartAccount ? '(Smart Account)' : '(EOA)');
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    // Sign with raw private key to produce standard EOA signature
-    console.log('[Auth] Redirect: signing with raw private key...');
-    let signature: string;
-    try {
-      const privateKey = await signingProvider.request({ method: 'eth_private_key' }) as string;
-      const { Wallet } = await import('ethers');
-      const wallet = new Wallet(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
-      signature = await wallet.signMessage(message);
-      console.log('[Auth] Redirect: standard EOA signature produced, length:', signature?.length);
-    } catch (e) {
-      console.warn('[Auth] Redirect: private key signing failed, falling back to personal_sign', e);
-      signature = await signingProvider.request({
-        method: 'personal_sign',
-        params: [message, authAddress],
-      }) as string;
-    }
-
+    // Use personal_sign — AA provider will produce ERC-6492 signature
+    // matching the Smart Account address. Backend verifies via EIP-1271.
+    console.log('[Auth] Redirect: signing with AA provider...');
+    const signature = await signingProvider.request({
+      method: 'personal_sign',
+      params: [message, authAddress],
+    }) as string;
     console.log('[Auth] Redirect signature length:', signature?.length);
 
     const BASE_CHAIN_ID = 8453;
@@ -509,11 +515,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * Complete DeHub authentication after Web3Auth connects.
    *
    * For social logins with AA:
-   * - eth_accounts returns the EOA signer address
+   * - The AA provider's eth_accounts returns [smartAccountAddress, eoaAddress]
+   *   but needs time to initialize. If called too early, falls through to
+   *   the EOA provider middleware and returns only [eoaAddress].
    * - personal_sign on AA provider produces ERC-6492 (Smart Account) signature
-   * - These DON'T match — backend rejects the mismatch
-   * - Fix: Use the raw private key to produce a standard EOA signature
-   *   that matches the EOA address. Backend verifies EOA sig normally.
+   * - Fix: Wait for AA init, use the Smart Account address (accounts[0])
+   *   with the ERC-6492 signature. Backend verifies via EIP-1271.
    */
   const completeDeHubAuth = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -521,8 +528,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const isSocial = isSocialLoginConnected();
     console.log('[Auth] Connection type:', isSocial ? 'SOCIAL (AA)' : 'EXTERNAL');
-
-    const signingProvider = provider;
 
     if (isSocial) {
       try {
@@ -536,18 +541,61 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    // Get address
-    let authAddress: string;
-    let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-    if (!accounts || accounts.length === 0) {
-      await new Promise(r => setTimeout(r, 1000));
-      accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+    // For social login with AA, use web3auth.provider (AA-wrapped) instead of
+    // the connectTo() return value, and wait for AA to fully initialize.
+    let signingProvider = provider;
+    if (isSocial) {
+      const w3a = await getOrInitWeb3Auth();
+      if (w3a.provider) {
+        signingProvider = w3a.provider;
+        console.log('[Auth] Using web3auth.provider (AA-wrapped) for signing');
+      }
     }
+
+    // Get address — for AA, wait and retry to let Smart Account init complete
+    let authAddress: string;
+    let accounts: string[] = [];
+
+    if (isSocial) {
+      // AA provider needs time to set up the Smart Account.
+      // The getAccounts handler returns [smartAccountAddress, ...eoaAccounts]
+      // once initialized. Retry with increasing delays to catch it.
+      for (let attempt = 0; attempt < 5; attempt++) {
+        if (attempt > 0) {
+          const delay = attempt * 1000; // 1s, 2s, 3s, 4s
+          console.log(`[Auth] Waiting ${delay}ms for AA provider init (attempt ${attempt + 1})...`);
+          await new Promise(r => setTimeout(r, delay));
+        }
+        accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+        console.log(`[Auth] eth_accounts attempt ${attempt + 1}:`, JSON.stringify(accounts));
+
+        // If we get 2+ accounts, AA is initialized: [smartAccountAddr, eoaAddr]
+        if (accounts && accounts.length >= 2) {
+          console.log('[Auth] AA provider initialized — got Smart Account + EOA addresses');
+          break;
+        }
+      }
+    } else {
+      accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+      if (!accounts || accounts.length === 0) {
+        await new Promise(r => setTimeout(r, 1000));
+        accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+      }
+    }
+
     if (!accounts || accounts.length === 0) {
       throw new Error('No accounts available for signing');
     }
+
+    // For AA: accounts[0] = Smart Account address, accounts[1] = EOA
+    // For non-AA: accounts[0] = EOA
     authAddress = accounts[0].toLowerCase();
-    console.log('[Auth] EOA address from eth_accounts:', authAddress);
+    const isSmartAccount = isSocial && accounts.length >= 2;
+    console.log('[Auth] Auth address:', authAddress, isSmartAccount ? '(Smart Account)' : '(EOA)');
+    if (accounts.length >= 2) {
+      console.log('[Auth] EOA signer:', accounts[1]);
+    }
+
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
     console.log('[Auth] Signing login message for address:', authAddress);
@@ -555,23 +603,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let signature: string;
 
     if (isSocial) {
-      // For social login with AA: personal_sign produces ERC-6492 (Smart Account) signature
-      // which doesn't match the EOA address. Instead, get the raw private key and sign directly
-      // with ethers to produce a standard ECDSA signature matching the EOA.
-      console.log('[Auth] Social login: signing with raw private key for standard EOA signature');
-      try {
-        const privateKey = await signingProvider.request({ method: 'eth_private_key' }) as string;
-        const { Wallet } = await import('ethers');
-        const wallet = new Wallet(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
-        signature = await wallet.signMessage(message);
-        console.log('[Auth] Standard EOA signature produced, length:', signature?.length);
-      } catch (e) {
-        console.warn('[Auth] Private key signing failed, falling back to personal_sign...', e);
-        signature = await signingProvider.request({
-          method: 'personal_sign',
-          params: [message, authAddress],
-        }) as string;
-      }
+      // AA provider's personal_sign produces ERC-6492 Smart Account signature.
+      // Combined with the Smart Account address (accounts[0]), backend verifies via EIP-1271.
+      signature = await signingProvider.request({
+        method: 'personal_sign',
+        params: [message, authAddress],
+      }) as string;
+      console.log('[Auth] AA signature received, length:', signature?.length);
     } else {
       // External wallets: use personal_sign directly
       try {
