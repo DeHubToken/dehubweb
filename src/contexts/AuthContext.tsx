@@ -92,6 +92,60 @@ function normalizeUser(userData: Partial<DeHubUser> | null | undefined, fallback
   };
 }
 
+/**
+ * Extract the raw ECDSA signature from an ERC-6492 wrapped signature.
+ *
+ * ERC-6492 format: abi.encode(factory, factoryCalldata, innerSig) + magicBytes
+ * The innerSig for Safe single-owner is 65 bytes: r(32) + s(32) + v(1)
+ * Safe uses v+4 for eth_sign type signatures (v=31→27, v=32→28).
+ *
+ * Returns the standard 65-byte ECDSA signature (0x + r + s + v) or null if
+ * the signature is not ERC-6492 or cannot be parsed.
+ */
+function extractEoaSignatureFromErc6492(sig: string): string | null {
+  const MAGIC = '6492649264926492649264926492649264926492649264926492649264926492';
+
+  const hex = sig.startsWith('0x') ? sig.slice(2) : sig;
+  if (!hex.toLowerCase().endsWith(MAGIC.toLowerCase())) {
+    return null; // Not an ERC-6492 signature
+  }
+
+  try {
+    // Remove magic bytes (last 64 hex chars = 32 bytes)
+    const withoutMagic = hex.slice(0, -64);
+
+    // ABI decode: (address factory, bytes factoryCalldata, bytes innerSig)
+    // Slot 2 (bytes 128-192): offset to innerSig data
+    const sigOffset = parseInt(withoutMagic.slice(128, 192), 16) * 2; // convert byte offset to hex char offset
+
+    // At offset: 32-byte length prefix, then actual signature bytes
+    const sigLength = parseInt(withoutMagic.slice(sigOffset, sigOffset + 64), 16);
+    const sigData = withoutMagic.slice(sigOffset + 64, sigOffset + 64 + sigLength * 2);
+
+    if (sigLength !== 65) {
+      console.warn('[Auth] ERC-6492 inner sig is not 65 bytes, length:', sigLength);
+      return null;
+    }
+
+    // r(32 bytes) + s(32 bytes) + v(1 byte)
+    const r = sigData.slice(0, 64);
+    const s = sigData.slice(64, 128);
+    const v = parseInt(sigData.slice(128, 130), 16);
+
+    // Safe uses v+4 for eth_sign type signatures. Normalize to standard v.
+    let normalizedV = v;
+    if (v > 30) {
+      normalizedV = v - 4; // 31→27, 32→28
+    }
+
+    console.log('[Auth] ERC-6492 inner sig extracted: v_raw=', v, 'v_normalized=', normalizedV);
+    return '0x' + r + s + normalizedV.toString(16).padStart(2, '0');
+  } catch (e) {
+    console.warn('[Auth] Failed to parse ERC-6492 signature:', e);
+    return null;
+  }
+}
+
 // Map custom provider names to Web3Auth AUTH_CONNECTION
 function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[keyof typeof AUTH_CONNECTION] {
   switch (provider) {
@@ -427,7 +481,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Complete DeHub auth specifically after redirect flow.
-   * Same Smart Account address resolution as popup flow.
+   * Same ERC-6492 extraction approach as popup flow.
    */
   const completeDeHubAuthAfterRedirect = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -443,45 +497,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.warn('[Auth] [DIAG-REDIRECT] getUserInfo failed:', e);
     }
 
-    // Use web3auth.provider (AA-wrapped) for redirect flow too
-    let signingProvider = provider;
-    const w3a = await getOrInitWeb3Auth();
-    if (w3a.provider) {
-      signingProvider = w3a.provider;
-      console.log('[Auth] [REDIRECT] Using web3auth.provider (AA-wrapped) for signing');
-    }
+    const signingProvider = provider;
 
-    // Wait for AA init and get Smart Account address
-    let accounts: string[] = [];
-    for (let attempt = 0; attempt < 5; attempt++) {
-      if (attempt > 0) {
-        const delay = attempt * 1000;
-        console.log(`[Auth] [REDIRECT] Waiting ${delay}ms for AA init (attempt ${attempt + 1})...`);
-        await new Promise(r => setTimeout(r, delay));
-      }
+    // Get EOA address
+    await new Promise(r => setTimeout(r, 500));
+    let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+    if (!accounts?.length) {
+      await new Promise(r => setTimeout(r, 1500));
       accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-      console.log(`[Auth] [REDIRECT] eth_accounts attempt ${attempt + 1}:`, JSON.stringify(accounts));
-      if (accounts && accounts.length >= 2) {
-        console.log('[Auth] [REDIRECT] AA provider initialized — got Smart Account + EOA');
-        break;
-      }
     }
-
     if (!accounts?.length) throw new Error('No accounts available from provider after redirect');
     const authAddress = accounts[0].toLowerCase();
-    const isSmartAccount = accounts.length >= 2;
-    console.log('[Auth] Redirect auth address:', authAddress, isSmartAccount ? '(Smart Account)' : '(EOA)');
+    console.log('[Auth] Redirect address from eth_accounts:', authAddress);
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    // Use personal_sign — AA provider will produce ERC-6492 signature
-    // matching the Smart Account address. Backend verifies via EIP-1271.
-    console.log('[Auth] Redirect: signing with AA provider...');
-    const signature = await signingProvider.request({
+    // Sign with personal_sign — AA provider produces ERC-6492 signature
+    console.log('[Auth] Redirect: signing message...');
+    let signature = await signingProvider.request({
       method: 'personal_sign',
       params: [message, authAddress],
     }) as string;
-    console.log('[Auth] Redirect signature length:', signature?.length);
+    console.log('[Auth] Redirect raw signature length:', signature?.length);
+
+    // If ERC-6492, extract the inner ECDSA sig to match the EOA address
+    const rawSig = extractEoaSignatureFromErc6492(signature);
+    if (rawSig) {
+      console.log('[Auth] Redirect: extracted EOA signature from ERC-6492, length:', rawSig.length);
+      signature = rawSig;
+    }
 
     const BASE_CHAIN_ID = 8453;
     const authResponse = await authenticateWallet(
@@ -515,12 +559,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * Complete DeHub authentication after Web3Auth connects.
    *
    * For social logins with AA:
-   * - The AA provider's eth_accounts returns [smartAccountAddress, eoaAddress]
-   *   but needs time to initialize. If called too early, falls through to
-   *   the EOA provider middleware and returns only [eoaAddress].
-   * - personal_sign on AA provider produces ERC-6492 (Smart Account) signature
-   * - Fix: Wait for AA init, use the Smart Account address (accounts[0])
-   *   with the ERC-6492 signature. Backend verifies via EIP-1271.
+   * - eth_accounts returns the EOA signer address
+   * - personal_sign produces ERC-6492 (Smart Account) signature wrapping
+   *   the raw ECDSA signature inside Safe's signing format
+   * - Fix: Extract the inner ECDSA signature from the ERC-6492 wrapper,
+   *   normalize Safe's v+4 convention, and send EOA + standard sig to backend.
    */
   const completeDeHubAuth = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -541,60 +584,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    // For social login with AA, use web3auth.provider (AA-wrapped) instead of
-    // the connectTo() return value, and wait for AA to fully initialize.
-    let signingProvider = provider;
-    if (isSocial) {
-      const w3a = await getOrInitWeb3Auth();
-      if (w3a.provider) {
-        signingProvider = w3a.provider;
-        console.log('[Auth] Using web3auth.provider (AA-wrapped) for signing');
-      }
-    }
+    const signingProvider = provider;
 
-    // Get address — for AA, wait and retry to let Smart Account init complete
+    // Get EOA address
     let authAddress: string;
-    let accounts: string[] = [];
-
-    if (isSocial) {
-      // AA provider needs time to set up the Smart Account.
-      // The getAccounts handler returns [smartAccountAddress, ...eoaAccounts]
-      // once initialized. Retry with increasing delays to catch it.
-      for (let attempt = 0; attempt < 5; attempt++) {
-        if (attempt > 0) {
-          const delay = attempt * 1000; // 1s, 2s, 3s, 4s
-          console.log(`[Auth] Waiting ${delay}ms for AA provider init (attempt ${attempt + 1})...`);
-          await new Promise(r => setTimeout(r, delay));
-        }
-        accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-        console.log(`[Auth] eth_accounts attempt ${attempt + 1}:`, JSON.stringify(accounts));
-
-        // If we get 2+ accounts, AA is initialized: [smartAccountAddr, eoaAddr]
-        if (accounts && accounts.length >= 2) {
-          console.log('[Auth] AA provider initialized — got Smart Account + EOA addresses');
-          break;
-        }
-      }
-    } else {
+    let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+    if (!accounts || accounts.length === 0) {
+      await new Promise(r => setTimeout(r, 1000));
       accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-      if (!accounts || accounts.length === 0) {
-        await new Promise(r => setTimeout(r, 1000));
-        accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-      }
     }
-
     if (!accounts || accounts.length === 0) {
       throw new Error('No accounts available for signing');
     }
-
-    // For AA: accounts[0] = Smart Account address, accounts[1] = EOA
-    // For non-AA: accounts[0] = EOA
     authAddress = accounts[0].toLowerCase();
-    const isSmartAccount = isSocial && accounts.length >= 2;
-    console.log('[Auth] Auth address:', authAddress, isSmartAccount ? '(Smart Account)' : '(EOA)');
-    if (accounts.length >= 2) {
-      console.log('[Auth] EOA signer:', accounts[1]);
-    }
+    console.log('[Auth] Address from eth_accounts:', authAddress);
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
@@ -602,31 +605,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     let signature: string;
 
-    if (isSocial) {
-      // AA provider's personal_sign produces ERC-6492 Smart Account signature.
-      // Combined with the Smart Account address (accounts[0]), backend verifies via EIP-1271.
+    // Sign the message
+    try {
       signature = await signingProvider.request({
         method: 'personal_sign',
         params: [message, authAddress],
       }) as string;
-      console.log('[Auth] AA signature received, length:', signature?.length);
-    } else {
-      // External wallets: use personal_sign directly
-      try {
-        signature = await signingProvider.request({
-          method: 'personal_sign',
-          params: [message, authAddress],
-        }) as string;
-      } catch (e) {
-        console.warn('[Auth] personal_sign failed, trying fallback param order...', e);
-        signature = await signingProvider.request({
-          method: 'personal_sign',
-          params: [authAddress, message],
-        }) as string;
-      }
+    } catch (e) {
+      console.warn('[Auth] personal_sign failed, trying fallback param order...', e);
+      signature = await signingProvider.request({
+        method: 'personal_sign',
+        params: [authAddress, message],
+      }) as string;
     }
 
-    console.log('[Auth] Signature received, length:', signature?.length);
+    console.log('[Auth] Raw signature length:', signature?.length);
+
+    // For social login: the AA provider wraps the ECDSA sig in ERC-6492 format.
+    // Extract the inner raw ECDSA signature so it matches the EOA address.
+    if (isSocial) {
+      const rawSig = extractEoaSignatureFromErc6492(signature);
+      if (rawSig) {
+        console.log('[Auth] Extracted EOA signature from ERC-6492, length:', rawSig.length);
+        signature = rawSig;
+      } else {
+        console.log('[Auth] Signature is not ERC-6492, using as-is');
+      }
+    }
 
     const BASE_CHAIN_ID = 8453;
     console.log(`[Auth] Authenticating with backend for address ${authAddress}...`);
