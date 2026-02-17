@@ -448,20 +448,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.warn('[Auth] [DIAG-REDIRECT] getUserInfo failed:', e);
     }
 
-    // Get address from provider (Smart Account address with AA)
-    const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
-    if (!accounts || accounts.length === 0) {
-      throw new Error('No accounts available from provider after redirect');
+    // Small delay for redirect/AA logins to ensure provider is fully ready
+    await new Promise(r => setTimeout(r, 500));
+
+    // Get current chain for diagnostics
+    try {
+      const chainIdHex = await provider.request({ method: 'eth_chainId' });
+      const currentChainId = parseInt(String(chainIdHex), 16);
+      console.log(`[Auth] Redirect - Current provider chainId: ${currentChainId} (${chainIdHex})`);
+    } catch (e) {
+      console.warn('[Auth] Redirect - Failed to get chainId from provider:', e);
     }
+
+    // Get address from provider (Smart Account address with AA)
+    let accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+    if (!accounts || accounts.length === 0) {
+      console.warn('[Auth] Redirect - No accounts returned, retrying...');
+      await new Promise(r => setTimeout(r, 1000));
+      accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+      
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts available from provider after redirect');
+      }
+    }
+    
     const authAddress = accounts[0].toLowerCase();
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    console.log('[Auth] Redirect - Signing with provider for address:', authAddress);
-    const signature = await provider.request({
-      method: 'personal_sign',
-      params: [message, authAddress],
-    }) as string;
+    console.log('[Auth] Redirect - Signing message for address:', authAddress);
+    
+    let signature: string;
+    try {
+      signature = await provider.request({
+        method: 'personal_sign',
+        params: [message, authAddress],
+      }) as string;
+    } catch (e) {
+      console.warn('[Auth] Redirect - personal_sign fallback required', e);
+      signature = await provider.request({
+        method: 'personal_sign',
+        params: [authAddress, message],
+      }) as string;
+    }
 
     console.log('[Auth] Redirect auth - Address:', authAddress);
     console.log('[Auth] Signature length:', signature?.length);
@@ -520,25 +549,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch (e) {
         console.warn('[Auth] [DIAG-POPUP] getUserInfo failed:', e);
       }
+
+      // Small delay for social/AA logins to ensure provider is fully ready
+      // Sometimes the Smart Account address calculation takes a moment to propagate
+      await new Promise(r => setTimeout(r, 500));
+    }
+
+    // Get current chain for diagnostics
+    try {
+      const chainIdHex = await provider.request({ method: 'eth_chainId' });
+      const currentChainId = parseInt(String(chainIdHex), 16);
+      console.log(`[Auth] Current provider chainId: ${currentChainId} (${chainIdHex})`);
+    } catch (e) {
+      console.warn('[Auth] Failed to get chainId from provider:', e);
     }
 
     // Get address from provider (Smart Account address for social login with AA)
-    const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+    let accounts = await provider.request({ method: 'eth_accounts' }) as string[];
     if (!accounts || accounts.length === 0) {
-      throw new Error('No accounts available from provider');
+      // Retry once after a delay if no accounts returned
+      console.warn('[Auth] No accounts returned, retrying after delay...');
+      await new Promise(r => setTimeout(r, 1000));
+      accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+      
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts available from provider');
+      }
     }
+    
     const authAddress = accounts[0].toLowerCase();
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    console.log('[Auth] Signing with provider for address:', authAddress);
+    console.log('[Auth] Signing message for address:', authAddress);
+    console.log('[Auth] Message content:', message.replace(/\n/g, '\\n'));
+    
     let signature: string;
     try {
       signature = await provider.request({
         method: 'personal_sign',
         params: [message, authAddress],
       }) as string;
-    } catch {
+    } catch (e) {
+      console.warn('[Auth] personal_sign failed with [message, address], trying [address, message] fallback...', e);
       // Fallback: some providers expect [address, message] order
       signature = await provider.request({
         method: 'personal_sign',
@@ -546,10 +599,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }) as string;
     }
 
-    console.log('[Auth] Using address for auth:', authAddress);
     console.log('[Auth] Signature length:', signature?.length);
+    if (signature?.length > 500) {
+      console.log('[Auth] Detected long signature (likely Smart Account/ERC-6492)');
+    }
 
     const BASE_CHAIN_ID = 8453;
+    console.log(`[Auth] Authenticating with backend for address ${authAddress} on chain ${BASE_CHAIN_ID}...`);
+
     const authResponse = await authenticateWallet(
       authAddress,
       signature,
