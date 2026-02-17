@@ -264,6 +264,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         clientId,
         chains: [chainConfig],
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+        sessionTime: 86400, // 24 hours session
         // Account Abstraction enabled - signature verification issues are handled
         // by deploying the contract via an empty transaction before signing (matches mobile logic).
         accountAbstractionConfig: {
@@ -392,8 +393,13 @@ export async function connectToSocialProvider(
     throw err;
   }
 
+  // Determine UX mode based on device (match initWeb3Auth logic)
+  const mobile = isMobileDevice();
+  const useRedirect = mobile || forceRedirectMode;
+
   const params: Record<string, unknown> = {
     authConnection,
+    uxMode: useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP,
   };
 
   // Add login hint for email/sms passwordless
