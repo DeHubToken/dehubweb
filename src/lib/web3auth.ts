@@ -56,17 +56,20 @@ export const CONFIRMATION_STRATEGY = {
 export function isMobileDevice(): boolean {
   if (typeof navigator === 'undefined') return false;
 
+  const ua = navigator.userAgent || '';
+
   // 1. Standard mobile user-agent check (most reliable)
-  if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+  if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)) {
     return true;
   }
   // 2. iPadOS 13+ reports macOS UA but has touch support
   if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) {
     return true;
   }
-  // 3. Small screen + touch = likely mobile (but NOT just touch or just small screen alone)
-  //    Many desktop laptops have touch. Many desktop windows are narrow.
-  if ('ontouchstart' in window && window.innerWidth <= 768) {
+  // 3. Small screen + touch = likely mobile
+  // Many desktop laptops have touch, so we combined with screen width.
+  const hasTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+  if (hasTouch && window.innerWidth <= 1024) {
     return true;
   }
   return false;
@@ -281,9 +284,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       // Determine UX mode based on device
       const mobile = isMobileDevice();
       const useRedirect = mobile || forceRedirectMode;
-      console.log("[Web3Auth] Is mobile device:", mobile);
-      console.log("[Web3Auth] UX Mode:", useRedirect ? "REDIRECT" : "POPUP");
-      console.log("[Web3Auth] forceRedirect:", forceRedirectMode);
+      console.log(`[Web3Auth] Init: mobile=${mobile} forceRedirect=${forceRedirectMode} -> useRedirect=${useRedirect}`);
 
       web3authInstance = new Web3Auth({
         clientId,
@@ -392,7 +393,9 @@ function isPopupBlockedError(err: unknown): boolean {
   return (
     (lower.includes('popup') && (lower.includes('blocked') || lower.includes('closed'))) ||
     lower.includes('allow-popups') ||
-    lower.includes('sandboxed frame')
+    lower.includes('sandboxed frame') ||
+    lower.includes('cross-origin-opener-policy') ||
+    lower.includes('coop')
   );
 }
 
@@ -419,15 +422,23 @@ export async function connectToSocialProvider(
   // Determine UX mode based on device (match initWeb3Auth logic)
   const mobile = isMobileDevice();
   const useRedirect = mobile || forceRedirectMode;
+  const uxMode = useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP;
+
+  console.log(`[Web3Auth] connectToSocialProvider: mobile=${mobile} forceRedirect=${forceRedirectMode} -> uxMode=${uxMode}`);
 
   const params: Record<string, unknown> = {
     authConnection,
-    uxMode: useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP,
+    uxMode,
   };
 
   // For redirect mode, must explicitly pass redirectUrl in connectTo params
   if (useRedirect) {
     params.redirectUrl = window.location.origin + window.location.pathname;
+    // Some providers/adapters in v10 also look for this
+    params.extraLoginOptions = {
+      ux_mode: UX_MODE.REDIRECT,
+      redirect_url: window.location.origin + window.location.pathname,
+    };
   }
 
   // Add login hint for email/sms passwordless
@@ -470,6 +481,10 @@ export async function connectToSocialProvider(
         uxMode: UX_MODE.REDIRECT,
         redirectUrl: window.location.origin + window.location.pathname,
         loginProvider: authConnection,
+        extraLoginOptions: {
+          ux_mode: UX_MODE.REDIRECT,
+          redirect_url: window.location.origin + window.location.pathname,
+        }
       };
 
       // This will redirect the browser (won't return on mobile)
