@@ -20,7 +20,7 @@ import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ShortsReel } from '@/components/app/cards/ShortsReel';
 
 import { useUnifiedFeed, mapToVideoItem, type UnifiedFeedParams, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
-import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
+import { mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -175,37 +175,6 @@ function parseTimeAgoToDate(timeAgo: string): Date {
   }
 }
 
-// Map NFT to ShortVideo format
-function mapNFTToShortVideo(nft: any): ShortVideo {
-  const id = String(nft.tokenId || nft.id || nft.token_id);
-  const viewCount = nft.views || nft.view_count || 0;
-  const minterAddress = nft.minter || nft.creator?.id || nft.creator?.address || '';
-  
-  // Try all possible avatar fields - same pattern as leaderboard/profile
-  const rawAvatarUrl = nft.minterAvatarUrl || nft.minterAvatarImg || nft.avatarUrl || nft.avatarImg ||
-                       nft.creator?.avatar_url || nft.creator?.avatarImg || nft.creator?.avatarUrl;
-  // Always use buildAvatarUrl - it handles all URL formats including api.dehub.io → CDN conversion
-  const avatarUrl = minterAddress && rawAvatarUrl 
-    ? buildAvatarUrl(minterAddress, rawAvatarUrl) 
-    : undefined;
-  
-  return {
-    id,
-    type: 'short',
-    username: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'user',
-    verified: nft.creator?.is_verified || false,
-    avatar: avatarUrl || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
-    likes: String(nft.totalVotes?.for || nft.like_count || 0),
-    thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
-    videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || '',
-    description: nft.description || nft.name || nft.title || '',
-    sound: 'Original Sound',
-    comments: formatCount(nft.commentCount || nft.comment_count || 0),
-    shares: '0',
-    views: formatCount(viewCount),
-    creatorUsername: nft.mintername || nft.creator?.username || 'user',
-  };
-}
 
 // ============================================================================
 // SUB-COMPONENTS
@@ -546,9 +515,13 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     status: 'minted',
   });
 
-  // Fetch shorts for the carousel (using original hook since it doesn't need content filtering)
-  const { data: shortsData } = useDeHubVideos({
-    unit: 10,
+  // Fetch shorts for the carousel using unified feed (same approach as HomeFeed)
+  const scrollFeed = useUnifiedFeed({
+    limit: 10,
+    postType: 'video',
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    status: 'minted',
   });
 
   useEffect(() => {
@@ -619,12 +592,39 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     videos.length < MIN_VISIBLE_VIDEOS &&
     (isFetchingNextPage || (hasNextPage && autoFetchAttempts.current < MAX_AUTO_FETCH_ATTEMPTS));
 
-  // Map shorts data
+  // Map shorts data (same mapping as HomeFeed)
   const shorts = useMemo((): ShortVideo[] => {
-    if (!shortsData?.pages) return [];
-    const allNFTs = shortsData.pages.flatMap(page => page.data || []);
-    return allNFTs.slice(0, 10).map(mapNFTToShortVideo);
-  }, [shortsData]);
+    if (!scrollFeed.data?.pages) return [];
+    const allItems = scrollFeed.data.pages.flatMap(page => page.items || []);
+    return allItems.slice(0, 10).map((item) => {
+      const id = String(item.tokenId);
+      const minterAddress = item.minter || '';
+      const avatarUrl = item.minterAvatarUrl
+        ? (item.minterAvatarUrl.startsWith('http') ? item.minterAvatarUrl : buildAvatarUrl(minterAddress, item.minterAvatarUrl))
+        : undefined;
+
+      return {
+        id,
+        type: 'short' as const,
+        username: item.minterDisplayName || item.minterUsername || 'user',
+        verified: (item as any).minterUser?.isVerified || false,
+        avatar: avatarUrl || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
+        likes: String(item.totalVotes?.for || 0),
+        thumbnail: getMediaUrl(item.imageUrl) || '',
+        videoUrl: item.videoUrl
+          ? (item.videoUrl.startsWith('http') ? item.videoUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.videoUrl}`)
+          : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4`,
+        description: item.description || item.name || '',
+        sound: 'Original Sound',
+        comments: formatCount(item.commentCount || 0),
+        shares: '0',
+        views: formatCount(item.views || 0),
+        creatorUsername: item.minterUsername || 'user',
+        creatorId: minterAddress,
+        displayName: item.minterDisplayName || undefined,
+      };
+    });
+  }, [scrollFeed.data]);
 
   // Check if any client-side filters are active
   const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all' || contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
