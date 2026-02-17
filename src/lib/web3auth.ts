@@ -256,9 +256,9 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       console.log("[Web3Auth] UX Mode:", useRedirect ? "REDIRECT" : "POPUP");
       console.log("[Web3Auth] forceRedirect:", forceRedirectMode);
 
-      // Create Web3Auth instance with custom UI configuration
+      // Create Web3Auth instance with      // Use modal: false to bypass Web3Auth modal UI
       // Modal is hidden - we use connectTo() for direct provider access
-      console.log("[Web3Auth] Creating Web3Auth v10 instance with AA config...");
+      console.log("[Web3Auth] Creating Web3Auth v10 instance (AA DISABLED for auth compatibility)...");
 
       web3authInstance = new Web3Auth({
         clientId,
@@ -315,7 +315,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           defaultLanguage: "en",
         },
       });
-      console.log("[Web3Auth] Instance created with Account Abstraction");
+      console.log("[Web3Auth] Instance created (standard EOA mode)");
 
       // Initialize
       console.log("[Web3Auth] Calling init()...");
@@ -331,7 +331,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       console.log("[Web3Auth] init() completed, status:", web3authInstance.status);
       console.log("[Web3Auth] Connected:", web3authInstance.connected);
 
-      console.log("[Web3Auth] INITIALIZATION COMPLETE (Modal v10 + Pimlico AA), status:", web3authInstance.status);
+      console.log("[Web3Auth] INITIALIZATION COMPLETE (Modal v10, EOA mode), status:", web3authInstance.status);
       return web3authInstance;
     } catch (error) {
       console.error("[Web3Auth] INITIALIZATION FAILED:", error);
