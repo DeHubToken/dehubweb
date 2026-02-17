@@ -10,7 +10,7 @@
  * ```
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Play, ChevronRight, Heart, Eye } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { ShortsViewer } from './ShortsViewer';
@@ -19,6 +19,23 @@ import type { ShortVideo } from '@/types/feed.types';
 
 // Module-level cache: survives unmount/remount, keeps images warm in browser memory
 const preloadedThumbnails = new Set<string>();
+
+/** Small squared-off avatar with image error fallback */
+function ShortAvatar({ avatar, username }: { avatar?: string; username?: string }) {
+  const [imgFailed, setImgFailed] = useState(false);
+  const showImg = avatar && !imgFailed;
+  return (
+    <div className="w-5 h-5 rounded-md bg-zinc-700 flex-shrink-0 overflow-hidden">
+      {showImg ? (
+        <img src={avatar} alt="" className="w-full h-full object-cover" onError={() => setImgFailed(true)} />
+      ) : (
+        <span className="w-full h-full flex items-center justify-center text-white text-[8px] font-medium">
+          {username?.[0]?.toUpperCase()}
+        </span>
+      )}
+    </div>
+  );
+}
 
 interface ShortsReelProps {
   shorts: ShortVideo[];
@@ -82,22 +99,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                 
                 {/* Creator info at top */}
                 <div className="absolute top-2 left-2 right-2 flex items-center gap-1.5">
-                  <div className="w-5 h-5 rounded-md bg-zinc-700 flex-shrink-0 overflow-hidden">
-                    {short.avatar ? (
-                      <img 
-                        src={short.avatar} 
-                        alt="" 
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none';
-                          (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                        }}
-                      />
-                    ) : null}
-                    <span className={`w-full h-full flex items-center justify-center text-white text-[8px] font-medium ${short.avatar ? 'hidden' : ''}`}>
-                      {short.username?.[0]?.toUpperCase()}
-                    </span>
-                  </div>
+                  <ShortAvatar avatar={short.avatar} username={short.username} />
                   <span className="text-white text-[10px] font-medium truncate">{short.username}</span>
                 </div>
                 
