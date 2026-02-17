@@ -12,7 +12,7 @@
  */
 
 import {
-  Web3Auth,
+  Web3AuthNoModal as Web3Auth,
   CHAIN_NAMESPACES,
   WEB3AUTH_NETWORK,
   WALLET_CONNECTORS,
@@ -270,9 +270,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           smartAccountType: "safe",
           chains: [
             {
-              chainNamespace: CHAIN_NAMESPACES.EIP155,
               chainId: "0x2105", // Base Mainnet
-              rpcTarget: chainConfig.rpcTarget,
               bundlerConfig: {
                 url: pimlicoConfig.bundlerUrl,
               },
