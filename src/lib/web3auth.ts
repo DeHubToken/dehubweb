@@ -12,7 +12,7 @@
  */
 
 import {
-  Web3Auth,
+  Web3AuthNoModal as Web3Auth,
   CHAIN_NAMESPACES,
   WEB3AUTH_NETWORK,
   WALLET_CONNECTORS,
@@ -20,7 +20,7 @@ import {
   CONFIRMATION_STRATEGY,
   authConnector,
   UX_MODE,
-} from "@web3auth/modal";
+} from "@web3auth/no-modal";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
@@ -269,28 +269,43 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         chains: [chainConfig],
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
         sessionTime: 86400,
-        // Headless mode: we hide the default modal and use custom UI
-        uiConfig: {
-          appName: "DeHub",
-          mode: "dark",
-          loginMethodsOrder: ["google", "twitter", "apple"],
-          defaultLanguage: "en",
+        accountAbstractionConfig: {
+          smartAccountType: "safe",
+          chains: [
+            {
+              chainId: "0x2105", // Base Mainnet
+              bundlerConfig: {
+                url: pimlicoConfig.bundlerUrl,
+              },
+              paymasterConfig: {
+                url: pimlicoConfig.paymasterUrl,
+              },
+            },
+          ],
         },
+        useAAWithExternalWallet: false,
+        connectors: [
+          authConnector({
+            connectorSettings: {
+              uxMode: useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP,
+              redirectUrl: window.location.origin + window.location.pathname,
+            }
+          })
+        ],
+        walletServicesConfig: {
+          confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
+          modalZIndex: 99999,
+          whiteLabel: {
+            showWidgetButton: false,
+          },
+        } as unknown as ConstructorParameters<typeof Web3Auth>[0]["walletServicesConfig"],
       });
-      console.log("[Web3Auth] Instance created (HEADLESS MODAL SDK)");
+      console.log("[Web3Auth] Instance created (NO-MODAL SDK)");
 
       // Initialize
-      console.log("[Web3Auth] Calling initModal()...");
-
-      await web3authInstance.initModal({
-        modalConfig: {
-          [WALLET_CONNECTORS.AUTH]: {
-            label: "Auth",
-            showOnModal: false, // Bypasses modal UI
-          }
-        }
-      });
-      console.log("[Web3Auth] initModal() resolved, status:", web3authInstance.status);
+      console.log("[Web3Auth] Calling init()...");
+      await web3authInstance.init();
+      console.log("[Web3Auth] init() resolved, status:", web3authInstance.status);
 
       // On some mobile devices/networks, status might stay 'not_ready' for a few ms
       // while it processes metadata or analytics failures. Wait for transition.
