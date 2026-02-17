@@ -15,13 +15,38 @@ import {
   Web3AuthNoModal as Web3Auth,
   CHAIN_NAMESPACES,
   WEB3AUTH_NETWORK,
-  WALLET_CONNECTORS,
-  AUTH_CONNECTION,
-  CONFIRMATION_STRATEGY,
-  authConnector,
-  UX_MODE,
 } from "@web3auth/no-modal";
 import { supabase } from "@/integrations/supabase/client";
+
+/**
+ * Web3Auth Constants
+ */
+export const WALLET_CONNECTORS = {
+  AUTH: "auth",
+} as const;
+
+export const AUTH_CONNECTION = {
+  GOOGLE: "google",
+  TWITTER: "twitter",
+  APPLE: "apple",
+  DISCORD: "discord",
+  GITHUB: "github",
+  TELEGRAM: "telegram",
+  EMAIL_PASSWORDLESS: "email_passwordless",
+  SMS_PASSWORDLESS: "sms_passwordless",
+} as const;
+
+export const UX_MODE = {
+  POPUP: "popup",
+  REDIRECT: "redirect",
+} as const;
+
+export const CONFIRMATION_STRATEGY = {
+  AUTO_APPROVE: "auto_approve",
+  NONE: "none",
+} as const;
+
+export const authConnector = (config: any) => config;
 
 /**
  * Detect if running on a mobile device based on user agent + touch support.
@@ -99,8 +124,9 @@ export function getWalletBrowserName(): string | null {
   return null;
 }
 
-// Re-export for use in other files
-export { WALLET_CONNECTORS, AUTH_CONNECTION };
+// Re-export for use in other files - type only to avoid redeclaration error
+// export type { WALLET_CONNECTORS, AUTH_CONNECTION, UX_MODE };
+// Constants are already exported at the top of the file!
 
 // Auth connection type for TypeScript
 export type AuthConnectionType = typeof AUTH_CONNECTION[keyof typeof AUTH_CONNECTION];
@@ -425,8 +451,15 @@ export async function connectToSocialProvider(
 
   let provider: Awaited<ReturnType<Web3Auth['connectTo']>>;
   try {
-    console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT calling connectTo(${WALLET_CONNECTORS.AUTH}, { authConnection: ${authConnection} })`);
-    provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, params);
+    console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT calling connectTo(${WALLET_CONNECTORS.AUTH}, { ... })`);
+
+    // Web3Auth v10 connectTo structure expects loginProvider
+    const connectOptions: any = {
+      ...params,
+      loginProvider: authConnection,
+    };
+
+    provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, connectOptions);
     lastConnectedConnector = WALLET_CONNECTORS.AUTH;
     console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT_OK provider=${provider ? 'received' : 'null'}`);
   } catch (err) {
@@ -443,11 +476,15 @@ export async function connectToSocialProvider(
       web3auth = await initWeb3Auth();
 
       console.log('[Web3Auth] Re-initialized with REDIRECT mode, retrying connectTo...');
-      // Ensure redirectUrl is in params for the retry
-      params.uxMode = UX_MODE.REDIRECT;
-      params.redirectUrl = window.location.origin + window.location.pathname;
+
+      const retryOptions: any = {
+        uxMode: UX_MODE.REDIRECT,
+        redirectUrl: window.location.origin + window.location.pathname,
+        loginProvider: authConnection,
+      };
+
       // This will redirect the browser (won't return on mobile)
-      provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, params);
+      provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, retryOptions);
       lastConnectedConnector = WALLET_CONNECTORS.AUTH;
       console.log(`[Web3Auth] connectToSocialProvider: phase=REDIRECT_CONNECT_OK`);
     } else {
