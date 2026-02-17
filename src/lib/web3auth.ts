@@ -581,24 +581,31 @@ export async function getEoaPrivateKey(): Promise<string> {
   await tempInstance.init();
   console.log('[Web3Auth] Temp instance status:', tempInstance.status, 'connected:', tempInstance.connected);
 
-  if (!tempInstance.connected || !tempInstance.provider) {
-    throw new Error('Temporary Web3Auth instance did not pick up existing session');
+  // The provider exists if session is picked up, even if status is 'not_ready'
+  if (!tempInstance.provider) {
+    throw new Error('Temporary Web3Auth instance did not pick up existing session - no provider');
   }
+
+  console.log('[Web3Auth] Temp instance has provider, attempting private key export...');
 
   // Try both method names — Web3Auth supports both
   let privateKey: string | null = null;
+  const errors: string[] = [];
+
   for (const method of ['eth_private_key', 'private_key']) {
     try {
       privateKey = await tempInstance.provider.request({ method }) as string;
-      console.log(`[Web3Auth] Private key exported via ${method}`);
+      console.log(`[Web3Auth] Private key exported successfully via ${method}`);
       break;
     } catch (e) {
-      console.warn(`[Web3Auth] ${method} failed on temp instance:`, (e as Error).message);
+      const errorMsg = (e as Error).message;
+      errors.push(`${method}: ${errorMsg}`);
+      console.warn(`[Web3Auth] ${method} failed on temp instance:`, errorMsg);
     }
   }
 
   if (!privateKey) {
-    throw new Error('Failed to export private key from non-AA Web3Auth instance');
+    throw new Error(`Failed to export private key from non-AA Web3Auth instance. Errors: ${errors.join('; ')}`);
   }
 
   return privateKey;
