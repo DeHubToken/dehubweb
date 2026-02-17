@@ -1,14 +1,39 @@
 
-## Fix: Uniform Border Gap on Search Bento
 
-**Problem:** The outer container and inner input both use `rounded-xl` (12px). When nesting rounded rectangles with a 3px gap, the inner radius should be `12px - 3px = 9px` to keep the visible border uniform on all sides. With matching radii, the corners create a wider visual gap than the straight edges.
+## Change "connect your wallet" toasts to "log in"
 
-**Solution:** Change the inner Input's border-radius to a slightly smaller value so the curves are concentric.
+All instances of "Please connect your wallet to do X" will be updated to "Please log in to do X" across the codebase. Here are the exact changes:
 
----
+### Files to update
 
-### Technical Details
+**1. `src/hooks/use-bookmarks.ts` (line 316)**
+- "Please connect your wallet to bookmark" -> "Please log in to bookmark"
 
-**File:** `src/components/app/RightSidebar.tsx` (line 38)
+**2. `src/hooks/use-profile-follow.ts` (line 64)**
+- "Please connect your wallet first" -> "Please log in first"
 
-- Change the Input's class from `rounded-xl` (12px) to `rounded-[9px]` so the inner curve is concentric with the outer `rounded-xl`, keeping the 3px gap uniform around all sides including corners.
+**3. `src/hooks/use-audio-spaces.ts` (lines 152, 215)**
+- "Please connect your wallet first" -> "Please log in first" (two occurrences)
+
+**4. `src/components/app/WhoToFollow.tsx` (line 213)**
+- "Please connect your wallet to follow users" -> "Please log in to follow users"
+
+**5. `src/components/app/mobile/MobileWhoToFollowCarousel.tsx` (line 189)**
+- "Please connect your wallet to follow users" -> "Please log in to follow users"
+
+**6. `src/components/app/cards/CommentsSection.tsx` (lines 561, 610, 666)**
+- "Please connect your wallet to like comments" -> "Please log in to like comments"
+- "Please connect your wallet to dislike comments" -> "Please log in to dislike comments"
+- "Please connect your wallet to comment" -> "Please log in to comment"
+
+**7. `src/components/app/profile/FollowersListDrawer.tsx` (line 264)**
+- "Please connect your wallet first" -> "Please log in first"
+
+**8. `src/i18n/locales/en.json` (line 118)**
+- "Please connect your wallet first" -> "Please log in first"
+
+**9. `src/pages/app/SettingsPage.tsx` (line 636)**
+- Uses `t('settings.connectWalletFirst')` -- this is covered by the i18n change above. The translation key name stays the same, only the English string value changes.
+
+Total: 10 string replacements across 8 files.
+
