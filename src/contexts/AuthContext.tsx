@@ -559,33 +559,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   /**
    * Complete DeHub authentication after Web3Auth connects.
    *
-   * For social logins: Use the provider's personal_sign directly.
-   * Web3Auth Modal v10 blocks private key export for security, so we work with the provider as-is.
+   * Uses personal_sign with Smart Account address (AA enabled).
+   * This matches the mobile app's authentication flow.
    */
   const completeDeHubAuth = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
 
     const isSocial = isSocialLoginConnected();
-    console.log('[Auth] Connection type:', isSocial ? 'SOCIAL (EOA)' : 'EXTERNAL');
+    console.log('[Auth] Connection type:', isSocial ? 'SOCIAL (AA Smart Account)' : 'EXTERNAL');
 
     if (isSocial) {
       try {
         const w3a = await getOrInitWeb3Auth();
         const userInfo = await w3a.getUserInfo();
-        console.log('[Auth] [DIAG-POPUP] Web3Auth userInfo:', JSON.stringify({
+        console.log('[Auth] [DIAG-POPUP] Web3 Auth userInfo:', JSON.stringify({
           email: userInfo.email,
         }));
       } catch (e) {
         console.warn('[Auth] [DIAG-POPUP] getUserInfo failed:', e);
       }
-      // Small delay to ensure provider is ready
-      await new Promise(r => setTimeout(r, 500));
     }
 
     const signingProvider = provider;
 
-    // Get address from provider
+    // Get address from provider (Smart Account for social, regular for external)
     let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
     if (!accounts || accounts.length === 0) {
       console.warn('[Auth] No accounts returned, retrying...');
@@ -602,7 +600,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    console.log('[Auth] Signing message with provider...');
+    console.log('[Auth] Signing message with personal_sign...');
     
     let signature: string;
     try {
