@@ -63,7 +63,7 @@ export function SidebarChat() {
   return (
     <div className="flex flex-col h-full px-4">
       {/* Header */}
-      <div className="flex items-center gap-2 pb-3 border-b border-zinc-800">
+      <div className="flex items-center gap-2 pb-3">
         <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">LIVE</span>
         <span className="text-zinc-400 text-xs flex items-center gap-1">
           <Users className="w-3 h-3" /> {onlineCount} online
@@ -128,7 +128,7 @@ export function SidebarChat() {
       </div>
 
       {/* Input */}
-      <div className="pt-2 border-t border-zinc-800">
+      <div className="pt-2">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
             <Smile className="w-4 h-4 text-zinc-500" />
