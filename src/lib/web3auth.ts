@@ -258,13 +258,19 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
 
       // Create Web3Auth instance with      // Use modal: false to bypass Web3Auth modal UI
       // Modal is hidden - we use connectTo() for direct provider access
-      console.log("[Web3Auth] Creating Web3Auth v10 instance with AA config...");
+      console.log("[Web3Auth] Creating Web3Auth v10 instance (AA DISABLED for backend compatibility)...");
 
       web3authInstance = new Web3Auth({
         clientId,
         chains: [chainConfig],
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        // v10 Account Abstraction configuration with Pimlico
+        // Account Abstraction DISABLED
+        // Backend requires standard ECDSA signatures (~132 chars)
+        // Email login works because its verifier returns simple ECDSA
+        // Twitter/Google OAuth with AA enabled returns ERC-6492 (2000+ chars) which backend rejects
+        //
+        // Solution: Disable AA for ALL social logins to get standard signatures
+        /*
         accountAbstractionConfig: {
           smartAccountType: "safe",
           chains: [
@@ -279,8 +285,8 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
             },
           ],
         },
-        // Use AA only for embedded wallets (social/email login)
-        // External wallets like MetaMask use Wagmi, not Web3Auth
+        */
+        // External wallets handled by Wagmi, not Web3Auth
         useAAWithExternalWallet: false,
         // Configure connectors for mobile-aware email/SMS login
         connectors: [
@@ -306,7 +312,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           defaultLanguage: "en",
         },
       });
-      console.log("[Web3Auth] Instance created with Account Abstraction");
+      console.log("[Web3Auth] Instance created (standard EOA mode - no AA)");
 
       // Initialize
       console.log("[Web3Auth] Calling init()...");
@@ -322,7 +328,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       console.log("[Web3Auth] init() completed, status:", web3authInstance.status);
       console.log("[Web3Auth] Connected:", web3authInstance.connected);
 
-      console.log("[Web3Auth] INITIALIZATION COMPLETE (Modal v10 + Pimlico AA), status:", web3authInstance.status);
+      console.log("[Web3Auth] INITIALIZATION COMPLETE (Modal v10, EOA mode), status:", web3authInstance.status);
       return web3authInstance;
     } catch (error) {
       console.error("[Web3Auth] INITIALIZATION FAILED:", error);
