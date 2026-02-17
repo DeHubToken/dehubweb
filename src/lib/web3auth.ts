@@ -29,16 +29,20 @@ import { supabase } from "@/integrations/supabase/client";
  */
 export function isMobileDevice(): boolean {
   if (typeof navigator === 'undefined') return false;
-  // Standard mobile user-agent check
+
+  // 1. Check screen width - if it's small, it's effectively a mobile view regardless of UA
+  if (window.innerWidth <= 1024) return true;
+
+  // 2. Standard mobile user-agent check
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     return true;
   }
-  // iPadOS 13+ reports macOS UA but has touch support
+  // 3. iPadOS 13+ reports macOS UA but has touch support
   if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) {
     return true;
   }
-  // Fallback: small screen + touch (catches edge cases)
-  if ('ontouchstart' in window && window.innerWidth <= 1024) {
+  // 4. Fallback: has touch support
+  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
     return true;
   }
   return false;
@@ -288,7 +292,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           authConnector({
             connectorSettings: {
               uxMode: useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP,
-              redirectUrl: `${window.location.origin}/app`,
+              redirectUrl: window.location.origin + window.location.pathname, // Returns to exact same page
             }
           })
         ],
@@ -403,9 +407,8 @@ export async function connectToSocialProvider(
   };
 
   // For redirect mode, must explicitly pass redirectUrl in connectTo params
-  // (authConnector config alone is not sufficient for some SDK versions)
   if (useRedirect) {
-    params.redirectUrl = `${window.location.origin}/app`;
+    params.redirectUrl = window.location.origin + window.location.pathname;
   }
 
   // Add login hint for email/sms passwordless
@@ -438,7 +441,7 @@ export async function connectToSocialProvider(
       console.log('[Web3Auth] Re-initialized with REDIRECT mode, retrying connectTo...');
       // Ensure redirectUrl is in params for the retry
       params.uxMode = UX_MODE.REDIRECT;
-      params.redirectUrl = `${window.location.origin}/app`;
+      params.redirectUrl = window.location.origin + window.location.pathname;
       // This will redirect the browser (won't return on mobile)
       provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, params);
       lastConnectedConnector = WALLET_CONNECTORS.AUTH;
