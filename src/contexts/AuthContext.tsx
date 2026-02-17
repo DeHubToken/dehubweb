@@ -485,40 +485,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const ensureSmartAccountDeployed = async (provider: any, address: string) => {
     console.log(`[Auth] Checking deployment for ${address}...`);
+    
+    // Helper to request with timeout
+    const requestWithTimeout = async (method: string, params: any[] = [], timeoutMs = 10000) => {
+      return Promise.race([
+        provider.request({ method, params }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error(`Method ${method} timed out`)), timeoutMs))
+      ]);
+    };
+
     try {
-      const code = await provider.request({
-        method: 'eth_getCode',
-        params: [address, 'latest']
-      }) as string;
+      toast.info('Checking account status...', { duration: 2000 });
+      const code = await requestWithTimeout('eth_getCode', [address, 'latest']) as string;
 
       if (code === '0x' || code === '0x0' || !code) {
-        console.log('[Auth] Account not deployed. Sending initialization transaction (matches mobile approach)...');
-        toast.info('Initializing your smart account...', { duration: 5000 });
+        console.log('[Auth] Account not deployed. Sending initialization transaction...');
+        toast.info('New account detected. Initializing...', { duration: 5000 });
         
-        // Execute an empty transaction to trigger deployment
-        // Pimlico paymaster will handle the gas
-        const txHash = await provider.request({
-          method: 'eth_sendTransaction',
-          params: [{
+        try {
+          // Execute an empty transaction to trigger deployment
+          // Pimlico paymaster will handle the gas
+          const txHash = await requestWithTimeout('eth_sendTransaction', [{
             from: address,
             to: address,
             value: '0x0',
             data: '0x',
-          }]
-        }) as string;
-        
-        console.log('[Auth] Initialization transaction sent:', txHash);
-        
-        // Brief wait for bundler inclusion
-        await new Promise(r => setTimeout(r, 4500));
+          }]) as string;
+          
+          console.log('[Auth] Initialization transaction sent:', txHash);
+          toast.success('Account initialized! Preparing login...', { duration: 4000 });
+          
+          // Brief wait for bundler inclusion
+          await new Promise(r => setTimeout(r, 4500));
+        } catch (txErr: any) {
+          console.warn('[Auth] Initialization transaction failed, proceeding anyway:', txErr.message);
+          toast.warning('Account initialization pending. Proceeding with login...', { duration: 3000 });
+        }
         return true;
       }
+      
       console.log('[Auth] Account already deployed');
       return true;
-    } catch (err) {
-      console.error('[Auth] Smart account deployment check/trigger failed:', err);
-      // We still try to proceed even if this fails, as the account might 
-      // already be deployed or the provider might handle it automatically
+    } catch (err: any) {
+      console.error('[Auth] Smart account deployment check failed:', err.message);
       return false;
     }
   };
@@ -531,82 +540,95 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
 
+    console.log('[Auth] [REDIRECT] Starting DeHub authentication sequence...');
+    toast.loading('Processing your login...', { id: 'auth-redirect' });
+
     try {
       const w3a = await getOrInitWeb3Auth();
       const userInfo = await w3a.getUserInfo();
-      console.log('[Auth] [DIAG-REDIRECT] Web3Auth userInfo:', JSON.stringify({
-        email: userInfo.email,
-      }));
+      console.log('[Auth] [REDIRECT] User Info:', userInfo.email || userInfo.name || 'Found');
     } catch (e) {
-      console.warn('[Auth] [DIAG-REDIRECT] getUserInfo failed:', e);
+      console.warn('[Auth] [REDIRECT] getUserInfo failed (ignoring):', e);
     }
 
     const signingProvider = provider;
 
-    // Get EOA address
-    await new Promise(r => setTimeout(r, 500));
-    let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-    if (!accounts?.length) {
-      await new Promise(r => setTimeout(r, 1500));
-      accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-    }
-    if (!accounts?.length) throw new Error('No accounts available from provider after redirect');
-    const authAddress = accounts[0].toLowerCase();
-    console.log('[Auth] [REDIRECT] Address from eth_accounts:', authAddress);
-
-    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-
-    // Redirect flow is always social login — ensure deployed then personal_sign
-    console.log('[Auth] [REDIRECT] Ensuring Safe account is deployed...');
-    await ensureSmartAccountDeployed(signingProvider, authAddress);
-
-    let signature: string;
-    console.log('[Auth] [REDIRECT] Signing message with personal_sign...');
     try {
-      signature = await signingProvider.request({
-        method: 'personal_sign',
-        params: [message, authAddress],
-      }) as string;
-    } catch (e) {
-      console.warn('[Auth] [REDIRECT] personal_sign failed, trying fallback param order...', e);
+      // Get AA address
+      console.log('[Auth] [REDIRECT] Fetching accounts...');
+      let accounts: string[] = [];
+      for (let i = 0; i < 5; i++) {
+        accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+        if (accounts?.length) break;
+        console.log(`[Auth] [REDIRECT] No accounts yet, retry ${i+1}/5...`);
+        await new Promise(r => setTimeout(r, 800));
+      }
+
+      if (!accounts?.length) {
+        toast.error('Could not find your wallet address', { id: 'auth-redirect' });
+        throw new Error('No accounts available from provider after redirect');
+      }
+      
+      const authAddress = accounts[0].toLowerCase();
+      console.log('[Auth] [REDIRECT] Account:', authAddress);
+
+      // Ensure deployed
+      await ensureSmartAccountDeployed(signingProvider, authAddress);
+
+      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+      
+      console.log('[Auth] [REDIRECT] Requesting signature...');
+      toast.info('Please sign in the wallet popup...', { id: 'auth-redirect', duration: 10000 });
+
+      let signature: string;
       try {
+        signature = await signingProvider.request({
+          method: 'personal_sign',
+          params: [message, authAddress],
+        }) as string;
+      } catch (e) {
+        console.warn('[Auth] [REDIRECT] personal_sign failed, trying fallback...', e);
         signature = await signingProvider.request({
           method: 'personal_sign',
           params: [authAddress, message],
         }) as string;
-      } catch (e2) {
-        console.error('[Auth] [REDIRECT] Both personal_sign attempts failed:', e2);
-        throw e2;
       }
+      
+      console.log('[Auth] [REDIRECT] Signature received, authenticating with backend...');
+      toast.loading('Verifying signature...', { id: 'auth-redirect' });
+
+      const BASE_CHAIN_ID = 8453;
+      const authResponse = await authenticateWallet(
+        authAddress,
+        signature,
+        timestamp,
+        BASE_CHAIN_ID
+      );
+
+      const normalizedUser = normalizeUser(authResponse.user, authAddress);
+
+      localStorage.setItem('dehub_wallet', authAddress);
+      localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
+
+      setWalletAddress(authAddress);
+      setUser(normalizedUser);
+
+      if (!normalizedUser.username) {
+        setRequiresUsername(true);
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+      queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+      queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+
+      toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!', { id: 'auth-redirect' });
+      console.log('[Auth] ✓ DeHub authentication complete (Redirect Flow)');
+    } catch (err: any) {
+      console.error('[Auth] [REDIRECT] Sequence failed:', err);
+      toast.error(err.message || 'Authentication failed', { id: 'auth-redirect' });
+      setIsProcessingRedirect(false);
+      setIsLoading(false);
     }
-    console.log('[Auth] [REDIRECT] Signature length:', signature?.length);
-
-    const BASE_CHAIN_ID = 8453;
-    const authResponse = await authenticateWallet(
-      authAddress,
-      signature,
-      timestamp,
-      BASE_CHAIN_ID
-    );
-
-    const normalizedUser = normalizeUser(authResponse.user, authAddress);
-
-    localStorage.setItem('dehub_wallet', authAddress);
-    localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
-
-    setWalletAddress(authAddress);
-    setUser(normalizedUser);
-
-    if (!normalizedUser.username) {
-      setRequiresUsername(true);
-    }
-
-    queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-    queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
-    queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-
-    toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
-    console.log('[Auth] ✓ DeHub authentication complete (redirect flow, Safe deployed)');
   };
 
   /**
@@ -620,99 +642,93 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const displayedDate = new Date(timestamp * 1000);
 
     const isSocial = isSocialLoginConnected();
-    console.log('[Auth] Connection type:', isSocial ? 'SOCIAL (EOA)' : 'EXTERNAL');
+    console.log('[Auth] [POPUP] Connection type:', isSocial ? 'SOCIAL' : 'EXTERNAL');
+    toast.loading(isSocial ? 'Processing login...' : 'Connecting to wallet...', { id: 'auth-popup' });
 
     if (isSocial) {
       try {
         const w3a = await getOrInitWeb3Auth();
         const userInfo = await w3a.getUserInfo();
-        console.log('[Auth] [DIAG-POPUP] Web3 Auth userInfo:', JSON.stringify({
-          email: userInfo.email,
-        }));
+        console.log('[Auth] [POPUP] User:', userInfo.email || userInfo.name || 'Found');
       } catch (e) {
-        console.warn('[Auth] [DIAG-POPUP] getUserInfo failed:', e);
+        console.warn('[Auth] [POPUP] getUserInfo failed:', e);
       }
     }
 
     const signingProvider = provider;
 
-    // Get address from provider (Smart Account for social, regular for external)
-    let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-    if (!accounts || accounts.length === 0) {
-      console.warn('[Auth] No accounts returned, retrying...');
-      await new Promise(r => setTimeout(r, 1000));
-      accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-    }
-    
-    if (!accounts || accounts.length === 0) {
-      throw new Error('No accounts available for signing');
-    }
-    
-    const authAddress = accounts[0].toLowerCase();
-    console.log('[Auth] Address from provider:', authAddress);
-
-    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-
-    let signature: string;
-
-    if (isSocial) {
-      // Social login (Safe AA enabled): ensure account is deployed before signing
-      // to avoid wrapped signature issues with undeployed contracts.
-      console.log('[Auth] Social login — ensuring Safe account is deployed...');
-      await ensureSmartAccountDeployed(signingProvider, authAddress);
-    }
-
-    // Fallback: use personal_sign (works for external wallets, or if private key export fails)
-    console.log('[Auth] Signing message with personal_sign...');
     try {
-      signature = await signingProvider.request({
-        method: 'personal_sign',
-        params: [message, authAddress],
-      }) as string;
-    } catch (e) {
-      console.warn('[Auth] personal_sign failed, trying fallback param order...', e);
-      signature = await signingProvider.request({
-        method: 'personal_sign',
-        params: [authAddress, message],
-      }) as string;
+      // Get address from provider
+      console.log('[Auth] [POPUP] Fetching accounts...');
+      let accounts: string[] = [];
+      for (let i = 0; i < 5; i++) {
+        accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+        if (accounts?.length) break;
+        await new Promise(r => setTimeout(r, 800));
+      }
+      
+      if (!accounts?.length) throw new Error('No accounts available for signing');
+      const authAddress = accounts[0].toLowerCase();
+      console.log('[Auth] [POPUP] Address:', authAddress);
+
+      if (isSocial) {
+        // Social login (Safe AA enabled): ensure account is deployed before signing
+        await ensureSmartAccountDeployed(signingProvider, authAddress);
+      }
+
+      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+
+      console.log('[Auth] [POPUP] Requesting signature...');
+      if (!isSocial) toast.info('Please sign in your wallet extension...', { id: 'auth-popup', duration: 10000 });
+      else toast.info('Finalizing your login...', { id: 'auth-popup', duration: 10000 });
+
+      let signature: string;
+      try {
+        signature = await signingProvider.request({
+          method: 'personal_sign',
+          params: [message, authAddress],
+        }) as string;
+      } catch (e) {
+        console.warn('[Auth] [POPUP] personal_sign fallback...', e);
+        signature = await signingProvider.request({
+          method: 'personal_sign',
+          params: [authAddress, message],
+        }) as string;
+      }
+
+      console.log('[Auth] [POPUP] Signature received, authenticating...');
+      toast.loading('Verifying with DeHub...', { id: 'auth-popup' });
+
+      const BASE_CHAIN_ID = 8453;
+      const authResponse = await authenticateWallet(
+        authAddress,
+        signature,
+        timestamp,
+        BASE_CHAIN_ID
+      );
+
+      const normalizedUser = normalizeUser(authResponse.user, authAddress);
+
+      localStorage.setItem('dehub_wallet', authAddress);
+      localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
+
+      setWalletAddress(authAddress);
+      setUser(normalizedUser);
+
+      if (!normalizedUser.username) {
+        setRequiresUsername(true);
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+      queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+      queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+
+      toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!', { id: 'auth-popup' });
+      console.log('[Auth] ✓ DeHub authentication complete (Popup Flow)');
+    } catch (err: any) {
+      console.error('[Auth] [POPUP] Sequence failed:', err);
+      toast.error(err.message || 'Authentication failed', { id: 'auth-popup' });
     }
-
-    console.log('[Auth] Signature received, length:', signature?.length);
-    
-    // Log signature type for debugging
-    if (signature && signature.length > 200) {
-      console.log('[Auth] Long signature detected (likely ERC-6492 from undeployed Smart Account)');
-      console.log('[Auth] Sending full signature to backend - it may need ERC-6492 support');
-    }
-
-    const BASE_CHAIN_ID = 8453;
-    console.log(`[Auth] Authenticating with backend for address ${authAddress}...`);
-
-    const authResponse = await authenticateWallet(
-      authAddress,
-      signature,
-      timestamp,
-      BASE_CHAIN_ID
-    );
-
-    const normalizedUser = normalizeUser(authResponse.user, authAddress);
-
-    localStorage.setItem('dehub_wallet', authAddress);
-    localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
-
-    setWalletAddress(authAddress);
-    setUser(normalizedUser);
-
-    if (!normalizedUser.username) {
-      setRequiresUsername(true);
-    }
-
-    queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-    queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
-    queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-
-    toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
-    console.log('[Auth] ✓ DeHub authentication complete');
   };
 
   /**
