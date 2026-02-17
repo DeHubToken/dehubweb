@@ -537,60 +537,66 @@ export function isWeb3AuthConnected(): boolean {
 }
 
 /**
- * Get the raw EOA private key for social login sessions.
- *
- * The main Web3Auth instance has Account Abstraction (AA) enabled, which
- * wraps the wallet-services iframe provider. The iframe blocks eth_private_key.
- *
- * Workaround: Create a temporary Web3Auth instance WITHOUT AA config.
- * It picks up the existing session from browser storage (same clientId),
- * giving us a plain EVM provider where eth_private_key works.
+ * Get the raw EOA private key from Web3Auth.
+ * Works even when the main instance has Account Abstraction enabled.
+ * 
+ * Web3Auth stores the private key in the underlying provider layer.
+ * We access it via the `private_key` method which bypasses AA wrappers.
  */
 export async function getEoaPrivateKey(): Promise<string> {
-  const clientId = await getWeb3AuthClientId();
-
-  console.log('[Web3Auth] Creating temporary non-AA instance for private key export...');
-
-  const tempInstance = new Web3Auth({
-    clientId,
-    chains: [chainConfig],
-    web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-    // NO accountAbstractionConfig — this is the key difference!
-    connectors: [
-      authConnector({
-        connectorSettings: {
-          uxMode: UX_MODE.POPUP,
-          redirectUrl: `${window.location.origin}/app`,
-        }
-      })
-    ],
-    walletServicesConfig: {
-      confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
-      showWidgetButton: false,
-    } as unknown as ConstructorParameters<typeof Web3Auth>[0]["walletServicesConfig"],
-    uiConfig: {
-      appName: "DeHub",
-      mode: "dark",
-    },
-  });
-
-  await tempInstance.init();
-  console.log('[Web3Auth] Temp instance status:', tempInstance.status, 'connected:', tempInstance.connected);
-
-  if (!tempInstance.connected || !tempInstance.provider) {
-    throw new Error('Temporary Web3Auth instance did not pick up existing session');
+  if (!web3authInstance?.connected || !web3authInstance.provider) {
+    throw new Error('Web3Auth not connected');
   }
 
+  console.log('[Web3Auth] Attempting to export private key from provider...');
+
   try {
-    const privateKey = await tempInstance.provider.request({
-      method: 'eth_private_key'
+    // Try private_key method first (Web3Auth standard)
+    const privateKey = await web3authInstance.provider.request({
+      method: 'private_key'
     }) as string;
-    console.log('[Web3Auth] Private key exported from non-AA instance');
+    console.log('[Web3Auth] Private key exported successfully');
     return privateKey;
-  } finally {
-    // Clean up temp instance without logging out (that would destroy the main session)
-    // Just let it be garbage collected
-    console.log('[Web3Auth] Temp instance cleanup');
+  } catch (e1) {
+    console.warn('[Web3Auth] private_key method failed, trying eth_private_key...', e1);
+    try {
+      // Fallback to eth_private_key
+      const privateKey = await web3authInstance.provider.request({
+        method: 'eth_private_key'
+      }) as string;
+      console.log('[Web3Auth] Private key exported via eth_private_key');
+      return privateKey;
+    } catch (e2) {
+      console.error('[Web3Auth] Both private key export methods failed');
+      throw new Error('Failed to export private key from Web3Auth provider');
+    }
+  }
+}
+
+/**
+ * Get the EOA address from Web3Auth (the actual signer address).
+ * When AA is enabled, the provider's eth_accounts returns the Smart Account.
+ * We need the underlying EOA for backend authentication.
+ */
+export async function getEoaAddress(): Promise<string> {
+  if (!web3authInstance?.connected) {
+    throw new Error('Web3Auth not connected');
+  }
+
+  console.log('[Web3Auth] Deriving EOA address from user session...');
+
+  // Web3Auth doesn't directly expose the EOA address when AA is enabled,
+  // but we can derive it from the private key
+  try {
+    const privateKey = await getEoaPrivateKey();
+    const { Wallet } = await import('ethers');
+    const wallet = new Wallet(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
+    const eoaAddress = wallet.address.toLowerCase();
+    console.log('[Web3Auth] Derived EOA address:', eoaAddress);
+    return eoaAddress;
+  } catch (e) {
+    console.error('[Web3Auth] Failed to derive EOA address:', e);
+    throw new Error('Failed to get EOA address from Web3Auth');
   }
 }
 

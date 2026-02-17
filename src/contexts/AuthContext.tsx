@@ -35,6 +35,7 @@ import {
   WALLET_CONNECTORS,
   getOrInitWeb3Auth,
   getEoaPrivateKey,
+  getEoaAddress,
 } from '@/lib/web3auth';
 import type { Web3Auth } from '@web3auth/modal';
 
@@ -562,14 +563,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   /**
    * Complete DeHub authentication after Web3Auth connects.
    *
-   * For social logins with AA:
-   * - The provider's personal_sign produces ERC-6492 (Smart Account) signatures
-   *   because the wallet-services iframe wraps signing with AA internally
-   * - eth_accounts returns the EOA signer address
-   * - The AA iframe blocks eth_private_key
-   * - Fix: Create a temporary non-AA Web3Auth instance that picks up the same
-   *   session, then export the raw EOA private key and sign with ethers directly.
-   *   This produces a standard ECDSA signature matching the EOA address.
+   * CRITICAL FIX for social logins with Account Abstraction:
+   * - The backend expects address to match the signer
+   * - With AA, eth_accounts returns the Smart Account address (Safe)
+   * - But the Safe isn't deployed yet, so backend can't verify EIP-1271
+   * - Solution: Use the EOA address (Safe owner) for both address and signature
+   * - The Safe address can still be used for on-chain transactions after login
    */
   const completeDeHubAuth = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -590,48 +589,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    const signingProvider = provider;
-
-    // Get EOA address
     let authAddress: string;
-    let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-    if (!accounts || accounts.length === 0) {
-      await new Promise(r => setTimeout(r, 1000));
-      accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-    }
-    if (!accounts || accounts.length === 0) {
-      throw new Error('No accounts available for signing');
-    }
-    authAddress = accounts[0].toLowerCase();
-    console.log('[Auth] Address from eth_accounts:', authAddress);
-
-    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-
-    console.log('[Auth] Signing login message for address:', authAddress);
-
     let signature: string;
 
     if (isSocial) {
-      // The AA-enabled provider wraps personal_sign with ERC-6492.
-      // Create a temporary non-AA Web3Auth instance to export the raw private key,
-      // then sign directly with ethers for a standard ECDSA signature.
-      console.log('[Auth] Social login: getting raw private key via non-AA instance...');
+      // For social logins: Use EOA address + EOA signature
+      console.log('[Auth] Social login: Getting EOA address and private key...');
       try {
+        const eoaAddress = await getEoaAddress();
+        authAddress = eoaAddress;
+        
+        const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+        
+        console.log('[Auth] Signing with EOA address:', authAddress);
+        
         const privateKey = await getEoaPrivateKey();
         const { Wallet } = await import('ethers');
         const wallet = new Wallet(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
         signature = await wallet.signMessage(message);
+        
         console.log('[Auth] Standard EOA signature produced, length:', signature?.length);
       } catch (e) {
-        console.warn('[Auth] Non-AA private key export failed, falling back to personal_sign:', e);
-        // Last resort: use the AA-wrapped personal_sign
-        signature = await signingProvider.request({
-          method: 'personal_sign',
-          params: [message, authAddress],
-        }) as string;
+        console.error('[Auth] EOA address/signature failed:', e);
+        throw new Error('Failed to get EOA credentials for authentication');
       }
     } else {
       // External wallets: use personal_sign directly
+      const signingProvider = provider;
+      
+      let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+      if (!accounts || accounts.length === 0) {
+        await new Promise(r => setTimeout(r, 1000));
+        accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+      }
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts available for signing');
+      }
+      authAddress = accounts[0].toLowerCase();
+      
+      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+      
+      console.log('[Auth] External wallet - Signing with address:', authAddress);
+      
       try {
         signature = await signingProvider.request({
           method: 'personal_sign',
