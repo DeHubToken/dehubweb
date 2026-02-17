@@ -115,7 +115,7 @@
     "allPostsPrivate": "All posts set to private",
     "allPostsPublic": "All posts set to public",
     "failedUpdateVisibility": "Failed to update visibility",
-    "connectWalletFirst": "Please connect your wallet first",
+    "connectWalletFirst": "Please log in first",
     "whoCanMessage": "Who can message you",
     "whoCanMessageDesc": "Control who can send you direct messages",
     "everyone": "Everyone",

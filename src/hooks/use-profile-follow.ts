@@ -61,7 +61,7 @@ export function useProfileFollow({
 
   const handleUnfollow = async () => {
     if (!isAuthenticated) {
-      toast.error('Please connect your wallet first');
+      toast.error('Please log in first');
       return;
     }
 
