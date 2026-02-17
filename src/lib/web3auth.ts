@@ -30,19 +30,17 @@ import { supabase } from "@/integrations/supabase/client";
 export function isMobileDevice(): boolean {
   if (typeof navigator === 'undefined') return false;
 
-  // 1. Check screen width - if it's small, it's effectively a mobile view regardless of UA
-  if (window.innerWidth <= 1024) return true;
-
-  // 2. Standard mobile user-agent check
+  // 1. Standard mobile user-agent check (most reliable)
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     return true;
   }
-  // 3. iPadOS 13+ reports macOS UA but has touch support
+  // 2. iPadOS 13+ reports macOS UA but has touch support
   if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) {
     return true;
   }
-  // 4. Fallback: has touch support
-  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+  // 3. Small screen + touch = likely mobile (but NOT just touch or just small screen alone)
+  //    Many desktop laptops have touch. Many desktop windows are narrow.
+  if ('ontouchstart' in window && window.innerWidth <= 768) {
     return true;
   }
   return false;
@@ -302,29 +300,43 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       });
       console.log("[Web3Auth] Instance created (NO-MODAL SDK)");
 
-      // Initialize
+      // Initialize with timeout to prevent hanging on mobile
       console.log("[Web3Auth] Calling init()...");
-      await web3authInstance.init();
+      await Promise.race([
+        web3authInstance.init(),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("Web3Auth init timed out after 15s")), 15000)
+        )
+      ]);
       console.log("[Web3Auth] init() resolved, status:", web3authInstance.status);
 
-      // On some mobile devices/networks, status might stay 'not_ready' for a few ms
-      // while it processes metadata or analytics failures. Wait for transition.
-      for (let i = 0; i < 40; i++) { // Wait up to 10 seconds
-        await new Promise(r => setTimeout(r, 250));
-        if (web3authInstance.status !== "not_ready") {
-          console.log(`[Web3Auth] Status transitioned to ${web3authInstance.status} after ${i * 250}ms`);
-          break;
+      // On redirect return pages, the SDK may need extra time to process params
+      if (web3authInstance.status === "not_ready" && hasRedirectResult()) {
+        console.log("[Web3Auth] Redirect page detected, waiting for SDK to process params...");
+        for (let i = 0; i < 20; i++) { // Wait up to 5 seconds
+          await new Promise(r => setTimeout(r, 250));
+          if (web3authInstance.status !== "not_ready") {
+            console.log(`[Web3Auth] Status transitioned to ${web3authInstance.status} after ${i * 250}ms`);
+            break;
+          }
+        }
+      } else if (web3authInstance.status === "not_ready") {
+        // Non-redirect page: brief wait only
+        for (let i = 0; i < 8; i++) { // Wait up to 2 seconds
+          await new Promise(r => setTimeout(r, 250));
+          if (web3authInstance.status !== "not_ready") {
+            console.log(`[Web3Auth] Status transitioned to ${web3authInstance.status} after ${i * 250}ms`);
+            break;
+          }
         }
       }
-      // If still not ready but we have redirect params, try a hard init() fallback
-      if (web3authInstance.status === "not_ready" && hasRedirectResult()) {
-        console.warn("[Web3Auth] Still not_ready on redirect page, attempting init() fallback...");
-        try {
-          await (web3authInstance as any).init();
-          console.log("[Web3Auth] init() fallback resolved, status:", web3authInstance.status);
-        } catch (e) {
-          console.error("[Web3Auth] init() fallback failed:", e);
-        }
+
+      // CRITICAL: If still not_ready, the SDK is broken — throw instead of returning a broken instance
+      if (web3authInstance.status === "not_ready") {
+        const errMsg = "Web3Auth stuck in not_ready state. This usually means the SDK cannot reach auth.web3auth.io (browser may be blocking it).";
+        console.error("[Web3Auth]", errMsg);
+        web3authInstance = null;
+        throw new Error(errMsg);
       }
 
       console.log("[Web3Auth] INITIALIZATION FINISHED, final status:", web3authInstance.status, "Connected:", web3authInstance.connected);

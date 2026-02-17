@@ -29,7 +29,6 @@ import {
   forceCleanupWeb3Auth,
   connectToSocialProvider,
   hasRedirectResult,
-  isMobileDevice,
   isSocialLoginConnected,
   setLastConnectedConnector,
   AUTH_CONNECTION,
@@ -777,6 +776,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       userFriendlyMessage = 'This login method is not configured. Please try a different option.';
     } else if (errorMessage.includes('smart account') || errorMessage.includes('Smart Account') || errorMessage.includes('aa_')) {
       userFriendlyMessage = 'Smart account setup failed. Please try again or use an external wallet.';
+    } else if (errorMessage.includes('not_ready') || errorMessage.includes('web3auth.io')) {
+      userFriendlyMessage = 'Login service unreachable. Your browser may be blocking it. Try a different browser or disable ad blockers.';
+    } else if (errorMessage.includes('init') && errorMessage.includes('timeout')) {
+      userFriendlyMessage = 'Login service is slow to respond. Check your connection and try again.';
     }
     
     toast.error(userFriendlyMessage);
@@ -813,13 +816,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log(`[Auth] ✓ ${provider} connection complete!`);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '';
-
-      // On mobile with redirect mode, the browser navigates away during connectTo().
-      // Any error at that point is just the page unloading — don't cleanup or show errors.
-      if (isMobileDevice()) {
-        console.log('[Auth] Mobile: ignoring error during redirect navigation:', errorMessage);
-        return;
-      }
 
       // Force cleanup after any error to ensure clean state for retry
       try {
@@ -865,11 +861,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '';
 
-      if (isMobileDevice()) {
-        console.log('[Auth] Mobile: ignoring error during redirect navigation:', errorMessage);
-        return;
-      }
-
       try {
         await forceCleanupWeb3Auth();
       } catch (e) {
@@ -912,11 +903,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('[Auth] ✓ SMS connection complete!');
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '';
-
-      if (isMobileDevice()) {
-        console.log('[Auth] Mobile: ignoring error during redirect navigation:', errorMessage);
-        return;
-      }
 
       try {
         await forceCleanupWeb3Auth();
