@@ -188,7 +188,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   const triggerButton = (
     <div className="flex flex-col items-center gap-0.5 md:gap-1 flex-shrink-0 cursor-pointer -ml-[7.5px]">
       <div className="rounded-xl bg-gradient-to-tl from-white/40 via-white/20 to-white/5 p-[2px]">
-        <div className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] rounded-[10px] bg-zinc-900 flex items-center justify-center">
+        <div className="w-[57px] h-[57px] md:w-[63px] md:h-[63px] rounded-[10px] bg-zinc-900 flex items-center justify-center">
           <Plus className="w-5 h-5 md:w-6 md:h-6 text-white" />
         </div>
       </div>
@@ -344,7 +344,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
               >
                 {item.type === 'story' ? (
                   <ShimmerBorder active={!isWatched(item.story?.id || '')}>
-                    <div className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] rounded-[10px] overflow-hidden bg-zinc-800">
+                    <div className="w-[57px] h-[57px] md:w-[63px] md:h-[63px] rounded-[10px] overflow-hidden bg-zinc-800">
                       {item.thumbnail ? (
                         <img 
                           src={item.thumbnail} 
@@ -362,7 +362,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
                     </div>
                   </ShimmerBorder>
                 ) : (
-                  <Avatar className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] rounded-[10px]">
+                  <Avatar className="w-[57px] h-[57px] md:w-[63px] md:h-[63px] rounded-[10px]">
                     <AvatarImage src={item.avatar} className="object-cover rounded-[10px]" />
                     <AvatarFallback className="bg-zinc-700 rounded-[10px]">
                       {item.name[0]?.toUpperCase()}
@@ -387,7 +387,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
                 onClick={() => setIsOpen(true)}
               >
                 <div className="rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 p-[2px]">
-                  <div className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] rounded-[10px] bg-zinc-900 flex items-center justify-center">
+                  <div className="w-[57px] h-[57px] md:w-[63px] md:h-[63px] rounded-[10px] bg-zinc-900 flex items-center justify-center">
                     <Plus className="w-5 h-5 md:w-6 md:h-6 text-zinc-500" />
                   </div>
                 </div>
