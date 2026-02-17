@@ -261,7 +261,7 @@ export function FollowersListDrawer({
     e.stopPropagation();
     
     if (!isAuthenticated) {
-      toast.error('Please connect your wallet first');
+      toast.error('Please log in first');
       return;
     }
 

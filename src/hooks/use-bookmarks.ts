@@ -313,7 +313,7 @@ export function useBookmarkPost(tokenId: string | number) {
 
   const toggleBookmark = () => {
     if (!isAuthenticated) {
-      toast.error('Please connect your wallet to bookmark');
+      toast.error('Please log in to bookmark');
       return;
     }
     

@@ -210,7 +210,7 @@ export function WhoToFollow() {
     e.stopPropagation();
 
     if (!isAuthenticated) {
-      toast.error('Please connect your wallet to follow users');
+      toast.error('Please log in to follow users');
       return;
     }
 

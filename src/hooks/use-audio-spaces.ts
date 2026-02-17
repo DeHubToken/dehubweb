@@ -149,7 +149,7 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
   // Create a new stage
   const createSpace = useCallback(async (title: string, description?: string): Promise<AudioSpace | null> => {
     if (!walletAddress) {
-      toast.error('Please connect your wallet first');
+      toast.error('Please log in first');
       return null;
     }
 
@@ -212,7 +212,7 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
   // Join an existing stage
   const joinSpace = useCallback(async (spaceId: string): Promise<boolean> => {
     if (!walletAddress) {
-      toast.error('Please connect your wallet first');
+      toast.error('Please log in first');
       return false;
     }
 

@@ -558,7 +558,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
   const handleLike = async (commentId: string) => {
     if (!isAuthenticated) {
-      toast.error('Please connect your wallet to like comments');
+      toast.error('Please log in to like comments');
       return;
     }
     
@@ -607,7 +607,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
   const handleDislike = (commentId: string) => {
     if (!isAuthenticated) {
-      toast.error('Please connect your wallet to dislike comments');
+      toast.error('Please log in to dislike comments');
       return;
     }
     
@@ -663,7 +663,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     if ((!newComment.trim() && !voiceNote && !commentImage) || isSubmitting) return;
     
     if (!isAuthenticated || !user) {
-      toast.error('Please connect your wallet to comment');
+      toast.error('Please log in to comment');
       return;
     }
 
