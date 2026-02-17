@@ -183,7 +183,7 @@ function parseTimeAgoToDate(timeAgo: string): Date {
 // Live Categories Carousel - consistent format with LiveFeed
 function LiveCategoriesCarousel() {
   return (
-    <div className="bg-zinc-900 rounded-2xl p-4">
+    <div>
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-white flex items-center gap-2">
           <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
@@ -194,14 +194,13 @@ function LiveCategoriesCarousel() {
         </button>
       </div>
       <div className="relative">
-        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
         <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide px-1">
           {LIVE_CATEGORIES.map((cat) => (
             <button
               key={cat.name}
               className="flex-shrink-0 group"
             >
-              <div className="w-24 sm:w-28 overflow-hidden rounded-xl">
+              <div className="w-36 sm:w-[10.5rem] overflow-hidden rounded-xl">
                 <img 
                   src={cat.image} 
                   alt={cat.name}
@@ -209,7 +208,7 @@ function LiveCategoriesCarousel() {
                 />
               </div>
               <div className="mt-1.5 text-left">
-                <p className="text-white text-xs font-medium truncate w-24 sm:w-28">{cat.name}</p>
+                <p className="text-white text-xs font-medium truncate w-36 sm:w-[10.5rem]">{cat.name}</p>
                 <div className="flex items-center gap-2 text-zinc-500 text-xs">
                   <span className="flex items-center gap-0.5">
                     <Radio className="w-3 h-3" />
