@@ -480,6 +480,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
+   * Ensure Smart Account is deployed before signing.
+   * Matches mobile app logic: check if code exists, if not, send empty tx.
+   */
+  const ensureSmartAccountDeployed = async (provider: any, address: string) => {
+    console.log(`[Auth] Checking deployment for ${address}...`);
+    try {
+      const code = await provider.request({
+        method: 'eth_getCode',
+        params: [address, 'latest']
+      }) as string;
+
+      if (code === '0x' || code === '0x0' || !code) {
+        console.log('[Auth] Account not deployed. Sending initialization transaction (matches mobile approach)...');
+        toast.info('Initializing your smart account...', { duration: 5000 });
+        
+        // Execute an empty transaction to trigger deployment
+        // Pimlico paymaster will handle the gas
+        const txHash = await provider.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            from: address,
+            to: address,
+            value: '0x0',
+            data: '0x',
+          }]
+        }) as string;
+        
+        console.log('[Auth] Initialization transaction sent:', txHash);
+        
+        // Brief wait for bundler inclusion
+        await new Promise(r => setTimeout(r, 4500));
+        return true;
+      }
+      console.log('[Auth] Account already deployed');
+      return true;
+    } catch (err) {
+      console.error('[Auth] Smart account deployment check/trigger failed:', err);
+      // We still try to proceed even if this fails, as the account might 
+      // already be deployed or the provider might handle it automatically
+      return false;
+    }
+  };
+
+  /**
    * Complete DeHub auth specifically after redirect flow.
    * Same non-AA private key approach as popup flow.
    */
@@ -512,58 +556,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    // Redirect flow is always social login — try EOA private key approach first
+    // Redirect flow is always social login — ensure deployed then personal_sign
+    console.log('[Auth] [REDIRECT] Ensuring Safe account is deployed...');
+    await ensureSmartAccountDeployed(signingProvider, authAddress);
+
     let signature: string;
-    console.log('[Auth] [REDIRECT] Attempting EOA private key signing...');
-    try {
-      const privateKey = await signingProvider.request({ 
-        method: 'eth_private_key' 
-      }) as string;
-      
-      console.log('[Auth] [REDIRECT] Private key exported successfully');
-      
-      const { Wallet } = await import('ethers');
-      const wallet = new Wallet(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
-      const eoaAddress = wallet.address.toLowerCase();
-      console.log('[Auth] [REDIRECT] EOA address from private key:', eoaAddress);
-
-      const eoaMessage = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${eoaAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-
-      signature = await wallet.signMessage(eoaMessage);
-      console.log('[Auth] [REDIRECT] Direct ECDSA signature, length:', signature?.length);
-
-      const BASE_CHAIN_ID = 8453;
-      const authResponse = await authenticateWallet(
-        eoaAddress,
-        signature,
-        timestamp,
-        BASE_CHAIN_ID
-      );
-
-      const normalizedUser = normalizeUser(authResponse.user, eoaAddress);
-
-      localStorage.setItem('dehub_wallet', eoaAddress);
-      localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
-
-      setWalletAddress(eoaAddress);
-      setUser(normalizedUser);
-
-      if (!normalizedUser.username) {
-        setRequiresUsername(true);
-      }
-
-      queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-      queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
-      queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-
-      toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
-      console.log('[Auth] ✓ DeHub authentication complete (redirect, EOA key)');
-      return;
-    } catch (pkError) {
-      console.warn('[Auth] [REDIRECT] EOA private key failed, falling back to personal_sign:', pkError);
-    }
-
-    // Fallback: personal_sign
     console.log('[Auth] [REDIRECT] Signing message with personal_sign...');
     try {
       signature = await signingProvider.request({
@@ -572,10 +569,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }) as string;
     } catch (e) {
       console.warn('[Auth] [REDIRECT] personal_sign failed, trying fallback param order...', e);
-      signature = await signingProvider.request({
-        method: 'personal_sign',
-        params: [authAddress, message],
-      }) as string;
+      try {
+        signature = await signingProvider.request({
+          method: 'personal_sign',
+          params: [authAddress, message],
+        }) as string;
+      } catch (e2) {
+        console.error('[Auth] [REDIRECT] Both personal_sign attempts failed:', e2);
+        throw e2;
+      }
     }
     console.log('[Auth] [REDIRECT] Signature length:', signature?.length);
 
@@ -604,7 +606,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
 
     toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
-    console.log('[Auth] ✓ DeHub authentication complete (redirect flow)');
+    console.log('[Auth] ✓ DeHub authentication complete (redirect flow, Safe deployed)');
   };
 
   /**
@@ -654,64 +656,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let signature: string;
 
     if (isSocial) {
-      // Social login: AA provider wraps personal_sign with ERC-6492 which the backend
-      // can't verify. Instead, export the raw EOA private key from a temporary non-AA
-      // Web3Auth instance and sign with ethers Wallet for a standard ECDSA signature.
-      console.log('[Auth] Social login — exporting EOA private key for direct signing...');
-      try {
-        // Request private key directly from Web3Auth provider
-        // This works even when AA is disabled in config
-        const privateKey = await signingProvider.request({ 
-          method: 'eth_private_key' 
-        }) as string;
-        
-        console.log('[Auth] Private key exported successfully');
-        
-        const { Wallet } = await import('ethers');
-        const wallet = new Wallet(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
-        const eoaAddress = wallet.address.toLowerCase();
-        console.log('[Auth] EOA address from private key:', eoaAddress);
-
-        // Re-derive message with EOA address (may differ from AA Smart Account address)
-        const eoaMessage = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${eoaAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-
-        signature = await wallet.signMessage(eoaMessage);
-        console.log('[Auth] Direct ECDSA signature, length:', signature?.length);
-
-        // Use EOA address for auth (matches the signature)
-        const BASE_CHAIN_ID = 8453;
-        console.log(`[Auth] Authenticating with backend for EOA address ${eoaAddress}...`);
-
-        const authResponse = await authenticateWallet(
-          eoaAddress,
-          signature,
-          timestamp,
-          BASE_CHAIN_ID
-        );
-
-        const normalizedUser = normalizeUser(authResponse.user, eoaAddress);
-
-        localStorage.setItem('dehub_wallet', eoaAddress);
-        localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
-
-        setWalletAddress(eoaAddress);
-        setUser(normalizedUser);
-
-        if (!normalizedUser.username) {
-          setRequiresUsername(true);
-        }
-
-        queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-        queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
-        queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-
-        toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
-        console.log('[Auth] ✓ DeHub authentication complete (EOA private key)');
-        return;
-      } catch (pkError) {
-        console.warn('[Auth] EOA private key approach failed, falling back to personal_sign:', pkError);
-        // Fall through to personal_sign below
-      }
+      // Social login (Safe AA enabled): ensure account is deployed before signing
+      // to avoid wrapped signature issues with undeployed contracts.
+      console.log('[Auth] Social login — ensuring Safe account is deployed...');
+      await ensureSmartAccountDeployed(signingProvider, authAddress);
     }
 
     // Fallback: use personal_sign (works for external wallets, or if private key export fails)

@@ -258,19 +258,14 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
 
       // Create Web3Auth instance with      // Use modal: false to bypass Web3Auth modal UI
       // Modal is hidden - we use connectTo() for direct provider access
-      console.log("[Web3Auth] Creating Web3Auth v10 instance (AA DISABLED for backend compatibility)...");
+      console.log("[Web3Auth] Creating Web3Auth v10 instance (AA ENABLED - will deploy on first login)...");
 
       web3authInstance = new Web3Auth({
         clientId,
         chains: [chainConfig],
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        // Account Abstraction DISABLED
-        // Backend requires standard ECDSA signatures (~132 chars)
-        // Email login works because its verifier returns simple ECDSA
-        // Twitter/Google OAuth with AA enabled returns ERC-6492 (2000+ chars) which backend rejects
-        //
-        // Solution: Disable AA for ALL social logins to get standard signatures
-        /*
+        // Account Abstraction enabled - signature verification issues are handled
+        // by deploying the contract via an empty transaction before signing (matches mobile logic).
         accountAbstractionConfig: {
           smartAccountType: "safe",
           chains: [
@@ -285,7 +280,6 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
             },
           ],
         },
-        */
         // External wallets handled by Wagmi, not Web3Auth
         useAAWithExternalWallet: false,
         // Configure connectors for mobile-aware email/SMS login
@@ -540,81 +534,6 @@ export async function safeResetAfterError(): Promise<void> {
 
 export function isWeb3AuthConnected(): boolean {
   return web3authInstance?.connected ?? false;
-}
-
-/**
- * Get the raw EOA private key for social login sessions.
- *
- * The main Web3Auth instance has Account Abstraction (AA) enabled.
- * The wallet-services iframe blocks eth_private_key/private_key when AA is active.
- *
- * Workaround: Create a temporary Web3Auth instance WITHOUT accountAbstractionConfig.
- * It picks up the existing session from browser storage (same clientId + network),
- * giving us a plain EVM provider where eth_private_key works.
- */
-export async function getEoaPrivateKey(): Promise<string> {
-  if (!web3authInstance?.connected) {
-    throw new Error('Web3Auth not connected');
-  }
-
-  const clientId = await getWeb3AuthClientId();
-
-  console.log('[Web3Auth] Creating temporary non-AA instance for private key export...');
-
-  const tempInstance = new Web3Auth({
-    clientId,
-    chains: [chainConfig],
-    web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-    // NO accountAbstractionConfig — this is the key difference!
-    connectors: [
-      authConnector({
-        connectorSettings: {
-          uxMode: UX_MODE.POPUP,
-          redirectUrl: `${window.location.origin}/app`,
-        }
-      })
-    ],
-    walletServicesConfig: {
-      confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
-      showWidgetButton: false,
-    } as unknown as ConstructorParameters<typeof Web3Auth>[0]["walletServicesConfig"],
-    uiConfig: {
-      appName: "DeHub",
-      mode: "dark",
-    },
-  });
-
-  await tempInstance.init();
-  console.log('[Web3Auth] Temp instance status:', tempInstance.status, 'connected:', tempInstance.connected);
-
-  // The provider exists if session is picked up, even if status is 'not_ready'
-  if (!tempInstance.provider) {
-    throw new Error('Temporary Web3Auth instance did not pick up existing session - no provider');
-  }
-
-  console.log('[Web3Auth] Temp instance has provider, attempting private key export...');
-
-  // Try both method names — Web3Auth supports both
-  let privateKey: string | null = null;
-  const errors: string[] = [];
-
-  for (const method of ['eth_private_key', 'private_key']) {
-    try {
-      privateKey = await tempInstance.provider.request({ method }) as string;
-      console.log(`[Web3Auth] Private key exported successfully via ${method}`);
-      break;
-    } catch (e) {
-      const errorMsg = (e as Error).message;
-      errors.push(`${method}: ${errorMsg}`);
-      console.warn(`[Web3Auth] ${method} failed on temp instance:`, errorMsg);
-    }
-  }
-
-  if (!privateKey) {
-    throw new Error(`Failed to export private key from non-AA Web3Auth instance. Errors: ${errors.join('; ')}`);
-  }
-
-  return privateKey;
 }
 
 /**

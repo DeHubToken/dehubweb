@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useUserSearchForDM } from '@/hooks/use-messages';
-import { type DeHubUser, type DeHubConversation, getAuthToken, DEHUB_CDN_BASE } from '@/lib/api/dehub';
+import { createGroup, type DeHubUser, type DeHubConversation, getAuthToken, DEHUB_CDN_BASE } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { toast } from 'sonner';
 import { VerifiedBadge } from '../VerifiedBadge';
@@ -119,43 +119,22 @@ export function CreateGroupModal({
     setIsCreating(true);
     
     try {
-      // Use FormData for group creation
-      const formData = new FormData();
-      formData.append('name', groupName.trim());
-      if (groupDescription.trim()) {
-        formData.append('description', groupDescription.trim());
-      }
-      // Send member addresses as JSON array
       const memberAddresses = selectedMembers.map(m => m.address || m._id).filter(Boolean);
       if (walletAddress && !memberAddresses.includes(walletAddress)) {
         memberAddresses.push(walletAddress);
       }
-      formData.append('members', JSON.stringify(memberAddresses));
 
-      const response = await fetch(`${DEHUB_API_BASE}/api/dm/group`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || errorData.error || `Failed to create group: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const groupConversation = data.result || data;
+      const groupConversation = await createGroup(
+        groupName.trim(),
+        memberAddresses,
+        groupDescription.trim() || undefined
+      );
       
       toast.success('Group created!');
       onGroupCreated({
-        id: groupConversation._id || groupConversation.id,
-        type: 'group',
-        participants: selectedMembers,
-        unreadCount: 0,
-        name: groupName,
         ...groupConversation,
+        isGroup: true,
+        participants: selectedMembers,
       });
       handleClose();
     } catch (error: any) {

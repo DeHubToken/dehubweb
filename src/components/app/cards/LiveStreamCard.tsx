@@ -448,6 +448,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
           postId={stream.id} 
           className="p-0 mb-2" 
           onComment={() => setShowComments(true)}
+          onLike={handleLike}
           likeCount={stream.likeCount}
           commentCount={stream.commentCount}
         />

@@ -757,7 +757,7 @@ export async function createGroup(
       method: "POST",
       body: {
         name,
-        members: JSON.stringify(memberAddresses),
+        members: memberAddresses,
         description,
       },
       requiresAuth: true,

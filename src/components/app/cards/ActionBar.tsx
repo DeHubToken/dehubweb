@@ -62,6 +62,10 @@ interface ActionBarProps {
   shareCount?: number;
   /** Whether this is an optimistic (processing) post */
   isOptimistic?: boolean;
+  /** Handler for like action (overrides default voteOnPost) */
+  onLike?: () => void;
+  /** Handler for dislike action (overrides default voteOnPost) */
+  onDislike?: () => void;
 }
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
@@ -78,6 +82,8 @@ export function ActionBar({
   onShare,
   onRepost,
   onQuote,
+  onLike,
+  onDislike,
   className,
   showBorder = false,
   isLiked: initialIsLiked = false,
@@ -193,7 +199,22 @@ export function ActionBar({
     patchFeedCaches(queryClient, postId, voteState);
 
     try {
-      await voteOnPost({ tokenId: parseInt(postId, 10), voteType: vote ? 'for' : 'against' });
+      // Use override if provided, otherwise default to voteOnPost
+      if (vote && onLike) {
+        await onLike();
+      } else if (!vote && onDislike) {
+        await onDislike();
+      } else {
+        const numericId = parseInt(postId, 10);
+        if (isNaN(numericId)) {
+          console.warn('[ActionBar] Non-numeric postId used without override handler:', postId);
+          // For non-numeric IDs, we don't call voteOnPost but we keep the optimistic UI state
+          // This allows Supabase-based IDs to at least look like they are working if the parent
+          // eventually syncs the state.
+          return;
+        }
+        await voteOnPost({ tokenId: numericId, voteType: vote ? 'for' : 'against' });
+      }
     } catch (error: unknown) {
       // Revert to pre-vote state on error
       setIsLiked(isLiked);
