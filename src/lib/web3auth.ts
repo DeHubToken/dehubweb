@@ -12,7 +12,7 @@
  */
 
 import {
-  Web3AuthNoModal as Web3Auth,
+  Web3Auth,
   CHAIN_NAMESPACES,
   WEB3AUTH_NETWORK,
   WALLET_CONNECTORS,
@@ -20,7 +20,7 @@ import {
   CONFIRMATION_STRATEGY,
   authConnector,
   UX_MODE,
-} from "@web3auth/no-modal";
+} from "@web3auth/modal";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
@@ -268,70 +268,47 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         clientId,
         chains: [chainConfig],
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        sessionTime: 86400, // 24 hours session
-        // Account Abstraction enabled - signature verification issues are handled
-        // by deploying the contract via an empty transaction before signing (matches mobile logic).
-        accountAbstractionConfig: {
-          smartAccountType: "safe",
-          chains: [
-            {
-              chainId: "0x2105", // Base Mainnet
-              bundlerConfig: {
-                url: pimlicoConfig.bundlerUrl,
-              },
-              paymasterConfig: {
-                url: pimlicoConfig.paymasterUrl,
-              },
-            },
-          ],
+        sessionTime: 86400,
+        // Headless mode: we hide the default modal and use custom UI
+        uiConfig: {
+          appName: "DeHub",
+          mode: "dark",
+          loginMethodsOrder: ["google", "twitter", "apple"],
+          defaultLanguage: "en",
         },
-        // External wallets handled by Wagmi, not Web3Auth
-        useAAWithExternalWallet: false,
-        // Configure connectors for mobile-aware email/SMS login
-        connectors: [
-          authConnector({
-            connectorSettings: {
-              uxMode: useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP,
-              redirectUrl: window.location.origin + window.location.pathname, // Returns to exact same page
-            }
-          })
-        ],
-        // Auto-approve signatures for auth messages (bypasses blocking modal)
-        walletServicesConfig: {
-          confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
-          modalZIndex: 99999,
-          whiteLabel: {
-            showWidgetButton: false,
-          },
-        } as unknown as ConstructorParameters<typeof Web3Auth>[0]["walletServicesConfig"],
-        // Custom UI configuration
-        enableLogging: true,
       });
-      console.log("[Web3Auth] Instance created (AA MODE ENABLED - NO-MODAL SDK)");
+      console.log("[Web3Auth] Instance created (HEADLESS MODAL SDK)");
 
       // Initialize
-      console.log("[Web3Auth] Calling init()...");
+      console.log("[Web3Auth] Calling initModal()...");
 
-      const initWithTimeout = Promise.race([
-        web3authInstance.init(),
-        new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error("Web3Auth init timeout")), 20000)
-        )
-      ]);
-
-      await initWithTimeout;
-      console.log("[Web3Auth] init() promise resolved, current status:", web3authInstance.status);
+      await web3authInstance.initModal({
+        modalConfig: {
+          [WALLET_CONNECTORS.AUTH]: {
+            label: "Auth",
+            showOnModal: false, // Bypasses modal UI
+          }
+        }
+      });
+      console.log("[Web3Auth] initModal() resolved, status:", web3authInstance.status);
 
       // On some mobile devices/networks, status might stay 'not_ready' for a few ms
       // while it processes metadata or analytics failures. Wait for transition.
-      if (web3authInstance.status === "not_ready") {
-        console.warn("[Web3Auth] Instance still not_ready, waiting for transition to ready...");
-        for (let i = 0; i < 20; i++) {
-          await new Promise(r => setTimeout(r, 250));
-          if (web3authInstance.status !== "not_ready") {
-            console.log(`[Web3Auth] Status transitioned to ${web3authInstance.status} after ${i * 250}ms`);
-            break;
-          }
+      for (let i = 0; i < 40; i++) { // Wait up to 10 seconds
+        await new Promise(r => setTimeout(r, 250));
+        if (web3authInstance.status !== "not_ready") {
+          console.log(`[Web3Auth] Status transitioned to ${web3authInstance.status} after ${i * 250}ms`);
+          break;
+        }
+      }
+      // If still not ready but we have redirect params, try a hard init() fallback
+      if (web3authInstance.status === "not_ready" && hasRedirectResult()) {
+        console.warn("[Web3Auth] Still not_ready on redirect page, attempting init() fallback...");
+        try {
+          await (web3authInstance as any).init();
+          console.log("[Web3Auth] init() fallback resolved, status:", web3authInstance.status);
+        } catch (e) {
+          console.error("[Web3Auth] init() fallback failed:", e);
         }
       }
 
