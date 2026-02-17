@@ -8,6 +8,9 @@
 import { Interface } from 'ethers';
 import { writeContractAA, getWalletAddress, parseTxError, switchChain } from './aa-utils';
 import { BASE_CHAIN_ID, getChainConfig } from './dhb-token';
+import { createLogger } from '@/lib/logger';
+
+const mintChainLogger = createLogger('StreamCollection.mintOnChain');
 import type { ChainId } from '@/components/app/ChainSelector';
 
 // Contract address on Base Mainnet (default for backward compatibility)
@@ -120,6 +123,17 @@ export async function mintOnChain(params: MintParams): Promise<string> {
     return receipt.hash;
   } catch (error) {
     console.error('[StreamCollection] Mint failed:', error);
+    // Log to backend for server-side debugging
+    mintChainLogger.error(
+      error instanceof Error ? error.message : String(error),
+      {
+        tokenId: params.tokenId,
+        chainId,
+        chainName: chainConfig.name,
+        contract: chainConfig.streamCollection,
+      },
+      error instanceof Error ? error : undefined,
+    );
     throw error;
   }
 }
