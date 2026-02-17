@@ -427,73 +427,66 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Complete DeHub auth specifically after redirect flow
-   * Uses eth_accounts + personal_sign through the v10 AA provider
+   * Uses eth_accounts + personal_sign through the v10 EOA provider.
    */
   const completeDeHubAuthAfterRedirect = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
 
+    // Get Web3Auth instance to access the EOA provider
+    const w3a = await getOrInitWeb3Auth();
+    
+    // Redirect flow is always social/embedded. We use w3a.provider (EOA)
+    // to ensure a standard signature.
+    const signingProvider = w3a.provider || provider;
+
     // Log Web3Auth user info for diagnostics
     try {
-      const w3aInstance = await getOrInitWeb3Auth();
-      const userInfo = await w3aInstance.getUserInfo();
+      const userInfo = await w3a.getUserInfo();
       console.log('[Auth] [DIAG-REDIRECT] Web3Auth userInfo:', JSON.stringify({
         email: userInfo.email,
-        verifier: (userInfo as any).verifier,
-        verifierId: (userInfo as any).verifierId,
         typeOfLogin: (userInfo as any).typeOfLogin,
-        aggregateVerifier: (userInfo as any).aggregateVerifier,
       }));
     } catch (e) {
       console.warn('[Auth] [DIAG-REDIRECT] getUserInfo failed:', e);
     }
 
-    // Small delay for redirect/AA logins to ensure provider is fully ready
+    // Small delay for stability
     await new Promise(r => setTimeout(r, 500));
 
-    // Get current chain for diagnostics
-    try {
-      const chainIdHex = await provider.request({ method: 'eth_chainId' });
-      const currentChainId = parseInt(String(chainIdHex), 16);
-      console.log(`[Auth] Redirect - Current provider chainId: ${currentChainId} (${chainIdHex})`);
-    } catch (e) {
-      console.warn('[Auth] Redirect - Failed to get chainId from provider:', e);
-    }
-
-    // Get address from provider (Smart Account address with AA)
-    let accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+    // Get address from the chosen signing provider
+    let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
     if (!accounts || accounts.length === 0) {
       console.warn('[Auth] Redirect - No accounts returned, retrying...');
       await new Promise(r => setTimeout(r, 1000));
-      accounts = await provider.request({ method: 'eth_accounts' }) as string[];
-      
-      if (!accounts || accounts.length === 0) {
-        throw new Error('No accounts available from provider after redirect');
-      }
+      accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+    }
+    
+    if (!accounts || accounts.length === 0) {
+      throw new Error('No accounts available from provider after redirect');
     }
     
     const authAddress = accounts[0].toLowerCase();
-
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    console.log('[Auth] Redirect - Signing message for address:', authAddress);
+    console.log('[Auth] Redirect - Signing login message for address:', authAddress);
     
     let signature: string;
     try {
-      signature = await provider.request({
+      signature = await signingProvider.request({
         method: 'personal_sign',
         params: [message, authAddress],
       }) as string;
     } catch (e) {
       console.warn('[Auth] Redirect - personal_sign fallback required', e);
-      signature = await provider.request({
+      signature = await signingProvider.request({
         method: 'personal_sign',
         params: [authAddress, message],
       }) as string;
     }
 
     console.log('[Auth] Redirect auth - Address:', authAddress);
-    console.log('[Auth] Signature length:', signature?.length);
+    console.log('[Auth] Signature received, length:', signature?.length);
 
     const BASE_CHAIN_ID = 8453;
     const authResponse = await authenticateWallet(
@@ -525,87 +518,84 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Complete DeHub authentication after Web3Auth connects
-   * Uses eth_accounts + personal_sign through the v10 provider (AA for social, direct for wallets)
+   * Uses eth_accounts + personal_sign through the v10 provider.
+   * 
+   * CRITICAL: For social logins with AA, the backend often fails to verify 
+   * ERC-6492 signatures (for un-deployed Smart Accounts). To fix this, 
+   * we use the EOA (Signer) address for login, while keeping the 
+   * Smart Account for on-chain transactions.
    */
   const completeDeHubAuth = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
 
-    // Log Web3Auth user info for diagnostics
+    // Get Web3Auth instance to access the EOA provider
+    const w3a = await getOrInitWeb3Auth();
+    
+    // For social login, we prefer the EOA for login to avoid ERC-6492 verification issues 
+    // on the backend. The Safe is used for transactions, but EOA is better for auth identity.
     const isSocial = isSocialLoginConnected();
-    console.log('[Auth] Is social login:', isSocial);
+    console.log('[Auth] Connection type:', isSocial ? 'SOCIAL (using EOA for login)' : 'EXTERNAL');
+
+    // Select the provider to use for signing
+    // If it's social login, we use the core w3a.provider (EOA) for the signature
+    // If it's something else, we use the passed provider (which might be the Safe)
+    const signingProvider = (isSocial && w3a.provider) ? w3a.provider : provider;
 
     if (isSocial) {
       try {
-        const w3aInstance = await getOrInitWeb3Auth();
-        const userInfo = await w3aInstance.getUserInfo();
+        const userInfo = await w3a.getUserInfo();
         console.log('[Auth] [DIAG-POPUP] Web3Auth userInfo:', JSON.stringify({
           email: userInfo.email,
-          verifier: (userInfo as any).verifier,
-          verifierId: (userInfo as any).verifierId,
           typeOfLogin: (userInfo as any).typeOfLogin,
-          aggregateVerifier: (userInfo as any).aggregateVerifier,
         }));
       } catch (e) {
         console.warn('[Auth] [DIAG-POPUP] getUserInfo failed:', e);
       }
-
-      // Small delay for social/AA logins to ensure provider is fully ready
-      // Sometimes the Smart Account address calculation takes a moment to propagate
-      await new Promise(r => setTimeout(r, 500));
+      // Small delay to ensure provider state is stable
+      await new Promise(r => setTimeout(r, 300));
     }
 
-    // Get current chain for diagnostics
-    try {
-      const chainIdHex = await provider.request({ method: 'eth_chainId' });
-      const currentChainId = parseInt(String(chainIdHex), 16);
-      console.log(`[Auth] Current provider chainId: ${currentChainId} (${chainIdHex})`);
-    } catch (e) {
-      console.warn('[Auth] Failed to get chainId from provider:', e);
-    }
-
-    // Get address from provider (Smart Account address for social login with AA)
-    let accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+    // Get address from the chosen signing provider
+    let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
     if (!accounts || accounts.length === 0) {
-      // Retry once after a delay if no accounts returned
-      console.warn('[Auth] No accounts returned, retrying after delay...');
-      await new Promise(r => setTimeout(r, 1000));
-      accounts = await provider.request({ method: 'eth_accounts' }) as string[];
-      
-      if (!accounts || accounts.length === 0) {
-        throw new Error('No accounts available from provider');
-      }
+      console.warn('[Auth] No accounts returned, retrying...');
+      await new Promise(r => setTimeout(r, 800));
+      accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+    }
+    
+    if (!accounts || accounts.length === 0) {
+      throw new Error('No accounts available for signing');
     }
     
     const authAddress = accounts[0].toLowerCase();
-
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    console.log('[Auth] Signing message for address:', authAddress);
-    console.log('[Auth] Message content:', message.replace(/\n/g, '\\n'));
+    console.log('[Auth] Signing login message for address:', authAddress);
     
     let signature: string;
     try {
-      signature = await provider.request({
+      signature = await signingProvider.request({
         method: 'personal_sign',
         params: [message, authAddress],
       }) as string;
     } catch (e) {
-      console.warn('[Auth] personal_sign failed with [message, address], trying [address, message] fallback...', e);
-      // Fallback: some providers expect [address, message] order
-      signature = await provider.request({
+      console.warn('[Auth] personal_sign failed, trying fallback param order...', e);
+      signature = await signingProvider.request({
         method: 'personal_sign',
         params: [authAddress, message],
       }) as string;
     }
 
-    console.log('[Auth] Signature length:', signature?.length);
-    if (signature?.length > 500) {
-      console.log('[Auth] Detected long signature (likely Smart Account/ERC-6492)');
+    console.log('[Auth] Signature received, length:', signature?.length);
+    if (signature?.length > 300) {
+      console.log('[Auth] Detected long signature (Smart Account/ERC-6492)');
+    } else {
+      console.log('[Auth] Detected standard signature (EOA)');
     }
 
     const BASE_CHAIN_ID = 8453;
-    console.log(`[Auth] Authenticating with backend for address ${authAddress} on chain ${BASE_CHAIN_ID}...`);
+    console.log(`[Auth] Authenticating with backend for address ${authAddress}...`);
 
     const authResponse = await authenticateWallet(
       authAddress,
