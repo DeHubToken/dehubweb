@@ -2,6 +2,9 @@ import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { createLogger } from '@/lib/logger';
+
+const mintLogger = createLogger('PostForm.handlePost');
 import { mintPost, type StreamInfo } from '@/lib/api/dehub';
 import { 
   mintOnChain, 
@@ -972,8 +975,10 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       toast.dismiss('mint-progress');
       // Extract nested error messages from wallet/provider errors
       let errorMsg = 'Unknown error';
+      let stackTrace: string | undefined;
       if (error instanceof Error) {
         errorMsg = error.message;
+        stackTrace = error.stack;
       } else if (typeof error === 'string') {
         errorMsg = error;
       } else if (error && typeof error === 'object') {
@@ -981,7 +986,14 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         errorMsg = e.message || e.shortMessage || e.reason || 
                    e.error?.message || e.data?.message || 
                    (() => { try { return JSON.stringify(error).slice(0, 200); } catch { return 'Unknown error'; } })();
+        stackTrace = e.stack;
       }
+      // Log mint failure to backend for debugging
+      mintLogger.error(errorMsg, {
+        postType: hasVideo ? 'video' : hasImage ? 'feed-images' : 'feed-simple',
+        chainId,
+        hadBounty: !!(isWatch2Earn && w2eTotal && w2eViews),
+      }, error instanceof Error ? error : undefined);
       toast.error(`Post failed: ${errorMsg}`);
     } finally {
       setIsPosting(false);
