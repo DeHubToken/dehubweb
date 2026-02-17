@@ -34,8 +34,6 @@ import {
   AUTH_CONNECTION,
   WALLET_CONNECTORS,
   getOrInitWeb3Auth,
-  getEoaPrivateKey,
-  getEoaAddress,
 } from '@/lib/web3auth';
 import type { Web3Auth } from '@web3auth/modal';
 
@@ -514,20 +512,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    // Use non-AA instance to get private key and sign directly
-    console.log('[Auth] [REDIRECT] Getting raw private key via non-AA instance...');
+    console.log('[Auth] [REDIRECT] Signing message with personal_sign...');
     let signature: string;
     try {
-      const privateKey = await getEoaPrivateKey();
-      const { Wallet } = await import('ethers');
-      const wallet = new Wallet(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
-      signature = await wallet.signMessage(message);
-      console.log('[Auth] [REDIRECT] Standard EOA signature produced, length:', signature?.length);
-    } catch (e) {
-      console.warn('[Auth] [REDIRECT] Private key export failed, falling back to personal_sign:', e);
       signature = await signingProvider.request({
         method: 'personal_sign',
         params: [message, authAddress],
+      }) as string;
+    } catch (e) {
+      console.warn('[Auth] [REDIRECT] personal_sign failed, trying fallback param order...', e);
+      signature = await signingProvider.request({
+        method: 'personal_sign',
+        params: [authAddress, message],
       }) as string;
     }
     console.log('[Auth] [REDIRECT] Signature length:', signature?.length);
@@ -563,9 +559,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   /**
    * Complete DeHub authentication after Web3Auth connects.
    *
-   * NOTE: Account Abstraction is currently DISABLED in web3auth.ts
-   * All social logins now use standard EOA addresses and signatures.
-   * This ensures compatibility with the backend's signature verification.
+   * For social logins: Use the provider's personal_sign directly.
+   * Web3Auth Modal v10 blocks private key export for security, so we work with the provider as-is.
    */
   const completeDeHubAuth = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -584,62 +579,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch (e) {
         console.warn('[Auth] [DIAG-POPUP] getUserInfo failed:', e);
       }
+      // Small delay to ensure provider is ready
+      await new Promise(r => setTimeout(r, 500));
     }
 
-    let authAddress: string;
-    let signature: string;
+    const signingProvider = provider;
 
-    if (isSocial) {
-      // For social logins: Use EOA address + EOA signature
-      console.log('[Auth] Social login: Getting EOA address and private key...');
-      try {
-        const eoaAddress = await getEoaAddress();
-        authAddress = eoaAddress;
-        
-        const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-        
-        console.log('[Auth] Signing with EOA address:', authAddress);
-        
-        const privateKey = await getEoaPrivateKey();
-        const { Wallet } = await import('ethers');
-        const wallet = new Wallet(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
-        signature = await wallet.signMessage(message);
-        
-        console.log('[Auth] Standard EOA signature produced, length:', signature?.length);
-      } catch (e) {
-        console.error('[Auth] EOA address/signature failed:', e);
-        throw new Error('Failed to get EOA credentials for authentication');
-      }
-    } else {
-      // External wallets: use personal_sign directly
-      const signingProvider = provider;
-      
-      let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-      if (!accounts || accounts.length === 0) {
-        await new Promise(r => setTimeout(r, 1000));
-        accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-      }
-      if (!accounts || accounts.length === 0) {
-        throw new Error('No accounts available for signing');
-      }
-      authAddress = accounts[0].toLowerCase();
-      
-      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-      
-      console.log('[Auth] External wallet - Signing with address:', authAddress);
-      
-      try {
-        signature = await signingProvider.request({
-          method: 'personal_sign',
-          params: [message, authAddress],
-        }) as string;
-      } catch (e) {
-        console.warn('[Auth] personal_sign failed, trying fallback param order...', e);
-        signature = await signingProvider.request({
-          method: 'personal_sign',
-          params: [authAddress, message],
-        }) as string;
-      }
+    // Get address from provider
+    let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+    if (!accounts || accounts.length === 0) {
+      console.warn('[Auth] No accounts returned, retrying...');
+      await new Promise(r => setTimeout(r, 1000));
+      accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+    }
+    
+    if (!accounts || accounts.length === 0) {
+      throw new Error('No accounts available for signing');
+    }
+    
+    const authAddress = accounts[0].toLowerCase();
+    console.log('[Auth] Address from provider:', authAddress);
+
+    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+
+    console.log('[Auth] Signing message with provider...');
+    
+    let signature: string;
+    try {
+      signature = await signingProvider.request({
+        method: 'personal_sign',
+        params: [message, authAddress],
+      }) as string;
+    } catch (e) {
+      console.warn('[Auth] personal_sign failed, trying fallback param order...', e);
+      signature = await signingProvider.request({
+        method: 'personal_sign',
+        params: [authAddress, message],
+      }) as string;
     }
 
     console.log('[Auth] Signature received, length:', signature?.length);
