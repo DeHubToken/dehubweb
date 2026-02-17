@@ -720,6 +720,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     console.log('[Auth] Signature received, length:', signature?.length);
 
+    // ERC-6492 signature detection and unwrapping
+    // Twitter/Google OAuth with AA returns wrapped signatures (~2242 chars)
+    // Email passwordless returns standard ECDSA (~132 chars)
+    if (signature && signature.length > 200) {
+      console.log('[Auth] Detected ERC-6492 wrapped signature (undeployed Smart Account)');
+      console.log('[Auth] Attempting to extract underlying ECDSA signature...');
+      
+      try {
+        // ERC-6492 format: 0x...signature...6492...magic_bytes
+        // The actual ECDSA signature is at the beginning (first 132 chars including 0x)
+        // Extract it: 0x + 130 hex chars (65 bytes)
+        const eoaSignature = signature.substring(0, 132);
+        console.log('[Auth] Extracted EOA signature from ERC-6492 wrapper, length:', eoaSignature.length);
+        signature = eoaSignature;
+      } catch (e) {
+        console.warn('[Auth] Failed to extract ECDSA from ERC-6492, using full signature:', e);
+      }
+    }
+
+    console.log('[Auth] Final signature for backend, length:', signature?.length);
+
     const BASE_CHAIN_ID = 8453;
     console.log(`[Auth] Authenticating with backend for address ${authAddress}...`);
 
