@@ -563,19 +563,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   /**
    * Complete DeHub authentication after Web3Auth connects.
    *
-   * CRITICAL FIX for social logins with Account Abstraction:
-   * - The backend expects address to match the signer
-   * - With AA, eth_accounts returns the Smart Account address (Safe)
-   * - But the Safe isn't deployed yet, so backend can't verify EIP-1271
-   * - Solution: Use the EOA address (Safe owner) for both address and signature
-   * - The Safe address can still be used for on-chain transactions after login
+   * NOTE: Account Abstraction is currently DISABLED in web3auth.ts
+   * All social logins now use standard EOA addresses and signatures.
+   * This ensures compatibility with the backend's signature verification.
    */
   const completeDeHubAuth = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
 
     const isSocial = isSocialLoginConnected();
-    console.log('[Auth] Connection type:', isSocial ? 'SOCIAL (AA)' : 'EXTERNAL');
+    console.log('[Auth] Connection type:', isSocial ? 'SOCIAL (EOA)' : 'EXTERNAL');
 
     if (isSocial) {
       try {

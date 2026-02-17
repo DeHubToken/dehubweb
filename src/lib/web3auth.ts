@@ -264,7 +264,15 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         clientId,
         chains: [chainConfig],
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        // v10 Account Abstraction configuration with Pimlico
+        // Account Abstraction DISABLED for authentication compatibility
+        // The AA provider blocks private_key export which we need for backend auth.
+        // Backend expects EOA signatures, not ERC-6492 (un-deployed Safe).
+        //
+        // TODO: Re-enable AA after fixing one of:
+        // 1. Backend adds ERC-6492 signature verification support, OR
+        // 2. Implement a separate flow to deploy Safe before authentication, OR
+        // 3. Use a hybrid approach: EOA for auth, Safe for transactions
+        /*
         accountAbstractionConfig: {
           smartAccountType: "safe",
           chains: [
@@ -279,6 +287,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
             },
           ],
         },
+        */
         // Use AA only for embedded wallets (social/email login)
         // External wallets like MetaMask use Wagmi, not Web3Auth
         useAAWithExternalWallet: false,
