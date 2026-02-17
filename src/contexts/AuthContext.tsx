@@ -35,7 +35,7 @@ import {
   WALLET_CONNECTORS,
   getOrInitWeb3Auth,
 } from '@/lib/web3auth';
-import type { Web3Auth } from '@web3auth/modal';
+import type { IWeb3Auth as Web3Auth } from '@web3auth/no-modal';
 
 // Provider types for the custom login modal
 export type SocialProvider = 'google' | 'twitter' | 'telegram' | 'apple' | 'discord' | 'github';

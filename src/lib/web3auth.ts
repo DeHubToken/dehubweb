@@ -20,7 +20,7 @@ import {
   CONFIRMATION_STRATEGY,
   authConnector,
   UX_MODE,
-} from "@web3auth/modal";
+} from "@web3auth/no-modal";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
@@ -270,7 +270,9 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           smartAccountType: "safe",
           chains: [
             {
+              chainNamespace: CHAIN_NAMESPACES.EIP155,
               chainId: "0x2105", // Base Mainnet
+              rpcTarget: chainConfig.rpcTarget,
               bundlerConfig: {
                 url: pimlicoConfig.bundlerUrl,
               },
@@ -299,14 +301,10 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
             showWidgetButton: false,
           },
         } as unknown as ConstructorParameters<typeof Web3Auth>[0]["walletServicesConfig"],
-        // Custom UI configuration - we use our own modal
-        uiConfig: {
-          appName: "DeHub",
-          mode: "dark",
-          defaultLanguage: "en",
-        },
+        // Custom UI configuration
+        enableLogging: true,
       });
-      console.log("[Web3Auth] Instance created (standard EOA mode - no AA)");
+      console.log("[Web3Auth] Instance created (AA MODE ENABLED - NO-MODAL SDK)");
 
       // Initialize
       console.log("[Web3Auth] Calling init()...");
@@ -314,15 +312,27 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       const initWithTimeout = Promise.race([
         web3authInstance.init(),
         new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error("Web3Auth init timeout")), 15000)
+          setTimeout(() => reject(new Error("Web3Auth init timeout")), 20000)
         )
       ]);
 
       await initWithTimeout;
-      console.log("[Web3Auth] init() completed, status:", web3authInstance.status);
-      console.log("[Web3Auth] Connected:", web3authInstance.connected);
+      console.log("[Web3Auth] init() promise resolved, current status:", web3authInstance.status);
 
-      console.log("[Web3Auth] INITIALIZATION COMPLETE (Modal v10, EOA mode), status:", web3authInstance.status);
+      // On some mobile devices/networks, status might stay 'not_ready' for a few ms
+      // while it processes metadata or analytics failures. Wait for transition.
+      if (web3authInstance.status === "not_ready") {
+        console.warn("[Web3Auth] Instance still not_ready, waiting for transition to ready...");
+        for (let i = 0; i < 20; i++) {
+          await new Promise(r => setTimeout(r, 250));
+          if (web3authInstance.status !== "not_ready") {
+            console.log(`[Web3Auth] Status transitioned to ${web3authInstance.status} after ${i * 250}ms`);
+            break;
+          }
+        }
+      }
+
+      console.log("[Web3Auth] INITIALIZATION FINISHED, final status:", web3authInstance.status, "Connected:", web3authInstance.connected);
       return web3authInstance;
     } catch (error) {
       console.error("[Web3Auth] INITIALIZATION FAILED:", error);
