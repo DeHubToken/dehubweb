@@ -34,6 +34,7 @@ import {
   AUTH_CONNECTION,
   WALLET_CONNECTORS,
   getOrInitWeb3Auth,
+  getEoaPrivateKey,
 } from '@/lib/web3auth';
 import type { Web3Auth } from '@web3auth/modal';
 
@@ -481,7 +482,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Complete DeHub auth specifically after redirect flow.
-   * Same Smart Account address resolution as popup flow.
+   * Same non-AA private key approach as popup flow.
    */
   const completeDeHubAuthAfterRedirect = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -507,35 +508,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
     }
     if (!accounts?.length) throw new Error('No accounts available from provider after redirect');
-    const eoaAddress = accounts[0].toLowerCase();
-    console.log('[Auth] [REDIRECT] EOA address:', eoaAddress);
-
-    // Resolve Smart Account address (redirect is always social login)
-    let authAddress = eoaAddress;
-    try {
-      const w3a = await getOrInitWeb3Auth() as any;
-      const aaProvider = w3a.aaProvider || w3a.accountAbstractionProvider;
-      if (aaProvider?.smartAccount) {
-        const saAddress = typeof aaProvider.smartAccount.address === 'string'
-          ? aaProvider.smartAccount.address
-          : await aaProvider.smartAccount.getAddress();
-        if (saAddress) {
-          authAddress = saAddress.toLowerCase();
-          console.log('[Auth] [REDIRECT] Smart Account address:', authAddress);
-        }
-      }
-    } catch (e) {
-      console.warn('[Auth] [REDIRECT] Failed to get Smart Account address:', e);
-    }
+    const authAddress = accounts[0].toLowerCase();
+    console.log('[Auth] [REDIRECT] Address from eth_accounts:', authAddress);
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    // Sign message — ERC-6492 signature will match the Smart Account address
-    console.log('[Auth] [REDIRECT] Signing message for address:', authAddress);
-    const signature = await signingProvider.request({
-      method: 'personal_sign',
-      params: [message, authAddress],
-    }) as string;
+    // Use non-AA instance to get private key and sign directly
+    console.log('[Auth] [REDIRECT] Getting raw private key via non-AA instance...');
+    let signature: string;
+    try {
+      const privateKey = await getEoaPrivateKey();
+      const { Wallet } = await import('ethers');
+      const wallet = new Wallet(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
+      signature = await wallet.signMessage(message);
+      console.log('[Auth] [REDIRECT] Standard EOA signature produced, length:', signature?.length);
+    } catch (e) {
+      console.warn('[Auth] [REDIRECT] Private key export failed, falling back to personal_sign:', e);
+      signature = await signingProvider.request({
+        method: 'personal_sign',
+        params: [message, authAddress],
+      }) as string;
+    }
     console.log('[Auth] [REDIRECT] Signature length:', signature?.length);
 
     const BASE_CHAIN_ID = 8453;
@@ -571,10 +564,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    *
    * For social logins with AA:
    * - The provider's personal_sign produces ERC-6492 (Smart Account) signatures
-   * - eth_accounts returns the EOA signer address (not the Smart Account)
-   * - Fix: Get the Smart Account address from web3auth.aaProvider.smartAccount,
-   *   and send SA address + ERC-6492 signature. Backend verifies via EIP-1271.
-   *   This matches the mobile app's auth flow which uses the same SA address.
+   *   because the wallet-services iframe wraps signing with AA internally
+   * - eth_accounts returns the EOA signer address
+   * - The AA iframe blocks eth_private_key
+   * - Fix: Create a temporary non-AA Web3Auth instance that picks up the same
+   *   session, then export the raw EOA private key and sign with ethers directly.
+   *   This produces a standard ECDSA signature matching the EOA address.
    */
   const completeDeHubAuth = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -597,7 +592,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const signingProvider = provider;
 
-    // Get address from eth_accounts (returns EOA for social login)
+    // Get EOA address
+    let authAddress: string;
     let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
     if (!accounts || accounts.length === 0) {
       await new Promise(r => setTimeout(r, 1000));
@@ -606,33 +602,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!accounts || accounts.length === 0) {
       throw new Error('No accounts available for signing');
     }
-    const eoaAddress = accounts[0].toLowerCase();
-    console.log('[Auth] EOA address from eth_accounts:', eoaAddress);
-
-    // For social login: resolve the Smart Account address from the AA provider.
-    // The SA address is what the mobile app uses and what the backend expects.
-    let authAddress = eoaAddress;
-    if (isSocial) {
-      try {
-        const w3a = await getOrInitWeb3Auth() as any;
-        // web3auth.aaProvider (or accountAbstractionProvider) stores the
-        // AccountAbstractionProvider instance with the Smart Account.
-        const aaProvider = w3a.aaProvider || w3a.accountAbstractionProvider;
-        if (aaProvider?.smartAccount) {
-          const saAddress = typeof aaProvider.smartAccount.address === 'string'
-            ? aaProvider.smartAccount.address
-            : await aaProvider.smartAccount.getAddress();
-          if (saAddress) {
-            authAddress = saAddress.toLowerCase();
-            console.log('[Auth] Smart Account address from aaProvider:', authAddress);
-          }
-        } else {
-          console.warn('[Auth] aaProvider.smartAccount not available, using EOA');
-        }
-      } catch (e) {
-        console.warn('[Auth] Failed to get Smart Account address:', e);
-      }
-    }
+    authAddress = accounts[0].toLowerCase();
+    console.log('[Auth] Address from eth_accounts:', authAddress);
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
@@ -640,20 +611,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     let signature: string;
 
-    // Sign the message — for social login, personal_sign produces ERC-6492
-    // signature matching the Smart Account. Backend verifies via EIP-1271.
-    try {
-      signature = await signingProvider.request({
-        method: 'personal_sign',
-        params: [message, authAddress],
-      }) as string;
-    } catch (e) {
-      console.warn('[Auth] personal_sign failed, trying with EOA address...', e);
-      // Fallback: some providers need the EOA address as the signer param
-      signature = await signingProvider.request({
-        method: 'personal_sign',
-        params: [message, eoaAddress],
-      }) as string;
+    if (isSocial) {
+      // The AA-enabled provider wraps personal_sign with ERC-6492.
+      // Create a temporary non-AA Web3Auth instance to export the raw private key,
+      // then sign directly with ethers for a standard ECDSA signature.
+      console.log('[Auth] Social login: getting raw private key via non-AA instance...');
+      try {
+        const privateKey = await getEoaPrivateKey();
+        const { Wallet } = await import('ethers');
+        const wallet = new Wallet(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
+        signature = await wallet.signMessage(message);
+        console.log('[Auth] Standard EOA signature produced, length:', signature?.length);
+      } catch (e) {
+        console.warn('[Auth] Non-AA private key export failed, falling back to personal_sign:', e);
+        // Last resort: use the AA-wrapped personal_sign
+        signature = await signingProvider.request({
+          method: 'personal_sign',
+          params: [message, authAddress],
+        }) as string;
+      }
+    } else {
+      // External wallets: use personal_sign directly
+      try {
+        signature = await signingProvider.request({
+          method: 'personal_sign',
+          params: [message, authAddress],
+        }) as string;
+      } catch (e) {
+        console.warn('[Auth] personal_sign failed, trying fallback param order...', e);
+        signature = await signingProvider.request({
+          method: 'personal_sign',
+          params: [authAddress, message],
+        }) as string;
+      }
     }
 
     console.log('[Auth] Signature received, length:', signature?.length);

@@ -537,6 +537,64 @@ export function isWeb3AuthConnected(): boolean {
 }
 
 /**
+ * Get the raw EOA private key for social login sessions.
+ *
+ * The main Web3Auth instance has Account Abstraction (AA) enabled, which
+ * wraps the wallet-services iframe provider. The iframe blocks eth_private_key.
+ *
+ * Workaround: Create a temporary Web3Auth instance WITHOUT AA config.
+ * It picks up the existing session from browser storage (same clientId),
+ * giving us a plain EVM provider where eth_private_key works.
+ */
+export async function getEoaPrivateKey(): Promise<string> {
+  const clientId = await getWeb3AuthClientId();
+
+  console.log('[Web3Auth] Creating temporary non-AA instance for private key export...');
+
+  const tempInstance = new Web3Auth({
+    clientId,
+    chains: [chainConfig],
+    web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+    // NO accountAbstractionConfig — this is the key difference!
+    connectors: [
+      authConnector({
+        connectorSettings: {
+          uxMode: UX_MODE.POPUP,
+          redirectUrl: `${window.location.origin}/app`,
+        }
+      })
+    ],
+    walletServicesConfig: {
+      confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
+      showWidgetButton: false,
+    } as unknown as ConstructorParameters<typeof Web3Auth>[0]["walletServicesConfig"],
+    uiConfig: {
+      appName: "DeHub",
+      mode: "dark",
+    },
+  });
+
+  await tempInstance.init();
+  console.log('[Web3Auth] Temp instance status:', tempInstance.status, 'connected:', tempInstance.connected);
+
+  if (!tempInstance.connected || !tempInstance.provider) {
+    throw new Error('Temporary Web3Auth instance did not pick up existing session');
+  }
+
+  try {
+    const privateKey = await tempInstance.provider.request({
+      method: 'eth_private_key'
+    }) as string;
+    console.log('[Web3Auth] Private key exported from non-AA instance');
+    return privateKey;
+  } finally {
+    // Clean up temp instance without logging out (that would destroy the main session)
+    // Just let it be garbage collected
+    console.log('[Web3Auth] Temp instance cleanup');
+  }
+}
+
+/**
  * Check if the current connection is via social login (AUTH connector)
  * Used to determine signing method in AuthContext
  */
