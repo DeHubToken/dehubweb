@@ -426,46 +426,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Complete DeHub auth specifically after redirect flow
-   * Uses eth_accounts + personal_sign through the v10 EOA provider.
+   * Complete DeHub auth specifically after redirect flow.
+   * Uses eth_accounts + personal_sign through the v10 AA provider.
    */
   const completeDeHubAuthAfterRedirect = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
 
-    // Get Web3Auth instance to access the EOA provider
-    const w3a = await getOrInitWeb3Auth();
-    
-    // Redirect flow is always social/embedded. We use w3a.provider (EOA)
-    // to ensure a standard signature.
-    const signingProvider = w3a.provider || provider;
+    // Use the passed provider directly (AA-wrapped)
+    const signingProvider = provider;
 
     // Log Web3Auth user info for diagnostics
     try {
+      const w3a = await getOrInitWeb3Auth();
       const userInfo = await w3a.getUserInfo();
       console.log('[Auth] [DIAG-REDIRECT] Web3Auth userInfo:', JSON.stringify({
         email: userInfo.email,
-        typeOfLogin: (userInfo as any).typeOfLogin,
       }));
     } catch (e) {
       console.warn('[Auth] [DIAG-REDIRECT] getUserInfo failed:', e);
     }
 
-    // Small delay for stability
-    await new Promise(r => setTimeout(r, 500));
+    // Wait for AA provider to fully initialize Smart Account address
+    console.log('[Auth] Waiting for AA provider to initialize (redirect)...');
+    await new Promise(r => setTimeout(r, 2000));
 
-    // Get address from the chosen signing provider
+    // Get address from the AA provider
     let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+    console.log('[Auth] Redirect eth_accounts result:', accounts?.[0]);
+
     if (!accounts || accounts.length === 0) {
       console.warn('[Auth] Redirect - No accounts returned, retrying...');
-      await new Promise(r => setTimeout(r, 1000));
+      await new Promise(r => setTimeout(r, 1500));
       accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
     }
-    
+
     if (!accounts || accounts.length === 0) {
       throw new Error('No accounts available from provider after redirect');
     }
-    
+
     const authAddress = accounts[0].toLowerCase();
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
@@ -517,57 +516,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Complete DeHub authentication after Web3Auth connects
-   * Uses eth_accounts + personal_sign through the v10 provider.
-   * 
-   * CRITICAL: For social logins with AA, the backend often fails to verify 
-   * ERC-6492 signatures (for un-deployed Smart Accounts). To fix this, 
-   * we use the EOA (Signer) address for login, while keeping the 
-   * Smart Account for on-chain transactions.
+   * Complete DeHub authentication after Web3Auth connects.
+   * Uses eth_accounts + personal_sign through the v10 AA provider.
+   *
+   * For social logins with AA, we use the Smart Account (AA) address
+   * since personal_sign produces ERC-6492 signatures through the AA pipeline.
+   * Address and signature must be consistent (both from AA provider).
    */
   const completeDeHubAuth = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
 
-    // Get Web3Auth instance to access the EOA provider
-    const w3a = await getOrInitWeb3Auth();
-    
-    // For social login, we prefer the EOA for login to avoid ERC-6492 verification issues 
-    // on the backend. The Safe is used for transactions, but EOA is better for auth identity.
     const isSocial = isSocialLoginConnected();
-    console.log('[Auth] Connection type:', isSocial ? 'SOCIAL (using EOA for login)' : 'EXTERNAL');
+    console.log('[Auth] Connection type:', isSocial ? 'SOCIAL (AA provider)' : 'EXTERNAL');
 
-    // Select the provider to use for signing
-    // If it's social login, we use the core w3a.provider (EOA) for the signature
-    // If it's something else, we use the passed provider (which might be the Safe)
-    const signingProvider = (isSocial && w3a.provider) ? w3a.provider : provider;
+    // Use the passed provider directly — for social login this is the AA-wrapped provider
+    // from connectTo(), which produces consistent address + signature pairs.
+    const signingProvider = provider;
 
     if (isSocial) {
       try {
+        const w3a = await getOrInitWeb3Auth();
         const userInfo = await w3a.getUserInfo();
         console.log('[Auth] [DIAG-POPUP] Web3Auth userInfo:', JSON.stringify({
           email: userInfo.email,
-          typeOfLogin: (userInfo as any).typeOfLogin,
         }));
       } catch (e) {
         console.warn('[Auth] [DIAG-POPUP] getUserInfo failed:', e);
       }
-      // Small delay to ensure provider state is stable
-      await new Promise(r => setTimeout(r, 300));
+      // Wait for AA provider to fully initialize Smart Account address
+      console.log('[Auth] Waiting for AA provider to initialize...');
+      await new Promise(r => setTimeout(r, 2000));
     }
 
-    // Get address from the chosen signing provider
+    // Get address from the AA provider — should return Smart Account address
     let accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
+    console.log('[Auth] Initial eth_accounts result:', accounts?.[0]);
+
     if (!accounts || accounts.length === 0) {
       console.warn('[Auth] No accounts returned, retrying...');
-      await new Promise(r => setTimeout(r, 800));
+      await new Promise(r => setTimeout(r, 1500));
       accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
     }
-    
+
     if (!accounts || accounts.length === 0) {
       throw new Error('No accounts available for signing');
     }
-    
+
     const authAddress = accounts[0].toLowerCase();
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
