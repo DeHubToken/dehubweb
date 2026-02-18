@@ -1,39 +1,35 @@
 
 
-## Change "connect your wallet" toasts to "log in"
+# Liquid Glass Styling for Wallet Connect Modal + Build Fix
 
-All instances of "Please connect your wallet to do X" will be updated to "Please log in to do X" across the codebase. Here are the exact changes:
+## Overview
+The "Connect Wallet" modal is rendered by the Reown AppKit SDK. It supports theming via `themeVariables` CSS custom properties and global CSS targeting its shadow DOM. We can make it match the liquid glass aesthetic by combining both approaches.
 
-### Files to update
+## Build Error Fix
+There's also a build error in `src/lib/web3auth.ts` where `modalZIndex: 99999` is typed as a number but expects a string. This will be fixed to `modalZIndex: "99999"`.
 
-**1. `src/hooks/use-bookmarks.ts` (line 316)**
-- "Please connect your wallet to bookmark" -> "Please log in to bookmark"
+## Changes
 
-**2. `src/hooks/use-profile-follow.ts` (line 64)**
-- "Please connect your wallet first" -> "Please log in first"
+### 1. Fix build error in `src/lib/web3auth.ts`
+- Change `modalZIndex: 99999` to `modalZIndex: "99999"`
 
-**3. `src/hooks/use-audio-spaces.ts` (lines 152, 215)**
-- "Please connect your wallet first" -> "Please log in first" (two occurrences)
+### 2. Update AppKit theme variables in `src/lib/wagmi.ts`
+- Set `--w3m-color-mix` to a dark transparent tone for blending
+- Set `--w3m-color-mix-strength` to control the glass-like tinting
+- Keep accent white to match the liquid glass button standard
 
-**4. `src/components/app/WhoToFollow.tsx` (line 213)**
-- "Please connect your wallet to follow users" -> "Please log in to follow users"
+### 3. Add global CSS overrides in `src/index.css`
+Target the AppKit modal's shadow DOM parts with liquid glass styling:
+- Frosted glass background (`backdrop-blur`, semi-transparent bg)
+- Subtle white borders matching `border-white/[0.08]`
+- Rounded corners consistent with the app's `rounded-xl` standard
+- Remove any solid dark backgrounds in favor of translucent ones
 
-**5. `src/components/app/mobile/MobileWhoToFollowCarousel.tsx` (line 189)**
-- "Please connect your wallet to follow users" -> "Please log in to follow users"
+The CSS will target `w3m-modal` and its internal parts using `::part()` selectors and CSS custom properties that AppKit exposes, giving the modal the same frosted glass look as the rest of the app.
 
-**6. `src/components/app/cards/CommentsSection.tsx` (lines 561, 610, 666)**
-- "Please connect your wallet to like comments" -> "Please log in to like comments"
-- "Please connect your wallet to dislike comments" -> "Please log in to dislike comments"
-- "Please connect your wallet to comment" -> "Please log in to comment"
-
-**7. `src/components/app/profile/FollowersListDrawer.tsx` (line 264)**
-- "Please connect your wallet first" -> "Please log in first"
-
-**8. `src/i18n/locales/en.json` (line 118)**
-- "Please connect your wallet first" -> "Please log in first"
-
-**9. `src/pages/app/SettingsPage.tsx` (line 636)**
-- Uses `t('settings.connectWalletFirst')` -- this is covered by the i18n change above. The translation key name stays the same, only the English string value changes.
-
-Total: 10 string replacements across 8 files.
+## Technical Details
+- AppKit renders inside a Web Component with shadow DOM, so normal CSS selectors won't reach internal elements
+- The `themeVariables` config is the primary customization mechanism
+- Additional global CSS using `w3m-modal` element selectors can override the outer shell
+- The `--w3m-color-mix` variable blends a color into the modal's default palette, which we'll use for the translucent glass effect
 
