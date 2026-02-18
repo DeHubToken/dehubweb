@@ -597,6 +597,30 @@ w3m-modal {
   --w3m-color-mix-strength: 40 !important;
 }
 
+/* Full-width bottom drawer on mobile */
+@media (max-width: 767px) {
+  w3m-modal {
+    --w3m-border-radius-master: 0px !important;
+  }
+
+  w3m-modal::part(content) {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    border-radius: 24px 24px 0 0 !important;
+    bottom: 0 !important;
+    position: fixed !important;
+  }
+
+  w3m-modal .wui-card,
+  w3m-modal [class*="card"] {
+    border-radius: 24px 24px 0 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+}
+
 w3m-modal,
 wcm-modal {
   --wui-color-modal-bg: rgba(9, 9, 11, 0.75) !important;
