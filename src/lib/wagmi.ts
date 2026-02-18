@@ -91,8 +91,8 @@ createAppKit({
     '--w3m-accent': '#FFFFFF',
     '--w3m-border-radius-master': '1px',
   },
-  // Hide "All Wallets" on desktop to only show what the user actually has/uses
-  allWallets: 'ONLY_MOBILE',
+  // Show all wallets on both desktop and mobile so users can pick any wallet
+  allWallets: 'SHOW',
   // Featured wallets to show even if not detected (MetaMask, Coinbase, Phantom, Trust)
   featuredWalletIds: [
     'c57ca71147597511ea610013372ad443', // MetaMask
