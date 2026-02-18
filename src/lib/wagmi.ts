@@ -97,6 +97,8 @@ createAppKit({
     '--w3m-z-index': 99999,
     '--w3m-accent': '#FFFFFF',
     '--w3m-border-radius-master': '1px',
+    '--w3m-color-mix': 'rgba(24, 24, 27, 0.85)',
+    '--w3m-color-mix-strength': 40,
   },
 })
 

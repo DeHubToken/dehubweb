@@ -315,9 +315,8 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         sessionTime: 86400,
         // Disable SES/lockdown as it interferes with modern UI libraries (Lit/AppKit)
         uiConfig: {
-          disableLockdown: true,
-          modalZIndex: 99999,
-        },
+          modalZIndex: "99999",
+        } as any,
         accountAbstractionConfig: {
           smartAccountType: "safe",
           chains: [
@@ -335,7 +334,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         useAAWithExternalWallet: false,
         walletServicesConfig: {
           confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
-          modalZIndex: 99999,
+          modalZIndex: "99999",
           whiteLabel: {
             showWidgetButton: false,
           },
