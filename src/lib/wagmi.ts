@@ -79,7 +79,10 @@ createAppKit({
     analytics: true,
     email: false,
     socials: false,
+    legalCheckbox: false,
   },
+  termsConditionsUrl: '',
+  privacyPolicyUrl: '',
   // Ensure extensions are explicitly enabled
   enableInjected: true,
   enableEIP6963: true,
