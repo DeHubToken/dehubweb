@@ -187,6 +187,19 @@ if (import.meta.hot) {
 }
 
 /**
+ * Pre-fetch configurations as soon as the module is loaded.
+ */
+function prewarmConfig() {
+  if (typeof window === 'undefined') return;
+  console.log("[Web3Auth] Pre-warming configurations...");
+  getWeb3AuthClientId().catch(() => { });
+  getPimlicoConfig().catch(() => { });
+}
+
+// Start pre-warming immediately
+prewarmConfig();
+
+/**
  * Save the current path before mobile redirect so we can restore it after auth.
  */
 export function savePreLoginPath(): void {
@@ -274,46 +287,32 @@ async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: s
  */
 export async function initWeb3Auth(): Promise<Web3Auth> {
   console.log("[Web3Auth] initWeb3Auth() called");
-  console.log("[Web3Auth] Current instance:", web3authInstance ? "exists" : "null");
-  console.log("[Web3Auth] Current status:", web3authInstance?.status || "N/A");
 
-  // Return existing instance if ready
   if (web3authInstance?.status === "connected" || web3authInstance?.status === "ready") {
-    console.log("[Web3Auth] Already initialized with status:", web3authInstance.status);
     return web3authInstance;
   }
 
-  // Return pending initialization
   if (isInitializing && initPromise) {
-    console.log("[Web3Auth] Already initializing, returning existing promise");
     return initPromise;
   }
 
   isInitializing = true;
-  console.log("[Web3Auth] Starting initialization...");
-
   initPromise = (async () => {
     try {
-      // Fetch configurations in parallel
-      console.log("[Web3Auth] Fetching configurations...");
+      // Parallel fetch configs
       const [clientId, pimlicoConfig] = await Promise.all([
         getWeb3AuthClientId(),
         getPimlicoConfig(),
       ]);
-      console.log("[Web3Auth] Client ID fetched:", clientId?.substring(0, 15) + "...");
-      console.log("[Web3Auth] Pimlico config fetched");
 
-      // Determine UX mode based on device
       const mobile = isMobileDevice();
       const useRedirect = mobile || forceRedirectMode;
-      console.log(`[Web3Auth] Init: mobile=${mobile} forceRedirect=${forceRedirectMode} -> useRedirect=${useRedirect}`);
 
       web3authInstance = new Web3Auth({
         clientId,
         chains: [chainConfig],
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
         sessionTime: 86400,
-        // Disable SES/lockdown as it interferes with modern UI libraries (Lit/AppKit)
         uiConfig: {
           modalZIndex: "99999",
         } as any,
@@ -321,13 +320,9 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           smartAccountType: "safe",
           chains: [
             {
-              chainId: "0x2105", // Base Mainnet
-              bundlerConfig: {
-                url: pimlicoConfig.bundlerUrl,
-              },
-              paymasterConfig: {
-                url: pimlicoConfig.paymasterUrl,
-              },
+              chainId: "0x2105",
+              bundlerConfig: { url: pimlicoConfig.bundlerUrl },
+              paymasterConfig: { url: pimlicoConfig.paymasterUrl },
             },
           ],
         },
@@ -335,53 +330,29 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         walletServicesConfig: {
           confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
           modalZIndex: "99999",
-          whiteLabel: {
-            showWidgetButton: false,
-          },
+          whiteLabel: { showWidgetButton: false },
         } as any,
       });
-      console.log("[Web3Auth] Instance created (MODAL SDK - HEADLESS MODE)");
 
-      // Initialize with timeout to prevent hanging on mobile
-      console.log("[Web3Auth] Calling init()...");
       await Promise.race([
         web3authInstance.init(),
         new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error("Web3Auth init timed out after 15s")), 15000)
         )
       ]);
-      console.log("[Web3Auth] init() resolved, status:", web3authInstance.status);
 
-      // On redirect return pages, the SDK may need extra time to process params
-      if (web3authInstance.status === "not_ready" && hasRedirectResult()) {
-        console.log("[Web3Auth] Redirect page detected, waiting for SDK to process params...");
-        for (let i = 0; i < 20; i++) { // Wait up to 5 seconds
-          await new Promise(r => setTimeout(r, 250));
-          if (web3authInstance.status !== "not_ready") {
-            console.log(`[Web3Auth] Status transitioned to ${web3authInstance.status} after ${i * 250}ms`);
-            break;
-          }
-        }
-      } else if (web3authInstance.status === "not_ready") {
-        // Non-redirect page: brief wait only
-        for (let i = 0; i < 8; i++) { // Wait up to 2 seconds
-          await new Promise(r => setTimeout(r, 250));
-          if (web3authInstance.status !== "not_ready") {
-            console.log(`[Web3Auth] Status transitioned to ${web3authInstance.status} after ${i * 250}ms`);
-            break;
-          }
-        }
-      }
-
-      // CRITICAL: If still not_ready, the SDK is broken — throw instead of returning a broken instance
+      // Polling for ready state if stuck in not_ready
       if (web3authInstance.status === "not_ready") {
-        const errMsg = "Web3Auth stuck in not_ready state. This usually means the SDK cannot reach auth.web3auth.io (browser may be blocking it).";
-        console.error("[Web3Auth]", errMsg);
-        web3authInstance = null;
-        throw new Error(errMsg);
+        for (let i = 0; i < 20; i++) {
+          await new Promise(r => setTimeout(r, 250));
+          if (web3authInstance.status !== "not_ready") break;
+        }
       }
 
-      console.log("[Web3Auth] INITIALIZATION FINISHED, final status:", web3authInstance.status, "Connected:", web3authInstance.connected);
+      if (web3authInstance.status === "not_ready") {
+        throw new Error("Web3Auth stuck in not_ready state");
+      }
+
       return web3authInstance;
     } catch (error) {
       console.error("[Web3Auth] INITIALIZATION FAILED:", error);
@@ -395,152 +366,65 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
   return initPromise;
 }
 
-/**
- * Check if an error is a popup-blocked error.
- * Web3Auth wraps the real error in a WalletLoginError, so we need to
- * check the full error chain (message + cause + string representation).
- */
 function isPopupBlockedError(err: unknown): boolean {
-  // Build a combined string from the error + its cause chain
-  let combined = '';
-  let current: unknown = err;
-  for (let depth = 0; depth < 5 && current; depth++) {
-    if (current instanceof Error) {
-      combined += ' ' + current.message;
-      current = (current as any).cause;
-    } else {
-      combined += ' ' + String(current);
-      break;
-    }
-  }
-  // Also check toString() which often includes "Caused by:"
-  combined += ' ' + String(err);
-  const lower = combined.toLowerCase();
+  const combined = String(err).toLowerCase() + (err instanceof Error ? ' ' + String(err.cause).toLowerCase() : '');
   return (
-    (lower.includes('popup') && (lower.includes('blocked') || lower.includes('closed'))) ||
-    lower.includes('allow-popups') ||
-    lower.includes('sandboxed frame') ||
-    lower.includes('cross-origin-opener-policy') ||
-    lower.includes('coop')
+    combined.includes('popup') && (combined.includes('blocked') || combined.includes('closed')) ||
+    combined.includes('allow-popups') ||
+    combined.includes('coop')
   );
 }
 
-/**
- * Connect to a specific social login provider using connectTo()
- * This bypasses the Web3Auth modal completely - direct provider connection.
- * If popup is blocked, automatically switches to REDIRECT mode and retries.
- */
 export async function connectToSocialProvider(
   authConnection: AuthConnectionType,
   loginHint?: string
 ): Promise<ReturnType<Web3Auth['connectTo']>> {
-  console.log(`[Web3Auth] connectToSocialProvider: phase=INIT authConnection=${authConnection} loginHint=${loginHint ? 'set' : 'none'}`);
+  console.log(`[Web3Auth] connectToSocialProvider: ${authConnection}`);
 
-  let web3auth: Web3Auth;
-  try {
-    web3auth = await getOrInitWeb3Auth();
-    console.log(`[Web3Auth] connectToSocialProvider: phase=READY status=${web3auth.status}`);
-  } catch (err) {
-    console.error(`[Web3Auth] connectToSocialProvider: phase=INIT_FAILED`, err);
-    throw err;
-  }
-
-  // Determine UX mode based on device (match initWeb3Auth logic)
+  const web3auth = await getOrInitWeb3Auth();
   const mobile = isMobileDevice();
   const useRedirect = mobile || forceRedirectMode;
   const uxMode = useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP;
 
-  console.log(`[Web3Auth] connectToSocialProvider: mobile=${mobile} forceRedirect=${forceRedirectMode} -> uxMode=${uxMode}`);
-
-  const params: Record<string, unknown> = {
-    authConnection,
+  const params: any = {
+    loginProvider: authConnection,
     uxMode,
+    redirectUrl: window.location.origin + window.location.pathname,
+    extraLoginOptions: {
+      ux_mode: uxMode,
+      redirect_url: window.location.origin + window.location.pathname,
+    }
   };
 
-  // For redirect mode, must explicitly pass redirectUrl in connectTo params
-  if (useRedirect) {
-    params.redirectUrl = window.location.origin + window.location.pathname;
-    // Some providers/adapters in v10 also look for this
-    params.extraLoginOptions = {
-      ux_mode: UX_MODE.REDIRECT,
-      redirect_url: window.location.origin + window.location.pathname,
-    };
-  }
+  if (loginHint) params.loginHint = loginHint;
 
-  // Add login hint for email/sms passwordless
-  if (loginHint) {
-    params.loginHint = loginHint;
-  }
-
-  // Save current path before potential redirect
   savePreLoginPath();
 
-  let provider: Awaited<ReturnType<Web3Auth['connectTo']>>;
   try {
-    console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT calling connectTo(${WALLET_CONNECTORS.AUTH}, { ... })`);
-
-    // Web3Auth v10 connectTo structure expects loginProvider
-    const connectOptions: any = {
-      ...params,
-      loginProvider: authConnection,
-    };
-
-    provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, connectOptions);
+    const provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, params);
     lastConnectedConnector = WALLET_CONNECTORS.AUTH;
-    console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT_OK provider=${provider ? 'received' : 'null'}`);
+    return provider;
   } catch (err) {
-    // If popup was blocked, switch to REDIRECT mode and retry automatically
     if (isPopupBlockedError(err) && !forceRedirectMode) {
-      console.warn('[Web3Auth] Popup blocked! Switching to REDIRECT mode and retrying...');
+      console.warn('[Web3Auth] Popup blocked! Switching to REDIRECT mode...');
       forceRedirectMode = true;
-
-      // Re-initialize with REDIRECT mode
-      web3authInstance = null;
-      isInitializing = false;
-      initPromise = null;
-
-      web3auth = await initWeb3Auth();
-
-      console.log('[Web3Auth] Re-initialized with REDIRECT mode, retrying connectTo...');
-
-      const retryOptions: any = {
-        uxMode: UX_MODE.REDIRECT,
-        redirectUrl: window.location.origin + window.location.pathname,
-        loginProvider: authConnection,
-        extraLoginOptions: {
-          ux_mode: UX_MODE.REDIRECT,
-          redirect_url: window.location.origin + window.location.pathname,
-        }
-      };
-
-      // This will redirect the browser (won't return on mobile)
-      provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, retryOptions);
-      lastConnectedConnector = WALLET_CONNECTORS.AUTH;
-      console.log(`[Web3Auth] connectToSocialProvider: phase=REDIRECT_CONNECT_OK`);
-    } else {
-      console.error(`[Web3Auth] connectToSocialProvider: phase=CONNECT_FAILED`, err);
-      throw err;
+      resetWeb3AuthState();
+      const retryAuth = await initWeb3Auth();
+      params.uxMode = UX_MODE.REDIRECT;
+      params.extraLoginOptions.ux_mode = UX_MODE.REDIRECT;
+      return await retryAuth.connectTo(WALLET_CONNECTORS.AUTH, params);
     }
+    throw err;
   }
-
-  console.log(`[Web3Auth] connectToSocialProvider: phase=DONE status=${web3auth.status} connected=${web3auth.connected}`);
-  console.log(`[Web3Auth] Connected to ${authConnection}`);
-  return provider;
 }
 
-/**
- * Get the initialized Web3Auth instance
- */
 export function getWeb3Auth(): Web3Auth {
   if (!web3authInstance || (web3authInstance.status !== "ready" && web3authInstance.status !== "connected")) {
-    throw new Error("Web3Auth not initialized. Call initWeb3Auth() first.");
+    throw new Error("Web3Auth not initialized");
   }
   return web3authInstance;
 }
 
-/**
- * Get or initialize Web3Auth
- */
 export async function getOrInitWeb3Auth(): Promise<Web3Auth> {
   if (web3authInstance?.status === "ready" || web3authInstance?.status === "connected") {
     return web3authInstance;
@@ -553,8 +437,6 @@ export function getWeb3AuthInstance(): Web3Auth | null {
 }
 
 export function getWeb3AuthProvider() {
-  // Only return provider if user actually authenticated through Web3Auth
-  // .provider exists after init() even for non-Web3Auth users
   if (web3authInstance?.connected && web3authInstance.provider) {
     return web3authInstance.provider;
   }
@@ -562,95 +444,41 @@ export function getWeb3AuthProvider() {
 }
 
 export async function disconnectWeb3Auth(): Promise<void> {
-  console.log("[Web3Auth] disconnectWeb3Auth() called");
-  try {
-    if (web3authInstance?.connected) {
-      await web3authInstance.logout();
-      console.log("[Web3Auth] Logged out");
-    }
-  } catch (e) {
-    console.warn("[Web3Auth] Logout error (continuing cleanup):", e);
+  if (web3authInstance?.connected) {
+    await web3authInstance.logout();
   }
 }
 
-/**
- * Force cleanup Web3Auth after errors - aggressively removes all state
- * This handles the case where OAuth popup is closed mid-flow and SDK is stuck
- */
 export async function forceCleanupWeb3Auth(): Promise<void> {
-  console.log("[Web3Auth] Force cleanup after error...");
-
-  // Try to logout regardless of connection state - clears internal SDK state
+  console.log("[Web3Auth] Force cleanup...");
   if (web3authInstance) {
-    try {
-      await web3authInstance.logout();
-      console.log("[Web3Auth] Logged out during cleanup");
-    } catch (e) {
-      // Expected to fail if not connected, that's fine
-      console.log("[Web3Auth] Logout during cleanup failed (expected):", e);
-    }
+    try { await web3authInstance.logout(); } catch (e) { }
   }
 
-  // Clean up any leftover Web3Auth iframes/modals from the DOM
-  const iframes = document.querySelectorAll('iframe[title*="web3auth"], iframe[id*="web3auth"], iframe[src*="web3auth"]');
-  iframes.forEach(el => {
-    console.log("[Web3Auth] Removing leftover iframe:", el);
-    el.remove();
-  });
+  // Clean up iframes
+  const iframes = document.querySelectorAll('iframe[title*="web3auth"], iframe[id*="web3auth"]');
+  iframes.forEach(el => el.remove());
 
-  const modals = document.querySelectorAll('[class*="w3a-modal"], [class*="web3auth"], [id*="w3a-"]');
-  modals.forEach(el => {
-    console.log("[Web3Auth] Removing leftover modal element:", el);
-    el.remove();
-  });
-
-  // Reset all module variables to allow fresh initialization
   web3authInstance = null;
   isInitializing = false;
   initPromise = null;
 
-  // Pre-initialize a new instance so it's ready for the next connection attempt
-  console.log("[Web3Auth] Pre-initializing new instance after cleanup...");
-  try {
-    await initWeb3Auth();
-    console.log("[Web3Auth] New instance ready after cleanup");
-  } catch (e) {
-    console.warn("[Web3Auth] Pre-init after cleanup failed (will retry on connect):", e);
-  }
-
-  console.log("[Web3Auth] Force cleanup complete - ready for new connection");
-}
-
-/**
- * Safe reset after connection errors - ensures clean state for retry
- * @deprecated Use forceCleanupWeb3Auth instead
- */
-export async function safeResetAfterError(): Promise<void> {
-  return forceCleanupWeb3Auth();
+  // Proactive re-init
+  initWeb3Auth().catch(() => { });
 }
 
 export function isWeb3AuthConnected(): boolean {
   return web3authInstance?.connected ?? false;
 }
 
-/**
- * Check if the current connection is via social login (AUTH connector)
- * Used to determine signing method in AuthContext
- */
 export function isSocialLoginConnected(): boolean {
   return lastConnectedConnector === WALLET_CONNECTORS.AUTH;
 }
 
-/**
- * Get the last connected connector name
- */
 export function getLastConnectedConnector(): string | null {
   return lastConnectedConnector;
 }
 
-/**
- * Set the last connected connector (used when restoring session from redirect)
- */
 export function setLastConnectedConnector(connector: string | null): void {
   lastConnectedConnector = connector;
 }

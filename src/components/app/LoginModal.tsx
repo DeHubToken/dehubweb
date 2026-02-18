@@ -17,31 +17,43 @@ import { useAuth, type WalletProvider } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
 // Social provider icons
+// Social provider icons
 const GoogleIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-5 h-5">
+  <svg width="20" height="20" viewBox="0 0 24 24">
     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
   </svg>
 );
 
 const XIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white">
+  <svg width="20" height="20" viewBox="0 0 24 24" className="fill-white">
     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
   </svg>
 );
 
 const MetaMaskIcon = () => (
-  <img src="https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg" className="w-5 h-5" alt="MetaMask" />
+  <img 
+    src="https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg" 
+    width="20" 
+    height="20" 
+    alt="MetaMask" 
+  />
 );
 
 const CoinbaseIcon = () => (
-  <img src="https://avatars.githubusercontent.com/u/18060234?s=200&v=4" className="w-5 h-5 rounded-full" alt="Coinbase" />
+  <img 
+    src="https://avatars.githubusercontent.com/u/18060234?s=200&v=4" 
+    width="20" 
+    height="20" 
+    className="rounded-full" 
+    alt="Coinbase" 
+  />
 );
 
 const WalletConnectIcon = () => (
-  <svg viewBox="0 0 300 185" className="w-5 h-5">
+  <svg width="20" height="20" viewBox="0 0 300 185">
     <path fill="#3B99FC" d="M61.4 36.3c49.1-48.1 128.6-48.1 177.7 0l5.9 5.8c2.5 2.4 2.5 6.3 0 8.7l-20.2 19.8c-1.2 1.2-3.2 1.2-4.4 0l-8.1-8c-34.2-33.5-89.7-33.5-124 0l-8.7 8.5c-1.2 1.2-3.2 1.2-4.4 0L55 51.3c-2.5-2.4-2.5-6.3 0-8.7l6.4-6.3zm219.6 41l18 17.6c2.5 2.4 2.5 6.3 0 8.7l-81.1 79.4c-2.5 2.4-6.4 2.4-8.9 0l-57.5-56.4c-.6-.6-1.6-.6-2.2 0L92.7 182.9c-2.5 2.4-6.4 2.4-8.9 0L2.8 103.5c-2.5-2.4-2.5-6.3 0-8.7l18-17.6c2.5-2.4 6.4-2.4 8.9 0l57.5 56.4c.6.6 1.6.6 2.2 0l57.5-56.4c2.5-2.4 6.4-2.4 8.9 0l57.5 56.4c.6.6 1.6.6 2.2 0l57.5-56.4c2.5-2.4 6.5-2.4 9 0z"/>
   </svg>
 );
@@ -213,8 +225,24 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const wallets: { id: WalletProvider, name: string, icon: React.ReactNode }[] = [
     { id: 'metamask', name: 'MetaMask', icon: <MetaMaskIcon /> },
     { id: 'coinbase', name: 'Coinbase Wallet', icon: <CoinbaseIcon /> },
-    { id: 'phantom', name: 'Phantom', icon: <img src="https://phantom.app/favicon.ico" className="w-5 h-5" alt="Phantom" /> },
-    { id: 'trust', name: 'Trust Wallet', icon: <img src="https://trustwallet.com/assets/images/media/assets/trust_wallet_logo.svg" className="w-5 h-5" alt="Trust" /> },
+    { 
+      id: 'phantom', 
+      name: 'Phantom', 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 200 200">
+          <path fill="#AB9FF2" d="M100 0C44.8 0 0 44.8 0 100s44.8 100 100 100 100-44.8 100-100S155.2 0 100 0zm45 135c-5 0-10-2-14-5-8-6-11-15-11-25 0-15-12-27-27-27s-27 12-27 27c0 10-3 19-11 25-4 3-9 5-14 5-3 0-6-1-8-2-4-2-7-6-7-11 0-25 20-45 45-45s45 20 45 45c0 5-3 9-7 11-2 1-5 2-8 2z"/>
+        </svg>
+      )
+    },
+    { 
+      id: 'trust', 
+      name: 'Trust Wallet', 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 128 128">
+          <path fill="#3375BB" d="M64 0L16 11.5v44.2c0 33.3 19.3 64.1 48 72.3 28.7-8.2 48-39 48-72.3V11.5L64 0zm31.7 55.7c0 26-15.1 50-31.7 57.5-16.6-7.5-31.7-31.5-31.7-57.5V23.7L64 15l31.7 8.7v32z"/>
+        </svg>
+      ) 
+    },
     { id: 'walletconnect', name: 'WalletConnect', icon: <WalletConnectIcon /> },
   ];
 

@@ -218,12 +218,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Check for existing session on mount
   useEffect(() => {
     const init = async () => {
+      // Start Web3Auth pre-warm as early as possible (parallel)
+      console.log('[Auth] Pre-warming Web3Auth...');
+      initWeb3Auth()
+        .then((instance) => setWeb3auth(instance))
+        .catch((err) => console.warn('Web3Auth pre-init failed:', err));
+
       // Check if this is a redirect return from Web3Auth (mobile email/SMS login)
       const isRedirectReturn = hasRedirectResult();
       if (isRedirectReturn) {
         console.log('[Auth] Detected Web3Auth redirect result, will process after init');
-        // Don't restore session from cache if we're processing a redirect
-        // The redirect flow will create a fresh session
         setIsLoading(false);
         return;
       }
@@ -233,7 +237,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const savedWallet = localStorage.getItem('dehub_wallet');
 
         if (token && savedWallet && !isTokenExpired()) {
-          // Session restoration
           try {
             console.log('Restoring session, fetching account info...');
             const userData = await getAccountInfo(savedWallet);
@@ -261,11 +264,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } finally {
         setIsLoading(false);
       }
-
-      // Pre-initialize Web3Auth in background
-      initWeb3Auth()
-        .then((instance) => setWeb3auth(instance))
-        .catch((err) => console.warn('Web3Auth pre-init failed:', err));
     };
 
     init();
@@ -919,10 +917,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setWagmiAuthIntent(false);
       localStorage.removeItem('dehub_connection_source');
       
-      if (err.message?.includes('User rejected')) {
+      const errorMessage = err.message?.toLowerCase() || '';
+      if (errorMessage.includes('rejected') || errorMessage.includes('denied')) {
         toast.error('Connection rejected');
+      } else if (errorMessage.includes('not found') || errorMessage.includes('not install')) {
+        const name = wallet === 'metamask' ? 'MetaMask' : wallet.charAt(0).toUpperCase() + wallet.slice(1);
+        toast.error(`${name} extension not found. Please install it or use WalletConnect.`);
       } else {
-        toast.error('Failed to connect wallet');
+        toast.error(`Failed to connect to ${wallet}`);
       }
       throw err;
     }

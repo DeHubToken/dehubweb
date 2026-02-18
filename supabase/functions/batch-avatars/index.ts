@@ -2,7 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform',
   'Cache-Control': 'public, max-age=120, stale-while-revalidate=300', // 2min fresh, 5min stale OK
 };
 
@@ -46,14 +46,14 @@ async function fetchAccount(address: string): Promise<AvatarResult> {
     }
 
     const data: DeHubAccountResponse = await response.json();
-    
+
     if (!data.result) {
       return { address, avatarUrl: null, username: null, displayName: null, error: 'No result' };
     }
 
     const user = data.result;
     const avatarPath = user.avatarImageUrl || user.avatarUrl || null;
-    
+
     return {
       address: address.toLowerCase(),
       avatarUrl: avatarPath,
@@ -62,12 +62,12 @@ async function fetchAccount(address: string): Promise<AvatarResult> {
     };
   } catch (error) {
     console.error(`Error fetching account ${address}:`, error);
-    return { 
-      address, 
-      avatarUrl: null, 
-      username: null, 
-      displayName: null, 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+    return {
+      address,
+      avatarUrl: null,
+      username: null,
+      displayName: null,
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 }
@@ -81,13 +81,13 @@ Deno.serve(async (req) => {
   try {
     // Parse request body
     const { addresses } = await req.json() as { addresses?: string[] };
-    
+
     if (!addresses || !Array.isArray(addresses)) {
       return new Response(
         JSON.stringify({ error: 'addresses array is required' }),
-        { 
+        {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 400 
+          status: 400
         }
       );
     }
@@ -111,28 +111,28 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         success: true,
         count: results.length,
         avatars: avatarMap,
       }),
-      { 
+      {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200 
+        status: 200
       }
     );
 
   } catch (error) {
     console.error("Batch avatar fetch failed:", error);
-    
+
     return new Response(
-      JSON.stringify({ 
-        success: false, 
+      JSON.stringify({
+        success: false,
         error: error instanceof Error ? error.message : "Unknown error",
       }),
-      { 
+      {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 500 
+        status: 500
       }
     );
   }
