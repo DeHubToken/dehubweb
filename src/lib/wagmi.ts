@@ -55,7 +55,7 @@ const metadata = {
   }
 }
 
-const networks = [base]
+const networks = [base] as [any, ...any[]]
 
 // 1. Create Wagmi Adapter
 export const wagmiAdapter = new WagmiAdapter({
@@ -82,8 +82,12 @@ createAppKit({
     email: false, // DeHub uses Web3Auth for email
     socials: false, // DeHub uses Web3Auth for socials
   },
-  // Disable automatic network switch prompt on page load
-  enableNetworkView: false,
+  // Hide all wallets except WalletConnect to fix desktop SVG errors
+  enableInjected: false,
+  enableEIP6963: false,
+  enableCoinbase: false,
+  allWallets: 'HIDE',
+  featuredWalletIds: [],
   // Theme and visibility settings
   themeMode: 'dark',
   themeVariables: {
@@ -91,9 +95,6 @@ createAppKit({
     '--w3m-accent': '#FFFFFF',
     '--w3m-border-radius-master': '1px',
   },
-  // Hide "All Wallets" on desktop to focus on WalletConnect/detected wallets
-  allWallets: 'ONLY_MOBILE',
-  featuredWalletIds: []
 })
 
 /**
