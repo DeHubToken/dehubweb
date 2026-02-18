@@ -313,6 +313,11 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         chains: [chainConfig],
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
         sessionTime: 86400,
+        // Disable SES/lockdown as it interferes with modern UI libraries (Lit/AppKit)
+        uiConfig: {
+          disableLockdown: true,
+          modalZIndex: 99999,
+        },
         accountAbstractionConfig: {
           smartAccountType: "safe",
           chains: [

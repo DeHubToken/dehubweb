@@ -62,9 +62,6 @@ export const wagmiAdapter = new WagmiAdapter({
   networks,
   projectId,
   ssr: true,
-  transports: {
-    [base.id]: http('https://base-rpc.publicnode.com'),
-  }
 })
 
 // 2. Export wagmiConfig for WagmiProvider
@@ -77,17 +74,23 @@ createAppKit({
   defaultNetwork: base,
   projectId,
   metadata,
+  allowUnsupportedChain: false,
   features: {
     analytics: true,
-    email: false, // DeHub uses Web3Auth for email
-    socials: false, // DeHub uses Web3Auth for socials
+    email: false,
+    socials: false,
   },
-  // Hide all wallets except WalletConnect to fix desktop SVG errors
-  enableInjected: false,
-  enableEIP6963: false,
-  enableCoinbase: false,
-  allWallets: 'HIDE',
-  featuredWalletIds: [],
+  // Ensure extensions are explicitly enabled
+  enableInjected: true,
+  enableEIP6963: true,
+  enableCoinbase: true,
+  allWallets: 'SHOW',
+  featuredWalletIds: [
+    'c57ca71147597511ea610013372ad443', // MetaMask
+    'fd20d473d0628e932ec06f6542ce91d4', // Coinbase Wallet
+    'a797aa35c0fad5cf3a7f87051ae3079979b94fa82fd2ef37d825f0e2030245a4', // Phantom
+    '4622a2b2d6ad1322744c74070a927a38b16c80c2f8149e21e90575d507119b4b', // Trust Wallet
+  ],
   // Theme and visibility settings
   themeMode: 'dark',
   themeVariables: {
