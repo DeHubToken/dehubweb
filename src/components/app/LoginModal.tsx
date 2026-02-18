@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { isMobileDevice } from '@/lib/web3auth';
+import { useAppKit } from '@reown/appkit/react';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
 // Social provider icons
@@ -168,16 +169,18 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     }
   };
 
-  // Connect using WalletConnect (QR code on desktop, deep links on mobile)
-  // User stays in their browser - wallet app opens for approval, then returns
+  // Connect using WalletConnect (via Reown AppKit)
+  const { open: openAppKit } = useAppKit();
+
   const handleWalletConnect = async () => {
     setActiveProvider('walletconnect');
-    onOpenChange(false); // Close our modal - WalletConnect shows its own modal
+    onOpenChange(false); // Close our modal - AppKit shows its own modal
     try {
-      await connectWithWallet('walletconnect');
-      // Auth continues in useEffect
+      console.log('[LoginModal] Opening Reown AppKit...');
+      await openAppKit();
+      // Auth continues in AuthContext useEffect when isWagmiConnected changes
     } catch (error) {
-      console.error('WalletConnect failed:', error);
+      console.error('AppKit failed:', error);
       setActiveProvider(null);
       onOpenChange(true); // Reopen our modal on error
     }
