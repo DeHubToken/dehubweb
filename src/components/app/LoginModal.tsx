@@ -38,7 +38,7 @@ interface LoginModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-type LoginStep = 'main' | 'email' | 'sms';
+type LoginStep = 'main' | 'email' | 'sms' | 'wallets';
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const { connectWithProvider, connectWithEmail, connectWithSMS, isConnecting } = useAuth();
@@ -115,16 +115,21 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   };
 
   // Open Reown AppKit modal - handles all wallets (injected, WalletConnect, etc.)
-  const handleConnectWallet = async () => {
-    setActiveProvider('wallet');
-    onOpenChange(false); // Close our modal - AppKit shows its own modal
+  const handleWalletConnect = async () => {
+    setActiveProvider('walletconnect');
     try {
-      console.log('[LoginModal] Setting intent and opening Reown AppKit...');
+      console.log('[LoginModal] Opening WalletConnect (AppKit)...');
       setWagmiAuthIntent(true);
+      
+      // Call open BEFORE closing our modal to avoid unmount issues
       await openAppKit();
+      
+      // Close our modal after a slight delay or once AppKit is likely visible
+      setTimeout(() => onOpenChange(false), 500);
+      
       // Auth continues in AuthContext useEffect when isWagmiConnected changes
     } catch (error) {
-      console.error('AppKit failed:', error);
+      console.error('WalletConnect failed:', error);
       setActiveProvider(null);
       onOpenChange(true); // Reopen our modal on error
     }
@@ -185,18 +190,37 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </div>
 
       <Button
-        onClick={handleConnectWallet}
+        onClick={() => setStep('wallets')}
         disabled={isConnecting}
         variant="outline"
         className="w-full h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-center gap-3 border-white/10"
       >
-        {activeProvider === 'wallet' ? (
-          <Loader2 className="w-4 h-4 animate-spin" />
-        ) : (
-          <Wallet className="w-5 h-5" />
-        )}
+        <Wallet className="w-5 h-5" />
         <span>Connect Wallet</span>
       </Button>
+    </div>
+  );
+  
+  const renderWalletsStep = () => (
+    <div className="space-y-4">
+      <Button
+        onClick={handleWalletConnect}
+        disabled={isConnecting}
+        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10 px-4"
+      >
+        {activeProvider === 'walletconnect' ? (
+          <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+        ) : (
+          <svg viewBox="0 0 300 185" className="w-5 h-5 flex-shrink-0">
+            <path fill="#3B99FC" d="M61.4 36.3c49.1-48.1 128.6-48.1 177.7 0l5.9 5.8c2.5 2.4 2.5 6.3 0 8.7l-20.2 19.8c-1.2 1.2-3.2 1.2-4.4 0l-8.1-8c-34.2-33.5-89.7-33.5-124 0l-8.7 8.5c-1.2 1.2-3.2 1.2-4.4 0L55 51.3c-2.5-2.4-2.5-6.3 0-8.7l6.4-6.3zm219.6 41l18 17.6c2.5 2.4 2.5 6.3 0 8.7l-81.1 79.4c-2.5 2.4-6.4 2.4-8.9 0l-57.5-56.4c-.6-.6-1.6-.6-2.2 0L92.7 182.9c-2.5 2.4-6.4 2.4-8.9 0L2.8 103.5c-2.5-2.4-2.5-6.3 0-8.7l18-17.6c2.5-2.4 6.4-2.4 8.9 0l57.5 56.4c.6.6 1.6.6 2.2 0l57.5-56.4c2.5-2.4 6.4-2.4 8.9 0l57.5 56.4c.6.6 1.6.6 2.2 0l57.5-56.4c2.5-2.4 6.5-2.4 9 0z"/>
+          </svg>
+        )}
+        <span className="flex-1 text-left">WalletConnect</span>
+        <ChevronRight className="w-4 h-4 text-white/40" />
+      </Button>
+      <p className="text-white/40 text-xs text-center">
+        Connect via WalletConnect or scan QR code
+      </p>
     </div>
   );
 
@@ -307,6 +331,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
             {step === 'main' && 'Log in'}
             {step === 'email' && 'Continue with Email'}
             {step === 'sms' && 'Continue with SMS'}
+            {step === 'wallets' && 'Connect Wallet'}
           </DialogTitle>
         </DialogHeader>
 
@@ -315,6 +340,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           {step === 'main' && renderMainStep()}
           {step === 'email' && renderEmailStep()}
           {step === 'sms' && renderSMSStep()}
+          {step === 'wallets' && renderWalletsStep()}
         </div>
 
         {/* Footer */}

@@ -44,24 +44,24 @@ const MAX_BATCH_SIZE = 30; // Max addresses per batch request
  */
 async function processBatchQueue() {
   if (batchQueue.length === 0) return;
-  
+
   // Take items from queue
   const items = batchQueue.splice(0, MAX_BATCH_SIZE);
   const addresses = items.map(item => item.address);
-  
+
   try {
     console.log(`[AvatarBatch] Fetching ${addresses.length} avatars in batch`);
-    
+
     const { data, error } = await supabase.functions.invoke('batch-avatars', {
       body: { addresses },
     });
-    
+
     if (error) {
       throw new Error(error.message || 'Batch avatar fetch failed');
     }
-    
+
     const avatarMap = data?.avatars || {};
-    
+
     // Resolve each promise with the fetched data
     for (const item of items) {
       const result = avatarMap[item.address.toLowerCase()];
@@ -79,7 +79,7 @@ async function processBatchQueue() {
       item.reject(error instanceof Error ? error : new Error('Batch fetch failed'));
     }
   }
-  
+
   // Process any remaining items in the queue
   if (batchQueue.length > 0) {
     processBatchQueue();
@@ -92,7 +92,7 @@ async function processBatchQueue() {
 function queueAvatarFetch(address: string): Promise<string | undefined> {
   return new Promise((resolve, reject) => {
     batchQueue.push({ address: address.toLowerCase(), resolve, reject });
-    
+
     // Set timeout to process batch if not already set
     if (!batchTimeout) {
       batchTimeout = setTimeout(() => {
@@ -100,7 +100,7 @@ function queueAvatarFetch(address: string): Promise<string | undefined> {
         processBatchQueue();
       }, BATCH_DELAY_MS);
     }
-    
+
     // If we've hit max batch size, process immediately
     if (batchQueue.length >= MAX_BATCH_SIZE) {
       if (batchTimeout) {
@@ -174,7 +174,7 @@ export function useAvatarPrefetch() {
     async (walletAddresses: string[]) => {
       // Dedupe and filter empty addresses
       const uniqueAddresses = [...new Set(walletAddresses.filter(Boolean))];
-      
+
       // Only prefetch addresses we don't already have cached
       const uncachedAddresses = uniqueAddresses.filter(
         (addr) => !queryClient.getQueryData([AVATAR_QUERY_KEY, addr])
@@ -182,7 +182,7 @@ export function useAvatarPrefetch() {
 
       // Batch prefetch (up to 10 at a time to avoid API overload)
       const batch = uncachedAddresses.slice(0, 10);
-      
+
       await Promise.allSettled(
         batch.map((address) =>
           queryClient.prefetchQuery({
@@ -219,10 +219,10 @@ export function useCachedAvatar(
   fallbackUrl?: string
 ): string | undefined {
   const queryClient = useQueryClient();
-  
+
   return useMemo(() => {
     if (!walletAddress) return fallbackUrl;
-    
+
     const cached = queryClient.getQueryData<string>([AVATAR_QUERY_KEY, walletAddress]);
     return cached ?? fallbackUrl;
   }, [walletAddress, fallbackUrl, queryClient]);
@@ -234,7 +234,7 @@ export function useCachedAvatar(
  */
 export function useInvalidateAvatar() {
   const queryClient = useQueryClient();
-  
+
   return useCallback(
     (walletAddress: string) => {
       queryClient.invalidateQueries({ queryKey: [AVATAR_QUERY_KEY, walletAddress] });

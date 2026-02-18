@@ -91,15 +91,9 @@ createAppKit({
     '--w3m-accent': '#FFFFFF',
     '--w3m-border-radius-master': '1px',
   },
-  // Show all wallets on both desktop and mobile so users can pick any wallet
-  allWallets: 'SHOW',
-  // Featured wallets to show even if not detected (MetaMask, Coinbase, Phantom, Trust)
-  featuredWalletIds: [
-    'c57ca71147597511ea610013372ad443', // MetaMask
-    'fd20d473d0628e932ec06f6542ce91d4', // Coinbase Wallet
-    'a797aa35c0fad5cf3a7f87051ae3079979b94fa82fd2ef37d825f0e2030245a4', // Phantom
-    '4622a2b2d6ad1322744c74070a927a38b16c80c2f8149e21e90575d507119b4b', // Trust Wallet
-  ]
+  // Hide "All Wallets" on desktop to focus on WalletConnect/detected wallets
+  allWallets: 'ONLY_MOBILE',
+  featuredWalletIds: []
 })
 
 /**
