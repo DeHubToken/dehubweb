@@ -413,21 +413,33 @@ html {
   transform: scale(1.02) !important;
 }
 
-/* Mobile: Slide up from bottom like a sheet */
+/* Mobile: Slide up from bottom like a proper full-width drawer */
 @media (max-width: 768px) {
+  #w3a-modal {
+    align-items: flex-end !important;
+    justify-content: flex-end !important;
+    padding: 0 !important;
+  }
+
   .w3a-modal__card {
     position: fixed !important;
     bottom: 0 !important;
     left: 0 !important;
     right: 0 !important;
     top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
     transform: none !important;
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-    border-top-left-radius: 24px !important;
-    border-top-right-radius: 24px !important;
+    border-radius: 24px 24px 0 0 !important;
     max-height: 90vh !important;
     animation: w3aSlideUp 0.3s ease-out !important;
+    box-sizing: border-box !important;
+  }
+
+  .w3a-modal__card .w3a-modal__content {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }
 
