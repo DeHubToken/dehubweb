@@ -222,28 +222,50 @@ export function hasRedirectResult(): boolean {
   );
 }
 
+async function fetchWithRetry<T>(fn: () => Promise<T>, label: string, maxRetries = 3): Promise<T> {
+  let lastError: any;
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      if (i > 0) console.log(`[Web3Auth] Retrying ${label} (attempt ${i + 1}/${maxRetries})...`);
+      return await fn();
+    } catch (err) {
+      lastError = err;
+      console.warn(`[Web3Auth] ${label} attempt ${i + 1} failed:`, err);
+      // Wait before retry: 1s, 2s, 4s...
+      await new Promise(r => setTimeout(r, Math.pow(2, i) * 1000));
+    }
+  }
+  throw lastError;
+}
+
 async function getWeb3AuthClientId(): Promise<string> {
   if (cachedClientId) return cachedClientId;
   console.log("[Web3Auth] Fetching client ID from edge function...");
-  const { data, error } = await supabase.functions.invoke("get-web3auth-config");
-  console.log("[Web3Auth] get-web3auth-config response:", { data, error });
-  if (!error && data?.clientId) {
-    cachedClientId = data.clientId;
-    return cachedClientId;
-  }
-  throw new Error("Web3Auth client ID not configured");
+
+  return fetchWithRetry(async () => {
+    const { data, error } = await supabase.functions.invoke("get-web3auth-config");
+    console.log("[Web3Auth] get-web3auth-config response:", { data, error });
+    if (!error && data?.clientId) {
+      cachedClientId = data.clientId;
+      return cachedClientId;
+    }
+    throw new Error(error?.message || "Web3Auth client ID not configured");
+  }, "get-web3auth-config");
 }
 
 async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: string }> {
   if (cachedPimlicoConfig) return cachedPimlicoConfig;
   console.log("[Web3Auth] Fetching Pimlico config from edge function...");
-  const { data, error } = await supabase.functions.invoke("get-pimlico-config");
-  console.log("[Web3Auth] get-pimlico-config response:", { data, error });
-  if (!error && data?.bundlerUrl && data?.paymasterUrl) {
-    cachedPimlicoConfig = data;
-    return cachedPimlicoConfig;
-  }
-  throw new Error("Pimlico API key not configured");
+
+  return fetchWithRetry(async () => {
+    const { data, error } = await supabase.functions.invoke("get-pimlico-config");
+    console.log("[Web3Auth] get-pimlico-config response:", { data, error });
+    if (!error && data?.bundlerUrl && data?.paymasterUrl) {
+      cachedPimlicoConfig = data;
+      return cachedPimlicoConfig;
+    }
+    throw new Error(error?.message || "Pimlico config not configured");
+  }, "get-pimlico-config");
 }
 
 /**
