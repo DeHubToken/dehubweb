@@ -989,7 +989,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isProcessingRedirect,
     requiresUsername,
     needsSignature,
-    web3auth: web3authInstance,
+    web3auth,
     connectionSource,
     connect,
     connectWithProvider,
