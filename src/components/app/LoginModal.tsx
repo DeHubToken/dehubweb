@@ -95,32 +95,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const isMobile = useMemo(() => isMobileDevice(), []);
   const hasInjectedWallet = useMemo(() => typeof window !== 'undefined' && !!(window as any).ethereum, []);
 
-  // Detect installed wallet extensions on desktop
-  const detectedWallets = useMemo(() => {
-    if (typeof window === 'undefined' || isMobile) return [];
-    const wallets: { id: string; name: string; icon: React.ReactNode }[] = [];
-    const eth = (window as any).ethereum;
-    if (!eth) return wallets;
-
-    // Check for MetaMask
-    if (eth.isMetaMask || eth.providers?.some((p: any) => p.isMetaMask)) {
-      wallets.push({ id: 'metamask', name: 'MetaMask', icon: <MetaMaskIcon /> });
-    }
-    // Check for Phantom
-    if ((window as any).phantom?.ethereum || eth.isPhantom || eth.providers?.some((p: any) => p.isPhantom)) {
-      wallets.push({ id: 'phantom', name: 'Phantom', icon: <PhantomIcon /> });
-    }
-    // Check for Coinbase Wallet
-    if (eth.isCoinbaseWallet || eth.providers?.some((p: any) => p.isCoinbaseWallet)) {
-      wallets.push({ id: 'coinbase', name: 'Coinbase Wallet', icon: <CoinbaseIcon /> });
-    }
-    // Check for Trust Wallet
-    if (eth.isTrust || eth.providers?.some((p: any) => p.isTrust)) {
-      wallets.push({ id: 'trust', name: 'Trust Wallet', icon: <TrustWalletIcon /> });
-    }
-    return wallets;
-  }, [isMobile]);
-
   const handleClose = () => {
     setStep('main');
     setEmail('');
@@ -281,8 +255,8 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const renderWalletsStep = () => (
     <div className="space-y-3">
-      {/* Mobile: In wallet in-app browser - direct connect */}
-      {isMobile && hasInjectedWallet && (
+      {/* Browser extension wallet - works on both desktop & mobile in-app browsers */}
+      {hasInjectedWallet && (
         <Button
           onClick={handleInjectedConnect}
           disabled={isConnecting}
@@ -298,33 +272,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         </Button>
       )}
 
-      {/* Desktop: Show detected wallet extensions - direct connect with chainId */}
-      {!isMobile && detectedWallets.map((w) => (
-        <Button
-          key={w.id}
-          onClick={async () => {
-            setActiveProvider(w.id);
-            try {
-              await connectWithWallet(w.id as any);
-              handleClose();
-            } catch {
-              setActiveProvider(null);
-            }
-          }}
-          disabled={isConnecting}
-          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center gap-3 border border-white/10 px-4"
-        >
-          {activeProvider === w.id ? (
-            <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
-          ) : (
-            <span className="flex-shrink-0">{w.icon}</span>
-          )}
-          <span className="flex-1 text-left">{w.name}</span>
-          <ChevronRight className="w-4 h-4 text-white/40" />
-        </Button>
-      ))}
-
-      {/* WalletConnect - QR code on desktop, wallet selection modal on mobile */}
+      {/* WalletConnect - QR code on desktop, deep links on mobile */}
       <Button
         onClick={handleWalletConnect}
         disabled={isConnecting}
@@ -341,10 +289,10 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         <ChevronRight className="w-4 h-4 text-white/40" />
       </Button>
       <p className="text-white/40 text-xs text-center pt-1">
-        {isMobile
-          ? 'Choose your wallet, approve & return here'
-          : detectedWallets.length > 0
-            ? 'Or use WalletConnect for other wallets'
+        {hasInjectedWallet
+          ? 'Or scan QR code with WalletConnect'
+          : isMobile
+            ? 'Choose your wallet, approve & return here'
             : 'Connect via WalletConnect or scan QR code'}
       </p>
     </div>

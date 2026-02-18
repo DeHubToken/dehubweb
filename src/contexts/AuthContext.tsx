@@ -971,9 +971,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const connectWithWallet = useCallback(async (wallet: WalletProvider) => {
     console.log(`[Auth] connectWithWallet(${wallet}) called`);
-    console.log('[Auth] Available connectors:', connectors.map(c => `${c.id}(${c.name})`).join(', '));
 
-    // Find the right connector based on wallet type
     let connector;
     if (wallet === 'walletconnect') {
       connector = connectors.find(c => c.id === 'walletConnect');
@@ -982,23 +980,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
     } else {
-      // Try to find wallet-specific connector first, then fall back to generic injected
-      const walletConnectorMap: Record<string, string[]> = {
-        metamask: ['io.metamask', 'metaMaskSDK', 'metaMask'],
-        phantom: ['app.phantom', 'phantom'],
-        coinbase: ['coinbaseWalletSDK', 'coinbaseWallet'],
-        trust: ['com.trustwallet.app', 'trust'],
-        rabby: ['io.rabby', 'rabby'],
-      };
-
-      const preferredIds = walletConnectorMap[wallet] || [];
-      connector = connectors.find(c => preferredIds.includes(c.id));
-
-      // Fallback to generic injected connector
-      if (!connector) {
-        connector = connectors.find(c => c.id === 'injected');
-      }
-
+      // Use generic injected connector - handles all browser extensions
+      // (MetaMask, Phantom, Coinbase, Trust, Rabby, etc.)
+      connector = connectors.find(c => c.id === 'injected');
       if (!connector) {
         toast.error('No wallet detected. Please install a wallet extension.');
         return;
@@ -1009,7 +993,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     wagmiAuthIntentRef.current = true;
 
     try {
-      console.log(`[Auth] Connecting via ${connector.id}(${connector.name}) connector...`);
+      console.log(`[Auth] Connecting via ${connector.id} connector with chainId 8453 (Base)...`);
       await connectAsync({ connector, chainId: 8453 });
       // Auth flow continues in the useEffect hook monitoring wagmi state
     } catch (error: unknown) {
@@ -1021,6 +1005,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         toast.error('Wallet not found. Please install a wallet extension.');
       } else if (msg.includes('rejected') || msg.includes('denied') || msg.includes('cancelled')) {
         toast.error('Connection was cancelled.');
+      } else if (msg.includes('chain') || msg.includes('network') || msg.includes('switch')) {
+        toast.error('Please switch to Base network in your wallet and try again.');
       } else {
         toast.error('Failed to connect wallet. Please try again.');
       }
