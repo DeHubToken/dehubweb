@@ -494,9 +494,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const ensureSmartAccountDeployed = async (provider: any, address: string) => {
     console.log(`[Auth] Checking deployment for ${address}...`);
-    
+
     // Helper to request with timeout
-    const requestWithTimeout = async (method: string, params: any[] = [], timeoutMs = 10000) => {
+    const requestWithTimeout = async (method: string, params: any[] = [], timeoutMs = 15000) => {
       return Promise.race([
         provider.request({ method, params }),
         new Promise((_, reject) => setTimeout(() => reject(new Error(`Method ${method} timed out`)), timeoutMs))
@@ -509,30 +509,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (code === '0x' || code === '0x0' || !code) {
         console.log('[Auth] Account not deployed. Sending initialization transaction...');
-        toast.info('New account detected. Initializing...', { duration: 5000 });
-        
-        try {
-          // Execute an empty transaction to trigger deployment
-          // Pimlico paymaster will handle the gas
-          const txHash = await requestWithTimeout('eth_sendTransaction', [{
-            from: address,
-            to: address,
-            value: '0x0',
-            data: '0x',
-          }]) as string;
-          
-          console.log('[Auth] Initialization transaction sent:', txHash);
-          toast.success('Account initialized! Preparing login...', { duration: 4000 });
-          
-          // Brief wait for bundler inclusion
-          await new Promise(r => setTimeout(r, 4500));
-        } catch (txErr: any) {
-          console.warn('[Auth] Initialization transaction failed, proceeding anyway:', txErr.message);
-          toast.warning('Account initialization pending. Proceeding with login...', { duration: 3000 });
+        toast.info('New account detected. Initializing...', { duration: 8000 });
+
+        // Try deployment with retries - UserOperations can take time via bundler
+        const MAX_RETRIES = 2;
+        let deployed = false;
+
+        for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+          try {
+            console.log(`[Auth] Deployment attempt ${attempt}/${MAX_RETRIES}...`);
+            // Execute an empty transaction to trigger deployment
+            // Pimlico paymaster will handle the gas - use longer timeout for bundler
+            const txHash = await requestWithTimeout('eth_sendTransaction', [{
+              from: address,
+              to: address,
+              value: '0x0',
+              data: '0x',
+            }], 60000) as string;
+
+            console.log('[Auth] Initialization transaction sent:', txHash);
+            toast.success('Account initialized! Preparing login...', { duration: 4000 });
+
+            // Wait for bundler inclusion
+            await new Promise(r => setTimeout(r, 5000));
+            deployed = true;
+            break;
+          } catch (txErr: any) {
+            console.warn(`[Auth] Deployment attempt ${attempt} failed:`, txErr.message);
+            if (attempt < MAX_RETRIES) {
+              toast.info('Retrying account setup...', { duration: 3000 });
+              await new Promise(r => setTimeout(r, 2000));
+            }
+          }
         }
+
+        if (!deployed) {
+          // Verify if it got deployed despite tx errors (bundler may have processed it)
+          try {
+            const recheck = await requestWithTimeout('eth_getCode', [address, 'latest']) as string;
+            if (recheck && recheck !== '0x' && recheck !== '0x0') {
+              console.log('[Auth] Account deployed (confirmed on recheck)');
+              deployed = true;
+            }
+          } catch (_) { /* ignore recheck errors */ }
+        }
+
+        if (!deployed) {
+          console.error('[Auth] Account deployment failed after all retries');
+          toast.error('Account setup failed. Please try again.', { duration: 5000 });
+          return false;
+        }
+
         return true;
       }
-      
+
       console.log('[Auth] Account already deployed');
       return true;
     } catch (err: any) {
@@ -582,10 +612,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('[Auth] [REDIRECT] Account:', authAddress);
 
       // Ensure deployed
-      await ensureSmartAccountDeployed(signingProvider, authAddress);
+      const deployed = await ensureSmartAccountDeployed(signingProvider, authAddress);
+      if (!deployed) {
+        throw new Error('Smart Account deployment failed. Please try again.');
+      }
 
       const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-      
+
       console.log('[Auth] [REDIRECT] Requesting signature...');
       toast.info('Please sign in the wallet popup...', { id: 'auth-redirect', duration: 10000 });
 
@@ -682,7 +715,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (isSocial) {
         // Social login (Safe AA enabled): ensure account is deployed before signing
-        await ensureSmartAccountDeployed(signingProvider, authAddress);
+        const deployed = await ensureSmartAccountDeployed(signingProvider, authAddress);
+        if (!deployed) {
+          throw new Error('Smart Account deployment failed. Please try again.');
+        }
       }
 
       const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
