@@ -971,10 +971,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const connectWithWallet = useCallback(async (wallet: WalletProvider) => {
     console.log(`[Auth] connectWithWallet(${wallet}) called`);
+    console.log('[Auth] Available connectors:', connectors.map(c => `${c.id}(${c.name})`).join(', '));
 
-    // Determine which connector to use:
-    // - 'walletconnect' → WalletConnect (QR code on desktop, deep links on mobile)
-    // - anything else → injected (browser extensions, in-app browsers)
+    // Find the right connector based on wallet type
     let connector;
     if (wallet === 'walletconnect') {
       connector = connectors.find(c => c.id === 'walletConnect');
@@ -983,7 +982,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
     } else {
-      connector = connectors.find(c => c.id === 'injected');
+      // Try to find wallet-specific connector first, then fall back to generic injected
+      const walletConnectorMap: Record<string, string[]> = {
+        metamask: ['io.metamask', 'metaMaskSDK', 'metaMask'],
+        phantom: ['app.phantom', 'phantom'],
+        coinbase: ['coinbaseWalletSDK', 'coinbaseWallet'],
+        trust: ['com.trustwallet.app', 'trust'],
+        rabby: ['io.rabby', 'rabby'],
+      };
+
+      const preferredIds = walletConnectorMap[wallet] || [];
+      connector = connectors.find(c => preferredIds.includes(c.id));
+
+      // Fallback to generic injected connector
+      if (!connector) {
+        connector = connectors.find(c => c.id === 'injected');
+      }
+
       if (!connector) {
         toast.error('No wallet detected. Please install a wallet extension.');
         return;
@@ -994,10 +1009,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     wagmiAuthIntentRef.current = true;
 
     try {
-      // Don't set isConnecting here - the wagmi auto-connect useEffect will set it
-      // when it detects the connection and starts the auth flow.
-      // Setting it here would block the useEffect (it checks !isConnecting).
-      console.log(`[Auth] Connecting via ${connector.id} connector...`);
+      console.log(`[Auth] Connecting via ${connector.id}(${connector.name}) connector...`);
       await connectAsync({ connector, chainId: 8453 });
       // Auth flow continues in the useEffect hook monitoring wagmi state
     } catch (error: unknown) {
