@@ -6,9 +6,10 @@
  * AppKit handles all wallets (injected, WalletConnect, etc.) on both desktop and mobile.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Mail, Wallet, Loader2, ChevronRight, Smartphone } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -48,9 +49,17 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const [emailError, setEmailError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   const { open: openAppKit } = useAppKit();
   const { setWagmiAuthIntent } = useAuth();
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const handleClose = () => {
     setStep('main');
@@ -305,50 +314,75 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     </div>
   );
 
+  const headerContent = (
+    <>
+      <div className="flex items-center justify-center relative">
+        {step !== 'main' && (
+          <button
+            onClick={() => setStep('main')}
+            className="absolute left-0 p-2 rounded-xl hover:bg-white/10 transition-colors text-white/60 hover:text-white"
+          >
+            <ChevronRight className="w-5 h-5 rotate-180" />
+          </button>
+        )}
+        <img src={dehubLogo} alt="DeHub" className="h-8" />
+        <button
+          onClick={handleClose}
+          className="absolute right-0 p-2 rounded-xl hover:bg-white/10 transition-colors text-white/60 hover:text-white z-[100000]"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+    </>
+  );
+
+  const titleText = step === 'main' ? 'Log in'
+    : step === 'email' ? 'Continue with Email'
+    : step === 'sms' ? 'Continue with SMS'
+    : 'Connect Wallet';
+
+  const bodyContent = (
+    <>
+      <div className="px-6 pb-6">
+        {step === 'main' && renderMainStep()}
+        {step === 'email' && renderEmailStep()}
+        {step === 'sms' && renderSMSStep()}
+        {step === 'wallets' && renderWalletsStep()}
+      </div>
+      <div className="px-6 py-4 bg-black/20 border-t border-white/10">
+        <p className="text-xs text-white/40 text-center">
+          By continuing, you agree to our Terms of Service and Privacy Policy
+        </p>
+      </div>
+    </>
+  );
+
+  if (isMobile) {
+    return (
+      <Drawer open={open} onOpenChange={handleClose}>
+        <DrawerContent className="bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden">
+          <DrawerHeader className="px-6 pt-6 pb-4">
+            {headerContent}
+            <DrawerTitle className="text-base font-medium text-white mt-4 text-center">
+              {titleText}
+            </DrawerTitle>
+          </DrawerHeader>
+          {bodyContent}
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="bg-black/40 backdrop-blur-2xl saturate-[180%] border border-white/10 max-w-sm p-0 gap-0 rounded-2xl overflow-hidden [&>button]:hidden">
-        {/* Header */}
         <DialogHeader className="px-6 pt-6 pb-4">
-          <div className="flex items-center justify-center relative">
-            {step !== 'main' && (
-              <button
-                onClick={() => setStep('main')}
-                className="absolute left-0 p-2 rounded-xl hover:bg-white/10 transition-colors text-white/60 hover:text-white"
-              >
-                <ChevronRight className="w-5 h-5 rotate-180" />
-              </button>
-            )}
-            <img src={dehubLogo} alt="DeHub" className="h-8" />
-            <button
-              onClick={handleClose}
-              className="absolute right-0 p-2 rounded-xl hover:bg-white/10 transition-colors text-white/60 hover:text-white z-[100000]"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+          {headerContent}
           <DialogTitle className="text-base font-medium text-white mt-4 text-center">
-            {step === 'main' && 'Log in'}
-            {step === 'email' && 'Continue with Email'}
-            {step === 'sms' && 'Continue with SMS'}
-            {step === 'wallets' && 'Connect Wallet'}
+            {titleText}
           </DialogTitle>
         </DialogHeader>
-
-        {/* Content */}
-        <div className="px-6 pb-6">
-          {step === 'main' && renderMainStep()}
-          {step === 'email' && renderEmailStep()}
-          {step === 'sms' && renderSMSStep()}
-          {step === 'wallets' && renderWalletsStep()}
-        </div>
-
-        {/* Footer */}
-        <div className="px-6 py-4 bg-black/20 border-t border-white/10">
-          <p className="text-xs text-white/40 text-center">
-            By continuing, you agree to our Terms of Service and Privacy Policy
-          </p>
-        </div>
+        {bodyContent}
       </DialogContent>
     </Dialog>
   );
