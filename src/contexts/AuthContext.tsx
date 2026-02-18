@@ -998,7 +998,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // when it detects the connection and starts the auth flow.
       // Setting it here would block the useEffect (it checks !isConnecting).
       console.log(`[Auth] Connecting via ${connector.id} connector...`);
-      await connectAsync({ connector });
+      await connectAsync({ connector, chainId: 8453 });
       // Auth flow continues in the useEffect hook monitoring wagmi state
     } catch (error: unknown) {
       wagmiAuthIntentRef.current = false;
