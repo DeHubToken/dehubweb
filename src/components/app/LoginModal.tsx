@@ -2,8 +2,8 @@
  * Custom Login Modal Component
  * ============================
  * Fully branded login experience.
- * Social logins via Web3Auth, wallet connections via Reown AppKit.
- * AppKit handles all wallets (injected, WalletConnect, etc.) on both desktop and mobile.
+ * Social logins via Web3Auth, wallet connections via standard Wagmi.
+ * Removed Reown AppKit to stabilize the connection experience.
  */
 
 import React, { useState, useEffect } from 'react';
@@ -13,8 +13,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { useAuth } from '@/contexts/AuthContext';
-import { useAppKit } from '@reown/appkit/react';
+import { useAuth, type WalletProvider } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
 // Social provider icons
@@ -33,6 +32,19 @@ const XIcon = () => (
   </svg>
 );
 
+const MetaMaskIcon = () => (
+  <img src="https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg" className="w-5 h-5" alt="MetaMask" />
+);
+
+const CoinbaseIcon = () => (
+  <img src="https://avatars.githubusercontent.com/u/18060234?s=200&v=4" className="w-5 h-5 rounded-full" alt="Coinbase" />
+);
+
+const WalletConnectIcon = () => (
+  <svg viewBox="0 0 300 185" className="w-5 h-5">
+    <path fill="#3B99FC" d="M61.4 36.3c49.1-48.1 128.6-48.1 177.7 0l5.9 5.8c2.5 2.4 2.5 6.3 0 8.7l-20.2 19.8c-1.2 1.2-3.2 1.2-4.4 0l-8.1-8c-34.2-33.5-89.7-33.5-124 0l-8.7 8.5c-1.2 1.2-3.2 1.2-4.4 0L55 51.3c-2.5-2.4-2.5-6.3 0-8.7l6.4-6.3zm219.6 41l18 17.6c2.5 2.4 2.5 6.3 0 8.7l-81.1 79.4c-2.5 2.4-6.4 2.4-8.9 0l-57.5-56.4c-.6-.6-1.6-.6-2.2 0L92.7 182.9c-2.5 2.4-6.4 2.4-8.9 0L2.8 103.5c-2.5-2.4-2.5-6.3 0-8.7l18-17.6c2.5-2.4 6.4-2.4 8.9 0l57.5 56.4c.6.6 1.6.6 2.2 0l57.5-56.4c2.5-2.4 6.4-2.4 8.9 0l57.5 56.4c.6.6 1.6.6 2.2 0l57.5-56.4c2.5-2.4 6.5-2.4 9 0z"/>
+  </svg>
+);
 
 interface LoginModalProps {
   open: boolean;
@@ -42,7 +54,7 @@ interface LoginModalProps {
 type LoginStep = 'main' | 'email' | 'sms' | 'wallets';
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
-  const { connectWithProvider, connectWithEmail, connectWithSMS, isConnecting } = useAuth();
+  const { connectWithProvider, connectWithEmail, connectWithSMS, connectWithWallet, isConnecting } = useAuth();
   const [step, setStep] = useState<LoginStep>('main');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -50,9 +62,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const [phoneError, setPhoneError] = useState('');
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-
-  const { open: openAppKit } = useAppKit();
-  const { setWagmiAuthIntent } = useAuth();
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -123,24 +132,15 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     }
   };
 
-  // Open Reown AppKit modal - handles all wallets (injected, WalletConnect, etc.)
-  const handleWalletConnect = async () => {
-    setActiveProvider('walletconnect');
+  const handleWalletSelect = async (wallet: WalletProvider) => {
+    setActiveProvider(wallet);
     try {
-      console.log('[LoginModal] Opening WalletConnect (AppKit)...');
-      setWagmiAuthIntent(true);
-      
-      // Call open BEFORE closing our modal to avoid unmount issues
-      await openAppKit();
-      
-      // Close our modal after a slight delay or once AppKit is likely visible
-      setTimeout(() => onOpenChange(false), 500);
-      
-      // Auth continues in AuthContext useEffect when isWagmiConnected changes
+      console.log(`[LoginModal] Connecting to ${wallet}...`);
+      await connectWithWallet(wallet);
+      handleClose();
     } catch (error) {
-      console.error('WalletConnect failed:', error);
+      console.error(`${wallet} connection failed:`, error);
       setActiveProvider(null);
-      onOpenChange(true); // Reopen our modal on error
     }
   };
 
@@ -210,25 +210,34 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     </div>
   );
   
+  const wallets: { id: WalletProvider, name: string, icon: React.ReactNode }[] = [
+    { id: 'metamask', name: 'MetaMask', icon: <MetaMaskIcon /> },
+    { id: 'coinbase', name: 'Coinbase Wallet', icon: <CoinbaseIcon /> },
+    { id: 'phantom', name: 'Phantom', icon: <img src="https://phantom.app/favicon.ico" className="w-5 h-5" alt="Phantom" /> },
+    { id: 'trust', name: 'Trust Wallet', icon: <img src="https://trustwallet.com/assets/images/media/assets/trust_wallet_logo.svg" className="w-5 h-5" alt="Trust" /> },
+    { id: 'walletconnect', name: 'WalletConnect', icon: <WalletConnectIcon /> },
+  ];
+
   const renderWalletsStep = () => (
-    <div className="space-y-4">
-      <Button
-        onClick={handleWalletConnect}
-        disabled={isConnecting}
-        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10 px-4"
-      >
-        {activeProvider === 'walletconnect' ? (
-          <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
-        ) : (
-          <svg viewBox="0 0 300 185" className="w-5 h-5 flex-shrink-0">
-            <path fill="#3B99FC" d="M61.4 36.3c49.1-48.1 128.6-48.1 177.7 0l5.9 5.8c2.5 2.4 2.5 6.3 0 8.7l-20.2 19.8c-1.2 1.2-3.2 1.2-4.4 0l-8.1-8c-34.2-33.5-89.7-33.5-124 0l-8.7 8.5c-1.2 1.2-3.2 1.2-4.4 0L55 51.3c-2.5-2.4-2.5-6.3 0-8.7l6.4-6.3zm219.6 41l18 17.6c2.5 2.4 2.5 6.3 0 8.7l-81.1 79.4c-2.5 2.4-6.4 2.4-8.9 0l-57.5-56.4c-.6-.6-1.6-.6-2.2 0L92.7 182.9c-2.5 2.4-6.4 2.4-8.9 0L2.8 103.5c-2.5-2.4-2.5-6.3 0-8.7l18-17.6c2.5-2.4 6.4-2.4 8.9 0l57.5 56.4c.6.6 1.6.6 2.2 0l57.5-56.4c2.5-2.4 6.4-2.4 8.9 0l57.5 56.4c.6.6 1.6.6 2.2 0l57.5-56.4c2.5-2.4 6.5-2.4 9 0z"/>
-          </svg>
-        )}
-        <span className="flex-1 text-left">WalletConnect</span>
-        <ChevronRight className="w-4 h-4 text-white/40" />
-      </Button>
-      <p className="text-white/40 text-xs text-center">
-        Connect via WalletConnect or scan QR code
+    <div className="space-y-3">
+      {wallets.map((wallet) => (
+        <Button
+          key={wallet.id}
+          onClick={() => handleWalletSelect(wallet.id)}
+          disabled={isConnecting}
+          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-start gap-3 border border-white/10 px-4"
+        >
+          {activeProvider === wallet.id ? (
+            <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+          ) : (
+            <div className="flex-shrink-0">{wallet.icon}</div>
+          )}
+          <span className="flex-1 text-left">{wallet.name}</span>
+          <ChevronRight className="w-4 h-4 text-white/40" />
+        </Button>
+      ))}
+      <p className="text-white/40 text-[10px] text-center mt-2 px-2">
+        Install wallet extension or use mobile app to connect
       </p>
     </div>
   );

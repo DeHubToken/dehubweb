@@ -13,7 +13,6 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useAccount, useSignMessage, useDisconnect, useConnect } from 'wagmi';
-import { useAppKit } from '@reown/appkit/react';
 import { clearWagmiStorage } from '@/lib/wagmi';
 import {
   authenticateWallet,
@@ -181,7 +180,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { signMessageAsync } = useSignMessage();
   const { disconnect: wagmiDisconnect } = useDisconnect();
   const { connectAsync, connectors } = useConnect();
-  const { close: closeAppKitModal } = useAppKit();
   
   // Ref to track if connection should be aborted when modal is closed
   const connectionAbortedRef = useRef(false);
@@ -287,19 +285,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // CASE A: Already authed with same address -> Sync state
         if (isAuthenticated && walletAddress && walletAddress.toLowerCase() === wagmiAddress.toLowerCase()) {
-           if (connectionSource !== 'wagmi') {
-             setConnectionSource('wagmi');
-           }
-           return;
+            if (connectionSource !== 'wagmi') {
+              setConnectionSource('wagmi');
+            }
+            return;
         }
 
         // CASE B: Already authed with DIFFERENT address -> Disconnect old session
         if (walletAddress && walletAddress.toLowerCase() !== wagmiAddress.toLowerCase()) {
-           console.log('[Auth] Address mismatch (Wagmi vs Session), requiring re-auth');
-           clearAuthSession();
-           localStorage.removeItem('dehub_user');
-           setWalletAddress(null);
-           setUser(null);
+            console.log('[Auth] Address mismatch (Wagmi vs Session), requiring re-auth');
+            clearAuthSession();
+            localStorage.removeItem('dehub_user');
+            setWalletAddress(null);
+            setUser(null);
         }
 
         // CASE C: Not authed -> Only start auth if user explicitly clicked "Connect Wallet"
@@ -321,8 +319,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
 
           wagmiDisconnect();
-          // Close the Reown AppKit "Switch Network" modal if it auto-opened
-          try { closeAppKitModal(); } catch (_) { /* ignore if not mounted */ }
           return;
         }
 
@@ -798,349 +794,219 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  /**
-   * Handle errors during connection - does NOT throw, just shows toast
-   */
-  const handleConnectionError = (error: unknown) => {
-    console.error('[Auth] Connection failed:', error);
-    
-    const errorMessage = error instanceof Error ? error.message : 'Connection failed';
-    let userFriendlyMessage = 'Connection failed. Please try again.';
-    
-    if (isCancellationError(errorMessage)) {
-      userFriendlyMessage = 'Log in was cancelled';
-    } else if (errorMessage.includes('network') || errorMessage.includes('chain')) {
-      userFriendlyMessage = 'Please switch to Base network and try again';
-    } else if (errorMessage.includes('timeout') || errorMessage.includes('Timeout')) {
-      userFriendlyMessage = 'Connection timed out. Please try again.';
-    } else if (errorMessage.includes('popup') || errorMessage.includes('blocked')) {
-      userFriendlyMessage = 'Redirecting to login page...';
-    } else if (errorMessage.includes('bundler') || errorMessage.includes('paymaster')) {
-      userFriendlyMessage = 'Account setup failed. Please try again.';
-    } else if (errorMessage.includes('Invalid auth connection') || errorMessage.includes('invalid auth connection')) {
-      userFriendlyMessage = 'This login method is not configured. Please try a different option.';
-    } else if (errorMessage.includes('smart account') || errorMessage.includes('Smart Account') || errorMessage.includes('aa_')) {
-      userFriendlyMessage = 'Smart account setup failed. Please try again or use an external wallet.';
-    } else if (errorMessage.includes('not_ready') || errorMessage.includes('web3auth.io')) {
-      userFriendlyMessage = 'Login service unreachable. Your browser may be blocking it. Try a different browser or disable ad blockers.';
-    } else if (errorMessage.includes('init') && errorMessage.includes('timeout')) {
-      userFriendlyMessage = 'Login service is slow to respond. Check your connection and try again.';
+  const connectWithProvider = async (provider: SocialProvider) => {
+    setIsConnecting(true);
+    setActiveProvider(provider);
+    setConnectionSource('web3auth');
+    localStorage.setItem('dehub_connection_source', 'web3auth');
+
+    try {
+      const socialProvider = mapSocialProvider(provider);
+      const authProvider = await connectToSocialProvider(socialProvider);
+      
+      if (authProvider) {
+        await completeDeHubAuth(authProvider);
+        closeLoginModal();
+      }
+    } catch (error: any) {
+      console.error(`${provider} login error:`, error);
+      
+      const errorMessage = error.message || String(error);
+      if (!isCancellationError(errorMessage)) {
+        toast.error(`Failed to connect with ${provider}. Please try again.`);
+      }
+      
+      // Reset state on error to allow retry
+      setConnectionSource(null);
+      localStorage.removeItem('dehub_connection_source');
+      forceCleanupWeb3Auth();
+    } finally {
+      setIsConnecting(false);
+      setActiveProvider(null);
     }
-    
-    toast.error(userFriendlyMessage);
-    // NOTE: Removed throw - throwing here prevents finally block from resetting isConnecting
   };
 
-  /**
-   * Connect with a social provider (Google, X, Telegram, Apple, etc.)
-   */
-  const connectWithProvider = useCallback(async (provider: SocialProvider) => {
-    console.log(`[Auth] connectWithProvider(${provider}) called`);
-    connectionAbortedRef.current = false;
+  const connectWithEmail = async (email: string) => {
     setIsConnecting(true);
+    setActiveProvider('email');
+    setConnectionSource('web3auth');
+    localStorage.setItem('dehub_connection_source', 'web3auth');
 
     try {
-      const authConnection = mapSocialProvider(provider);
-      const web3authProvider = await connectToSocialProvider(authConnection);
-
-      // Check if user closed modal during connection
-      if (connectionAbortedRef.current) {
-        console.log('[Auth] Connection aborted by user');
-        return;
+      const authProvider = await connectToSocialProvider(AUTH_CONNECTION.EMAIL_PASSWORDLESS, email);
+      
+      if (authProvider) {
+        await completeDeHubAuth(authProvider);
+        closeLoginModal();
       }
-
-      if (!web3authProvider) {
-        throw new Error('Failed to connect - no provider returned');
+    } catch (error: any) {
+      console.error('Email login error:', error);
+      const errorMessage = error.message || String(error);
+      if (!isCancellationError(errorMessage)) {
+        toast.error('Failed to send magic link. Please check your email and try again.');
       }
-
-      setConnectionSource('web3auth');
-      await completeDeHubAuth(web3authProvider);
-      setNeedsSignature(false);
-      closeLoginModal();
-
-      console.log(`[Auth] ✓ ${provider} connection complete!`);
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : '';
-
-      // Force cleanup after any error to ensure clean state for retry
-      try {
-        await forceCleanupWeb3Auth();
-      } catch (e) {
-        console.warn('[Auth] Cleanup after error failed:', e);
-      }
-
-      if (isCancellationError(errorMessage)) {
-        toast.error('Log in was cancelled');
-        return;
-      }
-
-      handleConnectionError(error);
+      setConnectionSource(null);
+      localStorage.removeItem('dehub_connection_source');
+      forceCleanupWeb3Auth();
     } finally {
       setIsConnecting(false);
+      setActiveProvider(null);
     }
-  }, []);
+  };
 
-  /**
-   * Connect with email (passwordless)
-   */
-  const connectWithEmail = useCallback(async (email: string) => {
-    console.log('[Auth] connectWithEmail() called');
+  const connectWithSMS = async (phone: string) => {
     setIsConnecting(true);
+    setActiveProvider('sms');
+    setConnectionSource('web3auth');
+    localStorage.setItem('dehub_connection_source', 'web3auth');
 
     try {
-      const web3authProvider = await connectToSocialProvider(
-        AUTH_CONNECTION.EMAIL_PASSWORDLESS,
-        email
-      );
-
-      if (!web3authProvider) {
-        throw new Error('Failed to connect - no provider returned');
+      const authProvider = await connectToSocialProvider(AUTH_CONNECTION.SMS_PASSWORDLESS, phone);
+      
+      if (authProvider) {
+        await completeDeHubAuth(authProvider);
+        closeLoginModal();
       }
-
-      setConnectionSource('web3auth');
-      await completeDeHubAuth(web3authProvider);
-      setNeedsSignature(false);
-      closeLoginModal();
-
-      console.log('[Auth] ✓ Email connection complete!');
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : '';
-
-      try {
-        await forceCleanupWeb3Auth();
-      } catch (e) {
-        console.warn('[Auth] Cleanup after error failed:', e);
+    } catch (error: any) {
+      console.error('SMS login error:', error);
+      const errorMessage = error.message || String(error);
+      if (!isCancellationError(errorMessage)) {
+        toast.error('Failed to send verification code. Please check your number and try again.');
       }
-
-      if (isCancellationError(errorMessage)) {
-        toast.error('Log in was cancelled');
-        return;
-      }
-
-      handleConnectionError(error);
+      setConnectionSource(null);
+      localStorage.removeItem('dehub_connection_source');
+      forceCleanupWeb3Auth();
     } finally {
       setIsConnecting(false);
+      setActiveProvider(null);
     }
-  }, []);
+  };
 
-  /**
-   * Connect with SMS (passwordless)
-   */
-  const connectWithSMS = useCallback(async (phone: string) => {
-    console.log('[Auth] connectWithSMS() called');
+  const connectWithWallet = async (wallet: WalletProvider) => {
+    console.log('[Auth] connectWithWallet called:', wallet);
     setIsConnecting(true);
+    setWagmiAuthIntent(true);
+    localStorage.setItem('dehub_connection_source', 'wagmi');
 
     try {
-      const web3authProvider = await connectToSocialProvider(
-        AUTH_CONNECTION.SMS_PASSWORDLESS,
-        phone
-      );
-
-      if (!web3authProvider) {
-        throw new Error('Failed to connect - no provider returned');
+      let connector;
+      if (wallet === 'metamask') {
+        connector = connectors.find(c => c.id === 'io.metamask' || c.id === 'metaMaskSDK' || (c.id === 'injected' && c.name.toLowerCase().includes('metamask')));
+      } else if (wallet === 'coinbase') {
+        connector = connectors.find(c => c.id === 'coinbaseWalletSDK' || c.id === 'coinbaseWallet');
+      } else if (wallet === 'walletconnect') {
+        connector = connectors.find(c => c.id === 'walletConnect');
+      } else if (wallet === 'phantom') {
+        connector = connectors.find(c => c.id === 'app.phantom' || (c.id === 'injected' && c.name.toLowerCase().includes('phantom')));
+      } else if (wallet === 'trust') {
+        connector = connectors.find(c => c.id === 'com.trustwallet.app' || (c.id === 'injected' && c.name.toLowerCase().includes('trust')));
       }
 
-      setConnectionSource('web3auth');
-      await completeDeHubAuth(web3authProvider);
-      setNeedsSignature(false);
-      closeLoginModal();
-
-      console.log('[Auth] ✓ SMS connection complete!');
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : '';
-
-      try {
-        await forceCleanupWeb3Auth();
-      } catch (e) {
-        console.warn('[Auth] Cleanup after error failed:', e);
+      // Fallback to injected if specific connector not found
+      if (!connector && (wallet === 'metamask' || wallet === 'phantom' || wallet === 'trust' || wallet === 'rabby')) {
+        connector = connectors.find(c => c.id === 'injected');
       }
 
-      if (isCancellationError(errorMessage)) {
-        toast.error('Log in was cancelled');
-        return;
-      }
-
-      handleConnectionError(error);
-    } finally {
-      setIsConnecting(false);
-    }
-  }, []);
-
-  /**
-   * Connect with an external wallet using wagmi connectors directly
-   */
-  const connectWithWallet = useCallback(async (wallet: WalletProvider) => {
-    console.log(`[Auth] connectWithWallet(${wallet}) called`);
-
-    let connector;
-    if (wallet === 'walletconnect') {
-      connector = connectors.find(c => c.id === 'walletConnect');
       if (!connector) {
-        toast.error('WalletConnect not available. Please try another option.');
-        return;
+        throw new Error(`Connector for ${wallet} not found`);
       }
-    } else {
-      // Use generic injected connector - handles all browser extensions
-      // (MetaMask, Phantom, Coinbase, Trust, Rabby, etc.)
-      connector = connectors.find(c => c.id === 'injected');
-      if (!connector) {
-        toast.error('No wallet detected. Please install a wallet extension.');
-        return;
-      }
-    }
 
-    // Set intent flag so the wagmi auto-connect effect knows this was user-initiated
-    wagmiAuthIntentRef.current = true;
-
-    try {
-      console.log(`[Auth] Connecting via ${connector.id} connector with chainId 8453 (Base)...`);
-      await connectAsync({ connector, chainId: 8453 });
-      // Auth flow continues in the useEffect hook monitoring wagmi state
-    } catch (error: unknown) {
-      wagmiAuthIntentRef.current = false;
-      const msg = error instanceof Error ? error.message : String(error);
-      console.error('[Auth] Wallet connection failed:', msg);
-
-      if (msg.includes('not found') || msg.includes('not installed')) {
-        toast.error('Wallet not found. Please install a wallet extension.');
-      } else if (msg.includes('rejected') || msg.includes('denied') || msg.includes('cancelled')) {
-        toast.error('Connection was cancelled.');
-      } else if (msg.includes('chain') || msg.includes('network') || msg.includes('switch')) {
-        toast.error('Please switch to Base network in your wallet and try again.');
+      await connectAsync({ connector });
+      // The auto-connect useEffect will handle the rest
+    } catch (err: any) {
+      console.error('[Auth] Manual wallet connection failed:', err);
+      setIsConnecting(false);
+      setWagmiAuthIntent(false);
+      localStorage.removeItem('dehub_connection_source');
+      
+      if (err.message?.includes('User rejected')) {
+        toast.error('Connection rejected');
       } else {
-        toast.error('Failed to connect wallet. Please try again.');
+        toast.error('Failed to connect wallet');
       }
+      throw err;
     }
-  }, [connectors, connectAsync]);
+  };
 
-  /**
-   * Legacy connect method - opens default Web3Auth modal
-   * Kept for backwards compatibility
-   */
-  const connect = useCallback(async () => {
-    console.log('[Auth] connect() called - opening custom login modal');
-    openLoginModal();
-  }, [openLoginModal]);
-
-  const disconnect = useCallback(async () => {
+  const disconnect = async () => {
     try {
-      if (connectionSource === 'wagmi') {
-        wagmiDisconnect();
-      } else {
+      if (connectionSource === 'web3auth') {
         await disconnectWeb3Auth();
+      } else {
+        wagmiDisconnect();
       }
+      
+      clearAuthSession();
+      localStorage.removeItem('dehub_user');
+      localStorage.removeItem('dehub_wallet');
+      localStorage.removeItem('dehub_connection_source');
+      clearWagmiStorage();
+      
+      setWalletAddress(null);
+      setUser(null);
+      setConnectionSource(null);
+      
+      queryClient.clear();
+      toast.success('Disconnected successfully');
     } catch (error) {
       console.error('Disconnect error:', error);
+      toast.error('Failed to disconnect properly');
     }
+  };
 
-    // Always clear wagmi storage to prevent auto-reconnect on next page load
-    clearWagmiStorage();
-
-    clearAuthSession();
-    localStorage.removeItem('dehub_user');
-    sessionStorage.removeItem('dehub_wallet_auto_connect_attempted');
-    setConnectionSource(null);
-    setUser(null);
-    setWalletAddress(null);
-    setRequiresUsername(false);
-    setNeedsSignature(false);
-    closeLoginModal();
-  }, [connectionSource, wagmiDisconnect, closeLoginModal]);
-
-  const refreshUser = useCallback(async () => {
+  const refreshUser = async () => {
     if (!walletAddress) return;
-
-    if (isTokenExpired()) {
-      console.log('Token expired during refresh, clearing session');
-      await disconnect();
-      return;
-    }
-
     try {
       const userData = await getAccountInfo(walletAddress);
       const normalizedUser = normalizeUser(userData, walletAddress);
-      
       setUser(normalizedUser);
       localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
     } catch (error) {
-      console.error('Failed to refresh user:', error);
+      console.error('Failed to refresh user data:', error);
     }
-  }, [walletAddress, disconnect]);
+  };
 
-  /**
-   * Seamlessly refresh the session by requesting a new signature
-   * from the still-connected Web3Auth provider.
-   * Returns true if refresh succeeded, false if full sign-in is needed.
-   */
-  const refreshSession = useCallback(async (): Promise<boolean> => {
-    console.log('[Auth] Attempting seamless session refresh with source:', connectionSource);
-    
-    if (connectionSource === 'wagmi') {
-       if (isWagmiConnected && wagmiAddress) {
-         try {
-           await completeDeHubAuthWagmi(wagmiAddress);
-           return true; 
-         } catch(e) {
-           console.error('[Auth] Wagmi session refresh failed:', e);
-           return false;
-         }
-       }
-       return false;
-    }
-
-    try {
-      const web3authInstance = await getOrInitWeb3Auth();
-      
-      // Check if still connected to wallet
-      if (!web3authInstance.connected || !web3authInstance.provider) {
-        console.log('[Auth] Not connected, cannot refresh - need full sign in');
-        return false;
-      }
-      
-      console.log('[Auth] Web3Auth still connected, requesting new signature...');
-      
-      // Re-run the signature flow with existing provider
-      await completeDeHubAuth(web3authInstance.provider);
-      
-      console.log('[Auth] ✓ Session refreshed successfully');
-      return true;
-    } catch (error) {
-      console.error('[Auth] Session refresh failed:', error);
+  const refreshSession = async (): Promise<boolean> => {
+    const token = getAuthToken();
+    if (!token || isTokenExpired()) {
       return false;
     }
-  }, [connectionSource, isWagmiConnected, wagmiAddress]);
+    return true;
+  };
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        walletAddress,
-        isAuthenticated,
-        isLoading,
-        isConnecting,
-        isProcessingRedirect,
-        requiresUsername,
-        needsSignature,
-        web3auth,
-        connectionSource,
-        connect,
-        connectWithProvider,
-        connectWithEmail,
-        connectWithSMS,
-        connectWithWallet,
-        disconnect,
-        refreshUser,
-        refreshSession,
-        setRequiresUsername,
-        setWagmiAuthIntent,
-        isLoginModalOpen,
-        openLoginModal,
-        closeLoginModal,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  const [activeProvider, setActiveProvider] = useState<string | null>(null);
+
+  const connect = async () => {
+    openLoginModal();
+  };
+
+  const value = {
+    user,
+    walletAddress,
+    isAuthenticated,
+    isLoading,
+    isConnecting,
+    isProcessingRedirect,
+    requiresUsername,
+    needsSignature,
+    web3auth: web3authInstance,
+    connectionSource,
+    connect,
+    connectWithProvider,
+    connectWithEmail,
+    connectWithSMS,
+    connectWithWallet,
+    disconnect,
+    refreshUser,
+    refreshSession,
+    setRequiresUsername,
+    setWagmiAuthIntent,
+    isLoginModalOpen,
+    openLoginModal,
+    closeLoginModal,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
