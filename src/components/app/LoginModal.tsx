@@ -326,12 +326,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           </button>
         )}
         <img src={dehubLogo} alt="DeHub" className="h-8" />
-        <button
-          onClick={handleClose}
-          className="absolute right-0 p-2 rounded-xl hover:bg-white/10 transition-colors text-white/60 hover:text-white z-[100000]"
-        >
-          <X className="w-5 h-5" />
-        </button>
       </div>
     </>
   );
