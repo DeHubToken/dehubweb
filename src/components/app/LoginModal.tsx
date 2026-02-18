@@ -169,14 +169,15 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     }
   };
 
-  // Connect using WalletConnect (via Reown AppKit)
   const { open: openAppKit } = useAppKit();
+  const { setWagmiAuthIntent } = useAuth();
 
   const handleWalletConnect = async () => {
     setActiveProvider('walletconnect');
     onOpenChange(false); // Close our modal - AppKit shows its own modal
     try {
-      console.log('[LoginModal] Opening Reown AppKit...');
+      console.log('[LoginModal] Setting intent and opening Reown AppKit...');
+      setWagmiAuthIntent(true);
       await openAppKit();
       // Auth continues in AuthContext useEffect when isWagmiConnected changes
     } catch (error) {

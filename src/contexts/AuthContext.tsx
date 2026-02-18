@@ -63,6 +63,7 @@ interface AuthContextType {
   refreshUser: () => Promise<void>;
   refreshSession: () => Promise<boolean>;
   setRequiresUsername: (value: boolean) => void;
+  setWagmiAuthIntent: (value: boolean) => void;
   // Login modal state
   isLoginModalOpen: boolean;
   openLoginModal: () => void;
@@ -189,14 +190,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
 
-  // Persist connection source
-  useEffect(() => {
-    if (connectionSource) {
-      localStorage.setItem('dehub_connection_source', connectionSource);
-    } else {
-      localStorage.removeItem('dehub_connection_source');
-    }
-  }, [connectionSource]);
+  const setWagmiAuthIntent = useCallback((value: boolean) => {
+    console.log('[Auth] Setting wagmiAuthIntent:', value);
+    wagmiAuthIntentRef.current = value;
+  }, []);
 
 
   const openLoginModal = useCallback(() => {
@@ -307,12 +304,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // OR if they are a returning wagmi user (connectionSource was 'wagmi' in localStorage)
         const savedSource = localStorage.getItem('dehub_connection_source');
         const hasUserIntent = wagmiAuthIntentRef.current;
-        const isReturningWagmiUser = savedSource === 'wagmi' && !!getAuthToken() && !isTokenExpired();
+        const hasToken = !!getAuthToken() && !isTokenExpired();
+        const isReturningWagmiUser = savedSource === 'wagmi' && hasToken;
 
         if (!hasUserIntent && !isReturningWagmiUser) {
           // Wagmi auto-reconnected from localStorage but user didn't click "Connect Wallet"
           // and there's no valid DeHub session - silently disconnect to prevent unwanted auth popup
           console.log('[Auth] Wagmi auto-reconnected without user intent, disconnecting silently');
+          
+          // Clear source if no token - this prevents Reown from trying to switch network on next load
+          if (!hasToken) {
+            localStorage.removeItem('dehub_connection_source');
+            clearWagmiStorage();
+          }
+          
           wagmiDisconnect();
           return;
         }
@@ -1089,6 +1094,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         refreshUser,
         refreshSession,
         setRequiresUsername,
+        setWagmiAuthIntent,
         isLoginModalOpen,
         openLoginModal,
         closeLoginModal,

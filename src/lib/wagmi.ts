@@ -77,6 +77,8 @@ createAppKit({
     email: false, // DeHub uses Web3Auth for email
     socials: false, // DeHub uses Web3Auth for socials
   },
+  // Disable automatic network switch prompt on page load
+  enableNetworkView: false,
   // Theme and visibility settings
   themeMode: 'dark',
   themeVariables: {
