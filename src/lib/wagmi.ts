@@ -21,13 +21,17 @@ function clearStaleWagmiState() {
   if (typeof window === 'undefined') return;
 
   const savedSource = localStorage.getItem('dehub_connection_source');
-  const hasToken = !!localStorage.getItem('dehub_auth_token');
+  const token = localStorage.getItem('dehub_token');
+  const timestamp = localStorage.getItem('dehub_token_timestamp');
+  const TOKEN_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000; // 7 days - match core.ts
+  const isExpired = !timestamp || (Date.now() - parseInt(timestamp, 10)) >= TOKEN_EXPIRY_MS;
+  const hasValidToken = !!token && !isExpired;
 
-  if (savedSource !== 'wagmi' || !hasToken) {
+  if (savedSource !== 'wagmi' || !hasValidToken) {
     const keysToRemove: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key && (key.startsWith('wagmi') || key.startsWith('@appkit') || key.startsWith('wc@') || key.startsWith('WCM@'))) {
+      if (key && (key.startsWith('wagmi') || key.startsWith('@appkit') || key.startsWith('@w3m') || key.startsWith('wc@') || key.startsWith('WCM@') || key.startsWith('W3M'))) {
         keysToRemove.push(key);
       }
     }
@@ -107,7 +111,7 @@ export function clearWagmiStorage() {
   const keysToRemove: string[] = [];
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    if (key && (key.startsWith('wagmi') || key.startsWith('@appkit') || key.startsWith('wc@') || key.startsWith('WCM@'))) {
+    if (key && (key.startsWith('wagmi') || key.startsWith('@appkit') || key.startsWith('@w3m') || key.startsWith('wc@') || key.startsWith('WCM@') || key.startsWith('W3M'))) {
       keysToRemove.push(key);
     }
   }

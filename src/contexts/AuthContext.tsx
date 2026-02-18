@@ -13,6 +13,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useAccount, useSignMessage, useDisconnect, useConnect } from 'wagmi';
+import { useAppKit } from '@reown/appkit/react';
 import { clearWagmiStorage } from '@/lib/wagmi';
 import {
   authenticateWallet,
@@ -180,6 +181,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { signMessageAsync } = useSignMessage();
   const { disconnect: wagmiDisconnect } = useDisconnect();
   const { connectAsync, connectors } = useConnect();
+  const { close: closeAppKitModal } = useAppKit();
   
   // Ref to track if connection should be aborted when modal is closed
   const connectionAbortedRef = useRef(false);
@@ -311,14 +313,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // Wagmi auto-reconnected from localStorage but user didn't click "Connect Wallet"
           // and there's no valid DeHub session - silently disconnect to prevent unwanted auth popup
           console.log('[Auth] Wagmi auto-reconnected without user intent, disconnecting silently');
-          
+
           // Clear source if no token - this prevents Reown from trying to switch network on next load
           if (!hasToken) {
             localStorage.removeItem('dehub_connection_source');
             clearWagmiStorage();
           }
-          
+
           wagmiDisconnect();
+          // Close the Reown AppKit "Switch Network" modal if it auto-opened
+          try { closeAppKitModal(); } catch (_) { /* ignore if not mounted */ }
           return;
         }
 
