@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 // CORS headers - must include all headers Supabase client sends (x-supabase-client-platform, etc.)
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, X-Supabase-Client-Platform, x-request-id, prefer',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-request-id, prefer',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Cache-Control': 'public, max-age=120, stale-while-revalidate=300', // 2min fresh, 5min stale OK
 };
