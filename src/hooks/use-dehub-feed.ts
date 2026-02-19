@@ -447,9 +447,13 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
   // API returns 'account' not 'streamer', and 'thumbnail' as relative path
   const rawAccount = (stream as any).account || stream.streamer;
   const rawThumbnail = (stream as any).thumbnail || stream.thumbnailUrl;
+  const playbackId = (stream as any).playbackId;
+  const livepeerThumb = playbackId
+    ? `https://livepeercdn.studio/hls/${playbackId}/thumbnail.jpg`
+    : null;
   const thumbnail = rawThumbnail
-    ? (rawThumbnail.startsWith('http') ? rawThumbnail : `${DEHUB_CDN_BASE}${rawThumbnail}`)
-    : FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
+    ? (rawThumbnail.startsWith('http') ? rawThumbnail : `${DEHUB_CDN_BASE}${rawThumbnail.replace(/^\//, '')}`)
+    : livepeerThumb ?? FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
 
   const streamerName = rawAccount?.displayName ||
     rawAccount?.username ||

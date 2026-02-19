@@ -121,8 +121,23 @@ export function LiveCard({ stream }: LiveCardProps) {
       </div>
 
       {/* Thumbnail */}
-      <div className="aspect-video bg-zinc-800 rounded-lg overflow-hidden" data-no-navigate>
-        <img src={stream.thumbnail} alt="" className="w-full h-full object-cover" />
+      <div className="relative aspect-video bg-zinc-800 rounded-lg overflow-hidden" data-no-navigate>
+        <img
+          src={stream.thumbnail}
+          alt=""
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src =
+              'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=480&h=270&fit=crop';
+          }}
+        />
+        {!stream.isLive && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+            <span className="text-white text-xs font-semibold bg-zinc-800/80 px-3 py-1 rounded-full backdrop-blur-sm">
+              Stream Ended
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Info & Actions */}
