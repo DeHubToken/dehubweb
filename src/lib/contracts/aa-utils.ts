@@ -270,6 +270,9 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   if (lowerError.includes('invalid signature') || lowerError.includes('signer should sign')) {
     return 'Signature verification failed on-chain.';
   }
+  if (lowerError.includes('unable to find matching address') || lowerError.includes('torus keyring')) {
+    return 'Wallet session mismatch. Please log out and log back in, then try again.';
+  }
   if (lowerError.includes('execution reverted')) {
     const match = errorStr.match(/reason="([^"]+)"/);
     if (match) return `Transaction reverted: ${match[1]}`;
@@ -380,10 +383,23 @@ export async function writeContractAA(
         txParams.value = toHex(options.value);
       }
 
-      txHash = await provider.request({
+      // Retry once on "Torus Keyring - Unable to find matching address" (session sync issue)
+      const sendTx = async () => provider.request({
         method: 'eth_sendTransaction',
         params: [txParams],
-      }) as string;
+      }) as Promise<string>;
+      try {
+        txHash = await sendTx();
+      } catch (firstErr: unknown) {
+        const msg = String(firstErr).toLowerCase();
+        if ((msg.includes('unable to find matching address') || msg.includes('torus keyring')) && msg.includes('keyring')) {
+          console.warn('[AA] Torus keyring error, retrying after 2s...');
+          await new Promise(r => setTimeout(r, 2000));
+          txHash = await sendTx();
+        } else {
+          throw firstErr;
+        }
+      }
     } else {
       // External wallet via wagmi -- use wagmi's sendTransaction
       // which properly routes through the wallet connector for signing
