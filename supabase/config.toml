@@ -101,3 +101,6 @@ verify_jwt = false
 
 [functions.refresh-leaderboard-user]
 verify_jwt = false
+
+[functions.get-stream-ingest]
+verify_jwt = false
