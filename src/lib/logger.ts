@@ -25,6 +25,9 @@ export async function logToBackend(data: LogData) {
     const consoleMethod = data.level === 'error' ? 'error' : data.level === 'warn' ? 'warn' : 'log';
     console[consoleMethod](`[${data.component}] ${data.message}`, data.metadata || '');
 
+    // Skip backend call for info/debug — console-only, saves ~87% of edge function invocations
+    if (data.level === 'info' || data.level === 'debug') return;
+
     try {
         const { error } = await supabase.functions.invoke('client-logs', {
             body: data,

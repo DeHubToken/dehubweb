@@ -8,21 +8,17 @@ const corsHeaders = {
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 
-// Cache configurations to pre-fetch - expanded for better scalability
-// Now caches pages 1-5 for both latest and popular feeds
+// Cache configurations to pre-fetch - trimmed to 3 pages for cost efficiency
+// Pages 4+ are fetched live on demand with TanStack Query (10-min staleTime)
 const CACHE_CONFIGS = [
-  // Latest feed - pages 1-5
+  // Latest feed - pages 1-3
   { key: "feed_latest_page1", page: 1, limit: 50, sortBy: "createdAt" },
   { key: "feed_latest_page2", page: 2, limit: 50, sortBy: "createdAt" },
   { key: "feed_latest_page3", page: 3, limit: 50, sortBy: "createdAt" },
-  { key: "feed_latest_page4", page: 4, limit: 50, sortBy: "createdAt" },
-  { key: "feed_latest_page5", page: 5, limit: 50, sortBy: "createdAt" },
-  // Popular feed - pages 1-5
+  // Popular feed - pages 1-3
   { key: "feed_popular_page1", page: 1, limit: 50, sortBy: "likes" },
   { key: "feed_popular_page2", page: 2, limit: 50, sortBy: "likes" },
   { key: "feed_popular_page3", page: 3, limit: 50, sortBy: "likes" },
-  { key: "feed_popular_page4", page: 4, limit: 50, sortBy: "likes" },
-  { key: "feed_popular_page5", page: 5, limit: 50, sortBy: "likes" },
 ];
 
 interface CacheConfig {
