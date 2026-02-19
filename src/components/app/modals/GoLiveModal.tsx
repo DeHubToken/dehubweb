@@ -12,6 +12,8 @@ import { getCategories, getNFTInfo } from '@/lib/api/dehub/feed';
 import { getStreamIngestUrl, startLiveStream } from '@/lib/api/dehub/livestream';
 import type { DeHubCategory } from '@/lib/api/dehub/types';
 import { createLogger } from '@/lib/logger';
+import { supabase } from '@/integrations/supabase/client';
+import { getAuthToken } from '@/lib/api/dehub/core';
 
 const logger = createLogger('GoLiveModal');
 
@@ -200,12 +202,25 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       } catch (e) {
         logger.warn('startLiveStream failed, trying ingesturl endpoint...', e);
         try {
-          // Try with tokenId since DeHub API uses tokenIds, not MongoDB ObjectIds
-          const ingestRes = await getStreamIngestUrl(tokenId);
+          // API expects streamId (MongoDB ObjectId), not tokenId
+          const ingestRes = await getStreamIngestUrl(streamId);
           ingestUrl = ingestRes?.result?.ingestUrl || '';
           if (ingestUrl) logger.info('Ingest URL obtained via endpoint', { ingestUrl });
         } catch (e2) {
-          logger.warn('getStreamIngestUrl also failed, using standard RTMP', e2);
+          logger.warn('getStreamIngestUrl also failed, trying Edge Function...', e2);
+          try {
+            const token = getAuthToken();
+            const { data, error } = await supabase.functions.invoke('get-stream-ingest', {
+              body: { tokenId },
+              ...(token && { headers: { Authorization: `Bearer ${token}` } }),
+            });
+            if (!error && data?.ingestUrl) {
+              ingestUrl = data.ingestUrl;
+              logger.info('Ingest URL obtained via Edge Function');
+            }
+          } catch (e3) {
+            logger.warn('Edge Function also failed, using standard RTMP', e3);
+          }
         }
       }
 
