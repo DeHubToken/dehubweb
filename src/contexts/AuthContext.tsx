@@ -696,22 +696,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }) as string;
       }
       
-      // Detect and unwrap ERC-6492 (same as popup flow)
+      // DeHub backend uses ecrecover — expects EOA address + ECDSA sig.
+      // Smart Account returns ERC-6492 or raw ECDSA; recover EOA and send that.
       let authAddressForApi = authAddress;
+      let sigToRecover = signature;
       const ERC6492_MAGIC_R = '6492649264926492649264926492649264926492649264926492649264926492';
       const isERC6492R = signature.toLowerCase().endsWith(ERC6492_MAGIC_R);
       console.log('[Auth] [REDIRECT] Signature format:', { length: signature.length, isERC6492: isERC6492R });
       if (isERC6492R) {
         const innerSig = extractEoaSignatureFromErc6492(signature);
-        if (innerSig) {
-          try {
-            const recoveredEoa = await recoverMessageAddress({ message, signature: innerSig });
-            authAddressForApi = recoveredEoa.toLowerCase();
-            signature = innerSig;
-            console.log('[Auth] [REDIRECT] ERC-6492: using EOA', authAddressForApi, 'for DeHub auth');
-          } catch (e) {
-            console.warn('[Auth] [REDIRECT] ERC-6492 recovery failed:', e);
-          }
+        if (innerSig) sigToRecover = innerSig;
+      }
+      if (sigToRecover.length === 132 || sigToRecover.length === 130) {
+        try {
+          const recoveredEoa = await recoverMessageAddress({ message, signature: sigToRecover as `0x${string}` });
+          authAddressForApi = recoveredEoa.toLowerCase();
+          signature = sigToRecover;
+          console.log('[Auth] [REDIRECT] Smart Account: using recovered EOA', authAddressForApi);
+        } catch (e) {
+          console.warn('[Auth] [REDIRECT] Recovery failed:', e);
         }
       }
 
@@ -827,23 +830,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         preview: signature.slice(0, 20) + '...' + signature.slice(-20),
       });
 
-      // Safe AA provider may return ERC-6492 (factory + calldata + innerSig + magic).
-      // DeHub backend uses ecrecover — it expects EOA address + ECDSA sig.
-      // Extract inner sig and recover the EOA signer; send that to backend.
+      // DeHub backend uses ecrecover — expects EOA address + ECDSA sig.
+      // Smart Account returns either ERC-6492 or raw ECDSA; in both cases we must send
+      // the recovered EOA (the signer), not the Smart Account address.
       let authAddressForApi = authAddress;
-      if (isERC6492) {
-        const innerSig = extractEoaSignatureFromErc6492(signature);
-        if (innerSig) {
+      if (isSocial) {
+        let sigToRecover = signature;
+        if (isERC6492) {
+          const innerSig = extractEoaSignatureFromErc6492(signature);
+          if (innerSig) sigToRecover = innerSig;
+        }
+        // Recover EOA from signature (works for both ERC-6492 inner sig and raw ECDSA)
+        if (sigToRecover.length === 132 || sigToRecover.length === 130) {
           try {
-            const recoveredEoa = await recoverMessageAddress({ message, signature: innerSig });
+            const recoveredEoa = await recoverMessageAddress({ message, signature: sigToRecover as `0x${string}` });
             authAddressForApi = recoveredEoa.toLowerCase();
-            signature = innerSig;
-            console.log('[Auth] [POPUP] ERC-6492: using EOA', authAddressForApi, 'for DeHub auth');
+            signature = sigToRecover;
+            console.log('[Auth] [POPUP] Smart Account: using recovered EOA', authAddressForApi, 'for DeHub auth');
           } catch (e) {
-            console.warn('[Auth] [POPUP] ERC-6492 recovery failed, trying raw sig:', e);
+            console.warn('[Auth] [POPUP] Recovery failed:', e);
           }
-        } else {
-          console.warn('[Auth] [POPUP] ERC-6492 parse failed, sending raw sig to backend');
         }
       }
 
