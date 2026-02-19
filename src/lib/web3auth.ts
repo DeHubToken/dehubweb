@@ -264,7 +264,11 @@ async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: s
 function prewarmConfig() {
   if (typeof window === 'undefined') return;
   console.log("[Web3Auth] Pre-warming configurations...");
-  getWeb3AuthClientId().catch(() => { });
+  // Pre-fetch both in parallel so init is instant when user clicks login
+  Promise.all([
+    getWeb3AuthClientId().catch(() => {}),
+    getPimlicoConfig().catch(() => {}),
+  ]);
 }
 
 // Start pre-warming immediately
@@ -315,8 +319,8 @@ async function fetchWithRetry<T>(fn: () => Promise<T>, label: string, maxRetries
     } catch (err) {
       lastError = err;
       console.warn(`[Web3Auth] ${label} attempt ${i + 1} failed:`, err);
-      // Wait before retry: 1s, 2s, 4s...
-      await new Promise(r => setTimeout(r, Math.pow(2, i) * 1000));
+      // Shorter retry delays: 500ms, 1s, 2s
+      await new Promise(r => setTimeout(r, Math.pow(2, i) * 500));
     }
   }
   throw lastError;
@@ -367,7 +371,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
   }
 
   const INIT_RETRIES = 3;
-  const RETRY_DELAYS = [3000, 8000, 20000]; // 3s, 8s, 20s
+  const RETRY_DELAYS = [2000, 4000, 8000]; // 2s, 4s, 8s (faster recovery on retry)
 
   isInitializing = true;
   initPromise = (async () => {
@@ -417,10 +421,10 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           )
         ]);
 
-        // Polling for ready state if stuck in not_ready
+        // Polling for ready state if stuck in not_ready (faster: 200ms × 15 = 3s max)
         if (web3authInstance.status === "not_ready") {
-          for (let i = 0; i < 20; i++) {
-            await new Promise(r => setTimeout(r, 250));
+          for (let i = 0; i < 15; i++) {
+            await new Promise(r => setTimeout(r, 200));
             if (web3authInstance.status !== "not_ready") break;
           }
         }

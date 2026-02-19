@@ -52,6 +52,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   isConnecting: boolean;
+  isWeb3AuthReady: boolean;
   isProcessingRedirect: boolean;
   requiresUsername: boolean;
   needsSignature: boolean;
@@ -221,6 +222,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const wagmiAuthInProgressRef = useRef(false);
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
+  const isWeb3AuthReady = !!(web3auth && (web3auth.status === 'ready' || web3auth.status === 'connected'));
 
   const setWagmiAuthIntent = useCallback((value: boolean) => {
     console.log('[Auth] Setting wagmiAuthIntent:', value);
@@ -599,11 +601,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             toast.info('Waiting for account deployment...', { duration: 30000 });
 
             // Poll eth_getCode until the contract is confirmed on-chain.
-            // A fixed wait is unreliable — UserOp mining time varies with bundler load.
-            // Mobile does the same: deploy → poll until code exists → then sign.
+            // Poll every 500ms (deployment usually 2–5s) — 40 polls = 20s max.
             let deployConfirmed = false;
-            for (let poll = 0; poll < 30; poll++) {
-              await new Promise(r => setTimeout(r, 1000));
+            for (let poll = 0; poll < 40; poll++) {
+              await new Promise(r => setTimeout(r, 500));
               try {
                 const checkCode = await requestWithTimeout('eth_getCode', [address, 'latest'], 5000) as string;
                 if (checkCode && checkCode !== '0x' && checkCode !== '0x0') {
@@ -622,8 +623,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           } catch (txErr: any) {
             console.warn(`[Auth] Deployment attempt ${attempt} failed:`, txErr.message);
             if (attempt < MAX_RETRIES) {
-              toast.info('Retrying account setup...', { duration: 3000 });
-              await new Promise(r => setTimeout(r, 2000));
+              toast.info('Retrying account setup...', { duration: 2000 });
+              await new Promise(r => setTimeout(r, 1000));
             }
           }
         }
@@ -681,11 +682,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Get AA address
       console.log('[Auth] [REDIRECT] Fetching accounts...');
       let accounts: string[] = [];
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 8; i++) {
         accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
         if (accounts?.length) break;
-        console.log(`[Auth] [REDIRECT] No accounts yet, retry ${i+1}/5...`);
-        await new Promise(r => setTimeout(r, 800));
+        console.log(`[Auth] [REDIRECT] No accounts yet, retry ${i+1}/8...`);
+        await new Promise(r => setTimeout(r, 250));
       }
 
       if (!accounts?.length) {
@@ -808,10 +809,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Get address from provider
       console.log('[Auth] [POPUP] Fetching accounts...');
       let accounts: string[] = [];
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 8; i++) {
         accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
         if (accounts?.length) break;
-        await new Promise(r => setTimeout(r, 800));
+        await new Promise(r => setTimeout(r, 250));
       }
       
       if (!accounts?.length) throw new Error('No accounts available for signing');
@@ -935,7 +936,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const connectWithProvider = async (provider: SocialProvider) => {
+  const connectWithProvider = async (provider: SocialProvider, isRetry = false) => {
     setIsConnecting(true);
     setActiveProvider(provider);
     setConnectionSource('web3auth');
@@ -954,10 +955,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       const errorMessage = error.message || String(error);
       if (!isCancellationError(errorMessage)) {
+        // Auto-retry once on first failure (common when app/config not fully loaded)
+        if (!isRetry) {
+          console.log(`[Auth] First attempt failed, retrying in 2s...`);
+          toast.info('Retrying...', { duration: 2000 });
+          setConnectionSource(null);
+          await forceCleanupWeb3Auth();
+          await new Promise(r => setTimeout(r, 2000));
+          return connectWithProvider(provider, true);
+        }
         toast.error(`Failed to connect with ${provider}. Please try again.`);
       }
       
-      // Reset state on error to allow retry
       setConnectionSource(null);
       localStorage.removeItem('dehub_connection_source');
       await forceCleanupWeb3Auth();
@@ -967,7 +976,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const connectWithEmail = async (email: string) => {
+  const connectWithEmail = async (email: string, isRetry = false) => {
     setIsConnecting(true);
     setActiveProvider('email');
     setConnectionSource('web3auth');
@@ -984,6 +993,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Email login error:', error);
       const errorMessage = error.message || String(error);
       if (!isCancellationError(errorMessage)) {
+        if (!isRetry) {
+          console.log('[Auth] Email login first attempt failed, retrying in 2s...');
+          toast.info('Retrying...', { duration: 2000 });
+          setConnectionSource(null);
+          await forceCleanupWeb3Auth();
+          await new Promise(r => setTimeout(r, 2000));
+          return connectWithEmail(email, true);
+        }
         toast.error('Failed to send magic link. Please check your email and try again.');
       }
       setConnectionSource(null);
@@ -995,7 +1012,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const connectWithSMS = async (phone: string) => {
+  const connectWithSMS = async (phone: string, isRetry = false) => {
     setIsConnecting(true);
     setActiveProvider('sms');
     setConnectionSource('web3auth');
@@ -1012,6 +1029,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('SMS login error:', error);
       const errorMessage = error.message || String(error);
       if (!isCancellationError(errorMessage)) {
+        if (!isRetry) {
+          console.log('[Auth] SMS login first attempt failed, retrying in 2s...');
+          toast.info('Retrying...', { duration: 2000 });
+          setConnectionSource(null);
+          await forceCleanupWeb3Auth();
+          await new Promise(r => setTimeout(r, 2000));
+          return connectWithSMS(phone, true);
+        }
         toast.error('Failed to send verification code. Please check your number and try again.');
       }
       setConnectionSource(null);
@@ -1126,6 +1151,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated,
     isLoading,
     isConnecting,
+    isWeb3AuthReady,
     isProcessingRedirect,
     requiresUsername,
     needsSignature,
