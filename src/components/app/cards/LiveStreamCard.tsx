@@ -148,8 +148,17 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               logger.info(`Network error, retrying in ${delay / 1000}s... (${retryCount + 1}/${maxRetriesPerUrl})`);
               setError('Connecting to stream...');
               setTimeout(() => {
-                // Manifest errors need a full source reload, not just startLoad
-                if (data.details === 'manifestLoadError' || data.details === 'levelLoadError') {
+                // Any manifest/level error = full source reload (not just resume)
+                // manifestParsingError: server returned non-HLS content (stream not ready yet)
+                // manifestLoadError / levelLoadError: HTTP-level failure
+                const needsReload = (
+                  data.details === 'manifestLoadError' ||
+                  data.details === 'manifestParsingError' ||
+                  data.details === 'manifestLoadTimeOut' ||
+                  data.details === 'levelLoadError' ||
+                  data.details === 'levelLoadTimeOut'
+                );
+                if (needsReload) {
                   hls.loadSource(currentUrl());
                 } else {
                   hls.startLoad();
