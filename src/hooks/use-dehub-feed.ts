@@ -471,11 +471,11 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
     thumbnail,
     tags: [],
     isLive: stream.status === 'live' || (stream.status as string) === 'LIVE' || (stream.status as string) === 'active' || !!(stream as any).streamKey,
-    playbackUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.com/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
+    playbackUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
     playbackUrls: (stream as any).playbackId
       ? [
-          `https://livepeercdn.com/hls/${(stream as any).playbackId}/index.m3u8`,
           `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8`,
+          `https://livepeercdn.com/hls/${(stream as any).playbackId}/index.m3u8`,
         ]
       : undefined,
     creatorId: stream.address || rawAccount?.address,

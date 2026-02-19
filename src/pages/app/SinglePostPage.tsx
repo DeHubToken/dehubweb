@@ -213,10 +213,10 @@ function toTextPost(nft: DeHubNFT): TextPost {
   };
 }
 
-/** Livepeer CDN bases - try .com (main) and .studio (Studio API) */
+/** Livepeer CDN bases - .studio is the active CDN; .com is legacy/deprecated */
 const LIVEPEER_CDN_BASES = [
-  'https://livepeercdn.com',
   'https://livepeercdn.studio',
+  'https://livepeercdn.com',
 ];
 
 /**
@@ -554,8 +554,8 @@ export default function SinglePostPage() {
           description: stream.description,
           postType: 'live',
           isLive: stream.status === 'live' || (stream.status as string) === 'LIVE' || stream.status === 'active' || !!(stream as any).streamKey,
-          videoUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.com/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
-          playbackUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.com/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
+          videoUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
+          playbackUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
           imageUrl: stream.thumbnailUrl || (stream as any).thumbnail,
           views: stream.viewerCount || (stream as any).totalViews || 0,
           totalVotes: { for: stream.likeCount || (stream as any).likes || 0, against: 0 },
