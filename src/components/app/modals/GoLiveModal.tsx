@@ -14,6 +14,7 @@ import type { DeHubCategory } from '@/lib/api/dehub/types';
 import { createLogger } from '@/lib/logger';
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub/core';
+import { useAuth } from '@/contexts/AuthContext';
 
 const logger = createLogger('GoLiveModal');
 
@@ -28,12 +29,13 @@ type Step = 'setup' | 'ready' | 'streaming';
 const MAX_CATEGORIES = 5;
 
 export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
+  const { walletAddress } = useAuth();
   const [step, setStep] = useState<Step>('setup');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [streamData, setStreamData] = useState<{ streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string; hlsUrl?: string } | null>(null);
+  const [streamData, setStreamData] = useState<{ tokenId: string; streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string; hlsUrl?: string } | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
   // Category drawer state
@@ -94,6 +96,23 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     setSelectedCategory('');
     setStreamData(null);
     onClose();
+  };
+
+  const handleEndStream = async () => {
+    if (!streamData?.tokenId) return;
+    const token = getAuthToken();
+    const addr = walletAddress?.toLowerCase();
+    if (token && addr) {
+      try {
+        await supabase.functions.invoke('end-stream-session', {
+          body: { tokenId: streamData.tokenId },
+          headers: { 'x-wallet-address': addr, 'x-dehub-token': token },
+        });
+      } catch (e) {
+        logger.warn('end-stream-session failed', e);
+      }
+    }
+    handleClose();
   };
 
   const handleStartStream = async () => {
@@ -233,6 +252,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       const hlsUrl = playbackId ? `https://livepeercdn.studio/hls/${playbackId}/index.m3u8` : '';
       
       const resultData = {
+        tokenId,
         streamId,
         streamKey,
         ingestUrl,
@@ -244,6 +264,18 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       setStep('ready');
       logger.info('Stream setup ready', { streamId, tokenId });
       toast.success('Live stream is ready!');
+
+      // Mark stream as live in Supabase (api.dehub.io /start fails with 404)
+      const token = getAuthToken();
+      const addr = walletAddress || minterAddress;
+      if (token && addr) {
+        supabase.functions.invoke('mark-stream-live', {
+          body: { tokenId, streamId },
+          headers: { 'x-wallet-address': addr.toLowerCase(), 'x-dehub-token': token },
+        }).then(({ error }) => {
+          if (error) logger.warn('mark-stream-live failed (non-blocking)', error);
+        });
+      }
     } catch (error) {
       toast.dismiss('golive-progress');
       logger.error('Failed to start stream', { title, selectedCategory }, error);
@@ -398,10 +430,17 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
               {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Radio className="w-5 h-5 mr-2" /> Go Live</>}
             </Button>
           ) : (
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={handleClose} className="flex-1 h-14 border-zinc-700">Close</Button>
-              <Button onClick={() => window.open(streamData?.playbackUrl, '_blank')} variant="glass" className="flex-1 h-14">
-                <ExternalLink className="w-4 h-4 mr-2" /> View Stream
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={handleEndStream} className="flex-1 h-14 border-zinc-700">
+                  <Radio className="w-4 h-4 mr-2" /> End Stream
+                </Button>
+                <Button onClick={() => window.open(streamData?.playbackUrl, '_blank')} variant="glass" className="flex-1 h-14">
+                  <ExternalLink className="w-4 h-4 mr-2" /> View Stream
+                </Button>
+              </div>
+              <Button variant="ghost" onClick={handleClose} className="h-10 text-zinc-400 hover:text-white">
+                Close
               </Button>
             </div>
           )}

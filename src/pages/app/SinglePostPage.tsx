@@ -20,6 +20,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { getNFTInfo, getLiveStream, type DeHubNFT } from '@/lib/api/dehub';
+import { useStreamLiveStatus } from '@/hooks/use-stream-live-status';
 
 import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
 import { PageHeader } from '@/components/app/PageHeader';
@@ -213,6 +214,32 @@ function toTextPost(nft: DeHubNFT): TextPost {
 }
 
 /**
+ * Build HLS playback URL from stream playbackId (when api.dehub.io /start fails)
+ */
+function buildLivePlaybackUrl(nft: DeHubNFT): string | undefined {
+  const stream = (nft as any).stream;
+  const playbackId = stream?.playbackId;
+  if (playbackId) {
+    return `https://livepeercdn.studio/hls/${playbackId}/index.m3u8`;
+  }
+  return nft.videoUrl || (nft as any).playbackUrl;
+}
+
+/**
+ * Derive isLive from stream status or streamKey+playbackId (ready-to-stream)
+ */
+function deriveIsLive(nft: DeHubNFT): boolean {
+  const explicit = (nft as any).isLive;
+  if (explicit !== undefined) return !!explicit;
+  const stream = (nft as any).stream;
+  if (!stream) return false;
+  const status = (stream.status || '').toLowerCase();
+  if (status === 'live' || status === 'active') return true;
+  // Stream with key + playbackId = ready to go live (treat as live so player attempts playback)
+  return !!(stream.streamKey && stream.playbackId);
+}
+
+/**
  * Transform API NFT data to LiveStream format
  */
 function toLiveStream(nft: DeHubNFT): LiveStream {
@@ -233,13 +260,33 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     viewers: formatViews(nft.views || 0).replace(' views', ''),
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
     tags: [],
-    isLive: (nft as any).isLive ?? false,
+    isLive: deriveIsLive(nft),
     creatorId: resolvedAddress,
     creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
     likeCount: nft.totalVotes?.for || 0,
     commentCount: nft.commentCount || nft.comment_count || 0,
-    playbackUrl: nft.videoUrl || (nft as any).playbackUrl,
+    playbackUrl: buildLivePlaybackUrl(nft),
   };
+}
+
+/**
+ * Live post wrapper: merges Supabase live status when api.dehub.io /start fails
+ */
+function LivePostWithStatus({ liveData, post }: { liveData: LiveStream; post: DeHubNFT }) {
+  const tokenId = String(post.tokenId ?? (post as any).tokenId ?? liveData.id);
+  const { data: isLiveFromSupabase } = useStreamLiveStatus(tokenId);
+  const mergedStream: LiveStream = {
+    ...liveData,
+    isLive: liveData.isLive || !!isLiveFromSupabase,
+  };
+  return (
+    <>
+      <LiveStreamCard stream={mergedStream} />
+      <div className="mt-4">
+        <LivePostChat streamId={liveData.id} isOffline={!mergedStream.isLive} />
+      </div>
+    </>
+  );
 }
 
 /**
@@ -542,12 +589,7 @@ export default function SinglePostPage() {
       case 'live': {
         const liveData = toLiveStream(post);
         return (
-          <>
-            <LiveStreamCard stream={liveData} />
-            <div className="mt-4">
-              <LivePostChat streamId={liveData.id} isOffline={!liveData.isLive} />
-            </div>
-          </>
+          <LivePostWithStatus liveData={liveData} post={post} />
         );
       }
       default:
