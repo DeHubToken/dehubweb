@@ -1,94 +1,62 @@
 
-## Root Cause: Missing `comment_like` Notification Type
+## Root Cause: Non-Wallet User IDs Being Sent as Members
 
-The API is returning notifications with `type: "comment_like"` (someone liked your comment), but this type is not defined anywhere in the codebase. The `getNotificationContent` switch statement has no case for it, so it falls through to `default: return 'New notification'`.
+The "requires 2 people to create" error comes directly from the DeHub API. Our app sends `members: memberAddresses` to `POST /api/dm/group`, and the API rejects it.
 
-The actual API payload for yowtf's notification:
+The bug is in this line of `CreateGroupModal.tsx`:
+
+```typescript
+const memberAddresses = selectedMembers
+  .map(m => m.address || m._id)  // ← m._id is a MongoDB ObjectId, NOT a wallet address
+  .filter(Boolean);
 ```
-type: "comment_like"
-content: "SilentHawk#BA28, dehu_b and would liked your comment"  ← pre-built by API, ignored
-aggregatedCount: 3
-latestActorNames: ["SilentHawk#BA28", "dehu_b", "would"]
-commentPreview: "lmaoo wtf this rocks"
-```
 
-The app builds its own display text but has no case for `comment_like`, so it shows "New notification".
+When a selected user doesn't have a `m.address` field populated (some API search results return users with only `_id`), the code falls back to `m._id` — a MongoDB ObjectId like `"6823ab12ef..."`. The DeHub API doesn't recognise MongoDB ObjectIds as valid member addresses, silently drops them, and ends up with fewer than 2 valid members — hence the "requires 2 people" error.
+
+There's a secondary issue: the case-sensitive `includes()` check for the creator's own wallet address may fail if the casing differs between AuthContext's `walletAddress` and the API's returned `m.address`, potentially duplicating the creator entry.
 
 ---
 
-## Two-Part Fix
+## The Fix — `src/components/app/chat/CreateGroupModal.tsx`
 
-### Part 1 — `src/lib/api/dehub/notifications.ts`
+### 1. Only use wallet addresses (filter out MongoDB ObjectIds)
 
-Add `comment_like` to the `NotificationType` union:
+After mapping, filter to only include strings that look like Ethereum wallet addresses (start with `0x` and are 42 chars), discarding `_id` fallbacks:
 
 ```typescript
-export type NotificationType = 
-  | 'like' 
-  | 'comment' 
-  | 'comment_reply'
-  | 'comment_like'     // ← ADD THIS
-  | 'following'
-  | 'tip' 
-  | 'subscription'
-  | 'ppv_purchase'
-  | 'video_milestone'
-  | 'livestream_start'
-  | 'video_removal';
+const memberAddresses = selectedMembers
+  .map(m => m.address)           // only use wallet address, never _id
+  .filter((addr): addr is string => !!addr && addr.startsWith('0x'));
 ```
 
-### Part 2 — `src/pages/app/NotificationsPage.tsx`
+This means if a user in search results has no `address`, they simply won't be added — which is correct, because a non-wallet user can't be in a group chat that uses wallet-based addressing.
 
-**a) Add icon for `comment_like`** in `getNotificationIcon`:
+### 2. Fix case-insensitive creator address dedup
+
+Use `.toLowerCase()` for the includes check so checksummed vs lowercase wallet addresses don't cause double-insertion:
+
 ```typescript
-case 'comment_like':
-  return <Heart className="w-4 h-4 text-pink-400" />;
-```
-
-**b) Add display text for `comment_like`** in `getNotificationContent`:
-
-For the aggregated case (3 people liked your comment), use `latestActorNames`:
-```typescript
-case 'comment_like': {
-  const commentPreview = (notification as any).commentPreview;
-  const count = (notification as any).aggregatedCount || 1;
-  const names = (notification as any).latestActorNames as string[] | undefined;
-  
-  if (count > 1 && names && names.length > 0) {
-    const first = names[0];
-    const rest = count - 1;
-    const othersText = rest === 1 ? '1 other' : `${rest} others`;
-    return commentPreview
-      ? `${first} and ${othersText} liked your comment: "${commentPreview}"`
-      : `${first} and ${othersText} liked your comment`;
-  }
-  
-  return commentPreview
-    ? `${actorName} liked your comment: "${commentPreview}"`
-    : `${actorName} liked your comment`;
+const lowerAddresses = memberAddresses.map(a => a.toLowerCase());
+if (walletAddress && !lowerAddresses.includes(walletAddress.toLowerCase())) {
+  memberAddresses.push(walletAddress);
 }
 ```
 
-**c) API content fallback** — change the `default` case from `'New notification'` to use the API-provided `content` string if present, so future unknown types don't silently break:
+### 3. Validate before submitting
+
+Add a guard that shows a clear error before hitting the API if fewer than 2 valid wallet-address members were selected (e.g. user picked users with no wallet address):
+
 ```typescript
-default:
-  return (notification as any).content || 'New notification';
+if (memberAddresses.length < 2) {
+  toast.error('Please select at least 2 members with wallet addresses');
+  return;
+}
 ```
 
-**d) Add `comment_like` to the "Likes" tab filter** so it shows up when filtering by Likes:
-```typescript
-likes: ['like', 'comment_like'],
-```
-
-**e) Navigation for `comment_like`** — add to `getNavigationLink` so clicking the notification goes to the post:
-```typescript
-case 'comment_like':
-  return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
-```
+Wait — per the memory note, the creator is included in `memberAddresses` before sending. So the minimum valid count before pushing the creator is 1 (creator + 1 = 2 total). The current guard `selectedMembers.length === 0` allows 1 selected member which should be fine as long as the creator is also pushed. The real issue is that `_id` values are being sent instead of wallet addresses.
 
 ---
 
 ## Files to Change
 
-- `src/lib/api/dehub/notifications.ts` — add `comment_like` to `NotificationType`
-- `src/pages/app/NotificationsPage.tsx` — handle `comment_like` in icon, content, navigation, and tab filter; add API content fallback to default case
+- `src/components/app/chat/CreateGroupModal.tsx` — fix `memberAddresses` mapping to only use `m.address`, fix case-insensitive creator dedup, and optionally surface a clearer error if a selected user has no wallet address
