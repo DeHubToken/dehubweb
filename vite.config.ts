@@ -37,6 +37,8 @@ export default defineConfig(({ mode }) => ({
       "viem",
       "@wagmi/core",
       "@wagmi/connectors",
+      "@metamask/sdk",
+      "@rainbow-me/rainbowkit",
     ],
   },
   define: {
