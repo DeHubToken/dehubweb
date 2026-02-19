@@ -125,7 +125,7 @@ const tabs: { label: string; value: NotificationTypeFilter; icon: React.ElementT
 // Map tab filter to notification types
 const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
-  likes: ['like'],
+  likes: ['like', 'comment_like'],
   follows: ['following'],
   comments: ['comment', 'comment_reply'],
   reposts: ['repost', 'quote'],
@@ -141,6 +141,8 @@ function getNotificationIcon(type: DeHubNotification['type']) {
     case 'comment':
     case 'comment_reply':
       return <MessageCircle className="w-4 h-4 text-blue-400" />;
+    case 'comment_like':
+      return <Heart className="w-4 h-4 text-pink-400" />;
     case 'tip':
       return <DollarSign className="w-4 h-4 text-yellow-500" />;
     case 'subscription':
@@ -204,10 +206,26 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
       return `🎉 Your post reached a new milestone!`;
     case 'livestream_start':
       return `${actorName} started streaming`;
+    case 'comment_like': {
+      const commentPreview = (notification as any).commentPreview;
+      const count = (notification as any).aggregatedCount || 1;
+      const names = (notification as any).latestActorNames as string[] | undefined;
+      if (count > 1 && names && names.length > 0) {
+        const first = names[0];
+        const rest = count - 1;
+        const othersText = rest === 1 ? '1 other' : `${rest} others`;
+        return commentPreview
+          ? `${first} and ${othersText} liked your comment: "${commentPreview}"`
+          : `${first} and ${othersText} liked your comment`;
+      }
+      return commentPreview
+        ? `${actorName} liked your comment: "${commentPreview}"`
+        : `${actorName} liked your comment`;
+    }
     case 'video_removal':
       return `Your post was removed`;
     default:
-      return 'New notification';
+      return (notification as any).content || 'New notification';
   }
 }
 
@@ -216,6 +234,7 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     case 'like':
     case 'comment':
     case 'comment_reply':
+    case 'comment_like':
     case 'tip':
     case 'video_milestone':
       return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
