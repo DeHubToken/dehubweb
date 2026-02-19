@@ -83,8 +83,8 @@ Deno.serve(async (req) => {
       );
     }
 
-    const nftData: NftInfoResult | { result?: NftInfoResult } = await nftRes.json();
-    const nft = (nftData as { result?: NftInfoResult }).result ?? nftData;
+    const nftData = await nftRes.json() as NftInfoResult | { result?: NftInfoResult };
+    const nft = ((nftData as { result?: NftInfoResult }).result ?? nftData) as NftInfoResult;
     const stream = nft?.stream;
 
     if (!stream?.streamKey) {
