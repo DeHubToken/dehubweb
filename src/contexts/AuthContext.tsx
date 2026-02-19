@@ -721,8 +721,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }) as string;
       }
       
-      // DeHub backend uses ecrecover — expects EOA address + ECDSA sig.
-      // Smart Account returns ERC-6492 or raw ECDSA; recover EOA and send that.
+      // Same as POPUP: send (Smart Account, original signature) so backend builds correct message.
+      // Backend verifies via ERC-1271 for Smart Accounts.
       let authAddressForApi = authAddress;
       let sigToRecover = signature;
       const ERC6492_MAGIC_R = '6492649264926492649264926492649264926492649264926492649264926492';
@@ -735,10 +735,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (sigToRecover.length === 132 || sigToRecover.length === 130) {
         try {
           const normalizedSig = normalizeSignatureV(sigToRecover);
-          const recoveredEoa = await recoverMessageAddress({ message, signature: normalizedSig as `0x${string}` });
-          authAddressForApi = recoveredEoa.toLowerCase();
-          signature = normalizedSig;
-          console.log('[Auth] [REDIRECT] Smart Account: using recovered EOA', authAddressForApi);
+          await recoverMessageAddress({ message, signature: normalizedSig as `0x${string}` });
+          // Keep original signature for API
+          console.log('[Auth] [REDIRECT] Smart Account: sending (SA, orig sig) for ERC-1271');
         } catch (e) {
           console.warn('[Auth] [REDIRECT] Recovery failed:', e);
         }
@@ -856,9 +855,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         preview: signature.slice(0, 20) + '...' + signature.slice(-20),
       });
 
-      // DeHub backend uses ecrecover — expects EOA address + ECDSA sig.
-      // Smart Account returns either ERC-6492 or raw ECDSA; in both cases we must send
-      // the recovered EOA (the signer), not the Smart Account address.
+      // DeHub backend reconstructs message with the address we send: "Your wallet address is {address}".
+      // The user signed a message with authAddress (Smart Account). So we MUST send (Smart Account, original signature)
+      // so the backend builds the same message. Backend verifies via ERC-1271 for Smart Accounts.
+      // Do NOT send recovered EOA — that would make the backend build a different message and verification would fail.
       let authAddressForApi = authAddress;
       if (isSocial) {
         let sigToRecover = signature;
@@ -866,14 +866,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const innerSig = extractEoaSignatureFromErc6492(signature);
           if (innerSig) sigToRecover = innerSig;
         }
-        // Recover EOA from signature (works for both ERC-6492 inner sig and raw ECDSA)
         if (sigToRecover.length === 132 || sigToRecover.length === 130) {
           try {
             const normalizedSig = normalizeSignatureV(sigToRecover);
-            const recoveredEoa = await recoverMessageAddress({ message, signature: normalizedSig as `0x${string}` });
-            authAddressForApi = recoveredEoa.toLowerCase();
-            signature = normalizedSig;
-            console.log('[Auth] [POPUP] Smart Account: using recovered EOA', authAddressForApi, 'for DeHub auth');
+            await recoverMessageAddress({ message, signature: normalizedSig as `0x${string}` });
+            // Keep original signature for API; only use normalized for recovery (debug/logging)
+            console.log('[Auth] [POPUP] Smart Account: sending (SA, orig sig) for ERC-1271 verification');
           } catch (e) {
             console.warn('[Auth] [POPUP] Recovery failed:', e);
           }
