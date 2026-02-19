@@ -88,7 +88,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     id: String(nft.tokenId),
     type: 'video',
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
-    videoUrl: nft.tokenId ? buildVideoUrl(nft.tokenId, nft.videoUrl || nft.media_url) : undefined,
+    videoUrl: nft.tokenId ? buildVideoUrl(nft.tokenId) : undefined,
     duration: formatDuration(durationSeconds),
     durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : 0,
     title,

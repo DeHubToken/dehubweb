@@ -86,13 +86,8 @@ export function buildImageUrl(tokenId: number | string, apiImagePath: string | u
 
 /**
  * Build video URL: cdn/videos/{tokenId}.mp4
- * Prefer apiVideoUrl when provided (API may return signed/different path).
  */
-export function buildVideoUrl(tokenId: number | string, apiVideoUrl?: string | null): string {
-  if (apiVideoUrl && apiVideoUrl.startsWith('http')) return apiVideoUrl;
-  if (apiVideoUrl && !apiVideoUrl.startsWith('/')) {
-    return apiVideoUrl.startsWith(DEHUB_CDN_BASE) ? apiVideoUrl : `${DEHUB_CDN_BASE}${apiVideoUrl}`;
-  }
+export function buildVideoUrl(tokenId: number | string): string {
   return `${DEHUB_CDN_BASE}videos/${tokenId}.mp4`;
 }
 

@@ -18,7 +18,7 @@ import {
   type SearchNFTsParams,
   type LiveStream as ApiLiveStream,
 } from '@/lib/api/dehub';
-import { buildAvatarUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
+import { buildAvatarUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, LiveStream } from '@/types/feed.types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
@@ -88,8 +88,8 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     getMediaUrl(nft.media_url) ||
     FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
 
-  // Build video URL (prefer API videoUrl/media_url when provided)
-  const videoUrl = tokenId ? buildVideoUrl(tokenId, nft.videoUrl || nft.media_url) : undefined;
+  // Build video URL using cdnurl/videos/{tokenId}.mp4 pattern
+  const videoUrl = tokenId ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4` : undefined;
 
   // Get duration from various fields
   const duration = nft.videoDuration || nft.duration;

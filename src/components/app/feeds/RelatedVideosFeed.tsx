@@ -11,7 +11,7 @@ import { useRef, useEffect, useCallback } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import { searchNFTs, getNFTInfo, getMediaUrl } from '@/lib/api/dehub';
-import { buildAvatarUrl, buildVideoUrl, extractAvatarPath } from '@/lib/media-url';
+import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { formatDuration, formatTimeAgo, formatViews } from '@/lib/feed-utils';
@@ -39,7 +39,7 @@ function toVideoItem(nft: any): VideoItem {
     type: 'video',
     thumbnail: getMediaUrl(nft.imageUrl) || '/placeholder.svg',
     videoUrl: nft.tokenId 
-      ? buildVideoUrl(nft.tokenId, nft.videoUrl || nft.media_url) 
+      ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${nft.tokenId}.mp4` 
       : undefined,
     duration: formatDuration(durationSeconds),
     durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : 0,

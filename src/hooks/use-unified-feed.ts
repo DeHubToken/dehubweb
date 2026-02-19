@@ -168,9 +168,9 @@ function isBlockedPost(item: UnifiedFeedItem): boolean {
 export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
   const id = String(item.tokenId);
   
-  // Build canonical URLs using shared utilities (prefer API videoUrl if provided)
+  // Build canonical URLs using shared utilities
   const thumbnail = buildImageUrl(item.tokenId, item.imageUrl);
-  const videoUrl = buildVideoUrl(item.tokenId, item.videoUrl);
+  const videoUrl = buildVideoUrl(item.tokenId);
   const rawAvatarPath = extractAvatarPath(item);
   const channelAvatar = rawAvatarPath 
     ? buildAvatarUrl(item.minter, rawAvatarPath) || 'user'

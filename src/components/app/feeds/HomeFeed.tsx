@@ -610,7 +610,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       return { type: 'image', data: imagePost };
     } else if (pinnedPost.videoUrl || pinnedPost.media_url) {
       const thumbnail = buildImageUrl(pinnedPost.tokenId, pinnedPost.imageUrl);
-      const videoUrl = buildVideoUrl(pinnedPost.tokenId, pinnedPost.videoUrl || pinnedPost.media_url);
+      const videoUrl = buildVideoUrl(pinnedPost.tokenId);
       const channelAvatar = pinnedPost.minterAvatarUrl 
         ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || 'user'
         : 'user';

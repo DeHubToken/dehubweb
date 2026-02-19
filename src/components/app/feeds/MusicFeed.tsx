@@ -87,7 +87,7 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     views: formatViews(nft.views || nft.view_count || 0),
     uploadedAgo: formatTimeAgo(nft.createdAt || nft.created_at),
     duration: formatDuration(duration),
-    videoUrl: buildVideoUrl(tokenId, nft.videoUrl || nft.media_url),
+    videoUrl: buildVideoUrl(tokenId),
     isPPV: nft.is_ppv,
     ppvPrice: nft.ppv_price,
     ppvCurrency: nft.ppv_currency,
