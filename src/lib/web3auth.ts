@@ -1,14 +1,15 @@
 /**
- * Web3Auth Configuration with Account Abstraction (v10 Modal SDK)
- * ================================================================
- * Web3Auth Modal SDK v10 for Base Mainnet with Pimlico-powered
- * Account Abstraction for gasless transactions.
+ * Web3Auth Configuration (v10 Modal SDK) with Account Abstraction
+ * ===============================================================
+ * Web3Auth Modal SDK v10 for Base Mainnet with Pimlico AA.
+ * Matches mobile: deploy Smart Account (empty tx) before signing.
+ * For DeHub auth we recover EOA from ERC-6492 inner sig and send that.
  *
  * CUSTOM UI MODE: Uses connectTo() for direct provider connections
  * without showing the default Web3Auth modal.
  *
- * External wallets (MetaMask, WalletConnect, etc.) are handled by
- * Wagmi + Reown AppKit — NOT by Web3Auth.
+ * External wallets (MetaMask, Rabby, Phantom, Trust) are handled by
+ * Wagmi — NOT by Web3Auth.
  */
 
 import {
@@ -128,6 +129,38 @@ export function getWalletBrowserName(): string | null {
   return null;
 }
 
+/**
+ * Generate a universal link to open the current site inside a wallet's in-app browser.
+ * Uses universal/app links (https://) instead of custom URI schemes (wallet://)
+ * because universal links are more reliable on iOS Safari and Android Chrome.
+ * - If the wallet app is installed → OS opens the wallet app directly
+ * - If not installed → redirects to Play Store / App Store
+ */
+export function getWalletDeepLink(wallet: string, targetUrl?: string): string | null {
+  if (typeof window === 'undefined') return null;
+
+  const url = targetUrl || window.location.href;
+  const encodedUrl = encodeURIComponent(url);
+  const domainAndPath = url.replace(/^https?:\/\//, '');
+
+  switch (wallet.toLowerCase()) {
+    case 'metamask':
+      // Universal link - works on iOS + Android, falls back to store if not installed
+      return `https://metamask.app.link/dapp/${domainAndPath}`;
+    case 'phantom':
+      // Phantom universal link
+      return `https://phantom.app/ul/v1/browse?url=${encodedUrl}&ref=${encodeURIComponent(window.location.origin)}`;
+    case 'coinbase':
+      // Coinbase Wallet universal link
+      return `https://go.cb-w.com/dapp?cb_url=${encodedUrl}`;
+    case 'trust':
+      // Trust Wallet universal link
+      return `https://link.trustwallet.com/open_url?coin_id=60&url=${encodedUrl}`;
+    default:
+      return null;
+  }
+}
+
 // Re-export for use in other files - type only to avoid redeclaration error
 // export type { WALLET_CONNECTORS, AUTH_CONNECTION, UX_MODE };
 // Constants are already exported at the top of the file!
@@ -161,6 +194,27 @@ let cachedClientId: string | null = null;
 let cachedPimlicoConfig: { bundlerUrl: string; paymasterUrl: string } | null = null;
 
 /**
+ * Clear Web3Auth/Torus persisted session from storage to prevent stale "connected" state
+ */
+function clearWeb3AuthStorage(): void {
+  if (typeof window === 'undefined') return;
+  const prefixes = ['torus', 'web3auth', 'tkey'];
+  for (const storage of [localStorage, sessionStorage]) {
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < storage.length; i++) {
+      const key = storage.key(i);
+      if (key && prefixes.some(p => key.toLowerCase().includes(p))) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(k => storage.removeItem(k));
+    if (keysToRemove.length) {
+      console.log('[Web3Auth] Cleared storage keys:', keysToRemove);
+    }
+  }
+}
+
+/**
  * Reset all Web3Auth module state - used for HMR and error recovery
  */
 export function resetWeb3AuthState(): void {
@@ -172,6 +226,7 @@ export function resetWeb3AuthState(): void {
   isInitializing = false;
   initPromise = null;
   lastConnectedConnector = null;
+  clearWeb3AuthStorage();
   // Don't reset cached configs or forceRedirectMode - persist across resets
   console.log("[Web3Auth] Module state reset");
 }
@@ -189,11 +244,22 @@ if (import.meta.hot) {
 /**
  * Pre-fetch configurations as soon as the module is loaded.
  */
+async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: string }> {
+  if (cachedPimlicoConfig) return cachedPimlicoConfig;
+  return fetchWithRetry(async () => {
+    const { data, error } = await supabase.functions.invoke("get-pimlico-config");
+    if (!error && data?.bundlerUrl && data?.paymasterUrl) {
+      cachedPimlicoConfig = data;
+      return cachedPimlicoConfig;
+    }
+    throw new Error(error?.message || "Pimlico config not configured");
+  }, "get-pimlico-config");
+}
+
 function prewarmConfig() {
   if (typeof window === 'undefined') return;
   console.log("[Web3Auth] Pre-warming configurations...");
   getWeb3AuthClientId().catch(() => { });
-  getPimlicoConfig().catch(() => { });
 }
 
 // Start pre-warming immediately
@@ -266,24 +332,23 @@ async function getWeb3AuthClientId(): Promise<string> {
   }, "get-web3auth-config");
 }
 
-async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: string }> {
-  if (cachedPimlicoConfig) return cachedPimlicoConfig;
-  console.log("[Web3Auth] Fetching Pimlico config from edge function...");
-
-  return fetchWithRetry(async () => {
-    const { data, error } = await supabase.functions.invoke("get-pimlico-config");
-    console.log("[Web3Auth] get-pimlico-config response:", { data, error });
-    if (!error && data?.bundlerUrl && data?.paymasterUrl) {
-      cachedPimlicoConfig = data;
-      return cachedPimlicoConfig;
-    }
-    throw new Error(error?.message || "Pimlico config not configured");
-  }, "get-pimlico-config");
+function isRetryableInitError(err: unknown): boolean {
+  const msg = String(err).toLowerCase() + (err instanceof Error ? ' ' + String((err as any).cause || '').toLowerCase() : '');
+  return (
+    msg.includes('failed to fetch') ||
+    msg.includes('429') ||
+    msg.includes('too many requests') ||
+    msg.includes('rate limit') ||
+    msg.includes('project configurations') ||
+    msg.includes('network')
+  );
 }
 
 /**
- * Initialize Web3Auth Modal v10 with Account Abstraction via Pimlico
- * Configured for CUSTOM UI - no default modal shown
+ * Initialize Web3Auth Modal v10 with Account Abstraction.
+ * Smart Account must be deployed (empty tx) before signing - matches mobile.
+ * For DeHub auth we send recovered EOA address + inner ECDSA sig.
+ * Retries with backoff on 429/rate limit/fetch errors.
  */
 export async function initWeb3Auth(): Promise<Web3Auth> {
   console.log("[Web3Auth] initWeb3Auth() called");
@@ -296,78 +361,92 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
     return initPromise;
   }
 
+  const INIT_RETRIES = 3;
+  const RETRY_DELAYS = [3000, 8000, 20000]; // 3s, 8s, 20s
+
   isInitializing = true;
   initPromise = (async () => {
-    try {
-      // Parallel fetch configs
-      const [clientId, pimlicoConfig] = await Promise.all([
-        getWeb3AuthClientId(),
-        getPimlicoConfig(),
-      ]);
+    let lastError: unknown;
+    for (let attempt = 0; attempt < INIT_RETRIES; attempt++) {
+      try {
+        if (attempt > 0) {
+          console.log(`[Web3Auth] Retry ${attempt}/${INIT_RETRIES - 1} after rate limit/fetch error...`);
+          await new Promise(r => setTimeout(r, RETRY_DELAYS[attempt - 1]));
+        }
 
-      const mobile = isMobileDevice();
-      const useRedirect = mobile || forceRedirectMode;
+        const [clientId, pimlicoConfig] = await Promise.all([
+          getWeb3AuthClientId(),
+          getPimlicoConfig().catch(() => ({ bundlerUrl: '', paymasterUrl: '' })),
+        ]);
 
-      web3authInstance = new Web3Auth({
-        clientId,
-        chains: [chainConfig],
-        web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        sessionTime: 86400,
-        uiConfig: {
-          modalZIndex: "99999",
-        } as any,
-        accountAbstractionConfig: {
-          smartAccountType: "safe",
-          chains: [
-            {
+        const initOptions: any = {
+          clientId,
+          chains: [chainConfig],
+          web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+          sessionTime: 86400,
+          uiConfig: { modalZIndex: "99999" } as any,
+          walletServicesConfig: {
+            confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
+            modalZIndex: "99999",
+            whiteLabel: { showWidgetButton: false },
+          } as any,
+        };
+
+        if (pimlicoConfig?.bundlerUrl && pimlicoConfig?.paymasterUrl) {
+          initOptions.accountAbstractionConfig = {
+            smartAccountType: "safe",
+            chains: [{
               chainId: "0x2105",
               bundlerConfig: { url: pimlicoConfig.bundlerUrl },
               paymasterConfig: { url: pimlicoConfig.paymasterUrl },
-            },
-          ],
-        },
-        useAAWithExternalWallet: false,
-        walletServicesConfig: {
-          confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
-          modalZIndex: "99999",
-          whiteLabel: { showWidgetButton: false },
-        } as any,
-      });
+            }],
+          };
+        }
 
-      await Promise.race([
-        web3authInstance.init(),
-        new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error("Web3Auth init timed out after 15s")), 15000)
-        )
-      ]);
+        web3authInstance = new Web3Auth(initOptions);
 
-      // Polling for ready state if stuck in not_ready
-      if (web3authInstance.status === "not_ready") {
-        for (let i = 0; i < 20; i++) {
-          await new Promise(r => setTimeout(r, 250));
-          if (web3authInstance.status !== "not_ready") break;
+        await Promise.race([
+          web3authInstance.init(),
+          new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error("Web3Auth init timed out after 15s")), 15000)
+          )
+        ]);
+
+        // Polling for ready state if stuck in not_ready
+        if (web3authInstance.status === "not_ready") {
+          for (let i = 0; i < 20; i++) {
+            await new Promise(r => setTimeout(r, 250));
+            if (web3authInstance.status !== "not_ready") break;
+          }
+        }
+
+        if (web3authInstance.status === "not_ready") {
+          throw new Error("Web3Auth stuck in not_ready state");
+        }
+
+        return web3authInstance;
+      } catch (error) {
+        lastError = error;
+        console.error(`[Web3Auth] INITIALIZATION FAILED (attempt ${attempt + 1}/${INIT_RETRIES}):`, error);
+        web3authInstance = null;
+
+        if (attempt < INIT_RETRIES - 1 && isRetryableInitError(error)) {
+          console.warn(`[Web3Auth] Will retry in ${RETRY_DELAYS[attempt] / 1000}s (rate limit / fetch error)`);
+        } else {
+          throw error;
         }
       }
-
-      if (web3authInstance.status === "not_ready") {
-        throw new Error("Web3Auth stuck in not_ready state");
-      }
-
-      return web3authInstance;
-    } catch (error) {
-      console.error("[Web3Auth] INITIALIZATION FAILED:", error);
-      web3authInstance = null;
-      throw error;
-    } finally {
-      isInitializing = false;
     }
-  })();
+    throw lastError;
+  })().finally(() => {
+    isInitializing = false;
+  });
 
   return initPromise;
 }
 
 function isPopupBlockedError(err: unknown): boolean {
-  const combined = String(err).toLowerCase() + (err instanceof Error ? ' ' + String(err.cause).toLowerCase() : '');
+  const combined = String(err).toLowerCase() + (err instanceof Error ? ' ' + String((err as any).cause).toLowerCase() : '');
   return (
     combined.includes('popup') && (combined.includes('blocked') || combined.includes('closed')) ||
     combined.includes('allow-popups') ||
@@ -377,26 +456,44 @@ function isPopupBlockedError(err: unknown): boolean {
 
 export async function connectToSocialProvider(
   authConnection: AuthConnectionType,
-  loginHint?: string
+  loginHint?: string,
+  skipConnectedCheck = false
 ): Promise<ReturnType<Web3Auth['connectTo']>> {
   console.log(`[Web3Auth] connectToSocialProvider: ${authConnection}`);
 
   const web3auth = await getOrInitWeb3Auth();
+
+  // If a previous failed session left Web3Auth in "connected" state, logout first.
+  // Otherwise connectTo throws "Already connected".
+  // skipConnectedCheck: set on retry after reset to avoid infinite loop (new instance may restore stale session)
+  if (!skipConnectedCheck && web3auth.connected) {
+    console.log('[Web3Auth] Already connected - logging out before new auth attempt...');
+    try {
+      await web3auth.logout();
+      await new Promise(r => setTimeout(r, 500));
+    } catch (e) {
+      console.warn('[Web3Auth] Pre-connect logout failed - forcing full reset:', e);
+      resetWeb3AuthState();
+      await new Promise(r => setTimeout(r, 1000));
+      return connectToSocialProvider(authConnection, loginHint, true);
+    }
+  }
+
   const mobile = isMobileDevice();
   const useRedirect = mobile || forceRedirectMode;
   const uxMode = useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP;
 
+  // v10 API: `authConnection` replaced `loginProvider`; uxMode/redirectUrl are top-level.
+  // email/phone hint goes in extraLoginOptions.login_hint (underscore), not top-level loginHint.
   const params: any = {
-    loginProvider: authConnection,
+    authConnection: authConnection,
     uxMode,
     redirectUrl: window.location.origin + window.location.pathname,
-    extraLoginOptions: {
-      ux_mode: uxMode,
-      redirect_url: window.location.origin + window.location.pathname,
-    }
   };
 
-  if (loginHint) params.loginHint = loginHint;
+  if (loginHint) {
+    params.extraLoginOptions = { login_hint: loginHint };
+  }
 
   savePreLoginPath();
 
@@ -411,7 +508,6 @@ export async function connectToSocialProvider(
       resetWeb3AuthState();
       const retryAuth = await initWeb3Auth();
       params.uxMode = UX_MODE.REDIRECT;
-      params.extraLoginOptions.ux_mode = UX_MODE.REDIRECT;
       return await retryAuth.connectTo(WALLET_CONNECTORS.AUTH, params);
     }
     throw err;
@@ -462,9 +558,10 @@ export async function forceCleanupWeb3Auth(): Promise<void> {
   web3authInstance = null;
   isInitializing = false;
   initPromise = null;
+  clearWeb3AuthStorage();
 
-  // Proactive re-init
-  initWeb3Auth().catch(() => { });
+  // Delayed re-init to avoid rate limiting (don't hammer api.web3auth.io)
+  setTimeout(() => initWeb3Auth().catch(() => { }), 5000);
 }
 
 export function isWeb3AuthConnected(): boolean {

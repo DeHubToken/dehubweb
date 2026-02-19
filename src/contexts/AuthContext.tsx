@@ -2,8 +2,9 @@
  * Auth Context
  * ============
  * Provides Web3Auth authentication integrated with DeHub API.
- * Uses Web3Auth Modal SDK v10 with Pimlico Account Abstraction for
- * social/email/SMS login, and Wagmi for external wallet connections.
+ * Uses Web3Auth Modal SDK v10 in EOA mode for social/email/SMS login
+ * (no AA - DeHub backend requires standard ECDSA signatures).
+ * Wagmi handles external wallet connections.
  *
  * CUSTOM UI MODE: Uses connectTo() for direct provider connections
  * without showing the default Web3Auth modal.
@@ -13,7 +14,10 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useAccount, useSignMessage, useDisconnect, useConnect } from 'wagmi';
+import { getAccount } from '@wagmi/core';
+import { wagmiConfig } from '@/lib/wagmi';
 import { clearWagmiStorage } from '@/lib/wagmi';
+import { getAddress, recoverMessageAddress } from 'viem';
 import {
   authenticateWallet,
   getAccountInfo,
@@ -34,12 +38,13 @@ import {
   AUTH_CONNECTION,
   WALLET_CONNECTORS,
   getOrInitWeb3Auth,
+  isMobileDevice,
 } from '@/lib/web3auth';
 import type { Web3Auth } from '@web3auth/modal';
 
 // Provider types for the custom login modal
 export type SocialProvider = 'google' | 'twitter' | 'telegram' | 'apple' | 'discord' | 'github';
-export type WalletProvider = 'metamask' | 'walletconnect' | 'coinbase' | 'phantom' | 'rabby' | 'trust';
+export type WalletProvider = 'metamask' | 'phantom';
 
 interface AuthContextType {
   user: DeHubUser | null;
@@ -58,7 +63,7 @@ interface AuthContextType {
   connectWithProvider: (provider: SocialProvider) => Promise<void>;
   connectWithEmail: (email: string) => Promise<void>;
   connectWithSMS: (phone: string) => Promise<void>;
-  connectWithWallet: (wallet: WalletProvider) => Promise<void>;
+  connectWithWallet: (wallet: WalletProvider) => Promise<boolean>;
   disconnect: () => Promise<void>;
   refreshUser: () => Promise<void>;
   refreshSession: () => Promise<boolean>;
@@ -187,6 +192,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const redirectProcessedRef = useRef(false);
   // Ref to track if user explicitly clicked "Connect Wallet" (prevents auto-auth on page load)
   const wagmiAuthIntentRef = useRef(false);
+  // Ref to prevent concurrent auth flows (handleWagmiConnect fires multiple times due to deps)
+  const wagmiAuthInProgressRef = useRef(false);
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
 
@@ -199,6 +206,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const openLoginModal = useCallback(() => {
     connectionAbortedRef.current = false;
     setIsLoginModalOpen(true);
+    
+    // Proactively init/check Web3Auth when modal opens
+    initWeb3Auth()
+      .then((instance) => setWeb3auth(instance))
+      .catch((err) => console.warn('[Auth] Web3Auth init failed on modal open:', err));
   }, []);
   
   const closeLoginModal = useCallback(() => {
@@ -218,11 +230,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Check for existing session on mount
   useEffect(() => {
     const init = async () => {
-      // Start Web3Auth pre-warm as early as possible (parallel)
-      console.log('[Auth] Pre-warming Web3Auth...');
-      initWeb3Auth()
-        .then((instance) => setWeb3auth(instance))
-        .catch((err) => console.warn('Web3Auth pre-init failed:', err));
+      // Don't pre-warm Web3Auth on mount for mobile to avoid triggering Chrome's 'Abusive Ads' blocker
+      // which often flags background iframes. We'll init it when the user opens the login modal.
+      if (!isMobileDevice()) {
+        console.log('[Auth] Pre-warming Web3Auth (Desktop)...');
+        initWeb3Auth()
+          .then((instance) => setWeb3auth(instance))
+          .catch((err) => console.warn('Web3Auth pre-init failed:', err));
+      }
 
       // Check if this is a redirect return from Web3Auth (mobile email/SMS login)
       const isRedirectReturn = hasRedirectResult();
@@ -273,17 +288,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const handleWagmiConnect = async () => {
       // Don't interfere if we're processing a redirect (mobile email/SMS login)
+      // Don't interfere if we're processing a redirect (mobile email/SMS login)
       if (isProcessingRedirect || hasRedirectResult()) {
         console.log('[Auth] Skipping Wagmi auto-connect during redirect processing');
         return;
       }
 
+      console.log('[Auth] Wagmi connection check:', { isWagmiConnected, wagmiAddress, isConnecting, isLoading, walletAddress });
+
       // If Wagmi connects (via AppKit or injected) and we are not authed yet
-      if (isWagmiConnected && wagmiAddress && !isConnecting && !isLoading) {
+      if (isWagmiConnected && wagmiAddress && !isLoading) {
+        // Guard against concurrent auth flows.
+        // This effect re-fires when isConnecting changes (e.g. after setIsConnecting(true) inside),
+        // which would start a second auth. The ref ensures only one flow runs at a time.
+        if (wagmiAuthInProgressRef.current) {
+          console.log('[Auth] Auth already in progress, skipping duplicate effect run');
+          return;
+        }
 
         // CASE A: Already authed with same address -> Sync state
-        if (isAuthenticated && walletAddress && walletAddress.toLowerCase() === wagmiAddress.toLowerCase()) {
+        if (isAuthenticated && walletAddress?.toLowerCase() === wagmiAddress.toLowerCase()) {
             if (connectionSource !== 'wagmi') {
+              console.log('[Auth] Syncing connection source to wagmi');
               setConnectionSource('wagmi');
             }
             return;
@@ -305,6 +331,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const hasToken = !!getAuthToken() && !isTokenExpired();
         const isReturningWagmiUser = savedSource === 'wagmi' && hasToken;
 
+        console.log('[Auth] handleWagmiConnect decision:', { 
+          hasUserIntent, 
+          isReturningWagmiUser, 
+          savedSource, 
+          hasToken 
+        });
+
         if (!hasUserIntent && !isReturningWagmiUser) {
           // Wagmi auto-reconnected from localStorage but user didn't click "Connect Wallet"
           // and there's no valid DeHub session - silently disconnect to prevent unwanted auth popup
@@ -312,6 +345,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           // Clear source if no token - this prevents Reown from trying to switch network on next load
           if (!hasToken) {
+            console.log('[Auth] No valid token found, clearing Wagmi storage');
             localStorage.removeItem('dehub_connection_source');
             clearWagmiStorage();
           }
@@ -323,16 +357,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log('[Auth] Wagmi connected, starting auth:', wagmiAddress,
           hasUserIntent ? '(user intent)' : '(returning user)');
 
+        wagmiAuthInProgressRef.current = true;
         try {
           setIsConnecting(true);
           setConnectionSource('wagmi');
-          wagmiAuthIntentRef.current = false; // Reset intent after use
+          localStorage.setItem('dehub_connection_source', 'wagmi');
+          // Reset intent only after successful auth, or on error
           await completeDeHubAuthWagmi(wagmiAddress);
+          wagmiAuthIntentRef.current = false;
           closeLoginModal();
         } catch (err) {
           console.error('[Auth] Wagmi auth failed:', err);
+          wagmiAuthIntentRef.current = false; // Reset on failure too
           setConnectionSource(null);
+          localStorage.removeItem('dehub_connection_source');
         } finally {
+          wagmiAuthInProgressRef.current = false;
           setIsConnecting(false);
         }
       }
@@ -418,7 +458,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       sessionStorage.setItem('dehub_wallet_auto_connect_attempted', 'true');
 
       console.log('[Auth] Mobile in-app browser detected, auto-connecting immediately...');
-      const injectedConnector = connectors.find(c => c.id === 'injected');
+      // Find the best connector for in-app browser auto-connect:
+      // prefer the generic injected() which picks up the wallet's window.ethereum
+      const injectedConnector = connectors.find(c => c.id === 'injected')
+        || connectors.find(c => c.id === 'io.metamask')
+        || connectors.find(c => c.id === 'metaMaskSDK')
+        || connectors.find(c => c.id === 'app.phantom');
       if (!injectedConnector) return;
 
       wagmiAuthIntentRef.current = true;
@@ -443,16 +488,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const displayedDate = new Date(timestamp * 1000);
     const authAddress = address.toLowerCase();
 
+    // Standard Wallets (MetaMask/Phantom) connected via Wagmi are EOAs.
+    // They don't need deployment. We only deploy Smart Accounts for Social Login.
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
     
+    console.log('[Auth] Requesting signature for address:', authAddress);
+    console.log('[Auth] Message:', message);
     toast.info('Please sign the message in your wallet...');
-    
+
     const signature = await signMessageAsync({ 
       message,
       account: authAddress as `0x${string}`
     });
     
-    console.log('[Auth] Wagmi signature received');
+    console.log('[Auth] Wagmi signature received, authenticating with backend...');
 
     const BASE_CHAIN_ID = 8453;
     const authResponse = await authenticateWallet(
@@ -522,10 +571,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }], 60000) as string;
 
             console.log('[Auth] Initialization transaction sent:', txHash);
-            toast.success('Account initialized! Preparing login...', { duration: 4000 });
+            toast.info('Waiting for account deployment...', { duration: 30000 });
 
-            // Wait for bundler inclusion
-            await new Promise(r => setTimeout(r, 5000));
+            // Poll eth_getCode until the contract is confirmed on-chain.
+            // A fixed wait is unreliable — UserOp mining time varies with bundler load.
+            // Mobile does the same: deploy → poll until code exists → then sign.
+            let deployConfirmed = false;
+            for (let poll = 0; poll < 30; poll++) {
+              await new Promise(r => setTimeout(r, 1000));
+              try {
+                const checkCode = await requestWithTimeout('eth_getCode', [address, 'latest'], 5000) as string;
+                if (checkCode && checkCode !== '0x' && checkCode !== '0x0') {
+                  console.log(`[Auth] ✓ Deployment confirmed on-chain after ~${poll + 1}s`);
+                  deployConfirmed = true;
+                  break;
+                }
+              } catch (_) {}
+            }
+            if (!deployConfirmed) {
+              console.warn('[Auth] Deployment not confirmed in 30s, proceeding anyway');
+            }
+            toast.success('Account ready! Signing in...', { duration: 3000 });
             deployed = true;
             break;
           } catch (txErr: any) {
@@ -567,7 +633,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Complete DeHub auth specifically after redirect flow.
-   * Same non-AA private key approach as popup flow.
+   * EOA mode: eth_accounts returns EOA address, personal_sign returns ECDSA.
    */
   const completeDeHubAuthAfterRedirect = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -605,7 +671,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const authAddress = accounts[0].toLowerCase();
       console.log('[Auth] [REDIRECT] Account:', authAddress);
 
-      // Ensure deployed
+      // Social login (Smart Account): deploy with empty tx first if not deployed (matches mobile)
       const deployed = await ensureSmartAccountDeployed(signingProvider, authAddress);
       if (!deployed) {
         throw new Error('Smart Account deployment failed. Please try again.');
@@ -630,23 +696,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }) as string;
       }
       
+      // Detect and unwrap ERC-6492 (same as popup flow)
+      let authAddressForApi = authAddress;
+      const ERC6492_MAGIC_R = '6492649264926492649264926492649264926492649264926492649264926492';
+      const isERC6492R = signature.toLowerCase().endsWith(ERC6492_MAGIC_R);
+      console.log('[Auth] [REDIRECT] Signature format:', { length: signature.length, isERC6492: isERC6492R });
+      if (isERC6492R) {
+        const innerSig = extractEoaSignatureFromErc6492(signature);
+        if (innerSig) {
+          try {
+            const recoveredEoa = await recoverMessageAddress({ message, signature: innerSig });
+            authAddressForApi = recoveredEoa.toLowerCase();
+            signature = innerSig;
+            console.log('[Auth] [REDIRECT] ERC-6492: using EOA', authAddressForApi, 'for DeHub auth');
+          } catch (e) {
+            console.warn('[Auth] [REDIRECT] ERC-6492 recovery failed:', e);
+          }
+        }
+      }
+
       console.log('[Auth] [REDIRECT] Signature received, authenticating with backend...');
       toast.loading('Verifying signature...', { id: 'auth-redirect' });
 
       const BASE_CHAIN_ID = 8453;
       const authResponse = await authenticateWallet(
-        authAddress,
+        authAddressForApi,
         signature,
         timestamp,
         BASE_CHAIN_ID
       );
 
-      const normalizedUser = normalizeUser(authResponse.user, authAddress);
+      const normalizedUser = normalizeUser(authResponse.user, authAddressForApi);
 
-      localStorage.setItem('dehub_wallet', authAddress);
+      localStorage.setItem('dehub_wallet', authAddressForApi);
       localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
 
-      setWalletAddress(authAddress);
+      setWalletAddress(authAddressForApi);
       setUser(normalizedUser);
 
       if (!normalizedUser.username) {
@@ -669,9 +754,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Complete DeHub authentication after Web3Auth connects.
-   *
-   * Uses personal_sign with Smart Account address (AA enabled).
-   * This matches the mobile app's authentication flow.
+   * EOA mode: eth_accounts returns EOA address, personal_sign returns ECDSA.
    */
   const completeDeHubAuth = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -707,8 +790,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const authAddress = accounts[0].toLowerCase();
       console.log('[Auth] [POPUP] Address:', authAddress);
 
+      // Social login (Smart Account): deploy with empty tx first if not deployed (matches mobile)
       if (isSocial) {
-        // Social login (Safe AA enabled): ensure account is deployed before signing
         const deployed = await ensureSmartAccountDeployed(signingProvider, authAddress);
         if (!deployed) {
           throw new Error('Smart Account deployment failed. Please try again.');
@@ -735,23 +818,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }) as string;
       }
 
+      // Detect signature format for debugging
+      const ERC6492_MAGIC = '6492649264926492649264926492649264926492649264926492649264926492';
+      const isERC6492 = signature.toLowerCase().endsWith(ERC6492_MAGIC);
+      console.log('[Auth] [POPUP] Signature format:', {
+        length: signature.length,
+        isERC6492,
+        preview: signature.slice(0, 20) + '...' + signature.slice(-20),
+      });
+
+      // Safe AA provider may return ERC-6492 (factory + calldata + innerSig + magic).
+      // DeHub backend uses ecrecover — it expects EOA address + ECDSA sig.
+      // Extract inner sig and recover the EOA signer; send that to backend.
+      let authAddressForApi = authAddress;
+      if (isERC6492) {
+        const innerSig = extractEoaSignatureFromErc6492(signature);
+        if (innerSig) {
+          try {
+            const recoveredEoa = await recoverMessageAddress({ message, signature: innerSig });
+            authAddressForApi = recoveredEoa.toLowerCase();
+            signature = innerSig;
+            console.log('[Auth] [POPUP] ERC-6492: using EOA', authAddressForApi, 'for DeHub auth');
+          } catch (e) {
+            console.warn('[Auth] [POPUP] ERC-6492 recovery failed, trying raw sig:', e);
+          }
+        } else {
+          console.warn('[Auth] [POPUP] ERC-6492 parse failed, sending raw sig to backend');
+        }
+      }
+
       console.log('[Auth] [POPUP] Signature received, authenticating...');
       toast.loading('Verifying with DeHub...', { id: 'auth-popup' });
 
       const BASE_CHAIN_ID = 8453;
       const authResponse = await authenticateWallet(
-        authAddress,
+        authAddressForApi,
         signature,
         timestamp,
         BASE_CHAIN_ID
       );
 
-      const normalizedUser = normalizeUser(authResponse.user, authAddress);
+      const normalizedUser = normalizeUser(authResponse.user, authAddressForApi);
 
-      localStorage.setItem('dehub_wallet', authAddress);
+      localStorage.setItem('dehub_wallet', authAddressForApi);
       localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
 
-      setWalletAddress(authAddress);
+      setWalletAddress(authAddressForApi);
       setUser(normalizedUser);
 
       if (!normalizedUser.username) {
@@ -817,7 +929,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Reset state on error to allow retry
       setConnectionSource(null);
       localStorage.removeItem('dehub_connection_source');
-      forceCleanupWeb3Auth();
+      await forceCleanupWeb3Auth();
     } finally {
       setIsConnecting(false);
       setActiveProvider(null);
@@ -845,7 +957,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       setConnectionSource(null);
       localStorage.removeItem('dehub_connection_source');
-      forceCleanupWeb3Auth();
+      await forceCleanupWeb3Auth();
     } finally {
       setIsConnecting(false);
       setActiveProvider(null);
@@ -873,60 +985,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       setConnectionSource(null);
       localStorage.removeItem('dehub_connection_source');
-      forceCleanupWeb3Auth();
+      await forceCleanupWeb3Auth();
     } finally {
       setIsConnecting(false);
       setActiveProvider(null);
     }
   };
 
-  const connectWithWallet = async (wallet: WalletProvider) => {
+  // connectWithWallet is kept for backward compatibility but wallet buttons in LoginModal
+  // now use RainbowKit's WalletButton.Custom which calls wagmi connectAsync internally.
+  // The handleWagmiConnect effect picks up the connection and completes DeHub auth.
+  const connectWithWallet = async (wallet: WalletProvider): Promise<boolean> => {
     console.log('[Auth] connectWithWallet called:', wallet);
     setIsConnecting(true);
     setWagmiAuthIntent(true);
     localStorage.setItem('dehub_connection_source', 'wagmi');
 
     try {
-      let connector;
-      if (wallet === 'metamask') {
-        connector = connectors.find(c => c.id === 'io.metamask' || c.id === 'metaMaskSDK' || (c.id === 'injected' && c.name.toLowerCase().includes('metamask')));
-      } else if (wallet === 'coinbase') {
-        connector = connectors.find(c => c.id === 'coinbaseWalletSDK' || c.id === 'coinbaseWallet');
-      } else if (wallet === 'walletconnect') {
-        connector = connectors.find(c => c.id === 'walletConnect');
-      } else if (wallet === 'phantom') {
-        connector = connectors.find(c => c.id === 'app.phantom' || (c.id === 'injected' && c.name.toLowerCase().includes('phantom')));
-      } else if (wallet === 'trust') {
-        connector = connectors.find(c => c.id === 'com.trustwallet.app' || (c.id === 'injected' && c.name.toLowerCase().includes('trust')));
-      }
+      console.log('[Auth] Available connectors:', connectors.map(c => ({ id: c.id, name: c.name })));
 
-      // Fallback to injected if specific connector not found
-      if (!connector && (wallet === 'metamask' || wallet === 'phantom' || wallet === 'trust' || wallet === 'rabby')) {
-        connector = connectors.find(c => c.id === 'injected');
-      }
+      let connector = connectors.find(c =>
+        wallet === 'metamask'
+          ? (c.id === 'metaMaskSDK' || c.id === 'io.metamask' || c.id === 'metaMask')
+          : (c.id === 'app.phantom' || c.name.toLowerCase().includes('phantom'))
+      ) || connectors.find(c => c.id === 'injected');
 
       if (!connector) {
         throw new Error(`Connector for ${wallet} not found`);
       }
 
+      console.log(`[Auth] Connecting with: ${connector.name} (${connector.id})`);
       await connectAsync({ connector });
-      // The auto-connect useEffect will handle the rest
+      return true;
     } catch (err: any) {
-      console.error('[Auth] Manual wallet connection failed:', err);
+      console.error('[Auth] Wallet connection failed:', err);
       setIsConnecting(false);
       setWagmiAuthIntent(false);
       localStorage.removeItem('dehub_connection_source');
-      
-      const errorMessage = err.message?.toLowerCase() || '';
-      if (errorMessage.includes('rejected') || errorMessage.includes('denied')) {
+
+      const fullError = (err.message || '').toLowerCase() + ' ' + (err.cause?.message || '').toLowerCase();
+      if (fullError.includes('rejected') || fullError.includes('denied')) {
         toast.error('Connection rejected');
-      } else if (errorMessage.includes('not found') || errorMessage.includes('not install')) {
-        const name = wallet === 'metamask' ? 'MetaMask' : wallet.charAt(0).toUpperCase() + wallet.slice(1);
-        toast.error(`${name} extension not found. Please install it or use WalletConnect.`);
       } else {
-        toast.error(`Failed to connect to ${wallet}`);
+        const name = wallet === 'metamask' ? 'MetaMask' : 'Phantom';
+        toast.error(`Failed to connect to ${name}. Please try again.`);
       }
-      throw err;
+      return false;
     }
   };
 
@@ -949,10 +1053,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setConnectionSource(null);
       
       queryClient.clear();
-      toast.success('Disconnected successfully');
     } catch (error) {
       console.error('Disconnect error:', error);
-      toast.error('Failed to disconnect properly');
     }
   };
 

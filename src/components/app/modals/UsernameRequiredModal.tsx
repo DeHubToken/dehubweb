@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, LogOut, AlertCircle, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import profileIcon from '@/assets/profile-icon.png';
 
@@ -33,6 +34,7 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 export function UsernameRequiredModal() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { requiresUsername, disconnect, refreshUser, setRequiresUsername, walletAddress } = useAuth();
   const [username, setUsername] = useState('');
@@ -185,7 +187,7 @@ export function UsernameRequiredModal() {
   const handleLogout = async () => {
     try {
       await disconnect();
-      toast.info('Logged out');
+      toast.success(t('settings.loggedOut'));
     } catch (err) {
       console.error('Logout failed:', err);
     }

@@ -112,17 +112,21 @@ function AppContent() {
 
 import { WagmiProvider } from 'wagmi';
 import { wagmiConfig } from '@/lib/wagmi';
+import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
+import '@rainbow-me/rainbowkit/styles.css';
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <WagmiProvider config={wagmiConfig}>
-      <AuthProvider>
-        <OptimisticPostsProvider>
-          <TooltipProvider>
-            <AppContent />
-          </TooltipProvider>
-        </OptimisticPostsProvider>
-      </AuthProvider>
+      <RainbowKitProvider theme={darkTheme()} modalSize="compact">
+        <AuthProvider>
+          <OptimisticPostsProvider>
+            <TooltipProvider>
+              <AppContent />
+            </TooltipProvider>
+          </OptimisticPostsProvider>
+        </AuthProvider>
+      </RainbowKitProvider>
     </WagmiProvider>
   </QueryClientProvider>
 );

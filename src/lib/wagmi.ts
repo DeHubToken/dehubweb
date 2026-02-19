@@ -1,16 +1,26 @@
 /**
- * Wagmi Configuration
- * =============================================
- * Uses standard Wagmi connectors for a stable wallet connection experience.
- * Removes Reown AppKit UI dependencies to avoid issues with modal loading.
+ * Wagmi Configuration with RainbowKit
+ * =====================================
+ * Uses RainbowKit connectors for MetaMask and Phantom.
+ * RainbowKit handles mobile deep links, SDK relay, and "sign → return to browser" flow.
+ * Also keeps a generic injected() connector for auto-connect in wallet in-app browsers.
  */
 
 import { http, createConfig } from 'wagmi'
 import { base } from 'wagmi/chains'
-import { injected, walletConnect, coinbaseWallet } from 'wagmi/connectors'
+import { injected } from 'wagmi/connectors'
+import { connectorsForWallets } from '@rainbow-me/rainbowkit'
+import {
+  metaMaskWallet,
+  phantomWallet,
+  coinbaseWallet,
+  trustWallet,
+  binanceWallet,
+  safepalWallet,
+  walletConnectWallet
+} from '@rainbow-me/rainbowkit/wallets'
 
-// WalletConnect project ID
-export const projectId = 'e6db175d9deccba51bc4414384e9c089'
+const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || ''
 
 /**
  * Prevent wagmi auto-reconnect on page load when there's no valid DeHub session.
@@ -21,7 +31,7 @@ function clearStaleWagmiState() {
   const savedSource = localStorage.getItem('dehub_connection_source');
   const token = localStorage.getItem('dehub_token');
   const timestamp = localStorage.getItem('dehub_token_timestamp');
-  const TOKEN_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+  const TOKEN_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
   const isExpired = !timestamp || (Date.now() - parseInt(timestamp, 10)) >= TOKEN_EXPIRY_MS;
   const hasValidToken = !!token && !isExpired;
 
@@ -42,21 +52,39 @@ function clearStaleWagmiState() {
 
 clearStaleWagmiState();
 
-// 1. Create Wagmi Config
+// RainbowKit connectors: MetaMask SDK + Phantom + Others
+// These handle desktop extension AND mobile (SDK relay / deep link → sign → return to browser)
+const rainbowKitConnectors = connectorsForWallets(
+  [
+    {
+      groupName: 'Popular',
+      wallets: [
+        metaMaskWallet,
+        phantomWallet,
+        coinbaseWallet,
+        trustWallet,
+        binanceWallet,
+        safepalWallet,
+        walletConnectWallet
+      ],
+    },
+  ],
+  {
+    appName: 'DeHub',
+    projectId,
+  }
+)
+
 export const wagmiConfig = createConfig({
   chains: [base],
   connectors: [
+    // RainbowKit connectors (MetaMask SDK + Phantom)
+    ...rainbowKitConnectors,
+    // Generic injected — for auto-connect when user opens dApp inside a wallet's in-app browser
     injected(),
-    coinbaseWallet({
-      appName: 'DeHub',
-    }),
-    walletConnect({
-      projectId,
-      showQrModal: true,
-    }),
   ],
   transports: {
-    [base.id]: http(),
+    [base.id]: http('https://base-rpc.publicnode.com'),
   },
 })
 

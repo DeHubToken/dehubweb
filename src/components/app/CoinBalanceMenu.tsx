@@ -11,6 +11,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import dehubCoin from '@/assets/dehub-coin.png';
 import usdcLogo from '@/assets/usdc-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
@@ -84,12 +85,14 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const { t } = useTranslation();
+
   const handleLogout = async () => {
     try {
       await disconnect();
-      toast.success('Logged out');
+      toast.success(t('settings.loggedOut'));
     } catch {
-      toast.error('Logout failed');
+      toast.error(t('settings.logoutFailed'));
     } finally {
       setIsOpen(false);
       resetMenu();

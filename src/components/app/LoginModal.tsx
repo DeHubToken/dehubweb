@@ -7,13 +7,14 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { X, Mail, Wallet, Loader2, ChevronRight, Smartphone } from 'lucide-react';
+import { Mail, Wallet, Loader2, ChevronRight, Smartphone } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { useAuth, type WalletProvider } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { WalletButton } from '@rainbow-me/rainbowkit';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
 // Social provider icons
@@ -35,28 +36,13 @@ const XIcon = () => (
 
 const MetaMaskIcon = () => (
   <img 
-    src="https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg" 
+    src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Alpha_Color.svg" 
     width="20" 
     height="20" 
     alt="MetaMask" 
   />
 );
 
-const CoinbaseIcon = () => (
-  <img 
-    src="https://avatars.githubusercontent.com/u/18060234?s=200&v=4" 
-    width="20" 
-    height="20" 
-    className="rounded-full" 
-    alt="Coinbase" 
-  />
-);
-
-const WalletConnectIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 300 185">
-    <path fill="#3B99FC" d="M61.4 36.3c49.1-48.1 128.6-48.1 177.7 0l5.9 5.8c2.5 2.4 2.5 6.3 0 8.7l-20.2 19.8c-1.2 1.2-3.2 1.2-4.4 0l-8.1-8c-34.2-33.5-89.7-33.5-124 0l-8.7 8.5c-1.2 1.2-3.2 1.2-4.4 0L55 51.3c-2.5-2.4-2.5-6.3 0-8.7l6.4-6.3zm219.6 41l18 17.6c2.5 2.4 2.5 6.3 0 8.7l-81.1 79.4c-2.5 2.4-6.4 2.4-8.9 0l-57.5-56.4c-.6-.6-1.6-.6-2.2 0L92.7 182.9c-2.5 2.4-6.4 2.4-8.9 0L2.8 103.5c-2.5-2.4-2.5-6.3 0-8.7l18-17.6c2.5-2.4 6.4-2.4 8.9 0l57.5 56.4c.6.6 1.6.6 2.2 0l57.5-56.4c2.5-2.4 6.4-2.4 8.9 0l57.5 56.4c.6.6 1.6.6 2.2 0l57.5-56.4c2.5-2.4 6.5-2.4 9 0z"/>
-  </svg>
-);
 
 interface LoginModalProps {
   open: boolean;
@@ -66,7 +52,7 @@ interface LoginModalProps {
 type LoginStep = 'main' | 'email' | 'sms' | 'wallets';
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
-  const { connectWithProvider, connectWithEmail, connectWithSMS, connectWithWallet, isConnecting } = useAuth();
+  const { connectWithProvider, connectWithEmail, connectWithSMS, setWagmiAuthIntent, isConnecting } = useAuth();
   const [step, setStep] = useState<LoginStep>('main');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -144,16 +130,10 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     }
   };
 
-  const handleWalletSelect = async (wallet: WalletProvider) => {
+  const handleWalletConnect = (wallet: 'metamask' | 'phantom', connect: () => void) => {
     setActiveProvider(wallet);
-    try {
-      console.log(`[LoginModal] Connecting to ${wallet}...`);
-      await connectWithWallet(wallet);
-      handleClose();
-    } catch (error) {
-      console.error(`${wallet} connection failed:`, error);
-      setActiveProvider(null);
-    }
+    setWagmiAuthIntent(true);
+    connect();
   };
 
   const renderMainStep = () => (
@@ -222,50 +202,55 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     </div>
   );
   
-  const wallets: { id: WalletProvider, name: string, icon: React.ReactNode }[] = [
-    { id: 'metamask', name: 'MetaMask', icon: <MetaMaskIcon /> },
-    { id: 'coinbase', name: 'Coinbase Wallet', icon: <CoinbaseIcon /> },
-    { 
-      id: 'phantom', 
-      name: 'Phantom', 
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 200 200">
-          <path fill="#AB9FF2" d="M100 0C44.8 0 0 44.8 0 100s44.8 100 100 100 100-44.8 100-100S155.2 0 100 0zm45 135c-5 0-10-2-14-5-8-6-11-15-11-25 0-15-12-27-27-27s-27 12-27 27c0 10-3 19-11 25-4 3-9 5-14 5-3 0-6-1-8-2-4-2-7-6-7-11 0-25 20-45 45-45s45 20 45 45c0 5-3 9-7 11-2 1-5 2-8 2z"/>
-        </svg>
-      )
-    },
-    { 
-      id: 'trust', 
-      name: 'Trust Wallet', 
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 128 128">
-          <path fill="#3375BB" d="M64 0L16 11.5v44.2c0 33.3 19.3 64.1 48 72.3 28.7-8.2 48-39 48-72.3V11.5L64 0zm31.7 55.7c0 26-15.1 50-31.7 57.5-16.6-7.5-31.7-31.5-31.7-57.5V23.7L64 15l31.7 8.7v32z"/>
-        </svg>
-      ) 
-    },
-    { id: 'walletconnect', name: 'WalletConnect', icon: <WalletConnectIcon /> },
-  ];
+  const PhantomIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="20" height="20">
+      <path fill="#AB9FF2" d="M109.8 15.6C102.3 8.3 92.7 4.5 82.2 4.5h-5.7l-4.2 1.1C64 12.8 45.6 28.6 34.6 47.9c-4.9 8.5-8.4 17.6-10.4 27.2l-.3 1.5c-2.7-.3-5.5-.6-8.3-.9-2.7-.3-5.5-.4-8.2-.4-7.4 0-14.1.9-20.2 2.7l-1.1.3-.3 1.1C-3.3 92.7-5.1 106.3-5 119.9c0 4.1 3.4 7.5 7.5 7.6h.2c1.9 0 3.8-.7 5.1-2l.7-.7c4.3-4.2 9.8-6.9 15.8-7.6 13.4-1.8 15.2 1.3 16.2 3 2.4 4 6.3 7.6 10.2 7.6h.2c1.9 0 3.7-.7 5.1-2l.7-.7c4.3-4.1 9.8-6.8 15.7-7.6 13.6-1.8 15.2 1.5 16.2 3.2 2.3 4 6.4 7.5 9.9 7.1h.2c1.9 0 3.7-.7 5.1-2l.7-.7c4.3-4.1 9.8-6.8 15.7-7.6 9.9-1.3 14.1-.9 16.5 1.9l1 1.1 1.4-.5c6.7-2.4 11.4-8.2 12.5-15.2 1.2-8.3-3.1-16.4-10.6-20.3l-1.3-.7v-1.5c0-23.9-7.5-46-21.7-64l-.9-1.1z"/>
+      <path fill="#FFF" d="M98.4 54.3c-4.4 0-8.1 3.7-8.1 8.1s3.7 8.1 8.1 8.1 8.1-3.7 8.1-8.1-3.7-8.1-8.1-8.1zM64.2 54.3c-4.4 0-8.1 3.7-8.1 8.1s3.7 8.1 8.1 8.1 8.1-3.7 8.1-8.1-3.7-8.1-8.1-8.1z"/>
+    </svg>
+  );
+
+  const walletButtonClass = "w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-start gap-3 border border-white/10 px-4";
 
   const renderWalletsStep = () => (
     <div className="space-y-3">
-      {wallets.map((wallet) => (
-        <Button
-          key={wallet.id}
-          onClick={() => handleWalletSelect(wallet.id)}
-          disabled={isConnecting}
-          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-start gap-3 border border-white/10 px-4"
-        >
-          {activeProvider === wallet.id ? (
-            <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
-          ) : (
-            <div className="flex-shrink-0">{wallet.icon}</div>
-          )}
-          <span className="flex-1 text-left">{wallet.name}</span>
-          <ChevronRight className="w-4 h-4 text-white/40" />
-        </Button>
-      ))}
+      <WalletButton.Custom wallet="metamask">
+        {({ ready, connect }) => (
+          <Button
+            disabled={!ready || isConnecting}
+            onClick={() => handleWalletConnect('metamask', connect)}
+            className={walletButtonClass}
+          >
+            {activeProvider === 'metamask' && isConnecting ? (
+              <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+            ) : (
+              <div className="flex-shrink-0"><MetaMaskIcon /></div>
+            )}
+            <span className="flex-1 text-left">MetaMask</span>
+            <ChevronRight className="w-4 h-4 text-white/40" />
+          </Button>
+        )}
+      </WalletButton.Custom>
+
+      <WalletButton.Custom wallet="phantom">
+        {({ ready, connect }) => (
+          <Button
+            disabled={!ready || isConnecting}
+            onClick={() => handleWalletConnect('phantom', connect)}
+            className={walletButtonClass}
+          >
+            {activeProvider === 'phantom' && isConnecting ? (
+              <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+            ) : (
+              <div className="flex-shrink-0"><PhantomIcon /></div>
+            )}
+            <span className="flex-1 text-left">Phantom</span>
+            <ChevronRight className="w-4 h-4 text-white/40" />
+          </Button>
+        )}
+      </WalletButton.Custom>
+
       <p className="text-white/40 text-[10px] text-center mt-2 px-2">
-        Install wallet extension or use mobile app to connect
+        On mobile, your wallet app will open to sign in and return here automatically
       </p>
     </div>
   );
