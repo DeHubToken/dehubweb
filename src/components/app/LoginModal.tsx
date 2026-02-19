@@ -53,7 +53,7 @@ interface LoginModalProps {
 type LoginStep = 'main' | 'email' | 'sms' | 'wallets';
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
-  const { connectWithProvider, connectWithEmail, connectWithSMS, setWagmiAuthIntent, isConnecting, isWeb3AuthReady } = useAuth();
+  const { connectWithProvider, connectWithEmail, connectWithSMS, setWagmiAuthIntent, isConnecting } = useAuth();
   const [step, setStep] = useState<LoginStep>('main');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -149,20 +149,12 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     connect();
   };
 
-  const socialButtonsDisabled = !isWeb3AuthReady || isConnecting;
-
   const renderMainStep = () => (
     <div className="space-y-4">
-      {!isWeb3AuthReady && (
-        <p className="text-sm text-white/60 flex items-center gap-2">
-          <Loader2 className="w-4 h-4 animate-spin" />
-          Preparing login...
-        </p>
-      )}
       <div className="space-y-3">
         <Button
           onClick={() => setStep('email')}
-          disabled={socialButtonsDisabled}
+          disabled={isConnecting}
           className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
         >
           <Mail className="w-5 h-5" />
@@ -171,7 +163,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
         <Button
           onClick={() => setStep('sms')}
-          disabled={socialButtonsDisabled}
+          disabled={isConnecting}
           className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
         >
           <Smartphone className="w-5 h-5" />
@@ -180,7 +172,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
         <Button
           onClick={() => handleSocialLogin('google')}
-          disabled={socialButtonsDisabled}
+          disabled={isConnecting}
           className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
         >
           {activeProvider === 'google' ? (
@@ -193,7 +185,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
         <Button
           onClick={() => handleSocialLogin('twitter')}
-          disabled={socialButtonsDisabled}
+          disabled={isConnecting}
           className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
         >
           {activeProvider === 'twitter' ? (
@@ -343,7 +335,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
         <Button
           type="submit"
-          disabled={!isWeb3AuthReady || isConnecting || !email}
+          disabled={isConnecting || !email}
           className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
         >
           {activeProvider === 'email' ? (
@@ -383,7 +375,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
         <Button
           type="submit"
-          disabled={!isWeb3AuthReady || isConnecting || !phone}
+          disabled={isConnecting || !phone}
           className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
         >
           {activeProvider === 'sms' ? (

@@ -52,7 +52,6 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   isConnecting: boolean;
-  isWeb3AuthReady: boolean;
   isProcessingRedirect: boolean;
   requiresUsername: boolean;
   needsSignature: boolean;
@@ -222,7 +221,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const wagmiAuthInProgressRef = useRef(false);
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
-  const isWeb3AuthReady = !!(web3auth && (web3auth.status === 'ready' || web3auth.status === 'connected'));
 
   const setWagmiAuthIntent = useCallback((value: boolean) => {
     console.log('[Auth] Setting wagmiAuthIntent:', value);
@@ -561,12 +559,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   /**
    * Ensure Smart Account is deployed before signing.
    * Matches mobile app logic: check if code exists, if not, send empty tx.
+   * onProgress: optional callback to update UI (e.g. toast) during long steps.
    */
-  const ensureSmartAccountDeployed = async (provider: any, address: string) => {
+  const ensureSmartAccountDeployed = async (provider: any, address: string, onProgress?: (msg: string) => void) => {
     console.log(`[Auth] Checking deployment for ${address}...`);
 
-    // Helper to request with timeout
-    const requestWithTimeout = async (method: string, params: any[] = [], timeoutMs = 15000) => {
+    const updateProgress = (msg: string) => onProgress?.(msg);
+
+    // Shorter timeouts for reads (5s) - eth_getCode is fast
+    const requestWithTimeout = async (method: string, params: any[] = [], timeoutMs = 5000) => {
       return Promise.race([
         provider.request({ method, params }),
         new Promise((_, reject) => setTimeout(() => reject(new Error(`Method ${method} timed out`)), timeoutMs))
@@ -574,12 +575,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     try {
-      toast.info('Checking account status...', { duration: 2000 });
       const code = await requestWithTimeout('eth_getCode', [address, 'latest']) as string;
 
       if (code === '0x' || code === '0x0' || !code) {
         console.log('[Auth] Account not deployed. Sending initialization transaction...');
-        toast.info('New account detected. Initializing...', { duration: 8000 });
+        updateProgress('Setting up your account...');
 
         // Try deployment with retries - UserOperations can take time via bundler
         const MAX_RETRIES = 2;
@@ -589,42 +589,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           try {
             console.log(`[Auth] Deployment attempt ${attempt}/${MAX_RETRIES}...`);
             // Execute an empty transaction to trigger deployment
-            // Pimlico paymaster will handle the gas - use longer timeout for bundler
             const txHash = await requestWithTimeout('eth_sendTransaction', [{
               from: address,
               to: address,
               value: '0x0',
               data: '0x',
-            }], 60000) as string;
+            }], 30000) as string;
 
             console.log('[Auth] Initialization transaction sent:', txHash);
-            toast.info('Waiting for account deployment...', { duration: 30000 });
+            updateProgress('Confirming on-chain (a few seconds)...');
 
             // Poll eth_getCode until the contract is confirmed on-chain.
-            // Poll every 500ms (deployment usually 2–5s) — 40 polls = 20s max.
+            // Poll every 400ms — 25 polls = 10s max (deployment usually 2–5s)
             let deployConfirmed = false;
-            for (let poll = 0; poll < 40; poll++) {
-              await new Promise(r => setTimeout(r, 500));
+            for (let poll = 0; poll < 25; poll++) {
+              await new Promise(r => setTimeout(r, 400));
               try {
-                const checkCode = await requestWithTimeout('eth_getCode', [address, 'latest'], 5000) as string;
+                const checkCode = await requestWithTimeout('eth_getCode', [address, 'latest'], 3000) as string;
                 if (checkCode && checkCode !== '0x' && checkCode !== '0x0') {
-                  console.log(`[Auth] ✓ Deployment confirmed on-chain after ~${poll + 1}s`);
+                  console.log(`[Auth] ✓ Deployment confirmed on-chain after ~${(poll + 1) * 0.4}s`);
                   deployConfirmed = true;
                   break;
                 }
-              } catch (_) {}
+              } catch (_) { /* ignore poll errors */ }
             }
             if (!deployConfirmed) {
-              console.warn('[Auth] Deployment not confirmed in 30s, proceeding anyway');
+              console.warn('[Auth] Deployment not confirmed in 10s, proceeding anyway');
             }
-            toast.success('Account ready! Signing in...', { duration: 3000 });
+            updateProgress('Account ready! Please sign...');
             deployed = true;
             break;
           } catch (txErr: any) {
             console.warn(`[Auth] Deployment attempt ${attempt} failed:`, txErr.message);
             if (attempt < MAX_RETRIES) {
-              toast.info('Retrying account setup...', { duration: 2000 });
-              await new Promise(r => setTimeout(r, 1000));
+              updateProgress('Retrying account setup...');
+              await new Promise(r => setTimeout(r, 800));
             }
           }
         }
@@ -632,7 +631,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!deployed) {
           // Verify if it got deployed despite tx errors (bundler may have processed it)
           try {
-            const recheck = await requestWithTimeout('eth_getCode', [address, 'latest']) as string;
+            const recheck = await requestWithTimeout('eth_getCode', [address, 'latest'], 5000) as string;
             if (recheck && recheck !== '0x' && recheck !== '0x0') {
               console.log('[Auth] Account deployed (confirmed on recheck)');
               deployed = true;
@@ -665,8 +664,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
 
+    const toastId = 'auth-redirect';
     console.log('[Auth] [REDIRECT] Starting DeHub authentication sequence...');
-    toast.loading('Processing your login...', { id: 'auth-redirect' });
+    toast.loading('Getting your account...', { id: toastId });
 
     try {
       const w3a = await getOrInitWeb3Auth();
@@ -682,15 +682,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Get AA address
       console.log('[Auth] [REDIRECT] Fetching accounts...');
       let accounts: string[] = [];
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 10; i++) {
         accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
         if (accounts?.length) break;
-        console.log(`[Auth] [REDIRECT] No accounts yet, retry ${i+1}/8...`);
-        await new Promise(r => setTimeout(r, 250));
+        console.log(`[Auth] [REDIRECT] No accounts yet, retry ${i+1}/10...`);
+        await new Promise(r => setTimeout(r, 150));
       }
 
       if (!accounts?.length) {
-        toast.error('Could not find your wallet address', { id: 'auth-redirect' });
+        toast.error('Could not find your wallet address', { id: toastId });
         throw new Error('No accounts available from provider after redirect');
       }
       
@@ -698,7 +698,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('[Auth] [REDIRECT] Account:', authAddress);
 
       // Social login (Smart Account): deploy with empty tx first if not deployed (matches mobile)
-      const deployed = await ensureSmartAccountDeployed(signingProvider, authAddress);
+      toast.loading('Checking account...', { id: toastId });
+      const deployed = await ensureSmartAccountDeployed(signingProvider, authAddress, (msg) => toast.loading(msg, { id: toastId }));
       if (!deployed) {
         throw new Error('Smart Account deployment failed. Please try again.');
       }
@@ -706,7 +707,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
       console.log('[Auth] [REDIRECT] Requesting signature...');
-      toast.info('Please sign in the wallet popup...', { id: 'auth-redirect', duration: 10000 });
+      toast.loading('Please sign the message in your wallet...', { id: toastId });
 
       let signature: string;
       try {
@@ -745,7 +746,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('[Auth] [REDIRECT] Signature received, authenticating with backend...');
-      toast.loading('Verifying signature...', { id: 'auth-redirect' });
+      toast.loading('Verifying with DeHub...', { id: toastId });
 
       const BASE_CHAIN_ID = 8453;
       const authResponse = await authenticateWallet(
@@ -790,8 +791,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const displayedDate = new Date(timestamp * 1000);
 
     const isSocial = isSocialLoginConnected();
+    const toastId = 'auth-popup';
     console.log('[Auth] [POPUP] Connection type:', isSocial ? 'SOCIAL' : 'EXTERNAL');
-    toast.loading(isSocial ? 'Processing login...' : 'Connecting to wallet...', { id: 'auth-popup' });
+    toast.loading('Getting your account...', { id: toastId });
 
     if (isSocial) {
       try {
@@ -809,10 +811,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Get address from provider
       console.log('[Auth] [POPUP] Fetching accounts...');
       let accounts: string[] = [];
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 10; i++) {
         accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
         if (accounts?.length) break;
-        await new Promise(r => setTimeout(r, 250));
+        await new Promise(r => setTimeout(r, 150));
       }
       
       if (!accounts?.length) throw new Error('No accounts available for signing');
@@ -821,7 +823,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // Social login (Smart Account): deploy with empty tx first if not deployed (matches mobile)
       if (isSocial) {
-        const deployed = await ensureSmartAccountDeployed(signingProvider, authAddress);
+        toast.loading('Checking account...', { id: toastId });
+        const deployed = await ensureSmartAccountDeployed(signingProvider, authAddress, (msg) => toast.loading(msg, { id: toastId }));
         if (!deployed) {
           throw new Error('Smart Account deployment failed. Please try again.');
         }
@@ -830,8 +833,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
       console.log('[Auth] [POPUP] Requesting signature...');
-      if (!isSocial) toast.info('Please sign in your wallet extension...', { id: 'auth-popup', duration: 10000 });
-      else toast.info('Finalizing your login...', { id: 'auth-popup', duration: 10000 });
+      toast.loading('Please sign the message in your wallet...', { id: toastId });
 
       let signature: string;
       try {
@@ -880,7 +882,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('[Auth] [POPUP] Signature received, authenticating...');
-      toast.loading('Verifying with DeHub...', { id: 'auth-popup' });
+      toast.loading('Verifying with DeHub...', { id: toastId });
 
       const BASE_CHAIN_ID = 8453;
       const authResponse = await authenticateWallet(
@@ -1151,7 +1153,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated,
     isLoading,
     isConnecting,
-    isWeb3AuthReady,
     isProcessingRedirect,
     requiresUsername,
     needsSignature,
