@@ -907,7 +907,9 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_old_client_error_logs: { Args: never; Returns: undefined }
       cleanup_old_leaderboard_snapshots: { Args: never; Returns: undefined }
+      cleanup_old_story_views: { Args: never; Returns: undefined }
       get_request_wallet_address: { Args: never; Returns: string }
     }
     Enums: {

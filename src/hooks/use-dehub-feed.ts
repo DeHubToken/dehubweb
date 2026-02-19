@@ -91,7 +91,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   // Live posts can't be played natively — skip videoUrl so VideoCard shows thumbnail
   // and the user clicks through to single post page (which uses HLS via LiveStreamCard).
   // For regular videos, use API-provided URL if available, otherwise build CDN URL.
-  const isLivePost = nft.postType === 'live';
+  const isLivePost = (nft.postType as string) === 'live';
   const videoUrl = isLivePost
     ? undefined
     : (tokenId ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4` : undefined);
