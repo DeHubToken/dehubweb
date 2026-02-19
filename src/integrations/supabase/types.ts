@@ -521,6 +521,27 @@ export type Database = {
         }
         Relationships: []
       }
+      live_stream_sessions: {
+        Row: {
+          address: string
+          started_at: string
+          stream_id: string | null
+          token_id: string
+        }
+        Insert: {
+          address: string
+          started_at?: string
+          stream_id?: string | null
+          token_id: string
+        }
+        Update: {
+          address?: string
+          started_at?: string
+          stream_id?: string | null
+          token_id?: string
+        }
+        Relationships: []
+      }
       livechat_messages: {
         Row: {
           content: string

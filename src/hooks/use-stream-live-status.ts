@@ -10,7 +10,7 @@ export function useStreamLiveStatus(tokenId: string | null) {
     queryKey: ['stream-live-status', tokenId],
     queryFn: async () => {
       if (!tokenId) return false;
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('live_stream_sessions')
         .select('token_id')
         .eq('token_id', String(tokenId))

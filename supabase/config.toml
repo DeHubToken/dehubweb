@@ -104,3 +104,9 @@ verify_jwt = false
 
 [functions.get-stream-ingest]
 verify_jwt = false
+
+[functions.mark-stream-live]
+verify_jwt = false
+
+[functions.end-stream-session]
+verify_jwt = false
