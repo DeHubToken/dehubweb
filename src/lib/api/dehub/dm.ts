@@ -653,8 +653,8 @@ export async function searchUsersForDM(
   console.log('[DM API] searchUsersForDM called', { query: trimmedQuery, page, limit });
 
   try {
-    const response = await apiCall<any>("/api/search", {
-      params: { q: trimmedQuery, type: 'accounts', page, unit: limit },
+    const response = await apiCall<any>("/api/search/accounts", {
+      params: { q: trimmedQuery, page, limit },
       requiresAuth: true,
     });
 
@@ -760,7 +760,7 @@ export async function createGroup(
       method: "POST",
       body: {
         name,
-        members: memberAddresses,
+        memberAddresses,
         description,
       },
       requiresAuth: true,
