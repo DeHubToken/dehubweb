@@ -99,6 +99,31 @@ function normalizeUser(userData: Partial<DeHubUser> | null | undefined, fallback
 }
 
 /**
+ * Normalize signature v value for viem's recoverMessageAddress.
+ * Viem accepts only v=0,1,27,28. Web3Auth/Safe may return v=31,32 (Safe) or
+ * EIP-155 v (chainId*2+35+recoveryId). Converts to 27 or 28.
+ */
+function normalizeSignatureV(sig: string): string {
+  const hex = sig.startsWith('0x') ? sig.slice(2) : sig;
+  if (hex.length !== 130) return sig;
+  const r = hex.slice(0, 64);
+  const s = hex.slice(64, 128);
+  const vRaw = parseInt(hex.slice(128, 130), 16);
+  let v = vRaw;
+  // viem accepts: 0, 1, 27, 28
+  if (v === 0 || v === 1 || v === 27 || v === 28) return sig;
+  // Safe uses v+4: 31→27, 32→28
+  if (v === 31 || v === 32) v = v - 4;
+  // EIP-155: v = chainId*2 + 35 + recoveryId → recoveryId = (v - 35) % 2
+  else if (v >= 35) v = 27 + ((v - 35) % 2);
+  else {
+    console.warn('[Auth] Unknown signature v value:', vRaw, '- trying recoveryId extraction');
+    v = 27 + (vRaw % 2); // fallback: use parity
+  }
+  return '0x' + r + s + v.toString(16).padStart(2, '0');
+}
+
+/**
  * Extract the raw ECDSA signature from an ERC-6492 wrapped signature.
  *
  * ERC-6492 format: abi.encode(factory, factoryCalldata, innerSig) + magicBytes
@@ -709,9 +734,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       if (sigToRecover.length === 132 || sigToRecover.length === 130) {
         try {
-          const recoveredEoa = await recoverMessageAddress({ message, signature: sigToRecover as `0x${string}` });
+          const normalizedSig = normalizeSignatureV(sigToRecover);
+          const recoveredEoa = await recoverMessageAddress({ message, signature: normalizedSig as `0x${string}` });
           authAddressForApi = recoveredEoa.toLowerCase();
-          signature = sigToRecover;
+          signature = normalizedSig;
           console.log('[Auth] [REDIRECT] Smart Account: using recovered EOA', authAddressForApi);
         } catch (e) {
           console.warn('[Auth] [REDIRECT] Recovery failed:', e);
@@ -843,9 +869,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Recover EOA from signature (works for both ERC-6492 inner sig and raw ECDSA)
         if (sigToRecover.length === 132 || sigToRecover.length === 130) {
           try {
-            const recoveredEoa = await recoverMessageAddress({ message, signature: sigToRecover as `0x${string}` });
+            const normalizedSig = normalizeSignatureV(sigToRecover);
+            const recoveredEoa = await recoverMessageAddress({ message, signature: normalizedSig as `0x${string}` });
             authAddressForApi = recoveredEoa.toLowerCase();
-            signature = sigToRecover;
+            signature = normalizedSig;
             console.log('[Auth] [POPUP] Smart Account: using recovered EOA', authAddressForApi, 'for DeHub auth');
           } catch (e) {
             console.warn('[Auth] [POPUP] Recovery failed:', e);
