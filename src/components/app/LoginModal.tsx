@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
+import { getWalletDeepLink, isMobileDevice } from '@/lib/web3auth';
 import { WalletButton } from '@rainbow-me/rainbowkit';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
@@ -36,7 +37,7 @@ const XIcon = () => (
 
 const MetaMaskIcon = () => (
   <img 
-    src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Alpha_Color.svg" 
+    src="https://logo.svgcdn.com/logos/metamask.svg" 
     width="20" 
     height="20" 
     alt="MetaMask" 
@@ -133,7 +134,16 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const handleWalletConnect = (wallet: 'metamask' | 'phantom', connect: () => void) => {
     setActiveProvider(wallet);
     setWagmiAuthIntent(true);
-    // RainbowKit handles mobile: WalletConnect opens wallet app → user signs → returns to browser
+
+    // Mobile: Chrome blocks WalletConnect redirects. Use direct deep link to open wallet app.
+    // Phantom/MetaMask browse link loads dapp in wallet's in-app browser → user signs there.
+    if (isMobileDevice()) {
+      const deepLink = getWalletDeepLink(wallet);
+      if (deepLink) {
+        window.location.href = deepLink;
+        return;
+      }
+    }
     connect();
   };
 
