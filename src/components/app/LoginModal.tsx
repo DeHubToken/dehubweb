@@ -270,7 +270,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         )}
       </WalletButton.Custom>
 
-      <WalletButton.Custom wallet="trust">
+      <WalletButton.Custom wallet={isMobileDevice() && !isWalletInAppBrowser() ? "walletconnect" : "trust"}>
         {({ ready, connect }) => (
           <Button
             disabled={!ready || isConnecting}
@@ -288,7 +288,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         )}
       </WalletButton.Custom>
 
-      <WalletButton.Custom wallet="rabby">
+      <WalletButton.Custom wallet={isMobileDevice() && !isWalletInAppBrowser() ? "walletconnect" : "rabby"}>
         {({ ready, connect }) => (
           <Button
             disabled={!ready || isConnecting}
@@ -307,7 +307,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </WalletButton.Custom>
 
       <p className="text-white/40 text-[10px] text-center mt-2 px-2">
-        On mobile, your wallet app will open to sign in and return here automatically
+        {isMobileDevice()
+          ? 'MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect.'
+          : 'Connect your wallet to sign in securely'}
       </p>
     </div>
   );

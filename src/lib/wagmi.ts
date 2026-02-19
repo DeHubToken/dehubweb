@@ -15,6 +15,7 @@ import {
   phantomWallet,
   trustWallet,
   rabbyWallet,
+  walletConnectWallet
 } from '@rainbow-me/rainbowkit/wallets'
 
 const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || ''
@@ -60,6 +61,7 @@ const rainbowKitConnectors = connectorsForWallets(
         phantomWallet,
         trustWallet,
         rabbyWallet,
+        walletConnectWallet,
       ],
     },
   ],
