@@ -44,7 +44,7 @@ import type { Web3Auth } from '@web3auth/modal';
 
 // Provider types for the custom login modal
 export type SocialProvider = 'google' | 'twitter' | 'telegram' | 'apple' | 'discord' | 'github';
-export type WalletProvider = 'metamask' | 'phantom';
+export type WalletProvider = 'metamask' | 'phantom' | 'trust' | 'rabby';
 
 interface AuthContextType {
   user: DeHubUser | null;
@@ -1010,10 +1010,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('[Auth] Available connectors:', connectors.map(c => ({ id: c.id, name: c.name })));
 
+      const walletMap: Record<string, string[]> = {
+        metamask: ['metaMaskSDK', 'io.metamask', 'metaMask'],
+        phantom: ['app.phantom', 'phantom'],
+        trust: ['trust', 'trustWallet'],
+        rabby: ['rabby', 'rabbyWallet'],
+      };
+      const ids = walletMap[wallet] || [];
       let connector = connectors.find(c =>
-        wallet === 'metamask'
-          ? (c.id === 'metaMaskSDK' || c.id === 'io.metamask' || c.id === 'metaMask')
-          : (c.id === 'app.phantom' || c.name.toLowerCase().includes('phantom'))
+        ids.some(id => c.id === id || c.name.toLowerCase().includes(id.toLowerCase()))
       ) || connectors.find(c => c.id === 'injected');
 
       if (!connector) {
@@ -1033,8 +1038,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (fullError.includes('rejected') || fullError.includes('denied')) {
         toast.error('Connection rejected');
       } else {
-        const name = wallet === 'metamask' ? 'MetaMask' : 'Phantom';
-        toast.error(`Failed to connect to ${name}. Please try again.`);
+        const names: Record<string, string> = { metamask: 'MetaMask', phantom: 'Phantom', trust: 'Trust Wallet', rabby: 'Rabby' };
+        toast.error(`Failed to connect to ${names[wallet] || wallet}. Please try again.`);
       }
       return false;
     }

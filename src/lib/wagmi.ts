@@ -1,9 +1,10 @@
 /**
  * Wagmi Configuration with RainbowKit
  * =====================================
- * Uses RainbowKit connectors for MetaMask and Phantom.
+ * Only 4 wallets: Rabby, MetaMask, Trust, Phantom.
+ * Rabby has no mobile app — hide it on mobile in LoginModal.
  * RainbowKit handles mobile deep links, SDK relay, and "sign → return to browser" flow.
- * Also keeps a generic injected() connector for auto-connect in wallet in-app browsers.
+ * Generic injected() for auto-connect in wallet in-app browsers.
  */
 
 import { http, createConfig } from 'wagmi'
@@ -13,11 +14,8 @@ import { connectorsForWallets } from '@rainbow-me/rainbowkit'
 import {
   metaMaskWallet,
   phantomWallet,
-  coinbaseWallet,
   trustWallet,
-  binanceWallet,
-  safepalWallet,
-  walletConnectWallet
+  rabbyWallet,
 } from '@rainbow-me/rainbowkit/wallets'
 
 const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || ''
@@ -52,7 +50,7 @@ function clearStaleWagmiState() {
 
 clearStaleWagmiState();
 
-// RainbowKit connectors: MetaMask SDK + Phantom + Others
+// RainbowKit connectors: MetaMask, Phantom, Trust, Rabby only
 // These handle desktop extension AND mobile (SDK relay / deep link → sign → return to browser)
 const rainbowKitConnectors = connectorsForWallets(
   [
@@ -61,11 +59,8 @@ const rainbowKitConnectors = connectorsForWallets(
       wallets: [
         metaMaskWallet,
         phantomWallet,
-        coinbaseWallet,
         trustWallet,
-        binanceWallet,
-        safepalWallet,
-        walletConnectWallet
+        rabbyWallet,
       ],
     },
   ],

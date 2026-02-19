@@ -83,7 +83,12 @@ export function isMobileDevice(): boolean {
 export function isWalletInAppBrowser(): boolean {
   if (typeof window === 'undefined') return false;
   const ua = navigator.userAgent.toLowerCase();
-  const hasEthereum = !!(window as any).ethereum;
+  const win = window as any;
+  const hasEthereum = !!win.ethereum;
+  const hasPhantomEthereum = !!win.phantom?.ethereum;
+
+  // Phantom injects window.phantom.ethereum (and sometimes window.ethereum)
+  if (hasPhantomEthereum) return true;
 
   // Check known wallet in-app browser UA strings
   const walletUAs = [

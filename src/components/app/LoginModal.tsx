@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
-import { getWalletDeepLink, isMobileDevice } from '@/lib/web3auth';
+import { getWalletDeepLink, isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { WalletButton } from '@rainbow-me/rainbowkit';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
@@ -35,13 +35,13 @@ const XIcon = () => (
   </svg>
 );
 
+// Official wallet logos (same as RainbowKit uses - MetaMask, Trust, Rabby)
+const METAMASK_LOGO = "data:image/svg+xml,%3Csvg%20width%3D%2228%22%20height%3D%2228%22%20viewBox%3D%220%200%2028%2028%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%2228%22%20height%3D%2228%22%20fill%3D%22white%22%2F%3E%3Cpath%20d%3D%22M24.0891%203.1199L15.3446%209.61456L16.9617%205.7828L24.0891%203.1199Z%22%20fill%3D%22%23E2761B%22%20stroke%3D%22%23E2761B%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M3.90207%203.1199L12.5763%209.67608L11.0383%205.7828L3.90207%203.1199Z%22%20fill%3D%22%23E4761B%22%20stroke%3D%22%23E4761B%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M20.9429%2018.1745L18.6139%2021.7426L23.597%2023.1136L25.0295%2018.2536L20.9429%2018.1745Z%22%20fill%3D%22%23E4761B%22%20stroke%3D%22%23E4761B%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M2.97929%2018.2536L4.40301%2023.1136L9.38607%2021.7426L7.05713%2018.1745L2.97929%2018.2536Z%22%20fill%3D%22%23E4761B%22%20stroke%3D%22%23E4761B%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M9.10483%2012.1456L7.71626%2014.2461L12.6642%2014.4658L12.4884%209.14877L9.10483%2012.1456Z%22%20fill%3D%22%23E4761B%22%20stroke%3D%22%23E4761B%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M18.8864%2012.1456L15.4589%209.08725L15.3446%2014.4658L20.2837%2014.2461L18.8864%2012.1456Z%22%20fill%3D%22%23E4761B%22%20stroke%3D%22%23E4761B%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M9.38606%2021.7426L12.3566%2020.2925L9.79033%2018.2888L9.38606%2021.7426Z%22%20fill%3D%22%23E4761B%22%20stroke%3D%22%23E4761B%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M15.6347%2020.2925L18.6139%2021.7426L18.2009%2018.2888L15.6347%2020.2925Z%22%20fill%3D%22%23E4761B%22%20stroke%3D%22%23E4761B%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M18.6139%2021.7426L15.6347%2020.2925L15.8719%2022.2348L15.8456%2023.0521L18.6139%2021.7426Z%22%20fill%3D%22%23D7C1B3%22%20stroke%3D%22%23D7C1B3%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M9.38606%2021.7426L12.1544%2023.0521L12.1368%2022.2348L12.3566%2020.2925L9.38606%2021.7426Z%22%20fill%3D%22%23D7C1B3%22%20stroke%3D%22%23D7C1B3%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M12.1984%2017.0056L9.72002%2016.2762L11.4689%2015.4765L12.1984%2017.0056Z%22%20fill%3D%22%23233447%22%20stroke%3D%22%23233447%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M15.7928%2017.0056L16.5223%2015.4765L18.28%2016.2762L15.7928%2017.0056Z%22%20fill%3D%22%23233447%22%20stroke%3D%22%23233447%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M9.38606%2021.7426L9.80791%2018.1745L7.05712%2018.2536L9.38606%2021.7426Z%22%20fill%3D%22%23CD6116%22%20stroke%3D%22%23CD6116%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M18.1921%2018.1745L18.6139%2021.7426L20.9429%2018.2536L18.1921%2018.1745Z%22%20fill%3D%22%23CD6116%22%20stroke%3D%22%23CD6116%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M20.2837%2014.2461L15.3446%2014.4658L15.8016%2017.0057L16.5311%2015.4765L18.2888%2016.2762L20.2837%2014.2461Z%22%20fill%3D%22%23CD6116%22%20stroke%3D%22%23CD6116%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M9.72002%2016.2762L11.4777%2015.4765L12.1984%2017.0057L12.6642%2014.4658L7.71626%2014.2461L9.72002%2016.2762Z%22%20fill%3D%22%23CD6116%22%20stroke%3D%22%23CD6116%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M7.71626%2014.2461L9.79033%2018.2888L9.72002%2016.2762L7.71626%2014.2461Z%22%20fill%3D%22%23E4751F%22%20stroke%3D%22%23E4751F%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M18.2888%2016.2762L18.2009%2018.2888L20.2837%2014.2461L18.2888%2016.2762Z%22%20fill%3D%22%23E4751F%22%20stroke%3D%22%23E4751F%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M12.6642%2014.4658L12.1984%2017.0057L12.7784%2020.0025L12.9102%2016.0565L12.6642%2014.4658Z%22%20fill%3D%22%23E4751F%22%20stroke%3D%22%23E4751F%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M15.3446%2014.4658L15.1073%2016.0477L15.2128%2020.0025L15.8016%2017.0057L15.3446%2014.4658Z%22%20fill%3D%22%23E4751F%22%20stroke%3D%22%23E4751F%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M15.8016%2017.0056L15.2128%2020.0025L15.6347%2020.2925L18.2009%2018.2888L18.2888%2016.2762L15.8016%2017.0056Z%22%20fill%3D%22%23F6851B%22%20stroke%3D%22%23F6851B%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M9.72002%2016.2762L9.79033%2018.2888L12.3566%2020.2925L12.7784%2020.0025L12.1984%2017.0056L9.72002%2016.2762Z%22%20fill%3D%22%23F6851B%22%20stroke%3D%22%23F6851B%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M15.8456%2023.0521L15.8719%2022.2348L15.6522%2022.0414H12.339L12.1368%2022.2348L12.1544%2023.0521L9.38606%2021.7426L10.3528%2022.5336L12.3126%2023.8958H15.6786L17.6472%2022.5336L18.6139%2021.7426L15.8456%2023.0521Z%22%20fill%3D%22%23C0AD9E%22%20stroke%3D%22%23C0AD9E%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M15.6347%2020.2925L15.2128%2020.0025H12.7784L12.3566%2020.2925L12.1368%2022.2348L12.339%2022.0414H15.6522L15.8719%2022.2348L15.6347%2020.2925Z%22%20fill%3D%22%23161616%22%20stroke%3D%22%23161616%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M24.4583%2010.0364L25.2053%206.45072L24.0891%203.1199L15.6347%209.39485L18.8864%2012.1456L23.4827%2013.4903L24.5022%2012.3038L24.0628%2011.9874L24.7658%2011.3459L24.221%2010.924L24.924%2010.3879L24.4583%2010.0364Z%22%20fill%3D%22%23763D16%22%20stroke%3D%22%23763D16%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M2.79472%206.45072L3.54174%2010.0364L3.06717%2010.3879L3.77024%2010.924L3.23415%2011.3459L3.93722%2011.9874L3.4978%2012.3038L4.50847%2013.4903L9.10483%2012.1456L12.3566%209.39485L3.90207%203.1199L2.79472%206.45072Z%22%20fill%3D%22%23763D16%22%20stroke%3D%22%23763D16%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M23.4827%2013.4903L18.8864%2012.1456L20.2837%2014.2461L18.2009%2018.2888L20.9429%2018.2536H25.0295L23.4827%2013.4903Z%22%20fill%3D%22%23F6851B%22%20stroke%3D%22%23F6851B%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M9.10484%2012.1456L4.50848%2013.4903L2.97929%2018.2536H7.05713L9.79033%2018.2888L7.71626%2014.2461L9.10484%2012.1456Z%22%20fill%3D%22%23F6851B%22%20stroke%3D%22%23F6851B%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M15.3446%2014.4658L15.6347%209.39485L16.9705%205.7828H11.0383L12.3566%209.39485L12.6642%2014.4658L12.7696%2016.0653L12.7784%2020.0025H15.2128L15.2304%2016.0653L15.3446%2014.4658Z%22%20fill%3D%22%23F6851B%22%20stroke%3D%22%23F6851B%22%20stroke-width%3D%220.0878845%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E";
+const TRUST_LOGO = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20width%3D%2228%22%20height%3D%2228%22%20viewBox%3D%220%200%2028%2028%22%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M0%200h28v28H0z%22%2F%3E%3Cpath%20fill%3D%22%230500FF%22%20d%3D%22M6%207.583%2013.53%205v17.882C8.15%2020.498%206%2015.928%206%2013.345V7.583Z%22%2F%3E%3Cpath%20fill%3D%22url(%23a)%22%20d%3D%22M22%207.583%2013.53%205v17.882c6.05-2.384%208.47-6.954%208.47-9.537V7.583Z%22%2F%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22a%22%20x1%3D%2219.768%22%20x2%3D%2214.072%22%20y1%3D%223.753%22%20y2%3D%2222.853%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%22.02%22%20stop-color%3D%22%2300F%22%2F%3E%3Cstop%20offset%3D%22.08%22%20stop-color%3D%22%230094FF%22%2F%3E%3Cstop%20offset%3D%22.16%22%20stop-color%3D%22%2348FF91%22%2F%3E%3Cstop%20offset%3D%22.42%22%20stop-color%3D%22%230094FF%22%2F%3E%3Cstop%20offset%3D%22.68%22%20stop-color%3D%22%230038FF%22%2F%3E%3Cstop%20offset%3D%22.9%22%20stop-color%3D%22%230500FF%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3C%2Fsvg%3E";
+const RABBY_LOGO = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2028%2028%22%3E%3Cg%20clip-path%3D%22url(%23a)%22%3E%3Cpath%20fill%3D%22%238697FF%22%20d%3D%22M28%200H0v28h28V0Z%22%2F%3E%3Cpath%20fill%3D%22url(%23b)%22%20d%3D%22M22.54%2015.078c.677-1.514-2.673-5.744-5.874-7.506-2.017-1.365-4.12-1.178-4.545-.579-.935%201.316%203.094%202.43%205.788%203.731-.58.252-1.125.703-1.446%201.28-1.004-1.096-3.209-2.04-5.796-1.28-1.743.513-3.191%201.721-3.751%203.546a1.097%201.097%200%201%200-.445%202.1c.112%200%20.463-.075.463-.075l5.612.041c-2.244%203.56-4.018%204.081-4.018%204.698s1.697.45%202.335.22c3.05-1.1%206.327-4.531%206.89-5.519%202.36.295%204.345.33%204.786-.657Z%22%2F%3E%3Cpath%20fill%3D%22url(%23c)%22%20fill-rule%3D%22evenodd%22%20d%3D%22m17.885%2010.713.025.01c.125-.049.105-.233.07-.378-.078-.333-1.438-1.676-2.715-2.277-1.743-.82-3.025-.777-3.212-.398.356.726%201.998%201.408%203.714%202.12.723.3%201.46.606%202.118.923Z%22%20clip-rule%3D%22evenodd%22%2F%3E%3Cpath%20fill%3D%22url(%23d)%22%20fill-rule%3D%22evenodd%22%20d%3D%22M15.701%2018.036a10.296%2010.296%200%200%200-1.2-.37c.482-.862.583-2.138.128-2.945-.639-1.133-1.44-1.736-3.304-1.736-1.024%200-3.783.346-3.832%202.648-.005.242%200%20.464.017.667l5.036.037a17.264%2017.264%200%200%201-1.871%202.483c.669.172%201.221.316%201.728.448.48.125.92.24%201.38.357a21.003%2021.003%200%200%200%201.918-1.59Z%22%20clip-rule%3D%22evenodd%22%2F%3E%3Cpath%20fill%3D%22url(%23e)%22%20d%3D%22M6.848%2016.063c.206%201.75%201.2%202.435%203.232%202.638%202.032.203%203.197.067%204.749.208%201.296.118%202.453.778%202.882.55.386-.205.17-.947-.347-1.423-.67-.617-1.597-1.046-3.229-1.199.325-.89.234-2.138-.27-2.817-.731-.982-2.079-1.426-3.785-1.232-1.782.202-3.49%201.08-3.232%203.275Z%22%2F%3E%3C%2Fg%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b%22%20x1%3D%2210.464%22%20x2%3D%2222.394%22%20y1%3D%2213.737%22%20y2%3D%2217.12%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20stop-color%3D%22%23fff%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22c%22%20x1%3D%2220.386%22%20x2%3D%2211.779%22%20y1%3D%2213.509%22%20y2%3D%224.879%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20stop-color%3D%22%237258DC%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23797DEA%22%20stop-opacity%3D%220%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22d%22%20x1%3D%2215.94%22%20x2%3D%227.673%22%20y1%3D%2218.337%22%20y2%3D%2213.584%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20stop-color%3D%22%237461EA%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23BFC2FF%22%20stop-opacity%3D%220%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22e%22%20x1%3D%2211.177%22%20x2%3D%2216.765%22%20y1%3D%2213.648%22%20y2%3D%2220.749%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20stop-color%3D%22%23fff%22%2F%3E%3Cstop%20offset%3D%22.984%22%20stop-color%3D%22%23D5CEFF%22%2F%3E%3C%2FlinearGradient%3E%3CclipPath%20id%3D%22a%22%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M0%200h28v28H0z%22%2F%3E%3C%2FclipPath%3E%3C%2Fdefs%3E%3C%2Fsvg%3E";
+
 const MetaMaskIcon = () => (
-  <img 
-    src="https://logo.svgcdn.com/logos/metamask.svg" 
-    width="20" 
-    height="20" 
-    alt="MetaMask" 
-  />
+  <img src={METAMASK_LOGO} width="20" height="20" alt="MetaMask" className="rounded-full object-contain" />
 );
 
 
@@ -115,7 +115,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     setPhoneError('');
 
     const phoneRegex = /^\+?[1-9]\d{6,14}$/;
-    const cleanedPhone = phone.replace(/[\s\-\(\)]/g, '');
+    const cleanedPhone = phone.replace(/[\s\-()]/g, '');
     if (!phoneRegex.test(cleanedPhone)) {
       setPhoneError('Please enter a valid phone number with country code');
       return;
@@ -131,13 +131,15 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     }
   };
 
-  const handleWalletConnect = (wallet: 'metamask' | 'phantom', connect: () => void) => {
+  type WalletId = 'metamask' | 'phantom' | 'trust' | 'rabby';
+  const handleWalletConnect = (wallet: WalletId, connect: () => void) => {
     setActiveProvider(wallet);
     setWagmiAuthIntent(true);
 
-    // Mobile: Chrome blocks WalletConnect redirects. Use direct deep link to open wallet app.
-    // Phantom/MetaMask browse link loads dapp in wallet's in-app browser → user signs there.
-    if (isMobileDevice()) {
+    // Mobile: Use deep link to open wallet app and load dapp in its in-app browser.
+    // Only redirect when NOT already in a wallet's in-app browser (where ethereum is injected).
+    // When in Phantom/Trust/MetaMask browser, call connect() directly so user can sign.
+    if (isMobileDevice() && !isWalletInAppBrowser()) {
       const deepLink = getWalletDeepLink(wallet);
       if (deepLink) {
         window.location.href = deepLink;
@@ -220,6 +222,14 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     </svg>
   );
 
+  const TrustIcon = () => (
+    <img src={TRUST_LOGO} width="20" height="20" alt="Trust Wallet" className="rounded-full object-contain" />
+  );
+
+  const RabbyIcon = () => (
+    <img src={RABBY_LOGO} width="20" height="20" alt="Rabby" className="rounded-full object-contain" />
+  );
+
   const walletButtonClass = "w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-start gap-3 border border-white/10 px-4";
 
   const renderWalletsStep = () => (
@@ -259,6 +269,44 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           </Button>
         )}
       </WalletButton.Custom>
+
+      <WalletButton.Custom wallet="trust">
+        {({ ready, connect }) => (
+          <Button
+            disabled={!ready || isConnecting}
+            onClick={() => handleWalletConnect('trust', connect)}
+            className={walletButtonClass}
+          >
+            {activeProvider === 'trust' && isConnecting ? (
+              <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+            ) : (
+              <div className="flex-shrink-0"><TrustIcon /></div>
+            )}
+            <span className="flex-1 text-left">Trust Wallet</span>
+            <ChevronRight className="w-4 h-4 text-white/40" />
+          </Button>
+        )}
+      </WalletButton.Custom>
+
+      {!isMobile && (
+        <WalletButton.Custom wallet="rabby">
+          {({ ready, connect }) => (
+            <Button
+              disabled={!ready || isConnecting}
+              onClick={() => handleWalletConnect('rabby', connect)}
+              className={walletButtonClass}
+            >
+              {activeProvider === 'rabby' && isConnecting ? (
+                <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+              ) : (
+                <div className="flex-shrink-0"><RabbyIcon /></div>
+              )}
+              <span className="flex-1 text-left">Rabby</span>
+              <ChevronRight className="w-4 h-4 text-white/40" />
+            </Button>
+          )}
+        </WalletButton.Custom>
+      )}
 
       <p className="text-white/40 text-[10px] text-center mt-2 px-2">
         On mobile, your wallet app will open to sign in and return here automatically
