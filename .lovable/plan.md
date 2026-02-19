@@ -1,84 +1,94 @@
 
-## Fix Live Card Thumbnails for Ended Streams
+## Root Cause: Missing `comment_like` Notification Type
 
-### What's Happening
+The API is returning notifications with `type: "comment_like"` (someone liked your comment), but this type is not defined anywhere in the codebase. The `getNotificationContent` switch statement has no case for it, so it falls through to `default: return 'New notification'`.
 
-When a live stream ends without the creator having uploaded a custom thumbnail, the `rawThumbnail` field from the API is null/empty. The code then falls through to a generic Unsplash fallback image — which is what's showing as "broken" for Shubham's streams.
-
-These aren't broken URLs — the streams have simply ended and were never given a custom thumbnail.
-
-### The Fix
-
-Livepeer automatically captures a "last frame" thumbnail for every stream via a well-known URL pattern:
-
+The actual API payload for yowtf's notification:
 ```
-https://livepeercdn.studio/hls/{playbackId}/thumbnail.jpg
+type: "comment_like"
+content: "SilentHawk#BA28, dehu_b and would liked your comment"  ← pre-built by API, ignored
+aggregatedCount: 3
+latestActorNames: ["SilentHawk#BA28", "dehu_b", "would"]
+commentPreview: "lmaoo wtf this rocks"
 ```
 
-Since `playbackId` is already being stored and used for HLS playback URLs in `mapApiLiveStreamToLocal`, we can use it as the primary fallback for the thumbnail — showing the actual last frame of the stream.
-
-The card will also show a "Stream Ended" overlay on top of the thumbnail when `stream.isLive === false`, so users understand they can't replay it.
+The app builds its own display text but has no case for `comment_like`, so it shows "New notification".
 
 ---
 
-### Change 1 — `src/hooks/use-dehub-feed.ts` (thumbnail resolution)
+## Two-Part Fix
 
-In `mapApiLiveStreamToLocal` (~line 449), update the thumbnail resolution priority:
+### Part 1 — `src/lib/api/dehub/notifications.ts`
 
-```
-Priority order:
-1. rawThumbnail (if the creator uploaded one — strip any leading slash)  
-2. Livepeer last-frame: https://livepeercdn.studio/hls/{playbackId}/thumbnail.jpg
-3. Generic Unsplash fallback (last resort, when no playbackId either)
-```
+Add `comment_like` to the `NotificationType` union:
 
 ```typescript
-const playbackId = (stream as any).playbackId;
-const livepeerThumb = playbackId
-  ? `https://livepeercdn.studio/hls/${playbackId}/thumbnail.jpg`
-  : null;
-
-const thumbnail = rawThumbnail
-  ? (rawThumbnail.startsWith('http') ? rawThumbnail : `${DEHUB_CDN_BASE}${rawThumbnail.replace(/^\//, '')}`)
-  : livepeerThumb ?? FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
+export type NotificationType = 
+  | 'like' 
+  | 'comment' 
+  | 'comment_reply'
+  | 'comment_like'     // ← ADD THIS
+  | 'following'
+  | 'tip' 
+  | 'subscription'
+  | 'ppv_purchase'
+  | 'video_milestone'
+  | 'livestream_start'
+  | 'video_removal';
 ```
 
-This also fixes the double-slash bug (`.replace(/^\//, '')`) that was identified earlier.
+### Part 2 — `src/pages/app/NotificationsPage.tsx`
+
+**a) Add icon for `comment_like`** in `getNotificationIcon`:
+```typescript
+case 'comment_like':
+  return <Heart className="w-4 h-4 text-pink-400" />;
+```
+
+**b) Add display text for `comment_like`** in `getNotificationContent`:
+
+For the aggregated case (3 people liked your comment), use `latestActorNames`:
+```typescript
+case 'comment_like': {
+  const commentPreview = (notification as any).commentPreview;
+  const count = (notification as any).aggregatedCount || 1;
+  const names = (notification as any).latestActorNames as string[] | undefined;
+  
+  if (count > 1 && names && names.length > 0) {
+    const first = names[0];
+    const rest = count - 1;
+    const othersText = rest === 1 ? '1 other' : `${rest} others`;
+    return commentPreview
+      ? `${first} and ${othersText} liked your comment: "${commentPreview}"`
+      : `${first} and ${othersText} liked your comment`;
+  }
+  
+  return commentPreview
+    ? `${actorName} liked your comment: "${commentPreview}"`
+    : `${actorName} liked your comment`;
+}
+```
+
+**c) API content fallback** — change the `default` case from `'New notification'` to use the API-provided `content` string if present, so future unknown types don't silently break:
+```typescript
+default:
+  return (notification as any).content || 'New notification';
+```
+
+**d) Add `comment_like` to the "Likes" tab filter** so it shows up when filtering by Likes:
+```typescript
+likes: ['like', 'comment_like'],
+```
+
+**e) Navigation for `comment_like`** — add to `getNavigationLink` so clicking the notification goes to the post:
+```typescript
+case 'comment_like':
+  return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
+```
 
 ---
 
-### Change 2 — `src/components/app/cards/LiveCard.tsx` (UI overlay + error fallback)
+## Files to Change
 
-In the thumbnail `<div>` block (~line 123–126):
-
-- Add an `onError` handler so if the Livepeer thumbnail 404s (very old/deleted stream), it gracefully falls back to the generic image
-- When `stream.isLive === false`, render a dark overlay with a "Stream Ended" badge over the thumbnail
-
-```tsx
-{/* Thumbnail */}
-<div className="relative aspect-video bg-zinc-800 rounded-lg overflow-hidden" data-no-navigate>
-  <img
-    src={stream.thumbnail}
-    alt=""
-    className="w-full h-full object-cover"
-    onError={(e) => {
-      (e.currentTarget as HTMLImageElement).src =
-        'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=480&h=270&fit=crop';
-    }}
-  />
-  {!stream.isLive && (
-    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-      <span className="text-white text-xs font-semibold bg-zinc-800/80 px-3 py-1 rounded-full backdrop-blur-sm">
-        Stream Ended
-      </span>
-    </div>
-  )}
-</div>
-```
-
----
-
-### Files to Change
-
-- `src/hooks/use-dehub-feed.ts` — update thumbnail resolution in `mapApiLiveStreamToLocal` to use Livepeer last-frame URL as middle fallback, and fix the leading-slash bug
-- `src/components/app/cards/LiveCard.tsx` — add "Stream Ended" overlay and `onError` fallback on the thumbnail image
+- `src/lib/api/dehub/notifications.ts` — add `comment_like` to `NotificationType`
+- `src/pages/app/NotificationsPage.tsx` — handle `comment_like` in icon, content, navigation, and tab filter; add API content fallback to default case
