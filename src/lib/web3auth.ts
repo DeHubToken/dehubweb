@@ -414,7 +414,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         }
 
         web3authInstance = new Web3Auth(initOptions);
-
+        
         await Promise.race([
           web3authInstance.init(),
           new Promise<never>((_, reject) =>
