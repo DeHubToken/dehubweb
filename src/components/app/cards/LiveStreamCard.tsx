@@ -138,20 +138,39 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
 
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
             const retryCount = (hls as any)._networkRetryCount || 0;
-            const maxRetriesPerUrl = 5;
+            // Live streams get many more retries — connection blips shouldn't kill the player
+            const maxRetriesPerUrl = stream.isLive ? 20 : 5;
+
             if (retryCount < maxRetriesPerUrl) {
               (hls as any)._networkRetryCount = retryCount + 1;
-              logger.info(`Network error, retrying in 5s... (${retryCount + 1}/${maxRetriesPerUrl})`);
+              // Back off: 3s → 5s → 10s
+              const delay = retryCount < 3 ? 3000 : retryCount < 10 ? 5000 : 10000;
+              logger.info(`Network error, retrying in ${delay / 1000}s... (${retryCount + 1}/${maxRetriesPerUrl})`);
               setError('Connecting to stream...');
-              setTimeout(() => hls.startLoad(), 5000);
+              setTimeout(() => {
+                // Manifest errors need a full source reload, not just startLoad
+                if (data.details === 'manifestLoadError' || data.details === 'levelLoadError') {
+                  hls.loadSource(currentUrl());
+                } else {
+                  hls.startLoad();
+                }
+              }, delay);
             } else if (urlIndex < urlsToTry.length - 1) {
-              // Try next CDN URL (e.g. livepeercdn.com -> livepeercdn.studio)
+              // Try next CDN URL
               urlIndex++;
               (hls as any)._networkRetryCount = 0;
               logger.info('Trying alternate CDN URL...', { urlIndex, url: currentUrl() });
               setError('Trying alternate source...');
               tryLoad();
+            } else if (stream.isLive) {
+              // Live stream: cycle back through all URLs and keep retrying — never give up
+              urlIndex = 0;
+              (hls as any)._networkRetryCount = 0;
+              logger.info('All URLs exhausted on live stream, cycling back in 15s...');
+              setError('Reconnecting...');
+              setTimeout(() => tryLoad(), 15000);
             } else {
+              // Ended/recording stream: give up
               setError('Stream unavailable');
               setStreamEnded(true);
             }
@@ -159,8 +178,16 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
             logger.info('Attempting media error recovery...');
             hls.recoverMediaError();
           } else {
-            hls.destroy();
-            setStreamEnded(true);
+            // Other fatal errors (e.g. internal): only end for non-live streams
+            if (!stream.isLive) {
+              hls.destroy();
+              setStreamEnded(true);
+            } else {
+              // For live streams, try reloading the source instead of ending
+              logger.warn('Non-network fatal error on live stream, reloading source...');
+              setError('Reconnecting...');
+              setTimeout(() => hls.loadSource(currentUrl()), 5000);
+            }
           }
         } else {
           logger.warn('HLS Non-fatal error', { type: data.type, details: data.details });
@@ -374,9 +401,9 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
 
       {/* Video Player or Stream Ended State */}
       <div ref={containerRef} className="aspect-video bg-black relative rounded-lg overflow-hidden">
-        {streamEnded || error ? (
+        {streamEnded ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900">
-            <div 
+            <div
               className="absolute inset-0 bg-cover bg-center opacity-20"
               style={{ backgroundImage: `url(${stream.thumbnail})` }}
             />
@@ -404,6 +431,15 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               onPause={() => setIsPlaying(false)}
               onEnded={() => setStreamEnded(true)}
             />
+            {/* Reconnecting overlay — shown on top of video while retrying */}
+            {error && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+                <div className="flex flex-col items-center gap-2 text-center px-4">
+                  <Loader2 className="w-6 h-6 text-white animate-spin" />
+                  <p className="text-white/80 text-sm">{error}</p>
+                </div>
+              </div>
+            )}
             
             <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity">
               <button
