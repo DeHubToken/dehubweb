@@ -187,6 +187,8 @@ export interface LiveStream extends BaseFeedItem {
   isLive: boolean;
   /** HLS playback URL (.m3u8) */
   playbackUrl?: string;
+  /** Fallback URLs to try if primary fails (e.g. alternate Livepeer CDN) */
+  playbackUrls?: string[];
   /** Creator's user ID for navigation */
   creatorId?: string;
   /** Creator's username for URL-based navigation */

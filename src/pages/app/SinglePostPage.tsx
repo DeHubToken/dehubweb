@@ -88,7 +88,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     id: String(nft.tokenId),
     type: 'video',
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
-    videoUrl: nft.tokenId ? buildVideoUrl(nft.tokenId) : undefined,
+    videoUrl: nft.tokenId ? buildVideoUrl(nft.tokenId, nft.videoUrl || nft.media_url) : undefined,
     duration: formatDuration(durationSeconds),
     durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : 0,
     title,
@@ -213,16 +213,36 @@ function toTextPost(nft: DeHubNFT): TextPost {
   };
 }
 
+/** Livepeer CDN bases - try .com (main) and .studio (Studio API) */
+const LIVEPEER_CDN_BASES = [
+  'https://livepeercdn.com',
+  'https://livepeercdn.studio',
+];
+
 /**
  * Build HLS playback URL from stream playbackId (when api.dehub.io /start fails)
+ * Prefers backend playbackUrl if present; otherwise builds from playbackId.
  */
 function buildLivePlaybackUrl(nft: DeHubNFT): string | undefined {
   const stream = (nft as any).stream;
+  // Prefer backend-provided URL
+  const fromApi = stream?.playbackUrl || nft.videoUrl || (nft as any).playbackUrl;
+  if (fromApi && fromApi.includes('.m3u8')) return fromApi;
+
   const playbackId = stream?.playbackId;
   if (playbackId) {
-    return `https://livepeercdn.studio/hls/${playbackId}/index.m3u8`;
+    const primary = `${LIVEPEER_CDN_BASES[0]}/hls/${playbackId}/index.m3u8`;
+    return primary;
   }
-  return nft.videoUrl || (nft as any).playbackUrl;
+  return fromApi;
+}
+
+/** Build all possible playback URLs for fallback (different Livepeer CDNs) */
+function buildLivePlaybackUrls(nft: DeHubNFT): string[] {
+  const stream = (nft as any).stream;
+  const playbackId = stream?.playbackId;
+  if (!playbackId) return [];
+  return LIVEPEER_CDN_BASES.map(base => `${base}/hls/${playbackId}/index.m3u8`);
 }
 
 /**
@@ -266,6 +286,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     likeCount: nft.totalVotes?.for || 0,
     commentCount: nft.commentCount || nft.comment_count || 0,
     playbackUrl: buildLivePlaybackUrl(nft),
+    playbackUrls: buildLivePlaybackUrls(nft),
   };
 }
 
@@ -533,8 +554,8 @@ export default function SinglePostPage() {
           description: stream.description,
           postType: 'live',
           isLive: stream.status === 'live' || (stream.status as string) === 'LIVE' || stream.status === 'active' || !!(stream as any).streamKey,
-          videoUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
-          playbackUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
+          videoUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.com/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
+          playbackUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.com/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
           imageUrl: stream.thumbnailUrl || (stream as any).thumbnail,
           views: stream.viewerCount || (stream as any).totalViews || 0,
           totalVotes: { for: stream.likeCount || (stream as any).likes || 0, against: 0 },

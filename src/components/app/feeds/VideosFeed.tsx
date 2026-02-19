@@ -22,7 +22,7 @@ import { ShortsReel } from '@/components/app/cards/ShortsReel';
 import { useUnifiedFeed, mapToVideoItem, type UnifiedFeedParams, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { buildAvatarUrl, buildVideoUrl } from '@/lib/media-url';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters, type SortValue } from '@/lib/feed-utils';
 import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
@@ -610,9 +610,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         avatar: avatarUrl || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
         likes: String(item.totalVotes?.for || 0),
         thumbnail: getMediaUrl(item.imageUrl) || '',
-        videoUrl: item.videoUrl
-          ? (item.videoUrl.startsWith('http') ? item.videoUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.videoUrl}`)
-          : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4`,
+        videoUrl: buildVideoUrl(id, item.videoUrl),
         description: item.description || item.name || '',
         sound: 'Original Sound',
         comments: formatCount(item.commentCount || 0),

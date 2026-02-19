@@ -56,7 +56,11 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(videoPlaybackManager.globalMuted);
   // Don't immediately mark as ended if we have a playback URL — try loading it first
-  const hasPlaybackUrl = !!(stream.playbackUrl && stream.playbackUrl.includes('.m3u8'));
+  const urlsToTry = useMemo(() => [
+    stream.playbackUrl,
+    ...(stream.playbackUrls || []).filter((u): u is string => !!u && u !== stream.playbackUrl),
+  ].filter((u): u is string => !!u && u.includes('.m3u8')), [stream.playbackUrl, stream.playbackUrls]);
+  const hasPlaybackUrl = urlsToTry.length > 0;
   const [streamEnded, setStreamEnded] = useState(!stream.isLive && !hasPlaybackUrl);
   const [error, setError] = useState<string | null>(null);
   const [isLiked, setIsLiked] = useState(false);
@@ -100,31 +104,17 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
 
   useEffect(() => {
     const video = videoRef.current;
-    // Try to play if stream is marked live OR if we have a valid playback URL
-    // (backend may not have updated status to "live" yet)
     const shouldAttemptPlayback = stream.isLive || hasPlaybackUrl;
-    if (!video || !shouldAttemptPlayback) return;
+    if (!video || !shouldAttemptPlayback || urlsToTry.length === 0) return;
 
-    const streamUrl = stream.playbackUrl || stream.thumbnail;
+    let urlIndex = 0;
+    const currentUrl = () => urlsToTry[urlIndex];
     logger.info('Initializing player', {
       streamId: stream.id,
       isLive: stream.isLive,
-      hasPlaybackUrl,
-      playbackUrl: stream.playbackUrl,
-      finalStreamUrl: streamUrl,
+      urlsToTry: urlsToTry.length,
+      currentUrl: currentUrl(),
     });
-
-    if (!streamUrl || !streamUrl.includes('.m3u8')) {
-      logger.warn('Stream URL missing or invalid (no .m3u8)', {
-        playbackUrl: stream.playbackUrl,
-        thumbnail: stream.thumbnail
-      });
-      if (stream.isLive || hasPlaybackUrl) {
-        setError('Stream source not found');
-        setStreamEnded(true);
-      }
-      return;
-    }
 
     if (Hls.isSupported()) {
       const hls = new Hls({
@@ -132,24 +122,35 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
         lowLatencyMode: true,
         backBufferLength: 60,
       });
-      
-      logger.info('HLS supported, loading source...', { streamUrl });
-      hls.loadSource(streamUrl);
+
+      const tryLoad = () => {
+        const streamUrl = currentUrl();
+        logger.info('HLS loading source...', { urlIndex, streamUrl });
+        hls.loadSource(streamUrl);
+      };
+
+      tryLoad();
       hls.attachMedia(video);
-      
+
       hls.on(Hls.Events.ERROR, (_, data) => {
         if (data.fatal) {
           logger.error('HLS Fatal Error', { type: data.type, details: data.details }, data);
-          
+
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-            // Live streams often take 60-120s to warm up on Livepeer after OBS connects.
-            // Retry patiently before giving up.
             const retryCount = (hls as any)._networkRetryCount || 0;
-            if (retryCount < 30) {
+            const maxRetriesPerUrl = 5;
+            if (retryCount < maxRetriesPerUrl) {
               (hls as any)._networkRetryCount = retryCount + 1;
-              logger.info(`Network error, retrying in 5s... (Attempt ${retryCount + 1}/30)`);
+              logger.info(`Network error, retrying in 5s... (${retryCount + 1}/${maxRetriesPerUrl})`);
               setError('Connecting to stream...');
               setTimeout(() => hls.startLoad(), 5000);
+            } else if (urlIndex < urlsToTry.length - 1) {
+              // Try next CDN URL (e.g. livepeercdn.com -> livepeercdn.studio)
+              urlIndex++;
+              (hls as any)._networkRetryCount = 0;
+              logger.info('Trying alternate CDN URL...', { urlIndex, url: currentUrl() });
+              setError('Trying alternate source...');
+              tryLoad();
             } else {
               setError('Stream unavailable');
               setStreamEnded(true);
@@ -162,14 +163,13 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
             setStreamEnded(true);
           }
         } else {
-          // Log non-fatal errors as warnings
           logger.warn('HLS Non-fatal error', { type: data.type, details: data.details });
         }
       });
-      
+
       hlsRef.current = hls;
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = streamUrl;
+      video.src = currentUrl();
     }
 
     videoPlaybackManager.register(videoId, () => {
@@ -181,7 +181,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       hlsRef.current?.destroy();
       videoPlaybackManager.unregister(videoId);
     };
-  }, [stream.isLive, stream.thumbnail, videoId, hasPlaybackUrl]);
+  }, [stream.isLive, stream.thumbnail, videoId, hasPlaybackUrl, urlsToTry]);
 
   const togglePlay = useCallback(() => {
     const video = videoRef.current;

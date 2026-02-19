@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
 import { useDeHubFeed } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { buildAvatarUrl, buildVideoUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { SORT_OPTIONS, DATE_FILTER_OPTIONS, applySorting, filterByDate, getApiSortMode, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
@@ -125,7 +125,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     avatar: avatarUrl || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
     likes: String(nft.totalVotes?.for || nft.like_count || 0),
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
-    videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || (id ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4` : ''),
+    videoUrl: id ? buildVideoUrl(id, nft.videoUrl || nft.media_url) : '',
     description: nft.description || nft.name || nft.title || '',
     sound: 'Original Sound',
     comments: formatLikes(nft.commentCount || nft.comment_count || 0),

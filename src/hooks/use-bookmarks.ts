@@ -31,7 +31,7 @@ function detectPostType(nft: DeHubNFT): 'video' | 'image' | 'text' {
 function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
   const id = String(nft.tokenId);
   const thumbnail = buildImageUrl(nft.tokenId, nft.imageUrl || nft.thumbnail_url);
-  const videoUrl = buildVideoUrl(nft.tokenId);
+  const videoUrl = buildVideoUrl(nft.tokenId, nft.videoUrl || nft.media_url);
   const channelAvatar = nft.minterAvatarUrl 
     ? buildAvatarUrl(nft.minter, nft.minterAvatarUrl) || 'user'
     : 'user';

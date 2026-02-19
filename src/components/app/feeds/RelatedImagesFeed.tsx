@@ -43,7 +43,7 @@ function adToVideoItem(nft: any): VideoItem {
     id: String(nft.tokenId),
     type: 'video',
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
-    videoUrl: nft.tokenId ? buildVideoUrl(nft.tokenId) : undefined,
+    videoUrl: nft.tokenId ? buildVideoUrl(nft.tokenId, nft.videoUrl || nft.media_url) : undefined,
     duration: formatDuration(durationSeconds),
     durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : 0,
     title: nft.title || nft.name || '',
