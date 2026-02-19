@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PenSquare, Sparkles, LogIn } from 'lucide-react';
@@ -110,7 +110,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             const isAfterMessages = item.label === 'Messages';
 
             return (
-              <div key={item.label} className="w-full flex flex-col items-center xl:items-stretch">
+              <React.Fragment key={item.label}>
                 <SidebarNavItem
                   item={item}
                   isActive={isActive}
@@ -136,7 +136,6 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   >
                     <div className={cn(
                       "w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
-                      "xl:w-9 xl:h-9",
                       isAIActive ? "bg-zinc-700" : "xl:bg-zinc-800 bg-transparent"
                     )}>
                       <Sparkles className="w-5 h-5" />
@@ -144,7 +143,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     <span className="truncate hidden xl:inline">{t('nav.assistant')}</span>
                   </NavLink>
                 )}
-              </div>
+              </React.Fragment>
             );
           })}
         </div>
