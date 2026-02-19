@@ -349,7 +349,8 @@ function isRetryableInitError(err: unknown): boolean {
     msg.includes('too many requests') ||
     msg.includes('rate limit') ||
     msg.includes('project configurations') ||
-    msg.includes('network')
+    msg.includes('network') ||
+    msg.includes('timed out')
   );
 }
 
@@ -417,7 +418,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         await Promise.race([
           web3authInstance.init(),
           new Promise<never>((_, reject) =>
-            setTimeout(() => reject(new Error("Web3Auth init timed out after 15s")), 15000)
+            setTimeout(() => reject(new Error("Web3Auth init timed out after 30s")), 30000)
           )
         ]);
 
