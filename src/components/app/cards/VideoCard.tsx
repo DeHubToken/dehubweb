@@ -1199,7 +1199,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         {/* Error state */}
         {hasError && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/60">
-            <p className="text-white/70 text-sm">Video format not supported</p>
+            <p className="text-white/70 text-sm">Video unavailable</p>
           </div>
         )}
         

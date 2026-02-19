@@ -110,10 +110,13 @@ export interface UnifiedFeedItem {
   minterFollowings?: number;
   stream?: {
     streamId?: string;
+    playbackId?: string;
+    streamKey?: string;
     status?: string;
     viewerCount?: number;
     title?: string;
     category?: string;
+    playbackUrl?: string;
   };
   createdAt: string;
   updatedAt?: string;
@@ -170,7 +173,13 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
   
   // Build canonical URLs using shared utilities
   const thumbnail = buildImageUrl(item.tokenId, item.imageUrl);
-  const videoUrl = buildVideoUrl(item.tokenId);
+
+  // For live/ended streams, VideoCard uses a native <video> which can't play HLS.
+  // Skip videoUrl so VideoCard shows the thumbnail — clicking navigates to the
+  // single post page which uses LiveStreamCard (with hls.js) for proper playback.
+  const videoUrl = item.postType === 'live'
+    ? undefined
+    : (item.videoUrl?.startsWith('http') ? item.videoUrl : buildVideoUrl(item.tokenId));
   const rawAvatarPath = extractAvatarPath(item);
   const channelAvatar = rawAvatarPath 
     ? buildAvatarUrl(item.minter, rawAvatarPath) || 'user'

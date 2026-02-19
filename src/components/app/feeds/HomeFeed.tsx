@@ -734,6 +734,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           return { type: 'image', data: mapToImagePost(item, index) };
         case 'feed-simple':
           return { type: 'post', data: mapToTextPost(item, index) };
+        case 'live':
         case 'video':
         default:
           return { type: 'video', data: mapToVideoItem(item, index) };
