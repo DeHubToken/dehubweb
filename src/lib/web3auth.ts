@@ -142,19 +142,19 @@ export function getWalletDeepLink(wallet: string, targetUrl?: string): string | 
   const url = targetUrl || window.location.href;
   const encodedUrl = encodeURIComponent(url);
   const domainAndPath = url.replace(/^https?:\/\//, '');
+  const ref = encodeURIComponent(window.location.origin);
 
   switch (wallet.toLowerCase()) {
     case 'metamask':
-      // Universal link - works on iOS + Android, falls back to store if not installed
+      // Universal link - opens dapp in MetaMask in-app browser (iOS + Android)
       return `https://metamask.app.link/dapp/${domainAndPath}`;
     case 'phantom':
-      // Phantom universal link
-      return `https://phantom.app/ul/v1/browse?url=${encodedUrl}&ref=${encodeURIComponent(window.location.origin)}`;
+      // Phantom Browse: https://phantom.app/ul/browse/<url>?ref=<ref>
+      // Opens dapp in Phantom in-app browser - same flow as MetaMask
+      return `https://phantom.app/ul/browse/${encodedUrl}?ref=${ref}`;
     case 'coinbase':
-      // Coinbase Wallet universal link
       return `https://go.cb-w.com/dapp?cb_url=${encodedUrl}`;
     case 'trust':
-      // Trust Wallet universal link
       return `https://link.trustwallet.com/open_url?coin_id=60&url=${encodedUrl}`;
     default:
       return null;

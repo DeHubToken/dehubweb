@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
+import { getWalletDeepLink, isMobileDevice } from '@/lib/web3auth';
 import { WalletButton } from '@rainbow-me/rainbowkit';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
@@ -133,6 +134,15 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const handleWalletConnect = (wallet: 'metamask' | 'phantom', connect: () => void) => {
     setActiveProvider(wallet);
     setWagmiAuthIntent(true);
+
+    // On mobile: redirect to wallet app via deep link (same as MetaMask) so user can sign in-app
+    if (isMobileDevice()) {
+      const deepLink = getWalletDeepLink(wallet);
+      if (deepLink) {
+        window.location.href = deepLink;
+        return;
+      }
+    }
     connect();
   };
 
