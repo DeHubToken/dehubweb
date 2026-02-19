@@ -119,9 +119,19 @@ export function CreateGroupModal({
     setIsCreating(true);
     
     try {
-      const memberAddresses = selectedMembers.map(m => m.address || m._id).filter(Boolean);
-      if (walletAddress && !memberAddresses.includes(walletAddress)) {
+      const memberAddresses = selectedMembers
+        .map(m => m.address)
+        .filter((addr): addr is string => !!addr && addr.startsWith('0x'));
+
+      const lowerAddresses = memberAddresses.map(a => a.toLowerCase());
+      if (walletAddress && !lowerAddresses.includes(walletAddress.toLowerCase())) {
         memberAddresses.push(walletAddress);
+      }
+
+      if (memberAddresses.length < 2) {
+        toast.error('Selected members have no wallet addresses. Please select users with wallet addresses.');
+        setIsCreating(false);
+        return;
       }
 
       const groupConversation = await createGroup(
