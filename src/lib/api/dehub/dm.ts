@@ -662,7 +662,10 @@ export async function searchUsersForDM(
 
     let accounts: DeHubUser[] = [];
 
-    if (response?.result?.accounts && Array.isArray(response.result.accounts)) {
+    if (response?.accounts?.items && Array.isArray(response.accounts.items)) {
+      accounts = response.accounts.items;
+    }
+    else if (response?.result?.accounts && Array.isArray(response.result.accounts)) {
       accounts = response.result.accounts;
     }
     else if (response?.accounts && Array.isArray(response.accounts)) {
