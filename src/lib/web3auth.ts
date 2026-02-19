@@ -163,8 +163,9 @@ export function getWalletDeepLink(wallet: string, targetUrl?: string): string | 
     case 'trust':
       return `https://link.trustwallet.com/open_url?coin_id=60&url=${encodedUrl}`;
     case 'rabby':
-      // Rabby Mobile: open dapp in Rabby in-app browser
-      return `https://rabby.io/dapp/${domainAndPath}`;
+      // Rabby has no official deep link (rabby.io/dapp returns 404).
+      // Return null so we use connect() → RainbowKit WalletConnect flow on mobile.
+      return null;
     default:
       return null;
   }

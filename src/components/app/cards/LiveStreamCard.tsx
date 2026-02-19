@@ -142,12 +142,12 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
           logger.error('HLS Fatal Error', { type: data.type, details: data.details }, data);
           
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-            // Live streams often take 30-60s to warm up on Livepeer.
-            // We retry a few times before giving up.
+            // Live streams often take 60-120s to warm up on Livepeer after OBS connects.
+            // Retry patiently before giving up.
             const retryCount = (hls as any)._networkRetryCount || 0;
-            if (retryCount < 10) {
+            if (retryCount < 30) {
               (hls as any)._networkRetryCount = retryCount + 1;
-              logger.info(`Network error, retrying in 5s... (Attempt ${retryCount + 1}/10)`);
+              logger.info(`Network error, retrying in 5s... (Attempt ${retryCount + 1}/30)`);
               setError('Connecting to stream...');
               setTimeout(() => hls.startLoad(), 5000);
             } else {
