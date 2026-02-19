@@ -93,6 +93,7 @@ export function isWalletInAppBrowser(): boolean {
   // Check known wallet in-app browser UA strings
   const walletUAs = [
     'metamask',        // MetaMask mobile browser
+    'rabby',           // Rabby mobile browser
     'trust',           // Trust Wallet
     'trustwallet',
     'coinbasebrowser', // Coinbase Wallet browser
@@ -161,6 +162,9 @@ export function getWalletDeepLink(wallet: string, targetUrl?: string): string | 
       return `https://go.cb-w.com/dapp?cb_url=${encodedUrl}`;
     case 'trust':
       return `https://link.trustwallet.com/open_url?coin_id=60&url=${encodedUrl}`;
+    case 'rabby':
+      // Rabby Mobile: open dapp in Rabby in-app browser
+      return `https://rabby.io/dapp/${domainAndPath}`;
     default:
       return null;
   }

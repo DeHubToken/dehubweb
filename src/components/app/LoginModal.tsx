@@ -288,25 +288,23 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         )}
       </WalletButton.Custom>
 
-      {!isMobile && (
-        <WalletButton.Custom wallet="rabby">
-          {({ ready, connect }) => (
-            <Button
-              disabled={!ready || isConnecting}
-              onClick={() => handleWalletConnect('rabby', connect)}
-              className={walletButtonClass}
-            >
-              {activeProvider === 'rabby' && isConnecting ? (
-                <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
-              ) : (
-                <div className="flex-shrink-0"><RabbyIcon /></div>
-              )}
-              <span className="flex-1 text-left">Rabby</span>
-              <ChevronRight className="w-4 h-4 text-white/40" />
-            </Button>
-          )}
-        </WalletButton.Custom>
-      )}
+      <WalletButton.Custom wallet="rabby">
+        {({ ready, connect }) => (
+          <Button
+            disabled={!ready || isConnecting}
+            onClick={() => handleWalletConnect('rabby', connect)}
+            className={walletButtonClass}
+          >
+            {activeProvider === 'rabby' && isConnecting ? (
+              <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+            ) : (
+              <div className="flex-shrink-0"><RabbyIcon /></div>
+            )}
+            <span className="flex-1 text-left">Rabby</span>
+            <ChevronRight className="w-4 h-4 text-white/40" />
+          </Button>
+        )}
+      </WalletButton.Custom>
 
       <p className="text-white/40 text-[10px] text-center mt-2 px-2">
         On mobile, your wallet app will open to sign in and return here automatically

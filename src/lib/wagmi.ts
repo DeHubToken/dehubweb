@@ -2,7 +2,6 @@
  * Wagmi Configuration with RainbowKit
  * =====================================
  * Only 4 wallets: Rabby, MetaMask, Trust, Phantom.
- * Rabby has no mobile app — hide it on mobile in LoginModal.
  * RainbowKit handles mobile deep links, SDK relay, and "sign → return to browser" flow.
  * Generic injected() for auto-connect in wallet in-app browsers.
  */
