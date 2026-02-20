@@ -356,7 +356,7 @@ export async function createCheckoutSession(request: {
   amount: number;
   tokenSymbol: string;
   walletAddress: string;
-  chainId?: string;
+  chainId?: number;
 }): Promise<{ checkoutUrl: string; sessionId: string }> {
   console.log('[DPay API] Creating checkout session...', request);
   
@@ -376,7 +376,7 @@ export async function createCheckoutSession(request: {
         amount: request.amount,
         tokenSymbol: request.tokenSymbol,
         walletAddress: request.walletAddress,
-        chainId: request.chainId || '8453',
+        chainId: request.chainId ?? 8453,
       }),
     });
 

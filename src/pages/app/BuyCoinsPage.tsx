@@ -144,7 +144,7 @@ export default function BuyCoinsPage() {
         amount: effectiveAmount,
         tokenSymbol: selectedToken?.symbol || 'DHB',
         walletAddress,
-        chainId: String(selectedChainId),
+        chainId: selectedChainId,
       });
     }
   };
