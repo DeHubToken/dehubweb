@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { mintPost } from '@/lib/api/dehub/content';
 import { getWeb3AuthSigner, mintOnChain, BASE_CHAIN_ID } from '@/lib/contracts';
 import { getCategories, getNFTInfo } from '@/lib/api/dehub/feed';
-import { getStreamIngestUrl, startLiveStream } from '@/lib/api/dehub/livestream';
+import { getStreamIngestUrl, startLiveStream, endLiveStream } from '@/lib/api/dehub/livestream';
 import type { DeHubCategory } from '@/lib/api/dehub/types';
 import { createLogger } from '@/lib/logger';
 import { supabase } from '@/integrations/supabase/client';
@@ -102,6 +102,18 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     if (!streamData?.tokenId) return;
     const token = getAuthToken();
     const addr = walletAddress?.toLowerCase();
+
+    // Notify DeHub backend that stream has ended — this triggers recording processing and VOD post creation
+    if (streamData.streamId) {
+      try {
+        await endLiveStream(streamData.streamId);
+        logger.info('Stream ended via DeHub API', { streamId: streamData.streamId });
+      } catch (e) {
+        logger.warn('endLiveStream API call failed (non-blocking)', e);
+      }
+    }
+
+    // Remove from Supabase live sessions table
     if (token && addr) {
       try {
         await supabase.functions.invoke('end-stream-session', {
