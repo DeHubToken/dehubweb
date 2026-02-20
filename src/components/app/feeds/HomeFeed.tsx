@@ -986,7 +986,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           <div key={`live-now-${index}`} className="space-y-2">
             <div className="flex items-center gap-2 px-1">
               <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-              <h3 className="text-white font-semibold text-sm">Live Now</h3>
+              <h3 className="text-white font-semibold text-sm">Livestreams</h3>
             </div>
             <SwipeableCarousel>
               <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-4">
