@@ -942,11 +942,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     );
   };
 
+  // Live carousel insert position: 4 posts after the radio carousel
+  const LIVE_INSERT_AFTER = RADIO_INSERT_AFTER + 4;
+
   // Render feed items with shorts and radio carousels inserted
   const renderFeedWithShorts = () => {
     const elements: React.ReactNode[] = [];
     let shortsInserted = false;
     let radioInserted = false;
+    let liveInserted = false;
     let whoToFollowInserted = false;
 
     items.forEach((item, index) => {
@@ -968,12 +972,34 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         shortsInserted = true;
       }
 
-      // Insert radio carousel after RADIO_INSERT_AFTER posts (15)
+      // Insert radio carousel after RADIO_INSERT_AFTER posts (12)
       if ((index + 1) === RADIO_INSERT_AFTER && radioStations.length > 0 && !radioInserted) {
         elements.push(
           <RadioCarouselSection key={`radio-carousel-${index}`} />
         );
         radioInserted = true;
+      }
+
+      // Insert Live Now carousel 4 posts after the radio carousel
+      if ((index + 1) === LIVE_INSERT_AFTER && liveNowStreams.length > 0 && !liveInserted) {
+        elements.push(
+          <div key={`live-now-${index}`} className="space-y-2">
+            <div className="flex items-center gap-2 px-1">
+              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+              <h3 className="text-white font-semibold text-sm">Live Now</h3>
+            </div>
+            <SwipeableCarousel>
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-4">
+                {liveNowStreams.map((stream) => (
+                  <div key={stream.id} className="flex-shrink-0 w-72 sm:w-80">
+                    <LiveCard stream={stream} />
+                  </div>
+                ))}
+              </div>
+            </SwipeableCarousel>
+          </div>
+        );
+        liveInserted = true;
       }
     });
 
@@ -1084,24 +1110,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             <StoriesBar users={storyUsers} shorts={shorts} />
           </div>
 
-          {/* Live Now Section */}
-          {liveNowStreams.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 px-1">
-                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                <h3 className="text-white font-semibold text-sm">Live Now</h3>
-              </div>
-              <SwipeableCarousel>
-                <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-4">
-                  {liveNowStreams.map((stream) => (
-                    <div key={stream.id} className="flex-shrink-0 w-72 sm:w-80">
-                      <LiveCard stream={stream} />
-                    </div>
-                  ))}
-                </div>
-              </SwipeableCarousel>
-            </div>
-          )}
 
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
