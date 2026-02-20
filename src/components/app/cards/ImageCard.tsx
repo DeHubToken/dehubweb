@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
+import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
@@ -28,6 +29,7 @@ import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
+import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
@@ -307,6 +309,8 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [showPPVDrawer, setShowPPVDrawer] = useState(false);
   const [showBountyDrawer, setShowBountyDrawer] = useState(false);
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
+  const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
+  const [showTipModal, setShowTipModal] = useState(false);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -405,7 +409,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           >
             <Sparkles className="w-5 h-5" />
           </button>
-          <Drawer>
+          <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
             <DrawerTrigger asChild>
               <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); openLoginModal(); } }} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
                 <MoreVertical className="w-5 h-5" />
@@ -416,6 +420,14 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                 <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
               </DrawerHeader>
               <div className="flex flex-col gap-1">
+                {!isOwnPost && (
+                  <button
+                    onClick={() => { setShowOptionsDrawer(false); setShowTipModal(true); }}
+                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                  >
+                    <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> {t('postOptions.sendTip')}
+                  </button>
+                )}
                 <button
                   onClick={handleTranslateImage}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
@@ -687,6 +699,15 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
           queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
         }}
+      />
+
+      {/* Tip Modal */}
+      <TipModal
+        open={showTipModal}
+        onOpenChange={setShowTipModal}
+        creatorAddress={post.creatorId}
+        creatorName={post.username}
+        context={post.id}
       />
 
       {/* PPV Drawer - controlled, rendered at root level for mobile compatibility */}

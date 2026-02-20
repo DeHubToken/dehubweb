@@ -31,6 +31,7 @@ import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
+import { TipModal } from '../modals/TipModal';
 import { CommentsSection } from './CommentsSection';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
@@ -426,6 +427,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
+  const [showTipModal, setShowTipModal] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
@@ -863,9 +865,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             >
               <Sparkles className="w-5 h-5" />
             </motion.button>
-            <Drawer>
+            <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
               <DrawerTrigger asChild>
-              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); openLoginModal(); } }} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
+              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); openLoginModal(); return; } setShowOptionsDrawer(true); }} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
                 <MoreVertical className="w-5 h-5" />
                 </button>
               </DrawerTrigger>
@@ -874,9 +876,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                   <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
                 </DrawerHeader>
                 <div className="flex flex-col gap-1">
-                  <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                    <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> {t('postOptions.sendTip')}
-                  </button>
+                  {!isOwnPost && (
+                    <button
+                      onClick={() => { setShowOptionsDrawer(false); setShowTipModal(true); }}
+                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                    >
+                      <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> {t('postOptions.sendTip')}
+                    </button>
+                  )}
                   <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                     <ListPlus className="w-5 h-5" /> {t('postOptions.queue')}
                   </button>
@@ -1316,9 +1323,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
           </DrawerHeader>
           <div className="flex flex-col gap-1">
-            <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-              <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> {t('postOptions.sendTip')}
-            </button>
+            {!isOwnPost && (
+              <button
+                onClick={() => { setShowOptionsDrawer(false); setShowTipModal(true); }}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              >
+                <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> {t('postOptions.sendTip')}
+              </button>
+            )}
             <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
               <ListPlus className="w-5 h-5" /> {t('postOptions.queue')}
             </button>
@@ -1392,6 +1404,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
         }}
       />
+
+      {/* Tip Modal */}
+      <TipModal
+        open={showTipModal}
+        onOpenChange={setShowTipModal}
+        creatorAddress={video.creatorId}
+        creatorName={video.channel}
+        context={video.id}
+      />
+
       {/* PPV Drawer - controlled, rendered at root level for mobile compatibility */}
       {video.isPPV && video.ppvPrice && (
         <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>

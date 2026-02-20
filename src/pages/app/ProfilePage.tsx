@@ -8,6 +8,7 @@ import { LoginModal } from '@/components/app/LoginModal';
 import { AuthGate } from '@/components/app/AuthGate';
 import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
 import { CreatePlanModal, EditPlanModal } from '@/components/app/subscriptions';
+import { TipModal } from '@/components/app/modals/TipModal';
 import { FollowersListDrawer } from '@/components/app/profile';
 import { StoryViewerModal } from '@/components/app/stories/StoryViewerModal';
 import { cn } from '@/lib/utils';
@@ -45,6 +46,7 @@ export default function ProfilePage() {
   const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
   const [showAvatarOverlay, setShowAvatarOverlay] = useState(false);
   const [editingPlan, setEditingPlan] = useState<SubscriptionPlan | null>(null);
+  const [showTipModal, setShowTipModal] = useState(false);
 
   // All data fetching + derived state
   const data = useProfilePage();
@@ -69,6 +71,7 @@ export default function ProfilePage() {
       handleUnfollow={handleUnfollow}
       setShareSheetOpen={setShareSheetOpen}
       onMakeOffer={handleMakeOffer}
+      onTip={!data.isViewingOwnProfile ? () => setShowTipModal(true) : undefined}
     />
   );
 
@@ -377,6 +380,15 @@ export default function ProfilePage() {
 
       {/* Login Modal */}
       <LoginModal open={loginModalOpen} onOpenChange={setLoginModalOpen} />
+
+      {/* Tip Modal */}
+      <TipModal
+        open={showTipModal}
+        onOpenChange={setShowTipModal}
+        creatorAddress={data.profile?.walletAddress}
+        creatorName={data.profile?.name}
+        context="profile"
+      />
     </div>
   );
 

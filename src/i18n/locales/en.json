@@ -241,6 +241,14 @@
     "translating": "Translating...",
     "close": "Close"
   },
+  "tip": {
+    "title": "Send Tip",
+    "toCreator": "Tip {{name}}",
+    "quickAmounts": "Quick amounts",
+    "customAmount": "Or enter amount",
+    "sending": "Sending...",
+    "sendAmount": "Send {{amount}} DHB"
+  },
   "postOptions": {
     "options": "Options",
     "sendTip": "Send Tip",

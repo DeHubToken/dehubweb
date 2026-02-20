@@ -33,6 +33,7 @@ import { RelatedImagesFeed } from '@/components/app/feeds/RelatedImagesFeed';
 import { LivePostChat } from '@/components/app/cards/LivePostChat';
 import { PostAIChat } from '@/components/app/cards/PostAIChat';
 import { ReportModal } from '@/components/app/modals/ReportModal';
+import { TipModal } from '@/components/app/modals/TipModal';
 import {
   Drawer,
   DrawerContent,
@@ -40,6 +41,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { formatTimeAgo, formatDuration, formatViews } from '@/lib/feed-utils';
+import { useAuth } from '@/contexts/AuthContext';
 import { VideoCardSkeleton, ImageCardSkeleton, PostCardSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
 
@@ -518,6 +520,8 @@ export default function SinglePostPage() {
   const [showDesktopAIChat, setShowDesktopAIChat] = useState(false);
   const [showDesktopOptionsDrawer, setShowDesktopOptionsDrawer] = useState(false);
   const [showDesktopReportModal, setShowDesktopReportModal] = useState(false);
+  const [showTipModal, setShowTipModal] = useState(false);
+  const { walletAddress } = useAuth();
   
   // Ref for mobile scroll container (needed for IntersectionObserver)
   const mobileScrollContainerRef = useRef<HTMLDivElement>(null);
@@ -701,9 +705,14 @@ export default function SinglePostPage() {
               <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-col gap-1">
-              <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> {t('postOptions.sendTip')}
-              </button>
+              {!(walletAddress && videoData.creatorId?.toLowerCase() === walletAddress.toLowerCase()) && (
+                <button
+                  onClick={() => { setShowDesktopOptionsDrawer(false); setShowTipModal(true); }}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> {t('postOptions.sendTip')}
+                </button>
+              )}
               <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                 <ListPlus className="w-5 h-5" /> {t('postOptions.queue')}
               </button>
@@ -736,6 +745,15 @@ export default function SinglePostPage() {
             </div>
           </DrawerContent>
         </Drawer>
+
+        {/* Tip Modal */}
+        <TipModal
+          open={showTipModal}
+          onOpenChange={setShowTipModal}
+          creatorAddress={videoData.creatorId}
+          creatorName={videoData.channel}
+          context={id || undefined}
+        />
       </>
     );
   }
