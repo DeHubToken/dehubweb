@@ -667,10 +667,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             deployed = true;
             break;
           } catch (txErr: any) {
+            const errMsg = (txErr.message || '').toLowerCase();
+            // AA10 = bundler says account already deployed — treat as success immediately
+            if (errMsg.includes('aa10') || errMsg.includes('sender already constructed') || errMsg.includes('already been deployed')) {
+              console.log('[Auth] Bundler confirms account already deployed (AA10) — skipping deployment');
+              markDeployedInCache(address);
+              deployed = true;
+              break;
+            }
+            // Torus keyring not ready yet after OAuth popup — wait longer before retry
+            const isKeyrignNotReady = errMsg.includes('torus keyring') || errMsg.includes('unable to find matching address');
             console.warn(`[Auth] Deployment attempt ${attempt} failed:`, txErr.message);
             if (attempt < MAX_RETRIES) {
               updateProgress('Retrying account setup...');
-              await new Promise(r => setTimeout(r, 800));
+              await new Promise(r => setTimeout(r, isKeyrignNotReady ? 2000 : 800));
             }
           }
         }
