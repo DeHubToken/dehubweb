@@ -145,6 +145,7 @@ export default function BuyCoinsPage() {
         tokenSymbol: selectedToken?.symbol || 'DHB',
         walletAddress,
         chainId: selectedChainId,
+        tokensToReceive: estimatedTokens,
       });
     }
   };
@@ -346,7 +347,7 @@ export default function BuyCoinsPage() {
         {/* Buy Button */}
         <Button
           onClick={handlePurchase}
-          disabled={effectiveAmount < 5 || isPending}
+          disabled={effectiveAmount < 5 || isPending || (paymentMethod === 'card' && estimatedTokens <= 0)}
           variant="glass"
           className="w-full py-6 text-lg font-semibold rounded-xl disabled:opacity-50"
         >
