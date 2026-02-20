@@ -321,10 +321,10 @@ export async function createOnrampSession(request: OnrampSessionRequest): Promis
         'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({
-        source_amount: request.amount,
-        source_currency: request.currency.toLowerCase(),
-        destination_currency: request.tokenSymbol.toLowerCase(),
-        destination_wallet_address: request.walletAddress,
+        amount: request.amount,
+        currency: request.currency.toLowerCase(),
+        tokenSymbol: request.tokenSymbol,
+        walletAddress: request.walletAddress,
       }),
     });
 
@@ -354,6 +354,7 @@ export async function createOnrampSession(request: OnrampSessionRequest): Promis
  */
 export async function createCheckoutSession(request: {
   amount: number;
+  currency?: string;
   tokenSymbol: string;
   walletAddress: string;
   chainId?: number;
@@ -375,6 +376,7 @@ export async function createCheckoutSession(request: {
       },
       body: JSON.stringify({
         amount: request.amount,
+        currency: request.currency ?? 'usd',
         tokenSymbol: request.tokenSymbol,
         walletAddress: request.walletAddress,
         chainId: request.chainId ?? 8453,
