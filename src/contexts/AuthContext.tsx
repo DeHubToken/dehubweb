@@ -556,6 +556,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log('[Auth] ✓ DeHub authentication complete (Wagmi)');
   };
 
+  // --- Deployed Smart Account Cache ---
+  // Once a Safe smart account is deployed on-chain it stays deployed forever.
+  // Cache this in localStorage so returning users skip the eth_getCode RPC call.
+  const SA_DEPLOYED_CACHE_KEY = 'dehub_deployed_sa';
+  const isKnownDeployed = (addr: string): boolean => {
+    try {
+      const cache = JSON.parse(localStorage.getItem(SA_DEPLOYED_CACHE_KEY) || '{}');
+      return cache[addr.toLowerCase()] === true;
+    } catch { return false; }
+  };
+  const markDeployedInCache = (addr: string): void => {
+    try {
+      const cache = JSON.parse(localStorage.getItem(SA_DEPLOYED_CACHE_KEY) || '{}');
+      cache[addr.toLowerCase()] = true;
+      localStorage.setItem(SA_DEPLOYED_CACHE_KEY, JSON.stringify(cache));
+    } catch {}
+  };
+
   /**
    * Ensure Smart Account is deployed before signing.
    * Matches mobile app logic: check if code exists, if not, send empty tx.
@@ -564,9 +582,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const ensureSmartAccountDeployed = async (provider: any, address: string, onProgress?: (msg: string) => void) => {
     console.log(`[Auth] Checking deployment for ${address}...`);
 
+    // Fast path: skip eth_getCode if we've confirmed deployment before (deployed = permanent)
+    if (isKnownDeployed(address)) {
+      console.log('[Auth] Account known deployed (cached) — skipping eth_getCode');
+      return true;
+    }
+
     const updateProgress = (msg: string) => onProgress?.(msg);
 
-    // Shorter timeouts for reads (5s) - eth_getCode is fast
+    // Use direct Base RPC for eth_getCode (read-only, avoids Pimlico AA overhead)
+    const BASE_RPC = 'https://base-rpc.publicnode.com';
+    const getCodeDirect = async (addr: string, timeoutMs = 4000): Promise<string> => {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const resp = await fetch(BASE_RPC, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_getCode', params: [addr, 'latest'], id: 1 }),
+          signal: controller.signal,
+        });
+        const json = await resp.json();
+        return json.result || '0x';
+      } finally {
+        clearTimeout(timer);
+      }
+    };
+
+    // Writes (eth_sendTransaction) still go through the AA provider
     const requestWithTimeout = async (method: string, params: any[] = [], timeoutMs = 5000) => {
       return Promise.race([
         provider.request({ method, params }),
@@ -575,7 +618,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     try {
-      const code = await requestWithTimeout('eth_getCode', [address, 'latest']) as string;
+      const code = await getCodeDirect(address).catch(async () => {
+        // Fallback to AA provider if direct RPC fails
+        console.warn('[Auth] Direct eth_getCode failed, falling back to AA provider');
+        return await requestWithTimeout('eth_getCode', [address, 'latest']) as string;
+      });
 
       if (code === '0x' || code === '0x0' || !code) {
         console.log('[Auth] Account not deployed. Sending initialization transaction...');
@@ -645,10 +692,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return false;
         }
 
+        // Save to cache so future logins skip eth_getCode entirely
+        markDeployedInCache(address);
         return true;
       }
 
       console.log('[Auth] Account already deployed');
+      // Cache so future logins are instant (skip eth_getCode)
+      markDeployedInCache(address);
       return true;
     } catch (err: any) {
       console.error('[Auth] Smart account deployment check failed:', err.message);
@@ -686,7 +737,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
         if (accounts?.length) break;
         console.log(`[Auth] [REDIRECT] No accounts yet, retry ${i+1}/10...`);
-        await new Promise(r => setTimeout(r, 150));
+        await new Promise(r => setTimeout(r, 50));
       }
 
       if (!accounts?.length) {
@@ -698,7 +749,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('[Auth] [REDIRECT] Account:', authAddress);
 
       // Social login (Smart Account): deploy with empty tx first if not deployed (matches mobile)
-      toast.loading('Checking account...', { id: toastId });
       const deployed = await ensureSmartAccountDeployed(signingProvider, authAddress, (msg) => toast.loading(msg, { id: toastId }));
       if (!deployed) {
         throw new Error('Smart Account deployment failed. Please try again.');
@@ -814,7 +864,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       for (let i = 0; i < 10; i++) {
         accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
         if (accounts?.length) break;
-        await new Promise(r => setTimeout(r, 150));
+        await new Promise(r => setTimeout(r, 50));
       }
       
       if (!accounts?.length) throw new Error('No accounts available for signing');
@@ -823,7 +873,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // Social login (Smart Account): deploy with empty tx first if not deployed (matches mobile)
       if (isSocial) {
-        toast.loading('Checking account...', { id: toastId });
         const deployed = await ensureSmartAccountDeployed(signingProvider, authAddress, (msg) => toast.loading(msg, { id: toastId }));
         if (!deployed) {
           throw new Error('Smart Account deployment failed. Please try again.');

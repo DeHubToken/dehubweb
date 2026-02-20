@@ -38,12 +38,13 @@ import {
 } from '@/lib/feed-utils';
 
 // Card components
-import { 
-  PostCard, 
-  VideoCard, 
-  ImageCard, 
-  ShortsReel, 
-  StoriesBar 
+import {
+  PostCard,
+  VideoCard,
+  ImageCard,
+  ShortsReel,
+  StoriesBar,
+  LiveCard,
 } from '@/components/app/cards';
 
 
@@ -53,7 +54,7 @@ import {
   mapToImagePost, 
   mapToTextPost,
 } from '@/hooks/use-unified-feed';
-import { useDeHubStoryUsers } from '@/hooks/use-dehub-feed';
+import { useDeHubStoryUsers, useDeHubLive, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
 import { getMediaUrl, getNFTInfo, getAccountInfo, getCategories } from '@/lib/api/dehub';
 import type { DeHubCategory } from '@/lib/api/dehub';
@@ -396,6 +397,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // Fetch story users from API
   const { storyUsers } = useDeHubStoryUsers(10);
+
+  // Fetch active live streams for the "Live Now" section
+  const { data: liveData } = useDeHubLive({ unit: 10, sortMode: 'recent' });
+  const liveNowStreams = useMemo(() => {
+    if (!liveData?.pages) return [];
+    const allStreams = liveData.pages.flatMap(page => page.data || []);
+    return allStreams.slice(0, 10).map((stream, index) => mapApiLiveStreamToLocal(stream, index));
+  }, [liveData]);
 
   // Fetch current user's following list for "Following" feed filter
   const { data: currentUserData } = useQuery({
@@ -1074,7 +1083,26 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           <div className="pt-2">
             <StoriesBar users={storyUsers} shorts={shorts} />
           </div>
-          
+
+          {/* Live Now Section */}
+          {liveNowStreams.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 px-1">
+                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                <h3 className="text-white font-semibold text-sm">Live Now</h3>
+              </div>
+              <SwipeableCarousel>
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-4">
+                  {liveNowStreams.map((stream) => (
+                    <div key={stream.id} className="flex-shrink-0 w-72 sm:w-80">
+                      <LiveCard stream={stream} />
+                    </div>
+                  ))}
+                </div>
+              </SwipeableCarousel>
+            </div>
+          )}
+
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
           ) : (
