@@ -103,13 +103,13 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     const token = getAuthToken();
     const addr = walletAddress?.toLowerCase();
 
-    // Notify DeHub backend that stream has ended — this triggers recording processing and VOD post creation
+    // Notify DeHub backend that stream has ended via PATCH /api/live/{streamId}/settings
     if (streamData.streamId) {
       try {
         await endLiveStream(streamData.streamId);
         logger.info('Stream ended via DeHub API', { streamId: streamData.streamId });
       } catch (e) {
-        logger.warn('endLiveStream API call failed (non-blocking)', e);
+        logger.warn('endLiveStream failed (non-blocking)', e);
       }
     }
 
@@ -218,41 +218,39 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       }
 
       // Step 5: Activate stream in DeHub backend + get ingest URL
-      // First try startLiveStream (marks stream as live in backend, returns proper URLs).
-      // If that fails, try the ingesturl endpoint, then fall back to standard Livepeer RTMP.
+      // Uses PATCH /api/live/{streamId}/settings to mark as live, GET /ingesturl for RTMP URL.
       const LIVEPEER_RTMP_URL = 'rtmp://rtmp.livepeer.com/live';
       let ingestUrl = '';
       let playbackUrl = '';
 
+      // Step 5a: Get ingest URL from API
       try {
-        logger.info('Activating stream via startLiveStream...', { streamId });
-        const startRes = await startLiveStream({ streamId });
-        ingestUrl = startRes?.result?.ingestUrl || '';
-        playbackUrl = startRes?.result?.playbackUrl || '';
-        if (ingestUrl) logger.info('Stream activated, ingest URL obtained', { ingestUrl });
+        const ingestRes = await getStreamIngestUrl(streamId);
+        ingestUrl = ingestRes?.result?.ingestUrl || '';
+        if (ingestUrl) logger.info('Ingest URL obtained', { ingestUrl });
       } catch (e) {
-        logger.warn('startLiveStream failed, trying ingesturl endpoint...', e);
+        logger.warn('getStreamIngestUrl failed, trying Edge Function...', e);
         try {
-          // API expects streamId (MongoDB ObjectId), not tokenId
-          const ingestRes = await getStreamIngestUrl(streamId);
-          ingestUrl = ingestRes?.result?.ingestUrl || '';
-          if (ingestUrl) logger.info('Ingest URL obtained via endpoint', { ingestUrl });
-        } catch (e2) {
-          logger.warn('getStreamIngestUrl also failed, trying Edge Function...', e2);
-          try {
-            const token = getAuthToken();
-            const { data, error } = await supabase.functions.invoke('get-stream-ingest', {
-              body: { tokenId },
-              ...(token && { headers: { Authorization: `Bearer ${token}` } }),
-            });
-            if (!error && data?.ingestUrl) {
-              ingestUrl = data.ingestUrl;
-              logger.info('Ingest URL obtained via Edge Function');
-            }
-          } catch (e3) {
-            logger.warn('Edge Function also failed, using standard RTMP', e3);
+          const token = getAuthToken();
+          const { data, error } = await supabase.functions.invoke('get-stream-ingest', {
+            body: { tokenId },
+            ...(token && { headers: { Authorization: `Bearer ${token}` } }),
+          });
+          if (!error && data?.ingestUrl) {
+            ingestUrl = data.ingestUrl;
+            logger.info('Ingest URL obtained via Edge Function');
           }
+        } catch (e2) {
+          logger.warn('Edge Function also failed, using standard RTMP', e2);
         }
+      }
+
+      // Step 5b: Mark stream as live via PATCH /settings
+      try {
+        await startLiveStream({ streamId });
+        logger.info('Stream marked as live via settings', { streamId });
+      } catch (e) {
+        logger.warn('startLiveStream (settings) failed (non-blocking)', e);
       }
 
       // Final fallback: standard Livepeer RTMP URL

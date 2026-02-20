@@ -127,27 +127,31 @@ export async function getStreamIngestUrl(streamId: string): Promise<{ result: { 
   });
 }
 
-export async function startLiveStream(data: StartLiveStreamData = {}): Promise<StartLiveStreamResponse> {
-  // If we have a streamId, try the specific resource endpoint first
-  const endpoint = data.streamId ? `/api/live/${data.streamId}/start` : "/api/live/start";
+export async function updateStreamSettings(
+  streamId: string,
+  settings: Record<string, unknown>
+): Promise<{ result: unknown }> {
+  return apiCall<{ result: unknown }>(`/api/live/${streamId}/settings`, {
+    method: "PATCH",
+    body: settings,
+    requiresAuth: true,
+  });
+}
 
-  try {
-    return await apiCall<StartLiveStreamResponse>(endpoint, {
-      method: "POST",
-      body: { ...data },
-      requiresAuth: true,
-    });
-  } catch (error) {
-    // If the ID-based endpoint fails and we haven't tried the generic one, try the generic one
-    if (data.streamId && endpoint !== "/api/live/start") {
-      return apiCall<StartLiveStreamResponse>("/api/live/start", {
-        method: "POST",
-        body: { ...data },
-        requiresAuth: true,
-      });
-    }
-    throw error;
-  }
+export async function startLiveStream(data: StartLiveStreamData = {}): Promise<StartLiveStreamResponse> {
+  if (!data.streamId) throw new Error('streamId is required');
+  // Mark stream as live via settings endpoint
+  await updateStreamSettings(data.streamId, { status: 'live' });
+  // Return ingest URL
+  const ingestRes = await getStreamIngestUrl(data.streamId);
+  return {
+    result: {
+      streamId: data.streamId,
+      streamKey: '',
+      ingestUrl: ingestRes?.result?.ingestUrl || '',
+      playbackUrl: '',
+    },
+  };
 }
 
 export async function likeLiveStream(streamId: string): Promise<{ result: boolean }> {
@@ -166,10 +170,9 @@ export async function sendLiveStreamGift(streamId: string, data: SendGiftData): 
 }
 
 export async function endLiveStream(streamId: string): Promise<{ result: boolean }> {
-  return apiCall<{ result: boolean }>(`/api/live/${streamId}/end`, {
-    method: "POST",
-    requiresAuth: true,
-  });
+  // Mark stream as ended via PATCH /api/live/{streamId}/settings
+  await updateStreamSettings(streamId, { status: 'ended' });
+  return { result: true };
 }
 
 // Legacy alias for backwards compatibility
