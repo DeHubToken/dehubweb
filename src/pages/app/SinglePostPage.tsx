@@ -246,17 +246,23 @@ function buildLivePlaybackUrls(nft: DeHubNFT): string[] {
 }
 
 /**
- * Derive isLive from stream status or streamKey+playbackId (ready-to-stream)
+ * Derive isLive from stream status fields.
+ * A stream is live only when Livepeer reports it as active AND it hasn't been ended.
  */
 function deriveIsLive(nft: DeHubNFT): boolean {
   const explicit = (nft as any).isLive;
   if (explicit !== undefined) return !!explicit;
   const stream = (nft as any).stream;
   if (!stream) return false;
-  const status = (stream.status || '').toLowerCase();
-  if (status === 'live' || status === 'active') return true;
-  // Stream with key + playbackId = ready to go live (treat as live so player attempts playback)
-  return !!(stream.streamKey && stream.playbackId);
+
+  // Ended: isActive=false or status=ENDED takes priority over everything
+  if (stream.isActive === false) return false;
+  const status = (stream.status || '').toUpperCase();
+  if (status === 'ENDED' || status === 'INACTIVE') return false;
+  // settings.status='ended' means we PATCHed it as ended
+  if (stream.settings?.status === 'ended') return false;
+
+  return status === 'LIVE' || status === 'ACTIVE';
 }
 
 /**

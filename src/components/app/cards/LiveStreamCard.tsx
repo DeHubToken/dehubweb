@@ -55,13 +55,13 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const [showGiftDrawer, setShowGiftDrawer] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(videoPlaybackManager.globalMuted);
-  // Don't immediately mark as ended if we have a playback URL — try loading it first
   const urlsToTry = useMemo(() => [
     stream.playbackUrl,
     ...(stream.playbackUrls || []).filter((u): u is string => !!u && u !== stream.playbackUrl),
   ].filter((u): u is string => !!u && u.includes('.m3u8')), [stream.playbackUrl, stream.playbackUrls]);
   const hasPlaybackUrl = urlsToTry.length > 0;
-  const [streamEnded, setStreamEnded] = useState(!stream.isLive && !hasPlaybackUrl);
+  // If stream.isLive is false, treat as ended immediately — don't try to play a dead HLS URL
+  const [streamEnded, setStreamEnded] = useState(!stream.isLive);
   const [error, setError] = useState<string | null>(null);
   const [isLiked, setIsLiked] = useState(false);
   const [giftAmount, setGiftAmount] = useState('');
