@@ -48,7 +48,7 @@ interface TranslatableTextProps {
 /**
  * Renders text with URLs replaced by clickable link emojis
  */
-function renderTextWithLinks(text: string): ReactNode[] {
+export function renderTextWithLinks(text: string): ReactNode[] {
   const parts: ReactNode[] = [];
   let lastIndex = 0;
   let match: RegExpExecArray | null;
