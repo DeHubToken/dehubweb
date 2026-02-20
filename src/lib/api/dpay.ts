@@ -377,6 +377,7 @@ export async function createCheckoutSession(request: {
         tokenSymbol: request.tokenSymbol,
         walletAddress: request.walletAddress,
         chainId: request.chainId ?? 8453,
+        termsAndServicesAccepted: true,
       }),
     });
 
