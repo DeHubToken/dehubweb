@@ -376,7 +376,7 @@ export async function createCheckoutSession(request: {
         amount: request.amount,
         tokenSymbol: request.tokenSymbol,
         walletAddress: request.walletAddress,
-        chain_id: request.chainId || '8453', // Default to Base - API expects snake_case
+        chainId: request.chainId || '8453',
       }),
     });
 
