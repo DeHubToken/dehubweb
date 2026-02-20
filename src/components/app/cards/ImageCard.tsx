@@ -23,7 +23,7 @@ import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
 import { PostMetadata } from './PostMetadata';
 import { PPVDrawerContent } from './PPVDrawerContent';
-import { useTranslation, LANGUAGE_NAMES } from '../TranslatableText';
+import { useTranslation, LANGUAGE_NAMES, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
@@ -275,7 +275,7 @@ function FeedDescription({
       {displayDescription && (
         <div>
           <p className="text-zinc-300 text-sm leading-relaxed">
-            {shownDescription}
+            {renderTextWithLinks(shownDescription)}
           </p>
           {hasLongDescription && (
             <button 
