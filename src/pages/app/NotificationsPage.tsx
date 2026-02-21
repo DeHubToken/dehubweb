@@ -722,7 +722,7 @@ export default function NotificationsPage() {
                 <button
                   key={tab.value}
                   onClick={() => setActiveTab(tab.value)}
-                  className={`flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
+                  className={`flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-200 ${
                     activeTab === tab.value
                       ? 'bg-white text-black'
                       : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
@@ -730,8 +730,12 @@ export default function NotificationsPage() {
                 >
                   <tab.icon className="w-4 h-4" />
                   <span className="hidden sm:inline">{tab.label}</span>
-                  {count > 0 && activeTab !== tab.value && (
-                    <span className="ml-1 px-1.5 py-0.5 text-xs bg-primary text-primary-foreground rounded-lg">
+                  {count > 0 && (
+                    <span className={`ml-1 px-1.5 py-0.5 text-xs rounded-lg transition-colors duration-200 ${
+                      activeTab === tab.value
+                        ? 'bg-black/15 text-black'
+                        : 'bg-primary text-primary-foreground'
+                    }`}>
                       {count > 99 ? '99+' : count}
                     </span>
                   )}
