@@ -56,9 +56,6 @@ export function PPVDrawerContent({
             {formatCompact(Number(price))} {currency || 'USDC'}
           </span>
         </div>
-        <p className="text-center text-white/60 text-sm">
-          {t('drawers.ppvDescription')}
-        </p>
         <div className="flex gap-3 mt-2">
           <LiquidGlassBubble
             shimmer={false}
