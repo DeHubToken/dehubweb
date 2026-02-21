@@ -1688,7 +1688,7 @@ export default function AssistantPage() {
               
               {/* Clean input row with auto-expanding textarea */}
               {/* Glow effect wrapper */}
-              <div className={`flex items-end gap-2 bg-zinc-900/10 backdrop-blur-2xl rounded-2xl px-3 py-2 border shadow-xl transition-all duration-500 ${
+              <div className={`relative flex flex-col lg:flex-row lg:items-end gap-0 lg:gap-2 bg-zinc-900/10 backdrop-blur-2xl rounded-2xl px-3 py-2 border shadow-xl transition-all duration-500 ${
                 inputGlow 
                   ? 'border-white/60 shadow-[0_0_20px_rgba(255,255,255,0.3)]' 
                   : 'border-white/10'
@@ -1702,48 +1702,51 @@ export default function AssistantPage() {
                   className="hidden"
                 />
                 
-                {/* Attach button - minimal */}
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="text-white hover:text-white/80 transition-colors p-1 shrink-0 mb-0.5"
-                    >
-                      <Paperclip className="w-5 h-5" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent>{t('assistant.attachFile')}</TooltipContent>
-                </Tooltip>
-                
-                {/* Voice recording button - all devices */}
-                {isVoiceSupported && (
+                {/* Desktop: buttons inline left of textarea */}
+                <div className="hidden lg:flex items-end gap-0">
+                  {/* Attach button */}
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
                         type="button"
-                        onClick={isRecording ? stopRecording : startRecording}
-                        disabled={isLoading}
-                        className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
-                          isRecording 
-                            ? 'text-red-500' 
-                            : 'text-white hover:text-white/80'
-                        }`}
+                        onClick={() => fileInputRef.current?.click()}
+                        className="text-white hover:text-white/80 transition-colors p-1 shrink-0 mb-0.5"
                       >
-                        {isRecording ? (
-                          <div className="w-5 h-5 flex items-center justify-center">
-                            <Square className="w-3.5 h-3.5 fill-current animate-pulse" />
-                          </div>
-                        ) : (
-                          <Mic className="w-5 h-5" />
-                        )}
+                        <Paperclip className="w-5 h-5" />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent>{isRecording ? t('assistant.stopRecording') : t('assistant.voiceInput')}</TooltipContent>
+                    <TooltipContent>{t('assistant.attachFile')}</TooltipContent>
                   </Tooltip>
-                )}
+                  
+                  {/* Voice recording button */}
+                  {isVoiceSupported && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          onClick={isRecording ? stopRecording : startRecording}
+                          disabled={isLoading}
+                          className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
+                            isRecording 
+                              ? 'text-red-500' 
+                              : 'text-white hover:text-white/80'
+                          }`}
+                        >
+                          {isRecording ? (
+                            <div className="w-5 h-5 flex items-center justify-center">
+                              <Square className="w-3.5 h-3.5 fill-current animate-pulse" />
+                            </div>
+                          ) : (
+                            <Mic className="w-5 h-5" />
+                          )}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>{isRecording ? t('assistant.stopRecording') : t('assistant.voiceInput')}</TooltipContent>
+                    </Tooltip>
+                  )}
+                </div>
                 
-                {/* Auto-expanding textarea - supports multiline and formatting */}
+                {/* Auto-expanding textarea */}
                 <textarea
                   ref={inputRef}
                   value={isRecording ? transcript : input}
@@ -1751,25 +1754,19 @@ export default function AssistantPage() {
                     if (!isRecording) {
                       const newValue = e.target.value;
                       setInput(newValue);
-                      // Trigger mention detection
                       mention.handleInput(newValue, e.target.selectionStart);
-                      // Auto-resize the textarea
                       e.target.style.height = 'auto';
-                      const maxHeight = window.innerHeight * 0.45; // Max 45% of viewport (about halfway up)
+                      const maxHeight = window.innerHeight * 0.45;
                       const newHeight = Math.min(e.target.scrollHeight, maxHeight);
                       e.target.style.height = `${newHeight}px`;
                     }
                   }}
                   onKeyDown={(e) => {
-                    // First check if mention dropdown wants to handle this
                     if (mention.isOpen) {
                       const handled = mention.handleKeyDown(e);
                       if (handled) {
-                        // If Enter/Tab was pressed in dropdown, select the user
                         if (e.key === 'Enter' || e.key === 'Tab') {
                           e.preventDefault();
-                          // The mention hook will handle selection via selectedIndex
-                          // We need to trigger selection manually here
                           import('@/components/app/mentions').then(({ searchUsers }) => {
                             const users = searchUsers(mention.query, 5);
                             if (users[mention.selectedIndex]) {
@@ -1780,7 +1777,6 @@ export default function AssistantPage() {
                         return;
                       }
                     }
-                    // Submit on Enter without Shift, allow Shift+Enter for new lines
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
                       handleSend();
@@ -1788,14 +1784,14 @@ export default function AssistantPage() {
                   }}
                   onPaste={handlePaste}
                   placeholder={isRecording ? t('assistant.listening') : attachedImage ? t('assistant.describeEdits') : t('assistant.askAnything')}
-                  className={`flex-1 bg-transparent text-sm text-white placeholder:text-white/50 focus:outline-none min-w-0 resize-none overflow-y-auto leading-relaxed py-1 ${
+                  className={`flex-1 bg-transparent text-sm text-white placeholder:text-white/50 focus:outline-none min-w-0 resize-none overflow-y-auto leading-relaxed py-1 pr-20 lg:pr-0 ${
                     isRecording ? 'text-white/60 italic' : ''
                   }`}
                   style={{ 
-                    minHeight: '24px',
+                    minHeight: isMobile ? '48px' : '24px',
                     maxHeight: '45vh'
                   }}
-                  rows={1}
+                  rows={isMobile ? 2 : 1}
                   readOnly={isRecording}
                 />
                 
@@ -1810,31 +1806,87 @@ export default function AssistantPage() {
                   onClose={mention.handleClose}
                 />
                 
-                {/* Stop speaking button - shown when AI is speaking */}
-                {isSpeaking && (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        onClick={stopSpeaking}
-                        className="text-cyan-400 hover:text-cyan-300 transition-colors p-1 animate-pulse shrink-0 mb-0.5"
-                      >
-                        <VolumeX className="w-5 h-5" />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent>{t('assistant.stopSpeaking')}</TooltipContent>
-                  </Tooltip>
-                )}
+                {/* Mobile: action buttons in bottom-right corner */}
+                <div className="absolute bottom-2 right-2 flex items-center gap-1 lg:hidden">
+                  {/* Attach button */}
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="text-white/60 hover:text-white transition-colors p-1"
+                  >
+                    <Paperclip className="w-4 h-4" />
+                  </button>
+                  
+                  {/* Voice recording button */}
+                  {isVoiceSupported && (
+                    <button
+                      type="button"
+                      onClick={isRecording ? stopRecording : startRecording}
+                      disabled={isLoading}
+                      className={`transition-colors p-1 disabled:opacity-30 ${
+                        isRecording ? 'text-red-500' : 'text-white/60 hover:text-white'
+                      }`}
+                    >
+                      {isRecording ? (
+                        <div className="w-4 h-4 flex items-center justify-center">
+                          <Square className="w-3 h-3 fill-current animate-pulse" />
+                        </div>
+                      ) : (
+                        <Mic className="w-4 h-4" />
+                      )}
+                    </button>
+                  )}
+                  
+                  {/* Stop speaking button */}
+                  {isSpeaking && (
+                    <button
+                      type="button"
+                      onClick={stopSpeaking}
+                      className="text-cyan-400 hover:text-cyan-300 transition-colors p-1 animate-pulse"
+                    >
+                      <VolumeX className="w-4 h-4" />
+                    </button>
+                  )}
+                  
+                  {/* Send button */}
+                  <button
+                    type="button"
+                    onClick={() => handleSend()}
+                    disabled={(!input.trim() && !isRecording) || isLoading}
+                    className="text-white hover:text-white/80 transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <Send className="w-4 h-4" />
+                  </button>
+                </div>
                 
-                {/* Send button - minimal */}
-                <button
-                  type="button"
-                  onClick={() => handleSend()}
-                  disabled={(!input.trim() && !isRecording) || isLoading}
-                  className="text-white hover:text-white/80 transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed shrink-0 mb-0.5"
-                >
-                  <Send className="w-5 h-5" />
-                </button>
+                {/* Desktop: inline end buttons */}
+                <div className="hidden lg:flex items-end gap-0">
+                  {/* Stop speaking button */}
+                  {isSpeaking && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          onClick={stopSpeaking}
+                          className="text-cyan-400 hover:text-cyan-300 transition-colors p-1 animate-pulse shrink-0 mb-0.5"
+                        >
+                          <VolumeX className="w-5 h-5" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>{t('assistant.stopSpeaking')}</TooltipContent>
+                    </Tooltip>
+                  )}
+                  
+                  {/* Send button */}
+                  <button
+                    type="button"
+                    onClick={() => handleSend()}
+                    disabled={(!input.trim() && !isRecording) || isLoading}
+                    className="text-white hover:text-white/80 transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed shrink-0 mb-0.5"
+                  >
+                    <Send className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
