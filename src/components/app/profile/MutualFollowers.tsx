@@ -43,7 +43,7 @@ export function MutualFollowers({ profileAddress }: MutualFollowersProps) {
               className="w-5 h-5 !rounded-[2px] border border-zinc-900 cursor-pointer"
               onClick={() => handleNavigate(item)}
             >
-              {url && <AvatarImage src={url} alt={getDisplayName(item)} />}
+              {url && <AvatarImage src={url} alt={getDisplayName(item)} className="!rounded-[2px]" />}
               <AvatarFallback className="bg-zinc-700 text-white text-[8px] font-medium">
                 {(item.username || item.displayName || item.address).charAt(0).toUpperCase()}
               </AvatarFallback>
