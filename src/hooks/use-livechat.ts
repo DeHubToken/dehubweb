@@ -148,7 +148,7 @@ export function useLiveChatMessages(roomId: string | null) {
   const send = useCallback(
     async (
       content: string,
-      type: 'text' | 'image' | 'gif' = 'text',
+      type: 'text' | 'image' | 'gif' | 'voice' = 'text',
       imageUrl?: string
     ) => {
       if (!roomId || !isAuthenticated || !walletAddress) return;
