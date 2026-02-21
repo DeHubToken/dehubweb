@@ -6,14 +6,13 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageSquare, Send, Loader2, Users, Mic, X } from 'lucide-react';
+import { MessageSquare, Send, Loader2, Users, Mic } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { getMediaUrl, getAuthToken } from '@/lib/api/dehub';
-import { supabase } from '@/integrations/supabase/client';
+import { getMediaUrl } from '@/lib/api/dehub';
 import { VoiceRecorder } from '@/components/app/chat/VoiceRecorder';
 import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
@@ -34,9 +33,8 @@ interface LivePostChatProps {
 
 export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps) {
   const [newMessage, setNewMessage] = useState('');
-  const [audioPreview, setAudioPreview] = useState<{ blob: Blob; duration: number } | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   // Use stream ID as the room ID for live chat
   const { messages, isLoading, isSending, send } = useLiveChatMessages(streamId);
@@ -53,40 +51,11 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
     }
   }, [messages.length]);
 
-  const handleVoiceRecordingComplete = useCallback((blob: Blob, duration: number) => {
-    setAudioPreview({ blob, duration });
-    toast.success(`Recording saved (${duration}s)`);
+  const handleVoiceRecordingComplete = useCallback((_blob: Blob, _duration: number) => {
+    toast.error('Voice notes are not yet supported in live chat. Feature bug reported.');
   }, []);
 
   const handleSend = async () => {
-    // Handle audio message
-    if (audioPreview) {
-      if (!isAuthenticated || !walletAddress) { toast.error('Sign in to chat'); return; }
-      try {
-        const token = getAuthToken();
-        const formData = new FormData();
-        formData.append('file', audioPreview.blob, `voice-${Date.now()}.webm`);
-
-        const { data, error } = await supabase.functions.invoke('dm-upload-media', {
-          body: formData,
-          headers: {
-            'x-wallet-address': walletAddress.toLowerCase(),
-            'x-dehub-token': token || '',
-          },
-        });
-
-        if (error || !data?.ok) throw new Error(data?.error || 'Upload failed');
-
-        await send(`🎤 Voice message (${audioPreview.duration}s)`, 'voice', data.url);
-        setAudioPreview(null);
-      } catch (err) {
-        console.error('[LivePostChat] Voice upload error:', err);
-        toast.error('Failed to send voice note');
-      }
-      return;
-    }
-
-    if (!newMessage.trim()) return;
     if (!isAuthenticated) {
       toast.error('Sign in to chat');
       return;
@@ -189,18 +158,6 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
 
       {/* Input */}
       <div className="pt-2">
-        {audioPreview && (
-          <div className="mb-2 inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-800 rounded-lg">
-            <div className="w-2 h-2 rounded-full bg-green-500" />
-            <span className="text-xs text-white">🎤 {audioPreview.duration}s</span>
-            <button
-              onClick={() => setAudioPreview(null)}
-              className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-            >
-              <X className="w-2.5 h-2.5 text-white" />
-            </button>
-          </div>
-        )}
         <div className="relative">
           <Textarea
             value={newMessage}
@@ -218,7 +175,7 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
             />
             <button
               onClick={handleSend}
-              disabled={isSending || (!newMessage.trim() && !audioPreview) || isOffline}
+              disabled={isSending || !newMessage.trim() || isOffline}
               className="p-2 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {isSending ? (
