@@ -2,6 +2,7 @@ import { TrendingUp, TrendingDown, Loader2, Wallet } from 'lucide-react';
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import dehubCoin from '@/assets/dehub-coin.png';
+import bnbLogo from '@/assets/bnb-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { getDHBBalance } from '@/lib/contracts/stream-controller';
 import { fromWei } from '@/lib/contracts/dhb-token';
@@ -12,9 +13,9 @@ import { toast } from 'sonner';
 
 /** Placeholder currencies the platform supports alongside DHB */
 const otherCurrencies = [
-  { symbol: 'ETH', name: 'Ethereum', balance: '0.00' },
-  { symbol: 'USDT', name: 'Tether', balance: '0.00' },
-  { symbol: 'BNB', name: 'BNB', balance: '0.00' },
+  { symbol: 'ETH', name: 'Ethereum', balance: '0.00', logo: null },
+  { symbol: 'USDT', name: 'Tether', balance: '0.00', logo: null },
+  { symbol: 'BNB', name: 'BNB', balance: '0.00', logo: bnbLogo },
 ];
 
 export function BalanceCard() {
@@ -64,9 +65,13 @@ export function BalanceCard() {
           {otherCurrencies.map((c) => (
             <div key={c.symbol} className="flex items-center justify-between py-1.5">
               <div className="flex items-center gap-2">
+              {c.logo ? (
+                <img src={c.logo} alt={c.symbol} className="w-6 h-6 rounded-full" />
+              ) : (
                 <span className="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-400">
                   {c.symbol.charAt(0)}
                 </span>
+              )}
                 <div>
                   <span className="text-sm text-white">{c.symbol}</span>
                   <span className="text-xs text-zinc-500 ml-1.5">{c.name}</span>
