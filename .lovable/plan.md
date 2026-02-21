@@ -1,52 +1,24 @@
 
+## Fix: Include PPV purchases in Balance Chart
 
-# Fix: PPV Content Stays Locked in Feed Due to Caching
+**Problem**: The BalanceCard's balance history chart only uses DPay API transactions to reconstruct your balance over time. Since your recent activity was PPV purchases, the chart has no data and shows "No transaction history yet."
 
-## Problem
-When you browse the main feed while logged in, PPV content you've already purchased still appears locked. This is because:
+**Solution**: Merge PPV purchases from the database into the chart data, just like we already did for Recent Transactions and the Transactions tab.
 
-1. The feed uses pre-cached data from the server that was fetched **without** your login credentials
-2. Since the cache has no knowledge of your purchases, `isUnlocked` is always `false` for every post
-3. In Bookmarks/Files, the data is fetched fresh with your credentials, so it works there
+### Changes
 
-## Solution
-When you're logged in, skip the server cache and fetch directly from the API with your authentication token. This way the API knows who you are and correctly marks purchased content as unlocked.
+**File: `src/components/app/command-centre/BalanceCard.tsx`**
 
-Unauthenticated visitors will continue using the fast cached data since they can't have purchases anyway.
+1. Import `supabase` client and add a query for `ppv_purchases` (same pattern used in `RecentTransactions.tsx`)
+2. Merge PPV records into the transaction list before building the chart — map each PPV purchase to the same shape the `buildBalanceChart` function expects (with `type`, `amount`, `createdAt`)
+3. For PPV transactions, set `type` based on whether the user is the buyer (debit) or creator (credit), so the balance reconstruction is accurate
+4. Update the `buildBalanceChart` function to recognize PPV types (e.g., `ppv_buy`, `ppv_sale`) when determining credit vs debit
 
-## Technical Details
+This ensures any PPV activity generates chart data points, so the balance history graph renders instead of showing the empty state.
 
-### File: `src/hooks/use-unified-feed.ts`
+### Technical Details
 
-**Change in `fetchUnifiedFeed` function (line ~456):**
-
-Before:
-```typescript
-async function fetchUnifiedFeed(params) {
-  const cacheKey = getCacheKey(params);
-  if (cacheKey) {
-    const cached = await fetchCachedFeed(cacheKey);
-    if (cached) return cached;
-  }
-  return fetchUnifiedFeedFromAPI(params);
-}
-```
-
-After:
-```typescript
-async function fetchUnifiedFeed(params) {
-  // Authenticated users bypass cache to get personalized data (isUnlocked, isLiked, etc.)
-  const token = getAuthToken();
-  if (!token) {
-    const cacheKey = getCacheKey(params);
-    if (cacheKey) {
-      const cached = await fetchCachedFeed(cacheKey);
-      if (cached) return cached;
-    }
-  }
-  return fetchUnifiedFeedFromAPI(params);
-}
-```
-
-This is a one-line logic change: only use the cache when there's no auth token. Authenticated users always get fresh, personalized data from the API.
-
+- Query: `supabase.from('ppv_purchases').select('*').or('buyer_address.ilike.{addr},creator_address.ilike.{addr}').order('created_at', { ascending: false }).limit(50)`
+- Map PPV records to `DPayTransaction`-compatible shape with `type: 'ppv'`
+- In `buildBalanceChart`, treat `type === 'ppv'` with buyer as debit, creator as credit
+- Merge both arrays, sort by date, then build chart as before
