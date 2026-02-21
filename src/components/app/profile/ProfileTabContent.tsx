@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info } from 'lucide-react';
+import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight } from 'lucide-react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -492,6 +492,17 @@ function CommentCard({ comment, onClick }: { comment: ApiCommentResponse; onClic
       onClick={onClick}
       className="w-full text-left rounded-xl border border-white/[0.08] bg-transparent p-3 hover:bg-white/[0.03] transition-colors cursor-pointer overflow-hidden relative"
     >
+      {/* "Replying to" context — X-style */}
+      {comment.tokenId && (
+        <div className="flex items-center gap-1.5 text-xs text-zinc-500 mb-2 pl-[44px]">
+          <CornerDownRight className="w-3 h-3 flex-shrink-0" />
+          <span>
+            {comment.parentId ? 'Replying to a comment on' : 'Commented on'}{' '}
+            <span className="text-blue-400 hover:underline">post #{comment.tokenId}</span>
+          </span>
+        </div>
+      )}
+
       <CardHeader
         username={resolvedName}
         handle={resolvedHandle}
