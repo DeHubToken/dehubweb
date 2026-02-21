@@ -1,32 +1,52 @@
 
 
-# Fix: PPV Video Stays Locked After Purchase
+# Fix: PPV Content Stays Locked in Feed Due to Caching
 
 ## Problem
-After successfully paying for PPV content, the video remains locked because:
-1. The `onSuccess` callback in `PPVDrawerContent` only closes the drawer
-2. The video's `isUnlocked` flag in the feed data is never updated locally
-3. `canBypassGating` remains `false`, so the gating overlay persists
+When you browse the main feed while logged in, PPV content you've already purchased still appears locked. This is because:
+
+1. The feed uses pre-cached data from the server that was fetched **without** your login credentials
+2. Since the cache has no knowledge of your purchases, `isUnlocked` is always `false` for every post
+3. In Bookmarks/Files, the data is fetched fresh with your credentials, so it works there
 
 ## Solution
-Add a local "unlocked" state to `VideoCard` (and `ImageCard`) that gets set to `true` after a successful PPV payment, and factor it into `canBypassGating`.
+When you're logged in, skip the server cache and fetch directly from the API with your authentication token. This way the API knows who you are and correctly marks purchased content as unlocked.
+
+Unauthenticated visitors will continue using the fast cached data since they can't have purchases anyway.
 
 ## Technical Details
 
-### 1. VideoCard.tsx
-- Add `const [locallyUnlocked, setLocallyUnlocked] = useState(false);`
-- Update bypass: `const canBypassGating = !!(isOwnPost || video.isOwner || video.isUnlocked || locallyUnlocked);`
-- Pass `onUnlocked={() => setLocallyUnlocked(true)}` to `PPVDrawerContent` instead of just `onClose`
+### File: `src/hooks/use-unified-feed.ts`
 
-### 2. ImageCard.tsx
-- Same pattern: add `locallyUnlocked` state and wire it into `canBypassGating`
+**Change in `fetchUnifiedFeed` function (line ~456):**
 
-### 3. PPVDrawerContent.tsx
-- Add an `onUnlocked` prop (called after successful payment)
-- Wire `onSuccess` in `usePPVPayment` to call both `onUnlocked` and `onClose`
+Before:
+```typescript
+async function fetchUnifiedFeed(params) {
+  const cacheKey = getCacheKey(params);
+  if (cacheKey) {
+    const cached = await fetchCachedFeed(cacheKey);
+    if (cached) return cached;
+  }
+  return fetchUnifiedFeedFromAPI(params);
+}
+```
 
-### 4. use-ppv-payment.ts (no change needed)
-- Already calls `onSuccess` after confirmed transaction -- the fix is purely in how the components respond to that callback
+After:
+```typescript
+async function fetchUnifiedFeed(params) {
+  // Authenticated users bypass cache to get personalized data (isUnlocked, isLiked, etc.)
+  const token = getAuthToken();
+  if (!token) {
+    const cacheKey = getCacheKey(params);
+    if (cacheKey) {
+      const cached = await fetchCachedFeed(cacheKey);
+      if (cached) return cached;
+    }
+  }
+  return fetchUnifiedFeedFromAPI(params);
+}
+```
 
-This approach works instantly without needing to refetch the feed, and the unlock persists visually for the session. If the user refreshes, the API's `isUnlocked` flag (set by the backend after the purchase is recorded) will take over.
+This is a one-line logic change: only use the cache when there's no auth token. Authenticated users always get fresh, personalized data from the API.
 
