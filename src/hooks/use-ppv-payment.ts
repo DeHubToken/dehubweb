@@ -63,6 +63,20 @@ export function usePPVPayment({
     setIsPaying(true);
 
     try {
+      // Check if already purchased
+      const { count } = await supabase
+        .from('ppv_purchases')
+        .select('*', { count: 'exact', head: true })
+        .eq('token_id', tokenId)
+        .eq('buyer_address', walletAddress.toLowerCase());
+
+      if (count && count > 0) {
+        toast.success('Content already unlocked! 🎉', { id: 'ppv-payment' });
+        onSuccess?.();
+        setIsPaying(false);
+        return;
+      }
+
       const chainConfig = getChainConfig(chainId);
       
       // Switch to correct chain
