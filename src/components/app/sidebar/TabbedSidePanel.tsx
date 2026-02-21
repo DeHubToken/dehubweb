@@ -3,6 +3,7 @@ import { SquareUserRound, Trophy, MessagesSquare } from 'lucide-react';
 import { WhoToFollow } from '../WhoToFollow';
 import { SidebarLeaderboard, type SidebarLeaderboardHandle } from './SidebarLeaderboard';
 import { SidebarChat } from './SidebarChat';
+import { BadgeBalanceProvider } from '@/contexts/BadgeBalanceContext';
 
 type TabType = 'leaderboard' | 'follow' | 'chat';
 
@@ -51,7 +52,9 @@ export function TabbedSidePanel() {
           <WhoToFollow />
         </div>
         <div style={{ display: activeTab === 'chat' ? 'block' : 'none' }} className="h-full">
-          <SidebarChat />
+          <BadgeBalanceProvider>
+            <SidebarChat />
+          </BadgeBalanceProvider>
         </div>
       </div>
     </div>
