@@ -61,6 +61,8 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     isLocked: nft.is_locked ?? false,
     lockedPrice: nft.locked_price,
     lockedCurrency: nft.locked_currency || 'DHB',
+    isOwner: nft.isOwner ?? false,
+    isUnlocked: nft.isUnlocked ?? false,
   };
 }
 
@@ -101,6 +103,8 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
     bountyComments: nft.streamInfo?.addBountyFirstXComments != null ? Number(nft.streamInfo.addBountyFirstXComments) : undefined,
     bountyAmount: nft.streamInfo?.addBountyAmount,
     bountyCurrency: nft.streamInfo?.addBountyTokenSymbol || 'DHB',
+    isOwner: nft.isOwner ?? false,
+    isUnlocked: nft.isUnlocked ?? false,
   };
 }
 

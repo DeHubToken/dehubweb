@@ -515,8 +515,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     };
   }, []);
 
-  const isPPVLocked = !!video.isPPV;
-  const isBountyLocked = !!video.isW2E;
+  const canBypassGating = !!(isOwnPost || video.isOwner || video.isUnlocked);
+  const isPPVLocked = !!video.isPPV && !canBypassGating;
+  const isBountyLocked = !!video.isW2E && !canBypassGating;
   const isContentGated = isPPVLocked || isBountyLocked;
 
   // PPV purchase count
@@ -900,7 +901,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                   >
                     <Flag className="w-5 h-5" /> {t('postOptions.report')}
                   </button>
-                  {!isContentGated && !video.isLocked && (
+                  {!isContentGated && !(video.isLocked && !canBypassGating) && (
                     <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                       <Download className="w-5 h-5" /> {t('postOptions.download')}
                     </button>
@@ -1070,7 +1071,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         )}
         
         {/* Content Type Badges - PPV/Bounty/Locked - show all that apply - hide in immersive mode */}
-        {!isImmersive && (video.isLocked) && (
+        {!isImmersive && (video.isLocked && !canBypassGating) && (
           <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5">
             {/* Locked/Gated Badge */}
             {video.isLocked && (
@@ -1240,16 +1241,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             verified={video.verified}
             onAIClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
             onMenuClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
-            isPPV={video.isPPV}
+            isPPV={isPPVLocked ? video.isPPV : false}
             tokenId={video.id}
             ppvPrice={video.ppvPrice}
             ppvCurrency={video.ppvCurrency}
-            isW2E={video.isW2E}
+            isW2E={isBountyLocked ? video.isW2E : false}
             bountyAmount={video.bountyAmount}
             bountyCurrency={video.bountyCurrency}
             bountyViews={video.bountyViews}
             bountyComments={video.bountyComments}
-            isLocked={video.isLocked}
+            isLocked={video.isLocked && !canBypassGating}
             lockedPrice={video.lockedPrice}
             lockedCurrency={video.lockedCurrency}
           />
@@ -1353,7 +1354,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             >
               <Flag className="w-5 h-5" /> {t('postOptions.report')}
             </button>
-            {!isContentGated && !video.isLocked && (
+            {!isContentGated && !(video.isLocked && !canBypassGating) && (
               <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                 <Download className="w-5 h-5" /> {t('postOptions.download')}
               </button>
@@ -1515,7 +1516,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
       )}
 
       {/* Locked Drawer - controlled, rendered at root level for mobile compatibility */}
-      {video.isLocked && (
+      {video.isLocked && !canBypassGating && (
         <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
           <DrawerContent glass className="px-4 pb-6">
             <DrawerHeader className="pb-3">
