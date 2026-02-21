@@ -26,6 +26,7 @@ import { ActionBar } from './ActionBar';
 import { PostMetadata } from './PostMetadata';
 import { PPVDrawerContent } from './PPVDrawerContent';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { TranslatableText, SharedTranslationProvider, useTranslation } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
@@ -340,6 +341,13 @@ function MobileCreatorInfo({
               <p className="text-center text-white/60 text-sm">
                 {t('drawers.gatedDescription')}
               </p>
+              {lockedPrice && lockedPrice > 0 && (
+                <VerifyUnlockButton
+                  requiredAmount={lockedPrice}
+                  currency={lockedCurrency || 'DHB'}
+                  onUnlocked={() => { setShowLockedDrawer(false); onUnlocked?.(); }}
+                />
+              )}
             </div>
           </DrawerContent>
         </Drawer>
@@ -1572,6 +1580,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               <p className="text-center text-white/60 text-sm">
                 {t('drawers.gatedDescription')}
               </p>
+              {video.lockedPrice && video.lockedPrice > 0 && (
+                <VerifyUnlockButton
+                  requiredAmount={video.lockedPrice}
+                  currency={video.lockedCurrency || 'DHB'}
+                  onUnlocked={() => { setShowLockedDrawer(false); setLocallyUnlocked(true); }}
+                />
+              )}
             </div>
           </DrawerContent>
         </Drawer>

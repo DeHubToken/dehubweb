@@ -119,6 +119,8 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     bountyComments,
     bountyAmount,
     bountyCurrency,
+    isOwner: nft.isOwner ?? false,
+    isUnlocked: nft.isUnlocked ?? false,
   };
 }
 
@@ -176,6 +178,8 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     bountyComments: streamInfo?.addBountyFirstXComments != null ? Number(streamInfo.addBountyFirstXComments) : undefined,
     bountyAmount: streamInfo?.addBountyAmount,
     bountyCurrency: streamInfo?.addBountyTokenSymbol || 'DHB',
+    isOwner: nft.isOwner ?? false,
+    isUnlocked: nft.isUnlocked ?? false,
   };
 }
 

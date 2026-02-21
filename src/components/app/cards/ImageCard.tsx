@@ -38,6 +38,7 @@ import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { useImageTranslation } from '@/hooks/use-image-translation';
 import { useAuth } from '@/contexts/AuthContext';
+import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { updateTokenVisibility, type TokenVisibility } from '@/lib/api/dehub';
 import { cacheImageForNavigation } from '@/lib/post-cache';
 import {
@@ -833,6 +834,13 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
               <p className="text-center text-white/60 text-sm">
                 {t('drawers.gatedDescription')}
               </p>
+              {post.lockedPrice && post.lockedPrice > 0 && (
+                <VerifyUnlockButton
+                  requiredAmount={post.lockedPrice}
+                  currency={post.lockedCurrency || 'DHB'}
+                  onUnlocked={() => { setShowLockedDrawer(false); setLocallyUnlocked(true); }}
+                />
+              )}
             </div>
           </DrawerContent>
         </Drawer>
