@@ -1,48 +1,34 @@
 
 
-# PPV Purchase Counter
+## Fix: Block Downloads on Locked/PPV Content
 
-## Overview
-Track PPV content purchases by recording each successful payment in a local database table, then displaying the purchase count on PPV posts. Since the DeHub API doesn't expose a purchase count endpoint, we'll maintain our own ledger after each confirmed on-chain transaction.
+### Problem
+The "Download" option in the three-dot menu (options drawer) is always visible and functional, even for PPV and locked videos/images. Users can bypass the paywall by simply downloading gated content without paying.
 
-## How It Works
+### Affected Locations
+There are **4 places** where an unguarded download button exists:
 
-1. After a successful DHB token transfer (already handled in `use-ppv-payment.ts`), we record the purchase in a new `ppv_purchases` table
-2. Purchase counts are fetched and displayed on PPV post cards (both Video and Image)
-3. Creators can see how many times their PPV content has been purchased
+1. **VideoCard.tsx** - Mobile options drawer (line ~903)
+2. **VideoCard.tsx** - Desktop/immersive options drawer (line ~1354)
+3. **ImageCard.tsx** - Options drawer (line ~442)
+4. **SinglePostPage.tsx** - Options drawer (line ~732)
 
-## Technical Details
+### Solution
+Conditionally hide the download button when the content is gated (PPV, locked, or bounty/W2E). The button will only render if none of these gating flags are true.
 
-### 1. New Database Table: `ppv_purchases`
+### Technical Details
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | uuid | Primary key |
-| token_id | text | The post/NFT token ID |
-| buyer_address | text | Wallet address of purchaser |
-| creator_address | text | Wallet address of creator |
-| amount | numeric | Price paid |
-| currency | text | Token symbol (DHB) |
-| chain_id | integer | Blockchain chain ID |
-| tx_hash | text | On-chain transaction hash |
-| created_at | timestamptz | Purchase timestamp |
+**VideoCard.tsx (2 locations)**
+- The component already has `isPPVLocked`, `isBountyLocked`, and `isContentGated` computed booleans, plus `video.isLocked`
+- Wrap both download buttons with a condition: only show if `!isContentGated && !video.isLocked`
 
-- Unique constraint on `(token_id, buyer_address)` to prevent duplicate records
-- RLS: anyone can read (for counts), only the buyer's wallet can insert
+**ImageCard.tsx**
+- The component receives `isPPV`, `isW2E`, and `isLocked` props
+- Wrap the download button: only show if `!isPPV && !isW2E && !isLocked`
 
-### 2. Record Purchase After Payment
+**SinglePostPage.tsx**
+- The page fetches post data including gating flags (`is_ppv`, `is_w2e`, `is_locked`)
+- Wrap the download button: only show if none of those flags are true
 
-In `src/hooks/use-ppv-payment.ts`, after the successful `result.wait(1)` call, insert a row into `ppv_purchases` with the transaction hash and details.
-
-### 3. New Hook: `usePPVPurchaseCount`
-
-A small hook that queries `ppv_purchases` to get the count for a given `token_id`. Uses a simple `select count(*)` query, cached via React Query.
-
-### 4. Display Count on PPV Cards
-
-Add a small purchase count badge (e.g., "12 unlocks") near the PPV price overlay on `VideoCard.tsx` and `ImageCard.tsx`. Only shown when count > 0.
-
-### 5. Check If Already Purchased
-
-The unique constraint on `(token_id, buyer_address)` also enables a quick "already unlocked" check, which could be used to skip the payment flow for repeat views.
+This is a UI-only guard -- the actual media URLs come from the CDN and are not proxied through an auth layer. However, since the video player itself is already blocked (thumbnail + overlay) for gated content, removing the download button closes the remaining bypass vector in the app's UI.
 
