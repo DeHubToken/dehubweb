@@ -7,7 +7,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { MessageSquare, Send, Loader2, Users } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
 import { useAuth } from '@/contexts/AuthContext';
@@ -139,19 +139,20 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
       </div>
 
       {/* Input */}
-      <div className="flex items-center gap-2">
-        <Input
+      <div className="relative">
+        <Textarea
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={isOffline ? 'Chat is offline' : 'Type a message...'}
           disabled={isOffline || !isAuthenticated}
-          className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 text-sm rounded-xl"
+          className="min-h-[56px] max-h-32 resize-none bg-white/5 border-white/10 text-white placeholder:text-zinc-500 text-sm rounded-xl pr-12"
+          rows={2}
         />
         <button
           onClick={handleSend}
           disabled={isSending || !newMessage.trim() || isOffline}
-          className="p-2 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="absolute bottom-2 right-2 p-2 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {isSending ? (
             <Loader2 className="w-4 h-4 animate-spin" />
