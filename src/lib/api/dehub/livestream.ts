@@ -179,7 +179,5 @@ export async function endLiveStream(streamId: string): Promise<{ result: boolean
 export const startLivestream = startLiveStream;
 export const endLivestream = async () => ({ success: true });
 
-// DHB Price
-export async function getDHBPrice(): Promise<{ price: number; change_24h: number }> {
-  return apiCall<{ price: number; change_24h: number }>("/api/dpay/price");
-}
+// DHB Price — re-exported from payments for backward compatibility
+export { getDHBPrice } from './payments';

@@ -108,3 +108,47 @@ export async function getUsersCount(): Promise<number> {
   }
   return response as number;
 }
+
+export interface SearchUsersParams {
+  q: string;
+  page?: number;
+  limit?: number;
+}
+
+export async function searchUsers(params: SearchUsersParams): Promise<PaginatedResponse<DeHubUser>> {
+  return apiCall<PaginatedResponse<DeHubUser>>("/api/users_search", {
+    params: { q: params.q, page: params.page, limit: params.limit },
+  });
+}
+
+export async function getUserComments(
+  address: string,
+  page: number = 1,
+  limit: number = 20,
+): Promise<PaginatedResponse<unknown>> {
+  return apiCall<PaginatedResponse<unknown>>(`/api/users/${encodeURIComponent(address)}/comments`, {
+    params: { page, limit },
+    requiresAuth: true,
+  });
+}
+
+export interface SuggestedAccount {
+  address: string;
+  username?: string;
+  displayName?: string;
+  avatarUrl?: string;
+  avatarImageUrl?: string;
+  followers?: number;
+  isFollowing?: boolean;
+}
+
+export async function getSuggestedAccounts(limit: number = 10): Promise<SuggestedAccount[]> {
+  const response = await apiCall<{ result: SuggestedAccount[] } | SuggestedAccount[]>("/api/suggested-accounts", {
+    params: { limit },
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as SuggestedAccount[];
+}

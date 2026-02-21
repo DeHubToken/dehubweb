@@ -254,3 +254,13 @@ export async function recordBatchViews(tokenIds: number[]): Promise<{ result: bo
     requiresAuth: false,
   });
 }
+
+export async function getMyPosts(
+  page: number = 1,
+  limit: number = 20,
+): Promise<{ result: DeHubNFT[]; pagination?: { page: number; limit: number; totalCount: number; totalPages: number; hasMore: boolean } }> {
+  return apiCall<{ result: DeHubNFT[]; pagination?: any }>("/api/myPosts", {
+    params: { page, limit },
+    requiresAuth: true,
+  });
+}
