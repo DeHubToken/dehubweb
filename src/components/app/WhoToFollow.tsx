@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { UserPlus, Loader2, RefreshCw } from 'lucide-react';
+import { UserPlus, Loader2, RefreshCw, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -62,11 +62,15 @@ export function WhoToFollow() {
     // Deduplicate by address
     const seen = new Set<string>();
     return allSuggestions.filter(user => {
-      if (followedUsers.has(user.address) || seen.has(user.address)) return false;
+      if (seen.has(user.address)) return false;
       seen.add(user.address);
       return true;
     });
-  }, [allSuggestions, followedUsers]);
+  }, [allSuggestions]);
+
+  const isUserFollowed = useCallback((user: SuggestedAccount) => {
+    return followedUsers.has(user.address) || user.isFollowing === true;
+  }, [followedUsers]);
 
   // Infinite scroll handler
   const handleScroll = useCallback(() => {
@@ -116,7 +120,7 @@ export function WhoToFollow() {
       return;
     }
 
-    if (loadingUsers.has(user.address) || followedUsers.has(user.address)) {
+    if (loadingUsers.has(user.address) || isUserFollowed(user)) {
       return;
     }
 
@@ -205,11 +209,20 @@ export function WhoToFollow() {
               size="sm"
               variant="outline"
               onClick={(e) => handleFollow(e, user)}
-              disabled={loadingUsers.has(user.address)}
-              className="h-8 w-[72px] text-xs font-semibold rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex items-center justify-center"
+              disabled={loadingUsers.has(user.address) || isUserFollowed(user)}
+              className={`h-8 w-[82px] text-xs font-semibold rounded-xl flex items-center justify-center ${
+                isUserFollowed(user)
+                  ? 'border-zinc-600 text-zinc-400 bg-transparent cursor-default'
+                  : 'border-zinc-700 text-white hover:bg-zinc-800 bg-transparent'
+              }`}
             >
               {loadingUsers.has(user.address) ? (
                 <Loader2 className="w-3 h-3 animate-spin" />
+              ) : isUserFollowed(user) ? (
+                <>
+                  <Check className="w-3 h-3 mr-1" />
+                  Following
+                </>
               ) : (
                 'Follow'
               )}
