@@ -29,7 +29,18 @@ export async function getLeaderboard(
   sort: LeaderboardSortMode = 'holdings',
   period: LeaderboardPeriod = 'all'
 ): Promise<LeaderboardResponse> {
-  // Try to get from server cache first
+  // For "all time", call the new /api/leaderboard endpoint directly
+  if (period === 'all') {
+    const params: Record<string, string> = { sort };
+    const raw = await apiCall<{ result: LeaderboardEntry[] }>("/api/leaderboard", { params });
+    // Normalize into the shared response shape
+    return {
+      result: { byWalletBalance: raw.result || [] },
+      hasHistoricalData: true,
+    };
+  }
+
+  // For time-based periods (day/week/month/year), use the server cache
   try {
     const { supabase } = await import('@/integrations/supabase/client');
     
@@ -48,10 +59,6 @@ export async function getLeaderboard(
     console.warn('[Leaderboard] Cache unavailable, falling back to API:', cacheError);
   }
   
-  const params: Record<string, string> = { sort };
-  if (period !== 'all') {
-    params.period = period;
-  }
-  
+  const params: Record<string, string> = { sort, period };
   return apiCall<LeaderboardResponse>("/api/leaderboard", { params });
 }
