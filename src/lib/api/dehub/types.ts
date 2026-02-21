@@ -62,6 +62,7 @@ export interface AuthResponse {
     isMobile: boolean;
     lastLoginTimestamp: number;
     tokenExpiry: string;
+    isNewAccount?: boolean;
   };
   message: string;
 }

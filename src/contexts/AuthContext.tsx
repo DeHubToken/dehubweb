@@ -544,7 +544,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setWalletAddress(authAddress);
     setUser(normalizedUser);
 
-    if (!normalizedUser.username) {
+    if (authResponse.result?.isNewAccount) {
       setRequiresUsername(true);
     }
 
@@ -556,166 +556,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log('[Auth] ✓ DeHub authentication complete (Wagmi)');
   };
 
-  // --- Deployed Smart Account Cache ---
-  // Once a Safe smart account is deployed on-chain it stays deployed forever.
-  // Cache this in localStorage so returning users skip the eth_getCode RPC call.
-  const SA_DEPLOYED_CACHE_KEY = 'dehub_deployed_sa';
-  const isKnownDeployed = (addr: string): boolean => {
-    try {
-      const cache = JSON.parse(localStorage.getItem(SA_DEPLOYED_CACHE_KEY) || '{}');
-      return cache[addr.toLowerCase()] === true;
-    } catch { return false; }
-  };
-  const markDeployedInCache = (addr: string): void => {
-    try {
-      const cache = JSON.parse(localStorage.getItem(SA_DEPLOYED_CACHE_KEY) || '{}');
-      cache[addr.toLowerCase()] = true;
-      localStorage.setItem(SA_DEPLOYED_CACHE_KEY, JSON.stringify(cache));
-    } catch {}
-  };
-
-  /**
-   * Ensure Smart Account is deployed before signing.
-   * Matches mobile app logic: check if code exists, if not, send empty tx.
-   * onProgress: optional callback to update UI (e.g. toast) during long steps.
-   */
-  const ensureSmartAccountDeployed = async (provider: any, address: string, onProgress?: (msg: string) => void) => {
-    console.log(`[Auth] Checking deployment for ${address}...`);
-
-    // Fast path: skip eth_getCode if we've confirmed deployment before (deployed = permanent)
-    if (isKnownDeployed(address)) {
-      console.log('[Auth] Account known deployed (cached) — skipping eth_getCode');
-      return true;
-    }
-
-    const updateProgress = (msg: string) => onProgress?.(msg);
-
-    // Use direct Base RPC for eth_getCode (read-only, avoids Pimlico AA overhead)
-    const BASE_RPC = 'https://base-rpc.publicnode.com';
-    const getCodeDirect = async (addr: string, timeoutMs = 4000): Promise<string> => {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), timeoutMs);
-      try {
-        const resp = await fetch(BASE_RPC, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_getCode', params: [addr, 'latest'], id: 1 }),
-          signal: controller.signal,
-        });
-        const json = await resp.json();
-        return json.result || '0x';
-      } finally {
-        clearTimeout(timer);
-      }
-    };
-
-    // Writes (eth_sendTransaction) still go through the AA provider
-    const requestWithTimeout = async (method: string, params: any[] = [], timeoutMs = 5000) => {
-      return Promise.race([
-        provider.request({ method, params }),
-        new Promise((_, reject) => setTimeout(() => reject(new Error(`Method ${method} timed out`)), timeoutMs))
-      ]);
-    };
-
-    try {
-      const code = await getCodeDirect(address).catch(async () => {
-        // Fallback to AA provider if direct RPC fails
-        console.warn('[Auth] Direct eth_getCode failed, falling back to AA provider');
-        return await requestWithTimeout('eth_getCode', [address, 'latest']) as string;
-      });
-
-      if (code === '0x' || code === '0x0' || !code) {
-        console.log('[Auth] Account not deployed. Sending initialization transaction...');
-        updateProgress('Setting up your account...');
-
-        // Try deployment with retries - UserOperations can take time via bundler
-        const MAX_RETRIES = 2;
-        let deployed = false;
-
-        for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-          try {
-            console.log(`[Auth] Deployment attempt ${attempt}/${MAX_RETRIES}...`);
-            // Execute an empty transaction to trigger deployment
-            const txHash = await requestWithTimeout('eth_sendTransaction', [{
-              from: address,
-              to: address,
-              value: '0x0',
-              data: '0x',
-            }], 30000) as string;
-
-            console.log('[Auth] Initialization transaction sent:', txHash);
-            updateProgress('Confirming on-chain (a few seconds)...');
-
-            // Poll eth_getCode until the contract is confirmed on-chain.
-            // Poll every 400ms — 25 polls = 10s max (deployment usually 2–5s)
-            let deployConfirmed = false;
-            for (let poll = 0; poll < 25; poll++) {
-              await new Promise(r => setTimeout(r, 400));
-              try {
-                const checkCode = await requestWithTimeout('eth_getCode', [address, 'latest'], 3000) as string;
-                if (checkCode && checkCode !== '0x' && checkCode !== '0x0') {
-                  console.log(`[Auth] ✓ Deployment confirmed on-chain after ~${(poll + 1) * 0.4}s`);
-                  deployConfirmed = true;
-                  break;
-                }
-              } catch (_) { /* ignore poll errors */ }
-            }
-            if (!deployConfirmed) {
-              console.warn('[Auth] Deployment not confirmed in 10s, proceeding anyway');
-            }
-            updateProgress('Account ready! Please sign...');
-            deployed = true;
-            break;
-          } catch (txErr: any) {
-            const errMsg = (txErr.message || '').toLowerCase();
-            // AA10 = bundler says account already deployed — treat as success immediately
-            if (errMsg.includes('aa10') || errMsg.includes('sender already constructed') || errMsg.includes('already been deployed')) {
-              console.log('[Auth] Bundler confirms account already deployed (AA10) — skipping deployment');
-              markDeployedInCache(address);
-              deployed = true;
-              break;
-            }
-            // Torus keyring not ready yet after OAuth popup — wait longer before retry
-            const isKeyrignNotReady = errMsg.includes('torus keyring') || errMsg.includes('unable to find matching address');
-            console.warn(`[Auth] Deployment attempt ${attempt} failed:`, txErr.message);
-            if (attempt < MAX_RETRIES) {
-              updateProgress('Retrying account setup...');
-              await new Promise(r => setTimeout(r, isKeyrignNotReady ? 2000 : 800));
-            }
-          }
-        }
-
-        if (!deployed) {
-          // Verify if it got deployed despite tx errors (bundler may have processed it)
-          try {
-            const recheck = await requestWithTimeout('eth_getCode', [address, 'latest'], 5000) as string;
-            if (recheck && recheck !== '0x' && recheck !== '0x0') {
-              console.log('[Auth] Account deployed (confirmed on recheck)');
-              deployed = true;
-            }
-          } catch (_) { /* ignore recheck errors */ }
-        }
-
-        if (!deployed) {
-          console.error('[Auth] Account deployment failed after all retries');
-          toast.error('Account setup failed. Please try again.', { duration: 5000 });
-          return false;
-        }
-
-        // Save to cache so future logins skip eth_getCode entirely
-        markDeployedInCache(address);
-        return true;
-      }
-
-      console.log('[Auth] Account already deployed');
-      // Cache so future logins are instant (skip eth_getCode)
-      markDeployedInCache(address);
-      return true;
-    } catch (err: any) {
-      console.error('[Auth] Smart account deployment check failed:', err.message);
-      return false;
-    }
-  };
 
   /**
    * Complete DeHub auth specifically after redirect flow.
@@ -758,11 +598,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const authAddress = accounts[0].toLowerCase();
       console.log('[Auth] [REDIRECT] Account:', authAddress);
 
-      // Social login (Smart Account): deploy with empty tx first if not deployed (matches mobile)
-      const deployed = await ensureSmartAccountDeployed(signingProvider, authAddress, (msg) => toast.loading(msg, { id: toastId }));
-      if (!deployed) {
-        throw new Error('Smart Account deployment failed. Please try again.');
-      }
 
       const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
@@ -824,15 +659,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setWalletAddress(authAddressForApi);
       setUser(normalizedUser);
 
-      if (!normalizedUser.username) {
-        setRequiresUsername(true);
-      }
+    if (authResponse.result?.isNewAccount) {
+      setRequiresUsername(true);
+    }
 
-      queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-      queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
-      queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+    queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+    queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+    queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
 
-      toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!', { id: 'auth-redirect' });
+    toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!', { id: 'auth-redirect' });
       console.log('[Auth] ✓ DeHub authentication complete (Redirect Flow)');
     } catch (err: any) {
       console.error('[Auth] [REDIRECT] Sequence failed:', err);
@@ -881,13 +716,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const authAddress = accounts[0].toLowerCase();
       console.log('[Auth] [POPUP] Address:', authAddress);
 
-      // Social login (Smart Account): deploy with empty tx first if not deployed (matches mobile)
-      if (isSocial) {
-        const deployed = await ensureSmartAccountDeployed(signingProvider, authAddress, (msg) => toast.loading(msg, { id: toastId }));
-        if (!deployed) {
-          throw new Error('Smart Account deployment failed. Please try again.');
-        }
-      }
 
       const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
@@ -959,7 +787,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setWalletAddress(authAddressForApi);
       setUser(normalizedUser);
 
-      if (!normalizedUser.username) {
+      if (authResponse.result?.isNewAccount) {
         setRequiresUsername(true);
       }
 
