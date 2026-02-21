@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { TrendingUp, Info, Settings2, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { FundActions } from './FundActions';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Line, ComposedChart } from 'recharts';
 import { PieChart, Pie, Cell } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
@@ -149,14 +150,7 @@ export function TransactionsTab() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-white">Transactions</h2>
-        <div className="flex gap-2">
-          <Button variant="glass" className="text-sm h-9 px-4 rounded-xl">
-            Add funds
-          </Button>
-          <Button variant="glass" className="text-sm h-9 px-4 rounded-xl">
-            Withdraw
-          </Button>
-        </div>
+        <FundActions />
       </div>
 
       {/* Top Grid */}
