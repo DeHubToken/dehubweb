@@ -838,13 +838,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     const target = e.target as HTMLElement;
     const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
     if (isInteractive) return;
-    // Guard: don't navigate if content is gated (PPV/Bounty) or any drawer is open
-    if (isContentGated || showBountyDrawer || showPPVDrawer || showLockedDrawer) return;
+    // Guard: don't navigate if any drawer is open
+    if (showBountyDrawer || showPPVDrawer || showLockedDrawer) return;
     
     // Cache the video data before navigation for instant display
     cacheVideoForNavigation(queryClient, video);
     navigate(`/app/post/${video.id}`);
-  }, [navigate, video.id, queryClient, video, isContentGated, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
+  }, [navigate, video.id, queryClient, video, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
   
   return (
     <div 
