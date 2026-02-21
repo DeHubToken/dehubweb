@@ -8,6 +8,7 @@ import { getDHBBalance } from '@/lib/contracts/stream-controller';
 import { fromWei } from '@/lib/contracts/dhb-token';
 import { getDPayTransactions, type DPayTransaction } from '@/lib/api/dpay';
 import { subHours, subDays, subWeeks, subMonths, format } from 'date-fns';
+import { supabase } from '@/integrations/supabase/client';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 
@@ -23,7 +24,7 @@ function getFilterStartDate(filter: string): Date | null {
 }
 
 /** Build cumulative balance chart from transactions */
-function buildBalanceChart(transactions: DPayTransaction[], currentBalance: number) {
+function buildBalanceChart(transactions: { type: string; amount: number; createdAt: string }[], currentBalance: number) {
   if (transactions.length === 0) return [];
   
   // Sort oldest first
@@ -45,7 +46,7 @@ function buildBalanceChart(transactions: DPayTransaction[], currentBalance: numb
   // Go backwards through transactions to reconstruct balance history
   for (let i = sorted.length - 1; i >= 0; i--) {
     const tx = sorted[i];
-    const isCredit = tx.type === 'buy' || tx.type === 'transfer';
+    const isCredit = tx.type === 'buy' || tx.type === 'transfer' || tx.type === 'ppv_sale';
     // Reverse the transaction to get prior balance
     if (isCredit) {
       runningBalance -= tx.amount;
@@ -92,12 +93,43 @@ export function BalanceCard() {
     staleTime: 60_000,
   });
 
+  // Fetch PPV purchases
+  const { data: ppvPurchases = [] } = useQuery({
+    queryKey: ['ppv-purchases-chart', walletAddress?.toLowerCase()],
+    queryFn: async () => {
+      if (!walletAddress) return [];
+      const addr = walletAddress.toLowerCase();
+      const { data } = await supabase
+        .from('ppv_purchases')
+        .select('*')
+        .or(`buyer_address.ilike.${addr},creator_address.ilike.${addr}`)
+        .order('created_at', { ascending: false })
+        .limit(50);
+      return data || [];
+    },
+    enabled: !!walletAddress,
+    staleTime: 60_000,
+  });
+
+  // Merge DPay + PPV into unified transaction list
+  const allTransactions = useMemo(() => {
+    const addr = walletAddress?.toLowerCase() || '';
+    const ppvAsTx = ppvPurchases.map((p) => ({
+      id: p.id,
+      type: p.buyer_address.toLowerCase() === addr ? 'ppv_buy' : 'ppv_sale',
+      amount: Number(p.amount),
+      createdAt: p.created_at,
+    }));
+    return [...transactions, ...ppvAsTx];
+    return [...transactions, ...ppvAsTx];
+  }, [transactions, ppvPurchases, walletAddress]);
+
   // Filter transactions by time window
   const filteredTxs = useMemo(() => {
     const startDate = getFilterStartDate(activeFilter);
-    if (!startDate) return transactions;
-    return transactions.filter((tx) => new Date(tx.createdAt) >= startDate);
-  }, [transactions, activeFilter]);
+    if (!startDate) return allTransactions;
+    return allTransactions.filter((tx) => new Date(tx.createdAt) >= startDate);
+  }, [allTransactions, activeFilter]);
 
   const chartData = useMemo(() => 
     buildBalanceChart(filteredTxs, balance), 
