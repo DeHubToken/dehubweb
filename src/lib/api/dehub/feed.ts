@@ -60,10 +60,7 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
 }
 
 export async function universalSearch(params: UniversalSearchParams): Promise<UniversalSearchResponse> {
-  const response = await apiCall<{ 
-    result: Array<DeHubNFT | DeHubUser>; 
-    pagination?: { hasMore: boolean; totalCount: number } 
-  }>("/api/search", {
+  const response = await apiCall<any>("/api/search", {
     params: {
       q: params.q,
       page: params.page,
@@ -74,17 +71,29 @@ export async function universalSearch(params: UniversalSearchParams): Promise<Un
     },
   });
   
-  let items: Array<any> = [];
-  if (response && typeof response === 'object' && 'result' in response) {
-    items = Array.isArray(response.result) ? response.result : [];
-  } else if (Array.isArray(response)) {
-    items = response;
-  }
-  
   const isAccountSearch = params.type === 'accounts';
   
+  // Handle account search - API returns { accounts: { items: [...], pagination: {...} } }
   if (isAccountSearch) {
-    const accounts: SearchAccount[] = items
+    let rawAccounts: any[] = [];
+    let pagination: any = {};
+    
+    // Primary format: { accounts: { items: [...], pagination: {...} } }
+    if (response?.accounts?.items) {
+      rawAccounts = response.accounts.items;
+      pagination = response.accounts.pagination || {};
+    }
+    // Fallback: { result: [...] }
+    else if (Array.isArray(response?.result)) {
+      rawAccounts = response.result;
+      pagination = response.pagination || {};
+    }
+    // Fallback: raw array
+    else if (Array.isArray(response)) {
+      rawAccounts = response;
+    }
+    
+    const accounts: SearchAccount[] = rawAccounts
       .map(item => ({
         id: item._id || item.id || item.address || '',
         address: item.address || '',
@@ -95,6 +104,7 @@ export async function universalSearch(params: UniversalSearchParams): Promise<Un
         avatarImageUrl: item.avatarImageUrl,
         verified: item.isVerified || false,
         followerCount: typeof item.followers === 'number' ? item.followers : undefined,
+        isFollowing: item.isFollowing,
       }))
       .filter(a => a.id && a.address);
     
@@ -102,17 +112,50 @@ export async function universalSearch(params: UniversalSearchParams): Promise<Un
       accounts,
       videos: [],
       livestreams: [],
-      has_more: (response as any).pagination?.hasMore ?? items.length >= (params.unit || 15),
-      total: (response as any).pagination?.totalCount ?? items.length,
+      has_more: pagination.hasMore ?? rawAccounts.length >= (params.unit || 15),
+      total: pagination.totalCount ?? rawAccounts.length,
     };
   }
   
+  // Handle content/video search - API may return { result: [...] } or { content: { items: [...] } }
+  let items: any[] = [];
+  let pagination: any = {};
+  
+  if (response?.content?.items) {
+    items = response.content.items;
+    pagination = response.content.pagination || {};
+  } else if (Array.isArray(response?.result)) {
+    items = response.result;
+    pagination = response.pagination || {};
+  } else if (Array.isArray(response)) {
+    items = response;
+  }
+  
+  // Also extract accounts from "All" search responses
+  let accounts: SearchAccount[] = [];
+  if (!params.type && response?.accounts?.items) {
+    accounts = response.accounts.items
+      .map((item: any) => ({
+        id: item._id || item.id || item.address || '',
+        address: item.address || '',
+        username: item.username || '',
+        displayName: item.displayName,
+        bio: item.aboutMe || item.bio,
+        avatarUrl: item.avatarImageUrl || item.avatarUrl,
+        avatarImageUrl: item.avatarImageUrl,
+        verified: item.isVerified || false,
+        followerCount: typeof item.followers === 'number' ? item.followers : undefined,
+        isFollowing: item.isFollowing,
+      }))
+      .filter((a: SearchAccount) => a.id && a.address);
+  }
+  
   return {
-    accounts: [],
+    accounts,
     videos: items as DeHubNFT[],
     livestreams: [],
-    has_more: (response as any).pagination?.hasMore ?? items.length >= (params.unit || 15),
-    total: (response as any).pagination?.totalCount ?? items.length,
+    has_more: pagination.hasMore ?? items.length >= (params.unit || 15),
+    total: pagination.totalCount ?? items.length,
   };
 }
 
