@@ -120,15 +120,22 @@ export function ProfileTabContent({
   const hasData = userContentData && (userContentData as any).pages && (userContentData as any).pages.length > 0;
   const showLoading = isLoadingContent && !hasData;
 
-  // Helper to wrap each tab panel - hidden when inactive, no unmount/remount
-  const TabPanel = ({ tab, children }: { tab: TabValue; children: React.ReactNode }) => (
-    <div style={{ display: activeTab === tab ? 'block' : 'none' }}>
-      {children}
-    </div>
-  );
+  // Hidden tabs use visibility:hidden + height:0 instead of display:none
+  // so the browser still loads/caches images inside inactive panels.
+  const TabPanel = ({ tab, children }: { tab: TabValue; children: React.ReactNode }) => {
+    const isActive = activeTab === tab;
+    return (
+      <div
+        style={isActive ? undefined : { visibility: 'hidden', height: 0, overflow: 'hidden', position: 'absolute', width: '100%' }}
+        aria-hidden={!isActive}
+      >
+        {children}
+      </div>
+    );
+  };
 
   return (
-    <>
+    <div style={{ position: 'relative' }}>
       {/* Loading overlay for content tabs on first load */}
       {showLoading && ['home', 'posts', 'images', 'videos'].includes(activeTab) && (
         <div className="flex flex-col items-center justify-center min-h-[200px]">
@@ -216,7 +223,7 @@ export function ProfileTabContent({
       <TabPanel tab="fractions">
         <ProfileEmptyState iconSrc={fractions3dIcon} iconAlt="Fractions" title="No fractions yet" subtitle="Fraction holdings will appear here" />
       </TabPanel>
-    </>
+    </div>
   );
 }
 
