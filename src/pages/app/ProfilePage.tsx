@@ -283,6 +283,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Tab Content */}
+        <div className="min-h-[200px]">
         <BadgeBalanceProvider>
         <ProfileTabContent
           activeTab={activeTab}
@@ -307,6 +308,7 @@ export default function ProfilePage() {
           setEditingPlan={setEditingPlan}
         />
         </BadgeBalanceProvider>
+        </div>
       </div>
 
       {/* Make Offer Drawer */}
