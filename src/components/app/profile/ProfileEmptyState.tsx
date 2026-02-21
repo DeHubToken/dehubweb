@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-
 interface ProfileEmptyStateProps {
   iconSrc: string;
   iconAlt: string;
@@ -11,29 +9,10 @@ interface ProfileEmptyStateProps {
 
 /**
  * Empty-state card for profile tabs.
- * Waits for the 3D icon image to fully load before rendering,
- * so switching tabs never flashes the previous tab's icon.
+ * Icons are preloaded at module level (use-preload-icons.ts),
+ * so we render immediately — no loading gate needed.
  */
 export function ProfileEmptyState({ iconSrc, iconAlt, title, subtitle, iconClassName }: ProfileEmptyStateProps) {
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    setReady(false);
-    const img = new Image();
-    img.src = iconSrc;
-    if (img.complete) {
-      setReady(true);
-      return;
-    }
-    img.onload = () => setReady(true);
-    img.onerror = () => setReady(true); // show anyway on error
-  }, [iconSrc]);
-
-  if (!ready) {
-    // Return an invisible placeholder with the same height to avoid layout shift
-    return <div className="py-12" style={{ minHeight: 160 }} />;
-  }
-
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center">
       <img src={iconSrc} alt={iconAlt} className={`w-16 h-16 mb-3 ${iconClassName ?? ''}`} />
