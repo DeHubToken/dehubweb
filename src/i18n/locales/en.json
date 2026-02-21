@@ -292,7 +292,7 @@
     "text": "Text",
     "ppv": "PPV",
     "bounty": "Bounty",
-    "locked": "Locked",
+    "locked": "Gated",
     "any": "Any",
     "resetFilters": "Reset filters"
   },
