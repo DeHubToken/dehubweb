@@ -37,4 +37,4 @@ export function getDefaultBanner(walletAddress?: string): string {
   return DEFAULT_BANNERS[hash % DEFAULT_BANNERS.length];
 }
 
-export type TabValue = 'home' | 'posts' | 'replies' | 'images' | 'videos' | 'subscribers' | 'songs' | 'live' | 'fractions';
+export type TabValue = 'home' | 'posts' | 'images' | 'videos' | 'subscribers' | 'songs' | 'live' | 'fractions';

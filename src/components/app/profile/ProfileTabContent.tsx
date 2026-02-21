@@ -94,7 +94,7 @@ export function ProfileTabContent({
     queryFn: ({ pageParam = 1 }) => getUserComments(profileAddress, pageParam, 20),
     getNextPageParam: (lastPage) => lastPage.has_more ? lastPage.page + 1 : undefined,
     initialPageParam: 1,
-    enabled: !!profileAddress && activeTab === 'replies',
+    enabled: !!profileAddress && activeTab === 'posts',
     staleTime: 2 * 60 * 1000,
   });
 
@@ -192,19 +192,65 @@ export function ProfileTabContent({
         </div>
       );
     }
-    case 'posts':
-      if (PROFILE_POSTS.length === 0) {
-        return <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" title="No text posts or comments yet" subtitle="They will appear here" />;
+    case 'posts': {
+      // Merge text posts and comments chronologically
+      const mergedItems: Array<{ type: 'post' | 'comment'; data: TextPost | ApiCommentResponse; createdAt: string }> = [
+        ...PROFILE_POSTS.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
+        ...allComments.map(c => ({ type: 'comment' as const, data: c, createdAt: c.createdAt || '' })),
+      ];
+      mergedItems.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+      const isLoadingAll = isLoadingComments && allComments.length === 0;
+
+      if (mergedItems.length === 0 && !isLoadingAll) {
+        return <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" title="No posts, comments, or replies yet" subtitle="They will appear here" />;
       }
+
       return (
         <div className="space-y-3">
-          {PROFILE_POSTS.map((post) => (
-            <div key={post.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
-              <PostCard post={post} />
+          {mergedItems.map((item) => {
+            if (item.type === 'post') {
+              return (
+                <div key={item.data.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+                  <PostCard post={item.data as TextPost} />
+                </div>
+              );
+            }
+            const comment = item.data as ApiCommentResponse;
+            return (
+              <CommentCard
+                key={comment.id}
+                comment={comment}
+                onClick={() => {
+                  if (comment.tokenId) {
+                    navigate(`/app/post/${comment.tokenId}?comment=${comment.id}`);
+                  }
+                }}
+              />
+            );
+          })}
+          {isLoadingAll && (
+            <div className="flex justify-center py-4">
+              <Loader2 className="w-6 h-6 text-muted-foreground animate-spin" />
             </div>
-          ))}
+          )}
+          {hasNextPage && (
+            <div className="flex justify-center py-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                {isFetchingNextPage ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                Load more
+              </Button>
+            </div>
+          )}
         </div>
       );
+    }
     case 'images':
       if (PROFILE_IMAGES.length === 0) {
         return <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" title="No images yet" subtitle="Image posts will appear here" />;
@@ -231,55 +277,6 @@ export function ProfileTabContent({
           ))}
         </div>
       );
-    case 'replies': {
-      if (isLoadingComments && allComments.length === 0) {
-        return (
-          <div className="flex flex-col items-center justify-center py-16">
-            <Loader2 className="w-8 h-8 text-muted-foreground animate-spin mb-3" />
-            <p className="text-muted-foreground text-sm">Loading comments...</p>
-          </div>
-        );
-      }
-
-      if (allComments.length === 0) {
-        return (
-          <ProfileEmptyState 
-            iconSrc={comment3dIcon} 
-            iconAlt="Replies" 
-            title="No comments or replies yet" 
-            subtitle="Comments and replies will appear here" 
-          />
-        );
-      }
-
-      return (
-        <div className="space-y-2">
-          {allComments.map((comment) => (
-            <CommentCard key={comment.id} comment={comment} onClick={() => {
-              if (comment.tokenId) {
-                navigate(`/app/post/${comment.tokenId}?comment=${comment.id}`);
-              }
-            }} />
-          ))}
-          {hasNextPage && (
-            <div className="flex justify-center py-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => fetchNextPage()}
-                disabled={isFetchingNextPage}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                {isFetchingNextPage ? (
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                ) : null}
-                Load more
-              </Button>
-            </div>
-          )}
-        </div>
-      );
-    }
     case 'subscribers': {
       if (isLoadingPlans) {
         return (

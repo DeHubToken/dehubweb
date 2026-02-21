@@ -1,6 +1,7 @@
 import { useMemo, useEffect, useRef, useCallback, useState } from 'react';
 import { useSearchParams, useParams } from 'react-router-dom';
 import { Home, MessageSquare, Image, Film, Star, Play, Radio, PieChart } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile, useDeHubUserContent, separateUserContent } from '@/hooks/use-dehub-profile';
 import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
@@ -11,6 +12,7 @@ import { getBadgeUrl } from '@/lib/staking-badges';
 import { useStories, useWatchedStories } from '@/hooks/use-stories';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
+import { getUserComments } from '@/lib/api/dehub';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { TabValue } from '@/components/app/profile/ProfileConstants';
 
@@ -93,9 +95,18 @@ export function useProfilePage() {
     };
   }, [userContentData]);
 
+  // Comment count for posts tab
+  const { data: commentCountData } = useQuery({
+    queryKey: ['user-comments-count', apiProfile?.walletAddress],
+    queryFn: () => getUserComments(apiProfile!.walletAddress, 1, 1),
+    enabled: !!apiProfile?.walletAddress,
+    staleTime: 2 * 60 * 1000,
+  });
+  const commentCount = commentCountData?.total ?? 0;
+
   const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
     { icon: Home, label: 'All', value: 'home', count: ALL_CONTENT.length },
-    { icon: MessageSquare, label: 'Posts', value: 'posts', count: PROFILE_POSTS.length },
+    { icon: MessageSquare, label: 'Posts', value: 'posts', count: PROFILE_POSTS.length + commentCount },
     { icon: Image, label: 'Images', value: 'images', count: PROFILE_IMAGES.length },
     { icon: Film, label: 'Videos', value: 'videos', count: ALL_PROFILE_VIDEOS.length },
     { icon: Star, label: 'Subs', value: 'subscribers', count: 0 },
