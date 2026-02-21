@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
+import ethLogo from '@/assets/eth-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { getDHBBalance } from '@/lib/contracts/stream-controller';
 import { fromWei } from '@/lib/contracts/dhb-token';
@@ -14,7 +15,7 @@ import { toast } from 'sonner';
 
 /** Placeholder currencies the platform supports alongside DHB */
 const otherCurrencies = [
-  { symbol: 'ETH', name: 'Ethereum', balance: '0.00', logo: null },
+  { symbol: 'ETH', name: 'Ethereum', balance: '0.00', logo: ethLogo },
   { symbol: 'USDT', name: 'Tether', balance: '0.00', logo: usdtLogo },
   { symbol: 'BNB', name: 'BNB', balance: '0.00', logo: bnbLogo },
 ];
