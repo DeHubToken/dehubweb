@@ -143,12 +143,12 @@ export function BalanceCard() {
             )}
           </div>
           <div className="flex items-center gap-2">
+            <img src={dehubCoin} alt="DeHub" className="w-8 h-8 sm:w-9 sm:h-9" />
             {balanceLoading ? (
               <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
             ) : (
               <span className="text-3xl sm:text-4xl font-bold text-white">{formattedBalance}</span>
             )}
-            <img src={dehubCoin} alt="DeHub" className="w-5 h-5" />
           </div>
         </div>
       </div>
