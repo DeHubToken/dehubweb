@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector, CreateGroupModal } from '@/components/app/chat';
+import { BadgeBalanceProvider } from '@/contexts/BadgeBalanceContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { useConversations, useUserOnlineStatus, useCreateConversation } from '@/hooks/use-messages';
@@ -164,9 +165,11 @@ export default function MessagesPage() {
   if (showPublicChat) {
     return (
       <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] p-3 sm:p-4 overflow-x-hidden">
-        <PublicChat
-          onBack={() => setShowPublicChat(false)}
-        />
+        <BadgeBalanceProvider>
+          <PublicChat
+            onBack={() => setShowPublicChat(false)}
+          />
+        </BadgeBalanceProvider>
       </div>
     );
   }
