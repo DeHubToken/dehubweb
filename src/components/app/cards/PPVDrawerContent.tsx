@@ -57,15 +57,14 @@ export function PPVDrawerContent({
           </span>
         </div>
         <div className="flex gap-3 mt-2">
-          <LiquidGlassBubble
-            shimmer={false}
-            className="flex-1 cursor-pointer"
-            onClick={isPaying ? undefined : onClose}
+          <Button
+            variant="glass"
+            className="flex-1"
+            onClick={onClose}
+            disabled={isPaying}
           >
-            <span className="block text-center text-white text-sm font-medium">
-              {t('common.close', 'Close')}
-            </span>
-          </LiquidGlassBubble>
+            {t('common.close', 'Close')}
+          </Button>
           <Button
             variant="glass"
             className="flex-1"
