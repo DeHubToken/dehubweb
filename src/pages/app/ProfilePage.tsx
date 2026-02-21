@@ -30,17 +30,29 @@ import { ProfileOptionsContent } from '@/components/app/profile/ProfileOptionsDr
 import type { TabValue } from '@/components/app/profile/ProfileConstants';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
 
-function TabContentWrapper({ activeTab, children }: { activeTab: string; children: React.ReactNode }) {
+function TabContentWrapper({ activeTab, tabsRef, children }: { activeTab: string; tabsRef: React.RefObject<HTMLDivElement>; children: React.ReactNode }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [lockedHeight, setLockedHeight] = useState<number | null>(null);
+  const prevTab = useRef(activeTab);
 
   useLayoutEffect(() => {
-    if (contentRef.current) {
-      setLockedHeight(contentRef.current.offsetHeight);
+    if (prevTab.current !== activeTab) {
+      // Lock height to prevent container collapse
+      if (contentRef.current) {
+        setLockedHeight(contentRef.current.offsetHeight);
+      }
+      // Scroll tabs bar into view so scroll position doesn't cause a jump
+      if (tabsRef.current) {
+        const rect = tabsRef.current.getBoundingClientRect();
+        if (rect.top < 0 || rect.top > window.innerHeight * 0.5) {
+          tabsRef.current.scrollIntoView({ behavior: 'instant', block: 'start' });
+        }
+      }
+      prevTab.current = activeTab;
     }
     const timer = setTimeout(() => setLockedHeight(null), 150);
     return () => clearTimeout(timer);
-  }, [activeTab]);
+  }, [activeTab, tabsRef]);
 
   return (
     <div
@@ -73,6 +85,7 @@ export default function ProfilePage() {
   const [showAvatarOverlay, setShowAvatarOverlay] = useState(false);
   const [editingPlan, setEditingPlan] = useState<SubscriptionPlan | null>(null);
   const [showTipModal, setShowTipModal] = useState(false);
+  const tabsBarRef = useRef<HTMLDivElement>(null);
 
   // All data fetching + derived state
   const data = useProfilePage();
@@ -286,7 +299,7 @@ export default function ProfilePage() {
         />
 
         {/* Profile Tabs Bento */}
-        <div className="bg-zinc-900 rounded-2xl p-2 relative">
+        <div ref={tabsBarRef} className="bg-zinc-900 rounded-2xl p-2 relative">
           <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
             {data.PROFILE_TABS.map((tab) => (
               <button
@@ -308,7 +321,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Tab Content */}
-        <TabContentWrapper activeTab={activeTab}>
+        <TabContentWrapper activeTab={activeTab} tabsRef={tabsBarRef}>
           <BadgeBalanceProvider>
             <ProfileTabContent
               activeTab={activeTab}
