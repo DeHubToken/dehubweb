@@ -1,26 +1,15 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { UserPlus, Loader2, ChevronRight, RefreshCw, Plus, Check } from 'lucide-react';
+import { UserPlus, Loader2, ChevronRight, RefreshCw, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { searchNFTs, followUser, getAccountInfo } from '@/lib/api/dehub';
-import { unfollowUser } from '@/lib/api/dehub/social';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { toast } from 'sonner';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
 
 interface UniqueUser {
   address: string;
@@ -193,9 +182,6 @@ export function MobileWhoToFollowCarousel() {
     }
   };
 
-  // Unfollow confirmation state
-  const [unfollowTarget, setUnfollowTarget] = useState<UniqueUser | null>(null);
-
   const handleFollow = async (e: React.MouseEvent, user: UniqueUser) => {
     e.stopPropagation();
 
@@ -204,13 +190,7 @@ export function MobileWhoToFollowCarousel() {
       return;
     }
 
-    // If already followed, show unfollow confirmation
-    if (followedUsers.has(user.address)) {
-      setUnfollowTarget(user);
-      return;
-    }
-
-    if (loadingUsers.has(user.address)) {
+    if (loadingUsers.has(user.address) || followedUsers.has(user.address)) {
       return;
     }
 
@@ -228,31 +208,6 @@ export function MobileWhoToFollowCarousel() {
       } else {
         handleApiError(error, 'Failed to follow user');
       }
-    } finally {
-      setLoadingUsers(prev => {
-        const next = new Set(prev);
-        next.delete(user.address);
-        return next;
-      });
-    }
-  };
-
-  const handleUnfollowConfirm = async () => {
-    if (!unfollowTarget) return;
-    const user = unfollowTarget;
-    setUnfollowTarget(null);
-    setLoadingUsers(prev => new Set(prev).add(user.address));
-
-    try {
-      await unfollowUser(user.address);
-      setFollowedUsers(prev => {
-        const next = new Set(prev);
-        next.delete(user.address);
-        return next;
-      });
-      toast.success(`Unfollowed ${getDisplayName(user)}`);
-    } catch (error) {
-      handleApiError(error, 'Failed to unfollow user');
     } finally {
       setLoadingUsers(prev => {
         const next = new Set(prev);
@@ -357,19 +312,10 @@ export function MobileWhoToFollowCarousel() {
                 variant="outline"
                 onClick={(e) => handleFollow(e, user)}
                 disabled={loadingUsers.has(user.address)}
-                className={`w-24 h-7 text-[10px] font-semibold rounded-lg flex items-center justify-center gap-0.5 ${
-                  followedUsers.has(user.address)
-                    ? 'border-zinc-600 text-zinc-300 hover:border-red-500/50 hover:text-red-400 bg-transparent'
-                    : 'border-zinc-700 text-white hover:bg-zinc-800 bg-transparent'
-                }`}
+                className="w-24 h-7 text-[10px] font-semibold rounded-lg border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex items-center justify-center"
               >
                 {loadingUsers.has(user.address) ? (
                   <Loader2 className="w-3 h-3 animate-spin" />
-                ) : followedUsers.has(user.address) ? (
-                  <>
-                    <Check className="w-3 h-3" />
-                    Following
-                  </>
                 ) : (
                   'Follow'
                 )}
@@ -399,22 +345,6 @@ export function MobileWhoToFollowCarousel() {
           </div>
         )}
       </SwipeableCarousel>
-
-      {/* Unfollow confirmation dialog */}
-      <AlertDialog open={!!unfollowTarget} onOpenChange={(open) => !open && setUnfollowTarget(null)}>
-        <AlertDialogContent className="bg-zinc-900 border-zinc-800">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-white">Unfollow {unfollowTarget ? getDisplayName(unfollowTarget) : ''}?</AlertDialogTitle>
-            <AlertDialogDescription className="text-zinc-400">
-              Their posts will no longer show up in your Following feed.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="bg-zinc-800 text-white border-zinc-700 hover:bg-zinc-700">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleUnfollowConfirm} className="bg-red-500 text-white hover:bg-red-600">Unfollow</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }
