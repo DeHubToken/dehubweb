@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { toast } from 'sonner';
 
-const BATCH_SIZE = 15;
+const BATCH_SIZE = 10;
 
 export function WhoToFollow() {
   const navigate = useNavigate();

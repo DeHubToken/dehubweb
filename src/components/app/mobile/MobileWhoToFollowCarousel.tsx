@@ -11,7 +11,7 @@ import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { toast } from 'sonner';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 
-const BATCH_SIZE = 15;
+const BATCH_SIZE = 10;
 
 export function MobileWhoToFollowCarousel() {
   const navigate = useNavigate();
