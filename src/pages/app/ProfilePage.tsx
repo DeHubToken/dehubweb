@@ -235,6 +235,7 @@ export default function ProfilePage() {
           isTargetPrivate={data.isTargetPrivate}
           isFollowLoading={isFollowLoading}
           handleFollow={handleFollow}
+          handleUnfollow={handleUnfollow}
           isSubscribed={data.isSubscribed}
           hasPlans={data.hasPlans}
           hasStories={data.hasStories}
