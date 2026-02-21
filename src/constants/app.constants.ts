@@ -38,7 +38,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: LayoutDashboard, label: 'Command Centre', path: '/app/command-centre' },
   { icon: FileText, label: 'Blog', path: 'https://docs.dhb.gg/docs/blog', external: true },
   { icon: Lightbulb, label: 'Feature Requests', path: '/features' },
-  { icon: Briefcase, label: 'Careers', path: '/app/careers' },
+  { icon: Briefcase, label: 'Careers', path: '/jobs' },
   { icon: Home, label: 'Home', path: '/app' },
 ];
 
