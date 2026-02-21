@@ -1,5 +1,5 @@
 import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info } from 'lucide-react';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { CardHeader } from '@/components/app/cards/CardHeader';
@@ -10,7 +10,7 @@ import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { PlanCard } from '@/components/app/subscriptions';
 import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
-import { getUserComments } from '@/lib/api/dehub';
+import { getUserComments, getAccountInfo } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { formatDistanceToNow } from 'date-fns';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
@@ -374,11 +374,21 @@ export function ProfileTabContent({
 // ============================================================================
 
 function CommentCard({ comment, onClick }: { comment: ApiCommentResponse; onClick: () => void }) {
-  const username = comment.writor?.username || `${comment.address.slice(0, 6)}...${comment.address.slice(-4)}`;
-  const displayName = (comment.writor as any)?.displayName || username;
-  const handle = username;
-  const avatarSeed = comment.writor?.avatarUrl
-    ? buildAvatarUrl(comment.address, comment.writor.avatarUrl) || comment.address
+  // Fetch full account info for proper display name + avatar resolution
+  const { data: accountInfo } = useQuery({
+    queryKey: ['account-info', comment.address],
+    queryFn: () => getAccountInfo(comment.address),
+    staleTime: 5 * 60 * 1000,
+    enabled: !!comment.address,
+  });
+
+  const resolvedName = accountInfo?.displayName || accountInfo?.username || comment.writor?.username || `${comment.address.slice(0, 6)}...${comment.address.slice(-4)}`;
+  const resolvedHandle = accountInfo?.username || comment.writor?.username || comment.address;
+  
+  // Build avatar from account info or writor fallback
+  const rawAvatarPath = accountInfo?.avatarImageUrl || accountInfo?.avatarUrl || comment.writor?.avatarUrl;
+  const avatarSeed = rawAvatarPath
+    ? buildAvatarUrl(comment.address, rawAvatarPath) || comment.address
     : comment.address;
 
   return (
@@ -387,12 +397,12 @@ function CommentCard({ comment, onClick }: { comment: ApiCommentResponse; onClic
       className="w-full text-left rounded-xl border border-white/[0.08] bg-transparent p-3 hover:bg-white/[0.03] transition-colors cursor-pointer overflow-hidden relative"
     >
       <CardHeader
-        username={displayName}
-        handle={handle}
+        username={resolvedName}
+        handle={resolvedHandle}
         avatarSeed={avatarSeed}
         contentType="post"
         creatorId={comment.address}
-        creatorUsername={handle}
+        creatorUsername={resolvedHandle}
       />
 
       {/* Content - matches PostCard text style */}
