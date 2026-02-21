@@ -18,6 +18,15 @@ export async function checkUsernameAvailability(username: string): Promise<Usern
   });
 }
 
+export async function checkUsernameAvailabilityPost(username: string): Promise<UsernameCheckResponse> {
+  const { apiCall } = await import('./core');
+  return apiCall<UsernameCheckResponse>("/api/username/check", {
+    method: "POST",
+    body: { username },
+    requiresAuth: false,
+  });
+}
+
 export async function authenticateWallet(
   address: string,
   signature: string,

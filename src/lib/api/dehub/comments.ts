@@ -188,3 +188,33 @@ export async function addVoiceComment(params: {
 
   return response.json();
 }
+
+export async function addGifComment(params: {
+  tokenId: number;
+  gifUrl: string;
+  content?: string;
+  parentId?: string;
+}): Promise<CommentResponse> {
+  const response = await apiCall<{ result: CommentResponse } | CommentResponse>("/api/comment_gif", {
+    method: "POST",
+    body: {
+      streamTokenId: params.tokenId,
+      gifUrl: params.gifUrl,
+      content: params.content || '',
+      commentId: params.parentId,
+    },
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as CommentResponse;
+}
+
+export async function deleteComment(commentId: string | number): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>("/api/delete_comment", {
+    method: "DELETE",
+    body: { commentId: Number(commentId) },
+    requiresAuth: true,
+  });
+}
