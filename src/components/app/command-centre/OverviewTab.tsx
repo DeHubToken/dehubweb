@@ -1,9 +1,8 @@
-import { TrendingUp, Info, Settings2, Coins } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { BalanceCard } from './BalanceCard';
 import { IncomeChart } from './IncomeChart';
 import { RecentTransactions } from './RecentTransactions';
 import { SubscriptionsSummary } from './SubscriptionsSummary';
+import { FundActions } from './FundActions';
 
 export function OverviewTab() {
   return (
@@ -11,14 +10,7 @@ export function OverviewTab() {
       {/* Top Section Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-white">Overview</h2>
-        <div className="flex gap-2">
-          <Button variant="glass" className="text-sm h-9 px-4 rounded-xl">
-            Add funds
-          </Button>
-          <Button variant="glass" className="text-sm h-9 px-4 rounded-xl">
-            Withdraw
-          </Button>
-        </div>
+        <FundActions />
       </div>
 
       {/* Main Cards Grid */}
