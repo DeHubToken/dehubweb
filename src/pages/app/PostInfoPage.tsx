@@ -758,6 +758,17 @@ export default function PostInfoPage() {
                     </div>
                   </div>
                 )}
+                {ppvPrice && (
+                  <div className="col-span-2 bg-primary/10 rounded-lg p-3 flex items-center gap-3 border border-primary/20">
+                    <HandCoins className="w-5 h-5 text-primary" />
+                    <div>
+                      <p className="text-lg font-bold text-white">
+                        {((ppvPurchaseCount ?? 0) * Number(ppvPrice)).toLocaleString()} {ppvCurrency}
+                      </p>
+                      <p className="text-xs text-white/60">Total Revenue</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </section>
           )}
