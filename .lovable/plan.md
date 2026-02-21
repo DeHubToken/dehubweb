@@ -1,66 +1,29 @@
 
 
-# Real-Time DHB Balance Check on Gated Content Click
+## Fix: Follow Suggestions Not Loading More
 
-## What This Does
-Instead of silently blocking you from gated content, the system will keep the gating overlay visible but add an "Unlock" button to the Locked/Gated drawer. When you click it, it fetches your DHB balance in real-time from the blockchain. If you hold enough, the content unlocks instantly with a satisfying reveal -- giving you that dopamine hit of clicking to unlock.
+### Root Cause
 
-## How It Works
-
-```text
-User taps gated overlay
-        |
-  Drawer opens showing "Must hold X DHB"
-        |
-  User clicks "Verify & Unlock" button
-        |
-  Real-time balance check via get-badge-balance edge function
-        |
-   +----+----+
-   |         |
- Enough    Not enough
-   |         |
- setLocallyUnlocked(true)   Show "Insufficient balance" message
- Close drawer + reveal       with current balance displayed
+The console log reveals the issue:
+```
+[Suggestions] Got 10 suggested accounts (page 1, hasMore: false)
 ```
 
-## Technical Details
+The component requests 15 items (`BATCH_SIZE = 15`), but the API only returns 10. Since `10 < 15`, the code concludes there are no more pages (`hasMore: false`), so infinite scroll never triggers.
 
-### 1. Fix SinglePostPage data passthrough (root cause of your original bug)
+The API likely caps results at 10 regardless of the requested limit.
 
-**File: `src/pages/app/SinglePostPage.tsx`**
-- Add `isOwner: nft.isOwner ?? false` and `isUnlocked: nft.isUnlocked ?? false` to the `toVideoItem()`, `toImagePost()`, and `toTextPost()` transform functions
-- This ensures the API's access flags actually reach the card components
+### Solution
 
-### 2. Add "Verify & Unlock" button to the Gated Drawer in VideoCard
+1. **Change `BATCH_SIZE` from 15 to 10** in `WhoToFollow.tsx` -- this matches what the API actually returns per page, so `items.length === limit` will be `true` and `hasMore` will correctly be set to `true` when there are more pages.
 
-**File: `src/components/app/cards/VideoCard.tsx`**
-- Import `fetchBadgeBalance` (extract it or call the edge function directly)
-- In the Locked Drawer (both thumbnail and immersive versions, ~line 322 and ~line 1552):
-  - Add a "Verify & Unlock" glass button below the holdings requirement display
-  - On click: fetch balance in real-time via the `get-badge-balance` edge function using the user's wallet address
-  - If `balance >= video.lockedPrice`: call `setLocallyUnlocked(true)`, close the drawer, show a success toast
-  - If insufficient: display a message showing "Your balance: X DHB" with the shortfall
-  - Add a loading spinner state while the balance check is in progress
+2. **Do the same in `MobileWhoToFollowCarousel.tsx`** for consistency.
 
-### 3. Add the same "Verify & Unlock" to ImageCard
+### Technical Details
 
-**File: `src/components/app/cards/ImageCard.tsx`**
-- Same pattern as VideoCard: add the verify button to the Locked Drawer (~line 813)
-- On success: `setLocallyUnlocked(true)`, close drawer, toast
-- On failure: show balance deficit
+**Files to change:**
+- `src/components/app/WhoToFollow.tsx` -- line 13: change `BATCH_SIZE = 15` to `BATCH_SIZE = 10`
+- `src/components/app/mobile/MobileWhoToFollowCarousel.tsx` -- line 14: change `BATCH_SIZE = 15` to `BATCH_SIZE = 10`
 
-### 4. Add the same to the Thumbnail VideoCard variant
+No other changes needed. The infinite scroll handler and `useInfiniteQuery` setup are already correct -- they just never fire because `hasMore` is always `false` due to the batch size mismatch.
 
-**File: `src/components/app/cards/VideoCard.tsx`** (thumbnail variant, ~line 322)
-- Same verify button and logic for the compact card's gated drawer
-
-### 5. No new edge functions needed
-- The existing `get-badge-balance` edge function already provides real-time on-chain DHB balance
-- We just call it directly via `fetch()` when the user clicks "Verify & Unlock"
-- No React Query hook needed here since this is a one-shot action, not cached data
-
-### Summary of files changed
-- `src/pages/app/SinglePostPage.tsx` -- pass through `isOwner`/`isUnlocked` flags
-- `src/components/app/cards/VideoCard.tsx` -- add verify button to both gated drawers
-- `src/components/app/cards/ImageCard.tsx` -- add verify button to gated drawer
