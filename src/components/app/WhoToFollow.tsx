@@ -198,7 +198,7 @@ export function WhoToFollow() {
           >
             <Avatar className="w-10 h-10 !rounded-[2px]">
               {getAvatarUrl(user) && <AvatarImage src={getAvatarUrl(user)} className="!rounded-[2px]" />}
-              <AvatarFallback className="bg-zinc-700 text-white font-medium">
+              <AvatarFallback className="bg-zinc-700 text-white font-medium !rounded-[2px]">
                 {getDisplayName(user).charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
