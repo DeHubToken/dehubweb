@@ -59,18 +59,18 @@ export function WhoToFollow() {
   }, [data]);
 
   const filteredSuggestions = useMemo(() => {
-    // Deduplicate by address
+    // Deduplicate by address, remove users followed during this session
     const seen = new Set<string>();
     return allSuggestions.filter(user => {
-      if (seen.has(user.address)) return false;
+      if (followedUsers.has(user.address) || seen.has(user.address)) return false;
       seen.add(user.address);
       return true;
     });
-  }, [allSuggestions]);
+  }, [allSuggestions, followedUsers]);
 
-  const isUserFollowed = useCallback((user: SuggestedAccount) => {
-    return followedUsers.has(user.address) || user.isFollowing === true;
-  }, [followedUsers]);
+  const isAlreadyFollowed = useCallback((user: SuggestedAccount) => {
+    return user.isFollowing === true;
+  }, []);
 
   // Infinite scroll handler
   const handleScroll = useCallback(() => {
@@ -120,7 +120,7 @@ export function WhoToFollow() {
       return;
     }
 
-    if (loadingUsers.has(user.address) || isUserFollowed(user)) {
+    if (loadingUsers.has(user.address) || followedUsers.has(user.address)) {
       return;
     }
 
@@ -209,16 +209,16 @@ export function WhoToFollow() {
               size="sm"
               variant="outline"
               onClick={(e) => handleFollow(e, user)}
-              disabled={loadingUsers.has(user.address) || isUserFollowed(user)}
+              disabled={loadingUsers.has(user.address) || isAlreadyFollowed(user)}
               className={`h-8 w-[82px] text-xs font-semibold rounded-xl flex items-center justify-center ${
-                isUserFollowed(user)
+                isAlreadyFollowed(user)
                   ? 'border-zinc-600 text-zinc-400 bg-transparent cursor-default'
                   : 'border-zinc-700 text-white hover:bg-zinc-800 bg-transparent'
               }`}
             >
               {loadingUsers.has(user.address) ? (
                 <Loader2 className="w-3 h-3 animate-spin" />
-              ) : isUserFollowed(user) ? (
+              ) : isAlreadyFollowed(user) ? (
                 <>
                   <Check className="w-3 h-3 mr-1" />
                   Following
