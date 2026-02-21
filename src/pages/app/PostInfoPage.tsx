@@ -11,7 +11,7 @@
 
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio } from 'lucide-react';
+import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio, Ticket } from 'lucide-react';
 import { toast } from 'sonner';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getNFTInfo, DeHubNFT, updateTokenVisibility, TokenVisibility } from '@/lib/api/dehub';
@@ -27,6 +27,7 @@ import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
 import { EditPostModal } from '@/components/app/modals/EditPostModal';
+import { usePPVPurchaseCount } from '@/hooks/use-ppv-purchase-count';
 
 // Visibility options configuration
 const VISIBILITY_OPTIONS: { value: TokenVisibility; label: string; icon: React.ReactNode; description: string }[] = [
@@ -218,6 +219,12 @@ export default function PostInfoPage() {
   const isOwner = walletAddress && nftInfo?.minter?.toLowerCase() === walletAddress.toLowerCase();
   const [showEditModal, setShowEditModal] = useState(false);
   
+  // PPV status and purchase count
+  const isPPV = nftInfo?.is_ppv || nftInfo?.streamInfo?.isPayPerView || false;
+  const ppvPrice = nftInfo?.ppv_price || nftInfo?.streamInfo?.payPerViewAmount;
+  const ppvCurrency = nftInfo?.ppv_currency || 'DHB';
+  const { data: ppvPurchaseCount } = usePPVPurchaseCount(isPPV ? postId : undefined);
+
   // Current visibility state (default to 'public' if not set)
   const currentVisibility: TokenVisibility = (nftInfo as any)?.visibility || 'public';
   
@@ -730,7 +737,31 @@ export default function PostInfoPage() {
             </div>
           </section>
 
-          {/* Content Info */}
+          {/* PPV Sales Info - shown for PPV content */}
+          {isPPV && (
+            <section className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h2 className="text-sm font-medium text-white/60 mb-3">Pay-Per-View</h2>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-white/5 rounded-lg p-3 flex items-center gap-3">
+                  <Ticket className="w-5 h-5 text-primary" />
+                  <div>
+                    <p className="text-lg font-bold text-white">{ppvPurchaseCount ?? 0}</p>
+                    <p className="text-xs text-white/60">PPV Sales</p>
+                  </div>
+                </div>
+                {ppvPrice && (
+                  <div className="bg-white/5 rounded-lg p-3 flex items-center gap-3">
+                    <Lock className="w-5 h-5 text-white" />
+                    <div>
+                      <p className="text-lg font-bold text-white">{ppvPrice} {ppvCurrency}</p>
+                      <p className="text-xs text-white/60">Price</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
+
           {(nftInfo.name || nftInfo.description) && (
             <section className="bg-white/5 rounded-xl p-4 border border-white/10">
               <h2 className="text-sm font-medium text-white/60 mb-3">Content</h2>
