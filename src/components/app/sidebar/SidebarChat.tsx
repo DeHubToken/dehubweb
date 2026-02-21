@@ -8,9 +8,18 @@ import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence } from '@/ho
 import { getMediaUrl } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
+import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
+import { getBadgeUrl } from '@/lib/staking-badges';
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
+
+function SidebarChatBadge({ address }: { address: string }) {
+  const { badgeBalance } = useBatchedBadgeBalance(address);
+  const badgeUrl = getBadgeUrl(badgeBalance);
+  if (!badgeUrl) return null;
+  return <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />;
+}
 
 export function SidebarChat() {
   const [newMessage, setNewMessage] = useState('');
@@ -110,7 +119,10 @@ export function SidebarChat() {
                     </Avatar>
                   </button>
                   <div className="min-w-0">
-                    <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>{name}</button>
+                    <span className="relative inline-flex items-baseline">
+                      <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>{name}</button>
+                      <SidebarChatBadge address={msg.sender_address} />
+                    </span>
                     {msg.message_type === 'image' && msg.image_url ? (
                       <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5" />
                     ) : msg.message_type === 'gif' && msg.image_url ? (
