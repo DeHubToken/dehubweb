@@ -21,6 +21,7 @@ interface PPVDrawerContentProps {
   currency?: string;
   creatorAddress?: string;
   onClose: () => void;
+  onUnlocked?: () => void;
   formatCompact: (num: number) => string;
 }
 
@@ -30,6 +31,7 @@ export function PPVDrawerContent({
   currency = 'DHB',
   creatorAddress,
   onClose,
+  onUnlocked,
   formatCompact,
 }: PPVDrawerContentProps) {
   const { t } = useTranslation();
@@ -38,7 +40,10 @@ export function PPVDrawerContent({
     creatorAddress,
     price,
     currency,
-    onSuccess: onClose,
+    onSuccess: () => {
+      onUnlocked?.();
+      onClose();
+    },
   });
 
   return (
