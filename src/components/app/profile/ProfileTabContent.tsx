@@ -1,3 +1,4 @@
+import React from 'react';
 import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info } from 'lucide-react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -95,13 +96,13 @@ export function ProfileTabContent({
     queryFn: ({ pageParam = 1 }) => getUserComments(profileAddress, pageParam, 20),
     getNextPageParam: (lastPage) => lastPage.has_more ? lastPage.page + 1 : undefined,
     initialPageParam: 1,
-    enabled: !!profileAddress && activeTab === 'posts',
+    enabled: !!profileAddress,
     staleTime: 2 * 60 * 1000,
   });
 
   const allComments = commentsData?.pages.flatMap(p => p.data) ?? [];
 
-  // Private account gate
+  // Private account gate - shown instead of all tabs
   if (isTargetPrivate && !isFollowing && !isViewingOwnProfile) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -116,255 +117,350 @@ export function ProfileTabContent({
     );
   }
   
-  // Only show loading spinner on very first load (no cached data yet)
   const hasData = userContentData && (userContentData as any).pages && (userContentData as any).pages.length > 0;
   const showLoading = isLoadingContent && !hasData;
+
+  // Helper to wrap each tab panel - hidden when inactive, no unmount/remount
+  const TabPanel = ({ tab, children }: { tab: TabValue; children: React.ReactNode }) => (
+    <div style={{ display: activeTab === tab ? 'block' : 'none' }}>
+      {children}
+    </div>
+  );
+
+  return (
+    <>
+      {/* Loading overlay for content tabs on first load */}
+      {showLoading && ['home', 'posts', 'images', 'videos'].includes(activeTab) && (
+        <div className="flex flex-col items-center justify-center min-h-[200px]">
+          <Loader2 className="w-8 h-8 text-muted-foreground animate-spin" />
+        </div>
+      )}
+
+      {/* HOME TAB */}
+      <TabPanel tab="home">
+        <HomeTabPanel
+          ALL_CONTENT={ALL_CONTENT}
+          isViewingOwnProfile={isViewingOwnProfile}
+          optimisticPosts={optimisticPosts}
+        />
+      </TabPanel>
+
+      {/* POSTS TAB */}
+      <TabPanel tab="posts">
+        <PostsTabPanel
+          PROFILE_POSTS={PROFILE_POSTS}
+          allComments={allComments}
+          isLoadingComments={isLoadingComments}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          fetchNextPage={fetchNextPage}
+          navigate={navigate}
+        />
+      </TabPanel>
+
+      {/* IMAGES TAB */}
+      <TabPanel tab="images">
+        {PROFILE_IMAGES.length === 0 ? (
+          <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" title="No images yet" subtitle="Image posts will appear here" />
+        ) : (
+          <div className="space-y-3">
+            {PROFILE_IMAGES.map((image) => (
+              <div key={image.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+                <ImageCard post={image} />
+              </div>
+            ))}
+          </div>
+        )}
+      </TabPanel>
+
+      {/* VIDEOS TAB */}
+      <TabPanel tab="videos">
+        {ALL_PROFILE_VIDEOS.length === 0 ? (
+          <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt="Videos" title="No videos yet" subtitle="Video posts will appear here" />
+        ) : (
+          <div className="space-y-3">
+            {ALL_PROFILE_VIDEOS.map((video) => (
+              <div key={video.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+                <VideoCard video={video} />
+              </div>
+            ))}
+          </div>
+        )}
+      </TabPanel>
+
+      {/* SUBSCRIBERS TAB */}
+      <TabPanel tab="subscribers">
+        <SubscribersTabPanel
+          isLoadingPlans={isLoadingPlans}
+          isViewingOwnProfile={isViewingOwnProfile}
+          hasPlans={hasPlans}
+          plans={plans}
+          isSubscribed={isSubscribed}
+          profile={profile}
+          setCreatePlanModalOpen={setCreatePlanModalOpen}
+          setEditingPlan={setEditingPlan}
+        />
+      </TabPanel>
+
+      {/* SONGS TAB */}
+      <TabPanel tab="songs">
+        <ProfileEmptyState iconSrc={audio3dIcon} iconAlt="Audio" title="No audio yet" subtitle="Audio tracks will appear here" />
+      </TabPanel>
+
+      {/* LIVE TAB */}
+      <TabPanel tab="live">
+        <ProfileEmptyState iconSrc={live3dIcon} iconAlt="Live" title="No live streams yet" subtitle="Live content will appear here" />
+      </TabPanel>
+
+      {/* FRACTIONS TAB */}
+      <TabPanel tab="fractions">
+        <ProfileEmptyState iconSrc={fractions3dIcon} iconAlt="Fractions" title="No fractions yet" subtitle="Fraction holdings will appear here" />
+      </TabPanel>
+    </>
+  );
+}
+
+// ============================================================================
+// Sub-panel components (extracted from switch cases)
+// ============================================================================
+
+function HomeTabPanel({
+  ALL_CONTENT,
+  isViewingOwnProfile,
+  optimisticPosts,
+}: {
+  ALL_CONTENT: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string }>;
+  isViewingOwnProfile: boolean | undefined;
+  optimisticPosts: OptimisticPost[];
+}) {
+  const hasOptimisticPosts = isViewingOwnProfile && optimisticPosts.length > 0;
   
-  if (showLoading && ['home', 'posts', 'images', 'videos'].includes(activeTab)) {
+  if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
+    return <ProfileEmptyState iconSrc={home3dIcon} iconAlt="All" iconClassName="opacity-90" title="No posts yet" subtitle="Content will appear here when posted" />;
+  }
+  
+  const filteredOptimisticPosts = isViewingOwnProfile 
+    ? optimisticPosts.filter((op) => {
+        return !ALL_CONTENT.some((apiItem) => {
+          const apiStatus = (apiItem.data as { status?: string }).status;
+          if (apiStatus !== 'minted') return false;
+          if (op.type === 'post' && apiItem.type === 'post') {
+            return (op.data as TextPost).content === (apiItem.data as TextPost).content;
+          }
+          if (op.type === 'image' && apiItem.type === 'image') {
+            const opData = op.data as ImagePost;
+            const apiData = apiItem.data as ImagePost;
+            return opData.title === apiData.title || opData.caption === apiData.caption;
+          }
+          if (op.type === 'video' && apiItem.type === 'video') {
+            return (op.data as VideoItem).title === (apiItem.data as VideoItem).title;
+          }
+          return false;
+        });
+      })
+    : [];
+  
+  return (
+    <div className="space-y-3">
+      {filteredOptimisticPosts.map((op) => {
+        const card = op.type === 'post'
+          ? <PostCard key={op.id} post={op.data as TextPost} />
+          : op.type === 'image'
+          ? <ImageCard key={op.id} post={op.data as ImagePost} />
+          : <VideoCard key={op.id} video={op.data as VideoItem} />;
+        return (
+          <div key={op.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+            {card}
+          </div>
+        );
+      })}
+      {ALL_CONTENT.map((item) => {
+        const card = item.type === 'post'
+          ? <PostCard key={item.data.id} post={item.data as TextPost} />
+          : item.type === 'image'
+          ? <ImageCard key={item.data.id} post={item.data as ImagePost} />
+          : <VideoCard key={item.data.id} video={item.data as VideoItem} />;
+        return (
+          <div key={item.data.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+            {card}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function PostsTabPanel({
+  PROFILE_POSTS,
+  allComments,
+  isLoadingComments,
+  hasNextPage,
+  isFetchingNextPage,
+  fetchNextPage,
+  navigate,
+}: {
+  PROFILE_POSTS: TextPost[];
+  allComments: ApiCommentResponse[];
+  isLoadingComments: boolean;
+  hasNextPage: boolean | undefined;
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => void;
+  navigate: (to: string) => void;
+}) {
+  const mergedItems: Array<{ type: 'post' | 'comment'; data: TextPost | ApiCommentResponse; createdAt: string }> = [
+    ...PROFILE_POSTS.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
+    ...allComments.map(c => ({ type: 'comment' as const, data: c, createdAt: c.createdAt || '' })),
+  ];
+  mergedItems.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  const isLoadingAll = isLoadingComments && allComments.length === 0;
+
+  if (mergedItems.length === 0 && !isLoadingAll) {
+    return <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" title="No posts, comments, or replies yet" subtitle="They will appear here" />;
+  }
+
+  return (
+    <div className="space-y-3">
+      {mergedItems.map((item) => {
+        if (item.type === 'post') {
+          return (
+            <div key={item.data.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+              <PostCard post={item.data as TextPost} />
+            </div>
+          );
+        }
+        const comment = item.data as ApiCommentResponse;
+        return (
+          <CommentCard
+            key={comment.id}
+            comment={comment}
+            onClick={() => {
+              if (comment.tokenId) {
+                navigate(`/app/post/${comment.tokenId}?comment=${comment.id}`);
+              }
+            }}
+          />
+        );
+      })}
+      {isLoadingAll && (
+        <div className="flex justify-center py-4">
+          <Loader2 className="w-6 h-6 text-muted-foreground animate-spin" />
+        </div>
+      )}
+      {hasNextPage && (
+        <div className="flex justify-center py-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            {isFetchingNextPage ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+            Load more
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SubscribersTabPanel({
+  isLoadingPlans,
+  isViewingOwnProfile,
+  hasPlans,
+  plans,
+  isSubscribed,
+  profile,
+  setCreatePlanModalOpen,
+  setEditingPlan,
+}: {
+  isLoadingPlans: boolean;
+  isViewingOwnProfile: boolean | undefined;
+  hasPlans: boolean;
+  plans: SubscriptionPlan[];
+  isSubscribed: boolean;
+  profile: ProfileData | undefined;
+  setCreatePlanModalOpen: (open: boolean) => void;
+  setEditingPlan: (plan: SubscriptionPlan | null) => void;
+}) {
+  if (isLoadingPlans) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[200px]">
-        <Loader2 className="w-8 h-8 text-muted-foreground animate-spin" />
+      <div className="flex flex-col items-center justify-center py-16">
+        <Loader2 className="w-8 h-8 text-zinc-400 animate-spin mb-3" />
+        <p className="text-zinc-500 text-sm">Loading plans...</p>
       </div>
     );
   }
   
-  switch (activeTab) {
-    case 'home': {
-      const hasOptimisticPosts = isViewingOwnProfile && optimisticPosts.length > 0;
-      
-      if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
-        return <ProfileEmptyState iconSrc={home3dIcon} iconAlt="All" iconClassName="opacity-90" title="No posts yet" subtitle="Content will appear here when posted" />;
-      }
-      
-      const filteredOptimisticPosts = isViewingOwnProfile 
-        ? optimisticPosts.filter((op) => {
-            return !ALL_CONTENT.some((apiItem) => {
-              const apiStatus = (apiItem.data as { status?: string }).status;
-              if (apiStatus !== 'minted') return false;
-              
-              if (op.type === 'post' && apiItem.type === 'post') {
-                const opData = op.data as TextPost;
-                const apiData = apiItem.data as TextPost;
-                return opData.content === apiData.content;
-              }
-              if (op.type === 'image' && apiItem.type === 'image') {
-                const opData = op.data as ImagePost;
-                const apiData = apiItem.data as ImagePost;
-                return opData.title === apiData.title || opData.caption === apiData.caption;
-              }
-              if (op.type === 'video' && apiItem.type === 'video') {
-                const opData = op.data as VideoItem;
-                const apiData = apiItem.data as VideoItem;
-                return opData.title === apiData.title;
-              }
-              return false;
-            });
-          })
-        : [];
-      
-      return (
-        <div className="space-y-3">
-          {filteredOptimisticPosts.map((op) => {
-            const card = op.type === 'post'
-              ? <PostCard key={op.id} post={op.data as TextPost} />
-              : op.type === 'image'
-              ? <ImageCard key={op.id} post={op.data as ImagePost} />
-              : <VideoCard key={op.id} video={op.data as VideoItem} />;
-            return (
-              <div key={op.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
-                {card}
-              </div>
-            );
-          })}
-          
-          {ALL_CONTENT.map((item) => {
-            const card = item.type === 'post'
-              ? <PostCard key={item.data.id} post={item.data as TextPost} />
-              : item.type === 'image'
-              ? <ImageCard key={item.data.id} post={item.data as ImagePost} />
-              : <VideoCard key={item.data.id} video={item.data as VideoItem} />;
-            return (
-              <div key={item.data.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
-                {card}
-              </div>
-            );
-          })}
-        </div>
-      );
-    }
-    case 'posts': {
-      // Merge text posts and comments chronologically
-      const mergedItems: Array<{ type: 'post' | 'comment'; data: TextPost | ApiCommentResponse; createdAt: string }> = [
-        ...PROFILE_POSTS.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
-        ...allComments.map(c => ({ type: 'comment' as const, data: c, createdAt: c.createdAt || '' })),
-      ];
-      mergedItems.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-      const isLoadingAll = isLoadingComments && allComments.length === 0;
-
-      if (mergedItems.length === 0 && !isLoadingAll) {
-        return <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" title="No posts, comments, or replies yet" subtitle="They will appear here" />;
-      }
-
-      return (
-        <div className="space-y-3">
-          {mergedItems.map((item) => {
-            if (item.type === 'post') {
-              return (
-                <div key={item.data.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
-                  <PostCard post={item.data as TextPost} />
-                </div>
-              );
-            }
-            const comment = item.data as ApiCommentResponse;
-            return (
-              <CommentCard
-                key={comment.id}
-                comment={comment}
-                onClick={() => {
-                  if (comment.tokenId) {
-                    navigate(`/app/post/${comment.tokenId}?comment=${comment.id}`);
-                  }
-                }}
-              />
-            );
-          })}
-          {isLoadingAll && (
-            <div className="flex justify-center py-4">
-              <Loader2 className="w-6 h-6 text-muted-foreground animate-spin" />
-            </div>
-          )}
-          {hasNextPage && (
-            <div className="flex justify-center py-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => fetchNextPage()}
-                disabled={isFetchingNextPage}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                {isFetchingNextPage ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                Load more
-              </Button>
-            </div>
-          )}
-        </div>
-      );
-    }
-    case 'images':
-      if (PROFILE_IMAGES.length === 0) {
-        return <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" title="No images yet" subtitle="Image posts will appear here" />;
-      }
-      return (
-        <div className="space-y-3">
-          {PROFILE_IMAGES.map((image) => (
-            <div key={image.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
-              <ImageCard post={image} />
-            </div>
-          ))}
-        </div>
-      );
-    case 'videos':
-      if (ALL_PROFILE_VIDEOS.length === 0) {
-        return <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt="Videos" title="No videos yet" subtitle="Video posts will appear here" />;
-      }
-      return (
-        <div className="space-y-3">
-          {ALL_PROFILE_VIDEOS.map((video) => (
-            <div key={video.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
-              <VideoCard video={video} />
-            </div>
-          ))}
-        </div>
-      );
-    case 'subscribers': {
-      if (isLoadingPlans) {
-        return (
-          <div className="flex flex-col items-center justify-center py-16">
-            <Loader2 className="w-8 h-8 text-zinc-400 animate-spin mb-3" />
-            <p className="text-zinc-500 text-sm">Loading plans...</p>
-          </div>
-        );
-      }
-      
-      if (isViewingOwnProfile && !hasPlans) {
-        return (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <img src={star3dIcon} alt="Star" className="w-16 h-16 object-contain mb-4" />
-            <h3 className="text-white font-bold text-xl mb-3">Subscriber Content</h3>
-            <Button
-              onClick={() => setCreatePlanModalOpen(true)}
-              className="rounded-xl bg-white/10 border border-white/[0.08] hover:bg-white/20 text-white font-semibold gap-2 backdrop-blur-md"
-            >
-              <Plus className="w-4 h-4" />
-              Create Your First Plan
-            </Button>
-          </div>
-        );
-      }
-      
-      if (isViewingOwnProfile && hasPlans) {
-        return (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-white font-semibold">Your Subscription Plans</h3>
-              <Button 
-                onClick={() => setCreatePlanModalOpen(true)}
-                size="sm"
-                className="rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-white gap-1"
-              >
-                <Plus className="w-4 h-4" />
-                Add Plan
-              </Button>
-            </div>
-            <div className="grid gap-4">
-              {plans.map((plan) => (
-                <PlanCard 
-                  key={plan._id || plan.id} 
-                  plan={plan} 
-                  isOwner={true}
-                  onEdit={() => setEditingPlan(plan)}
-                />
-              ))}
-            </div>
-          </div>
-        );
-      }
-      
-      if (!hasPlans) {
-        return (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <img src={subs3dIcon} alt="Subs" className="w-16 h-16 mb-3" />
-            <p className="text-zinc-400 text-lg font-medium">No subscription plans</p>
-            <p className="text-zinc-500 text-sm mt-1">{profile?.name || 'This creator'} hasn't set up any plans yet</p>
-          </div>
-        );
-      }
-      
-      return (
-        <div className="space-y-4">
-          <h3 className="text-white font-semibold mb-4">Subscription Plans</h3>
-          <div className="grid gap-4">
-            {plans.map((plan) => (
-              <PlanCard 
-                key={plan._id || plan.id} 
-                plan={plan} 
-                isSubscribed={isSubscribed}
-              />
-            ))}
-          </div>
-        </div>
-      );
-    }
-    case 'songs':
-      return <ProfileEmptyState iconSrc={audio3dIcon} iconAlt="Audio" title="No audio yet" subtitle="Audio tracks will appear here" />;
-    case 'live':
-      return <ProfileEmptyState iconSrc={live3dIcon} iconAlt="Live" title="No live streams yet" subtitle="Live content will appear here" />;
-    case 'fractions':
-      return <ProfileEmptyState iconSrc={fractions3dIcon} iconAlt="Fractions" title="No fractions yet" subtitle="Fraction holdings will appear here" />;
-    default:
-      return null;
+  if (isViewingOwnProfile && !hasPlans) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <img src={star3dIcon} alt="Star" className="w-16 h-16 object-contain mb-4" />
+        <h3 className="text-white font-bold text-xl mb-3">Subscriber Content</h3>
+        <Button
+          onClick={() => setCreatePlanModalOpen(true)}
+          className="rounded-xl bg-white/10 border border-white/[0.08] hover:bg-white/20 text-white font-semibold gap-2 backdrop-blur-md"
+        >
+          <Plus className="w-4 h-4" />
+          Create Your First Plan
+        </Button>
+      </div>
+    );
   }
+  
+  if (isViewingOwnProfile && hasPlans) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-white font-semibold">Your Subscription Plans</h3>
+          <Button 
+            onClick={() => setCreatePlanModalOpen(true)}
+            size="sm"
+            className="rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-white gap-1"
+          >
+            <Plus className="w-4 h-4" />
+            Add Plan
+          </Button>
+        </div>
+        <div className="grid gap-4">
+          {plans.map((plan) => (
+            <PlanCard 
+              key={plan._id || plan.id} 
+              plan={plan} 
+              isOwner={true}
+              onEdit={() => setEditingPlan(plan)}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+  
+  if (!hasPlans) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <img src={subs3dIcon} alt="Subs" className="w-16 h-16 mb-3" />
+        <p className="text-zinc-400 text-lg font-medium">No subscription plans</p>
+        <p className="text-zinc-500 text-sm mt-1">{profile?.name || 'This creator'} hasn't set up any plans yet</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="space-y-4">
+      <h3 className="text-white font-semibold mb-4">Subscription Plans</h3>
+      <div className="grid gap-4">
+        {plans.map((plan) => (
+          <PlanCard 
+            key={plan._id || plan.id} 
+            plan={plan} 
+            isSubscribed={isSubscribed}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 // ============================================================================
