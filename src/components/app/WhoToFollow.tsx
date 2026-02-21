@@ -196,9 +196,9 @@ export function WhoToFollow() {
             onClick={() => handleUserClick(user)}
             className="flex items-center gap-3 py-2 px-4 hover:bg-zinc-800/50 transition-colors cursor-pointer"
           >
-            <Avatar className="w-10 h-10 !rounded-[2px]">
-              {getAvatarUrl(user) && <AvatarImage src={getAvatarUrl(user)} className="!rounded-[2px]" />}
-              <AvatarFallback className="bg-zinc-700 text-white font-medium !rounded-[2px]">
+            <Avatar className="w-10 h-10">
+              {getAvatarUrl(user) && <AvatarImage src={getAvatarUrl(user)} />}
+              <AvatarFallback className="bg-zinc-700 text-white font-medium">
                 {getDisplayName(user).charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
