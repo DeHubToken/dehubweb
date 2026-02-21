@@ -394,7 +394,7 @@ export function filterByDate<T extends DeHubNFT>(items: T[], dateFilter: DateFil
 export const CONTENT_TYPE_FILTERS = [
   { label: 'PPV', value: 'ppv' as const, description: 'Pay-per-view content' },
   { label: 'Bounty', value: 'w2e' as const, description: 'Watch to earn' },
-  { label: 'Locked', value: 'locked' as const, description: 'Subscribers only' },
+  { label: 'Gated', value: 'locked' as const, description: 'Subscribers only' },
 ] as const;
 
 export type ContentTypeFilterOption = typeof CONTENT_TYPE_FILTERS[number];
