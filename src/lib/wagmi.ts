@@ -7,6 +7,7 @@
  */
 
 import { http, createConfig } from 'wagmi'
+import { injected } from 'wagmi/connectors'
 import { base } from 'wagmi/chains'
 import { connectorsForWallets } from '@rainbow-me/rainbowkit'
 import {
@@ -74,6 +75,10 @@ export const wagmiConfig = createConfig({
   chains: [base],
   connectors: [
     ...rainbowKitConnectors,
+    // Hidden fallback for mobile in-app browsers (Trust, MetaMask, etc.)
+    // that inject window.ethereum but may not support EIP-6963 discovery.
+    // Not shown in RainbowKit UI — only used programmatically for auto-connect.
+    injected(),
   ],
   transports: {
     [base.id]: http('https://base-rpc.publicnode.com'),
