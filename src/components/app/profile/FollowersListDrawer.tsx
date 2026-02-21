@@ -14,7 +14,6 @@ import {
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { getFollowList, followUser, unfollowUser, type FollowListItem } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { toast } from 'sonner';
@@ -42,13 +41,13 @@ interface UserListItem {
 interface FollowersListDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Wallet address of the profile to fetch followers/following for */
   profileAddress: string;
   title: 'Followers' | 'Following';
 }
 
 /**
- * Map API follow list item to local UserListItem format
+ * Map API follow list item to local UserListItem format.
+ * The API now returns full user objects — no enrichment needed.
  */
 function mapFollowListItem(item: FollowListItem): UserListItem {
   return {
@@ -60,22 +59,6 @@ function mapFollowListItem(item: FollowListItem): UserListItem {
     isFollowing: item.isFollowing,
     followsYou: item.followsYou,
   };
-}
-
-/**
- * Enrich raw-address users via the batch-avatars edge function.
- * Returns a map keyed by lowercase address.
- */
-async function enrichAddresses(addresses: string[]): Promise<Record<string, { avatarUrl: string | null; username: string | null; displayName: string | null }>> {
-  try {
-    const { data, error } = await supabase.functions.invoke('batch-avatars', {
-      body: { addresses },
-    });
-    if (!error && data?.avatars) return data.avatars;
-  } catch (e) {
-    console.warn('Avatar enrichment failed:', e);
-  }
-  return {};
 }
 
 export function FollowersListDrawer({
@@ -100,39 +83,6 @@ export function FollowersListDrawer({
 
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  /** Process a batch of items: map or enrich, then return UserListItem[] */
-  const processItems = useCallback(async (items: FollowListItem[]): Promise<UserListItem[]> => {
-    const needsEnrichment = items.length > 0 && items.every(item => !item.username);
-
-    if (needsEnrichment) {
-      const placeholders = items.map(item => ({
-        address: item.address,
-        username: undefined,
-        displayName: truncateAddress(item.address),
-        avatarUrl: undefined,
-        isFollowing: item.isFollowing,
-        followsYou: item.followsYou,
-      } as UserListItem));
-
-      // Start enrichment
-      const addresses = items.map(item => item.address);
-      const avatarMap = await enrichAddresses(addresses);
-
-      return placeholders.map(user => {
-        const enriched = avatarMap[user.address.toLowerCase()];
-        if (!enriched) return user;
-        return {
-          ...user,
-          username: enriched.username || undefined,
-          displayName: enriched.displayName || enriched.username || truncateAddress(user.address),
-          avatarUrl: buildAvatarUrl(user.address, enriched.avatarUrl || undefined),
-        };
-      });
-    }
-
-    return items.map(mapFollowListItem);
-  }, []);
-
   // Fetch initial page when drawer opens
   useEffect(() => {
     if (!open || !profileAddress) return;
@@ -148,7 +98,7 @@ export function FollowersListDrawer({
           limit: PAGE_SIZE,
         });
 
-        const processed = await processItems(items);
+        const processed = items.map(mapFollowListItem);
 
         // When viewing your OWN following list, everyone is followed by definition
         const isOwnFollowingList =
@@ -182,7 +132,7 @@ export function FollowersListDrawer({
     };
 
     fetchInitialPage();
-  }, [open, profileAddress, title, processItems]);
+  }, [open, profileAddress, title, currentUserAddress]);
 
   // Load more pages
   const loadMore = useCallback(async () => {
@@ -197,7 +147,7 @@ export function FollowersListDrawer({
         limit: PAGE_SIZE,
       });
 
-      const processed = await processItems(items);
+      const processed = items.map(mapFollowListItem);
 
       const isOwnFollowingList =
         title === 'Following' &&
@@ -216,7 +166,7 @@ export function FollowersListDrawer({
     } finally {
       setIsLoadingMore(false);
     }
-  }, [isLoadingMore, hasMore, currentPage, title, profileAddress, processItems]);
+  }, [isLoadingMore, hasMore, currentPage, title, profileAddress, currentUserAddress]);
 
   // IntersectionObserver for infinite scroll
   useEffect(() => {

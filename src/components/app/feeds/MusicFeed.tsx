@@ -17,7 +17,7 @@ import { RadioSection } from '@/components/app/radio';
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { VideoCard } from '@/components/app/cards/VideoCard';
-import { searchNFTs, getNFTInfo, type DeHubNFT } from '@/lib/api/dehub';
+import { searchNFTs, getNFTInfo, getBlockList, type DeHubNFT } from '@/lib/api/dehub';
 import { MANUAL_MUSIC_TOKEN_IDS } from '@/constants/music.constants';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
@@ -46,18 +46,22 @@ const VIDEOS_PAGE_SIZE = 10; // Page size for videos tab - small for fast initia
 
 // ============================================================================
 // HELPERS
-/** Usernames/display names to filter out from feeds */
-const BLOCKED_CREATORS = [
+/** Hardcoded fallback usernames/display names to filter out from feeds */
+const BLOCKED_CREATORS_FALLBACK = [
   'monkey d luffy',
   'monkey d. luffy',
   'monkeydluffy',
   'monkey_d_luffy',
 ];
 
-function isBlockedCreator(nft: DeHubNFT): boolean {
+function isBlockedCreator(nft: DeHubNFT, dynamicBlockedAddresses?: Set<string>): boolean {
+  if (dynamicBlockedAddresses) {
+    const minter = (nft.minter || '').toLowerCase();
+    if (minter && dynamicBlockedAddresses.has(minter)) return true;
+  }
   const displayName = (nft.minterDisplayName || nft.mintername || '').toLowerCase();
   const username = (nft.creator?.username || '').toLowerCase();
-  return BLOCKED_CREATORS.some(blocked => 
+  return BLOCKED_CREATORS_FALLBACK.some(blocked => 
     displayName.includes(blocked) || username.includes(blocked)
   );
 }
@@ -531,7 +535,21 @@ interface MusicFeedProps {
 
 export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFeedProps) {
   const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('all');
-  const { walletAddress } = useAuth();
+  const { walletAddress, isAuthenticated } = useAuth();
+
+  // Fetch dynamic block list for authenticated users
+  const { data: blockList } = useQuery({
+    queryKey: ['block-list'],
+    queryFn: getBlockList,
+    enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
+
+  const blockedAddresses = useMemo(() => {
+    if (!blockList?.length) return undefined;
+    return new Set(blockList.map(u => u.address.toLowerCase()));
+  }, [blockList]);
 
   // Fetch curated radio stations for carousel
   const { data: radioStations = [] } = useQuery({
@@ -562,9 +580,9 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
       // Filter out any duplicates (same tokenId) and blocked creators
       const apiTokenIds = new Set(manualTokens.map(t => t.tokenId));
       const filteredApiResults = (response.data || [])
-        .filter((nft: DeHubNFT) => !isBlockedCreator(nft) && !apiTokenIds.has(nft.tokenId));
+        .filter((nft: DeHubNFT) => !isBlockedCreator(nft, blockedAddresses) && !apiTokenIds.has(nft.tokenId));
       
-      return [...manualTokens.filter(nft => !isBlockedCreator(nft)), ...filteredApiResults];
+      return [...manualTokens.filter(nft => !isBlockedCreator(nft, blockedAddresses)), ...filteredApiResults];
     },
     staleTime: 5 * 60 * 1000,
   });

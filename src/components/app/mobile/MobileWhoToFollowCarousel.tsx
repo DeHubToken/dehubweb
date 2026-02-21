@@ -1,59 +1,15 @@
-import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { UserPlus, Loader2, ChevronRight, RefreshCw, Plus } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { UserPlus, Loader2, ChevronRight, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { searchNFTs, followUser, getAccountInfo } from '@/lib/api/dehub';
+import { getSuggestedAccounts, followUser, type SuggestedAccount } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { toast } from 'sonner';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-
-interface UniqueUser {
-  address: string;
-  username?: string;
-  displayName?: string;
-  avatarUrl?: string;
-}
-
-const PAGE_SIZE = 100;
-const PAGES_PER_BATCH = 2;
-const VISIBLE_INCREMENT = 15;
-
-async function fetchSuggestionsBatch(batchIndex: number): Promise<{ users: UniqueUser[]; hasMore: boolean }> {
-  const startPage = batchIndex * PAGES_PER_BATCH;
-  const seenAddresses = new Set<string>();
-  const uniqueUsers: UniqueUser[] = [];
-
-  const pagePromises = [];
-  for (let page = startPage; page < startPage + PAGES_PER_BATCH; page++) {
-    pagePromises.push(searchNFTs({ sortMode: 'new', unit: PAGE_SIZE, page }));
-  }
-
-  const results = await Promise.all(pagePromises);
-
-  let totalItems = 0;
-  for (const response of results) {
-    const items = response.data || [];
-    totalItems += items.length;
-    for (const nft of items) {
-      const address = nft.minter;
-      if (!address || seenAddresses.has(address)) continue;
-      seenAddresses.add(address);
-      uniqueUsers.push({
-        address,
-        username: nft.mintername,
-        displayName: nft.minterDisplayName,
-        avatarUrl: nft.minterAvatarUrl,
-      });
-    }
-  }
-
-  const hasMore = totalItems >= PAGES_PER_BATCH * PAGE_SIZE * 0.5;
-  return { users: uniqueUsers, hasMore };
-}
 
 export function MobileWhoToFollowCarousel() {
   const navigate = useNavigate();
@@ -61,128 +17,40 @@ export function MobileWhoToFollowCarousel() {
   const { handleApiError } = useReauthHandler();
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
-  const [visibleCount, setVisibleCount] = useState(VISIBLE_INCREMENT);
-  const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Fetch current user's following list
-  const { data: currentUserData, isLoading: isLoadingFollowings } = useQuery({
-    queryKey: ['current-user-followings', walletAddress],
-    queryFn: async () => {
-      if (!walletAddress) return null;
-      return getAccountInfo(walletAddress);
-    },
-    enabled: !!walletAddress && isAuthenticated,
-    staleTime: 2 * 60 * 1000,
-  });
-
-  // Infinite query for suggestions
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, refetch, isFetching } = useInfiniteQuery({
-    queryKey: ['mobile-suggestions'],
-    queryFn: ({ pageParam = 0 }) => fetchSuggestionsBatch(pageParam),
-    getNextPageParam: (lastPage, allPages) => {
-      if (!lastPage.hasMore) return undefined;
-      return allPages.length;
-    },
-    initialPageParam: 0,
+  // Fetch suggested accounts from dedicated API
+  const { data: suggestions = [], isLoading, refetch, isFetching } = useQuery({
+    queryKey: ['suggested-accounts', walletAddress],
+    queryFn: () => getSuggestedAccounts(50),
+    enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000,
   });
 
-  // Get following list as a Set — check both fields for consistency with desktop
-  const followingSet = useMemo(() => {
-    const followings = currentUserData?.followingsList || currentUserData?.followings;
-    if (!followings || !Array.isArray(followings)) return new Set<string>();
-    return new Set(followings.map((addr: string) => addr.toLowerCase()));
-  }, [currentUserData?.followingsList, currentUserData?.followings]);
+  // Filter out already-followed users (locally tracked)
+  const filteredSuggestions = useMemo(() => {
+    return suggestions.filter(user => !followedUsers.has(user.address));
+  }, [suggestions, followedUsers]);
 
-  // Accumulate all unique users across pages
-  const allUsers = useMemo(() => {
-    if (!data?.pages) return [];
-    const seenAddresses = new Set<string>();
-    const users: UniqueUser[] = [];
-    for (const page of data.pages) {
-      for (const user of page.users) {
-        if (!seenAddresses.has(user.address)) {
-          seenAddresses.add(user.address);
-          users.push(user);
-        }
-      }
-    }
-    return users;
-  }, [data?.pages]);
-
-  // Filter suggestions (no hard cap — visibleCount controls display)
-  const suggestions = useMemo(() => {
-    return allUsers.filter(user => {
-      const addressLower = user.address.toLowerCase();
-      if (walletAddress && addressLower === walletAddress.toLowerCase()) return false;
-      if (followingSet.has(addressLower)) return false;
-      if (followedUsers.has(user.address)) return false;
-      if (!user.avatarUrl) return false;
-      return true;
-    });
-  }, [allUsers, walletAddress, followingSet, followedUsers]);
-
-  // Auto-fetch more batches if suggestions are sparse after filtering
-  useEffect(() => {
-    const pagesLoaded = data?.pages?.length ?? 0;
-    const MAX_AUTO_BATCHES = 5;
-    const MIN_SUGGESTIONS = 5;
-
-    if (
-      suggestions.length < MIN_SUGGESTIONS &&
-      hasNextPage &&
-      !isFetchingNextPage &&
-      pagesLoaded < MAX_AUTO_BATCHES &&
-      !isLoading
-    ) {
-      fetchNextPage();
-    }
-  }, [suggestions.length, hasNextPage, isFetchingNextPage, data?.pages?.length, isLoading, fetchNextPage]);
-
-  const visibleSuggestions = suggestions.slice(0, visibleCount);
-  const hasMoreToShow = visibleCount < suggestions.length || hasNextPage;
-
-  const handleLoadMore = useCallback(() => {
-    if (visibleCount < suggestions.length) {
-      // Reveal more from the already-fetched pool
-      setVisibleCount(prev => prev + VISIBLE_INCREMENT);
-    } else if (hasNextPage && !isFetchingNextPage) {
-      // Fetch more from API, then reveal
-      fetchNextPage().then(() => {
-        setVisibleCount(prev => prev + VISIBLE_INCREMENT);
-      });
-    }
-  }, [visibleCount, suggestions.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  // Auto-trigger load more when user scrolls near end
-  const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const nearEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 150;
-    if (nearEnd && hasMoreToShow && !isFetchingNextPage) {
-      handleLoadMore();
-    }
-  }, [hasMoreToShow, isFetchingNextPage, handleLoadMore]);
-
-  const getAvatarUrl = (user: UniqueUser) => {
-    if (user.avatarUrl && user.address) {
-      return buildAvatarUrl(user.address, user.avatarUrl);
+  const getAvatarUrl = (user: SuggestedAccount) => {
+    const avatarPath = user.avatarImageUrl || user.avatarUrl;
+    if (avatarPath && user.address) {
+      return buildAvatarUrl(user.address, avatarPath);
     }
     return undefined;
   };
 
-  const getDisplayName = (user: UniqueUser) => {
+  const getDisplayName = (user: SuggestedAccount) => {
     return user.displayName || user.username || `${user.address.slice(0, 6)}...`;
   };
 
-  const handleUserClick = (user: UniqueUser) => {
+  const handleUserClick = (user: SuggestedAccount) => {
     const target = user.username || user.address;
     if (target) {
       navigate(`/${target}`);
     }
   };
 
-  const handleFollow = async (e: React.MouseEvent, user: UniqueUser) => {
+  const handleFollow = async (e: React.MouseEvent, user: SuggestedAccount) => {
     e.stopPropagation();
 
     if (!isAuthenticated) {
@@ -217,8 +85,11 @@ export function MobileWhoToFollowCarousel() {
     }
   };
 
-  // Wait for both suggestions and followings to load before showing
-  if (isLoading || (isAuthenticated && isLoadingFollowings)) {
+  if (!isAuthenticated) {
+    return null;
+  }
+
+  if (isLoading) {
     return (
       <div className="lg:hidden py-4">
         <div className="flex items-center justify-center py-8">
@@ -228,20 +99,7 @@ export function MobileWhoToFollowCarousel() {
     );
   }
 
-  const pagesLoaded = data?.pages?.length ?? 0;
-  const stillAutoFetching = hasNextPage && pagesLoaded < 5;
-
-  if (suggestions.length === 0 && (isFetchingNextPage || stillAutoFetching)) {
-    return (
-      <div className="lg:hidden py-4">
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
-        </div>
-      </div>
-    );
-  }
-
-  if (suggestions.length === 0) {
+  if (filteredSuggestions.length === 0) {
     return (
       <div className="lg:hidden py-4 border-y border-zinc-800/50">
         <div className="flex flex-col items-center justify-center gap-3 py-6">
@@ -283,13 +141,11 @@ export function MobileWhoToFollowCarousel() {
         </button>
       </div>
 
-      {/* Horizontal Carousel with infinite scroll */}
+      {/* Horizontal Carousel */}
       <SwipeableCarousel
-        ref={scrollRef}
-        onScroll={handleScroll}
         className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2 snap-x snap-mandatory"
       >
-        {visibleSuggestions.map((user) => (
+        {filteredSuggestions.map((user) => (
           <div
             key={user.address}
             onClick={() => handleUserClick(user)}
@@ -323,27 +179,6 @@ export function MobileWhoToFollowCarousel() {
             </div>
           </div>
         ))}
-
-        {/* Load More card */}
-        {hasMoreToShow && (
-          <div
-            onClick={handleLoadMore}
-            className="flex-shrink-0 w-[104px] bg-zinc-900 rounded-xl p-1 cursor-pointer hover:bg-zinc-800/80 transition-colors snap-start flex items-center justify-center"
-          >
-            <div className="flex flex-col items-center justify-center gap-2 py-6">
-              {isFetchingNextPage ? (
-                <Loader2 className="w-5 h-5 text-zinc-400 animate-spin" />
-              ) : (
-                <>
-                  <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center">
-                    <Plus className="w-5 h-5 text-zinc-400" />
-                  </div>
-                  <span className="text-[10px] text-zinc-400 font-medium">More</span>
-                </>
-              )}
-            </div>
-          </div>
-        )}
       </SwipeableCarousel>
     </div>
   );

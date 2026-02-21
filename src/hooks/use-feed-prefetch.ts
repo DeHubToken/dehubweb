@@ -227,6 +227,7 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
     const response = musicResult.value as any;
     const data = response.result || response.data || [];
     // Filter blocked creators
+    // Filter blocked creators using hardcoded fallback (no dynamic block list in prefetch)
     const filteredData = data.filter((nft: any) => {
       const displayName = (nft.minterDisplayName || nft.mintername || '').toLowerCase();
       const username = (nft.creator?.username || '').toLowerCase();

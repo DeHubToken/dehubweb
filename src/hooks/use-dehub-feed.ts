@@ -8,12 +8,13 @@
  */
 
 import { useMemo } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import {
   searchNFTs,
   getMediaUrl,
   DEHUB_CDN_BASE,
   getLiveStreams,
+  getBlockList,
   type DeHubNFT,
   type SearchNFTsParams,
   type LiveStream as ApiLiveStream,
@@ -22,6 +23,7 @@ import { buildAvatarUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, LiveStream } from '@/types/feed.types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Fallback thumbnails for when API doesn't return one
 const FALLBACK_THUMBNAILS = [
@@ -31,18 +33,23 @@ const FALLBACK_THUMBNAILS = [
   'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=480&h=270&fit=crop',
 ];
 
-/** Usernames/display names to filter out from feeds */
-const BLOCKED_CREATORS = [
+/** Hardcoded fallback usernames/display names to filter out from feeds */
+const BLOCKED_CREATORS_FALLBACK = [
   'monkey d luffy',
   'monkey d. luffy',
   'monkeydluffy',
   'monkey_d_luffy',
 ];
 
-function isBlockedCreator(nft: DeHubNFT): boolean {
+function isBlockedCreator(nft: DeHubNFT, dynamicBlockedAddresses?: Set<string>): boolean {
+  // Check dynamic block list (addresses) first
+  if (dynamicBlockedAddresses) {
+    const minter = (nft.minter || '').toLowerCase();
+    if (minter && dynamicBlockedAddresses.has(minter)) return true;
+  }
   const displayName = (nft.minterDisplayName || nft.mintername || '').toLowerCase();
   const username = (nft.creator?.username || '').toLowerCase();
-  return BLOCKED_CREATORS.some(blocked =>
+  return BLOCKED_CREATORS_FALLBACK.some(blocked =>
     displayName.includes(blocked) || username.includes(blocked)
   );
 }
@@ -324,6 +331,21 @@ interface UseDeHubFeedOptions extends SearchNFTsParams {
  */
 export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
   const { enabled = true, status = 'minted', ...searchParams } = options;
+  const { isAuthenticated } = useAuth();
+
+  // Fetch dynamic block list for authenticated users
+  const { data: blockList } = useQuery({
+    queryKey: ['block-list'],
+    queryFn: getBlockList,
+    enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
+
+  const blockedAddresses = useMemo(() => {
+    if (!blockList?.length) return undefined;
+    return new Set(blockList.map(u => u.address.toLowerCase()));
+  }, [blockList]);
 
   return useInfiniteQuery({
     queryKey: ['dehub-feed', { ...searchParams, status }],
@@ -339,7 +361,7 @@ export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
       const rawData = (response as any).result || response.data || [];
 
       // Filter out blocked creators and blocked posts
-      const data = rawData.filter((nft: DeHubNFT) => !isBlockedCreator(nft) && !isBlockedPost(nft));
+      const data = rawData.filter((nft: DeHubNFT) => !isBlockedCreator(nft, blockedAddresses) && !isBlockedPost(nft));
 
       const unit = searchParams.unit || 15;
 
