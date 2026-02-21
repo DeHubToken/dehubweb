@@ -219,10 +219,7 @@ export function WhoToFollow() {
               {loadingUsers.has(user.address) ? (
                 <Loader2 className="w-3 h-3 animate-spin" />
               ) : isAlreadyFollowed(user) ? (
-                <>
-                  <Check className="w-3 h-3 mr-1" />
-                  Following
-                </>
+                'Following'
               ) : (
                 'Follow'
               )}
