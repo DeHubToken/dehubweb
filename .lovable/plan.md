@@ -1,129 +1,82 @@
 
+# Replace Custom Workarounds with New API Endpoints
 
-# DeHub API Full Audit -- Cross-Referenced with Live Docs
-
-After comparing every endpoint from `https://api.dehub.io/api/docxx` against the codebase (`src/lib/api/dehub/`), here is the definitive list of what exists, what's missing, and what needs updating.
-
----
-
-## Already Implemented and Matching (No Changes Needed)
-
-These modules match the API docs 1:1:
-
-- **Auth** (`auth.ts`): `/api/username/check` (GET), `/api/web/auth` (POST)
-- **Users** (`users.ts`): `/api/account_info/{id}`, `/api/users_count`, `/api/update_profile`
-- **Social** (`social.ts`): `/api/request_follow`, `/api/is_following`, `/api/follow_list/{address}`, `/api/follow-requests` (GET + accept/reject/accept-all/reject-all), `/api/request_vote`, `/api/like_comment`
-- **Feed** (`feed.ts`): `/api/feed`, `/api/nft_info/{id}`, `/api/record-view/{tokenId}`, `/api/savePost`, `/api/savedPosts`, `/api/liked_videos`, `/api/my_watched_nfts`, `/api/get_categories`, `/api/getServerTime`, `/api/claim-bounty`, `/api/unlocked_nfts/{id}`, `/api/view/batch`
-- **Comments** (`comments.ts`): `/api/nft/{tokenId}/comments`, `/api/request_comment`, `/api/comment_image`, `/api/comment_audio`, `/api/edit_comment`
-- **Content** (`content.ts`): `/api/user_mint`, `/api/nft/{tokenId}` (PATCH + DELETE), `/api/token_visibility`
-- **Notifications** (`notifications.ts`): `/api/notification`, `/api/notification/unread-count`, `/api/notification/{id}` (PATCH), `/api/notification/mark-all-read`
-- **Reports** (`reports.ts`): All 8 report endpoints (legacy + v2)
-- **Livestream** (`livestream.ts`): All 10 livestream endpoints
-- **LiveChat** (`livechat.ts`): All 10 livechat endpoints
-- **Subscriptions** (`subscriptions.ts`): All 7 subscription/plan endpoints
-- **DM** (`dm.ts`): All DM endpoints
-- **Leaderboard** (`leaderboard.ts`): `/api/leaderboard` (recently updated)
-- **Search** (`feed.ts`): `/api/search`, `/api/search/suggestions`, `/api/search/log`
+After cross-referencing the new endpoints we added against the existing codebase, here are the custom workarounds that can now be replaced with proper API calls, plus the follower/following list improvements.
 
 ---
 
-## Missing Endpoints to Add
+## 1. "Who to Follow" -- Replace `searchNFTs` Workaround with `getSuggestedAccounts()`
 
-### Priority 1 -- Core Features
+**Current problem:** Both `WhoToFollow.tsx` and `MobileWhoToFollowCarousel.tsx` scrape the `searchNFTs` endpoint (fetching up to 1,000 NFTs across 5 batches of 200), then extract unique minter addresses, filter out followed users, and display the leftovers as "suggestions." This is extremely wasteful -- it downloads massive feed payloads just to find usernames.
 
-| # | Endpoint | Method | Module | Description |
-|---|----------|--------|--------|-------------|
-| 1 | `/api/comment_gif` | POST | `comments.ts` | Add GIF comment (Giphy/Tenor URL) |
-| 2 | `/api/delete_comment` | DELETE | `comments.ts` | User deletes own comment |
-| 3 | `/api/users_search` | GET | `users.ts` | Dedicated user search |
-| 4 | `/api/users/{address}/comments` | GET | `users.ts` | Get a user's comment history |
-| 5 | `/api/suggested-accounts` | GET | `users.ts` | Suggested accounts to follow |
-| 6 | `/api/myPosts` | GET | `feed.ts` | Get authenticated user's own posts |
-| 7 | `/api/username/check` | POST | `auth.ts` | POST variant of username check |
+**Fix:** Replace with the dedicated `GET /api/suggested-accounts` endpoint we just added. This returns curated suggestions from the API directly.
 
-### Priority 2 -- Blocks (Entirely Missing Module)
+### Files to change:
+- **`src/components/app/WhoToFollow.tsx`** -- Remove the `fetchUserBatch` function that calls `searchNFTs`. Replace the `useInfiniteQuery` with a simple `useQuery` calling `getSuggestedAccounts()`. Remove the `getAccountInfo` call used to build the "already following" filter (the API handles this server-side). Remove auto-fetch logic for sparse results.
+- **`src/components/app/mobile/MobileWhoToFollowCarousel.tsx`** -- Same changes as above, adapted for the carousel layout.
 
-| # | Endpoint | Method | Description |
-|---|----------|--------|-------------|
-| 8 | `/api/block` | POST | Block a user |
-| 9 | `/api/block/{address}` | DELETE | Unblock a user |
-| 10 | `/api/block` | GET | Get your block list |
-| 11 | `/api/block/blocked-by` | GET | Get who blocked you |
-| 12 | `/api/block/status/{address}` | GET | Check block status |
-
-New file: `src/lib/api/dehub/blocks.ts`
-
-### Priority 3 -- Push Notifications (Entirely Missing Module)
-
-| # | Endpoint | Method | Description |
-|---|----------|--------|-------------|
-| 13 | `/api/push/token` | POST | Register push token |
-| 14 | `/api/push/token/{deviceId}` | DELETE | Unregister push token |
-| 15 | `/api/push/tokens` | DELETE | Unregister all tokens |
-| 16 | `/api/push/devices` | GET | Get registered devices |
-| 17 | `/api/push/preferences` | GET | Get notification preferences |
-| 18 | `/api/push/preferences` | POST | Update preferences |
-| 19 | `/api/push/preferences/reset` | POST | Reset to defaults |
-
-New file: `src/lib/api/dehub/push.ts`
-
-### Priority 4 -- Payments (Mostly Missing)
-
-Currently only `/api/dpay/price` exists in `livestream.ts`. Missing:
-
-| # | Endpoint | Method | Description |
-|---|----------|--------|-------------|
-| 20 | `/api/dpay/available/tokens` | GET | Available payment tokens |
-| 21 | `/api/dpay/available/gas` | GET | Available gas |
-| 22 | `/api/dpay/tnxs` | GET | Transaction history |
-| 23 | `/api/dpay/price/{chainId}` | GET | Price by chain |
-| 24 | `/api/dpay/total` | GET | Total stats |
-| 25 | `/api/dpay/checkout` | POST | Create checkout |
-| 26 | `/api/dpay/tk` | POST | Create ticket |
-| 27 | `/api/dpay/create-onramp-session` | POST | Create onramp session |
-
-New file: `src/lib/api/dehub/payments.ts` (move `getDHBPrice` from `livestream.ts`, keep re-export for backward compat)
-
-### Priority 5 -- Admin Endpoints (Optional)
-
-These are admin-only endpoints. Only implement if an admin panel is planned:
-
-- **Admin Livestreams**: 6 endpoints (`/api/admin/livestreams/...`)
-- **Admin Reports & Moderation**: 7 endpoints (`/api/admin/reports/...`)
-- **Admin Comments**: 8 endpoints (`/api/admin/comments/...`)
+### What gets removed:
+- `searchNFTs` import (no longer needed for suggestions)
+- `getAccountInfo` call to fetch current user's following list for client-side filtering
+- Complex 5-batch auto-fetch loop
+- Client-side deduplication and filtering logic
 
 ---
 
-## Implementation Details
+## 2. Hardcoded `BLOCKED_CREATORS` Lists -- Replace with `getBlockList()` API
+
+**Current problem:** Three separate files have the same hardcoded `BLOCKED_CREATORS` array (containing "monkey d luffy" variants) and a `BLOCKED_POST_IDS` constant. This is a static blocklist that requires code changes to update.
+
+**Fix:** For authenticated users, fetch their dynamic block list from `GET /api/block` (the `getBlockList()` function we just added) and filter feeds using that. Keep the hardcoded lists as a fallback for unauthenticated users.
+
+### Files to change:
+- **`src/hooks/use-unified-feed.ts`** -- Add a `useQuery` for `getBlockList()` when authenticated. Merge the API block list with the hardcoded `BLOCKED_CREATORS` for filtering. The `isBlockedCreator` function checks against both lists.
+- **`src/hooks/use-dehub-feed.ts`** -- Same pattern.
+- **`src/hooks/use-feed-prefetch.ts`** -- Same pattern (this one has its own inline copy of the blocked list).
+- **`src/components/app/feeds/MusicFeed.tsx`** -- Same pattern.
+
+---
+
+## 3. Follower/Following Drawer -- Remove `batch-avatars` Enrichment Workaround
+
+**Current problem:** `FollowersListDrawer.tsx` calls `getFollowList()` and then checks if the results lack usernames. If they do, it calls the custom `batch-avatars` Edge Function to enrich raw wallet addresses with profile metadata. This two-stage enrichment was needed because the API sometimes returned bare addresses.
+
+**Fix:** The `getFollowList()` endpoint (with `requiresAuth: true`) now returns full user objects including `username`, `displayName`, `avatarImageUrl`, `isFollowing`, and `followsYou`. The `batch-avatars` enrichment fallback is no longer needed for this use case.
+
+### Files to change:
+- **`src/components/app/profile/FollowersListDrawer.tsx`** -- Remove the `enrichAddresses()` function and the `needsEnrichment` branch in `processItems()`. Simplify to always use `mapFollowListItem()`. Remove the `supabase` import (no longer calling `batch-avatars` from this component).
+
+---
+
+## 4. Mutual Followers -- No Changes Needed
+
+The `useMutualFollowers` hook already uses `getFollowList()` correctly. No custom workarounds to remove here.
+
+---
+
+## Summary of Impact
+
+| Area | Before | After |
+|------|--------|-------|
+| Who to Follow (sidebar) | Fetches up to 1,000 NFTs via `searchNFTs`, extracts minters | Single call to `getSuggestedAccounts()` |
+| Who to Follow (mobile) | Same wasteful NFT scraping | Same single API call |
+| Feed blocking | Hardcoded array of 4 names | Dynamic per-user block list from API |
+| Follower/Following drawer | Two-stage fetch + `batch-avatars` enrichment | Direct mapping from API response |
 
 ### Files to create:
-1. `src/lib/api/dehub/blocks.ts` -- 5 functions
-2. `src/lib/api/dehub/push.ts` -- 7 functions
-3. `src/lib/api/dehub/payments.ts` -- 9 functions (including moved `getDHBPrice`)
+- None
 
 ### Files to modify:
-1. `src/lib/api/dehub/comments.ts` -- add `addGifComment()`, `deleteComment()`
-2. `src/lib/api/dehub/users.ts` -- add `searchUsers()`, `getUserComments()`, `getSuggestedAccounts()`
-3. `src/lib/api/dehub/feed.ts` -- add `getMyPosts()`
-4. `src/lib/api/dehub/auth.ts` -- add POST variant of `checkUsernameAvailability`
-5. `src/lib/api/dehub/livestream.ts` -- keep `getDHBPrice` as re-export from payments for backward compat
-6. `src/lib/api/dehub/index.ts` -- add exports for `blocks`, `push`, `payments`
+1. `src/components/app/WhoToFollow.tsx`
+2. `src/components/app/mobile/MobileWhoToFollowCarousel.tsx`
+3. `src/hooks/use-unified-feed.ts`
+4. `src/hooks/use-dehub-feed.ts`
+5. `src/hooks/use-feed-prefetch.ts`
+6. `src/components/app/feeds/MusicFeed.tsx`
+7. `src/components/app/profile/FollowersListDrawer.tsx`
 
-### Pattern to follow:
-All new functions use the existing `apiCall` helper with defensive `result` unwrapping, matching every other function in the codebase. Example:
-
-```text
-export async function blockUser(address: string): Promise<{ result: boolean }> {
-  return apiCall<{ result: boolean }>("/api/block", {
-    method: "POST",
-    body: { address: address.toLowerCase() },
-    requiresAuth: true,
-  });
-}
-```
-
-### What is NOT changing:
-- No existing endpoint implementations are being modified
-- No UI changes in this pass (API layer only)
-- Historical leaderboard cache logic stays untouched
-- All existing imports continue working via barrel exports
+### What stays unchanged:
+- `batch-avatars` Edge Function (still used by notifications, stories, profile avatar cache)
+- `BLOCKED_POST_IDS` constant (post-level blocking stays as-is -- no API equivalent)
+- All API layer files we just created (no changes needed)
+- `useMutualFollowers` hook (already correct)
