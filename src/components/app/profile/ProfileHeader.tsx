@@ -258,8 +258,8 @@ export function ProfileHeader({
                 {isFollowing && (
                   <Button 
                     size="sm" 
-                    variant="outline"
-                    className="rounded-xl border-zinc-600 text-zinc-300 gap-2"
+                    variant="glass"
+                    className="rounded-xl gap-2"
                     onClick={() => setShowUnfollowConfirm(true)}
                     disabled={isFollowLoading}
                   >
