@@ -1,6 +1,7 @@
 import { 
-  UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2
+  UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check
 } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
@@ -8,6 +9,16 @@ import { ShimmerBorder } from '@/components/app/stories/ShimmerBorder';
 import { TranslatableText } from '@/components/app/TranslatableText';
 import { BioTranslateButton } from '@/components/app/profile/BioTranslateButton';
 import { MutualFollowers } from '@/components/app/profile/MutualFollowers';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import {
   Drawer,
   DrawerContent,
@@ -33,6 +44,7 @@ interface ProfileHeaderProps {
   isTargetPrivate: boolean;
   isFollowLoading: boolean;
   handleFollow: () => void;
+  handleUnfollow: () => void;
   // Subscriptions
   isSubscribed: boolean;
   hasPlans: boolean;
@@ -76,6 +88,7 @@ export function ProfileHeader({
   isTargetPrivate,
   isFollowLoading,
   handleFollow,
+  handleUnfollow,
   isSubscribed,
   hasPlans,
   hasStories,
@@ -99,6 +112,8 @@ export function ProfileHeader({
   setTranslatedBio,
 }: ProfileHeaderProps) {
   const navigate = useNavigate();
+
+  const [showUnfollowConfirm, setShowUnfollowConfirm] = useState(false);
 
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
@@ -238,6 +253,22 @@ export function ProfileHeader({
                       <UserPlus className="w-4 h-4" />
                     )}
                     {isTargetPrivate ? 'Request' : 'Follow'}
+                  </Button>
+                )}
+                {isFollowing && (
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="rounded-xl border-zinc-600 text-zinc-300 gap-2"
+                    onClick={() => setShowUnfollowConfirm(true)}
+                    disabled={isFollowLoading}
+                  >
+                    {isFollowLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Check className="w-4 h-4" />
+                    )}
+                    Following
                   </Button>
                 )}
                 {isFollowing && !isSubscribed && hasPlans && (
@@ -406,6 +437,30 @@ export function ProfileHeader({
           )}
         </div>
       </div>
+
+      {/* Unfollow confirmation */}
+      <AlertDialog open={showUnfollowConfirm} onOpenChange={setShowUnfollowConfirm}>
+        <AlertDialogContent className="bg-zinc-900 border-zinc-800">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">Unfollow {profile.name}?</AlertDialogTitle>
+            <AlertDialogDescription className="text-zinc-400">
+              You will no longer see their posts in your feed.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={() => {
+                handleUnfollow();
+                setShowUnfollowConfirm(false);
+              }}
+            >
+              Unfollow
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
