@@ -1062,7 +1062,7 @@ export default function AssistantPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center gap-3">
-          <img src={aiSparkleIcon} alt="AI" className="w-10 h-10 object-contain" />
+          <img src={aiSparkleIcon} alt="Assistant" className="w-10 h-10 object-contain" />
           <h1 className="text-lg font-semibold text-white leading-none mt-0.5">{t('assistant.title')}</h1>
         </div>
 
