@@ -744,7 +744,7 @@ export default function PostInfoPage() {
               <h2 className="text-sm font-medium text-white/60 mb-3">Pay-Per-View</h2>
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-white/5 rounded-lg p-3 flex items-center gap-3">
-                  <Ticket className="w-5 h-5 text-primary" />
+                  <Ticket className="w-5 h-5 text-white" />
                   <div>
                     <p className="text-lg font-bold text-white">{ppvPurchaseCount ?? 0}</p>
                     <p className="text-xs text-white/60">PPV Sales</p>
