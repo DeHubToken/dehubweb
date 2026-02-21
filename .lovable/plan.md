@@ -1,39 +1,45 @@
 
 
-# Simplify Auth Flow: Remove SA Deployment Check, Use `isNewAccount`
+# Fix Auth Bugs and Clear Stale Cache
 
 ## Summary
-Remove the smart account deployment step from the **authentication flow only** (since the backend now handles signatures from undeployed smart accounts). Keep all Pimlico/AA infrastructure intact for on-chain transactions (minting, tipping, etc.). Use the new `isNewAccount` response field instead of checking for missing username.
+Fix the identified bugs (token expiry mismatch, stale comments, redundant connector) and add a one-time cache/data clear for existing testers to ensure a clean slate after the auth flow changes.
 
 ## Changes
 
-### 1. Update `AuthResponse` type
-**File:** `src/lib/api/dehub/types.ts`
-- Add `isNewAccount?: boolean` to the `result` object in `AuthResponse`
+### 1. Fix token expiry mismatch in `src/lib/wagmi.ts`
+**Bug:** `TOKEN_EXPIRY_MS` is set to 7 days (line 32), but the actual token lifetime is 24 hours (matching `src/lib/api/dehub/core.ts`). This means Wagmi thinks a session is valid for 7 days when it actually expires after 24 hours.
+- Change `7 * 24 * 60 * 60 * 1000` to `24 * 60 * 60 * 1000`
 
-### 2. Remove `ensureSmartAccountDeployed` calls from auth flow only
-**File:** `src/contexts/AuthContext.tsx`
+### 2. Fix stale comments
+- **`src/lib/web3auth.ts` (lines 4-6):** Remove "Matches mobile: deploy Smart Account (empty tx) before signing" and "For DeHub auth we recover EOA from ERC-6492 inner sig and send that" from the file header comment
+- **`src/lib/web3auth.ts` (lines 362-366):** Remove "Smart Account must be deployed (empty tx) before signing - matches mobile. For DeHub auth we send recovered EOA address + inner ECDSA sig." from `initWeb3Auth` JSDoc
+- **`src/contexts/AuthContext.tsx` (lines 5-6):** Remove "(no AA - DeHub backend requires standard ECDSA signatures)" from the file header comment. The app does use AA via Pimlico for on-chain transactions; it's just not needed for auth signing anymore.
 
-- **Remove the `ensureSmartAccountDeployed` function** and its helpers (`isKnownDeployed`, `markDeployedInCache`, `SA_DEPLOYED_CACHE_KEY`, `getCodeDirect`, etc.)
-- **`completeDeHubAuthAfterRedirect` (redirect flow, ~line 762):** Remove the `ensureSmartAccountDeployed` call and the "deployment failed" error check. Keep signing logic unchanged.
-- **`completeDeHubAuth` (popup flow, ~line 885):** Remove the `ensureSmartAccountDeployed` call inside the `if (isSocial)` block. Keep signing logic unchanged.
-- **Username enforcement:** In both `completeDeHubAuth` and `completeDeHubAuthAfterRedirect`, replace `if (!normalizedUser.username)` with `if (authResponse.result?.isNewAccount)` to trigger `setRequiresUsername(true)`
-- **Session restore (mount effect):** Keep `if (!normalizedUser.username)` here since we don't have `isNewAccount` during session restore
+### 3. Remove redundant `injected()` connector from `src/lib/wagmi.ts`
+RainbowKit's wallet connectors (MetaMask, Phantom, Trust, Rabby) already register injected providers via EIP-6963 discovery. The explicit `injected()` connector can cause duplicate entries and conflicts. The in-app browser auto-connect in `AuthContext.tsx` (line 488) already searches connectors by ID and will find the RainbowKit-registered injected connector.
+- Remove `import { injected } from 'wagmi/connectors'`
+- Remove `injected()` from the `connectors` array
 
-### 3. No changes to Pimlico or Web3Auth init
-**Files NOT touched:**
-- `src/lib/web3auth.ts` -- Pimlico config, AA provider, prewarm all stay
-- `src/lib/contracts/aa-utils.ts` -- AA transaction helpers stay
-- `supabase/functions/get-pimlico-config/index.ts` -- Edge function stays
-- `src/components/app/UsernameRequiredModal.tsx` -- No changes needed
+### 4. One-time stale data clear for existing testers
+Add a versioned migration flag in `src/App.tsx` (or a new utility) that runs once on first load:
+- Check `localStorage` for a key like `dehub_cache_version`
+- If it's missing or less than the current version (e.g., `"2"`):
+  - Clear `dehub_token`, `dehub_token_timestamp`, `dehub_wallet`, `dehub_user`, `dehub_connection_source`, `dehub_deployed_sa`
+  - Clear all wagmi/WC/Web3Auth keys
+  - Clear React Query cache
+  - Set `dehub_cache_version` to `"2"`
+- This is a clean, removable pattern -- bump the version number for future breaking changes, or remove the block entirely when no longer needed
 
-## What stays the same
-- All Pimlico/AA infrastructure for on-chain transactions
-- Web3Auth v10 Modal SDK with Account Abstraction
-- ERC-6492 signature handling
-- Sign message format (already matches new API spec)
-- `POST /api/web/auth` endpoint call (already correct)
-- Wagmi external wallet flow
-- Session restore logic
-- Token storage and expiry
+This will be implemented as a small function called at the top of `App.tsx` (before React renders), so it runs synchronously on module load. Existing users get a fresh start; new users are unaffected.
+
+## Technical Details
+
+```text
+Files to edit:
+  1. src/lib/wagmi.ts        -- Fix expiry, remove injected()
+  2. src/lib/web3auth.ts      -- Fix stale comments
+  3. src/contexts/AuthContext.tsx -- Fix stale comment
+  4. src/App.tsx              -- Add one-time cache clear
+```
 
