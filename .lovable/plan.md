@@ -1,24 +1,66 @@
 
-## Fix: Include PPV purchases in Balance Chart
 
-**Problem**: The BalanceCard's balance history chart only uses DPay API transactions to reconstruct your balance over time. Since your recent activity was PPV purchases, the chart has no data and shows "No transaction history yet."
+# Real-Time DHB Balance Check on Gated Content Click
 
-**Solution**: Merge PPV purchases from the database into the chart data, just like we already did for Recent Transactions and the Transactions tab.
+## What This Does
+Instead of silently blocking you from gated content, the system will keep the gating overlay visible but add an "Unlock" button to the Locked/Gated drawer. When you click it, it fetches your DHB balance in real-time from the blockchain. If you hold enough, the content unlocks instantly with a satisfying reveal -- giving you that dopamine hit of clicking to unlock.
 
-### Changes
+## How It Works
 
-**File: `src/components/app/command-centre/BalanceCard.tsx`**
+```text
+User taps gated overlay
+        |
+  Drawer opens showing "Must hold X DHB"
+        |
+  User clicks "Verify & Unlock" button
+        |
+  Real-time balance check via get-badge-balance edge function
+        |
+   +----+----+
+   |         |
+ Enough    Not enough
+   |         |
+ setLocallyUnlocked(true)   Show "Insufficient balance" message
+ Close drawer + reveal       with current balance displayed
+```
 
-1. Import `supabase` client and add a query for `ppv_purchases` (same pattern used in `RecentTransactions.tsx`)
-2. Merge PPV records into the transaction list before building the chart — map each PPV purchase to the same shape the `buildBalanceChart` function expects (with `type`, `amount`, `createdAt`)
-3. For PPV transactions, set `type` based on whether the user is the buyer (debit) or creator (credit), so the balance reconstruction is accurate
-4. Update the `buildBalanceChart` function to recognize PPV types (e.g., `ppv_buy`, `ppv_sale`) when determining credit vs debit
+## Technical Details
 
-This ensures any PPV activity generates chart data points, so the balance history graph renders instead of showing the empty state.
+### 1. Fix SinglePostPage data passthrough (root cause of your original bug)
 
-### Technical Details
+**File: `src/pages/app/SinglePostPage.tsx`**
+- Add `isOwner: nft.isOwner ?? false` and `isUnlocked: nft.isUnlocked ?? false` to the `toVideoItem()`, `toImagePost()`, and `toTextPost()` transform functions
+- This ensures the API's access flags actually reach the card components
 
-- Query: `supabase.from('ppv_purchases').select('*').or('buyer_address.ilike.{addr},creator_address.ilike.{addr}').order('created_at', { ascending: false }).limit(50)`
-- Map PPV records to `DPayTransaction`-compatible shape with `type: 'ppv'`
-- In `buildBalanceChart`, treat `type === 'ppv'` with buyer as debit, creator as credit
-- Merge both arrays, sort by date, then build chart as before
+### 2. Add "Verify & Unlock" button to the Gated Drawer in VideoCard
+
+**File: `src/components/app/cards/VideoCard.tsx`**
+- Import `fetchBadgeBalance` (extract it or call the edge function directly)
+- In the Locked Drawer (both thumbnail and immersive versions, ~line 322 and ~line 1552):
+  - Add a "Verify & Unlock" glass button below the holdings requirement display
+  - On click: fetch balance in real-time via the `get-badge-balance` edge function using the user's wallet address
+  - If `balance >= video.lockedPrice`: call `setLocallyUnlocked(true)`, close the drawer, show a success toast
+  - If insufficient: display a message showing "Your balance: X DHB" with the shortfall
+  - Add a loading spinner state while the balance check is in progress
+
+### 3. Add the same "Verify & Unlock" to ImageCard
+
+**File: `src/components/app/cards/ImageCard.tsx`**
+- Same pattern as VideoCard: add the verify button to the Locked Drawer (~line 813)
+- On success: `setLocallyUnlocked(true)`, close drawer, toast
+- On failure: show balance deficit
+
+### 4. Add the same to the Thumbnail VideoCard variant
+
+**File: `src/components/app/cards/VideoCard.tsx`** (thumbnail variant, ~line 322)
+- Same verify button and logic for the compact card's gated drawer
+
+### 5. No new edge functions needed
+- The existing `get-badge-balance` edge function already provides real-time on-chain DHB balance
+- We just call it directly via `fetch()` when the user clicks "Verify & Unlock"
+- No React Query hook needed here since this is a one-shot action, not cached data
+
+### Summary of files changed
+- `src/pages/app/SinglePostPage.tsx` -- pass through `isOwner`/`isUnlocked` flags
+- `src/components/app/cards/VideoCard.tsx` -- add verify button to both gated drawers
+- `src/components/app/cards/ImageCard.tsx` -- add verify button to gated drawer
