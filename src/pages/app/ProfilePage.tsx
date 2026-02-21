@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useLayoutEffect } from 'react';
 import { BadgeBalanceProvider } from '@/contexts/BadgeBalanceContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AtSign, ChevronLeft, Loader2 } from 'lucide-react';
@@ -29,6 +29,31 @@ import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
 import { ProfileOptionsContent } from '@/components/app/profile/ProfileOptionsDrawer';
 import type { TabValue } from '@/components/app/profile/ProfileConstants';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
+
+function TabContentWrapper({ activeTab, children }: { activeTab: string; children: React.ReactNode }) {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [lockedHeight, setLockedHeight] = useState<number | null>(null);
+
+  useLayoutEffect(() => {
+    if (contentRef.current) {
+      setLockedHeight(contentRef.current.offsetHeight);
+    }
+    const timer = setTimeout(() => setLockedHeight(null), 150);
+    return () => clearTimeout(timer);
+  }, [activeTab]);
+
+  return (
+    <div
+      ref={contentRef}
+      style={{ minHeight: lockedHeight ? `${lockedHeight}px` : '200px' }}
+      className="transition-[min-height] duration-150 ease-out"
+    >
+      <div key={activeTab} className="animate-fade-in" style={{ animationDuration: '150ms' }}>
+        {children}
+      </div>
+    </div>
+  );
+}
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -283,32 +308,32 @@ export default function ProfilePage() {
         </div>
 
         {/* Tab Content */}
-        <div className="min-h-[200px]">
-        <BadgeBalanceProvider>
-        <ProfileTabContent
-          activeTab={activeTab}
-          profileAddress={data.apiProfile?.walletAddress || ''}
-          ALL_CONTENT={data.ALL_CONTENT}
-          PROFILE_POSTS={data.PROFILE_POSTS}
-          PROFILE_IMAGES={data.PROFILE_IMAGES}
-          ALL_PROFILE_VIDEOS={data.ALL_PROFILE_VIDEOS}
-          isLoadingContent={data.isLoadingContent}
-          userContentData={data.userContentData}
-          isTargetPrivate={data.isTargetPrivate}
-          isFollowing={data.isFollowing}
-          isPending={data.isPending}
-          isViewingOwnProfile={data.isViewingOwnProfile}
-          optimisticPosts={data.optimisticPosts}
-          isLoadingPlans={data.isLoadingPlans}
-          hasPlans={data.hasPlans}
-          plans={data.plans}
-          isSubscribed={data.isSubscribed}
-          profile={data.profile}
-          setCreatePlanModalOpen={setCreatePlanModalOpen}
-          setEditingPlan={setEditingPlan}
-        />
-        </BadgeBalanceProvider>
-        </div>
+        <TabContentWrapper activeTab={activeTab}>
+          <BadgeBalanceProvider>
+            <ProfileTabContent
+              activeTab={activeTab}
+              profileAddress={data.apiProfile?.walletAddress || ''}
+              ALL_CONTENT={data.ALL_CONTENT}
+              PROFILE_POSTS={data.PROFILE_POSTS}
+              PROFILE_IMAGES={data.PROFILE_IMAGES}
+              ALL_PROFILE_VIDEOS={data.ALL_PROFILE_VIDEOS}
+              isLoadingContent={data.isLoadingContent}
+              userContentData={data.userContentData}
+              isTargetPrivate={data.isTargetPrivate}
+              isFollowing={data.isFollowing}
+              isPending={data.isPending}
+              isViewingOwnProfile={data.isViewingOwnProfile}
+              optimisticPosts={data.optimisticPosts}
+              isLoadingPlans={data.isLoadingPlans}
+              hasPlans={data.hasPlans}
+              plans={data.plans}
+              isSubscribed={data.isSubscribed}
+              profile={data.profile}
+              setCreatePlanModalOpen={setCreatePlanModalOpen}
+              setEditingPlan={setEditingPlan}
+            />
+          </BadgeBalanceProvider>
+        </TabContentWrapper>
       </div>
 
       {/* Make Offer Drawer */}
