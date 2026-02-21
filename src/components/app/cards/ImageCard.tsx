@@ -323,6 +323,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const isPPV = (post.isPPV || false) && !canBypassGating;
   const isW2E = (post.isW2E || false) && !canBypassGating;
   const isLocked = (post.isLocked || false) && !canBypassGating;
+  const isComboLocked = isPPV && isLocked;
   const hasBadges = isPPV || isW2E || isLocked;
 
   // PPV purchase count
@@ -505,33 +506,56 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
 
       {/* Image Carousel - wrapped to prevent tab switching on swipe */}
       <div className="relative">
-        {isPPV ? (
+        {isComboLocked ? (
           <>
-            {/* PPV: show blurred image with ticket overlay */}
+            {/* Combo PPV + Holdings Locked: blurred image with dual icons */}
             <div className="relative rounded-md overflow-hidden">
-              <img 
-                src={images[0]} 
-                alt="" 
-                className="w-full max-h-[600px] object-cover blur-lg"
-                loading="lazy"
-              />
+              <img src={images[0]} alt="" className="w-full max-h-[600px] object-cover blur-lg" loading="lazy" />
               <div 
                 className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
                 onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
-                onTouchStart={(e) => {
-                  (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-                }}
+                onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
                 onTouchEnd={(e) => {
                   e.stopPropagation();
                   const start = (e.currentTarget as any)._touchStart;
                   if (!start) return;
                   const touch = e.changedTouches[0];
-                  const dx = Math.abs(touch.clientX - start.x);
-                  const dy = Math.abs(touch.clientY - start.y);
-                  if (dx < 10 && dy < 10) {
-                    e.preventDefault();
-                    setShowPPVDrawer(true);
-                  }
+                  if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowPPVDrawer(true); }
+                }}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-14 h-14 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+                    <Ticket className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="w-14 h-14 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+                    <Lock className="h-6 w-6 text-white" />
+                  </div>
+                </div>
+                <p className="text-white font-semibold text-sm mb-1">
+                  Unlock for {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'DHB'}
+                </p>
+                <p className="text-white/70 text-xs">
+                  Must be holding {formatCompact(Number(post.lockedPrice))} {post.lockedCurrency || 'DHB'}
+                </p>
+                <p className="text-white/50 text-[10px] mt-1">{ppvPurchaseCount ?? 0} PPV Sale{(ppvPurchaseCount ?? 0) !== 1 ? 's' : ''}</p>
+              </div>
+            </div>
+          </>
+        ) : isPPV ? (
+          <>
+            {/* PPV only: blurred image with ticket overlay */}
+            <div className="relative rounded-md overflow-hidden">
+              <img src={images[0]} alt="" className="w-full max-h-[600px] object-cover blur-lg" loading="lazy" />
+              <div 
+                className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
+                onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
+                onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
+                onTouchEnd={(e) => {
+                  e.stopPropagation();
+                  const start = (e.currentTarget as any)._touchStart;
+                  if (!start) return;
+                  const touch = e.changedTouches[0];
+                  if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowPPVDrawer(true); }
                 }}
               >
                 <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
