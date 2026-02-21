@@ -25,6 +25,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
+import dehubCoin from '@/assets/dehub-coin.png';
 import medal3 from '@/assets/medal-3.png';
 import { EditPostModal } from '@/components/app/modals/EditPostModal';
 import { usePPVPurchaseCount } from '@/hooks/use-ppv-purchase-count';
@@ -760,7 +761,7 @@ export default function PostInfoPage() {
                 )}
                 {ppvPrice && (
                   <div className="col-span-2 bg-primary/10 rounded-lg p-3 flex items-center gap-3 border border-primary/20">
-                    <HandCoins className="w-5 h-5 text-primary" />
+                    <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
                     <div>
                       <p className="text-lg font-bold text-white">
                         {((ppvPurchaseCount ?? 0) * Number(ppvPrice)).toLocaleString()} {ppvCurrency}
