@@ -359,7 +359,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[70] bg-black flex items-center justify-center"
+      className={cn("fixed inset-0 z-[70] flex items-center justify-center", isMobile ? "bg-black" : "bg-black/60 backdrop-blur-[24px]")}
       style={{ 
         touchAction: 'none',
         height: '100dvh',
