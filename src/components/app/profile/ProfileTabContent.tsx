@@ -116,14 +116,14 @@ export function ProfileTabContent({
     );
   }
   
-  // Loading state
+  // Only show loading spinner on very first load (no cached data yet)
   const hasData = userContentData && (userContentData as any).pages && (userContentData as any).pages.length > 0;
   const showLoading = isLoadingContent && !hasData;
   
   if (showLoading && ['home', 'posts', 'images', 'videos'].includes(activeTab)) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[200px]">
-        <Loader2 className="w-8 h-8 text-zinc-400 animate-spin" />
+        <Loader2 className="w-8 h-8 text-muted-foreground animate-spin" />
       </div>
     );
   }
