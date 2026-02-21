@@ -31,7 +31,7 @@ import { TranslatableText } from '../TranslatableText';
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, editComment, addCommentWithImage, uploadChatImage, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, editComment, addCommentWithImage, addVoiceComment, uploadChatImage, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 
 // ============================================================================
@@ -79,6 +79,13 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
   // Parse createdAt for sorting - fallback to current time if parsing fails
   const createdAt = apiComment.createdAt ? new Date(apiComment.createdAt) : new Date();
   
+  const voiceNote = (apiComment as any).audioUrl ? {
+    url: (apiComment as any).audioUrl.startsWith('http') 
+      ? (apiComment as any).audioUrl 
+      : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${(apiComment as any).audioUrl}`,
+    duration: (apiComment as any).audioDuration || 0,
+  } : undefined;
+
   return {
     id: String(apiComment.id),
     username: apiComment.writor?.username || 'Anonymous',
@@ -91,6 +98,7 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
     isLiked: apiComment.isLiked ?? false,
     replyToId: apiComment.parentId ? String(apiComment.parentId) : undefined,
     address,
+    voiceNote,
   };
 }
 
@@ -698,7 +706,21 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     setIsSubmitting(true);
 
     try {
-      if (imageFile) {
+      if (voiceNote) {
+        // Voice note comment via /api/comment_audio
+        const audioBlob = await fetch(voiceNote.url).then(r => r.blob());
+        if (audioBlob.size > 2 * 1024 * 1024) {
+          toast.error('Voice note must be under 2MB');
+          setIsSubmitting(false);
+          return;
+        }
+        await addVoiceComment({
+          tokenId: parseInt(tokenId, 10),
+          audioFile: audioBlob,
+          content: newComment || undefined,
+          parentId: replyTarget?.id,
+        });
+      } else if (imageFile) {
         // Upload image first, then post comment with image
         const { url: imageUrl } = await uploadChatImage(imageFile);
         await addCommentWithImage({
