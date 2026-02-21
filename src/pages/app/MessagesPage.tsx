@@ -11,9 +11,18 @@ import { useConversations, useUserOnlineStatus, useCreateConversation } from '@/
 import { getMediaUrl, type DeHubConversation } from '@/lib/api/dehub';
 import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
+import { getBadgeUrl } from '@/lib/staking-badges';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
 import dehubLogo from '@/assets/dehub-logo.png';
+
+function ConversationBadge({ address }: { address?: string }) {
+  const { badgeBalance } = useBatchedBadgeBalance(address);
+  const badgeUrl = getBadgeUrl(badgeBalance);
+  if (!badgeUrl) return null;
+  return <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />;
+}
 
 function ConversationsSkeleton() {
   return (
@@ -76,7 +85,10 @@ function ConversationItem({
       
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-white truncate">{displayName}</span>
+          <span className="relative inline-flex items-baseline">
+            <span className="font-semibold text-white truncate">{displayName}</span>
+            <ConversationBadge address={otherUser?.address} />
+          </span>
           {lastMessageTime && (
             <span className="text-zinc-500 text-sm ml-auto flex-shrink-0">{lastMessageTime}</span>
           )}

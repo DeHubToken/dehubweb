@@ -12,8 +12,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
+import { getBadgeUrl } from '@/lib/staking-badges';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+
+function LiveChatBadge({ address }: { address: string }) {
+  const { badgeBalance } = useBatchedBadgeBalance(address);
+  const badgeUrl = getBadgeUrl(badgeBalance);
+  if (!badgeUrl) return null;
+  return <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />;
+}
 
 interface LivePostChatProps {
   streamId: string;
@@ -109,8 +118,11 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-1.5">
-                      <span className="text-xs font-semibold text-white truncate max-w-[120px]">
-                        {displayName}
+                      <span className="relative inline-flex items-baseline">
+                        <span className="text-xs font-semibold text-white truncate max-w-[120px]">
+                          {displayName}
+                        </span>
+                        <LiveChatBadge address={msg.sender_address} />
                       </span>
                     </div>
                     <p className="text-sm text-zinc-300 break-words">{msg.content}</p>
