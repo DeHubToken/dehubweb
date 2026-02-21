@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 
 const BATCH_SIZE = 10;
+const MAX_PAGES = 10;
 
 export function MobileWhoToFollowCarousel() {
   const navigate = useNavigate();
@@ -31,8 +32,16 @@ export function MobileWhoToFollowCarousel() {
   } = useInfiniteQuery({
     queryKey: ['suggested-accounts', walletAddress],
     queryFn: ({ pageParam = 1 }) => getSuggestedAccounts(BATCH_SIZE, pageParam),
-    getNextPageParam: (lastPage, allPages) =>
-      lastPage.hasMore ? allPages.length + 1 : undefined,
+    getNextPageParam: (lastPage, allPages) => {
+      if (!lastPage.hasMore) return undefined;
+      if (allPages.length >= MAX_PAGES) return undefined;
+      const allPreviousAddresses = new Set(
+        allPages.slice(0, -1).flatMap(p => p.items.map(i => i.address))
+      );
+      const newItems = lastPage.items.filter(i => !allPreviousAddresses.has(i.address));
+      if (newItems.length === 0) return undefined;
+      return allPages.length + 1;
+    },
     initialPageParam: 1,
     enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000,
