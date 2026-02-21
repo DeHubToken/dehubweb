@@ -7,13 +7,15 @@
  * @module hooks/use-unified-feed
  */
 
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { getAuthToken, DEHUB_CDN_BASE, type DeHubNFT } from '@/lib/api/dehub';
+import { useMemo } from 'react';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { getAuthToken, DEHUB_CDN_BASE, type DeHubNFT, getBlockList } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 
@@ -139,18 +141,23 @@ export interface UnifiedFeedResponse {
 // BLOCKLIST
 // ============================================================================
 
-/** Usernames/display names to filter out from feeds */
-const BLOCKED_CREATORS = [
+/** Hardcoded fallback usernames/display names to filter out from feeds */
+const BLOCKED_CREATORS_FALLBACK = [
   'monkey d luffy',
   'monkey d. luffy',
   'monkeydluffy',
   'monkey_d_luffy',
 ];
 
-function isBlockedCreator(item: UnifiedFeedItem): boolean {
+function isBlockedCreator(item: UnifiedFeedItem, dynamicBlockedAddresses?: Set<string>): boolean {
+  // Check dynamic block list (addresses) first
+  if (dynamicBlockedAddresses && dynamicBlockedAddresses.has(item.minter?.toLowerCase())) {
+    return true;
+  }
+  // Fallback to hardcoded name-based list
   const displayName = (item.minterDisplayName || '').toLowerCase();
   const username = (item.minterUsername || '').toLowerCase();
-  return BLOCKED_CREATORS.some(blocked => 
+  return BLOCKED_CREATORS_FALLBACK.some(blocked => 
     displayName.includes(blocked) || username.includes(blocked)
   );
 }
@@ -470,6 +477,21 @@ interface UseUnifiedFeedOptions extends Omit<UnifiedFeedParams, 'page'> {
  */
 export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
   const { enabled = true, limit = 20, ...params } = options;
+  const { isAuthenticated } = useAuth();
+  
+  // Fetch dynamic block list for authenticated users
+  const { data: blockList } = useQuery({
+    queryKey: ['block-list'],
+    queryFn: getBlockList,
+    enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
+
+  const blockedAddresses = useMemo(() => {
+    if (!blockList?.length) return undefined;
+    return new Set(blockList.map(u => u.address.toLowerCase()));
+  }, [blockList]);
   
   // Track shuffleSeed across pages for random sort stable pagination
   const shuffleSeedRef = { current: '' };
@@ -496,7 +518,7 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
       
       // Filter out blocked creators and ended live streams (live content is shown in the carousel instead)
       const filteredItems = (response.result || []).filter(item => 
-        !isBlockedCreator(item) && !isBlockedPost(item) && item.postType !== 'live'
+        !isBlockedCreator(item, blockedAddresses) && !isBlockedPost(item) && item.postType !== 'live'
       );
       
       return {

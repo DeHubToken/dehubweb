@@ -1,59 +1,14 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { UserPlus, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { searchNFTs, followUser, getAccountInfo } from '@/lib/api/dehub';
+import { getSuggestedAccounts, followUser, type SuggestedAccount } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { toast } from 'sonner';
-
-interface UniqueUser {
-  address: string;
-  username?: string;
-  displayName?: string;
-  avatarUrl?: string;
-}
-
-const PAGE_SIZE = 100;
-const PAGES_PER_BATCH = 2;
-const VISIBLE_INCREMENT = 15;
-
-// Fetch a batch of pages and extract unique users
-async function fetchUserBatch(batchIndex: number): Promise<{ users: UniqueUser[]; hasMore: boolean }> {
-  const startPage = batchIndex * PAGES_PER_BATCH;
-  const seenAddresses = new Set<string>();
-  const uniqueUsers: UniqueUser[] = [];
-
-  const pagePromises = [];
-  for (let page = startPage; page < startPage + PAGES_PER_BATCH; page++) {
-    pagePromises.push(searchNFTs({ sortMode: 'new', unit: PAGE_SIZE, page }));
-  }
-
-  const results = await Promise.all(pagePromises);
-
-  let totalItems = 0;
-  for (const response of results) {
-    const items = response.data || [];
-    totalItems += items.length;
-    for (const nft of items) {
-      const address = nft.minter;
-      if (!address || seenAddresses.has(address)) continue;
-      seenAddresses.add(address);
-      uniqueUsers.push({
-        address,
-        username: nft.mintername,
-        displayName: nft.minterDisplayName,
-        avatarUrl: nft.minterAvatarUrl,
-      });
-    }
-  }
-
-  const hasMore = totalItems >= PAGES_PER_BATCH * PAGE_SIZE * 0.5;
-  return { users: uniqueUsers, hasMore };
-}
 
 export function WhoToFollow() {
   const navigate = useNavigate();
@@ -61,152 +16,41 @@ export function WhoToFollow() {
   const { handleApiError } = useReauthHandler();
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
-  const [visibleCount, setVisibleCount] = useState(VISIBLE_INCREMENT);
-  const loaderRef = useRef<HTMLDivElement>(null);
-  const isFetchingRef = useRef(false);
 
-  // Fetch current user's following list
-  const { data: currentUserData, isLoading: isLoadingFollowings } = useQuery({
-    queryKey: ['current-user-followings', walletAddress],
-    queryFn: async () => {
-      if (!walletAddress) return null;
-      return getAccountInfo(walletAddress);
-    },
-    enabled: !!walletAddress && isAuthenticated,
-    staleTime: 2 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-  });
-
-  // Get following list as a Set for O(1) lookups
-  const followingSet = useMemo(() => {
-    const followings = currentUserData?.followingsList || currentUserData?.followings;
-    if (!followings || !Array.isArray(followings)) {
-      return new Set<string>();
-    }
-    return new Set(followings.map((addr: string) => addr.toLowerCase()));
-  }, [currentUserData?.followingsList, currentUserData?.followings]);
-
-  // Infinite query for user suggestions
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading: isLoadingInitial,
-  } = useInfiniteQuery({
-    queryKey: ['suggestions-infinite'],
-    queryFn: ({ pageParam = 0 }) => fetchUserBatch(pageParam),
-    getNextPageParam: (lastPage, allPages) => {
-      if (!lastPage.hasMore) return undefined;
-      return allPages.length;
-    },
-    initialPageParam: 0,
+  // Fetch suggested accounts from dedicated API
+  const { data: suggestions = [], isLoading } = useQuery({
+    queryKey: ['suggested-accounts', walletAddress],
+    queryFn: () => getSuggestedAccounts(50),
+    enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
   });
 
-  // Accumulate all unique users across pages
-  const allUsers = useMemo(() => {
-    if (!data?.pages) return [];
-    const seenAddresses = new Set<string>();
-    const users: UniqueUser[] = [];
+  // Filter out already-followed users (locally tracked)
+  const filteredSuggestions = useMemo(() => {
+    return suggestions.filter(user => !followedUsers.has(user.address));
+  }, [suggestions, followedUsers]);
 
-    for (const page of data.pages) {
-      for (const user of page.users) {
-        if (!seenAddresses.has(user.address)) {
-          seenAddresses.add(user.address);
-          users.push(user);
-        }
-      }
-    }
-
-    return users;
-  }, [data?.pages]);
-
-  // Filter out users that are already followed, the current user, and newly followed users
-  const suggestions = useMemo(() => {
-    return allUsers.filter(user => {
-      const addressLower = user.address.toLowerCase();
-      if (walletAddress && addressLower === walletAddress.toLowerCase()) return false;
-      if (followingSet.has(addressLower)) return false;
-      if (followedUsers.has(user.address)) return false;
-      if (!user.avatarUrl) return false;
-      return true;
-    });
-  }, [allUsers, walletAddress, followingSet, followedUsers]);
-
-  // Auto-fetch more batches if suggestions are sparse after filtering
-  useEffect(() => {
-    const pagesLoaded = data?.pages?.length ?? 0;
-    const MAX_AUTO_BATCHES = 5;
-    const MIN_SUGGESTIONS = 5;
-
-    if (
-      suggestions.length < MIN_SUGGESTIONS &&
-      hasNextPage &&
-      !isFetchingNextPage &&
-      pagesLoaded < MAX_AUTO_BATCHES &&
-      !isLoadingInitial
-    ) {
-      fetchNextPage();
-    }
-  }, [suggestions.length, hasNextPage, isFetchingNextPage, data?.pages?.length, isLoadingInitial, fetchNextPage]);
-
-  const visibleSuggestions = suggestions.slice(0, visibleCount);
-  const hasMoreToShow = visibleCount < suggestions.length || hasNextPage;
-
-  // Intersection observer: reveal more from pool first, then fetch
-  const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
-    const [entry] = entries;
-    if (!entry.isIntersecting || isFetchingRef.current) return;
-
-    if (visibleCount < suggestions.length) {
-      // Reveal more from already-fetched pool (instant)
-      setVisibleCount(prev => prev + VISIBLE_INCREMENT);
-    } else if (hasNextPage) {
-      // Fetch more from API
-      isFetchingRef.current = true;
-      fetchNextPage().then(() => {
-        setVisibleCount(prev => prev + VISIBLE_INCREMENT);
-      }).finally(() => {
-        isFetchingRef.current = false;
-      });
-    }
-  }, [visibleCount, suggestions.length, hasNextPage, fetchNextPage]);
-
-  useEffect(() => {
-    const loader = loaderRef.current;
-    if (!loader) return;
-
-    const observer = new IntersectionObserver(handleObserver, {
-      root: null,
-      rootMargin: '100px',
-      threshold: 0,
-    });
-
-    observer.observe(loader);
-    return () => observer.disconnect();
-  }, [handleObserver]);
-
-  const getAvatarUrl = (user: UniqueUser) => {
-    if (user.avatarUrl && user.address) {
-      return buildAvatarUrl(user.address, user.avatarUrl);
+  const getAvatarUrl = (user: SuggestedAccount) => {
+    const avatarPath = user.avatarImageUrl || user.avatarUrl;
+    if (avatarPath && user.address) {
+      return buildAvatarUrl(user.address, avatarPath);
     }
     return undefined;
   };
 
-  const getDisplayName = (user: UniqueUser) => {
+  const getDisplayName = (user: SuggestedAccount) => {
     return user.displayName || user.username || `${user.address.slice(0, 6)}...${user.address.slice(-4)}`;
   };
 
-  const handleUserClick = (user: UniqueUser) => {
+  const handleUserClick = (user: SuggestedAccount) => {
     const target = user.username || user.address;
     if (target) {
       navigate(`/${target}`);
     }
   };
 
-  const handleFollow = async (e: React.MouseEvent, user: UniqueUser) => {
+  const handleFollow = async (e: React.MouseEvent, user: SuggestedAccount) => {
     e.stopPropagation();
 
     if (!isAuthenticated) {
@@ -241,8 +85,11 @@ export function WhoToFollow() {
     }
   };
 
-  // Show loading while fetching initial data OR while fetching followings for authenticated user
-  if (isLoadingInitial || (isAuthenticated && isLoadingFollowings)) {
+  if (!isAuthenticated) {
+    return null;
+  }
+
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
@@ -250,18 +97,7 @@ export function WhoToFollow() {
     );
   }
 
-  const pagesLoaded = data?.pages?.length ?? 0;
-  const stillAutoFetching = hasNextPage && pagesLoaded < 5;
-
-  if (suggestions.length === 0 && (isFetchingNextPage || stillAutoFetching)) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
-      </div>
-    );
-  }
-
-  if (suggestions.length === 0) {
+  if (filteredSuggestions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
         <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
@@ -275,7 +111,7 @@ export function WhoToFollow() {
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
-        {visibleSuggestions.map((user) => (
+        {filteredSuggestions.map((user) => (
           <div
             key={user.address}
             onClick={() => handleUserClick(user)}
@@ -305,15 +141,6 @@ export function WhoToFollow() {
             </Button>
           </div>
         ))}
-        
-        {/* Infinite scroll loader sentinel */}
-        {hasMoreToShow && (
-          <div ref={loaderRef} className="flex justify-center py-4">
-            {isFetchingNextPage && (
-              <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
-            )}
-          </div>
-        )}
       </div>
 
       <div className="relative">
