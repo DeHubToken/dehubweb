@@ -1,34 +1,32 @@
 
 
-## Fix: Block Downloads on Locked/PPV Content
+# Fix: PPV Video Stays Locked After Purchase
 
-### Problem
-The "Download" option in the three-dot menu (options drawer) is always visible and functional, even for PPV and locked videos/images. Users can bypass the paywall by simply downloading gated content without paying.
+## Problem
+After successfully paying for PPV content, the video remains locked because:
+1. The `onSuccess` callback in `PPVDrawerContent` only closes the drawer
+2. The video's `isUnlocked` flag in the feed data is never updated locally
+3. `canBypassGating` remains `false`, so the gating overlay persists
 
-### Affected Locations
-There are **4 places** where an unguarded download button exists:
+## Solution
+Add a local "unlocked" state to `VideoCard` (and `ImageCard`) that gets set to `true` after a successful PPV payment, and factor it into `canBypassGating`.
 
-1. **VideoCard.tsx** - Mobile options drawer (line ~903)
-2. **VideoCard.tsx** - Desktop/immersive options drawer (line ~1354)
-3. **ImageCard.tsx** - Options drawer (line ~442)
-4. **SinglePostPage.tsx** - Options drawer (line ~732)
+## Technical Details
 
-### Solution
-Conditionally hide the download button when the content is gated (PPV, locked, or bounty/W2E). The button will only render if none of these gating flags are true.
+### 1. VideoCard.tsx
+- Add `const [locallyUnlocked, setLocallyUnlocked] = useState(false);`
+- Update bypass: `const canBypassGating = !!(isOwnPost || video.isOwner || video.isUnlocked || locallyUnlocked);`
+- Pass `onUnlocked={() => setLocallyUnlocked(true)}` to `PPVDrawerContent` instead of just `onClose`
 
-### Technical Details
+### 2. ImageCard.tsx
+- Same pattern: add `locallyUnlocked` state and wire it into `canBypassGating`
 
-**VideoCard.tsx (2 locations)**
-- The component already has `isPPVLocked`, `isBountyLocked`, and `isContentGated` computed booleans, plus `video.isLocked`
-- Wrap both download buttons with a condition: only show if `!isContentGated && !video.isLocked`
+### 3. PPVDrawerContent.tsx
+- Add an `onUnlocked` prop (called after successful payment)
+- Wire `onSuccess` in `usePPVPayment` to call both `onUnlocked` and `onClose`
 
-**ImageCard.tsx**
-- The component receives `isPPV`, `isW2E`, and `isLocked` props
-- Wrap the download button: only show if `!isPPV && !isW2E && !isLocked`
+### 4. use-ppv-payment.ts (no change needed)
+- Already calls `onSuccess` after confirmed transaction -- the fix is purely in how the components respond to that callback
 
-**SinglePostPage.tsx**
-- The page fetches post data including gating flags (`is_ppv`, `is_w2e`, `is_locked`)
-- Wrap the download button: only show if none of those flags are true
-
-This is a UI-only guard -- the actual media URLs come from the CDN and are not proxied through an auth layer. However, since the video player itself is already blocked (thumbnail + overlay) for gated content, removing the download button closes the remaining bypass vector in the app's UI.
+This approach works instantly without needing to refetch the feed, and the unlock persists visually for the session. If the user refreshes, the API's `isUnlocked` flag (set by the backend after the purchase is recorded) will take over.
 
