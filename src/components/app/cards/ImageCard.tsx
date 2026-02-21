@@ -319,7 +319,8 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const isOwnPost = walletAddress && post.creatorId?.toLowerCase() === walletAddress.toLowerCase();
   
   // PPV/Bounty/Locked status - bypass for owners & already-unlocked content
-  const canBypassGating = !!(isOwnPost || post.isOwner || post.isUnlocked);
+  const [locallyUnlocked, setLocallyUnlocked] = useState(false);
+  const canBypassGating = !!(isOwnPost || post.isOwner || post.isUnlocked || locallyUnlocked);
   const isPPV = (post.isPPV || false) && !canBypassGating;
   const isW2E = (post.isW2E || false) && !canBypassGating;
   const isLocked = (post.isLocked || false) && !canBypassGating;
@@ -751,6 +752,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
             currency={post.ppvCurrency || 'DHB'}
             creatorAddress={post.creatorId}
             onClose={() => setShowPPVDrawer(false)}
+            onUnlocked={() => setLocallyUnlocked(true)}
             formatCompact={formatCompact}
           />
         </Drawer>

@@ -88,6 +88,7 @@ interface MobileCreatorInfoProps {
   isLocked?: boolean;
   lockedPrice?: number;
   lockedCurrency?: string;
+  onUnlocked?: () => void;
 }
 
 function MobileCreatorInfo({
@@ -110,6 +111,7 @@ function MobileCreatorInfo({
   isLocked,
   lockedPrice,
   lockedCurrency,
+  onUnlocked,
 }: MobileCreatorInfoProps) {
   const navigate = useNavigate();
   const { t } = useI18n();
@@ -311,6 +313,7 @@ function MobileCreatorInfo({
           currency={ppvCurrency || 'DHB'}
           creatorAddress={creatorId}
           onClose={() => setShowPPVDrawer(false)}
+          onUnlocked={onUnlocked}
           formatCompact={formatCompact}
         />
       </Drawer>
@@ -515,7 +518,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     };
   }, []);
 
-  const canBypassGating = !!(isOwnPost || video.isOwner || video.isUnlocked);
+  const [locallyUnlocked, setLocallyUnlocked] = useState(false);
+  const canBypassGating = !!(isOwnPost || video.isOwner || video.isUnlocked || locallyUnlocked);
   const isPPVLocked = !!video.isPPV && !canBypassGating;
   const isBountyLocked = !!video.isW2E && !canBypassGating;
   const isHoldingsLocked = !!video.isLocked && !canBypassGating;
@@ -1281,6 +1285,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             isLocked={video.isLocked && !canBypassGating}
             lockedPrice={video.lockedPrice}
             lockedCurrency={video.lockedCurrency}
+            onUnlocked={() => setLocallyUnlocked(true)}
           />
           </div>
         )}
@@ -1461,6 +1466,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             currency={video.ppvCurrency || 'DHB'}
             creatorAddress={video.creatorId}
             onClose={() => setShowPPVDrawer(false)}
+            onUnlocked={() => setLocallyUnlocked(true)}
             formatCompact={formatCompact}
           />
         </Drawer>
