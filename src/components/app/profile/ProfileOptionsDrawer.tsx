@@ -1,4 +1,4 @@
-import { Copy, AtSign, Wallet, MessageCircle, Gift, Bell, Handshake, UserMinus, Ban } from 'lucide-react';
+import { Copy, AtSign, Wallet, MessageCircle, Gift, Bell, Handshake, UserMinus, Ban, LayoutDashboard } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { DISPLAY_WALLET_OVERRIDES } from './ProfileConstants';
@@ -82,6 +82,20 @@ export function ProfileOptionsContent({
         </div>
         <span className="text-white font-medium">Copy address</span>
       </button>
+      {isViewingOwnProfile && (
+        <button
+          onClick={() => {
+            setShareSheetOpen(false);
+            navigate('/app/command-centre');
+          }}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
+        >
+          <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+            <LayoutDashboard className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-white font-medium">Open Wallet</span>
+        </button>
+      )}
       {!isViewingOwnProfile && (
         <>
           <button
