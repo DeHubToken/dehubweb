@@ -728,9 +728,11 @@ export default function SinglePostPage() {
               >
                 <Flag className="w-5 h-5" /> {t('postOptions.report')}
               </button>
-              <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                <Download className="w-5 h-5" /> {t('postOptions.download')}
-              </button>
+              {!videoData.isPPV && !videoData.isW2E && !videoData.isLocked && (
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <Download className="w-5 h-5" /> {t('postOptions.download')}
+                </button>
+              )}
               <button 
                 onClick={() => {
                   const url = `${window.location.origin}/app/post/${id}`;
