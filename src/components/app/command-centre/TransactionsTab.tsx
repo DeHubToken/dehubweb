@@ -6,6 +6,7 @@ import { PieChart, Pie, Cell } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 import { getDPayTransactions, getDPayTotal, type DPayTransaction } from '@/lib/api/dpay';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import dehubCoin from '@/assets/dehub-coin.png';
 
@@ -55,18 +56,19 @@ function buildChartData(transactions: DPayTransaction[]) {
   }));
 }
 
-// Generate breakdown from transactions
+// Generate breakdown from transactions (now uses unified type)
 function buildBreakdown(transactions: DPayTransaction[]) {
   const types: Record<string, number> = {};
   let total = 0;
   
   transactions.forEach((tx) => {
-    const label = tx.type === 'buy' ? 'Purchases' : tx.type === 'sell' ? 'Sales' : 'Transfers';
+    const t = tx.type as string;
+    const label = t === 'buy' ? 'Purchases' : t === 'sell' ? 'Sales' : t === 'ppv' ? 'PPV' : 'Transfers';
     types[label] = (types[label] || 0) + tx.amount;
     total += tx.amount;
   });
   
-  const colors = ['#22c55e', '#3b82f6', '#ef4444', '#eab308'];
+  const colors = ['#22c55e', '#3b82f6', '#ef4444', '#eab308', '#a855f7'];
   return Object.entries(types).map(([name, value], i) => ({
     name,
     value: total > 0 ? Math.round((value / total) * 1000) / 10 : 0,
@@ -76,13 +78,32 @@ function buildBreakdown(transactions: DPayTransaction[]) {
 
 export function TransactionsTab() {
   const [activeFilter, setActiveFilter] = useState('1m');
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
 
-  const { data: transactions = [], isLoading: txLoading, isError: txError } = useQuery({
+  const { data: dpayTxs = [], isLoading: txLoading, isError: txError } = useQuery({
     queryKey: ['dpay', 'transactions'],
     queryFn: getDPayTransactions,
     enabled: isAuthenticated,
     staleTime: 60_000,
+  });
+
+  // Fetch PPV purchases from database
+  const { data: ppvPurchases = [], isLoading: ppvLoading } = useQuery({
+    queryKey: ['ppv-purchases-tab', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return [];
+      const addr = walletAddress.toLowerCase();
+      const { data, error } = await supabase
+        .from('ppv_purchases')
+        .select('*')
+        .or(`buyer_address.ilike.${addr},creator_address.ilike.${addr}`)
+        .order('created_at', { ascending: false })
+        .limit(100);
+      if (error) return [];
+      return data || [];
+    },
+    enabled: isAuthenticated && !!walletAddress,
+    staleTime: 30_000,
   });
 
   const { data: totals } = useQuery({
@@ -90,6 +111,26 @@ export function TransactionsTab() {
     queryFn: getDPayTotal,
     staleTime: 5 * 60_000,
   });
+
+  // Merge DPay + PPV into unified list
+  const transactions: DPayTransaction[] = useMemo(() => {
+    const merged: DPayTransaction[] = [...dpayTxs];
+    ppvPurchases.forEach((p: any) => {
+      const isBuyer = p.buyer_address?.toLowerCase() === walletAddress?.toLowerCase();
+      merged.push({
+        id: p.id,
+        type: 'ppv' as any,
+        amount: Number(p.amount),
+        tokenSymbol: p.currency || 'DHB',
+        status: 'completed' as any,
+        createdAt: p.created_at,
+        txHash: p.tx_hash,
+        chainId: p.chain_id,
+      });
+    });
+    merged.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return merged;
+  }, [dpayTxs, ppvPurchases, walletAddress]);
 
   // Filter transactions by the selected time window
   const filteredTransactions = useMemo(() => {
