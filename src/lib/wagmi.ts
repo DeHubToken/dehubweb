@@ -8,7 +8,6 @@
 
 import { http, createConfig } from 'wagmi'
 import { base } from 'wagmi/chains'
-import { injected } from 'wagmi/connectors'
 import { connectorsForWallets } from '@rainbow-me/rainbowkit'
 import {
   metaMaskWallet,
@@ -29,7 +28,7 @@ function clearStaleWagmiState() {
   const savedSource = localStorage.getItem('dehub_connection_source');
   const token = localStorage.getItem('dehub_token');
   const timestamp = localStorage.getItem('dehub_token_timestamp');
-  const TOKEN_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
+  const TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000;
   const isExpired = !timestamp || (Date.now() - parseInt(timestamp, 10)) >= TOKEN_EXPIRY_MS;
   const hasValidToken = !!token && !isExpired;
 
@@ -74,10 +73,7 @@ const rainbowKitConnectors = connectorsForWallets(
 export const wagmiConfig = createConfig({
   chains: [base],
   connectors: [
-    // RainbowKit connectors (MetaMask SDK + Phantom)
     ...rainbowKitConnectors,
-    // Generic injected — for auto-connect when user opens dApp inside a wallet's in-app browser
-    injected(),
   ],
   transports: {
     [base.id]: http('https://base-rpc.publicnode.com'),

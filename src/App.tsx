@@ -37,6 +37,41 @@ import AgentsPage from "./pages/app/AgentsPage";
 import FeaturesPage from "./pages/app/FeaturesPage";
 
 
+/**
+ * One-time cache migration for existing testers.
+ * Clears stale auth/wagmi/web3auth data after auth flow changes.
+ * Bump CURRENT_CACHE_VERSION to force another clear in the future.
+ * Safe to remove this block once all testers have loaded the app at least once.
+ */
+const CURRENT_CACHE_VERSION = '2';
+(function migrateStaleCacheOnce() {
+  if (typeof window === 'undefined') return;
+  if (localStorage.getItem('dehub_cache_version') === CURRENT_CACHE_VERSION) return;
+
+  console.log('[CacheMigration] Clearing stale data for version', CURRENT_CACHE_VERSION);
+
+  // Clear DeHub auth state
+  ['dehub_token', 'dehub_token_timestamp', 'dehub_wallet', 'dehub_user',
+   'dehub_connection_source', 'dehub_deployed_sa'].forEach(k => localStorage.removeItem(k));
+
+  // Clear wagmi / WalletConnect / Web3Auth keys
+  const keysToRemove: string[] = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && (
+      key.startsWith('wagmi') || key.startsWith('@appkit') || key.startsWith('@w3m') ||
+      key.startsWith('wc@') || key.startsWith('WCM@') || key.startsWith('W3M') ||
+      key.startsWith('Web3Auth') || key.startsWith('openlogin')
+    )) {
+      keysToRemove.push(key);
+    }
+  }
+  keysToRemove.forEach(k => localStorage.removeItem(k));
+
+  localStorage.setItem('dehub_cache_version', CURRENT_CACHE_VERSION);
+  console.log('[CacheMigration] Done. Cleared', keysToRemove.length + 6, 'keys');
+})();
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

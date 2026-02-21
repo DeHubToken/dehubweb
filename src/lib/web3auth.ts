@@ -2,8 +2,7 @@
  * Web3Auth Configuration (v10 Modal SDK) with Account Abstraction
  * ===============================================================
  * Web3Auth Modal SDK v10 for Base Mainnet with Pimlico AA.
- * Matches mobile: deploy Smart Account (empty tx) before signing.
- * For DeHub auth we recover EOA from ERC-6492 inner sig and send that.
+ * AA is used for on-chain transactions; auth signing uses standard ECDSA.
  *
  * CUSTOM UI MODE: Uses connectTo() for direct provider connections
  * without showing the default Web3Auth modal.
@@ -361,8 +360,6 @@ function isRetryableInitError(err: unknown): boolean {
 
 /**
  * Initialize Web3Auth Modal v10 with Account Abstraction.
- * Smart Account must be deployed (empty tx) before signing - matches mobile.
- * For DeHub auth we send recovered EOA address + inner ECDSA sig.
  * Retries with backoff on 429/rate limit/fetch errors.
  */
 export async function initWeb3Auth(): Promise<Web3Auth> {
