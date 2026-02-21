@@ -1,6 +1,6 @@
 import React from 'react';
-import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight } from 'lucide-react';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight, Image, Play } from 'lucide-react';
+import { useInfiniteQuery, useQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { CardHeader } from '@/components/app/cards/CardHeader';
@@ -11,7 +11,8 @@ import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { PlanCard } from '@/components/app/subscriptions';
 import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
-import { getUserComments } from '@/lib/api/dehub';
+import { getUserComments, getNFTInfo, getMediaUrl } from '@/lib/api/dehub';
+import type { DeHubNFT } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { OptimisticPost } from '@/hooks/use-optimistic-posts';
@@ -314,6 +315,35 @@ function PostsTabPanel({
   fetchNextPage: () => void;
   navigate: (to: string) => void;
 }) {
+  // Collect unique tokenIds from comments to batch-fetch parent posts
+  const uniqueTokenIds = React.useMemo(() => {
+    const ids = new Set<string>();
+    allComments.forEach(c => {
+      if (c.tokenId) ids.add(String(c.tokenId));
+    });
+    return Array.from(ids);
+  }, [allComments]);
+
+  // Batch fetch parent post info for all unique tokenIds
+  const parentPostQueries = useQueries({
+    queries: uniqueTokenIds.map(tokenId => ({
+      queryKey: ['nft-info', tokenId],
+      queryFn: () => getNFTInfo(tokenId),
+      staleTime: 5 * 60 * 1000,
+      retry: 1,
+    })),
+  });
+
+  // Build a map of tokenId -> DeHubNFT
+  const parentPostsMap = React.useMemo(() => {
+    const map: Record<string, DeHubNFT> = {};
+    uniqueTokenIds.forEach((tokenId, i) => {
+      const data = parentPostQueries[i]?.data;
+      if (data) map[tokenId] = data;
+    });
+    return map;
+  }, [uniqueTokenIds, parentPostQueries]);
+
   const mergedItems: Array<{ type: 'post' | 'comment'; data: TextPost | ApiCommentResponse; createdAt: string }> = [
     ...PROFILE_POSTS.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
     ...allComments.map(c => ({ type: 'comment' as const, data: c, createdAt: c.createdAt || '' })),
@@ -337,10 +367,12 @@ function PostsTabPanel({
           );
         }
         const comment = item.data as ApiCommentResponse;
+        const parentPost = comment.tokenId ? parentPostsMap[String(comment.tokenId)] : undefined;
         return (
           <CommentCard
             key={comment.id}
             comment={comment}
+            parentPost={parentPost}
             onClick={() => {
               if (comment.tokenId) {
                 navigate(`/app/post/${comment.tokenId}?comment=${comment.id}`);
@@ -474,7 +506,7 @@ function SubscribersTabPanel({
 // Comment Card for profile replies tab
 // ============================================================================
 
-function CommentCard({ comment, onClick }: { comment: ApiCommentResponse; onClick: () => void }) {
+function CommentCard({ comment, parentPost, onClick }: { comment: ApiCommentResponse; parentPost?: DeHubNFT; onClick: () => void }) {
   // The user comments API returns an 'author' object with full profile data
   const author = (comment as any).author;
   
@@ -487,69 +519,118 @@ function CommentCard({ comment, onClick }: { comment: ApiCommentResponse; onClic
     ? buildAvatarUrl(comment.address, rawAvatarPath) || comment.address
     : comment.address;
 
+  // Parent post thumbnail
+  const parentThumbnail = parentPost
+    ? (parentPost.thumbnail_url || parentPost.imageUrl || (parentPost.videoUrl ? parentPost.imageUrl : null))
+    : null;
+  const parentTitle = parentPost?.title || parentPost?.name || parentPost?.description?.slice(0, 80);
+  const parentCreator = parentPost?.minterDisplayName || parentPost?.minterUsername || parentPost?.mintername;
+  const parentIsVideo = parentPost?.postType === 'video' || parentPost?.media_type === 'video';
+  const parentIsImage = parentPost?.postType === 'image' || parentPost?.media_type === 'image';
+
   return (
     <div
       onClick={onClick}
-      className="w-full text-left rounded-xl border border-white/[0.08] bg-transparent p-3 hover:bg-white/[0.03] transition-colors cursor-pointer overflow-hidden relative"
+      className="w-full text-left rounded-xl border border-white/[0.08] bg-transparent hover:bg-white/[0.03] transition-colors cursor-pointer overflow-hidden relative"
     >
-      {/* "Replying to" context — X-style */}
+      {/* Parent post preview — X-style quoted post */}
+      {parentPost && (
+        <div className="mx-3 mt-3 rounded-lg border border-white/[0.06] bg-white/[0.03] overflow-hidden">
+          <div className="flex gap-3 p-2.5">
+            {/* Thumbnail */}
+            {parentThumbnail && (
+              <div className="relative flex-shrink-0 w-16 h-16 rounded-md overflow-hidden bg-white/[0.05]">
+                <img
+                  src={parentThumbnail}
+                  alt=""
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+                {parentIsVideo && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                    <Play className="w-4 h-4 text-white fill-white" />
+                  </div>
+                )}
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              {parentCreator && (
+                <p className="text-xs text-zinc-400 truncate mb-0.5">
+                  @{parentCreator}
+                </p>
+              )}
+              {parentTitle && (
+                <p className="text-sm text-zinc-300 line-clamp-2 leading-snug">
+                  {parentTitle}
+                </p>
+              )}
+              {!parentTitle && !parentThumbnail && (
+                <p className="text-sm text-zinc-500 italic">Post #{parentPost.tokenId}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* "Replying to" label */}
       {comment.tokenId && (
-        <div className="flex items-center gap-1.5 text-xs text-zinc-500 mb-2 pl-[44px]">
+        <div className="flex items-center gap-1.5 text-xs text-zinc-500 mt-2 mb-1 px-3 pl-[56px]">
           <CornerDownRight className="w-3 h-3 flex-shrink-0" />
           <span>
-            {comment.parentId ? 'Replying to a comment on' : 'Commented on'}{' '}
-            <span className="text-blue-400 hover:underline">post #{comment.tokenId}</span>
+            {comment.parentId ? 'Replied to a comment' : 'Commented on this post'}
           </span>
         </div>
       )}
 
-      <CardHeader
-        username={resolvedName}
-        handle={resolvedHandle}
-        avatarSeed={avatarSeed}
-        contentType="post"
-        creatorId={comment.address}
-        creatorUsername={resolvedHandle}
-      />
+      <div className="p-3 pt-1">
+        <CardHeader
+          username={resolvedName}
+          handle={resolvedHandle}
+          avatarSeed={avatarSeed}
+          contentType="post"
+          creatorId={comment.address}
+          creatorUsername={resolvedHandle}
+        />
 
-      {/* Content - matches PostCard text style */}
-      <div className="pt-3 space-y-2">
-        <p className="text-white/90 text-sm sm:text-base whitespace-pre-wrap break-words line-clamp-4">
-          {comment.content}
-        </p>
+        {/* Content - matches PostCard text style */}
+        <div className="pt-3 space-y-2">
+          <p className="text-white/90 text-sm sm:text-base whitespace-pre-wrap break-words line-clamp-4">
+            {comment.content}
+          </p>
 
-        {comment.imageUrl && (
-          <div className="mt-2 rounded-lg overflow-hidden">
-            <img src={comment.imageUrl} alt="" className="w-full h-auto rounded-lg" loading="lazy" />
-          </div>
-        )}
+          {comment.imageUrl && (
+            <div className="mt-2 rounded-lg overflow-hidden">
+              <img src={comment.imageUrl} alt="" className="w-full h-auto rounded-lg" loading="lazy" />
+            </div>
+          )}
 
-        {/* Metadata: timestamp and view count */}
-        <PostMetadata timestamp={comment.createdAt} />
+          {/* Metadata: timestamp and view count */}
+          <PostMetadata timestamp={comment.createdAt} />
 
-        {/* Action bar - matches PostCard layout */}
-        <div className="pt-1 flex items-center justify-between">
-          <div className="flex items-center gap-0">
-            <span className="flex items-center gap-1.5 text-zinc-400 text-xs px-2 py-1.5 rounded-xl">
-              <ThumbsUp className="w-4 h-4" />
-              {comment.likeCount ?? 0}
-            </span>
-            <span className="flex items-center gap-1.5 text-zinc-400 text-xs px-2 py-1.5 rounded-xl">
-              <ThumbsDown className="w-4 h-4" />
-              0
-            </span>
-            <span className="flex items-center gap-1.5 text-zinc-400 text-xs px-2 py-1.5 rounded-xl">
-              <MessageSquare className="w-4 h-4" />
-              {comment.replyIds?.length ?? 0}
-            </span>
-            <span className="flex items-center gap-1.5 text-zinc-400 text-xs px-2 py-1.5 rounded-xl">
-              <Share2 className="w-4 h-4" />
-              0
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Bookmark className="w-4 h-4 text-zinc-400" />
-            <Info className="w-4 h-4 text-zinc-400" />
+          {/* Action bar - matches PostCard layout */}
+          <div className="pt-1 flex items-center justify-between">
+            <div className="flex items-center gap-0">
+              <span className="flex items-center gap-1.5 text-zinc-400 text-xs px-2 py-1.5 rounded-xl">
+                <ThumbsUp className="w-4 h-4" />
+                {comment.likeCount ?? 0}
+              </span>
+              <span className="flex items-center gap-1.5 text-zinc-400 text-xs px-2 py-1.5 rounded-xl">
+                <ThumbsDown className="w-4 h-4" />
+                0
+              </span>
+              <span className="flex items-center gap-1.5 text-zinc-400 text-xs px-2 py-1.5 rounded-xl">
+                <MessageSquare className="w-4 h-4" />
+                {comment.replyIds?.length ?? 0}
+              </span>
+              <span className="flex items-center gap-1.5 text-zinc-400 text-xs px-2 py-1.5 rounded-xl">
+                <Share2 className="w-4 h-4" />
+                0
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Bookmark className="w-4 h-4 text-zinc-400" />
+              <Info className="w-4 h-4 text-zinc-400" />
+            </div>
           </div>
         </div>
       </div>
