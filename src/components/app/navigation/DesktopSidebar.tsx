@@ -102,7 +102,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         </div>
 
         {/* Navigation Bento - scrollable */}
-        <div className="-mt-[8.5px] bg-zinc-900 rounded-2xl p-1 xl:p-2.5 space-y-2 xl:space-y-[2px] flex flex-col items-center xl:items-stretch overflow-y-auto overflow-x-hidden scrollbar-invisible flex-1 min-h-0">
+        <div className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0">
+          <div className="p-1 xl:p-2.5 space-y-2 xl:space-y-[2px] flex flex-col items-center xl:items-stretch overflow-y-auto overflow-x-hidden scrollbar-invisible h-full">
           {navItemsWithoutAI.map((item) => {
             const isActive = !item.external && location.pathname.startsWith(item.path);
             const isProfileItem = item.label === 'Profile';
@@ -146,6 +147,9 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               </React.Fragment>
             );
           })}
+          </div>
+          {/* Bottom fade overlay */}
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-zinc-900 to-transparent rounded-b-2xl" />
         </div>
 
         {/* Post / Login Button */}
