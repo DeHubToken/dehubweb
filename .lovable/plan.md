@@ -1,65 +1,48 @@
 
 
-# Fix Profile Tab Switching Shake
+# PPV Purchase Counter
 
-## Root Cause
+## Overview
+Track PPV content purchases by recording each successful payment in a local database table, then displaying the purchase count on PPV posts. Since the DeHub API doesn't expose a purchase count endpoint, we'll maintain our own ledger after each confirmed on-chain transaction.
 
-When switching tabs, the current content unmounts instantly and new content mounts, often with a different height. This causes the page layout to reflow -- the container snaps from one height to another, pushing everything below it up or down. That's the "shake."
+## How It Works
 
-The `min-h-[200px]` fix only prevents collapse to zero but doesn't prevent the jump between two different content heights (e.g., 800px to 300px).
+1. After a successful DHB token transfer (already handled in `use-ppv-payment.ts`), we record the purchase in a new `ppv_purchases` table
+2. Purchase counts are fetched and displayed on PPV post cards (both Video and Image)
+3. Creators can see how many times their PPV content has been purchased
 
-## Solution
+## Technical Details
 
-Use a height-locking wrapper that captures the current height before switching, holds it during the transition, then releases after the new content renders. Combined with a CSS opacity crossfade, the switch will feel seamless.
+### 1. New Database Table: `ppv_purchases`
 
-## Changes
+| Column | Type | Description |
+|--------|------|-------------|
+| id | uuid | Primary key |
+| token_id | text | The post/NFT token ID |
+| buyer_address | text | Wallet address of purchaser |
+| creator_address | text | Wallet address of creator |
+| amount | numeric | Price paid |
+| currency | text | Token symbol (DHB) |
+| chain_id | integer | Blockchain chain ID |
+| tx_hash | text | On-chain transaction hash |
+| created_at | timestamptz | Purchase timestamp |
 
-### 1. `src/pages/app/ProfilePage.tsx` - Height-locking tab content wrapper
+- Unique constraint on `(token_id, buyer_address)` to prevent duplicate records
+- RLS: anyone can read (for counts), only the buyer's wallet can insert
 
-- Replace the static `min-h-[200px]` div with a ref-based wrapper that:
-  - On tab change, captures the current `offsetHeight` and sets it as an explicit inline `min-height`
-  - After a short delay (e.g., one `requestAnimationFrame` + 50ms), clears the locked height so the container can grow/shrink naturally to the new content
-- Add a CSS transition on opacity for the `ProfileTabContent` to fade in new content (150ms ease-in-out)
-- Use a `key={activeTab}` on the content wrapper to trigger remount with a fade-in animation
+### 2. Record Purchase After Payment
 
-### 2. `src/components/app/profile/ProfileTabContent.tsx` - Remove loading flicker sources
+In `src/hooks/use-ppv-payment.ts`, after the successful `result.wait(1)` call, insert a row into `ppv_purchases` with the transaction hash and details.
 
-- Remove the early-return loading spinner for content tabs -- since content is already cached from the profile data hook, this spinner causes an unnecessary blank frame
-- Instead, show content immediately if data exists (`hasData` is true), only show spinner on very first load
-- Add `animate-in fade-in duration-150` class to the root element of each tab case for a subtle entrance
+### 3. New Hook: `usePPVPurchaseCount`
 
-## Technical Approach
+A small hook that queries `ppv_purchases` to get the count for a given `token_id`. Uses a simple `select count(*)` query, cached via React Query.
 
-```text
-Tab Switch Flow (Before):
-  Click tab -> unmount old (height drops) -> mount new (height jumps) = SHAKE
+### 4. Display Count on PPV Cards
 
-Tab Switch Flow (After):
-  Click tab -> lock container height -> fade out old -> mount new with fade-in -> unlock height
-```
+Add a small purchase count badge (e.g., "12 unlocks") near the PPV price overlay on `VideoCard.tsx` and `ImageCard.tsx`. Only shown when count > 0.
 
-The height lock uses a `useRef` and `useLayoutEffect` triggered by `activeTab` changes:
+### 5. Check If Already Purchased
 
-```tsx
-const contentRef = useRef<HTMLDivElement>(null);
-const [lockedHeight, setLockedHeight] = useState<number | null>(null);
+The unique constraint on `(token_id, buyer_address)` also enables a quick "already unlocked" check, which could be used to skip the payment flow for repeat views.
 
-useLayoutEffect(() => {
-  if (contentRef.current) {
-    setLockedHeight(contentRef.current.offsetHeight);
-  }
-  const timer = setTimeout(() => setLockedHeight(null), 100);
-  return () => clearTimeout(timer);
-}, [activeTab]);
-```
-
-The wrapper div uses:
-```tsx
-<div
-  ref={contentRef}
-  style={{ minHeight: lockedHeight ? `${lockedHeight}px` : undefined }}
-  className="transition-[min-height] duration-150 ease-out"
->
-```
-
-This ensures the container never collapses during the switch, eliminating the reflow that causes shaking.
