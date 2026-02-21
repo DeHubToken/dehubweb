@@ -454,17 +454,21 @@ async function fetchUnifiedFeedFromAPI(params: UnifiedFeedParams = {}): Promise<
  * Main fetch function with cache-first strategy
  */
 async function fetchUnifiedFeed(params: UnifiedFeedParams = {}): Promise<UnifiedFeedResponse> {
-  // Try cache first for eligible requests
-  const cacheKey = getCacheKey(params);
+  // Authenticated users bypass cache to get personalized data (isUnlocked, isLiked, etc.)
+  const token = getAuthToken();
   
-  if (cacheKey) {
-    const cached = await fetchCachedFeed(cacheKey);
-    if (cached) {
-      return cached;
+  if (!token) {
+    // Only use cache for unauthenticated visitors
+    const cacheKey = getCacheKey(params);
+    if (cacheKey) {
+      const cached = await fetchCachedFeed(cacheKey);
+      if (cached) {
+        return cached;
+      }
     }
   }
   
-  // Fallback to direct API
+  // Direct API call (always for authenticated users, fallback for guests)
   return fetchUnifiedFeedFromAPI(params);
 }
 
