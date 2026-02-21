@@ -485,7 +485,7 @@ interface UseUnifiedFeedOptions extends Omit<UnifiedFeedParams, 'page'> {
  */
 export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
   const { enabled = true, limit = 20, ...params } = options;
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
   
   // Fetch dynamic block list for authenticated users
   const { data: blockList } = useQuery({
@@ -493,6 +493,26 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
     queryFn: getBlockList,
     enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
+
+  // Fetch user's PPV purchases to enrich feed items with unlock status
+  const { data: purchasedTokenIds } = useQuery({
+    queryKey: ['ppv-purchased-tokens', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return new Set<string>();
+      const { data, error } = await supabase
+        .from('ppv_purchases')
+        .select('token_id')
+        .eq('buyer_address', walletAddress.toLowerCase());
+      if (error) {
+        console.warn('[Feed] Failed to fetch PPV purchases:', error);
+        return new Set<string>();
+      }
+      return new Set((data || []).map(p => p.token_id));
+    },
+    enabled: isAuthenticated && !!walletAddress,
+    staleTime: 2 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
   });
 
@@ -525,9 +545,19 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
       }
       
       // Filter out blocked creators and ended live streams (live content is shown in the carousel instead)
-      const filteredItems = (response.result || []).filter(item => 
+      let filteredItems = (response.result || []).filter(item => 
         !isBlockedCreator(item, blockedAddresses) && !isBlockedPost(item) && item.postType !== 'live'
       );
+      
+      // Enrich with local PPV purchase status — mark purchased content as unlocked
+      if (purchasedTokenIds && purchasedTokenIds.size > 0) {
+        filteredItems = filteredItems.map(item => {
+          if (purchasedTokenIds.has(String(item.tokenId))) {
+            return { ...item, isUnlocked: true };
+          }
+          return item;
+        });
+      }
       
       return {
         items: filteredItems,
