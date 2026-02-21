@@ -1,82 +1,36 @@
 
-# Replace Custom Workarounds with New API Endpoints
 
-After cross-referencing the new endpoints we added against the existing codebase, here are the custom workarounds that can now be replaced with proper API calls, plus the follower/following list improvements.
+# Merge Comments/Replies into the Posts Tab
 
----
+## What Changes
 
-## 1. "Who to Follow" -- Replace `searchNFTs` Workaround with `getSuggestedAccounts()`
+The "Posts" tab (MessageSquare icon, second tab) will show both text posts AND the user's comments/replies, merged together chronologically. No new tab is created.
 
-**Current problem:** Both `WhoToFollow.tsx` and `MobileWhoToFollowCarousel.tsx` scrape the `searchNFTs` endpoint (fetching up to 1,000 NFTs across 5 batches of 200), then extract unique minter addresses, filter out followed users, and display the leftovers as "suggestions." This is extremely wasteful -- it downloads massive feed payloads just to find usernames.
+## Files to Modify
 
-**Fix:** Replace with the dedicated `GET /api/suggested-accounts` endpoint we just added. This returns curated suggestions from the API directly.
+### 1. `src/components/app/profile/ProfileTabContent.tsx`
 
-### Files to change:
-- **`src/components/app/WhoToFollow.tsx`** -- Remove the `fetchUserBatch` function that calls `searchNFTs`. Replace the `useInfiniteQuery` with a simple `useQuery` calling `getSuggestedAccounts()`. Remove the `getAccountInfo` call used to build the "already following" filter (the API handles this server-side). Remove auto-fetch logic for sparse results.
-- **`src/components/app/mobile/MobileWhoToFollowCarousel.tsx`** -- Same changes as above, adapted for the carousel layout.
+- In the `case 'posts'` branch, fetch comments using the existing `useInfiniteQuery` for `getUserComments` (move it from the `replies` case so it runs when `activeTab === 'posts'`)
+- Merge `PROFILE_POSTS` and `allComments` into a single chronologically sorted list
+- Render `PostCard` for text posts and `CommentCard` for comments, interleaved by date
+- Remove the `case 'replies'` branch entirely (it becomes unused)
+- Update the empty state to say "No posts, comments, or replies yet"
+- Keep the "Load more" button for paginated comments at the bottom
 
-### What gets removed:
-- `searchNFTs` import (no longer needed for suggestions)
-- `getAccountInfo` call to fetch current user's following list for client-side filtering
-- Complex 5-batch auto-fetch loop
-- Client-side deduplication and filtering logic
+### 2. `src/hooks/use-profile-page.ts`
 
----
+- Update the "Posts" tab count to include comments count (fetch a lightweight comment count query)
+- Import `getUserComments` and add a `useQuery` with `limit=1` just to get the total count
+- Update tab count: `count: PROFILE_POSTS.length + commentCount`
+- Export `commentCount` so it's available
 
-## 2. Hardcoded `BLOCKED_CREATORS` Lists -- Replace with `getBlockList()` API
+### 3. `src/components/app/profile/ProfileConstants.ts`
 
-**Current problem:** Three separate files have the same hardcoded `BLOCKED_CREATORS` array (containing "monkey d luffy" variants) and a `BLOCKED_POST_IDS` constant. This is a static blocklist that requires code changes to update.
+- Remove `'replies'` from the `TabValue` type if it exists (since we're not using a separate tab)
 
-**Fix:** For authenticated users, fetch their dynamic block list from `GET /api/block` (the `getBlockList()` function we just added) and filter feeds using that. Keep the hardcoded lists as a fallback for unauthenticated users.
+## Technical Details
 
-### Files to change:
-- **`src/hooks/use-unified-feed.ts`** -- Add a `useQuery` for `getBlockList()` when authenticated. Merge the API block list with the hardcoded `BLOCKED_CREATORS` for filtering. The `isBlockedCreator` function checks against both lists.
-- **`src/hooks/use-dehub-feed.ts`** -- Same pattern.
-- **`src/hooks/use-feed-prefetch.ts`** -- Same pattern (this one has its own inline copy of the blocked list).
-- **`src/components/app/feeds/MusicFeed.tsx`** -- Same pattern.
-
----
-
-## 3. Follower/Following Drawer -- Remove `batch-avatars` Enrichment Workaround
-
-**Current problem:** `FollowersListDrawer.tsx` calls `getFollowList()` and then checks if the results lack usernames. If they do, it calls the custom `batch-avatars` Edge Function to enrich raw wallet addresses with profile metadata. This two-stage enrichment was needed because the API sometimes returned bare addresses.
-
-**Fix:** The `getFollowList()` endpoint (with `requiresAuth: true`) now returns full user objects including `username`, `displayName`, `avatarImageUrl`, `isFollowing`, and `followsYou`. The `batch-avatars` enrichment fallback is no longer needed for this use case.
-
-### Files to change:
-- **`src/components/app/profile/FollowersListDrawer.tsx`** -- Remove the `enrichAddresses()` function and the `needsEnrichment` branch in `processItems()`. Simplify to always use `mapFollowListItem()`. Remove the `supabase` import (no longer calling `batch-avatars` from this component).
-
----
-
-## 4. Mutual Followers -- No Changes Needed
-
-The `useMutualFollowers` hook already uses `getFollowList()` correctly. No custom workarounds to remove here.
-
----
-
-## Summary of Impact
-
-| Area | Before | After |
-|------|--------|-------|
-| Who to Follow (sidebar) | Fetches up to 1,000 NFTs via `searchNFTs`, extracts minters | Single call to `getSuggestedAccounts()` |
-| Who to Follow (mobile) | Same wasteful NFT scraping | Same single API call |
-| Feed blocking | Hardcoded array of 4 names | Dynamic per-user block list from API |
-| Follower/Following drawer | Two-stage fetch + `batch-avatars` enrichment | Direct mapping from API response |
-
-### Files to create:
-- None
-
-### Files to modify:
-1. `src/components/app/WhoToFollow.tsx`
-2. `src/components/app/mobile/MobileWhoToFollowCarousel.tsx`
-3. `src/hooks/use-unified-feed.ts`
-4. `src/hooks/use-dehub-feed.ts`
-5. `src/hooks/use-feed-prefetch.ts`
-6. `src/components/app/feeds/MusicFeed.tsx`
-7. `src/components/app/profile/FollowersListDrawer.tsx`
-
-### What stays unchanged:
-- `batch-avatars` Edge Function (still used by notifications, stories, profile avatar cache)
-- `BLOCKED_POST_IDS` constant (post-level blocking stays as-is -- no API equivalent)
-- All API layer files we just created (no changes needed)
-- `useMutualFollowers` hook (already correct)
+- The merged list will sort text posts (using `createdAt`) and comments (using `createdAt`) together in descending chronological order
+- Comments render using the existing `CommentCard` component already defined in the file
+- The `useInfiniteQuery` for comments will be enabled when `activeTab === 'posts'` instead of `'replies'`
+- The tab label stays "Posts" and the icon stays `MessageSquare`
