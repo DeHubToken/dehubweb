@@ -438,9 +438,11 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                 >
                   <Languages className="w-5 h-5" /> {t('postOptions.translateImage')}
                 </button>
-                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                  <Download className="w-5 h-5" /> {t('postOptions.download')}
-                </button>
+                {!isPPV && !isW2E && !isLocked && (
+                  <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                    <Download className="w-5 h-5" /> {t('postOptions.download')}
+                  </button>
+                )}
                 <button
                   onClick={() => setShowReportModal(true)}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
