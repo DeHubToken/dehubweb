@@ -337,7 +337,7 @@
     "payAmount": "Pay {{amount}} {{currency}}"
   },
   "assistant": {
-    "title": "AI Assistant",
+    "title": "Assistant",
     "welcome": "Use the text box below or these action buttons to get started.",
     "welcomeAlt": "Hi! Ask me anything, whether it's DeHub related or not, I can help.",
     "thinking": "Thinking...",
@@ -345,17 +345,17 @@
     "noResponse": "I apologize, I couldn't generate a response.",
     "dropImageHere": "Drop image here",
     "toAttachForEditing": "to attach for editing",
-    "aiPersonality": "AI Personality",
-    "aiSettings": "AI Settings",
+    "aiPersonality": "Personality",
+    "aiSettings": "Settings",
     "chatModel": "Chat Model",
     "imageModel": "Image Model",
     "videoModel": "Video Model",
-    "aiVoice": "AI Voice",
+    "aiVoice": "Voice",
     "premium": "Premium",
     "standard": "Standard",
     "fast": "Fast",
     "alwaysSpeakReplies": "Always speak replies",
-    "alwaysSpeakRepliesDesc": "Speak all AI responses, not just voice",
+    "alwaysSpeakRepliesDesc": "Speak all responses, not just voice",
     "whatsNew": "What's new?",
     "generateImage": "Generate an image",
     "editImage": "Edit an image",
@@ -395,7 +395,7 @@
     "generateImageOf": "Generate an image of ",
     "generateVideoOf": "Generate a video of ",
     "whatsHappeningNews": "What's happening in the news today?",
-    "loginRequired": "Log in to access the AI Assistant and unlock powerful features like image and video generation."
+    "loginRequired": "Log in to access the Assistant and unlock powerful features like image and video generation."
   },
   "publicChat": {
     "searchMessages": "Search messages",
@@ -404,9 +404,9 @@
     "noResults": "No messages found"
   },
   "aiChat": {
-    "title": "AI Assistant",
+    "title": "Assistant",
     "welcomePost": "I can see this {{type}}. {{context}}\n\nWhat would you like to know about it?",
-    "welcomeGeneral": "Hi! I'm your AI assistant. Ask me anything - I'm here to help with questions, ideas, or just chat.",
+    "welcomeGeneral": "Hi! I'm your assistant. Ask me anything - I'm here to help with questions, ideas, or just chat.",
     "thinking": "Thinking...",
     "errorGeneric": "Sorry, I encountered an error. Please try again.",
     "noResponse": "I apologize, I couldn't generate a response.",

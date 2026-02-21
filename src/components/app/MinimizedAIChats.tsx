@@ -34,7 +34,7 @@ export function MinimizedAIChats({ onRestore }: MinimizedAIChatsProps) {
             }}
             className="w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl flex items-center justify-center hover:bg-black/80 transition-colors relative group"
           >
-            <img src={assistantAvatar} alt="AI Assistant" className="w-8 h-8 rounded-lg" />
+            <img src={assistantAvatar} alt="Assistant" className="w-8 h-8 rounded-lg" />
             {/* Tooltip on hover */}
             <div className="absolute right-14 bg-black/80 backdrop-blur-sm px-2 py-1 rounded-lg text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none max-w-[150px] truncate">
               {chat.title || `${chat.type} chat`}
