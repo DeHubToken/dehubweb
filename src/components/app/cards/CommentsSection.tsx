@@ -33,6 +33,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { getNFTComments, postComment, toggleCommentLike, editComment, addCommentWithImage, addVoiceComment, uploadChatImage, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
+import { incrementCommentCount } from '@/lib/comment-count-cache';
 
 // ============================================================================
 // TYPES
@@ -733,6 +734,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         await postComment(tokenId, newComment, replyTarget?.id);
       }
       await queryClient.refetchQueries({ queryKey: ['comments', tokenId] });
+      incrementCommentCount(tokenId);
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
     } catch (err) {
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));

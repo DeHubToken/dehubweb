@@ -24,6 +24,7 @@ import { voteOnPost } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
+import { getCommentCountDelta } from '@/lib/comment-count-cache';
 import {
   Drawer,
   DrawerContent,
@@ -91,10 +92,13 @@ export function ActionBar({
   hideDislike = false,
   likeCount,
   dislikeCount,
-  commentCount,
+  commentCount: rawCommentCount,
   shareCount,
   isOptimistic = false,
 }: ActionBarProps) {
+  // Add localStorage delta to comment count for instant feedback
+  const commentCountDelta = postId ? getCommentCountDelta(postId) : 0;
+  const commentCount = (rawCommentCount ?? 0) + commentCountDelta;
   // On mount, check global vote cache for recent votes on this post
   const cachedVote = postId ? getVoteCache(postId) : null;
 
