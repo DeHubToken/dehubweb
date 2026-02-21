@@ -1,13 +1,12 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Smile, Users, Loader2, Mic, X } from 'lucide-react';
+import { Send, Smile, Users, Loader2, Mic } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { TranslatableText } from '../TranslatableText';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
-import { getMediaUrl, getAuthToken } from '@/lib/api/dehub';
-import { supabase } from '@/integrations/supabase/client';
+import { getMediaUrl } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
@@ -25,10 +24,9 @@ function SidebarChatBadge({ address }: { address: string }) {
 
 export function SidebarChat() {
   const [newMessage, setNewMessage] = useState('');
-  const [audioPreview, setAudioPreview] = useState<{ blob: Blob; duration: number } | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   // Use the first available room
   const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
@@ -47,42 +45,11 @@ export function SidebarChat() {
     }
   }, [messages.length]);
 
-  const handleVoiceRecordingComplete = useCallback((blob: Blob, duration: number) => {
-    setAudioPreview({ blob, duration });
-    toast.success(`Recording saved (${duration}s)`);
+  const handleVoiceRecordingComplete = useCallback((_blob: Blob, _duration: number) => {
+    toast.error('Voice notes are not yet supported in live chat. Feature bug reported.');
   }, []);
 
   const handleSend = async () => {
-    // Handle audio message - upload blob then send as voice type
-    if (audioPreview) {
-      if (!isAuthenticated || !walletAddress) { toast.error('Sign in to chat'); return; }
-      try {
-        const token = getAuthToken();
-        const formData = new FormData();
-        formData.append('file', audioPreview.blob, `voice-${Date.now()}.webm`);
-
-        const { data, error } = await supabase.functions.invoke('dm-upload-media', {
-          body: formData,
-          headers: {
-            'x-wallet-address': walletAddress.toLowerCase(),
-            'x-dehub-token': token || '',
-          },
-        });
-
-        if (error || !data?.ok) {
-          throw new Error(data?.error || 'Upload failed');
-        }
-
-        await send(`🎤 Voice message (${audioPreview.duration}s)`, 'voice', data.url);
-        setAudioPreview(null);
-      } catch (err) {
-        console.error('[SidebarChat] Voice upload error:', err);
-        toast.error('Failed to send voice note');
-      }
-      return;
-    }
-
-    if (!newMessage.trim()) return;
     if (!isAuthenticated) {
       toast.error('Sign in to chat');
       return;
@@ -184,21 +151,6 @@ export function SidebarChat() {
 
       {/* Input */}
       <div className="pt-2">
-        {/* Audio Preview */}
-        {audioPreview && (
-          <div className="mb-2 inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-800 rounded-lg">
-            <div className="w-2 h-2 rounded-full bg-green-500" />
-            <span className="text-xs text-white">
-              🎤 {audioPreview.duration}s
-            </span>
-            <button
-              onClick={() => setAudioPreview(null)}
-              className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-            >
-              <X className="w-2.5 h-2.5 text-white" />
-            </button>
-          </div>
-        )}
         <div className="relative">
           <Textarea
             placeholder="Send a message"
@@ -218,7 +170,7 @@ export function SidebarChat() {
             />
             <button
               onClick={handleSend}
-              disabled={(!newMessage.trim() && !audioPreview) || isSending}
+              disabled={!newMessage.trim() || isSending}
               className="h-7 w-7 flex items-center justify-center disabled:opacity-40"
             >
               {isSending ? (
