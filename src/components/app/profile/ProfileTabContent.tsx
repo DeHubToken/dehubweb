@@ -376,6 +376,7 @@ function CommentCard({ comment, onClick }: { comment: ApiCommentResponse; onClic
     ? buildAvatarUrl(comment.address, comment.writor.avatarUrl)
     : undefined;
   const username = comment.writor?.username || `${comment.address.slice(0, 6)}...${comment.address.slice(-4)}`;
+  const displayName = (comment.writor as any)?.displayName || username;
   const timeAgo = (() => {
     try {
       return formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true });
@@ -389,47 +390,61 @@ function CommentCard({ comment, onClick }: { comment: ApiCommentResponse; onClic
       onClick={onClick}
       className="w-full text-left rounded-xl border border-white/[0.08] bg-transparent p-3 hover:bg-white/[0.03] transition-colors"
     >
-      <div className="flex items-start gap-3">
-        <Avatar className="w-8 h-8 flex-shrink-0">
+      {/* Header - matches PostCard layout */}
+      <div className="flex items-center gap-3 mb-2">
+        <Avatar className="w-10 h-10 flex-shrink-0">
           <AvatarImage src={avatarUrl} alt={username} />
-          <AvatarFallback className="bg-white/10 text-foreground text-xs">
-            {username.slice(0, 2).toUpperCase()}
+          <AvatarFallback className="bg-white/10 text-foreground text-sm font-medium">
+            {displayName.charAt(0).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-foreground text-sm font-medium truncate">{username}</span>
-            <span className="text-muted-foreground text-xs flex-shrink-0">{timeAgo}</span>
+            <span className="text-foreground text-sm font-semibold truncate">{displayName}</span>
+            <span className="text-muted-foreground text-xs">@{username}</span>
           </div>
-          <p className="text-foreground/80 text-sm mt-0.5 line-clamp-3 whitespace-pre-wrap break-words">
-            {comment.content}
-          </p>
-          {comment.imageUrl && (
-            <div className="mt-2 rounded-lg overflow-hidden max-w-[200px]">
-              <img src={comment.imageUrl} alt="" className="w-full h-auto rounded-lg" loading="lazy" />
-            </div>
-          )}
-          <div className="flex items-center gap-3 mt-2">
-            {(comment.likeCount ?? 0) > 0 && (
-              <span className="flex items-center gap-1 text-muted-foreground text-xs">
-                <Heart className="w-3.5 h-3.5" />
-                {comment.likeCount}
-              </span>
-            )}
-            {comment.replyIds && comment.replyIds.length > 0 && (
-              <span className="flex items-center gap-1 text-muted-foreground text-xs">
-                <MessageCircle className="w-3.5 h-3.5" />
-                {comment.replyIds.length} {comment.replyIds.length === 1 ? 'reply' : 'replies'}
-              </span>
-            )}
-            {comment.tokenId && (
-              <span className="flex items-center gap-1 text-muted-foreground text-xs ml-auto">
-                <ArrowUpRight className="w-3.5 h-3.5" />
-                View post
-              </span>
-            )}
+          <div className="flex items-center gap-1.5">
+            <span className="text-muted-foreground text-xs">{timeAgo}</span>
+            <span className="text-muted-foreground text-xs">·</span>
+            <span className="text-muted-foreground text-xs flex items-center gap-1">
+              <MessageCircle className="w-3 h-3" />
+              Reply
+            </span>
           </div>
         </div>
+      </div>
+
+      {/* Content - matches PostCard text style */}
+      <p className="text-foreground text-sm leading-relaxed line-clamp-4 whitespace-pre-wrap break-words">
+        {comment.content}
+      </p>
+
+      {comment.imageUrl && (
+        <div className="mt-2 rounded-lg overflow-hidden max-w-[280px]">
+          <img src={comment.imageUrl} alt="" className="w-full h-auto rounded-lg" loading="lazy" />
+        </div>
+      )}
+
+      {/* Footer - engagement stats */}
+      <div className="flex items-center gap-3 mt-2.5 pt-2 border-t border-white/[0.05]">
+        {(comment.likeCount ?? 0) > 0 && (
+          <span className="flex items-center gap-1 text-muted-foreground text-xs">
+            <Heart className="w-3.5 h-3.5" />
+            {comment.likeCount} {comment.likeCount === 1 ? 'like' : 'likes'}
+          </span>
+        )}
+        {comment.replyIds && comment.replyIds.length > 0 && (
+          <span className="flex items-center gap-1 text-muted-foreground text-xs">
+            <MessageCircle className="w-3.5 h-3.5" />
+            {comment.replyIds.length} {comment.replyIds.length === 1 ? 'reply' : 'replies'}
+          </span>
+        )}
+        {comment.tokenId && (
+          <span className="flex items-center gap-1 text-muted-foreground text-xs ml-auto">
+            <ArrowUpRight className="w-3.5 h-3.5" />
+            View post
+          </span>
+        )}
       </div>
     </button>
   );

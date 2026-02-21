@@ -141,16 +141,23 @@ export async function getUserComments(
   });
   // Normalize: API may return { result: { items, ... } } or { data, ... }
   if (response?.result?.items) {
+    const items = response.result.items;
+    const total = response.result.totalCount ?? response.result.total ?? response.result.count ?? items.length;
     return {
-      data: response.result.items,
-      total: response.result.totalCount ?? 0,
+      data: items,
+      total,
       page,
       limit,
-      has_more: response.result.hasMore ?? false,
+      has_more: response.result.hasMore ?? (items.length >= limit),
     };
   }
   if (Array.isArray(response?.data)) {
-    return response as UserCommentsResponse;
+    const res = response as UserCommentsResponse;
+    // Ensure total is at least the length of returned data
+    if (res.total === 0 && res.data.length > 0) {
+      res.total = res.data.length;
+    }
+    return res;
   }
   return { data: [], total: 0, page, limit, has_more: false };
 }

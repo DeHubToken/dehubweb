@@ -98,11 +98,11 @@ export function useProfilePage() {
   // Comment count for posts tab
   const { data: commentCountData } = useQuery({
     queryKey: ['user-comments-count', apiProfile?.walletAddress],
-    queryFn: () => getUserComments(apiProfile!.walletAddress, 1, 1),
+    queryFn: () => getUserComments(apiProfile!.walletAddress, 1, 20),
     enabled: !!apiProfile?.walletAddress,
     staleTime: 2 * 60 * 1000,
   });
-  const commentCount = commentCountData?.total ?? 0;
+  const commentCount = commentCountData?.total || commentCountData?.data?.length || 0;
 
   const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
     { icon: Home, label: 'All', value: 'home', count: ALL_CONTENT.length },
