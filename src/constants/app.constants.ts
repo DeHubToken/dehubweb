@@ -20,7 +20,7 @@ import {
   Sparkles,
   
   BookOpen,
-  Map,
+  Lightbulb,
   Briefcase,
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
@@ -37,7 +37,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: BookOpen, label: 'Docs', path: 'https://docs.dhb.gg', external: true },
   { icon: LayoutDashboard, label: 'Command Centre', path: '/app/command-centre' },
   { icon: FileText, label: 'Blog', path: 'https://docs.dhb.gg/docs/blog', external: true },
-  { icon: Map, label: 'Roadmap', path: '/app/roadmap' },
+  { icon: Lightbulb, label: 'Feature Requests', path: '/features' },
   { icon: Briefcase, label: 'Careers', path: '/app/careers' },
   { icon: Home, label: 'Home', path: '/app' },
 ];
