@@ -13,6 +13,7 @@ import { PlanCard } from '@/components/app/subscriptions';
 import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
 import { getUserComments, getNFTInfo, getMediaUrl } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
+import { buildImageUrl } from '@/lib/media-url';
 import { buildAvatarUrl } from '@/lib/media-url';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { OptimisticPost } from '@/hooks/use-optimistic-posts';
@@ -519,9 +520,12 @@ function CommentCard({ comment, parentPost, onClick }: { comment: ApiCommentResp
     ? buildAvatarUrl(comment.address, rawAvatarPath) || comment.address
     : comment.address;
 
-  // Parent post thumbnail
-  const parentThumbnail = parentPost
+  // Parent post thumbnail - resolve through CDN helper
+  const rawThumb = parentPost
     ? (parentPost.thumbnail_url || parentPost.imageUrl || (parentPost.videoUrl ? parentPost.imageUrl : null))
+    : null;
+  const parentThumbnail = rawThumb && parentPost
+    ? (rawThumb.startsWith('http') ? rawThumb : buildImageUrl(parentPost.tokenId, rawThumb))
     : null;
   const parentTitle = parentPost?.title || parentPost?.name || parentPost?.description?.slice(0, 80);
   const parentCreator = parentPost?.minterDisplayName || parentPost?.minterUsername || parentPost?.mintername;
