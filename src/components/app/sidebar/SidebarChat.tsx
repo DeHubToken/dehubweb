@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Smile, Users, Loader2, Mic } from 'lucide-react';
+import { Send, Users, Loader2, Mic } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { TranslatableText } from '../TranslatableText';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
+import { EmojiGifPicker } from '../chat/EmojiGifPicker';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
 import { getMediaUrl } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -60,6 +61,22 @@ export function SidebarChat() {
       await send(text, 'text');
     } catch {
       toast.error('Failed to send');
+    }
+  };
+
+  const handleEmojiSelect = (emoji: string) => {
+    setNewMessage(prev => prev + emoji);
+  };
+
+  const handleGifSelect = async (gifUrl: string) => {
+    if (!isAuthenticated) {
+      toast.error('Sign in to chat');
+      return;
+    }
+    try {
+      await send(gifUrl, 'gif');
+    } catch {
+      toast.error('Failed to send GIF');
     }
   };
 
@@ -161,9 +178,10 @@ export function SidebarChat() {
             rows={2}
           />
           <div className="absolute bottom-1.5 right-1.5 flex items-center gap-0.5">
-            <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0">
-              <Smile className="w-4 h-4 text-zinc-500" />
-            </Button>
+            <EmojiGifPicker
+              onEmojiSelect={handleEmojiSelect}
+              onGifSelect={handleGifSelect}
+            />
             <VoiceRecorder
               onRecordingComplete={handleVoiceRecordingComplete}
               disabled={false}
