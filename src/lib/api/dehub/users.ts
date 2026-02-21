@@ -172,30 +172,45 @@ export interface SuggestedAccount {
   isFollowing?: boolean;
 }
 
-export async function getSuggestedAccounts(limit: number = 10): Promise<SuggestedAccount[]> {
+export async function getSuggestedAccounts(limit: number = 10, page: number = 1): Promise<{ items: SuggestedAccount[]; hasMore: boolean }> {
   const response = await apiCall<any>("/api/suggested-accounts", {
-    params: { limit },
+    params: { limit, page },
     requiresAuth: true,
   });
   
   // Handle various API response shapes defensively
   let items: unknown = response;
+  let hasMore = false;
   
   // Unwrap { result: ... }
   if (response && typeof response === 'object' && 'result' in response) {
     items = response.result;
   }
   
-  // Unwrap { items: [...] } (paginated response)
-  if (items && typeof items === 'object' && !Array.isArray(items) && 'items' in (items as any)) {
-    items = (items as any).items;
+  // Unwrap { items: [...], pagination: { ... } } (paginated response)
+  if (items && typeof items === 'object' && !Array.isArray(items)) {
+    const obj = items as any;
+    if ('items' in obj) {
+      // Check pagination metadata for hasMore
+      if (obj.pagination) {
+        const { page: currentPage, totalPages, total } = obj.pagination;
+        hasMore = currentPage < totalPages || (obj.items?.length === limit);
+      } else {
+        hasMore = obj.items?.length === limit;
+      }
+      items = obj.items;
+    }
   }
   
   if (Array.isArray(items)) {
-    console.log(`[Suggestions] Got ${items.length} suggested accounts`);
-    return items as SuggestedAccount[];
+    // If no pagination metadata, infer hasMore from batch size
+    if (!hasMore && items.length === limit) {
+      hasMore = true;
+    }
+    console.log(`[Suggestions] Got ${items.length} suggested accounts (page ${page}, hasMore: ${hasMore})`);
+    return { items: items as SuggestedAccount[], hasMore };
   }
   
   console.warn('[Suggestions] Unexpected response shape:', JSON.stringify(response).slice(0, 200));
-  return [];
+  return { items: [], hasMore: false };
 }
