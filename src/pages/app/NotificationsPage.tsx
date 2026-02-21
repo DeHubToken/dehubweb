@@ -722,10 +722,10 @@ export default function NotificationsPage() {
                 <button
                   key={tab.value}
                   onClick={() => setActiveTab(tab.value)}
-                  className={`flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+                  className={`flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-200 border ${
                     activeTab === tab.value
-                      ? 'bg-white text-black'
-                      : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
+                      ? 'bg-white text-black border-white/20'
+                      : 'text-zinc-400 hover:text-white hover:bg-zinc-800 border-transparent'
                   }`}
                 >
                   <tab.icon className="w-4 h-4" />
