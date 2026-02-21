@@ -16,6 +16,8 @@ import {
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import type { ChainId } from '@/components/app/ChainSelector';
 
 const erc20TransferInterface = new Interface([
@@ -92,6 +94,22 @@ export function usePPVPayment({
 
       const receipt = await result.wait(1);
       
+      // Record purchase in database
+      try {
+        const query = supabase.from('ppv_purchases').upsert({
+          token_id: tokenId,
+          buyer_address: signerAddress.toLowerCase(),
+          creator_address: creatorAddress.toLowerCase(),
+          amount: price,
+          currency,
+          chain_id: chainId,
+          tx_hash: receipt.hash,
+        }, { onConflict: 'token_id,buyer_address' });
+        await withWalletHeader(query, signerAddress);
+      } catch (e) {
+        console.warn('[PPV] Failed to record purchase:', e);
+      }
+      
       toast.success('Content unlocked! 🎉', { id: 'ppv-payment' });
       console.log('[PPV] Payment confirmed:', receipt.hash);
       
@@ -103,7 +121,7 @@ export function usePPVPayment({
     } finally {
       setIsPaying(false);
     }
-  }, [walletAddress, creatorAddress, price, chainId, openLoginModal, onSuccess]);
+  }, [walletAddress, creatorAddress, price, currency, chainId, tokenId, openLoginModal, onSuccess]);
 
   return { pay, isPaying };
 }
