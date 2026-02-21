@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Send, Smile, Users, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { TranslatableText } from '../TranslatableText';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
 import { getMediaUrl } from '@/lib/api/dehub';
@@ -141,28 +141,31 @@ export function SidebarChat() {
 
       {/* Input */}
       <div className="pt-2">
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
-            <Smile className="w-4 h-4 text-zinc-500" />
-          </Button>
-          <Input
+        <div className="relative">
+          <Textarea
             placeholder="Send a message"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="h-8 text-sm bg-zinc-800 border-zinc-700 rounded-lg"
+            className="min-h-[56px] max-h-32 resize-none text-sm bg-zinc-800 border-zinc-700 rounded-lg pr-20 text-white placeholder:text-zinc-500"
+            rows={2}
           />
-          <button
-            onClick={handleSend}
-            disabled={!newMessage.trim() || isSending}
-            className="h-8 w-8 flex items-center justify-center disabled:opacity-40"
-          >
-            {isSending ? (
-              <Loader2 className="w-4 h-4 text-white animate-spin" />
-            ) : (
-              <Send className="w-4 h-4 text-white" />
-            )}
-          </button>
+          <div className="absolute bottom-1.5 right-1.5 flex items-center gap-0.5">
+            <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0">
+              <Smile className="w-4 h-4 text-zinc-500" />
+            </Button>
+            <button
+              onClick={handleSend}
+              disabled={!newMessage.trim() || isSending}
+              className="h-7 w-7 flex items-center justify-center disabled:opacity-40"
+            >
+              {isSending ? (
+                <Loader2 className="w-4 h-4 text-white animate-spin" />
+              ) : (
+                <Send className="w-4 h-4 text-white" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
