@@ -494,8 +494,10 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
         shuffleSeedRef.current = response.shuffleSeed;
       }
       
-      // Filter out blocked creators
-      const filteredItems = (response.result || []).filter(item => !isBlockedCreator(item) && !isBlockedPost(item));
+      // Filter out blocked creators and ended live streams (live content is shown in the carousel instead)
+      const filteredItems = (response.result || []).filter(item => 
+        !isBlockedCreator(item) && !isBlockedPost(item) && item.postType !== 'live'
+      );
       
       return {
         items: filteredItems,
