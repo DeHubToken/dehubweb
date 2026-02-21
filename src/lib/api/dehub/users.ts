@@ -148,7 +148,8 @@ export async function getSuggestedAccounts(limit: number = 10): Promise<Suggeste
     requiresAuth: true,
   });
   if (response && typeof response === 'object' && 'result' in response) {
-    return response.result;
+    const result = response.result;
+    return Array.isArray(result) ? result : [];
   }
-  return response as SuggestedAccount[];
+  return Array.isArray(response) ? response : [];
 }

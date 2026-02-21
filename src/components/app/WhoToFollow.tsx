@@ -27,9 +27,11 @@ export function WhoToFollow() {
   });
 
   // Filter out already-followed users (locally tracked)
+  const safeSuggestions = Array.isArray(suggestions) ? suggestions : [];
+
   const filteredSuggestions = useMemo(() => {
-    return suggestions.filter(user => !followedUsers.has(user.address));
-  }, [suggestions, followedUsers]);
+    return safeSuggestions.filter(user => !followedUsers.has(user.address));
+  }, [safeSuggestions, followedUsers]);
 
   const getAvatarUrl = (user: SuggestedAccount) => {
     const avatarPath = user.avatarImageUrl || user.avatarUrl;
