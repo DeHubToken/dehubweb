@@ -318,10 +318,11 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const { walletAddress, openLoginModal } = useAuth();
   const isOwnPost = walletAddress && post.creatorId?.toLowerCase() === walletAddress.toLowerCase();
   
-  // PPV/Bounty/Locked status
-  const isPPV = post.isPPV || false;
-  const isW2E = post.isW2E || false;
-  const isLocked = post.isLocked || false;
+  // PPV/Bounty/Locked status - bypass for owners & already-unlocked content
+  const canBypassGating = !!(isOwnPost || post.isOwner || post.isUnlocked);
+  const isPPV = (post.isPPV || false) && !canBypassGating;
+  const isW2E = (post.isW2E || false) && !canBypassGating;
+  const isLocked = (post.isLocked || false) && !canBypassGating;
   const hasBadges = isPPV || isW2E || isLocked;
 
   // PPV purchase count

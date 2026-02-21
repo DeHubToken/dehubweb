@@ -232,6 +232,8 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     bountyCurrency: item.streamInfo?.addBountyTokenSymbol || 'DHB',
     // Preserve raw timestamp for navigation caching
     createdAt: item.createdAt,
+    isOwner: item.isOwner ?? false,
+    isUnlocked: item.isUnlocked ?? false,
   };
 }
 
@@ -287,6 +289,8 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     bountyComments: Number(item.streamInfo?.addBountyFirstXComments) || undefined,
     bountyAmount: item.streamInfo?.addBountyAmount,
     bountyCurrency: item.streamInfo?.addBountyTokenSymbol || 'DHB',
+    isOwner: item.isOwner ?? false,
+    isUnlocked: item.isUnlocked ?? false,
   };
 }
 
