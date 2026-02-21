@@ -1,47 +1,39 @@
 
-## Root Cause: API Response Structure Mismatch in `searchUsersForDM`
 
-The search was already broken before the group chat fix. The console logs confirm it:
+# Simplify Auth Flow: Remove SA Deployment Check, Use `isNewAccount`
 
-```
-[DM API] searchUsersForDM response: { "status": true, "accounts": { "items": [...7 results...], "pagination": {...} } }
-[DM API] searchUsersForDM returning { "count": 0 }
-```
+## Summary
+Remove the smart account deployment step from the **authentication flow only** (since the backend now handles signatures from undeployed smart accounts). Keep all Pimlico/AA infrastructure intact for on-chain transactions (minting, tipping, etc.). Use the new `isNewAccount` response field instead of checking for missing username.
 
-The API returns `response.accounts.items` (an object with a nested `items` array), but the parsing code only checks for `response.accounts` being a flat array. Since `accounts` is an object, all four conditions fail and the results are silently discarded.
+## Changes
 
-The existing checks (in order):
-1. `response?.result?.accounts` — no, API has no `result` wrapper here
-2. `response?.accounts` as array — no, it's an object `{ items: [...], pagination: {...} }`
-3. `response?.result` as array — no
-4. `response` as array — no
+### 1. Update `AuthResponse` type
+**File:** `src/lib/api/dehub/types.ts`
+- Add `isNewAccount?: boolean` to the `result` object in `AuthResponse`
 
-None match, so `items` returns empty every time.
+### 2. Remove `ensureSmartAccountDeployed` calls from auth flow only
+**File:** `src/contexts/AuthContext.tsx`
 
----
+- **Remove the `ensureSmartAccountDeployed` function** and its helpers (`isKnownDeployed`, `markDeployedInCache`, `SA_DEPLOYED_CACHE_KEY`, `getCodeDirect`, etc.)
+- **`completeDeHubAuthAfterRedirect` (redirect flow, ~line 762):** Remove the `ensureSmartAccountDeployed` call and the "deployment failed" error check. Keep signing logic unchanged.
+- **`completeDeHubAuth` (popup flow, ~line 885):** Remove the `ensureSmartAccountDeployed` call inside the `if (isSocial)` block. Keep signing logic unchanged.
+- **Username enforcement:** In both `completeDeHubAuth` and `completeDeHubAuthAfterRedirect`, replace `if (!normalizedUser.username)` with `if (authResponse.result?.isNewAccount)` to trigger `setRequiresUsername(true)`
+- **Session restore (mount effect):** Keep `if (!normalizedUser.username)` here since we don't have `isNewAccount` during session restore
 
-## The Fix — `src/lib/api/dehub/dm.ts`
+### 3. No changes to Pimlico or Web3Auth init
+**Files NOT touched:**
+- `src/lib/web3auth.ts` -- Pimlico config, AA provider, prewarm all stay
+- `src/lib/contracts/aa-utils.ts` -- AA transaction helpers stay
+- `supabase/functions/get-pimlico-config/index.ts` -- Edge function stays
+- `src/components/app/UsernameRequiredModal.tsx` -- No changes needed
 
-Add the correct check for `response.accounts.items` as the **first** condition (highest priority, since it's the actual API shape):
+## What stays the same
+- All Pimlico/AA infrastructure for on-chain transactions
+- Web3Auth v10 Modal SDK with Account Abstraction
+- ERC-6492 signature handling
+- Sign message format (already matches new API spec)
+- `POST /api/web/auth` endpoint call (already correct)
+- Wagmi external wallet flow
+- Session restore logic
+- Token storage and expiry
 
-```typescript
-if (response?.accounts?.items && Array.isArray(response.accounts.items)) {
-  accounts = response.accounts.items;                         // ← ADD THIS FIRST
-} else if (response?.result?.accounts && Array.isArray(response.result.accounts)) {
-  accounts = response.result.accounts;
-} else if (response?.accounts && Array.isArray(response.accounts)) {
-  accounts = response.accounts;
-} else if (response?.result && Array.isArray(response.result)) {
-  accounts = response.result;
-} else if (Array.isArray(response)) {
-  accounts = response;
-}
-```
-
-This is a one-line addition at the top of the existing if-chain.
-
----
-
-## Files to Change
-
-- `src/lib/api/dehub/dm.ts` — add `response?.accounts?.items` check as the first condition in `searchUsersForDM`
