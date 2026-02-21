@@ -4,9 +4,21 @@ import { useQuery } from '@tanstack/react-query';
 import { getDPayTransactions, type DPayTransaction } from '@/lib/api/dpay';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import dehubCoin from '@/assets/dehub-coin.png';
-import { format } from 'date-fns';
-import { useMemo } from 'react';
+import { format, subHours, subDays, subWeeks, subMonths } from 'date-fns';
+import { useState, useMemo } from 'react';
+
+const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
+
+function getFilterStartDate(filter: string): Date | null {
+  const now = new Date();
+  switch (filter) {
+    case '1h': return subHours(now, 1);
+    case '1d': return subDays(now, 1);
+    case '1w': return subWeeks(now, 1);
+    case '1m': return subMonths(now, 1);
+    default: return null;
+  }
+}
 
 interface UnifiedTransaction {
   id: string;
@@ -40,6 +52,7 @@ function formatDPayTx(tx: DPayTransaction): UnifiedTransaction {
 
 export function RecentTransactions() {
   const { isAuthenticated, walletAddress } = useAuth();
+  const [activeFilter, setActiveFilter] = useState('1m');
 
   const { data: dpayTxs = [], isLoading: dpayLoading } = useQuery({
     queryKey: ['dpay', 'transactions'],
@@ -48,7 +61,6 @@ export function RecentTransactions() {
     staleTime: 60_000,
   });
 
-  // Fetch PPV purchases from database
   const { data: ppvPurchases = [], isLoading: ppvLoading } = useQuery({
     queryKey: ['ppv-purchases', walletAddress],
     queryFn: async () => {
@@ -59,7 +71,7 @@ export function RecentTransactions() {
         .select('*')
         .or(`buyer_address.ilike.${addr},creator_address.ilike.${addr}`)
         .order('created_at', { ascending: false })
-        .limit(20);
+        .limit(50);
       if (error) { console.warn('[RecentTx] PPV query error:', error); return []; }
       return data || [];
     },
@@ -69,14 +81,11 @@ export function RecentTransactions() {
 
   const isLoading = dpayLoading || ppvLoading;
 
-  // Merge and sort all transactions
   const recent = useMemo(() => {
     const unified: UnifiedTransaction[] = [];
 
-    // DPay transactions
     dpayTxs.forEach(tx => unified.push(formatDPayTx(tx)));
 
-    // PPV purchases
     ppvPurchases.forEach((p: any) => {
       const isBuyer = p.buyer_address?.toLowerCase() === walletAddress?.toLowerCase();
       const amount = Number(p.amount).toLocaleString(undefined, { maximumFractionDigits: 0 });
@@ -85,23 +94,45 @@ export function RecentTransactions() {
         type: 'ppv',
         amount: Number(p.amount),
         createdAt: p.created_at,
-        isCredit: !isBuyer, // credit for creator, debit for buyer
+        isCredit: !isBuyer,
         description: isBuyer ? `PPV unlock — ${amount} DHB` : `PPV sale — ${amount} DHB`,
       });
     });
 
-    // Sort newest first, take 8
-    unified.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    return unified.slice(0, 8);
-  }, [dpayTxs, ppvPurchases, walletAddress]);
+    // Filter by time window
+    const startDate = getFilterStartDate(activeFilter);
+    const filtered = startDate
+      ? unified.filter(tx => new Date(tx.createdAt) >= startDate)
+      : unified;
+
+    filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return filtered.slice(0, 10);
+  }, [dpayTxs, ppvPurchases, walletAddress, activeFilter]);
 
   return (
     <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <h3 className="text-white font-semibold">Recent transactions</h3>
         <Button variant="glass" size="sm" className="text-xs h-8 rounded-xl">
           View all
         </Button>
+      </div>
+
+      {/* Time Filters */}
+      <div className="flex items-center gap-1 mb-4 bg-zinc-800/50 rounded-xl p-1 w-fit">
+        {timeFilters.map((filter) => (
+          <button
+            key={filter}
+            onClick={() => setActiveFilter(filter)}
+            className={`px-3 py-1 text-xs rounded-lg transition-colors ${
+              activeFilter === filter
+                ? 'bg-emerald-600 text-white'
+                : 'text-zinc-400 hover:text-white'
+            }`}
+          >
+            {filter}
+          </button>
+        ))}
       </div>
 
       {isLoading ? (
