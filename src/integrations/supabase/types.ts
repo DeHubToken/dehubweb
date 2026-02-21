@@ -584,6 +584,42 @@ export type Database = {
         }
         Relationships: []
       }
+      ppv_purchases: {
+        Row: {
+          amount: number
+          buyer_address: string
+          chain_id: number
+          created_at: string
+          creator_address: string
+          currency: string
+          id: string
+          token_id: string
+          tx_hash: string
+        }
+        Insert: {
+          amount: number
+          buyer_address: string
+          chain_id?: number
+          created_at?: string
+          creator_address: string
+          currency?: string
+          id?: string
+          token_id: string
+          tx_hash: string
+        }
+        Update: {
+          amount?: number
+          buyer_address?: string
+          chain_id?: number
+          created_at?: string
+          creator_address?: string
+          currency?: string
+          id?: string
+          token_id?: string
+          tx_hash?: string
+        }
+        Relationships: []
+      }
       raise_hand_requests: {
         Row: {
           avatar: string | null

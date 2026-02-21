@@ -28,6 +28,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
+import { usePPVPurchaseCount } from '@/hooks/use-ppv-purchase-count';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
@@ -323,6 +324,9 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const isLocked = post.isLocked || false;
   const hasBadges = isPPV || isW2E || isLocked;
 
+  // PPV purchase count
+  const { data: ppvPurchaseCount } = usePPVPurchaseCount(isPPV ? post.id : undefined);
+
   // Format numbers with abbreviations (1K, 1M, etc.)
   const formatCompact = (num: number): string => {
     if (num >= 1000000) return `${Math.floor(num / 1000000)}M`;
@@ -534,6 +538,9 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                 <p className="text-white/70 text-xs">
                   Unlock for {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
                 </p>
+                {!!ppvPurchaseCount && ppvPurchaseCount > 0 && (
+                  <p className="text-white/50 text-[10px] mt-1">{ppvPurchaseCount} unlock{ppvPurchaseCount !== 1 ? 's' : ''}</p>
+                )}
               </div>
             </div>
           </>
