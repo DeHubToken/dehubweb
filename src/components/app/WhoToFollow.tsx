@@ -1,6 +1,6 @@
-import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { UserPlus, Loader2 } from 'lucide-react';
+import { UserPlus, Loader2, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -18,13 +18,19 @@ export function WhoToFollow() {
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
 
   // Fetch suggested accounts from dedicated API
-  const { data: suggestions = [], isLoading } = useQuery({
+  const { data: suggestions = [], isLoading, error, refetch, isFetching } = useQuery({
     queryKey: ['suggested-accounts', walletAddress],
     queryFn: () => getSuggestedAccounts(50),
     enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
+    retry: 2,
   });
+
+  // Log for debugging
+  if (error) {
+    console.warn('[WhoToFollow] Query error:', error);
+  }
 
   // Filter out already-followed users (locally tracked)
   const safeSuggestions = Array.isArray(suggestions) ? suggestions : [];
@@ -105,7 +111,21 @@ export function WhoToFollow() {
         <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
           <UserPlus className="w-6 h-6 text-zinc-500" />
         </div>
-        <p className="text-zinc-400 text-sm">No suggestions yet</p>
+        <p className="text-zinc-400 text-sm mb-3">{error ? 'Failed to load suggestions' : 'No suggestions yet'}</p>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => refetch()}
+          disabled={isFetching}
+          className="h-8 px-4 text-xs font-semibold rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
+        >
+          {isFetching ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" />
+          ) : (
+            <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
+          )}
+          Retry
+        </Button>
       </div>
     );
   }

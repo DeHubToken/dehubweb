@@ -173,13 +173,29 @@ export interface SuggestedAccount {
 }
 
 export async function getSuggestedAccounts(limit: number = 10): Promise<SuggestedAccount[]> {
-  const response = await apiCall<{ result: SuggestedAccount[] } | SuggestedAccount[]>("/api/suggested-accounts", {
+  const response = await apiCall<any>("/api/suggested-accounts", {
     params: { limit },
     requiresAuth: true,
   });
+  
+  // Handle various API response shapes defensively
+  let items: unknown = response;
+  
+  // Unwrap { result: ... }
   if (response && typeof response === 'object' && 'result' in response) {
-    const result = response.result;
-    return Array.isArray(result) ? result : [];
+    items = response.result;
   }
-  return Array.isArray(response) ? response : [];
+  
+  // Unwrap { items: [...] } (paginated response)
+  if (items && typeof items === 'object' && !Array.isArray(items) && 'items' in (items as any)) {
+    items = (items as any).items;
+  }
+  
+  if (Array.isArray(items)) {
+    console.log(`[Suggestions] Got ${items.length} suggested accounts`);
+    return items as SuggestedAccount[];
+  }
+  
+  console.warn('[Suggestions] Unexpected response shape:', JSON.stringify(response).slice(0, 200));
+  return [];
 }
