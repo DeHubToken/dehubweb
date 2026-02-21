@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { UserPlus, Loader2, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -10,34 +10,72 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { toast } from 'sonner';
 
+const BATCH_SIZE = 15;
+
 export function WhoToFollow() {
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress } = useAuth();
   const { handleApiError } = useReauthHandler();
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Fetch suggested accounts from dedicated API
-  const { data: suggestions = [], isLoading, error, refetch, isFetching } = useQuery({
+  const {
+    data,
+    isLoading,
+    error,
+    refetch,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ['suggested-accounts', walletAddress],
-    queryFn: () => getSuggestedAccounts(50),
+    queryFn: ({ pageParam = 1 }) => getSuggestedAccounts(BATCH_SIZE, pageParam),
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.hasMore ? allPages.length + 1 : undefined,
+    initialPageParam: 1,
     enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
     retry: 2,
   });
 
-  // Log for debugging
+  const allSuggestions = useMemo(() => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap(page => page.items);
+  }, [data]);
+
+  const filteredSuggestions = useMemo(() => {
+    // Deduplicate by address
+    const seen = new Set<string>();
+    return allSuggestions.filter(user => {
+      if (followedUsers.has(user.address) || seen.has(user.address)) return false;
+      seen.add(user.address);
+      return true;
+    });
+  }, [allSuggestions, followedUsers]);
+
+  // Infinite scroll handler
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el || isFetchingNextPage || !hasNextPage) return;
+    const { scrollTop, scrollHeight, clientHeight } = el;
+    if (scrollHeight - scrollTop - clientHeight < 200) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', handleScroll);
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
+
   if (error) {
     console.warn('[WhoToFollow] Query error:', error);
   }
-
-  // Filter out already-followed users (locally tracked)
-  const safeSuggestions = Array.isArray(suggestions) ? suggestions : [];
-
-  const filteredSuggestions = useMemo(() => {
-    return safeSuggestions.filter(user => !followedUsers.has(user.address));
-  }, [safeSuggestions, followedUsers]);
 
   const getAvatarUrl = (user: SuggestedAccount) => {
     const avatarPath = user.avatarImageUrl || user.avatarUrl;
@@ -132,7 +170,10 @@ export function WhoToFollow() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto overflow-x-hidden space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent"
+      >
         {filteredSuggestions.map((user) => (
           <div
             key={user.address}
@@ -163,6 +204,11 @@ export function WhoToFollow() {
             </Button>
           </div>
         ))}
+        {isFetchingNextPage && (
+          <div className="flex items-center justify-center py-4">
+            <Loader2 className="w-4 h-4 text-zinc-500 animate-spin" />
+          </div>
+        )}
       </div>
 
       <div className="relative">

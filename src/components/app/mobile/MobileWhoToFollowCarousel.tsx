@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useMemo, useCallback, useRef } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { UserPlus, Loader2, ChevronRight, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -11,6 +11,8 @@ import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { toast } from 'sonner';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 
+const BATCH_SIZE = 15;
+
 export function MobileWhoToFollowCarousel() {
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress } = useAuth();
@@ -18,19 +20,48 @@ export function MobileWhoToFollowCarousel() {
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
 
-  // Fetch suggested accounts from dedicated API
-  const { data: suggestions = [], isLoading, refetch, isFetching } = useQuery({
+  const {
+    data,
+    isLoading,
+    refetch,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ['suggested-accounts', walletAddress],
-    queryFn: () => getSuggestedAccounts(50),
+    queryFn: ({ pageParam = 1 }) => getSuggestedAccounts(BATCH_SIZE, pageParam),
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.hasMore ? allPages.length + 1 : undefined,
+    initialPageParam: 1,
     enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000,
   });
 
-  const safeSuggestions = Array.isArray(suggestions) ? suggestions : [];
+  const allSuggestions = useMemo(() => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap(page => page.items);
+  }, [data]);
 
   const filteredSuggestions = useMemo(() => {
-    return safeSuggestions.filter(user => !followedUsers.has(user.address));
-  }, [safeSuggestions, followedUsers]);
+    const seen = new Set<string>();
+    return allSuggestions.filter(user => {
+      if (followedUsers.has(user.address) || seen.has(user.address)) return false;
+      seen.add(user.address);
+      return true;
+    });
+  }, [allSuggestions, followedUsers]);
+
+  // Load more when user scrolls near the end of the carousel
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const handleScroll = useCallback(() => {
+    const el = carouselRef.current;
+    if (!el || isFetchingNextPage || !hasNextPage) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    if (scrollWidth - scrollLeft - clientWidth < 300) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const getAvatarUrl = (user: SuggestedAccount) => {
     const avatarPath = user.avatarImageUrl || user.avatarUrl;
@@ -144,7 +175,9 @@ export function MobileWhoToFollowCarousel() {
 
       {/* Horizontal Carousel */}
       <SwipeableCarousel
+        ref={carouselRef}
         className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2 snap-x snap-mandatory"
+        onScroll={handleScroll}
       >
         {filteredSuggestions.map((user) => (
           <div
@@ -180,6 +213,11 @@ export function MobileWhoToFollowCarousel() {
             </div>
           </div>
         ))}
+        {isFetchingNextPage && (
+          <div className="flex-shrink-0 w-[104px] flex items-center justify-center">
+            <Loader2 className="w-4 h-4 text-zinc-500 animate-spin" />
+          </div>
+        )}
       </SwipeableCarousel>
     </div>
   );
