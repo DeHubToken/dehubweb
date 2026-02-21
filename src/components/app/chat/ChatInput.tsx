@@ -173,21 +173,19 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
       )}
       
       {/* Input Area */}
-      <div className="flex items-center gap-2">
-        <div className="flex-1">
-          <Textarea
-            ref={textareaRef}
-            placeholder="Type a message..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="min-h-[32px] max-h-32 resize-none bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 focus-visible:ring-0 focus-visible:ring-offset-0"
-            rows={1}
-          />
-        </div>
+      <div className="relative">
+        <Textarea
+          ref={textareaRef}
+          placeholder="Type a message..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="min-h-[56px] max-h-32 resize-none bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-28 focus-visible:ring-0 focus-visible:ring-offset-0"
+          rows={2}
+        />
         
-        {/* Action buttons */}
-        <div className="flex items-center gap-1">
+        {/* Action buttons - bottom right */}
+        <div className="absolute bottom-0 right-0 flex items-center gap-0.5">
           <EmojiGifPicker 
             onEmojiSelect={handleEmojiSelect} 
             onGifSelect={handleGifSelect}
