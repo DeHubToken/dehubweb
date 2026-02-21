@@ -83,7 +83,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
   return (
     <>
-      <aside className="hidden lg:flex sticky top-0 h-screen w-[60px] xl:w-[231px] px-2 xl:px-[18px] pt-[2px] pb-2 flex-col overflow-y-auto overflow-x-hidden scrollbar-invisible items-center xl:items-stretch transition-all duration-200">
+      <aside className="hidden lg:flex sticky top-0 h-screen w-[60px] xl:w-[231px] px-2 xl:px-[18px] pt-[2px] pb-2 flex-col overflow-hidden items-center xl:items-stretch transition-all duration-200">
         {/* Logo & Coin Balance */}
         <div className="mb-6 flex items-center justify-between w-full">
           <button onClick={handleLogoClick} className="block cursor-pointer mt-[10px] mx-auto xl:mx-0">
@@ -101,8 +101,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           )}
         </div>
 
-        {/* Navigation Bento */}
-        <div className="-mt-[8.5px] bg-zinc-900 rounded-2xl p-1 xl:p-2.5 space-y-2 xl:space-y-[2px] flex flex-col items-center xl:items-stretch">
+        {/* Navigation Bento - scrollable */}
+        <div className="-mt-[8.5px] bg-zinc-900 rounded-2xl p-1 xl:p-2.5 space-y-2 xl:space-y-[2px] flex flex-col items-center xl:items-stretch overflow-y-auto overflow-x-hidden scrollbar-invisible flex-1 min-h-0">
           {navItemsWithoutAI.map((item) => {
             const isActive = !item.external && location.pathname.startsWith(item.path);
             const isProfileItem = item.label === 'Profile';

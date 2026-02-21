@@ -18,6 +18,10 @@ import {
   Play,
   LayoutDashboard,
   Sparkles,
+  Terminal,
+  BookOpen,
+  Map,
+  Briefcase,
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
@@ -31,6 +35,10 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
   { icon: FileText, label: 'Blog', path: 'https://docs.dhb.gg/docs/blog', external: true },
+  { icon: Terminal, label: 'Command Centre', path: '/app/command-centre' },
+  { icon: BookOpen, label: 'Docs', path: 'https://docs.dhb.gg', external: true },
+  { icon: Map, label: 'Roadmap', path: '/app/roadmap' },
+  { icon: Briefcase, label: 'Careers', path: '/app/careers' },
   { icon: Home, label: 'Home', path: '/app' },
 ];
 
