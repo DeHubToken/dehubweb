@@ -1,12 +1,13 @@
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getSavedPosts, getLikedPosts, getWatchHistory, toggleSavePost, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
+import { useInfiniteQuery, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getSavedPosts, getLikedPosts, getWatchHistory, toggleSavePost, DeHubNFT, getMediaUrl, getNFTInfo } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
 
-export type BookmarkType = 'all' | 'liked' | 'history' | 'recent' | 'images' | 'videos' | 'text';
+export type BookmarkType = 'all' | 'liked' | 'history' | 'recent' | 'ppv' | 'images' | 'videos' | 'text';
 
 const PAGE_SIZE = 20;
 
@@ -170,7 +171,7 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
     },
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 1,
-    enabled: isAuthenticated && type !== 'liked' && type !== 'history',
+    enabled: isAuthenticated && type !== 'liked' && type !== 'history' && type !== 'ppv',
     staleTime: 2 * 60 * 1000,
   });
 
@@ -211,14 +212,49 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
     staleTime: 2 * 60 * 1000,
   });
 
+  // PPV purchases query
+  const ppvQuery = useQuery({
+    queryKey: ['bookmarks', 'ppv', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return [];
+      const { data, error } = await supabase
+        .from('ppv_purchases')
+        .select('token_id')
+        .eq('buyer_address', walletAddress.toLowerCase())
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      if (!data || data.length === 0) return [];
+      
+      // Fetch NFT info for each purchased token
+      const nfts = await Promise.all(
+        data.map(p => getNFTInfo(p.token_id).catch(() => null))
+      );
+      return nfts.filter(Boolean) as DeHubNFT[];
+    },
+    enabled: isAuthenticated && type === 'ppv' && !!walletAddress,
+    staleTime: 2 * 60 * 1000,
+  });
+
   // Use the appropriate query based on type
+  const isPPVTab = type === 'ppv';
   const activeQuery = type === 'liked' ? likedQuery : type === 'history' ? historyQuery : savedQuery;
   
   // Flatten all pages into a single array
-  const allNFTs = activeQuery.data?.pages.flatMap(page => page.items) || [];
+  const allNFTs = isPPVTab
+    ? (ppvQuery.data || [])
+    : (activeQuery.data?.pages.flatMap(page => page.items) || []);
   
   // Map to feed items
   let feedItems = allNFTs.map(mapNFTToFeedItem);
+  
+  // Mark PPV items as unlocked since user already paid
+  if (isPPVTab) {
+    feedItems = feedItems.map(item => {
+      if (item.type === 'video') return { ...item, isUnlocked: true };
+      if (item.type === 'image') return { ...item, isUnlocked: true };
+      return item;
+    });
+  }
   
   // Apply type filtering
   if (type === 'images') {
@@ -228,7 +264,6 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
   } else if (type === 'text') {
     feedItems = feedItems.filter(item => item.type === 'post');
   } else if (type === 'recent') {
-    // Sort by createdAt for recent
     feedItems = [...feedItems].sort((a, b) => {
       const dateA = 'createdAt' in a ? new Date(a.createdAt || 0).getTime() : 0;
       const dateB = 'createdAt' in b ? new Date(b.createdAt || 0).getTime() : 0;
@@ -257,16 +292,14 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
     });
   }
 
+  const queryState = isPPVTab
+    ? { isLoading: ppvQuery.isLoading, isError: ppvQuery.isError, error: ppvQuery.error, refetch: ppvQuery.refetch, fetchNextPage: () => Promise.resolve() as any, hasNextPage: false, isFetchingNextPage: false }
+    : { isLoading: activeQuery.isLoading, isError: activeQuery.isError, error: activeQuery.error, refetch: activeQuery.refetch, fetchNextPage: activeQuery.fetchNextPage, hasNextPage: activeQuery.hasNextPage, isFetchingNextPage: activeQuery.isFetchingNextPage };
+
   return {
     bookmarks: feedItems,
     totalCount: allNFTs.length,
-    isLoading: activeQuery.isLoading,
-    isError: activeQuery.isError,
-    error: activeQuery.error,
-    refetch: activeQuery.refetch,
-    fetchNextPage: activeQuery.fetchNextPage,
-    hasNextPage: activeQuery.hasNextPage,
-    isFetchingNextPage: activeQuery.isFetchingNextPage,
+    ...queryState,
   };
 }
 
