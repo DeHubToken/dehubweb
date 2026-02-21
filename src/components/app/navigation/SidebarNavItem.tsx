@@ -9,6 +9,7 @@ const NAV_LABEL_KEYS: Record<string, string> = {
   Home: 'nav.home', Explore: 'nav.explore', Notifications: 'nav.notifications',
   Messages: 'nav.messages', Assistant: 'nav.assistant', Leaderboard: 'nav.leaderboard',
   Bookmarks: 'nav.bookmarks', Settings: 'nav.settings', Profile: 'nav.profile', Blog: 'nav.blog',
+  'Command Centre': 'nav.commandCentre', Docs: 'nav.docs', Roadmap: 'nav.roadmap', Careers: 'nav.careers',
 };
 
 interface SidebarNavItemProps {

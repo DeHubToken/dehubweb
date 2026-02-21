@@ -1,4 +1,5 @@
 import { Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import { getDPayTransactions, type DPayTransaction } from '@/lib/api/dpay';
@@ -53,6 +54,7 @@ function formatDPayTx(tx: DPayTransaction): UnifiedTransaction {
 export function RecentTransactions() {
   const { isAuthenticated, walletAddress } = useAuth();
   const [activeFilter, setActiveFilter] = useState('1m');
+  const { t } = useTranslation();
 
   const { data: dpayTxs = [], isLoading: dpayLoading } = useQuery({
     queryKey: ['dpay', 'transactions'],
@@ -112,9 +114,9 @@ export function RecentTransactions() {
   return (
     <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-white font-semibold">Recent transactions</h3>
+        <h3 className="text-white font-semibold">{t('commandCentre.recentTransactions')}</h3>
         <Button variant="glass" size="sm" className="text-xs h-8 rounded-xl">
-          View all
+          {t('commandCentre.viewAll')}
         </Button>
       </div>
 
@@ -141,7 +143,7 @@ export function RecentTransactions() {
         </div>
       ) : recent.length === 0 ? (
         <div className="text-center py-8 text-zinc-500 text-sm">
-          No transactions yet
+          {t('commandCentre.noTransactionsYet')}
         </div>
       ) : (
         <div className="space-y-0 divide-y divide-zinc-800">

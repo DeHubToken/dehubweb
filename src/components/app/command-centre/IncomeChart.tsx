@@ -1,6 +1,7 @@
 import { Info, Settings2, Loader2 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { getDPayTransactions, type DPayTransaction } from '@/lib/api/dpay';
 import { useAuth } from '@/contexts/AuthContext';
@@ -51,6 +52,7 @@ function buildIncomeBreakdown(transactions: DPayTransaction[]) {
 export function IncomeChart() {
   const [activeFilter, setActiveFilter] = useState('1m');
   const { isAuthenticated } = useAuth();
+  const { t } = useTranslation();
 
   const { data: transactions = [], isLoading } = useQuery({
     queryKey: ['dpay', 'transactions'],
@@ -75,7 +77,7 @@ export function IncomeChart() {
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
-          <span className="text-zinc-400 text-sm">Income chart</span>
+          <span className="text-zinc-400 text-sm">{t('commandCentre.incomeChart')}</span>
           {topSource ? (
             <>
               <p className="text-zinc-500 text-xs mt-1">
@@ -84,12 +86,12 @@ export function IncomeChart() {
                   {topSource.rawValue.toLocaleString()}
                   <img src={dehubCoin} alt="DHB" className="w-3 h-3 inline" />
                 </span>{' '}
-                came from
+                {' '}{t('commandCentre.cameFrom')}
               </p>
               <p className="text-emerald-400 text-sm font-medium">{topSource.name}</p>
             </>
           ) : (
-            <p className="text-zinc-500 text-xs mt-1">No income data yet</p>
+            <p className="text-zinc-500 text-xs mt-1">{t('commandCentre.noIncomeData')}</p>
           )}
         </div>
       </div>
@@ -155,7 +157,7 @@ export function IncomeChart() {
         </div>
       ) : (
         <div className="flex items-center justify-center h-40 text-zinc-500 text-sm">
-          No income in this period
+          {t('commandCentre.noIncomeInPeriod')}
         </div>
       )}
     </div>
