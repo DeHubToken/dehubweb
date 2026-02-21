@@ -379,7 +379,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   // Navigate to single post page when clicking non-interactive areas
   // Pre-cache post data for instant display on the single post page
   const handleCardClick = useCallback((e: React.MouseEvent) => {
-    // Don't navigate if a drawer is open (PPV/Bounty/Locked)
+    // Don't navigate if a drawer is open
     if (showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
     
     const target = e.target as HTMLElement;
