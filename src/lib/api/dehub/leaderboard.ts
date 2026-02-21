@@ -32,10 +32,15 @@ export async function getLeaderboard(
   // For "all time", call the new /api/leaderboard endpoint directly
   if (period === 'all') {
     const params: Record<string, string> = { sort };
-    const raw = await apiCall<{ result: LeaderboardEntry[] }>("/api/leaderboard", { params });
-    // Normalize into the shared response shape
+    const raw = await apiCall<any>("/api/leaderboard", { params });
+    // The API may return { result: [...] } or { result: { byWalletBalance: [...] } }
+    const entries = Array.isArray(raw?.result) 
+      ? raw.result 
+      : Array.isArray(raw?.result?.byWalletBalance) 
+        ? raw.result.byWalletBalance 
+        : Array.isArray(raw) ? raw : [];
     return {
-      result: { byWalletBalance: raw.result || [] },
+      result: { byWalletBalance: entries },
       hasHistoricalData: true,
     };
   }
