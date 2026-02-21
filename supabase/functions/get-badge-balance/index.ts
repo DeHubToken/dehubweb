@@ -27,6 +27,7 @@ const BNB_PUBLIC_RPCS = [
 const cache = new Map<string, { total: number; timestamp: number }>();
 const CACHE_TTL_MS = 5 * 60 * 1000;
 const batchCache = new Map<string, { results: Record<string, number>; timestamp: number }>();
+let dehubLeaderboardCache: { entries: any[]; timestamp: number } | null = null;
 
 function encodeCall(selector: string, address: string): string {
   const cleaned = address.replace('0x', '').toLowerCase().padStart(64, '0');
@@ -96,6 +97,41 @@ async function bnbRpcCall(alchemyBnbRpc: string, to: string, data: string): Prom
   return result; // Return whatever Alchemy gave us
 }
 
+/** Fallback: look up address total from the live DeHub leaderboard API (cached in-memory) */
+async function getLeaderboardApiFallback(address: string): Promise<number> {
+  try {
+    // Use cached leaderboard data if fresh
+    if (dehubLeaderboardCache && Date.now() - dehubLeaderboardCache.timestamp < CACHE_TTL_MS) {
+      const match = dehubLeaderboardCache.entries.find((e: any) => e.account?.toLowerCase() === address.toLowerCase());
+      return match?.total || 0;
+    }
+
+    const res = await fetch('https://api.dehub.io/api/leaderboard?sort=holdings', {
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+    });
+    if (!res.ok) {
+      console.log('[api-fallback] HTTP error:', res.status);
+      return 0;
+    }
+    const json = await res.json();
+    const entries = json?.result?.byWalletBalance || json?.result || [];
+    if (!Array.isArray(entries)) return 0;
+
+    // Cache the leaderboard data
+    dehubLeaderboardCache = { entries, timestamp: Date.now() };
+
+    const match = entries.find((e: any) => e.account?.toLowerCase() === address.toLowerCase());
+    if (match?.total) {
+      console.log(`[api-fallback] Found ${address}: total=${match.total}`);
+      return match.total;
+    }
+    return 0;
+  } catch (err) {
+    console.error('[api-fallback] Error:', err);
+    return 0;
+  }
+}
+
 async function getBalanceForAddress(address: string, alchemyKey: string): Promise<number> {
   const cached = cache.get(address.toLowerCase());
   if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
@@ -118,7 +154,16 @@ async function getBalanceForAddress(address: string, alchemyKey: string): Promis
   const baseHoldings = hexToNumber(baseHoldingsHex);
   const bnbHoldings = hexToNumber(bnbHoldingsHex);
   const bnbStaked = hexFirstSlotToNumber(bnbStakedHex); // userInfos returns tuple, first slot = totalAmount
-  const total = baseHoldings + bnbHoldings + bnbStaked;
+  let total = baseHoldings + bnbHoldings + bnbStaked;
+
+  // If on-chain balance is 0, fall back to DeHub API (covers tokens on other chains/contracts)
+  if (total === 0) {
+    const fallback = await getLeaderboardApiFallback(address);
+    if (fallback > 0) {
+      console.log(`[balance] ${address}: on-chain=0, api-fallback=${fallback}`);
+      total = fallback;
+    }
+  }
 
   console.log(`[balance] ${address}: base=${baseHoldings}, bnb=${bnbHoldings}, staked=${bnbStaked}, total=${total}`);
 

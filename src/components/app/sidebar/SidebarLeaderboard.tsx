@@ -254,7 +254,7 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
                           {isPlaceholder ? '—' : getDisplayName(entry)}
                         </span>
                         {!isPlaceholder && (() => {
-                          const badgeUrl = getBadgeUrl(entry.badgeBalance ?? badgeBalances[entry.account.toLowerCase()]);
+                          const badgeUrl = getBadgeUrl(entry.badgeBalance || badgeBalances[entry.account.toLowerCase()] || entry.total);
                           return badgeUrl ? (
                             <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />
                           ) : null;

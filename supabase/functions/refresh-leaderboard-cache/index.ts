@@ -386,9 +386,13 @@ Deno.serve(async (req) => {
         );
 
         batch.forEach((entry, idx) => {
+          // If on-chain balance is 0, fall back to the DeHub API's total (covers tokens on other chains/contracts)
+          const onChainBalance = balances[idx];
+          const apiTotal = (entry.total as number) ?? 0;
+          const effectiveBalance = onChainBalance > 0 ? onChainBalance : apiTotal;
           enriched.push({
             account: (entry.account as string) || "",
-            total: balances[idx],
+            total: effectiveBalance,
             username: (entry.username as string) || undefined,
             userDisplayName: (entry.userDisplayName as string) || undefined,
             avatarUrl: (entry.avatarUrl as string) || undefined,
@@ -397,7 +401,7 @@ Deno.serve(async (req) => {
             followers: (entry.followers as number) ?? undefined,
             likes: (entry.likes as number) ?? undefined,
             subscribers: (entry.subscribers as number) ?? undefined,
-            badgeBalance: balances[idx],
+            badgeBalance: effectiveBalance,
           });
         });
 

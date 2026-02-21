@@ -487,7 +487,7 @@ export default function LeaderboardPage() {
                         <span className="relative inline-flex items-baseline shrink min-w-0">
                           <span className="font-semibold text-white truncate">{getDisplayName(entry)}</span>
                           {(() => {
-                            const badgeUrl = getBadgeUrl(entry.badgeBalance ?? badgeBalances[entry.account.toLowerCase()]);
+                            const badgeUrl = getBadgeUrl(entry.badgeBalance || badgeBalances[entry.account.toLowerCase()] || entry.total);
                             return badgeUrl ? <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" /> : null;
                           })()}
                         </span>
