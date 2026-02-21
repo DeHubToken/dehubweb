@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { BadgeBalanceProvider } from '@/contexts/BadgeBalanceContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AtSign, ChevronLeft, Loader2 } from 'lucide-react';
@@ -29,6 +29,42 @@ import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
 import { ProfileOptionsContent } from '@/components/app/profile/ProfileOptionsDrawer';
 import type { TabValue } from '@/components/app/profile/ProfileConstants';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
+
+/**
+ * Wraps tab content and remembers the max height ever rendered.
+ * When switching to a shorter tab, the container keeps its previous
+ * height so the page never shrinks and the scroll position stays put.
+ * The locked height is released after a brief delay so the container
+ * can grow naturally if new content loads.
+ */
+function StableHeightContainer({ activeTab, children }: { activeTab: string; children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const maxHeight = useRef(0);
+  const [minH, setMinH] = useState(0);
+
+  // On every tab switch, lock to the tallest height we've seen
+  useEffect(() => {
+    if (ref.current) {
+      const h = ref.current.scrollHeight;
+      if (h > maxHeight.current) maxHeight.current = h;
+      setMinH(maxHeight.current);
+    }
+    // After content settles, update to actual height (allows shrinking after data changes)
+    const timer = setTimeout(() => {
+      if (ref.current) {
+        maxHeight.current = ref.current.scrollHeight;
+        setMinH(ref.current.scrollHeight);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [activeTab]);
+
+  return (
+    <div ref={ref} style={{ minHeight: minH > 0 ? `${minH}px` : undefined }}>
+      {children}
+    </div>
+  );
+}
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -284,30 +320,32 @@ export default function ProfilePage() {
         </div>
 
         {/* Tab Content - all panels rendered, inactive hidden via CSS */}
-        <BadgeBalanceProvider>
-          <ProfileTabContent
-            activeTab={activeTab}
-            profileAddress={data.apiProfile?.walletAddress || ''}
-            ALL_CONTENT={data.ALL_CONTENT}
-            PROFILE_POSTS={data.PROFILE_POSTS}
-            PROFILE_IMAGES={data.PROFILE_IMAGES}
-            ALL_PROFILE_VIDEOS={data.ALL_PROFILE_VIDEOS}
-            isLoadingContent={data.isLoadingContent}
-            userContentData={data.userContentData}
-            isTargetPrivate={data.isTargetPrivate}
-            isFollowing={data.isFollowing}
-            isPending={data.isPending}
-            isViewingOwnProfile={data.isViewingOwnProfile}
-            optimisticPosts={data.optimisticPosts}
-            isLoadingPlans={data.isLoadingPlans}
-            hasPlans={data.hasPlans}
-            plans={data.plans}
-            isSubscribed={data.isSubscribed}
-            profile={data.profile}
-            setCreatePlanModalOpen={setCreatePlanModalOpen}
-            setEditingPlan={setEditingPlan}
-          />
-        </BadgeBalanceProvider>
+        <StableHeightContainer activeTab={activeTab}>
+          <BadgeBalanceProvider>
+            <ProfileTabContent
+              activeTab={activeTab}
+              profileAddress={data.apiProfile?.walletAddress || ''}
+              ALL_CONTENT={data.ALL_CONTENT}
+              PROFILE_POSTS={data.PROFILE_POSTS}
+              PROFILE_IMAGES={data.PROFILE_IMAGES}
+              ALL_PROFILE_VIDEOS={data.ALL_PROFILE_VIDEOS}
+              isLoadingContent={data.isLoadingContent}
+              userContentData={data.userContentData}
+              isTargetPrivate={data.isTargetPrivate}
+              isFollowing={data.isFollowing}
+              isPending={data.isPending}
+              isViewingOwnProfile={data.isViewingOwnProfile}
+              optimisticPosts={data.optimisticPosts}
+              isLoadingPlans={data.isLoadingPlans}
+              hasPlans={data.hasPlans}
+              plans={data.plans}
+              isSubscribed={data.isSubscribed}
+              profile={data.profile}
+              setCreatePlanModalOpen={setCreatePlanModalOpen}
+              setEditingPlan={setEditingPlan}
+            />
+          </BadgeBalanceProvider>
+        </StableHeightContainer>
       </div>
 
       {/* Make Offer Drawer */}
