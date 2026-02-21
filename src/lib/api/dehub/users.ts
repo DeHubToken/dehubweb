@@ -1,5 +1,6 @@
 import { DEHUB_API_BASE, apiCall, getAuthToken } from './core';
 import type { DeHubUser, DeHubNFT, PaginatedResponse } from './types';
+import type { ApiCommentResponse } from './comments';
 
 export async function getAccountInfo(userId: string, address?: string): Promise<DeHubUser> {
   const params: Record<string, string> = {};
@@ -121,15 +122,37 @@ export async function searchUsers(params: SearchUsersParams): Promise<PaginatedR
   });
 }
 
+export interface UserCommentsResponse {
+  data: ApiCommentResponse[];
+  total: number;
+  page: number;
+  limit: number;
+  has_more: boolean;
+}
+
 export async function getUserComments(
   address: string,
   page: number = 1,
   limit: number = 20,
-): Promise<PaginatedResponse<unknown>> {
-  return apiCall<PaginatedResponse<unknown>>(`/api/users/${encodeURIComponent(address)}/comments`, {
+): Promise<UserCommentsResponse> {
+  const response = await apiCall<any>(`/api/users/${encodeURIComponent(address)}/comments`, {
     params: { page, limit },
     requiresAuth: true,
   });
+  // Normalize: API may return { result: { items, ... } } or { data, ... }
+  if (response?.result?.items) {
+    return {
+      data: response.result.items,
+      total: response.result.totalCount ?? 0,
+      page,
+      limit,
+      has_more: response.result.hasMore ?? false,
+    };
+  }
+  if (Array.isArray(response?.data)) {
+    return response as UserCommentsResponse;
+  }
+  return { data: [], total: 0, page, limit, has_more: false };
 }
 
 export interface SuggestedAccount {

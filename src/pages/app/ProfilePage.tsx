@@ -284,6 +284,7 @@ export default function ProfilePage() {
         {/* Tab Content */}
         <ProfileTabContent
           activeTab={activeTab}
+          profileAddress={data.apiProfile?.walletAddress || ''}
           ALL_CONTENT={data.ALL_CONTENT}
           PROFILE_POSTS={data.PROFILE_POSTS}
           PROFILE_IMAGES={data.PROFILE_IMAGES}

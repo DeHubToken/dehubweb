@@ -1,15 +1,22 @@
-import { Loader2, Plus, MessageCircle } from 'lucide-react';
+import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight } from 'lucide-react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { PlanCard } from '@/components/app/subscriptions';
 import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
+import { getUserComments } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
+import { formatDistanceToNow } from 'date-fns';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { OptimisticPost } from '@/hooks/use-optimistic-posts';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import type { TabValue } from './ProfileConstants';
+import type { ApiCommentResponse } from '@/lib/api/dehub/comments';
 
 import fractions3dIcon from '@/assets/icons/fractions-3d-icon.png';
 import live3dIcon from '@/assets/icons/live-3d-icon.png';
@@ -24,6 +31,7 @@ import comment3dIcon from '@/assets/icons/comment-3d-icon.png';
 
 interface ProfileTabContentProps {
   activeTab: TabValue;
+  profileAddress: string;
   // Content arrays
   ALL_CONTENT: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string }>;
   PROFILE_POSTS: TextPost[];
@@ -52,6 +60,7 @@ interface ProfileTabContentProps {
 
 export function ProfileTabContent({
   activeTab,
+  profileAddress,
   ALL_CONTENT,
   PROFILE_POSTS,
   PROFILE_IMAGES,
@@ -71,6 +80,26 @@ export function ProfileTabContent({
   setCreatePlanModalOpen,
   setEditingPlan,
 }: ProfileTabContentProps) {
+  const navigate = useNavigate();
+
+  // Fetch user comments/replies
+  const {
+    data: commentsData,
+    isLoading: isLoadingComments,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['user-comments', profileAddress],
+    queryFn: ({ pageParam = 1 }) => getUserComments(profileAddress, pageParam, 20),
+    getNextPageParam: (lastPage) => lastPage.has_more ? lastPage.page + 1 : undefined,
+    initialPageParam: 1,
+    enabled: !!profileAddress && activeTab === 'replies',
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const allComments = commentsData?.pages.flatMap(p => p.data) ?? [];
+
   // Private account gate
   if (isTargetPrivate && !isFollowing && !isViewingOwnProfile) {
     return (
@@ -202,14 +231,55 @@ export function ProfileTabContent({
           ))}
         </div>
       );
-    case 'replies':
+    case 'replies': {
+      if (isLoadingComments && allComments.length === 0) {
+        return (
+          <div className="flex flex-col items-center justify-center py-16">
+            <Loader2 className="w-8 h-8 text-muted-foreground animate-spin mb-3" />
+            <p className="text-muted-foreground text-sm">Loading comments...</p>
+          </div>
+        );
+      }
+
+      if (allComments.length === 0) {
+        return (
+          <ProfileEmptyState 
+            iconSrc={comment3dIcon} 
+            iconAlt="Replies" 
+            title="No comments or replies yet" 
+            subtitle="Comments and replies will appear here" 
+          />
+        );
+      }
+
       return (
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <MessageCircle className="w-12 h-12 text-zinc-600 mb-3" />
-          <p className="text-zinc-400 text-lg font-medium">No replies yet</p>
-          <p className="text-zinc-500 text-sm mt-1">Replies to other posts will appear here</p>
+        <div className="space-y-2">
+          {allComments.map((comment) => (
+            <CommentCard key={comment.id} comment={comment} onClick={() => {
+              if (comment.tokenId) {
+                navigate(`/app/post/${comment.tokenId}?comment=${comment.id}`);
+              }
+            }} />
+          ))}
+          {hasNextPage && (
+            <div className="flex justify-center py-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                {isFetchingNextPage ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                ) : null}
+                Load more
+              </Button>
+            </div>
+          )}
         </div>
       );
+    }
     case 'subscribers': {
       if (isLoadingPlans) {
         return (
@@ -298,4 +368,72 @@ export function ProfileTabContent({
     default:
       return null;
   }
+}
+
+// ============================================================================
+// Comment Card for profile replies tab
+// ============================================================================
+
+function CommentCard({ comment, onClick }: { comment: ApiCommentResponse; onClick: () => void }) {
+  const avatarUrl = comment.writor?.avatarUrl
+    ? buildAvatarUrl(comment.address, comment.writor.avatarUrl)
+    : undefined;
+  const username = comment.writor?.username || `${comment.address.slice(0, 6)}...${comment.address.slice(-4)}`;
+  const timeAgo = (() => {
+    try {
+      return formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true });
+    } catch {
+      return '';
+    }
+  })();
+
+  return (
+    <button
+      onClick={onClick}
+      className="w-full text-left rounded-xl border border-white/[0.08] bg-transparent p-3 hover:bg-white/[0.03] transition-colors"
+    >
+      <div className="flex items-start gap-3">
+        <Avatar className="w-8 h-8 flex-shrink-0">
+          <AvatarImage src={avatarUrl} alt={username} />
+          <AvatarFallback className="bg-white/10 text-foreground text-xs">
+            {username.slice(0, 2).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="text-foreground text-sm font-medium truncate">{username}</span>
+            <span className="text-muted-foreground text-xs flex-shrink-0">{timeAgo}</span>
+          </div>
+          <p className="text-foreground/80 text-sm mt-0.5 line-clamp-3 whitespace-pre-wrap break-words">
+            {comment.content}
+          </p>
+          {comment.imageUrl && (
+            <div className="mt-2 rounded-lg overflow-hidden max-w-[200px]">
+              <img src={comment.imageUrl} alt="" className="w-full h-auto rounded-lg" loading="lazy" />
+            </div>
+          )}
+          <div className="flex items-center gap-3 mt-2">
+            {(comment.likeCount ?? 0) > 0 && (
+              <span className="flex items-center gap-1 text-muted-foreground text-xs">
+                <Heart className="w-3.5 h-3.5" />
+                {comment.likeCount}
+              </span>
+            )}
+            {comment.replyIds && comment.replyIds.length > 0 && (
+              <span className="flex items-center gap-1 text-muted-foreground text-xs">
+                <MessageCircle className="w-3.5 h-3.5" />
+                {comment.replyIds.length} {comment.replyIds.length === 1 ? 'reply' : 'replies'}
+              </span>
+            )}
+            {comment.tokenId && (
+              <span className="flex items-center gap-1 text-muted-foreground text-xs ml-auto">
+                <ArrowUpRight className="w-3.5 h-3.5" />
+                View post
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </button>
+  );
 }
