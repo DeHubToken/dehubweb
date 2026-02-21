@@ -6,7 +6,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { TranslatableText } from '../TranslatableText';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
-import { getMediaUrl } from '@/lib/api/dehub';
+import { getMediaUrl, getAuthToken } from '@/lib/api/dehub';
+import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
@@ -27,7 +28,7 @@ export function SidebarChat() {
   const [audioPreview, setAudioPreview] = useState<{ blob: Blob; duration: number } | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
 
   // Use the first available room
   const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
@@ -52,13 +53,32 @@ export function SidebarChat() {
   }, []);
 
   const handleSend = async () => {
-    // Handle audio message - send as text since livechat doesn't support audio type
+    // Handle audio message - upload blob then send as voice type
     if (audioPreview) {
-      if (!isAuthenticated) { toast.error('Sign in to chat'); return; }
+      if (!isAuthenticated || !walletAddress) { toast.error('Sign in to chat'); return; }
       try {
-        await send(`🎤 Voice message (${audioPreview.duration}s)`, 'text');
+        const token = getAuthToken();
+        const formData = new FormData();
+        formData.append('file', audioPreview.blob, `voice-${Date.now()}.webm`);
+
+        const { data, error } = await supabase.functions.invoke('dm-upload-media', {
+          body: formData,
+          headers: {
+            'x-wallet-address': walletAddress.toLowerCase(),
+            'x-dehub-token': token || '',
+          },
+        });
+
+        if (error || !data?.ok) {
+          throw new Error(data?.error || 'Upload failed');
+        }
+
+        await send(`🎤 Voice message (${audioPreview.duration}s)`, 'voice', data.url);
         setAudioPreview(null);
-      } catch { toast.error('Failed to send'); }
+      } catch (err) {
+        console.error('[SidebarChat] Voice upload error:', err);
+        toast.error('Failed to send voice note');
+      }
       return;
     }
 
@@ -143,6 +163,13 @@ export function SidebarChat() {
                       <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5" />
                     ) : msg.message_type === 'gif' && msg.image_url ? (
                       <img src={msg.image_url} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
+                    ) : msg.message_type === 'voice' && msg.image_url ? (
+                      <div className="mt-1 flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-2 max-w-[200px]">
+                        <Mic className="w-3.5 h-3.5 text-green-400 shrink-0" />
+                        <audio controls preload="none" className="h-8 w-full [&::-webkit-media-controls-panel]:bg-transparent">
+                          <source src={msg.image_url} type="audio/webm" />
+                        </audio>
+                      </div>
                     ) : (
                       <TranslatableText text={msg.content} className="text-xs text-zinc-300 break-words" as="p" />
                     )}
