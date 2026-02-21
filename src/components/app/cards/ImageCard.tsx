@@ -538,9 +538,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                 <p className="text-white/70 text-xs">
                   Unlock for {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
                 </p>
-                {!!ppvPurchaseCount && ppvPurchaseCount > 0 && (
-                  <p className="text-white/50 text-[10px] mt-1">{ppvPurchaseCount} unlock{ppvPurchaseCount !== 1 ? 's' : ''}</p>
-                )}
+                <p className="text-white/50 text-[10px] mt-1">{ppvPurchaseCount ?? 0} PPV Sale{(ppvPurchaseCount ?? 0) !== 1 ? 's' : ''}</p>
               </div>
             </div>
           </>
