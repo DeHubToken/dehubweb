@@ -1,18 +1,17 @@
 import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info } from 'lucide-react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { PostMetadata } from '@/components/app/cards/PostMetadata';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 import { PostCard } from '@/components/app/cards/PostCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { PlanCard } from '@/components/app/subscriptions';
 import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
-import { getUserComments, getAccountInfo } from '@/lib/api/dehub';
+import { getUserComments } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { formatDistanceToNow } from 'date-fns';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { OptimisticPost } from '@/hooks/use-optimistic-posts';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
@@ -374,19 +373,14 @@ export function ProfileTabContent({
 // ============================================================================
 
 function CommentCard({ comment, onClick }: { comment: ApiCommentResponse; onClick: () => void }) {
-  // Fetch full account info for proper display name + avatar resolution
-  const { data: accountInfo } = useQuery({
-    queryKey: ['account-info', comment.address],
-    queryFn: () => getAccountInfo(comment.address),
-    staleTime: 5 * 60 * 1000,
-    enabled: !!comment.address,
-  });
-
-  const resolvedName = accountInfo?.displayName || accountInfo?.username || comment.writor?.username || `${comment.address.slice(0, 6)}...${comment.address.slice(-4)}`;
-  const resolvedHandle = accountInfo?.username || comment.writor?.username || comment.address;
+  // The user comments API returns an 'author' object with full profile data
+  const author = (comment as any).author;
   
-  // Build avatar from account info or writor fallback
-  const rawAvatarPath = accountInfo?.avatarImageUrl || accountInfo?.avatarUrl || comment.writor?.avatarUrl;
+  const resolvedName = author?.displayName || author?.username || comment.writor?.username || `${comment.address.slice(0, 6)}...${comment.address.slice(-4)}`;
+  const resolvedHandle = author?.username || comment.writor?.username || comment.address;
+  
+  // Build avatar from author data or writor fallback
+  const rawAvatarPath = author?.avatarImageUrl || comment.writor?.avatarUrl;
   const avatarSeed = rawAvatarPath
     ? buildAvatarUrl(comment.address, rawAvatarPath) || comment.address
     : comment.address;

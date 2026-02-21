@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { BadgeBalanceProvider } from '@/contexts/BadgeBalanceContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AtSign, ChevronLeft, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -282,6 +283,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Tab Content */}
+        <BadgeBalanceProvider>
         <ProfileTabContent
           activeTab={activeTab}
           profileAddress={data.apiProfile?.walletAddress || ''}
@@ -304,6 +306,7 @@ export default function ProfilePage() {
           setCreatePlanModalOpen={setCreatePlanModalOpen}
           setEditingPlan={setEditingPlan}
         />
+        </BadgeBalanceProvider>
       </div>
 
       {/* Make Offer Drawer */}
