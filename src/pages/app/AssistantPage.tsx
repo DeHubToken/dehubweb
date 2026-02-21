@@ -1668,7 +1668,7 @@ export default function AssistantPage() {
 
           {/* Input - Fixed above bottom nav on mobile/tablet, fixed at bottom on desktop */}
           <div className="fixed bottom-[69px] md:bottom-[75px] left-0 right-0 px-2 z-40 lg:bottom-4 lg:left-auto lg:right-auto lg:px-4 lg:w-full lg:max-w-4xl lg:mx-auto lg:relative lg:z-auto lg:-translate-y-[5.3px]">
-            <div className="mx-auto max-w-[95%] md:max-w-md lg:max-w-none">
+            <div className="mx-auto max-w-[72%] md:max-w-md lg:max-w-none">
               {/* Attached image preview */}
               {attachedImage && (
                 <div className="mb-2 relative inline-block">
