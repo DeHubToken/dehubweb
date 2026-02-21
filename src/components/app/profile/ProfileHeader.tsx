@@ -440,17 +440,17 @@ export function ProfileHeader({
 
       {/* Unfollow confirmation */}
       <AlertDialog open={showUnfollowConfirm} onOpenChange={setShowUnfollowConfirm}>
-        <AlertDialogContent className="bg-zinc-900 border-zinc-800">
+        <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-white">Unfollow {profile.name}?</AlertDialogTitle>
-            <AlertDialogDescription className="text-zinc-400">
+            <AlertDialogDescription className="text-white/50">
               You will no longer see their posts in your feed.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="bg-white/[0.06] backdrop-blur-sm border-white/10 text-white hover:bg-white/[0.12]">Cancel</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-red-600 hover:bg-red-700 text-white"
+              className="bg-red-500/20 backdrop-blur-sm border border-red-500/30 text-red-400 hover:bg-red-500/30"
               onClick={() => {
                 handleUnfollow();
                 setShowUnfollowConfirm(false);
