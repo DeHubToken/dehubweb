@@ -40,7 +40,7 @@ export function MutualFollowers({ profileAddress }: MutualFollowersProps) {
           return (
             <Avatar
               key={item.address}
-              className="w-5 h-5 rounded-sm border border-zinc-900 cursor-pointer"
+              className="w-5 h-5 !rounded-[2px] border border-zinc-900 cursor-pointer"
               onClick={() => handleNavigate(item)}
             >
               {url && <AvatarImage src={url} alt={getDisplayName(item)} />}
