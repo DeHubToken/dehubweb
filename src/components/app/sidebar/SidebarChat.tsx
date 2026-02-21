@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
-import { Send, Smile, Users, Loader2 } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { Send, Smile, Users, Loader2, Mic, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { TranslatableText } from '../TranslatableText';
+import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
 import { getMediaUrl } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -23,6 +24,7 @@ function SidebarChatBadge({ address }: { address: string }) {
 
 export function SidebarChat() {
   const [newMessage, setNewMessage] = useState('');
+  const [audioPreview, setAudioPreview] = useState<{ blob: Blob; duration: number } | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
@@ -36,7 +38,6 @@ export function SidebarChat() {
   // Auto-scroll on new messages
   useEffect(() => {
     if (messages.length > 0) {
-      // Double rAF ensures DOM is fully laid out before scrolling
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -45,7 +46,22 @@ export function SidebarChat() {
     }
   }, [messages.length]);
 
+  const handleVoiceRecordingComplete = useCallback((blob: Blob, duration: number) => {
+    setAudioPreview({ blob, duration });
+    toast.success(`Recording saved (${duration}s)`);
+  }, []);
+
   const handleSend = async () => {
+    // Handle audio message - send as text since livechat doesn't support audio type
+    if (audioPreview) {
+      if (!isAuthenticated) { toast.error('Sign in to chat'); return; }
+      try {
+        await send(`🎤 Voice message (${audioPreview.duration}s)`, 'text');
+        setAudioPreview(null);
+      } catch { toast.error('Failed to send'); }
+      return;
+    }
+
     if (!newMessage.trim()) return;
     if (!isAuthenticated) {
       toast.error('Sign in to chat');
@@ -141,22 +157,41 @@ export function SidebarChat() {
 
       {/* Input */}
       <div className="pt-2">
+        {/* Audio Preview */}
+        {audioPreview && (
+          <div className="mb-2 inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-800 rounded-lg">
+            <div className="w-2 h-2 rounded-full bg-green-500" />
+            <span className="text-xs text-white">
+              🎤 {audioPreview.duration}s
+            </span>
+            <button
+              onClick={() => setAudioPreview(null)}
+              className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+            >
+              <X className="w-2.5 h-2.5 text-white" />
+            </button>
+          </div>
+        )}
         <div className="relative">
           <Textarea
             placeholder="Send a message"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="min-h-[56px] max-h-32 resize-none text-sm bg-zinc-800 border-zinc-700 rounded-lg pr-20 text-white placeholder:text-zinc-500"
+            className="min-h-[56px] max-h-32 resize-none text-sm bg-zinc-800 border-zinc-700 rounded-lg pr-24 text-white placeholder:text-zinc-500"
             rows={2}
           />
           <div className="absolute bottom-1.5 right-1.5 flex items-center gap-0.5">
             <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0">
               <Smile className="w-4 h-4 text-zinc-500" />
             </Button>
+            <VoiceRecorder
+              onRecordingComplete={handleVoiceRecordingComplete}
+              disabled={false}
+            />
             <button
               onClick={handleSend}
-              disabled={!newMessage.trim() || isSending}
+              disabled={(!newMessage.trim() && !audioPreview) || isSending}
               className="h-7 w-7 flex items-center justify-center disabled:opacity-40"
             >
               {isSending ? (
