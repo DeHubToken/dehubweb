@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, RefreshCw, ThumbsUp, Loader2, History } from 'lucide-react';
+import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, RefreshCw, ThumbsUp, Loader2, History, Ticket } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -16,6 +16,7 @@ const tabs = [
   { label: 'Liked', value: 'liked' as BookmarkType, icon: ThumbsUp },
   { label: 'History', value: 'history' as BookmarkType, icon: History },
   { label: 'Recent', value: 'recent' as BookmarkType, icon: Clock },
+  { label: 'Paid PPV', value: 'ppv' as BookmarkType, icon: Ticket },
   { label: 'Images', value: 'images' as BookmarkType, icon: Image },
   { label: 'Videos', value: 'videos' as BookmarkType, icon: Video },
   { label: 'Text Posts', value: 'text' as BookmarkType, icon: FileText },
