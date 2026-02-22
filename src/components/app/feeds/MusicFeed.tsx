@@ -9,6 +9,7 @@
 import { useState, useMemo, useRef, useCallback, useEffect, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Play, Music, Mic2, Radio, Disc3, ChevronRight, Pause, Volume2, VolumeX, Loader2 } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { MusicFeedSkeleton, MusicVideoCardSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
@@ -642,26 +643,39 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
 
   return (
     <div className="flex flex-col h-[calc(100vh-2.75rem)] lg:h-[calc(100vh-0rem)]">
-      {/* Sub-tab Navigation - Fixed at top */}
-      <div className="flex-shrink-0 px-2 sm:px-3 pb-2 bg-black">
-        <div className="bg-zinc-900 rounded-2xl p-2">
-          <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
-            {MUSIC_SUB_TABS.map((tab) => (
-              <button
-                key={tab.value}
-                onClick={() => setActiveSubTab(tab.value)}
-                className={cn(
-                  'flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap text-white',
-                  activeSubTab === tab.value && 'bg-zinc-800'
-                )}
-              >
-                <tab.icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+      {/* Sub-tab Navigation - Only shown when filters toggled */}
+      <AnimatePresence>
+        {showFilters && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="flex-shrink-0 px-2 sm:px-3 pb-2 bg-black overflow-hidden"
+          >
+            <div className="flex gap-1.5 overflow-x-auto scrollbar-hide py-1">
+              {MUSIC_SUB_TABS.map((tab) => {
+                const isActive = activeSubTab === tab.value;
+                return (
+                  <button
+                    key={tab.value}
+                    onClick={() => setActiveSubTab(tab.value)}
+                    className={cn(
+                      'flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all text-xs whitespace-nowrap',
+                      isActive
+                        ? 'text-white bg-white/[0.08] border border-white/20'
+                        : 'text-zinc-500 hover:text-zinc-300 border border-transparent'
+                    )}
+                  >
+                    <tab.icon className="w-3.5 h-3.5" />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Content - Scrollable */}
       <div className="flex-1 overflow-y-auto px-2 sm:px-3">
