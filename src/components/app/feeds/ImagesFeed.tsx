@@ -108,7 +108,7 @@ function ContentTypeFilterSection({
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentType')}</span>
       <div className="relative">
-        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1">
           {CONTENT_TYPE_FILTERS.map((filter) => (
             <button
               key={filter.value}
@@ -487,7 +487,7 @@ export function ImagesFeed({
               <div className="flex flex-col gap-2">
                 <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentType')}</span>
                 <div className="relative">
-                  <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+                  <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1">
                     {CONTENT_TYPE_FILTERS.map((filter) => (
                       <button
                         key={filter.value}
