@@ -7,7 +7,7 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lightbulb, Search, ChevronUp, ChevronDown, Plus, X, Loader2, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Lightbulb, Search, ChevronUp, ChevronDown, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -29,6 +29,7 @@ import {
   type FeatureStatus,
 } from '@/hooks/use-feature-requests';
 import { z } from 'zod';
+import { useFeatureRequestComments, useSubmitComment, useDeleteComment } from '@/hooks/use-feature-request-comments';
 
 const featureSchema = z.object({
   title: z.string().trim().min(1, 'Title is required').max(100, 'Title must be under 100 characters'),
@@ -141,6 +142,12 @@ function FeatureCard({
   voteDisabled: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
+
+  const { data: comments, isLoading: commentsLoading } = useFeatureRequestComments(expanded ? feature.id : null);
+  const submitComment = useSubmitComment();
+  const deleteComment = useDeleteComment();
 
   const avatarUrl = feature.author_avatar && feature.author_wallet_address
     ? buildAvatarUrl(feature.author_wallet_address, feature.author_avatar)
@@ -150,54 +157,156 @@ function FeatureCard({
     ? `@${feature.author_username}`
     : `${feature.author_wallet_address.slice(0, 6)}...${feature.author_wallet_address.slice(-4)}`;
 
+  const handleSubmitComment = (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated) { openLoginModal(); return; }
+    if (!commentText.trim()) return;
+    submitComment.mutate(
+      { featureRequestId: feature.id, content: commentText },
+      { onSuccess: () => setCommentText('') }
+    );
+  };
+
   return (
-    <div
-      className="bg-zinc-900 rounded-2xl p-4 flex gap-3 cursor-pointer hover:bg-zinc-800/70 transition-colors"
-      onClick={() => setExpanded(!expanded)}
-    >
-      <VoteButtons
-        featureId={feature.id}
-        voteCount={feature.vote_count}
-        currentVote={currentVote}
-        onVote={onVote}
-        disabled={voteDisabled}
-      />
+    <div className="bg-zinc-900 rounded-2xl p-4 flex flex-col gap-3">
+      <div className="flex gap-3 cursor-pointer" onClick={() => setExpanded(!expanded)}>
+        <VoteButtons
+          featureId={feature.id}
+          voteCount={feature.vote_count}
+          currentVote={currentVote}
+          onVote={onVote}
+          disabled={voteDisabled}
+        />
 
-      <div className="flex-1 min-w-0">
-        {/* Title and status */}
-        <div className="flex items-start gap-2 mb-1.5">
-          <h3 className="text-white font-semibold text-sm leading-tight flex-1 min-w-0">
-            {feature.title}
-          </h3>
-          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 ${STATUS_COLORS[feature.status]}`}>
-            {STATUS_LABELS[feature.status]}
-          </span>
-        </div>
-
-        {/* Description */}
-        <p className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`}>
-          {feature.description}
-        </p>
-
-        {/* Footer: author + category + time */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex items-center gap-1.5">
-            <UserAvatar
-              name={feature.author_username || feature.author_wallet_address.slice(0, 6)}
-              handle={feature.author_username || feature.author_wallet_address}
-              avatarUrl={avatarUrl}
-              size="sm"
-            />
-            <span className="text-zinc-500 text-[11px]">{displayName}</span>
+        <div className="flex-1 min-w-0">
+          {/* Title and status */}
+          <div className="flex items-start gap-2 mb-1.5">
+            <h3 className="text-white font-semibold text-sm leading-tight flex-1 min-w-0">
+              {feature.title}
+            </h3>
+            <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 ${STATUS_COLORS[feature.status]}`}>
+              {STATUS_LABELS[feature.status]}
+            </span>
           </div>
-          <span className="text-zinc-700 text-[11px]">·</span>
-          <span className="text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded-lg text-[10px] font-medium">
-            {CATEGORY_LABELS[feature.category]}
-          </span>
-          <span className="text-zinc-700 text-[11px]">·</span>
-          <span className="text-zinc-500 text-[11px]">{formatTimeAgo(feature.created_at)}</span>
+
+          {/* Description */}
+          <p className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`}>
+            {feature.description}
+          </p>
+
+          {/* Footer: author + category + time + comments */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-1.5">
+              <UserAvatar
+                name={feature.author_username || feature.author_wallet_address.slice(0, 6)}
+                handle={feature.author_username || feature.author_wallet_address}
+                avatarUrl={avatarUrl}
+                size="sm"
+              />
+              <span className="text-zinc-500 text-[11px]">{displayName}</span>
+            </div>
+            <span className="text-zinc-700 text-[11px]">·</span>
+            <span className="text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded-lg text-[10px] font-medium">
+              {CATEGORY_LABELS[feature.category]}
+            </span>
+            <span className="text-zinc-700 text-[11px]">·</span>
+            <span className="text-zinc-500 text-[11px]">{formatTimeAgo(feature.created_at)}</span>
+            <span className="text-zinc-700 text-[11px]">·</span>
+            <span className="flex items-center gap-1 text-zinc-500 text-[11px]">
+              <MessageCircle className="w-3 h-3" />
+              {feature.comment_count}
+            </span>
+          </div>
         </div>
       </div>
+
+      {/* Comments Section */}
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="border-t border-white/5 pt-3 mt-1">
+              {/* Comments list */}
+              {commentsLoading ? (
+                <div className="flex justify-center py-3">
+                  <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
+                </div>
+              ) : comments && comments.length > 0 ? (
+                <div className="space-y-2.5 mb-3 max-h-60 overflow-y-auto scrollbar-invisible">
+                  {comments.map((comment) => {
+                    const commentAvatar = comment.avatar && comment.wallet_address
+                      ? buildAvatarUrl(comment.wallet_address, comment.avatar)
+                      : null;
+                    const commentName = comment.username
+                      ? `@${comment.username}`
+                      : `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;
+                    const isOwn = walletAddress?.toLowerCase() === comment.wallet_address.toLowerCase();
+
+                    return (
+                      <div key={comment.id} className="flex gap-2 group">
+                        <UserAvatar
+                          name={comment.username || comment.wallet_address.slice(0, 6)}
+                          handle={comment.username || comment.wallet_address}
+                          avatarUrl={commentAvatar}
+                          size="sm"
+                          className="w-6 h-6 shrink-0 mt-0.5"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-zinc-400 text-[11px] font-medium">{commentName}</span>
+                            <span className="text-zinc-600 text-[10px]">{formatTimeAgo(comment.created_at)}</span>
+                            {isOwn && (
+                              <button
+                                type="button"
+                                onClick={() => deleteComment.mutate({ commentId: comment.id, featureRequestId: feature.id })}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity ml-auto"
+                              >
+                                <Trash2 className="w-3 h-3 text-zinc-600 hover:text-red-400" />
+                              </button>
+                            )}
+                          </div>
+                          <p className="text-zinc-300 text-xs leading-relaxed">{comment.content}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-zinc-600 text-xs text-center py-2 mb-2">No comments yet</p>
+              )}
+
+              {/* Comment input */}
+              <form onSubmit={handleSubmitComment} className="flex gap-2">
+                <Input
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  placeholder="Add a comment..."
+                  maxLength={500}
+                  className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs h-8"
+                />
+                <button
+                  type="submit"
+                  disabled={!commentText.trim() || submitComment.isPending}
+                  className="w-8 h-8 flex items-center justify-center rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white disabled:opacity-30 transition-opacity"
+                >
+                  {submitComment.isPending ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Send className="w-3.5 h-3.5" />
+                  )}
+                </button>
+              </form>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
