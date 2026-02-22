@@ -324,6 +324,156 @@ const EXTRA_WALLETS: Record<string, { wallet: string; displayName?: string; avat
   jimminycrockett: { wallet: "0x388bee96cdb67bed580adf54ee8dc5b0adfe8d79", displayName: "jimminycrockett" },
 };
 
+// ── Snapshot-based delta helper (used by light mode) ────────────────
+
+interface SnapshotDeltaResult {
+  sort: string;
+  period: string;
+  success: boolean;
+  error?: string;
+}
+
+/** Compute delta for a given sort/period using only DB snapshots — no RPC/API calls */
+async function computeSnapshotDelta(
+  supabase: ReturnType<typeof createClient>,
+  allEntries: EnrichedEntry[],
+  sortMode: string,
+  period: string,
+): Promise<SnapshotDeltaResult> {
+  try {
+    const daysAgo = PERIOD_DAYS[period];
+    const pastDate = new Date();
+    pastDate.setDate(pastDate.getDate() - daysAgo);
+    const pastDateStr = pastDate.toISOString().split("T")[0];
+
+    // Find closest snapshot date on or before target
+    const { data: closestSnap } = await supabase
+      .from("leaderboard_snapshots")
+      .select("snapshot_date")
+      .lte("snapshot_date", pastDateStr)
+      .order("snapshot_date", { ascending: false })
+      .limit(1);
+
+    const closestDate = closestSnap?.[0]?.snapshot_date;
+    const pastMap = new Map<string, number>();
+
+    if (closestDate) {
+      // Determine which field to read from snapshots
+      let snapshotField: string;
+      if (sortMode === "holdings") snapshotField = "balance";
+      else if (sortMode === "sentTips") snapshotField = "sent_tips";
+      else if (sortMode === "receivedTips") snapshotField = "received_tips";
+      else snapshotField = sortMode; // followers, likes, subscribers
+
+      const { data: snapshots } = await supabase
+        .from("leaderboard_snapshots")
+        .select(`account, ${snapshotField}`)
+        .eq("snapshot_date", closestDate);
+
+      if (snapshots) {
+        for (const snap of snapshots) {
+          pastMap.set(snap.account.toLowerCase(), (snap as any)[snapshotField] ?? 0);
+        }
+      }
+      console.log(`[light] ${sortMode}/${period}: snapshot from ${closestDate}, ${pastMap.size} entries`);
+    } else {
+      console.log(`[light] ${sortMode}/${period}: no snapshot found for ${pastDateStr}`);
+    }
+
+    // Determine the current value field on entries
+    const getEntryValue = (entry: EnrichedEntry): number => {
+      if (sortMode === "holdings") return entry.total;
+      if (sortMode === "sentTips") return entry.sentTips;
+      if (sortMode === "receivedTips") return entry.receivedTips;
+      return (entry as any)[sortMode] ?? 0;
+    };
+
+    // For sentTips/receivedTips, we need current snapshot values instead of the all-time cache values
+    let currentMap: Map<string, number> | null = null;
+    if (sortMode === "sentTips" || sortMode === "receivedTips") {
+      const snapshotField = sortMode === "sentTips" ? "sent_tips" : "received_tips";
+      const todayStr = new Date().toISOString().split("T")[0];
+      const { data: currentSnaps } = await supabase
+        .from("leaderboard_snapshots")
+        .select(`account, ${snapshotField}`)
+        .eq("snapshot_date", todayStr);
+
+      if (currentSnaps && currentSnaps.length > 0) {
+        currentMap = new Map<string, number>();
+        for (const snap of currentSnaps) {
+          currentMap.set(snap.account.toLowerCase(), (snap as any)[snapshotField] ?? 0);
+        }
+      }
+    }
+
+    // For short periods (day/week), only count real deltas for social metrics
+    const requireRealPast = (period === "day" || period === "week") &&
+      ["followers", "likes", "subscribers"].includes(sortMode);
+
+    // Filter entries for holdings period exclusion
+    const entries = sortMode === "holdings"
+      ? allEntries.filter(e => !HOLDINGS_PERIOD_EXCLUDED.has(e.account.toLowerCase()))
+      : allEntries;
+
+    const withDeltas: EnrichedEntry[] = entries
+      .filter((e) => {
+        if (sortMode === "followers" || sortMode === "likes" || sortMode === "subscribers") {
+          return (e[sortMode as keyof EnrichedEntry] as number ?? 0) > 0;
+        }
+        return true;
+      })
+      .map((entry) => {
+        const addr = entry.account.toLowerCase();
+        let currentVal: number;
+        if (currentMap) {
+          currentVal = currentMap.get(addr) || 0;
+        } else {
+          currentVal = getEntryValue(entry);
+        }
+        const pastVal = pastMap.get(addr);
+
+        let delta: number;
+        if (requireRealPast) {
+          const hasTruePastData = pastVal !== undefined && pastVal > 0;
+          delta = hasTruePastData ? currentVal - pastVal : 0;
+        } else {
+          delta = pastVal !== undefined ? currentVal - pastVal : 0;
+        }
+        return { ...entry, delta };
+      });
+
+    const sorted = withDeltas
+      .filter((e) => e.delta !== undefined && e.delta > 0)
+      .sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0));
+
+    const periodData = {
+      result: { byWalletBalance: sorted },
+      hasHistoricalData: pastMap.size > 0,
+    };
+
+    const { error } = await supabase.from("leaderboard_cache").upsert(
+      {
+        sort_mode: sortMode,
+        period,
+        data: periodData,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "sort_mode,period" }
+    );
+
+    if (error) {
+      console.error(`Error caching ${sortMode}/${period}:`, error);
+      return { sort: sortMode, period, success: false, error: error.message };
+    }
+    console.log(`[light] ${sortMode}/${period}: ${sorted.length} entries with positive delta`);
+    return { sort: sortMode, period, success: true };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Unknown error";
+    console.error(`Error computing ${sortMode}/${period}:`, msg);
+    return { sort: sortMode, period, success: false, error: msg };
+  }
+}
+
 // ── Main handler ────────────────────────────────────────────────────
 
 Deno.serve(async (req) => {
@@ -332,26 +482,18 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const alchemyKey = Deno.env.get("ALCHEMY_API_KEY");
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-    if (!alchemyKey) {
-      console.error("ALCHEMY_API_KEY not configured");
-      return new Response(
-        JSON.stringify({ success: false, error: "ALCHEMY_API_KEY missing" }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+    // Parse mode from request body (default: "full" for backwards compatibility)
+    let mode = "full";
+    try {
+      const body = await req.json();
+      if (body?.mode === "light") mode = "light";
+    } catch {
+      // No body or invalid JSON — default to full
     }
 
-    const baseRpc = `https://base-mainnet.g.alchemy.com/v2/${alchemyKey}`;
-    const bnbRpc = `https://bnb-mainnet.g.alchemy.com/v2/${alchemyKey}`;
-
-    console.log("Starting leaderboard cache refresh...");
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const results: {
       sort: string;
@@ -359,6 +501,76 @@ Deno.serve(async (req) => {
       success: boolean;
       error?: string;
     }[] = [];
+
+    // ================================================================
+    // LIGHT MODE: Only recompute day/week caches using existing snapshots
+    // No RPC calls, no API calls. Pure DB reads + cache writes.
+    // ================================================================
+    if (mode === "light") {
+      console.log("Starting LIGHT leaderboard cache refresh (day/week only, snapshot-based)...");
+
+      // Load the existing "all" holdings cache (has profile data + current balances)
+      const { data: holdingsCache } = await supabase
+        .from("leaderboard_cache")
+        .select("data")
+        .eq("sort_mode", "holdings")
+        .eq("period", "all")
+        .single();
+
+      const allEntries: EnrichedEntry[] = (holdingsCache?.data as any)?.result?.byWalletBalance ?? [];
+
+      if (allEntries.length === 0) {
+        console.warn("[light] No holdings/all cache found — cannot compute deltas. Run a full refresh first.");
+        return new Response(
+          JSON.stringify({ success: false, mode: "light", error: "No holdings/all cache available" }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
+        );
+      }
+
+      console.log(`[light] Using ${allEntries.length} entries from holdings/all cache`);
+
+      // Recompute day + week for all sort modes
+      const LIGHT_PERIODS = ["day", "week"] as const;
+      const ALL_SORT_MODES = ["holdings", "followers", "likes", "subscribers", "sentTips", "receivedTips"] as const;
+
+      for (const sortMode of ALL_SORT_MODES) {
+        for (const period of LIGHT_PERIODS) {
+          const result = await computeSnapshotDelta(supabase, allEntries, sortMode, period);
+          results.push(result);
+        }
+      }
+
+      const successCount = results.filter((r) => r.success).length;
+      console.log(`LIGHT refresh complete: ${successCount}/${results.length} successful`);
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          mode: "light",
+          message: `Light refresh: cached ${successCount}/${results.length} day/week combinations`,
+          results,
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
+      );
+    }
+
+    // ================================================================
+    // FULL MODE: Everything — on-chain, API, snapshots, all periods
+    // ================================================================
+    const alchemyKey = Deno.env.get("ALCHEMY_API_KEY");
+
+    if (!alchemyKey) {
+      console.error("ALCHEMY_API_KEY not configured");
+      return new Response(
+        JSON.stringify({ success: false, error: "ALCHEMY_API_KEY missing" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const baseRpc = `https://base-mainnet.g.alchemy.com/v2/${alchemyKey}`;
+    const bnbRpc = `https://bnb-mainnet.g.alchemy.com/v2/${alchemyKey}`;
+
+    console.log("Starting FULL leaderboard cache refresh...");
 
     // ────────────────────────────────────────────────────────────────
     // 1. ON-CHAIN HOLDINGS LEADERBOARD
@@ -392,7 +604,6 @@ Deno.serve(async (req) => {
         );
 
         batch.forEach((entry, idx) => {
-          // If on-chain balance is 0, fall back to the DeHub API's total (covers tokens on other chains/contracts)
           const onChainBalance = balances[idx];
           const apiTotal = (entry.total as number) ?? 0;
           const effectiveBalance = onChainBalance > 0 ? onChainBalance : apiTotal;
@@ -441,18 +652,13 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Note: Profile discovery removed — users can self-add via the manual refresh button
-
       enriched.sort((a, b) => b.total - a.total);
-      const nonZero = enriched; // All users for all-time
-      // Filtered list excluding founder for period-based leaderboards
+      const nonZero = enriched;
       const nonZeroPeriod = enriched.filter(e => !HOLDINGS_PERIOD_EXCLUDED.has(e.account.toLowerCase()));
 
-      console.log(
-        `On-chain holdings: ${nonZero.length} total holders`
-      );
+      console.log(`On-chain holdings: ${nonZero.length} total holders`);
 
-      // Get current block numbers (needed for snapshots + historical queries)
+      // Get current block numbers (needed for snapshots)
       const [currentBaseBlock, currentBnbBlock] = await Promise.all([
         getCurrentBlockNumber(baseRpc),
         getCurrentBlockNumber(bnbRpc),
@@ -460,15 +666,13 @@ Deno.serve(async (req) => {
       console.log(`Current blocks - Base: ${currentBaseBlock}, BNB: ${currentBnbBlock}`);
 
       // ── Snapshot: upsert today's balances + tip data (once per day) ──
-      const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+      const today = new Date().toISOString().split("T")[0];
 
-      // Check if today's snapshot already exists
       const { count: snapshotCount } = await supabase
         .from("leaderboard_snapshots")
         .select("id", { count: "exact", head: true })
         .eq("snapshot_date", today);
 
-      // Query today's tip/bounty activity (last 24h) for the snapshot
       let todaySpent = new Map<string, number>();
       let todayEarned = new Map<string, number>();
       if (!snapshotCount || snapshotCount === 0) {
@@ -496,7 +700,6 @@ Deno.serve(async (req) => {
           snapshot_date: today,
         }));
 
-        // Upsert in batches of 100
         for (let i = 0; i < snapshotRows.length; i += 100) {
           const batch = snapshotRows.slice(i, i + 100);
           const { error: snapErr } = await supabase
@@ -508,7 +711,6 @@ Deno.serve(async (req) => {
         }
         console.log(`Snapshot saved: ${snapshotRows.length} entries`);
 
-        // Cleanup old snapshots
         try {
           await supabase.rpc("cleanup_old_leaderboard_snapshots");
           console.log("Old snapshots cleaned up");
@@ -519,7 +721,7 @@ Deno.serve(async (req) => {
         console.log(`Snapshot for ${today} already exists, skipping`);
       }
 
-      // ── Cache "all" period (sorted by total balance, no change) ───
+      // ── Cache "all" period ───
       const allTimeData = {
         result: { byWalletBalance: nonZero },
       };
@@ -541,82 +743,10 @@ Deno.serve(async (req) => {
         results.push({ sort: "holdings", period: "all", success: true });
       }
 
-      // ── Cache time-based periods (sorted by delta, using SNAPSHOT-based deltas) ──
-      // This avoids expensive on-chain historical queries that caused statement timeouts.
-
+      // ── Cache time-based periods using snapshot deltas ──
       for (const period of ["day", "week", "month", "year"] as const) {
-        try {
-          const daysAgo = PERIOD_DAYS[period];
-          const pastDate = new Date();
-          pastDate.setDate(pastDate.getDate() - daysAgo);
-          const pastDateStr = pastDate.toISOString().split("T")[0];
-
-          // Find closest snapshot date on or before target
-          const { data: closestSnap } = await supabase
-            .from("leaderboard_snapshots")
-            .select("snapshot_date")
-            .lte("snapshot_date", pastDateStr)
-            .order("snapshot_date", { ascending: false })
-            .limit(1);
-
-          const closestDate = closestSnap?.[0]?.snapshot_date;
-          const pastBalanceMap = new Map<string, number>();
-
-          if (closestDate) {
-            const { data: snapshots } = await supabase
-              .from("leaderboard_snapshots")
-              .select("account, balance")
-              .eq("snapshot_date", closestDate);
-
-            if (snapshots) {
-              for (const snap of snapshots) {
-                pastBalanceMap.set(snap.account.toLowerCase(), snap.balance ?? 0);
-              }
-            }
-            console.log(`holdings/${period}: using snapshot from ${closestDate} (target ${pastDateStr}), ${pastBalanceMap.size} entries`);
-          } else {
-            console.log(`holdings/${period}: no snapshot found for ${pastDateStr}, skipping`);
-          }
-
-          // Compute deltas
-          const withDeltas: EnrichedEntry[] = nonZeroPeriod.map((entry) => {
-            const pastBalance = pastBalanceMap.get(entry.account.toLowerCase()) ?? 0;
-            const delta = entry.total - pastBalance;
-            return { ...entry, delta };
-          });
-
-          // Sort by delta descending, filter to positive deltas only
-          const sorted = withDeltas
-            .filter((e) => e.delta !== undefined && e.delta > 0)
-            .sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0));
-
-          const periodData = {
-            result: { byWalletBalance: sorted },
-            hasHistoricalData: pastBalanceMap.size > 0,
-          };
-
-          const { error } = await supabase.from("leaderboard_cache").upsert(
-            {
-              sort_mode: "holdings",
-              period,
-              data: periodData,
-              updated_at: new Date().toISOString(),
-            },
-            { onConflict: "sort_mode,period" }
-          );
-
-          if (error) {
-            console.error(`Error caching holdings/${period}:`, error);
-            results.push({ sort: "holdings", period, success: false, error: error.message });
-          } else {
-            console.log(`holdings/${period}: ${sorted.length} entries with positive delta`);
-            results.push({ sort: "holdings", period, success: true });
-          }
-        } catch (periodErr) {
-          const msg = periodErr instanceof Error ? periodErr.message : "Unknown error";
-          console.error(`Error computing holdings/${period}:`, msg);
-          results.push({ sort: "holdings", period, success: false, error: msg });
-        }
+        const result = await computeSnapshotDelta(supabase, nonZeroPeriod, "holdings", period);
+        results.push(result);
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Unknown error";
@@ -631,7 +761,6 @@ Deno.serve(async (req) => {
     // ────────────────────────────────────────────────────────────────
     const SOCIAL_METRICS = ["followers", "likes", "subscribers"] as const;
 
-    // We need the "all" holdings data which has social metrics embedded
     try {
       const { data: holdingsCache } = await supabase
         .from("leaderboard_cache")
@@ -669,96 +798,10 @@ Deno.serve(async (req) => {
           results.push({ sort: metric, period: "all", success: true });
         }
 
-        // Time-based periods: compute deltas
+        // Time-based periods: use shared delta helper
         for (const period of ["day", "week", "month", "year"] as const) {
-          try {
-            const daysAgo = PERIOD_DAYS[period];
-            const pastDate = new Date();
-            pastDate.setDate(pastDate.getDate() - daysAgo);
-            const pastDateStr = pastDate.toISOString().split("T")[0];
-
-            // Find closest snapshot date on or before target
-            const { data: closestSnap } = await supabase
-              .from("leaderboard_snapshots")
-              .select("snapshot_date")
-              .lte("snapshot_date", pastDateStr)
-              .order("snapshot_date", { ascending: false })
-              .limit(1);
-
-            const closestDate = closestSnap?.[0]?.snapshot_date;
-            const pastMap = new Map<string, number>();
-
-            if (closestDate) {
-              const { data: snapshots, error: snapFetchErr } = await supabase
-                .from("leaderboard_snapshots")
-                .select(`account, ${metric}`)
-                .eq("snapshot_date", closestDate);
-
-              if (snapFetchErr) {
-                console.error(`Error fetching ${metric} snapshots for ${period}:`, snapFetchErr);
-              }
-
-              if (snapshots) {
-                for (const snap of snapshots) {
-                  pastMap.set(snap.account.toLowerCase(), (snap as any)[metric] ?? 0);
-                }
-              }
-              console.log(`${metric}/${period}: using snapshot from ${closestDate} (target was ${pastDateStr}), ${pastMap.size} entries`);
-            }
-
-            // For short periods (day/week), only count real deltas where
-            // we have genuine past data (> 0). Old snapshots stored 0 for
-            // social fields before tracking was added.
-            const requireRealPast = period === "day" || period === "week";
-
-            const withDeltas: EnrichedEntry[] = allEntries
-              .filter((e) => (e[metric] ?? 0) > 0)
-              .map((entry) => {
-                const pastVal = pastMap.get(entry.account.toLowerCase());
-                const currentVal = entry[metric] ?? 0;
-                if (requireRealPast) {
-                  // Only compute delta if past value exists and is > 0 (real tracked data)
-                  const hasTruePastData = pastVal !== undefined && pastVal > 0;
-                  const delta = hasTruePastData ? currentVal - pastVal : 0;
-                  return { ...entry, delta };
-                } else {
-                  // For month/year, use total as delta if past is unknown/zero
-                  const delta = pastVal !== undefined ? currentVal - pastVal : 0;
-                  return { ...entry, delta };
-                }
-              });
-
-            const sorted = withDeltas
-              .filter((e) => e.delta !== undefined && e.delta > 0)
-              .sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0));
-
-            const periodData = {
-              result: { byWalletBalance: sorted },
-              hasHistoricalData: pastMap.size > 0,
-            };
-
-            const { error } = await supabase.from("leaderboard_cache").upsert(
-              {
-                sort_mode: metric,
-                period,
-                data: periodData,
-                updated_at: new Date().toISOString(),
-              },
-              { onConflict: "sort_mode,period" }
-            );
-
-            if (error) {
-              console.error(`Error caching ${metric}/${period}:`, error);
-              results.push({ sort: metric, period, success: false, error: error.message });
-            } else {
-              console.log(`${metric}/${period}: ${sorted.length} entries with positive delta`);
-              results.push({ sort: metric, period, success: true });
-            }
-          } catch (periodErr) {
-            const msg = periodErr instanceof Error ? periodErr.message : "Unknown error";
-            console.error(`Error computing ${metric}/${period}:`, msg);
-            results.push({ sort: metric, period, success: false, error: msg });
-          }
+          const result = await computeSnapshotDelta(supabase, allEntries, metric, period);
+          results.push(result);
         }
       }
     } catch (socialErr) {
@@ -772,10 +815,10 @@ Deno.serve(async (req) => {
     }
 
     // ────────────────────────────────────────────────────────────────
-    // 3. TIP/BOUNTY CATEGORIES (sentTips, receivedTips) - on-chain + snapshot deltas
+    // 3. TIP/BOUNTY CATEGORIES (sentTips, receivedTips) - API + snapshot deltas
     // ────────────────────────────────────────────────────────────────
     try {
-      // "all" period: use DeHub API as before (cumulative totals)
+      // "all" period: use DeHub API
       for (const sort of API_SORT_MODES) {
         try {
           console.log(`Fetching ${sort}/all from API...`);
@@ -797,8 +840,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Time-based periods: use snapshot deltas for sent_tips/received_tips
-      // Get the holdings/all cache to have the full user list with profile data
+      // Time-based periods: use snapshot deltas
       const { data: holdingsCacheForTips } = await supabase
         .from("leaderboard_cache")
         .select("data")
@@ -809,89 +851,9 @@ Deno.serve(async (req) => {
       const allEntriesForTips: EnrichedEntry[] = (holdingsCacheForTips?.data as any)?.result?.byWalletBalance ?? [];
 
       for (const tipSort of ["sentTips", "receivedTips"] as const) {
-        const snapshotField = tipSort === "sentTips" ? "sent_tips" : "received_tips";
-
         for (const period of ["day", "week", "month", "year"] as const) {
-          try {
-            const daysAgo = PERIOD_DAYS[period];
-            const pastDate = new Date();
-            pastDate.setDate(pastDate.getDate() - daysAgo);
-            const pastDateStr = pastDate.toISOString().split("T")[0];
-
-            // Find closest snapshot
-            const { data: closestSnap } = await supabase
-              .from("leaderboard_snapshots")
-              .select("snapshot_date")
-              .lte("snapshot_date", pastDateStr)
-              .order("snapshot_date", { ascending: false })
-              .limit(1);
-
-            const closestDate = closestSnap?.[0]?.snapshot_date;
-            const pastMap = new Map<string, number>();
-
-            if (closestDate) {
-              const { data: snapshots } = await supabase
-                .from("leaderboard_snapshots")
-                .select(`account, ${snapshotField}`)
-                .eq("snapshot_date", closestDate);
-
-              if (snapshots) {
-                for (const snap of snapshots) {
-                  pastMap.set(snap.account.toLowerCase(), (snap as any)[snapshotField] ?? 0);
-                }
-              }
-              console.log(`${tipSort}/${period}: using snapshot from ${closestDate}, ${pastMap.size} entries`);
-            }
-
-            // Get current snapshot values
-            const todayStr = new Date().toISOString().split("T")[0];
-            const { data: currentSnaps } = await supabase
-              .from("leaderboard_snapshots")
-              .select(`account, ${snapshotField}`)
-              .eq("snapshot_date", todayStr);
-
-            const currentMap = new Map<string, number>();
-            if (currentSnaps) {
-              for (const snap of currentSnaps) {
-                currentMap.set(snap.account.toLowerCase(), (snap as any)[snapshotField] ?? 0);
-              }
-            }
-
-            // Compute deltas between current and past snapshots
-            const withDeltas: EnrichedEntry[] = allEntriesForTips.map((entry) => {
-              const addr = entry.account.toLowerCase();
-              const currentVal = currentMap.get(addr) || 0;
-              const pastVal = pastMap.get(addr) || 0;
-              const delta = currentVal - pastVal;
-              return { ...entry, delta };
-            });
-
-            const sorted = withDeltas
-              .filter((e) => e.delta !== undefined && e.delta > 0)
-              .sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0));
-
-            const periodData = {
-              result: { byWalletBalance: sorted },
-              hasHistoricalData: pastMap.size > 0,
-            };
-
-            const { error } = await supabase.from("leaderboard_cache").upsert(
-              { sort_mode: tipSort, period, data: periodData, updated_at: new Date().toISOString() },
-              { onConflict: "sort_mode,period" }
-            );
-
-            if (error) {
-              console.error(`Error caching ${tipSort}/${period}:`, error);
-              results.push({ sort: tipSort, period, success: false, error: error.message });
-            } else {
-              console.log(`${tipSort}/${period}: ${sorted.length} entries with positive delta`);
-              results.push({ sort: tipSort, period, success: true });
-            }
-          } catch (periodErr) {
-            const msg = periodErr instanceof Error ? periodErr.message : "Unknown error";
-            console.error(`Error computing ${tipSort}/${period}:`, msg);
-            results.push({ sort: tipSort, period, success: false, error: msg });
-          }
+          const result = await computeSnapshotDelta(supabase, allEntriesForTips, tipSort, period);
+          results.push(result);
         }
       }
     } catch (tipErr) {
@@ -906,13 +868,14 @@ Deno.serve(async (req) => {
 
     const successCount = results.filter((r) => r.success).length;
     console.log(
-      `Leaderboard cache refresh complete: ${successCount}/${results.length} successful`
+      `FULL leaderboard cache refresh complete: ${successCount}/${results.length} successful`
     );
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: `Cached ${successCount}/${results.length} leaderboard combinations`,
+        mode: "full",
+        message: `Full refresh: cached ${successCount}/${results.length} leaderboard combinations`,
         results,
       }),
       {
