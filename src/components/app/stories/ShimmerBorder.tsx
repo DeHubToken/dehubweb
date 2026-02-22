@@ -1,10 +1,9 @@
 /**
  * ShimmerBorder
  * =============
- * Animated "light on glass" border for unwatched story thumbnails.
- * A soft white conic highlight sweeps around the rounded-xl border,
- * creating the illusion of light catching a glass surface.
- * Watched stories show a static dim border instead.
+ * Border wrapper for story thumbnails.
+ * Unwatched stories have a bright white border,
+ * watched stories have a dim, greyed-out border.
  */
 
 import { type ReactNode } from 'react';
@@ -16,10 +15,18 @@ interface ShimmerBorderProps {
 }
 
 export function ShimmerBorder({ active, children, className = '' }: ShimmerBorderProps) {
-  // Both states use the same liquid glass gradient border as the Create button
   return (
-    <div className={`rounded-xl bg-gradient-to-tl from-white/40 via-white/20 to-white/5 p-[2px] ${active ? 'story-shimmer-border' : ''} ${className}`}>
-      {children}
+    <div
+      className={`rounded-xl p-[2px] ${className}`}
+      style={{
+        background: active
+          ? 'linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,255,255,0.3))'
+          : 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))',
+      }}
+    >
+      <div style={{ opacity: active ? 1 : 0.55 }}>
+        {children}
+      </div>
     </div>
   );
 }
