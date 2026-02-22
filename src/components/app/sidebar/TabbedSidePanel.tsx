@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, memo } from 'react';
 import { SquareUserRound, Trophy, MessagesSquare } from 'lucide-react';
 import { WhoToFollow } from '../WhoToFollow';
 import { SidebarLeaderboard, type SidebarLeaderboardHandle } from './SidebarLeaderboard';
@@ -15,7 +15,7 @@ const tabs: { id: TabType; icon: typeof SquareUserRound }[] = [
 
 const TAB_INDEX: Record<TabType, number> = { leaderboard: 0, follow: 1, chat: 2 };
 
-export function TabbedSidePanel() {
+export const TabbedSidePanel = memo(function TabbedSidePanel() {
   const [activeTab, setActiveTab] = useState<TabType>('leaderboard');
   const leaderboardRef = useRef<SidebarLeaderboardHandle>(null);
 
@@ -71,4 +71,4 @@ export function TabbedSidePanel() {
       </div>
     </div>
   );
-}
+});
