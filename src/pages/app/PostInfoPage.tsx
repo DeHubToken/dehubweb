@@ -23,6 +23,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -64,8 +65,109 @@ interface FractionMarketplaceProps {
   truncateAddr: (address: string) => string;
 }
 
+function ListFractionsDrawer({ 
+  availableBalance, 
+  open, 
+  onOpenChange 
+}: { 
+  availableBalance: number; 
+  open: boolean; 
+  onOpenChange: (v: boolean) => void;
+}) {
+  const [quantity, setQuantity] = useState('');
+  const [price, setPrice] = useState('');
+
+  const qty = parseInt(quantity) || 0;
+  const prc = parseFloat(price) || 0;
+  const total = qty * prc;
+  const isValid = qty > 0 && qty <= availableBalance && prc > 0;
+
+  const handleSubmit = () => {
+    if (!isValid) return;
+    toast.info(`Listing ${qty} fraction${qty > 1 ? 's' : ''} at ${prc} DHB each — on-chain listing coming soon`);
+    onOpenChange(false);
+    setQuantity('');
+    setPrice('');
+  };
+
+  return (
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent glass className="px-4 pb-8">
+        <DrawerHeader className="px-0">
+          <DrawerTitle className="text-white text-lg">List Your Fractions</DrawerTitle>
+        </DrawerHeader>
+        <div className="space-y-4">
+          {/* Quantity */}
+          <div>
+            <label className="text-sm text-white/60 mb-1.5 block">
+              Quantity <span className="text-white/40">({availableBalance} available)</span>
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                min={1}
+                max={availableBalance}
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                placeholder="0"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 outline-none focus:border-white/30 transition-colors [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              />
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-white/60 hover:text-white shrink-0"
+                onClick={() => setQuantity(String(availableBalance))}
+              >
+                Max
+              </Button>
+            </div>
+          </div>
+
+          {/* Price per fraction */}
+          <div>
+            <label className="text-sm text-white/60 mb-1.5 block">Price per Fraction (DHB)</label>
+            <div className="relative">
+              <input
+                type="number"
+                min={0}
+                step="0.01"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="0.00"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-16 text-white placeholder:text-white/30 outline-none focus:border-white/30 transition-colors [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 text-sm">DHB</span>
+            </div>
+          </div>
+
+          {/* Summary */}
+          {qty > 0 && prc > 0 && (
+            <div className="bg-white/5 rounded-xl p-3 border border-white/10">
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Total listing value</span>
+                <span className="text-white font-medium">{total.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB</span>
+              </div>
+            </div>
+          )}
+
+          {/* Submit */}
+          <Button
+            onClick={handleSubmit}
+            disabled={!isValid}
+            className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20 disabled:opacity-40"
+          >
+            <Tag className="w-4 h-4 mr-2" />
+            List {qty > 0 ? `${qty} Fraction${qty > 1 ? 's' : ''}` : 'Fractions'}
+          </Button>
+        </div>
+      </DrawerContent>
+    </Drawer>
+  );
+}
+
 function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketplaceProps) {
   const { user, walletAddress } = useAuth();
+  const [listDrawerOpen, setListDrawerOpen] = useState(false);
   
   // Check if current user owns any fractions
   const userHolding = walletAddress 
@@ -73,16 +175,19 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
     : null;
   const userOwnsFractions = !!userHolding && userHolding.balance > 0;
 
-  const handleListFraction = () => {
-    toast.info('List fraction feature coming soon');
-  };
-
   const handleMakeOffer = () => {
     toast.info('Make offer feature coming soon');
   };
 
   return (
     <section className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+      {userOwnsFractions && (
+        <ListFractionsDrawer 
+          availableBalance={userHolding!.balance} 
+          open={listDrawerOpen} 
+          onOpenChange={setListDrawerOpen} 
+        />
+      )}
       <Tabs defaultValue="listings" className="w-full">
         <TabsList className="w-full bg-transparent border-b border-white/10 rounded-none h-auto p-0">
           <TabsTrigger 
@@ -103,17 +208,15 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
         
         {/* Listings Tab */}
         <TabsContent value="listings" className="p-4 mt-0">
-          {/* Empty state - no listings */}
           <div className="text-center py-8">
             <Tag className="w-8 h-8 text-white/20 mx-auto mb-2" />
             <p className="text-white/40 text-sm">No listings yet</p>
           </div>
           
-          {/* User actions */}
           <div className="space-y-3">
             {userOwnsFractions && (
               <Button 
-                onClick={handleListFraction}
+                onClick={() => setListDrawerOpen(true)}
                 className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
               >
                 <Plus className="w-4 h-4 mr-2" />
@@ -134,17 +237,15 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
         
         {/* Offers Tab */}
         <TabsContent value="offers" className="p-4 mt-0">
-          {/* Empty state - no offers */}
           <div className="text-center py-8">
             <HandCoins className="w-8 h-8 text-white/20 mx-auto mb-2" />
             <p className="text-white/40 text-sm">No offers yet</p>
           </div>
           
-          {/* User actions */}
           <div className="space-y-3">
             {userOwnsFractions && (
               <Button 
-                onClick={handleListFraction}
+                onClick={() => setListDrawerOpen(true)}
                 className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
               >
                 <Plus className="w-4 h-4 mr-2" />
