@@ -38,6 +38,9 @@ import ig from './locales/ig.json';
 import arz from './locales/arz.json';
 import ary from './locales/ary.json';
 import fa from './locales/fa.json';
+import af from './locales/af.json';
+import qu from './locales/qu.json';
+import am from './locales/am.json';
 
 const STORAGE_KEY = 'user-preferred-language';
 
@@ -77,6 +80,9 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'arz', name: 'Egyptian Arabic', nativeName: 'مصرى' },
   { code: 'ary', name: 'Moroccan Arabic', nativeName: 'الدارجة' },
   { code: 'fa', name: 'Persian', nativeName: 'فارسی' },
+  { code: 'af', name: 'Afrikaans', nativeName: 'Afrikaans' },
+  { code: 'qu', name: 'Quechua', nativeName: 'Runasimi' },
+  { code: 'am', name: 'Amharic', nativeName: 'አማርኛ' },
 ];
 
 i18n.use(initReactI18next).init({
@@ -111,6 +117,9 @@ i18n.use(initReactI18next).init({
     arz: { translation: arz },
     ary: { translation: ary },
     fa: { translation: fa },
+    af: { translation: af },
+    qu: { translation: qu },
+    am: { translation: am },
   },
   lng: defaultLang,
   fallbackLng: 'en',
