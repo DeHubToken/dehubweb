@@ -370,6 +370,13 @@ function NotificationItem({
           {getNotificationContent(notification, bundle)}
         </p>
         
+        {/* Post preview snippet — show title/text for context */}
+        {notification.tokenTitle && bundle.bundleType !== 'same-actor' && (
+          <p className="text-xs text-zinc-500 mt-0.5 line-clamp-1 italic">
+            "{notification.tokenTitle}"
+          </p>
+        )}
+        
         {/* Show individual actor names below backend-aggregated follows */}
         {notification.type === 'following' && (notification as any).latestActorNames?.length > 1 && (
           <p className="text-xs text-zinc-500 mt-0.5">
