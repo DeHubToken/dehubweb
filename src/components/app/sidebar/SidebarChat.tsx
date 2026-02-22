@@ -194,7 +194,7 @@ export function SidebarChat() {
       </div>
 
       {/* Input */}
-      <div className="pt-2">
+      <div className="px-3 pt-2 pb-3">
         <div className="relative">
           <Textarea
             placeholder="Send a message"
