@@ -67,14 +67,17 @@ export function MobileWhoToFollowCarousel() {
   useEffect(() => {
     if (
       filteredSuggestions.length < 3 &&
-      filteredSuggestions.length < prevFilteredCount.current &&
-      hasNextPage &&
-      !isFetchingNextPage
+      filteredSuggestions.length < prevFilteredCount.current
     ) {
-      fetchNextPage();
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      } else if (!hasNextPage && !isFetching) {
+        // No more pages but filtered list is low — refetch fresh suggestions
+        refetch();
+      }
     }
     prevFilteredCount.current = filteredSuggestions.length;
-  }, [filteredSuggestions.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [filteredSuggestions.length, hasNextPage, isFetchingNextPage, fetchNextPage, isFetching, refetch]);
 
   // Load more when user scrolls near the end of the carousel
   const carouselRef = useRef<HTMLDivElement>(null);
