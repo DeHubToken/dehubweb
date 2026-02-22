@@ -309,9 +309,9 @@ interface EnrichedEntry {
 }
 
 // ── Wallets excluded from the holdings leaderboard ─────────────────
-// Founder's wallet — tokens are in a smart contract, not this wallet
-const HOLDINGS_EXCLUDED_ADDRESSES = new Set([
-  "0x9324840523a5d17dd12a2f11a9472e5a199c1937", // mal (founder)
+// Wallets excluded from period-based holdings (1d/1w/1m/1y) but kept in All Time
+const HOLDINGS_PERIOD_EXCLUDED = new Set([
+  "0x9324840523a5d17dd12a2f11a9472e5a199c1937", // mal (founder) — tokens in smart contract, balance hasn't changed
 ]);
 
 // ── Extra wallets to include (username -> wallet address) ───────────
@@ -443,8 +443,9 @@ Deno.serve(async (req) => {
       // Note: Profile discovery removed — users can self-add via the manual refresh button
 
       enriched.sort((a, b) => b.total - a.total);
-      // Remove excluded addresses (e.g. founder's wallet where tokens are in a smart contract)
-      const nonZero = enriched.filter(e => !HOLDINGS_EXCLUDED_ADDRESSES.has(e.account.toLowerCase()));
+      const nonZero = enriched; // All users for all-time
+      // Filtered list excluding founder for period-based leaderboards
+      const nonZeroPeriod = enriched.filter(e => !HOLDINGS_PERIOD_EXCLUDED.has(e.account.toLowerCase()));
 
       console.log(
         `On-chain holdings: ${nonZero.length} total holders`
@@ -562,8 +563,8 @@ Deno.serve(async (req) => {
           const HIST_BATCH_SIZE = 10;
           const pastBalanceMap = new Map<string, number>();
 
-          for (let i = 0; i < nonZero.length; i += HIST_BATCH_SIZE) {
-            const batch = nonZero.slice(i, i + HIST_BATCH_SIZE);
+          for (let i = 0; i < nonZeroPeriod.length; i += HIST_BATCH_SIZE) {
+            const batch = nonZeroPeriod.slice(i, i + HIST_BATCH_SIZE);
             const historicalBalances = await Promise.all(
               batch.map((entry) =>
                 getOnChainBalance(entry.account, baseRpc, bnbRpc, baseBlockHex, bnbBlockHex)
@@ -573,13 +574,13 @@ Deno.serve(async (req) => {
               pastBalanceMap.set(entry.account.toLowerCase(), historicalBalances[idx]);
             });
 
-            if (i + HIST_BATCH_SIZE < nonZero.length) {
+            if (i + HIST_BATCH_SIZE < nonZeroPeriod.length) {
               await new Promise((r) => setTimeout(r, 200));
             }
           }
 
           // Compute deltas
-          const withDeltas: EnrichedEntry[] = nonZero.map((entry) => {
+          const withDeltas: EnrichedEntry[] = nonZeroPeriod.map((entry) => {
             const pastBalance = pastBalanceMap.get(entry.account.toLowerCase()) ?? 0;
             const delta = entry.total - pastBalance;
             return { ...entry, delta };
