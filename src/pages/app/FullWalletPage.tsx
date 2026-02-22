@@ -47,7 +47,7 @@ export default function FullWalletPage() {
   const [selectedToken, setSelectedToken] = useState<WalletToken | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { tokens, isLoading, refetch } = useWalletTokens(selectedChain);
+  const { tokens, isLoading, refetch, isFetching } = useWalletTokens(selectedChain);
 
   const filteredTokens = useMemo(() => {
     if (!searchQuery.trim()) return tokens;
@@ -155,15 +155,15 @@ export default function FullWalletPage() {
       </div>
 
       {/* Token list */}
-      <div className="space-y-1">
-        {isLoading ? (
+      <div className={`space-y-1 transition-opacity duration-150 ${isFetching && !isLoading ? 'opacity-60' : 'opacity-100'}`}>
+        {isLoading && tokens.length === 0 ? (
           <div className="flex items-center justify-center py-16">
             <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
           </div>
         ) : (
-          <AnimatePresence mode="popLayout">
+          <>
             {withBalance.map(token => (
-              <TokenRow key={token.address} token={token} onSend={handleSend} onReceive={() => setReceiveDialogOpen(true)} chainConfig={chainConfig} walletAddress={walletAddress} />
+              <TokenRow key={`${token.chainId}-${token.address}`} token={token} onSend={handleSend} onReceive={() => setReceiveDialogOpen(true)} chainConfig={chainConfig} walletAddress={walletAddress} />
             ))}
             {zeroBalance.length > 0 && withBalance.length > 0 && (
               <div className="pt-3 pb-1">
@@ -171,9 +171,9 @@ export default function FullWalletPage() {
               </div>
             )}
             {zeroBalance.map(token => (
-              <TokenRow key={token.address} token={token} onSend={handleSend} onReceive={() => setReceiveDialogOpen(true)} chainConfig={chainConfig} walletAddress={walletAddress} />
+              <TokenRow key={`${token.chainId}-${token.address}`} token={token} onSend={handleSend} onReceive={() => setReceiveDialogOpen(true)} chainConfig={chainConfig} walletAddress={walletAddress} />
             ))}
-          </AnimatePresence>
+          </>
         )}
       </div>
 
