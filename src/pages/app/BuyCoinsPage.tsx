@@ -7,11 +7,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { toast } from 'sonner';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { 
+import {
   getDPayPrice,
   getDPayPriceByChain,
-  getAvailableTokens, 
+  getAvailableTokens,
   getAvailableGasTokens,
+  getTokenAvailableSupply,
   createCheckoutSession,
   createOnrampSession,
   type DPayToken,
@@ -59,6 +60,15 @@ export default function BuyCoinsPage() {
     staleTime: 5 * 60 * 1000,
   });
 
+  // Pre-fetch token supply so we can validate before checkout (prevents 406)
+  const { data: availableSupply } = useQuery({
+    queryKey: ['dpay', 'supply', selectedToken?.symbol],
+    queryFn: () => getTokenAvailableSupply(selectedToken?.symbol || 'DHB'),
+    enabled: isAuthenticated && !!selectedToken,
+    staleTime: 30 * 1000,
+    refetchInterval: 60 * 1000,
+  });
+
   // Fetch chain-specific price
   const { data: chainPriceData, isLoading: priceLoading } = useQuery({
     queryKey: ['dpay', 'price', selectedChainId],
@@ -96,7 +106,7 @@ export default function BuyCoinsPage() {
       }
     },
     onError: (error: Error) => {
-      toast.error('Failed to start purchase');
+      toast.error(error.message || 'Failed to start purchase');
     },
   });
 
@@ -112,7 +122,7 @@ export default function BuyCoinsPage() {
       }
     },
     onError: (error: Error) => {
-      toast.error('Failed to start onramp');
+      toast.error(error.message || 'Failed to start onramp');
     },
   });
 
@@ -132,20 +142,32 @@ export default function BuyCoinsPage() {
       return;
     }
 
+    const symbol = selectedToken?.symbol || 'DHB';
+    const tokensToReceive = Math.floor(estimatedTokens);
+
     if (paymentMethod === 'onramp') {
       onrampMutation.mutate({
         amount: effectiveAmount,
         currency: 'usd',
-        tokenSymbol: selectedToken?.symbol || 'DHB',
+        tokenSymbol: symbol,
         walletAddress,
       });
     } else {
+      // Pre-check available supply to avoid 406 from the checkout API
+      const supply = availableSupply ?? Infinity;
+      if (tokensToReceive > supply) {
+        toast.error(
+          `Only ${supply.toLocaleString()} ${symbol} available. Please reduce your purchase amount.`
+        );
+        return;
+      }
+
       checkoutMutation.mutate({
         amount: effectiveAmount,
-        tokenSymbol: selectedToken?.symbol || 'DHB',
+        tokenSymbol: symbol,
         walletAddress,
         chainId: selectedChainId,
-        tokensToReceive: Math.floor(estimatedTokens),
+        tokensToReceive,
       });
     }
   };
@@ -255,6 +277,15 @@ export default function BuyCoinsPage() {
               Minimum purchase is $5
             </p>
           )}
+          {paymentMethod === 'card' &&
+            availableSupply !== undefined &&
+            availableSupply !== Infinity &&
+            Math.floor(estimatedTokens) > availableSupply && (
+            <p className="text-red-400 text-sm flex items-center gap-2">
+              <AlertCircle className="w-4 h-4" />
+              Only {availableSupply.toLocaleString()} {selectedToken?.symbol || 'DHB'} available. Please reduce the amount.
+            </p>
+          )}
         </div>
 
         {/* Price Summary */}
@@ -347,7 +378,15 @@ export default function BuyCoinsPage() {
         {/* Buy Button */}
         <Button
           onClick={handlePurchase}
-          disabled={effectiveAmount < 5 || isPending || (paymentMethod === 'card' && estimatedTokens <= 0)}
+          disabled={
+            effectiveAmount < 5 ||
+            isPending ||
+            (paymentMethod === 'card' && estimatedTokens <= 0) ||
+            (paymentMethod === 'card' &&
+              availableSupply !== undefined &&
+              availableSupply !== Infinity &&
+              Math.floor(estimatedTokens) > availableSupply)
+          }
           variant="glass"
           className="w-full py-6 text-lg font-semibold rounded-xl disabled:opacity-50"
         >

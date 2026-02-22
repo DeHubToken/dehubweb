@@ -138,7 +138,7 @@ export async function getDPayPriceByChain(chainId: number): Promise<DPayPrice> {
  */
 export async function getAvailableTokens(): Promise<DPayToken[]> {
   console.log('[DPay API] Fetching available tokens...');
-  
+
   try {
     const response = await fetch(`${DEHUB_API_BASE}/api/dpay/available/tokens`, {
       method: 'GET',
@@ -153,10 +153,10 @@ export async function getAvailableTokens(): Promise<DPayToken[]> {
 
     const data = await response.json();
     console.log('[DPay API] Tokens response:', data);
-    
+
     // Handle various response formats
     const tokens = data?.result || data?.tokens || data || [];
-    
+
     if (Array.isArray(tokens)) {
       return tokens.map((t: any) => ({
         symbol: t.symbol || t.ticker || 'UNKNOWN',
@@ -182,6 +182,49 @@ export async function getAvailableTokens(): Promise<DPayToken[]> {
       name: 'DeHub Token',
       decimals: 18,
     }];
+  }
+}
+
+/**
+ * Get available token supply for a specific token.
+ * Call this before createCheckoutSession to prevent 406 "exceeds available supply" errors.
+ * Uses /api/dpay/available/tokens?token=<symbol> which returns { balance: {...} }.
+ */
+export async function getTokenAvailableSupply(tokenSymbol: string): Promise<number> {
+  console.log('[DPay API] Checking available supply for:', tokenSymbol);
+  try {
+    const response = await fetch(
+      `${DEHUB_API_BASE}/api/dpay/available/tokens?token=${encodeURIComponent(tokenSymbol)}`,
+      { method: 'GET', headers: { 'Content-Type': 'application/json' } }
+    );
+
+    if (!response.ok) {
+      // Don't block purchase on supply fetch failure — let the checkout API decide
+      return Infinity;
+    }
+
+    const data = await response.json();
+    console.log('[DPay API] Supply response:', data);
+
+    const balance = data?.balance ?? data?.result ?? data;
+
+    // { balance: 12345 }
+    if (typeof balance === 'number') return balance;
+
+    // { balance: { available: 12345 } }
+    if (typeof balance?.available === 'number') return balance.available;
+
+    // { balance: { total: 12345 } }
+    if (typeof balance?.total === 'number') return balance.total;
+
+    // { balance: { DHB: 12345 } } or { balance: { dhb: 12345 } }
+    const bySymbol = balance?.[tokenSymbol] ?? balance?.[tokenSymbol.toUpperCase()] ?? balance?.[tokenSymbol.toLowerCase()];
+    if (typeof bySymbol === 'number') return bySymbol;
+    if (typeof bySymbol?.available === 'number') return bySymbol.available;
+
+    return Infinity;
+  } catch {
+    return Infinity; // On network error, don't block — let the checkout API decide
   }
 }
 
@@ -307,46 +350,48 @@ export async function getDPayTotal(): Promise<{ totalVolume: number; totalTransa
  */
 export async function createOnrampSession(request: OnrampSessionRequest): Promise<OnrampSessionResponse> {
   console.log('[DPay API] Creating onramp session...', request);
-  
+
   const token = getAuthToken();
   if (!token) {
     throw new Error('Authentication required');
   }
-  
-  try {
-    const response = await fetch(`${DEHUB_API_BASE}/api/dpay/create-onramp-session`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        source_amount: request.amount,
-        source_currency: request.currency.toLowerCase(),
-        destination_currency: request.tokenSymbol.toLowerCase(),
-        destination_wallet_address: request.walletAddress,
-      }),
-    });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || errorData.error || `Failed to create session: ${response.status}`);
+  const response = await fetch(`${DEHUB_API_BASE}/api/dpay/create-onramp-session`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      source_amount: request.amount,
+      source_currency: request.currency.toLowerCase(),
+      destination_currency: request.tokenSymbol.toUpperCase(),
+      destination_wallet_address: request.walletAddress,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+
+    // 500 from the backend means the onramp provider is currently unavailable.
+    // Surface a clear message so the user knows to try the Card/Bank method.
+    if (response.status >= 500) {
+      throw new Error('Onramp service is temporarily unavailable. Please use Card / Bank payment instead.');
     }
 
-    const data = await response.json();
-    console.log('[DPay API] Onramp session response:', data);
-    
-    const result = data?.result || data;
-    
-    return {
-      sessionId: result.sessionId || result.id,
-      url: result.url || result.redirectUrl || result.checkoutUrl,
-      expiresAt: result.expiresAt,
-    };
-  } catch (error) {
-    console.error('[DPay API] Error creating onramp session:', error);
-    throw error;
+    throw new Error(errorData.message || errorData.error || `Failed to create onramp session: ${response.status}`);
   }
+
+  const data = await response.json();
+  console.log('[DPay API] Onramp session response:', data);
+
+  const result = data?.result || data;
+
+  return {
+    sessionId: result.sessionId || result.id,
+    url: result.url || result.redirectUrl || result.checkoutUrl,
+    expiresAt: result.expiresAt,
+  };
 }
 
 /**
