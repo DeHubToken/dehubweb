@@ -175,6 +175,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     lockedCurrency,
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
+    chainId: nft.chainId,
   };
 }
 
@@ -256,6 +257,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
     bountyCurrency: nft.streamInfo?.addBountyTokenSymbol || 'DHB',
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
+    chainId: nft.chainId,
   };
 }
 

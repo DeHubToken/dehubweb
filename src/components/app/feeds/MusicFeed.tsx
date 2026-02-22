@@ -104,6 +104,7 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     isLocked: nft.is_locked,
     creatorUsername: nft.mintername || nft.creator?.username,
     creatorId: minterAddress,
+    chainId: nft.chainId,
   };
 }
 
