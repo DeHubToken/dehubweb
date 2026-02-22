@@ -41,6 +41,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { updateTokenVisibility, type TokenVisibility } from '@/lib/api/dehub';
 import { cacheImageForNavigation } from '@/lib/post-cache';
+import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import {
   Drawer,
   DrawerContent,
@@ -321,7 +322,8 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   
   // PPV/Bounty/Locked status - bypass for owners & already-unlocked content
   const [locallyUnlocked, setLocallyUnlocked] = useState(false);
-  const canBypassGating = !!(isOwnPost || post.isOwner || post.isUnlocked || locallyUnlocked);
+  const storedUnlocked = isTokenUnlocked(post.id);
+  const canBypassGating = !!(isOwnPost || post.isOwner || post.isUnlocked || locallyUnlocked || storedUnlocked);
   const isPPV = (post.isPPV || false) && !canBypassGating;
   const isW2E = (post.isW2E || false) && !canBypassGating;
   const isLocked = (post.isLocked || false) && !canBypassGating;
@@ -571,6 +573,33 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
               </div>
             </div>
           </>
+        ) : isLocked ? (
+          <>
+            {/* Holdings Locked: blurred image with lock icon overlay */}
+            <div className="relative rounded-md overflow-hidden">
+              <img src={images[0]} alt="" className="w-full max-h-[600px] object-cover blur-lg" loading="lazy" />
+              <div
+                className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
+                onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
+                onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
+                onTouchEnd={(e) => {
+                  e.stopPropagation();
+                  const start = (e.currentTarget as any)._touchStart;
+                  if (!start) return;
+                  const touch = e.changedTouches[0];
+                  if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowLockedDrawer(true); }
+                }}
+              >
+                <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+                  <Lock className="h-7 w-7 text-white" />
+                </div>
+                <p className="text-white font-semibold text-sm mb-1">Holdings Required</p>
+                <p className="text-white/70 text-xs">
+                  Must be holding {formatCompact(Number(post.lockedPrice))} {post.lockedCurrency || 'DHB'}
+                </p>
+              </div>
+            </div>
+          </>
         ) : (
           <SwipeableCarousel>
             <ImageCarousel images={images} onImageClick={handleImageClick} />
@@ -754,7 +783,13 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
             creatorAddress={post.creatorId}
             chainId={post.chainId}
             onClose={() => setShowPPVDrawer(false)}
-            onUnlocked={() => setLocallyUnlocked(true)}
+            onUnlocked={() => {
+              setLocallyUnlocked(true);
+              markTokenUnlocked(post.id);
+              queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+              queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+              queryClient.invalidateQueries({ queryKey: ['nft-info', post.id] });
+            }}
             formatCompact={formatCompact}
           />
         </Drawer>
@@ -839,7 +874,14 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                 <VerifyUnlockButton
                   requiredAmount={post.lockedPrice}
                   currency={post.lockedCurrency || 'DHB'}
-                  onUnlocked={() => { setShowLockedDrawer(false); setLocallyUnlocked(true); }}
+                  onUnlocked={() => {
+                    setShowLockedDrawer(false);
+                    setLocallyUnlocked(true);
+                    markTokenUnlocked(post.id);
+                    queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+                    queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+                    queryClient.invalidateQueries({ queryKey: ['nft-info', post.id] });
+                  }}
                 />
               )}
             </div>

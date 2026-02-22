@@ -41,6 +41,7 @@ import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { useAuth } from '@/contexts/AuthContext';
 
 import { cacheVideoForNavigation } from '@/lib/post-cache';
+import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import {
   Drawer,
   DrawerContent,
@@ -530,9 +531,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   }, []);
 
   const [locallyUnlocked, setLocallyUnlocked] = useState(false);
-  const canBypassGating = !!(isOwnPost || video.isOwner || video.isUnlocked || locallyUnlocked);
+  const storedUnlocked = isTokenUnlocked(video.id);
+  const canBypassGating = !!(isOwnPost || video.isOwner || video.isUnlocked || locallyUnlocked || storedUnlocked);
   const isPPVLocked = !!video.isPPV && !canBypassGating;
-  const isBountyLocked = !!video.isW2E && !canBypassGating;
+  const isBountyLocked = false; // W2E content is free to watch; bounty rewards first X viewers/commenters
   const isHoldingsLocked = !!video.isLocked && !canBypassGating;
   const isComboLocked = isPPVLocked && isHoldingsLocked;
   const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked;
@@ -1297,7 +1299,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             lockedPrice={video.lockedPrice}
             lockedCurrency={video.lockedCurrency}
             chainId={video.chainId}
-            onUnlocked={() => setLocallyUnlocked(true)}
+            onUnlocked={() => {
+              setLocallyUnlocked(true);
+              markTokenUnlocked(video.id);
+              queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+              queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+              queryClient.invalidateQueries({ queryKey: ['nft-info', video.id] });
+            }}
           />
           </div>
         )}
@@ -1479,7 +1487,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             creatorAddress={video.creatorId}
             chainId={video.chainId}
             onClose={() => setShowPPVDrawer(false)}
-            onUnlocked={() => setLocallyUnlocked(true)}
+            onUnlocked={() => {
+              setLocallyUnlocked(true);
+              markTokenUnlocked(video.id);
+              queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+              queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+              queryClient.invalidateQueries({ queryKey: ['nft-info', video.id] });
+            }}
             formatCompact={formatCompact}
           />
         </Drawer>
@@ -1589,7 +1603,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                 <VerifyUnlockButton
                   requiredAmount={video.lockedPrice}
                   currency={video.lockedCurrency || 'DHB'}
-                  onUnlocked={() => { setShowLockedDrawer(false); setLocallyUnlocked(true); }}
+                  onUnlocked={() => {
+                    setShowLockedDrawer(false);
+                    setLocallyUnlocked(true);
+                    markTokenUnlocked(video.id);
+                    queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+                    queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+                    queryClient.invalidateQueries({ queryKey: ['nft-info', video.id] });
+                  }}
                 />
               )}
             </div>
