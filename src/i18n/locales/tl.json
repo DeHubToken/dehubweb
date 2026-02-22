@@ -1,5 +1,5 @@
 {
-  "nav": { "home": "Home", "explore": "Galugarin", "notifications": "Mga Abiso", "messages": "Mga Mensahe", "assistant": "Katulong", "leaderboard": "Ranggo", "bookmarks": "Mga Bookmark", "settings": "Mga Setting", "profile": "Profile", "blog": "Blog", "commandCentre": "Command Centre", "docs": "Mga Dokumento", "roadmap": "Roadmap", "careers": "Mga Trabaho", "create": "Gumawa", "login": "Mag-log in", "connecting": "Kumokonekta...", "signMessage": "Pirmahan ang mensahe" },
+  "nav": { "home": "Home", "explore": "Galugarin", "notifications": "Mga Abiso", "messages": "Mga Mensahe", "assistant": "Katulong", "leaderboard": "Ranggo", "bookmarks": "Mga Bookmark", "settings": "Mga Setting", "profile": "Profile", "blog": "Blog", "commandCentre": "Command Centre", "wallet": "Pitaka", "docs": "Mga Dokumento", "roadmap": "Roadmap", "featureRequests": "Mga Kahilingan", "careers": "Mga Trabaho", "create": "Gumawa", "login": "Mag-log in", "connecting": "Kumokonekta...", "signMessage": "Pirmahan ang mensahe" },
   "feed": { "home": "Home", "videos": "Mga Video", "images": "Mga Larawan", "shorts": "Shorts", "music": "Musika", "live": "Live" },
   "explore": { "all": "Lahat", "people": "Mga Tao", "posts": "Mga Post", "images": "Mga Larawan", "videos": "Mga Video", "music": "Musika", "live": "Live" },
   "settings": {
