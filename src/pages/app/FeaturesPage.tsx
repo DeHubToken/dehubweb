@@ -476,13 +476,13 @@ export default function FeaturesPage() {
         </div>
 
         {/* Page Tabs: Requests / Shipped */}
-        <div className="flex gap-1 bg-zinc-800 rounded-xl p-1 mb-3">
+        <div className="flex gap-1 bg-zinc-800/40 rounded-xl p-1 mb-3">
           <button
             type="button"
             onClick={() => setActiveTab('requests')}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
               activeTab === 'requests'
-                ? 'bg-zinc-700 text-white'
+                ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] text-white'
                 : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
@@ -491,9 +491,9 @@ export default function FeaturesPage() {
           <button
             type="button"
             onClick={() => setActiveTab('shipped')}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-1.5 ${
               activeTab === 'shipped'
-                ? 'bg-zinc-700 text-white'
+                ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] text-white'
                 : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
