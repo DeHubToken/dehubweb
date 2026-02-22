@@ -6,7 +6,6 @@ import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { Button } from '@/components/ui/button';
 import { getLeaderboard, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { useBatchBadgeBalances } from '@/hooks/use-badge-balance';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
@@ -83,8 +82,7 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
     .sort((a, b) => (b.total ?? 0) - (a.total ?? 0))
     .slice(0, 50);
 
-  const walletAddresses = entries.map((e: LeaderboardEntry) => e.account);
-  const { balances: badgeBalances } = useBatchBadgeBalances(walletAddresses);
+  // Badge balances are already embedded in leaderboard cache entries (entry.badgeBalance)
 
   const displayEntries = entries.length > 0 ? entries : Array.from({ length: 10 }, (_, i) => ({
     account: `placeholder-${i}`,
@@ -179,7 +177,7 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
                     {isPlaceholder ? '—' : getDisplayName(entry)}
                   </span>
                   {!isPlaceholder && (() => {
-                    const badgeUrl = getBadgeUrl(entry.badgeBalance || badgeBalances[entry.account.toLowerCase()] || entry.total);
+                    const badgeUrl = getBadgeUrl(entry.badgeBalance || entry.total);
                     return badgeUrl ? (
                       <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />
                     ) : null;

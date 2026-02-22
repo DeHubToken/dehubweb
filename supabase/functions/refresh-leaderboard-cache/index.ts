@@ -541,43 +541,41 @@ Deno.serve(async (req) => {
         results.push({ sort: "holdings", period: "all", success: true });
       }
 
-      // ── Cache time-based periods (sorted by delta, on-chain historical) ──
+      // ── Cache time-based periods (sorted by delta, using SNAPSHOT-based deltas) ──
+      // This avoids expensive on-chain historical queries that caused statement timeouts.
 
       for (const period of ["day", "week", "month", "year"] as const) {
         try {
           const daysAgo = PERIOD_DAYS[period];
-          const targetBaseBlock = currentBaseBlock - (BASE_BLOCKS_PER_DAY * daysAgo);
-          const targetBnbBlock = currentBnbBlock - (BNB_BLOCKS_PER_DAY * daysAgo);
+          const pastDate = new Date();
+          pastDate.setDate(pastDate.getDate() - daysAgo);
+          const pastDateStr = pastDate.toISOString().split("T")[0];
 
-          if (targetBaseBlock < 0 || targetBnbBlock < 0) {
-            console.log(`Skipping ${period}: block would be negative`);
-            results.push({ sort: "holdings", period, success: true });
-            continue;
-          }
+          // Find closest snapshot date on or before target
+          const { data: closestSnap } = await supabase
+            .from("leaderboard_snapshots")
+            .select("snapshot_date")
+            .lte("snapshot_date", pastDateStr)
+            .order("snapshot_date", { ascending: false })
+            .limit(1);
 
-          const baseBlockHex = "0x" + targetBaseBlock.toString(16);
-          const bnbBlockHex = "0x" + targetBnbBlock.toString(16);
-
-          console.log(`Computing holdings/${period}: querying balances at Base block ${targetBaseBlock}, BNB block ${targetBnbBlock}`);
-
-          // Query historical balances on-chain in batches
-          const HIST_BATCH_SIZE = 10;
+          const closestDate = closestSnap?.[0]?.snapshot_date;
           const pastBalanceMap = new Map<string, number>();
 
-          for (let i = 0; i < nonZeroPeriod.length; i += HIST_BATCH_SIZE) {
-            const batch = nonZeroPeriod.slice(i, i + HIST_BATCH_SIZE);
-            const historicalBalances = await Promise.all(
-              batch.map((entry) =>
-                getOnChainBalance(entry.account, baseRpc, bnbRpc, baseBlockHex, bnbBlockHex)
-              )
-            );
-            batch.forEach((entry, idx) => {
-              pastBalanceMap.set(entry.account.toLowerCase(), historicalBalances[idx]);
-            });
+          if (closestDate) {
+            const { data: snapshots } = await supabase
+              .from("leaderboard_snapshots")
+              .select("account, balance")
+              .eq("snapshot_date", closestDate);
 
-            if (i + HIST_BATCH_SIZE < nonZeroPeriod.length) {
-              await new Promise((r) => setTimeout(r, 200));
+            if (snapshots) {
+              for (const snap of snapshots) {
+                pastBalanceMap.set(snap.account.toLowerCase(), snap.balance ?? 0);
+              }
             }
+            console.log(`holdings/${period}: using snapshot from ${closestDate} (target ${pastDateStr}), ${pastBalanceMap.size} entries`);
+          } else {
+            console.log(`holdings/${period}: no snapshot found for ${pastDateStr}, skipping`);
           }
 
           // Compute deltas
@@ -594,7 +592,7 @@ Deno.serve(async (req) => {
 
           const periodData = {
             result: { byWalletBalance: sorted },
-            hasHistoricalData: true,
+            hasHistoricalData: pastBalanceMap.size > 0,
           };
 
           const { error } = await supabase.from("leaderboard_cache").upsert(
@@ -611,7 +609,7 @@ Deno.serve(async (req) => {
             console.error(`Error caching holdings/${period}:`, error);
             results.push({ sort: "holdings", period, success: false, error: error.message });
           } else {
-            console.log(`holdings/${period}: ${sorted.length} entries with positive delta (on-chain at block -${daysAgo}d)`);
+            console.log(`holdings/${period}: ${sorted.length} entries with positive delta`);
             results.push({ sort: "holdings", period, success: true });
           }
         } catch (periodErr) {

@@ -31,7 +31,6 @@ import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
-import { useBatchBadgeBalances } from '@/hooks/use-badge-balance';
 
 type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
 
@@ -269,9 +268,7 @@ export default function LeaderboardPage() {
   const visibleEntries = useMemo(() => entries.slice(0, visibleCount), [entries, visibleCount]);
   const hasMore = visibleCount < entries.length;
 
-  // Batch fetch badge balances for visible entries only
-  const walletAddresses = useMemo(() => visibleEntries.map(e => e.account), [visibleEntries]);
-  const { balances: badgeBalances } = useBatchBadgeBalances(walletAddresses);
+  // Badge balances are already embedded in leaderboard cache entries (entry.badgeBalance)
 
   const handleUserClick = (entry: LeaderboardEntry) => {
     if (entry.username) {
@@ -503,7 +500,7 @@ export default function LeaderboardPage() {
                         <span className="relative inline-flex items-baseline shrink min-w-0">
                           <span className="font-semibold text-white truncate">{getDisplayName(entry)}</span>
                           {(() => {
-                            const badgeUrl = getBadgeUrl(entry.badgeBalance || badgeBalances[entry.account.toLowerCase()] || entry.total, entry.username);
+                            const badgeUrl = getBadgeUrl(entry.badgeBalance || entry.total, entry.username);
                             return badgeUrl ? <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" /> : null;
                           })()}
                         </span>

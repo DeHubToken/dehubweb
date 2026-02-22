@@ -280,8 +280,15 @@ async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: s
 
 function prewarmConfig() {
   if (typeof window === 'undefined') return;
+  // Skip if both configs are already in sessionStorage
+  if (sessionStorage.getItem('dehub_web3auth_client_id') && sessionStorage.getItem('dehub_pimlico_config')) {
+    console.log("[Web3Auth] Configs already cached in sessionStorage, skipping prewarm");
+    // Still populate in-memory caches from sessionStorage
+    cachedClientId = sessionStorage.getItem('dehub_web3auth_client_id')!;
+    try { cachedPimlicoConfig = JSON.parse(sessionStorage.getItem('dehub_pimlico_config')!); } catch {}
+    return;
+  }
   console.log("[Web3Auth] Pre-warming configurations...");
-  // Pre-fetch both in parallel so init is instant when user clicks login
   Promise.all([
     getWeb3AuthClientId().catch(() => {}),
     getPimlicoConfig().catch(() => {}),
