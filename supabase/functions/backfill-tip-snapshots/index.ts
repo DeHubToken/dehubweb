@@ -302,27 +302,28 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      // Upsert into leaderboard_snapshots
-      const BATCH_SIZE = 100;
+      // UPDATE only sent_tips and received_tips on existing snapshot rows
+      // Never create new rows or touch balance/followers/likes/subscribers
       const walletArr = [...allWallets];
       let errorCount = 0;
+      let updatedCount = 0;
 
-      for (let i = 0; i < walletArr.length; i += BATCH_SIZE) {
-        const batch = walletArr.slice(i, i + BATCH_SIZE);
-        const rows = batch.map((wallet) => ({
-          account: wallet.toLowerCase(),
-          snapshot_date: dateStr,
-          sent_tips: totalSpent.get(wallet) || 0,
-          received_tips: totalEarned.get(wallet) || 0,
-        }));
-
-        const { error: upsertErr } = await supabase
+      for (const wallet of walletArr) {
+        const addr = wallet.toLowerCase();
+        const { error: updateErr, count } = await supabase
           .from("leaderboard_snapshots")
-          .upsert(rows, { onConflict: "account,snapshot_date" });
+          .update({
+            sent_tips: totalSpent.get(wallet) || 0,
+            received_tips: totalEarned.get(wallet) || 0,
+          })
+          .eq("account", addr)
+          .eq("snapshot_date", dateStr);
 
-        if (upsertErr) {
-          console.error(`Upsert error batch ${i}:`, upsertErr);
-          errorCount += batch.length;
+        if (updateErr) {
+          console.error(`Update error for ${addr}:`, updateErr);
+          errorCount++;
+        } else if (count && count > 0) {
+          updatedCount++;
         }
       }
 
