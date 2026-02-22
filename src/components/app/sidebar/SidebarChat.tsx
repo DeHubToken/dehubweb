@@ -137,7 +137,7 @@ export function SidebarChat() {
         <span className="text-zinc-400 text-xs flex items-center gap-1">
           <Users className="w-3 h-3" /> {onlineCount} online
         </span>
-        <div className="ml-auto pr-1">
+        <div className="ml-auto pr-3">
           <Tooltip>
             <TooltipTrigger asChild>
               <button
