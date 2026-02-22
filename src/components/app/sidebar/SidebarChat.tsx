@@ -194,10 +194,10 @@ export function SidebarChat() {
       </div>
 
       {/* Input */}
-      <div className="pt-2 pb-3">
+      <div className="p-3 border-t border-white/5">
         <div className="relative">
           <Textarea
-            placeholder="Send a message"
+            placeholder="Type a message..."
             value={newMessage}
             onChange={(e) => {
               const val = e.target.value;
@@ -207,11 +207,11 @@ export function SidebarChat() {
             }}
             onKeyDown={handleKeyDown}
             maxLength={169}
-            className="min-h-[56px] resize-none text-sm bg-zinc-800 border-zinc-700 rounded-lg pb-8 leading-[1.35] text-white placeholder:text-zinc-500"
+            className="min-h-[44px] resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-24 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
             rows={1}
             style={{ fieldSizing: 'content' } as React.CSSProperties}
           />
-          <div className="absolute bottom-1.5 right-1.5 flex items-center gap-0.5">
+          <div className="absolute bottom-0 right-0 flex items-center gap-0.5">
             <EmojiGifPicker
               onEmojiSelect={handleEmojiSelect}
               onGifSelect={handleGifSelect}
@@ -223,12 +223,12 @@ export function SidebarChat() {
             <button
               onClick={handleSend}
               disabled={!newMessage.trim() || isSending}
-              className="h-7 w-7 flex items-center justify-center disabled:opacity-40"
+              className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white disabled:opacity-40 transition-colors"
             >
               {isSending ? (
-                <Loader2 className="w-4 h-4 text-white animate-spin" />
+                <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
-                <Send className="w-4 h-4 text-white" />
+                <Send className="w-5 h-5" />
               )}
             </button>
           </div>
