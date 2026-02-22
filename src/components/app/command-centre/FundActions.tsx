@@ -1,18 +1,7 @@
 import { useState } from 'react';
-import { Copy, CreditCard, Send, ArrowDownToLine, ArrowUpFromLine, Check, Clock, User, Wallet } from 'lucide-react';
+import { Copy, CreditCard, Send, ArrowDownToLine, ArrowUpFromLine, Check, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { createOnrampSession } from '@/lib/api/dpay';
@@ -21,10 +10,13 @@ import { toast } from 'sonner';
 export function FundActions() {
   const { walletAddress } = useAuth();
   const [copied, setCopied] = useState(false);
+  const [addFundsOpen, setAddFundsOpen] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
+  const [transferOpen, setTransferOpen] = useState(false);
   const [withdrawTarget, setWithdrawTarget] = useState('');
 
   const handleBuy = async () => {
+    setAddFundsOpen(false);
     try {
       const res = await createOnrampSession({
         walletAddress: walletAddress || '',
@@ -53,70 +45,98 @@ export function FundActions() {
 
   return (
     <div className="flex gap-2">
-      {/* Add Funds */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="glass" className="text-sm h-9 px-2.5 sm:px-4 rounded-lg">
-            <ArrowDownToLine className="w-3.5 h-3.5 sm:mr-1.5" />
-            <span className="hidden sm:inline">Add funds</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48 bg-zinc-900 border-zinc-800">
-          <DropdownMenuItem onClick={handleBuy} className="gap-2 cursor-pointer">
-            <CreditCard className="w-4 h-4" />
-            Buy
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleCopyAddress} className="gap-2 cursor-pointer">
-            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-            Transfer to me
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      {/* Add Funds Button */}
+      <Button variant="glass" className="text-sm h-9 px-2.5 sm:px-4 rounded-lg" onClick={() => setAddFundsOpen(true)}>
+        <ArrowDownToLine className="w-3.5 h-3.5 sm:mr-1.5" />
+        <span className="hidden sm:inline">Add funds</span>
+      </Button>
 
-      {/* Withdraw */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="glass" className="text-sm h-9 px-2.5 sm:px-4 rounded-lg">
-            <ArrowUpFromLine className="w-3.5 h-3.5 sm:mr-1.5" />
-            <span className="hidden sm:inline">Withdraw</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48 bg-zinc-900 border-zinc-800">
-          <DropdownMenuItem onClick={() => setWithdrawOpen(true)} className="gap-2 cursor-pointer">
-            <Send className="w-4 h-4" />
-            Transfer
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled className="gap-2 cursor-pointer opacity-50">
-            <Wallet className="w-4 h-4" />
-            Bank Card
-            <span className="ml-auto text-[10px] text-zinc-500 font-medium">SOON</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      {/* Withdraw Button */}
+      <Button variant="glass" className="text-sm h-9 px-2.5 sm:px-4 rounded-lg" onClick={() => setWithdrawOpen(true)}>
+        <ArrowUpFromLine className="w-3.5 h-3.5 sm:mr-1.5" />
+        <span className="hidden sm:inline">Withdraw</span>
+      </Button>
 
-      {/* Transfer Dialog */}
-      <Dialog open={withdrawOpen} onOpenChange={setWithdrawOpen}>
-        <DialogContent className="bg-zinc-900 border-zinc-800 sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-white">Transfer DHB</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 pt-2">
+      {/* Add Funds Drawer */}
+      <Drawer open={addFundsOpen} onOpenChange={setAddFundsOpen}>
+        <DrawerContent glass hideHandle={false}>
+          <div className="p-5 pb-8 space-y-2">
+            <h3 className="text-white font-semibold text-base mb-4">Add Funds</h3>
+            <button
+              onClick={handleBuy}
+              className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
+            >
+              <CreditCard className="w-5 h-5 text-white/70" />
+              <div className="text-left">
+                <span className="text-sm font-medium text-white">Buy</span>
+                <p className="text-xs text-white/40">Purchase with card</p>
+              </div>
+            </button>
+            <button
+              onClick={() => { handleCopyAddress(); setAddFundsOpen(false); }}
+              className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
+            >
+              {copied ? <Check className="w-5 h-5 text-emerald-400" /> : <Copy className="w-5 h-5 text-white/70" />}
+              <div className="text-left">
+                <span className="text-sm font-medium text-white">Transfer to me</span>
+                <p className="text-xs text-white/40">Copy your wallet address</p>
+              </div>
+            </button>
+          </div>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Withdraw Drawer */}
+      <Drawer open={withdrawOpen} onOpenChange={setWithdrawOpen}>
+        <DrawerContent glass hideHandle={false}>
+          <div className="p-5 pb-8 space-y-2">
+            <h3 className="text-white font-semibold text-base mb-4">Withdraw</h3>
+            <button
+              onClick={() => { setWithdrawOpen(false); setTimeout(() => setTransferOpen(true), 200); }}
+              className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
+            >
+              <Send className="w-5 h-5 text-white/70" />
+              <div className="text-left">
+                <span className="text-sm font-medium text-white">Transfer</span>
+                <p className="text-xs text-white/40">Send to wallet or username</p>
+              </div>
+            </button>
+            <button
+              disabled
+              className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] border border-white/10 opacity-50 cursor-not-allowed"
+            >
+              <Wallet className="w-5 h-5 text-white/70" />
+              <div className="text-left flex-1">
+                <span className="text-sm font-medium text-white">Bank Card</span>
+                <p className="text-xs text-white/40">Withdraw to bank</p>
+              </div>
+              <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">SOON</span>
+            </button>
+          </div>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Transfer Drawer */}
+      <Drawer open={transferOpen} onOpenChange={setTransferOpen}>
+        <DrawerContent glass hideHandle={false}>
+          <div className="p-5 pb-8 space-y-4">
+            <h3 className="text-white font-semibold text-base">Transfer DHB</h3>
             <div className="space-y-2">
-              <label className="text-sm text-zinc-400">Wallet address or username</label>
+              <label className="text-sm text-white/50">Wallet address or username</label>
               <Input
                 placeholder="0x... or @username"
                 value={withdrawTarget}
                 onChange={(e) => setWithdrawTarget(e.target.value)}
-                className="bg-zinc-800 border-zinc-700 text-white"
+                className="bg-white/[0.06] border-white/10 text-white backdrop-blur-sm"
               />
             </div>
             <Button
               variant="glass"
-              className="w-full"
+              className="w-full rounded-xl"
               disabled={!withdrawTarget.trim()}
               onClick={() => {
                 toast.info('Transfer feature coming soon');
-                setWithdrawOpen(false);
+                setTransferOpen(false);
                 setWithdrawTarget('');
               }}
             >
@@ -124,8 +144,8 @@ export function FundActions() {
               Send
             </Button>
           </div>
-        </DialogContent>
-      </Dialog>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }
