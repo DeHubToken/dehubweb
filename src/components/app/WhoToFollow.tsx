@@ -90,12 +90,16 @@ export function WhoToFollow() {
     return () => el.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
-  // Auto-fetch next page when filtered suggestions run low
+  // Auto-fetch next page or refetch when filtered suggestions run low
   useEffect(() => {
-    if (filteredSuggestions.length < 3 && hasNextPage && !isFetchingNextPage && !isLoading) {
-      fetchNextPage();
+    if (filteredSuggestions.length < 3 && !isLoading) {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      } else if (!hasNextPage && !isFetching) {
+        refetch();
+      }
     }
-  }, [filteredSuggestions.length, hasNextPage, isFetchingNextPage, isLoading, fetchNextPage]);
+  }, [filteredSuggestions.length, hasNextPage, isFetchingNextPage, isLoading, fetchNextPage, isFetching, refetch]);
 
   if (error) {
     console.warn('[WhoToFollow] Query error:', error);
