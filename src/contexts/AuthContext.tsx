@@ -702,7 +702,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const isSocial = isSocialLoginConnected();
     const toastId = 'auth-popup';
     console.log('[Auth] [POPUP] Connection type:', isSocial ? 'SOCIAL' : 'EXTERNAL');
-    toast.loading('Getting your account...', { id: toastId });
+    toast.loading('Setting up your account...', { id: toastId });
 
     if (isSocial) {
       try {
@@ -734,7 +734,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
       console.log('[Auth] [POPUP] Requesting signature...');
-      toast.loading('Please sign the message in your wallet...', { id: toastId });
+      toast.loading('Signing in...', { id: toastId });
 
       let signature: string;
       try {
@@ -783,7 +783,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('[Auth] [POPUP] Signature received, authenticating...');
-      toast.loading('Verifying with DeHub...', { id: toastId });
+      toast.loading('Almost there...', { id: toastId });
 
       const BASE_CHAIN_ID = 8453;
       const authResponse = await authenticateWallet(
@@ -846,6 +846,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setConnectionSource('web3auth');
     localStorage.setItem('dehub_connection_source', 'web3auth');
 
+    // Show immediate feedback before popup opens
+    toast.loading(`Connecting to ${provider === 'google' ? 'Google' : provider === 'twitter' ? 'X' : provider}...`, { id: 'auth-popup' });
+
     try {
       const socialProvider = mapSocialProvider(provider);
       const authProvider = await connectToSocialProvider(socialProvider);
@@ -855,6 +858,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         closeLoginModal();
       }
     } catch (error: any) {
+      toast.dismiss('auth-popup');
       console.error(`${provider} login error:`, error);
       
       const errorMessage = error.message || String(error);
