@@ -20,7 +20,6 @@ import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
 export { LANGUAGE_NAMES };
 import { cn } from '@/lib/utils';
 
-// Export URL_REGEX source for reuse in other components
 
 // URL regex pattern for detecting links (with or without protocol)
 // Only matches common TLDs to avoid false positives like "higher.mp4"
