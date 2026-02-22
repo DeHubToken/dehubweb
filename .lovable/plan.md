@@ -1,26 +1,27 @@
 
 
-## Restore Swipe-to-Fade Effect on Bottom Nav
+## Fix: Sidebar Leaderboard Time-Based Tabs Not Loading
 
-The last edit removed the `buttonOpacity` logic that made the center `+` button fade out when users swipe right on the bottom nav bar. The scroll progress tracking (`scrollProgress`, `buttonOpacity`) is still in the component but no longer applied to the button.
+### Root Cause
 
-### What Changed
-- The old code used `style={{ backgroundColor: rgba(255, 255, 255, ${buttonOpacity}) }}` to fade the button on scroll
-- The new liquid glass styling is purely class-based with no opacity tied to scroll
+The time-based leaderboard tabs (1d, 1w, 1m, 1y) try to read from the `leaderboard_cache` table in the database as their first data source. The database is currently experiencing timeout issues (504/500 errors visible in network logs for other tables too), which means these cache reads hang silently and never resolve, leaving the sidebar stuck on a loading spinner.
 
-### Fix
-Re-apply the `buttonOpacity` value to the button's container using an inline `opacity` style, while keeping the liquid glass classes intact:
+The "All" tab works fine because it bypasses the database cache entirely and calls the DeHub API directly.
 
-```tsx
-<div 
-  className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.15] shadow-[...] transition-all duration-300 active:scale-95"
-  style={{ opacity: buttonOpacity }}
->
-```
+### The Fix
 
-This preserves the liquid glass bubble look at rest and fades the entire button (glass + icon) smoothly as the user swipes right through the scrollable nav items.
+Change `getLeaderboard()` in `src/lib/api/dehub/leaderboard.ts` to wrap the database cache read in a timeout (3 seconds). If the cache read fails or times out, immediately fall back to the direct API call instead of hanging forever.
 
-### Technical Detail
-- `buttonOpacity` is already computed from `scrollProgress` (fades to 0 at ~10% scroll)
-- No new state or logic needed -- just re-wiring the existing value to the rendered element
+### Technical Changes
+
+**File: `src/lib/api/dehub/leaderboard.ts`**
+- Wrap the Supabase cache lookup in a `Promise.race` with a 3-second timeout
+- If the cache read times out or errors, fall back to the API call immediately
+- This ensures the sidebar leaderboard always loads data within a few seconds regardless of database health
+
+**File: `src/components/app/sidebar/SidebarLeaderboard.tsx`**
+- Add `retry: 1` to the `useQuery` options so failed queries retry once quickly rather than showing permanent loading states
+- Add `refetchOnMount: false` since data is already cached via TanStack Query's staleTime
+
+This approach keeps the cache as a fast-path optimization while ensuring the sidebar never gets stuck loading.
 
