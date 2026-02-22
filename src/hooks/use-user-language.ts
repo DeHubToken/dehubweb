@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import i18n from '@/i18n';
+import i18n, { loadLanguage } from '@/i18n';
 
 const STORAGE_KEY = 'user-preferred-language';
 
@@ -30,10 +30,11 @@ export function useUserLanguage() {
     setIsLoading(false);
   }, []);
 
-  const setPreferredLanguage = useCallback((lang: string) => {
+  const setPreferredLanguage = useCallback(async (lang: string) => {
     setLanguage(lang);
     localStorage.setItem(STORAGE_KEY, lang);
-    // Sync with i18next
+    // Lazy-load locale then switch
+    await loadLanguage(lang);
     i18n.changeLanguage(lang);
   }, []);
 
