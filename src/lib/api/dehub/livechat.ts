@@ -37,11 +37,13 @@ export interface LiveChatMessage {
   roomId: string;
   content: string;
   type?: 'text' | 'image' | 'gif';
+  messageType?: string;
   imageUrl?: string;
   sender: {
     address: string;
     username?: string;
     displayName?: string;
+    avatarUrl?: string;
     avatarImageUrl?: string;
   };
   isPinned?: boolean;
