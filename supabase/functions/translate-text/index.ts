@@ -56,6 +56,23 @@ const langCodeMap: Record<string, string> = {
   'ar': 'ar',
   'hi': 'hi',
   'ms': 'ms',
+  'tr': 'tr',
+  'ro': 'ro',
+  'bn': 'bn',
+  'id': 'id',
+  'vi': 'vi',
+  'th': 'th',
+  'nl': 'nl',
+  'pl': 'pl',
+  'uk': 'uk',
+  'tl': 'tl',
+  'fa': 'fa',
+  'arz': 'ar',  // Egyptian Arabic → standard Arabic for MyMemory
+  'ary': 'ar',  // Moroccan Arabic → standard Arabic for MyMemory
+  'pcm': 'en',  // Nigerian Pidgin → English for MyMemory (AI fallback handles properly)
+  'ha': 'ha',
+  'yo': 'yo',
+  'ig': 'ig',
   'auto': 'autodetect',
 };
 
@@ -74,6 +91,23 @@ const langNameMap: Record<string, string> = {
   'ar': 'Arabic',
   'hi': 'Hindi',
   'ms': 'Malay',
+  'tr': 'Turkish',
+  'ro': 'Romanian',
+  'bn': 'Bengali',
+  'id': 'Indonesian',
+  'vi': 'Vietnamese',
+  'th': 'Thai',
+  'nl': 'Dutch',
+  'pl': 'Polish',
+  'uk': 'Ukrainian',
+  'tl': 'Tagalog',
+  'fa': 'Persian',
+  'arz': 'Egyptian Arabic',
+  'ary': 'Moroccan Arabic (Darija)',
+  'pcm': 'Nigerian Pidgin',
+  'ha': 'Hausa',
+  'yo': 'Yoruba',
+  'ig': 'Igbo',
 };
 
 /**
