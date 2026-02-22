@@ -35,6 +35,9 @@ import pcm from './locales/pcm.json';
 import ha from './locales/ha.json';
 import yo from './locales/yo.json';
 import ig from './locales/ig.json';
+import arz from './locales/arz.json';
+import ary from './locales/ary.json';
+import fa from './locales/fa.json';
 
 const STORAGE_KEY = 'user-preferred-language';
 
@@ -71,6 +74,9 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'ha', name: 'Hausa', nativeName: 'Hausa' },
   { code: 'yo', name: 'Yoruba', nativeName: 'Yorùbá' },
   { code: 'ig', name: 'Igbo', nativeName: 'Igbo' },
+  { code: 'arz', name: 'Egyptian Arabic', nativeName: 'مصرى' },
+  { code: 'ary', name: 'Moroccan Arabic', nativeName: 'الدارجة' },
+  { code: 'fa', name: 'Persian', nativeName: 'فارسی' },
 ];
 
 i18n.use(initReactI18next).init({
@@ -102,6 +108,9 @@ i18n.use(initReactI18next).init({
     ha: { translation: ha },
     yo: { translation: yo },
     ig: { translation: ig },
+    arz: { translation: arz },
+    ary: { translation: ary },
+    fa: { translation: fa },
   },
   lng: defaultLang,
   fallbackLng: 'en',
