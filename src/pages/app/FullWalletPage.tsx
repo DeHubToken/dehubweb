@@ -94,14 +94,14 @@ export default function FullWalletPage() {
         <h1 className="text-lg font-bold text-white">Wallet</h1>
       </div>
 
-      {/* Wallet address bar */}
+      {/* Wallet balance bar */}
       <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 mb-4">
         <div className="flex items-center justify-between">
-          <div className="min-w-0 flex-1">
-            <span className="text-zinc-500 text-xs uppercase tracking-wider font-medium">Your Address</span>
-            <p className="text-white text-sm font-mono truncate mt-0.5">{walletAddress}</p>
+          <div className="min-w-0">
+            <span className="text-zinc-500 text-xs uppercase tracking-wider font-medium">Total Balance</span>
+            <p className="text-white text-2xl font-bold mt-0.5">$0.00</p>
           </div>
-          <Button variant="ghost" size="icon" className="shrink-0 ml-2 text-zinc-400 hover:text-white" onClick={handleCopy}>
+          <Button variant="ghost" size="icon" className="shrink-0 text-zinc-400 hover:text-white" onClick={handleCopy} title={walletAddress || ''}>
             {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
           </Button>
         </div>
