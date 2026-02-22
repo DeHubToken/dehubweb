@@ -172,10 +172,16 @@ export function SidebarChat() {
           <Textarea
             placeholder="Send a message"
             value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length <= 169) {
+                setNewMessage(e.target.value);
+              }
+            }}
             onKeyDown={handleKeyDown}
-            className="min-h-[56px] max-h-32 resize-none text-sm bg-zinc-800 border-zinc-700 rounded-lg pb-8 leading-[1.35] text-white placeholder:text-zinc-500"
+            maxLength={169}
+            className="min-h-[56px] max-h-[88px] resize-none text-sm bg-zinc-800 border-zinc-700 rounded-lg pb-8 leading-[1.35] text-white placeholder:text-zinc-500 overflow-y-auto"
             rows={1}
+            style={{ fieldSizing: 'content' } as React.CSSProperties}
           />
           <div className="absolute bottom-1.5 right-1.5 flex items-center gap-0.5">
             <EmojiGifPicker
