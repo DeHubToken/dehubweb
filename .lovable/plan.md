@@ -1,46 +1,52 @@
 
 
-## Cloud Credit Optimization: PPV Checks & Client Logs
+## Remove Feed Cache: Simplify to Direct API Calls
 
-### Problem 1: PPV Purchase Check on Every Feed Load
-The `use-unified-feed.ts` hook queries `ppv_purchases` for ALL purchased token IDs on every feed load for every logged-in user. This is wasteful -- the unlock status should only matter when the user tries to view/unlock a specific post, not on every scroll.
+### Why the feed cache should go
 
-**Fix:**
-- Remove the `ppv-purchased-tokens` query from `use-unified-feed.ts`
-- The existing PPV unlock flow in `use-ppv-payment.ts` already checks `ppv_purchases` when the user clicks "Pay" -- that's the correct place
-- The DeHub API already provides `isOwner` and `isUnlocked` flags per post, which already bypass gating overlays -- no local DB check needed in the feed
+The `refresh-feed-cache` edge function runs hourly, fetching 6 pages (300 posts) from the DeHub API and storing them in the database. The frontend then **races** the DB cache against the live API on every feed load.
 
-### Problem 2: Client Logs Edge Function Overhead
-10 components use `createLogger`, and while `info`/`debug` are console-only, every `error` or `warn` triggers an edge function call (`client-logs`) + DB insert. Auth success events are deliberately logged as `warn`, meaning every login = 1 edge function invocation.
+This is redundant because:
+- The DeHub API is already fast and always has the latest data
+- For logged-in users, the cache lacks personalization (isLiked, isUnlocked, etc.) so the API result always wins
+- For guests, TanStack Query's built-in `staleTime` (already set) handles caching perfectly
+- The hourly cron job is saturating the DB with 504 timeouts, causing cascading failures
 
-**Fix:**
-- Batch client logs: instead of firing the edge function per error/warn, queue them in memory and flush every 30 seconds (or on page unload)
-- Downgrade auth success logs from `warn` to `info` so they stay console-only (they were elevated for diagnostics which is no longer needed)
-- This alone could cut `client-logs` invocations by 80-90%
+### What changes
 
-### Problem 3: PPV Purchase Count on Every Card
-`usePPVPurchaseCount` is called inside `VideoCard`, `ImageCard`, and `PostInfoPage` for every PPV post visible in the feed. Each card that renders triggers a separate DB query.
+**1. Remove the cron job and edge function**
+- Delete `supabase/functions/refresh-feed-cache/index.ts`
+- Remove the `pg_cron` schedule that triggers it (via SQL)
+- Remove the config entry from `supabase/config.toml`
 
-**Fix:**
-- For feed cards, move the purchase count fetch to only trigger on `PostInfoPage` (where it's meaningful)
-- In feed cards, show "PPV" badge without the count, or use data from the DeHub API if available
+**2. Simplify `use-unified-feed.ts`**
+- Remove the `fetchCachedFeed()` function and the race strategy
+- All feed loads go directly to the DeHub API (which they already do as a fallback)
+- TanStack Query's `staleTime` and `gcTime` handle client-side caching
 
----
+**3. Compute trending categories client-side**
+- `WhatsHappening.tsx` currently reads `trending_categories` from the `feed_cache` table
+- Instead, derive trending categories from the first page of feed data already loaded by the home feed query, or fetch them once from the API and cache in TanStack Query with a long `staleTime`
 
-### Technical Details
+**4. Clean up the `feed_cache` table (optional)**
+- The table can be dropped since nothing will write to it anymore
+- Or leave it dormant -- no reads means zero cost
+
+### Technical details
 
 **Files to modify:**
+- `supabase/functions/refresh-feed-cache/index.ts` -- Delete entirely
+- `supabase/config.toml` -- Remove `[functions.refresh-feed-cache]` entry (auto-managed, just delete the function)
+- `src/hooks/use-unified-feed.ts` -- Remove `getCacheKey()`, `fetchCachedFeed()`, and the race logic in `fetchUnifiedFeed()`. All calls go straight to `fetchUnifiedFeedFromAPI()`
+- `src/components/app/WhatsHappening.tsx` -- Fetch trending categories from the first feed page data (already in TanStack Query cache) or compute from API response directly
 
-1. `src/hooks/use-unified-feed.ts` -- Remove `ppv-purchased-tokens` query and `purchasedTokenIds` usage
-2. `src/lib/logger.ts` -- Add batching: queue logs in an array, flush via `setInterval` (30s) and `visibilitychange`/`beforeunload`
-3. `src/contexts/AuthContext.tsx` -- Change auth success log from `warn` to `info`
-4. `src/components/app/cards/VideoCard.tsx` -- Remove `usePPVPurchaseCount` call (only show static "PPV" label)
-5. `src/components/app/cards/ImageCard.tsx` -- Remove `usePPVPurchaseCount` call (only show static "PPV" label)
-6. `src/hooks/use-bookmarks.ts` -- Has a similar `ppv_purchases` query for bookmarks; keep but add longer staleTime
+**Database cleanup (SQL migration):**
+- Unschedule the `refresh-feed-cache` cron job
+- Optionally truncate or drop the `feed_cache` table
 
-**Estimated credit savings:**
-- PPV feed query removal: ~1 DB query per feed load per user
-- PPV count per card removal: ~N DB queries per feed page (one per PPV card)
-- Logger batching: reduces edge function calls from per-error to ~2/minute max
-- Auth log downgrade: eliminates 1 edge function call per login
+**Impact:**
+- Eliminates the #1 source of 504 timeouts and DB saturation
+- Removes 6 DB writes per hour + 6 API calls per hour from the edge function
+- Removes 1 DB read per feed load per user (the cache race)
+- Feed loads become simpler and more predictable -- just one API call
 
