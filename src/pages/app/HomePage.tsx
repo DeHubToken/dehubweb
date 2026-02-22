@@ -479,7 +479,7 @@ export default function HomePage() {
               const isActive = activeTab === tab.value;
               return (
                 <button
-                  key={`${tab.value}-${activeTab}`}
+                  key={tab.value}
                   onClick={() => handleTabClick(tab.value)}
                   className={cn(
                     'relative flex-1 flex items-center justify-center px-3 sm:px-4 py-2 rounded-xl',
