@@ -1126,11 +1126,8 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
         </div>
       </div>
 
-      <div>
-        <Button variant="glass" className="w-full">
-          {t('settings.applyChanges')}
-        </Button>
-      </div>
+
+
     </div>
   );
 }
@@ -1230,11 +1227,8 @@ function ContentSettings() {
         />
       </div>
 
-      <div className="flex justify-end">
-        <Button className="bg-zinc-800 text-white hover:bg-zinc-700 border border-zinc-700">
-          {t('settings.savePreferences')}
-        </Button>
-      </div>
+
+
     </div>
   );
 }
