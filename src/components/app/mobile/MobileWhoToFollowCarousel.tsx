@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { UserPlus, Loader2, ChevronRight, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -61,6 +61,20 @@ export function MobileWhoToFollowCarousel() {
       return true;
     });
   }, [allSuggestions, followedUsers]);
+
+  // Auto-fetch more when filtered list drops below 3
+  const prevFilteredCount = useRef(filteredSuggestions.length);
+  useEffect(() => {
+    if (
+      filteredSuggestions.length < 3 &&
+      filteredSuggestions.length < prevFilteredCount.current &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
+      fetchNextPage();
+    }
+    prevFilteredCount.current = filteredSuggestions.length;
+  }, [filteredSuggestions.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   // Load more when user scrolls near the end of the carousel
   const carouselRef = useRef<HTMLDivElement>(null);
