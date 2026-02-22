@@ -89,14 +89,14 @@ export function BalanceCard() {
         </div>
       </div>
 
-      {/* Full Wallet button */}
+      {/* Wallet button */}
       <Button
         variant="glass"
         className="w-full mt-4 rounded-xl"
         onClick={() => navigate('/app/wallet')}
       >
         <Wallet className="w-4 h-4 mr-2" />
-        {t('commandCentre.fullWallet')}
+        Wallet
       </Button>
     </div>
   );
