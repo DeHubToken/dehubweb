@@ -7,6 +7,7 @@ import { getDPayTransactions, type DPayTransaction } from '@/lib/api/dpay';
 import { useAuth } from '@/contexts/AuthContext';
 import { subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { AnimatedFilterPill } from '@/components/app/feeds/AnimatedFilterPill';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 const COLORS = ['#22c55e', '#3b82f6', '#eab308', '#ef4444', '#a855f7'];
@@ -77,19 +78,16 @@ export function IncomeChart() {
       {/* Header with time filters on same line */}
       <div className="flex items-center justify-between mb-4">
         <span className="text-zinc-400 text-sm">{t('commandCentre.incomeChart')}</span>
-        <div className="flex items-center gap-1 bg-zinc-800/50 rounded-xl p-1">
+        <div className="flex items-center gap-1 pl-1 py-1">
           {timeFilters.map((filter) => (
-            <button
+            <AnimatedFilterPill
               key={filter}
+              layoutId="income-time"
+              isActive={activeFilter === filter}
               onClick={() => setActiveFilter(filter)}
-              className={`px-3 py-1 text-xs rounded-lg transition-colors ${
-                activeFilter === filter
-                  ? 'bg-emerald-600 text-white'
-                  : 'text-zinc-400 hover:text-white'
-              }`}
             >
               {filter}
-            </button>
+            </AnimatedFilterPill>
           ))}
         </div>
       </div>

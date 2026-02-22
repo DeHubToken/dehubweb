@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { AnimatedFilterPill } from '@/components/app/feeds/AnimatedFilterPill';
 import { TrendingUp, Info, Settings2, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FundActions } from './FundActions';
@@ -188,19 +189,16 @@ export function TransactionsTab() {
           <p className="text-zinc-400 text-sm mb-2">Income vs. Expenditure</p>
 
           {/* Time Filters */}
-          <div className="flex items-center gap-1 mb-4 bg-zinc-800/50 rounded-xl p-1 w-fit">
+          <div className="flex items-center gap-1 mb-4 pl-1 py-1 w-fit">
             {timeFilters.map((filter) => (
-              <button
+              <AnimatedFilterPill
                 key={filter}
+                layoutId="txns-tab-time"
+                isActive={activeFilter === filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`px-3 py-1 text-xs rounded-lg transition-colors ${
-                  activeFilter === filter
-                    ? 'bg-emerald-600 text-white'
-                    : 'text-zinc-400 hover:text-white'
-                }`}
               >
                 {filter}
-              </button>
+              </AnimatedFilterPill>
             ))}
           </div>
 
