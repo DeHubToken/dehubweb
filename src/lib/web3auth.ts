@@ -207,7 +207,9 @@ let cachedPimlicoConfig: { bundlerUrl: string; paymasterUrl: string } | null = n
  */
 function clearWeb3AuthStorage(): void {
   if (typeof window === 'undefined') return;
-  const prefixes = ['torus', 'web3auth', 'tkey'];
+  // 'openlogin' is Web3Auth v10's internal auth layer — must be included so
+  // cached OAuth sessions don't silently re-authenticate on the next login click.
+  const prefixes = ['torus', 'web3auth', 'tkey', 'openlogin'];
   for (const storage of [localStorage, sessionStorage]) {
     const keysToRemove: string[] = [];
     for (let i = 0; i < storage.length; i++) {
@@ -466,6 +468,29 @@ function isPopupBlockedError(err: unknown): boolean {
   );
 }
 
+/**
+ * Returns OAuth provider-specific options to force account selection / re-login.
+ * Without these, cached OAuth cookies cause silent auto-login with the last used account.
+ */
+function getProviderForceLoginOptions(authConnection: AuthConnectionType): Record<string, string> {
+  switch (authConnection) {
+    case AUTH_CONNECTION.GOOGLE:
+      // Forces Google account picker even when the user has an active Google session
+      return { prompt: 'select_account' };
+    case AUTH_CONNECTION.TWITTER:
+      // Forces Twitter re-authentication screen
+      return { force_login: 'true' };
+    case AUTH_CONNECTION.DISCORD:
+    case AUTH_CONNECTION.GITHUB:
+    case AUTH_CONNECTION.APPLE:
+      // Generic OAuth prompt=login forces re-auth for these providers
+      return { prompt: 'login' };
+    default:
+      // EMAIL_PASSWORDLESS, SMS_PASSWORDLESS, TELEGRAM — no forced re-auth needed
+      return {};
+  }
+}
+
 export async function connectToSocialProvider(
   authConnection: AuthConnectionType,
   loginHint?: string,
@@ -503,9 +528,13 @@ export async function connectToSocialProvider(
     redirectUrl: window.location.origin + window.location.pathname,
   };
 
-  if (loginHint) {
-    params.extraLoginOptions = { login_hint: loginHint };
-  }
+  // Always pass provider-specific options to force the account picker / re-login screen.
+  // This prevents silent auto-login with a cached OAuth session from a previous login.
+  const forceLoginOptions = getProviderForceLoginOptions(authConnection);
+  params.extraLoginOptions = {
+    ...forceLoginOptions,
+    ...(loginHint ? { login_hint: loginHint } : {}),
+  };
 
   savePreLoginPath();
 
