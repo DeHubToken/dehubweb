@@ -69,6 +69,12 @@ import KillerWhaleBadge from '@/assets/badges/Killer Whale.png';
 import BlueWhaleBadge from '@/assets/badges/Blue Whale.png';
 import MeglodonBadge from '@/assets/badges/Meglodon.png';
 
+// ── Coin / currency logos (Command Centre wallet) ──
+import dehubCoin from '@/assets/dehub-coin.png';
+import bnbLogo from '@/assets/bnb-logo.png';
+import usdtLogo from '@/assets/usdt-logo.png';
+import ethLogo from '@/assets/eth-logo.png';
+
 // Complete list of all 3D/PNG icons that should be browser-cached
 const ALL_ICONS = [
   aiStarIcon,
@@ -103,6 +109,8 @@ const ALL_ICONS = [
   TortoiseBadge, CrabBadge, PiranhaBadge, LobsterBadge, OctopusBadge,
   CobraBadge, CrocoditeBadge, DolphinBadge, TigerSharkBadge,
   GreatWhiteSharkBadge, KillerWhaleBadge, BlueWhaleBadge, MeglodonBadge,
+  // Coin logos
+  dehubCoin, bnbLogo, usdtLogo, ethLogo,
 ];
 
 // ── MODULE-LEVEL PRELOAD (runs immediately on import, before any render) ──
