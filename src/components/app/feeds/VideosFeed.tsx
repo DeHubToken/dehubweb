@@ -714,7 +714,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
             transition={{ duration: 0.25, ease: 'easeOut' }}
             className="overflow-hidden"
           >
-            <div data-no-swipe className="relative bg-zinc-900 rounded-2xl p-4 mb-3 space-y-4">
+            <div data-no-swipe className="relative px-2 sm:px-3 pb-2 space-y-4">
               <SortFilterSection selected={selectedSort} onSelect={setSelectedSort} />
               <CategoryFilterSection 
                 categories={categories} 

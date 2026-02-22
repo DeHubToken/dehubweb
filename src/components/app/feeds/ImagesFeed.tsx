@@ -475,7 +475,7 @@ export function ImagesFeed({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="relative p-3 sm:p-4 space-y-4 bg-zinc-900 mx-2 sm:mx-3 rounded-2xl mb-2">
+            <div className="relative px-2 sm:px-3 pb-2 space-y-4">
               <SortFilterSection 
                 selected={selectedSort} 
                 onSelect={setSelectedSort} 
