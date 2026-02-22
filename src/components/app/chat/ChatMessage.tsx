@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Pin, ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw } from 'lucide-react';
+import { Pin, ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TranslatableText, renderTextWithLinks } from '../TranslatableText';
@@ -8,7 +8,7 @@ import { useLiveChatUser } from '@/hooks/use-livechat';
 import { useNavigate } from 'react-router-dom';
 import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
-import translateGlobeIcon from '@/assets/icons/translate-globe-icon.png';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -196,7 +196,7 @@ export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnb
                   </button>
                 ) : (
                   <button onClick={handleTranslate} className="flex items-center text-zinc-500 hover:text-zinc-300 transition-colors">
-                    <img src={translateGlobeIcon} alt="Translate" className="w-3 h-3 opacity-40 brightness-200 invert" />
+                    <Languages className="w-3 h-3" />
                   </button>
                 )
               )}
@@ -230,7 +230,7 @@ export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnb
                   </button>
                 ) : (
                   <button onClick={handleTranslate} className="flex items-center text-zinc-500 hover:text-zinc-300 transition-colors">
-                    <img src={translateGlobeIcon} alt="Translate" className="w-3 h-3 opacity-40 brightness-200 invert" />
+                    <Languages className="w-3 h-3" />
                   </button>
                 )
               )}

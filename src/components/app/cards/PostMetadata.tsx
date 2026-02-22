@@ -4,8 +4,7 @@
  * Displays timestamp, view count, and optional translate control below post content.
  */
 
-import { Eye, RotateCcw, Loader2 } from 'lucide-react';
-import translateGlobeIcon from '@/assets/icons/translate-globe-icon.png';
+import { Eye, RotateCcw, Loader2, Languages } from 'lucide-react';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { cn } from '@/lib/utils';
 
@@ -68,7 +67,7 @@ export function PostMetadata({ timestamp, viewCount, isAd, translateControl }: P
         ) : translateControl.error ? (
           <span>{translateControl.error}</span>
         ) : (
-          <img src={translateGlobeIcon} alt="Translate" className="w-4 h-4 opacity-50 brightness-200 invert" />
+          <Languages className="w-4 h-4" />
         )}
       </button>
     );
