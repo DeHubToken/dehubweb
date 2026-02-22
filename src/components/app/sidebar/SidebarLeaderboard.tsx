@@ -67,6 +67,8 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
   };
   const blockedLeaderboardUsers: string[] = [];
 
+  const isTimeDelta = apiPeriod !== 'all';
+
   const entries = (data?.result?.byWalletBalance || [])
     .filter((entry: LeaderboardEntry) => entry.username && !blockedLeaderboardUsers.includes(entry.username.toLowerCase()))
     .map((entry: LeaderboardEntry) => {
@@ -79,7 +81,12 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
         ...(badgeOverride !== undefined ? { badgeBalance: badgeOverride } : {}),
       };
     })
-    .sort((a, b) => (b.total ?? 0) - (a.total ?? 0))
+    .sort((a, b) => {
+      if (isTimeDelta) {
+        return (b.delta ?? 0) - (a.delta ?? 0);
+      }
+      return (b.total ?? 0) - (a.total ?? 0);
+    })
     .slice(0, 50);
 
   // Badge balances are already embedded in leaderboard cache entries (entry.badgeBalance)
