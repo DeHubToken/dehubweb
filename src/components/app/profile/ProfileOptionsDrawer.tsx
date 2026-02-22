@@ -1,4 +1,4 @@
-import { Copy, AtSign, Wallet, MessageCircle, Gift, Bell, Handshake, UserMinus, Ban, LayoutDashboard } from 'lucide-react';
+import { Copy, AtSign, Wallet, MessageCircle, Gift, Bell, Handshake, UserMinus, Ban, LayoutDashboard, Loader2, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { DISPLAY_WALLET_OVERRIDES } from './ProfileConstants';
@@ -12,6 +12,9 @@ interface ProfileOptionsDrawerProps {
   setShareSheetOpen: (open: boolean) => void;
   onMakeOffer: () => void;
   onTip?: () => void;
+  isBlocked?: boolean;
+  isBlockLoading?: boolean;
+  handleBlock?: () => void;
 }
 
 export function ProfileOptionsContent({
@@ -22,6 +25,9 @@ export function ProfileOptionsContent({
   setShareSheetOpen,
   onMakeOffer,
   onTip,
+  isBlocked = false,
+  isBlockLoading = false,
+  handleBlock,
 }: ProfileOptionsDrawerProps) {
   const navigate = useNavigate();
   const handleCopyProfileUrl = () => {
@@ -50,6 +56,13 @@ export function ProfileOptionsContent({
 
   const handleToggleNotifications = () => {
     toast.success('Notifications enabled for this profile');
+    setShareSheetOpen(false);
+  };
+
+  const onBlockClick = () => {
+    if (handleBlock) {
+      handleBlock();
+    }
     setShareSheetOpen(false);
   };
 
@@ -98,69 +111,79 @@ export function ProfileOptionsContent({
       )}
       {!isViewingOwnProfile && (
         <>
-          <button
-            onClick={() => {
-              setShareSheetOpen(false);
-              navigate('/app/messages', { state: { openDmWith: profile.walletAddress, username: profile.handle?.replace('@', '') } });
-            }}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
-          >
-            <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-              <MessageCircle className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-white font-medium">Message</span>
-          </button>
-          {onTip && (
-            <button
-              onClick={() => { setShareSheetOpen(false); onTip(); }}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
-            >
-              <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                <Gift className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-white font-medium">Send Tip</span>
-            </button>
+          {!isBlocked && (
+            <>
+              <button
+                onClick={() => {
+                  setShareSheetOpen(false);
+                  navigate('/app/messages', { state: { openDmWith: profile.walletAddress, username: profile.handle?.replace('@', '') } });
+                }}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
+              >
+                <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                  <MessageCircle className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-white font-medium">Message</span>
+              </button>
+              {onTip && (
+                <button
+                  onClick={() => { setShareSheetOpen(false); onTip(); }}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
+                >
+                  <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                    <Gift className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-white font-medium">Send Tip</span>
+                </button>
+              )}
+              <button
+                onClick={handleToggleNotifications}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
+              >
+                <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                  <Bell className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-white font-medium">Notify</span>
+              </button>
+              <button
+                onClick={onMakeOffer}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
+              >
+                <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                  <Handshake className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-white font-medium">Make Offer</span>
+              </button>
+              {isFollowing && (
+                <button
+                  onClick={handleUnfollow}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-red-500/10 backdrop-blur-md border border-red-500/20 hover:bg-red-500/20 transition-colors text-left"
+                >
+                  <div className="w-8 h-8 rounded-xl bg-red-500/20 backdrop-blur-sm flex items-center justify-center">
+                    <UserMinus className="w-4 h-4 text-red-400" />
+                  </div>
+                  <span className="text-red-400 font-medium">Unfollow</span>
+                </button>
+              )}
+            </>
           )}
           <button
-            onClick={handleToggleNotifications}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
-          >
-            <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-              <Bell className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-white font-medium">Notify</span>
-          </button>
-          <button
-            onClick={onMakeOffer}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
-          >
-            <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-              <Handshake className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-white font-medium">Make Offer</span>
-          </button>
-          {isFollowing && (
-            <button
-              onClick={handleUnfollow}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-red-500/10 backdrop-blur-md border border-red-500/20 hover:bg-red-500/20 transition-colors text-left"
-            >
-              <div className="w-8 h-8 rounded-xl bg-red-500/20 backdrop-blur-sm flex items-center justify-center">
-                <UserMinus className="w-4 h-4 text-red-400" />
-              </div>
-              <span className="text-red-400 font-medium">Unfollow</span>
-            </button>
-          )}
-          <button
-            onClick={() => {
-              toast.info('User blocked');
-              setShareSheetOpen(false);
-            }}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-red-500/10 backdrop-blur-md border border-red-500/20 hover:bg-red-500/20 transition-colors text-left"
+            onClick={onBlockClick}
+            disabled={isBlockLoading}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-red-500/10 backdrop-blur-md border border-red-500/20 hover:bg-red-500/20 transition-colors text-left disabled:opacity-50"
           >
             <div className="w-8 h-8 rounded-xl bg-red-500/20 backdrop-blur-sm flex items-center justify-center">
-              <Ban className="w-4 h-4 text-red-400" />
+              {isBlockLoading ? (
+                <Loader2 className="w-4 h-4 text-red-400 animate-spin" />
+              ) : isBlocked ? (
+                <ShieldCheck className="w-4 h-4 text-red-400" />
+              ) : (
+                <Ban className="w-4 h-4 text-red-400" />
+              )}
             </div>
-            <span className="text-red-400 font-medium">Block</span>
+            <span className="text-red-400 font-medium">
+              {isBlocked ? 'Unblock' : 'Block'}
+            </span>
           </button>
         </>
       )}

@@ -1,5 +1,5 @@
 import { 
-  UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check
+  UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check, Ban
 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -75,6 +75,8 @@ interface ProfileHeaderProps {
   // Bio translation
   translatedBio: string | null;
   setTranslatedBio: (bio: string | null) => void;
+  // Block state
+  isBlocked?: boolean;
 }
 
 export function ProfileHeader({
@@ -110,6 +112,7 @@ export function ProfileHeader({
   setFollowListDrawerOpen,
   translatedBio,
   setTranslatedBio,
+  isBlocked = false,
 }: ProfileHeaderProps) {
   const navigate = useNavigate();
 
@@ -225,6 +228,16 @@ export function ProfileHeader({
               >
                 <Pencil className="w-4 h-4" />
                 Edit Profile
+              </Button>
+            ) : isBlocked ? (
+              <Button 
+                size="sm" 
+                variant="outline"
+                className="rounded-xl border-red-500/50 text-red-400 gap-2 cursor-default"
+                disabled
+              >
+                <Ban className="w-4 h-4" />
+                Blocked
               </Button>
             ) : (
               <>

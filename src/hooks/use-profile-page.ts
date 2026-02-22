@@ -1,7 +1,7 @@
 import { useMemo, useEffect, useRef, useCallback, useState } from 'react';
 import { useSearchParams, useParams } from 'react-router-dom';
 import { Home, MessageSquare, Image, Film, Star, Play, Radio, PieChart } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile, useDeHubUserContent, separateUserContent } from '@/hooks/use-dehub-profile';
 import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
@@ -12,7 +12,8 @@ import { getBadgeUrl } from '@/lib/staking-badges';
 import { useStories, useWatchedStories } from '@/hooks/use-stories';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
-import { getUserComments } from '@/lib/api/dehub';
+import { getUserComments, getBlockStatus, blockUser, unblockUser } from '@/lib/api/dehub';
+import { toast } from 'sonner';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { TabValue } from '@/components/app/profile/ProfileConstants';
 
@@ -26,7 +27,9 @@ export function useProfilePage() {
 
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [translatedBio, setTranslatedBio] = useState<string | null>(null);
+  const [isBlockLoading, setIsBlockLoading] = useState(false);
   const profileContainerRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
 
   // Reset scroll position on mount
   useEffect(() => {
@@ -157,6 +160,36 @@ export function useProfilePage() {
   const isPending = apiProfile?.isPending ?? false;
   const isTargetPrivate = apiProfile?.isPrivate ?? false;
 
+  // Block status
+  const { data: blockStatus } = useQuery({
+    queryKey: ['block-status', apiProfile?.walletAddress],
+    queryFn: () => getBlockStatus(apiProfile!.walletAddress),
+    enabled: !!apiProfile?.walletAddress && isAuthenticated && !isViewingOwnProfile,
+    staleTime: 60 * 1000,
+  });
+
+  const isBlocked = blockStatus?.isBlocked ?? false;
+  const isBlockedBy = blockStatus?.isBlockedBy ?? false;
+
+  const handleBlock = useCallback(async () => {
+    if (!apiProfile?.walletAddress || isBlockLoading) return;
+    setIsBlockLoading(true);
+    try {
+      if (isBlocked) {
+        await unblockUser(apiProfile.walletAddress);
+        toast.success(`Unblocked ${apiProfile.name || apiProfile.handle || 'user'}`);
+      } else {
+        await blockUser(apiProfile.walletAddress);
+        toast.success(`Blocked ${apiProfile.name || apiProfile.handle || 'user'}`);
+      }
+      queryClient.invalidateQueries({ queryKey: ['block-status', apiProfile.walletAddress] });
+      queryClient.invalidateQueries({ queryKey: ['block-list'] });
+    } catch (error) {
+      handleApiError(error, `Failed to ${isBlocked ? 'unblock' : 'block'} user`);
+    } finally {
+      setIsBlockLoading(false);
+    }
+  }, [apiProfile, isBlocked, isBlockLoading, queryClient, handleApiError]);
   // Pull-to-refresh
   const triggerRefresh = useCallback(() => {
     if (isRefreshing) return;
@@ -232,6 +265,11 @@ export function useProfilePage() {
     isFollowing,
     isPending,
     isTargetPrivate,
+    // Block
+    isBlocked,
+    isBlockedBy,
+    isBlockLoading,
+    handleBlock,
     // Pull-to-refresh
     profileContainerRef,
     pullDistance,
