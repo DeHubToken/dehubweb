@@ -752,7 +752,7 @@ export default function NotificationsPage() {
                       <span className={`ml-1 px-1.5 py-0.5 text-xs rounded-lg transition-colors duration-200 ${
                         activeTab === tab.value
                           ? 'bg-white/20 text-white'
-                          : 'bg-primary text-primary-foreground'
+                          : 'bg-red-500 text-white'
                       }`}>
                         {count > 99 ? '99+' : count}
                       </span>
