@@ -74,43 +74,24 @@ export function IncomeChart() {
 
   return (
     <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <span className="text-zinc-400 text-sm">{t('commandCentre.incomeChart')}</span>
-          {topSource ? (
-            <>
-              <p className="text-zinc-500 text-xs mt-1">
-                Top source of income{' '}
-                <span className="text-white flex items-center gap-1 inline-flex">
-                  {topSource.rawValue.toLocaleString()}
-                  <img src={dehubCoin} alt="DHB" className="w-3 h-3 inline" />
-                </span>{' '}
-                {' '}{t('commandCentre.cameFrom')}
-              </p>
-              <p className="text-emerald-400 text-sm font-medium">{topSource.name}</p>
-            </>
-          ) : (
-            <p className="text-zinc-500 text-xs mt-1">{t('commandCentre.noIncomeData')}</p>
-          )}
+      {/* Header with time filters on same line */}
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-zinc-400 text-sm">{t('commandCentre.incomeChart')}</span>
+        <div className="flex items-center gap-1 bg-zinc-800/50 rounded-xl p-1">
+          {timeFilters.map((filter) => (
+            <button
+              key={filter}
+              onClick={() => setActiveFilter(filter)}
+              className={`px-3 py-1 text-xs rounded-lg transition-colors ${
+                activeFilter === filter
+                  ? 'bg-emerald-600 text-white'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              {filter}
+            </button>
+          ))}
         </div>
-      </div>
-
-      {/* Time Filters */}
-      <div className="flex items-center gap-1 mb-4 bg-zinc-800/50 rounded-xl p-1 w-fit ml-auto">
-        {timeFilters.map((filter) => (
-          <button
-            key={filter}
-            onClick={() => setActiveFilter(filter)}
-            className={`px-3 py-1 text-xs rounded-lg transition-colors ${
-              activeFilter === filter
-                ? 'bg-emerald-600 text-white'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            {filter}
-          </button>
-        ))}
       </div>
 
       {/* Donut Chart with Legend */}
