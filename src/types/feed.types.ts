@@ -209,6 +209,8 @@ export interface LiveStream extends BaseFeedItem {
   likeCount?: number;
   /** Number of comments */
   commentCount?: number;
+  /** MongoDB ObjectId of the stream (needed for /api/live/{id}/settings API calls) */
+  streamId?: string;
 }
 
 /**

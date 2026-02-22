@@ -292,6 +292,9 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
   const creatorId = nft.minter || nft.creator?.id;
   const creatorUsername = nft.mintername || nft.creator?.username;
 
+  // MongoDB ObjectId needed for /api/live/{id}/settings endpoint
+  const streamId = (nft.stream as any)?._id || nft.stream?.streamId;
+
   return {
     id,
     type: 'live',
@@ -305,6 +308,7 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     isLive: nft.is_live ?? true,
     creatorId,
     creatorUsername,
+    ...(streamId ? { streamId } : {}),
   };
 }
 

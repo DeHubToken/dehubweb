@@ -296,15 +296,18 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
 
   const handleEndStream = useCallback(async () => {
     if (!isAuthenticated) return;
+    // Prefer MongoDB ObjectId (stream.streamId) over numeric tokenId (stream.id)
+    // DeHub's PATCH /api/live/{id}/settings requires a MongoDB ObjectId
+    const apiStreamId = stream.streamId || stream.id;
     try {
-      await end(stream.id);
+      await end(apiStreamId);
       setStreamEnded(true);
       toast.success('Stream ended');
     } catch (err) {
       console.error('[LiveStream] End failed:', err);
       toast.error('Failed to end stream');
     }
-  }, [stream.id, isAuthenticated, end]);
+  }, [stream.id, stream.streamId, isAuthenticated, end]);
 
   const getActivityIcon = (type: string) => {
     switch (type) {
