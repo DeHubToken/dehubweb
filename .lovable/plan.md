@@ -1,42 +1,18 @@
 
+## Convert Token Action Popup to Drawer
 
-## Fix: PPV Payments Always Show "DHB on Base" Regardless of Selected Chain
-
-### Problem
-
-When a post is minted on BNB chain (56), the PPV payment drawer still says "DHB on Base" and processes the payment on Base. This happens because:
-
-1. The `VideoItem` type has no `chainId` field
-2. The `mapNFTToVideoItem` mapper ignores the NFT's `chainId` field (which exists on `DeHubNFT` at line 157)
-3. `PPVDrawerContent` doesn't accept or pass a `chainId` prop
-4. `usePPVPayment` defaults to `BASE_CHAIN_ID` when no `chainId` is provided
-
-### Solution
-
-Thread the post's `chainId` through the entire PPV pipeline so payments execute on the correct chain.
+Currently, when you tap a token in the wallet, a `Dialog` (popup modal) appears with Send/Receive/Buy actions. This will be converted to a bottom `Drawer` for a more native feel on all devices.
 
 ### Changes
 
-**1. `src/types/feed.types.ts`** -- Add `chainId` to `VideoItem` and `ImagePost`
-- Add optional `chainId?: number` field to both interfaces
+**File: `src/pages/app/FullWalletPage.tsx`**
 
-**2. `src/hooks/use-dehub-feed.ts`** -- Map `chainId` from NFT data
-- In `mapNFTToVideoItem`: extract `nft.chainId` and include it in the returned object
-- In `mapNFTToImagePost`: same change
+In the `TokenActionDrawer` component (lines 303-364):
+- Replace `Dialog`/`DialogContent`/`DialogHeader`/`DialogTitle` with `Drawer`/`DrawerContent`/`DrawerHeader`/`DrawerTitle` from the existing drawer component
+- Use the `glass` prop on `DrawerContent` to match the liquid glass aesthetic already used elsewhere in the app
+- Keep the same token icon, symbol, balance display, and Send/Receive/Buy action buttons
+- Update imports: remove `Dialog`/`DialogContent`/`DialogHeader`/`DialogTitle`, add `Drawer`/`DrawerContent`/`DrawerHeader`/`DrawerTitle` from `@/components/ui/drawer`
 
-**3. `src/components/app/cards/PPVDrawerContent.tsx`** -- Accept and pass `chainId`
-- Add `chainId?: number` to `PPVDrawerContentProps`
-- Pass it through to `usePPVPayment`
+### Technical Details
 
-**4. `src/components/app/cards/VideoCard.tsx`** -- Pass `chainId` to PPV drawer
-- Where `PPVDrawerContent` is rendered, add `chainId={video.chainId}` (there are two VideoCard components in this file -- the compact one and the full one, both need updating)
-
-**5. Any other card components rendering `PPVDrawerContent`** -- Same pattern: pass through the item's `chainId`
-
-**6. `src/hooks/use-bookmarks.ts`** -- Map `chainId` in bookmark mappers
-- Include `chainId: nft.chainId` in the bookmark video/image mappers
-
-**7. `src/components/app/feeds/MusicFeed.tsx`** -- Map `chainId` in its local mapper
-- Include `chainId: nft.chainId` in `mapNFTToVideoItem`
-
-This ensures PPV payments execute on whichever chain the content was originally minted on (Base or BNB), using the correct DHB token contract address for that chain.
+The drawer will slide up from the bottom on all devices (mobile and desktop), matching the existing drawer pattern used throughout the app. The `glass` prop enables the frosted glass styling (`bg-zinc-900/10 backdrop-blur-2xl`). The existing `shouldScaleBackground` and touch handling from the drawer component will provide a native swipe-to-dismiss experience.
