@@ -1,59 +1,71 @@
 
 
-# Fix Smooth Scroll Bounce Clipping on All Feed Sort Menus
+# Improve Google Login Toast Flow
 
 ## Problem
 
-The animated "liquid glass" filter pills use `framer-motion` layoutId animations with shadows and borders that extend slightly outside their container. The parent `motion.div` (the collapsible filter panel) uses `overflow-hidden` which clips these visual effects -- especially visible when scrolling to the far left where the bounce/elastic effect pushes content past the container edge.
+When logging in with Google, the user clicks the button, a Google popup opens, and nothing happens in the app until the popup closes. Then all the progress toasts ("Getting your account...", "Please sign the message...", "Verifying with DeHub...", "Welcome back!") flash through rapidly at the end. The user has no feedback during the waiting period.
 
-This was already fixed in MusicFeed by using `overflow-y-clip overflow-x-visible` instead of `overflow-hidden`. The same fix needs to be applied to HomeFeed, VideosFeed, ShortsFeed, and ImagesFeed.
+## Solution
 
-## Changes
+Add progressive toast notifications at each stage of the login flow so the user sees real-time feedback:
 
-### 1. HomeFeed.tsx (line ~1072)
+1. **Immediately on click**: Show "Connecting to Google..." toast (before the popup even opens)
+2. **After Google popup returns**: Update to "Setting up your account..." 
+3. **During signature**: Update to "Signing in..."
+4. **During API verification**: Update to "Verifying..."
+5. **On success**: Show "Welcome back!" or "Successfully logged in!"
 
-Change the `motion.div` wrapper class from:
-```
-className="overflow-hidden"
-```
-to:
-```
-className="overflow-y-clip overflow-x-visible"
-```
+## Technical Changes
 
-### 2. VideosFeed.tsx (line ~715)
+### 1. `src/contexts/AuthContext.tsx` - `connectWithProvider` (around line 843)
 
-Same change on the `motion.div` wrapper:
-```
-className="overflow-hidden"  ->  className="overflow-y-clip overflow-x-visible"
-```
+Add an immediate toast right when the user clicks Google (before `connectToSocialProvider` is called):
 
-### 3. ShortsFeed.tsx (line ~505)
+```typescript
+const connectWithProvider = async (provider: SocialProvider, isRetry = false) => {
+    setIsConnecting(true);
+    setActiveProvider(provider);
+    setConnectionSource('web3auth');
+    localStorage.setItem('dehub_connection_source', 'web3auth');
 
-Same change:
-```
-className="overflow-hidden"  ->  className="overflow-y-clip overflow-x-visible"
-```
+    // Show immediate feedback
+    toast.loading(`Connecting to ${provider === 'google' ? 'Google' : provider === 'twitter' ? 'X' : provider}...`, { id: 'auth-popup' });
 
-### 4. ImagesFeed.tsx (line ~476)
-
-Same change:
-```
-className="overflow-hidden"  ->  className="overflow-y-clip overflow-x-visible"
+    try { ...
 ```
 
-### 5. Add `overflow-y-visible` to pill scroll rows (all 4 feeds)
+### 2. `src/contexts/AuthContext.tsx` - `completeDeHubAuth` (around line 698-818)
 
-Each `div` containing the `AnimatedFilterPill` buttons (the ones with `flex gap-1.5 overflow-x-auto scrollbar-hide`) should also get `overflow-y-visible` added, matching MusicFeed's pattern. This ensures the pill shadows render fully above and below the scroll row.
+Update the toast progression to flow naturally from the existing "Connecting to Google..." toast:
 
-## Why this works
+- Change line ~705 from `toast.loading('Getting your account...')` to `toast.loading('Setting up your account...')` — this replaces the "Connecting to Google..." toast since it uses the same `id: 'auth-popup'`
+- Keep the signature toast at line ~737: "Signing in..." (shorter, cleaner)  
+- Keep the verification toast at line ~786: "Almost there..." (friendlier)
+- Keep the success toast at line ~812
 
-- `overflow-y-clip` still clips vertical overflow so the AnimatePresence height animation (expand/collapse) works correctly
-- `overflow-x-visible` allows the horizontal bounce/elastic scroll effect to render without clipping the glass pill shadows at the edges
-- `overflow-y-visible` on the inner scroll row lets pill borders/shadows render above and below the row
+### 3. `src/contexts/AuthContext.tsx` - Dismiss toast on cancellation
 
-## Feeds NOT affected
+In the `connectWithProvider` catch block (around line 857), dismiss the loading toast if the user cancels or if there's an error, so it doesn't linger:
 
-- LiveFeed and PPVFeed do not use AnimatedFilterPill sort menus, so no changes needed
-- MusicFeed already has the fix applied
+```typescript
+} catch (error: any) {
+    // Dismiss any lingering loading toast
+    toast.dismiss('auth-popup');
+    ...
+```
+
+Also dismiss on retry path (line ~865) so the "Retrying..." toast replaces cleanly.
+
+## Result
+
+The user will see a smooth progression:
+- Click Google -> "Connecting to Google..." (instant)
+- Google popup opens and user authenticates
+- Popup closes -> "Setting up your account..." 
+- Auto-sign -> "Signing in..."
+- API call -> "Almost there..."  
+- Done -> "Welcome back!"
+
+No more dead silence followed by a rapid toast avalanche.
 
