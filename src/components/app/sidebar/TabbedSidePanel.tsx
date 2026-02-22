@@ -1,4 +1,4 @@
-import { useState, useRef, memo } from 'react';
+import { useState, useRef, useCallback, memo } from 'react';
 import { SquareUserRound, Trophy, MessagesSquare } from 'lucide-react';
 import { WhoToFollow } from '../WhoToFollow';
 import { SidebarLeaderboard, type SidebarLeaderboardHandle } from './SidebarLeaderboard';
@@ -15,9 +15,17 @@ const tabs: { id: TabType; icon: typeof SquareUserRound }[] = [
 
 const TAB_INDEX: Record<TabType, number> = { leaderboard: 0, follow: 1, chat: 2 };
 
+// Persist tab state across remounts so layout changes don't reset it
+let persistedTab: TabType = 'leaderboard';
+
 export const TabbedSidePanel = memo(function TabbedSidePanel() {
-  const [activeTab, setActiveTab] = useState<TabType>('leaderboard');
+  const [activeTab, setActiveTab] = useState<TabType>(persistedTab);
   const leaderboardRef = useRef<SidebarLeaderboardHandle>(null);
+
+  const handleTabClick = useCallback((id: TabType) => {
+    persistedTab = id;
+    setActiveTab(id);
+  }, []);
 
   const activeIndex = TAB_INDEX[activeTab];
 
@@ -31,7 +39,7 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
             <button
               type="button"
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabClick(tab.id)}
               className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
                 activeTab === tab.id
                   ? 'text-white'
