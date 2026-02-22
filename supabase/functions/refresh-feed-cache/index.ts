@@ -78,44 +78,41 @@ Deno.serve(async (req) => {
     
     const results: { key: string; success: boolean; error?: string; itemCount?: number }[] = [];
     
-    // Fetch and cache each configuration
-    for (const config of CACHE_CONFIGS) {
-      try {
-        console.log(`Processing cache key: ${config.key}`);
-        
-        const data = await fetchFeed(config);
-        
-        // Validate response has expected structure
-        const feedData = data as { result?: unknown[]; pagination?: unknown };
-        const itemCount = Array.isArray(feedData.result) ? feedData.result.length : 0;
-        
-        console.log(`Fetched ${itemCount} items for ${config.key}`);
-        
-        // Upsert into cache table
-        const { error: upsertError } = await supabase
-          .from("feed_cache")
-          .upsert({
-            cache_key: config.key,
-            data: data,
-            updated_at: new Date().toISOString(),
-          }, { 
-            onConflict: "cache_key" 
-          });
-        
-        if (upsertError) {
-          console.error(`Failed to cache ${config.key}:`, upsertError);
-          results.push({ key: config.key, success: false, error: upsertError.message });
-        } else {
+    // Process in batches of 3 to avoid DeHub 429 rate limits
+    const BATCH_SIZE = 3;
+    for (let i = 0; i < CACHE_CONFIGS.length; i += BATCH_SIZE) {
+      const batch = CACHE_CONFIGS.slice(i, i + BATCH_SIZE);
+      const settled = await Promise.allSettled(
+        batch.map(async (config) => {
+          console.log(`Processing cache key: ${config.key}`);
+          const data = await fetchFeed(config);
+          const feedData = data as { result?: unknown[]; pagination?: unknown };
+          const itemCount = Array.isArray(feedData.result) ? feedData.result.length : 0;
+          console.log(`Fetched ${itemCount} items for ${config.key}`);
+          
+          const { error: upsertError } = await supabase
+            .from("feed_cache")
+            .upsert({
+              cache_key: config.key,
+              data: data,
+              updated_at: new Date().toISOString(),
+            }, { onConflict: "cache_key" });
+          
+          if (upsertError) {
+            console.error(`Failed to cache ${config.key}:`, upsertError);
+            return { key: config.key, success: false, error: upsertError.message };
+          }
           console.log(`Successfully cached ${config.key}`);
-          results.push({ key: config.key, success: true, itemCount });
+          return { key: config.key, success: true, itemCount };
+        })
+      );
+      
+      for (const result of settled) {
+        if (result.status === 'fulfilled') {
+          results.push(result.value);
+        } else {
+          results.push({ key: 'unknown', success: false, error: result.reason?.message || 'Unknown error' });
         }
-      } catch (fetchError) {
-        console.error(`Error fetching ${config.key}:`, fetchError);
-        results.push({ 
-          key: config.key, 
-          success: false, 
-          error: fetchError instanceof Error ? fetchError.message : "Unknown error" 
-        });
       }
     }
     
