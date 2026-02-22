@@ -1,4 +1,5 @@
 import { TrendingUp, TrendingDown, Loader2, Wallet } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -12,7 +13,7 @@ import { fromWei } from '@/lib/contracts/dhb-token';
 import { getDPayTransactions } from '@/lib/api/dpay';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+
 
 /** Placeholder currencies the platform supports alongside DHB */
 const otherCurrencies = [
@@ -24,6 +25,7 @@ const otherCurrencies = [
 export function BalanceCard() {
   const { walletAddress, isAuthenticated } = useAuth();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   // Fetch on-chain DHB balance
   const { data: rawBalance, isLoading: balanceLoading } = useQuery({
@@ -91,7 +93,7 @@ export function BalanceCard() {
       <Button
         variant="glass"
         className="w-full mt-4 rounded-xl"
-        onClick={() => toast.info('Full wallet coming soon')}
+        onClick={() => navigate('/app/wallet')}
       >
         <Wallet className="w-4 h-4 mr-2" />
         {t('commandCentre.fullWallet')}

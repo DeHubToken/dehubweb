@@ -35,6 +35,7 @@ import AssistantPage from "./pages/app/AssistantPage";
 import BuyCoinsPage from "./pages/app/BuyCoinsPage";
 import AgentsPage from "./pages/app/AgentsPage";
 import FeaturesPage from "./pages/app/FeaturesPage";
+import FullWalletPage from "./pages/app/FullWalletPage";
 
 
 /**
@@ -123,6 +124,7 @@ function AppContent() {
               <Route path="bookmarks" element={<BookmarksPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="command-centre" element={<CommandCentrePage />} />
+              <Route path="wallet" element={<FullWalletPage />} />
               <Route path="music" element={<MusicPage />} />
               <Route path="buy" element={<BuyCoinsPage />} />
               <Route path="agents" element={<AgentsPage />} />
