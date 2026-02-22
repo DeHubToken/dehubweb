@@ -765,10 +765,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           <button
             type="button"
             onClick={() => setActiveTab('replies')}
-            className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
+            className={`px-4 py-2 flex items-center justify-center transition-all rounded-lg ${
               activeTab === 'replies'
-                ? 'text-white bg-zinc-800'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06]'
             }`}
           >
             <MessageSquare className="w-5 h-5" />
@@ -776,10 +776,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           <button
             type="button"
             onClick={() => setActiveTab('quotes')}
-            className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
+            className={`px-4 py-2 flex items-center justify-center transition-all rounded-lg ${
               activeTab === 'quotes'
-                ? 'text-white bg-zinc-800'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06]'
             }`}
           >
             <Quote className="w-5 h-5" />
@@ -787,10 +787,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           <button
             type="button"
             onClick={() => setActiveTab('search')}
-            className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
+            className={`px-4 py-2 flex items-center justify-center transition-all rounded-lg ${
               activeTab === 'search'
-                ? 'text-white bg-zinc-800'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06]'
             }`}
           >
             <Search className="w-5 h-5" />
@@ -800,7 +800,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
               <button
                 type="button"
                 onClick={() => setSortBy(prev => prev === 'recent' ? 'oldest' : prev === 'oldest' ? 'liked' : 'recent')}
-                className="px-4 py-2 flex items-center justify-center gap-2 transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+                className="px-4 py-2 flex items-center justify-center gap-2 transition-all rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06]"
               >
                 <ArrowUpDown className="w-5 h-5" />
                 <span className="text-xs">{sortBy === 'recent' ? 'Recent' : sortBy === 'oldest' ? 'Oldest' : 'Liked'}</span>
@@ -815,28 +815,28 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           <div className="flex items-center gap-1">
             <button
               type="button"
-              className="px-4 py-2 flex items-center justify-center transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+               className="px-4 py-2 flex items-center justify-center transition-all rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06]"
               aria-label="Like post"
             >
               <ThumbsUp className="w-5 h-5" />
             </button>
             <button
               type="button"
-              className="px-4 py-2 flex items-center justify-center transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              className="px-4 py-2 flex items-center justify-center transition-all rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06]"
               aria-label="Dislike post"
             >
               <ThumbsDown className="w-5 h-5" />
             </button>
             <button
               type="button"
-              className="px-4 py-2 flex items-center justify-center transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              className="px-4 py-2 flex items-center justify-center transition-all rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06]"
               aria-label="Bookmark post"
             >
               <Bookmark className="w-5 h-5" />
             </button>
             <button
               type="button"
-              className="px-4 py-2 flex items-center justify-center transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              className="px-4 py-2 flex items-center justify-center transition-all rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06]"
               aria-label="Share post"
             >
               <Share2 className="w-5 h-5" />
@@ -1117,7 +1117,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                 "h-10 px-4 rounded-xl text-sm font-medium transition-colors flex-shrink-0",
                 canPost
                   ? "bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
-                  : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                  : "bg-white/[0.06] backdrop-blur-xl border border-white/[0.08] text-zinc-500 cursor-not-allowed"
               )}
             >
               {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Post'}
