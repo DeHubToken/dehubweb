@@ -312,6 +312,44 @@ export type Database = {
         }
         Relationships: []
       }
+      feature_request_comments: {
+        Row: {
+          avatar: string | null
+          content: string
+          created_at: string
+          feature_request_id: string
+          id: string
+          username: string | null
+          wallet_address: string
+        }
+        Insert: {
+          avatar?: string | null
+          content: string
+          created_at?: string
+          feature_request_id: string
+          id?: string
+          username?: string | null
+          wallet_address: string
+        }
+        Update: {
+          avatar?: string | null
+          content?: string
+          created_at?: string
+          feature_request_id?: string
+          id?: string
+          username?: string | null
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_request_comments_feature_request_id_fkey"
+            columns: ["feature_request_id"]
+            isOneToOne: false
+            referencedRelation: "feature_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feature_request_votes: {
         Row: {
           created_at: string
