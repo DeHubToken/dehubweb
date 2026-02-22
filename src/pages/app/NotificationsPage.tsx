@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Repeat2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -722,23 +723,32 @@ export default function NotificationsPage() {
                 <button
                   key={tab.value}
                   onClick={() => setActiveTab(tab.value)}
-                  className={`flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-200 border ${
+                  className={`relative flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
                     activeTab === tab.value
-                      ? 'bg-white text-black border-white/20'
-                      : 'text-zinc-400 hover:text-white hover:bg-zinc-800 border-transparent'
+                      ? 'text-white'
+                      : 'text-zinc-400 hover:text-white'
                   }`}
                 >
-                  <tab.icon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{tab.label}</span>
-                  {count > 0 && (
-                    <span className={`ml-1 px-1.5 py-0.5 text-xs rounded-lg transition-colors duration-200 ${
-                      activeTab === tab.value
-                        ? 'bg-black/15 text-black'
-                        : 'bg-primary text-primary-foreground'
-                    }`}>
-                      {count > 99 ? '99+' : count}
-                    </span>
+                  {activeTab === tab.value && (
+                    <motion.div
+                      layoutId="notif-tab"
+                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
                   )}
+                  <span className="relative z-10 flex items-center gap-2">
+                    <tab.icon className="w-4 h-4" />
+                    <span className="hidden sm:inline">{tab.label}</span>
+                    {count > 0 && (
+                      <span className={`ml-1 px-1.5 py-0.5 text-xs rounded-lg transition-colors duration-200 ${
+                        activeTab === tab.value
+                          ? 'bg-white/20 text-white'
+                          : 'bg-primary text-primary-foreground'
+                      }`}>
+                        {count > 99 ? '99+' : count}
+                      </span>
+                    )}
+                  </span>
                 </button>
               );
             })}
