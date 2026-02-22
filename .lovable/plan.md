@@ -1,27 +1,42 @@
 
 
-## Fix: Sidebar Leaderboard Time-Based Tabs Not Loading
+## Fix: Home Feed Slow Load for Authenticated Users
 
 ### Root Cause
 
-The time-based leaderboard tabs (1d, 1w, 1m, 1y) try to read from the `leaderboard_cache` table in the database as their first data source. The database is currently experiencing timeout issues (504/500 errors visible in network logs for other tables too), which means these cache reads hang silently and never resolve, leaving the sidebar stuck on a loading spinner.
+The home feed is the **only feed that is NOT prefetched**. The `useFeedPrefetch` hook prefetches Videos, Images, Shorts, Music, and Live tabs -- but never the home feed itself. Meanwhile, authenticated users always bypass the database cache (`feed_cache` table) and hit the DeHub API directly on every page load.
 
-The "All" tab works fine because it bypasses the database cache entirely and calls the DeHub API directly.
+So the home feed always waits for a cold API call to `api.dehub.io/api/feed` before showing anything. Every other page appears fast because either it's prefetched or it uses lazy loading with cached data.
 
 ### The Fix
 
-Change `getLeaderboard()` in `src/lib/api/dehub/leaderboard.ts` to wrap the database cache read in a timeout (3 seconds). If the cache read fails or times out, immediately fall back to the direct API call instead of hanging forever.
+Two changes to make the home feed load instantly:
 
-### Technical Changes
+**1. Add home feed to the prefetcher (`src/hooks/use-feed-prefetch.ts`)**
 
-**File: `src/lib/api/dehub/leaderboard.ts`**
-- Wrap the Supabase cache lookup in a `Promise.race` with a 3-second timeout
-- If the cache read times out or errors, fall back to the API call immediately
-- This ensures the sidebar leaderboard always loads data within a few seconds regardless of database health
+Add a new parallel fetch for the home feed (Latest, page 1, no postType filter) inside `prefetchAllFeeds()`. Populate the React Query cache with the correct key so the `useUnifiedFeed` hook picks it up immediately without making another API call.
 
-**File: `src/components/app/sidebar/SidebarLeaderboard.tsx`**
-- Add `retry: 1` to the `useQuery` options so failed queries retry once quickly rather than showing permanent loading states
-- Add `refetchOnMount: false` since data is already cached via TanStack Query's staleTime
+The query key must match exactly: `['unified-feed', { sortBy: 'createdAt', sortOrder: 'desc', status: 'minted', ... }, 20]`
 
-This approach keeps the cache as a fast-path optimization while ensuring the sidebar never gets stuck loading.
+**2. Use cached data as placeholder for authenticated users (`src/hooks/use-unified-feed.ts`)**
+
+Currently authenticated users completely skip the `feed_cache` table. Instead of skipping it, use the cached data as **immediate placeholder data** while the personalized API call runs in the background. This way users see content instantly, and it gets enriched with their like/unlock status moments later when the API responds.
+
+Change `fetchUnifiedFeed()`:
+- For authenticated users on page 1 of cacheable feeds: start both the cache read and the API call in parallel
+- Return the API result (personalized), but if the cache resolves first, use it as initial data via TanStack Query's `placeholderData`
+
+### Technical Details
+
+**File: `src/hooks/use-feed-prefetch.ts`**
+- Add `homeFeedPromise` calling the unified feed API with `{ limit: 20, sortBy: 'createdAt', sortOrder: 'desc', status: 'minted' }`
+- Include it in `Promise.allSettled`
+- Populate cache with key `['unified-feed', { sortBy: 'createdAt', sortOrder: 'desc', range: undefined, isPPV: undefined, hasBounty: undefined, isLocked: undefined, status: 'minted', category: undefined, followingOnly: undefined }, 20]`
+
+**File: `src/hooks/use-unified-feed.ts`**
+- In `fetchUnifiedFeed()`: for authenticated users on page 1 with a valid cache key, race the cache read (with 2s timeout) against the API call
+- If cache wins, return cache data immediately (the API will still populate on next background refetch thanks to `staleTime`)
+- If API wins, return API data as normal
+
+This ensures authenticated users see feed content within milliseconds (from cache or prefetch) while still getting personalized data.
 
