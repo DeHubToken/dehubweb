@@ -92,27 +92,9 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
       if (error) throw error;
       return (data || []) as AudioSpace[];
     },
-    staleTime: 60 * 1000, // 60 seconds
-    refetchInterval: 60 * 1000, // Refresh every 60s (reduced from 30s, realtime handles updates)
+    staleTime: 5 * 60 * 1000, // 5 minutes — feature not active yet
+    enabled: false, // Disabled: audio spaces not functional yet, saves cloud credits
   });
-
-  // Subscribe to realtime updates for live stages
-  useEffect(() => {
-    const channel = supabase
-      .channel('stages-carousel-updates')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'audio_spaces',
-      }, () => {
-        refetch();
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [refetch]);
 
   // Don't render if no live stages
   if (liveSpaces.length === 0) {

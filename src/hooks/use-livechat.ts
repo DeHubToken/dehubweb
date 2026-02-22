@@ -98,7 +98,6 @@ export function useLiveChatMessages(roomId: string | null) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const channelRef = useRef<RealtimeChannel | null>(null);
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { isAuthenticated, user, walletAddress } = useAuth();
 
   // Fetch from DeHub API only — Supabase Realtime handles our own messages
@@ -173,18 +172,12 @@ export function useLiveChatMessages(roomId: string | null) {
 
     channelRef.current = channel;
 
-    // Poll DeHub API every 60s to catch messages from other clients (reduced from 20s)
-    pollRef.current = setInterval(() => {
-      fetchFromApi(false);
-    }, 60_000);
+    // No polling — Realtime handles incoming messages.
+    // fetchFromApi is called on mount and after sending a message.
 
     return () => {
       channel.unsubscribe();
       channelRef.current = null;
-      if (pollRef.current) {
-        clearInterval(pollRef.current);
-        pollRef.current = null;
-      }
     };
   }, [roomId, fetchFromApi]);
 
