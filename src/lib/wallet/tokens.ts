@@ -26,11 +26,15 @@ export interface WalletToken {
 export const DEFAULT_TOKENS: Record<number, { address: string; symbol: string; name: string; decimals: number; logo?: string }[]> = {
   [BASE_CHAIN_ID]: [
     { address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c', symbol: 'DHB', name: 'DeHub', decimals: 18 },
+    { address: '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2', symbol: 'USDT', name: 'Tether', decimals: 6 },
   ],
   [BNB_CHAIN_ID]: [
     { address: '0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7', symbol: 'DHB', name: 'DeHub', decimals: 18 },
+    { address: '0x55d398326f99059fF775485246999027B3197955', symbol: 'USDT', name: 'Tether', decimals: 18 },
   ],
-  [ETH_CHAIN_ID]: [],
+  [ETH_CHAIN_ID]: [
+    { address: '0xdAC17F958D2ee523a2206206994597C13D831ec7', symbol: 'USDT', name: 'Tether', decimals: 6 },
+  ],
 };
 
 const NATIVE_TOKEN: Record<number, { symbol: string; name: string; decimals: number }> = {
