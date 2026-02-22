@@ -1,52 +1,70 @@
 
 
-## Remove Feed Cache: Simplify to Direct API Calls
+# Leaderboard Cache Optimization Plan
 
-### Why the feed cache should go
+## Current Problem
 
-The `refresh-feed-cache` edge function runs hourly, fetching 6 pages (300 posts) from the DeHub API and storing them in the database. The frontend then **races** the DB cache against the live API on every feed load.
+The `refresh-leaderboard-cache` cron runs every 6 hours and performs ~100+ operations per run (RPC calls, DB reads/writes, API calls). Most of this work is redundant for short periods.
 
-This is redundant because:
-- The DeHub API is already fast and always has the latest data
-- For logged-in users, the cache lacks personalization (isLiked, isUnlocked, etc.) so the API result always wins
-- For guests, TanStack Query's built-in `staleTime` (already set) handles caching perfectly
-- The hourly cron job is saturating the DB with 504 timeouts, causing cascading failures
+## Proposed Architecture: "Freeze + Delta" Strategy
 
 ### What changes
 
-**1. Remove the cron job and edge function**
-- Delete `supabase/functions/refresh-feed-cache/index.ts`
-- Remove the `pg_cron` schedule that triggers it (via SQL)
-- Remove the config entry from `supabase/config.toml`
+| Period | Current approach | New approach |
+|--------|-----------------|--------------|
+| All | DeHub API + on-chain balance (every 6h) | Same, but reduce to once per day |
+| Year | Snapshot delta (every 6h) | Freeze: refresh once per week |
+| Month | Snapshot delta (every 6h) | Freeze: refresh once per day |
+| Week | Snapshot delta (every 6h) | Live delta: query only the ~50 known wallets on-chain, compare to cached "all" balances from 7 days ago |
+| Day | Snapshot delta (every 6h) | Live delta: query only the ~50 known wallets on-chain, compare to yesterday's snapshot |
 
-**2. Simplify `use-unified-feed.ts`**
-- Remove the `fetchCachedFeed()` function and the race strategy
-- All feed loads go directly to the DeHub API (which they already do as a fallback)
-- TanStack Query's `staleTime` and `gcTime` handle client-side caching
+### How it works
 
-**3. Compute trending categories client-side**
-- `WhatsHappening.tsx` currently reads `trending_categories` from the `feed_cache` table
-- Instead, derive trending categories from the first page of feed data already loaded by the home feed query, or fetch them once from the API and cache in TanStack Query with a long `staleTime`
+1. **Keep the daily snapshot** -- this is cheap (one DB write per day) and provides the foundation for all deltas. No change needed here.
 
-**4. Clean up the `feed_cache` table (optional)**
-- The table can be dropped since nothing will write to it anymore
-- Or leave it dormant -- no reads means zero cost
+2. **Split the cron into two frequencies:**
+   - **Heavy refresh (once/day):** Full on-chain balance scan, DeHub API calls, snapshot creation, year/month/all cache updates
+   - **Light refresh (every 6h or even 2h):** Only recompute day/week by reading 2 snapshots from DB and comparing. No RPC calls, no API calls. Just DB reads + cache writes.
 
-### Technical details
+3. **For tips (sentTips/receivedTips) day/week:** Query Transfer events for only the last 7 days of blocks (already done for snapshots). Cache the result. For daily, just use today's snapshot vs yesterday's.
 
-**Files to modify:**
-- `supabase/functions/refresh-feed-cache/index.ts` -- Delete entirely
-- `supabase/config.toml` -- Remove `[functions.refresh-feed-cache]` entry (auto-managed, just delete the function)
-- `src/hooks/use-unified-feed.ts` -- Remove `getCacheKey()`, `fetchCachedFeed()`, and the race logic in `fetchUnifiedFeed()`. All calls go straight to `fetchUnifiedFeedFromAPI()`
-- `src/components/app/WhatsHappening.tsx` -- Fetch trending categories from the first feed page data (already in TanStack Query cache) or compute from API response directly
+### Cost reduction estimate
 
-**Database cleanup (SQL migration):**
-- Unschedule the `refresh-feed-cache` cron job
-- Optionally truncate or drop the `feed_cache` table
+| Resource | Current (per day) | New (per day) |
+|----------|------------------|---------------|
+| RPC calls | ~120 (30 x 4) | ~30 (30 x 1) |
+| Tip log queries | ~24 (6 x 4) | ~6 (6 x 1) |
+| DB operations | ~140 (35 x 4) | ~50 (35 x 1 heavy + 15 x 1 light) |
+| DeHub API calls | ~12 (3 x 4) | ~3 (3 x 1) |
 
-**Impact:**
-- Eliminates the #1 source of 504 timeouts and DB saturation
-- Removes 6 DB writes per hour + 6 API calls per hour from the edge function
-- Removes 1 DB read per feed load per user (the cache race)
-- Feed loads become simpler and more predictable -- just one API call
+**Estimated 70-75% reduction in cloud resource usage.**
+
+### Why this is better than querying raw transactions
+
+Your idea of "query the last week of transactions and match to users" would work for tips, but for **holdings** (balance changes) there's no single transaction log to query -- you'd need to check every wallet's balance individually anyway. The snapshot approach is already the cheapest way to do holdings deltas.
+
+For tips, querying Transfer events for the last 7 days is essentially what the current system does for the daily snapshot. We just need to avoid doing it 4 times a day.
+
+## Technical Implementation
+
+### Step 1: Add a "mode" parameter to the edge function
+
+The cron will call the function with `mode=full` (once/day) or `mode=light` (every 6h).
+
+- `mode=full`: Everything it does today (on-chain, API, snapshots, all periods)
+- `mode=light`: Only recompute day/week caches using existing snapshots (pure DB reads, no RPC/API)
+
+### Step 2: Update the cron schedule
+
+Replace the single 6-hour cron with two:
+- Full refresh: once daily (e.g., 03:00 UTC)
+- Light refresh: every 4-6 hours (only day/week delta recalculation)
+
+### Step 3: Freeze year/month cache updates
+
+In `mode=light`, skip year/month/all entirely. These only change meaningfully on a daily basis anyway.
+
+### Step 4: Optional -- reduce "all" period to DeHub-only
+
+Since the DeHub API already returns the "all" leaderboard, we could skip on-chain balance verification for the "all" period entirely and only do on-chain checks for period-based deltas. This would cut another ~30 RPC calls from the heavy refresh.
 
