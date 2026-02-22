@@ -10,10 +10,13 @@ import { useState, useMemo, useRef, useCallback, useEffect, useId } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Play, Music, Mic2, Radio, Disc3, ChevronRight, Pause, Volume2, VolumeX, Loader2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { MusicFeedSkeleton, MusicVideoCardSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { RadioSection } from '@/components/app/radio';
+import { StagesCarousel } from '@/components/app/music/StagesCarousel';
+import { AudioSpacesModal } from '@/components/app/spaces';
 
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -31,14 +34,15 @@ import type { VideoItem } from '@/types/feed.types';
 // TYPES
 // ============================================================================
 
-type MusicSubTab = 'all' | 'tracks' | 'videos' | 'podcasts' | 'radio';
+type MusicSubTab = 'all' | 'tracks' | 'videos' | 'podcasts' | 'radio' | 'stages';
 
-const MUSIC_SUB_TABS: { icon: typeof Music; label: string; value: MusicSubTab }[] = [
+const MUSIC_SUB_TABS: { icon?: typeof Music; customIcon?: string; label: string; value: MusicSubTab }[] = [
   { icon: Music, label: 'All', value: 'all' },
   { icon: Disc3, label: 'Tracks', value: 'tracks' },
   { icon: Play, label: 'Videos', value: 'videos' },
   { icon: Mic2, label: 'Podcasts', value: 'podcasts' },
   { icon: Radio, label: 'Radio', value: 'radio' },
+  { customIcon: stagesMicIcon, label: 'Stages', value: 'stages' },
 ];
 
 const CAROUSEL_INITIAL_VISIBLE = 6; // Initial visible items in carousel
@@ -410,6 +414,7 @@ function AllSection({
   isLoadingVideos,
   onGoToRadio,
   onGoToVideos,
+  onOpenStages,
 }: { 
   radioStations: RadioStation[];
   musicVideos: VideoItem[];
@@ -417,9 +422,11 @@ function AllSection({
   isLoadingVideos: boolean;
   onGoToRadio: () => void;
   onGoToVideos: () => void;
+  onOpenStages: () => void;
 }) {
   return (
     <div className="space-y-4 pb-32">
+      <StagesCarousel onOpenStages={onOpenStages} />
       <MusicVideosCarousel videos={musicVideos} totalCount={totalVideoCount} isLoading={isLoadingVideos} onSeeAll={onGoToVideos} />
       <RadioCarousel stations={radioStations} onSeeAll={onGoToRadio} />
       <TracksCarousel />
@@ -536,6 +543,7 @@ interface MusicFeedProps {
 
 export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFeedProps) {
   const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('all');
+  const [showStagesModal, setShowStagesModal] = useState(false);
   const { walletAddress, isAuthenticated } = useAuth();
 
   // Fetch dynamic block list for authenticated users
@@ -628,12 +636,19 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
             isLoadingVideos={isLoadingCarouselVideos}
             onGoToRadio={() => setActiveSubTab('radio')}
             onGoToVideos={() => setActiveSubTab('videos')}
+            onOpenStages={() => setShowStagesModal(true)}
           />
         );
       case 'videos':
         return <MusicVideosSection walletAddress={walletAddress} />;
       case 'radio':
         return <RadioSection showFilters={showFilters} />;
+      case 'stages':
+        return (
+          <div className="pb-32">
+            <StagesCarousel onOpenStages={() => setShowStagesModal(true)} />
+          </div>
+        );
       case 'tracks':
       case 'podcasts':
       default:
@@ -667,7 +682,11 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
                         : 'text-zinc-500 hover:text-zinc-300 border border-transparent'
                     )}
                   >
-                    <tab.icon className="w-3.5 h-3.5" />
+                    {tab.icon ? (
+                      <tab.icon className="w-3.5 h-3.5" />
+                    ) : tab.customIcon ? (
+                      <img src={tab.customIcon} alt="" className="w-3.5 h-3.5 object-contain" />
+                    ) : null}
                     {tab.label}
                   </button>
                 );
@@ -681,6 +700,12 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
       <div className="flex-1 overflow-y-auto px-2 sm:px-3">
         {renderContent()}
       </div>
+
+      {/* Stages Modal */}
+      <AudioSpacesModal 
+        isOpen={showStagesModal} 
+        onClose={() => setShowStagesModal(false)} 
+      />
     </div>
   );
 }
