@@ -432,6 +432,7 @@
     "subscriptions": "Subscriptions",
     "transactions": "Transactions",
     "totalBalance": "Total wallet value",
+    "totalDhbBalance": "Total DHB Balance",
     "otherAssets": "Other assets",
     "fullWallet": "Full Wallet",
     "signInBalance": "Sign in to view your balance",
