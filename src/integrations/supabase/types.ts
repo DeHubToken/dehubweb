@@ -427,30 +427,6 @@ export type Database = {
         }
         Relationships: []
       }
-      feed_cache: {
-        Row: {
-          cache_key: string
-          created_at: string | null
-          data: Json
-          id: string
-          updated_at: string | null
-        }
-        Insert: {
-          cache_key: string
-          created_at?: string | null
-          data: Json
-          id?: string
-          updated_at?: string | null
-        }
-        Update: {
-          cache_key?: string
-          created_at?: string | null
-          data?: Json
-          id?: string
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
       job_applications: {
         Row: {
           created_at: string
