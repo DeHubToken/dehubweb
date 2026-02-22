@@ -44,4 +44,60 @@ export default defineConfig(({ mode }) => ({
   define: {
     global: 'globalThis',
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // Web3Auth + AA — heavy, only needed for auth
+          if (id.includes('@web3auth') || id.includes('@toruslabs') || id.includes('permissionless')) {
+            return 'vendor-web3auth';
+          }
+          // WalletConnect / Reown / Coinbase — large packages
+          if (id.includes('@walletconnect') || id.includes('@reown') || id.includes('@metamask') || id.includes('@coinbase')) {
+            return 'vendor-walletconnect';
+          }
+          // ethers — blockchain utils, loaded with web3auth
+          if (id.includes('/ethers/') || id.includes('node_modules/ethers')) {
+            return 'vendor-ethers';
+          }
+          // HLS.js — video streaming, only used on TV/video pages
+          if (id.includes('hls.js') || id.includes('node_modules/hls')) {
+            return 'vendor-hls';
+          }
+          // Socket.io — real-time, lazy where possible
+          if (id.includes('socket.io') || id.includes('engine.io')) {
+            return 'vendor-socket';
+          }
+          // Wagmi + RainbowKit + viem — wallet connections
+          if (id.includes('wagmi') || id.includes('@wagmi') || id.includes('@rainbow-me') || id.includes('viem')) {
+            return 'vendor-wagmi';
+          }
+          // THREE.js — only used on landing page
+          if (id.includes('/three/')) {
+            return 'vendor-three';
+          }
+          // Recharts — only used in command-centre
+          if (id.includes('recharts') || id.includes('d3-')) {
+            return 'vendor-charts';
+          }
+          // Agora — only used in audio spaces
+          if (id.includes('agora')) {
+            return 'vendor-agora';
+          }
+          // React core
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/') || id.includes('node_modules/react-router')) {
+            return 'vendor-react';
+          }
+          // Radix UI components
+          if (id.includes('@radix-ui')) {
+            return 'vendor-radix';
+          }
+          // General node_modules
+          if (id.includes('node_modules')) {
+            return 'vendor-misc';
+          }
+        },
+      },
+    },
+  },
 }));

@@ -277,8 +277,13 @@ function prewarmConfig() {
   ]);
 }
 
-// Start pre-warming immediately
-prewarmConfig();
+// Delay pre-warming until after initial page paint so it doesn't compete with LCP
+if (typeof window !== 'undefined') {
+  window.addEventListener('load', () => {
+    // Further delay to let React hydrate and render first
+    setTimeout(prewarmConfig, 3000);
+  }, { once: true });
+}
 
 /**
  * Save the current path before mobile redirect so we can restore it after auth.
