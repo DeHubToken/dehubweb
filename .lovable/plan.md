@@ -1,65 +1,37 @@
 
 
-# Live Chat Messages Investigation
+## Fix Side Panel Icon Re-rendering
 
-## Current Status
-Your messages **ARE saved** in the database. Both "we shit on farcaster" and "and any other crypto social app I've seen before" are stored correctly with timestamps and your wallet address. The system did not lose them.
+### Problem
+The `SidebarLeaderboard` component uses Framer Motion's `AnimatePresence` with `key={activePeriod}`, which completely unmounts and remounts the entire leaderboard list every time the period changes (every 5 seconds via auto-rotate, or on manual selection). This destroys all `<img>` DOM elements (medals, avatars, badges) and creates fresh ones, causing a visible flash/re-render even though the image files are browser-cached.
 
-## Root Cause: Hybrid Architecture Problem
+### Solution
+Replace the `AnimatePresence` destroy-and-recreate pattern with a **CSS-based visibility toggle** (matching the profile tab pattern already used in the app). All period lists will remain mounted in the DOM, with inactive ones hidden via `visibility: hidden` + `height: 0`. This keeps images in the render tree and eliminates the flash.
 
-The live chat currently has a split-brain design:
+### Changes
 
-1. **Room list** comes from the DeHub API (`GET /api/livechat/rooms`) -- this gives us room IDs like `global`, `topic-test`, etc.
-2. **Sending messages** goes through our own backend function, which saves to our own database table (`livechat_messages`)
-3. **Reading messages** also comes from our own database table
-4. **The DeHub API also has its own message storage** (`GET /api/livechat/rooms/{roomId}/messages`) that we never read from or write to
+**File: `src/components/app/sidebar/SidebarLeaderboard.tsx`**
 
-This means:
-- Messages sent from the official DeHub app do NOT appear in our chat
-- Messages sent from our app do NOT appear in the official DeHub app
-- If the room ID returned by the API changes between sessions, messages appear to vanish (they're still in the DB, just filtered by a different room ID)
+1. Remove the `AnimatePresence` and `motion.div` wrapper around the leaderboard entries
+2. Pre-fetch all period data by rendering a hidden container for each period
+3. Use CSS visibility toggling (`visibility: hidden`, `height: 0`, `position: absolute`) for inactive periods, and normal flow for the active one -- matching the existing native-tab-stability pattern
+4. Keep the fade-in animation as a simple CSS `animate-fade-in` class on the active period
+5. The auto-rotate and manual period selection logic stays the same, only the rendering strategy changes
 
-## The Fix
+### Technical Details
 
-We should **use the DeHub API as the source of truth** for messages instead of our own database, since the API provides both read (`GET /api/livechat/rooms/{roomId}/messages`) and the messages endpoint. The API docs don't show a POST endpoint for sending, so the edge function approach may still be needed for sending -- but reading should come from the API.
+- Remove `framer-motion` imports (`AnimatePresence`, `motion`) from SidebarLeaderboard
+- Remove `directionRef` (no longer needed for directional animation)
+- Remove `shimmerKey` state (medal shimmer can re-trigger via CSS class toggle on period change)
+- Render all 5 periods simultaneously inside the scrollable area, each wrapped in a `div` that toggles visibility based on `activePeriod`
+- Each period container uses the existing query `['sidebar-leaderboard', 'holdings', apiPeriod]` -- TanStack Query will deduplicate and cache these
+- Active period: `className="h-full animate-fade-in"`
+- Inactive periods: `className="h-0 overflow-hidden invisible absolute"`
+- This matches the proven pattern from the profile tabs (StableHeightContainer approach)
 
-However, since there's no POST endpoint in the API docs you shared, the current sending approach via our backend function is the only option. The fix should focus on:
-
-### Step 1: Read messages from the DeHub API instead of Supabase
-- Update `useLiveChatMessages` to fetch from `GET /api/livechat/rooms/{roomId}/messages` (already implemented as `getLiveChatMessages` but never used)
-- This ensures messages from all clients (mobile app, web) are visible
-
-### Step 2: Keep Supabase as a write-through + realtime layer
-- Continue sending via the `livechat-send` edge function for persistence
-- Use Supabase Realtime only for instant delivery of new messages between our web users
-- On initial load and periodic refresh, merge API messages with Supabase messages
-
-### Step 3: Deduplicate messages
-- Messages may appear in both sources; deduplicate by content + sender + timestamp proximity
-
-## Technical Details
-
-### Files to modify:
-- **`src/hooks/use-livechat.ts`** -- Change `useLiveChatMessages` to:
-  - Fetch initial messages from the DeHub API (`getLiveChatMessages`) instead of Supabase
-  - Keep Supabase Realtime subscription for live updates from our own users
-  - Merge and deduplicate both sources
-- **`src/lib/api/dehub/livechat.ts`** -- The `getLiveChatMessages` function already exists but needs to map the API response format (which uses `sender.address`, `sender.username`) to our `SupabaseLiveChatMessage` format
-
-### Message format mapping:
-```text
-API format:                          Our format:
-message.sender.address        -->    sender_address
-message.sender.username       -->    sender_username  
-message.sender.displayName    -->    sender_display_name
-message.sender.avatarUrl      -->    sender_avatar_url
-message.content               -->    content
-message.messageType           -->    message_type
-message.createdAt             -->    created_at
-```
-
-### Polling strategy:
-- Initial load: fetch from API
-- Realtime: Supabase channel for instant updates from our users
-- Periodic poll (every 15-30s): re-fetch from API to catch messages from other clients (mobile app)
+### What Won't Change
+- Tab switching between Leaderboard/Follow/Chat (already uses `display: none` correctly)
+- Badge and medal images (already local imports, will stay cached in DOM)
+- Auto-rotation timing and period selection logic
+- Query caching and data fetching behavior
 
