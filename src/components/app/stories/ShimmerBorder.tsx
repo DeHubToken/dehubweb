@@ -24,7 +24,7 @@ export function ShimmerBorder({ active, children, className = '' }: ShimmerBorde
           : 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))',
       }}
     >
-      <div style={{ opacity: active ? 1 : 0.55 }}>
+      <div className="rounded-[10px] overflow-hidden" style={{ opacity: active ? 1 : 0.55 }}>
         {children}
       </div>
     </div>
