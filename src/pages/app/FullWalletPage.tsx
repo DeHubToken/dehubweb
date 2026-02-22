@@ -114,7 +114,8 @@ export default function FullWalletPage() {
         });
       }
     }
-    return Array.from(map.values());
+    const ORDER: Record<string, number> = { DHB: 0, ETH: 1, BNB: 2, USDT: 3 };
+    return Array.from(map.values()).sort((a, b) => (ORDER[a.symbol] ?? 99) - (ORDER[b.symbol] ?? 99));
   }, [allTokens]);
 
   const filteredGrouped = useMemo(() => {
