@@ -7,6 +7,7 @@
  */
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Play, Music, Mic2, Radio, Disc3 } from 'lucide-react';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
@@ -332,19 +333,31 @@ export default function MusicPage() {
       <div className="sticky top-11 lg:top-0 bg-black z-10 p-2 sm:p-3">
         <div className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
-            {MUSIC_TABS.map((tab) => (
-              <button
-                key={tab.value}
-                onClick={() => setActiveTab(tab.value)}
-                className={cn(
-                  'flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap text-white',
-                  activeTab === tab.value && 'bg-zinc-800'
-                )}
-              >
-                <tab.icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
-              </button>
-            ))}
+            {MUSIC_TABS.map((tab) => {
+              const isActive = activeTab === tab.value;
+              return (
+                <button
+                  key={tab.value}
+                  onClick={() => setActiveTab(tab.value)}
+                  className={cn(
+                    'relative flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
+                    isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
+                  )}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="music-tab"
+                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10 flex items-center gap-2">
+                    <tab.icon className="w-4 h-4" />
+                    <span className="hidden sm:inline">{tab.label}</span>
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
