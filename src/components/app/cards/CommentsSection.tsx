@@ -761,46 +761,32 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
       <div className="flex justify-between items-center gap-1 mb-3">
         {/* Left side - Tab buttons */}
-        <div className="flex gap-1">
-          <button
-            type="button"
-            onClick={() => setActiveTab('replies')}
-            className={`px-4 py-2 flex items-center justify-center transition-all rounded-lg ${
-              activeTab === 'replies'
-                ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06]'
-            }`}
-          >
-            <MessageSquare className="w-5 h-5" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('quotes')}
-            className={`px-4 py-2 flex items-center justify-center transition-all rounded-lg ${
-              activeTab === 'quotes'
-                ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06]'
-            }`}
-          >
-            <Quote className="w-5 h-5" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('search')}
-            className={`px-4 py-2 flex items-center justify-center transition-all rounded-lg ${
-              activeTab === 'search'
-                ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06]'
-            }`}
-          >
-            <Search className="w-5 h-5" />
-          </button>
+        <div className="flex gap-1 relative">
+          {['replies', 'quotes', 'search'].map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setActiveTab(tab as typeof activeTab)}
+              className="px-4 py-2 flex items-center justify-center transition-all rounded-xl relative z-10 text-zinc-400 hover:text-zinc-200"
+            >
+              {activeTab === tab && (
+                <motion.div
+                  layoutId="comments-tab-indicator"
+                  className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                />
+              )}
+              <span className={cn("relative z-10", activeTab === tab && "text-white")}>
+                {tab === 'replies' ? <MessageSquare className="w-5 h-5" /> : tab === 'quotes' ? <Quote className="w-5 h-5" /> : <Search className="w-5 h-5" />}
+              </span>
+            </button>
+          ))}
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 type="button"
                 onClick={() => setSortBy(prev => prev === 'recent' ? 'oldest' : prev === 'oldest' ? 'liked' : 'recent')}
-                className="px-4 py-2 flex items-center justify-center gap-2 transition-all rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06]"
+                className="px-4 py-2 flex items-center justify-center gap-2 transition-all rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06]"
               >
                 <ArrowUpDown className="w-5 h-5" />
                 <span className="text-xs">{sortBy === 'recent' ? 'Recent' : sortBy === 'oldest' ? 'Oldest' : 'Liked'}</span>
@@ -851,7 +837,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           placeholder="Search comments & quotes..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="bg-white/[0.08] backdrop-blur-xl border-white/[0.12] text-white text-sm h-9 placeholder:text-zinc-500"
+          className="bg-white/[0.08] backdrop-blur-xl border-white/[0.12] text-white text-sm h-10 rounded-xl placeholder:text-zinc-500"
           autoFocus={activeTab === 'search'}
         />
       </div>
@@ -906,7 +892,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                   <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-zinc-500 text-sm py-6 text-center"
+                    className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
                   >
                     No replies yet. Be the first!
                   </motion.p>
@@ -922,7 +908,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-zinc-500 text-sm py-6 text-center"
+              className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
             >
               No quotes yet. Be the first!
             </motion.p>
@@ -975,7 +961,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                   <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-zinc-500 text-sm py-6 text-center"
+                    className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
                   >
                     {searchQuery ? 'No results found' : 'No comments or quotes yet'}
                   </motion.p>
