@@ -28,6 +28,9 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
     dedupe: [
+      "react",
+      "react-dom",
+      "scheduler",
       "@web3auth/modal",
       "@web3auth/no-modal",
       "@web3auth/account-abstraction-provider",
@@ -84,15 +87,11 @@ export default defineConfig(({ mode }) => ({
           if (id.includes('agora')) {
             return 'vendor-agora';
           }
-          // React core
-          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/') || id.includes('node_modules/react-router')) {
-            return 'vendor-react';
-          }
           // Radix UI components
           if (id.includes('@radix-ui')) {
             return 'vendor-radix';
           }
-          // General node_modules
+          // General node_modules (React/scheduler/react-dom left here — Vite handles them correctly)
           if (id.includes('node_modules')) {
             return 'vendor-misc';
           }
