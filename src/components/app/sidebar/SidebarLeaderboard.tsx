@@ -54,8 +54,10 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
   const { data, isLoading } = useQuery({
     queryKey: ['sidebar-leaderboard', 'holdings', apiPeriod],
     queryFn: () => getLeaderboard('holdings', apiPeriod as LeaderboardPeriod),
-    staleTime: 60 * 60 * 1000, // 1 hour — cache refreshed server-side
+    staleTime: 60 * 60 * 1000,
     gcTime: 2 * 60 * 60 * 1000,
+    retry: 1,
+    refetchOnMount: false,
   });
 
   const balanceOverrides: Record<string, number> = {

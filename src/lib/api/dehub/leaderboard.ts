@@ -45,20 +45,24 @@ export async function getLeaderboard(
     };
   }
 
-  // For time-based periods (day/week/month/year), use the server cache
+  // For time-based periods (day/week/month/year), try server cache with timeout, fall back to API
   try {
     const { supabase } = await import('@/integrations/supabase/client');
     
-    const { data: cached, error } = await supabase
+    const cachePromise = supabase
       .from('leaderboard_cache')
       .select('data, updated_at')
       .eq('sort_mode', sort)
       .eq('period', period)
       .single();
     
-    if (!error && cached?.data) {
-      console.log(`[Leaderboard] Using cached data from ${cached.updated_at}`);
-      return cached.data as unknown as LeaderboardResponse;
+    const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 3000));
+    
+    const cached = await Promise.race([cachePromise, timeoutPromise]);
+    
+    if (cached && 'data' in cached && !cached.error && cached.data?.data) {
+      console.log(`[Leaderboard] Using cached data from ${cached.data.updated_at}`);
+      return cached.data.data as unknown as LeaderboardResponse;
     }
   } catch (cacheError) {
     console.warn('[Leaderboard] Cache unavailable, falling back to API:', cacheError);
