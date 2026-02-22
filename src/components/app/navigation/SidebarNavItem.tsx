@@ -107,10 +107,10 @@ export function SidebarNavItem({
         isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
         isActive
           ? variant === 'mobile'
-            ? 'bg-zinc-700/50 font-semibold'
+            ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] font-semibold'
             : collapsed
-              ? 'xl:bg-zinc-800 bg-zinc-700 font-semibold'
-              : 'bg-zinc-800 font-semibold'
+              ? 'xl:bg-gradient-to-br xl:from-white/20 xl:via-white/10 xl:to-white/5 xl:backdrop-blur-xl xl:border xl:border-white/30 xl:shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] font-semibold'
+              : 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] font-semibold'
           : variant === 'mobile'
             ? 'hover:bg-zinc-700/50'
             : 'hover:bg-zinc-800/50'
@@ -134,7 +134,7 @@ export function SidebarNavItem({
           isDesktop ? "w-9 h-9" : "w-10 h-10",
           isDesktop
             ? isActive 
-              ? "bg-zinc-700" 
+              ? "bg-white/10" 
               : collapsed ? "bg-transparent xl:bg-zinc-800" : "bg-zinc-800"
             : isActive
               ? "bg-white/[0.10] backdrop-blur-sm border border-white/[0.12]"
