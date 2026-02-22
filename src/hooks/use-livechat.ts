@@ -101,32 +101,38 @@ export function useLiveChatMessages(roomId: string | null) {
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { isAuthenticated, user, walletAddress } = useAuth();
 
-  // Fetch from DeHub API
+  // Fetch from both DeHub API and Supabase, merge results
   const fetchFromApi = useCallback(async (showLoading = false) => {
     if (!roomId) return;
     if (showLoading) setIsLoading(true);
     try {
-      const apiMessages = await fetchApiMessages(roomId, { limit: 50 });
-      const mapped = apiMessages.map(apiMsgToLocal);
-      setMessages((prev) => {
-        // Merge API messages with any optimistic/realtime messages
-        const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
-        return deduplicateMessages([...mapped, ...optimistic]);
-      });
-    } catch (err) {
-      console.error('[LiveChat] API fetch failed, falling back to Supabase:', err);
-      // Fallback: try Supabase
-      try {
-        const { data } = await (supabase as any)
+      // Fetch from both sources in parallel
+      const [apiResult, supabaseResult] = await Promise.allSettled([
+        fetchApiMessages(roomId, { limit: 50 }),
+        (supabase as any)
           .from('livechat_messages')
           .select('*')
           .eq('room_id', roomId)
           .order('created_at', { ascending: true })
-          .limit(50);
-        if (data) setMessages(data as SupabaseLiveChatMessage[]);
-      } catch (fallbackErr) {
-        console.error('[LiveChat] Supabase fallback also failed:', fallbackErr);
-      }
+          .limit(50),
+      ]);
+
+      const apiMapped =
+        apiResult.status === 'fulfilled'
+          ? apiResult.value.map(apiMsgToLocal)
+          : [];
+
+      const supabaseMsgs: SupabaseLiveChatMessage[] =
+        supabaseResult.status === 'fulfilled' && supabaseResult.value.data
+          ? supabaseResult.value.data
+          : [];
+
+      setMessages((prev) => {
+        const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
+        return deduplicateMessages([...apiMapped, ...supabaseMsgs, ...optimistic]);
+      });
+    } catch (err) {
+      console.error('[LiveChat] Failed to fetch messages:', err);
     } finally {
       if (showLoading) setIsLoading(false);
     }
