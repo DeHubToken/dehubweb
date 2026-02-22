@@ -173,9 +173,11 @@ export default function HomePage() {
   // Prefetch all other feeds in background once home feed loads
   useFeedPrefetch(isHomeFeedLoaded);
   
-  // Trigger prefetch immediately on mount
+  // Delay other-tab prefetching so the home feed query gets network priority
+  // The home feed's own useUnifiedFeed fires on mount; give it 2s head start
   useEffect(() => {
-    setIsHomeFeedLoaded(true);
+    const timer = setTimeout(() => setIsHomeFeedLoaded(true), 2000);
+    return () => clearTimeout(timer);
   }, []);
 
   // --------------------------------------------------------------------------
