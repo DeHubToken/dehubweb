@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles } from 'lucide-react';
+import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
 import { AuthPrompt } from './AuthPrompt';
@@ -19,10 +19,16 @@ const RIGHT_NAV_ITEMS = [
 
 const SCROLL_NAV_ITEMS = [
   { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
+  { icon: Bell, label: 'Notifications', path: '/app/notifications' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
+  { icon: Wallet, label: 'Wallet', path: '/app/wallet' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
+  { icon: BookOpen, label: 'Docs', path: 'https://docs.dhb.gg', external: true },
+  { icon: FileText, label: 'Blog', path: 'https://docs.dhb.gg/docs/blog', external: true },
+  { icon: Lightbulb, label: 'Features', path: '/features' },
+  { icon: Briefcase, label: 'Careers', path: '/jobs' },
 ];
 
 export function MobileBottomNav() {
@@ -178,8 +184,23 @@ export function MobileBottomNav() {
 
             {/* Additional items - accessible via scroll */}
             {SCROLL_NAV_ITEMS.map((item) => {
-              const isActive = location.pathname.startsWith(item.path);
+              const isActive = !item.external && location.pathname.startsWith(item.path);
               
+              if (item.external) {
+                return (
+                  <a
+                    key={item.label}
+                    href={item.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-all duration-200 text-white"
+                    style={{ width: 'calc((50% - 24px) / 2)' }}
+                  >
+                    <item.icon className="w-5 h-5 md:w-6 md:h-6 transition-all duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]" />
+                  </a>
+                );
+              }
+
               return (
                 <NavLink
                   key={item.path}
