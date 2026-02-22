@@ -153,7 +153,8 @@ export function useSubmitFeatureRequest() {
           author_avatar: user?.avatarImageUrl || null,
         })
         .select()
-        .single();
+        .single()
+        .setHeader('x-wallet-address', walletAddress.toLowerCase());
 
       if (error) throw error;
       return data;
@@ -185,7 +186,8 @@ export function useVoteFeatureRequest() {
           .from('feature_request_votes')
           .delete()
           .eq('feature_request_id', featureRequestId)
-          .eq('wallet_address', wallet);
+          .eq('wallet_address', wallet)
+          .setHeader('x-wallet-address', wallet);
 
         if (error) throw error;
         return { action: 'removed' as const };
@@ -200,7 +202,8 @@ export function useVoteFeatureRequest() {
               vote_type: voteType,
             },
             { onConflict: 'feature_request_id,wallet_address' }
-          );
+          )
+          .setHeader('x-wallet-address', wallet);
 
         if (error) throw error;
         return { action: 'voted' as const };
