@@ -1,6 +1,5 @@
 import { TrendingUp, TrendingDown, Loader2, Wallet } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -8,12 +7,20 @@ import bnbLogo from '@/assets/bnb-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
 import ethLogo from '@/assets/eth-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
-import { getDHBBalance } from '@/lib/contracts/stream-controller';
-import { fromWei } from '@/lib/contracts/dhb-token';
-import { getDPayTransactions } from '@/lib/api/dpay';
 import { Button } from '@/components/ui/button';
-import { supabase } from '@/integrations/supabase/client';
 
+/** Fetch combined DHB balance (holdings + staking across all chains) via get-badge-balance */
+async function fetchCombinedDHBBalance(address: string): Promise<number> {
+  const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+  const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  const res = await fetch(
+    `https://${projectId}.supabase.co/functions/v1/get-badge-balance?address=${address}`,
+    { headers: { 'apikey': anonKey } }
+  );
+  if (!res.ok) throw new Error('Failed to fetch balance');
+  const json = await res.json();
+  return json.badgeBalance ?? 0;
+}
 
 /** Placeholder currencies the platform supports alongside DHB */
 const otherCurrencies = [
@@ -27,18 +34,14 @@ export function BalanceCard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  // Fetch on-chain DHB balance
-  const { data: rawBalance, isLoading: balanceLoading } = useQuery({
-    queryKey: ['dhb-balance', walletAddress?.toLowerCase()],
-    queryFn: async () => {
-      if (!walletAddress) return BigInt(0);
-      return getDHBBalance(walletAddress);
-    },
-    enabled: !!walletAddress,
+  // Fetch combined DHB balance (holdings + staking) — same source as leaderboard
+  const { data: balance = 0, isLoading: balanceLoading } = useQuery({
+    queryKey: ['dhb-combined-balance', walletAddress?.toLowerCase()],
+    queryFn: () => fetchCombinedDHBBalance(walletAddress!),
+    enabled: !!walletAddress && isAuthenticated,
     staleTime: 60_000,
   });
 
-  const balance = rawBalance ? Number(fromWei(rawBalance)) : 0;
   const formattedBalance = Math.round(balance).toLocaleString();
 
   if (!isAuthenticated) {
