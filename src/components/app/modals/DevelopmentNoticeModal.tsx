@@ -46,9 +46,9 @@ export function DevelopmentNoticeModal() {
 
         {/* Content */}
         <div className="text-center pt-2">
-          <h2 className="text-xl font-bold text-white mb-3">Upgrade Under Development</h2>
+          <h2 className="text-xl font-bold text-white mb-3">Almost There!</h2>
           <p className="text-white/60 text-sm leading-relaxed mb-6">
-            This webapp is currently under development. Download DeHub on Google Play today for the full experience. Apple listings coming soon!
+            App upgrade almost complete. Some users may experience downtime as we ship final developments.
           </p>
           
           {/* Google Play button */}
