@@ -73,6 +73,9 @@ const langCodeMap: Record<string, string> = {
   'ha': 'ha',
   'yo': 'yo',
   'ig': 'ig',
+  'af': 'af',
+  'qu': 'qu',
+  'am': 'am',
   'auto': 'autodetect',
 };
 
@@ -108,6 +111,9 @@ const langNameMap: Record<string, string> = {
   'ha': 'Hausa',
   'yo': 'Yoruba',
   'ig': 'Igbo',
+  'af': 'Afrikaans',
+  'qu': 'Quechua',
+  'am': 'Amharic',
 };
 
 /**
