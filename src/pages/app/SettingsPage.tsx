@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { 
   Settings as SettingsIcon, 
   User, 
@@ -145,14 +146,21 @@ export default function SettingsPage() {
               <button
                 key={tab.value}
                 onClick={() => setActiveTab(tab.value)}
-                className={`p-[11px] sm:p-3 rounded-xl transition-colors ${
+                className={`relative p-[11px] sm:p-3 rounded-xl transition-colors ${
                   activeTab === tab.value
-                    ? 'bg-zinc-800 text-white'
-                    : 'text-zinc-500 hover:text-white hover:bg-zinc-800/50'
+                    ? 'text-white'
+                    : 'text-zinc-500 hover:text-white'
                 }`}
                 title={t(tab.label)}
               >
-                <Icon className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
+                {activeTab === tab.value && (
+                  <motion.div
+                    layoutId="settings-tab"
+                    className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <Icon className="relative z-10 w-[18px] h-[18px] sm:w-5 sm:h-5" />
               </button>
             );
           })}
