@@ -450,26 +450,72 @@ async function fetchUnifiedFeedFromAPI(params: UnifiedFeedParams = {}): Promise<
   return response.json();
 }
 
+// ============================================================================
+// SESSION STORAGE CLIENT-SIDE CACHE
+// ============================================================================
+
+function getSessionCacheKey(params: UnifiedFeedParams): string {
+  const sortBy = params.sortBy || 'likes';
+  const postType = params.postType || 'all';
+  const page = params.page || 1;
+  return `feed-client-cache:${sortBy}:${postType}:${page}`;
+}
+
+function getSessionCachedFeed(params: UnifiedFeedParams): UnifiedFeedResponse | null {
+  try {
+    const key = getSessionCacheKey(params);
+    const raw = sessionStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    // Expire after 5 minutes
+    if (Date.now() - (parsed._ts || 0) > 5 * 60 * 1000) {
+      sessionStorage.removeItem(key);
+      return null;
+    }
+    return parsed.data as UnifiedFeedResponse;
+  } catch {
+    return null;
+  }
+}
+
+function setSessionCachedFeed(params: UnifiedFeedParams, data: UnifiedFeedResponse) {
+  try {
+    const key = getSessionCacheKey(params);
+    sessionStorage.setItem(key, JSON.stringify({ data, _ts: Date.now() }));
+  } catch {
+    // sessionStorage full or unavailable, ignore
+  }
+}
+
 /**
- * Main fetch function with cache-first strategy
+ * Main fetch function with cache-first strategy.
+ * ALL users (including authenticated) get cached data first for instant load.
+ * Background refetch via React Query's staleTime:0 provides personalized data.
  */
 async function fetchUnifiedFeed(params: UnifiedFeedParams = {}): Promise<UnifiedFeedResponse> {
-  // Authenticated users bypass cache to get personalized data (isUnlocked, isLiked, etc.)
-  const token = getAuthToken();
-  
-  if (!token) {
-    // Only use cache for unauthenticated visitors
-    const cacheKey = getCacheKey(params);
-    if (cacheKey) {
-      const cached = await fetchCachedFeed(cacheKey);
-      if (cached) {
-        return cached;
-      }
+  // 1. Try client-side sessionStorage cache (fastest, covers repeat visits)
+  const sessionCached = getSessionCachedFeed(params);
+  if (sessionCached) {
+    console.log('[Feed] Session cache hit');
+    return sessionCached;
+  }
+
+  // 2. Try server-side cache for ALL users (including authenticated)
+  const cacheKey = getCacheKey(params);
+  if (cacheKey) {
+    const cached = await fetchCachedFeed(cacheKey);
+    if (cached) {
+      // Store in session cache for next time
+      setSessionCachedFeed(params, cached);
+      return cached;
     }
   }
-  
-  // Direct API call (always for authenticated users, fallback for guests)
-  return fetchUnifiedFeedFromAPI(params);
+
+  // 3. Fallback to API
+  const response = await fetchUnifiedFeedFromAPI(params);
+  // Cache the API response for future instant loads
+  setSessionCachedFeed(params, response);
+  return response;
 }
 
 // ============================================================================
@@ -581,11 +627,11 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
     },
     initialPageParam: 1,
     enabled,
-    // Stale-while-revalidate: show cached data immediately, refresh in background
-    staleTime: 1000 * 60 * 5, // Data is "fresh" for 5 minutes (no refetch)
+    // Cache-first: show cached/placeholder data instantly, then refetch for personalized data
+    staleTime: 0, // Always refetch in background to get personalized data (isLiked, isUnlocked)
     gcTime: 1000 * 60 * 60, // Keep in cache for 1 hour for instant back navigation
     refetchOnWindowFocus: false, // Don't refetch on tab focus
-    refetchOnMount: false, // Don't refetch when component remounts
+    refetchOnMount: true, // Refetch on mount to get personalized data after showing cache
     refetchOnReconnect: false, // Don't refetch on network reconnect
     retry: 2,
     // Show stale data while refetching in background (stale-while-revalidate pattern)
