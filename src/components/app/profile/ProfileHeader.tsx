@@ -149,7 +149,7 @@ export function ProfileHeader({
                       <img 
                         src={profile.avatarUrl} 
                         alt={profile.name} 
-                        className="w-full h-full rounded-[10px] object-cover"
+                        className="w-full h-full rounded-[10px] object-cover aspect-square"
                       />
                     ) : (
                       <UserAvatar 
@@ -206,7 +206,7 @@ export function ProfileHeader({
                   <img 
                     src={profile.avatarUrl} 
                     alt={profile.name} 
-                    className="w-full h-full rounded-lg object-cover"
+                    className="w-full h-full rounded-lg object-cover aspect-square"
                   />
                 ) : (
                   <UserAvatar 
