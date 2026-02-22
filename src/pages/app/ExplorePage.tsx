@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
+import { useTranslation } from 'react-i18next';
 import searchIcon from '@/assets/icons/search-icon.png';
 import search3dIcon from '@/assets/icons/search-3d-icon.png';
 import trendingFireIcon from '@/assets/icons/trending-fire-icon.png';
@@ -293,6 +294,7 @@ const UserResultCard = ({
 };
 
 export default function ExplorePage() {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { walletAddress, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -645,7 +647,7 @@ export default function ExplorePage() {
 
   if (!isAuthenticated) {
     return (
-      <AuthGate description="Log in to explore and discover trending posts, creators, and communities on DeHub." />
+      <AuthGate description={t('explorePage.loginDescription')} />
     );
   }
 
@@ -661,7 +663,7 @@ export default function ExplorePage() {
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for people, posts, or content..."
+                placeholder={t('explorePage.searchPlaceholder')}
                 className="w-full pl-12 pr-4 h-[48px] bg-zinc-800 border-zinc-700 rounded-xl text-white placeholder:text-zinc-500 focus:border-zinc-600 text-sm sm:text-base"
               />
               {searchQuery && (
@@ -705,14 +707,14 @@ export default function ExplorePage() {
             >
               <div className="bg-zinc-900 rounded-2xl p-4 space-y-4 pb-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-white font-semibold">Filters</h3>
+                  <h3 className="text-white font-semibold">{t('explorePage.filters')}</h3>
                   {(activeFilterCount > 0 || selectedCategory !== 'All') && (
                     <button
                       onClick={resetFilters}
                       className="flex items-center gap-1 text-sm text-zinc-400 hover:text-white transition-colors"
                     >
                       <X className="w-4 h-4" />
-                      Clear all
+                      {t('explorePage.clearAll')}
                     </button>
                   )}
                 </div>
@@ -720,7 +722,7 @@ export default function ExplorePage() {
                 {/* Category Filters */}
                 {isSearching && (
                   <div className="space-y-2">
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider">Category</p>
+                    <p className="text-xs text-zinc-500 uppercase tracking-wider">{t('explorePage.category')}</p>
                     <div className="flex flex-wrap gap-2">
                       {SEARCH_CATEGORIES.map((cat) => (
                         <FilterPill
@@ -737,20 +739,20 @@ export default function ExplorePage() {
 
                 {/* Content Type Filters */}
                 <div className="space-y-2">
-                  <p className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</p>
+                  <p className="text-xs text-zinc-500 uppercase tracking-wider">{t('explorePage.contentType')}</p>
                   <div className="flex flex-wrap gap-2">
                     <FilterPill
-                      label="Bounty"
+                      label={t('explorePage.bounty')}
                       active={filters.w2e}
                       onClick={() => setFilters(f => ({ ...f, w2e: !f.w2e }))}
                     />
                     <FilterPill
-                      label="PPV"
+                      label={t('explorePage.ppv')}
                       active={filters.ppv}
                       onClick={() => setFilters(f => ({ ...f, ppv: !f.ppv }))}
                     />
                     <FilterPill
-                      label="Gated"
+                      label={t('explorePage.gated')}
                       active={filters.gated}
                       onClick={() => setFilters(f => ({ ...f, gated: !f.gated }))}
                     />
@@ -759,7 +761,7 @@ export default function ExplorePage() {
 
                 {/* Date Filter */}
                 <div className="space-y-2">
-                  <p className="text-xs text-zinc-500 uppercase tracking-wider">Date Posted</p>
+                  <p className="text-xs text-zinc-500 uppercase tracking-wider">{t('explorePage.datePosted')}</p>
                   <div className="flex flex-wrap gap-2">
                     <FilterDropdown
                       label="Date"
@@ -772,7 +774,7 @@ export default function ExplorePage() {
 
                 {/* Engagement Filters */}
                 <div className="space-y-2 relative z-30">
-                  <p className="text-xs text-zinc-500 uppercase tracking-wider">Engagement</p>
+                  <p className="text-xs text-zinc-500 uppercase tracking-wider">{t('explorePage.engagement')}</p>
                   <div className="flex flex-wrap gap-2">
                     <FilterDropdown
                       label="Likes"
@@ -993,9 +995,9 @@ export default function ExplorePage() {
               {/* Recent Searches Bento */}
               <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                    <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                     <img src={search3dIcon} alt="Search" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
-                    Recent Searches
+                    {t('explorePage.searchHistory')}
                   </h2>
                   {recentSearches.length > 0 && (
                     <button
@@ -1003,7 +1005,7 @@ export default function ExplorePage() {
                       className="text-zinc-500 hover:text-white text-sm flex items-center gap-1 transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
-                      Clear
+                      {t('explorePage.clearHistory')}
                     </button>
                   )}
                 </div>
@@ -1042,7 +1044,7 @@ export default function ExplorePage() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <img src={trendingFireIcon} alt="" className="w-[35px] h-[35px] object-contain" />
-                    <h2 className="text-lg sm:text-xl font-bold text-white">Trending</h2>
+                    <h2 className="text-lg sm:text-xl font-bold text-white">{t('explorePage.trending')}</h2>
                   </div>
                   <FilterDropdown
                     label="Country"

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Repeat2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -112,15 +113,15 @@ function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars
 // Notification type tabs
 type NotificationTypeFilter = 'all' | 'likes' | 'follows' | 'comments' | 'reposts' | 'subscriptions' | 'tips' | 'livestreams';
 
-const tabs: { label: string; value: NotificationTypeFilter; icon: React.ElementType }[] = [
-  { label: 'All', value: 'all', icon: Bell },
-  { label: 'Likes', value: 'likes', icon: Heart },
-  { label: 'Follows', value: 'follows', icon: UserPlus },
-  { label: 'Comments', value: 'comments', icon: MessageCircle },
-  { label: 'Reposts', value: 'reposts', icon: Repeat2 },
-  { label: 'Subs', value: 'subscriptions', icon: Users },
-  { label: 'Tips', value: 'tips', icon: DollarSign },
-  { label: 'Live', value: 'livestreams', icon: Zap },
+const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.ElementType }[] = [
+  { labelKey: 'notifications.all', value: 'all', icon: Bell },
+  { labelKey: 'notifications.likes', value: 'likes', icon: Heart },
+  { labelKey: 'notifications.follows', value: 'follows', icon: UserPlus },
+  { labelKey: 'notifications.comments', value: 'comments', icon: MessageCircle },
+  { labelKey: 'notifications.reposts', value: 'reposts', icon: Repeat2 },
+  { labelKey: 'notifications.subs', value: 'subscriptions', icon: Users },
+  { labelKey: 'notifications.tips', value: 'tips', icon: DollarSign },
+  { labelKey: 'notifications.live', value: 'livestreams', icon: Zap },
 ];
 
 // Map tab filter to notification types
@@ -419,6 +420,7 @@ function NotificationItem({
 }
 
 export default function NotificationsPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<NotificationTypeFilter>('all');
   const { isAuthenticated } = useAuth();
   
@@ -481,7 +483,7 @@ export default function NotificationsPage() {
 
   if (!isAuthenticated) {
     return (
-      <AuthGate description="Log in to view your notifications and stay updated with your friends on DeHub." />
+      <AuthGate description={t('notifications.loginDescription')} />
     );
   }
 
@@ -523,7 +525,7 @@ export default function NotificationsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <img src={notificationsIcon} alt="Notifications" className="w-9 h-9 object-contain" />
-              <h1 className="font-bold text-white text-lg">Notifications</h1>
+              <h1 className="font-bold text-white text-lg">{t('notifications.title')}</h1>
               {totalUnread > 0 && (
                 <span className="px-2 py-0.5 text-xs font-medium bg-primary text-primary-foreground rounded-lg">
                   {totalUnread > 99 ? '99+' : totalUnread}
@@ -544,7 +546,7 @@ export default function NotificationsPage() {
                   ) : (
                     <Check className="w-4 h-4" />
                   )}
-                  <span className="ml-1 hidden sm:inline">Mark all read</span>
+                    <span className="ml-1 hidden sm:inline">{t('notifications.markAllRead')}</span>
                 </Button>
               )}
               <Sheet>
@@ -560,13 +562,13 @@ export default function NotificationsPage() {
                   <SheetHeader className="pb-4">
                     <SheetTitle className="text-white text-lg font-bold flex items-center gap-2">
                       <Settings className="w-5 h-5 text-white" />
-                      Notification Settings
+                      {t('notifications.settings')}
                     </SheetTitle>
                   </SheetHeader>
                   
                   {/* Actions Section */}
                   <div className="space-y-3 mb-6">
-                    <p className="text-xs text-white/50 uppercase tracking-wider font-medium">Actions</p>
+                    <p className="text-xs text-white/50 uppercase tracking-wider font-medium">{t('notifications.actions')}</p>
                     <button
                       onClick={handleMarkAllAsRead}
                       disabled={markAllAsRead.isPending || totalUnread === 0}
@@ -576,8 +578,8 @@ export default function NotificationsPage() {
                         <Check className="w-5 h-5 text-white" />
                       </div>
                       <div className="flex-1 text-left">
-                        <p className="text-white font-medium">Mark all as read</p>
-                        <p className="text-white/50 text-sm">Clear all unread indicators</p>
+                        <p className="text-white font-medium">{t('notifications.markAllAsRead')}</p>
+                        <p className="text-white/50 text-sm">{t('notifications.clearAllIndicators')}</p>
                       </div>
                     </button>
                     
@@ -592,15 +594,15 @@ export default function NotificationsPage() {
                         <Trash2 className="w-5 h-5 text-white" />
                       </div>
                       <div className="flex-1 text-left">
-                        <p className="text-white font-medium">Clear all notifications</p>
-                        <p className="text-white/50 text-sm">Remove all notification history</p>
+                        <p className="text-white font-medium">{t('notifications.clearAll')}</p>
+                        <p className="text-white/50 text-sm">{t('notifications.removeHistory')}</p>
                       </div>
                     </button>
                   </div>
                   
                   {/* Notification Types Section */}
                   <div className="space-y-3">
-                    <p className="text-xs text-white/50 uppercase tracking-wider font-medium">Notification Types</p>
+                    <p className="text-xs text-white/50 uppercase tracking-wider font-medium">{t('notifications.notificationTypes')}</p>
                     
                     <div className="space-y-2">
                       <div className="flex items-center justify-between p-4 rounded-xl bg-white/10">
@@ -609,8 +611,8 @@ export default function NotificationsPage() {
                             <Heart className="w-5 h-5 text-white" />
                           </div>
                           <div>
-                            <p className="text-white font-medium">Likes</p>
-                            <p className="text-white/50 text-sm">When someone likes your content</p>
+                            <p className="text-white font-medium">{t('notifications.likes')}</p>
+                            <p className="text-white/50 text-sm">{t('notifications.likesDesc')}</p>
                           </div>
                         </div>
                         <Switch 
@@ -625,8 +627,8 @@ export default function NotificationsPage() {
                             <MessageCircle className="w-5 h-5 text-white" />
                           </div>
                           <div>
-                            <p className="text-white font-medium">Comments</p>
-                            <p className="text-white/50 text-sm">When someone comments or replies</p>
+                            <p className="text-white font-medium">{t('notifications.comments')}</p>
+                            <p className="text-white/50 text-sm">{t('notifications.commentsDesc')}</p>
                           </div>
                         </div>
                         <Switch 
@@ -641,8 +643,8 @@ export default function NotificationsPage() {
                             <UserPlus className="w-5 h-5 text-white" />
                           </div>
                           <div>
-                            <p className="text-white font-medium">Follows</p>
-                            <p className="text-white/50 text-sm">When someone follows you</p>
+                            <p className="text-white font-medium">{t('notifications.follows')}</p>
+                            <p className="text-white/50 text-sm">{t('notifications.followsDesc')}</p>
                           </div>
                         </div>
                         <Switch 
@@ -657,8 +659,8 @@ export default function NotificationsPage() {
                             <DollarSign className="w-5 h-5 text-white" />
                           </div>
                           <div>
-                            <p className="text-white font-medium">Tips</p>
-                            <p className="text-white/50 text-sm">When someone tips your content</p>
+                            <p className="text-white font-medium">{t('notifications.tips')}</p>
+                            <p className="text-white/50 text-sm">{t('notifications.tipsDesc')}</p>
                           </div>
                         </div>
                         <Switch 
@@ -673,8 +675,8 @@ export default function NotificationsPage() {
                             <Users className="w-5 h-5 text-white" />
                           </div>
                           <div>
-                            <p className="text-white font-medium">Subscriptions</p>
-                            <p className="text-white/50 text-sm">When someone subscribes to you</p>
+                            <p className="text-white font-medium">{t('notifications.subscriptions')}</p>
+                            <p className="text-white/50 text-sm">{t('notifications.subscriptionsDesc')}</p>
                           </div>
                         </div>
                         <Switch 
@@ -689,8 +691,8 @@ export default function NotificationsPage() {
                             <Zap className="w-5 h-5 text-white" />
                           </div>
                           <div>
-                            <p className="text-white font-medium">Livestreams</p>
-                            <p className="text-white/50 text-sm">When creators you follow go live</p>
+                            <p className="text-white font-medium">{t('notifications.livestreams')}</p>
+                            <p className="text-white/50 text-sm">{t('notifications.livestreamsDesc')}</p>
                           </div>
                         </div>
                         <Switch 
@@ -738,7 +740,7 @@ export default function NotificationsPage() {
                   )}
                   <span className="relative z-10 flex items-center gap-2">
                     <tab.icon className="w-4 h-4" />
-                    <span className="hidden sm:inline">{tab.label}</span>
+                    <span className="hidden sm:inline">{t(tab.labelKey)}</span>
                     {count > 0 && (
                       <span className={`ml-1 px-1.5 py-0.5 text-xs rounded-lg transition-colors duration-200 ${
                         activeTab === tab.value
@@ -766,9 +768,9 @@ export default function NotificationsPage() {
           ) : notifications.length === 0 ? (
             <div className="p-8 flex flex-col items-center justify-center text-center">
               <Bell className="w-12 h-12 text-zinc-600 mb-4" />
-              <h3 className="text-white font-semibold text-lg mb-2">No notifications yet</h3>
+              <h3 className="text-white font-semibold text-lg mb-2">{t('notifications.noNotificationsYet')}</h3>
               <p className="text-zinc-500 text-sm max-w-xs">
-                When you get likes, comments, tips, or new subscribers, they'll show up here.
+                {t('notifications.noNotificationsDesc')}
               </p>
             </div>
           ) : (
@@ -799,7 +801,7 @@ export default function NotificationsPage() {
                     {isFetchingNextPage ? (
                       <Loader2 className="w-4 h-4 animate-spin mr-2" />
                     ) : null}
-                    Load more
+                    {t('notifications.loadMore')}
                   </Button>
                 </div>
               )}
