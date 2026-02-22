@@ -5,6 +5,7 @@
  */
 
 import { useState, useMemo, useCallback, useLayoutEffect, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
@@ -335,14 +336,21 @@ export default function LeaderboardPage() {
                   key={cat.id}
                   type="button"
                   onClick={() => { setCategory(cat.id); setSortDirection('desc'); }}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
-                    isActive
-                      ? 'bg-white text-black'
-                      : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
+                  className={`relative flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
+                    isActive ? 'text-white' : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
-                  {cat.label}
+                  {isActive && (
+                    <motion.div
+                      layoutId="leaderboard-category"
+                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10 flex items-center gap-1.5">
+                    <Icon className="w-4 h-4" />
+                    {cat.label}
+                  </span>
                 </button>
               );
             })}
@@ -363,13 +371,18 @@ export default function LeaderboardPage() {
                     setShimmerKey(k => k + 1);
                     setSortDirection('desc');
                   }}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                    isActive
-                      ? 'bg-zinc-700 text-white'
-                      : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
+                  className={`relative px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                    isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
                   }`}
                 >
-                  {period.label}
+                  {isActive && (
+                    <motion.div
+                      layoutId="leaderboard-period"
+                      className="absolute inset-0 rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">{period.label}</span>
                 </button>
               );
             })}
