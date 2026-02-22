@@ -9,6 +9,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { flushSync } from 'react-dom';
 import { useSearchParams, useNavigationType } from 'react-router-dom';
 import { Settings2 } from 'lucide-react';
@@ -481,13 +482,18 @@ export default function HomePage() {
                   key={`${tab.value}-${activeTab}`}
                   onClick={() => handleTabClick(tab.value)}
                   className={cn(
-                    'flex-1 flex items-center justify-center px-3 sm:px-4 py-2 rounded-xl text-white',
-                    isActive 
-                      ? 'bg-zinc-800' 
-                      : 'hover:bg-white/5'
+                    'relative flex-1 flex items-center justify-center px-3 sm:px-4 py-2 rounded-xl',
+                    isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
                   )}
                 >
-                  <tab.icon className="w-4 h-4" />
+                  {isActive && (
+                    <motion.div
+                      layoutId="home-feed-tab"
+                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  <tab.icon className="relative z-10 w-4 h-4" />
                 </button>
               );
             })}
