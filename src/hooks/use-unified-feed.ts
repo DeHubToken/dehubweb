@@ -457,21 +457,44 @@ async function fetchUnifiedFeedFromAPI(params: UnifiedFeedParams = {}): Promise<
  * Main fetch function with cache-first strategy
  */
 async function fetchUnifiedFeed(params: UnifiedFeedParams = {}): Promise<UnifiedFeedResponse> {
-  // Authenticated users bypass cache to get personalized data (isUnlocked, isLiked, etc.)
   const token = getAuthToken();
+  const page = params.page || 1;
+  const cacheKey = getCacheKey(params);
   
   if (!token) {
-    // Only use cache for unauthenticated visitors
-    const cacheKey = getCacheKey(params);
+    // Unauthenticated: cache-first
     if (cacheKey) {
       const cached = await fetchCachedFeed(cacheKey);
-      if (cached) {
-        return cached;
-      }
+      if (cached) return cached;
     }
+    return fetchUnifiedFeedFromAPI(params);
   }
   
-  // Direct API call (always for authenticated users, fallback for guests)
+  // Authenticated: use cache as fast placeholder, but always return API result for personalized data
+  if (cacheKey && page <= 2) {
+    // Race cache (with 2s timeout) against API
+    const cachePromise = fetchCachedFeed(cacheKey).catch(() => null);
+    const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2000));
+    const apiPromise = fetchUnifiedFeedFromAPI(params);
+    
+    // Wait for cache or timeout (whichever first)
+    const cachedResult = await Promise.race([cachePromise, timeoutPromise]);
+    
+    if (cachedResult) {
+      // Cache resolved fast — return it immediately.
+      // The API call is still in-flight; TanStack Query's staleTime + refetchOnMount:false
+      // means the next background refetch will pick up personalized data.
+      console.log(`[Feed] Auth user: returning cached data for ${cacheKey} while API runs in background`);
+      // Don't await API — let it resolve naturally and be picked up on next refetch
+      apiPromise.catch(() => {}); // swallow unhandled rejection
+      return cachedResult;
+    }
+    
+    // Cache missed/timed out — wait for API
+    return apiPromise;
+  }
+  
+  // No cacheable key or page > 2: direct API call
   return fetchUnifiedFeedFromAPI(params);
 }
 
