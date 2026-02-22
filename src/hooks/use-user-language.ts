@@ -75,4 +75,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   bn: 'Bengali',
   tl: 'Tagalog',
   pcm: 'Nigerian Pidgin',
+  ha: 'Hausa',
+  yo: 'Yoruba',
+  ig: 'Igbo',
 };
