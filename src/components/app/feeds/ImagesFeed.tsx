@@ -14,6 +14,7 @@ import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, ImageIcon, Grid3x3, Loa
 import { ImagesFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatedFilterPill } from '@/components/app/feeds/AnimatedFilterPill';
 import { ImageCard } from '@/components/app/cards';
 import { useAuth } from '@/contexts/AuthContext';
 import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
@@ -55,18 +56,14 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
       <div className="relative">
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
           {SORT_OPTIONS.map((option) => (
-            <button
+            <AnimatedFilterPill
               key={option.label}
+              layoutId="images-sort"
+              isActive={selected.label === option.label}
               onClick={() => onSelect(option)}
-              className={cn(
-                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-                selected.label === option.label
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              )}
             >
               {t(`filters.${option.value === 'most-viewed' ? 'mostViewed' : option.value === 'most-liked' ? 'mostLiked' : option.value === 'most-comments' ? 'mostComments' : option.value}`, option.label)}
-            </button>
+            </AnimatedFilterPill>
           ))}
         </div>
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
@@ -83,18 +80,14 @@ function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterO
       <div className="relative">
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
           {DATE_FILTER_OPTIONS.map((option) => (
-            <button
+            <AnimatedFilterPill
               key={option.label}
+              layoutId="images-date"
+              isActive={selected.label === option.label}
               onClick={() => onSelect(option)}
-              className={cn(
-                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-                selected.label === option.label
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              )}
             >
               {option.value === 'all' ? t('filters.all') : option.label}
-            </button>
+            </AnimatedFilterPill>
           ))}
         </div>
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
@@ -123,7 +116,7 @@ function ContentTypeFilterSection({
               className={cn(
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
                 filters[filter.value]
-                  ? 'bg-white text-black'
+                  ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
                   : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
               )}
             >
@@ -502,7 +495,7 @@ export function ImagesFeed({
                         className={cn(
                           'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
                           contentFilters[filter.value]
-                            ? 'bg-white text-black'
+                            ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
                             : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                         )}
                       >

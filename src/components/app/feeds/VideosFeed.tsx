@@ -16,6 +16,7 @@ import { RefreshCw, Video, Play, ChevronRight, Filter, Radio, Eye, Loader2 } fro
 import { VideosFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { AnimatedFilterPill } from '@/components/app/feeds/AnimatedFilterPill';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ShortsReel } from '@/components/app/cards/ShortsReel';
 
@@ -239,18 +240,14 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
       <div className="relative">
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
           {SORT_OPTIONS.map((option) => (
-            <button
+            <AnimatedFilterPill
               key={option.label}
+              layoutId="videos-sort"
+              isActive={selected.label === option.label}
               onClick={() => onSelect(option)}
-              className={cn(
-                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                selected.label === option.label
-                  ? ACTIVE_FILTER_CLASS
-                  : INACTIVE_FILTER_CLASS
-              )}
             >
               {t(`filters.${option.value === 'most-viewed' ? 'mostViewed' : option.value === 'most-liked' ? 'mostLiked' : option.value === 'most-comments' ? 'mostComments' : option.value}`, option.label)}
-            </button>
+            </AnimatedFilterPill>
           ))}
         </div>
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
@@ -268,18 +265,14 @@ function DurationFilterSection({ selected, onSelect }: { selected: DurationFilte
       <div className="relative">
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
           {DURATION_FILTERS.map((option) => (
-            <button
+            <AnimatedFilterPill
               key={option.label}
+              layoutId="videos-duration"
+              isActive={selected.label === option.label}
               onClick={() => onSelect(option)}
-              className={cn(
-                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                selected.label === option.label
-                  ? ACTIVE_FILTER_CLASS
-                  : INACTIVE_FILTER_CLASS
-              )}
             >
               {option.label === 'Any' ? t('filters.any') : option.label}
-            </button>
+            </AnimatedFilterPill>
           ))}
         </div>
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
@@ -297,18 +290,14 @@ function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterO
       <div className="relative">
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
           {DATE_FILTER_OPTIONS.map((option) => (
-            <button
+            <AnimatedFilterPill
               key={option.label}
+              layoutId="videos-date"
+              isActive={selected.label === option.label}
               onClick={() => onSelect(option)}
-              className={cn(
-                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                selected.label === option.label
-                  ? ACTIVE_FILTER_CLASS
-                  : INACTIVE_FILTER_CLASS
-              )}
             >
               {option.value === 'all' ? t('filters.all') : option.label}
-            </button>
+            </AnimatedFilterPill>
           ))}
         </div>
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />

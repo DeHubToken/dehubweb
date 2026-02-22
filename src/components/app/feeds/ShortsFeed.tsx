@@ -15,6 +15,7 @@ import { ShortsFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
+import { AnimatedFilterPill } from '@/components/app/feeds/AnimatedFilterPill';
 import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
 import { useDeHubFeed } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
@@ -151,18 +152,14 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
       <div className="relative">
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
           {SORT_OPTIONS.map((option) => (
-            <button
+            <AnimatedFilterPill
               key={option.label}
+              layoutId="shorts-sort"
+              isActive={selected.label === option.label}
               onClick={() => onSelect(option)}
-              className={cn(
-                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                selected.label === option.label
-                  ? ACTIVE_FILTER_CLASS
-                  : INACTIVE_FILTER_CLASS
-              )}
             >
               {t(`filters.${option.value === 'most-viewed' ? 'mostViewed' : option.value === 'most-liked' ? 'mostLiked' : option.value === 'most-comments' ? 'mostComments' : option.value}`, option.label)}
-            </button>
+            </AnimatedFilterPill>
           ))}
         </div>
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
@@ -179,18 +176,14 @@ function DurationFilterSection({ selected, onSelect }: { selected: DurationFilte
       <div className="relative">
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
           {DURATION_FILTERS.map((option) => (
-            <button
+            <AnimatedFilterPill
               key={option.label}
+              layoutId="shorts-duration"
+              isActive={selected.label === option.label}
               onClick={() => onSelect(option)}
-              className={cn(
-                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                selected.label === option.label
-                  ? ACTIVE_FILTER_CLASS
-                  : INACTIVE_FILTER_CLASS
-              )}
             >
               {option.label === 'Any' ? t('filters.any') : option.label}
-            </button>
+            </AnimatedFilterPill>
           ))}
         </div>
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
@@ -303,18 +296,14 @@ function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterO
       <div className="relative">
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
           {DATE_FILTER_OPTIONS.map((option) => (
-            <button
+            <AnimatedFilterPill
               key={option.label}
+              layoutId="shorts-date"
+              isActive={selected.label === option.label}
               onClick={() => onSelect(option)}
-              className={cn(
-                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-                selected.label === option.label
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              )}
             >
               {option.value === 'all' ? t('filters.all') : option.label}
-            </button>
+            </AnimatedFilterPill>
           ))}
         </div>
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
