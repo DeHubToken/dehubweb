@@ -12,7 +12,6 @@ import { RadioMiniPlayer } from '@/components/app/radio';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 import HomePage from '@/pages/app/HomePage';
 import SinglePostPage from '@/pages/app/SinglePostPage';
-import { toast } from 'sonner';
 
 interface AppLayoutContentProps {
   children?: ReactNode;
@@ -33,22 +32,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   useEffect(() => {
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
-    }
-  }, []);
-
-  // Show upgrade notice toast on first load
-  useEffect(() => {
-    const key = 'dehub_upgrade_toast_seen';
-    if (!localStorage.getItem(key)) {
-      localStorage.setItem(key, 'true');
-      toast('App upgrade almost complete', {
-        description: 'Download DeHub on the Google Play Store today for full functionality.',
-        duration: 8000,
-        action: {
-          label: 'Get it',
-          onClick: () => window.open('https://play.google.com/store/apps/details?id=io.dehub.mobile&hl', '_blank'),
-        },
-      });
     }
   }, []);
   

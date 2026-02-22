@@ -137,14 +137,14 @@ export function useProfileAvatar(
   const { data: avatarUrl } = useQuery({
     queryKey: [AVATAR_QUERY_KEY, walletAddress],
     queryFn: async () => {
-      if (!walletAddress) return null;
+      if (!walletAddress) return undefined;
       try {
         // Use batch queue instead of direct API call
         const url = await queueAvatarFetch(walletAddress);
-        return url || fallbackUrl || null;
+        return url || fallbackUrl;
       } catch (error) {
         console.warn('[AvatarCache] Failed to fetch avatar for', walletAddress, error);
-        return fallbackUrl || null;
+        return fallbackUrl;
       }
     },
     enabled: !!walletAddress,
@@ -192,7 +192,7 @@ export function useAvatarPrefetch() {
                 const user = await getAccountInfo(address);
                 return extractUserAvatarUrl(user);
               } catch {
-                return null;
+                return undefined;
               }
             },
             staleTime: AVATAR_CACHE_STALE_MS,

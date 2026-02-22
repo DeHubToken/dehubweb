@@ -1,28 +1,71 @@
 
 
-## Fix: Avatars and Thumbnails Breaking
+# Improve Google Login Toast Flow
 
-### Root Cause
+## Problem
 
-**Avatars:** React Query v5 forbids `queryFn` from returning `undefined`. The `useProfileAvatar` hook in `src/hooks/use-profile-avatar-cache.ts` returns `undefined` in several code paths (when no URL is found, when fallbackUrl is itself undefined). This causes React Query to throw an error, which makes every avatar query fail and fall back to showing initial letters.
+When logging in with Google, the user clicks the button, a Google popup opens, and nothing happens in the app until the popup closes. Then all the progress toasts ("Getting your account...", "Please sign the message...", "Verifying with DeHub...", "Welcome back!") flash through rapidly at the end. The user has no feedback during the waiting period.
 
-**Thumbnails:** The video files on the CDN are returning `MEDIA_ELEMENT_ERROR: Format error`. This causes the `VideoThumbnail` canvas extraction to fail. This is a separate, pre-existing issue with specific CDN video files, not a code regression.
+## Solution
 
-### Changes
+Add progressive toast notifications at each stage of the login flow so the user sees real-time feedback:
 
-**File: `src/hooks/use-profile-avatar-cache.ts`**
+1. **Immediately on click**: Show "Connecting to Google..." toast (before the popup even opens)
+2. **After Google popup returns**: Update to "Setting up your account..." 
+3. **During signature**: Update to "Signing in..."
+4. **During API verification**: Update to "Verifying..."
+5. **On success**: Show "Welcome back!" or "Successfully logged in!"
 
-1. Change the `queryFn` to return `null` instead of `undefined` in all code paths -- React Query v5 accepts `null` but not `undefined`
-2. Update the return type to `string | null` where needed
-3. Also fix the `useAvatarPrefetch` function which has the same issue (line 194: `return undefined`)
+## Technical Changes
 
-Specific changes:
-- Line 140: `return undefined` changes to `return null`
-- Line 144: `return url || fallbackUrl` changes to `return url || fallbackUrl || null`
-- Line 148: `return fallbackUrl` changes to `return fallbackUrl || null`
-- Line 194: `return undefined` changes to `return null`
+### 1. `src/contexts/AuthContext.tsx` - `connectWithProvider` (around line 843)
 
-### No Other Files Need Changes
+Add an immediate toast right when the user clicks Google (before `connectToSocialProvider` is called):
 
-The i18n lazy-loading changes did not cause this issue. The avatar bug is a React Query v5 compatibility issue that may have been latent and recently surfaced due to a dependency update or query re-evaluation timing.
+```typescript
+const connectWithProvider = async (provider: SocialProvider, isRetry = false) => {
+    setIsConnecting(true);
+    setActiveProvider(provider);
+    setConnectionSource('web3auth');
+    localStorage.setItem('dehub_connection_source', 'web3auth');
+
+    // Show immediate feedback
+    toast.loading(`Connecting to ${provider === 'google' ? 'Google' : provider === 'twitter' ? 'X' : provider}...`, { id: 'auth-popup' });
+
+    try { ...
+```
+
+### 2. `src/contexts/AuthContext.tsx` - `completeDeHubAuth` (around line 698-818)
+
+Update the toast progression to flow naturally from the existing "Connecting to Google..." toast:
+
+- Change line ~705 from `toast.loading('Getting your account...')` to `toast.loading('Setting up your account...')` — this replaces the "Connecting to Google..." toast since it uses the same `id: 'auth-popup'`
+- Keep the signature toast at line ~737: "Signing in..." (shorter, cleaner)  
+- Keep the verification toast at line ~786: "Almost there..." (friendlier)
+- Keep the success toast at line ~812
+
+### 3. `src/contexts/AuthContext.tsx` - Dismiss toast on cancellation
+
+In the `connectWithProvider` catch block (around line 857), dismiss the loading toast if the user cancels or if there's an error, so it doesn't linger:
+
+```typescript
+} catch (error: any) {
+    // Dismiss any lingering loading toast
+    toast.dismiss('auth-popup');
+    ...
+```
+
+Also dismiss on retry path (line ~865) so the "Retrying..." toast replaces cleanly.
+
+## Result
+
+The user will see a smooth progression:
+- Click Google -> "Connecting to Google..." (instant)
+- Google popup opens and user authenticates
+- Popup closes -> "Setting up your account..." 
+- Auto-sign -> "Signing in..."
+- API call -> "Almost there..."  
+- Done -> "Welcome back!"
+
+No more dead silence followed by a rapid toast avalanche.
 
