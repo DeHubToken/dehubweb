@@ -1,74 +1,68 @@
 
 
-# Speed Up Home Feed Loading
+# Fix: Home Feed Cache Never Actually Works
 
-## Problem
-When an authenticated user opens the home feed, the app **completely skips** the server-side cache (`feed_cache` table) and hits the external DeHub API directly every time. This was done intentionally to get personalized data (isLiked, isDisliked, isUnlocked), but it means the first load is always slow — typically 1-3 seconds waiting on the external API.
+## Root Cause
 
-## Solution: Cache-First, Then Personalize
+The server-side cache (`feed_cache` table) only caches feeds with `postType = 'all'`, but the HomeFeed component makes 3 separate queries with specific post types:
+- `postType: 'video'`
+- `postType: 'feed-images'`
+- `postType: 'feed-simple'`
 
-Use the server-side cache as **instant placeholder data** for all users (including authenticated), then silently refresh with personalized data in the background. Users see content in under 200ms, and personalized states (like/dislike indicators) update seamlessly moments later.
-
-```text
-Current Flow (Slow):
-User opens feed --> Wait for DeHub API (1-3s) --> Show content
-
-New Flow (Fast):
-User opens feed --> Show cached content instantly (~100ms)
-                --> Refresh from API in background (~1-3s)
-                --> Merge personalized data (seamless update)
+In `getCacheKey()` (line 352), there's an explicit guard:
+```
+if (postType !== 'all') return null; // Only cache "all" feed for now
 ```
 
-## Changes
+This means the cache is **never hit** for the actual home feed queries. Both authenticated AND non-authenticated users always wait 1-3 seconds for 3 parallel DeHub API calls.
 
-### 1. Use cache as placeholder for authenticated users (`use-unified-feed.ts`)
-- Remove the `if (!token)` guard that blocks authenticated users from using the cache
-- Change `fetchUnifiedFeed` to **always** check the cache first
-- If cache exists, return it immediately as placeholder data
-- Then trigger a background API call for personalized data
-- This is achieved by using React Query's `placeholderData` or `initialData` with the cached feed
+The `sessionStorage` client-side cache added in the last change also doesn't help on the **first visit** since there's nothing stored yet.
 
-### 2. Add client-side cache layer (`use-unified-feed.ts`)
-- Store the last successful API response in `sessionStorage` (keyed by feed params)
-- On next load, use this as instant data while the API call is in flight
-- This covers the case where the server-side `feed_cache` might be stale or miss
+## Fix
 
-### 3. Optimize the prefetch to warm cache on app start (`use-feed-prefetch.ts`)
-- Move the home feed prefetch to trigger **immediately on app mount** (not after home feed loads)
-- This way, by the time the user navigates to the home tab, data is already cached in React Query
+### 1. Expand `getCacheKey()` to support per-postType caches
 
-## Technical Details
+Update the function to generate cache keys for `video`, `feed-images`, and `feed-simple` post types, not just `'all'`.
 
-The key change in `fetchUnifiedFeed`:
-
-```typescript
-// Before: authenticated users ALWAYS skip cache
-async function fetchUnifiedFeed(params) {
-  const token = getAuthToken();
-  if (!token) {
-    // only guests use cache
-  }
-  return fetchUnifiedFeedFromAPI(params);
-}
-
-// After: everyone gets cache-first, API refresh in background
-async function fetchUnifiedFeed(params) {
-  // Try cache first for ALL users (instant load)
-  const cacheKey = getCacheKey(params);
-  if (cacheKey) {
-    const cached = await fetchCachedFeed(cacheKey);
-    if (cached) return cached;
-  }
-  // Fallback to API
-  return fetchUnifiedFeedFromAPI(params);
-}
+```
+feed_latest_video_page1
+feed_latest_feed-images_page1
+feed_latest_feed-simple_page1
 ```
 
-Then in the `useUnifiedFeed` hook, set `staleTime: 0` so React Query immediately triggers a background refetch after showing the cached data. The personalized fields (isLiked, isDisliked, isUnlocked) will update in-place without a loading flash thanks to the existing `placeholderData` pattern.
+### 2. Expand the `refresh-feed-cache` Edge Function to pre-warm per-type caches
 
-The PPV purchase enrichment (lines 553-560) will still apply on the background refetch, so unlock states remain accurate.
+Currently the cron job only caches the "all" feed. It needs to also cache the 3 post-type-specific feeds that the HomeFeed actually uses.
 
-### Risk Mitigation
-- Like/dislike icons may briefly show the wrong state (from non-personalized cache) before the background refresh completes — this is a standard stale-while-revalidate tradeoff and is acceptable for a ~2s window
-- The existing vote cache (`vote-cache.ts`) already handles optimistic updates, so any recent user votes will be correct immediately
+### 3. Expand the Nebula prefetch to match cache keys
+
+The `use-nebula-prefetch.ts` already fetches per-type feeds and caches them in React Query, but the query keys it uses may not align with what `useUnifiedFeed` expects. Verify alignment so the prefetched data is actually used.
+
+## Technical Changes
+
+### File: `src/hooks/use-unified-feed.ts`
+
+**`getCacheKey()`** -- expand to support per-type cache keys:
+- Remove the `if (postType !== 'all') return null` guard
+- Generate keys like `feed_latest_video_page1`, `feed_popular_feed-images_page1`
+- Keep existing guards for user-specific queries, PPV, etc.
+
+### File: `supabase/functions/refresh-feed-cache/index.ts`
+
+Add cache warming for the 3 home feed post types:
+- For each of `video`, `feed-images`, `feed-simple`:
+  - Fetch page 1 from the DeHub API
+  - Store in `feed_cache` with keys like `feed_latest_video_page1`
+- This runs on the existing hourly cron, so no additional scheduling needed
+
+### File: `src/hooks/use-nebula-prefetch.ts`
+
+Verify the React Query keys used by `prefetchHomeFeed()` match the keys used by `useUnifiedFeed` in `HomeFeed.tsx`. Currently the prefetch manually constructs query keys that may not match.
+
+## Expected Result
+
+- First-time non-authenticated visitors get cached data in ~100ms (from `feed_cache`) instead of waiting 1-3s for the DeHub API
+- The nebula prefetch warms React Query on first interaction, so switching to the home tab is instant
+- The session cache provides instant loads on repeat visits within the same session
+- Authenticated users get the same instant first-paint, with personalized data updating moments later via background refetch
 
