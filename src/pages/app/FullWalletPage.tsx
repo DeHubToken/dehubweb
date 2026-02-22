@@ -12,6 +12,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { useWalletTokens, useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
+import { createOnrampSession } from '@/lib/api/dpay';
 import { getERC20Metadata, saveCustomToken, removeCustomToken, formatBalance, type WalletToken } from '@/lib/wallet/tokens';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { switchChain } from '@/lib/contracts/aa-utils';
@@ -149,13 +150,23 @@ export default function FullWalletPage() {
           <Send className="w-5 h-5" />
           <span className="text-xs">Send</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl" onClick={() => {
-          const dexUrls: Record<number, string> = {
-            [BASE_CHAIN_ID]: 'https://app.uniswap.org/swap?chain=base',
-            [BNB_CHAIN_ID]: 'https://pancakeswap.finance/swap?chain=bsc',
-            [ETH_CHAIN_ID]: 'https://app.uniswap.org/swap?chain=mainnet',
-          };
-          window.open(dexUrls[selectedChain] || dexUrls[BASE_CHAIN_ID], '_blank');
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl" onClick={async () => {
+          try {
+            const res = await createOnrampSession({
+              walletAddress: walletAddress || '',
+              currency: 'USD',
+              amount: 50,
+              tokenSymbol: 'DHB',
+            });
+            const url = (res as any)?.url || (res as any)?.redirectUrl;
+            if (url) {
+              window.open(url, '_blank');
+            } else {
+              toast.error('Unable to open payment gateway');
+            }
+          } catch {
+            toast.error('Failed to start purchase session');
+          }
         }}>
           <ShoppingCart className="w-5 h-5" />
           <span className="text-xs">Buy</span>
