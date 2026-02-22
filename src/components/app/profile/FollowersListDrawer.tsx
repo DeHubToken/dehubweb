@@ -12,7 +12,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
-import { getFollowList, followUser, unfollowUser, type FollowListItem } from '@/lib/api/dehub';
+import { getFollowList, followUser, unfollowUser, isFollowing as checkIsFollowing, type FollowListItem } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
@@ -83,7 +83,7 @@ export function FollowersListDrawer({
   const [sortOption, setSortOption] = useState<SortOption>('newest');
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [myFollowingAddresses, setMyFollowingAddresses] = useState<Set<string>>(new Set());
+  
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -111,46 +111,40 @@ export function FollowersListDrawer({
       try {
         const type = title === 'Followers' ? 'followers' : 'following';
 
-        // Fetch the list AND current user's following list in parallel
-        // so we can mark who the current user already follows
-        const [listResult, myFollowingResult] = await Promise.all([
-          getFollowList(profileAddress, type, {
-            page: 1,
-            limit: PAGE_SIZE,
-            sortBy: 'createdAt',
-            sortOrder: sortOption === 'newest' ? 'desc' : 'asc',
-            ...(debouncedSearch ? { search: debouncedSearch } : {}),
-          }),
-          isAuthenticated && currentUserAddress
-            ? getFollowList(currentUserAddress, 'following', { limit: 300 }).catch(() => ({ items: [] }))
-            : Promise.resolve({ items: [] as FollowListItem[] }),
-        ]);
-
-        const { items, pagination } = listResult;
-        const myFollowingSet = new Set(
-          myFollowingResult.items.map((u: FollowListItem) => u.address.toLowerCase())
-        );
-
-        const processed = items.map(item => {
-          const mapped = mapFollowListItem(item);
-          // Enrich with isFollowing from cross-reference
-          if (mapped.isFollowing === undefined && currentUserAddress) {
-            mapped.isFollowing = myFollowingSet.has(item.address.toLowerCase());
-          }
-          return mapped;
+        // Fetch the list
+        const { items, pagination } = await getFollowList(profileAddress, type, {
+          page: 1,
+          limit: PAGE_SIZE,
+          sortBy: 'createdAt',
+          sortOrder: sortOption === 'newest' ? 'desc' : 'asc',
+          ...(debouncedSearch ? { search: debouncedSearch } : {}),
         });
 
+        const processed = items.map(mapFollowListItem);
+
+        // Check isFollowing status for each user in parallel
         const isOwnFollowingList =
           title === 'Following' &&
           currentUserAddress &&
           profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
 
-        const finalUsers = isOwnFollowingList
-          ? processed.map(u => ({ ...u, isFollowing: true }))
-          : processed;
+        let finalUsers: UserListItem[];
+        if (isOwnFollowingList) {
+          finalUsers = processed.map(u => ({ ...u, isFollowing: true }));
+        } else if (isAuthenticated && currentUserAddress && processed.length > 0) {
+          const followStatuses = await Promise.all(
+            processed.map(u =>
+              u.isFollowing !== undefined
+                ? Promise.resolve(u.isFollowing)
+                : checkIsFollowing(u.address).catch(() => false)
+            )
+          );
+          finalUsers = processed.map((u, i) => ({ ...u, isFollowing: followStatuses[i] }));
+        } else {
+          finalUsers = processed;
+        }
 
         setUsers(finalUsers);
-        setMyFollowingAddresses(myFollowingSet);
         setCurrentPage(1);
         setHasMore(pagination?.hasMore ?? false);
         setTotalCount(pagination?.totalCount ?? null);
@@ -190,22 +184,28 @@ export function FollowersListDrawer({
         ...(debouncedSearch ? { search: debouncedSearch } : {}),
       });
 
-      const processed = items.map(item => {
-        const mapped = mapFollowListItem(item);
-        if (mapped.isFollowing === undefined && currentUserAddress) {
-          mapped.isFollowing = myFollowingAddresses.has(item.address.toLowerCase());
-        }
-        return mapped;
-      });
+      const processed = items.map(mapFollowListItem);
 
       const isOwnFollowingList =
         title === 'Following' &&
         currentUserAddress &&
         profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
 
-      const finalItems = isOwnFollowingList
-        ? processed.map(u => ({ ...u, isFollowing: true }))
-        : processed;
+      let finalItems: UserListItem[];
+      if (isOwnFollowingList) {
+        finalItems = processed.map(u => ({ ...u, isFollowing: true }));
+      } else if (isAuthenticated && currentUserAddress && processed.length > 0) {
+        const followStatuses = await Promise.all(
+          processed.map(u =>
+            u.isFollowing !== undefined
+              ? Promise.resolve(u.isFollowing)
+              : checkIsFollowing(u.address).catch(() => false)
+          )
+        );
+        finalItems = processed.map((u, i) => ({ ...u, isFollowing: followStatuses[i] }));
+      } else {
+        finalItems = processed;
+      }
 
       setUsers(prev => [...prev, ...finalItems]);
       setCurrentPage(nextPage);
@@ -215,7 +215,7 @@ export function FollowersListDrawer({
     } finally {
       setIsLoadingMore(false);
     }
-  }, [isLoadingMore, hasMore, currentPage, title, profileAddress, currentUserAddress, sortOption, debouncedSearch, myFollowingAddresses]);
+  }, [isLoadingMore, hasMore, currentPage, title, profileAddress, currentUserAddress, isAuthenticated, sortOption, debouncedSearch]);
 
   // IntersectionObserver for infinite scroll
   useEffect(() => {
@@ -247,7 +247,6 @@ export function FollowersListDrawer({
       setSearchQuery('');
       setDebouncedSearch('');
       setSortOption('newest');
-      setMyFollowingAddresses(new Set());
     }
   }, [open]);
 
