@@ -185,7 +185,7 @@ export default function FullWalletPage() {
       <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 mb-4">
         <div className="flex items-center justify-between">
           <div className="min-w-0">
-            <span className="text-zinc-500 text-xs uppercase tracking-wider font-medium">Total Balance</span>
+            <span className="text-zinc-500 text-xs uppercase tracking-wider font-medium">Total Wallet Value</span>
             <p className="text-white text-2xl font-bold mt-0.5">
               ${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
