@@ -110,6 +110,9 @@ export default function ProfilePage() {
       setShareSheetOpen={setShareSheetOpen}
       onMakeOffer={handleMakeOffer}
       onTip={!data.isViewingOwnProfile ? () => setShowTipModal(true) : undefined}
+      isBlocked={data.isBlocked}
+      isBlockLoading={data.isBlockLoading}
+      handleBlock={data.handleBlock}
     />
   );
 
@@ -295,6 +298,7 @@ export default function ProfilePage() {
           setFollowListDrawerOpen={setFollowListDrawerOpen}
           translatedBio={data.translatedBio}
           setTranslatedBio={data.setTranslatedBio}
+          isBlocked={data.isBlocked}
         />
 
         {/* Profile Tabs Bento */}
