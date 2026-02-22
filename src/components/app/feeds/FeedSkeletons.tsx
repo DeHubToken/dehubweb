@@ -255,7 +255,6 @@ export function CategoryPillsSkeleton() {
 export function HomeFeedSkeleton() {
   return (
     <div className="space-y-3">
-      <StoriesBarSkeleton />
       <VideoCardSkeleton />
       <PostCardSkeleton />
       <ImageCardSkeleton />
