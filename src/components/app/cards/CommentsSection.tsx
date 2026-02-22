@@ -851,7 +851,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           placeholder="Search comments & quotes..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
+          className="bg-white/[0.08] backdrop-blur-xl border-white/[0.12] text-white text-sm h-9 placeholder:text-zinc-500"
           autoFocus={activeTab === 'search'}
         />
       </div>
@@ -990,7 +990,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         <div className="mt-auto pt-3">
           {/* Reply indicator */}
           {replyTo && (
-            <div className="flex items-center gap-2 mb-2 px-3 py-2 bg-zinc-800 rounded-xl">
+            <div className="flex items-center gap-2 mb-2 px-3 py-2 bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl">
               <Reply className="w-3.5 h-3.5 text-zinc-400" />
               <span className="text-xs text-zinc-400">Replying to @{replyTo.username}</span>
               <button 
@@ -1067,7 +1067,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
               </div>
             ) : (
               <>
-                <div className="flex-1 flex items-center bg-zinc-800 rounded-xl px-3 min-h-[40px]">
+                <div className="flex-1 flex items-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl px-3 min-h-[40px]">
                   <textarea
                     ref={inputRef}
                     placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Add a reply...'}
@@ -1094,7 +1094,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                 {/* Image attach button */}
                 <button
                   onClick={() => imageInputRef.current?.click()}
-                  className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-colors"
+                  className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl text-zinc-400 hover:text-white transition-colors"
                   aria-label="Attach image"
                 >
                   <ImagePlus className="w-5 h-5" />
@@ -1102,7 +1102,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                 {!voiceNote && (
                   <button
                     onClick={startRecording}
-                    className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 rounded-xl text-zinc-400 hover:text-red-400 transition-colors"
+                    className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl text-zinc-400 hover:text-red-400 transition-colors"
                     aria-label="Record voice note"
                   >
                     <Mic className="w-5 h-5" />
