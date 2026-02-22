@@ -6,6 +6,7 @@
  */
 
 import { useState, useMemo, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Lightbulb, Search, ChevronUp, ChevronDown, Plus, X, Loader2, Sparkles, CheckCircle2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -521,13 +522,20 @@ export default function FeaturesPage() {
                     key={cat.id}
                     type="button"
                     onClick={() => setCategory(cat.id)}
-                    className={`px-3 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
+                    className={`relative px-3 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
                       category === cat.id
-                        ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] text-white'
-                        : 'bg-zinc-800/60 text-zinc-400 hover:text-white hover:bg-white/10'
+                        ? 'text-white'
+                        : 'text-zinc-400 hover:text-white'
                     }`}
                   >
-                    {cat.label}
+                    {category === cat.id && (
+                      <motion.div
+                        layoutId="category-pill"
+                        className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]"
+                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10">{cat.label}</span>
                   </button>
                 ))}
               </div>
