@@ -8,7 +8,7 @@
  */
 
 import { Interface, parseUnits, formatUnits } from 'ethers';
-import { getWeb3AuthProvider, getOrInitWeb3Auth } from '@/lib/web3auth';
+import { getWeb3AuthProvider, getOrInitWeb3Auth, refreshWeb3AuthProvider } from '@/lib/web3auth';
 import { getAccount } from '@wagmi/core';
 import { sendTransaction, waitForTransactionReceipt, switchChain as wagmiSwitchChain } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
@@ -270,8 +270,9 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   if (lowerError.includes('invalid signature') || lowerError.includes('signer should sign')) {
     return 'Signature verification failed on-chain.';
   }
-  if (lowerError.includes('unable to find matching address') || lowerError.includes('torus keyring')) {
-    return 'Wallet session mismatch. Please log out and log back in, then try again.';
+  if (lowerError.includes('unable to find matching address') || lowerError.includes('torus keyring') ||
+      lowerError.includes('session expired') || lowerError.includes('log in again to complete')) {
+    return 'Session expired. Please log in again to complete this transaction.';
   }
   if (lowerError.includes('execution reverted')) {
     const match = errorStr.match(/reason="([^"]+)"/);
@@ -383,19 +384,26 @@ export async function writeContractAA(
         txParams.value = toHex(options.value);
       }
 
-      // Retry once on "Torus Keyring - Unable to find matching address" (session sync issue)
-      const sendTx = async () => provider.request({
+      const sendTx = async (p: any) => p.request({
         method: 'eth_sendTransaction',
         params: [txParams],
       }) as Promise<string>;
       try {
-        txHash = await sendTx();
+        txHash = await sendTx(provider);
       } catch (firstErr: unknown) {
         const msg = String(firstErr).toLowerCase();
-        if ((msg.includes('unable to find matching address') || msg.includes('torus keyring')) && msg.includes('keyring')) {
-          console.warn('[AA] Torus keyring error, retrying after 2s...');
-          await new Promise(r => setTimeout(r, 2000));
-          txHash = await sendTx();
+        if (msg.includes('unable to find matching address') || msg.includes('torus keyring')) {
+          // The Torus key shard wasn't loaded after session restore — try re-initializing
+          // the Web3Auth provider (keeps storage so session can be re-read from openlogin_* keys).
+          console.warn('[AA] Torus keyring error - refreshing Web3Auth provider before retry...');
+          const freshProvider = await refreshWeb3AuthProvider();
+          if (freshProvider) {
+            console.log('[AA] Provider refreshed, retrying transaction...');
+            txHash = await sendTx(freshProvider);
+          } else {
+            // Session truly expired — tell user to log in again
+            throw new Error('Session expired. Please log in again to complete this transaction.');
+          }
         } else {
           throw firstErr;
         }

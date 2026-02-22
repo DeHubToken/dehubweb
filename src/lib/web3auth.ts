@@ -609,6 +609,34 @@ export function isWeb3AuthConnected(): boolean {
   return web3authInstance?.connected ?? false;
 }
 
+/**
+ * Refresh the Web3Auth provider in-memory WITHOUT clearing storage.
+ * Used to recover from "Torus Keyring - Unable to find matching address" errors
+ * that occur when the key shard hasn't been reconstructed after session restore.
+ * If the openlogin_* session is still valid, re-init will fully load the key.
+ * Returns the fresh provider, or null if the session truly expired.
+ */
+export async function refreshWeb3AuthProvider(): Promise<any> {
+  console.log('[Web3Auth] Refreshing provider (keeping storage for session restore)...');
+  // Reset in-memory state only — do NOT touch storage so init() can re-read openlogin_* keys
+  web3authInstance = null;
+  isInitializing = false;
+  initPromise = null;
+
+  try {
+    const freshInstance = await initWeb3Auth();
+    if (freshInstance.connected && freshInstance.provider) {
+      console.log('[Web3Auth] Provider refreshed — session restored successfully');
+      return freshInstance.provider;
+    }
+    console.warn('[Web3Auth] Provider refresh: init completed but not connected');
+    return null;
+  } catch (e) {
+    console.warn('[Web3Auth] Provider refresh failed:', e);
+    return null;
+  }
+}
+
 export function isSocialLoginConnected(): boolean {
   return lastConnectedConnector === WALLET_CONNECTORS.AUTH;
 }

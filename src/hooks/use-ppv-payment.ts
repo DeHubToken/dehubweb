@@ -183,6 +183,10 @@ export function usePPVPayment({
       console.error('[PPV] Payment failed:', error);
       const message = parseTxError(error);
       toast.error(message || 'PPV payment failed', { id: 'ppv-payment' });
+      // Session expired → auto-open login modal so user can re-auth and retry
+      if (message.toLowerCase().includes('session expired') || message.toLowerCase().includes('log in again')) {
+        setTimeout(() => openLoginModal?.(), 1200);
+      }
     } finally {
       setIsPaying(false);
     }
