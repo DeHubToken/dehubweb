@@ -1,68 +1,43 @@
 
-
-## Fix: Home Feed Cache Key Mismatch
+## Fix: Home Feed Loading Slower Than Video Feed
 
 ### Root Cause
 
-The prefetcher is caching the home feed data under a query key that does NOT match what the home feed component actually uses. TanStack Query treats `{ postType: undefined }` and `{}` (missing key) as different cache entries, so the prefetched data is never found.
+The home feed is slower because of the **Supabase cache race strategy** in `fetchUnifiedFeed`. For authenticated users, when the home feed loads (postType = "all", sortBy = "createdAt"), the code:
 
-Here is the mismatch:
+1. Starts a Supabase database query to `feed_cache` table
+2. Starts the DeHub API call
+3. Waits up to **2 seconds** for the Supabase cache to resolve before falling back to the API
 
-**What the home feed component uses (singleFeed query key):**
-```
-['unified-feed', {
-  limit: 20,          // <-- included in params
-  sortBy: 'createdAt',
-  sortOrder: 'desc',
-  status: 'minted',
-  category: undefined,
-  isPPV: undefined,
-  hasBounty: undefined,
-  isLocked: undefined,
-  followingOnly: undefined,
-  postType: undefined,  // <-- PRESENT as undefined
-  range: undefined,
-}, 20]
-```
+If the Supabase cache misses (stale, empty, or slow), this adds up to 2 seconds of latency before the API result is used.
 
-**What the prefetcher caches under:**
-```
-['unified-feed', {
-  sortBy: 'createdAt',
-  sortOrder: 'desc',
-  status: 'minted',
-  category: undefined,
-  isPPV: undefined,
-  hasBounty: undefined,
-  isLocked: undefined,
-  followingOnly: undefined,
-  // postType is MISSING entirely
-  range: undefined,
-}, 20]
-```
-
-These keys are different objects to TanStack Query's deep comparison, so the cached data is invisible to the component.
-
-Additionally, the nebula prefetch caches per-postType feeds (video, feed-images, feed-simple) but the home feed in "Latest" mode uses a single unified feed query (no postType) -- those per-type caches are also never used because `useInterleavedFeed` is false for the default "Latest" sort.
+Meanwhile, the **video feed skips all caching** because the `getCacheKey` function returns `null` for any `postType` that isn't `'all'`. So the video feed goes directly to the DeHub API with zero overhead -- making it appear almost instant.
 
 ### The Fix
 
-**File: `src/hooks/use-feed-prefetch.ts`**
+Two changes to `src/hooks/use-unified-feed.ts`:
 
-1. Add `postType: undefined` to the `homeFeedParams` object so the cache key matches what the `useUnifiedFeed` hook generates
-2. Also add `followingOnly: undefined` if missing (already present -- verify)
+1. **Reduce the cache timeout from 2 seconds to 500ms** -- If the Supabase cache doesn't respond in 500ms, it's not helping. Fall through to the API result immediately.
 
-**File: `src/hooks/use-nebula-prefetch.ts`**
-
-1. Add a 4th prefetch for the single unified home feed (no postType) alongside the 3 per-type feeds
-2. Cache it with the correct key including `postType: undefined` and `followingOnly: undefined`
+2. **Use the cache as `placeholderData` instead of blocking** -- Instead of awaiting the cache race, fire both requests and return whichever resolves first. If the cache wins, use it; if the API wins, use that directly. This way the cache never adds latency, it can only make things faster.
 
 ### Technical Details
 
-**`src/hooks/use-feed-prefetch.ts` changes:**
-- In the `homeFeedParams` object (around line 287), add `postType: undefined` to match the component's query key shape exactly
+**File: `src/hooks/use-unified-feed.ts`**
 
-**`src/hooks/use-nebula-prefetch.ts` changes:**
-- Add a new `fetchFeed` call with no postType filter (pass empty string or omit the param from the URL)
-- Cache it under a key that includes `postType: undefined, followingOnly: undefined` to match the singleFeed query key
-- This ensures the nebula hover prefetch also populates the correct cache for "Latest" sort
+In the `fetchUnifiedFeed` function (around line 459), change the authenticated user path:
+
+- Current: Races cache (2s timeout) vs nothing, then falls back to API if cache misses
+- New: Race cache (500ms timeout) vs API directly. Whichever resolves first wins. The cache can only help, never hurt.
+
+```text
+Current flow:
+  cache (2s timeout) --> if miss --> await API
+  Total worst case: 2s + API time
+
+New flow:
+  Promise.race(cache (500ms timeout), API)
+  Total worst case: API time (cache never adds delay)
+```
+
+Also in `useNebulaPrefetch`, the prefetched home feed data should be hitting the TanStack Query cache directly, so the Supabase cache race shouldn't even trigger for prefetched data. We should verify the prefetch query keys match exactly (the plan.md identified this issue -- ensure `postType: undefined` and `followingOnly: undefined` are both present).
