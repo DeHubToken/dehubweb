@@ -10,7 +10,7 @@ const DEHUB_API_BASE = "https://api.dehub.io";
 
 // Cache configurations to pre-fetch - trimmed to 3 pages for cost efficiency
 // Pages 4+ are fetched live on demand with TanStack Query (10-min staleTime)
-const CACHE_CONFIGS = [
+const CACHE_CONFIGS: CacheConfig[] = [
   // Latest feed - pages 1-3
   { key: "feed_latest_page1", page: 1, limit: 50, sortBy: "createdAt" },
   { key: "feed_latest_page2", page: 2, limit: 50, sortBy: "createdAt" },
@@ -19,6 +19,10 @@ const CACHE_CONFIGS = [
   { key: "feed_popular_page1", page: 1, limit: 50, sortBy: "likes" },
   { key: "feed_popular_page2", page: 2, limit: 50, sortBy: "likes" },
   { key: "feed_popular_page3", page: 3, limit: 50, sortBy: "likes" },
+  // Per-type latest feeds (HomeFeed uses these 3 types) - page 1 only
+  { key: "feed_latest_video_page1", page: 1, limit: 20, sortBy: "createdAt", postType: "video" },
+  { key: "feed_latest_feed-images_page1", page: 1, limit: 20, sortBy: "createdAt", postType: "feed-images" },
+  { key: "feed_latest_feed-simple_page1", page: 1, limit: 20, sortBy: "createdAt", postType: "feed-simple" },
 ];
 
 interface CacheConfig {
@@ -26,6 +30,7 @@ interface CacheConfig {
   page: number;
   limit: number;
   sortBy: string;
+  postType?: string;
 }
 
 async function fetchFeed(config: CacheConfig): Promise<unknown> {
@@ -35,6 +40,7 @@ async function fetchFeed(config: CacheConfig): Promise<unknown> {
   url.searchParams.set("sortBy", config.sortBy);
   url.searchParams.set("sortOrder", "desc");
   url.searchParams.set("status", "minted");
+  if (config.postType) url.searchParams.set("postType", config.postType);
   
   console.log(`Fetching feed: ${url.toString()}`);
   
