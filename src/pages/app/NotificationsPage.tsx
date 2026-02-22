@@ -534,7 +534,7 @@ export default function NotificationsPage() {
               <img src={notificationsIcon} alt="Notifications" className="w-9 h-9 object-contain" />
               <h1 className="font-bold text-white text-lg">{t('notifications.title')}</h1>
               {totalUnread > 0 && (
-                <span className="px-2 py-0.5 text-xs font-medium bg-primary text-primary-foreground rounded-lg">
+                <span className="px-2 py-0.5 text-xs font-medium bg-red-500 text-white rounded-lg">
                   {totalUnread > 99 ? '99+' : totalUnread}
                 </span>
               )}
