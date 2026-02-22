@@ -397,7 +397,9 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const allShorts = useMemo(() => {
     // API now returns only videos (postType: 'video'), no client-side filter needed
     const dateFiltered = filterByDate(allRawNFTs, selectedUploadDate.value);
-    const sorted = applySorting(dateFiltered, selectedSort.value);
+    // Exclude PPV content from shorts
+    const nonPPV = dateFiltered.filter(nft => !nft.is_ppv && !nft.streamInfo?.isPayPerView);
+    const sorted = applySorting(nonPPV, selectedSort.value);
     return sorted.map((nft, index) => mapToShortVideo(nft, index));
   }, [allRawNFTs, selectedSort.value, selectedUploadDate.value]);
 
