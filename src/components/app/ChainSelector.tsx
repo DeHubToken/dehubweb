@@ -11,8 +11,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { cn } from '@/lib/utils';
 import baseLogo from '@/assets/icons/base-logo.png';
 import bnbLogo from '@/assets/icons/bnb-logo.png';
+import ethLogo from '@/assets/eth-logo.png';
 
-export type ChainId = 8453 | 56;
+export type ChainId = 8453 | 56 | 1;
 
 export interface Chain {
   id: ChainId;
@@ -36,6 +37,13 @@ export const SUPPORTED_CHAINS: Chain[] = [
     symbol: 'BNB',
     icon: bnbLogo,
     explorerUrl: 'https://bscscan.com',
+  },
+  {
+    id: 1,
+    name: 'Ethereum',
+    symbol: 'ETH',
+    icon: ethLogo,
+    explorerUrl: 'https://etherscan.io',
   },
 ];
 

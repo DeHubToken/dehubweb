@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { useWalletTokens } from '@/hooks/use-wallet-tokens';
 import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
 import { getERC20Metadata, saveCustomToken, removeCustomToken, formatBalance, type WalletToken } from '@/lib/wallet/tokens';
-import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
+import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { switchChain } from '@/lib/contracts/aa-utils';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { toast } from 'sonner';
@@ -24,6 +24,7 @@ import baseLogo from '@/assets/icons/base-logo.png';
 const CHAIN_OPTIONS: { id: ChainId; name: string; icon: string }[] = [
   { id: BASE_CHAIN_ID, name: 'Base', icon: baseLogo },
   { id: BNB_CHAIN_ID, name: 'BNB Chain', icon: bnbLogo },
+  { id: ETH_CHAIN_ID, name: 'Ethereum', icon: ethLogo },
 ];
 
 const TOKEN_ICONS: Record<string, string> = {

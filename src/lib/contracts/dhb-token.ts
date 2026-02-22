@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 // Chain IDs
 export const BASE_CHAIN_ID = 8453;
 export const BNB_CHAIN_ID = 56;
+export const ETH_CHAIN_ID = 1;
 
 // Chain-specific configurations
 export interface ChainConfig {
@@ -40,6 +41,15 @@ export const CHAIN_CONFIGS: Record<ChainId, ChainConfig> = {
     dhbToken: '0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7', // DHB on BNB
     streamCollection: '0x1065F5922a336C75623B55D22c4a0C760efCe947',
     streamController: '0x9f8012074d27F8596C0E5038477ACB52057BC934', // Uses same as collection on BNB
+  },
+  [ETH_CHAIN_ID]: {
+    chainId: ETH_CHAIN_ID,
+    name: 'Ethereum',
+    rpcUrl: 'https://eth.public-rpc.com',
+    explorerUrl: 'https://etherscan.io',
+    dhbToken: '', // No DHB on Ethereum mainnet
+    streamCollection: '',
+    streamController: '',
   },
 };
 
