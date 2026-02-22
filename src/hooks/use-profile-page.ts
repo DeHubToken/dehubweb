@@ -174,6 +174,7 @@ export function useProfilePage() {
   const handleBlock = useCallback(async () => {
     if (!apiProfile?.walletAddress || isBlockLoading) return;
     setIsBlockLoading(true);
+    const newBlocked = !isBlocked;
     try {
       if (isBlocked) {
         await unblockUser(apiProfile.walletAddress);
@@ -182,14 +183,23 @@ export function useProfilePage() {
         await blockUser(apiProfile.walletAddress);
         toast.success(`Blocked ${apiProfile.name || apiProfile.handle || 'user'}`);
       }
-      queryClient.invalidateQueries({ queryKey: ['block-status', apiProfile.walletAddress] });
+      // Optimistic: set block status immediately so UI updates
+      queryClient.setQueryData(['block-status', apiProfile.walletAddress], {
+        isBlocked: newBlocked,
+        isBlockedBy: blockStatus?.isBlockedBy ?? false,
+      });
       queryClient.invalidateQueries({ queryKey: ['block-list'] });
     } catch (error) {
+      // Revert optimistic update on failure
+      queryClient.setQueryData(['block-status', apiProfile.walletAddress], {
+        isBlocked: isBlocked,
+        isBlockedBy: blockStatus?.isBlockedBy ?? false,
+      });
       handleApiError(error, `Failed to ${isBlocked ? 'unblock' : 'block'} user`);
     } finally {
       setIsBlockLoading(false);
     }
-  }, [apiProfile, isBlocked, isBlockLoading, queryClient, handleApiError]);
+  }, [apiProfile, isBlocked, isBlockLoading, blockStatus, queryClient, handleApiError]);
   // Pull-to-refresh
   const triggerRefresh = useCallback(() => {
     if (isRefreshing) return;
