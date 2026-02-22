@@ -25,7 +25,7 @@ export function RightSidebar({ showSearch = true }: RightSidebarProps) {
   };
 
   return (
-    <aside className="hidden lg:block w-72 xl:w-80 h-screen sticky top-0 p-4 overflow-y-auto scrollbar-hide z-[50] isolate">
+    <aside className="hidden lg:block w-72 xl:w-80 h-screen sticky top-0 p-4 overflow-y-auto scrollbar-hide z-0 isolate">
       {showSearch && (
         <div className="bg-zinc-900 rounded-xl p-[3px] -mt-[5px]">
           <div className="relative">
