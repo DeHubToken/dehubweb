@@ -23,6 +23,7 @@ export {
   DHB_TOKEN, 
   BASE_CHAIN_ID,
   BNB_CHAIN_ID,
+  ETH_CHAIN_ID,
   CHAIN_CONFIGS,
   getChainConfig,
   ERC20_ABI, 
