@@ -259,15 +259,19 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
       </div>
 
       {/* Scrollable list — sliding strip */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden relative">
         <div
-          className="flex h-full transition-transform duration-300 ease-out"
-          style={{ transform: `translateX(-${PERIODS.indexOf(activePeriod as typeof PERIODS[number]) * 100}%)` }}
+          className="absolute inset-0 flex transition-transform duration-300 ease-out"
+          style={{
+            width: `${PERIODS.length * 100}%`,
+            transform: `translateX(-${PERIODS.indexOf(activePeriod as typeof PERIODS[number]) * (100 / PERIODS.length)}%)`,
+          }}
         >
           {PERIODS.map((period) => (
             <div
               key={period}
-              className="w-full flex-shrink-0 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent"
+              className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent"
+              style={{ width: `${100 / PERIODS.length}%` }}
             >
               <PeriodList period={period} isActive={activePeriod === period} />
             </div>

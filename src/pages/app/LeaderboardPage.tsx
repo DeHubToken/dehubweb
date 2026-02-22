@@ -167,7 +167,8 @@ export default function LeaderboardPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['leaderboard', apiSortMode, timePeriod],
     queryFn: () => getLeaderboard(apiSortMode, timePeriod),
-    staleTime: 60_000, // 1 minute
+    staleTime: 60 * 60 * 1000, // 1 hour — matches server-side cache refresh
+    gcTime: 2 * 60 * 60 * 1000,
     placeholderData: (prev) => prev, // Keep previous data while loading new tab
   });
 
