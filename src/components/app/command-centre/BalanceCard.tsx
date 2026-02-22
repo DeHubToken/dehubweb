@@ -95,7 +95,6 @@ export function BalanceCard() {
         className="w-full mt-4 rounded-xl"
         onClick={() => navigate('/app/wallet')}
       >
-        <Wallet className="w-4 h-4 mr-2" />
         Wallet
       </Button>
     </div>
