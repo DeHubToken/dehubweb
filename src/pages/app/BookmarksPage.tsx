@@ -11,16 +11,17 @@ import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
 import type { FeedItem } from '@/types/feed.types';
 import bookmark3dIcon from '@/assets/icons/bookmark-3d-icon.png';
+import { useTranslation } from 'react-i18next';
 
-const tabs = [
-  { label: 'All', value: 'all' as BookmarkType, icon: LayoutGrid },
-  { label: 'Liked', value: 'liked' as BookmarkType, icon: ThumbsUp },
-  { label: 'History', value: 'history' as BookmarkType, icon: History },
-  { label: 'Recent', value: 'recent' as BookmarkType, icon: Clock },
-  { label: 'Paid PPV', value: 'ppv' as BookmarkType, icon: Ticket },
-  { label: 'Images', value: 'images' as BookmarkType, icon: Image },
-  { label: 'Videos', value: 'videos' as BookmarkType, icon: Video },
-  { label: 'Text Posts', value: 'text' as BookmarkType, icon: FileText },
+const tabKeys = [
+  { labelKey: 'bookmarks.all', value: 'all' as BookmarkType, icon: LayoutGrid },
+  { labelKey: 'bookmarks.liked', value: 'liked' as BookmarkType, icon: ThumbsUp },
+  { labelKey: 'bookmarks.history', value: 'history' as BookmarkType, icon: History },
+  { labelKey: 'bookmarks.recent', value: 'recent' as BookmarkType, icon: Clock },
+  { labelKey: 'bookmarks.paidPpv', value: 'ppv' as BookmarkType, icon: Ticket },
+  { labelKey: 'bookmarks.images', value: 'images' as BookmarkType, icon: Image },
+  { labelKey: 'bookmarks.videos', value: 'videos' as BookmarkType, icon: Video },
+  { labelKey: 'bookmarks.textPosts', value: 'text' as BookmarkType, icon: FileText },
 ];
 
 function FeedItemRenderer({ item }: { item: FeedItem }) {
@@ -60,6 +61,7 @@ function BookmarksSkeleton() {
 }
 
 export default function BookmarksPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<BookmarkType>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const { isAuthenticated } = useAuth();
@@ -107,7 +109,7 @@ export default function BookmarksPage() {
   // Block access for unauthenticated users
   if (!isAuthenticated) {
     return (
-      <AuthGate description="Log in to view and manage your saved bookmarks." />
+      <AuthGate description={t('bookmarks.loginDescription')} />
     );
   }
 
@@ -117,11 +119,11 @@ export default function BookmarksPage() {
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
-            <img src={bookmark3dIcon} alt="Bookmarks" className="w-[52px] h-[52px] object-contain" />
+            <img src={bookmark3dIcon} alt={t('nav.bookmarks')} className="w-[52px] h-[52px] object-contain" />
             <div>
-              <h1 className="text-xl font-bold text-white">Your Bookmarks</h1>
+              <h1 className="text-xl font-bold text-white">{t('bookmarks.title')}</h1>
               <p className="text-zinc-500 text-sm">
-                {totalCount} saved {totalCount === 1 ? 'post' : 'posts'}
+                {totalCount === 1 ? t('bookmarks.savedCount', { count: totalCount }) : t('bookmarks.savedCountPlural', { count: totalCount })}
               </p>
             </div>
           </div>
@@ -129,7 +131,7 @@ export default function BookmarksPage() {
           <button 
             onClick={() => refetch()}
             className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 transition-colors"
-            title="Refresh bookmarks"
+            title={t('bookmarks.refresh')}
           >
             <RefreshCw className={`w-4 h-4 text-zinc-400 ${isLoading ? 'animate-spin' : ''}`} />
           </button>
@@ -139,7 +141,7 @@ export default function BookmarksPage() {
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
-            placeholder="Search bookmarks..."
+            placeholder={t('bookmarks.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
@@ -148,7 +150,7 @@ export default function BookmarksPage() {
 
         {/* Filter Tabs */}
         <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-          {tabs.map((tab) => {
+          {tabKeys.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.value;
             return (
@@ -168,7 +170,7 @@ export default function BookmarksPage() {
                 )}
                 <span className="relative z-10 flex items-center gap-2">
                   <Icon className="w-4 h-4" />
-                  {tab.label}
+                  {t(tab.labelKey)}
                 </span>
               </button>
             );
@@ -185,15 +187,15 @@ export default function BookmarksPage() {
             <div className="w-16 h-16 bg-red-500/10 rounded-xl flex items-center justify-center mx-auto mb-6">
               <Bookmark className="w-8 h-8 text-red-400" />
             </div>
-            <h2 className="text-xl font-bold text-white mb-3">Failed to load bookmarks</h2>
+            <h2 className="text-xl font-bold text-white mb-3">{t('bookmarks.failedToLoad')}</h2>
             <p className="text-zinc-500 max-w-sm mb-4">
-              There was an error loading your bookmarks. Please try again.
+              {t('bookmarks.errorMessage')}
             </p>
             <button
               onClick={() => refetch()}
               className="px-4 py-2 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10 rounded-lg font-medium transition-colors"
             >
-              Try Again
+              {t('bookmarks.tryAgain')}
             </button>
           </div>
         </div>
@@ -204,12 +206,12 @@ export default function BookmarksPage() {
               <Bookmark className="w-8 h-8 text-zinc-400" />
             </div>
             <h2 className="text-xl font-bold text-white mb-3">
-              {searchQuery ? 'No matching bookmarks' : 'No bookmarks yet'}
+              {searchQuery ? t('bookmarks.noMatchingBookmarks') : t('bookmarks.noBookmarksYet')}
             </h2>
             <p className="text-zinc-500 max-w-sm">
               {searchQuery 
-                ? `No bookmarks match "${searchQuery}". Try a different search.`
-                : 'Start saving posts by tapping the bookmark icon on any post you want to save.'
+                ? t('bookmarks.noMatchSearch', { query: searchQuery })
+                : t('bookmarks.startSaving')
               }
             </p>
           </div>
@@ -230,7 +232,7 @@ export default function BookmarksPage() {
           {/* End of list indicator */}
           {!hasNextPage && bookmarks.length > 0 && (
             <div className="py-8 text-center text-zinc-500 text-sm">
-              You've reached the end of your bookmarks
+              {t('bookmarks.reachedEnd')}
             </div>
           )}
         </div>

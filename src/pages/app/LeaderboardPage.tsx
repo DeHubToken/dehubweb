@@ -6,6 +6,7 @@
 
 import { useState, useMemo, useCallback, useLayoutEffect, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
@@ -34,21 +35,21 @@ import { useBatchBadgeBalances } from '@/hooks/use-badge-balance';
 
 type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
 
-const categories: { id: CategoryType; label: string; icon: typeof Wallet; apiSort: LeaderboardSortMode }[] = [
-  { id: 'holdings', label: 'Holdings', icon: Wallet, apiSort: 'holdings' },
-  { id: 'sentTips', label: 'Spent', icon: ArrowUpRight, apiSort: 'sentTips' },
-  { id: 'receivedTips', label: 'Earned', icon: CreditCard, apiSort: 'receivedTips' },
-  { id: 'followers', label: 'Followers', icon: Users, apiSort: 'followers' },
-  { id: 'likes', label: 'Likes', icon: Heart, apiSort: 'likes' },
-  { id: 'subscribers', label: 'Subscribers', icon: UserCheck, apiSort: 'subscribers' },
+const categories: { id: CategoryType; labelKey: string; icon: typeof Wallet; apiSort: LeaderboardSortMode }[] = [
+  { id: 'holdings', labelKey: 'leaderboard.holdings', icon: Wallet, apiSort: 'holdings' },
+  { id: 'sentTips', labelKey: 'leaderboard.spent', icon: ArrowUpRight, apiSort: 'sentTips' },
+  { id: 'receivedTips', labelKey: 'leaderboard.earned', icon: CreditCard, apiSort: 'receivedTips' },
+  { id: 'followers', labelKey: 'leaderboard.followers', icon: Users, apiSort: 'followers' },
+  { id: 'likes', labelKey: 'leaderboard.likes', icon: Heart, apiSort: 'likes' },
+  { id: 'subscribers', labelKey: 'leaderboard.subscribers', icon: UserCheck, apiSort: 'subscribers' },
 ];
 
-const timePeriods: { id: LeaderboardPeriod; label: string }[] = [
-  { id: 'day', label: 'Day' },
-  { id: 'week', label: 'Week' },
-  { id: 'month', label: 'Month' },
-  { id: 'year', label: 'Year' },
-  { id: 'all', label: 'All Time' },
+const timePeriods: { id: LeaderboardPeriod; labelKey: string }[] = [
+  { id: 'day', labelKey: 'leaderboard.day' },
+  { id: 'week', labelKey: 'leaderboard.week' },
+  { id: 'month', labelKey: 'leaderboard.month' },
+  { id: 'year', labelKey: 'leaderboard.year' },
+  { id: 'all', labelKey: 'leaderboard.allTime' },
 ];
 
 const getRankStyle = (rank: number) => {
@@ -80,6 +81,7 @@ const formatDHB = (num: number): string => {
 };
 
 export default function LeaderboardPage() {
+  const { t } = useTranslation();
   useLayoutEffect(() => {
     // Force scroll to top immediately and repeatedly to override any residual scroll position
     window.scrollTo(0, 0);
@@ -123,7 +125,7 @@ export default function LeaderboardPage() {
 
     requireAuth(async () => {
       if (!walletAddress) {
-        toast.error('No wallet address found');
+        toast.error(t('leaderboard.noWalletAddress'));
         return;
       }
 
@@ -137,14 +139,14 @@ export default function LeaderboardPage() {
         const result = await res.json();
 
         if (!res.ok || !result.success) {
-          toast.error(result.error || 'Failed to refresh');
+          toast.error(result.error || t('leaderboard.refreshFailed'));
           return;
         }
 
         if (result.added) {
-          toast.success(`You've been added! Balance: ${(result.balance as number).toLocaleString()} DHB`);
+          toast.success(t('leaderboard.addedToLeaderboard', { balance: (result.balance as number).toLocaleString() }));
         } else {
-          toast.info(result.reason || `Balance too low (${(result.balance as number).toLocaleString()} DHB)`);
+          toast.info(result.reason || t('leaderboard.balanceTooLow', { balance: (result.balance as number).toLocaleString() }));
         }
 
         // Refetch leaderboard data
@@ -155,7 +157,7 @@ export default function LeaderboardPage() {
         setTimeout(() => setRefreshCooldown(false), 30_000);
       } catch (err) {
         console.error('Refresh failed:', err);
-        toast.error('Something went wrong');
+        toast.error(t('leaderboard.refreshFailed'));
       } finally {
         setIsRefreshing(false);
       }
@@ -319,8 +321,8 @@ export default function LeaderboardPage() {
             <img src={trophyIcon} alt="Trophy" className="w-11 h-11 object-contain" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">Leaderboards</h1>
-            <p className="text-zinc-500 text-sm">Automatically updates every 5 minutes</p>
+            <h1 className="text-xl font-bold text-white">{t('leaderboard.title')}</h1>
+            <p className="text-zinc-500 text-sm">{t('leaderboard.subtitle')}</p>
           </div>
         </div>
 
@@ -349,7 +351,7 @@ export default function LeaderboardPage() {
                   )}
                   <span className="relative z-10 flex items-center gap-1.5">
                     <Icon className="w-4 h-4" />
-                    {cat.label}
+                    {t(cat.labelKey)}
                   </span>
                 </button>
               );
@@ -382,7 +384,7 @@ export default function LeaderboardPage() {
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
                   )}
-                  <span className="relative z-10">{period.label}</span>
+                  <span className="relative z-10">{t(period.labelKey)}</span>
                 </button>
               );
             })}
@@ -391,7 +393,7 @@ export default function LeaderboardPage() {
             type="button"
             onClick={() => setSortDirection(d => d === 'desc' ? 'asc' : 'desc')}
             className="p-1.5 rounded-lg bg-zinc-800 text-zinc-400 hover:text-white transition-colors shrink-0"
-            title={sortDirection === 'desc' ? 'Showing highest first' : 'Showing lowest first'}
+            title={sortDirection === 'desc' ? t('leaderboard.highestFirst') : t('leaderboard.lowestFirst')}
           >
             {sortDirection === 'desc' ? <ArrowDown className="w-4 h-4" /> : <ArrowUp className="w-4 h-4" />}
           </button>
@@ -402,7 +404,7 @@ export default function LeaderboardPage() {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
             <Input
-              placeholder="Search users..."
+              placeholder={t('leaderboard.searchUsers')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
@@ -414,7 +416,7 @@ export default function LeaderboardPage() {
               onClick={handleRefreshMe}
               disabled={isRefreshing || refreshCooldown}
               className="flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
-              title={refreshCooldown ? 'Cooldown active (30s)' : 'Refresh my position'}
+              title={refreshCooldown ? t('leaderboard.cooldownActive') : t('leaderboard.refreshPosition')}
             >
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             </button>
@@ -427,9 +429,9 @@ export default function LeaderboardPage() {
         {/* Table Header - only render when we have entries to avoid border flash */}
         {entries.length > 0 && (
           <div className="hidden sm:grid grid-cols-12 gap-4 px-4 sm:px-6 py-4 border-b border-zinc-800 text-zinc-500 text-sm font-medium">
-            <div className="col-span-1 text-center -ml-[5.5px]">Rank</div>
-            <div className="col-span-5">User</div>
-            <div className="col-span-6 text-right">{currentCategory?.label || 'Value'}</div>
+            <div className="col-span-1 text-center -ml-[5.5px]">{t('leaderboard.rank')}</div>
+            <div className="col-span-5">{t('leaderboard.user')}</div>
+            <div className="col-span-6 text-right">{currentCategory ? t(currentCategory.labelKey) : t('leaderboard.value')}</div>
           </div>
         )}
 
@@ -443,14 +445,14 @@ export default function LeaderboardPage() {
         {/* Error State */}
         {error && (
           <div className="text-center py-20">
-            <p className="text-zinc-500">Failed to load leaderboard</p>
+            <p className="text-zinc-500">{t('leaderboard.failedToLoad')}</p>
           </div>
         )}
 
         {/* Empty State */}
         {!isLoading && !error && entries.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-zinc-500">No users found</p>
+            <p className="text-zinc-500">{t('leaderboard.noUsersFound')}</p>
           </div>
         )}
 
