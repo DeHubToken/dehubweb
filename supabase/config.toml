@@ -45,8 +45,6 @@ verify_jwt = false
 [functions.agora-token]
 verify_jwt = false
 
-[functions.refresh-feed-cache]
-verify_jwt = false
 
 [functions.refresh-leaderboard-cache]
 verify_jwt = false
