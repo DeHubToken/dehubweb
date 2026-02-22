@@ -1,33 +1,42 @@
 
-## Fix: Filter Menus Breaking on Rapid Toggle
 
-### Root Cause
+## Fix: PPV Payments Always Show "DHB on Base" Regardless of Selected Chain
 
-Every feed tab (Home, Videos, Shorts, Images, Music) wraps its filter section in `AnimatePresence` with a conditional `motion.div` that animates `height: 0` to `height: auto`. When you rapidly toggle filters (by tapping the same tab twice quickly), Framer Motion's `AnimatePresence` hits a race condition: the exit animation hasn't completed when a new enter animation starts. This leaves the `motion.div` stuck at `height: 0` with `overflow-hidden`, making the filters invisible even though `showFilters` is `true`.
+### Problem
+
+When a post is minted on BNB chain (56), the PPV payment drawer still says "DHB on Base" and processes the payment on Base. This happens because:
+
+1. The `VideoItem` type has no `chainId` field
+2. The `mapNFTToVideoItem` mapper ignores the NFT's `chainId` field (which exists on `DeHubNFT` at line 157)
+3. `PPVDrawerContent` doesn't accept or pass a `chainId` prop
+4. `usePPVPayment` defaults to `BASE_CHAIN_ID` when no `chainId` is provided
 
 ### Solution
 
-Add `mode="wait"` to every `AnimatePresence` wrapper around filter sections. This tells Framer Motion to finish the exit animation before starting the enter animation, preventing the race condition.
+Thread the post's `chainId` through the entire PPV pipeline so payments execute on the correct chain.
 
-### Files to Change
+### Changes
 
-1. **src/components/app/feeds/HomeFeed.tsx** (line ~1065)
-   - Change `<AnimatePresence>` to `<AnimatePresence mode="wait">`
+**1. `src/types/feed.types.ts`** -- Add `chainId` to `VideoItem` and `ImagePost`
+- Add optional `chainId?: number` field to both interfaces
 
-2. **src/components/app/feeds/VideosFeed.tsx** (line ~708)
-   - Change `<AnimatePresence>` to `<AnimatePresence mode="wait">`
+**2. `src/hooks/use-dehub-feed.ts`** -- Map `chainId` from NFT data
+- In `mapNFTToVideoItem`: extract `nft.chainId` and include it in the returned object
+- In `mapNFTToImagePost`: same change
 
-3. **src/components/app/feeds/ShortsFeed.tsx** (line ~498)
-   - Change `<AnimatePresence>` to `<AnimatePresence mode="wait">`
+**3. `src/components/app/cards/PPVDrawerContent.tsx`** -- Accept and pass `chainId`
+- Add `chainId?: number` to `PPVDrawerContentProps`
+- Pass it through to `usePPVPayment`
 
-4. **src/components/app/feeds/ImagesFeed.tsx** (line ~469)
-   - Change `<AnimatePresence>` to `<AnimatePresence mode="wait">`
+**4. `src/components/app/cards/VideoCard.tsx`** -- Pass `chainId` to PPV drawer
+- Where `PPVDrawerContent` is rendered, add `chainId={video.chainId}` (there are two VideoCard components in this file -- the compact one and the full one, both need updating)
 
-5. **src/components/app/feeds/MusicFeed.tsx** (line ~662)
-   - Change `<AnimatePresence>` to `<AnimatePresence mode="wait">`
+**5. Any other card components rendering `PPVDrawerContent`** -- Same pattern: pass through the item's `chainId`
 
-### What This Fixes
+**6. `src/hooks/use-bookmarks.ts`** -- Map `chainId` in bookmark mappers
+- Include `chainId: nft.chainId` in the bookmark video/image mappers
 
-- Filters will no longer get stuck in a collapsed/invisible state after rapid toggling
-- The exit animation completes cleanly before the enter animation begins
-- No visual change to the animation itself -- same smooth height transition
+**7. `src/components/app/feeds/MusicFeed.tsx`** -- Map `chainId` in its local mapper
+- Include `chainId: nft.chainId` in `mapNFTToVideoItem`
+
+This ensures PPV payments execute on whichever chain the content was originally minted on (Base or BNB), using the correct DHB token contract address for that chain.
