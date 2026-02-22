@@ -59,9 +59,9 @@ export function ProfileOptionsContent({
     setShareSheetOpen(false);
   };
 
-  const onBlockClick = () => {
+  const onBlockClick = async () => {
     if (handleBlock) {
-      handleBlock();
+      await handleBlock();
     }
     setShareSheetOpen(false);
   };
