@@ -160,7 +160,7 @@ export function useProfilePage() {
   const isPending = apiProfile?.isPending ?? false;
   const isTargetPrivate = apiProfile?.isPrivate ?? false;
 
-  // Block status
+  // Block status - prefer account_info data (always fresh), fallback to dedicated endpoint
   const { data: blockStatus } = useQuery({
     queryKey: ['block-status', apiProfile?.walletAddress],
     queryFn: () => getBlockStatus(apiProfile!.walletAddress),
@@ -168,8 +168,9 @@ export function useProfilePage() {
     staleTime: 60 * 1000,
   });
 
-  const isBlocked = blockStatus?.isBlocked ?? false;
-  const isBlockedBy = blockStatus?.isBlockedBy ?? false;
+  // account_info returns youBlocked/blockedYou directly on the profile
+  const isBlocked = blockStatus?.isBlocked ?? apiProfile?.youBlocked ?? false;
+  const isBlockedBy = blockStatus?.isBlockedBy ?? apiProfile?.blockedYou ?? false;
 
   const handleBlock = useCallback(async () => {
     if (!apiProfile?.walletAddress || isBlockLoading) return;
@@ -189,6 +190,8 @@ export function useProfilePage() {
         isBlockedBy: blockStatus?.isBlockedBy ?? false,
       });
       queryClient.invalidateQueries({ queryKey: ['block-list'] });
+      // Also refresh the profile so account_info youBlocked stays in sync
+      queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
     } catch (error) {
       // Revert optimistic update on failure
       queryClient.setQueryData(['block-status', apiProfile.walletAddress], {

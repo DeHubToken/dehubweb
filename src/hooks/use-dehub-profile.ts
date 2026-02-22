@@ -35,11 +35,14 @@ export interface ProfileData {
   isPending?: boolean;
   /** Whether this account is private (requires follow approval) */
   isPrivate?: boolean;
+  /** Whether the current viewer has blocked this user */
+  youBlocked?: boolean;
+  /** Whether this user has blocked the current viewer */
+  blockedYou?: boolean;
   /** Raw array of follower wallet addresses (for list display) */
   followersList?: string[];
   /** Raw array of following wallet addresses (for list display) */
   followingsList?: string[];
-  /** Raw customs data from API */
   /** Raw customs data from API */
   customs?: Record<string, unknown>;
 }
@@ -96,6 +99,8 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     followsYou: user.followsYou,
     isPending: user.isPending,
     isPrivate: user.isPrivate || customs?.isPrivate === 'true' || customs?.isPrivate === true,
+    youBlocked: user.youBlocked ?? false,
+    blockedYou: user.blockedYou ?? false,
     followersList,
     followingsList,
     customs: user.customs as Record<string, unknown> | undefined,
