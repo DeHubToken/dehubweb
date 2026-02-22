@@ -595,7 +595,9 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const shorts = useMemo((): ShortVideo[] => {
     if (!scrollFeed.data?.pages) return [];
     const allItems = scrollFeed.data.pages.flatMap(page => page.items || []);
-    return allItems.slice(0, 10).map((item) => {
+    // Exclude PPV content from shorts carousels
+    const nonPPV = allItems.filter(item => !item.streamInfo?.isPayPerView);
+    return nonPPV.slice(0, 10).map((item) => {
       const id = String(item.tokenId);
       const minterAddress = item.minter || '';
       const avatarUrl = item.minterAvatarUrl
