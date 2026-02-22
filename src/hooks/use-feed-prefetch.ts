@@ -119,14 +119,6 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
   // Live - no auth needed
   const livePromise = getLiveStreams({ page: 1, unit: 15, sortMode: 'recent' }).catch(() => ({ result: [] }));
   
-  // Home feed (Latest, page 1, no postType filter)
-  const homeFeedPromise = fetchUnifiedFeed({
-    limit: 20,
-    sortBy: 'createdAt',
-    sortOrder: 'desc',
-    status: 'minted',
-  });
-  
   // ============================================================================
   // STEP 2: WAIT FOR ALL TO COMPLETE (TRULY PARALLEL!)
   // ============================================================================
@@ -136,14 +128,12 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
     shortsResult,
     musicResult,
     liveResult,
-    homeFeedResult,
   ] = await Promise.allSettled([
     videosPromise,
     imagesPromise,
     shortsPromise,
     musicPromise,
     livePromise,
-    homeFeedPromise,
   ]);
   
   console.log(`[Prefetch] All HTTP requests completed in ${Date.now() - startTime}ms`);
@@ -279,35 +269,6 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
       }
     );
     console.log('[Prefetch] Live cached:', streams.length, 'items');
-  }
-  
-  // Home feed
-  if (homeFeedResult.status === 'fulfilled') {
-    const response = homeFeedResult.value;
-    const homeFeedParams = {
-      sortBy: 'createdAt' as const,
-      sortOrder: 'desc' as const,
-      range: undefined,
-      isPPV: undefined,
-      hasBounty: undefined,
-      isLocked: undefined,
-      status: 'minted' as const,
-      category: undefined,
-      followingOnly: undefined,
-      postType: undefined,
-    };
-    queryClient.setQueryData(
-      ['unified-feed', homeFeedParams, 20],
-      {
-        pages: [{
-          items: response.result || [],
-          pagination: response.pagination,
-          page: 1,
-        }],
-        pageParams: [1],
-      }
-    );
-    console.log('[Prefetch] Home feed cached:', (response.result || []).length, 'items');
   }
   
   console.log(`[Prefetch] Complete - total time: ${Date.now() - startTime}ms`);
