@@ -513,28 +513,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   isLoading={categoriesLoading}
                 />
                 <DurationFilterSection selected={selectedDuration} onSelect={setSelectedDuration} />
-                <div className="flex flex-col gap-2">
-                  <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.uploadDate')}</span>
-                  <div className="relative">
-                    <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
-                      {DATE_FILTER_OPTIONS.map((option) => (
-                        <button
-                          key={option.label}
-                          onClick={() => setSelectedUploadDate(option)}
-                          className={cn(
-                            'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                            selectedUploadDate.label === option.label
-                              ? ACTIVE_FILTER_CLASS
-                              : INACTIVE_FILTER_CLASS
-                          )}
-                        >
-                          {option.value === 'all' ? t('filters.all') : option.label}
-                        </button>
-                      ))}
-                    </div>
-                    <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
-                  </div>
-                </div>
+                <UploadDateFilterSection selected={selectedUploadDate} onSelect={setSelectedUploadDate} />
                 {/* Reset filters - bottom right */}
                 <button
                   onClick={() => {
