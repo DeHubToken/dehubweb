@@ -354,7 +354,6 @@ export default function FullWalletPage() {
 function GroupedTokenRow({ grouped, onClick }: { grouped: GroupedToken; onClick: () => void }) {
   const icon = TOKEN_ICONS[grouped.symbol] || grouped.logo;
   const hasBalance = grouped.totalBalance > BigInt(0);
-  const chainCount = grouped.chains.length;
 
   return (
     <motion.div
@@ -367,24 +366,10 @@ function GroupedTokenRow({ grouped, onClick }: { grouped: GroupedToken; onClick:
     >
       <div className="flex items-center gap-3 min-w-0">
         {icon ? (
-          <div className="relative shrink-0">
-            <img src={icon} alt={grouped.symbol} className="w-9 h-9 rounded-full" />
-            {chainCount > 1 && (
-              <span className="absolute -bottom-1 -right-1 bg-zinc-700 text-[9px] text-zinc-300 font-bold rounded-full w-4 h-4 flex items-center justify-center border border-zinc-900">
-                {chainCount}
-              </span>
-            )}
-          </div>
+          <img src={icon} alt={grouped.symbol} className="w-9 h-9 rounded-full shrink-0" />
         ) : (
-          <div className="relative shrink-0">
-            <div className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center">
-              <span className="text-xs font-bold text-zinc-400">{grouped.symbol.slice(0, 2)}</span>
-            </div>
-            {chainCount > 1 && (
-              <span className="absolute -bottom-1 -right-1 bg-zinc-700 text-[9px] text-zinc-300 font-bold rounded-full w-4 h-4 flex items-center justify-center border border-zinc-900">
-                {chainCount}
-              </span>
-            )}
+          <div className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center shrink-0">
+            <span className="text-xs font-bold text-zinc-400">{grouped.symbol.slice(0, 2)}</span>
           </div>
         )}
         <div className="min-w-0">
@@ -392,10 +377,7 @@ function GroupedTokenRow({ grouped, onClick }: { grouped: GroupedToken; onClick:
             <span className="text-sm font-medium text-white">{grouped.symbol}</span>
             {grouped.isCustom && <span className="text-[10px] bg-violet-500/20 text-violet-400 px-1.5 py-0.5 rounded">CUSTOM</span>}
           </div>
-          <span className="text-xs text-zinc-500 truncate block">
-            {grouped.name}
-            {chainCount > 1 && <span className="text-zinc-600"> · {chainCount} chains</span>}
-          </span>
+          <span className="text-xs text-zinc-500 truncate block">{grouped.name}</span>
         </div>
       </div>
       <div className="text-right">
