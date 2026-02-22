@@ -669,7 +669,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
             transition={{ duration: 0.2 }}
             className="flex-shrink-0 px-2 sm:px-3 pb-2 bg-black overflow-y-clip overflow-x-visible"
           >
-            <div className="flex gap-1.5 overflow-x-auto scrollbar-hide py-1 overflow-y-visible">
+            <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pl-1 py-1 overflow-y-visible">
               {MUSIC_SUB_TABS.map((tab) => {
                 const isActive = activeSubTab === tab.value;
                 return (
