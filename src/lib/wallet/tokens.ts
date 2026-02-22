@@ -137,7 +137,28 @@ export async function getAllTokenBalances(walletAddress: string, chainId: ChainI
 
   const tokens: WalletToken[] = [];
 
-  // Native token first
+  // Build ERC20 token list
+  const erc20Tokens: WalletToken[] = allErc20.map((token, i) => ({
+    address: token.address,
+    symbol: token.symbol,
+    name: token.name,
+    decimals: token.decimals,
+    balance: erc20Balances[i],
+    formattedBalance: formatBalance(erc20Balances[i], token.decimals),
+    logo: token.logo,
+    isCustom: !!(token as any).isCustom,
+    chainId,
+  }));
+
+  // On Base and BNB, put DHB first (above native token)
+  const dhbToken = erc20Tokens.find(t => t.symbol === 'DHB');
+  const otherErc20 = erc20Tokens.filter(t => t.symbol !== 'DHB');
+
+  if (dhbToken) {
+    tokens.push(dhbToken);
+  }
+
+  // Native token
   tokens.push({
     address: '0x0',
     symbol: nativeInfo.symbol,
@@ -149,21 +170,8 @@ export async function getAllTokenBalances(walletAddress: string, chainId: ChainI
     chainId,
   });
 
-  // ERC20 tokens
-  allErc20.forEach((token, i) => {
-    const balance = erc20Balances[i];
-    tokens.push({
-      address: token.address,
-      symbol: token.symbol,
-      name: token.name,
-      decimals: token.decimals,
-      balance,
-      formattedBalance: formatBalance(balance, token.decimals),
-      logo: token.logo,
-      isCustom: !!(token as any).isCustom,
-      chainId,
-    });
-  });
+  // Remaining ERC20 tokens
+  tokens.push(...otherErc20);
 
   return tokens;
 }

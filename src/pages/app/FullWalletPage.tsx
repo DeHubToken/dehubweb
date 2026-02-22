@@ -256,7 +256,6 @@ function TokenRow({ token, onSend, onReceive, chainConfig, walletAddress }: {
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
               <span className="text-sm font-medium text-white">{token.symbol}</span>
-              {token.isNative && <span className="text-[10px] bg-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded">NATIVE</span>}
               {token.isCustom && <span className="text-[10px] bg-violet-500/20 text-violet-400 px-1.5 py-0.5 rounded">CUSTOM</span>}
             </div>
             <span className="text-xs text-zinc-500 truncate block">{token.name}</span>
