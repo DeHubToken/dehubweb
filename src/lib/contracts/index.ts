@@ -55,3 +55,12 @@ export {
   mintWithBounty,
   type MintWithBountyParams,
 } from './stream-controller';
+
+// Uniswap V3 Auto-Swap (Base)
+export {
+  getSwapQuote,
+  applySlippage,
+  swapETHForDHB,
+  isAutoSwapSupported,
+  getNativeBalance,
+} from './uniswap-swap';

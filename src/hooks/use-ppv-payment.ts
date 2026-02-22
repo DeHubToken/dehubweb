@@ -2,6 +2,7 @@
  * PPV Payment Hook
  * ================
  * Handles Pay-Per-View content unlock via DHB ERC20 transfer.
+ * Auto-swaps ETH → DHB via Uniswap V3 on Base when user lacks DHB.
  */
 
 import { useState, useCallback } from 'react';
@@ -14,7 +15,14 @@ import {
   switchChain,
   parseTxError,
 } from '@/lib/contracts/aa-utils';
-import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { DHB_TOKEN, toWei, fromWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import {
+  isAutoSwapSupported,
+  getSwapQuote,
+  applySlippage,
+  swapETHForDHB,
+  getNativeBalance,
+} from '@/lib/contracts/uniswap-swap';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
@@ -84,18 +92,61 @@ export function usePPVPayment({
       
       const signerAddress = await getWalletAddress();
       
-      // Check balance
+      // Check DHB balance
       const amountWei = toWei(price, DHB_TOKEN.decimals);
-      const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+      const dhbBalance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
       
-      if (balance < amountWei) {
-        const balanceHuman = Number(balance) / 1e18;
-        toast.error(`Insufficient DHB balance. Need ${price} DHB but have ${balanceHuman.toFixed(2)} DHB`);
-        setIsPaying(false);
-        return;
+      // ── Auto-swap if insufficient DHB ────────────────────────
+      if (dhbBalance < amountWei) {
+        const shortfall = amountWei - dhbBalance;
+        
+        // Only Base supports auto-swap via Uniswap
+        if (!isAutoSwapSupported(chainId)) {
+          const balanceHuman = fromWei(dhbBalance);
+          toast.error(`Insufficient DHB balance. Need ${price} DHB but have ${balanceHuman} DHB. Auto-swap is only available on Base.`);
+          setIsPaying(false);
+          return;
+        }
+
+        // Get Uniswap quote for the shortfall
+        toast.loading('Getting swap quote...', { id: 'ppv-payment' });
+        const ethQuote = await getSwapQuote(shortfall);
+        
+        if (!ethQuote) {
+          toast.error('Could not get swap quote. Please acquire DHB manually.', { id: 'ppv-payment' });
+          setIsPaying(false);
+          return;
+        }
+
+        const ethNeeded = applySlippage(ethQuote);
+        const ethBalance = await getNativeBalance(signerAddress, chainId);
+
+        if (ethBalance < ethNeeded) {
+          const ethHuman = fromWei(ethBalance);
+          const ethRequired = fromWei(ethNeeded);
+          toast.error(
+            `Insufficient DHB and ETH. Need ~${ethRequired} ETH for auto-swap but have ${ethHuman} ETH.`,
+            { id: 'ppv-payment' }
+          );
+          setIsPaying(false);
+          return;
+        }
+
+        // Execute swap
+        toast.loading('Swapping ETH → DHB...', { id: 'ppv-payment' });
+        try {
+          await swapETHForDHB(shortfall, ethNeeded, signerAddress);
+          console.log('[PPV] Auto-swap complete, proceeding with payment');
+        } catch (swapError: any) {
+          console.error('[PPV] Auto-swap failed:', swapError);
+          const msg = parseTxError(swapError);
+          toast.error(msg || 'ETH → DHB swap failed', { id: 'ppv-payment' });
+          setIsPaying(false);
+          return;
+        }
       }
 
-      // Execute ERC20 transfer to creator
+      // ── Execute ERC20 transfer to creator ────────────────────
       toast.loading('Processing PPV payment...', { id: 'ppv-payment' });
       
       const result = await writeContractAA(
