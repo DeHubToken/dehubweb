@@ -8,43 +8,34 @@ import { UsernameRequiredModal } from "@/components/app/modals";
 import { LoginModal } from "@/components/app/LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
-import React, { Suspense } from "react";
+import Index from "./pages/Index";
+import DeleteAccount from "./pages/DeleteAccount";
+import CreatorsPage from "./pages/app/CreatorsPage";
+import JobsPage from "./pages/JobsPage";
+import SkillPage from "./pages/SkillPage";
+import NotFound from "./pages/NotFound";
+
+// App routes
 import { AppLayout } from "./components/app/AppLayout";
-
-// Lazy-loaded pages (code splitting - each page loads only when visited)
-const Index = React.lazy(() => import("./pages/Index"));
-const DeleteAccount = React.lazy(() => import("./pages/DeleteAccount"));
-const CreatorsPage = React.lazy(() => import("./pages/app/CreatorsPage"));
-const JobsPage = React.lazy(() => import("./pages/JobsPage"));
-const SkillPage = React.lazy(() => import("./pages/SkillPage"));
-const NotFound = React.lazy(() => import("./pages/NotFound"));
-
-// Lazy-loaded app routes
-const TVPage = React.lazy(() => import("./pages/app/TVPage"));
-const HomePage = React.lazy(() => import("./pages/app/HomePage"));
-const ExplorePage = React.lazy(() => import("./pages/app/ExplorePage"));
-const ProfilePage = React.lazy(() => import("./pages/app/ProfilePage"));
-const NotificationsPage = React.lazy(() => import("./pages/app/NotificationsPage"));
-const MessagesPage = React.lazy(() => import("./pages/app/MessagesPage"));
-const LeaderboardPage = React.lazy(() => import("./pages/app/LeaderboardPage"));
-const BookmarksPage = React.lazy(() => import("./pages/app/BookmarksPage"));
-const SettingsPage = React.lazy(() => import("./pages/app/SettingsPage"));
-const CommandCentrePage = React.lazy(() => import("./pages/app/CommandCentrePage"));
-const MusicPage = React.lazy(() => import("./pages/app/MusicPage"));
-const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
-const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));
-const AssistantPage = React.lazy(() => import("./pages/app/AssistantPage"));
-const BuyCoinsPage = React.lazy(() => import("./pages/app/BuyCoinsPage"));
-const AgentsPage = React.lazy(() => import("./pages/app/AgentsPage"));
-const FeaturesPage = React.lazy(() => import("./pages/app/FeaturesPage"));
-const FullWalletPage = React.lazy(() => import("./pages/app/FullWalletPage"));
-
-// Minimal loading fallback - matches app dark theme
-const PageLoader = () => (
-  <div className="flex items-center justify-center min-h-screen bg-black">
-    <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
-  </div>
-);
+import TVPage from "./pages/app/TVPage";
+import HomePage from "./pages/app/HomePage";
+import ExplorePage from "./pages/app/ExplorePage";
+import ProfilePage from "./pages/app/ProfilePage";
+import PlaceholderPage from "./pages/app/PlaceholderPage";
+import NotificationsPage from "./pages/app/NotificationsPage";
+import MessagesPage from "./pages/app/MessagesPage";
+import LeaderboardPage from "./pages/app/LeaderboardPage";
+import BookmarksPage from "./pages/app/BookmarksPage";
+import SettingsPage from "./pages/app/SettingsPage";
+import CommandCentrePage from "./pages/app/CommandCentrePage";
+import MusicPage from "./pages/app/MusicPage";
+import PostInfoPage from "./pages/app/PostInfoPage";
+import SinglePostPage from "./pages/app/SinglePostPage";
+import AssistantPage from "./pages/app/AssistantPage";
+import BuyCoinsPage from "./pages/app/BuyCoinsPage";
+import AgentsPage from "./pages/app/AgentsPage";
+import FeaturesPage from "./pages/app/FeaturesPage";
+import FullWalletPage from "./pages/app/FullWalletPage";
 
 
 /**
@@ -111,7 +102,6 @@ function AppContent() {
       <UsernameRequiredModal />
       <LoginModal open={isLoginModalOpen} onOpenChange={closeLoginModal} />
       <BrowserRouter>
-        <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/delete-account" element={<DeleteAccount />} />
@@ -121,7 +111,7 @@ function AppContent() {
             <Route path="/features" element={<AppLayout />}>
               <Route index element={<FeaturesPage />} />
             </Route>
-
+            
             {/* App routes with shared layout */}
             <Route path="/app" element={<AppLayout />}>
               <Route index element={<HomePage />} />
@@ -144,15 +134,14 @@ function AppContent() {
               <Route path="video/:tokenId" element={<SinglePostPage />} />
               <Route path="post/:postId/info" element={<PostInfoPage />} />
             </Route>
-
+            
             {/* Username-based profile route (e.g., /d, /username) */}
             <Route path="/:username" element={<ProfilePage />} />
-
-
+            
+            
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </Suspense>
         </BrowserRouter>
       </>
     );
