@@ -96,10 +96,10 @@ function VoteButtons({
         type="button"
         onClick={(e) => { e.stopPropagation(); onVote(featureId, 1, currentVote); }}
         disabled={disabled}
-        className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${
+        className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all ${
           currentVote === 1
-            ? 'bg-white text-black'
-            : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
+            ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] text-white'
+            : 'bg-zinc-800/60 text-zinc-400 hover:bg-white/10 hover:text-white hover:backdrop-blur-xl'
         }`}
         aria-label="Upvote"
       >
@@ -112,10 +112,10 @@ function VoteButtons({
         type="button"
         onClick={(e) => { e.stopPropagation(); onVote(featureId, -1, currentVote); }}
         disabled={disabled}
-        className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${
+        className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all ${
           currentVote === -1
-            ? 'bg-white text-black'
-            : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
+            ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] text-white'
+            : 'bg-zinc-800/60 text-zinc-400 hover:bg-white/10 hover:text-white hover:backdrop-blur-xl'
         }`}
         aria-label="Downvote"
       >
@@ -519,10 +519,10 @@ export default function FeaturesPage() {
                     key={cat.id}
                     type="button"
                     onClick={() => setCategory(cat.id)}
-                    className={`px-3 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
+                    className={`px-3 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
                       category === cat.id
-                        ? 'bg-white text-black'
-                        : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
+                        ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] text-white'
+                        : 'bg-zinc-800/60 text-zinc-400 hover:text-white hover:bg-white/10'
                     }`}
                   >
                     {cat.label}
