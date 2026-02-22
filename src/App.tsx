@@ -11,31 +11,16 @@ import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { AppLayout } from "./components/app/AppLayout";
 import React, { Suspense } from "react";
 
-// Pages — lazy loaded (only download when user visits that route)
+// Pages — lazy loaded
 const Index = React.lazy(() => import("./pages/Index"));
 const DeleteAccount = React.lazy(() => import("./pages/DeleteAccount"));
 const CreatorsPage = React.lazy(() => import("./pages/app/CreatorsPage"));
 const JobsPage = React.lazy(() => import("./pages/JobsPage"));
 const SkillPage = React.lazy(() => import("./pages/SkillPage"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
-const TVPage = React.lazy(() => import("./pages/app/TVPage"));
-const HomePage = React.lazy(() => import("./pages/app/HomePage"));
-const ExplorePage = React.lazy(() => import("./pages/app/ExplorePage"));
 const ProfilePage = React.lazy(() => import("./pages/app/ProfilePage"));
-const NotificationsPage = React.lazy(() => import("./pages/app/NotificationsPage"));
-const MessagesPage = React.lazy(() => import("./pages/app/MessagesPage"));
-const LeaderboardPage = React.lazy(() => import("./pages/app/LeaderboardPage"));
-const BookmarksPage = React.lazy(() => import("./pages/app/BookmarksPage"));
-const SettingsPage = React.lazy(() => import("./pages/app/SettingsPage"));
-const CommandCentrePage = React.lazy(() => import("./pages/app/CommandCentrePage"));
-const MusicPage = React.lazy(() => import("./pages/app/MusicPage"));
 const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
 const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));
-const AssistantPage = React.lazy(() => import("./pages/app/AssistantPage"));
-const BuyCoinsPage = React.lazy(() => import("./pages/app/BuyCoinsPage"));
-const AgentsPage = React.lazy(() => import("./pages/app/AgentsPage"));
-const FeaturesPage = React.lazy(() => import("./pages/app/FeaturesPage"));
-const FullWalletPage = React.lazy(() => import("./pages/app/FullWalletPage"));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-screen bg-black">
@@ -116,27 +101,29 @@ function AppContent() {
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/skill.md" element={<SkillPage />} />
             <Route path="/features" element={<AppLayout />}>
-              <Route index element={<FeaturesPage />} />
+              <Route index element={null} />
             </Route>
 
             {/* App routes with shared layout */}
+            {/* Cached pages render null here — PersistentPageCache manages them */}
             <Route path="/app" element={<AppLayout />}>
-              <Route index element={<HomePage />} />
-              <Route path="explore" element={<ExplorePage />} />
-              <Route path="profile" element={<ProfilePage />} />
-              <Route path="notifications" element={<NotificationsPage />} />
-              <Route path="messages" element={<MessagesPage />} />
-              <Route path="assistant" element={<AssistantPage />} />
-              <Route path="leaderboard" element={<LeaderboardPage />} />
-              <Route path="bookmarks" element={<BookmarksPage />} />
-              <Route path="settings" element={<SettingsPage />} />
-              <Route path="command-centre" element={<CommandCentrePage />} />
-              <Route path="wallet" element={<FullWalletPage />} />
-              <Route path="music" element={<MusicPage />} />
-              <Route path="buy" element={<BuyCoinsPage />} />
-              <Route path="agents" element={<AgentsPage />} />
-              <Route path="tv" element={<TVPage />} />
-              <Route path="features" element={<FeaturesPage />} />
+              <Route index element={null} />
+              <Route path="explore" element={null} />
+              <Route path="profile" element={null} />
+              <Route path="notifications" element={null} />
+              <Route path="messages" element={null} />
+              <Route path="assistant" element={null} />
+              <Route path="leaderboard" element={null} />
+              <Route path="bookmarks" element={null} />
+              <Route path="settings" element={null} />
+              <Route path="command-centre" element={null} />
+              <Route path="wallet" element={null} />
+              <Route path="music" element={null} />
+              <Route path="buy" element={null} />
+              <Route path="agents" element={null} />
+              <Route path="tv" element={null} />
+              <Route path="features" element={null} />
+              {/* Dynamic routes — rendered via Outlet */}
               <Route path="post/:postId" element={<SinglePostPage />} />
               <Route path="video/:tokenId" element={<SinglePostPage />} />
               <Route path="post/:postId/info" element={<PostInfoPage />} />

@@ -10,7 +10,7 @@ import { PostModal } from '@/features/post/PostModal';
 import { DevelopmentNoticeModal } from './modals';
 import { RadioMiniPlayer } from '@/components/app/radio';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
-import HomePage from '@/pages/app/HomePage';
+import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import SinglePostPage from '@/pages/app/SinglePostPage';
 
 interface AppLayoutContentProps {
@@ -28,7 +28,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const navigate = useNavigate();
   
   // Disable browser's automatic scroll restoration globally
-  // This is CRITICAL - browsers default to 'auto' which fights our custom logic
   useEffect(() => {
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
@@ -41,19 +40,16 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const isPostRoute = !!(postMatch || videoMatch);
   
   // Track if we came from home page (for overlay behavior)
-  // CRITICAL: Initialize synchronously from sessionStorage to prevent HomePage unmounting on first render
   const [cameFromHome, setCameFromHome] = useState(() => {
     return sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY) === 'home';
   });
   const prevPathRef = useRef<string | null>(null);
   const savedScrollRef = useRef<number>(0);
   
-  // Helper to get scroll position (works for both window and documentElement)
   const getScrollPosition = () => {
     return window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
   };
   
-  // Helper to set scroll position
   const setScrollPosition = (value: number) => {
     window.scrollTo(0, value);
     document.documentElement.scrollTop = value;
@@ -61,7 +57,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   };
   
   // Save home scroll position continuously when on home page
-  // This ensures we capture the position BEFORE navigation happens
   useEffect(() => {
     const isHome = location.pathname === '/app';
     if (!isHome) return;
@@ -72,14 +67,11 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       savedScrollRef.current = scrollPos;
     };
     
-    // Save immediately
     saveScroll();
     
-    // Save on every scroll - listen to both window and document
     window.addEventListener('scroll', saveScroll, { passive: true });
     document.addEventListener('scroll', saveScroll, { passive: true });
     
-    // Also save on any click (captures position right before link clicks)
     const handleClick = () => saveScroll();
     document.addEventListener('click', handleClick, { capture: true, passive: true });
     
@@ -90,18 +82,16 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     };
   }, [location.pathname]);
   
-  // Detect navigation from home to post - set the origin flag
+  // Detect navigation from home to post
   useEffect(() => {
     const currentPath = location.pathname;
     const prevPath = prevPathRef.current;
     
-    // Navigating TO a post route FROM home - mark origin
     if (isPostRoute && prevPath === '/app') {
       setCameFromHome(true);
       sessionStorage.setItem(POST_OVERLAY_ORIGIN_KEY, 'home');
     }
     
-    // Update ref AFTER all checks
     prevPathRef.current = currentPath;
   }, [location.pathname, isPostRoute]);
   
@@ -119,26 +109,21 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           setScrollPosition(scrollValue);
         };
         
-        // Immediate attempt
         attemptScroll();
         
-        // Use requestAnimationFrame for after-paint timing
         requestAnimationFrame(() => {
           attemptScroll();
           requestAnimationFrame(attemptScroll);
         });
         
-        // Extended staggered attempts for lazy-loaded content
         const attempts = [16, 50, 100, 200, 400, 800];
         const timeouts = attempts.map(delay => 
           setTimeout(attemptScroll, delay)
         );
         
-        // MutationObserver to catch content loading
         const observer = new MutationObserver(attemptScroll);
         observer.observe(document.body, { childList: true, subtree: true });
         
-        // Cleanup after restoration window
         const cleanupTimeout = setTimeout(() => {
           observer.disconnect();
           sessionStorage.removeItem(HOME_SCROLL_POSITION_KEY);
@@ -146,7 +131,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           setCameFromHome(false);
         }, 1000);
         
-        // Cleanup timeouts if component unmounts
         return () => {
           timeouts.forEach(clearTimeout);
           clearTimeout(cleanupTimeout);
@@ -156,11 +140,26 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     }
   }, [location.pathname]);
 
+  // Scroll to top when navigating between cached pages (not home overlay)
+  const prevCachedPathRef = useRef(location.pathname);
+  useEffect(() => {
+    const prev = prevCachedPathRef.current;
+    const curr = location.pathname;
+    prevCachedPathRef.current = curr;
+    
+    if (prev !== curr && isCachedPageRoute(curr) && curr !== '/app') {
+      // Don't scroll to top when returning to home (handled by scroll restoration)
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname]);
+
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   
-  // Determine if we should show the overlay pattern
   const showHomePagePersisted = isPostRoute && cameFromHome;
   const isHomePage = location.pathname === '/app';
+  const isCached = isCachedPageRoute(location.pathname);
+  // Dynamic routes: post overlay, single post, post info, or username profiles
+  const isDynamicRoute = !isCached && !showHomePagePersisted;
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-clip" style={{ touchAction: 'manipulation', overscrollBehavior: 'none' }}>
@@ -168,23 +167,18 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
         <main className="flex-1 min-h-screen pt-11 pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black">
-          {/* Keep HomePage mounted when viewing post from home (overlay pattern) */}
-          {/* CRITICAL: Use overflow-hidden to prevent hidden content from affecting scroll height */}
-          {(isHomePage || showHomePagePersisted) && (
-            <div className={showHomePagePersisted ? 'hidden' : ''}>
-              <HomePage />
-            </div>
-          )}
+          {/* Persistent page cache — all visited pages stay mounted */}
+          <PersistentPageCache />
           
-          {/* Post overlay - renders on top when viewing a post from home */}
+          {/* Post overlay — renders on top when viewing a post from home */}
           {showHomePagePersisted && (
             <div className="w-full min-h-screen">
               <SinglePostPage />
             </div>
           )}
           
-          {/* Other routes use Outlet normally (not home, not post overlay) */}
-          {!isHomePage && !showHomePagePersisted && (
+          {/* Dynamic routes (post pages, username profiles, etc.) use Outlet */}
+          {isDynamicRoute && (
             children || <Outlet />
           )}
         </main>
@@ -194,14 +188,9 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       
       <MobileBottomNav />
       
-      
-      {/* Radio Mini Player */}
       <RadioMiniPlayer />
-      
-      {/* Minimized AI Chats */}
       <MinimizedAIChats />
       
-      {/* Global Post Modal for drag & drop */}
       <PostModal 
         isOpen={isPostModalOpen} 
         onClose={closePostModal}
