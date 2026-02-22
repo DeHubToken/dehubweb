@@ -7,9 +7,10 @@ import { TranslatableText, replaceLinksWithEmoji } from '../TranslatableText';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { EmojiGifPicker } from '../chat/EmojiGifPicker';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
-import { getMediaUrl } from '@/lib/api/dehub';
+import { getMediaUrl, getAuthToken } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { useNavigate } from 'react-router-dom';
@@ -27,7 +28,7 @@ export function SidebarChat() {
   const [newMessage, setNewMessage] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
 
   // Use the first available room
   const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
@@ -46,9 +47,35 @@ export function SidebarChat() {
     }
   }, [messages.length]);
 
-  const handleVoiceRecordingComplete = useCallback((_blob: Blob, _duration: number) => {
-    toast.error('Voice notes are not yet supported in live chat. Feature bug reported.');
-  }, []);
+  const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
+    if (!isAuthenticated) {
+      toast.error('Sign in to send voice notes');
+      return;
+    }
+    const toastId = 'sidebarchat-voice-upload';
+    toast.loading('Uploading voice note...', { id: toastId });
+    try {
+      const token = getAuthToken();
+      const file = new File([blob], `voice-${Date.now()}.webm`, { type: 'audio/webm' });
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+      const { data, error } = await supabase.functions.invoke('dm-upload-media', {
+        body: formData,
+        headers: {
+          'x-wallet-address': walletAddress?.toLowerCase() || '',
+          'x-dehub-token': token || '',
+        },
+      });
+      if (error || !data?.ok || !data?.url) {
+        throw new Error(data?.error || error?.message || 'Upload failed');
+      }
+      await send('', 'voice', data.url);
+      toast.success('Voice note sent!', { id: toastId });
+    } catch (err: any) {
+      console.error('[SidebarChat] Voice upload failed:', err);
+      toast.error(err?.message || 'Failed to send voice note', { id: toastId });
+    }
+  }, [isAuthenticated, walletAddress, send]);
 
   const handleSend = async () => {
     if (!isAuthenticated) {

@@ -13,12 +13,13 @@ import { replaceLinksWithEmoji } from '@/components/app/TranslatableText';
 import { useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { getMediaUrl } from '@/lib/api/dehub';
+import { getMediaUrl, getAuthToken } from '@/lib/api/dehub';
 import { VoiceRecorder } from '@/components/app/chat/VoiceRecorder';
 import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { supabase } from '@/integrations/supabase/client';
 
 function LiveChatBadge({ address }: { address: string }) {
   const { badgeBalance } = useBatchedBadgeBalance(address);
@@ -35,7 +36,7 @@ interface LivePostChatProps {
 export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps) {
   const [newMessage, setNewMessage] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
 
   // Use stream ID as the room ID for live chat
   const { messages, isLoading, isSending, send } = useLiveChatMessages(streamId);
@@ -52,9 +53,35 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
     }
   }, [messages.length]);
 
-  const handleVoiceRecordingComplete = useCallback((_blob: Blob, _duration: number) => {
-    toast.error('Voice notes are not yet supported in live chat. Feature bug reported.');
-  }, []);
+  const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
+    if (!isAuthenticated) {
+      toast.error('Sign in to send voice notes');
+      return;
+    }
+    const toastId = 'livechat-voice-upload';
+    toast.loading('Uploading voice note...', { id: toastId });
+    try {
+      const token = getAuthToken();
+      const file = new File([blob], `voice-${Date.now()}.webm`, { type: 'audio/webm' });
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+      const { data, error } = await supabase.functions.invoke('dm-upload-media', {
+        body: formData,
+        headers: {
+          'x-wallet-address': walletAddress?.toLowerCase() || '',
+          'x-dehub-token': token || '',
+        },
+      });
+      if (error || !data?.ok || !data?.url) {
+        throw new Error(data?.error || error?.message || 'Upload failed');
+      }
+      await send('', 'voice', data.url);
+      toast.success('Voice note sent!', { id: toastId });
+    } catch (err: any) {
+      console.error('[LiveChat] Voice upload failed:', err);
+      toast.error(err?.message || 'Failed to send voice note', { id: toastId });
+    }
+  }, [isAuthenticated, walletAddress, send]);
 
   const handleSend = async () => {
     if (!isAuthenticated) {
