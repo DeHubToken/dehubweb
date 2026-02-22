@@ -150,7 +150,7 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
       <div className="relative">
-        <div className="flex gap-1.5 scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
           {SORT_OPTIONS.map((option) => (
             <AnimatedFilterPill
               key={option.label}
@@ -174,7 +174,7 @@ function DurationFilterSection({ selected, onSelect }: { selected: DurationFilte
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.duration')}</span>
       <div className="relative">
-        <div className="flex gap-1.5 scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
           {DURATION_FILTERS.map((option) => (
             <AnimatedFilterPill
               key={option.label}
