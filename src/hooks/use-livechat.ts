@@ -100,22 +100,35 @@ export function useLiveChatMessages(roomId: string | null) {
   const channelRef = useRef<RealtimeChannel | null>(null);
   const { isAuthenticated, user, walletAddress } = useAuth();
 
-  // Fetch from DeHub API only — Supabase Realtime handles our own messages
-  // This eliminates redundant Supabase REST polling that was causing 504 timeouts
+  // Fetch from both DeHub API and Supabase, merging results
   const fetchFromApi = useCallback(async (showLoading = false) => {
     if (!roomId) return;
     if (showLoading) setIsLoading(true);
     try {
-      const apiMessages = await fetchApiMessages(roomId, { limit: 200 });
-      const apiMapped = apiMessages.map(apiMsgToLocal);
+      // Fetch from both sources in parallel
+      const [apiMessages, supabaseResult] = await Promise.allSettled([
+        fetchApiMessages(roomId, { limit: 200 }),
+        supabase
+          .from('livechat_messages')
+          .select('*')
+          .eq('room_id', roomId)
+          .order('created_at', { ascending: true })
+          .limit(200),
+      ]);
+
+      const apiMapped =
+        apiMessages.status === 'fulfilled'
+          ? apiMessages.value.map(apiMsgToLocal)
+          : [];
+
+      const supabaseMapped: SupabaseLiveChatMessage[] =
+        supabaseResult.status === 'fulfilled' && supabaseResult.value.data
+          ? (supabaseResult.value.data as SupabaseLiveChatMessage[])
+          : [];
 
       setMessages((prev) => {
-        // Keep optimistic messages and any Supabase-realtime-delivered messages not in API yet
         const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
-        const realtimeOnly = prev.filter(
-          (m) => !m.id.startsWith('temp-') && !apiMapped.some((a) => a.id === m.id)
-        );
-        return deduplicateMessages([...apiMapped, ...realtimeOnly, ...optimistic]);
+        return deduplicateMessages([...apiMapped, ...supabaseMapped, ...optimistic]);
       });
     } catch (err) {
       console.error('[LiveChat] Failed to fetch messages:', err);
