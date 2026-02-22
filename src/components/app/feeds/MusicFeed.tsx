@@ -659,7 +659,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
   return (
     <div className="flex flex-col h-[calc(100vh-2.75rem)] lg:h-[calc(100vh-0rem)]">
       {/* Sub-tab Navigation - Only shown when filters toggled */}
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {showFilters && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
