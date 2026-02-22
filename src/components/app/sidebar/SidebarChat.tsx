@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Users, Loader2, Mic } from 'lucide-react';
+import { Send, Users, Loader2, Mic, Languages, RotateCcw } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { TranslatableText, replaceLinksWithEmoji } from '../TranslatableText';
+import { TranslatableText, replaceLinksWithEmoji, SharedTranslationContext } from '../TranslatableText';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { EmojiGifPicker } from '../chat/EmojiGifPicker';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
@@ -26,6 +27,9 @@ function SidebarChatBadge({ address }: { address: string }) {
 
 export function SidebarChat() {
   const [newMessage, setNewMessage] = useState('');
+  const [translateSignal, setTranslateSignal] = useState(0);
+  const [originalSignal, setOriginalSignal] = useState(0);
+  const [isAllTranslated, setIsAllTranslated] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress } = useAuth();
@@ -36,6 +40,15 @@ export function SidebarChat() {
   const { messages, isLoading: messagesLoading, isSending, send } = useLiveChatMessages(roomId);
   const { onlineCount } = useLiveChatPresence(roomId);
 
+  const handleTranslateAll = useCallback(() => {
+    if (isAllTranslated) {
+      setOriginalSignal(s => s + 1);
+      setIsAllTranslated(false);
+    } else {
+      setTranslateSignal(s => s + 1);
+      setIsAllTranslated(true);
+    }
+  }, [isAllTranslated]);
   // Auto-scroll on new messages
   useEffect(() => {
     if (messages.length > 0) {
@@ -124,9 +137,26 @@ export function SidebarChat() {
         <span className="text-zinc-400 text-xs flex items-center gap-1">
           <Users className="w-3 h-3" /> {onlineCount} online
         </span>
+        <div className="ml-auto pr-1">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={handleTranslateAll}
+                className="text-zinc-500 hover:text-white transition-colors"
+              >
+                {isAllTranslated ? (
+                  <RotateCcw className="w-4 h-4" />
+                ) : (
+                  <Languages className="w-4 h-4" />
+                )}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{isAllTranslated ? 'Show original' : 'Translate all'}</TooltipContent>
+          </Tooltip>
+        </div>
       </div>
 
-      {/* Messages */}
+      <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate: () => setTranslateSignal(s => s + 1), requestOriginal: () => setOriginalSignal(s => s + 1) }}>
       <div className="relative flex-1">
         <div className="absolute inset-0 overflow-y-auto py-2 space-y-2">
           {isLoading ? (
@@ -192,6 +222,7 @@ export function SidebarChat() {
           <div ref={bottomRef} />
         </div>
       </div>
+      </SharedTranslationContext.Provider>
 
       {/* Input */}
       <div className="p-3">
