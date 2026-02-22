@@ -126,19 +126,22 @@ export default function FullWalletPage() {
       </div>
 
       {/* Chain selector */}
-      <div className="flex gap-2 mb-4">
+      <div className="relative flex gap-1 p-1 rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10 mb-4">
         {CHAIN_OPTIONS.map(chain => (
           <button
             key={chain.id}
             onClick={() => setSelectedChain(chain.id)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
-              selectedChain === chain.id
-                ? 'bg-zinc-700 text-white border border-zinc-600'
-                : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:border-zinc-700'
-            }`}
+            className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors z-10 flex-1 justify-center"
           >
-            <img src={chain.icon} alt={chain.name} className="w-5 h-5 rounded-md" />
-            {chain.name}
+            {selectedChain === chain.id && (
+              <motion.div
+                layoutId="wallet-chain-indicator"
+                className="absolute inset-0 rounded-xl bg-white/[0.12] backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              />
+            )}
+            <img src={chain.icon} alt={chain.name} className="w-5 h-5 rounded-md relative z-10" />
+            <span className={`relative z-10 ${selectedChain === chain.id ? 'text-white' : 'text-zinc-500'}`}>{chain.name}</span>
           </button>
         ))}
       </div>
