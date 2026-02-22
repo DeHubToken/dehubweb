@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import dehubCoin from '@/assets/dehub-coin.png';
 import ppvTicketIcon from '@/assets/ppv-ticket-icon.png';
-import { usePPVPurchaseCount } from '@/hooks/use-ppv-purchase-count';
+
 import dehubCoinSmall from '@/assets/dehub-coin.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
@@ -539,8 +539,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   const isComboLocked = isPPVLocked && isHoldingsLocked;
   const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked;
 
-  // PPV purchase count
-  const { data: ppvPurchaseCount } = usePPVPurchaseCount(isPPVLocked ? video.id : undefined);
 
   const handlePlayClick = useCallback(() => {
     if (!video.videoUrl || isContentGated) return;
@@ -1014,7 +1012,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               <p className="text-white/70 text-xs">
                 Must be holding {formatCompact(Number(video.lockedPrice))} {video.lockedCurrency || 'DHB'}
               </p>
-              <p className="text-white/50 text-[10px] mt-1">{ppvPurchaseCount ?? 0} PPV Sale{(ppvPurchaseCount ?? 0) !== 1 ? 's' : ''}</p>
+              <p className="text-white/50 text-[10px] mt-1">PPV</p>
             </div>
           </>
         ) : isPPVLocked ? (
@@ -1039,7 +1037,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               <p className="text-white/70 text-xs">
                 {t('drawers.unlockFor')} {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
               </p>
-              <p className="text-white/50 text-[10px] mt-1">{ppvPurchaseCount ?? 0} PPV Sale{(ppvPurchaseCount ?? 0) !== 1 ? 's' : ''}</p>
+              <p className="text-white/50 text-[10px] mt-1">PPV</p>
             </div>
           </>
         ) : isHoldingsLocked ? (

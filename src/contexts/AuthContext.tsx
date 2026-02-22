@@ -566,7 +566,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
     console.log('[Auth] ✓ DeHub authentication complete (Wagmi)');
-    authLogger.warn('Login success', { method: 'wagmi', address: authAddress, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
+    authLogger.info('Login success', { method: 'wagmi', address: authAddress, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
   };
 
 
@@ -682,7 +682,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!', { id: 'auth-redirect' });
       console.log('[Auth] ✓ DeHub authentication complete (Redirect Flow)');
-      authLogger.warn('Login success', { method: 'redirect', address: authAddressForApi, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
+      authLogger.info('Login success', { method: 'redirect', address: authAddressForApi, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
     } catch (err: any) {
       console.error('[Auth] [REDIRECT] Sequence failed:', err);
       toast.error(err.message || 'Authentication failed', { id: 'auth-redirect' });
@@ -811,7 +811,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!', { id: 'auth-popup' });
       console.log('[Auth] ✓ DeHub authentication complete (Popup Flow)');
-      authLogger.warn('Login success', { method: 'popup', address: authAddressForApi, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
+      authLogger.info('Login success', { method: 'popup', address: authAddressForApi, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
     } catch (err: any) {
       console.error('[Auth] [POPUP] Sequence failed:', err);
       toast.error(err.message || 'Authentication failed', { id: 'auth-popup' });

@@ -2,6 +2,7 @@
  * Client-Side Logging Utility
  * ===========================
  * Sends logs to Supabase Edge Functions for server-side monitoring.
+ * Batches error/warn logs and flushes every 30s or on page unload.
  */
 
 import { supabase } from "@/integrations/supabase/client";
@@ -17,29 +18,68 @@ interface LogData {
     user_address?: string;
 }
 
-/**
- * Send a log entry to the backend
- */
-export async function logToBackend(data: LogData) {
-    // Always log to console as well
-    const consoleMethod = data.level === 'error' ? 'error' : data.level === 'warn' ? 'warn' : 'log';
-    console[consoleMethod](`[${data.component}] ${data.message}`, data.metadata || '');
+// ============================================================================
+// BATCHING
+// ============================================================================
 
-    // Skip backend call for info/debug — console-only, saves ~87% of edge function invocations
-    if (data.level === 'info' || data.level === 'debug') return;
+const LOG_QUEUE: LogData[] = [];
+const FLUSH_INTERVAL_MS = 30_000; // 30 seconds
+let flushTimer: ReturnType<typeof setInterval> | null = null;
+
+async function flushLogs() {
+    if (LOG_QUEUE.length === 0) return;
+
+    // Drain the queue
+    const batch = LOG_QUEUE.splice(0);
 
     try {
         const { error } = await supabase.functions.invoke('client-logs', {
-            body: data,
+            body: { logs: batch },
         });
 
         if (error) {
-            // Don't use logger recursively if it fails
-            console.warn('[Logger] Failed to send log to backend:', error);
+            console.warn('[Logger] Failed to flush log batch:', error);
         }
     } catch (err) {
-        console.warn('[Logger] Network error sending log:', err);
+        console.warn('[Logger] Network error flushing logs:', err);
     }
+}
+
+function ensureFlushTimer() {
+    if (flushTimer) return;
+    flushTimer = setInterval(flushLogs, FLUSH_INTERVAL_MS);
+
+    // Flush on page hide (covers tab close, navigation, mobile background)
+    if (typeof document !== 'undefined') {
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                flushLogs();
+            }
+        });
+        window.addEventListener('beforeunload', () => {
+            flushLogs();
+        });
+    }
+}
+
+// ============================================================================
+// PUBLIC API
+// ============================================================================
+
+/**
+ * Send a log entry to the backend (batched for error/warn, console-only for info/debug)
+ */
+export async function logToBackend(data: LogData) {
+    // Always log to console
+    const consoleMethod = data.level === 'error' ? 'error' : data.level === 'warn' ? 'warn' : 'log';
+    console[consoleMethod](`[${data.component}] ${data.message}`, data.metadata || '');
+
+    // Skip backend call for info/debug — console-only
+    if (data.level === 'info' || data.level === 'debug') return;
+
+    // Queue for batched flush
+    LOG_QUEUE.push(data);
+    ensureFlushTimer();
 }
 
 /**

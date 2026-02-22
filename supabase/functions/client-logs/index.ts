@@ -12,11 +12,23 @@ Deno.serve(async (req) => {
     }
 
     try {
-        const { level, component, message, stack_trace, metadata, user_address } = await req.json();
+        const body = await req.json();
 
-        if (!message) {
+        // Support both single log and batched logs
+        const logs: Array<{
+            level?: string;
+            component?: string;
+            message?: string;
+            stack_trace?: string;
+            metadata?: Record<string, unknown>;
+            user_address?: string;
+        }> = Array.isArray(body.logs) ? body.logs : [body];
+
+        // Filter out entries without a message
+        const valid = logs.filter((l) => l.message);
+        if (valid.length === 0) {
             return new Response(
-                JSON.stringify({ error: "message is required" }),
+                JSON.stringify({ error: "No valid log entries" }),
                 {
                     status: 400,
                     headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -29,21 +41,23 @@ Deno.serve(async (req) => {
             Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
         );
 
+        const rows = valid.map((l) => ({
+            level: l.level || "error",
+            component: l.component,
+            message: l.message!,
+            stack_trace: l.stack_trace,
+            metadata: l.metadata,
+            user_address: l.user_address,
+        }));
+
         const { error } = await supabase
             .from("client_error_logs")
-            .insert({
-                level: level || 'error',
-                component,
-                message,
-                stack_trace,
-                metadata,
-                user_address,
-            });
+            .insert(rows);
 
         if (error) {
             console.error("[client-logs] DB Insert error:", error);
             return new Response(
-                JSON.stringify({ error: "Failed to save log" }),
+                JSON.stringify({ error: "Failed to save logs" }),
                 {
                     status: 500,
                     headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -52,7 +66,7 @@ Deno.serve(async (req) => {
         }
 
         return new Response(
-            JSON.stringify({ success: true }),
+            JSON.stringify({ success: true, count: rows.length }),
             {
                 headers: { ...corsHeaders, "Content-Type": "application/json" },
             },
