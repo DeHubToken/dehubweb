@@ -476,14 +476,18 @@ export default function FeaturesPage() {
         </div>
 
         {/* Page Tabs: Requests / Shipped */}
-        <div className="flex gap-1 bg-zinc-800/40 rounded-xl p-1 mb-3">
+        <div className="relative flex gap-1 bg-zinc-800/40 rounded-xl p-1 mb-3">
+          {/* Sliding liquid glass indicator */}
+          <div
+            className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] transition-transform duration-300 ease-out ${
+              activeTab === 'shipped' ? 'translate-x-[calc(100%+4px)]' : 'translate-x-0'
+            }`}
+          />
           <button
             type="button"
             onClick={() => setActiveTab('requests')}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-              activeTab === 'requests'
-                ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] text-white'
-                : 'text-zinc-500 hover:text-zinc-300'
+            className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 ${
+              activeTab === 'requests' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
             Requests
@@ -491,10 +495,8 @@ export default function FeaturesPage() {
           <button
             type="button"
             onClick={() => setActiveTab('shipped')}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-1.5 ${
-              activeTab === 'shipped'
-                ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] text-white'
-                : 'text-zinc-500 hover:text-zinc-300'
+            className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
+              activeTab === 'shipped' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
             <CheckCircle2 className="w-3.5 h-3.5" />
