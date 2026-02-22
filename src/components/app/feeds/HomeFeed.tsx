@@ -1057,46 +1057,46 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   return (
     <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
+      {/* Filters - ALWAYS accessible so users can change settings even when feed is empty/retrying */}
+      <AnimatePresence mode="wait">
+        {showFilters && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="overflow-y-clip overflow-x-visible"
+          >
+            <div ref={bentoRef} data-no-swipe className="px-2 sm:px-3 pb-2 space-y-4">
+              <SortFilterSection 
+                selectedSort={selectedSort} 
+                onSortSelect={handleSortSelect}
+                selectedCategory={selectedCategory}
+                onCategorySelect={setSelectedCategory}
+                categories={categories}
+                selectedDate={selectedDate}
+                onDateSelect={setSelectedDate}
+                selectedPostType={selectedPostType}
+                onPostTypeSelect={setSelectedPostType}
+                contentFilters={contentFilters}
+                onContentFilterToggle={toggleContentFilter}
+                onReset={() => {
+                  setSelectedSort(SORT_OPTIONS[0]);
+                  setSelectedCategory('all');
+                  setSelectedDate(DATE_FILTER_OPTIONS[0]);
+                  setSelectedPostType('all');
+                  resetContentFilters();
+                }}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {(isLoadingState || isAutoRetrying) ? (
         <HomeFeedSkeleton />
       ) : (
         <>
-          {/* Filters */}
-          <AnimatePresence mode="wait">
-            {showFilters && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.25, ease: 'easeOut' }}
-                className="overflow-y-clip overflow-x-visible"
-              >
-                <div ref={bentoRef} data-no-swipe className="px-2 sm:px-3 pb-2 space-y-4">
-                  <SortFilterSection 
-                    selectedSort={selectedSort} 
-                    onSortSelect={handleSortSelect}
-                    selectedCategory={selectedCategory}
-                    onCategorySelect={setSelectedCategory}
-                    categories={categories}
-                    selectedDate={selectedDate}
-                    onDateSelect={setSelectedDate}
-                    selectedPostType={selectedPostType}
-                    onPostTypeSelect={setSelectedPostType}
-                    contentFilters={contentFilters}
-                    onContentFilterToggle={toggleContentFilter}
-                    onReset={() => {
-                      setSelectedSort(SORT_OPTIONS[0]);
-                      setSelectedCategory('all');
-                      setSelectedDate(DATE_FILTER_OPTIONS[0]);
-                      setSelectedPostType('all');
-                      resetContentFilters();
-                    }}
-                  />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           <div className="pt-2">
             <StoriesBar users={storyUsers} shorts={shorts} />
           </div>
