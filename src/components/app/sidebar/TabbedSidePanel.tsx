@@ -13,9 +13,13 @@ const tabs: { id: TabType; icon: typeof SquareUserRound }[] = [
   { id: 'chat', icon: MessagesSquare },
 ];
 
+const TAB_INDEX: Record<TabType, number> = { leaderboard: 0, follow: 1, chat: 2 };
+
 export function TabbedSidePanel() {
   const [activeTab, setActiveTab] = useState<TabType>('leaderboard');
   const leaderboardRef = useRef<SidebarLeaderboardHandle>(null);
+
+  const activeIndex = TAB_INDEX[activeTab];
 
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
@@ -43,18 +47,26 @@ export function TabbedSidePanel() {
         })}
       </div>
 
-      {/* Tab Content */}
-      <div className="px-0 py-4 h-[400px] overflow-hidden">
-        <div style={{ display: activeTab === 'leaderboard' ? 'block' : 'none' }} className="h-full overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
-          <SidebarLeaderboard ref={leaderboardRef} />
-        </div>
-        <div style={{ display: activeTab === 'follow' ? 'flex' : 'none' }} className="h-full flex-col">
-          <WhoToFollow />
-        </div>
-        <div style={{ display: activeTab === 'chat' ? 'block' : 'none' }} className="h-full">
-          <BadgeBalanceProvider>
-            <SidebarChat />
-          </BadgeBalanceProvider>
+      {/* Tab Content — sliding strip */}
+      <div className="h-[400px] overflow-hidden">
+        <div
+          className="flex h-full transition-transform duration-300 ease-out"
+          style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+        >
+          {/* Leaderboard panel */}
+          <div className="w-full flex-shrink-0 h-full overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+            <SidebarLeaderboard ref={leaderboardRef} />
+          </div>
+          {/* Follow panel */}
+          <div className="w-full flex-shrink-0 h-full flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+            <WhoToFollow />
+          </div>
+          {/* Chat panel */}
+          <div className="w-full flex-shrink-0 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+            <BadgeBalanceProvider>
+              <SidebarChat />
+            </BadgeBalanceProvider>
+          </div>
         </div>
       </div>
     </div>
