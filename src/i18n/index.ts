@@ -1,7 +1,7 @@
 /**
  * i18n Configuration
  * ==================
- * Static translation files for UI labels.
+ * Only English is bundled. All other languages are lazy-loaded on demand.
  * Syncs with useUserLanguage hook for language preference.
  */
 
@@ -9,40 +9,6 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import en from './locales/en.json';
-import es from './locales/es.json';
-import fr from './locales/fr.json';
-import de from './locales/de.json';
-import pt from './locales/pt.json';
-import zh from './locales/zh.json';
-import ja from './locales/ja.json';
-import ko from './locales/ko.json';
-import ru from './locales/ru.json';
-import ar from './locales/ar.json';
-import hi from './locales/hi.json';
-import tr from './locales/tr.json';
-import ro from './locales/ro.json';
-import bn from './locales/bn.json';
-import id from './locales/id.json';
-import vi from './locales/vi.json';
-import th from './locales/th.json';
-import it from './locales/it.json';
-import nl from './locales/nl.json';
-import pl from './locales/pl.json';
-import uk from './locales/uk.json';
-import tl from './locales/tl.json';
-import ms from './locales/ms.json';
-import pcm from './locales/pcm.json';
-import ha from './locales/ha.json';
-import yo from './locales/yo.json';
-import ig from './locales/ig.json';
-import arz from './locales/arz.json';
-import ary from './locales/ary.json';
-import fa from './locales/fa.json';
-import af from './locales/af.json';
-import qu from './locales/qu.json';
-import am from './locales/am.json';
-import sw from './locales/sw.json';
-import zu from './locales/zu.json';
 
 const STORAGE_KEY = 'user-preferred-language';
 
@@ -89,47 +55,75 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'zu', name: 'Zulu', nativeName: 'isiZulu' },
 ];
 
+// Dynamic import map for lazy loading locale files
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
+  es: () => import('./locales/es.json'),
+  fr: () => import('./locales/fr.json'),
+  de: () => import('./locales/de.json'),
+  pt: () => import('./locales/pt.json'),
+  zh: () => import('./locales/zh.json'),
+  ja: () => import('./locales/ja.json'),
+  ko: () => import('./locales/ko.json'),
+  ru: () => import('./locales/ru.json'),
+  ar: () => import('./locales/ar.json'),
+  hi: () => import('./locales/hi.json'),
+  tr: () => import('./locales/tr.json'),
+  ro: () => import('./locales/ro.json'),
+  bn: () => import('./locales/bn.json'),
+  id: () => import('./locales/id.json'),
+  vi: () => import('./locales/vi.json'),
+  th: () => import('./locales/th.json'),
+  it: () => import('./locales/it.json'),
+  nl: () => import('./locales/nl.json'),
+  pl: () => import('./locales/pl.json'),
+  uk: () => import('./locales/uk.json'),
+  tl: () => import('./locales/tl.json'),
+  ms: () => import('./locales/ms.json'),
+  pcm: () => import('./locales/pcm.json'),
+  ha: () => import('./locales/ha.json'),
+  yo: () => import('./locales/yo.json'),
+  ig: () => import('./locales/ig.json'),
+  arz: () => import('./locales/arz.json'),
+  ary: () => import('./locales/ary.json'),
+  fa: () => import('./locales/fa.json'),
+  af: () => import('./locales/af.json'),
+  qu: () => import('./locales/qu.json'),
+  am: () => import('./locales/am.json'),
+  sw: () => import('./locales/sw.json'),
+  zu: () => import('./locales/zu.json'),
+};
+
+/**
+ * Lazy-load a locale's translations. Returns immediately if already loaded.
+ */
+export async function loadLanguage(lang: string): Promise<void> {
+  if (lang === 'en') return; // already bundled
+  if (i18n.hasResourceBundle(lang, 'translation')) return; // already loaded
+  const loader = localeLoaders[lang];
+  if (!loader) return; // unsupported language, will fall back to en
+  try {
+    const module = await loader();
+    i18n.addResourceBundle(lang, 'translation', module.default, true, true);
+  } catch (err) {
+    console.warn(`[i18n] Failed to load locale "${lang}", falling back to English`, err);
+  }
+}
+
 i18n.use(initReactI18next).init({
   resources: {
     en: { translation: en },
-    es: { translation: es },
-    fr: { translation: fr },
-    de: { translation: de },
-    pt: { translation: pt },
-    zh: { translation: zh },
-    ja: { translation: ja },
-    ko: { translation: ko },
-    ru: { translation: ru },
-    ar: { translation: ar },
-    hi: { translation: hi },
-    tr: { translation: tr },
-    ro: { translation: ro },
-    bn: { translation: bn },
-    id: { translation: id },
-    vi: { translation: vi },
-    th: { translation: th },
-    it: { translation: it },
-    nl: { translation: nl },
-    pl: { translation: pl },
-    uk: { translation: uk },
-    tl: { translation: tl },
-    ms: { translation: ms },
-    pcm: { translation: pcm },
-    ha: { translation: ha },
-    yo: { translation: yo },
-    ig: { translation: ig },
-    arz: { translation: arz },
-    ary: { translation: ary },
-    fa: { translation: fa },
-    af: { translation: af },
-    qu: { translation: qu },
-    am: { translation: am },
-    sw: { translation: sw },
-    zu: { translation: zu },
   },
-  lng: defaultLang,
+  lng: 'en', // start with English, then switch after lazy load
   fallbackLng: 'en',
   interpolation: { escapeValue: false },
 });
+
+// If user's preferred language isn't English, lazy-load it immediately
+if (defaultLang && defaultLang !== 'en') {
+  loadLanguage(defaultLang).then(() => {
+    i18n.changeLanguage(defaultLang);
+  });
+}
 
 export default i18n;
