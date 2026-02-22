@@ -31,6 +31,7 @@ import pl from './locales/pl.json';
 import uk from './locales/uk.json';
 import tl from './locales/tl.json';
 import ms from './locales/ms.json';
+import pcm from './locales/pcm.json';
 
 const STORAGE_KEY = 'user-preferred-language';
 
@@ -63,6 +64,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'uk', name: 'Ukrainian', nativeName: 'Українська' },
   { code: 'tl', name: 'Tagalog', nativeName: 'Tagalog' },
   { code: 'ms', name: 'Malay', nativeName: 'Bahasa Melayu' },
+  { code: 'pcm', name: 'Nigerian Pidgin', nativeName: 'Naijá' },
 ];
 
 i18n.use(initReactI18next).init({
@@ -90,6 +92,7 @@ i18n.use(initReactI18next).init({
     uk: { translation: uk },
     tl: { translation: tl },
     ms: { translation: ms },
+    pcm: { translation: pcm },
   },
   lng: defaultLang,
   fallbackLng: 'en',
