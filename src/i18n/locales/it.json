@@ -1,5 +1,5 @@
 {
-  "nav": { "home": "Home", "explore": "Esplora", "notifications": "Notifiche", "messages": "Messaggi", "assistant": "Assistente", "leaderboard": "Classifica", "bookmarks": "Segnalibri", "settings": "Impostazioni", "profile": "Profilo", "blog": "Blog", "commandCentre": "Centro Comando", "docs": "Documenti", "roadmap": "Roadmap", "careers": "Carriere", "create": "Crea", "login": "Accedi", "connecting": "Connessione...", "signMessage": "Firma messaggio" },
+  "nav": { "home": "Home", "explore": "Esplora", "notifications": "Notifiche", "messages": "Messaggi", "assistant": "Assistente", "leaderboard": "Classifica", "bookmarks": "Segnalibri", "settings": "Impostazioni", "profile": "Profilo", "blog": "Blog", "commandCentre": "Centro Comando", "wallet": "Portafoglio", "docs": "Documentazione", "roadmap": "Roadmap", "featureRequests": "Richieste", "careers": "Carriere", "create": "Crea", "login": "Accedi", "connecting": "Connessione...", "signMessage": "Firma messaggio" },
   "feed": { "home": "Home", "videos": "Video", "images": "Immagini", "shorts": "Shorts", "music": "Musica", "live": "In diretta" },
   "explore": { "all": "Tutto", "people": "Persone", "posts": "Post", "images": "Immagini", "videos": "Video", "music": "Musica", "live": "In diretta" },
   "settings": {

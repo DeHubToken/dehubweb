@@ -1,5 +1,5 @@
 {
-  "nav": { "home": "Trang chủ", "explore": "Khám phá", "notifications": "Thông báo", "messages": "Tin nhắn", "assistant": "Trợ lý", "leaderboard": "Bảng xếp hạng", "bookmarks": "Dấu trang", "settings": "Cài đặt", "profile": "Hồ sơ", "blog": "Blog", "commandCentre": "Trung tâm Chỉ huy", "docs": "Tài liệu", "roadmap": "Lộ trình", "careers": "Tuyển dụng", "create": "Tạo", "login": "Đăng nhập", "connecting": "Đang kết nối...", "signMessage": "Ký tin nhắn" },
+  "nav": { "home": "Trang chủ", "explore": "Khám phá", "notifications": "Thông báo", "messages": "Tin nhắn", "assistant": "Trợ lý", "leaderboard": "Bảng xếp hạng", "bookmarks": "Dấu trang", "settings": "Cài đặt", "profile": "Hồ sơ", "blog": "Blog", "commandCentre": "Trung tâm Chỉ huy", "wallet": "Ví", "docs": "Tài liệu", "roadmap": "Lộ trình", "featureRequests": "Yêu cầu", "careers": "Tuyển dụng", "create": "Tạo", "login": "Đăng nhập", "connecting": "Đang kết nối...", "signMessage": "Ký tin nhắn" },
   "feed": { "home": "Trang chủ", "videos": "Video", "images": "Hình ảnh", "shorts": "Shorts", "music": "Âm nhạc", "live": "Trực tiếp" },
   "explore": { "all": "Tất cả", "people": "Mọi người", "posts": "Bài viết", "images": "Hình ảnh", "videos": "Video", "music": "Âm nhạc", "live": "Trực tiếp" },
   "settings": {
