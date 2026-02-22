@@ -49,12 +49,14 @@ export async function getBlockedBy(): Promise<BlockedUser[]> {
 }
 
 export async function getBlockStatus(address: string): Promise<BlockStatusResponse> {
-  const response = await apiCall<{ result: BlockStatusResponse } | BlockStatusResponse>(
+  const response = await apiCall<any>(
     `/api/block/status/${encodeURIComponent(address.toLowerCase())}`,
     { requiresAuth: true }
   );
-  if (response && typeof response === 'object' && 'result' in response) {
-    return response.result;
-  }
-  return response as BlockStatusResponse;
+  // API returns { youBlocked, blockedYou, isBlocked } or wrapped in { result: ... }
+  const data = response?.result ?? response;
+  return {
+    isBlocked: data?.youBlocked ?? data?.isBlocked ?? false,
+    isBlockedBy: data?.blockedYou ?? data?.isBlockedBy ?? false,
+  };
 }

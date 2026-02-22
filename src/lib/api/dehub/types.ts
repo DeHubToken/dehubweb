@@ -33,6 +33,9 @@ export interface DeHubUser {
   followsYou?: boolean;
   isPending?: boolean;
   isPrivate?: boolean;
+  youBlocked?: boolean;
+  blockedYou?: boolean;
+  isBlocked?: boolean;
   balanceData?: Array<{
     chainId: number;
     tokenAddress: string;
