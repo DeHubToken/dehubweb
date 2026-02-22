@@ -39,12 +39,24 @@ async function prefetchHomeFeed(queryClient: ReturnType<typeof useQueryClient>) 
       return res.json();
     };
 
-    // Fire all 3 home feed queries + scroll carousel in parallel
-    const [videosRes, imagesRes, textsRes, scrollRes] = await Promise.allSettled([
+    // Fire all 3 home feed queries + scroll carousel + unified home feed in parallel
+    const [videosRes, imagesRes, textsRes, scrollRes, unifiedHomeRes] = await Promise.allSettled([
       fetchFeed('video'),
       fetchFeed('feed-images'),
       fetchFeed('feed-simple'),
       fetchFeed('video'), // scroll carousel uses same endpoint
+      (async () => {
+        // Unified home feed (no postType filter) - matches "Latest" sort in HomeFeed
+        const url = new URL('/api/feed', DEHUB_API_BASE);
+        url.searchParams.set('page', '1');
+        url.searchParams.set('limit', '20');
+        url.searchParams.set('sortBy', 'createdAt');
+        url.searchParams.set('sortOrder', 'desc');
+        url.searchParams.set('status', 'minted');
+        const res = await fetch(url.toString(), { headers });
+        if (!res.ok) return null;
+        return res.json();
+      })(),
     ]);
 
     const baseParams = {
@@ -91,6 +103,30 @@ async function prefetchHomeFeed(queryClient: ReturnType<typeof useQueryClient>) 
           pageParams: [1],
         }
       );
+    }
+
+    // Unified home feed (no postType) - matches HomeFeed "Latest" query key exactly
+    if (unifiedHomeRes.status === 'fulfilled' && unifiedHomeRes.value) {
+      const homeFeedParams = {
+        sortBy: 'createdAt' as const,
+        sortOrder: 'desc' as const,
+        range: undefined,
+        isPPV: undefined,
+        hasBounty: undefined,
+        isLocked: undefined,
+        status: 'minted' as const,
+        category: undefined,
+        followingOnly: undefined,
+        postType: undefined,
+      };
+      queryClient.setQueryData(
+        ['unified-feed', homeFeedParams, 20],
+        {
+          pages: [{ items: unifiedHomeRes.value.result || [], pagination: unifiedHomeRes.value.pagination, page: 1 }],
+          pageParams: [1],
+        }
+      );
+      console.log('[Nebula Prefetch] Unified home feed cached:', (unifiedHomeRes.value.result || []).length, 'items');
     }
 
     console.log('[Nebula Prefetch] Home feeds cached successfully');

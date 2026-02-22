@@ -294,6 +294,7 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
       status: 'minted' as const,
       category: undefined,
       followingOnly: undefined,
+      postType: undefined,
     };
     queryClient.setQueryData(
       ['unified-feed', homeFeedParams, 20],
