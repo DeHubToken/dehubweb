@@ -72,7 +72,7 @@ export function useProfilePage() {
 
   // Badge
   const { badgeBalance } = useBadgeBalance(apiProfile?.walletAddress);
-  const badgeUrl = getBadgeUrl(badgeBalance);
+  const badgeUrl = getBadgeUrl(badgeBalance, apiProfile?.handle || routeUsername);
 
   // Content separation
   const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS, ALL_CONTENT } = useMemo(() => {

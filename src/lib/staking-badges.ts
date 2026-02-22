@@ -32,6 +32,11 @@ const BADGE_LEVELS: BadgeDef[] = [
 /** Minimum DHB to qualify for any badge */
 const MIN_BADGE_THRESHOLD = 10000;
 
+/** Username-based badge overrides (always get this badge regardless of balance) */
+const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
+  "maldoteth": "Meglodon",
+};
+
 // Import all badge images
 import TortoiseBadge from '@/assets/badges/Tortoise.png';
 import CrabBadge from '@/assets/badges/Crab.png';
@@ -65,8 +70,16 @@ const BADGE_IMAGES: Record<string, string> = {
 
 /**
  * Get badge name based on badge balance (holdings + staked)
+ * Optional username param checks for hardcoded overrides first.
  */
-export function getBadgeName(badgeBalance: number | string | undefined | null): string | null {
+export function getBadgeName(badgeBalance: number | string | undefined | null, username?: string | null): string | null {
+  // Check username overrides first
+  if (username) {
+    const clean = username.replace('@', '').toLowerCase();
+    const override = USERNAME_BADGE_OVERRIDES[clean];
+    if (override) return override;
+  }
+
   if (badgeBalance === undefined || badgeBalance === null) {
     return null;
   }
@@ -88,8 +101,8 @@ export function getBadgeName(badgeBalance: number | string | undefined | null): 
 /**
  * Get badge image URL based on badge balance (holdings + staked)
  */
-export function getBadgeUrl(badgeBalance: number | string | undefined | null): string | null {
-  const badge = getBadgeName(badgeBalance);
+export function getBadgeUrl(badgeBalance: number | string | undefined | null, username?: string | null): string | null {
+  const badge = getBadgeName(badgeBalance, username);
   if (!badge) return null;
   return BADGE_IMAGES[badge] || null;
 }
@@ -97,12 +110,12 @@ export function getBadgeUrl(badgeBalance: number | string | undefined | null): s
 /**
  * Get badge tier info (name, min, and image)
  */
-export function getBadgeInfo(badgeBalance: number | string | undefined | null): {
+export function getBadgeInfo(badgeBalance: number | string | undefined | null, username?: string | null): {
   name: string | null;
   imageUrl: string | null;
   minStake: number;
 } {
-  const name = getBadgeName(badgeBalance);
+  const name = getBadgeName(badgeBalance, username);
   if (!name) return { name: null, imageUrl: null, minStake: MIN_BADGE_THRESHOLD };
   const level = BADGE_LEVELS.find(b => b.name === name) || BADGE_LEVELS[0];
   return {
