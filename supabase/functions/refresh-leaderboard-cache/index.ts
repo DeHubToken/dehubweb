@@ -653,7 +653,15 @@ Deno.serve(async (req) => {
       }
 
       enriched.sort((a, b) => b.total - a.total);
-      const nonZero = enriched;
+      // Deduplicate by lowercased address (keep first = highest balance)
+      const seenAddrs = new Set<string>();
+      const deduped = enriched.filter(e => {
+        const addr = e.account.toLowerCase();
+        if (seenAddrs.has(addr)) return false;
+        seenAddrs.add(addr);
+        return true;
+      });
+      const nonZero = deduped;
       const nonZeroPeriod = enriched.filter(e => !HOLDINGS_PERIOD_EXCLUDED.has(e.account.toLowerCase()));
 
       console.log(`On-chain holdings: ${nonZero.length} total holders`);
