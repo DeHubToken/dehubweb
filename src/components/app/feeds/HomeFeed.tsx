@@ -16,6 +16,7 @@ import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
 import { HomeFeedSkeleton, StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { AnimatedFilterPill } from '@/components/app/feeds/AnimatedFilterPill';
 import { toast } from 'sonner';
 import { 
   SORT_OPTIONS, 
@@ -181,18 +182,14 @@ function SortFilterSection({
         <div className="relative">
           <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
             {SORT_OPTIONS.map((option) => (
-              <button
+              <AnimatedFilterPill
                 key={option.label}
+                layoutId="home-sort"
+                isActive={selectedSort.label === option.label}
                 onClick={() => onSortSelect(option)}
-                className={cn(
-                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                  selectedSort.label === option.label
-                    ? activeFilterClass
-                    : inactiveFilterClass
-                )}
               >
               {t(`filters.${option.value === 'most-viewed' ? 'mostViewed' : option.value === 'most-liked' ? 'mostLiked' : option.value === 'most-comments' ? 'mostComments' : option.value}`, option.label)}
-              </button>
+              </AnimatedFilterPill>
             ))}
           </div>
           <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
@@ -260,18 +257,14 @@ function SortFilterSection({
         <div className="relative">
           <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
             {DATE_FILTER_OPTIONS.map((option) => (
-              <button
+              <AnimatedFilterPill
                 key={option.value}
+                layoutId="home-date"
+                isActive={selectedDate.value === option.value}
                 onClick={() => onDateSelect(option)}
-                className={cn(
-                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                  selectedDate.value === option.value
-                    ? activeFilterClass
-                    : inactiveFilterClass
-                )}
               >
                 {option.label}
-              </button>
+              </AnimatedFilterPill>
             ))}
           </div>
           <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
@@ -284,18 +277,14 @@ function SortFilterSection({
         <div className="relative">
           <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
             {POST_TYPE_FILTERS.map((option) => (
-              <button
+              <AnimatedFilterPill
                 key={option.value}
+                layoutId="home-posttype"
+                isActive={selectedPostType === option.value}
                 onClick={() => onPostTypeSelect(option.value)}
-                className={cn(
-                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                  selectedPostType === option.value
-                    ? activeFilterClass
-                    : inactiveFilterClass
-                )}
               >
                 {t(`filters.${option.value === 'all' ? 'all' : option.value === 'video' ? 'videos' : option.value === 'feed-images' ? 'images' : 'text'}`, option.label)}
-              </button>
+              </AnimatedFilterPill>
             ))}
           </div>
           <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
