@@ -79,6 +79,8 @@ export interface VideoItem extends BaseFeedItem {
   creatorId?: string;
   /** Creator's username for URL-based navigation */
   creatorUsername?: string;
+  /** Creator's badge balance from API (avoids edge function call) */
+  creatorBadgeBalance?: number;
   /** Whether the current user has liked this item */
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
@@ -150,6 +152,8 @@ export interface ImagePost extends BaseFeedItem {
   creatorId?: string;
   /** Creator's username for URL-based navigation */
   creatorUsername?: string;
+  /** Creator's badge balance from API (avoids edge function call) */
+  creatorBadgeBalance?: number;
   /** Whether the current user has liked this item */
   isLiked?: boolean;
   /** Whether the current user has disliked this item */

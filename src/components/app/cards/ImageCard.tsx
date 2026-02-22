@@ -410,6 +410,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           contentType="image"
           creatorId={post.creatorId}
           creatorUsername={post.creatorUsername}
+          badgeBalance={post.creatorBadgeBalance}
         />
         <div className="flex items-center gap-1">
           <button

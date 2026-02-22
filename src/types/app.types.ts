@@ -13,6 +13,7 @@ export interface User {
   handle: string;
   verified: boolean;
   avatarSeed?: string;
+  badgeBalance?: number;
 }
 
 export interface Post {

@@ -14,7 +14,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { getAgentAvatarFallback } from '@/constants/agent-avatars.constants';
 import { getBadgeUrl } from '@/lib/staking-badges';
-import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
 
 import type { ContentType } from '@/types/feed.types';
 
@@ -39,6 +38,8 @@ interface CardHeaderProps {
   timestamp?: string;
   /** View count to show next to timestamp */
   viewCount?: string | number;
+  /** Badge balance from API data (avoids edge function call) */
+  badgeBalance?: number;
 }
 
 /**
@@ -63,6 +64,7 @@ export function CardHeader({
   creatorUsername,
   timestamp,
   viewCount,
+  badgeBalance,
 }: CardHeaderProps) {
   const navigate = useNavigate();
   const [imageError, setImageError] = useState(false);
@@ -72,8 +74,7 @@ export function CardHeader({
   const liveAvatarUrl = useProfileAvatar(creatorId, avatarSeed);
   const agentFallback = getAgentAvatarFallback(creatorId);
   
-  // Badge balance from batch context (single request per feed page)
-  const { badgeBalance } = useBatchedBadgeBalance(creatorId);
+  // Use badge balance from API data directly — no edge function call needed
   const badgeUrl = getBadgeUrl(badgeBalance);
   
   // Only use avatarSeed as image source if it's a real URL and hasn't errored
