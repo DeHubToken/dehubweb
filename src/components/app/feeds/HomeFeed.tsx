@@ -1062,7 +1062,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       ) : (
         <>
           {/* Filters */}
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             {showFilters && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}

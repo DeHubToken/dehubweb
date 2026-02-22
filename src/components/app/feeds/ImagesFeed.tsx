@@ -466,7 +466,7 @@ export function ImagesFeed({
   return (
     <div>
       {/* Filter Section */}
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {showFilters && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}

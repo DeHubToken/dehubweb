@@ -705,7 +705,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   return (
     <div className="p-2 sm:p-3 pt-0 sm:pt-0">
       {/* Filters */}
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {showFilters && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
