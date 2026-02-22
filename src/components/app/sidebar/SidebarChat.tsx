@@ -119,7 +119,7 @@ export function SidebarChat() {
   return (
     <div className="flex flex-col h-full pl-px">
       {/* Header */}
-      <div className="flex items-center gap-2 pb-3">
+      <div className="flex items-center gap-2 pb-3" style={{ paddingLeft: '10px' }}>
         <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">LIVE</span>
         <span className="text-zinc-400 text-xs flex items-center gap-1">
           <Users className="w-3 h-3" /> {onlineCount} online
@@ -156,7 +156,7 @@ export function SidebarChat() {
               const handle = msg.sender_username;
               const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
               return (
-                <div key={msg.id} className="flex items-start gap-2" style={{ paddingLeft: '7px' }}>
+                <div key={msg.id} className="flex items-start gap-2" style={{ paddingLeft: '10px' }}>
                   <button onClick={goToProfile} disabled={!handle} className={`flex-shrink-0 ${handle ? 'cursor-pointer' : 'cursor-default'}`}>
                     <Avatar className="w-6 h-6">
                       {avatarUrl && <AvatarImage src={avatarUrl} />}
