@@ -77,7 +77,7 @@ export function BioTranslateButton({ bio, onTranslated, onShowOriginal, isTransl
       <TooltipTrigger asChild>
         <button
           onClick={handleTranslate}
-          className="text-muted-foreground hover:text-foreground transition-colors"
+          className="text-zinc-500 hover:text-foreground transition-colors"
         >
           <Languages className="w-5 h-5" />
         </button>
