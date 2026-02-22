@@ -26,10 +26,10 @@ async function prefetchHomeFeed(queryClient: ReturnType<typeof useQueryClient>) 
     const headers: HeadersInit = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const fetchFeed = async (postType: string) => {
+    const fetchFeed = async (postType: string, limit = 20) => {
       const url = new URL('/api/feed', DEHUB_API_BASE);
       url.searchParams.set('page', '1');
-      url.searchParams.set('limit', '20');
+      url.searchParams.set('limit', String(limit));
       url.searchParams.set('sortBy', 'createdAt');
       url.searchParams.set('sortOrder', 'desc');
       url.searchParams.set('status', 'minted');
@@ -40,32 +40,42 @@ async function prefetchHomeFeed(queryClient: ReturnType<typeof useQueryClient>) 
     };
 
     // Fire all 3 home feed queries + scroll carousel in parallel
-    const [videosRes, imagesRes, textsRes, scrollRes] = await Promise.allSettled([
+    const [videosRes, imagesRes, textsRes] = await Promise.allSettled([
       fetchFeed('video'),
       fetchFeed('feed-images'),
       fetchFeed('feed-simple'),
-      fetchFeed('video'), // scroll carousel uses same endpoint
     ]);
 
-    const baseParams = {
-      sortBy: 'createdAt' as const,
-      sortOrder: 'desc' as const,
-      range: undefined,
-      status: 'minted' as const,
-      category: undefined,
-      isPPV: undefined,
-      hasBounty: undefined,
-      isLocked: undefined,
-    };
-
+    // Cache results using the EXACT same query key structure as useUnifiedFeed:
+    // ['unified-feed', params (without page/limit/enabled), limit]
+    // HomeFeed default uses: sortBy='createdAt', sortOrder='desc', status='minted',
+    // with range/category/isPPV/hasBounty/isLocked all undefined
     const cacheResult = (result: PromiseSettledResult<any>, postType: string, limit = 20) => {
       if (result.status !== 'fulfilled' || !result.value) return;
       const response = result.value;
-      const params = { ...baseParams, postType };
+      
+      // Match the exact params shape from useUnifiedFeed hook (options minus page/limit/enabled)
+      const params = {
+        sortBy: 'createdAt' as const,
+        sortOrder: 'desc' as const,
+        range: undefined,
+        status: 'minted' as const,
+        category: undefined,
+        isPPV: undefined,
+        hasBounty: undefined,
+        isLocked: undefined,
+        postType,
+      };
+      
       queryClient.setQueryData(
         ['unified-feed', params, limit],
         {
-          pages: [{ items: response.result || [], pagination: response.pagination, page: 1 }],
+          pages: [{ 
+            items: response.result || [], 
+            pagination: response.pagination, 
+            page: 1,
+            shuffleSeed: undefined,
+          }],
           pageParams: [1],
         }
       );
@@ -75,23 +85,6 @@ async function prefetchHomeFeed(queryClient: ReturnType<typeof useQueryClient>) 
     cacheResult(videosRes, 'video');
     cacheResult(imagesRes, 'feed-images');
     cacheResult(textsRes, 'feed-simple');
-    
-    // Scroll carousel uses limit=10
-    if (scrollRes.status === 'fulfilled' && scrollRes.value) {
-      const scrollParams = {
-        postType: 'video',
-        sortBy: 'createdAt' as const,
-        sortOrder: 'desc' as const,
-        status: 'minted' as const,
-      };
-      queryClient.setQueryData(
-        ['unified-feed', scrollParams, 10],
-        {
-          pages: [{ items: (scrollRes.value.result || []).slice(0, 10), pagination: scrollRes.value.pagination, page: 1 }],
-          pageParams: [1],
-        }
-      );
-    }
 
     console.log('[Nebula Prefetch] Home feeds cached successfully');
   } catch (e) {

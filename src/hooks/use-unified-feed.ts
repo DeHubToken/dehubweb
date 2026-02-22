@@ -349,14 +349,19 @@ function getCacheKey(params: UnifiedFeedParams): string | null {
   if (params.range || params.from || params.to) return null;
   
   const postType = params.postType || 'all';
-  if (postType !== 'all') return null; // Only cache "all" feed for now
-  
   const sortBy = params.sortBy || 'likes'; // Default sort is likes (popular)
   
-  if (sortBy === 'createdAt') {
-    return `feed_latest_page${page}`;
-  } else if (sortBy === 'likes') {
-    return `feed_popular_page${page}`;
+  // Support per-type cache keys for home feed post types
+  const sortPrefix = sortBy === 'createdAt' ? 'latest' : sortBy === 'likes' ? 'popular' : null;
+  if (!sortPrefix) return null;
+  
+  if (postType === 'all') {
+    return `feed_${sortPrefix}_page${page}`;
+  }
+  
+  // Per-type caches (video, feed-images, feed-simple) - only page 1
+  if (['video', 'feed-images', 'feed-simple'].includes(postType) && page === 1) {
+    return `feed_${sortPrefix}_${postType}_page1`;
   }
   
   return null;
