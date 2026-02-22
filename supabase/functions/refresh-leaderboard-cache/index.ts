@@ -324,6 +324,11 @@ const EXTRA_WALLETS: Record<string, { wallet: string; displayName?: string; avat
   jimminycrockett: { wallet: "0x388bee96cdb67bed580adf54ee8dc5b0adfe8d79", displayName: "jimminycrockett" },
 };
 
+// Set of extra wallet addresses for quick lookup (used to ensure they appear in period deltas)
+const EXTRA_WALLET_ADDRESSES = new Set(
+  Object.values(EXTRA_WALLETS).map(w => w.wallet.toLowerCase())
+);
+
 // ── Snapshot-based delta helper (used by light mode) ────────────────
 
 interface SnapshotDeltaResult {
@@ -477,13 +482,19 @@ async function computeSnapshotDelta(
           currentVal = getEntryValue(entry);
         }
         const pastVal = pastMap.get(addr);
+        const isExtraWallet = EXTRA_WALLET_ADDRESSES.has(addr);
 
         let delta: number;
         if (requireRealPast) {
           const hasTruePastData = pastVal !== undefined && pastVal > 0;
           delta = hasTruePastData ? currentVal - pastVal : 0;
+        } else if (pastVal !== undefined) {
+          delta = currentVal - pastVal;
+        } else if (isExtraWallet && currentVal > 0) {
+          // Extra wallets missing from past snapshot: treat past as 0
+          delta = currentVal;
         } else {
-          delta = pastVal !== undefined ? currentVal - pastVal : 0;
+          delta = 0;
         }
         return { ...entry, delta };
       });
