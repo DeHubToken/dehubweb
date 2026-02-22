@@ -84,7 +84,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
   return (
     <>
-      <aside className="hidden lg:flex sticky top-0 h-screen w-[60px] xl:w-[231px] px-2 xl:px-[18px] pt-[2px] pb-2 flex-col overflow-hidden items-center xl:items-stretch transition-all duration-200">
+      <aside className="hidden lg:flex sticky top-0 h-screen w-[60px] xl:w-[231px] px-2 xl:px-[18px] pt-[2px] pb-2 flex-col overflow-hidden items-center xl:items-stretch transition-all duration-200 z-[50] isolate">
         {/* Logo & Coin Balance */}
         <div className="mb-6 flex items-center justify-between w-full">
           <button onClick={handleLogoClick} className="block cursor-pointer mt-[10px] mx-auto xl:mx-0">
