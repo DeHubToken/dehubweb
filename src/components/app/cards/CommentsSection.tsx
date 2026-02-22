@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Globe } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -347,7 +347,7 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
                     aria-label="Translate"
                     disabled={translation.isLoading}
                   >
-                    <Globe className="w-4 h-4" />
+                    <Languages className="w-4 h-4" />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>{translation.isTranslated ? 'Show original' : 'Translate'}</TooltipContent>
