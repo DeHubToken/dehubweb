@@ -61,8 +61,8 @@ export default function FullWalletPage() {
   const [importChainId, setImportChainId] = useState<ChainId>(BASE_CHAIN_ID);
   const [selectedToken, setSelectedToken] = useState<WalletToken | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [chainPickerToken, setChainPickerToken] = useState<GroupedToken | null>(null);
-  const [actionToken, setActionToken] = useState<WalletToken | null>(null);
+  const [actionGrouped, setActionGrouped] = useState<GroupedToken | null>(null);
+  const [sendChainPickerGrouped, setSendChainPickerGrouped] = useState<GroupedToken | null>(null);
 
   const { allTokens, isLoading } = useAllChainsTokens();
 
@@ -153,12 +153,19 @@ export default function FullWalletPage() {
     setSendDialogOpen(true);
   };
 
-  // Smart click handler: if token is on 1 chain, open actions directly. If multiple, show chain picker.
+  // Always open action drawer directly
   const handleGroupedTokenClick = (grouped: GroupedToken) => {
-    if (grouped.chains.length === 1) {
-      setActionToken(grouped.chains[0]);
+    setActionGrouped(grouped);
+  };
+
+  // Smart send: if multiple chains have balance, show chain picker. Otherwise send directly.
+  const handleSmartSend = (grouped: GroupedToken) => {
+    const chainsWithBalance = grouped.chains.filter(t => t.balance > BigInt(0));
+    if (chainsWithBalance.length === 0) return;
+    if (chainsWithBalance.length === 1) {
+      handleSend(chainsWithBalance[0]);
     } else {
-      setChainPickerToken(grouped);
+      setSendChainPickerGrouped(grouped);
     }
   };
 
@@ -261,49 +268,53 @@ export default function FullWalletPage() {
         )}
       </div>
 
-      {/* Chain Picker Drawer - shown when token exists on multiple chains */}
-      <Drawer open={!!chainPickerToken} onOpenChange={v => { if (!v) setChainPickerToken(null); }}>
+      {/* Token Action Drawer - shows actions for grouped token */}
+      <GroupedActionDrawer
+        open={!!actionGrouped}
+        onOpenChange={v => { if (!v) setActionGrouped(null); }}
+        grouped={actionGrouped}
+        onSend={() => {
+          const g = actionGrouped;
+          setActionGrouped(null);
+          if (g) handleSmartSend(g);
+        }}
+        onReceive={() => { setActionGrouped(null); setReceiveDialogOpen(true); }}
+        walletAddress={walletAddress}
+      />
+
+      {/* Send Chain Picker - only shown when sending and multiple chains have balance */}
+      <Drawer open={!!sendChainPickerGrouped} onOpenChange={v => { if (!v) setSendChainPickerGrouped(null); }}>
         <DrawerContent glass>
           <DrawerHeader>
             <DrawerTitle className="text-white">
-              {chainPickerToken?.symbol} — Select Chain
+              Send {sendChainPickerGrouped?.symbol} — Select Chain
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-6 space-y-2">
-            {chainPickerToken?.chains.map(token => {
-              const chainInfo = CHAIN_OPTIONS.find(c => c.id === token.chainId);
-              const hasBalance = token.balance > BigInt(0);
-              return (
-                <button
-                  key={token.chainId}
-                  onClick={() => {
-                    setChainPickerToken(null);
-                    setTimeout(() => setActionToken(token), 200);
-                  }}
-                  className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
-                >
-                  {chainInfo && <img src={chainInfo.icon} alt={chainInfo.name} className="w-6 h-6 rounded-md" />}
-                  <div className="text-left flex-1 min-w-0">
-                    <span className="text-sm font-medium text-white">{chainInfo?.name || `Chain ${token.chainId}`}</span>
-                    <p className={`text-xs ${hasBalance ? 'text-zinc-400' : 'text-zinc-600'}`}>{token.formattedBalance} {token.symbol}</p>
-                  </div>
-                </button>
-              );
-            })}
+            {sendChainPickerGrouped?.chains
+              .filter(t => t.balance > BigInt(0))
+              .map(token => {
+                const chainInfo = CHAIN_OPTIONS.find(c => c.id === token.chainId);
+                return (
+                  <button
+                    key={token.chainId}
+                    onClick={() => {
+                      setSendChainPickerGrouped(null);
+                      setTimeout(() => handleSend(token), 200);
+                    }}
+                    className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
+                  >
+                    {chainInfo && <img src={chainInfo.icon} alt={chainInfo.name} className="w-6 h-6 rounded-md" />}
+                    <div className="text-left flex-1 min-w-0">
+                      <span className="text-sm font-medium text-white">{chainInfo?.name || `Chain ${token.chainId}`}</span>
+                      <p className="text-xs text-zinc-400">{token.formattedBalance} {token.symbol}</p>
+                    </div>
+                  </button>
+                );
+              })}
           </div>
         </DrawerContent>
       </Drawer>
-
-      {/* Token Action Drawer - shown for a specific chain token */}
-      <TokenActionDrawer
-        open={!!actionToken}
-        onOpenChange={v => { if (!v) setActionToken(null); }}
-        token={actionToken}
-        icon={actionToken ? (TOKEN_ICONS[actionToken.symbol] || actionToken.logo) : undefined}
-        hasBalance={actionToken ? actionToken.balance > BigInt(0) : false}
-        onSend={() => { const t = actionToken; setActionToken(null); if (t) handleSend(t); }}
-        onReceive={() => { setActionToken(null); setReceiveDialogOpen(true); }}
-      />
 
       {/* Send Dialog */}
       <SendDialog
@@ -388,35 +399,34 @@ function GroupedTokenRow({ grouped, onClick }: { grouped: GroupedToken; onClick:
   );
 }
 
-/* ─── Token Action Drawer ─── */
-function TokenActionDrawer({ open, onOpenChange, token, icon, hasBalance, onSend, onReceive }: {
+/* ─── Grouped Action Drawer ─── */
+function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, walletAddress }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  token: WalletToken | null;
-  icon: string | undefined;
-  hasBalance: boolean;
+  grouped: GroupedToken | null;
   onSend: () => void;
   onReceive: () => void;
+  walletAddress?: string;
 }) {
-  if (!token) return null;
-  const chainInfo = CHAIN_OPTIONS.find(c => c.id === token.chainId);
+  if (!grouped) return null;
+  const icon = TOKEN_ICONS[grouped.symbol] || grouped.logo;
+  const hasBalance = grouped.totalBalance > BigInt(0);
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent glass>
         <DrawerHeader>
           <DrawerTitle className="flex items-center gap-3 text-white">
             {icon ? (
-              <img src={icon} alt={token.symbol} className="w-8 h-8 rounded-full" />
+              <img src={icon} alt={grouped.symbol} className="w-8 h-8 rounded-full" />
             ) : (
               <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center">
-                <span className="text-xs font-bold text-zinc-400">{token.symbol.slice(0, 2)}</span>
+                <span className="text-xs font-bold text-zinc-400">{grouped.symbol.slice(0, 2)}</span>
               </div>
             )}
             <div>
-              <span className="block">{token.symbol}</span>
+              <span className="block">{grouped.symbol}</span>
               <span className="text-xs text-zinc-500 font-normal">
-                {token.formattedBalance} {token.symbol}
-                {chainInfo && <span> · {chainInfo.name}</span>}
+                {grouped.totalFormattedBalance} {grouped.symbol}
               </span>
             </div>
           </DrawerTitle>
@@ -442,9 +452,24 @@ function TokenActionDrawer({ open, onOpenChange, token, icon, hasBalance, onSend
           <Button
             variant="glass"
             className="flex-col h-auto py-4 gap-2 rounded-xl"
-            onClick={() => {
-              toast.info('Buy feature coming soon');
+            onClick={async () => {
               onOpenChange(false);
+              try {
+                const res = await createOnrampSession({
+                  walletAddress: walletAddress || '',
+                  currency: 'USD',
+                  amount: 50,
+                  tokenSymbol: grouped.symbol,
+                });
+                const url = (res as any)?.url || (res as any)?.redirectUrl;
+                if (url) {
+                  window.open(url, '_blank');
+                } else {
+                  toast.error('Unable to open payment gateway');
+                }
+              } catch {
+                toast.error('Failed to start purchase session');
+              }
             }}
           >
             <ShoppingCart className="w-5 h-5" />
