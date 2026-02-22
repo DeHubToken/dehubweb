@@ -112,6 +112,81 @@ export function formatBalance(balance: bigint, decimals: number, maxDecimals: nu
 }
 
 /**
+ * Auto-detect all ERC-20 token balances using Alchemy's alchemy_getTokenBalances.
+ * Returns discovered tokens with non-zero balances (excluding known tokens).
+ */
+async function autoDetectTokens(walletAddress: string, chainId: ChainId): Promise<WalletToken[]> {
+  try {
+    const config = CHAIN_CONFIGS[chainId];
+    if (!config?.rpcUrl?.includes('alchemy')) return []; // Only works with Alchemy RPCs
+
+    const res = await fetch(config.rpcUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'alchemy_getTokenBalances',
+        params: [walletAddress, 'erc20'],
+      }),
+    });
+    const json = await res.json();
+    const balances = json.result?.tokenBalances;
+    if (!Array.isArray(balances)) return [];
+
+    // Get known addresses to skip
+    const defaultAddrs = new Set(
+      (DEFAULT_TOKENS[chainId] || []).map(t => t.address.toLowerCase())
+    );
+    const customAddrs = new Set(
+      getCustomTokens(chainId).map(t => t.address.toLowerCase())
+    );
+
+    // Filter to non-zero, non-known tokens
+    const discovered = balances.filter((tb: any) => {
+      const bal = BigInt(tb.tokenBalance || '0');
+      if (bal === BigInt(0)) return false;
+      const addr = tb.contractAddress.toLowerCase();
+      return !defaultAddrs.has(addr) && !customAddrs.has(addr);
+    });
+
+    if (discovered.length === 0) return [];
+
+    // Fetch metadata for discovered tokens (limit to 20 to avoid excessive calls)
+    const limited = discovered.slice(0, 20);
+    const metadataResults = await Promise.allSettled(
+      limited.map((tb: any) => getERC20Metadata(tb.contractAddress, chainId))
+    );
+
+    const tokens: WalletToken[] = [];
+    for (let i = 0; i < limited.length; i++) {
+      const tb = limited[i];
+      const metaResult = metadataResults[i];
+      if (metaResult.status !== 'fulfilled') continue;
+      const meta = metaResult.value;
+      if (!meta.symbol || !meta.name) continue;
+
+      const balance = BigInt(tb.tokenBalance || '0');
+      tokens.push({
+        address: tb.contractAddress,
+        symbol: meta.symbol,
+        name: meta.name,
+        decimals: meta.decimals,
+        balance,
+        formattedBalance: formatBalance(balance, meta.decimals),
+        isCustom: false,
+        chainId,
+      });
+    }
+
+    return tokens;
+  } catch (err) {
+    console.warn('[Wallet] Auto-detect tokens failed:', err);
+    return [];
+  }
+}
+
+/**
  * Get all token balances for a wallet on a specific chain
  */
 export async function getAllTokenBalances(walletAddress: string, chainId: ChainId): Promise<WalletToken[]> {
@@ -122,15 +197,16 @@ export async function getAllTokenBalances(walletAddress: string, chainId: ChainI
   const customTokens = getCustomTokens(chainId);
   const allErc20 = [...defaultTokens, ...customTokens];
 
-  // Fetch all in parallel
-  const [nativeBalance, ...erc20Balances] = await Promise.all([
+  // Fetch known balances + auto-detect in parallel
+  const [nativeBalance, autoDetected, ...erc20Balances] = await Promise.all([
     getNativeBalance(walletAddress, chainId),
+    autoDetectTokens(walletAddress, chainId),
     ...allErc20.map(t => getERC20TokenBalance(t.address, walletAddress, chainId)),
   ]);
 
   const tokens: WalletToken[] = [];
 
-  // Build ERC20 token list
+  // Build known ERC20 token list
   const erc20Tokens: WalletToken[] = allErc20.map((token, i) => ({
     address: token.address,
     symbol: token.symbol,
@@ -163,8 +239,14 @@ export async function getAllTokenBalances(walletAddress: string, chainId: ChainI
     chainId,
   });
 
-  // Remaining ERC20 tokens
+  // Known ERC20 tokens
   tokens.push(...otherErc20);
+
+  // Auto-detected tokens (sorted by symbol)
+  if (autoDetected.length > 0) {
+    const sorted = autoDetected.sort((a, b) => a.symbol.localeCompare(b.symbol));
+    tokens.push(...sorted);
+  }
 
   return tokens;
 }

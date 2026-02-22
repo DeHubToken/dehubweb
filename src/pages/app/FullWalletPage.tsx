@@ -51,7 +51,22 @@ export default function FullWalletPage() {
 
   const { tokens, isLoading, refetch, isFetching } = useWalletTokens(selectedChain);
   const { allTokens } = useAllChainsTokens();
-  const { data: prices = {} } = useTokenPrices();
+
+  // Collect auto-detected tokens (not in TOKEN_ICONS) for dynamic price lookups
+  const extraTokensForPricing = useMemo(() => {
+    const known = new Set(Object.keys(TOKEN_ICONS));
+    const seen = new Set<string>();
+    const extras: { address: string; symbol: string }[] = [];
+    for (const t of allTokens) {
+      if (!known.has(t.symbol) && t.address !== '0x0' && !seen.has(t.address.toLowerCase())) {
+        seen.add(t.address.toLowerCase());
+        extras.push({ address: t.address, symbol: t.symbol });
+      }
+    }
+    return extras;
+  }, [allTokens]);
+
+  const { data: prices = {} } = useTokenPrices(extraTokensForPricing.length > 0 ? extraTokensForPricing : undefined);
 
   // Compute total USD across all chains
   const totalUsd = useMemo(() => {
