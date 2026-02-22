@@ -8,6 +8,7 @@ import { AuthGate } from '@/components/app/AuthGate';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useWalletTokens } from '@/hooks/use-wallet-tokens';
 import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
 import { getERC20Metadata, saveCustomToken, removeCustomToken, formatBalance, type WalletToken } from '@/lib/wallet/tokens';
@@ -311,10 +312,10 @@ function TokenActionDrawer({ open, onOpenChange, token, icon, hasBalance, onSend
   onReceive: () => void;
 }) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 sm:max-w-xs">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-3 text-white">
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent glass>
+        <DrawerHeader>
+          <DrawerTitle className="flex items-center gap-3 text-white">
             {icon ? (
               <img src={icon} alt={token.symbol} className="w-8 h-8 rounded-full" />
             ) : (
@@ -326,9 +327,9 @@ function TokenActionDrawer({ open, onOpenChange, token, icon, hasBalance, onSend
               <span className="block">{token.symbol}</span>
               <span className="text-xs text-zinc-500 font-normal">{token.formattedBalance} {token.symbol}</span>
             </div>
-          </DialogTitle>
-        </DialogHeader>
-        <div className="grid grid-cols-3 gap-2 pt-2">
+          </DrawerTitle>
+        </DrawerHeader>
+        <div className="grid grid-cols-3 gap-2 px-4 pb-6">
           <Button
             variant="glass"
             className="flex-col h-auto py-4 gap-2 rounded-xl"
@@ -358,8 +359,8 @@ function TokenActionDrawer({ open, onOpenChange, token, icon, hasBalance, onSend
             <span className="text-xs">Buy</span>
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </DrawerContent>
+    </Drawer>
   );
 }
 
