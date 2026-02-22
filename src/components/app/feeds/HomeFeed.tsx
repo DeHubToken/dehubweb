@@ -1071,7 +1071,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 transition={{ duration: 0.25, ease: 'easeOut' }}
                 className="overflow-hidden"
               >
-                <div ref={bentoRef} data-no-swipe className="bg-zinc-900 rounded-2xl p-4 mb-3">
+                <div ref={bentoRef} data-no-swipe className="px-2 sm:px-3 pb-2 space-y-4">
                   <SortFilterSection 
                     selectedSort={selectedSort} 
                     onSortSelect={handleSortSelect}
