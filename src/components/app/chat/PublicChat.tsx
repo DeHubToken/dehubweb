@@ -187,8 +187,8 @@ export function PublicChat({ onBack }: PublicChatProps) {
   const selectedRoom = rooms.find((r) => r.id === selectedRoomId) || null;
   const enrichedRoom = roomDetails || selectedRoom;
   const isLoading = roomsLoading || messagesLoading;
-  const roomName = 'Public Chat';
-  const roomDescription = 'All things DeHub';
+  const roomName = t('publicChat.title');
+  const roomDescription = t('publicChat.allThingsDeHub');
 
   const handleRoomCreated = useCallback((room: LiveChatRoom) => {
     refetchRooms();

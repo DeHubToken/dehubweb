@@ -325,5 +325,6 @@
     "cannotReadContract": "টোকেন কন্ট্র্যাক্ট পড়া যাচ্ছে না। ঠিকানা সঠিক কিনা নিশ্চিত করুন।",
     "imported": "{{symbol}} আমদানি হয়েছে",
     "custom": "কাস্টম"
-  }
+  },
+  "publicChat": { "title": "পাবলিক চ্যাট", "subtitle": "কমিউনিটি কথোপকথনে যোগ দিন", "searchMessages": "বার্তা খুঁজুন", "searchPlaceholder": "খুঁজুন...", "resultsCount": "{{count}} ফলাফল", "noResults": "কোনো বার্তা পাওয়া যায়নি", "allThingsDeHub": "DeHub সম্পর্কে সবকিছু", "noRooms": "কোনো চ্যাট রুম নেই", "checkBackLater": "পরে আবার আসুন বা নতুন রুম তৈরি করুন", "noMessages": "এখনো কোনো বার্তা নেই", "beFirst": "প্রথম বার্তা পাঠান!", "failedToLoad": "চ্যাট লোড করতে ব্যর্থ", "tryAgain": "আবার চেষ্টা করুন", "sending": "পাঠানো হচ্ছে...", "signInToSend": "বার্তা পাঠাতে লগ ইন করুন", "signInToModerate": "মডারেট করতে লগ ইন করুন", "pinned": "পিন করা", "unpin": "আনপিন", "pinMessage": "বার্তা পিন করুন", "banUser": "ব্যবহারকারী ব্যান করুন", "unbanUser": "ব্যান মুক্ত করুন", "moderator": "মডারেটর", "createRoom": "নতুন রুম তৈরি করুন", "roomSettings": "রুম সেটিংস", "messagePinned": "বার্তা পিন করা হয়েছে", "messageUnpinned": "বার্তা আনপিন করা হয়েছে", "online": "{{count}} জন অনলাইন" }
 }

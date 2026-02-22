@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Search, Plus, MessageCircle, RefreshCw } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -113,6 +114,7 @@ function ConversationItem({
 }
 
 export default function MessagesPage() {
+  const { t } = useTranslation();
   const location = useLocation();
   const [selectedConversation, setSelectedConversation] = useState<DeHubConversation | null>(null);
   const [showPublicChat, setShowPublicChat] = useState(false);
@@ -241,8 +243,8 @@ export default function MessagesPage() {
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <span className="font-semibold text-white truncate block">Public Chat</span>
-                <p className="text-zinc-500 text-sm truncate">Join the community conversation</p>
+                <span className="font-semibold text-white truncate block">{t('publicChat.title')}</span>
+                <p className="text-zinc-500 text-sm truncate">{t('publicChat.subtitle')}</p>
               </div>
             </button>
 

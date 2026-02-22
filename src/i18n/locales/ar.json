@@ -325,5 +325,6 @@
     "cannotReadContract": "تعذر قراءة عقد العملة. تأكد من صحة العنوان.",
     "imported": "تم استيراد {{symbol}}",
     "custom": "مخصص"
-  }
+  },
+  "publicChat": { "title": "الدردشة العامة", "subtitle": "انضم إلى محادثة المجتمع", "searchMessages": "بحث في الرسائل", "searchPlaceholder": "بحث...", "resultsCount": "{{count}} نتيجة", "noResults": "لم يتم العثور على رسائل", "allThingsDeHub": "كل شيء عن DeHub", "noRooms": "لا توجد غرف دردشة متاحة", "checkBackLater": "عد لاحقاً أو أنشئ غرفة جديدة", "noMessages": "لا توجد رسائل بعد", "beFirst": "كن أول من يقول شيئاً!", "failedToLoad": "فشل في تحميل الدردشة", "tryAgain": "حاول مرة أخرى", "sending": "جارٍ الإرسال...", "signInToSend": "سجل الدخول لإرسال الرسائل", "signInToModerate": "سجل الدخول للإشراف", "pinned": "مثبت", "unpin": "إلغاء التثبيت", "pinMessage": "تثبيت الرسالة", "banUser": "حظر المستخدم", "unbanUser": "إلغاء الحظر", "moderator": "مشرف", "createRoom": "إنشاء غرفة جديدة", "roomSettings": "إعدادات الغرفة", "messagePinned": "تم تثبيت الرسالة", "messageUnpinned": "تم إلغاء تثبيت الرسالة", "online": "{{count}} متصل" }
 }

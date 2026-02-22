@@ -325,5 +325,6 @@
     "cannotReadContract": "टोकन कॉन्ट्रैक्ट नहीं पढ़ सकता। सुनिश्चित करें कि पता सही है।",
     "imported": "{{symbol}} आयात किया गया",
     "custom": "कस्टम"
-  }
+  },
+  "publicChat": { "title": "सार्वजनिक चैट", "subtitle": "समुदाय की बातचीत में शामिल हों", "searchMessages": "संदेश खोजें", "searchPlaceholder": "खोजें...", "resultsCount": "{{count}} परिणाम", "noResults": "कोई संदेश नहीं मिला", "allThingsDeHub": "DeHub के बारे में सब कुछ", "noRooms": "कोई चैट रूम उपलब्ध नहीं", "checkBackLater": "बाद में फिर आएं या नया कमरा बनाएं", "noMessages": "अभी तक कोई संदेश नहीं", "beFirst": "पहला संदेश भेजें!", "failedToLoad": "चैट लोड करने में विफल", "tryAgain": "पुनः प्रयास करें", "sending": "भेज रहा है...", "signInToSend": "संदेश भेजने के लिए लॉग इन करें", "signInToModerate": "मॉडरेट करने के लिए लॉग इन करें", "pinned": "पिन किया गया", "unpin": "अनपिन करें", "pinMessage": "संदेश पिन करें", "banUser": "उपयोगकर्ता को प्रतिबंधित करें", "unbanUser": "प्रतिबंध हटाएं", "moderator": "मॉडरेटर", "createRoom": "नया कमरा बनाएं", "roomSettings": "कमरे की सेटिंग", "messagePinned": "संदेश पिन किया गया", "messageUnpinned": "संदेश अनपिन किया गया", "online": "{{count}} ऑनलाइन" }
 }

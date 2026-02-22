@@ -325,5 +325,6 @@
     "cannotReadContract": "Tidak dapat membaca kontrak token. Pastikan alamat benar.",
     "imported": "{{symbol}} diimpor",
     "custom": "KUSTOM"
-  }
+  },
+  "publicChat": { "title": "Obrolan Publik", "subtitle": "Bergabung dengan percakapan komunitas", "searchMessages": "Cari pesan", "searchPlaceholder": "Cari...", "resultsCount": "{{count}} hasil", "noResults": "Pesan tidak ditemukan", "allThingsDeHub": "Semua tentang DeHub", "noRooms": "Tidak ada ruang obrolan", "checkBackLater": "Kembali nanti atau buat ruang baru", "noMessages": "Belum ada pesan", "beFirst": "Jadilah yang pertama!", "failedToLoad": "Gagal memuat obrolan", "tryAgain": "Coba lagi", "sending": "Mengirim...", "signInToSend": "Masuk untuk mengirim pesan", "signInToModerate": "Masuk untuk moderasi", "pinned": "Disematkan", "unpin": "Lepas sematan", "pinMessage": "Sematkan pesan", "banUser": "Blokir pengguna", "unbanUser": "Buka blokir", "moderator": "Moderator", "createRoom": "Buat ruang baru", "roomSettings": "Pengaturan ruang", "messagePinned": "Pesan disematkan", "messageUnpinned": "Sematan dilepas", "online": "{{count}} online" }
 }
