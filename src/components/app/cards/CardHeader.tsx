@@ -74,8 +74,8 @@ export function CardHeader({
   const liveAvatarUrl = useProfileAvatar(creatorId, avatarSeed);
   const agentFallback = getAgentAvatarFallback(creatorId);
   
-  // Use badge balance from API data directly — no edge function call needed
-  const badgeUrl = getBadgeUrl(badgeBalance);
+  // Use badge balance from API data directly — with username override support
+  const badgeUrl = getBadgeUrl(badgeBalance, handle || username);
   
   // Only use avatarSeed as image source if it's a real URL and hasn't errored
   const hasRealAvatar = liveAvatarUrl && liveAvatarUrl.startsWith('http') && !imageError;
