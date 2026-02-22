@@ -6,10 +6,11 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageSquare, Send, Loader2, Users, Mic } from 'lucide-react';
+import { MessageSquare, Send, Loader2, Users, Mic, Languages, RotateCcw } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { replaceLinksWithEmoji } from '@/components/app/TranslatableText';
+import { replaceLinksWithEmoji, renderTextWithLinks } from '@/components/app/TranslatableText';
+import { useTranslation as useTextTranslation } from '@/components/app/TranslatableText';
 import { useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -26,6 +27,45 @@ function LiveChatBadge({ address }: { address: string }) {
   const badgeUrl = getBadgeUrl(badgeBalance);
   if (!badgeUrl) return null;
   return <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />;
+}
+
+/** Translatable text message with inline translate button */
+function TranslatableChatMsg({ content }: { content: string }) {
+  const {
+    isTranslated,
+    translatedText,
+    isLoading: isTranslateLoading,
+    error: translateError,
+    isTooShort,
+    handleTranslate,
+    handleShowOriginal,
+  } = useTextTranslation(content);
+
+  return (
+    <div>
+      <p className="text-sm text-zinc-300 break-words whitespace-pre-wrap">
+        {renderTextWithLinks(isTranslated ? translatedText : content)}
+      </p>
+      <div className="flex items-center gap-1 mt-0.5">
+        {!isTooShort && (
+          isTranslateLoading ? (
+            <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
+          ) : isTranslated ? (
+            <button onClick={handleShowOriginal} className="flex items-center text-zinc-500 hover:text-zinc-300 transition-colors">
+              <RotateCcw className="w-2.5 h-2.5" />
+            </button>
+          ) : (
+            <button onClick={handleTranslate} className="flex items-center text-zinc-500 hover:text-zinc-300 transition-colors">
+              <Languages className="w-3 h-3" />
+            </button>
+          )
+        )}
+        {translateError && (
+          <span className="text-zinc-500 text-[10px]">{translateError}</span>
+        )}
+      </div>
+    </div>
+  );
 }
 
 interface LivePostChatProps {
@@ -170,7 +210,7 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
                     ) : msg.message_type === 'gif' && msg.image_url ? (
                       <img src={msg.image_url} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
                     ) : (
-                      <p className="text-sm text-zinc-300 break-words">{msg.content}</p>
+                      <TranslatableChatMsg content={msg.content} />
                     )}
                     <span className="text-[10px] text-zinc-600 mt-0.5 block">
                       {format(new Date(msg.created_at), 'HH:mm')}
