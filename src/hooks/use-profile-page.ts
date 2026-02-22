@@ -12,7 +12,7 @@ import { getBadgeUrl } from '@/lib/staking-badges';
 import { useStories, useWatchedStories } from '@/hooks/use-stories';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
-import { getUserComments, getBlockStatus, blockUser, unblockUser } from '@/lib/api/dehub';
+import { getUserComments, blockUser, unblockUser } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { TabValue } from '@/components/app/profile/ProfileConstants';
@@ -160,17 +160,19 @@ export function useProfilePage() {
   const isPending = apiProfile?.isPending ?? false;
   const isTargetPrivate = apiProfile?.isPrivate ?? false;
 
-  // Block status - prefer account_info data (always fresh), fallback to dedicated endpoint
-  const { data: blockStatus } = useQuery({
+  // Block status - use account_info data (youBlocked/blockedYou) as primary source
+  // The dedicated /api/block/status/ endpoint is unreliable, so we use it only
+  // for optimistic updates after block/unblock actions
+  const { data: blockStatusOverride } = useQuery<{ isBlocked: boolean; isBlockedBy: boolean }>({
     queryKey: ['block-status', apiProfile?.walletAddress],
-    queryFn: () => getBlockStatus(apiProfile!.walletAddress),
-    enabled: !!apiProfile?.walletAddress && isAuthenticated && !isViewingOwnProfile,
-    staleTime: 60 * 1000,
+    queryFn: () => ({ isBlocked: false, isBlockedBy: false }), // dummy, only used for optimistic setQueryData
+    enabled: false, // never auto-fetch; only populated via setQueryData
+    staleTime: Infinity,
   });
 
-  // account_info returns youBlocked/blockedYou directly on the profile
-  const isBlocked = blockStatus?.isBlocked ?? apiProfile?.youBlocked ?? false;
-  const isBlockedBy = blockStatus?.isBlockedBy ?? apiProfile?.blockedYou ?? false;
+  // Prefer optimistic override (set after block/unblock action), then account_info data
+  const isBlocked = blockStatusOverride?.isBlocked ?? apiProfile?.youBlocked ?? false;
+  const isBlockedBy = blockStatusOverride?.isBlockedBy ?? apiProfile?.blockedYou ?? false;
 
   const handleBlock = useCallback(async () => {
     if (!apiProfile?.walletAddress || isBlockLoading) return;
@@ -187,7 +189,7 @@ export function useProfilePage() {
       // Optimistic: set block status immediately so UI updates
       queryClient.setQueryData(['block-status', apiProfile.walletAddress], {
         isBlocked: newBlocked,
-        isBlockedBy: blockStatus?.isBlockedBy ?? false,
+        isBlockedBy: isBlockedBy,
       });
       queryClient.invalidateQueries({ queryKey: ['block-list'] });
       // Also refresh the profile so account_info youBlocked stays in sync
@@ -196,13 +198,13 @@ export function useProfilePage() {
       // Revert optimistic update on failure
       queryClient.setQueryData(['block-status', apiProfile.walletAddress], {
         isBlocked: isBlocked,
-        isBlockedBy: blockStatus?.isBlockedBy ?? false,
+        isBlockedBy: isBlockedBy,
       });
       handleApiError(error, `Failed to ${isBlocked ? 'unblock' : 'block'} user`);
     } finally {
       setIsBlockLoading(false);
     }
-  }, [apiProfile, isBlocked, isBlockLoading, blockStatus, queryClient, handleApiError]);
+  }, [apiProfile, isBlocked, isBlockedBy, isBlockLoading, queryClient, handleApiError]);
   // Pull-to-refresh
   const triggerRefresh = useCallback(() => {
     if (isRefreshing) return;
