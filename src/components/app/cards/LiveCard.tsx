@@ -16,10 +16,9 @@ import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
-import { CommentsSection } from './CommentsSection';
+import { CommentsWrapper } from './CommentsWrapper';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
-import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -154,17 +153,12 @@ export function LiveCard({ stream }: LiveCardProps) {
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
       </div>
 
-      {/* Comments - Always use Drawer for consistent liquid glass style */}
-      <Drawer open={showComments} onOpenChange={setShowComments}>
-        <DrawerContent glass hideHandle className="max-h-[70vh] flex flex-col overflow-hidden">
-          <div className="flex-1 min-h-0 px-4 pb-4 pt-2">
-            <CommentsSection
-              tokenId={stream.id}
-              onClose={() => setShowComments(false)}
-            />
-          </div>
-        </DrawerContent>
-      </Drawer>
+      {/* Comments */}
+      <CommentsWrapper
+        open={showComments}
+        onOpenChange={setShowComments}
+        tokenId={stream.id}
+      />
 
       {/* AI Chat */}
       <PostAIChat

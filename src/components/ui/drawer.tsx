@@ -28,10 +28,10 @@ DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName;
 
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean; hideHandle?: boolean }
->(({ className, children, glass = false, hideHandle = false, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean; hideHandle?: boolean; noOverlay?: boolean }
+>(({ className, children, glass = false, hideHandle = false, noOverlay = false, ...props }, ref) => (
   <DrawerPortal>
-    <DrawerOverlay className={glass ? "bg-black/20 backdrop-blur-md" : undefined} />
+    {!noOverlay && <DrawerOverlay className={glass ? "bg-black/20 backdrop-blur-md" : undefined} />}
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(

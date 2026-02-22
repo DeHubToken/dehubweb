@@ -17,7 +17,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { voteOnPost, getNFTComments, postComment, followUser, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
-import { CommentsSection } from './CommentsSection';
+import { CommentsWrapper } from './CommentsWrapper';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Repeat2, Quote, Link } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -1045,19 +1045,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         </DrawerContent>
       </Drawer>
 
-      {/* Comments Drawer */}
-      <Drawer open={showComments} onOpenChange={setShowComments}>
-        <DrawerContent glass hideHandle className="max-h-[70vh] flex flex-col overflow-hidden">
-          <div className="flex-1 min-h-0 px-4 pb-4 pt-2">
-            {currentShort?.id && (
-              <CommentsSection
-                tokenId={currentShort.id}
-                onClose={() => setShowComments(false)}
-              />
-            )}
-          </div>
-        </DrawerContent>
-      </Drawer>
+      {/* Comments */}
+      {currentShort?.id && (
+        <CommentsWrapper
+          open={showComments}
+          onOpenChange={setShowComments}
+          tokenId={currentShort.id}
+        />
+      )}
     </motion.div>
   );
 }
