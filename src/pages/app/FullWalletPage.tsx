@@ -13,6 +13,8 @@ import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
 import { createOnrampSession } from '@/lib/api/dpay';
+import { showWeb3AuthCheckout, isWeb3AuthConnected } from '@/lib/web3auth';
+import { getDexBuyLink } from '@/lib/wallet/buy-links';
 import { getERC20Metadata, saveCustomToken, formatBalance, type WalletToken } from '@/lib/wallet/tokens';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { switchChain } from '@/lib/contracts/aa-utils';
@@ -454,21 +456,54 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, w
             className="flex-col h-auto py-4 gap-2 rounded-xl"
             onClick={async () => {
               onOpenChange(false);
-              try {
-                const res = await createOnrampSession({
-                  walletAddress: walletAddress || '',
-                  currency: 'USD',
-                  amount: 50,
-                  tokenSymbol: grouped.symbol,
-                });
-                const url = (res as any)?.url || (res as any)?.redirectUrl;
-                if (url) {
-                  window.open(url, '_blank');
-                } else {
-                  toast.error('Unable to open payment gateway');
+
+              // DHB → existing DHub fiat gateway
+              if (grouped.symbol === 'DHB') {
+                try {
+                  const res = await createOnrampSession({
+                    walletAddress: walletAddress || '',
+                    currency: 'USD',
+                    amount: 50,
+                    tokenSymbol: 'DHB',
+                  });
+                  const url = (res as any)?.url || (res as any)?.redirectUrl;
+                  if (url) {
+                    window.open(url, '_blank');
+                  } else {
+                    toast.error('Unable to open payment gateway');
+                  }
+                } catch {
+                  toast.error('Failed to start purchase session');
                 }
-              } catch {
-                toast.error('Failed to start purchase session');
+                return;
+              }
+
+              // Non-DHB + Web3Auth session → built-in checkout aggregator
+              if (isWeb3AuthConnected()) {
+                try {
+                  toast.info(`Opening checkout for ${grouped.symbol}...`);
+                  await showWeb3AuthCheckout();
+                } catch (err) {
+                  console.error('[Buy] Web3Auth checkout failed:', err);
+                  // Fallback to DEX
+                  const dexUrl = getDexBuyLink(grouped.symbol);
+                  if (dexUrl) {
+                    toast.info(`Opening DEX to buy ${grouped.symbol}...`);
+                    window.open(dexUrl, '_blank');
+                  } else {
+                    toast.error('Checkout unavailable for this token');
+                  }
+                }
+                return;
+              }
+
+              // Non-DHB + External wallet → DEX deeplink
+              const dexUrl = getDexBuyLink(grouped.symbol);
+              if (dexUrl) {
+                toast.info(`Opening DEX to buy ${grouped.symbol}...`);
+                window.open(dexUrl, '_blank');
+              } else {
+                toast.error('No buy option available for this token');
               }
             }}
           >

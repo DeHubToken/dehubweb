@@ -620,3 +620,20 @@ export function getLastConnectedConnector(): string | null {
 export function setLastConnectedConnector(connector: string | null): void {
   lastConnectedConnector = connector;
 }
+
+/**
+ * Open Web3Auth's built-in fiat on-ramp checkout (Stripe, Revolut, MoonPay, etc.)
+ * Requires an active Web3Auth session (social login). Throws if not connected.
+ */
+export async function showWeb3AuthCheckout(): Promise<void> {
+  const { EVM_PLUGINS } = await import("@web3auth/no-modal");
+  const instance = await getOrInitWeb3Auth();
+  if (!instance.connected) {
+    throw new Error("Web3Auth not connected — user must be logged in via social login");
+  }
+  const plugin = instance.getPlugin(EVM_PLUGINS.WALLET_SERVICES);
+  if (!plugin) {
+    throw new Error("Wallet Services plugin not available");
+  }
+  await (plugin as any).showCheckout({ show: true });
+}
