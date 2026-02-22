@@ -1037,7 +1037,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
             onChange={handleImageSelect}
           />
 
-          <div className={cn("pb-1 -ml-2 mt-2.5", isMobile ? "flex flex-col gap-2" : "flex items-center gap-2")}>
+          <div className={cn("pb-1 mt-2.5", isMobile ? "flex flex-col gap-2" : "flex items-center gap-2")}>
             {isRecording ? (
               /* Recording indicator */
               <div className="flex-1 flex items-center gap-2 bg-red-500/10 rounded-xl px-4 h-10">
