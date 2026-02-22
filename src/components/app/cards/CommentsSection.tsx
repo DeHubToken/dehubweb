@@ -806,6 +806,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
               </span>
             </button>
           ))}
+        </div>
+
+        {/* Right side - Sort toggle */}
+        <div className="flex items-center gap-1">
           <Tooltip>
             <TooltipTrigger asChild>
               <button
