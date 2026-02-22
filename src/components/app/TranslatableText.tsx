@@ -155,7 +155,7 @@ interface SharedTranslationContextValue {
   requestOriginal: () => void;
 }
 
-const SharedTranslationContext = createContext<SharedTranslationContextValue | null>(null);
+export const SharedTranslationContext = createContext<SharedTranslationContextValue | null>(null);
 
 /**
  * Wrap multiple TranslatableText components to share a single translate trigger.
