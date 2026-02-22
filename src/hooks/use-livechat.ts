@@ -101,35 +101,22 @@ export function useLiveChatMessages(roomId: string | null) {
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { isAuthenticated, user, walletAddress } = useAuth();
 
-  // Fetch from both DeHub API and Supabase, merge results
+  // Fetch from DeHub API only — Supabase Realtime handles our own messages
+  // This eliminates redundant Supabase REST polling that was causing 504 timeouts
   const fetchFromApi = useCallback(async (showLoading = false) => {
     if (!roomId) return;
     if (showLoading) setIsLoading(true);
     try {
-      // Fetch from both sources in parallel
-      const [apiResult, supabaseResult] = await Promise.allSettled([
-        fetchApiMessages(roomId, { limit: 200 }),
-        (supabase as any)
-          .from('livechat_messages')
-          .select('*')
-          .eq('room_id', roomId)
-          .order('created_at', { ascending: false })
-          .limit(200),
-      ]);
-
-      const apiMapped =
-        apiResult.status === 'fulfilled'
-          ? apiResult.value.map(apiMsgToLocal)
-          : [];
-
-      const supabaseMsgs: SupabaseLiveChatMessage[] =
-        supabaseResult.status === 'fulfilled' && supabaseResult.value.data
-          ? supabaseResult.value.data
-          : [];
+      const apiMessages = await fetchApiMessages(roomId, { limit: 200 });
+      const apiMapped = apiMessages.map(apiMsgToLocal);
 
       setMessages((prev) => {
+        // Keep optimistic messages and any Supabase-realtime-delivered messages not in API yet
         const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
-        return deduplicateMessages([...apiMapped, ...supabaseMsgs, ...optimistic]);
+        const realtimeOnly = prev.filter(
+          (m) => !m.id.startsWith('temp-') && !apiMapped.some((a) => a.id === m.id)
+        );
+        return deduplicateMessages([...apiMapped, ...realtimeOnly, ...optimistic]);
       });
     } catch (err) {
       console.error('[LiveChat] Failed to fetch messages:', err);
@@ -186,10 +173,10 @@ export function useLiveChatMessages(roomId: string | null) {
 
     channelRef.current = channel;
 
-    // Poll DeHub API every 20s to catch messages from other clients
+    // Poll DeHub API every 60s to catch messages from other clients (reduced from 20s)
     pollRef.current = setInterval(() => {
       fetchFromApi(false);
-    }, 20_000);
+    }, 60_000);
 
     return () => {
       channel.unsubscribe();

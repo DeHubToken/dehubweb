@@ -92,8 +92,8 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
       if (error) throw error;
       return (data || []) as AudioSpace[];
     },
-    staleTime: 30 * 1000, // 30 seconds
-    refetchInterval: 30 * 1000, // Refresh every 30s to catch new stages
+    staleTime: 60 * 1000, // 60 seconds
+    refetchInterval: 60 * 1000, // Refresh every 60s (reduced from 30s, realtime handles updates)
   });
 
   // Subscribe to realtime updates for live stages
