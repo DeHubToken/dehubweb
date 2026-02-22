@@ -41,6 +41,8 @@ import fa from './locales/fa.json';
 import af from './locales/af.json';
 import qu from './locales/qu.json';
 import am from './locales/am.json';
+import sw from './locales/sw.json';
+import zu from './locales/zu.json';
 
 const STORAGE_KEY = 'user-preferred-language';
 
@@ -83,6 +85,8 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'af', name: 'Afrikaans', nativeName: 'Afrikaans' },
   { code: 'qu', name: 'Quechua', nativeName: 'Runasimi' },
   { code: 'am', name: 'Amharic', nativeName: 'አማርኛ' },
+  { code: 'sw', name: 'Swahili', nativeName: 'Kiswahili' },
+  { code: 'zu', name: 'Zulu', nativeName: 'isiZulu' },
 ];
 
 i18n.use(initReactI18next).init({
@@ -120,6 +124,8 @@ i18n.use(initReactI18next).init({
     af: { translation: af },
     qu: { translation: qu },
     am: { translation: am },
+    sw: { translation: sw },
+    zu: { translation: zu },
   },
   lng: defaultLang,
   fallbackLng: 'en',

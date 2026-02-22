@@ -84,4 +84,6 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   af: 'Afrikaans',
   qu: 'Quechua',
   am: 'Amharic',
+  sw: 'Swahili',
+  zu: 'Zulu',
 };
