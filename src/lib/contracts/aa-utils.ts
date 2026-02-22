@@ -271,6 +271,7 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
     return 'Signature verification failed on-chain.';
   }
   if (lowerError.includes('unable to find matching address') || lowerError.includes('torus keyring') ||
+      lowerError.includes('unknown account') ||
       lowerError.includes('session expired') || lowerError.includes('log in again to complete')) {
     return 'Session expired. Please log in again to complete this transaction.';
   }
@@ -392,10 +393,15 @@ export async function writeContractAA(
         txHash = await sendTx(provider);
       } catch (firstErr: unknown) {
         const msg = String(firstErr).toLowerCase();
-        if (msg.includes('unable to find matching address') || msg.includes('torus keyring')) {
+        const isSessionError = (
+          msg.includes('unable to find matching address') ||
+          msg.includes('torus keyring') ||
+          msg.includes('unknown account')
+        );
+        if (isSessionError) {
           // The Torus key shard wasn't loaded after session restore — try re-initializing
           // the Web3Auth provider (keeps storage so session can be re-read from openlogin_* keys).
-          console.warn('[AA] Torus keyring error - refreshing Web3Auth provider before retry...');
+          console.warn('[AA] Provider session error - refreshing Web3Auth provider before retry...');
           const freshProvider = await refreshWeb3AuthProvider();
           if (freshProvider) {
             console.log('[AA] Provider refreshed, retrying transaction...');

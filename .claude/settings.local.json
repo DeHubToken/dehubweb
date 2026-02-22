@@ -6,7 +6,8 @@
       "Bash(curl:*)",
       "Bash(findstr:*)",
       "Bash(npm install:*)",
-      "WebFetch(domain:api.dehub.io)"
+      "WebFetch(domain:api.dehub.io)",
+      "Bash(python3:*)"
     ]
   }
 }

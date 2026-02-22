@@ -141,6 +141,9 @@ export function usePPVPayment({
           console.error('[PPV] Auto-swap failed:', swapError);
           const msg = parseTxError(swapError);
           toast.error(msg || 'ETH → DHB swap failed', { id: 'ppv-payment' });
+          if (msg.toLowerCase().includes('session expired') || msg.toLowerCase().includes('log in again')) {
+            setTimeout(() => openLoginModal?.(), 1200);
+          }
           setIsPaying(false);
           return;
         }
