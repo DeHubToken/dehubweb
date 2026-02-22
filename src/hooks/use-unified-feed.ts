@@ -528,25 +528,8 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
     gcTime: 30 * 60 * 1000,
   });
 
-  // Fetch user's PPV purchases to enrich feed items with unlock status
-  const { data: purchasedTokenIds } = useQuery({
-    queryKey: ['ppv-purchased-tokens', walletAddress],
-    queryFn: async () => {
-      if (!walletAddress) return new Set<string>();
-      const { data, error } = await supabase
-        .from('ppv_purchases')
-        .select('token_id')
-        .eq('buyer_address', walletAddress.toLowerCase());
-      if (error) {
-        console.warn('[Feed] Failed to fetch PPV purchases:', error);
-        return new Set<string>();
-      }
-      return new Set((data || []).map(p => p.token_id));
-    },
-    enabled: isAuthenticated && !!walletAddress,
-    staleTime: 2 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
-  });
+  // PPV purchase check removed — the DeHub API already provides isUnlocked per post,
+  // and the payment flow in use-ppv-payment.ts checks ppv_purchases on-demand.
 
   const blockedAddresses = useMemo(() => {
     if (!blockList?.length) return undefined;
@@ -581,15 +564,6 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
         !isBlockedCreator(item, blockedAddresses) && !isBlockedPost(item) && item.postType !== 'live'
       );
       
-      // Enrich with local PPV purchase status — mark purchased content as unlocked
-      if (purchasedTokenIds && purchasedTokenIds.size > 0) {
-        filteredItems = filteredItems.map(item => {
-          if (purchasedTokenIds.has(String(item.tokenId))) {
-            return { ...item, isUnlocked: true };
-          }
-          return item;
-        });
-      }
       
       return {
         items: filteredItems,
