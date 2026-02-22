@@ -1363,7 +1363,7 @@ function AssetsSettings() {
         </button>
       </div>
 
-      {/* Full Wallet */}
+      {/* Wallet */}
       <div>
         <button
           onClick={() => navigate('/app/wallet')}
@@ -1373,7 +1373,7 @@ function AssetsSettings() {
             <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
               <Wallet className="w-5 h-5 text-white" />
             </div>
-            <span className="text-white font-semibold">{t('settings.fullWallet') || 'Full Wallet'}</span>
+            <span className="text-white font-semibold">Wallet</span>
           </div>
           <ExternalLink className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
         </button>
