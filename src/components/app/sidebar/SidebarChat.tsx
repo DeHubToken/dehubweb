@@ -179,7 +179,7 @@ export function SidebarChat() {
             }}
             onKeyDown={handleKeyDown}
             maxLength={169}
-            className="min-h-[56px] max-h-[88px] resize-none text-sm bg-zinc-800 border-zinc-700 rounded-lg pb-8 leading-[1.35] text-white placeholder:text-zinc-500 overflow-y-auto"
+            className="min-h-[56px] resize-none text-sm bg-zinc-800 border-zinc-700 rounded-lg pb-8 leading-[1.35] text-white placeholder:text-zinc-500"
             rows={1}
             style={{ fieldSizing: 'content' } as React.CSSProperties}
           />
