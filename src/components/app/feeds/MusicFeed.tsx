@@ -676,18 +676,25 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
                     key={tab.value}
                     onClick={() => setActiveSubTab(tab.value)}
                     className={cn(
-                      'flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all text-xs whitespace-nowrap',
-                      isActive
-                        ? 'text-white bg-white/[0.08] border border-white/20'
-                        : 'text-zinc-500 hover:text-zinc-300 border border-transparent'
+                      'relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors text-xs whitespace-nowrap font-medium',
+                      isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
                     )}
                   >
-                    {tab.icon ? (
-                      <tab.icon className="w-3.5 h-3.5" />
-                    ) : tab.customIcon ? (
-                      <img src={tab.customIcon} alt="" className="w-3.5 h-3.5 object-contain" />
-                    ) : null}
-                    {tab.label}
+                    {isActive && (
+                      <motion.div
+                        layoutId="music-sub-tab"
+                        className="absolute inset-0 rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10 flex items-center gap-1.5">
+                      {tab.icon ? (
+                        <tab.icon className="w-3.5 h-3.5" />
+                      ) : tab.customIcon ? (
+                        <img src={tab.customIcon} alt="" className="w-3.5 h-3.5 object-contain" />
+                      ) : null}
+                      {tab.label}
+                    </span>
                   </button>
                 );
               })}
