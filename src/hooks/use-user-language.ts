@@ -78,4 +78,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   ha: 'Hausa',
   yo: 'Yoruba',
   ig: 'Igbo',
+  arz: 'Egyptian Arabic',
+  ary: 'Moroccan Arabic',
+  fa: 'Persian',
 };
