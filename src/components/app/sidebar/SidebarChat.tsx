@@ -3,7 +3,7 @@ import { Send, Users, Loader2, Mic } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { TranslatableText } from '../TranslatableText';
+import { TranslatableText, replaceLinksWithEmoji } from '../TranslatableText';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { EmojiGifPicker } from '../chat/EmojiGifPicker';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
@@ -173,8 +173,9 @@ export function SidebarChat() {
             placeholder="Send a message"
             value={newMessage}
             onChange={(e) => {
-              if (e.target.value.length <= 169) {
-                setNewMessage(e.target.value);
+              const val = e.target.value;
+              if (val.length <= 169) {
+                setNewMessage(replaceLinksWithEmoji(val));
               }
             }}
             onKeyDown={handleKeyDown}

@@ -20,6 +20,8 @@ import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
 export { LANGUAGE_NAMES };
 import { cn } from '@/lib/utils';
 
+// Export URL_REGEX source for reuse in other components
+
 // URL regex pattern for detecting links (with or without protocol)
 // Only matches common TLDs to avoid false positives like "higher.mp4"
 // All 2-letter country-code TLDs + popular generic TLDs (~300+)
@@ -36,6 +38,14 @@ const WWW_URL_REGEX_SRC = `(?:^|(?<=\\s)|(?<=[\\(\\[<"']))(?:https?:\\/\\/)?www\
 
 // Combined: match www. links (any TLD) OR TLD-restricted links
 const URL_REGEX = new RegExp(`(?:${WWW_URL_REGEX_SRC})|(?:${TLD_URL_REGEX_SRC})`, 'gi');
+
+/**
+ * Replace URLs in plain text with 🔗 emoji (for use in textarea inputs).
+ * Returns the transformed text.
+ */
+export function replaceLinksWithEmoji(text: string): string {
+  return text.replace(new RegExp(`(?:${WWW_URL_REGEX_SRC})|(?:${TLD_URL_REGEX_SRC})`, 'gi'), '🔗');
+}
 
 interface TranslatableTextProps {
   text: string;

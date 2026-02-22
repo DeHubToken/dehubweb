@@ -9,6 +9,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageSquare, Send, Loader2, Users, Mic } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { replaceLinksWithEmoji } from '@/components/app/TranslatableText';
 import { useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -161,7 +162,7 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
         <div className="relative">
           <Textarea
             value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
+            onChange={(e) => setNewMessage(replaceLinksWithEmoji(e.target.value))}
             onKeyDown={handleKeyDown}
             placeholder={isOffline ? 'Chat is offline' : 'Type a message...'}
             disabled={isOffline || !isAuthenticated}
