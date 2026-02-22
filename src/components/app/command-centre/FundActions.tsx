@@ -56,9 +56,9 @@ export function FundActions() {
       {/* Add Funds */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="glass" className="text-sm h-9 px-4 rounded-lg">
-            <ArrowDownToLine className="w-3.5 h-3.5 mr-1.5" />
-            Add funds
+          <Button variant="glass" className="text-sm h-9 px-2.5 sm:px-4 rounded-lg">
+            <ArrowDownToLine className="w-3.5 h-3.5 sm:mr-1.5" />
+            <span className="hidden sm:inline">Add funds</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48 bg-zinc-900 border-zinc-800">
@@ -76,9 +76,9 @@ export function FundActions() {
       {/* Withdraw */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="glass" className="text-sm h-9 px-4 rounded-lg">
-            <ArrowUpFromLine className="w-3.5 h-3.5 mr-1.5" />
-            Withdraw
+          <Button variant="glass" className="text-sm h-9 px-2.5 sm:px-4 rounded-lg">
+            <ArrowUpFromLine className="w-3.5 h-3.5 sm:mr-1.5" />
+            <span className="hidden sm:inline">Withdraw</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48 bg-zinc-900 border-zinc-800">
