@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -27,7 +27,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { TranslatableText } from '../TranslatableText';
+import { TranslatableText, useTranslation } from '../TranslatableText';
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -175,6 +175,7 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
+  const translation = useTranslation(comment.text || '');
   // Avatar URL is already resolved via buildAvatarUrl in mapApiComment
   const avatarUrl = comment.avatar;
 
@@ -238,7 +239,12 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
         ) : (
           <>
             {comment.text && (
-              <TranslatableText text={comment.text} className="text-zinc-300 text-sm leading-relaxed break-words" as="p" />
+              <TranslatableText 
+                text={translation.isTranslated ? translation.translatedText : comment.text} 
+                className="text-zinc-300 text-sm leading-relaxed break-words" 
+                as="p" 
+                hideControls 
+              />
             )}
             {comment.voiceNote && (
               <div className="mt-1">
@@ -328,6 +334,25 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            {comment.text && !translation.isTooShort && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => translation.isTranslated ? translation.handleShowOriginal() : translation.handleTranslate()}
+                    className={cn(
+                      "transition-colors",
+                      translation.isLoading ? "text-zinc-500 animate-pulse" : 
+                      translation.isTranslated ? "text-blue-400" : "text-white hover:text-zinc-400"
+                    )}
+                    aria-label="Translate"
+                    disabled={translation.isLoading}
+                  >
+                    <Globe className="w-4 h-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>{translation.isTranslated ? 'Show original' : 'Translate'}</TooltipContent>
+              </Tooltip>
+            )}
           </div>
           <button
             onClick={handleBookmark}
