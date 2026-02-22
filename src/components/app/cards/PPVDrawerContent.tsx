@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { usePPVPayment } from '@/hooks/use-ppv-payment';
+import type { ChainId } from '@/components/app/ChainSelector';
 import {
   DrawerContent,
   DrawerHeader,
@@ -20,6 +21,7 @@ interface PPVDrawerContentProps {
   price: number;
   currency?: string;
   creatorAddress?: string;
+  chainId?: number;
   onClose: () => void;
   onUnlocked?: () => void;
   formatCompact: (num: number) => string;
@@ -30,6 +32,7 @@ export function PPVDrawerContent({
   price,
   currency = 'DHB',
   creatorAddress,
+  chainId,
   onClose,
   onUnlocked,
   formatCompact,
@@ -40,6 +43,7 @@ export function PPVDrawerContent({
     creatorAddress,
     price,
     currency,
+    chainId: chainId as ChainId,
     onSuccess: () => {
       onUnlocked?.();
       onClose();

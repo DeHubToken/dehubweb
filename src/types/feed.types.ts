@@ -117,6 +117,8 @@ export interface VideoItem extends BaseFeedItem {
   isOwner?: boolean;
   /** Whether the content has been unlocked for the current viewer (purchased/earned) */
   isUnlocked?: boolean;
+  /** Chain ID the content was minted on (e.g., 8453 for Base, 56 for BNB) */
+  chainId?: number;
 }
 
 /**
@@ -178,6 +180,8 @@ export interface ImagePost extends BaseFeedItem {
   isOwner?: boolean;
   /** Whether the content has been unlocked for the current viewer (purchased/earned) */
   isUnlocked?: boolean;
+  /** Chain ID the content was minted on (e.g., 8453 for Base, 56 for BNB) */
+  chainId?: number;
 }
 
 /**

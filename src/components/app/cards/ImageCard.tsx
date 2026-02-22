@@ -752,6 +752,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
             price={Number(post.ppvPrice)}
             currency={post.ppvCurrency || 'DHB'}
             creatorAddress={post.creatorId}
+            chainId={post.chainId}
             onClose={() => setShowPPVDrawer(false)}
             onUnlocked={() => setLocallyUnlocked(true)}
             formatCompact={formatCompact}

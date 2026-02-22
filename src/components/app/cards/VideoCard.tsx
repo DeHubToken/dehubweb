@@ -89,6 +89,7 @@ interface MobileCreatorInfoProps {
   isLocked?: boolean;
   lockedPrice?: number;
   lockedCurrency?: string;
+  chainId?: number;
   onUnlocked?: () => void;
 }
 
@@ -112,6 +113,7 @@ function MobileCreatorInfo({
   isLocked,
   lockedPrice,
   lockedCurrency,
+  chainId,
   onUnlocked,
 }: MobileCreatorInfoProps) {
   const navigate = useNavigate();
@@ -313,6 +315,7 @@ function MobileCreatorInfo({
           price={Number(ppvPrice)}
           currency={ppvCurrency || 'DHB'}
           creatorAddress={creatorId}
+          chainId={chainId}
           onClose={() => setShowPPVDrawer(false)}
           onUnlocked={onUnlocked}
           formatCompact={formatCompact}
@@ -1293,6 +1296,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             isLocked={video.isLocked && !canBypassGating}
             lockedPrice={video.lockedPrice}
             lockedCurrency={video.lockedCurrency}
+            chainId={video.chainId}
             onUnlocked={() => setLocallyUnlocked(true)}
           />
           </div>
@@ -1473,6 +1477,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             price={Number(video.ppvPrice)}
             currency={video.ppvCurrency || 'DHB'}
             creatorAddress={video.creatorId}
+            chainId={video.chainId}
             onClose={() => setShowPPVDrawer(false)}
             onUnlocked={() => setLocallyUnlocked(true)}
             formatCompact={formatCompact}
