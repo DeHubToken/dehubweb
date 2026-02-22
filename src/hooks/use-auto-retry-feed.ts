@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * Auto-retries a feed refetch when data comes back empty.
@@ -28,22 +28,29 @@ export function useAutoRetryFeed({
 }) {
   const retryCount = useRef(0);
   const retryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isAutoRetrying = useRef(false);
+  const [isAutoRetrying, setIsAutoRetrying] = useState(false);
 
   // Reset retry count when items appear
   useEffect(() => {
     if (itemCount > 0) {
       retryCount.current = 0;
-      isAutoRetrying.current = false;
+      setIsAutoRetrying(false);
     }
   }, [itemCount]);
 
   // Auto-retry when empty and not loading
   useEffect(() => {
-    if (isLoading || isError || itemCount > 0) return;
-    if (retryCount.current >= maxRetries) return;
+    if (isLoading || isError || itemCount > 0) {
+      return;
+    }
 
-    isAutoRetrying.current = true;
+    // Retries exhausted — stop retrying and show empty/error state
+    if (retryCount.current >= maxRetries) {
+      setIsAutoRetrying(false);
+      return;
+    }
+
+    setIsAutoRetrying(true);
     retryTimer.current = setTimeout(() => {
       retryCount.current += 1;
       console.log(`[AutoRetry] Attempt ${retryCount.current}/${maxRetries}`);
@@ -56,6 +63,7 @@ export function useAutoRetryFeed({
   }, [itemCount, isLoading, isError, refetch, maxRetries, retryDelay]);
 
   return {
-    isAutoRetrying: isAutoRetrying.current && itemCount === 0 && !isError,
+    isAutoRetrying: isAutoRetrying && itemCount === 0 && !isError,
+    retriesExhausted: retryCount.current >= maxRetries && itemCount === 0,
   };
 }
