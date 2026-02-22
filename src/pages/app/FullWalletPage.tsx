@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Trash2, ExternalLink, Search } from 'lucide-react';
+import { useState, useMemo, useCallback } from 'react';
+import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Trash2, ExternalLink, Search, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -162,7 +162,7 @@ export default function FullWalletPage() {
         ) : (
           <AnimatePresence mode="popLayout">
             {withBalance.map(token => (
-              <TokenRow key={token.address} token={token} onSend={handleSend} chainConfig={chainConfig} />
+              <TokenRow key={token.address} token={token} onSend={handleSend} onReceive={() => setReceiveDialogOpen(true)} chainConfig={chainConfig} walletAddress={walletAddress} />
             ))}
             {zeroBalance.length > 0 && withBalance.length > 0 && (
               <div className="pt-3 pb-1">
@@ -170,7 +170,7 @@ export default function FullWalletPage() {
               </div>
             )}
             {zeroBalance.map(token => (
-              <TokenRow key={token.address} token={token} onSend={handleSend} chainConfig={chainConfig} />
+              <TokenRow key={token.address} token={token} onSend={handleSend} onReceive={() => setReceiveDialogOpen(true)} chainConfig={chainConfig} walletAddress={walletAddress} />
             ))}
           </AnimatePresence>
         )}
@@ -223,61 +223,140 @@ export default function FullWalletPage() {
 }
 
 /* ─── Token Row ─── */
-function TokenRow({ token, onSend, chainConfig }: { token: WalletToken; onSend: (t: WalletToken) => void; chainConfig: any }) {
+function TokenRow({ token, onSend, onReceive, chainConfig, walletAddress }: { 
+  token: WalletToken; 
+  onSend: (t: WalletToken) => void; 
+  onReceive: () => void;
+  chainConfig: any;
+  walletAddress?: string;
+}) {
   const icon = TOKEN_ICONS[token.symbol] || token.logo;
   const hasBalance = token.balance > BigInt(0);
+  const [showActions, setShowActions] = useState(false);
 
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      className="flex items-center justify-between p-3 rounded-xl hover:bg-zinc-900/60 transition-colors group"
-    >
-      <div className="flex items-center gap-3 min-w-0">
-        {icon ? (
-          <img src={icon} alt={token.symbol} className="w-9 h-9 rounded-full shrink-0" />
-        ) : (
-          <div className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center shrink-0">
-            <span className="text-xs font-bold text-zinc-400">{token.symbol.slice(0, 2)}</span>
+    <>
+      <motion.div
+        layout
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -8 }}
+        className="flex items-center justify-between p-3 rounded-xl hover:bg-zinc-900/60 transition-colors group cursor-pointer"
+        onClick={() => setShowActions(true)}
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          {icon ? (
+            <img src={icon} alt={token.symbol} className="w-9 h-9 rounded-full shrink-0" />
+          ) : (
+            <div className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center shrink-0">
+              <span className="text-xs font-bold text-zinc-400">{token.symbol.slice(0, 2)}</span>
+            </div>
+          )}
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm font-medium text-white">{token.symbol}</span>
+              {token.isNative && <span className="text-[10px] bg-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded">NATIVE</span>}
+              {token.isCustom && <span className="text-[10px] bg-violet-500/20 text-violet-400 px-1.5 py-0.5 rounded">CUSTOM</span>}
+            </div>
+            <span className="text-xs text-zinc-500 truncate block">{token.name}</span>
           </div>
-        )}
-        <div className="min-w-0">
-          <div className="flex items-center gap-1.5">
-            <span className="text-sm font-medium text-white">{token.symbol}</span>
-            {token.isNative && <span className="text-[10px] bg-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded">NATIVE</span>}
-            {token.isCustom && <span className="text-[10px] bg-violet-500/20 text-violet-400 px-1.5 py-0.5 rounded">CUSTOM</span>}
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="text-right">
+            <span className={`text-sm font-medium ${hasBalance ? 'text-white' : 'text-zinc-600'}`}>{token.formattedBalance}</span>
           </div>
-          <span className="text-xs text-zinc-500 truncate block">{token.name}</span>
+          {token.isCustom && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 hover:text-red-400"
+              onClick={(e) => {
+                e.stopPropagation();
+                removeCustomToken(token.chainId, token.address);
+                toast.success(`Removed ${token.symbol}`);
+                window.dispatchEvent(new Event('custom-token-changed'));
+              }}
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </Button>
+          )}
         </div>
-      </div>
-      <div className="flex items-center gap-2">
-        <div className="text-right">
-          <span className={`text-sm font-medium ${hasBalance ? 'text-white' : 'text-zinc-600'}`}>{token.formattedBalance}</span>
-        </div>
-        {hasBalance && (
-          <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-400 hover:text-white" onClick={() => onSend(token)}>
-            <Send className="w-3.5 h-3.5" />
-          </Button>
-        )}
-        {token.isCustom && (
+      </motion.div>
+
+      {/* Token action drawer */}
+      <TokenActionDrawer
+        open={showActions}
+        onOpenChange={setShowActions}
+        token={token}
+        icon={icon}
+        hasBalance={hasBalance}
+        onSend={() => { setShowActions(false); onSend(token); }}
+        onReceive={() => { setShowActions(false); onReceive(); }}
+      />
+    </>
+  );
+}
+
+/* ─── Token Action Drawer ─── */
+function TokenActionDrawer({ open, onOpenChange, token, icon, hasBalance, onSend, onReceive }: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  token: WalletToken;
+  icon: string | undefined;
+  hasBalance: boolean;
+  onSend: () => void;
+  onReceive: () => void;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="bg-zinc-900 border-zinc-800 sm:max-w-xs">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-3 text-white">
+            {icon ? (
+              <img src={icon} alt={token.symbol} className="w-8 h-8 rounded-full" />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center">
+                <span className="text-xs font-bold text-zinc-400">{token.symbol.slice(0, 2)}</span>
+              </div>
+            )}
+            <div>
+              <span className="block">{token.symbol}</span>
+              <span className="text-xs text-zinc-500 font-normal">{token.formattedBalance} {token.symbol}</span>
+            </div>
+          </DialogTitle>
+        </DialogHeader>
+        <div className="grid grid-cols-3 gap-2 pt-2">
           <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 hover:text-red-400"
+            variant="glass"
+            className="flex-col h-auto py-4 gap-2 rounded-xl"
+            onClick={onSend}
+            disabled={!hasBalance}
+          >
+            <Send className="w-5 h-5" />
+            <span className="text-xs">Send</span>
+          </Button>
+          <Button
+            variant="glass"
+            className="flex-col h-auto py-4 gap-2 rounded-xl"
+            onClick={onReceive}
+          >
+            <ArrowDownToLine className="w-5 h-5" />
+            <span className="text-xs">Receive</span>
+          </Button>
+          <Button
+            variant="glass"
+            className="flex-col h-auto py-4 gap-2 rounded-xl"
             onClick={() => {
-              removeCustomToken(token.chainId, token.address);
-              toast.success(`Removed ${token.symbol}`);
-              // Trigger refetch via parent
-              window.dispatchEvent(new Event('custom-token-changed'));
+              toast.info('Buy feature coming soon');
+              onOpenChange(false);
             }}
           >
-            <Trash2 className="w-3.5 h-3.5" />
+            <ShoppingCart className="w-5 h-5" />
+            <span className="text-xs">Buy</span>
           </Button>
-        )}
-      </div>
-    </motion.div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
