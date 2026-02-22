@@ -1011,7 +1011,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const hasCachedData = hasQueryData && items.length > 0;
   const isLoadingState = !hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading));
 
-  const { isAutoRetrying } = useAutoRetryFeed({
+  const { isAutoRetrying, retriesExhausted } = useAutoRetryFeed({
     itemCount: items.length,
     isLoading: isLoadingState,
     isError,
@@ -1024,7 +1024,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     const hasNoFollowings = followingSet.size === 0;
     
     let title = 'No Content Yet';
-    let description = isError 
+    let description = (isError || retriesExhausted)
       ? 'Unable to load feed. Please try again.'
       : 'Be the first to share something amazing!';
     
