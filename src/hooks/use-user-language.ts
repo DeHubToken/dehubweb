@@ -74,4 +74,5 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   sk: 'Slovak',
   bn: 'Bengali',
   tl: 'Tagalog',
+  pcm: 'Nigerian Pidgin',
 };
