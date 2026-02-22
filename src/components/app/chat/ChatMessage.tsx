@@ -71,6 +71,7 @@ export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnb
     isTranslated,
     translatedText,
     isLoading: isTranslateLoading,
+    error: translateError,
     isTooShort,
     handleTranslate,
     handleShowOriginal,
@@ -198,6 +199,9 @@ export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnb
                     <img src={translateGlobeIcon} alt="Translate" className="w-3 h-3 opacity-40 brightness-200 invert" />
                   </button>
                 )
+              )}
+              {translateError && (
+                <span className="text-zinc-500 text-[10px]">{translateError}</span>
               )}
             </div>
           </div>
