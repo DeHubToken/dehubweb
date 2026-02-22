@@ -1,12 +1,12 @@
 /**
  * 3D Icon Preloader
  * =================
- * Preloads ALL 3D icon assets at module-load time (before any component renders).
- * This eliminates the flash/flicker when navigating between pages that use these icons.
- * 
- * Icons are preloaded immediately when this module is first imported (in App.tsx),
- * NOT inside useEffect, so they're cached by the browser before any page renders.
+ * Preloads ALL 3D icon assets when the browser is idle (via requestIdleCallback).
+ * This eliminates the flash/flicker when navigating between pages that use these icons,
+ * while no longer competing with critical resources during initial page load.
  */
+
+import { useEffect, useRef } from 'react';
 
 // ── Page header icons ──
 import aiStarIcon from '@/assets/icons/ai-star-icon.png';
@@ -113,18 +113,31 @@ const ALL_ICONS = [
   dehubCoin, bnbLogo, usdtLogo, ethLogo,
 ];
 
-// ── MODULE-LEVEL PRELOAD (runs immediately on import, before any render) ──
-ALL_ICONS.forEach((src) => {
-  const img = new Image();
-  img.src = src;
-});
-
 /**
- * Hook kept for backwards compatibility. The actual preloading happens
- * at module level above, so this is effectively a no-op.
+ * Preloads all icons when the browser is idle.
+ * Uses requestIdleCallback (with setTimeout fallback) so preloading
+ * never competes with critical rendering work.
  */
 export function usePreloadIcons() {
-  // No-op: preloading already happened at module level
+  const didRun = useRef(false);
+
+  useEffect(() => {
+    if (didRun.current) return;
+    didRun.current = true;
+
+    const preload = () => {
+      ALL_ICONS.forEach((src) => {
+        const img = new Image();
+        img.src = src;
+      });
+    };
+
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(preload);
+    } else {
+      setTimeout(preload, 200);
+    }
+  }, []);
 }
 
 // ── Re-export all icon paths for consistent usage across components ──
