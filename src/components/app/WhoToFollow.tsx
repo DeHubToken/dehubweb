@@ -8,6 +8,7 @@ import { getSuggestedAccounts, followUser, type SuggestedAccount } from '@/lib/a
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
+import { useFollowedSuggestions } from '@/hooks/use-followed-suggestions';
 import { toast } from 'sonner';
 
 const BATCH_SIZE = 10;
@@ -17,7 +18,7 @@ export function WhoToFollow() {
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress } = useAuth();
   const { handleApiError } = useReauthHandler();
-  const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
+  const { followedUsers, markFollowed } = useFollowedSuggestions();
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -135,13 +136,13 @@ export function WhoToFollow() {
 
     try {
       await followUser(user.address);
-      setFollowedUsers(prev => new Set(prev).add(user.address));
+      markFollowed(user.address);
       toast.success(`Following ${getDisplayName(user)}!`);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       if (errorMessage.toLowerCase().includes('already') || errorMessage.toLowerCase().includes('following')) {
         toast.info(`You're already following ${getDisplayName(user)}`);
-        setFollowedUsers(prev => new Set(prev).add(user.address));
+        markFollowed(user.address);
       } else {
         handleApiError(error, 'Failed to follow user');
       }
