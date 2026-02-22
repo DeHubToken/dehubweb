@@ -42,6 +42,33 @@ import nailIcon from '@/assets/icons/nail-icon.png';
 // ── Misc assets used as icons ──
 import lock3dIcon from '@/assets/lock-3d.png';
 
+// ── Medal assets (sidebar leaderboard) ──
+import medal1 from '@/assets/medal-1.png';
+import medal2 from '@/assets/medal-2.png';
+import medal3 from '@/assets/medal-3.png';
+import medal4 from '@/assets/medal-4.png';
+import medal5 from '@/assets/medal-5.png';
+import medal6 from '@/assets/medal-6.png';
+import medal7 from '@/assets/medal-7.png';
+import medal8 from '@/assets/medal-8.png';
+import medal9 from '@/assets/medal-9.png';
+import medal10 from '@/assets/medal-10.png';
+
+// ── Badge assets (staking tiers) ──
+import TortoiseBadge from '@/assets/badges/Tortoise.png';
+import CrabBadge from '@/assets/badges/Crab.png';
+import PiranhaBadge from '@/assets/badges/Piranha.png';
+import LobsterBadge from '@/assets/badges/Lobster.png';
+import OctopusBadge from '@/assets/badges/Octopus.png';
+import CobraBadge from '@/assets/badges/Cobra.png';
+import CrocoditeBadge from '@/assets/badges/Crocodite.png';
+import DolphinBadge from '@/assets/badges/Dolphin.png';
+import TigerSharkBadge from '@/assets/badges/Tiger Shark.png';
+import GreatWhiteSharkBadge from '@/assets/badges/Great White Shark.png';
+import KillerWhaleBadge from '@/assets/badges/Killer Whale.png';
+import BlueWhaleBadge from '@/assets/badges/Blue Whale.png';
+import MeglodonBadge from '@/assets/badges/Meglodon.png';
+
 // Complete list of all 3D/PNG icons that should be browser-cached
 const ALL_ICONS = [
   aiStarIcon,
@@ -70,6 +97,12 @@ const ALL_ICONS = [
   translateGlobeIcon,
   nailIcon,
   lock3dIcon,
+  // Medals
+  medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10,
+  // Badges
+  TortoiseBadge, CrabBadge, PiranhaBadge, LobsterBadge, OctopusBadge,
+  CobraBadge, CrocoditeBadge, DolphinBadge, TigerSharkBadge,
+  GreatWhiteSharkBadge, KillerWhaleBadge, BlueWhaleBadge, MeglodonBadge,
 ];
 
 // ── MODULE-LEVEL PRELOAD (runs immediately on import, before any render) ──

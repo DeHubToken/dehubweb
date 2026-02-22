@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, forwardRef, useImperativeHandle } from 'react';
+import { useState, useEffect, useCallback, useRef, forwardRef, useImperativeHandle, memo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -47,7 +47,7 @@ export interface SidebarLeaderboardHandle {
 }
 
 /** Renders a single period's leaderboard list — always mounted, visibility toggled by parent */
-function PeriodList({ period, isActive }: { period: string; isActive: boolean }) {
+const PeriodList = memo(function PeriodList({ period, isActive }: { period: string; isActive: boolean }) {
   const navigate = useNavigate();
   const apiPeriod = PERIOD_MAP[period] || 'all';
 
@@ -202,7 +202,7 @@ function PeriodList({ period, isActive }: { period: string; isActive: boolean })
       })}
     </div>
   );
-}
+});
 
 export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function SidebarLeaderboard(_props, ref) {
   const navigate = useNavigate();

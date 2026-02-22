@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
@@ -17,9 +17,11 @@ const sizeClasses = {
 
 /**
  * Avatar component with CDN fallback handling.
- * If the CDN image fails to load, falls back to Dicebear identicon.
+ * If the CDN image fails to load, falls back to initial letter.
+ * Memoized to prevent unnecessary re-renders when parent state changes (e.g. tab switches).
+ * No `key` prop on Avatar — avoids remount/flash when avatarUrl arrives after initial render.
  */
-export function LeaderboardUserAvatar({
+export const LeaderboardUserAvatar = memo(function LeaderboardUserAvatar({
   avatarUrl,
   fallbackSeed,
   displayName,
@@ -32,7 +34,7 @@ export function LeaderboardUserAvatar({
   const showImage = avatarUrl && !imageError;
 
   return (
-    <Avatar key={avatarUrl || fallbackSeed} className={cn(sizeClasses[size], className)}>
+    <Avatar className={cn(sizeClasses[size], className)}>
       {showImage && (
         <AvatarImage 
           src={avatarUrl} 
@@ -45,4 +47,4 @@ export function LeaderboardUserAvatar({
       </AvatarFallback>
     </Avatar>
   );
-}
+});
