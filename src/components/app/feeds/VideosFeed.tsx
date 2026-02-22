@@ -250,7 +250,7 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
             </AnimatedFilterPill>
           ))}
         </div>
-        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
       </div>
     </div>
   );
@@ -275,7 +275,7 @@ function DurationFilterSection({ selected, onSelect }: { selected: DurationFilte
             </AnimatedFilterPill>
           ))}
         </div>
-        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
       </div>
     </div>
   );
@@ -300,7 +300,7 @@ function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterO
             </AnimatedFilterPill>
           ))}
         </div>
-        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
       </div>
     </div>
   );
@@ -335,7 +335,7 @@ function ContentTypeFilterSection({
             </button>
           ))}
         </div>
-        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
       </div>
     </div>
   );
@@ -431,7 +431,7 @@ function CategoryFilterSection({
             <span className="text-xs text-zinc-500 py-1.5">{t('filters.noMatches')}</span>
           )}
         </div>
-        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
       </div>
     </div>
   );
@@ -743,7 +743,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                       </button>
                     ))}
                   </div>
-                  <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+                  <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
                 </div>
               </div>
               {/* Reset filters - bottom right */}
@@ -821,7 +821,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
           
           {/* Mobile: Horizontally swipeable */}
           <div className="sm:hidden relative">
-            <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+            <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none z-10" />
             <SwipeableCarousel className="flex gap-2 overflow-x-auto scrollbar-hide">
               {videos.slice(0, 3).map((video) => (
                 <button 

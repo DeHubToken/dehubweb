@@ -192,7 +192,7 @@ function SortFilterSection({
               </AnimatedFilterPill>
             ))}
           </div>
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
         </div>
       </div>
 
@@ -247,7 +247,7 @@ function SortFilterSection({
               <span className="text-xs text-zinc-500 py-1.5">{t('filters.noMatches')}</span>
             )}
           </div>
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
         </div>
       </div>
       
@@ -267,7 +267,7 @@ function SortFilterSection({
               </AnimatedFilterPill>
             ))}
           </div>
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
         </div>
       </div>
 
@@ -287,7 +287,7 @@ function SortFilterSection({
               </AnimatedFilterPill>
             ))}
           </div>
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
         </div>
       </div>
 
@@ -311,7 +311,7 @@ function SortFilterSection({
               </button>
             ))}
           </div>
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
         </div>
       </div>
 
