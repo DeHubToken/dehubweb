@@ -191,7 +191,7 @@ export function useTranslation(text: string) {
   const isTooShort = text.length < MIN_TEXT_LENGTH_FOR_TRANSLATION;
 
   const handleTranslate = async () => {
-    if (isTooShort) return;
+    if (isTooShort || isLoading) return;
 
     const cacheKey = `${text}-${userLang}`;
     
@@ -207,11 +207,21 @@ export function useTranslation(text: string) {
     setError(null);
 
     try {
+      console.log('[Translate] Invoking translate-text, targetLang:', userLang, 'text:', text.substring(0, 40));
       const { data, error: fnError } = await supabase.functions.invoke('translate-text', {
         body: { text, targetLang: userLang },
       });
 
+      console.log('[Translate] Response:', { data, fnError });
+
       if (fnError) throw fnError;
+
+      if (!data || !data.translatedText) {
+        console.error('[Translate] No translatedText in response:', data);
+        setError('Translation unavailable');
+        setTimeout(() => setError(null), 3000);
+        return;
+      }
 
       const translated = data.translatedText;
       const detected = data.detectedLanguage?.language || 'unknown';
@@ -229,8 +239,9 @@ export function useTranslation(text: string) {
       setSourceLang(detected);
       setIsTranslated(true);
     } catch (err) {
-      console.error('Translation failed:', err);
+      console.error('[Translate] Translation failed:', err);
       setError('Translation unavailable');
+      setTimeout(() => setError(null), 3000);
     } finally {
       setIsLoading(false);
     }
