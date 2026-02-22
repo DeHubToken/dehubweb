@@ -73,10 +73,10 @@ export default function FullWalletPage() {
     const known = new Set(Object.keys(TOKEN_ICONS));
     const seen = new Set<string>();
     const extras: { address: string; symbol: string }[] = [];
-    for (const t of allTokens) {
-      if (!known.has(t.symbol) && t.address !== '0x0' && !seen.has(t.address.toLowerCase())) {
-        seen.add(t.address.toLowerCase());
-        extras.push({ address: t.address, symbol: t.symbol });
+    for (const tk of allTokens) {
+      if (!known.has(tk.symbol) && tk.address !== '0x0' && !seen.has(tk.address.toLowerCase())) {
+        seen.add(tk.address.toLowerCase());
+        extras.push({ address: tk.address, symbol: tk.symbol });
       }
     }
     return extras;
@@ -136,17 +136,17 @@ export default function FullWalletPage() {
   const [copied, setCopied] = useState(false);
 
   // All tokens with balance across all chains (for send dialog)
-  const allWithBalance = useMemo(() => allTokens.filter(t => t.balance > BigInt(0)), [allTokens]);
+  const allWithBalance = useMemo(() => allTokens.filter(tk => tk.balance > BigInt(0)), [allTokens]);
 
   if (!isAuthenticated) {
-    return <AuthGate description="Log in to access your wallet." />;
+    return <AuthGate description={t('wallet.loginRequired')} />;
   }
 
   const handleCopy = () => {
     if (!walletAddress) return;
     navigator.clipboard.writeText(walletAddress);
     setCopied(true);
-    toast.success('Address copied');
+    toast.success(t('wallet.addressCopied'));
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -162,7 +162,7 @@ export default function FullWalletPage() {
 
   // Smart send: if multiple chains have balance, show chain picker. Otherwise send directly.
   const handleSmartSend = (grouped: GroupedToken) => {
-    const chainsWithBalance = grouped.chains.filter(t => t.balance > BigInt(0));
+    const chainsWithBalance = grouped.chains.filter(tk => tk.balance > BigInt(0));
     if (chainsWithBalance.length === 0) return;
     if (chainsWithBalance.length === 1) {
       handleSend(chainsWithBalance[0]);
@@ -178,14 +178,14 @@ export default function FullWalletPage() {
         <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white h-8 w-8" onClick={() => navigate('/app/command-centre')}>
           <ArrowLeft className="w-5 h-5" />
         </Button>
-        <h1 className="text-lg font-bold text-white">Wallet</h1>
+        <h1 className="text-lg font-bold text-white">{t('wallet.title')}</h1>
       </div>
 
       {/* Wallet balance bar */}
       <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 mb-4">
         <div className="flex items-center justify-between">
           <div className="min-w-0">
-            <span className="text-zinc-500 text-xs uppercase tracking-wider font-medium">Total Wallet Value</span>
+            <span className="text-zinc-500 text-xs uppercase tracking-wider font-medium">{t('wallet.totalWalletValue')}</span>
             <p className="text-white text-2xl font-bold mt-0.5">
               ${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
@@ -200,14 +200,14 @@ export default function FullWalletPage() {
       <div className="grid grid-cols-4 gap-2 mb-4">
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl" onClick={() => setReceiveDialogOpen(true)}>
           <ArrowDownToLine className="w-5 h-5" />
-          <span className="text-xs">Receive</span>
+          <span className="text-xs">{t('wallet.receive')}</span>
         </Button>
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl" onClick={() => {
           if (allWithBalance.length > 0) handleSend(allWithBalance[0]);
-          else toast.info('No tokens with balance to send');
+          else toast.info(t('wallet.noTokensToSend'));
         }}>
           <Send className="w-5 h-5" />
-          <span className="text-xs">Send</span>
+          <span className="text-xs">{t('wallet.send')}</span>
         </Button>
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl" onClick={async () => {
           try {
@@ -221,18 +221,18 @@ export default function FullWalletPage() {
             if (url) {
               window.open(url, '_blank');
             } else {
-              toast.error('Unable to open payment gateway');
+              toast.error(t('wallet.unableOpenGateway'));
             }
           } catch {
-            toast.error('Failed to start purchase session');
+            toast.error(t('wallet.failedPurchaseSession'));
           }
         }}>
           <ShoppingCart className="w-5 h-5" />
-          <span className="text-xs">Buy</span>
+          <span className="text-xs">{t('wallet.buy')}</span>
         </Button>
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl" onClick={() => setImportDialogOpen(true)}>
           <Plus className="w-5 h-5" />
-          <span className="text-xs">Import</span>
+          <span className="text-xs">{t('wallet.import')}</span>
         </Button>
       </div>
 
@@ -240,7 +240,7 @@ export default function FullWalletPage() {
       <div className="relative mb-4">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
         <Input
-          placeholder="Search tokens..."
+          placeholder={t('wallet.searchTokens')}
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           className="pl-9 bg-zinc-900 border-zinc-800 text-white rounded-xl h-10"
@@ -260,7 +260,7 @@ export default function FullWalletPage() {
             ))}
             {zeroBalance.length > 0 && withBalance.length > 0 && (
               <div className="pt-3 pb-1">
-                <span className="text-xs text-zinc-600 uppercase tracking-wider font-medium">Zero balance</span>
+                <span className="text-xs text-zinc-600 uppercase tracking-wider font-medium">{t('wallet.zeroBalance')}</span>
               </div>
             )}
             {zeroBalance.map(grouped => (
@@ -289,12 +289,12 @@ export default function FullWalletPage() {
         <DrawerContent glass>
           <DrawerHeader>
             <DrawerTitle className="text-white">
-              Send {sendChainPickerGrouped?.symbol} — Select Chain
+              {t('wallet.selectChain', { symbol: sendChainPickerGrouped?.symbol })}
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-6 space-y-2">
             {sendChainPickerGrouped?.chains
-              .filter(t => t.balance > BigInt(0))
+              .filter(tk => tk.balance > BigInt(0))
               .map(token => {
                 const chainInfo = CHAIN_OPTIONS.find(c => c.id === token.chainId);
                 return (
@@ -333,7 +333,7 @@ export default function FullWalletPage() {
       <Dialog open={receiveDialogOpen} onOpenChange={setReceiveDialogOpen}>
         <DialogContent className="bg-zinc-900 border-zinc-800 sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle className="text-white">Receive Tokens</DialogTitle>
+            <DialogTitle className="text-white">{t('wallet.receiveTokens')}</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col items-center gap-4 py-4">
             <div className="bg-white rounded-2xl p-4">
@@ -341,13 +341,13 @@ export default function FullWalletPage() {
                 <QrCode className="w-32 h-32 text-zinc-900" />
               </div>
             </div>
-            <p className="text-xs text-zinc-500 text-center">Send tokens to your wallet address (available on all supported chains)</p>
+            <p className="text-xs text-zinc-500 text-center">{t('wallet.receiveDescription')}</p>
             <div className="w-full bg-zinc-800 rounded-xl p-3">
               <p className="text-xs text-zinc-400 font-mono break-all text-center">{walletAddress}</p>
             </div>
             <Button variant="glass" className="w-full rounded-xl" onClick={handleCopy}>
               {copied ? <Check className="w-4 h-4 mr-2 text-emerald-400" /> : <Copy className="w-4 h-4 mr-2" />}
-              Copy Address
+              {t('wallet.copyAddress')}
             </Button>
           </div>
         </DialogContent>
@@ -366,6 +366,7 @@ export default function FullWalletPage() {
 
 /* ─── Grouped Token Row ─── */
 function GroupedTokenRow({ grouped, onClick }: { grouped: GroupedToken; onClick: () => void }) {
+  const { t } = useTranslation();
   const icon = TOKEN_ICONS[grouped.symbol] || grouped.logo;
   const hasBalance = grouped.totalBalance > BigInt(0);
 
@@ -389,7 +390,7 @@ function GroupedTokenRow({ grouped, onClick }: { grouped: GroupedToken; onClick:
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
             <span className="text-sm font-medium text-white">{grouped.symbol}</span>
-            {grouped.isCustom && <span className="text-[10px] bg-violet-500/20 text-violet-400 px-1.5 py-0.5 rounded">CUSTOM</span>}
+            {grouped.isCustom && <span className="text-[10px] bg-violet-500/20 text-violet-400 px-1.5 py-0.5 rounded">{t('wallet.custom')}</span>}
           </div>
           <span className="text-xs text-zinc-500 truncate block">{grouped.name}</span>
         </div>
@@ -410,6 +411,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, w
   onReceive: () => void;
   walletAddress?: string;
 }) {
+  const { t } = useTranslation();
   if (!grouped) return null;
   const icon = TOKEN_ICONS[grouped.symbol] || grouped.logo;
   const hasBalance = grouped.totalBalance > BigInt(0);
@@ -441,7 +443,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, w
             disabled={!hasBalance}
           >
             <Send className="w-5 h-5" />
-            <span className="text-xs">Send</span>
+            <span className="text-xs">{t('wallet.send')}</span>
           </Button>
           <Button
             variant="glass"
@@ -449,7 +451,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, w
             onClick={onReceive}
           >
             <ArrowDownToLine className="w-5 h-5" />
-            <span className="text-xs">Receive</span>
+            <span className="text-xs">{t('wallet.receive')}</span>
           </Button>
           <Button
             variant="glass"
@@ -470,10 +472,10 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, w
                   if (url) {
                     window.open(url, '_blank');
                   } else {
-                    toast.error('Unable to open payment gateway');
+                    toast.error(t('wallet.unableOpenGateway'));
                   }
                 } catch {
-                  toast.error('Failed to start purchase session');
+                  toast.error(t('wallet.failedPurchaseSession'));
                 }
                 return;
               }
@@ -481,17 +483,17 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, w
               // Non-DHB + Web3Auth session → built-in checkout aggregator
               if (isWeb3AuthConnected()) {
                 try {
-                  toast.info(`Opening checkout for ${grouped.symbol}...`);
+                  toast.info(t('wallet.openingCheckout', { symbol: grouped.symbol }));
                   await showWeb3AuthCheckout();
                 } catch (err) {
                   console.error('[Buy] Web3Auth checkout failed:', err);
                   // Fallback to DEX
                   const dexUrl = getDexBuyLink(grouped.symbol);
                   if (dexUrl) {
-                    toast.info(`Opening DEX to buy ${grouped.symbol}...`);
+                    toast.info(t('wallet.openingDex', { symbol: grouped.symbol }));
                     window.open(dexUrl, '_blank');
                   } else {
-                    toast.error('Checkout unavailable for this token');
+                    toast.error(t('wallet.checkoutUnavailable'));
                   }
                 }
                 return;
@@ -500,15 +502,15 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, w
               // Non-DHB + External wallet → DEX deeplink
               const dexUrl = getDexBuyLink(grouped.symbol);
               if (dexUrl) {
-                toast.info(`Opening DEX to buy ${grouped.symbol}...`);
+                toast.info(t('wallet.openingDex', { symbol: grouped.symbol }));
                 window.open(dexUrl, '_blank');
               } else {
-                toast.error('No buy option available for this token');
+                toast.error(t('wallet.noBuyOption'));
               }
             }}
           >
             <ShoppingCart className="w-5 h-5" />
-            <span className="text-xs">Buy</span>
+            <span className="text-xs">{t('wallet.buy')}</span>
           </Button>
         </div>
       </DrawerContent>
@@ -526,6 +528,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
   allTokens: WalletToken[];
   onTokenChange: (t: WalletToken) => void;
 }) {
+  const { t } = useTranslation();
   const [toAddress, setToAddress] = useState('');
   const [amount, setAmount] = useState('');
   const [sending, setSending] = useState(false);
@@ -534,18 +537,18 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
     if (!token || !toAddress.trim() || !amount.trim()) return;
     const trimmedTo = toAddress.trim();
     if (!/^0x[a-fA-F0-9]{40}$/.test(trimmedTo)) {
-      toast.error('Invalid wallet address');
+      toast.error(t('wallet.invalidAddress'));
       return;
     }
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) {
-      toast.error('Invalid amount');
+      toast.error(t('wallet.invalidAmount'));
       return;
     }
     // Check balance
     const maxBal = parseFloat(formatBalance(token.balance, token.decimals, 18));
     if (numAmount > maxBal) {
-      toast.error(`Insufficient ${token.symbol} balance`);
+      toast.error(t('wallet.insufficientBalance', { symbol: token.symbol }));
       return;
     }
 
@@ -561,10 +564,10 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
         result = await sendERC20Token(token.address, trimmedTo, amount, token.decimals, chainId);
       }
 
-      toast.success(`Sent ${amount} ${token.symbol}`, {
+      toast.success(t('wallet.sent', { amount, symbol: token.symbol }), {
         description: `TX: ${result.hash.slice(0, 10)}...`,
         action: {
-          label: 'View',
+          label: t('wallet.view'),
           onClick: () => {
             const explorer = CHAIN_CONFIGS[chainId]?.explorerUrl;
             if (explorer) window.open(`${explorer}/tx/${result.hash}`, '_blank');
@@ -575,7 +578,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
       setAmount('');
       onSuccess();
     } catch (err: any) {
-      toast.error(err.message || 'Transaction failed');
+      toast.error(err.message || t('wallet.transactionFailed'));
     } finally {
       setSending(false);
     }
@@ -590,24 +593,24 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
     <Dialog open={open} onOpenChange={v => { if (!sending) onOpenChange(v); }}>
       <DialogContent className="bg-zinc-900 border-zinc-800 sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-white">Send {token?.symbol || 'Token'}</DialogTitle>
+          <DialogTitle className="text-white">{t('wallet.sendToken', { symbol: token?.symbol || 'Token' })}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 pt-2">
           {/* Token selector */}
           {allTokens.length > 1 && (
             <div className="flex gap-2 overflow-x-auto pb-1">
-              {allTokens.map(t => {
-                const icon = TOKEN_ICONS[t.symbol] || t.logo;
+              {allTokens.map(tk => {
+                const icon = TOKEN_ICONS[tk.symbol] || tk.logo;
                 return (
                   <button
-                    key={t.address}
-                    onClick={() => onTokenChange(t)}
+                    key={tk.address}
+                    onClick={() => onTokenChange(tk)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all shrink-0 ${
-                      token?.address === t.address ? 'bg-zinc-700 text-white' : 'bg-zinc-800 text-zinc-400 hover:text-white'
+                      token?.address === tk.address ? 'bg-zinc-700 text-white' : 'bg-zinc-800 text-zinc-400 hover:text-white'
                     }`}
                   >
-                    {icon ? <img src={icon} alt={t.symbol} className="w-4 h-4 rounded-full" /> : null}
-                    {t.symbol}
+                    {icon ? <img src={icon} alt={tk.symbol} className="w-4 h-4 rounded-full" /> : null}
+                    {tk.symbol}
                   </button>
                 );
               })}
@@ -615,7 +618,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
           )}
 
           <div className="space-y-2">
-            <label className="text-sm text-zinc-400">Recipient address</label>
+            <label className="text-sm text-zinc-400">{t('wallet.recipientAddress')}</label>
             <Input
               placeholder="0x..."
               value={toAddress}
@@ -626,7 +629,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-sm text-zinc-400">Amount</label>
+              <label className="text-sm text-zinc-400">{t('wallet.amount')}</label>
               {token && (
                 <button onClick={handleMax} className="text-xs text-violet-400 hover:text-violet-300">
                   Max: {token.formattedBalance}
@@ -650,7 +653,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
             onClick={handleSend}
           >
             {sending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
-            {sending ? 'Sending...' : `Send ${token?.symbol || ''}`}
+            {sending ? t('wallet.sending') : t('wallet.sendToken', { symbol: token?.symbol || '' })}
           </Button>
         </div>
       </DialogContent>
@@ -665,6 +668,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
   chainId: ChainId;
   onImported: () => void;
 }) {
+  const { t } = useTranslation();
   const [chainId, setChainId] = useState<ChainId>(initialChainId);
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
@@ -673,7 +677,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
   const handleLookup = async () => {
     const trimmed = address.trim();
     if (!/^0x[a-fA-F0-9]{40}$/.test(trimmed)) {
-      toast.error('Invalid contract address');
+      toast.error(t('wallet.invalidContractAddress'));
       return;
     }
     setLoading(true);
@@ -681,7 +685,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
       const info = await getERC20Metadata(trimmed, chainId);
       setTokenInfo(info);
     } catch {
-      toast.error('Could not read token contract. Make sure the address is correct.');
+      toast.error(t('wallet.cannotReadContract'));
     } finally {
       setLoading(false);
     }
@@ -690,7 +694,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
   const handleImport = () => {
     if (!tokenInfo) return;
     saveCustomToken(chainId, { address: address.trim(), ...tokenInfo });
-    toast.success(`Imported ${tokenInfo.symbol}`);
+    toast.success(t('wallet.imported', { symbol: tokenInfo.symbol }));
     setAddress('');
     setTokenInfo(null);
     onImported();
@@ -700,7 +704,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
     <Dialog open={open} onOpenChange={v => { onOpenChange(v); if (!v) { setAddress(''); setTokenInfo(null); } }}>
       <DialogContent className="bg-zinc-900 border-zinc-800 sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-white">Import Custom Token</DialogTitle>
+          <DialogTitle className="text-white">{t('wallet.importCustomToken')}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 pt-2">
           {/* Chain selector for import */}
@@ -719,9 +723,9 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
             ))}
           </div>
 
-          <p className="text-xs text-zinc-500">Add any ERC-20 token on {CHAIN_CONFIGS[chainId]?.name || 'this network'} by pasting the contract address.</p>
+          <p className="text-xs text-zinc-500">{t('wallet.importDescription', { network: CHAIN_CONFIGS[chainId]?.name || 'this network' })}</p>
           <div className="space-y-2">
-            <label className="text-sm text-zinc-400">Token contract address</label>
+            <label className="text-sm text-zinc-400">{t('wallet.tokenContractAddress')}</label>
             <Input
               placeholder="0x..."
               value={address}
@@ -733,27 +737,27 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
           {!tokenInfo ? (
             <Button variant="glass" className="w-full rounded-xl" onClick={handleLookup} disabled={loading || !address.trim()}>
               {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Search className="w-4 h-4 mr-2" />}
-              {loading ? 'Looking up...' : 'Look up token'}
+              {loading ? t('wallet.lookingUp') : t('wallet.lookUpToken')}
             </Button>
           ) : (
             <>
               <div className="bg-zinc-800/60 rounded-xl p-4 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-zinc-400">Name</span>
+                  <span className="text-sm text-zinc-400">{t('wallet.name')}</span>
                   <span className="text-sm text-white font-medium">{tokenInfo.name}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-zinc-400">Symbol</span>
+                  <span className="text-sm text-zinc-400">{t('wallet.symbol')}</span>
                   <span className="text-sm text-white font-medium">{tokenInfo.symbol}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-zinc-400">Decimals</span>
+                  <span className="text-sm text-zinc-400">{t('wallet.decimals')}</span>
                   <span className="text-sm text-white font-medium">{tokenInfo.decimals}</span>
                 </div>
               </div>
               <Button variant="glass" className="w-full rounded-xl" onClick={handleImport}>
                 <Plus className="w-4 h-4 mr-2" />
-                Import {tokenInfo.symbol}
+                {t('wallet.importToken', { symbol: tokenInfo.symbol })}
               </Button>
             </>
           )}
