@@ -1,71 +1,74 @@
 
 
-# Improve Google Login Toast Flow
+# Speed Up Home Feed Loading
 
 ## Problem
+When an authenticated user opens the home feed, the app **completely skips** the server-side cache (`feed_cache` table) and hits the external DeHub API directly every time. This was done intentionally to get personalized data (isLiked, isDisliked, isUnlocked), but it means the first load is always slow — typically 1-3 seconds waiting on the external API.
 
-When logging in with Google, the user clicks the button, a Google popup opens, and nothing happens in the app until the popup closes. Then all the progress toasts ("Getting your account...", "Please sign the message...", "Verifying with DeHub...", "Welcome back!") flash through rapidly at the end. The user has no feedback during the waiting period.
+## Solution: Cache-First, Then Personalize
 
-## Solution
+Use the server-side cache as **instant placeholder data** for all users (including authenticated), then silently refresh with personalized data in the background. Users see content in under 200ms, and personalized states (like/dislike indicators) update seamlessly moments later.
 
-Add progressive toast notifications at each stage of the login flow so the user sees real-time feedback:
+```text
+Current Flow (Slow):
+User opens feed --> Wait for DeHub API (1-3s) --> Show content
 
-1. **Immediately on click**: Show "Connecting to Google..." toast (before the popup even opens)
-2. **After Google popup returns**: Update to "Setting up your account..." 
-3. **During signature**: Update to "Signing in..."
-4. **During API verification**: Update to "Verifying..."
-5. **On success**: Show "Welcome back!" or "Successfully logged in!"
-
-## Technical Changes
-
-### 1. `src/contexts/AuthContext.tsx` - `connectWithProvider` (around line 843)
-
-Add an immediate toast right when the user clicks Google (before `connectToSocialProvider` is called):
-
-```typescript
-const connectWithProvider = async (provider: SocialProvider, isRetry = false) => {
-    setIsConnecting(true);
-    setActiveProvider(provider);
-    setConnectionSource('web3auth');
-    localStorage.setItem('dehub_connection_source', 'web3auth');
-
-    // Show immediate feedback
-    toast.loading(`Connecting to ${provider === 'google' ? 'Google' : provider === 'twitter' ? 'X' : provider}...`, { id: 'auth-popup' });
-
-    try { ...
+New Flow (Fast):
+User opens feed --> Show cached content instantly (~100ms)
+                --> Refresh from API in background (~1-3s)
+                --> Merge personalized data (seamless update)
 ```
 
-### 2. `src/contexts/AuthContext.tsx` - `completeDeHubAuth` (around line 698-818)
+## Changes
 
-Update the toast progression to flow naturally from the existing "Connecting to Google..." toast:
+### 1. Use cache as placeholder for authenticated users (`use-unified-feed.ts`)
+- Remove the `if (!token)` guard that blocks authenticated users from using the cache
+- Change `fetchUnifiedFeed` to **always** check the cache first
+- If cache exists, return it immediately as placeholder data
+- Then trigger a background API call for personalized data
+- This is achieved by using React Query's `placeholderData` or `initialData` with the cached feed
 
-- Change line ~705 from `toast.loading('Getting your account...')` to `toast.loading('Setting up your account...')` — this replaces the "Connecting to Google..." toast since it uses the same `id: 'auth-popup'`
-- Keep the signature toast at line ~737: "Signing in..." (shorter, cleaner)  
-- Keep the verification toast at line ~786: "Almost there..." (friendlier)
-- Keep the success toast at line ~812
+### 2. Add client-side cache layer (`use-unified-feed.ts`)
+- Store the last successful API response in `sessionStorage` (keyed by feed params)
+- On next load, use this as instant data while the API call is in flight
+- This covers the case where the server-side `feed_cache` might be stale or miss
 
-### 3. `src/contexts/AuthContext.tsx` - Dismiss toast on cancellation
+### 3. Optimize the prefetch to warm cache on app start (`use-feed-prefetch.ts`)
+- Move the home feed prefetch to trigger **immediately on app mount** (not after home feed loads)
+- This way, by the time the user navigates to the home tab, data is already cached in React Query
 
-In the `connectWithProvider` catch block (around line 857), dismiss the loading toast if the user cancels or if there's an error, so it doesn't linger:
+## Technical Details
+
+The key change in `fetchUnifiedFeed`:
 
 ```typescript
-} catch (error: any) {
-    // Dismiss any lingering loading toast
-    toast.dismiss('auth-popup');
-    ...
+// Before: authenticated users ALWAYS skip cache
+async function fetchUnifiedFeed(params) {
+  const token = getAuthToken();
+  if (!token) {
+    // only guests use cache
+  }
+  return fetchUnifiedFeedFromAPI(params);
+}
+
+// After: everyone gets cache-first, API refresh in background
+async function fetchUnifiedFeed(params) {
+  // Try cache first for ALL users (instant load)
+  const cacheKey = getCacheKey(params);
+  if (cacheKey) {
+    const cached = await fetchCachedFeed(cacheKey);
+    if (cached) return cached;
+  }
+  // Fallback to API
+  return fetchUnifiedFeedFromAPI(params);
+}
 ```
 
-Also dismiss on retry path (line ~865) so the "Retrying..." toast replaces cleanly.
+Then in the `useUnifiedFeed` hook, set `staleTime: 0` so React Query immediately triggers a background refetch after showing the cached data. The personalized fields (isLiked, isDisliked, isUnlocked) will update in-place without a loading flash thanks to the existing `placeholderData` pattern.
 
-## Result
+The PPV purchase enrichment (lines 553-560) will still apply on the background refetch, so unlock states remain accurate.
 
-The user will see a smooth progression:
-- Click Google -> "Connecting to Google..." (instant)
-- Google popup opens and user authenticates
-- Popup closes -> "Setting up your account..." 
-- Auto-sign -> "Signing in..."
-- API call -> "Almost there..."  
-- Done -> "Welcome back!"
-
-No more dead silence followed by a rapid toast avalanche.
+### Risk Mitigation
+- Like/dislike icons may briefly show the wrong state (from non-personalized cache) before the background refresh completes — this is a standard stale-while-revalidate tradeoff and is acceptable for a ~2s window
+- The existing vote cache (`vote-cache.ts`) already handles optimistic updates, so any recent user votes will be correct immediately
 
