@@ -19,9 +19,10 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
 import ethLogo from '@/assets/eth-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
+import baseLogo from '@/assets/icons/base-logo.png';
 
 const CHAIN_OPTIONS: { id: ChainId; name: string; icon: string }[] = [
-  { id: BASE_CHAIN_ID, name: 'Base', icon: ethLogo },
+  { id: BASE_CHAIN_ID, name: 'Base', icon: baseLogo },
   { id: BNB_CHAIN_ID, name: 'BNB Chain', icon: bnbLogo },
 ];
 
