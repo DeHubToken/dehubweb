@@ -29,23 +29,7 @@ export async function getLeaderboard(
   sort: LeaderboardSortMode = 'holdings',
   period: LeaderboardPeriod = 'all'
 ): Promise<LeaderboardResponse> {
-  // For "all time", call the new /api/leaderboard endpoint directly
-  if (period === 'all') {
-    const params: Record<string, string> = { sort };
-    const raw = await apiCall<any>("/api/leaderboard", { params });
-    // The API may return { result: [...] } or { result: { byWalletBalance: [...] } }
-    const entries = Array.isArray(raw?.result) 
-      ? raw.result 
-      : Array.isArray(raw?.result?.byWalletBalance) 
-        ? raw.result.byWalletBalance 
-        : Array.isArray(raw) ? raw : [];
-    return {
-      result: { byWalletBalance: entries },
-      hasHistoricalData: true,
-    };
-  }
-
-  // For time-based periods (day/week/month/year), try server cache with timeout, fall back to API
+  // Try server cache first for all periods (cache has enriched on-chain balances)
   try {
     const { supabase } = await import('@/integrations/supabase/client');
     
@@ -68,6 +52,17 @@ export async function getLeaderboard(
     console.warn('[Leaderboard] Cache unavailable, falling back to API:', cacheError);
   }
   
-  const params: Record<string, string> = { sort, period };
-  return apiCall<LeaderboardResponse>("/api/leaderboard", { params });
+  // Fall back to direct API call
+  const params: Record<string, string> = { sort };
+  if (period !== 'all') params.period = period;
+  const raw = await apiCall<any>("/api/leaderboard", { params });
+  const entries = Array.isArray(raw?.result) 
+    ? raw.result 
+    : Array.isArray(raw?.result?.byWalletBalance) 
+      ? raw.result.byWalletBalance 
+      : Array.isArray(raw) ? raw : [];
+  return {
+    result: { byWalletBalance: entries },
+    hasHistoricalData: period === 'all',
+  };
 }
