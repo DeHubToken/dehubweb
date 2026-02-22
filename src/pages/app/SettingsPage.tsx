@@ -44,7 +44,8 @@ import {
   Palmtree,
   Terminal,
   Skull,
-  Orbit
+  Orbit,
+  Ban
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -57,8 +58,9 @@ import { SettingDrawerSelect } from '@/components/app/settings/SettingDrawerSele
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Search } from 'lucide-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser } from '@/lib/api/dehub';
+import { getBlockListPaginated, unblockUser as apiUnblockUser, type BlockedUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
@@ -852,12 +854,105 @@ function PrivacySettings() {
         </div>
       </div>
 
+      {/* Blocked Users */}
+      <BlockedUsersSection />
+
       {/* Geo-Blocking */}
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.geoBlocking')}</h3>
         <p className="text-zinc-500 text-sm mb-4">{t('settings.geoBlockingDesc')}</p>
         <GeoBlockingSelector />
       </div>
+    </div>
+  );
+}
+
+function BlockedUsersSection() {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const { isAuthenticated } = useAuthContext();
+  const [unblockingId, setUnblockingId] = useState<string | null>(null);
+
+  const { data: blockData, isLoading } = useQuery({
+    queryKey: ['block-list-settings'],
+    queryFn: () => getBlockListPaginated(1, 50),
+    enabled: isAuthenticated,
+    staleTime: 30 * 1000,
+  });
+
+  const items = blockData?.items ?? [];
+
+  const handleUnblock = async (user: BlockedUser) => {
+    setUnblockingId(user.address);
+    try {
+      await apiUnblockUser(user.address);
+      toast.success(`Unblocked ${user.username || user.displayName || user.address.slice(0, 8)}`);
+      queryClient.invalidateQueries({ queryKey: ['block-list-settings'] });
+      queryClient.invalidateQueries({ queryKey: ['block-list'] });
+    } catch {
+      toast.error('Failed to unblock user');
+    } finally {
+      setUnblockingId(null);
+    }
+  };
+
+  return (
+    <div>
+      <h3 className="font-medium text-zinc-400 text-sm mb-4">
+        <Ban className="w-4 h-4 inline mr-2" />
+        Blocked Users
+      </h3>
+      {isLoading ? (
+        <div className="flex items-center gap-2 text-zinc-500 text-sm py-4">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          Loading...
+        </div>
+      ) : items.length === 0 ? (
+        <p className="text-zinc-500 text-sm py-2">You haven't blocked anyone.</p>
+      ) : (
+        <div className="space-y-2">
+          {items.map((user) => (
+            <div
+              key={user.blockId || user.address}
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src={user.avatarImageUrl} />
+                  <AvatarFallback className="bg-zinc-700 text-white text-xs">
+                    {(user.username || user.address)?.[0]?.toUpperCase() || '?'}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0">
+                  <p className="text-white text-sm font-medium truncate">
+                    {user.displayName || user.username || `${user.address.slice(0, 6)}...${user.address.slice(-4)}`}
+                  </p>
+                  {user.username && (
+                    <p className="text-zinc-500 text-xs truncate">@{user.username.replace('@', '')}</p>
+                  )}
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-red-500/10 border-red-500/20 text-red-400 hover:bg-red-500/20 rounded-lg text-xs"
+                onClick={() => handleUnblock(user)}
+                disabled={unblockingId === user.address}
+              >
+                {unblockingId === user.address ? (
+                  <Loader2 className="w-3 h-3 animate-spin mr-1" />
+                ) : null}
+                Unblock
+              </Button>
+            </div>
+          ))}
+          {blockData && blockData.total > items.length && (
+            <p className="text-zinc-500 text-xs text-center pt-2">
+              Showing {items.length} of {blockData.total} blocked users
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
