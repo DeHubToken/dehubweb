@@ -258,23 +258,21 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
         ))}
       </div>
 
-      {/* Scrollable list — all periods mounted, visibility toggled */}
-      <div className="flex-1 overflow-hidden relative">
-        {PERIODS.map((period) => {
-          const isActive = activePeriod === period;
-          return (
+      {/* Scrollable list — sliding strip */}
+      <div className="flex-1 overflow-hidden">
+        <div
+          className="flex h-full transition-transform duration-300 ease-out"
+          style={{ transform: `translateX(-${PERIODS.indexOf(activePeriod as typeof PERIODS[number]) * 100}%)` }}
+        >
+          {PERIODS.map((period) => (
             <div
               key={period}
-              className={
-                isActive
-                  ? 'h-full overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent animate-fade-in'
-                  : 'h-0 overflow-hidden invisible absolute'
-              }
+              className="w-full flex-shrink-0 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent"
             >
-              <PeriodList period={period} isActive={isActive} />
+              <PeriodList period={period} isActive={activePeriod === period} />
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
 
       {/* Bottom fade gradient */}
