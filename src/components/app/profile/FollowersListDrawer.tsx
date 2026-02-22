@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Users, UserPlus, UserMinus } from 'lucide-react';
+import { Loader2, Users, UserPlus, UserMinus, Search, ArrowUpDown, X } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -21,6 +21,12 @@ import { cn } from '@/lib/utils';
 
 const MAX_PAGES = 3;
 const PAGE_SIZE = 30;
+
+type SortOption = 'newest' | 'earliest';
+const SORT_LABELS: Record<SortOption, string> = {
+  newest: 'Newest',
+  earliest: 'Earliest',
+};
 
 /** Truncate a hex address to 0x1234…abcd */
 function truncateAddress(address: string): string {
@@ -74,6 +80,9 @@ export function FollowersListDrawer({
   const [isLoading, setIsLoading] = useState(false);
   const [loadingFollows, setLoadingFollows] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
+  const [sortOption, setSortOption] = useState<SortOption>('newest');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -82,8 +91,15 @@ export function FollowersListDrawer({
   const [totalCount, setTotalCount] = useState<number | null>(null);
 
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch initial page when drawer opens
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Fetch initial page when drawer opens or search/sort changes
   useEffect(() => {
     if (!open || !profileAddress) return;
 
@@ -96,11 +112,13 @@ export function FollowersListDrawer({
         const { items, pagination } = await getFollowList(profileAddress, type, {
           page: 1,
           limit: PAGE_SIZE,
+          sortBy: 'createdAt',
+          sortOrder: sortOption === 'newest' ? 'desc' : 'asc',
+          ...(debouncedSearch ? { search: debouncedSearch } : {}),
         });
 
         const processed = items.map(mapFollowListItem);
 
-        // When viewing your OWN following list, everyone is followed by definition
         const isOwnFollowingList =
           title === 'Following' &&
           currentUserAddress &&
@@ -132,7 +150,7 @@ export function FollowersListDrawer({
     };
 
     fetchInitialPage();
-  }, [open, profileAddress, title, currentUserAddress]);
+  }, [open, profileAddress, title, currentUserAddress, sortOption, debouncedSearch]);
 
   // Load more pages
   const loadMore = useCallback(async () => {
@@ -145,6 +163,9 @@ export function FollowersListDrawer({
       const { items, pagination } = await getFollowList(profileAddress, type, {
         page: nextPage,
         limit: PAGE_SIZE,
+        sortBy: 'createdAt',
+        sortOrder: sortOption === 'newest' ? 'desc' : 'asc',
+        ...(debouncedSearch ? { search: debouncedSearch } : {}),
       });
 
       const processed = items.map(mapFollowListItem);
@@ -166,7 +187,7 @@ export function FollowersListDrawer({
     } finally {
       setIsLoadingMore(false);
     }
-  }, [isLoadingMore, hasMore, currentPage, title, profileAddress, currentUserAddress]);
+  }, [isLoadingMore, hasMore, currentPage, title, profileAddress, currentUserAddress, sortOption, debouncedSearch]);
 
   // IntersectionObserver for infinite scroll
   useEffect(() => {
@@ -195,8 +216,15 @@ export function FollowersListDrawer({
       setCurrentPage(1);
       setHasMore(false);
       setTotalCount(null);
+      setSearchQuery('');
+      setDebouncedSearch('');
+      setSortOption('newest');
     }
   }, [open]);
+
+  const toggleSort = () => {
+    setSortOption(prev => prev === 'newest' ? 'earliest' : 'newest');
+  };
 
   const handleUserClick = (user: UserListItem) => {
     onOpenChange(false);
@@ -259,7 +287,39 @@ export function FollowersListDrawer({
           </DrawerTitle>
         </DrawerHeader>
 
-        <div className="flex-1 px-4 pb-6 overflow-y-auto overscroll-contain" style={{ maxHeight: 'calc(85vh - 80px)', WebkitOverflowScrolling: 'touch' }}>
+        {/* Search & Sort Controls */}
+        <div className="px-4 pb-3 flex gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search..."
+              className="w-full h-9 pl-9 pr-8 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={toggleSort}
+            className="shrink-0 h-9 px-3 rounded-lg bg-white/5 border border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white text-xs gap-1.5"
+          >
+            <ArrowUpDown className="w-3.5 h-3.5" />
+            {SORT_LABELS[sortOption]}
+          </Button>
+        </div>
+
+        <div className="flex-1 px-4 pb-6 overflow-y-auto overscroll-contain" style={{ maxHeight: 'calc(85vh - 140px)', WebkitOverflowScrolling: 'touch' }}>
           {isLoading ? (
             <div className="space-y-3">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -293,12 +353,16 @@ export function FollowersListDrawer({
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <Users className="w-12 h-12 text-zinc-600 mb-3" />
               <p className="text-zinc-400 text-lg font-medium">
-                {title === 'Followers' ? 'No followers yet' : 'Not following anyone'}
+                {debouncedSearch
+                  ? 'No results found'
+                  : title === 'Followers' ? 'No followers yet' : 'Not following anyone'}
               </p>
               <p className="text-zinc-500 text-sm mt-1">
-                {title === 'Followers' 
-                  ? 'Followers will appear here'
-                  : 'Follow users to see them here'}
+                {debouncedSearch
+                  ? `No matches for "${debouncedSearch}"`
+                  : title === 'Followers' 
+                    ? 'Followers will appear here'
+                    : 'Follow users to see them here'}
               </p>
             </div>
           ) : (
