@@ -1,42 +1,68 @@
 
 
-## Fix: Home Feed Slow Load for Authenticated Users
+## Fix: Home Feed Cache Key Mismatch
 
 ### Root Cause
 
-The home feed is the **only feed that is NOT prefetched**. The `useFeedPrefetch` hook prefetches Videos, Images, Shorts, Music, and Live tabs -- but never the home feed itself. Meanwhile, authenticated users always bypass the database cache (`feed_cache` table) and hit the DeHub API directly on every page load.
+The prefetcher is caching the home feed data under a query key that does NOT match what the home feed component actually uses. TanStack Query treats `{ postType: undefined }` and `{}` (missing key) as different cache entries, so the prefetched data is never found.
 
-So the home feed always waits for a cold API call to `api.dehub.io/api/feed` before showing anything. Every other page appears fast because either it's prefetched or it uses lazy loading with cached data.
+Here is the mismatch:
+
+**What the home feed component uses (singleFeed query key):**
+```
+['unified-feed', {
+  limit: 20,          // <-- included in params
+  sortBy: 'createdAt',
+  sortOrder: 'desc',
+  status: 'minted',
+  category: undefined,
+  isPPV: undefined,
+  hasBounty: undefined,
+  isLocked: undefined,
+  followingOnly: undefined,
+  postType: undefined,  // <-- PRESENT as undefined
+  range: undefined,
+}, 20]
+```
+
+**What the prefetcher caches under:**
+```
+['unified-feed', {
+  sortBy: 'createdAt',
+  sortOrder: 'desc',
+  status: 'minted',
+  category: undefined,
+  isPPV: undefined,
+  hasBounty: undefined,
+  isLocked: undefined,
+  followingOnly: undefined,
+  // postType is MISSING entirely
+  range: undefined,
+}, 20]
+```
+
+These keys are different objects to TanStack Query's deep comparison, so the cached data is invisible to the component.
+
+Additionally, the nebula prefetch caches per-postType feeds (video, feed-images, feed-simple) but the home feed in "Latest" mode uses a single unified feed query (no postType) -- those per-type caches are also never used because `useInterleavedFeed` is false for the default "Latest" sort.
 
 ### The Fix
 
-Two changes to make the home feed load instantly:
+**File: `src/hooks/use-feed-prefetch.ts`**
 
-**1. Add home feed to the prefetcher (`src/hooks/use-feed-prefetch.ts`)**
+1. Add `postType: undefined` to the `homeFeedParams` object so the cache key matches what the `useUnifiedFeed` hook generates
+2. Also add `followingOnly: undefined` if missing (already present -- verify)
 
-Add a new parallel fetch for the home feed (Latest, page 1, no postType filter) inside `prefetchAllFeeds()`. Populate the React Query cache with the correct key so the `useUnifiedFeed` hook picks it up immediately without making another API call.
+**File: `src/hooks/use-nebula-prefetch.ts`**
 
-The query key must match exactly: `['unified-feed', { sortBy: 'createdAt', sortOrder: 'desc', status: 'minted', ... }, 20]`
-
-**2. Use cached data as placeholder for authenticated users (`src/hooks/use-unified-feed.ts`)**
-
-Currently authenticated users completely skip the `feed_cache` table. Instead of skipping it, use the cached data as **immediate placeholder data** while the personalized API call runs in the background. This way users see content instantly, and it gets enriched with their like/unlock status moments later when the API responds.
-
-Change `fetchUnifiedFeed()`:
-- For authenticated users on page 1 of cacheable feeds: start both the cache read and the API call in parallel
-- Return the API result (personalized), but if the cache resolves first, use it as initial data via TanStack Query's `placeholderData`
+1. Add a 4th prefetch for the single unified home feed (no postType) alongside the 3 per-type feeds
+2. Cache it with the correct key including `postType: undefined` and `followingOnly: undefined`
 
 ### Technical Details
 
-**File: `src/hooks/use-feed-prefetch.ts`**
-- Add `homeFeedPromise` calling the unified feed API with `{ limit: 20, sortBy: 'createdAt', sortOrder: 'desc', status: 'minted' }`
-- Include it in `Promise.allSettled`
-- Populate cache with key `['unified-feed', { sortBy: 'createdAt', sortOrder: 'desc', range: undefined, isPPV: undefined, hasBounty: undefined, isLocked: undefined, status: 'minted', category: undefined, followingOnly: undefined }, 20]`
+**`src/hooks/use-feed-prefetch.ts` changes:**
+- In the `homeFeedParams` object (around line 287), add `postType: undefined` to match the component's query key shape exactly
 
-**File: `src/hooks/use-unified-feed.ts`**
-- In `fetchUnifiedFeed()`: for authenticated users on page 1 with a valid cache key, race the cache read (with 2s timeout) against the API call
-- If cache wins, return cache data immediately (the API will still populate on next background refetch thanks to `staleTime`)
-- If API wins, return API data as normal
-
-This ensures authenticated users see feed content within milliseconds (from cache or prefetch) while still getting personalized data.
-
+**`src/hooks/use-nebula-prefetch.ts` changes:**
+- Add a new `fetchFeed` call with no postType filter (pass empty string or omit the param from the URL)
+- Cache it under a key that includes `postType: undefined, followingOnly: undefined` to match the singleFeed query key
+- This ensures the nebula hover prefetch also populates the correct cache for "Latest" sort
