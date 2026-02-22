@@ -10,9 +10,8 @@ export function OverviewTab() {
 
   return (
     <div className="space-y-4">
-      {/* Top Section Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">{t('commandCentre.overview')}</h2>
+      {/* Fund Actions */}
+      <div className="flex justify-end">
         <FundActions />
       </div>
 
