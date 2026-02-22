@@ -1,4 +1,3 @@
-import { lazy, Suspense } from "react";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -9,37 +8,35 @@ import { UsernameRequiredModal } from "@/components/app/modals";
 import { LoginModal } from "@/components/app/LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
+import Index from "./pages/Index";
+import DeleteAccount from "./pages/DeleteAccount";
+import CreatorsPage from "./pages/app/CreatorsPage";
+import JobsPage from "./pages/JobsPage";
+import SkillPage from "./pages/SkillPage";
+import NotFound from "./pages/NotFound";
 
-// ── Lazy-loaded pages ──
-const Index = lazy(() => import("./pages/Index"));
-const DeleteAccount = lazy(() => import("./pages/DeleteAccount"));
-const CreatorsPage = lazy(() => import("./pages/app/CreatorsPage"));
-const JobsPage = lazy(() => import("./pages/JobsPage"));
-const SkillPage = lazy(() => import("./pages/SkillPage"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-
-const TVPage = lazy(() => import("./pages/app/TVPage"));
-const HomePage = lazy(() => import("./pages/app/HomePage"));
-const ExplorePage = lazy(() => import("./pages/app/ExplorePage"));
-const ProfilePage = lazy(() => import("./pages/app/ProfilePage"));
-const PlaceholderPage = lazy(() => import("./pages/app/PlaceholderPage"));
-const NotificationsPage = lazy(() => import("./pages/app/NotificationsPage"));
-const MessagesPage = lazy(() => import("./pages/app/MessagesPage"));
-const LeaderboardPage = lazy(() => import("./pages/app/LeaderboardPage"));
-const BookmarksPage = lazy(() => import("./pages/app/BookmarksPage"));
-const SettingsPage = lazy(() => import("./pages/app/SettingsPage"));
-const CommandCentrePage = lazy(() => import("./pages/app/CommandCentrePage"));
-const MusicPage = lazy(() => import("./pages/app/MusicPage"));
-const PostInfoPage = lazy(() => import("./pages/app/PostInfoPage"));
-const SinglePostPage = lazy(() => import("./pages/app/SinglePostPage"));
-const AssistantPage = lazy(() => import("./pages/app/AssistantPage"));
-const BuyCoinsPage = lazy(() => import("./pages/app/BuyCoinsPage"));
-const AgentsPage = lazy(() => import("./pages/app/AgentsPage"));
-const FeaturesPage = lazy(() => import("./pages/app/FeaturesPage"));
-const FullWalletPage = lazy(() => import("./pages/app/FullWalletPage"));
-
-// App routes (kept as static import - it's the layout shell)
+// App routes
 import { AppLayout } from "./components/app/AppLayout";
+import TVPage from "./pages/app/TVPage";
+import HomePage from "./pages/app/HomePage";
+import ExplorePage from "./pages/app/ExplorePage";
+import ProfilePage from "./pages/app/ProfilePage";
+import PlaceholderPage from "./pages/app/PlaceholderPage";
+import NotificationsPage from "./pages/app/NotificationsPage";
+import MessagesPage from "./pages/app/MessagesPage";
+import LeaderboardPage from "./pages/app/LeaderboardPage";
+import BookmarksPage from "./pages/app/BookmarksPage";
+import SettingsPage from "./pages/app/SettingsPage";
+import CommandCentrePage from "./pages/app/CommandCentrePage";
+import MusicPage from "./pages/app/MusicPage";
+import PostInfoPage from "./pages/app/PostInfoPage";
+import SinglePostPage from "./pages/app/SinglePostPage";
+import AssistantPage from "./pages/app/AssistantPage";
+import BuyCoinsPage from "./pages/app/BuyCoinsPage";
+import AgentsPage from "./pages/app/AgentsPage";
+import FeaturesPage from "./pages/app/FeaturesPage";
+import FullWalletPage from "./pages/app/FullWalletPage";
+
 
 /**
  * One-time cache migration for existing testers.
@@ -89,16 +86,11 @@ const queryClient = new QueryClient({
 
 import { useDMRealtime } from "@/hooks/use-dm-realtime";
 
-/** Dark fallback shown while lazy chunks load – prevents white flash */
-const DarkFallback = () => (
-  <div className="min-h-screen bg-black" />
-);
-
 // Inner app component that uses auth context
 function AppContent() {
   const { isLoginModalOpen, closeLoginModal } = useAuth();
   
-  // Preload 3D icons on app mount (deferred via requestIdleCallback)
+  // Preload 3D icons on app mount to prevent flicker during navigation
   usePreloadIcons();
   
   // Subscribe to global DM updates
@@ -110,7 +102,6 @@ function AppContent() {
       <UsernameRequiredModal />
       <LoginModal open={isLoginModalOpen} onOpenChange={closeLoginModal} />
       <BrowserRouter>
-        <Suspense fallback={<DarkFallback />}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/delete-account" element={<DeleteAccount />} />
@@ -151,7 +142,6 @@ function AppContent() {
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </Suspense>
         </BrowserRouter>
       </>
     );
