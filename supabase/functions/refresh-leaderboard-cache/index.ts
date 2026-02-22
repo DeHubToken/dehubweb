@@ -347,7 +347,9 @@ async function computeSnapshotDelta(
     const pastDateStr = pastDate.toISOString().split("T")[0];
 
     // Find closest valid snapshot date on or before target (with quality guard)
+    // Check both total count AND non-zero entries for the relevant field
     const MIN_SNAPSHOT_ENTRIES = 10;
+    const MIN_NONZERO_RATIO = 0.3; // at least 30% of entries must have non-zero values
     const { data: candidateSnaps } = await supabase
       .from("leaderboard_snapshots")
       .select("snapshot_date")
@@ -355,24 +357,47 @@ async function computeSnapshotDelta(
       .order("snapshot_date", { ascending: false })
       .limit(10); // fetch several candidates to skip corrupted ones
 
+    // Determine which DB column to check for non-zero quality
+    let qualityField: string;
+    if (sortMode === "holdings") qualityField = "balance";
+    else if (sortMode === "sentTips") qualityField = "sent_tips";
+    else if (sortMode === "receivedTips") qualityField = "received_tips";
+    else qualityField = sortMode; // followers, likes, subscribers
+
     let closestDate: string | null = null;
     if (candidateSnaps) {
       // Deduplicate dates
       const uniqueDates = [...new Set(candidateSnaps.map(s => s.snapshot_date))];
       for (const candidateDate of uniqueDates) {
-        // Count entries for this snapshot date
-        const { count } = await supabase
+        // Count total entries for this snapshot date
+        const { count: totalCount } = await supabase
           .from("leaderboard_snapshots")
           .select("id", { count: "exact", head: true })
           .eq("snapshot_date", candidateDate);
 
-        if (count !== null && count >= MIN_SNAPSHOT_ENTRIES) {
-          closestDate = candidateDate;
-          console.log(`[light] ${sortMode}/${period}: using snapshot ${candidateDate} with ${count} entries`);
-          break;
-        } else {
-          console.warn(`[light] ${sortMode}/${period}: skipping snapshot ${candidateDate} — only ${count} entries (min ${MIN_SNAPSHOT_ENTRIES})`);
+        if (totalCount === null || totalCount < MIN_SNAPSHOT_ENTRIES) {
+          console.warn(`[light] ${sortMode}/${period}: skipping snapshot ${candidateDate} — only ${totalCount} entries (min ${MIN_SNAPSHOT_ENTRIES})`);
+          continue;
         }
+
+        // For holdings, also check that enough entries have non-zero balance
+        if (sortMode === "holdings") {
+          const { count: nonZeroCount } = await supabase
+            .from("leaderboard_snapshots")
+            .select("id", { count: "exact", head: true })
+            .eq("snapshot_date", candidateDate)
+            .gt("balance", 0);
+
+          const ratio = (nonZeroCount ?? 0) / totalCount;
+          if (ratio < MIN_NONZERO_RATIO) {
+            console.warn(`[light] ${sortMode}/${period}: skipping snapshot ${candidateDate} — only ${nonZeroCount}/${totalCount} non-zero balances (${(ratio * 100).toFixed(0)}%, min ${MIN_NONZERO_RATIO * 100}%)`);
+            continue;
+          }
+        }
+
+        closestDate = candidateDate;
+        console.log(`[light] ${sortMode}/${period}: using snapshot ${candidateDate} with ${totalCount} entries`);
+        break;
       }
     }
 
