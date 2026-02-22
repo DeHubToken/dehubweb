@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import type { NavItem } from '@/types/app.types';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -24,6 +25,8 @@ interface SidebarNavItemProps {
   avatarUrl?: string | null;
   avatarFallback?: string;
   notificationCount?: number;
+  /** Layout group for smooth sliding indicator */
+  layoutId?: string;
 }
 
 export function SidebarNavItem({ 
@@ -38,16 +41,14 @@ export function SidebarNavItem({
   avatarUrl,
   avatarFallback,
   notificationCount,
+  layoutId = 'sidebar-nav',
 }: SidebarNavItemProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const translatedLabel = t(NAV_LABEL_KEYS[item.label] || item.label);
   
   const handleClick = (e: React.MouseEvent) => {
-    // Call custom onClick first if provided
     onClick?.(e);
-    
-    // If onClick prevented default, stop here
     if (e.defaultPrevented) return;
     
     if (isHome) {
@@ -58,16 +59,21 @@ export function SidebarNavItem({
     onNavigate?.();
   };
 
-  // Desktop variant uses smaller sizing (10% reduction)
   const isDesktop = variant === 'desktop';
-
-  // Check if we should render avatar instead of icon
   const showAvatar = avatarUrl !== undefined;
   
-  // Collapsed: icon-only square button; Expanded: full-width row
   const collapsedItemClass = collapsed
     ? 'w-9 h-9 xl:w-full xl:h-auto justify-center xl:justify-start px-0 xl:px-2.5 xl:py-2.5 xl:gap-3'
     : 'gap-3 px-2.5 py-2.5';
+
+  // Shared glass indicator element
+  const glassIndicator = isActive && (
+    <motion.div
+      layoutId={layoutId}
+      className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+    />
+  );
 
   if (item.external) {
     return (
@@ -77,23 +83,24 @@ export function SidebarNavItem({
         rel="noopener noreferrer"
         onClick={onNavigate}
         className={cn(
-          'flex items-center rounded-xl transition-colors text-white text-[15px]',
+          'relative flex items-center rounded-xl transition-colors text-white text-[15px]',
           isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
-          variant === 'mobile'
-            ? 'hover:bg-zinc-700/50'
-            : 'hover:bg-zinc-800/50'
+          !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
         )}
       >
+        {glassIndicator}
         <div className={cn(
-          "rounded-xl flex items-center justify-center flex-shrink-0",
+          "relative z-10 rounded-xl flex items-center justify-center flex-shrink-0",
           isDesktop ? "w-9 h-9" : "w-10 h-10",
           isDesktop
-            ? collapsed ? "bg-transparent xl:bg-zinc-800" : "bg-zinc-800"
-            : "bg-white/[0.06] backdrop-blur-sm border border-white/[0.08]"
+            ? isActive ? "bg-transparent" : collapsed ? "bg-transparent xl:bg-zinc-800" : "bg-zinc-800"
+            : isActive
+              ? "bg-white/[0.10] backdrop-blur-sm border border-white/[0.12]"
+              : "bg-white/[0.06] backdrop-blur-sm border border-white/[0.08]"
         )}>
           <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
         </div>
-        <span className={cn("truncate", collapsed && "hidden xl:inline")}>{translatedLabel}</span>
+        <span className={cn("relative z-10 truncate", collapsed && "hidden xl:inline")}>{translatedLabel}</span>
       </a>
     );
   }
@@ -103,22 +110,16 @@ export function SidebarNavItem({
       to={item.path}
       onClick={handleClick}
       className={cn(
-        'flex items-center rounded-xl transition-colors text-white text-[15px]',
+        'relative flex items-center rounded-xl transition-colors text-white text-[15px]',
         isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
-        isActive
-          ? variant === 'mobile'
-            ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] font-semibold'
-            : collapsed
-              ? 'xl:bg-gradient-to-br xl:from-white/20 xl:via-white/10 xl:to-white/5 xl:backdrop-blur-xl xl:border xl:border-white/30 xl:shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] font-semibold'
-              : 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] font-semibold'
-          : variant === 'mobile'
-            ? 'hover:bg-zinc-700/50'
-            : 'hover:bg-zinc-800/50'
+        isActive ? 'font-semibold' : '',
+        !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
       )}
     >
+      {glassIndicator}
       {showAvatar ? (
         <Avatar className={cn(
-          "flex-shrink-0 rounded-xl",
+          "relative z-10 flex-shrink-0 rounded-xl",
           isDesktop ? "w-9 h-9" : "w-10 h-10"
         )}>
           {avatarUrl && (
@@ -130,11 +131,11 @@ export function SidebarNavItem({
         </Avatar>
       ) : (
         <div className={cn(
-          "rounded-xl flex items-center justify-center flex-shrink-0 transition-colors relative",
+          "relative z-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
           isDesktop ? "w-9 h-9" : "w-10 h-10",
           isDesktop
             ? isActive 
-              ? "bg-white/10" 
+              ? "bg-transparent" 
               : collapsed ? "bg-transparent xl:bg-zinc-800" : "bg-zinc-800"
             : isActive
               ? "bg-white/[0.10] backdrop-blur-sm border border-white/[0.12]"
@@ -142,13 +143,13 @@ export function SidebarNavItem({
         )}>
           <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
           {notificationCount !== undefined && notificationCount > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full">
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full z-20">
               {notificationCount > 99 ? '99+' : notificationCount}
             </span>
           )}
         </div>
       )}
-      <span className={cn("truncate", collapsed && "hidden xl:inline")}>{translatedLabel}</span>
+      <span className={cn("relative z-10 truncate", collapsed && "hidden xl:inline")}>{translatedLabel}</span>
     </NavLink>
   );
 }
