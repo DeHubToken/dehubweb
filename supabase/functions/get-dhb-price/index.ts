@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
 serve(async (req) => {
@@ -11,14 +11,11 @@ serve(async (req) => {
   }
 
   try {
-    // Fetch DHB price from CoinGecko
+    // Fetch prices for all wallet tokens from CoinGecko
+    const ids = 'dehub,ethereum,binancecoin,tether';
     const response = await fetch(
-      'https://api.coingecko.com/api/v3/simple/price?ids=dehub&vs_currencies=usd',
-      {
-        headers: {
-          'Accept': 'application/json',
-        },
-      }
+      `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`,
+      { headers: { 'Accept': 'application/json' } }
     );
 
     if (!response.ok) {
@@ -26,25 +23,28 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const dhbPrice = data.dehub?.usd;
 
-    if (!dhbPrice) {
-      throw new Error('DHB price not found');
-    }
+    // Map CoinGecko IDs to token symbols
+    const prices: Record<string, number> = {
+      DHB: data.dehub?.usd ?? 0,
+      ETH: data.ethereum?.usd ?? 0,
+      WETH: data.ethereum?.usd ?? 0,
+      BNB: data.binancecoin?.usd ?? 0,
+      WBNB: data.binancecoin?.usd ?? 0,
+      USDT: data.tether?.usd ?? 1,
+    };
 
-    console.log('DHB price fetched:', dhbPrice);
+    console.log('Token prices fetched:', prices);
 
     return new Response(
-      JSON.stringify({ 
-        price: dhbPrice,
-        currency: 'usd',
+      JSON.stringify({
+        prices,
         timestamp: new Date().toISOString(),
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
-
   } catch (error) {
-    console.error('Error fetching DHB price:', error);
+    console.error('Error fetching token prices:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
       JSON.stringify({ error: errorMessage }),

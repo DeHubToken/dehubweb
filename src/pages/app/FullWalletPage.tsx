@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
-import { useWalletTokens } from '@/hooks/use-wallet-tokens';
+import { useWalletTokens, useAllChainsTokens } from '@/hooks/use-wallet-tokens';
+import { useTokenPrices } from '@/hooks/use-token-prices';
 import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
 import { getERC20Metadata, saveCustomToken, removeCustomToken, formatBalance, type WalletToken } from '@/lib/wallet/tokens';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
@@ -49,6 +50,17 @@ export default function FullWalletPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const { tokens, isLoading, refetch, isFetching } = useWalletTokens(selectedChain);
+  const { allTokens } = useAllChainsTokens();
+  const { data: prices = {} } = useTokenPrices();
+
+  // Compute total USD across all chains
+  const totalUsd = useMemo(() => {
+    return allTokens.reduce((sum, token) => {
+      const price = prices[token.symbol] ?? 0;
+      const value = parseFloat(token.formattedBalance) * price;
+      return sum + (isNaN(value) ? 0 : value);
+    }, 0);
+  }, [allTokens, prices]);
 
   const filteredTokens = useMemo(() => {
     if (!searchQuery.trim()) return tokens;
@@ -99,7 +111,9 @@ export default function FullWalletPage() {
         <div className="flex items-center justify-between">
           <div className="min-w-0">
             <span className="text-zinc-500 text-xs uppercase tracking-wider font-medium">Total Balance</span>
-            <p className="text-white text-2xl font-bold mt-0.5">$0.00</p>
+            <p className="text-white text-2xl font-bold mt-0.5">
+              ${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </p>
           </div>
           <Button variant="ghost" size="icon" className="shrink-0 text-zinc-400 hover:text-white" onClick={handleCopy} title={walletAddress || ''}>
             {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
