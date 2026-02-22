@@ -346,15 +346,36 @@ async function computeSnapshotDelta(
     pastDate.setDate(pastDate.getDate() - daysAgo);
     const pastDateStr = pastDate.toISOString().split("T")[0];
 
-    // Find closest snapshot date on or before target
-    const { data: closestSnap } = await supabase
+    // Find closest valid snapshot date on or before target (with quality guard)
+    const MIN_SNAPSHOT_ENTRIES = 10;
+    const { data: candidateSnaps } = await supabase
       .from("leaderboard_snapshots")
       .select("snapshot_date")
       .lte("snapshot_date", pastDateStr)
       .order("snapshot_date", { ascending: false })
-      .limit(1);
+      .limit(10); // fetch several candidates to skip corrupted ones
 
-    const closestDate = closestSnap?.[0]?.snapshot_date;
+    let closestDate: string | null = null;
+    if (candidateSnaps) {
+      // Deduplicate dates
+      const uniqueDates = [...new Set(candidateSnaps.map(s => s.snapshot_date))];
+      for (const candidateDate of uniqueDates) {
+        // Count entries for this snapshot date
+        const { count } = await supabase
+          .from("leaderboard_snapshots")
+          .select("id", { count: "exact", head: true })
+          .eq("snapshot_date", candidateDate);
+
+        if (count !== null && count >= MIN_SNAPSHOT_ENTRIES) {
+          closestDate = candidateDate;
+          console.log(`[light] ${sortMode}/${period}: using snapshot ${candidateDate} with ${count} entries`);
+          break;
+        } else {
+          console.warn(`[light] ${sortMode}/${period}: skipping snapshot ${candidateDate} — only ${count} entries (min ${MIN_SNAPSHOT_ENTRIES})`);
+        }
+      }
+    }
+
     const pastMap = new Map<string, number>();
 
     if (closestDate) {
@@ -377,7 +398,7 @@ async function computeSnapshotDelta(
       }
       console.log(`[light] ${sortMode}/${period}: snapshot from ${closestDate}, ${pastMap.size} entries`);
     } else {
-      console.log(`[light] ${sortMode}/${period}: no snapshot found for ${pastDateStr}`);
+      console.log(`[light] ${sortMode}/${period}: no valid snapshot found for ${pastDateStr} (all candidates below ${MIN_SNAPSHOT_ENTRIES} entries)`);
     }
 
     // Determine the current value field on entries
@@ -507,7 +528,7 @@ Deno.serve(async (req) => {
     // No RPC calls, no API calls. Pure DB reads + cache writes.
     // ================================================================
     if (mode === "light") {
-      console.log("Starting LIGHT leaderboard cache refresh (day/week only, snapshot-based)...");
+      console.log("Starting LIGHT leaderboard cache refresh (snapshot-based)...");
 
       // Load the existing "all" holdings cache (has profile data + current balances)
       const { data: holdingsCache } = await supabase
@@ -530,7 +551,7 @@ Deno.serve(async (req) => {
       console.log(`[light] Using ${allEntries.length} entries from holdings/all cache`);
 
       // Recompute day + week for all sort modes
-      const LIGHT_PERIODS = ["day", "week"] as const;
+      const LIGHT_PERIODS = ["day", "week", "month", "year"] as const;
       const ALL_SORT_MODES = ["holdings", "followers", "likes", "subscribers", "sentTips", "receivedTips"] as const;
 
       for (const sortMode of ALL_SORT_MODES) {
@@ -547,7 +568,7 @@ Deno.serve(async (req) => {
         JSON.stringify({
           success: true,
           mode: "light",
-          message: `Light refresh: cached ${successCount}/${results.length} day/week combinations`,
+          message: `Light refresh: cached ${successCount}/${results.length} combinations`,
           results,
         }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
