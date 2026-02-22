@@ -652,20 +652,28 @@ export default function FeaturesPage() {
 
             {/* Sort Tabs */}
             <div className="flex gap-1.5 overflow-x-auto scrollbar-invisible">
-              {SORTS.map((s) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => setSort(s.id)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                    sort === s.id
-                      ? 'bg-zinc-700 text-white'
-                      : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
-                  }`}
-                >
-                  {s.label}
-                </button>
-              ))}
+              {SORTS.map((s) => {
+                const isActive = sort === s.id;
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => setSort(s.id)}
+                    className={`relative px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                      isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="features-sort"
+                        className="absolute inset-0 rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10">{s.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </>
         )}
