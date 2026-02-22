@@ -83,6 +83,7 @@ export function FollowersListDrawer({
   const [sortOption, setSortOption] = useState<SortOption>('newest');
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [myFollowingAddresses, setMyFollowingAddresses] = useState<Set<string>>(new Set());
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -109,15 +110,35 @@ export function FollowersListDrawer({
 
       try {
         const type = title === 'Followers' ? 'followers' : 'following';
-        const { items, pagination } = await getFollowList(profileAddress, type, {
-          page: 1,
-          limit: PAGE_SIZE,
-          sortBy: 'createdAt',
-          sortOrder: sortOption === 'newest' ? 'desc' : 'asc',
-          ...(debouncedSearch ? { search: debouncedSearch } : {}),
-        });
 
-        const processed = items.map(mapFollowListItem);
+        // Fetch the list AND current user's following list in parallel
+        // so we can mark who the current user already follows
+        const [listResult, myFollowingResult] = await Promise.all([
+          getFollowList(profileAddress, type, {
+            page: 1,
+            limit: PAGE_SIZE,
+            sortBy: 'createdAt',
+            sortOrder: sortOption === 'newest' ? 'desc' : 'asc',
+            ...(debouncedSearch ? { search: debouncedSearch } : {}),
+          }),
+          isAuthenticated && currentUserAddress
+            ? getFollowList(currentUserAddress, 'following', { limit: 300 }).catch(() => ({ items: [] }))
+            : Promise.resolve({ items: [] as FollowListItem[] }),
+        ]);
+
+        const { items, pagination } = listResult;
+        const myFollowingSet = new Set(
+          myFollowingResult.items.map((u: FollowListItem) => u.address.toLowerCase())
+        );
+
+        const processed = items.map(item => {
+          const mapped = mapFollowListItem(item);
+          // Enrich with isFollowing from cross-reference
+          if (mapped.isFollowing === undefined && currentUserAddress) {
+            mapped.isFollowing = myFollowingSet.has(item.address.toLowerCase());
+          }
+          return mapped;
+        });
 
         const isOwnFollowingList =
           title === 'Following' &&
@@ -129,6 +150,7 @@ export function FollowersListDrawer({
           : processed;
 
         setUsers(finalUsers);
+        setMyFollowingAddresses(myFollowingSet);
         setCurrentPage(1);
         setHasMore(pagination?.hasMore ?? false);
         setTotalCount(pagination?.totalCount ?? null);
@@ -150,7 +172,7 @@ export function FollowersListDrawer({
     };
 
     fetchInitialPage();
-  }, [open, profileAddress, title, currentUserAddress, sortOption, debouncedSearch]);
+  }, [open, profileAddress, title, currentUserAddress, isAuthenticated, sortOption, debouncedSearch]);
 
   // Load more pages
   const loadMore = useCallback(async () => {
@@ -168,7 +190,13 @@ export function FollowersListDrawer({
         ...(debouncedSearch ? { search: debouncedSearch } : {}),
       });
 
-      const processed = items.map(mapFollowListItem);
+      const processed = items.map(item => {
+        const mapped = mapFollowListItem(item);
+        if (mapped.isFollowing === undefined && currentUserAddress) {
+          mapped.isFollowing = myFollowingAddresses.has(item.address.toLowerCase());
+        }
+        return mapped;
+      });
 
       const isOwnFollowingList =
         title === 'Following' &&
@@ -187,7 +215,7 @@ export function FollowersListDrawer({
     } finally {
       setIsLoadingMore(false);
     }
-  }, [isLoadingMore, hasMore, currentPage, title, profileAddress, currentUserAddress, sortOption, debouncedSearch]);
+  }, [isLoadingMore, hasMore, currentPage, title, profileAddress, currentUserAddress, sortOption, debouncedSearch, myFollowingAddresses]);
 
   // IntersectionObserver for infinite scroll
   useEffect(() => {
@@ -219,6 +247,7 @@ export function FollowersListDrawer({
       setSearchQuery('');
       setDebouncedSearch('');
       setSortOption('newest');
+      setMyFollowingAddresses(new Set());
     }
   }, [open]);
 
