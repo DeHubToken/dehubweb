@@ -878,6 +878,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             contentType="video"
             creatorId={video.creatorId}
             creatorUsername={video.creatorUsername}
+            badgeBalance={video.creatorBadgeBalance}
           />
           <div className="flex items-center gap-1">
             <motion.button

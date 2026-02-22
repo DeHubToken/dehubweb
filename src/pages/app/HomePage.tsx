@@ -19,7 +19,7 @@ import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { setTabSwitchTime } from '@/lib/gesture-state';
 import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
 import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
-import { BadgeBalanceProvider } from '@/contexts/BadgeBalanceContext';
+
 
 // Feed components
 import {
@@ -567,7 +567,7 @@ export default function HomePage() {
             </div>
           </div>
         )}
-        <BadgeBalanceProvider>
+        {/* Badge balances now come from DeHub API data — no provider needed */}
         {/* All feeds mounted persistently, only active one visible */}
         <div style={{ display: activeTab === 'home' ? 'block' : 'none' }}>
           <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} pinnedPostId={pinnedPostId} />
@@ -601,7 +601,7 @@ export default function HomePage() {
         <div style={{ display: activeTab === 'w2e' ? 'block' : 'none' }}>
           <W2EFeed />
         </div>
-        </BadgeBalanceProvider>
+        {/* end feed tabs */}
       </div>
 
       {/* Stages Modal */}

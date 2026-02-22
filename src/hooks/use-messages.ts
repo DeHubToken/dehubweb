@@ -64,9 +64,9 @@ export function useConversations(searchQuery: string = '') {
       }
     },
     enabled: isAuthenticated,
-    staleTime: 30 * 1000, // 30 seconds
-    refetchInterval: 30 * 1000, // Poll every 30s for new messages
-    retry: 2, // Retry twice on API errors
+    staleTime: 60 * 1000, // 1 minute
+    refetchOnWindowFocus: true, // Refetch when user returns to tab
+    // No polling — Supabase Realtime handles DM updates
   });
 
   // Server-side search is now used via the query parameter
@@ -114,7 +114,7 @@ export function useMessages(conversationId: string | null) {
     initialPageParam: 0,
     enabled: isAuthenticated && !!conversationId,
     staleTime: 60 * 1000, // 1 minute
-    refetchInterval: 10 * 1000, // Poll every 10s for new messages
+    // No polling — Realtime subscription handles new messages
   });
 
   // Flatten pages into single array (newest last for chat display)

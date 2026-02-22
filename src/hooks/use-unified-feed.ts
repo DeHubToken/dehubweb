@@ -216,6 +216,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     status: item.status,
     creatorId: item.minter,
     creatorUsername: item.minterUsername,
+    creatorBadgeBalance: item.minterUser?.badgeBalance,
     isLiked: item.isLiked ?? false,
     isDisliked: item.isDisliked ?? false,
     likeCount: item.likes ?? item.totalVotes?.for ?? 0,
@@ -275,6 +276,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     status: item.status,
     creatorId: item.minter,
     creatorUsername: item.minterUsername,
+    creatorBadgeBalance: item.minterUser?.badgeBalance,
     isLiked: item.isLiked ?? false,
     isDisliked: item.isDisliked ?? false,
     // Preserve raw timestamp for navigation caching
@@ -317,6 +319,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
       handle: item.minterUsername || item.minter,
       avatarSeed: avatarUrl,
       verified: false,
+      badgeBalance: item.minterUser?.badgeBalance,
     },
     content: item.description || item.name || '',
     // Store raw timestamp - PostMetadata handles formatting

@@ -111,6 +111,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         contentType="post"
         creatorId={post.author.id}
         creatorUsername={post.author.handle}
+        badgeBalance={post.author.badgeBalance}
       />
 
       {/* AI Button and Options Drawer - positioned in header area */}

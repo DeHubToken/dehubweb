@@ -257,10 +257,21 @@ if (import.meta.hot) {
  */
 async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: string }> {
   if (cachedPimlicoConfig) return cachedPimlicoConfig;
+  
+  // Check sessionStorage first to survive HMR/reloads without re-fetching
+  const stored = sessionStorage.getItem('dehub_pimlico_config');
+  if (stored) {
+    try {
+      cachedPimlicoConfig = JSON.parse(stored);
+      return cachedPimlicoConfig;
+    } catch {}
+  }
+  
   return fetchWithRetry(async () => {
     const { data, error } = await supabase.functions.invoke("get-pimlico-config");
     if (!error && data?.bundlerUrl && data?.paymasterUrl) {
       cachedPimlicoConfig = data;
+      sessionStorage.setItem('dehub_pimlico_config', JSON.stringify(data));
       return cachedPimlicoConfig;
     }
     throw new Error(error?.message || "Pimlico config not configured");
@@ -334,6 +345,14 @@ async function fetchWithRetry<T>(fn: () => Promise<T>, label: string, maxRetries
 
 async function getWeb3AuthClientId(): Promise<string> {
   if (cachedClientId) return cachedClientId;
+  
+  // Check sessionStorage first to survive HMR/reloads without re-fetching
+  const stored = sessionStorage.getItem('dehub_web3auth_client_id');
+  if (stored) {
+    cachedClientId = stored;
+    return cachedClientId;
+  }
+  
   console.log("[Web3Auth] Fetching client ID from edge function...");
 
   return fetchWithRetry(async () => {
@@ -341,6 +360,7 @@ async function getWeb3AuthClientId(): Promise<string> {
     console.log("[Web3Auth] get-web3auth-config response:", { data, error });
     if (!error && data?.clientId) {
       cachedClientId = data.clientId;
+      sessionStorage.setItem('dehub_web3auth_client_id', data.clientId);
       return cachedClientId;
     }
     throw new Error(error?.message || "Web3Auth client ID not configured");
