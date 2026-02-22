@@ -253,7 +253,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         resetWeb3AuthState();
       }, 100);
     }
-  }, [isConnecting, walletAddress]);
+  }, [isConnecting, walletAddress, connectionSource]);
 
   // Check for existing session on mount
   useEffect(() => {
@@ -343,8 +343,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return;
         }
 
-        // CASE B: Already authed with DIFFERENT address -> Disconnect old session
+        // CASE B: Already authed with DIFFERENT address
         if (walletAddress && walletAddress.toLowerCase() !== wagmiAddress.toLowerCase()) {
+            const savedSrc = localStorage.getItem('dehub_connection_source');
+            // If active session is Web3Auth (social/email/SMS), Smart Account address will ALWAYS
+            // differ from any external wallet. Just silently disconnect Wagmi — don't wipe the session.
+            if (connectionSource === 'web3auth' || savedSrc === 'web3auth') {
+              console.log('[Auth] Address mismatch but Web3Auth session active - silently disconnecting Wagmi');
+              clearWagmiStorage();
+              wagmiDisconnect();
+              return;
+            }
             console.log('[Auth] Address mismatch (Wagmi vs Session), requiring re-auth');
             clearAuthSession();
             localStorage.removeItem('dehub_user');
