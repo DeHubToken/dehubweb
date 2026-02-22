@@ -108,13 +108,13 @@ export function useLiveChatMessages(roomId: string | null) {
     try {
       // Fetch from both sources in parallel
       const [apiResult, supabaseResult] = await Promise.allSettled([
-        fetchApiMessages(roomId, { limit: 50 }),
+        fetchApiMessages(roomId, { limit: 200 }),
         (supabase as any)
           .from('livechat_messages')
           .select('*')
           .eq('room_id', roomId)
-          .order('created_at', { ascending: true })
-          .limit(50),
+          .order('created_at', { ascending: false })
+          .limit(200),
       ]);
 
       const apiMapped =
