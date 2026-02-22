@@ -180,7 +180,7 @@ function SortFilterSection({
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
         <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+          <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
             {SORT_OPTIONS.map((option) => (
               <AnimatedFilterPill
                 key={option.label}
@@ -207,7 +207,7 @@ function SortFilterSection({
           className="w-full px-3 py-1.5 rounded-lg text-xs bg-zinc-800 text-zinc-200 placeholder-zinc-500 border border-zinc-700 focus:border-zinc-500 focus:outline-none transition-colors mb-1"
         />
         <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+          <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
             {/* Pinned selected category chip (before All) */}
             {selectedCategoryObj && (
               <button
@@ -255,7 +255,7 @@ function SortFilterSection({
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.uploadDate')}</span>
         <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+          <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
             {DATE_FILTER_OPTIONS.map((option) => (
               <AnimatedFilterPill
                 key={option.value}
@@ -275,7 +275,7 @@ function SortFilterSection({
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.postType')}</span>
         <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+          <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
             {POST_TYPE_FILTERS.map((option) => (
               <AnimatedFilterPill
                 key={option.value}

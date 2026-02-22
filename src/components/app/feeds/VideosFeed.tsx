@@ -238,7 +238,7 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
       <div className="relative">
-        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
           {SORT_OPTIONS.map((option) => (
             <AnimatedFilterPill
               key={option.label}
@@ -263,7 +263,7 @@ function DurationFilterSection({ selected, onSelect }: { selected: DurationFilte
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.duration')}</span>
       <div className="relative">
-        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
           {DURATION_FILTERS.map((option) => (
             <AnimatedFilterPill
               key={option.label}
@@ -288,7 +288,7 @@ function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterO
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.uploadDate')}</span>
       <div className="relative">
-        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
           {DATE_FILTER_OPTIONS.map((option) => (
             <AnimatedFilterPill
               key={option.label}
@@ -396,7 +396,7 @@ function CategoryFilterSection({
         className="w-full px-3 py-1.5 rounded-lg text-xs bg-zinc-800 text-zinc-200 placeholder-zinc-500 border border-zinc-700 focus:border-zinc-500 focus:outline-none transition-colors mb-1"
       />
       <div className="relative">
-        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
           {selectedObj && (
             <button
               onClick={() => { onSelect(null); setSearch(''); }}
