@@ -24,7 +24,7 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
 
   const handleTabClick = useCallback((id: TabType) => {
     persistedTab = id;
-    setActiveTab(id);
+    setActiveTab(() => id);
   }, []);
 
   const activeIndex = TAB_INDEX[activeTab];
