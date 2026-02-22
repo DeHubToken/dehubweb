@@ -137,7 +137,7 @@ export default function FullWalletPage() {
       </div>
 
       {/* Action buttons */}
-      <div className="grid grid-cols-3 gap-2 mb-4">
+      <div className="grid grid-cols-4 gap-2 mb-4">
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl" onClick={() => setReceiveDialogOpen(true)}>
           <ArrowDownToLine className="w-5 h-5" />
           <span className="text-xs">Receive</span>
@@ -149,9 +149,20 @@ export default function FullWalletPage() {
           <Send className="w-5 h-5" />
           <span className="text-xs">Send</span>
         </Button>
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl" onClick={() => {
+          const dexUrls: Record<number, string> = {
+            [BASE_CHAIN_ID]: 'https://app.uniswap.org/swap?chain=base',
+            [BNB_CHAIN_ID]: 'https://pancakeswap.finance/swap?chain=bsc',
+            [ETH_CHAIN_ID]: 'https://app.uniswap.org/swap?chain=mainnet',
+          };
+          window.open(dexUrls[selectedChain] || dexUrls[BASE_CHAIN_ID], '_blank');
+        }}>
+          <ShoppingCart className="w-5 h-5" />
+          <span className="text-xs">Buy</span>
+        </Button>
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl" onClick={() => setImportDialogOpen(true)}>
           <Plus className="w-5 h-5" />
-          <span className="text-xs">Import Token</span>
+          <span className="text-xs">Import</span>
         </Button>
       </div>
 
