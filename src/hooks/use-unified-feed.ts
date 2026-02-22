@@ -48,6 +48,8 @@ export interface UnifiedFeedParams {
   to?: string;
   shuffleSeed?: string;
   maxPerCreator?: number;
+  /** When true, only returns content from accounts the authenticated user follows. Requires JWT. */
+  followingOnly?: boolean;
 }
 
 export interface UnifiedFeedItem {
@@ -431,6 +433,7 @@ async function fetchUnifiedFeedFromAPI(params: UnifiedFeedParams = {}): Promise<
   if (params.to) url.searchParams.set('to', params.to);
   if (params.shuffleSeed) url.searchParams.set('shuffleSeed', params.shuffleSeed);
   if (params.maxPerCreator !== undefined) url.searchParams.set('maxPerCreator', String(params.maxPerCreator));
+  if (params.followingOnly) url.searchParams.set('followingOnly', 'true');
   
   const token = getAuthToken();
   const headers: HeadersInit = {

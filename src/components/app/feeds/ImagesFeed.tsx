@@ -8,6 +8,7 @@
  */
 
 import { useRef, useMemo, useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, ImageIcon, Grid3x3, Loader2, Ticket } from 'lucide-react';
@@ -313,11 +314,26 @@ export function ImagesFeed({
   
   
   // Get wallet address for authenticated requests
-  const { walletAddress } = useAuth();
+  const { walletAddress, isAuthenticated } = useAuth();
 
-  // Determine if premium content filters are active
+  // Determine if we need the unified feed API (premium filters or following mode)
   const isPremiumFilterActive = contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
-  
+  const isFollowingMode = selectedSort.value === 'following';
+  const useUnifiedSource = isPremiumFilterActive || isFollowingMode;
+
+  // Auth-guarded sort selection
+  const handleSortSelect = useCallback((option: SortOption) => {
+    if (option.value === 'subscribed') {
+      toast.info('Subscribed feed coming soon!');
+      return;
+    }
+    if (option.value === 'following' && !isAuthenticated) {
+      toast.info('Log in to see followed creators');
+      return;
+    }
+    setSelectedSort(option);
+  }, [isAuthenticated, setSelectedSort]);
+
   // Fetch from DeHub API (default - no content filters)
   const {
     data: apiData,
@@ -350,16 +366,17 @@ export function ImagesFeed({
     status: 'minted',
     sortBy: selectedSort.value === 'most-liked' ? 'likes' : 'createdAt',
     sortOrder: 'desc',
-    enabled: isPremiumFilterActive,
+    followingOnly: isFollowingMode ? true : undefined,
+    enabled: useUnifiedSource,
   });
 
   // Select the active data source based on filter state
-  const fetchNextPage = isPremiumFilterActive ? fetchNextPageUnified : fetchNextPageDefault;
-  const hasNextPage = isPremiumFilterActive ? hasNextPageUnified : hasNextPageDefault;
-  const isFetchingNextPage = isPremiumFilterActive ? isFetchingNextPageUnified : isFetchingNextPageDefault;
-  const isApiLoading = isPremiumFilterActive ? isApiLoadingUnified : isApiLoadingDefault;
-  const isError = isPremiumFilterActive ? isErrorUnified : isErrorDefault;
-  const refetch = isPremiumFilterActive ? refetchUnified : refetchDefault;
+  const fetchNextPage = useUnifiedSource ? fetchNextPageUnified : fetchNextPageDefault;
+  const hasNextPage = useUnifiedSource ? hasNextPageUnified : hasNextPageDefault;
+  const isFetchingNextPage = useUnifiedSource ? isFetchingNextPageUnified : isFetchingNextPageDefault;
+  const isApiLoading = useUnifiedSource ? isApiLoadingUnified : isApiLoadingDefault;
+  const isError = useUnifiedSource ? isErrorUnified : isErrorDefault;
+  const refetch = useUnifiedSource ? refetchUnified : refetchDefault;
 
   // Refetch when refreshKey changes
   useEffect(() => {
@@ -370,7 +387,7 @@ export function ImagesFeed({
 
   // Map API data to ImagePost array
   const imagePosts = useMemo(() => {
-    if (isPremiumFilterActive) {
+    if (useUnifiedSource) {
       if (!unifiedData?.pages) return [];
       const allItems = unifiedData.pages.flatMap(page => page.items || []);
       return allItems.map((item, index) => mapToImagePost(item, index));
@@ -378,7 +395,7 @@ export function ImagesFeed({
     if (!apiData?.pages) return [];
     const allNFTs = apiData.pages.flatMap(page => page.data || []);
     return allNFTs.map((nft, index) => mapNFTToImagePost(nft, index));
-  }, [apiData, unifiedData, isPremiumFilterActive]);
+  }, [apiData, unifiedData, useUnifiedSource]);
 
   // Handle image click in collage - switch to feed view
   const handleImageClick = (postId: string) => {
@@ -478,7 +495,7 @@ export function ImagesFeed({
             <div className="relative px-2 sm:px-3 pb-2 space-y-4">
               <SortFilterSection 
                 selected={selectedSort} 
-                onSelect={setSelectedSort} 
+                onSelect={handleSortSelect} 
               />
               <UploadDateFilterSection 
                 selected={selectedUploadDate} 

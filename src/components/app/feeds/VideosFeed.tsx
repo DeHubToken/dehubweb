@@ -8,6 +8,7 @@
  */
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery } from '@tanstack/react-query';
@@ -21,6 +22,7 @@ import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ShortsReel } from '@/components/app/cards/ShortsReel';
 
 import { useUnifiedFeed, mapToVideoItem, type UnifiedFeedParams, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
+import { useAuth } from '@/contexts/AuthContext';
 import { mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -129,6 +131,8 @@ function getUnifiedSortBy(sortValue: SortValue): UnifiedFeedParams['sortBy'] {
       return 'comments';
     case 'random':
       return 'random';
+    case 'following':
+      return 'createdAt'; // Following sorts by newest, server filters by followed users
     case 'latest':
     default:
       return 'createdAt';
@@ -444,6 +448,7 @@ function CategoryFilterSection({
 export function VideosFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: VideosFeedProps) {
   const navigate = useNavigate();
   const { t } = useI18n();
+  const { isAuthenticated } = useAuth();
   
   // Sort is now client-side - default to "Latest" for instant loading - persisted to sessionStorage
   const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('videos', 'sort', SORT_OPTIONS[0]);
@@ -453,7 +458,20 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('videos', 'category', null);
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('videos');
   const loaderRef = useRef<HTMLDivElement>(null);
-  const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
+  const isFetchingRef = useRef(false);
+
+  // Auth-guarded sort selection
+  const handleSortSelect = useCallback((option: SortOption) => {
+    if (option.value === 'subscribed') {
+      toast.info('Subscribed feed coming soon!');
+      return;
+    }
+    if (option.value === 'following' && !isAuthenticated) {
+      toast.info('Log in to see followed creators');
+      return;
+    }
+    setSelectedSort(option);
+  }, [isAuthenticated, setSelectedSort]);
 
   // Fetch categories from API
   const { data: apiCategories, isLoading: categoriesLoading } = useQuery({
@@ -474,8 +492,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
   // For "Most Liked", ignore date filter to get true all-time ranking (matches Home feed behavior)
   const effectiveRange = useMemo(() => {
-    if (selectedSort.value === 'most-liked' || selectedSort.value === 'random') {
-      return undefined; // No range limit for global ranking / random
+    if (selectedSort.value === 'most-liked' || selectedSort.value === 'random' || selectedSort.value === 'following') {
+      return undefined; // No range limit for global ranking / random / following
     }
     return getUnifiedRange(selectedUploadDate.value);
   }, [selectedSort.value, selectedUploadDate.value]);
@@ -501,6 +519,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     hasBounty: contentFilters.w2e || undefined,
     isLocked: contentFilters.locked || undefined,
     status: 'minted',
+    followingOnly: selectedSort.value === 'following' ? true : undefined,
   });
 
   // Fetch shorts for the carousel using unified feed (same approach as HomeFeed)
@@ -715,7 +734,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
             className="overflow-y-clip overflow-x-visible"
           >
             <div data-no-swipe className="relative px-2 sm:px-3 pb-2 space-y-4">
-              <SortFilterSection selected={selectedSort} onSelect={setSelectedSort} />
+              <SortFilterSection selected={selectedSort} onSelect={handleSortSelect} />
               <CategoryFilterSection 
                 categories={categories} 
                 selectedCategory={selectedCategory} 

@@ -6,7 +6,8 @@
  * @module components/app/feeds/ShortsFeed
  */
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
@@ -18,6 +19,7 @@ import { cn } from '@/lib/utils';
 import { AnimatedFilterPill } from '@/components/app/feeds/AnimatedFilterPill';
 import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
 import { useDeHubFeed } from '@/hooks/use-dehub-feed';
+import { useUnifiedFeed } from '@/hooks/use-unified-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
@@ -334,7 +336,21 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedIndex, setSelectedIndex] = useState(0);
   const loaderRef = useRef<HTMLDivElement>(null);
 
-  const { walletAddress } = useAuth();
+  const { walletAddress, isAuthenticated } = useAuth();
+  const isFollowingMode = selectedSort.value === 'following';
+
+  // Auth-guarded sort selection
+  const handleSortSelect = useCallback((option: SortOption) => {
+    if (option.value === 'subscribed') {
+      toast.info('Subscribed feed coming soon!');
+      return;
+    }
+    if (option.value === 'following' && !isAuthenticated) {
+      toast.info('Log in to see followed creators');
+      return;
+    }
+    setSelectedSort(option);
+  }, [isAuthenticated, setSelectedSort]);
 
   // Fetch categories from API
   const { data: apiCategories, isLoading: categoriesLoading } = useQuery({
@@ -353,21 +369,49 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     return FALLBACK_CATEGORIES;
   }, [apiCategories]);
 
-  // Fetch from DeHub API - pass sortMode based on selected filter
+  // Fetch from DeHub API - pass sortMode based on selected filter (default source)
   const {
     data: apiData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading: isApiLoading,
-    isError,
-    refetch,
+    fetchNextPage: fetchNextPageDefault,
+    hasNextPage: hasNextPageDefault,
+    isFetchingNextPage: isFetchingNextPageDefault,
+    isLoading: isApiLoadingDefault,
+    isError: isErrorDefault,
+    refetch: refetchDefault,
   } = useDeHubFeed({
     unit: 12,
     sortMode: getApiSortMode(selectedSort.value),
     category: selectedCategory || undefined,
     postType: 'video',
   });
+
+  // Fetch from unified feed API (when following mode is active)
+  const {
+    data: unifiedData,
+    fetchNextPage: fetchNextPageUnified,
+    hasNextPage: hasNextPageUnified,
+    isFetchingNextPage: isFetchingNextPageUnified,
+    isLoading: isApiLoadingUnified,
+    isError: isErrorUnified,
+    refetch: refetchUnified,
+  } = useUnifiedFeed({
+    postType: 'video',
+    limit: 12,
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    status: 'minted',
+    category: selectedCategory || undefined,
+    followingOnly: true,
+    enabled: isFollowingMode,
+  });
+
+  // Select active data source
+  const fetchNextPage = isFollowingMode ? fetchNextPageUnified : fetchNextPageDefault;
+  const hasNextPage = isFollowingMode ? hasNextPageUnified : hasNextPageDefault;
+  const isFetchingNextPage = isFollowingMode ? isFetchingNextPageUnified : isFetchingNextPageDefault;
+  const isApiLoading = isFollowingMode ? isApiLoadingUnified : isApiLoadingDefault;
+  const isError = isFollowingMode ? isErrorUnified : isErrorDefault;
+  const refetch = isFollowingMode ? refetchUnified : refetchDefault;
 
   // Refetch when refreshKey changes
   useEffect(() => {
@@ -376,21 +420,24 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     }
   }, [refreshKey, refetch]);
 
-  // Get raw NFTs for sorting
-  const allRawNFTs = useMemo((): DeHubNFT[] => {
+  // Get raw items for sorting - handle both data sources
+  const allRawNFTs = useMemo((): any[] => {
+    if (isFollowingMode) {
+      if (!unifiedData?.pages) return [];
+      return unifiedData.pages.flatMap(page => page.items || []);
+    }
     if (!apiData?.pages) return [];
     return apiData.pages.flatMap(page => page.data || []);
-  }, [apiData]);
+  }, [apiData, unifiedData, isFollowingMode]);
 
   // Apply date filter on raw NFTs, then sort and map to ShortVideo array
   const allShorts = useMemo(() => {
-    // API now returns only videos (postType: 'video'), no client-side filter needed
-    const dateFiltered = filterByDate(allRawNFTs, selectedUploadDate.value);
+    const dateFiltered = isFollowingMode ? allRawNFTs : filterByDate(allRawNFTs, selectedUploadDate.value);
     // Exclude PPV content from shorts
-    const nonPPV = dateFiltered.filter(nft => !nft.is_ppv && !nft.streamInfo?.isPayPerView);
-    const sorted = applySorting(nonPPV, selectedSort.value);
-    return sorted.map((nft, index) => mapToShortVideo(nft, index));
-  }, [allRawNFTs, selectedSort.value, selectedUploadDate.value]);
+    const nonPPV = dateFiltered.filter((nft: any) => !nft.is_ppv && !nft.streamInfo?.isPayPerView);
+    const sorted = isFollowingMode ? nonPPV : applySorting(nonPPV, selectedSort.value);
+    return sorted.map((nft: any, index: number) => mapToShortVideo(nft, index));
+  }, [allRawNFTs, selectedSort.value, selectedUploadDate.value, isFollowingMode]);
 
   // Apply client-side duration filter
   const shorts = useMemo((): ShortVideo[] => {
@@ -505,7 +552,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
               className="overflow-y-clip overflow-x-visible"
             >
               <div data-no-swipe className="relative px-2 sm:px-3 pb-2 space-y-4">
-                <SortFilterSection selected={selectedSort} onSelect={setSelectedSort} />
+                <SortFilterSection selected={selectedSort} onSelect={handleSortSelect} />
                 <CategoryFilterSection 
                   categories={categories} 
                   selectedCategory={selectedCategory} 

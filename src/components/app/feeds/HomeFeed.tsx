@@ -57,7 +57,7 @@ import {
 } from '@/hooks/use-unified-feed';
 import { useDeHubStoryUsers, useDeHubLive, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
-import { getMediaUrl, getNFTInfo, getAccountInfo, getCategories } from '@/lib/api/dehub';
+import { getMediaUrl, getNFTInfo, getCategories } from '@/lib/api/dehub';
 import type { DeHubCategory } from '@/lib/api/dehub';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
@@ -395,23 +395,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return allStreams.slice(0, 10).map((stream, index) => mapApiLiveStreamToLocal(stream, index));
   }, [liveData]);
 
-  // Fetch current user's following list for "Following" feed filter
-  const { data: currentUserData } = useQuery({
-    queryKey: ['current-user-followings', walletAddress],
-    queryFn: async () => {
-      if (!walletAddress) return null;
-      return getAccountInfo(walletAddress);
-    },
-    enabled: isAuthenticated && !!walletAddress && selectedSort.value === 'following',
-    staleTime: 30000,
-  });
-
-  // Get following list as a Set for O(1) lookups
-  const followingSet = useMemo(() => {
-    const followings = currentUserData?.followings;
-    if (!followings || !Array.isArray(followings)) return new Set<string>();
-    return new Set(followings.map(addr => addr.toLowerCase()));
-  }, [currentUserData?.followings]);
+  // "Following" mode is handled server-side via followingOnly=true API param
+  const isFollowingMode = selectedSort.value === 'following';
 
   // Handle sort selection with special logic for "Subscribed" (coming soon)
   const handleSortSelect = useCallback((option: SortOption) => {
@@ -467,7 +452,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     isPPV: contentFilters.ppv ? true : undefined,
     hasBounty: contentFilters.w2e ? true : undefined,
     isLocked: contentFilters.locked ? true : undefined,
-  }), [sortBy, sortOrder, range, selectedCategory, contentFilters]);
+    followingOnly: selectedSort.value === 'following' ? true : undefined,
+  }), [sortBy, sortOrder, range, selectedCategory, contentFilters, selectedSort.value]);
 
   // ============================================================================
   // THREE SEPARATE FEED QUERIES
@@ -749,34 +735,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const rawItems = useInterleavedFeed ? interleavedItems : singleFeedItems;
   
   const items = useMemo(() => {
-    let filteredItems = rawItems;
-    
-    // For "Following" mode, filter to only show posts from followed creators
-    if (selectedSort.value === 'following' && followingSet.size > 0) {
-      filteredItems = rawItems.filter((item) => {
-        let creatorId: string | undefined;
-        switch (item.type) {
-          case 'post':
-            creatorId = item.data.author?.id;
-            break;
-          case 'video':
-            creatorId = item.data.creatorId;
-            break;
-          case 'image':
-            creatorId = item.data.creatorId;
-            break;
-          default:
-            return true; // Keep shorts bundles
-        }
-        return creatorId ? followingSet.has(creatorId.toLowerCase()) : false;
-      });
-    }
-    
+    // Following filtering is now server-side via followingOnly=true
     return limitCreatorDiversity(
-      filteredItems,
+      rawItems,
       DEFAULT_MAX_POSTS_PER_CREATOR,
       (item) => {
-        // Extract creator ID based on item type
         switch (item.type) {
           case 'post':
             return item.data.author?.id;
@@ -785,7 +748,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           case 'image':
             return item.data.creatorId;
           case 'shorts':
-            // Shorts are a bundle, no single creator
             return undefined;
           default:
             return undefined;
@@ -793,7 +755,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       },
       DEFAULT_MIN_CREATOR_SPACING
     );
-  }, [rawItems, selectedSort.value, followingSet]);
+  }, [rawItems]);
 
   // ============================================================================
   // INFINITE SCROLL
@@ -1020,22 +982,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   const EmptyState = () => {
     // Custom message for Following feed
-    const isFollowingMode = selectedSort.value === 'following';
-    const hasNoFollowings = followingSet.size === 0;
+    const isFollowingEmpty = selectedSort.value === 'following';
     
     let title = 'No Content Yet';
     let description = (isError || retriesExhausted)
       ? 'Unable to load feed. Please try again.'
       : 'Be the first to share something amazing!';
     
-    if (isFollowingMode) {
-      if (hasNoFollowings) {
-        title = 'No Followed Creators';
-        description = 'Follow some creators to see their posts here!';
-      } else {
-        title = 'No Posts Yet';
-        description = 'The creators you follow haven\'t posted anything recently.';
-      }
+    if (isFollowingEmpty) {
+      title = 'No Posts Yet';
+      description = 'Follow some creators to see their posts here!';
     }
     
     return (
