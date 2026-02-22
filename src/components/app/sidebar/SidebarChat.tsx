@@ -7,6 +7,7 @@ import { TranslatableText, replaceLinksWithEmoji, SharedTranslationContext } fro
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { EmojiGifPicker } from '../chat/EmojiGifPicker';
+import { formatTimeAgo } from '@/lib/feed-utils';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
 import { getMediaUrl, getAuthToken } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -195,10 +196,11 @@ export function SidebarChat() {
                       </AvatarFallback>
                     </Avatar>
                   </button>
-                  <div className="min-w-0">
-                    <span className="relative inline-flex items-baseline">
+                  <div className="min-w-0 flex-1">
+                    <span className="relative inline-flex items-baseline gap-1.5">
                       <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>{name}</button>
                       <SidebarChatBadge address={msg.sender_address} />
+                      <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
                     </span>
                     {msg.message_type === 'image' && msg.image_url ? (
                       <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5" />
