@@ -117,7 +117,7 @@ export function SidebarChat() {
   const isLoading = roomsLoading || messagesLoading;
 
   return (
-    <div className="flex flex-col h-full px-4">
+    <div className="flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center gap-2 pb-3">
         <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">LIVE</span>
@@ -194,7 +194,7 @@ export function SidebarChat() {
       </div>
 
       {/* Input */}
-      <div className="p-3 border-t border-white/5">
+      <div className="p-3">
         <div className="relative">
           <Textarea
             placeholder="Type a message..."
