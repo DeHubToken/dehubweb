@@ -470,28 +470,31 @@ async function fetchUnifiedFeed(params: UnifiedFeedParams = {}): Promise<Unified
     return fetchUnifiedFeedFromAPI(params);
   }
   
-  // Authenticated: use cache as fast placeholder, but always return API result for personalized data
+  // Authenticated: race cache against API — cache can only help, never hurt
   if (cacheKey && page <= 5) {
-    // Race cache (with 2s timeout) against API
-    const cachePromise = fetchCachedFeed(cacheKey).catch(() => null);
-    const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2000));
+    const cacheWithTimeout = fetchCachedFeed(cacheKey)
+      .then(result => result || Promise.reject('empty'))
+      .catch(() => new Promise<null>(r => setTimeout(() => r(null), 500)));
     const apiPromise = fetchUnifiedFeedFromAPI(params);
     
-    // Wait for cache or timeout (whichever first)
-    const cachedResult = await Promise.race([cachePromise, timeoutPromise]);
+    // Race: whichever resolves first with data wins
+    const result = await Promise.race([
+      cacheWithTimeout.then(cached => {
+        if (cached) {
+          console.log(`[Feed] Cache won race for ${cacheKey}`);
+          apiPromise.catch(() => {}); // swallow unhandled rejection
+          return cached;
+        }
+        // Cache timed out — fall through to API
+        return apiPromise;
+      }),
+      apiPromise.then(apiResult => {
+        console.log(`[Feed] API won race for ${cacheKey}`);
+        return apiResult;
+      }),
+    ]);
     
-    if (cachedResult) {
-      // Cache resolved fast — return it immediately.
-      // The API call is still in-flight; TanStack Query's staleTime + refetchOnMount:false
-      // means the next background refetch will pick up personalized data.
-      console.log(`[Feed] Auth user: returning cached data for ${cacheKey} while API runs in background`);
-      // Don't await API — let it resolve naturally and be picked up on next refetch
-      apiPromise.catch(() => {}); // swallow unhandled rejection
-      return cachedResult;
-    }
-    
-    // Cache missed/timed out — wait for API
-    return apiPromise;
+    return result;
   }
   
   // No cacheable key or page > 2: direct API call
