@@ -125,9 +125,10 @@ export function MobileBottomNav() {
               onClick={handlePostClick}
               className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center"
             >
-              <div 
-                className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.15] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_2px_8px_rgba(0,0,0,0.3)] transition-all duration-300 active:scale-95"
-              >
+                <div 
+                  className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.15] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_2px_8px_rgba(0,0,0,0.3)] transition-all duration-300 active:scale-95"
+                  style={{ opacity: buttonOpacity }}
+                >
                 <Plus 
                   className="w-5 h-5 md:w-6 md:h-6 text-white" 
                 />
