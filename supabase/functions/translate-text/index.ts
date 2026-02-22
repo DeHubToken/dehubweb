@@ -76,6 +76,8 @@ const langCodeMap: Record<string, string> = {
   'af': 'af',
   'qu': 'qu',
   'am': 'am',
+  'sw': 'sw',
+  'zu': 'zu',
   'auto': 'autodetect',
 };
 
@@ -114,6 +116,8 @@ const langNameMap: Record<string, string> = {
   'af': 'Afrikaans',
   'qu': 'Quechua',
   'am': 'Amharic',
+  'sw': 'Swahili',
+  'zu': 'Zulu',
 };
 
 /**
