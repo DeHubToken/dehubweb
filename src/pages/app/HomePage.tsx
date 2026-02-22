@@ -474,7 +474,7 @@ export default function HomePage() {
       {/* Tab Navigation */}
       <div className="sticky top-11 lg:top-0 bg-black z-10 p-2 sm:p-3 lg:mt-0">
         <div className="bg-zinc-900 rounded-2xl p-1">
-          <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
+          <div className="flex gap-1 sm:gap-2 scrollbar-hide">
             {FEED_TABS.map((tab) => {
               const isActive = activeTab === tab.value;
               return (
