@@ -6,8 +6,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { RotateCcw, Loader2 } from 'lucide-react';
-import translateGlobeIcon from '@/assets/icons/translate-globe-icon.png';
+import { RotateCcw, Loader2, Languages } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserLanguage } from '@/hooks/use-user-language';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -80,7 +79,7 @@ export function BioTranslateButton({ bio, onTranslated, onShowOriginal, isTransl
           onClick={handleTranslate}
           className="text-muted-foreground hover:text-foreground transition-colors"
         >
-          <img src={translateGlobeIcon} alt="Translate" className="w-6 h-6 -mt-0.5 opacity-50 brightness-200 invert" />
+          <Languages className="w-5 h-5" />
         </button>
       </TooltipTrigger>
       <TooltipContent>Translate bio</TooltipContent>

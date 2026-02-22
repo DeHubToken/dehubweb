@@ -11,7 +11,7 @@
 
 import { useState, useMemo, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
-import { Globe, RotateCcw, Loader2 } from 'lucide-react';
+import { Languages, RotateCcw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
