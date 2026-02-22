@@ -174,10 +174,10 @@ export function SidebarChat() {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="min-h-[68px] max-h-32 resize-none text-sm bg-zinc-800 border-zinc-700 rounded-lg pr-24 pb-9 text-white placeholder:text-zinc-500"
-            rows={2}
+            className="min-h-[56px] max-h-32 resize-none text-sm bg-zinc-800 border-zinc-700 rounded-lg pb-8 leading-[1.35] text-white placeholder:text-zinc-500"
+            rows={1}
           />
-          <div className="absolute bottom-2 right-1.5 flex items-center gap-0.5">
+          <div className="absolute bottom-1.5 right-1.5 flex items-center gap-0.5">
             <EmojiGifPicker
               onEmojiSelect={handleEmojiSelect}
               onGifSelect={handleGifSelect}
