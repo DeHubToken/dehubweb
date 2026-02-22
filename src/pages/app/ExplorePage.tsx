@@ -71,6 +71,7 @@ const BRAND_QUERIES = ['d', 'de', 'deh', 'dehu', 'dehub'];
 type FilterState = {
   w2e: boolean;
   ppv: boolean;
+  gated: boolean;
   date: string;
   likes: string;
   shares: string;
@@ -80,22 +81,33 @@ type FilterState = {
 const FilterPill = ({ 
   label, 
   active, 
-  onClick 
+  onClick,
+  layoutId,
 }: { 
   label: string; 
   active: boolean; 
   onClick: () => void;
+  layoutId?: string;
 }) => (
   <button
     onClick={onClick}
     className={cn(
-      'px-3 py-1.5 rounded-full text-sm font-medium transition-all',
+      'relative px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
       active
-        ? 'bg-white text-black'
+        ? 'text-white'
         : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
     )}
   >
-    {label}
+    {active && layoutId ? (
+      <motion.div
+        layoutId={layoutId}
+        className="absolute inset-0 rounded-full bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+      />
+    ) : active ? (
+      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]" />
+    ) : null}
+    <span className="relative z-10">{label}</span>
   </button>
 );
 
@@ -292,6 +304,7 @@ export default function ExplorePage() {
   const [filters, setFilters] = useState<FilterState>({
     w2e: false,
     ppv: false,
+    gated: false,
     date: 'Any time',
     likes: 'Any',
     shares: 'Any',
@@ -523,16 +536,47 @@ export default function ExplorePage() {
       });
     }
     
+    // Apply content type filters on posts
+    let filteredPosts = videos.filter(p => p && (p.id || p.tokenId));
+    
+    const hasContentFilter = filters.w2e || filters.ppv || filters.gated;
+    if (hasContentFilter) {
+      filteredPosts = filteredPosts.filter(nft => {
+        if (filters.w2e && nft.is_w2e) return true;
+        if (filters.ppv && nft.is_ppv) return true;
+        if (filters.gated && nft.is_locked) return true;
+        return false;
+      });
+    }
+
+    // Apply date filter
+    if (filters.date !== 'Any time') {
+      const now = new Date();
+      let cutoff: Date;
+      switch (filters.date) {
+        case 'Today': cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate()); break;
+        case 'This week': cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); break;
+        case 'This month': cutoff = new Date(now.getFullYear(), now.getMonth(), 1); break;
+        case 'This year': cutoff = new Date(now.getFullYear(), 0, 1); break;
+        default: cutoff = new Date(0);
+      }
+      filteredPosts = filteredPosts.filter(nft => {
+        const created = nft.createdAt || nft.created_at;
+        return created ? new Date(created) >= cutoff : true;
+      });
+    }
+
     return {
       users: peopleResults.filter(u => u && u.id),
-      posts: videos.filter(p => p && (p.id || p.tokenId)),
+      posts: filteredPosts,
       total: searchData?.pages?.[0]?.total || 0,
     };
-  }, [searchData, allTabAccountData, exactUser, brandUser, isShortSearch, effectiveQuery]);
+  }, [searchData, allTabAccountData, exactUser, brandUser, isShortSearch, effectiveQuery, filters]);
 
   const activeFilterCount = [
     filters.w2e,
     filters.ppv,
+    filters.gated,
     filters.date !== 'Any time',
     filters.likes !== 'Any',
     filters.shares !== 'Any',
@@ -543,6 +587,7 @@ export default function ExplorePage() {
     setFilters({
       w2e: false,
       ppv: false,
+      gated: false,
       date: 'Any time',
       likes: 'Any',
       shares: 'Any',
@@ -631,15 +676,18 @@ export default function ExplorePage() {
             <button
               onClick={() => setShowFilters(!showFilters)}
               className={cn(
-                'flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all',
+                'relative flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-colors',
                 showFilters || activeFilterCount > 0
-                  ? 'bg-white text-black'
+                  ? 'text-white'
                   : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
               )}
             >
-              <SlidersHorizontal className="w-5 h-5" />
+              {(showFilters || activeFilterCount > 0) && (
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]" />
+              )}
+              <SlidersHorizontal className="relative z-10 w-5 h-5" />
               {activeFilterCount > 0 && (
-                <span className="text-sm font-medium">{activeFilterCount}</span>
+                <span className="relative z-10 text-sm font-medium">{activeFilterCount}</span>
               )}
             </button>
           </div>
@@ -680,6 +728,7 @@ export default function ExplorePage() {
                           label={cat}
                           active={selectedCategory === cat}
                           onClick={() => setSelectedCategory(cat)}
+                          layoutId="explore-category"
                         />
                       ))}
                     </div>
@@ -699,6 +748,11 @@ export default function ExplorePage() {
                       label="PPV"
                       active={filters.ppv}
                       onClick={() => setFilters(f => ({ ...f, ppv: !f.ppv }))}
+                    />
+                    <FilterPill
+                      label="Gated"
+                      active={filters.gated}
+                      onClick={() => setFilters(f => ({ ...f, gated: !f.gated }))}
                     />
                   </div>
                 </div>
