@@ -184,6 +184,7 @@ function FeatureCard({
             <UserAvatar
               name={feature.author_username || feature.author_wallet_address.slice(0, 6)}
               handle={feature.author_username || feature.author_wallet_address}
+              avatarUrl={avatarUrl}
               size="sm"
             />
             <span className="text-zinc-500 text-[11px]">{displayName}</span>

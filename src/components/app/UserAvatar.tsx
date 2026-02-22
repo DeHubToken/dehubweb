@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 interface UserAvatarProps {
   name: string;
   handle: string;
+  avatarUrl?: string | null;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -14,9 +15,10 @@ const sizeClasses = {
   lg: 'w-12 h-12',
 };
 
-export function UserAvatar({ name, handle, size = 'md', className }: UserAvatarProps) {
+export function UserAvatar({ name, handle, avatarUrl, size = 'md', className }: UserAvatarProps) {
   return (
     <Avatar className={cn(sizeClasses[size], className)}>
+      {avatarUrl && <AvatarImage src={avatarUrl} alt={`${name}'s avatar`} />}
       <AvatarFallback className="bg-zinc-700 text-white font-medium">
         {name.charAt(0).toUpperCase()}
       </AvatarFallback>
