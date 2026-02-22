@@ -1,11 +1,14 @@
-import { Pin, ShieldBan, ShieldCheck, MoreVertical } from 'lucide-react';
+import { useState, useCallback } from 'react';
+import { Pin, ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { TranslatableText } from '../TranslatableText';
+import { TranslatableText, renderTextWithLinks } from '../TranslatableText';
+import { useTranslation as useTextTranslation } from '../TranslatableText';
 import { useLiveChatUser } from '@/hooks/use-livechat';
 import { useNavigate } from 'react-router-dom';
 import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
+import translateGlobeIcon from '@/assets/icons/translate-globe-icon.png';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,6 +67,14 @@ function StakingBadgeInline({ address }: { address: string }) {
 
 export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnban }: ChatMessageProps) {
   const navigate = useNavigate();
+  const {
+    isTranslated,
+    translatedText,
+    isLoading: isTranslateLoading,
+    isTooShort,
+    handleTranslate,
+    handleShowOriginal,
+  } = useTextTranslation(message.content);
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -170,8 +181,25 @@ export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnb
         
         {message.type === 'text' && (
           <div>
-            <TranslatableText text={message.content} className="text-zinc-300 text-sm break-words" as="p" />
-            <span className="text-zinc-500 text-[10px] whitespace-nowrap block mt-0.5">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
+            <p className="text-zinc-300 text-sm break-words whitespace-pre-wrap">
+              {renderTextWithLinks(isTranslated ? translatedText : message.content)}
+            </p>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
+              {!isTooShort && (
+                isTranslateLoading ? (
+                  <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
+                ) : isTranslated ? (
+                  <button onClick={handleShowOriginal} className="flex items-center text-zinc-500 hover:text-zinc-300 transition-colors">
+                    <RotateCcw className="w-2.5 h-2.5" />
+                  </button>
+                ) : (
+                  <button onClick={handleTranslate} className="flex items-center text-zinc-500 hover:text-zinc-300 transition-colors">
+                    <img src={translateGlobeIcon} alt="Translate" className="w-3 h-3 opacity-40 brightness-200 invert" />
+                  </button>
+                )
+              )}
+            </div>
           </div>
         )}
         
@@ -183,8 +211,26 @@ export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnb
               className="max-w-xs max-h-64 rounded-lg object-cover"
             />
             {message.content && (
-              <TranslatableText text={message.content} className="text-zinc-300 text-sm mt-1" as="p" />
+              <p className="text-zinc-300 text-sm mt-1 whitespace-pre-wrap">
+                {renderTextWithLinks(isTranslated ? translatedText : message.content)}
+              </p>
             )}
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
+              {message.content && !isTooShort && (
+                isTranslateLoading ? (
+                  <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
+                ) : isTranslated ? (
+                  <button onClick={handleShowOriginal} className="flex items-center text-zinc-500 hover:text-zinc-300 transition-colors">
+                    <RotateCcw className="w-2.5 h-2.5" />
+                  </button>
+                ) : (
+                  <button onClick={handleTranslate} className="flex items-center text-zinc-500 hover:text-zinc-300 transition-colors">
+                    <img src={translateGlobeIcon} alt="Translate" className="w-3 h-3 opacity-40 brightness-200 invert" />
+                  </button>
+                )
+              )}
+            </div>
           </div>
         )}
         

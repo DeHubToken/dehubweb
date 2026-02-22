@@ -325,5 +325,6 @@
     "cannotReadContract": "Token sözleşmesi okunamadı. Adresin doğru olduğundan emin olun.",
     "imported": "{{symbol}} içe aktarıldı",
     "custom": "ÖZEL"
-  }
+  },
+  "publicChat": { "title": "Genel Sohbet", "subtitle": "Topluluk sohbetine katılın", "searchMessages": "Mesaj ara", "searchPlaceholder": "Ara...", "resultsCount": "{{count}} sonuç", "noResults": "Mesaj bulunamadı", "allThingsDeHub": "DeHub hakkında her şey", "noRooms": "Sohbet odası yok", "checkBackLater": "Daha sonra tekrar gelin veya yeni bir oda oluşturun", "noMessages": "Henüz mesaj yok", "beFirst": "İlk mesajı siz yazın!", "failedToLoad": "Sohbet yüklenemedi", "tryAgain": "Tekrar dene", "sending": "Gönderiliyor...", "signInToSend": "Mesaj göndermek için giriş yapın", "signInToModerate": "Yönetmek için giriş yapın", "pinned": "Sabitlendi", "unpin": "Sabiti kaldır", "pinMessage": "Mesajı sabitle", "banUser": "Kullanıcıyı yasakla", "unbanUser": "Yasağı kaldır", "moderator": "Moderatör", "createRoom": "Yeni oda oluştur", "roomSettings": "Oda ayarları", "messagePinned": "Mesaj sabitlendi", "messageUnpinned": "Mesaj sabiti kaldırıldı", "online": "{{count}} çevrimiçi" }
 }
