@@ -16,7 +16,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import Hls from 'hls.js';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
-import { CommentsSection } from './CommentsSection';
+import { CommentsWrapper } from './CommentsWrapper';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -507,17 +507,12 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
       </div>
 
-      {/* Comments Drawer */}
-      <Drawer open={showComments} onOpenChange={setShowComments}>
-        <DrawerContent glass hideHandle className="max-h-[70vh] flex flex-col overflow-hidden">
-          <div className="flex-1 min-h-0 px-4 pb-4 pt-2">
-            <CommentsSection
-              tokenId={stream.id}
-              onClose={() => setShowComments(false)}
-            />
-          </div>
-        </DrawerContent>
-      </Drawer>
+      {/* Comments */}
+      <CommentsWrapper
+        open={showComments}
+        onOpenChange={setShowComments}
+        tokenId={stream.id}
+      />
 
       {/* Gift Drawer */}
       <Drawer open={showGiftDrawer} onOpenChange={setShowGiftDrawer}>

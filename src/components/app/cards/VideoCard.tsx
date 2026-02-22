@@ -34,7 +34,7 @@ import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { TipModal } from '../modals/TipModal';
-import { CommentsSection } from './CommentsSection';
+import { CommentsWrapper } from './CommentsWrapper';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
@@ -1343,17 +1343,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           isOptimistic={video.isOptimistic}
         />
 
-        {/* Comments - Always use Drawer for consistent liquid glass style */}
-        <Drawer open={showComments} onOpenChange={setShowComments}>
-          <DrawerContent glass hideHandle className="max-h-[70vh] flex flex-col overflow-hidden">
-            <div className="flex-1 min-h-0 px-4 pb-4 pt-2">
-              <CommentsSection
-                tokenId={video.id}
-                onClose={() => setShowComments(false)}
-              />
-            </div>
-          </DrawerContent>
-        </Drawer>
+        {/* Comments */}
+        <CommentsWrapper
+          open={showComments}
+          onOpenChange={setShowComments}
+          tokenId={video.id}
+        />
       </div>
 
       {/* AI Chat */}
