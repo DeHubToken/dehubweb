@@ -90,16 +90,20 @@ export function WhoToFollow() {
     return () => el.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
-  // Auto-fetch next page or refetch when filtered suggestions run low
+  // Auto-fetch next page when filtered suggestions run low (only after user follows someone)
+  const prevFilteredCount = useRef(filteredSuggestions.length);
   useEffect(() => {
-    if (filteredSuggestions.length < 3 && !isLoading) {
+    if (
+      filteredSuggestions.length < 3 &&
+      filteredSuggestions.length < prevFilteredCount.current &&
+      !isLoading && !error
+    ) {
       if (hasNextPage && !isFetchingNextPage) {
         fetchNextPage();
-      } else if (!hasNextPage && !isFetching) {
-        refetch();
       }
     }
-  }, [filteredSuggestions.length, hasNextPage, isFetchingNextPage, isLoading, fetchNextPage, isFetching, refetch]);
+    prevFilteredCount.current = filteredSuggestions.length;
+  }, [filteredSuggestions.length, hasNextPage, isFetchingNextPage, isLoading, fetchNextPage, error]);
 
   if (error) {
     console.warn('[WhoToFollow] Query error:', error);
