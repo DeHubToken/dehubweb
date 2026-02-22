@@ -1,19 +1,19 @@
-import { useState, useMemo, useCallback } from 'react';
-import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Trash2, ExternalLink, Search, ShoppingCart } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
-import { useWalletTokens, useAllChainsTokens } from '@/hooks/use-wallet-tokens';
+import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
 import { createOnrampSession } from '@/lib/api/dpay';
-import { getERC20Metadata, saveCustomToken, removeCustomToken, formatBalance, type WalletToken } from '@/lib/wallet/tokens';
+import { getERC20Metadata, saveCustomToken, formatBalance, type WalletToken } from '@/lib/wallet/tokens';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { switchChain } from '@/lib/contracts/aa-utils';
 import type { ChainId } from '@/components/app/ChainSelector';
@@ -39,19 +39,32 @@ const TOKEN_ICONS: Record<string, string> = {
   WBNB: bnbLogo,
 };
 
+// Grouped token: combines balances across chains
+interface GroupedToken {
+  symbol: string;
+  name: string;
+  totalBalance: bigint;
+  totalFormattedBalance: string;
+  decimals: number;
+  logo?: string;
+  isCustom?: boolean;
+  chains: WalletToken[]; // individual per-chain entries
+}
+
 export default function FullWalletPage() {
   const { isAuthenticated, walletAddress } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [selectedChain, setSelectedChain] = useState<ChainId>(BASE_CHAIN_ID);
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
   const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [importChainId, setImportChainId] = useState<ChainId>(BASE_CHAIN_ID);
   const [selectedToken, setSelectedToken] = useState<WalletToken | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [chainPickerToken, setChainPickerToken] = useState<GroupedToken | null>(null);
+  const [actionToken, setActionToken] = useState<WalletToken | null>(null);
 
-  const { tokens, isLoading, refetch, isFetching } = useWalletTokens(selectedChain);
-  const { allTokens } = useAllChainsTokens();
+  const { allTokens, isLoading } = useAllChainsTokens();
 
   // Collect auto-detected tokens (not in TOKEN_ICONS) for dynamic price lookups
   const extraTokensForPricing = useMemo(() => {
@@ -78,20 +91,49 @@ export default function FullWalletPage() {
     }, 0);
   }, [allTokens, prices]);
 
-  const filteredTokens = useMemo(() => {
-    if (!searchQuery.trim()) return tokens;
+  // Group tokens by symbol across chains
+  const groupedTokens = useMemo(() => {
+    const map = new Map<string, GroupedToken>();
+    for (const token of allTokens) {
+      const existing = map.get(token.symbol);
+      if (existing) {
+        existing.totalBalance = existing.totalBalance + token.balance;
+        existing.totalFormattedBalance = formatBalance(existing.totalBalance, existing.decimals, 8);
+        existing.chains.push(token);
+        if (token.isCustom) existing.isCustom = true;
+      } else {
+        map.set(token.symbol, {
+          symbol: token.symbol,
+          name: token.name,
+          totalBalance: token.balance,
+          totalFormattedBalance: token.formattedBalance,
+          decimals: token.decimals,
+          logo: token.logo,
+          isCustom: token.isCustom,
+          chains: [token],
+        });
+      }
+    }
+    return Array.from(map.values());
+  }, [allTokens]);
+
+  const filteredGrouped = useMemo(() => {
+    if (!searchQuery.trim()) return groupedTokens;
     const q = searchQuery.toLowerCase();
-    return tokens.filter(t => t.symbol.toLowerCase().includes(q) || t.name.toLowerCase().includes(q));
-  }, [tokens, searchQuery]);
+    return groupedTokens.filter(g => g.symbol.toLowerCase().includes(q) || g.name.toLowerCase().includes(q));
+  }, [groupedTokens, searchQuery]);
 
   // Separate tokens with balance vs zero balance
   const { withBalance, zeroBalance } = useMemo(() => {
-    const withBalance = filteredTokens.filter(t => t.balance > BigInt(0));
-    const zeroBalance = filteredTokens.filter(t => t.balance === BigInt(0));
+    const withBalance = filteredGrouped.filter(g => g.totalBalance > BigInt(0));
+    const zeroBalance = filteredGrouped.filter(g => g.totalBalance === BigInt(0));
     return { withBalance, zeroBalance };
-  }, [filteredTokens]);
+  }, [filteredGrouped]);
 
   const [copied, setCopied] = useState(false);
+
+  // All tokens with balance across all chains (for send dialog)
+  const allWithBalance = useMemo(() => allTokens.filter(t => t.balance > BigInt(0)), [allTokens]);
 
   if (!isAuthenticated) {
     return <AuthGate description="Log in to access your wallet." />;
@@ -110,7 +152,14 @@ export default function FullWalletPage() {
     setSendDialogOpen(true);
   };
 
-  const chainConfig = CHAIN_CONFIGS[selectedChain];
+  // Smart click handler: if token is on 1 chain, open actions directly. If multiple, show chain picker.
+  const handleGroupedTokenClick = (grouped: GroupedToken) => {
+    if (grouped.chains.length === 1) {
+      setActionToken(grouped.chains[0]);
+    } else {
+      setChainPickerToken(grouped);
+    }
+  };
 
   return (
     <div className="p-2 sm:p-3 pt-2 lg:pt-3 min-h-screen max-w-2xl mx-auto">
@@ -144,7 +193,7 @@ export default function FullWalletPage() {
           <span className="text-xs">Receive</span>
         </Button>
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl" onClick={() => {
-          if (withBalance.length > 0) handleSend(withBalance[0]);
+          if (allWithBalance.length > 0) handleSend(allWithBalance[0]);
           else toast.info('No tokens with balance to send');
         }}>
           <Send className="w-5 h-5" />
@@ -177,27 +226,6 @@ export default function FullWalletPage() {
         </Button>
       </div>
 
-      {/* Chain selector */}
-      <div className="relative flex gap-1 p-1 rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10 mb-4">
-        {CHAIN_OPTIONS.map(chain => (
-          <button
-            key={chain.id}
-            onClick={() => setSelectedChain(chain.id)}
-            className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors z-10 flex-1 justify-center"
-          >
-            {selectedChain === chain.id && (
-              <motion.div
-                layoutId="wallet-chain-indicator"
-                className="absolute inset-0 rounded-xl bg-white/[0.12] backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
-                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-              />
-            )}
-            <img src={chain.icon} alt={chain.name} className="w-5 h-5 rounded-md relative z-10" />
-            <span className={`relative z-10 ${selectedChain === chain.id ? 'text-white' : 'text-zinc-500'}`}>{chain.name}</span>
-          </button>
-        ))}
-      </div>
-
       {/* Search */}
       <div className="relative mb-4">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
@@ -210,36 +238,80 @@ export default function FullWalletPage() {
       </div>
 
       {/* Token list */}
-      <div className={`space-y-1 transition-opacity duration-150 ${isFetching && !isLoading ? 'opacity-60' : 'opacity-100'}`}>
-        {isLoading && tokens.length === 0 ? (
+      <div className="space-y-1">
+        {isLoading && allTokens.length === 0 ? (
           <div className="flex items-center justify-center py-16">
             <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
           </div>
         ) : (
           <>
-            {withBalance.map(token => (
-              <TokenRow key={`${token.chainId}-${token.address}`} token={token} onSend={handleSend} onReceive={() => setReceiveDialogOpen(true)} chainConfig={chainConfig} walletAddress={walletAddress} />
+            {withBalance.map(grouped => (
+              <GroupedTokenRow key={grouped.symbol} grouped={grouped} onClick={() => handleGroupedTokenClick(grouped)} />
             ))}
             {zeroBalance.length > 0 && withBalance.length > 0 && (
               <div className="pt-3 pb-1">
                 <span className="text-xs text-zinc-600 uppercase tracking-wider font-medium">Zero balance</span>
               </div>
             )}
-            {zeroBalance.map(token => (
-              <TokenRow key={`${token.chainId}-${token.address}`} token={token} onSend={handleSend} onReceive={() => setReceiveDialogOpen(true)} chainConfig={chainConfig} walletAddress={walletAddress} />
+            {zeroBalance.map(grouped => (
+              <GroupedTokenRow key={grouped.symbol} grouped={grouped} onClick={() => handleGroupedTokenClick(grouped)} />
             ))}
           </>
         )}
       </div>
+
+      {/* Chain Picker Drawer - shown when token exists on multiple chains */}
+      <Drawer open={!!chainPickerToken} onOpenChange={v => { if (!v) setChainPickerToken(null); }}>
+        <DrawerContent glass>
+          <DrawerHeader>
+            <DrawerTitle className="text-white">
+              {chainPickerToken?.symbol} — Select Chain
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="px-4 pb-6 space-y-2">
+            {chainPickerToken?.chains.map(token => {
+              const chainInfo = CHAIN_OPTIONS.find(c => c.id === token.chainId);
+              const hasBalance = token.balance > BigInt(0);
+              return (
+                <button
+                  key={token.chainId}
+                  onClick={() => {
+                    setChainPickerToken(null);
+                    setTimeout(() => setActionToken(token), 200);
+                  }}
+                  className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
+                >
+                  {chainInfo && <img src={chainInfo.icon} alt={chainInfo.name} className="w-6 h-6 rounded-md" />}
+                  <div className="text-left flex-1 min-w-0">
+                    <span className="text-sm font-medium text-white">{chainInfo?.name || `Chain ${token.chainId}`}</span>
+                    <p className={`text-xs ${hasBalance ? 'text-zinc-400' : 'text-zinc-600'}`}>{token.formattedBalance} {token.symbol}</p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Token Action Drawer - shown for a specific chain token */}
+      <TokenActionDrawer
+        open={!!actionToken}
+        onOpenChange={v => { if (!v) setActionToken(null); }}
+        token={actionToken}
+        icon={actionToken ? (TOKEN_ICONS[actionToken.symbol] || actionToken.logo) : undefined}
+        hasBalance={actionToken ? actionToken.balance > BigInt(0) : false}
+        onSend={() => { const t = actionToken; setActionToken(null); if (t) handleSend(t); }}
+        onReceive={() => { setActionToken(null); setReceiveDialogOpen(true); }}
+      />
 
       {/* Send Dialog */}
       <SendDialog
         open={sendDialogOpen}
         onOpenChange={setSendDialogOpen}
         token={selectedToken}
-        chainId={selectedChain}
-        onSuccess={() => { refetch(); setSendDialogOpen(false); }}
-        allTokens={withBalance}
+        chainId={selectedToken?.chainId ?? BASE_CHAIN_ID}
+        onSuccess={() => { setSendDialogOpen(false); }}
+        allTokens={allWithBalance}
         onTokenChange={setSelectedToken}
       />
 
@@ -255,7 +327,7 @@ export default function FullWalletPage() {
                 <QrCode className="w-32 h-32 text-zinc-900" />
               </div>
             </div>
-            <p className="text-xs text-zinc-500 text-center">Send tokens to your wallet address on the {CHAIN_CONFIGS[selectedChain]?.name} network</p>
+            <p className="text-xs text-zinc-500 text-center">Send tokens to your wallet address (available on all supported chains)</p>
             <div className="w-full bg-zinc-800 rounded-xl p-3">
               <p className="text-xs text-zinc-400 font-mono break-all text-center">{walletAddress}</p>
             </div>
@@ -271,84 +343,65 @@ export default function FullWalletPage() {
       <ImportTokenDialog
         open={importDialogOpen}
         onOpenChange={setImportDialogOpen}
-        chainId={selectedChain}
-        onImported={() => { refetch(); setImportDialogOpen(false); }}
+        chainId={importChainId}
+        onImported={() => { setImportDialogOpen(false); }}
       />
     </div>
   );
 }
 
-/* ─── Token Row ─── */
-function TokenRow({ token, onSend, onReceive, chainConfig, walletAddress }: { 
-  token: WalletToken; 
-  onSend: (t: WalletToken) => void; 
-  onReceive: () => void;
-  chainConfig: any;
-  walletAddress?: string;
-}) {
-  const icon = TOKEN_ICONS[token.symbol] || token.logo;
-  const hasBalance = token.balance > BigInt(0);
-  const [showActions, setShowActions] = useState(false);
+/* ─── Grouped Token Row ─── */
+function GroupedTokenRow({ grouped, onClick }: { grouped: GroupedToken; onClick: () => void }) {
+  const icon = TOKEN_ICONS[grouped.symbol] || grouped.logo;
+  const hasBalance = grouped.totalBalance > BigInt(0);
+  const chainCount = grouped.chains.length;
 
   return (
-    <>
-      <motion.div
-        layout
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -8 }}
-        className="flex items-center justify-between p-3 rounded-xl hover:bg-zinc-900/60 transition-colors group cursor-pointer"
-        onClick={() => setShowActions(true)}
-      >
-        <div className="flex items-center gap-3 min-w-0">
-          {icon ? (
-            <img src={icon} alt={token.symbol} className="w-9 h-9 rounded-full shrink-0" />
-          ) : (
-            <div className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center shrink-0">
-              <span className="text-xs font-bold text-zinc-400">{token.symbol.slice(0, 2)}</span>
-            </div>
-          )}
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5">
-              <span className="text-sm font-medium text-white">{token.symbol}</span>
-              {token.isCustom && <span className="text-[10px] bg-violet-500/20 text-violet-400 px-1.5 py-0.5 rounded">CUSTOM</span>}
-            </div>
-            <span className="text-xs text-zinc-500 truncate block">{token.name}</span>
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      className="flex items-center justify-between p-3 rounded-xl hover:bg-zinc-900/60 transition-colors group cursor-pointer"
+      onClick={onClick}
+    >
+      <div className="flex items-center gap-3 min-w-0">
+        {icon ? (
+          <div className="relative shrink-0">
+            <img src={icon} alt={grouped.symbol} className="w-9 h-9 rounded-full" />
+            {chainCount > 1 && (
+              <span className="absolute -bottom-1 -right-1 bg-zinc-700 text-[9px] text-zinc-300 font-bold rounded-full w-4 h-4 flex items-center justify-center border border-zinc-900">
+                {chainCount}
+              </span>
+            )}
           </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="text-right">
-            <span className={`text-sm font-medium ${hasBalance ? 'text-white' : 'text-zinc-600'}`}>{token.formattedBalance}</span>
+        ) : (
+          <div className="relative shrink-0">
+            <div className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center">
+              <span className="text-xs font-bold text-zinc-400">{grouped.symbol.slice(0, 2)}</span>
+            </div>
+            {chainCount > 1 && (
+              <span className="absolute -bottom-1 -right-1 bg-zinc-700 text-[9px] text-zinc-300 font-bold rounded-full w-4 h-4 flex items-center justify-center border border-zinc-900">
+                {chainCount}
+              </span>
+            )}
           </div>
-          {token.isCustom && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 hover:text-red-400"
-              onClick={(e) => {
-                e.stopPropagation();
-                removeCustomToken(token.chainId, token.address);
-                toast.success(`Removed ${token.symbol}`);
-                window.dispatchEvent(new Event('custom-token-changed'));
-              }}
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-            </Button>
-          )}
+        )}
+        <div className="min-w-0">
+          <div className="flex items-center gap-1.5">
+            <span className="text-sm font-medium text-white">{grouped.symbol}</span>
+            {grouped.isCustom && <span className="text-[10px] bg-violet-500/20 text-violet-400 px-1.5 py-0.5 rounded">CUSTOM</span>}
+          </div>
+          <span className="text-xs text-zinc-500 truncate block">
+            {grouped.name}
+            {chainCount > 1 && <span className="text-zinc-600"> · {chainCount} chains</span>}
+          </span>
         </div>
-      </motion.div>
-
-      {/* Token action drawer */}
-      <TokenActionDrawer
-        open={showActions}
-        onOpenChange={setShowActions}
-        token={token}
-        icon={icon}
-        hasBalance={hasBalance}
-        onSend={() => { setShowActions(false); onSend(token); }}
-        onReceive={() => { setShowActions(false); onReceive(); }}
-      />
-    </>
+      </div>
+      <div className="text-right">
+        <span className={`text-sm font-medium ${hasBalance ? 'text-white' : 'text-zinc-600'}`}>{grouped.totalFormattedBalance}</span>
+      </div>
+    </motion.div>
   );
 }
 
@@ -356,12 +409,14 @@ function TokenRow({ token, onSend, onReceive, chainConfig, walletAddress }: {
 function TokenActionDrawer({ open, onOpenChange, token, icon, hasBalance, onSend, onReceive }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  token: WalletToken;
+  token: WalletToken | null;
   icon: string | undefined;
   hasBalance: boolean;
   onSend: () => void;
   onReceive: () => void;
 }) {
+  if (!token) return null;
+  const chainInfo = CHAIN_OPTIONS.find(c => c.id === token.chainId);
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent glass>
@@ -376,7 +431,10 @@ function TokenActionDrawer({ open, onOpenChange, token, icon, hasBalance, onSend
             )}
             <div>
               <span className="block">{token.symbol}</span>
-              <span className="text-xs text-zinc-500 font-normal">{token.formattedBalance} {token.symbol}</span>
+              <span className="text-xs text-zinc-500 font-normal">
+                {token.formattedBalance} {token.symbol}
+                {chainInfo && <span> · {chainInfo.name}</span>}
+              </span>
             </div>
           </DrawerTitle>
         </DrawerHeader>
@@ -558,12 +616,13 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
 }
 
 /* ─── Import Token Dialog ─── */
-function ImportTokenDialog({ open, onOpenChange, chainId, onImported }: {
+function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImported }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   chainId: ChainId;
   onImported: () => void;
 }) {
+  const [chainId, setChainId] = useState<ChainId>(initialChainId);
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const [tokenInfo, setTokenInfo] = useState<{ name: string; symbol: string; decimals: number } | null>(null);
@@ -601,6 +660,22 @@ function ImportTokenDialog({ open, onOpenChange, chainId, onImported }: {
           <DialogTitle className="text-white">Import Custom Token</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 pt-2">
+          {/* Chain selector for import */}
+          <div className="flex gap-1.5">
+            {CHAIN_OPTIONS.map(chain => (
+              <button
+                key={chain.id}
+                onClick={() => { setChainId(chain.id); setTokenInfo(null); }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  chainId === chain.id ? 'bg-zinc-700 text-white' : 'bg-zinc-800 text-zinc-500 hover:text-zinc-300'
+                }`}
+              >
+                <img src={chain.icon} alt={chain.name} className="w-4 h-4 rounded-sm" />
+                {chain.name}
+              </button>
+            ))}
+          </div>
+
           <p className="text-xs text-zinc-500">Add any ERC-20 token on {CHAIN_CONFIGS[chainId]?.name || 'this network'} by pasting the contract address.</p>
           <div className="space-y-2">
             <label className="text-sm text-zinc-400">Token contract address</label>
