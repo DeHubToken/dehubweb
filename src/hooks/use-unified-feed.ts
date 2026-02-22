@@ -471,7 +471,7 @@ async function fetchUnifiedFeed(params: UnifiedFeedParams = {}): Promise<Unified
   }
   
   // Authenticated: use cache as fast placeholder, but always return API result for personalized data
-  if (cacheKey && page <= 2) {
+  if (cacheKey && page <= 5) {
     // Race cache (with 2s timeout) against API
     const cachePromise = fetchCachedFeed(cacheKey).catch(() => null);
     const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2000));

@@ -29,9 +29,7 @@ import {
   formatTimeAgo, 
   CONTENT_PATTERN,
   interleaveByPattern,
-  limitCreatorDiversity,
-  DEFAULT_MAX_POSTS_PER_CREATOR,
-  DEFAULT_MIN_CREATOR_SPACING,
+  
   type SortOption, 
   type DateFilterOption, 
   type ContentTypeFilters, 
@@ -734,28 +732,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // This ensures users see content from a variety of creators (max 2 per creator in view)
   const rawItems = useInterleavedFeed ? interleavedItems : singleFeedItems;
   
-  const items = useMemo(() => {
-    // Following filtering is now server-side via followingOnly=true
-    return limitCreatorDiversity(
-      rawItems,
-      DEFAULT_MAX_POSTS_PER_CREATOR,
-      (item) => {
-        switch (item.type) {
-          case 'post':
-            return item.data.author?.id;
-          case 'video':
-            return item.data.creatorId;
-          case 'image':
-            return item.data.creatorId;
-          case 'shorts':
-            return undefined;
-          default:
-            return undefined;
-        }
-      },
-      DEFAULT_MIN_CREATOR_SPACING
-    );
-  }, [rawItems]);
+  const items = rawItems;
 
   // ============================================================================
   // INFINITE SCROLL
@@ -824,7 +801,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           });
         }
       },
-      { threshold: 0.1, rootMargin: '100px' }
+      { threshold: 0.1, rootMargin: '600px' }
     );
 
     observer.observe(loaderRef.current);
