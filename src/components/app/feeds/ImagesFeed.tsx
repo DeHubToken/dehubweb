@@ -54,7 +54,7 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
       <div className="relative">
-        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
           {SORT_OPTIONS.map((option) => (
             <AnimatedFilterPill
               key={option.label}
@@ -78,7 +78,7 @@ function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterO
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.uploadDate')}</span>
       <div className="relative">
-        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
           {DATE_FILTER_OPTIONS.map((option) => (
             <AnimatedFilterPill
               key={option.label}
