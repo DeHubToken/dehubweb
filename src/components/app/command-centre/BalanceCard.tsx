@@ -60,7 +60,7 @@ export function BalanceCard() {
     <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 flex flex-col">
       {/* Header */}
       <div className="mb-4">
-        <span className="text-zinc-400 text-sm">{t('commandCentre.totalBalance')}</span>
+        <span className="text-zinc-400 text-sm">{t('commandCentre.totalDhbBalance')}</span>
         <div className="flex items-center gap-2 mt-1">
           <img src={dehubCoin} alt="DeHub" className="w-8 h-8 sm:w-9 sm:h-9" />
           {isLoading ? (
