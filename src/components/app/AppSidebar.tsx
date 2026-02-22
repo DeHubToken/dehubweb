@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PenSquare, LogIn, LogOut } from 'lucide-react';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
@@ -8,6 +8,8 @@ import { DesktopSidebar } from './navigation/DesktopSidebar';
 import { SidebarNavItem } from './navigation/SidebarNavItem';
 import { PostModal } from '@/features/post';
 import { useAuth } from '@/contexts/AuthContext';
+import { ChainSelector, type ChainId } from './ChainSelector';
+import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -18,6 +20,14 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   const location = useLocation();
   const { isAuthenticated, disconnect } = useAuth();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [selectedChainId, setSelectedChainId] = useState<ChainId>(() => {
+    const stored = localStorage.getItem('preferred-chain-id');
+    return stored ? (Number(stored) as ChainId) : (BASE_CHAIN_ID as ChainId);
+  });
+  const handleChainChange = useCallback((id: ChainId) => {
+    setSelectedChainId(id);
+    localStorage.setItem('preferred-chain-id', String(id));
+  }, []);
 
   const mobileNavContent = (
     <>
@@ -64,13 +74,20 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               Post
             </div>
           </LiquidGlassBubble>
-          <button
-            onClick={() => { onToggle(); disconnect(); }}
-            className="w-full flex items-center justify-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors py-2"
-          >
-            <LogOut className="w-4 h-4" />
-            Log out
-          </button>
+          <div className="flex items-center justify-center gap-3">
+            <ChainSelector
+              selectedChainId={selectedChainId}
+              onChainChange={handleChainChange}
+              variant="icon"
+            />
+            <button
+              onClick={() => { onToggle(); disconnect(); }}
+              className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors py-2"
+            >
+              <LogOut className="w-4 h-4" />
+              Log out
+            </button>
+          </div>
         </div>
       )}
     </>

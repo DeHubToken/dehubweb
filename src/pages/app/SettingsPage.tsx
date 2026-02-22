@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Settings as SettingsIcon, 
@@ -73,6 +73,8 @@ import settingsIcon from '@/assets/icons/settings-icon.png';
 import { useUserLanguage } from '@/hooks/use-user-language';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 import { useTranslation } from 'react-i18next';
+import { ChainSelector, type ChainId } from '@/components/app/ChainSelector';
+import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 
 const TAB_KEYS: Record<string, string> = {
   profile: 'settings.profile',
@@ -97,6 +99,14 @@ const tabs = [
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
   const [theme, setTheme] = useState('system');
+  const [selectedChainId, setSelectedChainId] = useState<ChainId>(() => {
+    const stored = localStorage.getItem('preferred-chain-id');
+    return stored ? (Number(stored) as ChainId) : (BASE_CHAIN_ID as ChainId);
+  });
+  const handleChainChange = useCallback((id: ChainId) => {
+    setSelectedChainId(id);
+    localStorage.setItem('preferred-chain-id', String(id));
+  }, []);
   const { isAuthenticated, disconnect } = useAuth();
 
   const { t } = useTranslation();
@@ -129,13 +139,20 @@ export default function SettingsPage() {
               <p className="text-zinc-500 text-sm">{t('settings.manageAccount')}</p>
             </div>
           </div>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-white"
-          >
-            <LogOut className="w-4 h-4" />
-            <span className="hidden sm:inline text-sm font-medium">{t('settings.logOut')}</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <ChainSelector
+              selectedChainId={selectedChainId}
+              onChainChange={handleChainChange}
+              variant="icon"
+            />
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-white"
+            >
+              <LogOut className="w-4 h-4" />
+              <span className="hidden sm:inline text-sm font-medium">{t('settings.logOut')}</span>
+            </button>
+          </div>
         </div>
 
         {/* Tab Icons */}
