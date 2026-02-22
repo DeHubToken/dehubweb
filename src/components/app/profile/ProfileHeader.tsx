@@ -8,6 +8,7 @@ import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { ShimmerBorder } from '@/components/app/stories/ShimmerBorder';
 import { TranslatableText } from '@/components/app/TranslatableText';
 import { BioTranslateButton } from '@/components/app/profile/BioTranslateButton';
+import { ProfileSocialLinks } from '@/components/app/profile/ProfileSocialLinks';
 import { MutualFollowers } from '@/components/app/profile/MutualFollowers';
 import {
   AlertDialog,
@@ -404,6 +405,9 @@ export function ProfileHeader({
             )}
           </div>
           
+          {/* Social Links */}
+          <ProfileSocialLinks customs={profile.customs} />
+
           {/* Followers/Following */}
           {(!hideFollowerCounts || isViewingOwnProfile) && (
             <div className="flex items-center gap-4 mt-3">
