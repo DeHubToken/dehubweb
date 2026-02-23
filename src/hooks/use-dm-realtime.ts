@@ -27,7 +27,9 @@ export function useDMRealtime() {
                     event: 'INSERT',
                     schema: 'public',
                     table: 'direct_messages',
-                    // No complex filter here, we'll check addresses in the callback
+                    // No server-side filter — address casing in DB may differ from lowercase userAddress,
+                    // causing Supabase's case-sensitive filter to silently miss messages.
+                    // We filter client-side instead.
                 },
                 (payload: any) => {
                     const { sender_address, receiver_address, conversation_id } = payload.new;
@@ -46,16 +48,10 @@ export function useDMRealtime() {
                         if (conversation_id) {
                             queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversation_id) });
                         }
-                        // Also invalidate by other user's address (for new conversations)
-                        const otherAddress = sender_address?.toLowerCase() === userAddress ? receiver_address : sender_address;
-                        if (otherAddress) {
-                            queryClient.invalidateQueries({ queryKey: messagesKeys.messages(otherAddress.toLowerCase()) });
-                        }
 
                         // 3. Show notification toast if it's an incoming message
                         if (receiver_address?.toLowerCase() === userAddress) {
                             const senderName = payload.new.sender_username || payload.new.sender_display_name || 'Someone';
-                            // Check if we are currently on the messages page for this conversation
                             const isCurrentChat = window.location.pathname.includes(`/app/messages`) &&
                                 (window.location.search.includes(conversation_id) || window.location.search.includes(sender_address));
 

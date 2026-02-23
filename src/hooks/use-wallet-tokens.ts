@@ -33,8 +33,8 @@ export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), chainId],
     queryFn: () => getAllTokenBalances(walletAddress!, chainId),
     enabled: !!walletAddress && isAuthenticated,
-    staleTime: 30_000,
-    refetchInterval: 60_000,
+    staleTime: 60_000,
+    refetchInterval: 3 * 60_000, // 3 minutes — balances don't change that fast
     placeholderData: keepPreviousData,
   });
 

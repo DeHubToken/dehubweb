@@ -461,7 +461,7 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
   useEffect(() => {
     if (!currentSpace) return;
 
-    // Subscribe to participants
+    // Subscribe to participants — update state directly from payload, no extra DB query
     const participantsChannel = supabase
       .channel(`participants:${currentSpace.id}`)
       .on('postgres_changes', {
@@ -470,20 +470,30 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
         table: 'space_participants',
         filter: `space_id=eq.${currentSpace.id}`
       }, (payload) => {
-        console.log('Participant change:', payload);
-        // Refresh participants list
-        supabase
-          .from('space_participants')
-          .select('*')
-          .eq('space_id', currentSpace.id)
-          .is('left_at', null)
-          .then(({ data }) => {
-            if (data) setParticipants(data as SpaceParticipant[]);
-          });
+        if (payload.eventType === 'INSERT') {
+          const newParticipant = payload.new as SpaceParticipant;
+          if (!newParticipant.left_at) {
+            setParticipants(prev => {
+              if (prev.some(p => p.id === newParticipant.id)) return prev;
+              return [...prev, newParticipant];
+            });
+          }
+        } else if (payload.eventType === 'UPDATE') {
+          const updated = payload.new as SpaceParticipant;
+          if (updated.left_at) {
+            // Participant left — remove them
+            setParticipants(prev => prev.filter(p => p.id !== updated.id));
+          } else {
+            setParticipants(prev => prev.map(p => p.id === updated.id ? updated : p));
+          }
+        } else if (payload.eventType === 'DELETE') {
+          const removed = payload.old as SpaceParticipant;
+          setParticipants(prev => prev.filter(p => p.id !== removed.id));
+        }
       })
       .subscribe();
 
-    // Subscribe to hand requests (for host)
+    // Subscribe to hand requests — update state directly from payload, no extra DB query
     const handChannel = supabase
       .channel(`hands:${currentSpace.id}`)
       .on('postgres_changes', {
@@ -492,16 +502,25 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
         table: 'raise_hand_requests',
         filter: `space_id=eq.${currentSpace.id}`
       }, (payload) => {
-        console.log('Hand request change:', payload);
-        // Refresh hand requests
-        supabase
-          .from('raise_hand_requests')
-          .select('*')
-          .eq('space_id', currentSpace.id)
-          .eq('status', 'pending')
-          .then(({ data }) => {
-            if (data) setHandRequests(data as RaiseHandRequest[]);
-          });
+        if (payload.eventType === 'INSERT') {
+          const newRequest = payload.new as RaiseHandRequest;
+          if (newRequest.status === 'pending') {
+            setHandRequests(prev => {
+              if (prev.some(r => r.id === newRequest.id)) return prev;
+              return [...prev, newRequest];
+            });
+          }
+        } else if (payload.eventType === 'UPDATE') {
+          const updated = payload.new as RaiseHandRequest;
+          if (updated.status !== 'pending') {
+            setHandRequests(prev => prev.filter(r => r.id !== updated.id));
+          } else {
+            setHandRequests(prev => prev.map(r => r.id === updated.id ? updated : r));
+          }
+        } else if (payload.eventType === 'DELETE') {
+          const removed = payload.old as RaiseHandRequest;
+          setHandRequests(prev => prev.filter(r => r.id !== removed.id));
+        }
       })
       .subscribe();
 

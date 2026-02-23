@@ -65,8 +65,8 @@ export default function BuyCoinsPage() {
     queryKey: ['dpay', 'supply', selectedToken?.symbol],
     queryFn: () => getTokenAvailableSupply(selectedToken?.symbol || 'DHB'),
     enabled: isAuthenticated && !!selectedToken,
-    staleTime: 30 * 1000,
-    refetchInterval: 60 * 1000,
+    staleTime: 2 * 60 * 1000,
+    refetchInterval: 5 * 60 * 1000,
   });
 
   // Fetch chain-specific price
@@ -74,8 +74,8 @@ export default function BuyCoinsPage() {
     queryKey: ['dpay', 'price', selectedChainId],
     queryFn: () => getDPayPriceByChain(selectedChainId),
     enabled: isAuthenticated,
-    staleTime: 30 * 1000,
-    refetchInterval: 30 * 1000,
+    staleTime: 2 * 60 * 1000,
+    refetchInterval: 2 * 60 * 1000,
   });
 
   // Fallback to general price if chain price fails

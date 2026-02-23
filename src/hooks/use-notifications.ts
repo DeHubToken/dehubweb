@@ -43,8 +43,8 @@ export function useNotifications(category?: NotificationCategory) {
     },
     initialPageParam: 1,
     enabled: isAuthenticated,
-    staleTime: 30 * 1000, // 30 seconds
-    refetchInterval: 60 * 1000, // Poll every minute
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    refetchInterval: 5 * 60 * 1000, // Poll every 5 minutes
   });
 
   // Flatten pages into single array, filtering out any undefined items
@@ -74,8 +74,8 @@ export function useUnreadNotificationCount() {
     queryKey: notificationKeys.unreadCount(),
     queryFn: getUnreadNotificationCount,
     enabled: isAuthenticated,
-    staleTime: 30 * 1000,
-    refetchInterval: 60 * 1000, // Poll every minute
+    staleTime: 2 * 60 * 1000,
+    refetchInterval: 5 * 60 * 1000, // Poll every 5 minutes
   });
 }
 

@@ -155,7 +155,7 @@ export function useStreamCredentials(streamId: string | null) {
  * Fetch the activity log (joins, gifts, likes, comments) for a stream.
  * Polls at the specified interval while enabled.
  */
-export function useStreamActivities(streamId: string | null, pollInterval = 5000) {
+export function useStreamActivities(streamId: string | null, pollInterval = 15000) {
   const [activities, setActivities] = useState<StreamActivity[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);

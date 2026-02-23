@@ -65,8 +65,7 @@ export function useConversations(searchQuery: string = '') {
     },
     enabled: isAuthenticated,
     staleTime: 60 * 1000, // 1 minute
-    refetchOnWindowFocus: true, // Refetch when user returns to tab
-    // No polling — Supabase Realtime handles DM updates
+    refetchOnWindowFocus: false, // Realtime handles DM updates — no need to refetch on focus
   });
 
   // Server-side search is now used via the query parameter
@@ -151,10 +150,8 @@ export function useMessages(conversationId: string | null) {
         },
         (payload) => {
           console.log('[useMessages] New message received via Realtime:', payload);
-          // Invalidate messages query to trigger a refetch
+          // Invalidate this thread only — useDMRealtime handles conversations globally
           queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
-          // Also invalidate conversations to update the sidebar
-          queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
         }
       )
       .subscribe();
@@ -461,8 +458,8 @@ export function useUserOnlineStatus(address: string | null) {
     queryKey: [...messagesKeys.all, 'userStatus', address],
     queryFn: () => getUserOnlineStatus(address!),
     enabled: isAuthenticated && !!address,
-    staleTime: 30 * 1000, // 30 seconds
-    refetchInterval: 60 * 1000, // Refresh every minute
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    refetchInterval: 3 * 60 * 1000, // Refresh every 3 minutes
   });
 }
 
