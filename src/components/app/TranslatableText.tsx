@@ -231,13 +231,6 @@ export function useTranslation(text: string) {
       const translated = data.translatedText;
       const detected = data.detectedLanguage?.language || 'unknown';
 
-      // Only skip if the translated output is identical to the input (no change)
-      if (translated.trim() === text.trim()) {
-        setError('Already in your language');
-        setTimeout(() => setError(null), 2000);
-        return;
-      }
-
       translationCache.set(cacheKey, { translated, sourceLang: detected });
 
       setTranslatedText(translated);

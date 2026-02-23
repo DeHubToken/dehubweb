@@ -136,9 +136,19 @@ async function translateWithMyMemory(
     const target = langCodeMap[targetLang] || targetLang;
     const langpair = `${source}|${target}`;
     
+    // MyMemory struggles with texts over ~500 chars, skip to AI for long texts
+    if (text.length > 500) {
+      console.log('Text too long for MyMemory, skipping to AI');
+      return null;
+    }
+    
     const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${encodeURIComponent(langpair)}`;
     
-    const response = await fetch(url);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000); // 5s timeout
+    
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeout);
     
     if (!response.ok) {
       console.log(`MyMemory returned status: ${response.status}`);
@@ -148,16 +158,21 @@ async function translateWithMyMemory(
     const data = await response.json();
     
     if (data.responseStatus !== 200) {
-      console.log(`MyMemory response status: ${data.responseStatus}`);
+      console.log(`MyMemory response status: ${data.responseStatus}, message: ${data.responseDetails}`);
       return null;
     }
     
     const translatedText = data.responseData.translatedText;
     
-    // If the translated text is identical to the input, consider it a failure
-    // This happens when MyMemory can't actually translate the text
+    // Check for quota exceeded or error messages in the response
+    if (!translatedText || translatedText.includes('MYMEMORY WARNING') || translatedText.includes('PLEASE CONTACT')) {
+      console.log('MyMemory quota exceeded or error in response');
+      return null;
+    }
+    
+    // If the translated text is identical to the input (case-insensitive), MyMemory couldn't translate
     if (translatedText.trim().toLowerCase() === text.trim().toLowerCase()) {
-      console.log('MyMemory returned same text as input, treating as failure');
+      console.log('MyMemory returned same text as input, falling back to AI');
       return null;
     }
     
@@ -205,9 +220,13 @@ async function translateWithAI(
         messages: [
           {
             role: 'system',
-            content: `You are a translator. Translate the user's text to ${targetLanguageName}. 
-IMPORTANT: Reply with ONLY the translated text, no explanations, no quotes, no additional text.
-If the text is already in ${targetLanguageName}, still output it as-is.`
+            content: `You are a professional translator. Translate the following text to ${targetLanguageName}. 
+Rules:
+- Output ONLY the translated text
+- No explanations, quotes, labels, or extra text
+- Preserve formatting, line breaks, emojis, and special characters
+- If text contains slang or informal language, translate it naturally
+- Translate ALL of the text, do not skip any part`
           },
           {
             role: 'user',
@@ -215,7 +234,7 @@ If the text is already in ${targetLanguageName}, still output it as-is.`
           }
         ],
         temperature: 0.1,
-        max_tokens: 1000,
+        max_tokens: 2000,
       }),
     });
 
