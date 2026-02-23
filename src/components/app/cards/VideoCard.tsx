@@ -1309,13 +1309,27 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           </div>
         )}
         <SharedTranslationProvider>
-          <TranslatableText text={video.title} className="text-white text-sm font-medium mb-1" as="h3" hideControls />
-          {video.description && video.description !== video.title && (
-            <ExpandableDescription 
-              description={video.description} 
-              isImmersive={isImmersive} 
-            />
-          )}
+          {(() => {
+            // Split translated text back into title + description
+            let translatedTitle = video.title;
+            let translatedDesc = video.description || '';
+            if (isVideoTranslated && videoTranslatedText) {
+              const parts = videoTranslatedText.split('\n\n');
+              translatedTitle = parts[0] || video.title;
+              translatedDesc = parts.slice(1).join('\n\n') || video.description || '';
+            }
+            return (
+              <>
+                <TranslatableText text={isVideoTranslated ? translatedTitle : video.title} className="text-white text-sm font-medium mb-1" as="h3" hideControls />
+                {video.description && video.description !== video.title && (
+                  <ExpandableDescription 
+                    description={isVideoTranslated ? translatedDesc : video.description} 
+                    isImmersive={isImmersive} 
+                  />
+                )}
+              </>
+            );
+          })()}
         </SharedTranslationProvider>
         <div className="mb-3">
           <PostMetadata 
