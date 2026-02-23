@@ -8,6 +8,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lightbulb, Search, ChevronUp, ChevronDown, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2 } from 'lucide-react';
+import { TranslatableText } from '@/components/app/TranslatableText';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -185,18 +186,14 @@ function FeatureCard({
         <div className="flex-1 min-w-0">
           {/* Title and status */}
           <div className="flex items-start gap-2 mb-1.5">
-            <h3 className="text-white font-semibold text-sm leading-tight flex-1 min-w-0">
-              {feature.title}
-            </h3>
+            <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight flex-1 min-w-0" as="h3" hideControls />
             <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 ${STATUS_COLORS[feature.status]}`}>
               {STATUS_LABELS[feature.status]}
             </span>
           </div>
 
           {/* Description */}
-          <p className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`}>
-            {feature.description}
-          </p>
+          <TranslatableText text={feature.description} className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`} as="p" />
 
           {/* Footer: author + category + time + comments */}
           <div className="flex items-center gap-2 flex-wrap">
@@ -275,7 +272,7 @@ function FeatureCard({
                               </button>
                             )}
                           </div>
-                          <p className="text-zinc-300 text-xs leading-relaxed">{comment.content}</p>
+                          <TranslatableText text={comment.content} className="text-zinc-300 text-xs leading-relaxed" as="p" />
                         </div>
                       </div>
                     );
@@ -489,17 +486,13 @@ function ShippedCard({ feature }: { feature: FeatureRequest }) {
 
       <div className="flex-1 min-w-0">
         <div className="flex items-start gap-2 mb-1.5">
-          <h3 className="text-white font-semibold text-sm leading-tight flex-1 min-w-0">
-            {feature.title}
-          </h3>
+          <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight flex-1 min-w-0" as="h3" hideControls />
           <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 bg-emerald-900/40 text-emerald-400">
             Shipped
           </span>
         </div>
 
-        <p className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`}>
-          {feature.description}
-        </p>
+        <TranslatableText text={feature.description} className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`} as="p" />
 
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded-lg text-[10px] font-medium">
