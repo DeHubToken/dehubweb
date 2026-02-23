@@ -15,6 +15,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
+import { useDMRealtime } from '@/hooks/use-dm-realtime';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
 import dehubLogo from '@/assets/dehub-logo.png';
@@ -123,6 +124,9 @@ export default function MessagesPage() {
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { isAuthenticated, walletAddress } = useAuth();
+  
+  // Subscribe to DM realtime updates only when on messages page
+  useDMRealtime();
 
   const{ 
     conversations, 
