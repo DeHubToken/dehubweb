@@ -175,7 +175,7 @@ export function SharedTranslationProvider({ children }: { children: ReactNode })
   );
 }
 
-const MIN_TEXT_LENGTH_FOR_TRANSLATION = 10;
+const MIN_TEXT_LENGTH_FOR_TRANSLATION = 1;
 
 // Custom hook for translation logic (shared between components)
 // On-demand only: no auto-detection, translate-text is called when user clicks
