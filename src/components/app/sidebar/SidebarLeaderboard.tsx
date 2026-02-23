@@ -91,16 +91,15 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
 
   // Badge balances are already embedded in leaderboard cache entries (entry.badgeBalance)
 
-  const displayEntries = entries.length > 0 ? entries : Array.from({ length: 10 }, (_, i) => ({
-    account: `placeholder-${i}`,
-    total: 0,
-    username: undefined,
-    userDisplayName: undefined,
-    avatarUrl: undefined,
-    sentTips: 0,
-    receivedTips: 0,
-    _isPlaceholder: true,
-  })) as (LeaderboardEntry & { _isPlaceholder?: boolean })[];
+  if (!isLoading && entries.length === 0) {
+    return (
+      <div className="flex items-center justify-center py-8 text-zinc-500 text-sm">
+        {apiPeriod !== 'all' ? 'No data for this period yet' : 'No data yet'}
+      </div>
+    );
+  }
+
+  const displayEntries = entries;
 
   const getAvatarUrl = (entry: LeaderboardEntry) => {
     if (entry.avatarUrl && entry.account) {
