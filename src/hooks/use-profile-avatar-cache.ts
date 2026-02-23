@@ -66,7 +66,12 @@ async function processBatchQueue() {
     for (const item of items) {
       const result = avatarMap[item.address.toLowerCase()];
       if (result?.avatarUrl) {
-        const url = buildAvatarUrl(item.address, result.avatarUrl);
+        // Use the address from the API response if available (handles username-based lookups like "maldoteth")
+        const resolvedAddress = result.address && result.address !== item.address ? result.address : item.address;
+        // If avatarUrl contains a different address (e.g. avatars/0x9324...jpg), extract it for correct CDN path
+        const avatarPathMatch = result.avatarUrl.match(/avatars\/(0x[a-fA-F0-9]+)\./);
+        const addressForUrl = avatarPathMatch ? avatarPathMatch[1] : resolvedAddress;
+        const url = buildAvatarUrl(addressForUrl, result.avatarUrl);
         item.resolve(url);
       } else {
         item.resolve(undefined);
