@@ -423,5 +423,8 @@
     "messagePinned": "Nachricht angepinnt",
     "messageUnpinned": "Nachricht gelöst",
     "online": "{{count}} online"
+  },
+  "auth": {
+    "loginRequired": "Anmeldung erforderlich"
   }
 }

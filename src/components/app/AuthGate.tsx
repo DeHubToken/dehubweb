@@ -9,6 +9,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import assistantAvatar from '@/assets/assistant-avatar.png';
@@ -19,6 +20,7 @@ interface AuthGateProps {
 }
 
 export function AuthGate({ description }: AuthGateProps) {
+  const { t } = useTranslation();
   const { openLoginModal, isLoading, isConnecting, needsSignature } = useAuth();
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -30,9 +32,9 @@ export function AuthGate({ description }: AuthGateProps) {
   };
 
   const getButtonText = () => {
-    if (isConnecting) return 'Connecting...';
-    if (needsSignature) return 'Sign message';
-    return 'Log in';
+    if (isConnecting) return t('nav.connecting');
+    if (needsSignature) return t('nav.signMessage');
+    return t('nav.login');
   };
 
   return (
@@ -58,7 +60,7 @@ export function AuthGate({ description }: AuthGateProps) {
             alt="Log in" 
             className="w-20 h-20 object-contain mb-6 translate-y-[11px]"
           />
-          <h2 className="text-xl font-semibold text-white mb-6">Log in required</h2>
+          <h2 className="text-xl font-semibold text-white mb-6">{t('auth.loginRequired')}</h2>
           <Button 
             onClick={handleLogin}
             disabled={isConnecting}

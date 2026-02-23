@@ -354,5 +354,8 @@
     "messagePinned": "消息已置顶",
     "messageUnpinned": "已取消置顶",
     "online": "{{count}}人在线"
+  },
+  "auth": {
+    "loginRequired": "需要登录"
   }
 }

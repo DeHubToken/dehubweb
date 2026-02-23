@@ -558,5 +558,6 @@
     "cannotReadContract": "خواندن قرارداد توکن ممکن نیست. مطمئن شوید آدرس صحیح است.",
     "imported": "{{symbol}} وارد شد",
     "custom": "سفارشی"
-  }
+  },
+  "auth": { "loginRequired": "ورود لازم است" }
 }

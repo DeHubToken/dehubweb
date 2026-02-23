@@ -737,5 +737,8 @@
     "statusInProgress": "In Progress",
     "statusCompleted": "Completed",
     "statusDeclined": "Declined"
+  },
+  "auth": {
+    "loginRequired": "Log in required"
   }
 }

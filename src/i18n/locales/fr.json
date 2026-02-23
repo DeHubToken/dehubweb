@@ -423,5 +423,8 @@
     "messagePinned": "Message épinglé",
     "messageUnpinned": "Message désépinglé",
     "online": "{{count}} en ligne"
+  },
+  "auth": {
+    "loginRequired": "Connexion requise"
   }
 }
