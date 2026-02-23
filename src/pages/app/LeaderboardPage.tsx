@@ -166,9 +166,8 @@ export default function LeaderboardPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['leaderboard', apiSortMode, timePeriod],
     queryFn: () => getLeaderboard(apiSortMode, timePeriod),
-    staleTime: 60 * 60 * 1000, // 1 hour — matches server-side cache refresh
+    staleTime: 60 * 60 * 1000,
     gcTime: 2 * 60 * 60 * 1000,
-    placeholderData: (prev) => prev, // Keep previous data while loading new tab
   });
 
 
@@ -450,7 +449,11 @@ export default function LeaderboardPage() {
         {/* Empty State */}
         {!isLoading && !error && entries.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-zinc-500">{t('leaderboard.noUsersFound')}</p>
+            <p className="text-zinc-500">
+              {timePeriod !== 'all' 
+                ? t('leaderboard.noDataForPeriod', { defaultValue: 'No data available for this period yet' })
+                : t('leaderboard.noUsersFound')}
+            </p>
           </div>
         )}
 
