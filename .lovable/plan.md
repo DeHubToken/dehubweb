@@ -1,22 +1,78 @@
 
 
-## Problem
+## Fix Noun Class Prefix/Suffix Issues in Zulu and Quechua
 
-Both `en.json` and `es.json` have **duplicate `"settings"` JSON keys**. The first `"settings"` object (lines ~41-400) contains all the actual settings translations (title, manageAccount, logOut, profileSettings, etc.). But a second `"settings"` object was added at the bottom (lines ~847-849 in en.json, ~698-700 in es.json) containing only `loginDescription`. 
+Two languages have the same "Mga" problem that Tagalog had, where grammatical markers clutter up short UI labels like page titles, nav items, and tab labels.
 
-In JSON, duplicate keys cause the **last one to win**, so the entire settings translation block gets overwritten with just `{loginDescription}`. That's why the UI shows raw keys like `settings.title` and `settings.manageAccount`.
+---
 
-## Fix
+### 1. Zulu (zu) - Noun Class Prefixes
 
-1. **en.json**: Delete the duplicate `"settings"` block at line 847-849 and merge `"loginDescription"` into the existing `"settings"` block (around line 41).
+Zulu uses noun class prefixes (Ama-, Izi-, Imi-, Iza-) that make UI labels unnecessarily long and cluttered. These need to be stripped from short labels (titles, nav, tabs) while keeping them in descriptive sentences where they're grammatically needed.
 
-2. **es.json**: Delete the duplicate `"settings"` block at line 698-700 and merge `"loginDescription"` into the existing `"settings"` block (around line 41).
+**Changes needed in `src/i18n/locales/zu.json`:**
 
-3. **Audit all other locale files** (fr, de, pt, zh, ja, ko, ru, ar, hi, tr, id, it, nl, tl, ms, bn, fa, vi, th, pl, ro, uk) for the same duplicate-key issue and fix any that have it.
+| Key | Current | Fixed |
+|-----|---------|-------|
+| nav.notifications | Izaziso | Zaziso or Aziso |
+| nav.messages | Imilayezo | Layezo |
+| nav.bookmarks | Amabhukimakhi | Bhukimakhi |
+| nav.settings | Izilungiselelo | Zilungiselelo |
+| nav.docs | Amadokhumenti | Dokhumenti |
+| nav.featureRequests | Izicelo | Zicelo |
+| nav.careers | Amathuba Omsebenzi | Thuba Lomsebenzi |
+| feed.videos | Amavidiyo | Vidiyo |
+| feed.images | Izithombe | Zithombe |
+| settings.title | Izilungiselelo | Zilungiselelo |
+| bookmarks.title | Amabhukimakhi | Bhukimakhi |
+| notifications.title | Izaziso | Aziso |
+| messages.title | Imilayezo | Layezo |
+| features.title | Izicelo Zezici | Zicelo Zezici |
+| agents.title | Ama-ejensi e-AI | Ejensi ye-AI |
+| leaderboard.title | Ibhodi Yabaholi | Bhodi Yabaholi |
 
-## Technical Details
+Plus similar fixes throughout explore tabs, feed tabs, and other short labels.
 
-- Remove lines 847-849 from `en.json` (the second `"settings": { "loginDescription": "..." }`)
-- Add `"loginDescription": "Log in to access and manage your account settings."` inside the existing `"settings"` block in `en.json`
-- Same pattern for `es.json`: remove lines 698-700, add `"loginDescription"` to existing settings block
-- Check and fix all other locale files for the same duplicate key problem
+---
+
+### 2. Quechua (qu) - Plural Suffix "-kuna"
+
+Quechua appends "-kuna" as a plural marker on many titles. For short UI labels, the singular/base form is cleaner.
+
+**Changes needed in `src/i18n/locales/qu.json`:**
+
+| Key | Current | Fixed |
+|-----|---------|-------|
+| nav.notifications | Willaykuna | Willay |
+| nav.messages | Willakuykuna | Willakuy |
+| nav.bookmarks | Waqaychasqakuna | Waqaychasqa |
+| nav.settings | Churanakuna | Churana |
+| nav.docs | Qillqakuna | Qillqa |
+| nav.featureRequests | Mañakuykuna | Mañakuy |
+| nav.careers | Llamkaykuna | Llamkay |
+| settings.title | Churanakuna | Churana |
+| bookmarks.title | Waqaychasqakuna | Waqaychasqa |
+| notifications.title | Willaykuna | Willay |
+| messages.title | Willakuykuna | Willakuy |
+
+Plus similar fixes for feed/explore tab labels.
+
+---
+
+### 3. Other Languages - No Issues Found
+
+The remaining 32 languages were checked and are clean:
+- **Swahili, Yoruba, Hausa, Igbo** - use proper short labels
+- **Arabic, Egyptian Arabic, Moroccan Arabic** - definite article "ال" is standard and expected
+- **Amharic, Bengali, Hindi, Persian** - clean labels
+- **European languages** - all fine
+- **Nigerian Pidgin** - uses English base words, clean
+
+---
+
+### Technical Details
+
+- Edit `src/i18n/locales/zu.json` - strip noun class prefixes from nav, titles, tabs, and short labels
+- Edit `src/i18n/locales/qu.json` - strip "-kuna" suffix from nav, titles, tabs, and short labels
+- Only modify short UI labels (titles, nav items, tab labels); leave descriptive text and sentences intact where grammar requires the full form
+
