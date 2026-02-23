@@ -91,7 +91,9 @@ function AppContent() {
             <Route path="/" element={<Index />} />
             <Route path="/delete-account" element={<DeleteAccount />} />
             <Route path="/creators" element={<CreatorsPage />} />
-            <Route path="/jobs" element={<JobsPage />} />
+            <Route path="/jobs" element={<AppLayout />}>
+              <Route index element={null} />
+            </Route>
             <Route path="/skill.md" element={<SkillPage />} />
             <Route path="/features" element={<AppLayout />}>
               <Route index element={null} />
@@ -116,6 +118,7 @@ function AppContent() {
               <Route path="agents" element={null} />
               <Route path="tv" element={null} />
               <Route path="features" element={null} />
+              <Route path="jobs" element={null} />
               {/* Dynamic routes — rendered via Outlet */}
               <Route path="post/:postId" element={<SinglePostPage />} />
               <Route path="video/:tokenId" element={<SinglePostPage />} />
