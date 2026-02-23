@@ -96,7 +96,7 @@ export function BalanceCard() {
       <Button
         variant="glass"
         className="w-full mt-4 rounded-xl"
-        onClick={() => navigate('/app/wallet')}
+        onClick={() => navigate('/app/wallet', { state: { from: 'command-centre' } })}
       >
         {t('commandCentre.fullWallet')}
       </Button>

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
@@ -56,6 +56,7 @@ interface GroupedToken {
 export default function FullWalletPage() {
   const { isAuthenticated, walletAddress } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
   const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
@@ -173,13 +174,15 @@ export default function FullWalletPage() {
 
   return (
     <div className="p-2 sm:p-3 pt-2 lg:pt-3 min-h-screen max-w-2xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-5">
-        <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white h-8 w-8" onClick={() => navigate('/app/command-centre')}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <h1 className="text-lg font-bold text-white">{t('wallet.title')}</h1>
-      </div>
+      {/* Header - only show back button and title when navigated from command centre */}
+      {location.state?.from === 'command-centre' && (
+        <div className="flex items-center gap-3 mb-5">
+          <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white h-8 w-8" onClick={() => navigate('/app/command-centre')}>
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
+          <h1 className="text-lg font-bold text-white">{t('wallet.title')}</h1>
+        </div>
+      )}
 
       {/* Wallet balance bar */}
       <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 mb-4">
