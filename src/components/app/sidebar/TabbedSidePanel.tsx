@@ -54,9 +54,7 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
                 <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
               )}
               <Icon className="w-5 h-5 relative z-10" />
-              {tab.id === 'chat' && onlineCount > 0 && (
-                <span className="relative z-10 text-[10px] text-zinc-400 mt-0.5">{onlineCount} online</span>
-              )}
+              
             </button>
           );
         })}
