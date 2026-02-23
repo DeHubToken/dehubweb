@@ -6,7 +6,7 @@
  * Feature cards use the same UI pattern as text posts (ActionBar + CommentsWrapper).
  */
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2 } from 'lucide-react';
@@ -491,6 +491,30 @@ function ShippedCard({ feature }: { feature: FeatureRequest }) {
 }
 
 // ──────────────────────────────────────────────────
+// Infinite Scroll Sentinel
+// ──────────────────────────────────────────────────
+function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () => void; isFetching: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting && !isFetching) onIntersect(); },
+      { rootMargin: '200px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [onIntersect, isFetching]);
+
+  return (
+    <div ref={ref} className="flex justify-center py-4">
+      {isFetching && <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />}
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────
 // Main Page
 // ──────────────────────────────────────────────────
 export default function FeaturesPage() {
@@ -503,7 +527,8 @@ export default function FeaturesPage() {
   const search = useDebouncedValue(searchInput, 300);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const { data: features, isLoading } = useFeatureRequests(sort, category, search);
+  const { data: featuresData, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeatureRequests(sort, category, search);
+  const features = useMemo(() => featuresData?.pages.flat() ?? [], [featuresData]);
   const { data: shippedFeatures, isLoading: isLoadingShipped } = useShippedFeatures();
   const { data: userVotes } = useUserVotes();
   const voteMutation = useVoteFeatureRequest();
@@ -527,7 +552,7 @@ export default function FeaturesPage() {
     setDrawerOpen(true);
   };
 
-  const totalCount = features?.length ?? 0;
+  const totalCount = features.length;
   const shippedCount = shippedFeatures?.length ?? 0;
 
   return (
@@ -663,7 +688,7 @@ export default function FeaturesPage() {
         <>
           {isLoading ? (
             <FeatureSkeletons />
-          ) : features && features.length > 0 ? (
+          ) : features.length > 0 ? (
             <div className="space-y-3">
               {features.map((feature) => (
                 <FeatureCard
@@ -674,6 +699,13 @@ export default function FeaturesPage() {
                   voteDisabled={voteMutation.isPending}
                 />
               ))}
+              {/* Infinite scroll sentinel */}
+              {hasNextPage && (
+                <InfiniteScrollSentinel
+                  onIntersect={fetchNextPage}
+                  isFetching={isFetchingNextPage}
+                />
+              )}
             </div>
           ) : (
             <div className="bg-zinc-900 rounded-2xl p-8 text-center">

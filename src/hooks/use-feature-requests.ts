@@ -6,7 +6,7 @@
  * Aggressively cached in sessionStorage for instant page loads.
  */
 
-import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -80,11 +80,12 @@ function setSessionCache(key: string, data: unknown) {
   } catch { /* quota exceeded — ignore */ }
 }
 
+const PAGE_SIZE = 15;
+
 export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory | 'all', search: string) {
-  const cacheKey = `${CACHE_KEY}-${sort}-${category}-${search}`;
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ['feature-requests', sort, category, search],
-    queryFn: async () => {
+    queryFn: async ({ pageParam = 0 }) => {
       let query = supabase
         .from('feature_requests')
         .select('*');
@@ -109,21 +110,18 @@ export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory 
       // Exclude shipped (completed) features from the main list
       query = query.neq('status', 'completed');
 
+      // Pagination
+      query = query.range(pageParam, pageParam + PAGE_SIZE - 1);
+
       const { data, error } = await query;
       if (error) throw error;
-      const result = (data || []) as FeatureRequest[];
-      setSessionCache(cacheKey, result);
-      return result;
+      return (data || []) as FeatureRequest[];
     },
-    initialData: () => getSessionCache<FeatureRequest[]>(cacheKey),
-    initialDataUpdatedAt: () => {
-      try {
-        const raw = sessionStorage.getItem(cacheKey);
-        if (raw) return JSON.parse(raw).ts;
-      } catch {}
-      return undefined;
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < PAGE_SIZE) return undefined;
+      return allPages.length * PAGE_SIZE;
     },
-    placeholderData: keepPreviousData,
     staleTime: 60_000,
     gcTime: 5 * 60_000,
   });
@@ -277,19 +275,25 @@ export function useVoteFeatureRequest() {
         return newVotes;
       });
 
-      // Optimistically update vote count on feature requests
-      queryClient.setQueriesData({ queryKey: ['feature-requests'] }, (old: FeatureRequest[] | undefined) => {
-        if (!old) return old;
-        return old.map((fr) => {
-          if (fr.id !== featureRequestId) return fr;
-          let delta: number = voteType;
-          if (currentVote === voteType) {
-            delta = -voteType; // removing the vote
-          } else if (currentVote) {
-            delta = voteType - currentVote; // switching from -1 to +1 = +2
-          }
-          return { ...fr, vote_count: fr.vote_count + delta };
-        });
+      // Optimistically update vote count on feature requests (InfiniteData shape)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      queryClient.setQueriesData({ queryKey: ['feature-requests'] }, (old: any) => {
+        if (!old?.pages) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page: FeatureRequest[]) =>
+            page.map((fr) => {
+              if (fr.id !== featureRequestId) return fr;
+              let delta: number = voteType;
+              if (currentVote === voteType) {
+                delta = -voteType;
+              } else if (currentVote) {
+                delta = voteType - currentVote;
+              }
+              return { ...fr, vote_count: fr.vote_count + delta };
+            })
+          ),
+        };
       });
 
       return { previousRequests, previousVotes };
