@@ -3,6 +3,7 @@
  * =====================
  * Data fetching and mutations for the feature request board.
  * Uses Supabase directly for CRUD operations with optimistic updates.
+ * Aggressively cached in sessionStorage for instant page loads.
  */
 
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
@@ -58,7 +59,29 @@ const STATUS_LABELS: Record<FeatureStatus, string> = {
 
 export { CATEGORY_LABELS, STATUS_LABELS };
 
+// Session-level cache for instant page loads
+const CACHE_KEY = 'feature-requests-cache';
+const SHIPPED_CACHE_KEY = 'feature-requests-shipped-cache';
+
+function getSessionCache<T>(key: string): T | undefined {
+  try {
+    const raw = sessionStorage.getItem(key);
+    if (!raw) return undefined;
+    const { data, ts } = JSON.parse(raw);
+    // Cache valid for 5 minutes
+    if (Date.now() - ts > 5 * 60 * 1000) return undefined;
+    return data as T;
+  } catch { return undefined; }
+}
+
+function setSessionCache(key: string, data: unknown) {
+  try {
+    sessionStorage.setItem(key, JSON.stringify({ data, ts: Date.now() }));
+  } catch { /* quota exceeded — ignore */ }
+}
+
 export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory | 'all', search: string) {
+  const cacheKey = `${CACHE_KEY}-${sort}-${category}-${search}`;
   return useQuery({
     queryKey: ['feature-requests', sort, category, search],
     queryFn: async () => {
@@ -88,10 +111,21 @@ export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory 
 
       const { data, error } = await query;
       if (error) throw error;
-      return (data || []) as FeatureRequest[];
+      const result = (data || []) as FeatureRequest[];
+      setSessionCache(cacheKey, result);
+      return result;
+    },
+    initialData: () => getSessionCache<FeatureRequest[]>(cacheKey),
+    initialDataUpdatedAt: () => {
+      try {
+        const raw = sessionStorage.getItem(cacheKey);
+        if (raw) return JSON.parse(raw).ts;
+      } catch {}
+      return undefined;
     },
     placeholderData: keepPreviousData,
-    staleTime: 30_000,
+    staleTime: 60_000,
+    gcTime: 5 * 60_000,
   });
 }
 
@@ -106,9 +140,20 @@ export function useShippedFeatures() {
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
-      return (data || []) as FeatureRequest[];
+      const result = (data || []) as FeatureRequest[];
+      setSessionCache(SHIPPED_CACHE_KEY, result);
+      return result;
     },
-    staleTime: 30_000,
+    initialData: () => getSessionCache<FeatureRequest[]>(SHIPPED_CACHE_KEY),
+    initialDataUpdatedAt: () => {
+      try {
+        const raw = sessionStorage.getItem(SHIPPED_CACHE_KEY);
+        if (raw) return JSON.parse(raw).ts;
+      } catch {}
+      return undefined;
+    },
+    staleTime: 60_000,
+    gcTime: 5 * 60_000,
   });
 }
 
@@ -133,7 +178,7 @@ export function useUserVotes() {
       return voteMap;
     },
     enabled: !!walletAddress,
-    staleTime: 30_000,
+    staleTime: 60_000,
   });
 }
 
