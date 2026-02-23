@@ -9,7 +9,7 @@
  * 2. TranslatableGroup - wraps multiple elements, shows single control at end
  */
 
-import { useState, useMemo, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef, createContext, useContext, ReactNode } from 'react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Languages, RotateCcw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -187,13 +187,18 @@ export function useTranslation(text: string) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Use ref to always get latest userLang in async handlers (avoids stale closures in memo'd components)
+  const userLangRef = useRef(userLang);
+  useEffect(() => { userLangRef.current = userLang; }, [userLang]);
+
   // Too short to bother translating
   const isTooShort = text.length < MIN_TEXT_LENGTH_FOR_TRANSLATION;
 
-  const handleTranslate = async () => {
-    if (isTooShort || isLoading) return;
+  const handleTranslate = useCallback(async () => {
+    if (text.length < MIN_TEXT_LENGTH_FOR_TRANSLATION || isLoading) return;
 
-    const cacheKey = `${text}-${userLang}`;
+    const targetLang = userLangRef.current;
+    const cacheKey = `${text}-${targetLang}`;
     
     if (translationCache.has(cacheKey)) {
       const cached = translationCache.get(cacheKey)!;
@@ -207,9 +212,9 @@ export function useTranslation(text: string) {
     setError(null);
 
     try {
-      console.log('[Translate] Invoking translate-text, targetLang:', userLang, 'text:', text.substring(0, 40));
+      console.log('[Translate] Invoking translate-text, targetLang:', targetLang, 'text:', text.substring(0, 40));
       const { data, error: fnError } = await supabase.functions.invoke('translate-text', {
-        body: { text, targetLang: userLang },
+        body: { text, targetLang },
       });
 
       console.log('[Translate] Response:', { data, fnError });
@@ -245,11 +250,11 @@ export function useTranslation(text: string) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [text, isLoading]);
 
-  const handleShowOriginal = () => {
+  const handleShowOriginal = useCallback(() => {
     setIsTranslated(false);
-  };
+  }, []);
 
   return {
     userLang,
