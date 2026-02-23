@@ -14,6 +14,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import {
   useFeatureRequests,
@@ -149,9 +150,11 @@ function FeatureCard({
   const submitComment = useSubmitComment();
   const deleteComment = useDeleteComment();
 
-  const avatarUrl = feature.author_avatar && feature.author_wallet_address
+  const storedAvatarUrl = feature.author_avatar && feature.author_wallet_address
     ? buildAvatarUrl(feature.author_wallet_address, feature.author_avatar)
     : null;
+  const dynamicAvatarUrl = useProfileAvatar(feature.author_wallet_address, storedAvatarUrl || undefined);
+  const avatarUrl = dynamicAvatarUrl || storedAvatarUrl;
 
   const displayName = feature.author_username
     ? `@${feature.author_username}`
