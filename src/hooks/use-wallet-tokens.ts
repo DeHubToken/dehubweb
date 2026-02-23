@@ -24,7 +24,7 @@ export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
       queryClient.prefetchQuery({
         queryKey: ['wallet-tokens', walletAddress.toLowerCase(), cid],
         queryFn: () => getAllTokenBalances(walletAddress, cid),
-        staleTime: 30_000,
+        staleTime: 5 * 60_000,
       });
     });
   }, [walletAddress, isAuthenticated]); // only on mount / auth change
@@ -33,8 +33,9 @@ export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), chainId],
     queryFn: () => getAllTokenBalances(walletAddress!, chainId),
     enabled: !!walletAddress && isAuthenticated,
-    staleTime: 60_000,
-    refetchInterval: 3 * 60_000, // 3 minutes — balances don't change that fast
+    staleTime: 5 * 60_000,
+    refetchInterval: 5 * 60_000,
+    refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
   });
 
@@ -51,21 +52,24 @@ export function useAllChainsTokens() {
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), BASE_CHAIN_ID],
     queryFn: () => getAllTokenBalances(walletAddress!, BASE_CHAIN_ID),
     enabled: !!walletAddress && isAuthenticated,
-    staleTime: 30_000,
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
   });
 
   const bnbQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), BNB_CHAIN_ID],
     queryFn: () => getAllTokenBalances(walletAddress!, BNB_CHAIN_ID),
     enabled: !!walletAddress && isAuthenticated,
-    staleTime: 30_000,
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
   });
 
   const ethQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), ETH_CHAIN_ID],
     queryFn: () => getAllTokenBalances(walletAddress!, ETH_CHAIN_ID),
     enabled: !!walletAddress && isAuthenticated,
-    staleTime: 30_000,
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
   });
 
   const allTokens = useMemo(() => [

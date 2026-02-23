@@ -83,6 +83,8 @@ export const wagmiConfig = createConfig({
   transports: {
     [base.id]: http('https://base-rpc.publicnode.com'),
   },
+  // Default is 4000ms — way too aggressive. We don't watch blocks actively.
+  pollingInterval: 30_000,
 })
 
 /**

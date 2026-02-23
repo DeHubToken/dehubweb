@@ -92,6 +92,18 @@ export default function HomePage() {
   // Tab state - initialized from sessionStorage for back navigation
   const [activeTab, setActiveTab] = useState(getInitialTab);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  // Lazy mount: only mount a feed on its first visit, then keep it alive.
+  // Prevents all 8 feeds from firing queries simultaneously on page load.
+  const [visitedTabs, setVisitedTabs] = useState<Set<string>>(() => new Set([getInitialTab()]));
+  useEffect(() => {
+    setVisitedTabs(prev => {
+      if (prev.has(activeTab)) return prev;
+      const next = new Set(prev);
+      next.add(activeTab);
+      return next;
+    });
+  }, [activeTab]);
   const [isRefreshing, setIsRefreshing] = useState(false);
   
   // Filter states for each feed type
@@ -567,40 +579,56 @@ export default function HomePage() {
             </div>
           </div>
         )}
-        {/* Badge balances now come from DeHub API data — no provider needed */}
-        {/* All feeds mounted persistently, only active one visible */}
-        <div style={{ display: activeTab === 'home' ? 'block' : 'none' }}>
-          <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} pinnedPostId={pinnedPostId} />
-        </div>
-        <div style={{ display: activeTab === 'videos' ? 'block' : 'none' }}>
-          <VideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
-        </div>
-        <div style={{ display: activeTab === 'images' ? 'block' : 'none' }}>
-          <ImagesFeed 
-            showCollage={showImagesCollage} 
-            showFilters={showImagesFilters}
-            isRefreshing={isRefreshing} 
-            refreshKey={refreshKey}
-            selectedPostId={selectedImageId}
-            onPostSelected={handleImageSelected}
-            onBackToCollage={handleBackToCollage}
-          />
-        </div>
-        <div style={{ display: activeTab === 'shorts' ? 'block' : 'none' }}>
-          <ShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
-        </div>
-        <div style={{ display: activeTab === 'live' ? 'block' : 'none' }}>
-          <LiveFeed key={refreshKey} isRefreshing={isRefreshing} />
-        </div>
-        <div style={{ display: activeTab === 'music' ? 'block' : 'none' }}>
-          <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
-        </div>
-        <div style={{ display: activeTab === 'ppv' ? 'block' : 'none' }}>
-          <PPVFeed />
-        </div>
-        <div style={{ display: activeTab === 'w2e' ? 'block' : 'none' }}>
-          <W2EFeed />
-        </div>
+        {/* Feeds mount lazily on first tab visit, then stay alive (CSS display toggle).
+            This prevents all 8 feeds from firing queries simultaneously on page load. */}
+        {visitedTabs.has('home') && (
+          <div style={{ display: activeTab === 'home' ? 'block' : 'none' }}>
+            <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} pinnedPostId={pinnedPostId} />
+          </div>
+        )}
+        {visitedTabs.has('videos') && (
+          <div style={{ display: activeTab === 'videos' ? 'block' : 'none' }}>
+            <VideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+          </div>
+        )}
+        {visitedTabs.has('images') && (
+          <div style={{ display: activeTab === 'images' ? 'block' : 'none' }}>
+            <ImagesFeed
+              showCollage={showImagesCollage}
+              showFilters={showImagesFilters}
+              isRefreshing={isRefreshing}
+              refreshKey={refreshKey}
+              selectedPostId={selectedImageId}
+              onPostSelected={handleImageSelected}
+              onBackToCollage={handleBackToCollage}
+            />
+          </div>
+        )}
+        {visitedTabs.has('shorts') && (
+          <div style={{ display: activeTab === 'shorts' ? 'block' : 'none' }}>
+            <ShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+          </div>
+        )}
+        {visitedTabs.has('live') && (
+          <div style={{ display: activeTab === 'live' ? 'block' : 'none' }}>
+            <LiveFeed key={refreshKey} isRefreshing={isRefreshing} />
+          </div>
+        )}
+        {visitedTabs.has('music') && (
+          <div style={{ display: activeTab === 'music' ? 'block' : 'none' }}>
+            <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+          </div>
+        )}
+        {visitedTabs.has('ppv') && (
+          <div style={{ display: activeTab === 'ppv' ? 'block' : 'none' }}>
+            <PPVFeed />
+          </div>
+        )}
+        {visitedTabs.has('w2e') && (
+          <div style={{ display: activeTab === 'w2e' ? 'block' : 'none' }}>
+            <W2EFeed />
+          </div>
+        )}
         {/* end feed tabs */}
       </div>
 
