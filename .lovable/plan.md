@@ -1,47 +1,22 @@
 
 
-## Fix: Leaderboard Showing All-Time Stats for All Tabs
+## Problem
 
-### Root Cause
+Both `en.json` and `es.json` have **duplicate `"settings"` JSON keys**. The first `"settings"` object (lines ~41-400) contains all the actual settings translations (title, manageAccount, logOut, profileSettings, etc.). But a second `"settings"` object was added at the bottom (lines ~847-849 in en.json, ~698-700 in es.json) containing only `loginDescription`. 
 
-The database is intermittently returning **503 errors** (service unavailable) due to overload. When the cache fetch fails, the code falls back to calling the DeHub API directly at `/api/leaderboard`. However, the DeHub API does not support period-based filtering -- it always returns all-time data. This means every tab (Day, Week, Month, Year) falls back to showing the same all-time data.
+In JSON, duplicate keys cause the **last one to win**, so the entire settings translation block gets overwritten with just `{loginDescription}`. That's why the UI shows raw keys like `settings.title` and `settings.manageAccount`.
 
-Additionally, `placeholderData: (prev) => prev` on the main leaderboard page keeps showing the previous tab's data while loading, making all tabs appear identical.
+## Fix
 
-### Fix Plan
+1. **en.json**: Delete the duplicate `"settings"` block at line 847-849 and merge `"loginDescription"` into the existing `"settings"` block (around line 41).
 
-**1. Stop the API fallback from masquerading as period data**
+2. **es.json**: Delete the duplicate `"settings"` block at line 698-700 and merge `"loginDescription"` into the existing `"settings"` block (around line 41).
 
-In `src/lib/api/dehub/leaderboard.ts`, when the cache fails and we fall back to the API:
-- For non-"all" periods, return an **empty result** instead of all-time data from the API. The API simply doesn't have delta/period data, so returning its all-time results for a "day" query is incorrect.
-- Only use the API fallback for `period === 'all'`.
+3. **Audit all other locale files** (fr, de, pt, zh, ja, ko, ru, ar, hi, tr, id, it, nl, tl, ms, bn, fa, vi, th, pl, ro, uk) for the same duplicate-key issue and fix any that have it.
 
-**2. Remove `placeholderData` cross-contamination**
+## Technical Details
 
-In `src/pages/app/LeaderboardPage.tsx`:
-- Remove `placeholderData: (prev) => prev` so that switching from "All Time" to "Day" doesn't show stale all-time entries while loading.
-- Instead, show a loading spinner briefly until the correct period data arrives.
-
-**3. Add retry logic for 503 errors**
-
-In `src/lib/api/dehub/leaderboard.ts`:
-- Add a single retry with a 2-second delay when the cache query returns a 503 error, before giving up and returning empty results.
-
-**4. Show "No data for this period" state**
-
-In `src/pages/app/LeaderboardPage.tsx`:
-- When a period query returns zero entries and it's not "all", display a message like "No data available for this period yet" instead of an empty table or stale data.
-
-### Technical Details
-
-**File: `src/lib/api/dehub/leaderboard.ts`**
-- After the cache fetch fails for non-"all" periods, return `{ result: { byWalletBalance: [] }, hasHistoricalData: false }` instead of calling the API.
-- Add one retry on 503 with a 2-second delay.
-
-**File: `src/pages/app/LeaderboardPage.tsx`** (line ~171)
-- Remove `placeholderData: (prev) => prev`
-- Add an empty-state UI when `entries.length === 0 && !isLoading && timePeriod !== 'all'`
-
-**File: `src/components/app/sidebar/SidebarLeaderboard.tsx`** (line ~94)
-- When `entries.length === 0` for a non-"All" period, show "No data yet" instead of 10 placeholder skeleton rows (which look like real data loading).
-
+- Remove lines 847-849 from `en.json` (the second `"settings": { "loginDescription": "..." }`)
+- Add `"loginDescription": "Log in to access and manage your account settings."` inside the existing `"settings"` block in `en.json`
+- Same pattern for `es.json`: remove lines 698-700, add `"loginDescription"` to existing settings block
+- Check and fix all other locale files for the same duplicate key problem
