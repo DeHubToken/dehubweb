@@ -354,5 +354,8 @@
     "messagePinned": "メッセージをピン留めしました",
     "messageUnpinned": "ピン留めを解除しました",
     "online": "{{count}}人オンライン"
+  },
+  "auth": {
+    "loginRequired": "ログインが必要です"
   }
 }

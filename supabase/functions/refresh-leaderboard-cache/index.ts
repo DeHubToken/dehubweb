@@ -340,7 +340,7 @@ interface SnapshotDeltaResult {
 
 /** Compute delta for a given sort/period using only DB snapshots — no RPC/API calls */
 async function computeSnapshotDelta(
-  supabase: ReturnType<typeof createClient>,
+  supabase: any,
   allEntries: EnrichedEntry[],
   sortMode: string,
   period: string,

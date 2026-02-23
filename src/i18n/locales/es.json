@@ -588,5 +588,8 @@
     "statusInProgress": "En progreso",
     "statusCompleted": "Completada",
     "statusDeclined": "Rechazada"
+  },
+  "auth": {
+    "loginRequired": "Inicio de sesión requerido"
   }
 }
