@@ -125,7 +125,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     // Use minterUsername for the @handle, not display name
     handle: nft.minterUsername || nft.mintername || nft.creator?.username || 'user',
     verified: nft.creator?.is_verified || false,
-    avatar: avatarUrl || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
+    avatar: avatarUrl || undefined,
     likes: String(nft.totalVotes?.for || nft.like_count || 0),
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
     videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || (id ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4` : ''),

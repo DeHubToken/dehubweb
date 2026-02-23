@@ -92,7 +92,7 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     title: nft.name || nft.title || nft.description || 'Untitled',
     channel: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'Anonymous',
     verified: nft.creator?.is_verified || false,
-    channelAvatar: avatarUrl || `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}`,
+    channelAvatar: avatarUrl || undefined,
     views: formatViews(nft.views || nft.view_count || 0),
     uploadedAgo: formatTimeAgo(nft.createdAt || nft.created_at),
     duration: formatDuration(duration),

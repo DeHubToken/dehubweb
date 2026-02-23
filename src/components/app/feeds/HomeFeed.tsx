@@ -522,7 +522,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         type: 'short' as const,
         username: item.minterDisplayName || item.minterUsername || 'user',
         verified: (item as any).minterUser?.isVerified || false,
-        avatar: avatarUrl || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
+        avatar: avatarUrl || undefined,
         likes: String(item.totalVotes?.for || 0),
         thumbnail: getMediaUrl(item.imageUrl) || '',
         videoUrl: item.videoUrl
