@@ -1030,7 +1030,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         <HomeFeedSkeleton />
       ) : (
         <>
-          {/* StoriesBar temporarily removed — needs rework */}
+          <StoriesBar users={storyUsers} isLoading={isLoadingState} shorts={shorts} />
 
 
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
