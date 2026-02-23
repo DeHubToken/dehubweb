@@ -5,7 +5,7 @@
  * Uses Supabase directly for CRUD operations with optimistic updates.
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -88,6 +88,7 @@ export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory 
       if (error) throw error;
       return (data || []) as FeatureRequest[];
     },
+    placeholderData: keepPreviousData,
     staleTime: 30_000,
   });
 }
