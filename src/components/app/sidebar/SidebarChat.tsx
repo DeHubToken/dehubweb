@@ -123,13 +123,6 @@ export function SidebarChat() {
 
   return (
     <div className="flex flex-col h-full pl-px">
-      {/* Header */}
-      <div className="flex items-center gap-2 pb-3" style={{ paddingLeft: '10px' }}>
-        <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">LIVE</span>
-        <span className="text-zinc-400 text-xs flex items-center gap-1">
-          <Users className="w-3 h-3" /> {onlineCount} online
-        </span>
-      </div>
 
       <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate: () => {}, requestOriginal: () => {} }}>
       <div className="relative flex-1">

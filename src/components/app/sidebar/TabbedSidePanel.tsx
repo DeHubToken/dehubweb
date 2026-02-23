@@ -4,6 +4,7 @@ import { WhoToFollow } from '../WhoToFollow';
 import { SidebarLeaderboard, type SidebarLeaderboardHandle } from './SidebarLeaderboard';
 import { SidebarChat } from './SidebarChat';
 import { BadgeBalanceProvider } from '@/contexts/BadgeBalanceContext';
+import { useLiveChatPresence, useLiveChatRooms } from '@/hooks/use-livechat';
 
 type TabType = 'leaderboard' | 'follow' | 'chat';
 
@@ -21,6 +22,9 @@ let persistedTab: TabType = 'leaderboard';
 export const TabbedSidePanel = memo(function TabbedSidePanel() {
   const [activeTab, setActiveTab] = useState<TabType>(persistedTab);
   const leaderboardRef = useRef<SidebarLeaderboardHandle>(null);
+  const { rooms } = useLiveChatRooms();
+  const roomId = rooms[0]?.id || null;
+  const { onlineCount } = useLiveChatPresence(roomId);
 
   const handleTabClick = useCallback((id: TabType) => {
     persistedTab = id;
@@ -40,7 +44,7 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
               type="button"
               key={tab.id}
               onClick={() => handleTabClick(tab.id)}
-              className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
+              className={`relative flex-1 py-3 flex flex-col items-center justify-center transition-colors ${
                 activeTab === tab.id
                   ? 'text-white'
                   : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
@@ -50,6 +54,9 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
                 <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
               )}
               <Icon className="w-5 h-5 relative z-10" />
+              {tab.id === 'chat' && onlineCount > 0 && (
+                <span className="relative z-10 text-[10px] text-zinc-400 mt-0.5">{onlineCount} online</span>
+              )}
             </button>
           );
         })}
