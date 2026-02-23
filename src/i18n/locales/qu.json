@@ -2,20 +2,20 @@
   "nav": {
     "home": "Qallariy",
     "explore": "Maskay",
-    "notifications": "Willaykuna",
-    "messages": "Willakuykuna",
+    "notifications": "Willay",
+    "messages": "Willakuy",
     "assistant": "Yanapaq",
     "leaderboard": "Ñawpaqkuna",
-    "bookmarks": "Waqaychasqakuna",
-    "settings": "Churanakuna",
+    "bookmarks": "Waqaychasqa",
+    "settings": "Churana",
     "profile": "Riqsichiy",
     "blog": "Blog",
     "commandCentre": "Kamachiy Chawpi",
     "wallet": "Qullqi Wasi",
-    "docs": "Qillqakuna",
+    "docs": "Qillqa",
     "roadmap": "Ñan Mapa",
-    "featureRequests": "Mañakuykuna",
-    "careers": "Llamkaykuna",
+    "featureRequests": "Mañakuy",
+    "careers": "Llamkay",
     "create": "Kamariy",
     "login": "Yaykuy",
     "connecting": "Tinkuchkan...",
@@ -23,8 +23,8 @@
   },
   "feed": {
     "home": "Qallariy",
-    "videos": "Videokuna",
-    "images": "Siqikuna",
+    "videos": "Video",
+    "images": "Siqi",
     "shorts": "Uchuy videokuna",
     "music": "Takiy",
     "live": "Kawsaq"
@@ -33,23 +33,23 @@
     "all": "Llapan",
     "people": "Runakuna",
     "posts": "Churasqakuna",
-    "images": "Siqikuna",
-    "videos": "Videokuna",
+    "images": "Siqi",
+    "videos": "Video",
     "music": "Takiy",
     "live": "Kawsaq"
   },
   "settings": {
-    "title": "Churanakuna",
+    "title": "Churana",
     "manageAccount": "Cuentaykita kamachiy",
     "logOut": "Lluqsiy",
     "loggedOut": "Lluqsirqanki",
     "logoutFailed": "Mana lluqsiyta atirqanchu",
     "profile": "Riqsichiy",
-    "notifications": "Willaykuna",
+    "notifications": "Willay",
     "privacy": "Pakasqa kay",
     "appearance": "Rikch'ay",
     "content": "Imaymana",
-    "messages": "Willakuykuna",
+    "messages": "Willakuy",
     "assets": "Kapuykuna",
     "profileSettings": "Riqsichiy churanakuna",
     "saveChanges": "Tikrachaykuna waqaychay",
@@ -567,7 +567,7 @@
   },
   "explorePage": { "searchPlaceholder": "Runata, churasqata icha willakuyta maskay...", "filters": "Chiqinchakuna", "clearAll": "Llapanta pichay", "category": "Raki", "contentType": "Willakuy Riki", "bounty": "Chanin", "ppv": "PPV", "gated": "Harkasqa", "datePosted": "Pacha Churasqa", "engagement": "Tinkuy", "follow": "Qatiy", "loginDescription": "Yaykuy DeHub-pi churasqakunata, ruwaqkunata, ayllukunata maskanaykipaq.", "noResults": "Mana ima tarisqachu", "noResultsDesc": "Huk rimakunata maskay icha trending willakuykunata qhaway.", "searchHistory": "Maskay Kawsasqan", "clearHistory": "Kawsasqanta pichay", "trending": "Trending", "trendingSearches": "Trending Maskana", "suggestedCreators": "Yuyaychisqa Ruwaqkuna", "people": "Runakuna", "posts": "Churasqakuna", "seeAllPeople": "Llaparunata qhaway", "results": "tarisqa", "loadMore": "Astawanta chaskiy", "searching": "Maskachkan...", "searchError": "Mana maskayta atikunchu. Musuqmanta ruwaway.", "retry": "Musuqmanta", "resultsFor": "\"{{query}}\" tarisqakuna", "resultsFound": "{{count}} tarisqa", "content": "Willakuy", "loadingMore": "Astawanta chaskichkan...", "noMoreResults": "Mana astawanñachu", "noResultsFor": "Mana ima tarisqachu \"{{query}}\" nisqapaq", "tryDifferent": "Hukta maskayta qallariy", "tipRemoveAt": "Yuyaychay: @ qichuy willakuyta maskanapaq", "noRecentSearches": "Mana maskay kanchu. Maskay qallariy!", "nothingTrending": "Mana ima trendingchu! Kutimuynankama.", "viewAllPeople": "Llaparunata {{count}} qhaway", "noFilterResults": "Mana tarisqachu", "selectLabel": "{{label}} akllay", "search": "Maskay...", "country": "Suyu", "date": "Pacha", "likes": "Kusiy", "shares": "Rakiy", "comments": "Rimaykuna", "anyTime": "Maypacha", "today": "Kunan", "thisWeek": "Kay simana", "thisMonth": "Kay killa", "thisYear": "Kay wata", "any": "Mayqin", "gaming": "Pukllana", "music": "Takiy", "art": "Ruwana", "programming": "Kamachiy", "crypto": "Crypto", "entertainment": "Kusikuy", "all": "Llapan", "global": "Tiqsimuyu" },
   "bookmarks": {
-    "title": "Waqaychasqakuna",
+    "title": "Waqaychasqa",
     "savedCount": "{{count}} waqaychasqa churasqa",
     "savedCountPlural": "{{count}} waqaychasqa churasqakuna",
     "refresh": "Waqaychasqakuna musuqyachiy",
@@ -591,7 +591,7 @@
     "loginDescription": "Yaykuy waqaychasqa waqaychasqaykikunata qhawanaykipaq kamachiynaykipaq."
   },
   "notifications": {
-    "title": "Willaykuna",
+    "title": "Willay",
     "markAllRead": "Llapanta ñawiriyta churay",
     "settings": "Willay churanakuna",
     "actions": "Ruraykuna",
@@ -674,7 +674,7 @@
     "noWalletAddress": "Mana qullqi wasi churana tarisqachu"
   },
   "features": {
-    "title": "Musuq mañakuykuna",
+    "title": "Musuq mañakuy",
     "ideasSubmitted": "{{count}} yuyaykuna apachisqa",
     "ideaSubmitted": "1 yuyay apachisqa",
     "submit": "Apachiy",
@@ -716,7 +716,7 @@
     "loginRequired": "Yaykuy munakun"
   },
   "messages": {
-    "title": "Willakuykuna",
+    "title": "Willakuy",
     "searchConversations": "Rimanakuykuna maskay...",
     "failedToLoad": "Mana rimanakuykunata churayta atirqanchu",
     "tryAgain": "Musuqmanta ruway"
