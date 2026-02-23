@@ -125,7 +125,7 @@ export default function SettingsPage() {
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
     return (
-      <AuthGate description="Log in to access and manage your account settings." />
+      <AuthGate description={t('settings.loginDescription')} />
     );
   }
 

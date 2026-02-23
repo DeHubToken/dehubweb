@@ -744,5 +744,107 @@
   },
   "auth": {
     "loginRequired": "Log in required"
+  },
+  "messages": {
+    "title": "Messages",
+    "searchConversations": "Search conversations...",
+    "failedToLoad": "Failed to load conversations",
+    "tryAgain": "Try Again"
+  },
+  "music": {
+    "all": "All",
+    "tracks": "Tracks",
+    "videos": "Videos",
+    "podcasts": "Podcasts",
+    "radio": "Radio",
+    "trendingTracks": "Trending Tracks",
+    "moreVideos": "More Videos",
+    "newReleases": "New Releases"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "returnHome": "Return Home"
+  },
+  "profile": {
+    "back": "Back",
+    "usernameAvailable": "Username available!",
+    "signUpToClaim": "Sign up today to claim",
+    "signUp": "Sign Up",
+    "notFound": "Profile Not Found",
+    "unableToLoad": "Unable to load profile. Please try again later.",
+    "doesNotExist": "This user doesn't exist or you need to log in to view your profile.",
+    "makeOffer": "Make Offer for {{handle}}",
+    "enterOfferAmount": "Enter the amount of DHB tokens you'd like to offer to acquire this username.",
+    "submitOffer": "Submit Offer",
+    "validOfferAmount": "Please enter a valid offer amount",
+    "offerSubmitted": "Offer of {{amount}} DHB submitted for {{handle}}",
+    "followers": "Followers",
+    "following": "Following",
+    "loginDescription": "Log in to view and manage your profile."
+  },
+  "tv": {
+    "title": "TV"
+  },
+  "buyCoins": {
+    "title": "Buy Coins",
+    "network": "Network",
+    "token": "Token",
+    "selectToken": "Select Token",
+    "amountUsd": "Amount (USD)",
+    "customAmount": "Custom amount",
+    "minPurchase": "Minimum purchase is $5",
+    "youPay": "You pay",
+    "youReceive": "You receive (est.)",
+    "paymentMethod": "Payment Method",
+    "cardBank": "Card / Bank",
+    "cardBankDesc": "Visa, Mastercard, Apple Pay",
+    "fiatOnramp": "Fiat Onramp",
+    "fiatOnrampDesc": "Buy crypto directly with fiat",
+    "buy": "Buy {{symbol}}",
+    "processing": "Processing...",
+    "disclaimer": "By purchasing, you agree to our terms of service. Cryptocurrency purchases are non-refundable.",
+    "loginDescription": "Log in to purchase coins.",
+    "noTokens": "No tokens available",
+    "supplyWarning": "Only {{supply}} {{symbol}} available. Please reduce the amount.",
+    "walletNotConnected": "Wallet not connected",
+    "redirecting": "Redirecting to payment...",
+    "sessionCreated": "Session created",
+    "failedPurchase": "Failed to start purchase",
+    "redirectingOnramp": "Redirecting to onramp...",
+    "onrampCreated": "Onramp session created",
+    "failedOnramp": "Failed to start onramp"
+  },
+  "agents": {
+    "title": "AI Agents",
+    "connectToManage": "Connect to Manage AI Agents",
+    "signInToCreate": "Sign in to create and manage your AI agents.",
+    "description": "Create AI agents that can interact with DeHub using the MCP protocol.",
+    "apiDocs": "API Docs",
+    "newAgent": "New AI Agent",
+    "createDescription": "Create a new agent to interact with DeHub",
+    "agentName": "Agent Name",
+    "agentNamePlaceholder": "my-cool-agent",
+    "agentDescription": "Description",
+    "agentDescriptionPlaceholder": "What does your agent do?",
+    "createAgent": "Create Agent",
+    "creating": "Creating...",
+    "cancel": "Cancel",
+    "createNew": "Create New Agent",
+    "noAgents": "No agents yet. Create your first one!",
+    "active": "Active",
+    "inactive": "Inactive",
+    "apiKey": "API Key",
+    "created": "Created",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this agent? This cannot be undone.",
+    "agentCreated": "AI Agent created!",
+    "saveApiKey": "Save your API key - you won't be able to see it again.",
+    "agentDeleted": "Agent deleted",
+    "failedCreate": "Failed to create agent",
+    "failedDelete": "Failed to delete agent",
+    "apiKeyCopied": "API key copied to clipboard"
+  },
+  "settings": {
+    "loginDescription": "Log in to access and manage your account settings."
   }
 }

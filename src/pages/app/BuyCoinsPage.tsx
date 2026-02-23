@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, CreditCard, Wallet, Loader2, Check, ChevronDown, AlertCircle, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,6 +36,7 @@ const CHAINS = [
 type PaymentMethod = 'card' | 'onramp';
 
 export default function BuyCoinsPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress } = useAuth();
   const [selectedAmount, setSelectedAmount] = useState<number>(50);
@@ -100,13 +102,13 @@ export default function BuyCoinsPage() {
     onSuccess: (data) => {
       if (data.checkoutUrl) {
         window.open(data.checkoutUrl, '_blank');
-        toast.success('Redirecting to payment...');
+        toast.success(t('buyCoins.redirecting'));
       } else if (data.sessionId) {
-        toast.success('Session created');
+        toast.success(t('buyCoins.sessionCreated'));
       }
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to start purchase');
+      toast.error(error.message || t('buyCoins.failedPurchase'));
     },
   });
 
@@ -116,13 +118,13 @@ export default function BuyCoinsPage() {
     onSuccess: (data) => {
       if (data.url) {
         window.open(data.url, '_blank');
-        toast.success('Redirecting to onramp...');
+        toast.success(t('buyCoins.redirectingOnramp'));
       } else {
-        toast.success('Onramp session created');
+        toast.success(t('buyCoins.onrampCreated'));
       }
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to start onramp');
+      toast.error(error.message || t('buyCoins.failedOnramp'));
     },
   });
 
@@ -134,11 +136,11 @@ export default function BuyCoinsPage() {
 
   const handlePurchase = () => {
     if (!walletAddress) {
-      toast.error('Wallet not connected');
+      toast.error(t('buyCoins.walletNotConnected'));
       return;
     }
     if (effectiveAmount < 5) {
-      toast.error('Minimum purchase is $5');
+      toast.error(t('buyCoins.minPurchase'));
       return;
     }
 
@@ -173,7 +175,7 @@ export default function BuyCoinsPage() {
   };
 
   if (!isAuthenticated) {
-    return <AuthGate description="Log in to purchase coins." />;
+    return <AuthGate description={t('buyCoins.loginDescription')} />;
   }
 
   return (
@@ -189,12 +191,12 @@ export default function BuyCoinsPage() {
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="text-xl font-bold text-white">Buy Coins</h1>
+          <h1 className="text-xl font-bold text-white">{t('buyCoins.title')}</h1>
         </div>
 
         {/* Chain Selection */}
         <div className="bg-zinc-900 rounded-2xl p-4">
-          <label className="text-sm text-zinc-400 mb-2 block">Network</label>
+          <label className="text-sm text-zinc-400 mb-2 block">{t('buyCoins.network')}</label>
           <div className="flex gap-2">
             {CHAINS.map((chain) => (
               <button
@@ -214,7 +216,7 @@ export default function BuyCoinsPage() {
 
         {/* Token Selection */}
         <div className="bg-zinc-900 rounded-2xl p-4">
-          <label className="text-sm text-zinc-400 mb-2 block">Token</label>
+          <label className="text-sm text-zinc-400 mb-2 block">{t('buyCoins.token')}</label>
           <button
             onClick={() => setIsTokenDrawerOpen(true)}
             className="w-full flex items-center justify-between p-3 bg-zinc-800 rounded-xl hover:bg-zinc-700 transition-colors"
@@ -236,7 +238,7 @@ export default function BuyCoinsPage() {
 
         {/* Amount Selection */}
         <div className="bg-zinc-900 rounded-2xl p-4 space-y-4">
-          <label className="text-sm text-zinc-400 block">Amount (USD)</label>
+          <label className="text-sm text-zinc-400 block">{t('buyCoins.amountUsd')}</label>
           
           <div className="grid grid-cols-3 gap-2">
             {PRESET_AMOUNTS.map((amount) => (
@@ -261,7 +263,7 @@ export default function BuyCoinsPage() {
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 font-medium">$</span>
             <Input
               type="number"
-              placeholder="Custom amount"
+              placeholder={t('buyCoins.customAmount')}
               value={customAmount}
               onChange={(e) => {
                 setCustomAmount(e.target.value);
@@ -274,7 +276,7 @@ export default function BuyCoinsPage() {
           {effectiveAmount < 5 && effectiveAmount > 0 && (
             <p className="text-amber-400 text-sm flex items-center gap-2">
               <AlertCircle className="w-4 h-4" />
-              Minimum purchase is $5
+              {t('buyCoins.minPurchase')}
             </p>
           )}
           {paymentMethod === 'card' &&
@@ -283,7 +285,7 @@ export default function BuyCoinsPage() {
             Math.floor(estimatedTokens) > availableSupply && (
             <p className="text-red-400 text-sm flex items-center gap-2">
               <AlertCircle className="w-4 h-4" />
-              Only {availableSupply.toLocaleString()} {selectedToken?.symbol || 'DHB'} available. Please reduce the amount.
+              {t('buyCoins.supplyWarning', { supply: availableSupply!.toLocaleString(), symbol: selectedToken?.symbol || 'DHB' })}
             </p>
           )}
         </div>
@@ -291,13 +293,13 @@ export default function BuyCoinsPage() {
         {/* Price Summary */}
         <div className="bg-zinc-900 rounded-2xl p-4 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-zinc-400">You pay</span>
+            <span className="text-zinc-400">{t('buyCoins.youPay')}</span>
             <span className="text-white font-semibold text-lg">${effectiveAmount.toFixed(2)}</span>
           </div>
           
           <div className="border-t border-zinc-800 pt-3">
             <div className="flex items-center justify-between">
-              <span className="text-zinc-400">You receive (est.)</span>
+              <span className="text-zinc-400">{t('buyCoins.youReceive')}</span>
               <div className="flex items-center gap-2">
                 {priceLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
@@ -336,7 +338,7 @@ export default function BuyCoinsPage() {
 
         {/* Payment Methods */}
         <div className="bg-zinc-900 rounded-2xl p-4 space-y-3">
-          <label className="text-sm text-zinc-400 block">Payment Method</label>
+          <label className="text-sm text-zinc-400 block">{t('buyCoins.paymentMethod')}</label>
           
           <button
             onClick={() => setPaymentMethod('card')}
@@ -350,8 +352,8 @@ export default function BuyCoinsPage() {
               <CreditCard className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1 text-left">
-              <p className="text-white font-medium">Card / Bank</p>
-              <p className="text-xs text-zinc-400">Visa, Mastercard, Apple Pay</p>
+              <p className="text-white font-medium">{t('buyCoins.cardBank')}</p>
+              <p className="text-xs text-zinc-400">{t('buyCoins.cardBankDesc')}</p>
             </div>
             {paymentMethod === 'card' && <Check className="w-5 h-5 text-primary" />}
           </button>
@@ -368,8 +370,8 @@ export default function BuyCoinsPage() {
               <Zap className="w-5 h-5 text-yellow-400" />
             </div>
             <div className="flex-1 text-left">
-              <p className="text-white font-medium">Fiat Onramp</p>
-              <p className="text-xs text-zinc-400">Buy crypto directly with fiat</p>
+              <p className="text-white font-medium">{t('buyCoins.fiatOnramp')}</p>
+              <p className="text-xs text-zinc-400">{t('buyCoins.fiatOnrampDesc')}</p>
             </div>
             {paymentMethod === 'onramp' && <Check className="w-5 h-5 text-primary" />}
           </button>
@@ -395,12 +397,12 @@ export default function BuyCoinsPage() {
           ) : (
             <Wallet className="w-5 h-5 mr-2" />
           )}
-          {isPending ? 'Processing...' : `Buy ${selectedToken?.symbol || 'DHB'}`}
+          {isPending ? t('buyCoins.processing') : t('buyCoins.buy', { symbol: selectedToken?.symbol || 'DHB' })}
         </Button>
 
         {/* Disclaimer */}
         <p className="text-xs text-zinc-500 text-center px-4">
-          By purchasing, you agree to our terms of service. Cryptocurrency purchases are non-refundable.
+          {t('buyCoins.disclaimer')}
         </p>
       </div>
 
@@ -408,7 +410,7 @@ export default function BuyCoinsPage() {
       <Drawer open={isTokenDrawerOpen} onOpenChange={setIsTokenDrawerOpen}>
         <DrawerContent glass className="max-h-[70vh]">
           <DrawerHeader className="border-b border-white/10">
-            <DrawerTitle className="text-white">Select Token</DrawerTitle>
+            <DrawerTitle className="text-white">{t('buyCoins.selectToken')}</DrawerTitle>
           </DrawerHeader>
           <div className="p-4 space-y-2 overflow-y-auto">
             {tokensLoading ? (
@@ -449,7 +451,7 @@ export default function BuyCoinsPage() {
               ))
             ) : (
               <div className="text-center py-8 text-zinc-400">
-                <p>No tokens available</p>
+                <p>{t('buyCoins.noTokens')}</p>
               </div>
             )}
           </div>

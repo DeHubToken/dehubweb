@@ -7,6 +7,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Play, Music, Mic2, Radio, Disc3 } from 'lucide-react';
 import { VideoCard } from '@/components/app/cards/VideoCard';
@@ -191,12 +192,12 @@ const AUDIO_TRACKS: AudioTrack[] = [
 
 type MusicTabValue = 'all' | 'tracks' | 'videos' | 'podcasts' | 'live' | 'radio';
 
-const MUSIC_TABS: { icon: typeof Music; label: string; value: MusicTabValue }[] = [
-  { icon: Music, label: 'All', value: 'all' },
-  { icon: Disc3, label: 'Tracks', value: 'tracks' },
-  { icon: Play, label: 'Videos', value: 'videos' },
-  { icon: Mic2, label: 'Podcasts', value: 'podcasts' },
-  { icon: Radio, label: 'Radio', value: 'radio' },
+const MUSIC_TABS: { icon: typeof Music; labelKey: string; value: MusicTabValue }[] = [
+  { icon: Music, labelKey: 'music.all', value: 'all' },
+  { icon: Disc3, labelKey: 'music.tracks', value: 'tracks' },
+  { icon: Play, labelKey: 'music.videos', value: 'videos' },
+  { icon: Mic2, labelKey: 'music.podcasts', value: 'podcasts' },
+  { icon: Radio, labelKey: 'music.radio', value: 'radio' },
 ];
 
 function AudioTrackCard({ track }: { track: AudioTrack }) {
@@ -243,6 +244,7 @@ function AudioTrackCard({ track }: { track: AudioTrack }) {
 // ============================================================================
 
 export default function MusicPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<MusicTabValue>('all');
 
   const renderContent = () => {
@@ -295,7 +297,7 @@ export default function MusicPage() {
             
             {/* Audio Tracks */}
             <div>
-              <h3 className="text-white font-semibold mb-3 px-1">Trending Tracks</h3>
+              <h3 className="text-white font-semibold mb-3 px-1">{t('music.trendingTracks')}</h3>
               <div className="space-y-2 sm:space-y-3">
                 {AUDIO_TRACKS.slice(0, 5).map((track) => (
                   <AudioTrackCard key={track.id} track={track} />
@@ -305,7 +307,7 @@ export default function MusicPage() {
             
             {/* More Videos */}
             <div>
-              <h3 className="text-white font-semibold mb-3 px-1">More Videos</h3>
+              <h3 className="text-white font-semibold mb-3 px-1">{t('music.moreVideos')}</h3>
               <div className="space-y-2 sm:space-y-3">
                 {MUSIC_VIDEOS.slice(3).map((video) => (
                   <VideoCard key={video.id} video={video} />
@@ -315,7 +317,7 @@ export default function MusicPage() {
             
             {/* More Tracks */}
             <div>
-              <h3 className="text-white font-semibold mb-3 px-1">New Releases</h3>
+              <h3 className="text-white font-semibold mb-3 px-1">{t('music.newReleases')}</h3>
               <div className="space-y-2 sm:space-y-3">
                 {AUDIO_TRACKS.slice(5).map((track) => (
                   <AudioTrackCard key={track.id} track={track} />
@@ -353,7 +355,7 @@ export default function MusicPage() {
                   )}
                   <span className="relative z-10 flex items-center gap-2">
                     <tab.icon className="w-4 h-4" />
-                    <span className="hidden sm:inline">{tab.label}</span>
+                    <span className="hidden sm:inline">{t(tab.labelKey)}</span>
                   </span>
                 </button>
               );
