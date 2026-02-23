@@ -697,5 +697,32 @@
   },
   "settings": {
     "loginDescription": "Inicia sesión para acceder y gestionar tu cuenta."
+  },
+  "hero": {
+    "title": "Un Nuevo Mundo",
+    "subtitle": "Te Espera",
+    "comingSoon": "Próximamente",
+    "iosComingSoon": "¡La app para iOS estará disponible pronto!"
+  },
+  "creators": {
+    "title": "Solicitud de Creador",
+    "subtitle": "Únete a la red de creadores de DeHub",
+    "xUsername": "Usuario de X (Twitter)",
+    "youtubeUsername": "Usuario de YouTube",
+    "twitchUsername": "Usuario de Twitch",
+    "instagramUsername": "Usuario de Instagram",
+    "tiktokUsername": "Usuario de TikTok",
+    "otherSocials": "Otros usuarios/redes sociales",
+    "totalFollowerReach": "Alcance total de seguidores",
+    "followerReachPlaceholder": "ej., 500K en todas las plataformas",
+    "emailOrTelegram": "Email o Telegram para contacto",
+    "emailPlaceholder": "tu@ejemplo.com o @usuario",
+    "expectedCompensation": "Compensación esperada",
+    "compensationPlaceholder": "ej., $100/mes",
+    "submitApplication": "Enviar solicitud",
+    "submitting": "Enviando...",
+    "fillRequired": "Por favor completa todos los campos requeridos",
+    "submitted": "¡Solicitud enviada exitosamente!",
+    "failedSubmit": "Error al enviar solicitud. Inténtalo de nuevo."
   }
 }

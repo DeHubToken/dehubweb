@@ -163,51 +163,52 @@ function getNotificationIcon(type: DeHubNotification['type']) {
   }
 }
 
-function getNotificationContent(notification: DeHubNotification, bundle?: BundledNotification): React.ReactNode {
+function getNotificationContent(notification: DeHubNotification, bundle?: BundledNotification, t?: (key: string, opts?: any) => string): React.ReactNode {
+  const tr = t || ((key: string) => key);
   const actorName = notification.actorUsername || 'Someone';
   
-  // Backend-aggregated follow: "okanbey and 2 others started following you"
+  // Backend-aggregated follow
   if (notification.type === 'following' && (notification as any).aggregatedCount > 1) {
     const othersCount = (notification as any).aggregatedCount - 1;
-    const othersText = othersCount === 1 ? '1 other' : `${othersCount} others`;
-    return `${actorName} and ${othersText} started following you`;
+    const othersText = othersCount === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: othersCount });
+    return tr('notifications.andOthersFollowing', { name: actorName, others: othersText });
   }
   
-  // Same-actor bundle: "Frank liked 5 of your posts"
+  // Same-actor bundle
   if (bundle?.bundleType === 'same-actor' && bundle.postCount > 1) {
     const count = bundle.postCount;
     switch (notification.type) {
       case 'like':
-        return `${actorName} liked ${count} of your posts`;
+        return tr('notifications.likedPosts', { name: actorName, count });
       case 'comment':
-        return `${actorName} commented on ${count} of your posts`;
+        return tr('notifications.commentedPosts', { name: actorName, count });
       case 'comment_reply':
-        return `${actorName} replied to ${count} of your comments`;
+        return tr('notifications.repliedComments', { name: actorName, count });
       default:
-        return `${actorName} interacted with ${count} of your posts`;
+        return tr('notifications.interactedPosts', { name: actorName, count });
     }
   }
   
   switch (notification.type) {
     case 'like':
-      return `${actorName} liked your post`;
+      return tr('notifications.likedPost', { name: actorName });
     case 'comment':
-      return `${actorName} commented on your post`;
+      return tr('notifications.commentedPost', { name: actorName });
     case 'comment_reply':
-      return `${actorName} replied to your comment`;
+      return tr('notifications.repliedComment', { name: actorName });
     case 'tip':
       const tipAmount = notification.amount ? ` ${notification.amount} ${notification.currency || 'DHB'}` : '';
-      return `${actorName} tipped you${tipAmount}`;
+      return tr('notifications.tippedYou', { name: actorName }) + tipAmount;
     case 'subscription':
-      return `${actorName} subscribed to your plan`;
+      return tr('notifications.subscribedPlan', { name: actorName });
     case 'ppv_purchase':
-      return `${actorName} purchased your content`;
+      return tr('notifications.purchasedContent', { name: actorName });
     case 'following':
-      return `${actorName} started following you`;
+      return tr('notifications.startedFollowing', { name: actorName });
     case 'video_milestone':
-      return `🎉 Your post reached a new milestone!`;
+      return tr('notifications.postMilestone');
     case 'livestream_start':
-      return `${actorName} started streaming`;
+      return tr('notifications.startedStreaming', { name: actorName });
     case 'comment_like': {
       const commentPreview = (notification as any).commentPreview;
       const count = (notification as any).aggregatedCount || 1;
@@ -215,19 +216,19 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
       if (count > 1 && names && names.length > 0) {
         const first = names[0];
         const rest = count - 1;
-        const othersText = rest === 1 ? '1 other' : `${rest} others`;
+        const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
         return commentPreview
-          ? `${first} and ${othersText} liked your comment: "${commentPreview}"`
-          : `${first} and ${othersText} liked your comment`;
+          ? tr('notifications.andOthersLikedCommentPreview', { first, others: othersText, preview: commentPreview })
+          : tr('notifications.andOthersLikedComment', { first, others: othersText });
       }
       return commentPreview
-        ? `${actorName} liked your comment: "${commentPreview}"`
-        : `${actorName} liked your comment`;
+        ? tr('notifications.likedCommentPreview', { name: actorName, preview: commentPreview })
+        : tr('notifications.likedComment', { name: actorName });
     }
     case 'video_removal':
-      return `Your post was removed`;
+      return tr('notifications.postRemoved');
     default:
-      return (notification as any).content || 'New notification';
+      return (notification as any).content || tr('notifications.newNotification');
   }
 }
 
@@ -276,6 +277,7 @@ function NotificationItem({
   enrichedAvatars: Map<string, EnrichedAvatar>;
 }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   
   // Prefer fresh enriched avatar over stale API snapshot
   const enriched = notification.actorAddress ? enrichedAvatars.get(notification.actorAddress.toLowerCase()) : undefined;
@@ -357,7 +359,7 @@ function NotificationItem({
       {/* Content */}
       <div className="flex-1 min-w-0">
         <p className={`text-sm ${notification.read ? 'text-zinc-400' : 'text-white'}`}>
-          {getNotificationContent(notification, bundle)}
+          {getNotificationContent(notification, bundle, t)}
         </p>
         
         {/* Post preview snippet — show title/text for context */}
