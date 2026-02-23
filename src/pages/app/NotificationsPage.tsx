@@ -290,10 +290,8 @@ function NotificationItem({
       ? buildAvatarUrl(notification.actorAddress, freshAvatarPath || staleAvatarPath)
       : staleAvatarPath?.startsWith('http') ? staleAvatarPath : undefined;
   
-  // Dicebear fallback for when no avatar exists
-  const fallbackAvatar = notification.actorAddress 
-    ? `https://api.dicebear.com/7.x/identicon/svg?seed=${notification.actorAddress}`
-    : undefined;
+   // No dicebear fallback — let AvatarFallback show the greyed-out letter
+  const fallbackLetter = (enriched?.displayName || enriched?.username || notification.actorUsername || 'U').charAt(0).toUpperCase();
     
   const postThumbnail = notification.tokenThumbnail 
     ? (notification.tokenThumbnail.startsWith('http') ? notification.tokenThumbnail : `${DEHUB_CDN_BASE}${notification.tokenThumbnail}`)
@@ -337,25 +335,17 @@ function NotificationItem({
         {profileLink ? (
           <Link to={profileLink} onClick={(e) => e.stopPropagation()}>
             <Avatar className="w-12 h-12">
-              <AvatarImage src={avatarUrl || fallbackAvatar} />
-              <AvatarFallback className="bg-zinc-700 text-white">
-                {fallbackAvatar ? (
-                  <img src={fallbackAvatar} alt="" className="w-full h-full" />
-                ) : (
-                  (notification.actorUsername || 'U').charAt(0).toUpperCase()
-                )}
+              <AvatarImage src={avatarUrl} />
+              <AvatarFallback className="bg-zinc-700 text-white font-medium">
+                {fallbackLetter}
               </AvatarFallback>
             </Avatar>
           </Link>
         ) : (
           <Avatar className="w-12 h-12">
-            <AvatarImage src={avatarUrl || fallbackAvatar} />
-            <AvatarFallback className="bg-zinc-700 text-white">
-              {fallbackAvatar ? (
-                <img src={fallbackAvatar} alt="" className="w-full h-full" />
-              ) : (
-                (notification.actorUsername || 'U').charAt(0).toUpperCase()
-              )}
+            <AvatarImage src={avatarUrl} />
+            <AvatarFallback className="bg-zinc-700 text-white font-medium">
+              {fallbackLetter}
             </AvatarFallback>
           </Avatar>
         )}
