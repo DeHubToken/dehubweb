@@ -233,7 +233,8 @@
     "offersMade": "Offers You've Made",
     "noOffers": "You haven't made any offers yet",
     "walletCopied": "Wallet address copied!",
-    "note": "Note"
+    "note": "Note",
+    "loginDescription": "Log in to access and manage your account settings."
   },
   "common": {
     "save": "Save",
@@ -843,9 +844,6 @@
     "failedCreate": "Failed to create agent",
     "failedDelete": "Failed to delete agent",
     "apiKeyCopied": "API key copied to clipboard"
-  },
-  "settings": {
-    "loginDescription": "Log in to access and manage your account settings."
   },
   "hero": {
     "title": "A New World",
