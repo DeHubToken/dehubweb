@@ -399,14 +399,14 @@ export function PostAccessToggles({
 
       {/* PPV Drawer */}
       <Drawer open={ppvDrawerOpen} onOpenChange={setPpvDrawerOpen}>
-        <DrawerContent glass>
-          <DrawerHeader className="text-left">
+        <DrawerContent glass className="max-h-[90vh] flex flex-col overflow-hidden">
+          <DrawerHeader className="text-left shrink-0">
             <DrawerTitle className="flex items-center gap-2 text-white">
               <Ticket className="w-5 h-5" />
               {t('drawers.setPpvPrice')}
             </DrawerTitle>
           </DrawerHeader>
-          <div className="px-4 pb-4 space-y-4">
+          <div className="px-4 pb-4 space-y-4 overflow-y-auto flex-1 min-h-0 overscroll-contain">
             {/* Currency selector */}
             <div className="space-y-2">
               <label className="text-sm text-white/70">{t('drawers.currency')}</label>
@@ -445,7 +445,7 @@ export function PostAccessToggles({
               </span>
             </div>
           </div>
-          <DrawerFooter className="flex-row gap-2">
+          <DrawerFooter className="flex-row gap-2 shrink-0 border-t border-white/10">
             <Button variant="glass" onClick={cancelPpv} className="flex-1 rounded-xl">
               {t('drawers.cancel')}
             </Button>
@@ -464,14 +464,14 @@ export function PostAccessToggles({
 
       {/* Bounty Drawer */}
       <Drawer open={bountyDrawerOpen} onOpenChange={setBountyDrawerOpen}>
-        <DrawerContent glass>
-          <DrawerHeader className="text-left">
+        <DrawerContent glass className="max-h-[90vh] flex flex-col overflow-hidden">
+          <DrawerHeader className="text-left shrink-0">
             <DrawerTitle className="flex items-center gap-2 text-white">
               <Gift className="w-5 h-5" />
               {t('drawers.setupBounty')}
             </DrawerTitle>
           </DrawerHeader>
-          <div className="px-4 pb-4 space-y-4">
+          <div className="px-4 pb-4 space-y-4 overflow-y-auto flex-1 min-h-0 overscroll-contain">
             <div className="space-y-2">
               <label className="flex items-center gap-2 text-sm text-white/70">
                 <Eye className="w-4 h-4" />
@@ -517,7 +517,7 @@ export function PostAccessToggles({
               </div>
             )}
           </div>
-          <DrawerFooter className="flex-row gap-2">
+          <DrawerFooter className="flex-row gap-2 shrink-0 border-t border-white/10">
             <Button variant="glass" onClick={cancelBounty} className="flex-1 rounded-xl">
               {t('drawers.cancel')}
             </Button>
@@ -536,14 +536,14 @@ export function PostAccessToggles({
 
       {/* Token Gated Drawer */}
       <Drawer open={tokenDrawerOpen} onOpenChange={setTokenDrawerOpen}>
-        <DrawerContent glass>
-          <DrawerHeader className="text-left">
+        <DrawerContent glass className="max-h-[90vh] flex flex-col overflow-hidden">
+          <DrawerHeader className="text-left shrink-0">
             <DrawerTitle className="flex items-center gap-2 text-white">
               <Shield className="w-5 h-5" />
               {t('drawers.tokenGateSettings')}
             </DrawerTitle>
           </DrawerHeader>
-          <div className="px-4 pb-4 space-y-4">
+          <div className="px-4 pb-4 space-y-4 overflow-y-auto flex-1 min-h-0 overscroll-contain">
             <div className="flex items-center gap-2 p-3 rounded-lg bg-zinc-800/30 border border-white/10">
               <Info className="w-4 h-4 text-white/50 shrink-0" />
               <span className="text-xs text-white/50">
@@ -561,7 +561,7 @@ export function PostAccessToggles({
               />
             </div>
           </div>
-          <DrawerFooter className="flex-row gap-2">
+          <DrawerFooter className="flex-row gap-2 shrink-0 border-t border-white/10">
             <Button variant="glass" onClick={cancelToken} className="flex-1 rounded-xl">
               {t('drawers.cancel')}
             </Button>
