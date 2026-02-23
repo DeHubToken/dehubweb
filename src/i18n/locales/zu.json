@@ -2,20 +2,20 @@
   "nav": {
     "home": "Ekhaya",
     "explore": "Hlola",
-    "notifications": "Izaziso",
-    "messages": "Imilayezo",
+    "notifications": "Zaziso",
+    "messages": "Layezo",
     "assistant": "Umsizi",
-    "leaderboard": "Ibhodi Yabaholi",
-    "bookmarks": "Amabhukimakhi",
-    "settings": "Izilungiselelo",
+    "leaderboard": "Bhodi Yabaholi",
+    "bookmarks": "Bhukimakhi",
+    "settings": "Zilungiselelo",
     "profile": "Iphrofayela",
     "blog": "Ibhulogi",
     "commandCentre": "Isikhungo Sokulawula",
     "wallet": "Isikhwama",
-    "docs": "Amadokhumenti",
+    "docs": "Dokhumenti",
     "roadmap": "Imephu Yendlela",
-    "featureRequests": "Izicelo",
-    "careers": "Amathuba Omsebenzi",
+    "featureRequests": "Zicelo",
+    "careers": "Thuba Lomsebenzi",
     "create": "Dala",
     "login": "Ngena",
     "connecting": "Ixhuma...",
@@ -23,8 +23,8 @@
   },
   "feed": {
     "home": "Ekhaya",
-    "videos": "Amavidiyo",
-    "images": "Izithombe",
+    "videos": "Vidiyo",
+    "images": "Zithombe",
     "shorts": "Okufushane",
     "music": "Umculo",
     "live": "Bukhoma"
@@ -33,23 +33,23 @@
     "all": "Konke",
     "people": "Abantu",
     "posts": "Okuthunyelwe",
-    "images": "Izithombe",
-    "videos": "Amavidiyo",
+    "images": "Zithombe",
+    "videos": "Vidiyo",
     "music": "Umculo",
     "live": "Bukhoma"
   },
   "settings": {
-    "title": "Izilungiselelo",
+    "title": "Zilungiselelo",
     "manageAccount": "Phatha i-akhawunti yakho nezilungiselelo",
     "logOut": "Phuma",
     "loggedOut": "Uphumile",
     "logoutFailed": "Ukuphuma kuhlulekile",
     "profile": "Iphrofayela",
-    "notifications": "Izaziso",
+    "notifications": "Zaziso",
     "privacy": "Ubumfihlo",
     "appearance": "Ukubukeka",
     "content": "Okuqukethwe",
-    "messages": "Imilayezo",
+    "messages": "Layezo",
     "assets": "Impahla",
     "profileSettings": "Izilungiselelo Zephrofayela",
     "saveChanges": "Gcina Izinguquko",
@@ -567,7 +567,7 @@
   },
   "explorePage": { "searchPlaceholder": "Sesha abantu, okuthunyelwe noma okuqukethwe...", "filters": "Izihluzi", "clearAll": "Sula konke", "category": "Isigaba", "contentType": "Uhlobo Lokuqukethwe", "bounty": "Umvuzo", "ppv": "PPV", "gated": "Kuvinjelwe", "datePosted": "Usuku Lokuthunyelwa", "engagement": "Ukuzibandakanya", "follow": "Landela", "loginDescription": "Ngena ukuze uthole okuthunyelwe, abadali nemiphakathi ku-DeHub.", "noResults": "Awekho imiphumela", "noResultsDesc": "Zama amagama ahlukile noma ubheke okuqukethwe okudumile.", "searchHistory": "Umlando Wokusesha", "clearHistory": "Sula umlando", "trending": "Okudumile", "trendingSearches": "Ukusesha Okudumile", "suggestedCreators": "Abadali Abanconyiwe", "people": "Abantu", "posts": "Okuthunyelwe", "seeAllPeople": "Bona bonke abantu", "results": "imiphumela", "loadMore": "Layisha okwengeziwe", "searching": "Iyasesha...", "searchError": "Ayikwazi ukusesha. Sicela uzame futhi.", "retry": "Zama futhi", "resultsFor": "Imiphumela ka-\"{{query}}\"", "resultsFound": "Kutholwe imiphumela engu-{{count}}", "content": "Okuqukethwe", "loadingMore": "Ilayisha okwengeziwe...", "noMoreResults": "Akusekho imiphumela", "noResultsFor": "Awekho imiphumela ka-\"{{query}}\"", "tryDifferent": "Zama ukusesha okunye", "tipRemoveAt": "Icebiso: Susa @ ukusesha okuqukethwe kunokuba igama lomsebenzisi", "noRecentSearches": "Akukho ukusesha kwamuva. Qala ukuhlola!", "nothingTrending": "Akukho okudumile okwamanje! Buya maduzane.", "viewAllPeople": "Bona bonke abantu abangu-{{count}}", "noFilterResults": "Awekho imiphumela", "selectLabel": "Khetha {{label}}", "search": "Sesha...", "country": "Izwe", "date": "Usuku", "likes": "Ukuthanda", "shares": "Ukwabelana", "comments": "Amazwana", "anyTime": "Noma nini", "today": "Namhlanje", "thisWeek": "Leli viki", "thisMonth": "Le nyanga", "thisYear": "Lo nyaka", "any": "Konke", "gaming": "Imidlalo", "music": "Umculo", "art": "Ubuciko", "programming": "Ukuhlela", "crypto": "Crypto", "entertainment": "Ukuzijabulisa", "all": "Konke", "global": "Umhlaba wonke" },
   "bookmarks": {
-    "title": "Amabhukimakhi",
+    "title": "Bhukimakhi",
     "savedCount": "Okuthunyelwe okungu-{{count}} okugciniwe",
     "savedCountPlural": "Okuthunyelwe okungu-{{count}} okugciniwe",
     "refresh": "Vuselela amabhukimakhi",
@@ -591,7 +591,7 @@
     "loginDescription": "Ngena ukubona nokuphatha amabhukimakhi akho agciniwe."
   },
   "notifications": {
-    "title": "Izaziso",
+    "title": "Zaziso",
     "markAllRead": "Phawula konke njengokufundiwe",
     "settings": "Izilungiselelo Zezaziso",
     "actions": "Izenzo",
@@ -645,7 +645,7 @@
     "nOthers": "abanye abangu-{{count}}"
   },
   "leaderboard": {
-    "title": "Ibhodi Yabaholi",
+    "title": "Bhodi Yabaholi",
     "subtitle": "Ibuyekezwa ngokuzenzakalelayo njalo ngemizuzu emi-5",
     "holdings": "Okubanjwe",
     "spent": "Okusetshenzisiwe",
@@ -674,7 +674,7 @@
     "noWalletAddress": "Alikho ikheli lesikhwama elitholakalayo"
   },
   "features": {
-    "title": "Izicelo Zezici",
+    "title": "Zicelo Zezici",
     "ideasSubmitted": "Imibono engu-{{count}} ethunyelwe",
     "ideaSubmitted": "Umbono owodwa othunyelwe",
     "submit": "Thumela",
@@ -716,7 +716,7 @@
     "loginRequired": "Ukungena kuyadingeka"
   },
   "messages": {
-    "title": "Imilayezo",
+    "title": "Layezo",
     "searchConversations": "Sesha izingxoxo...",
     "failedToLoad": "Kuhlulekile ukulayisha izingxoxo",
     "tryAgain": "Zama futhi"
@@ -785,7 +785,7 @@
     "failedOnramp": "Kuhlulekile ukuqala indlela"
   },
   "agents": {
-    "title": "Ama-ejensi e-AI",
+    "title": "Ejensi ye-AI",
     "connectToManage": "Xhuma ukuphatha ama-ejensi e-AI",
     "signInToCreate": "Ngena ukudala nokuphatha ama-ejensi e-AI.",
     "description": "Dala ama-ejensi e-AI angasebenzisana neDeHub esebenzisa iprothokholi ye-MCP.",
