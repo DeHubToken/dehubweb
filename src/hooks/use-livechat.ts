@@ -105,42 +105,17 @@ export function useLiveChatMessages(roomId: string | null) {
     if (!roomId) return;
     if (showLoading) setIsLoading(true);
     try {
-      // Fetch from both sources in parallel
-      const [apiMessages, supabaseResult] = await Promise.allSettled([
-        fetchApiMessages(roomId, { limit: 200 }),
-        supabase
-          .from('livechat_messages')
-          .select('*')
-          .eq('room_id', roomId)
-          .order('created_at', { ascending: true })
-          .limit(200),
-      ]);
-
-      const apiSucceeded = apiMessages.status === 'fulfilled';
-      const apiMapped = apiSucceeded ? apiMessages.value.map(apiMsgToLocal) : [];
-
-      const supabaseMapped: SupabaseLiveChatMessage[] =
-        supabaseResult.status === 'fulfilled' && supabaseResult.value.data
-          ? (supabaseResult.value.data as SupabaseLiveChatMessage[])
-          : [];
-
-      // Only retry if BOTH sources failed — if the API succeeded with 0 messages, that's valid
-      if (!apiSucceeded && apiMapped.length === 0 && supabaseMapped.length === 0) {
-        const supabaseFailed = supabaseResult.status === 'rejected' ||
-          (supabaseResult.status === 'fulfilled' && supabaseResult.value.error);
-
-        if (supabaseFailed) {
-          console.warn('[LiveChat] Both sources failed, scheduling retry in 5s');
-          setTimeout(() => fetchFromApi(false), 5000);
-        }
-      }
+      // Use DeHub API as sole source of truth for initial load.
+      // Supabase Realtime handles new messages — no need to REST-query the table
+      // (which adds DB load and fails with 503 when the DB is overloaded).
+      const apiMessages = await fetchApiMessages(roomId, { limit: 200 });
+      const apiMapped = apiMessages.map(apiMsgToLocal);
 
       setMessages((prev) => {
         const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
-        const merged = deduplicateMessages([...apiMapped, ...supabaseMapped, ...optimistic]);
-        // Only update if we got data or this is the initial load
+        const merged = deduplicateMessages([...apiMapped, ...optimistic]);
         if (merged.length > 0 || prev.length === 0) return merged;
-        return prev; // Keep existing messages if new fetch returned nothing
+        return prev;
       });
     } catch (err) {
       console.error('[LiveChat] Failed to fetch messages:', err);
