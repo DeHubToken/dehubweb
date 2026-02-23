@@ -98,7 +98,7 @@ export function BalanceCard() {
         className="w-full mt-4 rounded-xl"
         onClick={() => navigate('/app/wallet')}
       >
-        Wallet
+        {t('commandCentre.fullWallet')}
       </Button>
     </div>
   );
