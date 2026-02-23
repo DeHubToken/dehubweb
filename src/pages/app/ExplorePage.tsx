@@ -216,6 +216,7 @@ const UserResultCard = ({
   onProfileClick?: (handle: string) => void;
 }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -286,7 +287,7 @@ const UserResultCard = ({
           onClick={handleFollow}
           disabled={isLoading || !walletAddress}
         >
-          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Follow'}
+          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : t('explorePage.follow')}
         </Button>
       )}
     </div>

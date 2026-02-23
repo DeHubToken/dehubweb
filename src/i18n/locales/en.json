@@ -846,5 +846,32 @@
   },
   "settings": {
     "loginDescription": "Log in to access and manage your account settings."
+  },
+  "hero": {
+    "title": "A New World",
+    "subtitle": "Awaits",
+    "comingSoon": "Coming Soon",
+    "iosComingSoon": "The iOS app will be available soon!"
+  },
+  "creators": {
+    "title": "Creator Application",
+    "subtitle": "Join the DeHub creator network",
+    "xUsername": "X (Twitter) Username",
+    "youtubeUsername": "YouTube Username",
+    "twitchUsername": "Twitch Username",
+    "instagramUsername": "Instagram Username",
+    "tiktokUsername": "TikTok Username",
+    "otherSocials": "Other Usernames/Socials",
+    "totalFollowerReach": "Total Follower Reach",
+    "followerReachPlaceholder": "e.g., 500K across all platforms",
+    "emailOrTelegram": "Email or Telegram ID to Contact",
+    "emailPlaceholder": "you@example.com or @username",
+    "expectedCompensation": "Expected Compensation",
+    "compensationPlaceholder": "e.g., $100/month",
+    "submitApplication": "Submit Application",
+    "submitting": "Submitting...",
+    "fillRequired": "Please fill in all required fields",
+    "submitted": "Application submitted successfully!",
+    "failedSubmit": "Failed to submit application. Please try again."
   }
 }

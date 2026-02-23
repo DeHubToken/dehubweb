@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import googlePlayBadge from '@/assets/google-play-badge.png';
 import appStoreBadge from '@/assets/app-store-badge.svg';
@@ -21,9 +22,10 @@ const cursorStyle = {
 };
 
 export const AppStoreButtons = () => {
+  const { t } = useTranslation();
   const handleAppStoreClick = () => {
-    toast.info('Coming Soon', {
-      description: 'The iOS app will be available soon!',
+    toast.info(t('hero.comingSoon', 'Coming Soon'), {
+      description: t('hero.iosComingSoon', 'The iOS app will be available soon!'),
       duration: 3000,
     });
   };

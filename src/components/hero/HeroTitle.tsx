@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 interface HeroTitleProps {
   masterGlitch: boolean;
@@ -27,9 +28,12 @@ export const HeroTitle = ({
   corruptedTitle,
   corruptedSubtitle,
   className = '',
-  title = 'A New World',
-  subtitle = 'Awaits'
+  title: titleProp,
+  subtitle: subtitleProp
 }: HeroTitleProps) => {
+  const { t } = useTranslation();
+  const title = titleProp || t('hero.title', 'A New World');
+  const subtitle = subtitleProp || t('hero.subtitle', 'Awaits');
   // Split title for mobile 3-line layout
   const titleWords = title.split(' ');
   const mobileLine1 = titleWords.slice(0, 2).join(' '); // "A New"

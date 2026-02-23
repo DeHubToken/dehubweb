@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,6 +11,7 @@ import { ArrowLeft, Send, Loader2 } from 'lucide-react';
 
 export default function CreatorsPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     x_username: '',
@@ -32,7 +34,7 @@ export default function CreatorsPage() {
     e.preventDefault();
     
     if (!formData.email || !formData.total_follower_reach || !formData.expected_compensation) {
-      toast.error('Please fill in all required fields');
+      toast.error(t('creators.fillRequired', 'Please fill in all required fields'));
       return;
     }
 
@@ -54,7 +56,7 @@ export default function CreatorsPage() {
 
       if (error) throw error;
 
-      toast.success('Application submitted successfully!');
+      toast.success(t('creators.submitted', 'Application submitted successfully!'));
       setFormData({
         x_username: '',
         youtube_username: '',
@@ -68,7 +70,7 @@ export default function CreatorsPage() {
       });
     } catch (error) {
       console.error('Error submitting application:', error);
-      toast.error('Failed to submit application. Please try again.');
+      toast.error(t('creators.failedSubmit', 'Failed to submit application. Please try again.'));
     } finally {
       setIsSubmitting(false);
     }
@@ -110,141 +112,57 @@ export default function CreatorsPage() {
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="text-2xl font-bold text-center">Creator Application</h1>
-          <p className="text-zinc-400 text-sm text-center">Join the DeHub creator network</p>
+          <h1 className="text-2xl font-bold text-center">{t('creators.title', 'Creator Application')}</h1>
+          <p className="text-zinc-400 text-sm text-center">{t('creators.subtitle', 'Join the DeHub creator network')}</p>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6 space-y-5">
-            {/* X Username */}
             <div className="space-y-2">
-              <Label htmlFor="x_username" className="text-zinc-300">X (Twitter) Username</Label>
-              <Input
-                id="x_username"
-                name="x_username"
-                placeholder="@username"
-                value={formData.x_username}
-                onChange={handleChange}
-                className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500"
-              />
+              <Label htmlFor="x_username" className="text-zinc-300">{t('creators.xUsername', 'X (Twitter) Username')}</Label>
+              <Input id="x_username" name="x_username" placeholder="@username" value={formData.x_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
             </div>
-
-            {/* YouTube Username */}
             <div className="space-y-2">
-              <Label htmlFor="youtube_username" className="text-zinc-300">YouTube Username</Label>
-              <Input
-                id="youtube_username"
-                name="youtube_username"
-                placeholder="@channel"
-                value={formData.youtube_username}
-                onChange={handleChange}
-                className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500"
-              />
+              <Label htmlFor="youtube_username" className="text-zinc-300">{t('creators.youtubeUsername', 'YouTube Username')}</Label>
+              <Input id="youtube_username" name="youtube_username" placeholder="@channel" value={formData.youtube_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
             </div>
-
-            {/* Twitch Username */}
             <div className="space-y-2">
-              <Label htmlFor="twitch_username" className="text-zinc-300">Twitch Username</Label>
-              <Input
-                id="twitch_username"
-                name="twitch_username"
-                placeholder="@username"
-                value={formData.twitch_username}
-                onChange={handleChange}
-                className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500"
-              />
+              <Label htmlFor="twitch_username" className="text-zinc-300">{t('creators.twitchUsername', 'Twitch Username')}</Label>
+              <Input id="twitch_username" name="twitch_username" placeholder="@username" value={formData.twitch_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
             </div>
-
-            {/* Instagram Username */}
             <div className="space-y-2">
-              <Label htmlFor="instagram_username" className="text-zinc-300">Instagram Username</Label>
-              <Input
-                id="instagram_username"
-                name="instagram_username"
-                placeholder="@username"
-                value={formData.instagram_username}
-                onChange={handleChange}
-                className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500"
-              />
+              <Label htmlFor="instagram_username" className="text-zinc-300">{t('creators.instagramUsername', 'Instagram Username')}</Label>
+              <Input id="instagram_username" name="instagram_username" placeholder="@username" value={formData.instagram_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
             </div>
-
-            {/* TikTok Username */}
             <div className="space-y-2">
-              <Label htmlFor="tiktok_username" className="text-zinc-300">TikTok Username</Label>
-              <Input
-                id="tiktok_username"
-                name="tiktok_username"
-                placeholder="@username"
-                value={formData.tiktok_username}
-                onChange={handleChange}
-                className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500"
-              />
+              <Label htmlFor="tiktok_username" className="text-zinc-300">{t('creators.tiktokUsername', 'TikTok Username')}</Label>
+              <Input id="tiktok_username" name="tiktok_username" placeholder="@username" value={formData.tiktok_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
             </div>
-
-            {/* Other Socials */}
             <div className="space-y-2">
-              <Label htmlFor="other_socials" className="text-zinc-300">Other Usernames/Socials</Label>
-              <Textarea
-                id="other_socials"
-                name="other_socials"
-                placeholder=""
-                value={formData.other_socials}
-                onChange={handleChange}
-                className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500 min-h-[80px]"
-              />
+              <Label htmlFor="other_socials" className="text-zinc-300">{t('creators.otherSocials', 'Other Usernames/Socials')}</Label>
+              <Textarea id="other_socials" name="other_socials" placeholder="" value={formData.other_socials} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500 min-h-[80px]" />
             </div>
-
-            {/* Total Follower Reach */}
             <div className="space-y-2">
               <Label htmlFor="total_follower_reach" className="text-zinc-300">
-                Total Follower Reach <span className="text-red-400">*</span>
+                {t('creators.totalFollowerReach', 'Total Follower Reach')} <span className="text-red-400">*</span>
               </Label>
-              <Input
-                id="total_follower_reach"
-                name="total_follower_reach"
-                placeholder="e.g., 500K across all platforms"
-                value={formData.total_follower_reach}
-                onChange={handleChange}
-                required
-                className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500"
-              />
+              <Input id="total_follower_reach" name="total_follower_reach" placeholder={t('creators.followerReachPlaceholder', 'e.g., 500K across all platforms')} value={formData.total_follower_reach} onChange={handleChange} required className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
             </div>
-
-            {/* Email */}
             <div className="space-y-2">
               <Label htmlFor="email" className="text-zinc-300">
-                Email or Telegram ID to Contact <span className="text-red-400">*</span>
+                {t('creators.emailOrTelegram', 'Email or Telegram ID to Contact')} <span className="text-red-400">*</span>
               </Label>
-              <Input
-                id="email"
-                name="email"
-                placeholder="you@example.com or @username"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500"
-              />
+              <Input id="email" name="email" placeholder={t('creators.emailPlaceholder', 'you@example.com or @username')} value={formData.email} onChange={handleChange} required className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
             </div>
-
-            {/* Expected Compensation */}
             <div className="space-y-2">
               <Label htmlFor="expected_compensation" className="text-zinc-300">
-                Expected Compensation <span className="text-red-400">*</span>
+                {t('creators.expectedCompensation', 'Expected Compensation')} <span className="text-red-400">*</span>
               </Label>
-              <Input
-                id="expected_compensation"
-                name="expected_compensation"
-                placeholder="e.g., $100/month"
-                value={formData.expected_compensation}
-                onChange={handleChange}
-                required
-                className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500"
-              />
+              <Input id="expected_compensation" name="expected_compensation" placeholder={t('creators.compensationPlaceholder', 'e.g., $100/month')} value={formData.expected_compensation} onChange={handleChange} required className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
             </div>
           </div>
 
-          {/* Submit Button */}
           <Button
             type="submit"
             disabled={isSubmitting}
@@ -253,12 +171,12 @@ export default function CreatorsPage() {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Submitting...
+                {t('creators.submitting', 'Submitting...')}
               </>
             ) : (
               <>
                 <Send className="w-4 h-4 mr-2" />
-                Submit Application
+                {t('creators.submitApplication', 'Submit Application')}
               </>
             )}
           </Button>
