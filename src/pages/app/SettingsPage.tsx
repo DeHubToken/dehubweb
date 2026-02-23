@@ -1140,6 +1140,7 @@ function LanguageSelector() {
       value={language}
       onValueChange={setPreferredLanguage}
       title={t('settings.language')}
+      searchable
       options={SUPPORTED_LANGUAGES.map(l => ({
         value: l.code,
         label: `${l.nativeName}`,
