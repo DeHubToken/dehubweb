@@ -1,12 +1,12 @@
 {
-  "nav": { "home": "Home", "explore": "Galugarin", "notifications": "Mga Abiso", "messages": "Mga Mensahe", "assistant": "Katulong", "leaderboard": "Ranggo", "bookmarks": "Mga Bookmark", "settings": "Mga Setting", "profile": "Profile", "blog": "Blog", "commandCentre": "Command Centre", "wallet": "Pitaka", "docs": "Mga Dokumento", "roadmap": "Roadmap", "featureRequests": "Mga Kahilingan", "careers": "Mga Trabaho", "create": "Gumawa", "login": "Mag-log in", "connecting": "Kumokonekta...", "signMessage": "Pirmahan ang mensahe" },
+  "nav": { "home": "Home", "explore": "Galugarin", "notifications": "Abiso", "messages": "Mensahe", "assistant": "Katulong", "leaderboard": "Ranggo", "bookmarks": "Bookmark", "settings": "Setting", "profile": "Profile", "blog": "Blog", "commandCentre": "Command Centre", "wallet": "Pitaka", "docs": "Dokumento", "roadmap": "Roadmap", "featureRequests": "Kahilingan", "careers": "Trabaho", "create": "Gumawa", "login": "Mag-log in", "connecting": "Kumokonekta...", "signMessage": "Pirmahan ang mensahe" },
   "feed": { "home": "Home", "videos": "Mga Video", "images": "Mga Larawan", "shorts": "Shorts", "music": "Musika", "live": "Live" },
   "explore": { "all": "Lahat", "people": "Mga Tao", "posts": "Mga Post", "images": "Mga Larawan", "videos": "Mga Video", "music": "Musika", "live": "Live" },
   "settings": {
-    "title": "Mga Setting", "manageAccount": "Pamahalaan ang iyong account at mga kagustuhan", "logOut": "Mag-log out", "loggedOut": "Na-log out na", "logoutFailed": "Hindi makapag-log out",
-    "profile": "Profile", "notifications": "Mga Abiso", "privacy": "Privacy", "appearance": "Hitsura", "content": "Nilalaman", "messages": "Mga Mensahe", "assets": "Mga Asset",
-    "profileSettings": "Mga Setting ng Profile", "saveChanges": "I-save ang mga pagbabago", "profilePicture": "Larawan ng Profile", "clickCameraUpload": "I-click ang camera icon para mag-upload", "displayName": "Display Name", "enterDisplayName": "Ilagay ang display name", "username": "Username", "usernamePlaceholder": "username", "usernameHint": "3-30 character, letra, numero, underscore", "bio": "Bio", "bioPlaceholder": "Sabihin mo tungkol sa sarili mo...", "socialLinks": "Mga Social Link", "profileUpdated": "Matagumpay na na-update ang profile", "failedLoadProfile": "Hindi ma-load ang profile data", "imageTooLarge5": "Ang larawan ay dapat mas mababa sa 5MB", "imageTooLarge10": "Ang larawan ay dapat mas mababa sa 10MB", "failedUpdateProfile": "Hindi ma-update ang profile",
-    "notificationSettings": "Mga Setting ng Abiso", "general": "Pangkalahatan", "emailNotifications": "Mga Abiso sa Email", "emailNotificationsDesc": "Tumanggap ng abiso sa email", "pushNotifications": "Push Notifications", "pushNotificationsDesc": "Tumanggap ng push notifications sa browser", "activity": "Aktibidad", "likes": "Mga Like", "likesDesc": "Kapag may nag-like ng post mo", "comments": "Mga Komento", "commentsDesc": "Kapag may nag-komento sa post mo", "newFollowers": "Mga Bagong Follower", "newFollowersDesc": "Kapag may sumunod sa iyo", "directMessages": "Mga Direktang Mensahe", "directMessagesDesc": "Kapag may bagong mensahe", "quietHours": "Tahimik na Oras", "enableQuietHours": "I-enable ang Tahimik na Oras", "quietHoursDesc": "I-pause ang abiso mula 10 PM hanggang 8 AM",
+    "title": "Setting", "manageAccount": "Pamahalaan ang iyong account at mga kagustuhan", "logOut": "Mag-log out", "loggedOut": "Na-log out na", "logoutFailed": "Hindi makapag-log out",
+    "profile": "Profile", "notifications": "Abiso", "privacy": "Privacy", "appearance": "Hitsura", "content": "Nilalaman", "messages": "Mensahe", "assets": "Asset",
+    "profileSettings": "Setting ng Profile", "saveChanges": "I-save ang mga pagbabago", "profilePicture": "Larawan ng Profile", "clickCameraUpload": "I-click ang camera icon para mag-upload", "displayName": "Display Name", "enterDisplayName": "Ilagay ang display name", "username": "Username", "usernamePlaceholder": "username", "usernameHint": "3-30 character, letra, numero, underscore", "bio": "Bio", "bioPlaceholder": "Sabihin mo tungkol sa sarili mo...", "socialLinks": "Mga Social Link", "profileUpdated": "Matagumpay na na-update ang profile", "failedLoadProfile": "Hindi ma-load ang profile data", "imageTooLarge5": "Ang larawan ay dapat mas mababa sa 5MB", "imageTooLarge10": "Ang larawan ay dapat mas mababa sa 10MB", "failedUpdateProfile": "Hindi ma-update ang profile",
+    "notificationSettings": "Setting ng Abiso", "general": "Pangkalahatan", "emailNotifications": "Mga Abiso sa Email", "emailNotificationsDesc": "Tumanggap ng abiso sa email", "pushNotifications": "Push Notifications", "pushNotificationsDesc": "Tumanggap ng push notifications sa browser", "activity": "Aktibidad", "likes": "Mga Like", "likesDesc": "Kapag may nag-like ng post mo", "comments": "Mga Komento", "commentsDesc": "Kapag may nag-komento sa post mo", "newFollowers": "Mga Bagong Follower", "newFollowersDesc": "Kapag may sumunod sa iyo", "directMessages": "Mga Direktang Mensahe", "directMessagesDesc": "Kapag may bagong mensahe", "quietHours": "Tahimik na Oras", "enableQuietHours": "I-enable ang Tahimik na Oras", "quietHoursDesc": "I-pause ang abiso mula 10 PM hanggang 8 AM",
     "privacySecurity": "Privacy at Seguridad", "profileVisibility": "Visibility ng Profile", "privateAccount": "Pribadong Account", "privateAccountDesc": "Tanging mga aprubadong follower lang ang makakakita ng content", "viewFollowRequests": "Tingnan ang Follow Requests", "publicProfile": "Pampublikong Profile", "publicProfileDesc": "Gawing visible ang profile sa lahat", "followVisibility": "Visibility ng Follower", "followVisibilityDesc": "Kontrolin kung paano nakikita ng iba ang iyong stats", "publicOption": "Pampubliko", "publicOptionDesc": "Mga numero ay visible at naki-click", "numbersOnly": "Numero lang", "numbersOnlyDesc": "Mga numero ay visible pero hindi naki-click", "hiddenOption": "Nakatago", "hiddenOptionDesc": "Mga numero ay nakatago sa mga bisita", "showActivityStatus": "Ipakita ang Activity Status", "showActivityStatusDesc": "Hayaan ang iba na makita kung kailan ka aktibo", "searchEngineIndexing": "Search Engine Indexing", "searchEngineIndexingDesc": "Payagan ang search engines na i-index ang profile",
     "postVisibility": "Visibility ng Post", "defaultPostVisibility": "Default na Visibility", "defaultPostVisibilityDesc": "Nalalapat sa lahat ng kasalukuyan at hinaharap na post", "public": "Pampubliko", "publicDesc": "Sinuman ay makakakita ng mga post mo", "private": "Pribado", "privateDesc": "Ikaw lang ang makakakita ng mga post mo", "followers": "Mga Follower", "followersDesc": "Tanging mga follower mo lang ang makakakita", "postVisibilityNote": "Ang pagbabago nito ay mag-a-update ng visibility ng lahat ng post at magse-set ng default para sa bago.", "allPostsPrivate": "Lahat ng post ay naging pribado", "allPostsPublic": "Lahat ng post ay naging pampubliko", "failedUpdateVisibility": "Hindi ma-update ang visibility", "connectWalletFirst": "Mangyaring ikonekta muna ang wallet",
     "whoCanMessage": "Sino ang pwedeng mag-mensahe sa iyo", "whoCanMessageDesc": "Kontrolin kung sino ang pwedeng magpadala ng direktang mensahe", "everyone": "Lahat", "everyoneDesc": "Sinuman ay pwedeng mag-mensahe", "followersOnlyDesc": "Tanging mga follower lang ang pwedeng mag-mensahe", "noOne": "Wala", "noOneDesc": "I-disable ang direktang mensahe",
@@ -222,7 +222,7 @@
   "auth": { "loginRequired": "Kailangan mag-log in" },
   "explorePage": { "searchPlaceholder": "Maghanap ng tao, post, o nilalaman...", "filters": "Mga Filter", "clearAll": "Burahin lahat", "category": "Kategorya", "contentType": "Uri ng Nilalaman", "bounty": "Gantimpala", "ppv": "PPV", "gated": "Limitado", "datePosted": "Petsa ng Post", "engagement": "Pakikipag-ugnayan", "follow": "Sundan", "loginDescription": "Mag-log in para matuklasan ang mga post, creator, at komunidad sa DeHub.", "noResults": "Walang resulta", "noResultsDesc": "Subukan ang ibang keyword o tumingin sa trending na nilalaman.", "searchHistory": "Kasaysayan ng Paghahanap", "clearHistory": "Burahin ang kasaysayan", "trending": "Trending", "trendingSearches": "Mga Trending na Paghahanap", "suggestedCreators": "Mga Iminumungkahing Creator", "people": "Mga Tao", "posts": "Mga Post", "seeAllPeople": "Tingnan lahat ng tao", "results": "resulta", "loadMore": "Mag-load pa", "searching": "Naghahanap...", "searchError": "Hindi makapag-search. Subukan muli.", "retry": "Ulitin", "resultsFor": "Mga resulta para sa \"{{query}}\"", "resultsFound": "{{count}} resulta ang nahanap", "content": "Nilalaman", "loadingMore": "Naglo-load pa...", "noMoreResults": "Wala nang resulta", "noResultsFor": "Walang resulta para sa \"{{query}}\"", "tryDifferent": "Subukan maghanap ng iba", "tipRemoveAt": "Tip: Alisin ang @ para maghanap ng nilalaman sa halip na eksaktong username", "noRecentSearches": "Wala pang kamakailan na paghahanap. Magsimula na!", "nothingTrending": "Wala pang trending! Bumalik ka mamaya.", "viewAllPeople": "Tingnan lahat ng {{count}} tao", "noFilterResults": "Walang resulta", "selectLabel": "Pumili ng {{label}}", "search": "Maghanap...", "country": "Bansa", "date": "Petsa", "likes": "Gusto", "shares": "Ibahagi", "comments": "Mga Komento", "anyTime": "Kahit kailan", "today": "Ngayon", "thisWeek": "Ngayong linggo", "thisMonth": "Ngayong buwan", "thisYear": "Ngayong taon", "any": "Lahat", "gaming": "Gaming", "music": "Musika", "art": "Sining", "programming": "Programming", "crypto": "Crypto", "entertainment": "Libangan", "all": "Lahat", "global": "Global" },
   "bookmarks": {
-    "title": "Mga Bookmark Mo",
+    "title": "Bookmark Mo",
     "savedCount": "{{count}} naka-save na post",
     "savedCountPlural": "{{count}} naka-save na post",
     "refresh": "I-refresh ang mga bookmark",
@@ -246,7 +246,7 @@
     "loginDescription": "Mag-log in para tingnan at pamahalaan ang iyong mga naka-save na bookmark."
   },
   "notifications": {
-    "title": "Mga Abiso",
+    "title": "Abiso",
     "markAllRead": "Markahan lahat bilang nabasa",
     "settings": "Mga Setting ng Abiso",
     "actions": "Mga Aksyon",
@@ -300,7 +300,7 @@
     "nOthers": "{{count}} iba pa"
   },
   "leaderboard": {
-    "title": "Mga Ranggo",
+    "title": "Ranggo",
     "subtitle": "Awtomatikong nag-a-update tuwing 5 minuto",
     "holdings": "Mga Hawak",
     "spent": "Nagastos",
@@ -329,7 +329,7 @@
     "noWalletAddress": "Walang nahanap na wallet address"
   },
   "features": {
-    "title": "Mga Kahilingan ng Feature",
+    "title": "Kahilingan ng Feature",
     "ideasSubmitted": "{{count}} ideya ang naisumite",
     "ideaSubmitted": "1 ideya ang naisumite",
     "submit": "Isumite",
@@ -368,7 +368,7 @@
     "statusDeclined": "Tinanggihan"
   },
   "messages": {
-    "title": "Mga Mensahe",
+    "title": "Mensahe",
     "searchConversations": "Maghanap ng usapan...",
     "failedToLoad": "Hindi ma-load ang mga usapan",
     "tryAgain": "Subukan Muli"
@@ -437,7 +437,7 @@
     "failedOnramp": "Hindi masimulan ang onramp"
   },
   "agents": {
-    "title": "Mga AI Agent",
+    "title": "AI Agent",
     "connectToManage": "Kumonekta para Pamahalaan ang mga AI Agent",
     "signInToCreate": "Mag-log in para gumawa at pamahalaan ang iyong mga AI agent.",
     "description": "Gumawa ng mga AI agent na makaka-interact sa DeHub gamit ang MCP protocol.",
