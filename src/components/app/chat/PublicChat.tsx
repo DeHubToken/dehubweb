@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
-import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, Pin, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw, Search, X } from 'lucide-react';
+import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, Pin, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw, Search, X, Languages, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { ChatMessage, Message } from './ChatMessage';
+import { TranslatableText, SharedTranslationContext } from '../TranslatableText';
 import { ChatInput } from './ChatInput';
 import { CreateTopicRoomModal } from './CreateTopicRoomModal';
 import { RoomSettingsModal } from './RoomSettingsModal';
@@ -50,6 +51,11 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // Search state
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Translation state
+  const [translateSignal, setTranslateSignal] = useState(0);
+  const [originalSignal, setOriginalSignal] = useState(0);
+  const [isAllTranslated, setIsAllTranslated] = useState(false);
 
   // Fetch rooms, use the first available room
   const { rooms, isLoading: roomsLoading, error: roomsError, refetch: refetchRooms } = useLiveChatRooms();
@@ -106,6 +112,16 @@ export function PublicChat({ onBack }: PublicChatProps) {
       return !prev;
     });
   }, []);
+
+  const handleTranslateAll = useCallback(() => {
+    if (isAllTranslated) {
+      setOriginalSignal(s => s + 1);
+      setIsAllTranslated(false);
+    } else {
+      setTranslateSignal(s => s + 1);
+      setIsAllTranslated(true);
+    }
+  }, [isAllTranslated]);
 
   // Auto-scroll when messages change
   useEffect(() => {
@@ -230,7 +246,21 @@ export function PublicChat({ onBack }: PublicChatProps) {
         </div>
         
         <div className="flex items-center gap-2">
-          {/* Search toggle - available to all users */}
+          {/* Translate all toggle */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={`h-8 w-8 ${isAllTranslated ? 'text-white bg-zinc-700' : 'text-zinc-400 hover:text-white'}`}
+                onClick={handleTranslateAll}
+              >
+                {isAllTranslated ? <RotateCcw className="w-4 h-4" /> : <Languages className="w-4 h-4" />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{isAllTranslated ? 'Show original' : 'Translate all'}</TooltipContent>
+          </Tooltip>
+          {/* Search toggle */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -322,6 +352,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
       )}
       
       {/* Messages Area */}
+      <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate: () => setTranslateSignal(s => s + 1), requestOriginal: () => setOriginalSignal(s => s + 1) }}>
       <div className="relative flex-1">
         <div 
           ref={scrollContainerRef}
@@ -387,6 +418,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
           <div ref={bottomRef} />
         </div>
       </div>
+      </SharedTranslationContext.Provider>
       
       {/* Input Area */}
       <div className="relative">
