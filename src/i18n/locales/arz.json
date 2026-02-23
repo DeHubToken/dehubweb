@@ -226,7 +226,8 @@
     "offersMade": "العروض اللي عملتها",
     "noOffers": "معملتش أي عروض لسه",
     "walletCopied": "عنوان المحفظة اتنسخ!",
-    "note": "ملاحظة"
+    "note": "ملاحظة",
+    "loginDescription": "سجل دخول عشان توصل وتدير إعدادات حسابك."
   },
   "common": {
     "save": "حفظ",
@@ -473,6 +474,10 @@
     "buy": "شراء",
     "transferToMe": "حول لي",
     "transfer": "تحويل",
+    "purchaseWithCard": "اشتري بالكارت",
+    "copyWalletAddress": "انسخ عنوان محفظتك",
+    "sendToWalletOrUsername": "ابعت لمحفظة أو اسم مستخدم",
+    "withdrawToBank": "سحب للبنك",
     "bankCard": "كارت بنكي",
     "soon": "قريباً",
     "transferDhb": "حول DHB",
