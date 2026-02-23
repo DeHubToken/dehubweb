@@ -126,9 +126,25 @@ export function useLiveChatMessages(roomId: string | null) {
           ? (supabaseResult.value.data as SupabaseLiveChatMessage[])
           : [];
 
+      // If both sources returned empty/failed and we had no previous messages,
+      // schedule a retry (DB might be under load)
+      if (apiMapped.length === 0 && supabaseMapped.length === 0) {
+        const apiFailed = apiMessages.status === 'rejected';
+        const supabaseFailed = supabaseResult.status === 'rejected' ||
+          (supabaseResult.status === 'fulfilled' && supabaseResult.value.error);
+
+        if (apiFailed || supabaseFailed) {
+          console.warn('[LiveChat] Source(s) failed, scheduling retry in 5s');
+          setTimeout(() => fetchFromApi(false), 5000);
+        }
+      }
+
       setMessages((prev) => {
         const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
-        return deduplicateMessages([...apiMapped, ...supabaseMapped, ...optimistic]);
+        const merged = deduplicateMessages([...apiMapped, ...supabaseMapped, ...optimistic]);
+        // Only update if we got data or this is the initial load
+        if (merged.length > 0 || prev.length === 0) return merged;
+        return prev; // Keep existing messages if new fetch returned nothing
       });
     } catch (err) {
       console.error('[LiveChat] Failed to fetch messages:', err);
