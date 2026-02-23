@@ -115,11 +115,20 @@ function FeatureCard({
   const submitComment = useSubmitComment();
   const deleteComment = useDeleteComment();
 
-  const storedAvatarUrl = feature.author_avatar && feature.author_wallet_address
+  // Known avatar overrides for non-wallet identifiers
+  const KNOWN_AVATARS: Record<string, string> = {
+    maldoteth: 'https://cdn.dehub.io/assets/avatars/0x06da979225262715ed57449d0573329a1e685140.octet-stream',
+  };
+
+  const knownAvatar = KNOWN_AVATARS[feature.author_wallet_address.toLowerCase()];
+  const storedAvatarUrl = knownAvatar || (feature.author_avatar && feature.author_wallet_address
     ? buildAvatarUrl(feature.author_wallet_address, feature.author_avatar)
-    : null;
-  const dynamicAvatarUrl = useProfileAvatar(feature.author_wallet_address, storedAvatarUrl || undefined);
-  const avatarUrl = dynamicAvatarUrl || storedAvatarUrl;
+    : null);
+  const dynamicAvatarUrl = useProfileAvatar(
+    knownAvatar ? undefined : feature.author_wallet_address,
+    storedAvatarUrl || undefined
+  );
+  const avatarUrl = knownAvatar || dynamicAvatarUrl || storedAvatarUrl;
 
   const displayName = feature.author_username || feature.author_wallet_address.slice(0, 6);
   const handle = feature.author_username || `${feature.author_wallet_address.slice(0, 6)}...${feature.author_wallet_address.slice(-4)}`;
