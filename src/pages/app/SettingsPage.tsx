@@ -90,9 +90,9 @@ const TAB_KEYS: Record<string, string> = {
 
 const tabs = [
   { icon: User, value: 'profile', label: 'settings.profile' },
+  { icon: Palette, value: 'appearance', label: 'settings.appearance' },
   { icon: Bell, value: 'notifications', label: 'settings.notifications' },
   { icon: Shield, value: 'privacy', label: 'settings.privacy' },
-  { icon: Palette, value: 'appearance', label: 'settings.appearance' },
   { icon: Eye, value: 'content', label: 'settings.content' },
   { icon: MessageSquare, value: 'messages', label: 'settings.messages' },
   { icon: Wallet, value: 'assets', label: 'settings.assets' },
