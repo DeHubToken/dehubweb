@@ -1010,7 +1010,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 selectedDate={selectedDate}
                 onDateSelect={setSelectedDate}
                 selectedPostType={selectedPostType}
-                onPostTypeSelect={setSelectedPostType}
+                onPostTypeSelect={(v) => {
+                  if (v === 'video') {
+                    window.dispatchEvent(new CustomEvent('switch-home-tab', { detail: 'videos' }));
+                  } else if (v === 'feed-images') {
+                    window.dispatchEvent(new CustomEvent('switch-home-tab', { detail: 'images' }));
+                  } else {
+                    setSelectedPostType(v);
+                  }
+                }}
                 contentFilters={contentFilters}
                 onContentFilterToggle={toggleContentFilter}
                 onReset={() => {

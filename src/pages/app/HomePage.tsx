@@ -223,11 +223,18 @@ export default function HomePage() {
       triggerRefresh();
     };
 
+    const handleSwitchTab = (e: Event) => {
+      const tab = (e as CustomEvent).detail;
+      if (tab) setActiveTab(tab);
+    };
+
     window.addEventListener('home-refresh', handleHomeRefresh);
     window.addEventListener('category-filter-changed', handleCategoryFilter);
+    window.addEventListener('switch-home-tab', handleSwitchTab);
     return () => {
       window.removeEventListener('home-refresh', handleHomeRefresh);
       window.removeEventListener('category-filter-changed', handleCategoryFilter);
+      window.removeEventListener('switch-home-tab', handleSwitchTab);
     };
   }, [triggerRefresh]);
 
