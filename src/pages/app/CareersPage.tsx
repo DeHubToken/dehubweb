@@ -19,7 +19,7 @@ import {
   Send, Loader2, ExternalLink, ChevronUp, Target, Handshake,
   Globe, TrendingUp, Megaphone, Heart, Sparkles, CheckCircle2,
 } from 'lucide-react';
-import careersIcon from '@/assets/dehub-logo-white.png';
+import careersBriefcase from '@/assets/careers-briefcase.png';
 
 /* ─── Reusable sub-components ─── */
 
@@ -127,7 +127,7 @@ export default function CareersPage() {
       {/* Header bento */}
       <div className="rounded-2xl p-4 sm:p-6 mb-4 bg-gradient-to-br from-white/[0.06] via-white/[0.03] to-transparent backdrop-blur-xl border border-white/[0.08]">
         <div className="flex items-center gap-3 mb-3">
-          <img src={careersIcon} alt="Careers" className="w-10 h-10 object-contain" />
+          <img src={careersBriefcase} alt="Careers" className="w-10 h-10 object-contain" />
           <div>
             <h1 className="text-xl font-bold text-white">Careers at DeHub</h1>
             <p className="text-zinc-500 text-sm">Join the team building the future of decentralised social media</p>
