@@ -9,7 +9,8 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lightbulb, Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2 } from 'lucide-react';
+import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2 } from 'lucide-react';
+import featuresLightbulb from '@/assets/features-lightbulb.png';
 import { TranslatableText } from '@/components/app/TranslatableText';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -535,9 +536,7 @@ export default function FeaturesPage() {
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-zinc-800 flex items-center justify-center">
-              <Lightbulb className="w-6 h-6 text-white" />
-            </div>
+            <img src={featuresLightbulb} alt="Features" className="w-12 h-12 object-contain" />
             <div>
               <h1 className="text-xl font-bold text-white">{t('features.title')}</h1>
               <p className="text-zinc-500 text-sm">{totalCount === 1 ? t('features.ideaSubmitted') : t('features.ideasSubmitted', { count: totalCount })}</p>
@@ -678,8 +677,8 @@ export default function FeaturesPage() {
             </div>
           ) : (
             <div className="bg-zinc-900 rounded-2xl p-8 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
-                <Lightbulb className="w-8 h-8 text-zinc-600" />
+              <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <img src={featuresLightbulb} alt="No features yet" className="w-16 h-16 object-contain opacity-40" />
               </div>
               <h3 className="text-white font-semibold mb-1">{t('features.noRequestsYet')}</h3>
               <p className="text-zinc-500 text-sm mb-4">{t('features.beFirstIdea')}</p>
