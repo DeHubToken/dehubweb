@@ -62,12 +62,12 @@ const SORTS: { id: FeatureSort; labelKey: string }[] = [
 ];
 
 const STATUS_COLORS: Record<FeatureStatus, string> = {
-  open: 'bg-zinc-700 text-zinc-300',
-  under_review: 'bg-amber-900/40 text-amber-400',
-  planned: 'bg-blue-900/40 text-blue-400',
-  in_progress: 'bg-purple-900/40 text-purple-400',
-  completed: 'bg-emerald-900/40 text-emerald-400',
-  declined: 'bg-red-900/40 text-red-400',
+  open: 'text-zinc-300',
+  under_review: 'text-amber-400',
+  planned: 'text-blue-400',
+  in_progress: 'text-purple-400',
+  completed: 'text-emerald-400',
+  declined: 'text-red-400',
 };
 
 const STATUS_I18N_KEYS: Record<FeatureStatus, string> = {
@@ -115,20 +115,17 @@ function FeatureCard({
   const submitComment = useSubmitComment();
   const deleteComment = useDeleteComment();
 
-  // Known avatar overrides for non-wallet identifiers
-  const KNOWN_AVATARS: Record<string, string> = {
-    maldoteth: 'https://cdn.dehub.io/assets/avatars/0x06da979225262715ed57449d0573329a1e685140.octet-stream',
+  // Known avatar overrides for non-wallet identifiers (username-based accounts)
+  const KNOWN_AVATAR_ADDRESSES: Record<string, string> = {
+    maldoteth: '0x9324840523a5d17dd12a2f11a9472e5a199c1937',
   };
 
-  const knownAvatar = KNOWN_AVATARS[feature.author_wallet_address.toLowerCase()];
-  const storedAvatarUrl = knownAvatar || (feature.author_avatar && feature.author_wallet_address
-    ? buildAvatarUrl(feature.author_wallet_address, feature.author_avatar)
-    : null);
-  const dynamicAvatarUrl = useProfileAvatar(
-    knownAvatar ? undefined : feature.author_wallet_address,
-    storedAvatarUrl || undefined
-  );
-  const avatarUrl = knownAvatar || dynamicAvatarUrl || storedAvatarUrl;
+  const resolvedAddress = KNOWN_AVATAR_ADDRESSES[feature.author_wallet_address.toLowerCase()] || feature.author_wallet_address;
+  const storedAvatarUrl = feature.author_avatar
+    ? buildAvatarUrl(resolvedAddress, feature.author_avatar)
+    : null;
+  const dynamicAvatarUrl = useProfileAvatar(resolvedAddress, storedAvatarUrl || undefined);
+  const avatarUrl = dynamicAvatarUrl || storedAvatarUrl;
 
   const displayName = feature.author_username || feature.author_wallet_address.slice(0, 6);
   const handle = feature.author_username || `${feature.author_wallet_address.slice(0, 6)}...${feature.author_wallet_address.slice(-4)}`;
@@ -170,9 +167,9 @@ function FeatureCard({
         timestamp={formatTimeAgo(feature.created_at)}
       />
 
-      {/* Status badge - top right */}
+      {/* Status badge - top right, liquid glass style */}
       <div className="absolute top-0 right-0 z-10">
-        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap ${STATUS_COLORS[feature.status]}`}>
+        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap bg-gradient-to-br from-white/15 via-white/8 to-white/3 backdrop-blur-xl border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)] ${STATUS_COLORS[feature.status]}`}>
           {t(STATUS_I18N_KEYS[feature.status])}
         </span>
       </div>
@@ -182,9 +179,9 @@ function FeatureCard({
         <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
         <TranslatableText text={feature.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />
 
-        {/* Category badge */}
+        {/* Category badge - liquid glass style */}
         <div className="flex items-center gap-2">
-          <span className="text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded-lg text-[10px] font-medium">
+          <span className="text-zinc-300 text-[10px] font-medium px-2 py-0.5 rounded-lg bg-gradient-to-br from-white/15 via-white/8 to-white/3 backdrop-blur-xl border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)]">
             {CATEGORY_LABELS[feature.category]}
           </span>
         </div>
