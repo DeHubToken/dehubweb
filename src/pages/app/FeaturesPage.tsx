@@ -3,20 +3,24 @@
  * =====================
  * Community-driven feature request board.
  * Users can submit ideas and vote on existing ones.
+ * Feature cards use the same UI pattern as text posts (ActionBar + CommentsWrapper).
  */
 
 import { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lightbulb, Search, ChevronUp, ChevronDown, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2 } from 'lucide-react';
+import { Lightbulb, Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2 } from 'lucide-react';
 import { TranslatableText } from '@/components/app/TranslatableText';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { UserAvatar } from '@/components/app/UserAvatar';
+import { CardHeader } from '@/components/app/cards/CardHeader';
+import { ActionBar } from '@/components/app/cards/ActionBar';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
+import { supabase } from '@/integrations/supabase/client';
 import {
   useFeatureRequests,
   useShippedFeatures,
@@ -79,58 +83,7 @@ function formatTimeAgo(dateStr: string): string {
 }
 
 // ──────────────────────────────────────────────────
-// Vote Button Component
-// ──────────────────────────────────────────────────
-function VoteButtons({
-  featureId,
-  voteCount,
-  currentVote,
-  onVote,
-  disabled,
-}: {
-  featureId: string;
-  voteCount: number;
-  currentVote: number | undefined;
-  onVote: (featureId: string, voteType: 1 | -1, currentVote: number | undefined) => void;
-  disabled: boolean;
-}) {
-  return (
-    <div className="flex flex-col items-center gap-0.5 min-w-[40px]">
-      <button
-        type="button"
-        onClick={(e) => { e.stopPropagation(); onVote(featureId, 1, currentVote); }}
-        disabled={disabled}
-        className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all ${
-          currentVote === 1
-            ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] text-white'
-            : 'bg-zinc-800/60 text-zinc-400 hover:bg-white/10 hover:text-white hover:backdrop-blur-xl'
-        }`}
-        aria-label="Upvote"
-      >
-        <ChevronUp className="w-4 h-4" />
-      </button>
-      <span className={`text-sm font-bold tabular-nums ${voteCount > 0 ? 'text-white' : voteCount < 0 ? 'text-zinc-500' : 'text-zinc-400'}`}>
-        {voteCount}
-      </span>
-      <button
-        type="button"
-        onClick={(e) => { e.stopPropagation(); onVote(featureId, -1, currentVote); }}
-        disabled={disabled}
-        className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all ${
-          currentVote === -1
-            ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] text-white'
-            : 'bg-zinc-800/60 text-zinc-400 hover:bg-white/10 hover:text-white hover:backdrop-blur-xl'
-        }`}
-        aria-label="Downvote"
-      >
-        <ChevronDown className="w-4 h-4" />
-      </button>
-    </div>
-  );
-}
-
-// ──────────────────────────────────────────────────
-// Feature Card Component
+// Feature Card Component (PostCard-style UI)
 // ──────────────────────────────────────────────────
 function FeatureCard({
   feature,
@@ -143,11 +96,11 @@ function FeatureCard({
   onVote: (featureId: string, voteType: 1 | -1, currentVote: number | undefined) => void;
   voteDisabled: boolean;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
 
-  const { data: comments, isLoading: commentsLoading } = useFeatureRequestComments(expanded ? feature.id : null);
+  const { data: comments, isLoading: commentsLoading } = useFeatureRequestComments(showComments ? feature.id : null);
   const submitComment = useSubmitComment();
   const deleteComment = useDeleteComment();
 
@@ -157,9 +110,20 @@ function FeatureCard({
   const dynamicAvatarUrl = useProfileAvatar(feature.author_wallet_address, storedAvatarUrl || undefined);
   const avatarUrl = dynamicAvatarUrl || storedAvatarUrl;
 
-  const displayName = feature.author_username
-    ? `@${feature.author_username}`
-    : `${feature.author_wallet_address.slice(0, 6)}...${feature.author_wallet_address.slice(-4)}`;
+  const displayName = feature.author_username || feature.author_wallet_address.slice(0, 6);
+  const handle = feature.author_username || `${feature.author_wallet_address.slice(0, 6)}...${feature.author_wallet_address.slice(-4)}`;
+
+  // Determine like/dislike state from currentVote
+  const isLiked = currentVote === 1;
+  const isDisliked = currentVote === -1;
+
+  const handleLike = useCallback(() => {
+    onVote(feature.id, 1, currentVote);
+  }, [feature.id, currentVote, onVote]);
+
+  const handleDislike = useCallback(() => {
+    onVote(feature.id, -1, currentVote);
+  }, [feature.id, currentVote, onVote]);
 
   const handleSubmitComment = (e: React.FormEvent) => {
     e.preventDefault();
@@ -173,140 +137,140 @@ function FeatureCard({
   };
 
   return (
-    <div className="bg-zinc-900 rounded-2xl p-4 flex flex-col gap-3">
-      <div className="flex gap-3 cursor-pointer" onClick={() => setExpanded(!expanded)}>
-        <VoteButtons
-          featureId={feature.id}
-          voteCount={feature.vote_count}
-          currentVote={currentVote}
-          onVote={onVote}
-          disabled={voteDisabled}
-        />
+    <div className="overflow-hidden relative">
+      {/* Header - PostCard style */}
+      <CardHeader
+        username={displayName}
+        handle={handle}
+        avatarSeed={avatarUrl || feature.author_wallet_address}
+        verified={false}
+        contentType="post"
+        creatorId={feature.author_wallet_address}
+        creatorUsername={feature.author_username || undefined}
+        timestamp={formatTimeAgo(feature.created_at)}
+      />
 
-        <div className="flex-1 min-w-0">
-          {/* Title and status */}
-          <div className="flex items-start gap-2 mb-1.5">
-            <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight flex-1 min-w-0" as="h3" hideControls />
-            <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 ${STATUS_COLORS[feature.status]}`}>
-              {STATUS_LABELS[feature.status]}
-            </span>
-          </div>
-
-          {/* Description */}
-          <TranslatableText text={feature.description} className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`} as="p" />
-
-          {/* Footer: author + category + time + comments */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="flex items-center gap-1.5">
-              <UserAvatar
-                name={feature.author_username || feature.author_wallet_address.slice(0, 6)}
-                handle={feature.author_username || feature.author_wallet_address}
-                avatarUrl={avatarUrl}
-                size="sm"
-              />
-              <span className="text-zinc-500 text-[11px]">{displayName}</span>
-            </div>
-            <span className="text-zinc-700 text-[11px]">·</span>
-            <span className="text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded-lg text-[10px] font-medium">
-              {CATEGORY_LABELS[feature.category]}
-            </span>
-            <span className="text-zinc-700 text-[11px]">·</span>
-            <span className="text-zinc-500 text-[11px]">{formatTimeAgo(feature.created_at)}</span>
-            <span className="text-zinc-700 text-[11px]">·</span>
-            <span className="flex items-center gap-1 text-zinc-500 text-[11px]">
-              <MessageCircle className="w-3 h-3" />
-              {feature.comment_count}
-            </span>
-          </div>
-        </div>
+      {/* Status badge - top right */}
+      <div className="absolute top-0 right-0 z-10">
+        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap ${STATUS_COLORS[feature.status]}`}>
+          {STATUS_LABELS[feature.status]}
+        </span>
       </div>
 
-      {/* Comments Section */}
-      <AnimatePresence>
-        {expanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="border-t border-white/5 pt-3 mt-1">
-              {/* Comments list */}
-              {commentsLoading ? (
-                <div className="flex justify-center py-3">
-                  <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
-                </div>
-              ) : comments && comments.length > 0 ? (
-                <div className="space-y-2.5 mb-3 max-h-60 overflow-y-auto scrollbar-invisible">
-                  {comments.map((comment) => {
-                    const commentAvatar = comment.avatar && comment.wallet_address
-                      ? buildAvatarUrl(comment.wallet_address, comment.avatar)
-                      : null;
-                    const commentName = comment.username
-                      ? `@${comment.username}`
-                      : `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;
-                    const isOwn = walletAddress?.toLowerCase() === comment.wallet_address.toLowerCase();
+      {/* Content */}
+      <div className="pt-1 space-y-2">
+        <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
+        <TranslatableText text={feature.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />
 
-                    return (
-                      <div key={comment.id} className="flex gap-2 group">
-                        <UserAvatar
-                          name={comment.username || comment.wallet_address.slice(0, 6)}
-                          handle={comment.username || comment.wallet_address}
-                          avatarUrl={commentAvatar}
-                          size="sm"
-                          className="w-6 h-6 shrink-0 mt-0.5"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-zinc-400 text-[11px] font-medium">{commentName}</span>
-                            <span className="text-zinc-600 text-[10px]">{formatTimeAgo(comment.created_at)}</span>
-                            {isOwn && (
-                              <button
-                                type="button"
-                                onClick={() => deleteComment.mutate({ commentId: comment.id, featureRequestId: feature.id })}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity ml-auto"
-                              >
-                                <Trash2 className="w-3 h-3 text-zinc-600 hover:text-red-400" />
-                              </button>
-                            )}
+        {/* Category badge */}
+        <div className="flex items-center gap-2">
+          <span className="text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded-lg text-[10px] font-medium">
+            {CATEGORY_LABELS[feature.category]}
+          </span>
+        </div>
+
+        {/* Action Bar - same as PostCard */}
+        <div className="pt-1">
+          <ActionBar
+            postId={feature.id}
+            className="p-0"
+            onComment={() => setShowComments(prev => !prev)}
+            onLike={handleLike}
+            onDislike={handleDislike}
+            isLiked={isLiked}
+            isDisliked={isDisliked}
+            likeCount={feature.like_count ?? 0}
+            dislikeCount={feature.dislike_count ?? 0}
+            commentCount={feature.comment_count}
+          />
+        </div>
+
+        {/* Comments Section */}
+        <AnimatePresence>
+          {showComments && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="border-t border-white/5 pt-3 mt-1">
+                {commentsLoading ? (
+                  <div className="flex justify-center py-3">
+                    <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
+                  </div>
+                ) : comments && comments.length > 0 ? (
+                  <div className="space-y-2.5 mb-3 max-h-60 overflow-y-auto scrollbar-invisible">
+                    {comments.map((comment) => {
+                      const commentAvatar = comment.avatar && comment.wallet_address
+                        ? buildAvatarUrl(comment.wallet_address, comment.avatar)
+                        : null;
+                      const commentName = comment.username
+                        ? `@${comment.username}`
+                        : `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;
+                      const isOwn = walletAddress?.toLowerCase() === comment.wallet_address.toLowerCase();
+
+                      return (
+                        <div key={comment.id} className="flex gap-2 group">
+                          <UserAvatar
+                            name={comment.username || comment.wallet_address.slice(0, 6)}
+                            handle={comment.username || comment.wallet_address}
+                            avatarUrl={commentAvatar}
+                            size="sm"
+                            className="w-6 h-6 shrink-0 mt-0.5"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-zinc-400 text-[11px] font-medium">{commentName}</span>
+                              <span className="text-zinc-600 text-[10px]">{formatTimeAgo(comment.created_at)}</span>
+                              {isOwn && (
+                                <button
+                                  type="button"
+                                  onClick={() => deleteComment.mutate({ commentId: comment.id, featureRequestId: feature.id })}
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity ml-auto"
+                                >
+                                  <Trash2 className="w-3 h-3 text-zinc-600 hover:text-red-400" />
+                                </button>
+                              )}
+                            </div>
+                            <TranslatableText text={comment.content} className="text-zinc-300 text-xs leading-relaxed" as="p" />
                           </div>
-                          <TranslatableText text={comment.content} className="text-zinc-300 text-xs leading-relaxed" as="p" />
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <p className="text-zinc-600 text-xs text-center py-2 mb-2">No comments yet</p>
-              )}
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-zinc-600 text-xs text-center py-2 mb-2">No comments yet</p>
+                )}
 
-              {/* Comment input */}
-              <form onSubmit={handleSubmitComment} className="flex gap-2">
-                <Input
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  placeholder="Add a comment..."
-                  maxLength={500}
-                  className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs h-8"
-                />
-                <button
-                  type="submit"
-                  disabled={!commentText.trim() || submitComment.isPending}
-                  className="w-8 h-8 flex items-center justify-center rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white disabled:opacity-30 transition-opacity"
-                >
-                  {submitComment.isPending ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <Send className="w-3.5 h-3.5" />
-                  )}
-                </button>
-              </form>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                {/* Comment input */}
+                <form onSubmit={handleSubmitComment} className="flex gap-2">
+                  <Input
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder="Add a comment..."
+                    maxLength={500}
+                    className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs h-8"
+                  />
+                  <button
+                    type="submit"
+                    disabled={!commentText.trim() || submitComment.isPending}
+                    className="w-8 h-8 flex items-center justify-center rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white disabled:opacity-30 transition-opacity"
+                  >
+                    {submitComment.isPending ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <Send className="w-3.5 h-3.5" />
+                    )}
+                  </button>
+                </form>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

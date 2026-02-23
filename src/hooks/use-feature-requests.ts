@@ -24,6 +24,8 @@ export interface FeatureRequest {
   author_username: string | null;
   author_avatar: string | null;
   vote_count: number;
+  like_count: number;
+  dislike_count: number;
   comment_count: number;
   created_at: string;
   updated_at: string;
