@@ -96,12 +96,12 @@ export function WhatsHappening() {
             <div className="flex items-center gap-3">
               <span className="text-xs font-medium text-zinc-500 w-4">{i + 1}</span>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white group-hover:text-primary truncate">
+                <p className="text-sm font-medium text-white group-hover:text-white group-hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.5)] truncate transition-all duration-200">
                   {cat.name}
                 </p>
                 <p className="text-xs text-zinc-500">{cat.post_count} posts</p>
               </div>
-              <TrendingUp className="w-3.5 h-3.5 text-zinc-600 group-hover:text-primary" />
+              <TrendingUp className="w-3.5 h-3.5 text-zinc-600 group-hover:text-white group-hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.4)] transition-all duration-200" />
             </div>
           </button>
         ))}
