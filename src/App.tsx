@@ -18,6 +18,7 @@ const CreatorsPage = React.lazy(() => import("./pages/app/CreatorsPage"));
 const JobsPage = React.lazy(() => import("./pages/JobsPage"));
 const SkillPage = React.lazy(() => import("./pages/SkillPage"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
+const DocsPage = React.lazy(() => import("./pages/DocsPage"));
 const ProfilePage = React.lazy(() => import("./pages/app/ProfilePage"));
 const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
 const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));
@@ -89,6 +90,8 @@ function AppContent() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/docs" element={<DocsPage />} />
+            <Route path="/docs/*" element={<DocsPage />} />
             <Route path="/delete-account" element={<DeleteAccount />} />
             <Route path="/creators" element={<CreatorsPage />} />
             <Route path="/jobs" element={<AppLayout />}>
