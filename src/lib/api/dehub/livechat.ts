@@ -61,10 +61,14 @@ export interface LiveChatUserProfile {
 
 export async function getLiveChatRooms(): Promise<LiveChatRoom[]> {
   try {
-    const response = await apiCall<Record<string, unknown>>("/api/livechat/rooms", {
+    let response = await apiCall<Record<string, unknown>>("/api/livechat/rooms", {
       requiresAuth: false,
     });
-    console.log('[LiveChat API] getLiveChatRooms raw response:', JSON.stringify(response, null, 2));
+
+    // Unwrap the common { result: ... } wrapper from the DeHub API
+    if (response && typeof response === 'object' && 'result' in response && !Array.isArray(response) && typeof response.result === 'object' && response.result !== null && !Array.isArray(response.result)) {
+      response = response.result as Record<string, unknown>;
+    }
 
     if (Array.isArray(response)) return normalizeRooms(response);
 
@@ -78,11 +82,9 @@ export async function getLiveChatRooms(): Promise<LiveChatRoom[]> {
       if ('roomId' in response || 'id' in response) return [normalizeRoom(response)];
 
       const keys = Object.keys(response);
-      console.log('[LiveChat API] getLiveChatRooms response keys:', keys);
       for (const key of keys) {
         const val = response[key];
         if (Array.isArray(val) && val.length > 0 && typeof val[0] === 'object' && val[0] !== null) {
-          console.log('[LiveChat API] getLiveChatRooms: using array from key:', key);
           return normalizeRooms(val);
         }
       }
@@ -111,7 +113,7 @@ export async function getLiveChatMessages(
   params?: { page?: number; limit?: number; before?: string }
 ): Promise<LiveChatMessage[]> {
   try {
-    const response = await apiCall<Record<string, unknown>>(
+    let response = await apiCall<Record<string, unknown>>(
       `/api/livechat/rooms/${roomId}/messages`,
       {
         params: {
@@ -122,7 +124,12 @@ export async function getLiveChatMessages(
         requiresAuth: false,
       }
     );
-    console.log('[LiveChat API] getLiveChatMessages raw response:', response);
+
+    // Unwrap the common { result: ... } wrapper from the DeHub API
+    if (response && typeof response === 'object' && 'result' in response && !Array.isArray(response) && typeof response.result === 'object' && response.result !== null && !Array.isArray(response.result)) {
+      response = response.result as Record<string, unknown>;
+    }
+
     if (response && typeof response === 'object') {
       if ('messages' in response && Array.isArray(response.messages)) return response.messages as LiveChatMessage[];
       if ('result' in response && Array.isArray(response.result)) return response.result as LiveChatMessage[];
