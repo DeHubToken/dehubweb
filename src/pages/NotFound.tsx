@@ -1,12 +1,14 @@
 "use client";
 
 import { useLocation, Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import * as THREE from "three";
 import { SimplexNoise } from "@/lib/simplex-noise";
 
 const NotFound = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isGlitching, setIsGlitching] = useState(false);
@@ -178,7 +180,7 @@ const NotFound = () => {
             textShadow: '0 0 10px rgba(255, 255, 255, 0.4)',
           }}
         >
-          Page Not Found
+          {t('notFound.title')}
         </motion.p>
 
         <motion.div
@@ -199,7 +201,7 @@ const NotFound = () => {
               backdropFilter: 'blur(10px)',
             }}
           >
-            <span className="relative z-10">Return Home</span>
+            <span className="relative z-10">{t('notFound.returnHome')}</span>
             <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           </Link>
         </motion.div>

@@ -202,7 +202,7 @@ export default function MessagesPage() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <img src={messagesBubbleIcon} alt="Messages" className="w-10 h-10 object-contain" />
-                <h1 className="text-xl font-bold text-white">Messages</h1>
+                <h1 className="text-xl font-bold text-white">{t('messages.title')}</h1>
               </div>
               <Button
                 variant="ghost"
@@ -217,7 +217,7 @@ export default function MessagesPage() {
             <div className="relative flex items-center">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <Input
-                placeholder="Search conversations..."
+                placeholder={t('messages.searchConversations')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 pr-12 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
@@ -259,13 +259,13 @@ export default function MessagesPage() {
             {isError && (
               <div className="flex flex-col items-center justify-center py-12 text-center px-4">
                 <MessageCircle className="w-12 h-12 text-zinc-600 mb-4" />
-                <p className="text-zinc-400 mb-4">Failed to load conversations</p>
+                <p className="text-zinc-400 mb-4">{t('messages.failedToLoad')}</p>
                 <Button 
                   variant="outline" 
                   onClick={() => refetch()}
                   className="border-zinc-700 text-white hover:bg-zinc-800"
                 >
-                  Try Again
+                  {t('messages.tryAgain')}
                 </Button>
               </div>
             )}

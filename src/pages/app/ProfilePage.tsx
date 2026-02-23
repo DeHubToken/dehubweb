@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BadgeBalanceProvider } from '@/contexts/BadgeBalanceContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AtSign, ChevronLeft, Loader2 } from 'lucide-react';
@@ -67,6 +68,7 @@ function StableHeightContainer({ activeTab, children }: { activeTab: string; chi
 }
 
 export default function ProfilePage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -124,10 +126,10 @@ export default function ProfilePage() {
 
   const handleSubmitOffer = () => {
     if (!offerAmount || parseFloat(offerAmount) <= 0) {
-      toast.error('Please enter a valid offer amount');
+      toast.error(t('profile.validOfferAmount'));
       return;
     }
-    toast.success(`Offer of ${offerAmount} DHB submitted for ${data.profile?.handle || 'user'}`);
+    toast.success(t('profile.offerSubmitted', { amount: offerAmount, handle: data.profile?.handle || 'user' }));
     setOfferDrawerOpen(false);
     setOfferAmount('');
   };
@@ -148,7 +150,7 @@ export default function ProfilePage() {
   // Auth gate for own profile
   if (data.isOwnProfile && !data.isAuthenticated) {
     const authGateContent = (
-      <AuthGate description="Log in to view and manage your profile." />
+      <AuthGate description={t('profile.loginDescription')} />
     );
     if (data.needsLayoutWrapper) {
       return <AppLayout>{authGateContent}</AppLayout>;
@@ -169,16 +171,16 @@ export default function ProfilePage() {
               <AtSign className="w-10 h-10 text-emerald-400" />
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold text-white">Username available!</h2>
+              <h2 className="text-2xl font-bold text-white">{t('profile.usernameAvailable')}</h2>
               <p className="text-zinc-400 max-w-md">
-                Sign up today to claim <span className="text-white font-medium">dehub.io/{displayUsername}</span>
+                {t('profile.signUpToClaim')} <span className="text-white font-medium">dehub.io/{displayUsername}</span>
               </p>
             </div>
             <Button
               onClick={() => setLoginModalOpen(true)}
               className="h-12 px-8 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
             >
-              Sign Up
+              {t('profile.signUp')}
             </Button>
             <LoginModal open={loginModalOpen} onOpenChange={setLoginModalOpen} />
           </>
@@ -187,11 +189,11 @@ export default function ProfilePage() {
             <div className="w-20 h-20 rounded-xl bg-zinc-800 flex items-center justify-center">
               <AtSign className="w-10 h-10 text-zinc-500" />
             </div>
-            <h2 className="text-xl font-bold text-white">Profile Not Found</h2>
+            <h2 className="text-xl font-bold text-white">{t('profile.notFound')}</h2>
             <p className="text-zinc-400 max-w-md">
               {data.isProfileError 
-                ? "Unable to load profile. Please try again later."
-                : "This user doesn't exist or you need to log in to view your profile."}
+                ? t('profile.unableToLoad')
+                : t('profile.doesNotExist')}
             </p>
           </>
         )}
@@ -259,7 +261,7 @@ export default function ProfilePage() {
               className="rounded-xl text-white hover:bg-white/10 gap-2 px-3"
             >
               <ChevronLeft className="w-5 h-5" />
-              <span>Back</span>
+              <span>{t('profile.back')}</span>
             </Button>
           </div>
         )}
@@ -356,11 +358,11 @@ export default function ProfilePage() {
       <Drawer open={offerDrawerOpen} onOpenChange={setOfferDrawerOpen}>
         <DrawerContent glass className="px-4 pb-8">
           <DrawerHeader className="text-left">
-            <DrawerTitle className="text-white">Make Offer for {data.profile.handle}</DrawerTitle>
+            <DrawerTitle className="text-white">{t('profile.makeOffer', { handle: data.profile.handle })}</DrawerTitle>
           </DrawerHeader>
           <div className="space-y-4">
             <p className="text-zinc-400 text-sm">
-              Enter the amount of DHB tokens you'd like to offer to acquire this username.
+              {t('profile.enterOfferAmount')}
             </p>
             <div className="relative">
               <div className="absolute left-3 top-1/2 -translate-y-1/2">
@@ -381,7 +383,7 @@ export default function ProfilePage() {
               onClick={handleSubmitOffer}
               className="w-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white"
             >
-              Submit Offer
+              {t('profile.submitOffer')}
             </Button>
           </div>
         </DrawerContent>

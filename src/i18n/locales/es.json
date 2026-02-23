@@ -595,5 +595,107 @@
   },
   "auth": {
     "loginRequired": "Inicio de sesión requerido"
+  },
+  "messages": {
+    "title": "Mensajes",
+    "searchConversations": "Buscar conversaciones...",
+    "failedToLoad": "Error al cargar conversaciones",
+    "tryAgain": "Intentar de nuevo"
+  },
+  "music": {
+    "all": "Todo",
+    "tracks": "Pistas",
+    "videos": "Vídeos",
+    "podcasts": "Podcasts",
+    "radio": "Radio",
+    "trendingTracks": "Pistas populares",
+    "moreVideos": "Más vídeos",
+    "newReleases": "Nuevos lanzamientos"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "returnHome": "Volver al inicio"
+  },
+  "profile": {
+    "back": "Volver",
+    "usernameAvailable": "¡Nombre de usuario disponible!",
+    "signUpToClaim": "Regístrate hoy para reclamar",
+    "signUp": "Registrarse",
+    "notFound": "Perfil no encontrado",
+    "unableToLoad": "No se pudo cargar el perfil. Inténtalo de nuevo más tarde.",
+    "doesNotExist": "Este usuario no existe o necesitas iniciar sesión para ver tu perfil.",
+    "makeOffer": "Hacer oferta por {{handle}}",
+    "enterOfferAmount": "Ingresa la cantidad de tokens DHB que deseas ofrecer para adquirir este nombre de usuario.",
+    "submitOffer": "Enviar oferta",
+    "validOfferAmount": "Por favor ingresa un monto válido",
+    "offerSubmitted": "Oferta de {{amount}} DHB enviada para {{handle}}",
+    "followers": "Seguidores",
+    "following": "Siguiendo",
+    "loginDescription": "Inicia sesión para ver y gestionar tu perfil."
+  },
+  "tv": {
+    "title": "TV"
+  },
+  "buyCoins": {
+    "title": "Comprar monedas",
+    "network": "Red",
+    "token": "Token",
+    "selectToken": "Seleccionar token",
+    "amountUsd": "Monto (USD)",
+    "customAmount": "Monto personalizado",
+    "minPurchase": "La compra mínima es $5",
+    "youPay": "Pagas",
+    "youReceive": "Recibes (est.)",
+    "paymentMethod": "Método de pago",
+    "cardBank": "Tarjeta / Banco",
+    "cardBankDesc": "Visa, Mastercard, Apple Pay",
+    "fiatOnramp": "Rampa fiat",
+    "fiatOnrampDesc": "Compra cripto directamente con fiat",
+    "buy": "Comprar {{symbol}}",
+    "processing": "Procesando...",
+    "disclaimer": "Al comprar, aceptas nuestros términos de servicio. Las compras de criptomonedas no son reembolsables.",
+    "loginDescription": "Inicia sesión para comprar monedas.",
+    "noTokens": "No hay tokens disponibles",
+    "supplyWarning": "Solo {{supply}} {{symbol}} disponibles. Reduce el monto.",
+    "walletNotConnected": "Billetera no conectada",
+    "redirecting": "Redirigiendo al pago...",
+    "sessionCreated": "Sesión creada",
+    "failedPurchase": "Error al iniciar compra",
+    "redirectingOnramp": "Redirigiendo a la rampa...",
+    "onrampCreated": "Sesión de rampa creada",
+    "failedOnramp": "Error al iniciar rampa"
+  },
+  "agents": {
+    "title": "Agentes IA",
+    "connectToManage": "Conectar para gestionar agentes IA",
+    "signInToCreate": "Inicia sesión para crear y gestionar tus agentes IA.",
+    "description": "Crea agentes IA que interactúan con DeHub usando el protocolo MCP.",
+    "apiDocs": "Documentación API",
+    "newAgent": "Nuevo agente IA",
+    "createDescription": "Crear un nuevo agente para interactuar con DeHub",
+    "agentName": "Nombre del agente",
+    "agentNamePlaceholder": "mi-agente",
+    "agentDescription": "Descripción",
+    "agentDescriptionPlaceholder": "¿Qué hace tu agente?",
+    "createAgent": "Crear agente",
+    "creating": "Creando...",
+    "cancel": "Cancelar",
+    "createNew": "Crear nuevo agente",
+    "noAgents": "Sin agentes aún. ¡Crea el primero!",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "apiKey": "Clave API",
+    "created": "Creado",
+    "delete": "Eliminar",
+    "deleteConfirm": "¿Eliminar este agente? No se puede deshacer.",
+    "agentCreated": "¡Agente IA creado!",
+    "saveApiKey": "Guarda tu clave API - no podrás verla de nuevo.",
+    "agentDeleted": "Agente eliminado",
+    "failedCreate": "Error al crear agente",
+    "failedDelete": "Error al eliminar agente",
+    "apiKeyCopied": "Clave API copiada al portapapeles"
+  },
+  "settings": {
+    "loginDescription": "Inicia sesión para acceder y gestionar tu cuenta."
   }
 }
