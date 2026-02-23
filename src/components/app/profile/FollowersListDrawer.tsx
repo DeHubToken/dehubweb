@@ -367,8 +367,8 @@ export function FollowersListDrawer({
               <p className="text-zinc-400 text-lg font-medium">Error Loading</p>
               <p className="text-zinc-500 text-sm mt-1">{error}</p>
               <Button
-                variant="ghost"
-                className="mt-4 text-zinc-400"
+                variant="glass"
+                className="mt-4"
                 onClick={() => {
                   onOpenChange(false);
                   setTimeout(() => onOpenChange(true), 100);

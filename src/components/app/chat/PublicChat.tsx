@@ -333,10 +333,10 @@ export function PublicChat({ onBack }: PublicChatProps) {
               <p className="text-sm text-red-400">Failed to load chat</p>
               <p className="text-xs text-zinc-600">{roomsError}</p>
               <Button
-                variant="outline"
+                variant="glass"
                 size="sm"
                 onClick={() => refetchRooms()}
-                className="border-zinc-700 text-white hover:bg-zinc-800 mt-2"
+                className="mt-2"
               >
                 <RefreshCw className="w-3 h-3 mr-2" />
                 Try Again
