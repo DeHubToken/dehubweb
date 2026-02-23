@@ -39,6 +39,7 @@ const BuyCoinsPage = React.lazy(() => import('@/pages/app/BuyCoinsPage'));
 const AgentsPage = React.lazy(() => import('@/pages/app/AgentsPage'));
 const FeaturesPage = React.lazy(() => import('@/pages/app/FeaturesPage'));
 const FullWalletPage = React.lazy(() => import('@/pages/app/FullWalletPage'));
+const CareersPage = React.lazy(() => import('@/pages/app/CareersPage'));
 
 // Pages that get cached (mount-once, hide with CSS)
 interface CachedPageConfig {
@@ -64,6 +65,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'buy', path: '/app/buy', component: BuyCoinsPage, skeleton: GenericPageSkeleton },
   { key: 'agents', path: '/app/agents', component: AgentsPage, skeleton: GenericPageSkeleton },
   { key: 'features', path: ['/app/features', '/features'], component: FeaturesPage, skeleton: GenericPageSkeleton },
+  { key: 'careers', path: ['/app/jobs', '/jobs'], component: CareersPage, skeleton: GenericPageSkeleton },
   { key: 'profile', path: '/app/profile', component: ProfilePage, skeleton: ProfileSkeleton },
 ];
 

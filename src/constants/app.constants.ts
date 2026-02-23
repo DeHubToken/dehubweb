@@ -39,7 +39,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: BookOpen, label: 'Docs', path: 'https://docs.dhb.gg', external: true },
   { icon: FileText, label: 'Blog', path: 'https://docs.dhb.gg/docs/blog', external: true },
   { icon: Lightbulb, label: 'Feature Requests', path: '/features' },
-  { icon: Briefcase, label: 'Careers', path: '/jobs' },
+  { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: Home, label: 'Home', path: '/app' },
 ];
 
