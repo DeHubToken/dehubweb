@@ -597,6 +597,30 @@
   "auth": {
     "loginRequired": "Inicio de sesión requerido"
   },
+  "bookmarks": {
+    "title": "Tus Marcadores",
+    "savedCount": "{{count}} publicación guardada",
+    "savedCountPlural": "{{count}} publicaciones guardadas",
+    "refresh": "Actualizar marcadores",
+    "searchPlaceholder": "Buscar marcadores...",
+    "all": "Todo",
+    "liked": "Me gusta",
+    "history": "Historial",
+    "recent": "Reciente",
+    "paidPpv": "PPV Pagado",
+    "images": "Imágenes",
+    "videos": "Vídeos",
+    "textPosts": "Publicaciones de texto",
+    "failedToLoad": "Error al cargar marcadores",
+    "errorMessage": "Hubo un error al cargar tus marcadores. Inténtalo de nuevo.",
+    "tryAgain": "Intentar de nuevo",
+    "noMatchingBookmarks": "No hay marcadores coincidentes",
+    "noBookmarksYet": "Aún no hay marcadores",
+    "noMatchSearch": "Ningún marcador coincide con \"{{query}}\". Prueba otra búsqueda.",
+    "startSaving": "Empieza a guardar publicaciones tocando el icono de marcador en cualquier publicación.",
+    "reachedEnd": "Has llegado al final de tus marcadores",
+    "loginDescription": "Inicia sesión para ver y gestionar tus marcadores guardados."
+  },
   "messages": {
     "title": "Mensajes",
     "searchConversations": "Buscar conversaciones...",
