@@ -422,11 +422,11 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
           <AlertCircle className="w-12 h-12 text-red-500/60 mb-3" />
           <p className="text-red-400 mb-2">Failed to load messages</p>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => refetchMessages()}
-            className="border-zinc-700 text-white hover:bg-zinc-800"
+            <Button
+              variant="glass"
+              size="sm"
+              onClick={() => refetchMessages()}
+              className=""
           >
             <RefreshCw className="w-3 h-3 mr-2" />
             Try Again
