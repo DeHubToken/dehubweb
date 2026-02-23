@@ -226,7 +226,8 @@
     "offersMade": "Ofertas realizadas",
     "noOffers": "Aún no has hecho ninguna oferta",
     "walletCopied": "¡Dirección de billetera copiada!",
-    "note": "Nota"
+    "note": "Nota",
+    "loginDescription": "Inicia sesión para acceder y gestionar tu cuenta."
   },
   "common": {
     "save": "Guardar",
@@ -694,9 +695,6 @@
     "failedCreate": "Error al crear agente",
     "failedDelete": "Error al eliminar agente",
     "apiKeyCopied": "Clave API copiada al portapapeles"
-  },
-  "settings": {
-    "loginDescription": "Inicia sesión para acceder y gestionar tu cuenta."
   },
   "hero": {
     "title": "Un Nuevo Mundo",
