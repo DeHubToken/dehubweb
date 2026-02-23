@@ -116,25 +116,21 @@ export function useLiveChatMessages(roomId: string | null) {
           .limit(200),
       ]);
 
-      const apiMapped =
-        apiMessages.status === 'fulfilled'
-          ? apiMessages.value.map(apiMsgToLocal)
-          : [];
+      const apiSucceeded = apiMessages.status === 'fulfilled';
+      const apiMapped = apiSucceeded ? apiMessages.value.map(apiMsgToLocal) : [];
 
       const supabaseMapped: SupabaseLiveChatMessage[] =
         supabaseResult.status === 'fulfilled' && supabaseResult.value.data
           ? (supabaseResult.value.data as SupabaseLiveChatMessage[])
           : [];
 
-      // If both sources returned empty/failed and we had no previous messages,
-      // schedule a retry (DB might be under load)
-      if (apiMapped.length === 0 && supabaseMapped.length === 0) {
-        const apiFailed = apiMessages.status === 'rejected';
+      // Only retry if BOTH sources failed — if the API succeeded with 0 messages, that's valid
+      if (!apiSucceeded && apiMapped.length === 0 && supabaseMapped.length === 0) {
         const supabaseFailed = supabaseResult.status === 'rejected' ||
           (supabaseResult.status === 'fulfilled' && supabaseResult.value.error);
 
-        if (apiFailed || supabaseFailed) {
-          console.warn('[LiveChat] Source(s) failed, scheduling retry in 5s');
+        if (supabaseFailed) {
+          console.warn('[LiveChat] Both sources failed, scheduling retry in 5s');
           setTimeout(() => fetchFromApi(false), 5000);
         }
       }
@@ -149,7 +145,7 @@ export function useLiveChatMessages(roomId: string | null) {
     } catch (err) {
       console.error('[LiveChat] Failed to fetch messages:', err);
     } finally {
-      if (showLoading) setIsLoading(false);
+      setIsLoading(false);
     }
   }, [roomId]);
 
