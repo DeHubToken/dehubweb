@@ -399,7 +399,7 @@ export function PostAccessToggles({
 
       {/* PPV Drawer */}
       <Drawer open={ppvDrawerOpen} onOpenChange={setPpvDrawerOpen}>
-        <DrawerContent glass className="max-h-[90vh] flex flex-col overflow-hidden">
+        <DrawerContent glass className="max-h-[90dvh] flex flex-col overflow-hidden">
           <DrawerHeader className="text-left shrink-0">
             <DrawerTitle className="flex items-center gap-2 text-white">
               <Ticket className="w-5 h-5" />
@@ -445,15 +445,15 @@ export function PostAccessToggles({
               </span>
             </div>
           </div>
-          <DrawerFooter className="flex-row gap-2 shrink-0 border-t border-white/10">
-            <Button variant="glass" onClick={cancelPpv} className="flex-1 rounded-xl">
+          <DrawerFooter className="flex-row gap-2 shrink-0 border-t border-white/10 p-4 pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
+            <Button variant="glass" onClick={cancelPpv} className="flex-1 rounded-xl min-h-[48px] touch-manipulation">
               {t('drawers.cancel')}
             </Button>
             <Button 
               onClick={confirmPpv} 
               disabled={!tempPpvAmount.trim()}
               variant="glass"
-              className="flex-1 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 rounded-xl min-h-[48px] touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Check className="w-4 h-4 mr-2" />
               {t('drawers.confirm')}
@@ -464,7 +464,7 @@ export function PostAccessToggles({
 
       {/* Bounty Drawer */}
       <Drawer open={bountyDrawerOpen} onOpenChange={setBountyDrawerOpen}>
-        <DrawerContent glass className="max-h-[90vh] flex flex-col overflow-hidden">
+        <DrawerContent glass className="max-h-[90dvh] flex flex-col overflow-hidden">
           <DrawerHeader className="text-left shrink-0">
             <DrawerTitle className="flex items-center gap-2 text-white">
               <Gift className="w-5 h-5" />
@@ -479,6 +479,7 @@ export function PostAccessToggles({
               </label>
               <input
                 type="number"
+                inputMode="numeric"
                 value={tempW2eViews}
                 onChange={(e) => setTempW2eViews(e.target.value)}
                 placeholder={t('drawers.numberOfViewers')}
@@ -492,6 +493,7 @@ export function PostAccessToggles({
               </label>
               <input
                 type="number"
+                inputMode="numeric"
                 value={tempW2eComments}
                 onChange={(e) => setTempW2eComments(e.target.value)}
                 placeholder={t('drawers.numberOfCommenters')}
@@ -502,6 +504,7 @@ export function PostAccessToggles({
               <label className="text-sm text-white/70">{t('drawers.rewardPerPerson')}</label>
               <input
                 type="number"
+                inputMode="numeric"
                 value={tempW2eTotal}
                 onChange={(e) => setTempW2eTotal(e.target.value)}
                 placeholder={t('drawers.amountPerPerson')}
@@ -517,15 +520,15 @@ export function PostAccessToggles({
               </div>
             )}
           </div>
-          <DrawerFooter className="flex-row gap-2 shrink-0 border-t border-white/10">
-            <Button variant="glass" onClick={cancelBounty} className="flex-1 rounded-xl">
+          <DrawerFooter className="flex-row gap-2 shrink-0 border-t border-white/10 p-4 pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
+            <Button variant="glass" onClick={cancelBounty} className="flex-1 rounded-xl min-h-[48px] touch-manipulation">
               {t('drawers.cancel')}
             </Button>
             <Button 
               onClick={confirmBounty} 
               disabled={!tempW2eViews.trim() || !tempW2eTotal.trim()}
               variant="glass"
-              className="flex-1 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 rounded-xl min-h-[48px] touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Check className="w-4 h-4 mr-2" />
               {t('drawers.confirm')}
@@ -536,7 +539,7 @@ export function PostAccessToggles({
 
       {/* Token Gated Drawer */}
       <Drawer open={tokenDrawerOpen} onOpenChange={setTokenDrawerOpen}>
-        <DrawerContent glass className="max-h-[90vh] flex flex-col overflow-hidden">
+        <DrawerContent glass className="max-h-[90dvh] flex flex-col overflow-hidden">
           <DrawerHeader className="text-left shrink-0">
             <DrawerTitle className="flex items-center gap-2 text-white">
               <Shield className="w-5 h-5" />
@@ -561,15 +564,15 @@ export function PostAccessToggles({
               />
             </div>
           </div>
-          <DrawerFooter className="flex-row gap-2 shrink-0 border-t border-white/10">
-            <Button variant="glass" onClick={cancelToken} className="flex-1 rounded-xl">
+          <DrawerFooter className="flex-row gap-2 shrink-0 border-t border-white/10 p-4 pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
+            <Button variant="glass" onClick={cancelToken} className="flex-1 rounded-xl min-h-[48px] touch-manipulation">
               {t('drawers.cancel')}
             </Button>
             <Button 
               onClick={confirmToken} 
               disabled={!tempTokenAmount.trim()}
               variant="glass"
-              className="flex-1 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 rounded-xl min-h-[48px] touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Check className="w-4 h-4 mr-2" />
               {t('drawers.confirm')}
