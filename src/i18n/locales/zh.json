@@ -357,5 +357,6 @@
   },
   "auth": {
     "loginRequired": "需要登录"
-  }
+  },
+  "explorePage": { "searchPlaceholder": "搜索人物、帖子或内容...", "filters": "筛选", "clearAll": "清除全部", "category": "分类", "contentType": "内容类型", "bounty": "悬赏", "ppv": "付费观看", "gated": "受限", "datePosted": "发布日期", "engagement": "互动", "follow": "关注", "loginDescription": "登录以探索和发现DeHub上的帖子、创作者和社区。", "noResults": "未找到结果", "noResultsDesc": "尝试其他关键词或浏览热门内容。", "searchHistory": "搜索历史", "clearHistory": "清除历史", "trending": "热门", "trendingSearches": "热门搜索", "suggestedCreators": "推荐创作者", "people": "用户", "posts": "帖子", "seeAllPeople": "查看所有用户", "results": "结果", "loadMore": "加载更多", "searching": "搜索中...", "searchError": "搜索失败，请重试。", "retry": "重试", "resultsFor": "\"{{query}}\"的搜索结果", "resultsFound": "找到{{count}}个结果", "content": "内容", "loadingMore": "加载更多...", "noMoreResults": "没有更多结果", "noResultsFor": "未找到\"{{query}}\"的结果", "tryDifferent": "尝试搜索其他内容", "tipRemoveAt": "提示：去掉@可以搜索内容而非精确用户名", "noRecentSearches": "暂无搜索记录。开始探索吧！", "nothingTrending": "暂无热门内容！稍后再来看看。", "viewAllPeople": "查看全部{{count}}位用户", "noFilterResults": "未找到结果", "selectLabel": "选择{{label}}", "search": "搜索...", "country": "国家", "date": "日期", "likes": "点赞", "shares": "分享", "comments": "评论", "anyTime": "任何时间", "today": "今天", "thisWeek": "本周", "thisMonth": "本月", "thisYear": "今年", "any": "全部", "gaming": "游戏", "music": "音乐", "art": "艺术", "programming": "编程", "crypto": "加密货币", "entertainment": "娱乐", "all": "全部", "global": "全球" }
 }

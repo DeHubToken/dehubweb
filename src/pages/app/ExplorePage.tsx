@@ -35,9 +35,11 @@ import { VideoCard, ImageCard, PostCard } from '@/components/app/cards';
 import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
 import type { VideoItem, ImagePost } from '@/types/feed.types';
 
-const DATE_OPTIONS = ['Any time', 'Today', 'This week', 'This month', 'This year'];
+const DATE_OPTION_KEYS = ['anyTime', 'today', 'thisWeek', 'thisMonth', 'thisYear'] as const;
+const DATE_OPTIONS_RAW = ['Any time', 'Today', 'This week', 'This month', 'This year'];
 const ENGAGEMENT_OPTIONS = ['Any', '100+', '1K+', '10K+', '100K+', '1M+'];
-const SEARCH_CATEGORIES = ['All', 'Gaming', 'Music', 'Art', 'Programming', 'Crypto', 'Entertainment'];
+const SEARCH_CATEGORY_KEYS = ['all', 'gaming', 'music', 'art', 'programming', 'crypto', 'entertainment'] as const;
+const SEARCH_CATEGORIES_RAW = ['All', 'Gaming', 'Music', 'Art', 'Programming', 'Crypto', 'Entertainment'];
 const COUNTRY_OPTIONS = [
   'Global',
   'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan',
@@ -117,12 +119,15 @@ const FilterDropdown = ({
   value,
   options,
   onChange,
+  displayValue,
 }: {
   label: string;
   value: string;
   options: string[];
   onChange: (value: string) => void;
+  displayValue?: string;
 }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -141,14 +146,14 @@ const FilterDropdown = ({
             : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
         )}
       >
-        <span>{label}: {value}</span>
+        <span>{label}: {displayValue || value}</span>
         <ChevronDown className="w-3 h-3" />
       </button>
       
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerContent glass className="max-h-[70vh]">
           <DrawerHeader className="border-b border-white/10">
-            <DrawerTitle className="text-white">Select {label}</DrawerTitle>
+            <DrawerTitle className="text-white">{t('explorePage.selectLabel', { label })}</DrawerTitle>
           </DrawerHeader>
           
           {/* Search input */}
@@ -157,7 +162,7 @@ const FilterDropdown = ({
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder={t('explorePage.search')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-10 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20"
@@ -198,7 +203,7 @@ const FilterDropdown = ({
                 </button>
               ))
             ) : (
-              <div className="px-4 py-8 text-center text-sm text-zinc-500">No results found</div>
+              <div className="px-4 py-8 text-center text-sm text-zinc-500">{t('explorePage.noFilterResults')}</div>
             )}
           </div>
         </DrawerContent>
@@ -725,12 +730,12 @@ export default function ExplorePage() {
                   <div className="space-y-2">
                     <p className="text-xs text-zinc-500 uppercase tracking-wider">{t('explorePage.category')}</p>
                     <div className="flex flex-wrap gap-2">
-                      {SEARCH_CATEGORIES.map((cat) => (
+                      {SEARCH_CATEGORY_KEYS.map((catKey, idx) => (
                         <FilterPill
-                          key={cat}
-                          label={cat}
-                          active={selectedCategory === cat}
-                          onClick={() => setSelectedCategory(cat)}
+                          key={catKey}
+                          label={t(`explorePage.${catKey}`)}
+                          active={selectedCategory === SEARCH_CATEGORIES_RAW[idx]}
+                          onClick={() => setSelectedCategory(SEARCH_CATEGORIES_RAW[idx])}
                           layoutId="explore-category"
                         />
                       ))}
@@ -765,10 +770,11 @@ export default function ExplorePage() {
                   <p className="text-xs text-zinc-500 uppercase tracking-wider">{t('explorePage.datePosted')}</p>
                   <div className="flex flex-wrap gap-2">
                     <FilterDropdown
-                      label="Date"
+                      label={t('explorePage.date')}
                       value={filters.date}
-                      options={DATE_OPTIONS}
+                      options={DATE_OPTIONS_RAW}
                       onChange={(v) => setFilters(f => ({ ...f, date: v }))}
+                      displayValue={t(`explorePage.${DATE_OPTION_KEYS[DATE_OPTIONS_RAW.indexOf(filters.date)]}`)}
                     />
                   </div>
                 </div>
@@ -778,19 +784,19 @@ export default function ExplorePage() {
                   <p className="text-xs text-zinc-500 uppercase tracking-wider">{t('explorePage.engagement')}</p>
                   <div className="flex flex-wrap gap-2">
                     <FilterDropdown
-                      label="Likes"
+                      label={t('explorePage.likes')}
                       value={filters.likes}
                       options={ENGAGEMENT_OPTIONS}
                       onChange={(v) => setFilters(f => ({ ...f, likes: v }))}
                     />
                     <FilterDropdown
-                      label="Shares"
+                      label={t('explorePage.shares')}
                       value={filters.shares}
                       options={ENGAGEMENT_OPTIONS}
                       onChange={(v) => setFilters(f => ({ ...f, shares: v }))}
                     />
                     <FilterDropdown
-                      label="Comments"
+                      label={t('explorePage.comments')}
                       value={filters.comments}
                       options={ENGAGEMENT_OPTIONS}
                       onChange={(v) => setFilters(f => ({ ...f, comments: v }))}
@@ -859,11 +865,11 @@ export default function ExplorePage() {
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h2 className="text-lg sm:text-xl font-bold text-white break-all">
-                      Results for "{searchQuery}"
+                      {t('explorePage.resultsFor', { query: searchQuery })}
                     </h2>
                     {!showLoading && searchResults.total > 0 && (
                       <p className="text-zinc-500 text-sm mt-1">
-                        {searchResults.total.toLocaleString()} results found
+                        {t('explorePage.resultsFound', { count: String(searchResults.total.toLocaleString()) } as Record<string, string>)}
                       </p>
                     )}
                   </div>
@@ -880,7 +886,7 @@ export default function ExplorePage() {
                   <div className="flex items-center justify-center py-12">
                     <div className="flex items-center gap-3 text-zinc-400">
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>Searching...</span>
+                      <span>{t('explorePage.searching')}</span>
                     </div>
                   </div>
                 )}
@@ -888,14 +894,14 @@ export default function ExplorePage() {
                 {/* Error State */}
                 {searchError && (
                   <div className="text-center py-8">
-                    <p className="text-red-400">Unable to search. Please try again.</p>
+                    <p className="text-red-400">{t('explorePage.searchError')}</p>
                     <Button
                       variant="outline"
                       size="sm"
                       className="mt-3 border-zinc-700 text-white hover:bg-zinc-800"
                       onClick={() => window.location.reload()}
                     >
-                      Retry
+                      {t('explorePage.retry')}
                     </Button>
                   </div>
                 )}
@@ -904,7 +910,7 @@ export default function ExplorePage() {
                 {showResults && (activeTab === 'all' || activeTab === 'people') && searchResults.users.length > 0 && (
                   <div className="mb-6">
                     <h3 className="text-sm text-zinc-400 uppercase tracking-wider mb-3">
-                      People ({searchResults.users.length})
+                      {t('explorePage.people')} ({searchResults.users.length})
                     </h3>
                     <div className="space-y-1">
                       {searchResults.users.slice(0, activeTab === 'people' ? undefined : 5).map((user, idx) => (
@@ -920,7 +926,7 @@ export default function ExplorePage() {
                         onClick={() => setActiveTab('people')}
                         className="text-primary text-sm mt-3 hover:underline"
                       >
-                        View all {searchResults.users.length} people
+                        {t('explorePage.viewAllPeople', { count: searchResults.users.length })}
                       </button>
                     )}
                   </div>
@@ -930,7 +936,7 @@ export default function ExplorePage() {
                 {showResults && activeTab !== 'people' && mappedFeedItems.length > 0 && (
                   <div className="space-y-4">
                     <h3 className="text-sm text-zinc-400 uppercase tracking-wider mb-3">
-                      {activeTab === 'all' ? 'Content' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} ({mappedFeedItems.length}{hasNextPage ? '+' : ''})
+                      {activeTab === 'all' ? t('explorePage.content') : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} ({mappedFeedItems.length}{hasNextPage ? '+' : ''})
                     </h3>
                     
                     {/* Feed Cards */}
@@ -961,11 +967,11 @@ export default function ExplorePage() {
                       {isFetchingNextPage && (
                         <div className="flex items-center gap-2 text-zinc-400">
                           <Loader2 className="w-4 h-4 animate-spin" />
-                          <span className="text-sm">Loading more...</span>
+                          <span className="text-sm">{t('explorePage.loadingMore')}</span>
                         </div>
                       )}
                       {!hasNextPage && mappedFeedItems.length > 0 && (
-                        <p className="text-zinc-500 text-sm">No more results</p>
+                        <p className="text-zinc-500 text-sm">{t('explorePage.noMoreResults')}</p>
                       )}
                     </div>
                   </div>
@@ -974,11 +980,11 @@ export default function ExplorePage() {
                 {/* No Results */}
                 {showNoResults && (
                   <div className="text-center py-8">
-                    <p className="text-zinc-400">No results found for "{searchQuery}"</p>
-                    <p className="text-zinc-500 text-sm mt-1">Try searching for something else</p>
+                    <p className="text-zinc-400">{t('explorePage.noResultsFor', { query: searchQuery })}</p>
+                    <p className="text-zinc-500 text-sm mt-1">{t('explorePage.tryDifferent')}</p>
                     {isUsernameQuery && (
                       <p className="text-zinc-500 text-sm mt-2">
-                        Tip: Remove the @ to search for content instead of exact usernames
+                        {t('explorePage.tipRemoveAt')}
                       </p>
                     )}
                   </div>
@@ -1036,7 +1042,7 @@ export default function ExplorePage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-zinc-500 text-sm">No recent searches yet. Start exploring!</p>
+                  <p className="text-zinc-500 text-sm">{t('explorePage.noRecentSearches')}</p>
                 )}
               </div>
 
@@ -1048,13 +1054,13 @@ export default function ExplorePage() {
                     <h2 className="text-lg sm:text-xl font-bold text-white">{t('explorePage.trending')}</h2>
                   </div>
                   <FilterDropdown
-                    label="Country"
+                    label={t('explorePage.country')}
                     value={selectedCountry}
                     options={COUNTRY_OPTIONS}
                     onChange={setSelectedCountry}
                   />
                 </div>
-                <p className="text-zinc-500 text-sm">Nothing trending yet! Check back soon.</p>
+                <p className="text-zinc-500 text-sm">{t('explorePage.nothingTrending')}</p>
               </div>
             </motion.div>
           )}
