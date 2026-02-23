@@ -7,6 +7,7 @@
  */
 
 import { useState, useMemo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lightbulb, Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2 } from 'lucide-react';
 import { TranslatableText } from '@/components/app/TranslatableText';
@@ -43,21 +44,21 @@ const featureSchema = z.object({
   category: z.enum(['ui_ux', 'performance', 'new_feature', 'bug_fix', 'integration', 'other']),
 });
 
-const CATEGORIES: { id: FeatureCategory | 'all'; label: string }[] = [
-  { id: 'all', label: 'All' },
-  { id: 'ui_ux', label: 'UI/UX' },
-  { id: 'performance', label: 'Performance' },
-  { id: 'new_feature', label: 'New Feature' },
-  { id: 'bug_fix', label: 'Bug Fix' },
-  { id: 'integration', label: 'Integration' },
-  { id: 'other', label: 'Other' },
+const CATEGORIES: { id: FeatureCategory | 'all'; labelKey: string }[] = [
+  { id: 'all', labelKey: 'features.all' },
+  { id: 'ui_ux', labelKey: 'features.uiUx' },
+  { id: 'performance', labelKey: 'features.performance' },
+  { id: 'new_feature', labelKey: 'features.newFeature' },
+  { id: 'bug_fix', labelKey: 'features.bugFix' },
+  { id: 'integration', labelKey: 'features.integration' },
+  { id: 'other', labelKey: 'features.other' },
 ];
 
 type PageTab = 'requests' | 'shipped';
 
-const SORTS: { id: FeatureSort; label: string }[] = [
-  { id: 'most_voted', label: 'Most Voted' },
-  { id: 'newest', label: 'Newest' },
+const SORTS: { id: FeatureSort; labelKey: string }[] = [
+  { id: 'most_voted', labelKey: 'features.mostVoted' },
+  { id: 'newest', labelKey: 'features.newest' },
 ];
 
 const STATUS_COLORS: Record<FeatureStatus, string> = {
@@ -67,6 +68,15 @@ const STATUS_COLORS: Record<FeatureStatus, string> = {
   in_progress: 'bg-purple-900/40 text-purple-400',
   completed: 'bg-emerald-900/40 text-emerald-400',
   declined: 'bg-red-900/40 text-red-400',
+};
+
+const STATUS_I18N_KEYS: Record<FeatureStatus, string> = {
+  open: 'features.statusOpen',
+  under_review: 'features.statusUnderReview',
+  planned: 'features.statusPlanned',
+  in_progress: 'features.statusInProgress',
+  completed: 'features.statusCompleted',
+  declined: 'features.statusDeclined',
 };
 
 function formatTimeAgo(dateStr: string): string {
@@ -96,6 +106,7 @@ function FeatureCard({
   onVote: (featureId: string, voteType: 1 | -1, currentVote: number | undefined) => void;
   voteDisabled: boolean;
 }) {
+  const { t } = useTranslation();
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
@@ -153,7 +164,7 @@ function FeatureCard({
       {/* Status badge - top right */}
       <div className="absolute top-0 right-0 z-10">
         <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap ${STATUS_COLORS[feature.status]}`}>
-          {STATUS_LABELS[feature.status]}
+          {t(STATUS_I18N_KEYS[feature.status])}
         </span>
       </div>
 
@@ -242,7 +253,7 @@ function FeatureCard({
                     })}
                   </div>
                 ) : (
-                  <p className="text-zinc-600 text-xs text-center py-2 mb-2">No comments yet</p>
+                  <p className="text-zinc-600 text-xs text-center py-2 mb-2">{t('features.noComments')}</p>
                 )}
 
                 {/* Comment input */}
@@ -250,7 +261,7 @@ function FeatureCard({
                   <Input
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
-                    placeholder="Add a comment..."
+                    placeholder={t('features.addComment')}
                     maxLength={500}
                     className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs h-8"
                   />
@@ -285,6 +296,7 @@ function SubmitFeatureDrawer({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t } = useTranslation();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<FeatureCategory>('new_feature');
@@ -320,7 +332,7 @@ function SubmitFeatureDrawer({
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[85vh]">
         <DrawerHeader className="relative">
-          <DrawerTitle className="text-white text-lg font-bold">Submit Feature Request</DrawerTitle>
+          <DrawerTitle className="text-white text-lg font-bold">{t('features.submitDrawerTitle')}</DrawerTitle>
           <button
             type="button"
             onClick={() => onOpenChange(false)}
@@ -333,11 +345,11 @@ function SubmitFeatureDrawer({
         <div className="px-4 pb-6 space-y-4">
           {/* Title */}
           <div>
-            <label className="text-zinc-400 text-xs font-medium mb-1 block">Title</label>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">{t('features.titleLabel')}</label>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Brief title for your idea..."
+              placeholder={t('features.titlePlaceholder')}
               maxLength={100}
               className="bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl"
             />
@@ -349,11 +361,11 @@ function SubmitFeatureDrawer({
 
           {/* Description */}
           <div>
-            <label className="text-zinc-400 text-xs font-medium mb-1 block">Description</label>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">{t('features.descriptionLabel')}</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe your feature idea in detail..."
+              placeholder={t('features.descriptionPlaceholder')}
               maxLength={1000}
               rows={4}
               className="w-full bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
@@ -366,7 +378,7 @@ function SubmitFeatureDrawer({
 
           {/* Category */}
           <div>
-            <label className="text-zinc-400 text-xs font-medium mb-2 block">Category</label>
+            <label className="text-zinc-400 text-xs font-medium mb-2 block">{t('features.categoryLabel')}</label>
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.filter((c) => c.id !== 'all').map((cat) => (
                 <button
@@ -379,7 +391,7 @@ function SubmitFeatureDrawer({
                       : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
                   }`}
                 >
-                  {cat.label}
+                  {t(cat.labelKey)}
                 </button>
               ))}
             </div>
@@ -397,7 +409,7 @@ function SubmitFeatureDrawer({
             ) : (
               <>
                 <Sparkles className="w-4 h-4" />
-                Submit Request
+                {t('features.submitRequest')}
               </>
             )}
           </Button>
@@ -435,6 +447,7 @@ function FeatureSkeletons() {
 // Shipped Feature Card (simpler, no voting)
 // ──────────────────────────────────────────────────
 function ShippedCard({ feature }: { feature: FeatureRequest }) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -452,7 +465,7 @@ function ShippedCard({ feature }: { feature: FeatureRequest }) {
         <div className="flex items-start gap-2 mb-1.5">
           <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight flex-1 min-w-0" as="h3" hideControls />
           <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 bg-emerald-900/40 text-emerald-400">
-            Shipped
+            {t('features.shippedBadge')}
           </span>
         </div>
 
@@ -474,6 +487,7 @@ function ShippedCard({ feature }: { feature: FeatureRequest }) {
 // Main Page
 // ──────────────────────────────────────────────────
 export default function FeaturesPage() {
+  const { t } = useTranslation();
   const { isAuthenticated, openLoginModal } = useAuth();
   const [activeTab, setActiveTab] = useState<PageTab>('requests');
   const [sort, setSort] = useState<FeatureSort>('most_voted');
@@ -519,8 +533,8 @@ export default function FeaturesPage() {
               <Lightbulb className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white">Feature Requests</h1>
-              <p className="text-zinc-500 text-sm">{totalCount} {totalCount === 1 ? 'idea' : 'ideas'} submitted</p>
+              <h1 className="text-xl font-bold text-white">{t('features.title')}</h1>
+              <p className="text-zinc-500 text-sm">{totalCount === 1 ? t('features.ideaSubmitted') : t('features.ideasSubmitted', { count: totalCount })}</p>
             </div>
           </div>
           <Button
@@ -530,7 +544,7 @@ export default function FeaturesPage() {
             size="sm"
           >
             <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">Submit</span>
+            <span className="hidden sm:inline">{t('features.submit')}</span>
           </Button>
         </div>
 
@@ -538,7 +552,7 @@ export default function FeaturesPage() {
         <div className="relative mb-3">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
-            placeholder="Search feature requests..."
+            placeholder={t('features.searchPlaceholder')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
@@ -560,7 +574,7 @@ export default function FeaturesPage() {
               activeTab === 'requests' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
-            Requests
+            {t('features.requests')}
           </button>
           <button
             type="button"
@@ -570,7 +584,7 @@ export default function FeaturesPage() {
             }`}
           >
             <CheckCircle2 className="w-3.5 h-3.5" />
-            Shipped
+            {t('features.shipped')}
             {shippedCount > 0 && (
               <span className="text-[10px] bg-emerald-900/40 text-emerald-400 px-1.5 py-0.5 rounded-md font-semibold">
                 {shippedCount}
@@ -604,7 +618,7 @@ export default function FeaturesPage() {
                         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                       />
                     )}
-                    <span className="relative z-10">{cat.label}</span>
+                    <span className="relative z-10">{t(cat.labelKey)}</span>
                   </button>
                 ))}
               </div>
@@ -630,7 +644,7 @@ export default function FeaturesPage() {
                         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                       />
                     )}
-                    <span className="relative z-10">{s.label}</span>
+                    <span className="relative z-10">{t(s.labelKey)}</span>
                   </button>
                 );
               })}
@@ -661,15 +675,15 @@ export default function FeaturesPage() {
               <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
                 <Lightbulb className="w-8 h-8 text-zinc-600" />
               </div>
-              <h3 className="text-white font-semibold mb-1">No feature requests yet</h3>
-              <p className="text-zinc-500 text-sm mb-4">Be the first to suggest an idea!</p>
+              <h3 className="text-white font-semibold mb-1">{t('features.noRequestsYet')}</h3>
+              <p className="text-zinc-500 text-sm mb-4">{t('features.beFirstIdea')}</p>
               <Button
                 onClick={handleSubmitClick}
                 variant="glass"
                 className="rounded-xl font-semibold"
               >
                 <Plus className="w-4 h-4" />
-                Submit Feature Request
+                {t('features.submitFeatureRequest')}
               </Button>
             </div>
           )}
@@ -692,8 +706,8 @@ export default function FeaturesPage() {
               <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
                 <CheckCircle2 className="w-8 h-8 text-zinc-600" />
               </div>
-              <h3 className="text-white font-semibold mb-1">No shipped features yet</h3>
-              <p className="text-zinc-500 text-sm">Completed features will appear here.</p>
+              <h3 className="text-white font-semibold mb-1">{t('features.noShippedYet')}</h3>
+              <p className="text-zinc-500 text-sm">{t('features.shippedAppearHere')}</p>
             </div>
           )}
         </>
