@@ -34,7 +34,7 @@ function Skeleton({ className }: SkeletonProps) {
 
 export function StoriesBarSkeleton() {
   return (
-    <div className="p-4 -mt-[7px]">
+    <div className="p-4 mt-[7px]">
       <div className="flex gap-4 overflow-hidden">
         {/* Create button skeleton */}
         <div className="flex flex-col items-center gap-1 flex-shrink-0">

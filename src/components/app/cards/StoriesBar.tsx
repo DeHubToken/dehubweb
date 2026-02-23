@@ -299,7 +299,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
         isOpen={isPostModalOpen}
         onClose={() => setIsPostModalOpen(false)}
       />
-      <div className="-mt-[7px]">
+      <div className="">
         <div className="relative">
           {/* Right fade gradient to signal more stories */}
           <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
