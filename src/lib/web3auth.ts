@@ -255,6 +255,8 @@ if (import.meta.hot) {
 /**
  * Pre-fetch configurations as soon as the module is loaded.
  */
+let pendingPimlicoFetch: Promise<{ bundlerUrl: string; paymasterUrl: string }> | null = null;
+
 async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: string }> {
   if (cachedPimlicoConfig) return cachedPimlicoConfig;
   
@@ -266,8 +268,11 @@ async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: s
       return cachedPimlicoConfig;
     } catch {}
   }
+
+  // Deduplicate in-flight requests
+  if (pendingPimlicoFetch) return pendingPimlicoFetch;
   
-  return fetchWithRetry(async () => {
+  pendingPimlicoFetch = fetchWithRetry(async () => {
     const { data, error } = await supabase.functions.invoke("get-pimlico-config");
     if (!error && data?.bundlerUrl && data?.paymasterUrl) {
       cachedPimlicoConfig = data;
@@ -275,7 +280,9 @@ async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: s
       return cachedPimlicoConfig;
     }
     throw new Error(error?.message || "Pimlico config not configured");
-  }, "get-pimlico-config");
+  }, "get-pimlico-config").finally(() => { pendingPimlicoFetch = null; });
+
+  return pendingPimlicoFetch;
 }
 
 function prewarmConfig() {
@@ -350,6 +357,8 @@ async function fetchWithRetry<T>(fn: () => Promise<T>, label: string, maxRetries
   throw lastError;
 }
 
+let pendingClientIdFetch: Promise<string> | null = null;
+
 async function getWeb3AuthClientId(): Promise<string> {
   if (cachedClientId) return cachedClientId;
   
@@ -360,9 +369,12 @@ async function getWeb3AuthClientId(): Promise<string> {
     return cachedClientId;
   }
   
+  // Deduplicate in-flight requests
+  if (pendingClientIdFetch) return pendingClientIdFetch;
+
   console.log("[Web3Auth] Fetching client ID from edge function...");
 
-  return fetchWithRetry(async () => {
+  pendingClientIdFetch = fetchWithRetry(async () => {
     const { data, error } = await supabase.functions.invoke("get-web3auth-config");
     console.log("[Web3Auth] get-web3auth-config response:", { data, error });
     if (!error && data?.clientId) {
@@ -371,7 +383,9 @@ async function getWeb3AuthClientId(): Promise<string> {
       return cachedClientId;
     }
     throw new Error(error?.message || "Web3Auth client ID not configured");
-  }, "get-web3auth-config");
+  }, "get-web3auth-config").finally(() => { pendingClientIdFetch = null; });
+
+  return pendingClientIdFetch;
 }
 
 function isRetryableInitError(err: unknown): boolean {
