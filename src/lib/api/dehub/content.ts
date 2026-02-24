@@ -41,7 +41,10 @@ export interface MintResponse {
   timestamp: number;
 }
 
-export async function mintPost(params: MintPostParams): Promise<MintResponse> {
+export async function mintPost(
+  params: MintPostParams,
+  onProgress?: (percent: number) => void
+): Promise<MintResponse> {
   const token = getAuthToken();
   if (!token) {
     throw new Error("Authentication required");
@@ -53,17 +56,17 @@ export async function mintPost(params: MintPostParams): Promise<MintResponse> {
   formData.append('postType', params.postType);
   formData.append('chainId', String(params.chainId));
   formData.append('category', JSON.stringify(params.category));
-  
+
   formData.append('minter', params.minterAddress);
   console.log('[MintPost] Including minter address:', params.minterAddress);
-  
+
   const streamInfo: StreamInfo = params.streamInfo || {
     isLockContent: false,
     isPayPerView: false,
     isAddBounty: false,
   };
   formData.append('streamInfo', JSON.stringify(streamInfo));
-  
+
   if (params.plans && params.plans.length > 0) {
     formData.append('plans', JSON.stringify(params.plans));
   }
@@ -78,26 +81,43 @@ export async function mintPost(params: MintPostParams): Promise<MintResponse> {
     formData.append('file', params.thumbnail, 'thumbnail.jpg');
   }
 
-  const response = await fetch(`${DEHUB_API_BASE}/api/user_mint`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    },
-    body: formData,
+  return new Promise<MintResponse>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+
+    // Track upload progress (bytes sent to server)
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable && onProgress) {
+        const percent = Math.round((event.loaded / event.total) * 95); // cap at 95 until response
+        onProgress(percent);
+      }
+    };
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          onProgress?.(100);
+          resolve(data.result ?? data);
+        } catch {
+          reject(new Error('Invalid response from server'));
+        }
+      } else {
+        let errorData: Record<string, string> = {};
+        try { errorData = JSON.parse(xhr.responseText); } catch { /* ignore */ }
+        reject(new Error(errorData.message || errorData.error || `Mint failed: ${xhr.status}`));
+      }
+    };
+
+    xhr.onerror = () => reject(new Error('Upload failed — please check your connection and try again'));
+    xhr.ontimeout = () => reject(new Error('Upload timed out — your video may be too large or connection too slow'));
+
+    // 8-minute timeout for large video files on slow mobile connections
+    xhr.timeout = 8 * 60 * 1000;
+
+    xhr.open('POST', `${DEHUB_API_BASE}/api/user_mint`);
+    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+    xhr.send(formData);
   });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || errorData.error || `Mint failed: ${response.status}`);
-  }
-
-  const data = await response.json();
-  
-  if (data.result) {
-    return data.result;
-  }
-  
-  return data;
 }
 
 // Simple mintNFT wrapper
