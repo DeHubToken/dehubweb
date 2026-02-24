@@ -128,7 +128,6 @@ function AppContent() {
               <Route path="post/:postId/info" element={<PostInfoPage />} />
             </Route>
 
-            {/* Username-based profile route (e.g., /d, /username) */}
             <Route path="/:username" element={<ProfilePage />} />
 
 
