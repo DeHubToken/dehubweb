@@ -72,8 +72,9 @@ async function fetchDeHubLeaderboard(sort: string, period: string): Promise<unkn
 /** Fetch a single user's profile from DeHub API */
 async function fetchDeHubUserProfile(account: string): Promise<Record<string, unknown> | null> {
   try {
+    // Try account_info endpoint first (returns badgeBalance, balanceData)
     const response = await fetch(
-      `${DEHUB_API_BASE}/api/user?account=${account}`,
+      `${DEHUB_API_BASE}/api/account_info/${account}`,
       { headers: { "Content-Type": "application/json" } }
     );
     if (!response.ok) return null;
@@ -375,32 +376,56 @@ Deno.serve(async (req) => {
         };
       });
 
-      // ── Inject extra wallets (via API profile lookup) ─────────────
-      const existingAccounts = new Set(enriched.map(e => e.account.toLowerCase()));
+      // ── Inject or fix extra wallets (via account_info lookup) ─────
+      const existingAccountsMap = new Map(enriched.map((e, i) => [e.account.toLowerCase(), i]));
       for (const [username, config] of Object.entries(EXTRA_WALLETS)) {
-        if (!existingAccounts.has(config.wallet.toLowerCase())) {
-          try {
-            const profile = await fetchDeHubUserProfile(config.wallet);
-            const balance = (profile?.total as number) ?? 0;
-            if (balance > 0) {
-              enriched.push({
-                account: config.wallet.toLowerCase(),
-                total: balance,
-                username: (profile?.username as string) || username,
-                userDisplayName: (profile?.userDisplayName as string) || config.displayName,
-                avatarUrl: (profile?.avatarUrl as string) || config.avatarUrl,
-                sentTips: (profile?.sentTips as number) ?? 0,
-                receivedTips: (profile?.receivedTips as number) ?? 0,
-                followers: (profile?.followers as number) ?? undefined,
-                likes: (profile?.likes as number) ?? undefined,
-                subscribers: (profile?.subscribers as number) ?? undefined,
-                badgeBalance: balance,
-              });
-              console.log(`Extra wallet ${username} (${config.wallet}): ${balance} DHB`);
+        const addr = config.wallet.toLowerCase();
+        const existingIdx = existingAccountsMap.get(addr);
+        const existingEntry = existingIdx !== undefined ? enriched[existingIdx] : null;
+        
+        // If wallet exists with a valid balance, skip
+        if (existingEntry && existingEntry.total > 0) {
+          continue;
+        }
+        
+        // Fetch fresh data from account_info API
+        try {
+          const profile = await fetchDeHubUserProfile(config.wallet);
+          // badgeBalance can be 0 even when the wallet has tokens (API bug)
+          // Fall back to computing from balanceData (sum of walletBalance + staked)
+          let balance = (profile?.badgeBalance as number) ?? 0;
+          if (balance === 0 && Array.isArray(profile?.balanceData)) {
+            for (const bd of profile.balanceData as Array<{ walletBalance?: number; staked?: number }>) {
+              balance += (bd.walletBalance ?? 0) + (bd.staked ?? 0);
             }
-          } catch (err) {
-            console.error(`Failed to fetch extra wallet ${username}:`, err);
           }
+          
+          const entry: EnrichedEntry = {
+            account: addr,
+            total: balance,
+            username: (profile?.username as string) || username,
+            userDisplayName: (profile?.userDisplayName as string) || (profile?.displayName as string) || config.displayName,
+            avatarUrl: (profile?.avatarUrl as string) || (profile?.avatarImageUrl as string) || config.avatarUrl,
+            sentTips: (profile?.sentTips as number) ?? 0,
+            receivedTips: (profile?.receivedTips as number) ?? 0,
+            followers: (profile?.followers as number) ?? undefined,
+            likes: (profile?.likes as number) ?? undefined,
+            subscribers: (profile?.subscribers as number) ?? undefined,
+            badgeBalance: balance,
+          };
+          
+          if (existingIdx !== undefined) {
+            // Override existing zero-balance entry
+            enriched[existingIdx] = entry;
+            console.log(`Extra wallet ${username} (${addr}): overrode zero-balance entry with ${balance} DHB`);
+          } else if (balance > 0) {
+            enriched.push(entry);
+            console.log(`Extra wallet ${username} (${addr}): added with ${balance} DHB`);
+          } else {
+            console.warn(`Extra wallet ${username} (${addr}): balance is 0 even from account_info`);
+          }
+        } catch (err) {
+          console.error(`Failed to fetch extra wallet ${username}:`, err);
         }
       }
 
