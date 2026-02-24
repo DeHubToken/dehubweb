@@ -229,45 +229,52 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     const video = document.createElement('video');
     video.preload = 'auto';
     video.muted = true;
-    video.crossOrigin = 'anonymous';
+    video.playsInline = true;
+    // NOTE: do NOT set crossOrigin on blob URLs — it taints the canvas on some mobile browsers
     video.src = preview;
-    
+
     try {
-      // Wait for video metadata
+      // Wait for video metadata — 15s timeout for slow mobile devices
       const duration = await new Promise<number>((resolve, reject) => {
-        video.onloadedmetadata = () => resolve(video.duration);
-        video.onerror = () => reject(new Error('Failed to load video'));
+        const timeout = setTimeout(() => reject(new Error('Metadata load timeout')), 15000);
+        video.onloadedmetadata = () => { clearTimeout(timeout); resolve(video.duration); };
+        video.onerror = () => { clearTimeout(timeout); reject(new Error('Failed to load video')); };
+        video.load(); // ensure loading starts on mobile
       });
 
       // Generate thumbnail from video frame
       let thumbnailUrl: string | undefined;
       let thumbnailBlob: Blob | undefined;
-      
+
       try {
         const seekTime = Math.min(1, duration * 0.1);
-        
-        await new Promise<void>((resolve, reject) => {
-          video.onseeked = () => resolve();
-          video.onerror = () => reject(new Error('Failed to seek video'));
+
+        // Timeout for seek — mobile browsers sometimes never fire onseeked
+        await new Promise<void>((resolve) => {
+          const timeout = setTimeout(resolve, 5000); // resolve anyway after 5s
+          video.onseeked = () => { clearTimeout(timeout); resolve(); };
           video.currentTime = seekTime;
         });
-        
+
         const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 360;
         const ctx = canvas.getContext('2d');
-        
+
         if (ctx && canvas.width > 0 && canvas.height > 0) {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          
+
           const blob = await new Promise<Blob | null>((resolve) => {
             canvas.toBlob(resolve, 'image/jpeg', 0.85);
           });
-          
-          if (blob) {
+
+          // Only store if blob is valid and non-empty
+          if (blob && blob.size > 0) {
             thumbnailBlob = blob;
             thumbnailUrl = URL.createObjectURL(blob);
             console.log('[Video] Auto-generated thumbnail:', { width: canvas.width, height: canvas.height, size: blob.size });
+          } else {
+            console.warn('[Video] canvas.toBlob returned empty blob — skipping auto thumbnail');
           }
         }
       } catch (err) {
@@ -781,12 +788,17 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // Get thumbnail for video posts - use stored blob if available
       let thumbnail: Blob | undefined;
       if (hasVideo && media[0]) {
-        if (media[0].thumbnailBlob) {
+        if (media[0].thumbnailBlob && media[0].thumbnailBlob.size > 0) {
           thumbnail = media[0].thumbnailBlob;
         } else if (media[0].thumbnail) {
           // Fallback: convert thumbnail URL to blob
-          const thumbResponse = await fetch(media[0].thumbnail);
-          thumbnail = await thumbResponse.blob();
+          try {
+            const thumbResponse = await fetch(media[0].thumbnail);
+            const fetchedBlob = await thumbResponse.blob();
+            if (fetchedBlob.size > 0) thumbnail = fetchedBlob;
+          } catch (err) {
+            console.warn('[Mint] Failed to fetch thumbnail blob:', err);
+          }
         }
 
         // Last-resort: generate thumbnail on-the-fly if still missing
@@ -796,16 +808,20 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
             const video = document.createElement('video');
             video.preload = 'auto';
             video.muted = true;
+            video.playsInline = true;
+            // No crossOrigin on blob URL — would taint canvas on some mobile browsers
             video.src = media[0].preview;
+            video.load(); // required on some mobile browsers to start loading
             await new Promise<void>((resolve, reject) => {
-              video.onloadeddata = () => resolve();
-              video.onerror = () => reject(new Error('Failed to load video'));
-              setTimeout(() => reject(new Error('Video load timeout')), 10000);
+              const timeout = setTimeout(() => reject(new Error('Video load timeout')), 12000);
+              video.onloadeddata = () => { clearTimeout(timeout); resolve(); };
+              video.onerror = () => { clearTimeout(timeout); reject(new Error('Failed to load video')); };
             });
-            video.currentTime = Math.min(1, video.duration * 0.1);
+            const seekTime = Math.min(1, (video.duration || 0) * 0.1);
+            video.currentTime = seekTime;
             await new Promise<void>((resolve) => {
-              video.onseeked = () => resolve();
-              setTimeout(() => resolve(), 3000);
+              const timeout = setTimeout(resolve, 4000); // resolve anyway — some mobile browsers skip onseeked
+              video.onseeked = () => { clearTimeout(timeout); resolve(); };
             });
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth || 640;
