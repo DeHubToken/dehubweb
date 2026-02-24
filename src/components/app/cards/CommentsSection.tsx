@@ -341,13 +341,17 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
                     onClick={() => translation.isTranslated ? translation.handleShowOriginal() : translation.handleTranslate()}
                     className={cn(
                       "transition-colors",
-                      translation.isLoading ? "text-zinc-500 animate-pulse" : 
+                      translation.isLoading ? "text-blue-400" : 
                       translation.isTranslated ? "text-blue-400" : "text-white hover:text-zinc-400"
                     )}
                     aria-label="Translate"
                     disabled={translation.isLoading}
                   >
-                    <Languages className="w-4 h-4" />
+                    {translation.isLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Languages className="w-4 h-4" />
+                    )}
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>{translation.isTranslated ? 'Show original' : 'Translate'}</TooltipContent>
