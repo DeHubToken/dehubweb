@@ -106,7 +106,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     followersList,
     followingsList,
     customs: user.customs as Record<string, unknown> | undefined,
-    badgeBalance: user.badgeBalance,
+    badgeBalance: user.badgeBalance || (user.balanceData?.reduce((sum, b) => sum + (b.walletBalance || 0) + (b.staked || 0), 0)) || 0,
   };
 }
 
