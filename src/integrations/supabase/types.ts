@@ -892,6 +892,36 @@ export type Database = {
         }
         Relationships: []
       }
+      tip_records: {
+        Row: {
+          amount: number
+          chain_id: number
+          created_at: string
+          id: string
+          receiver_address: string
+          sender_address: string
+          tx_hash: string
+        }
+        Insert: {
+          amount: number
+          chain_id?: number
+          created_at?: string
+          id?: string
+          receiver_address: string
+          sender_address: string
+          tx_hash: string
+        }
+        Update: {
+          amount?: number
+          chain_id?: number
+          created_at?: string
+          id?: string
+          receiver_address?: string
+          sender_address?: string
+          tx_hash?: string
+        }
+        Relationships: []
+      }
       tv_channels_verified: {
         Row: {
           broken_reports: number
