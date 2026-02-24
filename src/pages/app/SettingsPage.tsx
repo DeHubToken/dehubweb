@@ -598,12 +598,14 @@ function NotificationSettings() {
             title={t('settings.emailNotifications')}
             description={t('settings.emailNotificationsDesc')}
             defaultChecked
+            comingSoon
           />
           <SettingToggle
             icon={Bell}
             title={t('settings.pushNotifications')}
             description={t('settings.pushNotificationsDesc')}
             defaultChecked
+            comingSoon
           />
         </div>
       </div>
@@ -617,24 +619,28 @@ function NotificationSettings() {
             title={t('settings.likes')}
             description={t('settings.likesDesc')}
             defaultChecked
+            comingSoon
           />
           <SettingToggle
             icon={MessageSquare}
             title={t('settings.comments')}
             description={t('settings.commentsDesc')}
             defaultChecked
+            comingSoon
           />
           <SettingToggle
             icon={Users}
             title={t('settings.newFollowers')}
             description={t('settings.newFollowersDesc')}
             defaultChecked
+            comingSoon
           />
           <SettingToggle
             icon={MessageSquare}
             title={t('settings.directMessages')}
             description={t('settings.directMessagesDesc')}
             defaultChecked
+            comingSoon
           />
         </div>
       </div>
@@ -646,6 +652,7 @@ function NotificationSettings() {
           icon={Clock}
           title={t('settings.enableQuietHours')}
           description={t('settings.quietHoursDesc')}
+          comingSoon
         />
       </div>
     </div>
@@ -739,6 +746,7 @@ function PrivacySettings() {
             title={t('settings.publicProfile')}
             description={t('settings.publicProfileDesc')}
             defaultChecked
+            comingSoon
           />
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -777,12 +785,14 @@ function PrivacySettings() {
             title={t('settings.showActivityStatus')}
             description={t('settings.showActivityStatusDesc')}
             defaultChecked
+            comingSoon
           />
           <SettingToggle
             icon={Globe}
             title={t('settings.searchEngineIndexing')}
             description={t('settings.searchEngineIndexingDesc')}
             defaultChecked
+            comingSoon
           />
         </div>
       </div>
@@ -829,7 +839,7 @@ function PrivacySettings() {
           </div>
           <SettingDrawerSelect
             value={whoCanMessage}
-            onValueChange={setWhoCanMessage}
+            onValueChange={() => toast.info(t('settings.comingSoon', 'Coming soon'))}
             title={t('settings.whoCanMessage')}
             options={[
               { value: 'everyone', label: t('settings.everyone'), description: t('settings.everyoneDesc') },
@@ -852,7 +862,7 @@ function PrivacySettings() {
                 <p className="text-zinc-500 text-sm">{t('settings.twoFactorAuthDesc')}</p>
               </div>
             </div>
-            <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md">
+            <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md" onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))}>
               {t('settings.enable')}
             </Button>
           </div>
@@ -874,7 +884,7 @@ function PrivacySettings() {
             variant="outline" 
             size="sm" 
             className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md"
-            onClick={() => toast.success(t('settings.dataExportSubmitted'))}
+            onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))}
           >
             {t('settings.download')}
           </Button>
@@ -1070,7 +1080,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
             </div>
             <SettingDrawerSelect
               value={feedLayout}
-              onValueChange={setFeedLayout}
+              onValueChange={() => toast.info(t('settings.comingSoon', 'Coming soon'))}
               title={t('settings.feedLayout')}
               options={[
                 { value: 'comfortable', label: t('settings.comfortable'), description: t('settings.comfortableDesc') },
@@ -1082,6 +1092,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
             icon={LayoutGrid}
             title={t('settings.compactMode')}
             description={t('settings.compactModeDesc')}
+            comingSoon
           />
         </div>
       </div>
@@ -1095,12 +1106,14 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
             title={t('settings.autoPlay')}
             description={t('settings.autoPlayDesc')}
             defaultChecked
+            comingSoon
           />
           <SettingToggle
             icon={Sparkles}
             title={t('settings.showAnimations')}
             description={t('settings.showAnimationsDesc')}
             defaultChecked
+            comingSoon
           />
         </div>
       </div>
@@ -1175,7 +1188,7 @@ function ContentSettings() {
             </div>
             <SettingDrawerSelect
               value={postVisibility}
-              onValueChange={setPostVisibility}
+              onValueChange={() => toast.info(t('settings.comingSoon', 'Coming soon'))}
               title={t('settings.defaultPostVisibility')}
               options={[
                 { value: 'public', label: t('settings.public'), description: t('settings.publicDesc') },
@@ -1189,6 +1202,7 @@ function ContentSettings() {
             title={t('settings.autoSaveDrafts')}
             description={t('settings.autoSaveDraftsDesc')}
             defaultChecked
+            comingSoon
           />
         </div>
       </div>
@@ -1202,17 +1216,20 @@ function ContentSettings() {
             title={t('settings.filterExplicit')}
             description={t('settings.filterExplicitDesc')}
             defaultChecked
+            comingSoon
           />
           <SettingToggle
             icon={Eye}
             title={t('settings.showSensitive')}
             description={t('settings.showSensitiveDesc')}
+            comingSoon
           />
           <SettingToggle
             icon={AlertTriangle}
             title={t('settings.enableContentWarnings')}
             description={t('settings.enableContentWarningsDesc')}
             defaultChecked
+            comingSoon
           />
         </div>
       </div>
@@ -1225,6 +1242,7 @@ function ContentSettings() {
           title={t('settings.showReposts')}
           description={t('settings.showRepostsDesc')}
           defaultChecked
+          comingSoon
         />
       </div>
 
@@ -1241,6 +1259,7 @@ function SettingToggle({
   defaultChecked = false,
   onCheckedChange,
   disabled = false,
+  comingSoon = false,
 }: { 
   icon: any; 
   title: string; 
@@ -1248,7 +1267,9 @@ function SettingToggle({
   defaultChecked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
   disabled?: boolean;
+  comingSoon?: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -1261,7 +1282,7 @@ function SettingToggle({
       <Switch 
         defaultChecked={defaultChecked} 
         checked={onCheckedChange ? defaultChecked : undefined}
-        onCheckedChange={onCheckedChange}
+        onCheckedChange={comingSoon ? () => toast.info(t('settings.comingSoon', 'Coming soon')) : onCheckedChange}
         disabled={disabled}
       />
     </div>
@@ -1448,7 +1469,7 @@ function MessagesSettings() {
             </div>
             <SettingDrawerSelect
               value={dmAccess}
-              onValueChange={setDmAccess}
+              onValueChange={() => toast.info(t('settings.comingSoon', 'Coming soon'))}
               title={t('settings.allowDirectMessages')}
               options={[
                 { value: 'everyone', label: t('settings.everyone'), description: t('settings.dmEveryoneHelp') },
@@ -1474,23 +1495,27 @@ function MessagesSettings() {
             title={t('settings.messageNotifications')}
             description={t('settings.messageNotificationsDesc')}
             defaultChecked
+            comingSoon
           />
           <SettingToggle
             icon={Eye}
             title={t('settings.readReceipts')}
             description={t('settings.readReceiptsDesc')}
             defaultChecked
+            comingSoon
           />
           <SettingToggle
             icon={Lock}
             title={t('settings.e2eEncryption')}
             description={t('settings.e2eEncryptionDesc')}
             defaultChecked
+            comingSoon
           />
           <SettingToggle
             icon={Filter}
             title={t('settings.filterMessageRequests')}
             description={t('settings.filterMessageRequestsDesc')}
+            comingSoon
           />
         </div>
       </div>
@@ -1520,11 +1545,11 @@ function MessagesSettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.quickActions')}</h3>
         <div className="grid grid-cols-2 gap-3">
-          <button className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
+          <button onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))} className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
             <FileText className="w-6 h-6 text-zinc-400" />
             <span className="text-zinc-300 text-sm">{t('settings.archivedChats')}</span>
           </button>
-          <button className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
+          <button onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))} className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
             <Save className="w-6 h-6 text-zinc-400" />
             <span className="text-zinc-300 text-sm">{t('settings.exportChats')}</span>
           </button>
