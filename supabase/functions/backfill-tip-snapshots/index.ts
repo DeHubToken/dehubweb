@@ -207,6 +207,71 @@ async function queryChainTips(
   return { spent, earned };
 }
 
+// Known contract addresses to exclude from wallet-to-wallet backfill
+const EXCLUDED_ADDRESSES = new Set([
+  "0x4fa30daef50c6dc8593470750f3c721ca3275581",
+  "0x6e19ba22da239c46941582530c0ef61400b0e3e6",
+  "0x9f8012074d27f8596c0e5038477acb52057bc934",
+  "0x0000000000000000000000000000000000000000",
+  "0xd20ab1015f6a2de4a6fddebab270113f689c2f7c",
+].map(a => a.toLowerCase()));
+
+const MIN_TIP_AMOUNT = 0.1;
+
+async function backfillTipRecords(
+  baseRpc: string,
+  supabase: ReturnType<typeof createClient>,
+  daysBack: number
+): Promise<Response> {
+  console.log(`Backfilling tip_records for last ${daysBack} days on Base...`);
+  const currentBlock = await getCurrentBlockNumber(baseRpc);
+  const fromBlock = currentBlock - (BASE_BLOCKS_PER_DAY * daysBack);
+  console.log(`Block range: ${fromBlock} to ${currentBlock}`);
+
+  const allLogs: Array<{ topics: string[]; data: string; transactionHash: string }> = [];
+  for (let cursor = fromBlock; cursor <= currentBlock; cursor += BASE_CHUNK_SIZE) {
+    const chunkEnd = Math.min(cursor + BASE_CHUNK_SIZE - 1, currentBlock);
+    const fromHex = "0x" + cursor.toString(16);
+    const toHex = "0x" + chunkEnd.toString(16);
+    const logs = await getLogs(baseRpc, DHB_BASE, fromHex, toHex, [TRANSFER_TOPIC]);
+    allLogs.push(...(logs as any[]));
+    console.log(`  Chunk ${fromHex}-${toHex}: ${logs.length} events`);
+    if (cursor + BASE_CHUNK_SIZE <= currentBlock) await new Promise(r => setTimeout(r, 250));
+  }
+
+  console.log(`Total Transfer events: ${allLogs.length}`);
+
+  const tipRecords: Array<{
+    sender_address: string; receiver_address: string;
+    amount: number; chain_id: number; tx_hash: string;
+  }> = [];
+
+  for (const log of allLogs) {
+    const from = "0x" + log.topics[1].slice(26).toLowerCase();
+    const to = "0x" + log.topics[2].slice(26).toLowerCase();
+    const amount = hexToNumber(log.data);
+    if (EXCLUDED_ADDRESSES.has(from) || EXCLUDED_ADDRESSES.has(to)) continue;
+    if (amount < MIN_TIP_AMOUNT || from === to) continue;
+    tipRecords.push({ sender_address: from, receiver_address: to, amount, chain_id: 8453, tx_hash: log.transactionHash });
+  }
+
+  console.log(`Filtered to ${tipRecords.length} wallet-to-wallet transfers`);
+
+  let inserted = 0;
+  for (let i = 0; i < tipRecords.length; i += 500) {
+    const batch = tipRecords.slice(i, i + 500);
+    const { error } = await supabase
+      .from("tip_records")
+      .upsert(batch, { onConflict: "tx_hash", ignoreDuplicates: true });
+    if (error) console.error(`Batch error at ${i}:`, error);
+    else inserted += batch.length;
+  }
+
+  const summary = { success: true, daysBack, totalEvents: allLogs.length, walletTips: tipRecords.length, inserted };
+  console.log("Backfill complete!", JSON.stringify(summary));
+  return new Response(JSON.stringify(summary), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -228,11 +293,18 @@ Deno.serve(async (req) => {
     const baseRpc = `https://base-mainnet.g.alchemy.com/v2/${alchemyKey}`;
     const bnbRpc = `https://bnb-mainnet.g.alchemy.com/v2/${alchemyKey}`;
 
+    const url = new URL(req.url);
+
+    // Mode: backfill-records scans on-chain for wallet-to-wallet DHB transfers
+    const mode = url.searchParams.get("mode");
+    if (mode === "backfill-records") {
+      const daysBack = parseInt(url.searchParams.get("days") || "30", 10);
+      return await backfillTipRecords(baseRpc, supabase, daysBack);
+    }
+
     console.log("Starting tip/bounty historical backfill...");
 
-    // Parse optional ?period= query param to run a single period
-    const url = new URL(req.url);
-    const periodFilter = url.searchParams.get("period"); // day|week|month|year
+    const periodFilter = url.searchParams.get("period");
     const periodsToRun = periodFilter
       ? PERIODS.filter((p) => p.name === periodFilter)
       : PERIODS;
