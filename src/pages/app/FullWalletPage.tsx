@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart } from 'lucide-react';
+import { useState, useMemo, useCallback } from 'react';
+import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart, User } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -543,6 +543,45 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
   const [toAddress, setToAddress] = useState('');
   const [amount, setAmount] = useState('');
   const [sending, setSending] = useState(false);
+  const [usernameQuery, setUsernameQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [resolvedUser, setResolvedUser] = useState<{ username: string; avatar?: string; address: string } | null>(null);
+
+  const handleUsernameSearch = useCallback(async (query: string) => {
+    setUsernameQuery(query);
+    setResolvedUser(null);
+    if (query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    setSearching(true);
+    try {
+      const { searchUsers } = await import('@/lib/api/dehub/users');
+      const res = await searchUsers({ q: query, limit: 5 });
+      const items = res?.data || (Array.isArray(res) ? res : []);
+      setSearchResults(items.filter((u: any) => u.address || u.wallet_address));
+    } catch {
+      setSearchResults([]);
+    } finally {
+      setSearching(false);
+    }
+  }, []);
+
+  const selectUser = (user: any) => {
+    const addr = user.address || user.wallet_address || '';
+    const name = user.username || user.displayName || user.display_name || '';
+    const avatar = user.avatarImageUrl || user.avatarUrl || user.avatar_url || '';
+    setToAddress(addr);
+    setResolvedUser({ username: name, avatar, address: addr });
+    setUsernameQuery('');
+    setSearchResults([]);
+  };
+
+  const clearResolvedUser = () => {
+    setResolvedUser(null);
+    setToAddress('');
+  };
 
   const handleSend = async () => {
     if (!token || !toAddress.trim() || !amount.trim()) return;
@@ -556,7 +595,6 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
       toast.error(t('wallet.invalidAmount'));
       return;
     }
-    // Check balance
     const maxBal = parseFloat(formatBalance(token.balance, token.decimals, 18));
     if (numAmount > maxBal) {
       toast.error(t('wallet.insufficientBalance', { symbol: token.symbol }));
@@ -565,7 +603,6 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
 
     setSending(true);
     try {
-      // Switch chain first
       await switchChain(chainId);
       
       let result;
@@ -587,6 +624,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
       });
       setToAddress('');
       setAmount('');
+      setResolvedUser(null);
       onSuccess();
     } catch (err: any) {
       toast.error(err.message || t('wallet.transactionFailed'));
@@ -602,7 +640,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
 
   return (
     <Dialog open={open} onOpenChange={v => { if (!sending) onOpenChange(v); }}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 sm:max-w-md">
+      <DialogContent className="bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] border-white/10 sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-white">{t('wallet.sendToken', { symbol: token?.symbol || 'Token' })}</DialogTitle>
         </DialogHeader>
@@ -617,7 +655,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
                     key={tk.address}
                     onClick={() => onTokenChange(tk)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all shrink-0 ${
-                      token?.address === tk.address ? 'bg-zinc-700 text-white' : 'bg-zinc-800 text-zinc-400 hover:text-white'
+                      token?.address === tk.address ? 'bg-white/15 text-white' : 'bg-white/5 text-zinc-400 hover:text-white'
                     }`}
                   >
                     {icon ? <img src={icon} alt={tk.symbol} className="w-4 h-4 rounded-full" /> : null}
@@ -628,21 +666,83 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
             </div>
           )}
 
+          {/* Recipient: username search OR direct address */}
           <div className="space-y-2">
             <label className="text-sm text-zinc-400">{t('wallet.recipientAddress')}</label>
-            <Input
-              placeholder="0x..."
-              value={toAddress}
-              onChange={e => setToAddress(e.target.value)}
-              className="bg-zinc-800 border-zinc-700 text-white font-mono text-sm"
-            />
+            
+            {resolvedUser ? (
+              <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-3 py-2">
+                {resolvedUser.avatar ? (
+                  <img src={resolvedUser.avatar} alt="" className="w-6 h-6 rounded-full" />
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
+                    <User className="w-3 h-3 text-zinc-400" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-white text-sm font-medium truncate">@{resolvedUser.username}</p>
+                  <p className="text-zinc-500 text-xs font-mono truncate">{resolvedUser.address.slice(0, 10)}...{resolvedUser.address.slice(-6)}</p>
+                </div>
+                <button onClick={clearResolvedUser} className="text-zinc-500 hover:text-white text-xs">✕</button>
+              </div>
+            ) : (
+              <div className="relative">
+                <Input
+                  placeholder={`@username or 0x...`}
+                  value={usernameQuery || toAddress}
+                  onChange={e => {
+                    const val = e.target.value;
+                    if (val.startsWith('0x')) {
+                      setToAddress(val);
+                      setUsernameQuery('');
+                      setSearchResults([]);
+                    } else {
+                      setToAddress('');
+                      handleUsernameSearch(val);
+                    }
+                  }}
+                  className="bg-white/5 border-white/10 text-white font-mono text-sm"
+                />
+                {searching && (
+                  <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-zinc-500" />
+                )}
+                {searchResults.length > 0 && (
+                  <div className="absolute z-50 top-full mt-1 left-0 right-0 bg-zinc-900 border border-white/10 rounded-lg overflow-hidden shadow-xl">
+                    {searchResults.map((user: any, i: number) => {
+                      const avatar = user.avatarImageUrl || user.avatarUrl || user.avatar_url;
+                      const name = user.username || user.displayName || user.display_name;
+                      const addr = user.address || user.wallet_address || '';
+                      return (
+                        <button
+                          key={addr || i}
+                          onClick={() => selectUser(user)}
+                          className="w-full flex items-center gap-2 px-3 py-2 hover:bg-white/10 transition-colors text-left"
+                        >
+                          {avatar ? (
+                            <img src={avatar} alt="" className="w-7 h-7 rounded-full" />
+                          ) : (
+                            <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
+                              <User className="w-3.5 h-3.5 text-zinc-400" />
+                            </div>
+                          )}
+                          <div className="min-w-0 flex-1">
+                            <p className="text-white text-sm truncate">@{name}</p>
+                            <p className="text-zinc-500 text-xs font-mono truncate">{addr.slice(0, 8)}...{addr.slice(-4)}</p>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-sm text-zinc-400">{t('wallet.amount')}</label>
               {token && (
-                <button onClick={handleMax} className="text-xs text-violet-400 hover:text-violet-300">
+                <button onClick={handleMax} className="text-xs text-white/60 hover:text-white transition-colors">
                   Max: {token.formattedBalance}
                 </button>
               )}
@@ -652,7 +752,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
               placeholder="0.00"
               value={amount}
               onChange={e => setAmount(e.target.value)}
-              className="bg-zinc-800 border-zinc-700 text-white"
+              className="bg-white/5 border-white/10 text-white"
               step="any"
             />
           </div>
