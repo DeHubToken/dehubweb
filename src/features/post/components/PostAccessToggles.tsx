@@ -480,8 +480,10 @@ export function PostAccessToggles({
               <input
                 type="number"
                 inputMode="numeric"
+                step="1"
+                min="0"
                 value={tempW2eViews}
-                onChange={(e) => setTempW2eViews(e.target.value)}
+                onChange={(e) => setTempW2eViews(e.target.value.replace(/\.\d*$/, ''))}
                 placeholder={t('drawers.numberOfViewers')}
                 className={cn(inputClass, "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none")}
               />
@@ -494,8 +496,10 @@ export function PostAccessToggles({
               <input
                 type="number"
                 inputMode="numeric"
+                step="1"
+                min="0"
                 value={tempW2eComments}
-                onChange={(e) => setTempW2eComments(e.target.value)}
+                onChange={(e) => setTempW2eComments(e.target.value.replace(/\.\d*$/, ''))}
                 placeholder={t('drawers.numberOfCommenters')}
                 className={cn(inputClass, "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none")}
               />
@@ -503,10 +507,13 @@ export function PostAccessToggles({
             <div className="space-y-2">
               <label className="text-sm text-white/70">{t('drawers.rewardPerPerson')}</label>
               <input
-                type="number"
-                inputMode="numeric"
+                type="text"
+                inputMode="decimal"
                 value={tempW2eTotal}
-                onChange={(e) => setTempW2eTotal(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === '' || /^\d*\.?\d*$/.test(val)) setTempW2eTotal(val);
+                }}
                 placeholder={t('drawers.amountPerPerson')}
                 className={cn(inputClass, "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none")}
               />
