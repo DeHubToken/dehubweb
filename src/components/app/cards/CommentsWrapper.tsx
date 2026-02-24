@@ -22,7 +22,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId }: CommentsWrapper
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange} modal={false}>
-        <DrawerContent glass hideHandle noOverlay className="max-h-[70vh] flex flex-col overflow-hidden">
+        <DrawerContent glass hideHandle noOverlay className="max-h-[70vh] flex flex-col overflow-hidden !bg-black/60 !backdrop-blur-[24px] border border-white/[0.08]">
           <div className="flex-1 min-h-0 px-4 pb-4 pt-2">
             <CommentsSection
               tokenId={tokenId}
