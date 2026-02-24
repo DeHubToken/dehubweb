@@ -1,78 +1,24 @@
 
 
-## Fix Noun Class Prefix/Suffix Issues in Zulu and Quechua
+## Plan: Unify Mobile and Desktop Post Action Buttons
 
-Two languages have the same "Mga" problem that Tagalog had, where grammatical markers clutter up short UI labels like page titles, nav items, and tab labels.
+### Problem
+On mobile, the separate Image and Video buttons are hidden (`hidden sm:block`) and replaced with a single Paperclip icon (`sm:hidden`). This limits mobile users and creates an inconsistent experience.
 
----
+### Changes
 
-### 1. Zulu (zu) - Noun Class Prefixes
+**File: `src/features/post/components/PostActionBar.tsx`**
 
-Zulu uses noun class prefixes (Ama-, Izi-, Imi-, Iza-) that make UI labels unnecessarily long and cluttered. These need to be stripped from short labels (titles, nav, tabs) while keeping them in descriptive sentences where they're grammatically needed.
+1. **Remove the mobile Paperclip button** (lines 214-228) — delete the entire block with `sm:hidden` and the `Paperclip` import.
 
-**Changes needed in `src/i18n/locales/zu.json`:**
+2. **Make the Image button visible on all screen sizes** (line 237) — change `hidden sm:block` to just show always:
+   - `className="p-2 hover:bg-white/10 rounded-xl transition-colors"` (remove `hidden sm:block`)
 
-| Key | Current | Fixed |
-|-----|---------|-------|
-| nav.notifications | Izaziso | Zaziso or Aziso |
-| nav.messages | Imilayezo | Layezo |
-| nav.bookmarks | Amabhukimakhi | Bhukimakhi |
-| nav.settings | Izilungiselelo | Zilungiselelo |
-| nav.docs | Amadokhumenti | Dokhumenti |
-| nav.featureRequests | Izicelo | Zicelo |
-| nav.careers | Amathuba Omsebenzi | Thuba Lomsebenzi |
-| feed.videos | Amavidiyo | Vidiyo |
-| feed.images | Izithombe | Zithombe |
-| settings.title | Izilungiselelo | Zilungiselelo |
-| bookmarks.title | Amabhukimakhi | Bhukimakhi |
-| notifications.title | Izaziso | Aziso |
-| messages.title | Imilayezo | Layezo |
-| features.title | Izicelo Zezici | Zicelo Zezici |
-| agents.title | Ama-ejensi e-AI | Ejensi ye-AI |
-| leaderboard.title | Ibhodi Yabaholi | Bhodi Yabaholi |
+3. **Make the Video button visible on all screen sizes** (line 253) — same change:
+   - `className="p-2 hover:bg-white/10 rounded-xl transition-colors"` (remove `hidden sm:block`)
 
-Plus similar fixes throughout explore tabs, feed tabs, and other short labels.
+4. **Clean up the `Paperclip` import** from the lucide-react import line since it's no longer used.
 
----
-
-### 2. Quechua (qu) - Plural Suffix "-kuna"
-
-Quechua appends "-kuna" as a plural marker on many titles. For short UI labels, the singular/base form is cleaner.
-
-**Changes needed in `src/i18n/locales/qu.json`:**
-
-| Key | Current | Fixed |
-|-----|---------|-------|
-| nav.notifications | Willaykuna | Willay |
-| nav.messages | Willakuykuna | Willakuy |
-| nav.bookmarks | Waqaychasqakuna | Waqaychasqa |
-| nav.settings | Churanakuna | Churana |
-| nav.docs | Qillqakuna | Qillqa |
-| nav.featureRequests | Mañakuykuna | Mañakuy |
-| nav.careers | Llamkaykuna | Llamkay |
-| settings.title | Churanakuna | Churana |
-| bookmarks.title | Waqaychasqakuna | Waqaychasqa |
-| notifications.title | Willaykuna | Willay |
-| messages.title | Willakuykuna | Willakuy |
-
-Plus similar fixes for feed/explore tab labels.
-
----
-
-### 3. Other Languages - No Issues Found
-
-The remaining 32 languages were checked and are clean:
-- **Swahili, Yoruba, Hausa, Igbo** - use proper short labels
-- **Arabic, Egyptian Arabic, Moroccan Arabic** - definite article "ال" is standard and expected
-- **Amharic, Bengali, Hindi, Persian** - clean labels
-- **European languages** - all fine
-- **Nigerian Pidgin** - uses English base words, clean
-
----
-
-### Technical Details
-
-- Edit `src/i18n/locales/zu.json` - strip noun class prefixes from nav, titles, tabs, and short labels
-- Edit `src/i18n/locales/qu.json` - strip "-kuna" suffix from nav, titles, tabs, and short labels
-- Only modify short UI labels (titles, nav items, tab labels); leave descriptive text and sentences intact where grammar requires the full form
+### Result
+Mobile and desktop will both show the separate Image and Video icons, matching the desktop layout exactly.
 
