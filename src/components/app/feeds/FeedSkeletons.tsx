@@ -1,8 +1,8 @@
 /**
  * Feed Skeleton Components
  * ========================
- * Shimmering skeleton loaders for all feed content types.
- * Provides better perceived loading experience than spinners.
+ * Shimmering skeleton loaders matching the liquid glass bento card UI.
+ * Avatars are rounded-md, action buttons are rounded-xl, cards use border-white/[0.08].
  * 
  * @module components/app/feeds/FeedSkeletons
  */
@@ -62,9 +62,9 @@ export function VideoCardSkeleton() {
     <div className="rounded-xl border border-white/[0.08] bg-transparent p-3">
       {/* Header */}
       <div className="pb-3 flex items-center gap-3">
-        <Skeleton className="w-10 h-10 rounded-md flex-shrink-0" />
+        <Skeleton className="w-9 h-9 rounded-md flex-shrink-0" />
         <div className="flex-1 space-y-2">
-          <Skeleton className="h-4 w-24 rounded" />
+          <Skeleton className="h-4 w-28 rounded" />
           <Skeleton className="h-3 w-16 rounded" />
         </div>
       </div>
@@ -74,9 +74,9 @@ export function VideoCardSkeleton() {
       <div className="pt-3 space-y-2">
         <Skeleton className="h-4 w-3/4 rounded" />
         <div className="flex gap-4">
-          <Skeleton className="h-8 w-16 rounded-full" />
-          <Skeleton className="h-8 w-16 rounded-full" />
-          <Skeleton className="h-8 w-16 rounded-full" />
+          <Skeleton className="h-8 w-16 rounded-xl" />
+          <Skeleton className="h-8 w-16 rounded-xl" />
+          <Skeleton className="h-8 w-16 rounded-xl" />
         </div>
       </div>
     </div>
@@ -92,9 +92,9 @@ export function ImageCardSkeleton() {
     <div className="rounded-xl border border-white/[0.08] bg-transparent p-3">
       {/* Header */}
       <div className="pb-3 flex items-center gap-3">
-        <Skeleton className="w-10 h-10 rounded-md flex-shrink-0" />
+        <Skeleton className="w-9 h-9 rounded-md flex-shrink-0" />
         <div className="flex-1 space-y-2">
-          <Skeleton className="h-4 w-24 rounded" />
+          <Skeleton className="h-4 w-28 rounded" />
           <Skeleton className="h-3 w-16 rounded" />
         </div>
       </div>
@@ -104,8 +104,8 @@ export function ImageCardSkeleton() {
       <div className="pt-3 space-y-2">
         <Skeleton className="h-4 w-2/3 rounded" />
         <div className="flex gap-4">
-          <Skeleton className="h-8 w-16 rounded-full" />
-          <Skeleton className="h-8 w-16 rounded-full" />
+          <Skeleton className="h-8 w-16 rounded-xl" />
+          <Skeleton className="h-8 w-16 rounded-xl" />
         </div>
       </div>
     </div>
@@ -121,7 +121,7 @@ export function PostCardSkeleton() {
     <div className="rounded-xl border border-white/[0.08] bg-transparent p-3">
       {/* Header */}
       <div className="flex items-center gap-3 mb-3">
-        <Skeleton className="w-10 h-10 rounded-md flex-shrink-0" />
+        <Skeleton className="w-9 h-9 rounded-md flex-shrink-0" />
         <div className="flex-1 space-y-2">
           <Skeleton className="h-4 w-28 rounded" />
           <Skeleton className="h-3 w-16 rounded" />
@@ -135,9 +135,9 @@ export function PostCardSkeleton() {
       </div>
       {/* Actions */}
       <div className="flex gap-4">
-        <Skeleton className="h-8 w-16 rounded-full" />
-        <Skeleton className="h-8 w-16 rounded-full" />
-        <Skeleton className="h-8 w-16 rounded-full" />
+        <Skeleton className="h-8 w-16 rounded-xl" />
+        <Skeleton className="h-8 w-16 rounded-xl" />
+        <Skeleton className="h-8 w-16 rounded-xl" />
       </div>
     </div>
   );
@@ -195,7 +195,7 @@ export function LiveStreamCardSkeleton() {
     <div className="rounded-xl border border-white/[0.08] bg-transparent p-3 flex-shrink-0 w-72 sm:w-80">
       {/* Header */}
       <div className="flex items-center gap-3 pb-3">
-        <Skeleton className="w-10 h-10 rounded-md flex-shrink-0" />
+        <Skeleton className="w-9 h-9 rounded-md flex-shrink-0" />
         <div className="flex-1 space-y-2">
           <Skeleton className="h-4 w-3/4 rounded" />
           <Skeleton className="h-3 w-1/2 rounded" />
