@@ -8,7 +8,7 @@ import usdtLogo from '@/assets/usdt-logo.png';
 import ethLogo from '@/assets/eth-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { useBadgeBalance } from '@/hooks/use-badge-balance';
+import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 
 const OTHER_SYMBOLS = ['ETH', 'BNB', 'USDT'] as const;
@@ -20,8 +20,9 @@ export function BalanceCard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  // DHB balance (holdings + staking across all chains) — same source as badges/leaderboard
-  const { badgeBalance, isLoading: badgeLoading } = useBadgeBalance(walletAddress);
+  // DHB balance from API profile (no edge function needed)
+  const { data: profile, isLoading: badgeLoading } = useDeHubProfile({ userId: walletAddress || undefined, enabled: !!walletAddress });
+  const badgeBalance = profile?.badgeBalance;
 
   // Real on-chain token balances across Base, BNB Chain, Ethereum
   const { allTokens, isLoading: tokensLoading } = useAllChainsTokens();

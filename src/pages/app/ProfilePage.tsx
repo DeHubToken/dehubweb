@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BadgeBalanceProvider } from '@/contexts/BadgeBalanceContext';
+
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AtSign, ChevronLeft, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -327,7 +327,6 @@ export default function ProfilePage() {
 
         {/* Tab Content - all panels rendered, inactive hidden via CSS */}
         <StableHeightContainer activeTab={activeTab}>
-          <BadgeBalanceProvider>
             <ProfileTabContent
               activeTab={activeTab}
               profileAddress={data.apiProfile?.walletAddress || ''}
@@ -350,7 +349,7 @@ export default function ProfilePage() {
               setCreatePlanModalOpen={setCreatePlanModalOpen}
               setEditingPlan={setEditingPlan}
             />
-          </BadgeBalanceProvider>
+          
         </StableHeightContainer>
       </div>
 

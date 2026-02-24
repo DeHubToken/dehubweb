@@ -13,17 +13,13 @@ import { getMediaUrl, getAuthToken } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
-import { getBadgeUrl } from '@/lib/staking-badges';
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 
-function SidebarChatBadge({ address }: { address: string }) {
-  const { badgeBalance } = useBatchedBadgeBalance(address);
-  const badgeUrl = getBadgeUrl(badgeBalance);
-  if (!badgeUrl) return null;
-  return <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />;
+/** Sidebar chat badge — livechat messages have no badge data, removed edge function call */
+function SidebarChatBadge({ address: _address }: { address: string }) {
+  return null;
 }
 
 export function SidebarChat() {

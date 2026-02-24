@@ -16,17 +16,13 @@ import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getMediaUrl, getAuthToken } from '@/lib/api/dehub';
 import { VoiceRecorder } from '@/components/app/chat/VoiceRecorder';
-import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
-import { getBadgeUrl } from '@/lib/staking-badges';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 
-function LiveChatBadge({ address }: { address: string }) {
-  const { badgeBalance } = useBatchedBadgeBalance(address);
-  const badgeUrl = getBadgeUrl(badgeBalance);
-  if (!badgeUrl) return null;
-  return <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />;
+/** Live chat badge — livechat messages have no badge data, removed edge function call */
+function LiveChatBadge({ address: _address }: { address: string }) {
+  return null;
 }
 
 /** Translatable text message with inline translate button */

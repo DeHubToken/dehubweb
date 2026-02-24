@@ -7,7 +7,7 @@ import { useDeHubProfile, useDeHubUserContent, separateUserContent } from '@/hoo
 import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
 import { useUserPrivacySettings } from '@/hooks/use-privacy-settings';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
-import { useBadgeBalance } from '@/hooks/use-badge-balance';
+
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { useStories, useWatchedStories } from '@/hooks/use-stories';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
@@ -70,8 +70,8 @@ export function useProfilePage() {
   const isOwnProfile = !routeUsername && (!userId || (currentUser?.address === userId) || (currentWalletAddress === userId));
   const isViewingOwnProfile = isOwnProfile || (apiProfile?.walletAddress && apiProfile.walletAddress.toLowerCase() === currentWalletAddress?.toLowerCase());
 
-  // Badge
-  const { badgeBalance } = useBadgeBalance(apiProfile?.walletAddress);
+  // Badge — use API-provided value instead of edge function
+  const badgeBalance = apiProfile?.badgeBalance;
   const badgeUrl = getBadgeUrl(badgeBalance, apiProfile?.handle || routeUsername);
 
   // Content separation
