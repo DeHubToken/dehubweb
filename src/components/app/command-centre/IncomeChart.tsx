@@ -1,16 +1,15 @@
-import { Info, Settings2, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { getDPayTransactions, type DPayTransaction } from '@/lib/api/dpay';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { subHours, subDays, subWeeks, subMonths } from 'date-fns';
-import dehubCoin from '@/assets/dehub-coin.png';
 import { AnimatedFilterPill } from '@/components/app/feeds/AnimatedFilterPill';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
-const COLORS = ['#22c55e', '#3b82f6', '#eab308', '#ef4444', '#a855f7'];
+const COLORS = ['#22c55e', '#3b82f6', '#eab308', '#ef4444', '#a855f7', '#ec4899', '#14b8a6', '#f97316'];
 
 function getFilterStartDate(filter: string): Date | null {
   const now = new Date();
@@ -23,61 +22,78 @@ function getFilterStartDate(filter: string): Date | null {
   }
 }
 
-function buildIncomeBreakdown(transactions: DPayTransaction[]) {
-  const categories: Record<string, number> = {};
-  let totalIncome = 0;
-
-  transactions.forEach((tx) => {
-    // Only count incoming transactions
-    if (tx.type === 'buy' || tx.type === 'transfer') {
-      const label = tx.type === 'buy' ? 'Purchases' : 'Transfers';
-      categories[label] = (categories[label] || 0) + tx.amount;
-      totalIncome += tx.amount;
-    }
-  });
-
-  if (totalIncome === 0) return { data: [], totalIncome: 0, topSource: null };
-
-  const data = Object.entries(categories)
-    .sort(([, a], [, b]) => b - a)
-    .map(([name, value], i) => ({
-      name,
-      value: Math.round((value / totalIncome) * 1000) / 10,
-      rawValue: Math.round(value),
-      color: COLORS[i % COLORS.length],
-    }));
-
-  return { data, totalIncome: Math.round(totalIncome), topSource: data[0] || null };
+function truncateAddress(addr: string) {
+  return addr.length > 10 ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : addr;
 }
 
 export function IncomeChart() {
   const [activeFilter, setActiveFilter] = useState('1m');
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
   const { t } = useTranslation();
 
-  const { data: transactions = [], isLoading } = useQuery({
-    queryKey: ['dpay', 'transactions'],
-    queryFn: getDPayTransactions,
-    enabled: isAuthenticated,
-    staleTime: 60_000,
+  // Fetch tips received by this wallet from tip_records
+  const { data: tipRecords = [], isLoading } = useQuery({
+    queryKey: ['tip-records-received', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return [];
+      const { data, error } = await supabase
+        .from('tip_records')
+        .select('sender_address, amount, created_at')
+        .eq('receiver_address', walletAddress.toLowerCase())
+        .order('created_at', { ascending: false });
+      if (error) {
+        console.error('[IncomeChart] Error fetching tip records:', error);
+        return [];
+      }
+      return data || [];
+    },
+    enabled: isAuthenticated && !!walletAddress,
+    staleTime: 30_000,
   });
 
-  const filteredTxs = useMemo(() => {
+  const filteredTips = useMemo(() => {
     const startDate = getFilterStartDate(activeFilter);
-    if (!startDate) return transactions;
-    return transactions.filter((tx) => new Date(tx.createdAt) >= startDate);
-  }, [transactions, activeFilter]);
+    if (!startDate) return tipRecords;
+    return tipRecords.filter((tip) => new Date(tip.created_at) >= startDate);
+  }, [tipRecords, activeFilter]);
 
-  const { data: chartData, totalIncome, topSource } = useMemo(
-    () => buildIncomeBreakdown(filteredTxs),
-    [filteredTxs]
-  );
+  const { chartData, totalEarned } = useMemo(() => {
+    if (filteredTips.length === 0) return { chartData: [], totalEarned: 0 };
+
+    const bySender: Record<string, number> = {};
+    let total = 0;
+
+    for (const tip of filteredTips) {
+      const sender = tip.sender_address;
+      bySender[sender] = (bySender[sender] || 0) + Number(tip.amount);
+      total += Number(tip.amount);
+    }
+
+    const sorted = Object.entries(bySender)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 8); // top 8 senders
+
+    const data = sorted.map(([address, value], i) => ({
+      name: truncateAddress(address),
+      fullAddress: address,
+      value: Math.round((value / total) * 1000) / 10,
+      rawValue: Math.round(value * 100) / 100,
+      color: COLORS[i % COLORS.length],
+    }));
+
+    return { chartData: data, totalEarned: Math.round(total * 100) / 100 };
+  }, [filteredTips]);
 
   return (
     <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
-      {/* Header with time filters on same line */}
+      {/* Header with time filters */}
       <div className="flex items-center justify-between mb-4">
-        <span className="text-zinc-400 text-sm">{t('commandCentre.incomeChart')}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-zinc-400 text-sm">{t('commandCentre.incomeChart')}</span>
+          {totalEarned > 0 && (
+            <span className="text-emerald-400 text-sm font-semibold">{totalEarned} DHB</span>
+          )}
+        </div>
         <div className="flex items-center gap-1 pl-1 py-1">
           {timeFilters.map((filter) => (
             <AnimatedFilterPill
@@ -99,22 +115,23 @@ export function IncomeChart() {
         </div>
       ) : chartData.length > 0 ? (
         <div className="flex items-center justify-center gap-6">
-          <div className="space-y-3">
+          <div className="space-y-3 min-w-0">
             {chartData.map((item, index) => (
               <div key={index} className="flex items-center gap-2">
-                <div 
-                  className="w-3 h-3 rounded-full" 
-                  style={{ backgroundColor: item.color }} 
+                <div
+                  className="w-3 h-3 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: item.color }}
                 />
-                <span className="text-sm text-zinc-300">
+                <span className="text-sm text-zinc-300 truncate">
                   <span className="font-medium" style={{ color: item.color }}>{item.value}%</span>
                   {' '}{item.name}
+                  <span className="text-zinc-500 ml-1">({item.rawValue})</span>
                 </span>
               </div>
             ))}
           </div>
 
-          <div className="w-40 h-40">
+          <div className="w-40 h-40 flex-shrink-0">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
