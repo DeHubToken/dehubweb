@@ -121,6 +121,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       return localStorage.getItem('post_default_categories') || '';
     } catch { return ''; }
   });
+  const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false);
 
   // Refs
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -154,7 +155,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   }, [hasImage, hasAudio, hasVideo, isShort, hasMusicVideo, isLive]);
 
   const destinations = getPostDestinations();
-  const canPost = Boolean(text.trim() || media.length > 0 || isLive);
+  const canPost = Boolean((text.trim() || media.length > 0 || isLive) && !isGeneratingThumbnail);
 
   // Actions
   const handleImageSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -221,6 +222,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       type: 'video', 
     }]);
 
+    setIsGeneratingThumbnail(true);
+
     // Background: load metadata + generate thumbnail, then update the entry
     const video = document.createElement('video');
     video.preload = 'auto';
@@ -268,6 +271,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         }
       } catch (err) {
         console.warn('[Video] Failed to generate thumbnail:', err);
+        toast.error('Could not generate thumbnail automatically. You can add one manually.');
       }
 
       // Update the media entry with duration + thumbnail
@@ -282,6 +286,9 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       ));
     } catch (err) {
       console.warn('[Video] Failed to load video metadata:', err);
+      toast.error('Could not process video. Try a different file.');
+    } finally {
+      setIsGeneratingThumbnail(false);
     }
   }, [hasImage, hasVideo]);
 
@@ -779,6 +786,49 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           // Fallback: convert thumbnail URL to blob
           const thumbResponse = await fetch(media[0].thumbnail);
           thumbnail = await thumbResponse.blob();
+        }
+
+        // Last-resort: generate thumbnail on-the-fly if still missing
+        if (!thumbnail && media[0].file) {
+          console.warn('[Mint] No thumbnail available, attempting last-resort generation');
+          try {
+            const video = document.createElement('video');
+            video.preload = 'auto';
+            video.muted = true;
+            video.src = media[0].preview;
+            await new Promise<void>((resolve, reject) => {
+              video.onloadeddata = () => resolve();
+              video.onerror = () => reject(new Error('Failed to load video'));
+              setTimeout(() => reject(new Error('Video load timeout')), 10000);
+            });
+            video.currentTime = Math.min(1, video.duration * 0.1);
+            await new Promise<void>((resolve) => {
+              video.onseeked = () => resolve();
+              setTimeout(() => resolve(), 3000);
+            });
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 360;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+              const blob = await new Promise<Blob | null>((resolve) => {
+                canvas.toBlob(resolve, 'image/jpeg', 0.85);
+              });
+              if (blob && blob.size > 0) {
+                thumbnail = blob;
+                console.log('[Mint] Last-resort thumbnail generated:', blob.size);
+              }
+            }
+          } catch (err) {
+            console.error('[Mint] Last-resort thumbnail generation failed:', err);
+          }
+        }
+
+        if (!thumbnail) {
+          toast.error('Could not generate thumbnail. Please add a custom thumbnail and try again.');
+          setIsPosting(false);
+          return;
         }
       }
 
