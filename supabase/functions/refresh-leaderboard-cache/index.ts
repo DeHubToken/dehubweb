@@ -186,21 +186,32 @@ async function computeSnapshotDelta(
       return (entry as any)[sortMode] ?? 0;
     };
 
+    // Use today's snapshot as "current" for ALL sort modes (snapshot-vs-snapshot)
+    // This prevents fake deltas caused by API values differing from snapshot values
+    const currentSnapshotFieldMap: Record<string, string> = {
+      holdings: "balance",
+      sentTips: "sent_tips",
+      receivedTips: "received_tips",
+      followers: "followers",
+      likes: "likes",
+      subscribers: "subscribers",
+    };
+    const currentSnapshotField = currentSnapshotFieldMap[sortMode] || sortMode;
     let currentMap: Map<string, number> | null = null;
-    if (sortMode === "sentTips" || sortMode === "receivedTips") {
-      const snapshotField = sortMode === "sentTips" ? "sent_tips" : "received_tips";
-      const todayStr = new Date().toISOString().split("T")[0];
-      const { data: currentSnaps } = await supabase
-        .from("leaderboard_snapshots")
-        .select(`account, ${snapshotField}`)
-        .eq("snapshot_date", todayStr);
+    const todayStr = new Date().toISOString().split("T")[0];
+    const { data: currentSnaps } = await supabase
+      .from("leaderboard_snapshots")
+      .select(`account, ${currentSnapshotField}`)
+      .eq("snapshot_date", todayStr);
 
-      if (currentSnaps && currentSnaps.length > 0) {
-        currentMap = new Map<string, number>();
-        for (const snap of currentSnaps) {
-          currentMap.set(snap.account.toLowerCase(), (snap as any)[snapshotField] ?? 0);
-        }
+    if (currentSnaps && currentSnaps.length > 0) {
+      currentMap = new Map<string, number>();
+      for (const snap of currentSnaps) {
+        currentMap.set(snap.account.toLowerCase(), (snap as any)[currentSnapshotField] ?? 0);
       }
+      console.log(`[delta] ${sortMode}/${period}: using today's snapshot (${currentSnaps.length} entries) for current values`);
+    } else {
+      console.log(`[delta] ${sortMode}/${period}: no today snapshot found, falling back to API values`);
     }
 
     const requireRealPast = (period === "day" || period === "week") &&
