@@ -1,77 +1,77 @@
 
 
-## Root Cause: API value vs snapshot mismatch for short periods
+## Problem: Tips sent through the app bypass the tip contract
 
-The `computeSnapshotDelta` function uses **two different data sources** for holdings deltas:
+The `use-tip-payment.ts` hook sends DHB via a **direct ERC20 `transfer(creatorAddress, amount)`** — a simple wallet-to-wallet token transfer. It never routes through the tip contract (`0x4fa30dAef50c6dc8593470750F3c721CA3275581`).
 
-- **Current value**: `entry.total` from the live DeHub API call (e.g., 56,142,985 for coinage)
-- **Past value**: `balance` from `leaderboard_snapshots` table
+However, the `backfill-tip-snapshots` edge function only tracks Transfer events **to/from the tip contract**. So tips sent through DeHub's own UI are completely invisible to the leaderboard's `sent_tips` and `received_tips` columns.
 
-The snapshots from Feb 14 onward store **50,000,000** for coinage (what the `/api/leaderboard` endpoint returns as `total`), but the live API call at delta-computation time returns **56,142,985** (which may include additional data like staking). This creates a fake delta of 6.1M.
-
-Why 1m/1y are correct: snapshots from before Feb 14 were created by the **old on-chain code** and stored 56,142,985 — matching the current API value. So `56M - 56M = 0`, no fake delta.
-
-Why 1d/1w are wrong: recent snapshots (Feb 14+) store 50M from the new API-only code, but the live `entry.total` is 56M. So `56M - 50M = 6.1M` fake delta.
-
-### Database evidence
-
-| Date | Snapshot balance | API `entry.total` | Source |
-|------|-----------------|-------------------|--------|
-| Feb 13 (old code) | 56,142,985 | — | On-chain `balanceOf` |
-| Feb 14+ (new code) | 50,000,000 | 56,142,985 | `/api/leaderboard` |
-
-137 users show positive deltas in 1d — most are fake, caused by this same mismatch.
+That 20 DHB you received? It was a direct ERC20 transfer from `0x26eeb...` to your wallet. The backfill function would never detect it because the tip contract wasn't involved.
 
 ---
 
-## Fix
+## Root cause in code
 
-**File: `supabase/functions/refresh-leaderboard-cache/index.ts`**
-
-Change lines 189-204 in `computeSnapshotDelta` to use **today's snapshot** as the current value for ALL sort modes (not just sentTips/receivedTips). This ensures apples-to-apples comparison: snapshot vs snapshot.
-
-Currently (lines 189-204):
+**`src/hooks/use-tip-payment.ts` (line 83-89)**:
 ```typescript
-// Only sentTips/receivedTips use snapshot-vs-snapshot
-if (sortMode === "sentTips" || sortMode === "receivedTips") {
-  // loads today's snapshot as currentMap
-}
-// Everything else uses entry.total from API (mismatched!)
+// Sends directly to creatorAddress — no tip contract involved
+const result = await writeContractAA(
+  chainConfig.dhbToken,        // DHB token contract
+  erc20TransferInterface,       // simple transfer ABI
+  'transfer',
+  [creatorAddress, amountWei],  // direct to creator
+);
 ```
 
-Change to:
+**`supabase/functions/backfill-tip-snapshots/index.ts` (lines 186-197)**:
 ```typescript
-// ALL sort modes use snapshot-vs-snapshot
-const snapshotFieldMap: Record<string, string> = {
-  holdings: "balance",
-  sentTips: "sent_tips",
-  receivedTips: "received_tips",
-  followers: "followers",
-  likes: "likes",
-  subscribers: "subscribers",
-};
-const currentSnapshotField = snapshotFieldMap[sortMode] || sortMode;
-const todayStr = new Date().toISOString().split("T")[0];
-const { data: currentSnaps } = await supabase
-  .from("leaderboard_snapshots")
-  .select(`account, ${currentSnapshotField}`)
-  .eq("snapshot_date", todayStr);
-
-if (currentSnaps && currentSnaps.length > 0) {
-  currentMap = new Map<string, number>();
-  for (const snap of currentSnaps) {
-    currentMap.set(
-      snap.account.toLowerCase(),
-      (snap as any)[currentSnapshotField] ?? 0
-    );
-  }
-}
+// Only finds transfers TO the tip contract (spent)
+[TRANSFER_TOPIC, null, paddedContract]
+// Only finds transfers FROM the tip contract (earned)
+[TRANSFER_TOPIC, paddedContract, null]
 ```
 
-This is one small indexed DB query per sort mode — negligible cost. After deploying, trigger a manual full refresh to rebuild the 1d/1w caches with correct deltas.
+A direct wallet-to-wallet transfer has neither `from` nor `to` as the tip contract, so it's missed entirely.
 
-### Expected result
-- Coinage 1d delta: `50M (today's snapshot) - 50M (yesterday's snapshot) = 0` — correct
-- 1m/1y deltas: unchanged (already correct)
-- Most 1d entries will show 0 delta unless there was a real change between snapshots
+---
+
+## Fix: Route tips through the StreamController contract
+
+The proper fix is to make `use-tip-payment.ts` call the tip/StreamController contract instead of doing a raw ERC20 transfer. However, I need to verify whether the StreamController has a `tip(address, amount)` function or equivalent.
+
+**Alternative approach** (if the contract doesn't have a tip function): Record tips in the database after a successful on-chain transfer, and have the backfill function also read from the database.
+
+### Recommended: Hybrid approach
+
+1. **Keep the direct ERC20 transfer** (it works, it's gas-efficient)
+2. **After successful tx**, record the tip in the `tip_leaderboard_cache` table or a new `tip_transactions` table with sender, receiver, amount, tx_hash, chain_id
+3. **Update `backfill-tip-snapshots`** to also read from this database table when computing sent/received tips, merging on-chain contract tips with recorded direct tips
+
+### Implementation details
+
+**Step 1 — Add tip recording after successful transfer in `use-tip-payment.ts`**:
+After `result.wait(1)` succeeds, insert a record into a new `tip_records` table via Supabase with: sender, receiver, amount, chain_id, tx_hash, timestamp.
+
+**Step 2 — Create `tip_records` table** (migration):
+```sql
+CREATE TABLE public.tip_records (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  sender_address text NOT NULL,
+  receiver_address text NOT NULL,
+  amount numeric NOT NULL,
+  chain_id integer NOT NULL DEFAULT 8453,
+  tx_hash text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE public.tip_records ENABLE ROW LEVEL SECURITY;
+-- Anyone can read tips
+CREATE POLICY "Anyone can view tips" ON public.tip_records FOR SELECT USING (true);
+-- Users can record their own sent tips
+CREATE POLICY "Users can record sent tips" ON public.tip_records FOR INSERT
+  WITH CHECK (lower(sender_address) = get_request_wallet_address());
+```
+
+**Step 3 — Update `backfill-tip-snapshots`** to also query `tip_records` for the relevant date range and merge those amounts into the spent/earned maps before writing to snapshots.
+
+This way both contract-routed tips AND direct-transfer tips are tracked.
 
