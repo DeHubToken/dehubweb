@@ -273,6 +273,15 @@ export default function FullWalletPage() {
         )}
       </div>
 
+      {/* Import Token button */}
+      <button
+        onClick={() => toast.info('Import token coming soon')}
+        className="w-full py-2.5 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-sm text-sm text-zinc-400 hover:text-zinc-200 transition-colors flex items-center justify-center gap-2"
+      >
+        <Plus className="w-4 h-4" />
+        Import Token
+      </button>
+
       {/* Token Action Drawer - shows actions for grouped token */}
       <GroupedActionDrawer
         open={!!actionGrouped}
