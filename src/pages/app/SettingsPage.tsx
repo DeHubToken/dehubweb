@@ -582,6 +582,39 @@ function ProfileSettings() {
 
 function NotificationSettings() {
   const { t } = useTranslation();
+  const { isAuthenticated } = useAuthContext();
+
+  const { data: pushPrefs, isLoading: prefsLoading } = useQuery({
+    queryKey: ['push-preferences'],
+    queryFn: () => import('@/lib/api/dehub').then(m => m.getPushPreferences()),
+    enabled: isAuthenticated,
+    staleTime: 60_000,
+  });
+
+  const queryClient = useQueryClient();
+
+  const updatePrefMutation = useMutation({
+    mutationFn: (prefs: Record<string, boolean>) =>
+      import('@/lib/api/dehub').then(m => m.updatePushPreferences(prefs)),
+    onMutate: async (newPrefs) => {
+      await queryClient.cancelQueries({ queryKey: ['push-preferences'] });
+      const prev = queryClient.getQueryData(['push-preferences']);
+      queryClient.setQueryData(['push-preferences'], (old: any) => ({ ...old, ...newPrefs }));
+      return { prev };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.prev) queryClient.setQueryData(['push-preferences'], context.prev);
+      toast.error(t('settings.failedUpdateProfile'));
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['push-preferences'] }),
+  });
+
+  const handleToggle = (key: string) => (checked: boolean) => {
+    updatePrefMutation.mutate({ [key]: checked });
+  };
+
+  const isDisabled = prefsLoading || updatePrefMutation.isPending;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -618,29 +651,33 @@ function NotificationSettings() {
             icon={Heart}
             title={t('settings.likes')}
             description={t('settings.likesDesc')}
-            defaultChecked
-            comingSoon
+            defaultChecked={pushPrefs?.likes ?? true}
+            onCheckedChange={handleToggle('likes')}
+            disabled={isDisabled}
           />
           <SettingToggle
             icon={MessageSquare}
             title={t('settings.comments')}
             description={t('settings.commentsDesc')}
-            defaultChecked
-            comingSoon
+            defaultChecked={pushPrefs?.comments ?? true}
+            onCheckedChange={handleToggle('comments')}
+            disabled={isDisabled}
           />
           <SettingToggle
             icon={Users}
             title={t('settings.newFollowers')}
             description={t('settings.newFollowersDesc')}
-            defaultChecked
-            comingSoon
+            defaultChecked={pushPrefs?.follows ?? true}
+            onCheckedChange={handleToggle('follows')}
+            disabled={isDisabled}
           />
           <SettingToggle
             icon={MessageSquare}
             title={t('settings.directMessages')}
             description={t('settings.directMessagesDesc')}
-            defaultChecked
-            comingSoon
+            defaultChecked={pushPrefs?.directMessages ?? true}
+            onCheckedChange={handleToggle('directMessages')}
+            disabled={isDisabled}
           />
         </div>
       </div>
