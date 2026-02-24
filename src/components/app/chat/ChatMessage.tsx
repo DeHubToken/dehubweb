@@ -6,8 +6,6 @@ import { TranslatableText, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useTextTranslation } from '../TranslatableText';
 import { useLiveChatUser } from '@/hooks/use-livechat';
 import { useNavigate } from 'react-router-dom';
-import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
-import { getBadgeUrl } from '@/lib/staking-badges';
 
 import {
   DropdownMenu,
@@ -55,14 +53,9 @@ function ModeratorBadge({ address }: { address: string }) {
 }
 
 
-/** Inline staking badge (blue tick) shown next to display name */
-function StakingBadgeInline({ address }: { address: string }) {
-  const { badgeBalance } = useBatchedBadgeBalance(address);
-  const badgeUrl = getBadgeUrl(badgeBalance);
-  if (!badgeUrl) return null;
-  return (
-    <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />
-  );
+/** Inline staking badge — no longer fetched via edge function (livechat has no badge data) */
+function StakingBadgeInline({ address: _address }: { address: string }) {
+  return null;
 }
 
 export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnban }: ChatMessageProps) {

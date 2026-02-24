@@ -45,6 +45,8 @@ export interface ProfileData {
   followingsList?: string[];
   /** Raw customs data from API */
   customs?: Record<string, unknown>;
+  /** On-chain badge balance from API */
+  badgeBalance?: number;
 }
 
 /**
@@ -104,6 +106,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     followersList,
     followingsList,
     customs: user.customs as Record<string, unknown> | undefined,
+    badgeBalance: user.badgeBalance,
   };
 }
 

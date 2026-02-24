@@ -3,7 +3,7 @@ import { SquareUserRound, Trophy, MessagesSquare } from 'lucide-react';
 import { WhoToFollow } from '../WhoToFollow';
 import { SidebarLeaderboard, type SidebarLeaderboardHandle } from './SidebarLeaderboard';
 import { SidebarChat } from './SidebarChat';
-import { BadgeBalanceProvider } from '@/contexts/BadgeBalanceContext';
+
 import { useLiveChatPresence, useLiveChatRooms } from '@/hooks/use-livechat';
 
 type TabType = 'leaderboard' | 'follow' | 'chat';
@@ -76,9 +76,7 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
           </div>
           {/* Chat panel */}
           <div className="w-full flex-shrink-0 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
-            <BadgeBalanceProvider>
               <SidebarChat />
-            </BadgeBalanceProvider>
           </div>
         </div>
       </div>

@@ -6,22 +6,20 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector, CreateGroupModal } from '@/components/app/chat';
-import { BadgeBalanceProvider } from '@/contexts/BadgeBalanceContext';
+
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { useConversations, useUserOnlineStatus, useCreateConversation } from '@/hooks/use-messages';
 import { getMediaUrl, type DeHubConversation } from '@/lib/api/dehub';
 import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { useDMRealtime } from '@/hooks/use-dm-realtime';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
 import dehubLogo from '@/assets/dehub-logo.png';
 
-function ConversationBadge({ address }: { address?: string }) {
-  const { badgeBalance } = useBatchedBadgeBalance(address);
+function ConversationBadge({ badgeBalance }: { badgeBalance?: number }) {
   const badgeUrl = getBadgeUrl(badgeBalance);
   if (!badgeUrl) return null;
   return <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />;
@@ -90,7 +88,7 @@ function ConversationItem({
         <div className="flex items-center gap-2">
           <span className="relative inline-flex items-baseline">
             <span className="font-semibold text-white truncate">{displayName}</span>
-            <ConversationBadge address={otherUser?.address} />
+            <ConversationBadge badgeBalance={otherUser?.badgeBalance} />
           </span>
           {lastMessageTime && (
             <span className="text-zinc-500 text-sm ml-auto flex-shrink-0">{lastMessageTime}</span>
@@ -171,11 +169,9 @@ export default function MessagesPage() {
   if (showPublicChat) {
     return (
       <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] p-3 sm:p-4 overflow-x-hidden">
-        <BadgeBalanceProvider>
           <PublicChat
             onBack={() => setShowPublicChat(false)}
           />
-        </BadgeBalanceProvider>
       </div>
     );
   }
