@@ -46,7 +46,7 @@ export const RightSidebar = memo(function RightSidebar({ showSearch = true }: Ri
       {showSearch && <SearchBar />}
       <div className="mt-[11px] space-y-4">
         <TabbedSidePanel />
-        <WhatsHappening />
+        {/* <WhatsHappening /> */}
       </div>
     </aside>
   );
