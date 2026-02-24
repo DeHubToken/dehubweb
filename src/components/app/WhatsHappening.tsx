@@ -58,53 +58,16 @@ function deriveTrendingCategories(queryClient: ReturnType<typeof useQueryClient>
 export function WhatsHappening() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const categories = deriveTrendingCategories(queryClient);
-
-  const handleCategoryClick = (categoryName: string) => {
-    setFilterValue('home', 'category', categoryName);
-    navigate('/app');
-  };
-
-  if (categories.length === 0) {
-    return (
-      <div className="bg-zinc-900 rounded-2xl p-4">
-        <div className="flex items-center justify-between mb-4 pr-1.5">
-          <h3 className="font-bold text-lg text-white">Talk of The Town</h3>
-        </div>
-        <div className="flex flex-col items-center justify-center py-8 text-center">
-          <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
-            <LayoutGrid className="w-6 h-6 text-zinc-500" />
-          </div>
-          <p className="text-zinc-400 text-sm">Nothing trending yet</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
       <div className="flex items-center justify-between mb-4 pr-1.5">
         <h3 className="font-bold text-lg text-white">Talk of The Town</h3>
       </div>
-      <div className="space-y-3">
-        {categories.map((cat, i) => (
-          <button
-            key={cat.name}
-            onClick={() => handleCategoryClick(cat.name)}
-            className="w-full text-left group"
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-xs font-medium text-zinc-500 w-4">{i + 1}</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white group-hover:text-white group-hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.5)] truncate transition-all duration-200">
-                  {cat.name}
-                </p>
-                <p className="text-xs text-zinc-500">{cat.post_count} posts</p>
-              </div>
-              <TrendingUp className="w-3.5 h-3.5 text-zinc-600 group-hover:text-white group-hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.4)] transition-all duration-200" />
-            </div>
-          </button>
-        ))}
+      <div className="flex flex-col items-center justify-center py-8 text-center">
+        <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
+          <LayoutGrid className="w-6 h-6 text-zinc-500" />
+        </div>
+        <p className="text-zinc-400 text-sm">Nothing trending yet</p>
       </div>
     </div>
   );
