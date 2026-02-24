@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Paperclip, Camera } from 'lucide-react';
+import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -211,30 +211,14 @@ export function PostActionBar({
           </Tooltip>
         )}
 
-        {/* Mobile: Combined attachment button for image/video */}
-        {!isLive && !hasVideo && !hasImage && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button 
-                type="button" 
-                onClick={() => imageInputRef.current?.click()} 
-                className="p-2 hover:bg-white/10 rounded-xl transition-colors sm:hidden"
-              >
-                <Paperclip className="w-5 h-5 text-white" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>Add media</TooltipContent>
-          </Tooltip>
-        )}
-
-        {/* Desktop: Separate image button */}
+        {/* Image button */}
         {!isLive && !hasVideo && (
           <Tooltip>
             <TooltipTrigger asChild>
               <button 
                 type="button" 
                 onClick={() => imageInputRef.current?.click()} 
-                className="p-2 hover:bg-white/10 rounded-xl transition-colors hidden sm:block"
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
               >
                 <Image className="w-5 h-5 text-white" />
               </button>
@@ -250,7 +234,7 @@ export function PostActionBar({
               <button 
                 type="button" 
                 onClick={() => videoInputRef.current?.click()} 
-                className="p-2 hover:bg-white/10 rounded-xl transition-colors hidden sm:block"
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
               >
                 <Film className="w-5 h-5 text-white" />
               </button>
