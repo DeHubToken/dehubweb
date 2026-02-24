@@ -741,8 +741,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       const hasBounty = isWatch2Earn && w2eTotal && w2eViews;
       if (hasBounty) {
         const bountyAmount = parseFloat(w2eTotal);
-        const viewerCount = parseInt(w2eViews) || 10;
-        const commentCount = parseInt(w2eComments) || 0;
+        const viewerCount = w2eViews.trim() !== '' ? parseInt(w2eViews) : 10;
+        const commentCount = w2eComments.trim() !== '' ? parseInt(w2eComments) : 0;
         
         if (bountyAmount > 0 && (viewerCount > 0 || commentCount > 0)) {
           // Calculate total bounty needed
@@ -862,8 +862,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           r: mintResponse.r,
           s: mintResponse.s,
           bountyAmount: parseFloat(w2eTotal),
-          countOfViewers: parseInt(w2eViews) || 10,
-          countOfCommentors: parseInt(w2eComments) || 0,
+          countOfViewers: w2eViews.trim() !== '' ? parseInt(w2eViews) : 10,
+          countOfCommentors: w2eComments.trim() !== '' ? parseInt(w2eComments) : 0,
           chainId,
         });
       } else {
