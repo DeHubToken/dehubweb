@@ -1,53 +1,77 @@
 
 
-## How Period Data Works (and Why We Can Remove On-Chain Calls)
+## Root Cause: API value vs snapshot mismatch for short periods
 
-The 1d/1w/1m/1y data is computed entirely from **database snapshots** — not from on-chain calls. Here's the flow:
+The `computeSnapshotDelta` function uses **two different data sources** for holdings deltas:
 
-```text
-┌─────────────────────────────────────────────────┐
-│  FULL REFRESH (3 AM UTC daily)                  │
-│                                                 │
-│  1. Fetch leaderboard from DeHub API            │
-│  2. For EACH wallet (batches of 5):             │
-│     → balanceOf on Base  ← REDUNDANT RPC CALL   │
-│     → balanceOf on BNB   ← REDUNDANT RPC CALL   │
-│     → userInfos (staking)← REDUNDANT RPC CALL   │
-│  3. Save today's snapshot to leaderboard_snapshots│
-│  4. Compute deltas: today − snapshot_from_N_days │
-│  5. Cache results in leaderboard_cache          │
-└─────────────────────────────────────────────────┘
+- **Current value**: `entry.total` from the live DeHub API call (e.g., 56,142,985 for coinage)
+- **Past value**: `balance` from `leaderboard_snapshots` table
 
-┌─────────────────────────────────────────────────┐
-│  LIGHT REFRESH (every 6 hours)                  │
-│                                                 │
-│  Pure DB: load "all" cache + compare snapshots  │
-│  No RPC calls at all ← This one is fine         │
-└─────────────────────────────────────────────────┘
+The snapshots from Feb 14 onward store **50,000,000** for coinage (what the `/api/leaderboard` endpoint returns as `total`), but the live API call at delta-computation time returns **56,142,985** (which may include additional data like staking). This creates a fake delta of 6.1M.
+
+Why 1m/1y are correct: snapshots from before Feb 14 were created by the **old on-chain code** and stored 56,142,985 — matching the current API value. So `56M - 56M = 0`, no fake delta.
+
+Why 1d/1w are wrong: recent snapshots (Feb 14+) store 50M from the new API-only code, but the live `entry.total` is 56M. So `56M - 50M = 6.1M` fake delta.
+
+### Database evidence
+
+| Date | Snapshot balance | API `entry.total` | Source |
+|------|-----------------|-------------------|--------|
+| Feb 13 (old code) | 56,142,985 | — | On-chain `balanceOf` |
+| Feb 14+ (new code) | 50,000,000 | 56,142,985 | `/api/leaderboard` |
+
+137 users show positive deltas in 1d — most are fake, caused by this same mismatch.
+
+---
+
+## Fix
+
+**File: `supabase/functions/refresh-leaderboard-cache/index.ts`**
+
+Change lines 189-204 in `computeSnapshotDelta` to use **today's snapshot** as the current value for ALL sort modes (not just sentTips/receivedTips). This ensures apples-to-apples comparison: snapshot vs snapshot.
+
+Currently (lines 189-204):
+```typescript
+// Only sentTips/receivedTips use snapshot-vs-snapshot
+if (sortMode === "sentTips" || sortMode === "receivedTips") {
+  // loads today's snapshot as currentMap
+}
+// Everything else uses entry.total from API (mismatched!)
 ```
 
-The period deltas are just: **current value − snapshot value from N days ago**. The snapshots are already in the database. The on-chain RPC calls in step 2 are redundant because the DeHub API already returns `total` (which includes holdings + staking). The function even has a fallback: `const effectiveBalance = onChainBalance > 0 ? onChainBalance : apiTotal;`
+Change to:
+```typescript
+// ALL sort modes use snapshot-vs-snapshot
+const snapshotFieldMap: Record<string, string> = {
+  holdings: "balance",
+  sentTips: "sent_tips",
+  receivedTips: "received_tips",
+  followers: "followers",
+  likes: "likes",
+  subscribers: "subscribers",
+};
+const currentSnapshotField = snapshotFieldMap[sortMode] || sortMode;
+const todayStr = new Date().toISOString().split("T")[0];
+const { data: currentSnaps } = await supabase
+  .from("leaderboard_snapshots")
+  .select(`account, ${currentSnapshotField}`)
+  .eq("snapshot_date", todayStr);
 
-## Plan: Remove On-Chain RPC Calls, Keep Snapshots
+if (currentSnaps && currentSnaps.length > 0) {
+  currentMap = new Map<string, number>();
+  for (const snap of currentSnaps) {
+    currentMap.set(
+      snap.account.toLowerCase(),
+      (snap as any)[currentSnapshotField] ?? 0
+    );
+  }
+}
+```
 
-**What changes in `refresh-leaderboard-cache/index.ts`:**
+This is one small indexed DB query per sort mode — negligible cost. After deploying, trigger a manual full refresh to rebuild the 1d/1w caches with correct deltas.
 
-1. **Remove all RPC/Alchemy calls** — `getOnChainBalance`, `rpcCall`, `bnbRpcCall`, `getCurrentBlockNumber`, `queryTipEvents`, `getLogs`, etc.
-2. **Use the API-provided `total` directly** as the balance (it already includes Base + BNB + staking)
-3. **Keep the snapshot system intact** — still upsert today's values into `leaderboard_snapshots` using API data
-4. **Keep `computeSnapshotDelta`** — unchanged, it's pure DB work
-5. **Keep extra wallets** — but instead of on-chain lookup, fetch their profile from the DeHub API (`/api/user?account=ADDRESS`) to get their `total`
-6. **For tip snapshots** — use the `sentTips`/`receivedTips` values from the API response instead of scanning Transfer event logs
-
-**What stays the same:**
-- Snapshot-based delta computation (1d/1w/1m/1y)
-- Light refresh mode (already RPC-free)
-- All sort modes (holdings, followers, likes, subscribers, sentTips, receivedTips)
-- Cache structure and periods
-
-**Impact:**
-- Full refresh drops from ~3-5 minutes of execution to ~10-15 seconds (just API calls + DB writes)
-- Eliminates all Alchemy RPC costs from the cron job
-- Eliminates the massive cloud credit burn from long-running edge function execution
-- Period data continues working exactly as before
+### Expected result
+- Coinage 1d delta: `50M (today's snapshot) - 50M (yesterday's snapshot) = 0` — correct
+- 1m/1y deltas: unchanged (already correct)
+- Most 1d entries will show 0 delta unless there was a real change between snapshots
 
