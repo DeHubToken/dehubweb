@@ -93,34 +93,36 @@ function setCachedHolders(tokenId: number | string, chainId: number, holders: To
   }
 }
 
+const RPC_SESSION_KEY = 'dehub_rpc_endpoints';
+const FALLBACK_ENDPOINTS = { base: 'https://mainnet.base.org', bsc: 'https://bsc-dataseed1.binance.org' };
+
 /**
- * Fetch RPC endpoints from the edge function
+ * Fetch RPC endpoints — cached in sessionStorage to avoid repeated edge function calls.
  */
 async function getRpcEndpoints(): Promise<{ base: string; bsc: string }> {
-  if (cachedEndpoints) {
-    return cachedEndpoints;
-  }
-  
+  if (cachedEndpoints) return cachedEndpoints;
+
+  // Check sessionStorage first (shared with dhb-token.ts)
+  try {
+    const stored = sessionStorage.getItem(RPC_SESSION_KEY);
+    if (stored) {
+      cachedEndpoints = JSON.parse(stored);
+      return cachedEndpoints!;
+    }
+  } catch {}
+
   try {
     const { data, error } = await supabase.functions.invoke('get-rpc-endpoints');
-    
     if (error || !data) {
-      console.warn('Failed to fetch RPC endpoints from edge function, using fallback');
-      // Fallback to public RPCs if edge function fails
-      return {
-        base: 'https://mainnet.base.org',
-        bsc: 'https://bsc-dataseed1.binance.org',
-      };
+      console.warn('Failed to fetch RPC endpoints, using fallback');
+      return FALLBACK_ENDPOINTS;
     }
-    
     cachedEndpoints = data;
+    try { sessionStorage.setItem(RPC_SESSION_KEY, JSON.stringify(data)); } catch {}
     return data;
   } catch (err) {
     console.warn('Error fetching RPC endpoints:', err);
-    return {
-      base: 'https://mainnet.base.org',
-      bsc: 'https://bsc-dataseed1.binance.org',
-    };
+    return FALLBACK_ENDPOINTS;
   }
 }
 

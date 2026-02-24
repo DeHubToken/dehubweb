@@ -55,16 +55,30 @@ export const CHAIN_CONFIGS: Record<ChainId, ChainConfig> = {
 
 // Alchemy RPC initialization
 let rpcInitialized = false;
+const RPC_SESSION_KEY = 'dehub_rpc_endpoints';
 
 /**
  * Fetch Alchemy RPC endpoints and update CHAIN_CONFIGS.
- * Called once per session; falls back to public RPCs on failure.
+ * Caches in sessionStorage so only one edge function call per browser session.
  */
 export async function initChainRpcUrls(): Promise<void> {
   if (rpcInitialized) return;
   try {
-    const { data, error } = await supabase.functions.invoke('get-rpc-endpoints');
-    if (error) throw error;
+    // Check sessionStorage first
+    const cached = sessionStorage.getItem(RPC_SESSION_KEY);
+    let data: { base?: string; bsc?: string } | null = null;
+
+    if (cached) {
+      data = JSON.parse(cached);
+    } else {
+      const res = await supabase.functions.invoke('get-rpc-endpoints');
+      if (res.error) throw res.error;
+      data = res.data;
+      if (data) {
+        try { sessionStorage.setItem(RPC_SESSION_KEY, JSON.stringify(data)); } catch {}
+      }
+    }
+
     if (data?.base) {
       CHAIN_CONFIGS[BASE_CHAIN_ID].rpcUrl = data.base;
       console.log('[RPC] Using Alchemy for Base');
@@ -76,7 +90,6 @@ export async function initChainRpcUrls(): Promise<void> {
     rpcInitialized = true;
   } catch (err) {
     console.warn('[RPC] Failed to fetch Alchemy endpoints, using public fallback:', err);
-    // Keep existing public RPC URLs as fallback
   }
 }
 
