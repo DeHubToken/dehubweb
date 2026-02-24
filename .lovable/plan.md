@@ -1,54 +1,53 @@
 
 
-## Analysis: Badge Balance Edge Function is Redundant
+## How Period Data Works (and Why We Can Remove On-Chain Calls)
 
-You are correct. The DeHub API already returns `badgeBalance` on virtually every user/account object:
+The 1d/1w/1m/1y data is computed entirely from **database snapshots** — not from on-chain calls. Here's the flow:
 
-- **Feed posts**: `minterUser.badgeBalance` is included in every post response
-- **Suggested accounts**: `badgeBalance` field on each account
-- **Live streams**: `account.badgeBalance` on each stream
-- **Leaderboard**: Already cached with `badgeBalance` embedded
-- **Profile lookups**: The profile API returns `badgeBalance`
+```text
+┌─────────────────────────────────────────────────┐
+│  FULL REFRESH (3 AM UTC daily)                  │
+│                                                 │
+│  1. Fetch leaderboard from DeHub API            │
+│  2. For EACH wallet (batches of 5):             │
+│     → balanceOf on Base  ← REDUNDANT RPC CALL   │
+│     → balanceOf on BNB   ← REDUNDANT RPC CALL   │
+│     → userInfos (staking)← REDUNDANT RPC CALL   │
+│  3. Save today's snapshot to leaderboard_snapshots│
+│  4. Compute deltas: today − snapshot_from_N_days │
+│  5. Cache results in leaderboard_cache          │
+└─────────────────────────────────────────────────┘
 
-### Where the Edge Function is Still Being Called (Unnecessarily)
+┌─────────────────────────────────────────────────┐
+│  LIGHT REFRESH (every 6 hours)                  │
+│                                                 │
+│  Pure DB: load "all" cache + compare snapshots  │
+│  No RPC calls at all ← This one is fine         │
+└─────────────────────────────────────────────────┘
+```
 
-| Consumer | What it does | Can use API data instead? |
-|---|---|---|
-| `BadgeBalanceContext` (batch) | Fires `get-badge-balance` edge function for livechat messages, DM list, sidebar chat, live post chat | Yes -- these contexts have the sender's address, and the API already provided `badgeBalance` when the data was fetched |
-| `useBadgeBalance` (individual) | Used on profile page | Yes -- profile API returns `badgeBalance` |
-| `useVerifyUnlock` | Real-time on-chain verification for gated content | **No -- this one is legitimate**. Gated content needs a fresh on-chain check, not a cached API value |
+The period deltas are just: **current value − snapshot value from N days ago**. The snapshots are already in the database. The on-chain RPC calls in step 2 are redundant because the DeHub API already returns `total` (which includes holdings + staking). The function even has a fallback: `const effectiveBalance = onChainBalance > 0 ? onChainBalance : apiTotal;`
 
-### Plan
+## Plan: Remove On-Chain RPC Calls, Keep Snapshots
 
-**Phase 1: Stop calling the edge function for display badges**
+**What changes in `refresh-leaderboard-cache/index.ts`:**
 
-1. **Feed posts / VideoCard / PostCard** -- Already using API-provided `creatorBadgeBalance`. No change needed.
+1. **Remove all RPC/Alchemy calls** — `getOnChainBalance`, `rpcCall`, `bnbRpcCall`, `getCurrentBlockNumber`, `queryTipEvents`, `getLogs`, etc.
+2. **Use the API-provided `total` directly** as the balance (it already includes Base + BNB + staking)
+3. **Keep the snapshot system intact** — still upsert today's values into `leaderboard_snapshots` using API data
+4. **Keep `computeSnapshotDelta`** — unchanged, it's pure DB work
+5. **Keep extra wallets** — but instead of on-chain lookup, fetch their profile from the DeHub API (`/api/user?account=ADDRESS`) to get their `total`
+6. **For tip snapshots** — use the `sentTips`/`receivedTips` values from the API response instead of scanning Transfer event logs
 
-2. **Leaderboard / Sidebar Leaderboard** -- Already using cached `entry.badgeBalance`. No change needed.
+**What stays the same:**
+- Snapshot-based delta computation (1d/1w/1m/1y)
+- Light refresh mode (already RPC-free)
+- All sort modes (holdings, followers, likes, subscribers, sentTips, receivedTips)
+- Cache structure and periods
 
-3. **Livechat (`ChatMessage.tsx`, `LivePostChat.tsx`)** -- Instead of `useBatchedBadgeBalance(address)` calling the edge function, pass `badgeBalance` from the message/user data that the API already provided.
-
-4. **DM list (`MessagesPage.tsx`)** -- The DM conversation list comes from the API with user profile data. Thread the `badgeBalance` through instead of calling the edge function.
-
-5. **Sidebar chat (`SidebarChat.tsx`)** -- Same approach: use the balance already available from the conversation/user data.
-
-6. **Profile page (`ProfilePage.tsx`)** -- The profile API response includes `badgeBalance`. Pass it to the badge component directly instead of wrapping in `BadgeBalanceProvider`.
-
-**Phase 2: Remove dead code**
-
-7. Remove the `BadgeBalanceProvider` and `BadgeBalanceContext.tsx` entirely (no longer needed).
-
-8. Remove `useBadgeBalance` hook from `use-badge-balance.ts` (the batch variant too).
-
-9. Keep `useVerifyUnlock` -- it is the only legitimate use case (real-time on-chain balance check for content gating).
-
-**Phase 3: Keep edge function for gating only**
-
-10. The `get-badge-balance` edge function stays deployed but is only called by `useVerifyUnlock` when a user tries to unlock gated content -- a rare, intentional action, not a per-scroll event.
-
-### Impact
-
-- Eliminates hundreds of edge function invocations per session (every scroll, every chat message, every DM list render)
-- Keeps the one legitimate use case: on-chain verification for content unlocking
-- No visual changes -- badges still appear everywhere, just sourced from data the API already gave us
+**Impact:**
+- Full refresh drops from ~3-5 minutes of execution to ~10-15 seconds (just API calls + DB writes)
+- Eliminates all Alchemy RPC costs from the cron job
+- Eliminates the massive cloud credit burn from long-running edge function execution
+- Period data continues working exactly as before
 
