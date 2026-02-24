@@ -76,8 +76,6 @@ verify_jwt = false
 [functions.ssr-seo]
 verify_jwt = false
 
-[functions.get-badge-balance]
-verify_jwt = false
 
 [functions.backfill-leaderboard-snapshots]
 verify_jwt = false

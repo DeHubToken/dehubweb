@@ -1,6 +1,6 @@
 /**
- * Hook for real-time DHB balance verification to unlock gated content.
- * Calls the get-badge-balance edge function and checks against required amount.
+ * Hook for DHB balance verification to unlock gated content.
+ * Uses the cached badgeBalance from the DeHub API profile instead of calling an edge function.
  */
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
@@ -8,53 +8,32 @@ import { toast } from 'sonner';
 interface VerifyUnlockResult {
   isVerifying: boolean;
   insufficientMessage: string | null;
-  verifyAndUnlock: (walletAddress: string, requiredAmount: number, currency: string) => Promise<boolean>;
+  verifyAndUnlock: (badgeBalance: number, requiredAmount: number, currency: string) => boolean;
   resetMessage: () => void;
 }
 
 export function useVerifyUnlock(): VerifyUnlockResult {
-  const [isVerifying, setIsVerifying] = useState(false);
+  const [isVerifying] = useState(false);
   const [insufficientMessage, setInsufficientMessage] = useState<string | null>(null);
 
   const resetMessage = useCallback(() => setInsufficientMessage(null), []);
 
-  const verifyAndUnlock = useCallback(async (
-    walletAddress: string,
+  const verifyAndUnlock = useCallback((
+    badgeBalance: number,
     requiredAmount: number,
     currency: string,
-  ): Promise<boolean> => {
-    setIsVerifying(true);
+  ): boolean => {
     setInsufficientMessage(null);
 
-    try {
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
-      const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-      const res = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/get-badge-balance?address=${walletAddress}`,
-        { headers: { 'apikey': anonKey } }
+    if (badgeBalance >= requiredAmount) {
+      toast.success('Content unlocked! 🎉');
+      return true;
+    } else {
+      const shortfall = requiredAmount - badgeBalance;
+      setInsufficientMessage(
+        `Your balance: ${Math.floor(badgeBalance).toLocaleString()} ${currency}. Need ${Math.floor(shortfall).toLocaleString()} more.`
       );
-
-      if (!res.ok) throw new Error('Balance check failed');
-
-      const json = await res.json();
-      const balance = json.badgeBalance ?? 0;
-
-      if (balance >= requiredAmount) {
-        toast.success('Content unlocked! 🎉');
-        return true;
-      } else {
-        const shortfall = requiredAmount - balance;
-        setInsufficientMessage(
-          `Your balance: ${Math.floor(balance).toLocaleString()} ${currency}. Need ${Math.floor(shortfall).toLocaleString()} more.`
-        );
-        return false;
-      }
-    } catch (err) {
-      console.error('[verify-unlock] Error:', err);
-      toast.error('Failed to verify balance. Try again.');
       return false;
-    } finally {
-      setIsVerifying(false);
     }
   }, []);
 
