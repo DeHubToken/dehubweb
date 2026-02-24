@@ -1,49 +1,54 @@
 
 
-## Corrected Analysis: "No video file or thumbnail" Error
+## Analysis: Badge Balance Edge Function is Redundant
 
-### What's Actually Happening
+You are correct. The DeHub API already returns `badgeBalance` on virtually every user/account object:
 
-The error **"no video file or thumbnail"** is a server-side validation error from the DeHub `/api/user_mint` endpoint. It means the API received the request but the video file and/or thumbnail were missing or unreadable in the `FormData`.
+- **Feed posts**: `minterUser.badgeBalance` is included in every post response
+- **Suggested accounts**: `badgeBalance` field on each account
+- **Live streams**: `account.badgeBalance` on each stream
+- **Leaderboard**: Already cached with `badgeBalance` embedded
+- **Profile lookups**: The profile API returns `badgeBalance`
 
-### Root Cause: Race Condition in Thumbnail Generation
+### Where the Edge Function is Still Being Called (Unnecessarily)
 
-The video processing flow has a **race condition**:
+| Consumer | What it does | Can use API data instead? |
+|---|---|---|
+| `BadgeBalanceContext` (batch) | Fires `get-badge-balance` edge function for livechat messages, DM list, sidebar chat, live post chat | Yes -- these contexts have the sender's address, and the API already provided `badgeBalance` when the data was fetched |
+| `useBadgeBalance` (individual) | Used on profile page | Yes -- profile API returns `badgeBalance` |
+| `useVerifyUnlock` | Real-time on-chain verification for gated content | **No -- this one is legitimate**. Gated content needs a fresh on-chain check, not a cached API value |
 
-1. **Line 218-222**: When a video is selected, the media entry is created immediately with just `{ file, preview, type: 'video' }` — **no thumbnail yet**
-2. **Lines 224-282**: Thumbnail generation runs **in the background** (async) — it creates a `<video>` element, seeks to a frame, draws to canvas, and converts to blob
-3. **Lines 774-782**: When the user hits Post, the code checks `media[0].thumbnailBlob` or `media[0].thumbnail`
+### Plan
 
-**If the user posts before thumbnail generation completes**, `thumbnailBlob` is `undefined` and `thumbnail` URL doesn't exist. The `mintPost()` call then sends FormData with the video file but **no thumbnail blob**.
+**Phase 1: Stop calling the edge function for display badges**
 
-Additionally, thumbnail generation can **silently fail** (line 269-271 catches and only warns) — for example if `canvas.width` or `canvas.height` is 0 (video dimensions not yet available), or `canvas.toBlob` returns null. In that case, `thumbnailBlob` is never set, and the post will always fail.
+1. **Feed posts / VideoCard / PostCard** -- Already using API-provided `creatorBadgeBalance`. No change needed.
 
-The DeHub API likely **requires** a thumbnail for video posts, hence the error.
+2. **Leaderboard / Sidebar Leaderboard** -- Already using cached `entry.badgeBalance`. No change needed.
 
-### Why It's Intermittent
+3. **Livechat (`ChatMessage.tsx`, `LivePostChat.tsx`)** -- Instead of `useBatchedBadgeBalance(address)` calling the edge function, pass `badgeBalance` from the message/user data that the API already provided.
 
-- Fast devices: thumbnail generates before user finishes typing → works
-- Slow devices / large videos: thumbnail generation lags → user posts before it's ready → fails
-- Some video codecs: canvas draw fails silently → thumbnail never generated → always fails
+4. **DM list (`MessagesPage.tsx`)** -- The DM conversation list comes from the API with user profile data. Thread the `badgeBalance` through instead of calling the edge function.
 
-### Proposed Fix
+5. **Sidebar chat (`SidebarChat.tsx`)** -- Same approach: use the balance already available from the conversation/user data.
 
-**File: `src/features/post/hooks/usePostForm.ts`**
+6. **Profile page (`ProfilePage.tsx`)** -- The profile API response includes `badgeBalance`. Pass it to the badge component directly instead of wrapping in `BadgeBalanceProvider`.
 
-1. **Add a `thumbnailReady` state** (or a flag on the media item) that tracks whether thumbnail generation has completed
-2. **Block posting until thumbnail is ready** for video posts — if `hasVideo && !media[0].thumbnailBlob`, either:
-   - Wait for thumbnail generation to complete (show "Generating thumbnail..." toast)
-   - Or generate one on-the-fly before calling `mintPost()`
-3. **Add fallback thumbnail generation** in the `handlePost` function: if `thumbnailBlob` is still missing when posting, attempt to generate one synchronously before submitting
-4. **Surface the thumbnail failure**: Instead of silently warning at line 270, set an error state so the user knows their video may have an issue
+**Phase 2: Remove dead code**
 
-### Changes
+7. Remove the `BadgeBalanceProvider` and `BadgeBalanceContext.tsx` entirely (no longer needed).
 
-**`src/features/post/hooks/usePostForm.ts`**:
-- Add `isGeneratingThumbnail` state, set `true` when video processing starts, `false` when complete (success or failure)
-- In `handlePost` (~line 774): if `hasVideo` and no `thumbnailBlob`, attempt a last-resort thumbnail generation before calling `mintPost`. If that also fails, show a clear error: "Could not generate thumbnail. Please try a different video or add a custom thumbnail."
-- Update `canPost` computed value to be `false` while `isGeneratingThumbnail` is true, preventing premature submission
-- In the thumbnail generation catch block (line 269), log the error more visibly and ensure the user can still manually add a thumbnail via the existing UI
+8. Remove `useBadgeBalance` hook from `use-badge-balance.ts` (the batch variant too).
 
-This is a ~20 line change concentrated in the video processing and post submission sections of `usePostForm.ts`.
+9. Keep `useVerifyUnlock` -- it is the only legitimate use case (real-time on-chain balance check for content gating).
+
+**Phase 3: Keep edge function for gating only**
+
+10. The `get-badge-balance` edge function stays deployed but is only called by `useVerifyUnlock` when a user tries to unlock gated content -- a rare, intentional action, not a per-scroll event.
+
+### Impact
+
+- Eliminates hundreds of edge function invocations per session (every scroll, every chat message, every DM list render)
+- Keeps the one legitimate use case: on-chain verification for content unlocking
+- No visual changes -- badges still appear everywhere, just sourced from data the API already gave us
 
