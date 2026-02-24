@@ -8,6 +8,7 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import { Interface } from 'ethers';
+import { supabase } from '@/integrations/supabase/client';
 import {
   writeContractAA,
   getWalletAddress,
@@ -89,6 +90,19 @@ export function useTipPayment({
         );
 
         await result.wait(1);
+
+        // Record tip in database for leaderboard tracking
+        try {
+          await supabase.from('tip_records').insert({
+            sender_address: signerAddress.toLowerCase(),
+            receiver_address: creatorAddress.toLowerCase(),
+            amount,
+            chain_id: chainId,
+            tx_hash: result.hash,
+          });
+        } catch (dbErr) {
+          console.warn('[Tip] Failed to record tip in DB:', dbErr);
+        }
 
         toast.success(`Tip of ${amount} DHB sent! 🎉`, { id: 'tip-payment' });
         onSuccess?.();

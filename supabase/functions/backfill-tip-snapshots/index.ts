@@ -294,6 +294,23 @@ Deno.serve(async (req) => {
       mergeMaps(totalEarned, baseResult.earned);
       mergeMaps(totalEarned, bnbResult.earned);
 
+      // Merge direct tips from tip_records table
+      const { data: dbTips } = await supabase
+        .from("tip_records")
+        .select("sender_address, receiver_address, amount")
+        .gte("created_at", new Date(targetDate).toISOString());
+
+      if (dbTips && dbTips.length > 0) {
+        for (const tip of dbTips) {
+          const sender = tip.sender_address.toLowerCase();
+          const receiver = tip.receiver_address.toLowerCase();
+          const amt = Number(tip.amount);
+          totalSpent.set(sender, (totalSpent.get(sender) || 0) + amt);
+          totalEarned.set(receiver, (totalEarned.get(receiver) || 0) + amt);
+        }
+        console.log(`  Merged ${dbTips.length} direct tips from database`);
+      }
+
       const allWallets = new Set([...totalSpent.keys(), ...totalEarned.keys()]);
       console.log(`${period.name}: ${allWallets.size} unique wallets with tip/bounty activity`);
 
