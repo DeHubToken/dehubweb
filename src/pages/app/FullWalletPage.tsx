@@ -276,7 +276,7 @@ export default function FullWalletPage() {
       {/* Import Token button */}
       <button
         onClick={() => setImportDialogOpen(true)}
-        className="w-full py-2 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-sm text-zinc-400 hover:text-zinc-200 transition-colors flex items-center justify-center"
+        className="w-full mt-3 py-2 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-sm text-zinc-400 hover:text-zinc-200 transition-colors flex items-center justify-center"
       >
         <Plus className="w-4 h-4" />
       </button>
