@@ -6,6 +6,7 @@
 
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRef, useEffect } from 'react';
 import {
   getNotifications,
   getUnreadNotificationCount,
@@ -15,6 +16,7 @@ import {
   type NotificationCategory,
   type UnreadNotificationCount,
 } from '@/lib/api/dehub';
+import { useBrowserNotifications, getLastSeenTimestamp, setLastSeenTimestamp } from '@/hooks/use-browser-notifications';
 
 // Query keys for cache management
 export const notificationKeys = {
@@ -29,6 +31,8 @@ export const notificationKeys = {
  */
 export function useNotifications(category?: NotificationCategory) {
   const { isAuthenticated } = useAuth();
+  const { showNotification } = useBrowserNotifications();
+  const prevIdsRef = useRef<Set<string>>(new Set());
 
   const query = useInfiniteQuery({
     queryKey: notificationKeys.list(category),
@@ -37,20 +41,44 @@ export function useNotifications(category?: NotificationCategory) {
     },
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.hasMore) {
-        return allPages.length + 1; // 1-indexed pages
+        return allPages.length + 1;
       }
       return undefined;
     },
     initialPageParam: 1,
     enabled: isAuthenticated,
-    staleTime: 2 * 60 * 1000, // 2 minutes
-    refetchInterval: 5 * 60 * 1000, // Poll every 5 minutes
+    staleTime: 2 * 60 * 1000,
+    refetchInterval: 5 * 60 * 1000,
   });
 
   // Flatten pages into single array, filtering out any undefined items
   const notifications = query.data?.pages
     .flatMap((page) => page?.items || [])
     .filter((item): item is DeHubNotification => Boolean(item && item.id)) || [];
+
+  // Trigger browser notifications for newly arrived unread items
+  useEffect(() => {
+    if (!notifications.length) return;
+    const lastSeen = getLastSeenTimestamp();
+    const isFirstLoad = prevIdsRef.current.size === 0;
+
+    for (const n of notifications) {
+      if (prevIdsRef.current.has(n.id)) continue;
+      // On first load, just populate the set without showing notifications
+      if (!isFirstLoad && !n.read) {
+        const createdAt = new Date(n.createdAt || 0).getTime();
+        if (createdAt > lastSeen) {
+          const title = n.actorUsername ? `${n.actorUsername}` : 'DeHub';
+          showNotification(title, n.content || '', n.actorAvatar, n.id);
+        }
+      }
+    }
+
+    // Update refs
+    prevIdsRef.current = new Set(notifications.map(n => n.id));
+    // Update last seen to now
+    setLastSeenTimestamp(Date.now());
+  }, [notifications, showNotification]);
 
   return {
     notifications,
