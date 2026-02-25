@@ -1,31 +1,39 @@
 
 
-## Plan: Keep Left Sidebar Expanded Longer — Feed Shrinks First
+## Current State
 
-### Problem
-Currently, the left sidebar collapses to icon-only at the `xl` breakpoint (1280px), meaning as soon as the viewport drops below 1280px the sidebar loses its labels while the feed stays large. The user wants the opposite priority: the feed should compress first, and the sidebar should remain fully expanded down to the `lg` breakpoint (1024px).
+There's already a **Push Notifications** toggle in Settings (line 639-645) using the `Bell` icon. It's currently marked `comingSoon` with `defaultChecked` set to true.
 
-### Approach
-Change all `xl:` responsive classes that control the sidebar's expanded state to `lg:` instead. Since the sidebar and feed are in a flex layout, the feed (`flex-1`) will naturally shrink as the sidebar takes more space. No changes to collapsed/fullscreen mode.
+## Plan
 
-### Files to Change
+Make this existing toggle functional instead of "coming soon":
 
-**1. `src/components/app/navigation/DesktopSidebar.tsx`**
-- Line 95: Change `xl:w-[231px] xl:px-[18px] xl:items-stretch xl:pt-0 xl:-mt-[3px]` → use `lg:` prefix instead of `xl:`
-- All other `xl:` prefixes controlling expanded-state visibility (logo, menu toggle, labels, coin balance, buttons) — approximately 15 occurrences — change from `xl:` to `lg:`
-- This keeps the sidebar at 231px from 1024px upward in normal mode
+### 1. Update `src/pages/app/SettingsPage.tsx`
+- Remove `comingSoon` prop from the Push Notifications toggle
+- Set `defaultChecked={false}` (off by default)
+- Add an `onCheckedChange` handler that:
+  - When turned ON: calls `Notification.requestPermission()`
+    - If granted → save preference to localStorage, show success toast
+    - If denied → revert toggle to off, show toast explaining how to enable in browser settings
+    - If unsupported → revert toggle to off, show "not supported" toast
+  - When turned OFF: clear localStorage preference, no more browser notifications
 
-**2. `src/components/app/navigation/SidebarNavItem.tsx`**
-- Lines 72, 74, 104, 147: Change `xl:` responsive classes to `lg:` so nav item labels and layout respond at the same breakpoint as the sidebar container
+### 2. Create `src/hooks/use-browser-notifications.ts`
+- Custom hook that reads/writes `dehub_browser_notifications` from localStorage
+- Exposes `isEnabled`, `setEnabled(bool)`, and `showNotification(title, body, icon)`
+- `showNotification` only fires when `document.hidden` is true (tab not focused) and permission is granted
 
-**3. `src/components/app/RightSidebar.tsx`**
-- Optionally reduce right sidebar width slightly at the old `lg` range (e.g., `lg:w-72 xl:w-80`) to give more room to the feed at narrower widths
+### 3. Update `src/hooks/use-notifications.ts`
+- Import `useBrowserNotifications` hook
+- When polling detects new unread notifications (compare against a `lastSeenTimestamp` in localStorage), call `showNotification` for each new one
+- Track `lastSeenTimestamp` to avoid duplicate browser notifications
 
-### What Won't Change
-- Collapsed/fullscreen mode (`isCollapsed` state) — untouched, all those code paths use the `isCollapsed` conditional, not the breakpoint
-- Mobile layout — unchanged (below `lg`)
-- The sidebar still collapses to 60px icons when user manually clicks the collapse toggle
+### 4. Update translations (all 38 locale files)
+- Add keys: `browserNotificationsEnabled`, `browserNotificationsDenied`, `browserNotificationsUnsupported`
+- Reuse existing `pushNotifications` / `pushNotificationsDesc` keys (no change needed there)
 
-### Result
-At 1024–1280px the user will see: full expanded sidebar (231px) + right sidebar (320px) + a narrower feed in the middle — instead of the current icon-only sidebar with an oversized feed.
+### Safety
+- Permission requested only on explicit user toggle action (not on page load)
+- Follows Google's recommended pattern — no flagging risk
+- Respects browser-level denial gracefully
 
