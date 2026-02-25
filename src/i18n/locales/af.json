@@ -1,5 +1,5 @@
 {
-  "nav": { "home": "Tuis", "explore": "Verken", "notifications": "Kennisgewings", "messages": "Boodskappe", "assistant": "Assistent", "leaderboard": "Ranglyste", "bookmarks": "Boekmerke", "settings": "Instellings", "profile": "Profiel", "blog": "Blog", "commandCentre": "Beheersentrum", "wallet": "Beursie", "docs": "Dokumente", "roadmap": "Padkaart", "featureRequests": "Versoeke", "careers": "Loopbane", "create": "Skep", "login": "Meld aan", "connecting": "Verbind tans...", "signMessage": "Teken boodskap" },
+  "nav": { "home": "Tuis", "explore": "Verken", "notifications": "Kennisgewings", "messages": "Boodskappe", "assistant": "Assistent", "leaderboard": "Ranglyste", "bookmarks": "Boekmerke", "settings": "Instellings", "profile": "Profiel", "blog": "Blog", "command": "Bevel", "commandCentre": "Beheersentrum", "wallet": "Beursie", "docs": "Dokumente", "roadmap": "Padkaart", "featureRequests": "Versoeke", "careers": "Loopbane", "create": "Skep", "login": "Meld aan", "connecting": "Verbind tans...", "signMessage": "Teken boodskap" },
   "feed": { "home": "Tuis", "videos": "Video's", "images": "Beelde", "shorts": "Kortfilms", "music": "Musiek", "live": "Lewendig" },
   "explore": { "all": "Alles", "people": "Mense", "posts": "Plasings", "images": "Beelde", "videos": "Video's", "music": "Musiek", "live": "Lewendig" },
   "settings": {
