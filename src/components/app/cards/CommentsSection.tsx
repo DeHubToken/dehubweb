@@ -829,39 +829,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           </Tooltip>
         </div>
 
-        {/* Right side - Post action buttons (desktop/tablet only) */}
-        {!isMobile && (
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-               className="px-4 py-2 flex items-center justify-center transition-all rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06]"
-              aria-label="Like post"
-            >
-              <ThumbsUp className="w-5 h-5" />
-            </button>
-            <button
-              type="button"
-              className="px-4 py-2 flex items-center justify-center transition-all rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06]"
-              aria-label="Dislike post"
-            >
-              <ThumbsDown className="w-5 h-5" />
-            </button>
-            <button
-              type="button"
-              className="px-4 py-2 flex items-center justify-center transition-all rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06]"
-              aria-label="Bookmark post"
-            >
-              <Bookmark className="w-5 h-5" />
-            </button>
-            <button
-              type="button"
-              className="px-4 py-2 flex items-center justify-center transition-all rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06]"
-              aria-label="Share post"
-            >
-              <Share2 className="w-5 h-5" />
-            </button>
-          </div>
-        )}
+        {/* Duplicate post action buttons removed — already shown in ActionBar above */}
       </div>
 
       {/* Search Input - always rendered but hidden when not on search tab to maintain consistent height */}
