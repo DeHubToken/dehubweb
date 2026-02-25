@@ -1,56 +1,41 @@
 
+## Analysis: Why the Collapse/Expand Animation Feels Rigid
 
-## Issue: "Command" sidebar label not translating
+After inspecting the codebase and profiling the transition, the root cause is **multiple independent CSS transitions fighting each other at different timings**, plus **layout reflows from content changes** that happen mid-animation.
 
-The sidebar navigation item "Command" maps to translation key `nav.command` (defined in `SidebarNavItem.tsx` line 13). However, **this key is missing from all 37 non-English locale files**. Only `en.json` has it. The other locales have `nav.commandCentre` but not `nav.command`, so i18next falls back to the raw key string "nav.command" or the English fallback "Command" depending on config.
+### The specific problems
 
-## Root cause
+1. **`max-width` transition on the outer container** (AppLayout line 171-172): Animating `max-width` from `80rem` to `100%` causes the browser to recalculate layout for the entire page on every frame. With 17,000+ DOM nodes and a masonry grid that re-columns based on `isCollapsed`, this is extremely expensive.
 
-When the sidebar label was shortened from "Command Centre" to "Command", the new `nav.command` key was added to `en.json` but never propagated to the other locale files.
+2. **Feed grid instantly jumps from 1-column to 3-column masonry** (HomeFeed line 872-885): The `colCount` state changes synchronously with `isCollapsed`, so mid-animation the entire feed snaps from single-column to multi-column layout. This creates the visible "multi-step" jank.
 
-## Plan
+3. **GlobalFeedNav animating `max-height` + `opacity` + `transform`** simultaneously while the container is also changing width creates compounding layout shifts.
 
-Add the `"command"` key to the `nav` object in all 37 non-English locale files, with appropriate translations for each language. Here are the translations that will be added:
+4. **Right sidebar padding transition** adds yet another element reflowing during the same 500ms window.
 
-| File | Value |
-|------|-------|
-| es.json | "Comando" |
-| fr.json | "Commande" |
-| de.json | "Kommando" |
-| it.json | "Comando" |
-| pt.json | "Comando" |
-| ru.json | "Команда" |
-| zh.json | "指挥" |
-| ja.json | "コマンド" |
-| ko.json | "명령" |
-| ar.json | "القيادة" |
-| hi.json | "कमांड" |
-| th.json | "คำสั่ง" |
-| vi.json | "Lệnh" |
-| nl.json | "Commando" |
-| pl.json | "Komenda" |
-| tr.json | "Komut" |
-| uk.json | "Команда" |
-| ro.json | "Comandă" |
-| id.json | "Perintah" |
-| ms.json | "Arahan" |
-| bn.json | "কমান্ড" |
-| tl.json | "Utos" |
-| pcm.json | "Command" |
-| ha.json | "Umarni" |
-| yo.json | "Aṣẹ" |
-| ig.json | "Iwu" |
-| arz.json | "القيادة" |
-| ary.json | "لقيادة" |
-| fa.json | "فرمان" |
-| af.json | "Bevel" |
-| qu.json | "Kamachiy" |
-| am.json | "ትዕዛዝ" |
-| sw.json | "Amri" |
-| zu.json | "Umyalo" |
-| el.json | "Εντολή" |
-| gsw.json | "Befehl" |
-| hr.json | "Naredba" |
+5. **`transition-[width,padding]` on the left sidebar** is correct but fights with the `max-width` transition on the parent container.
 
-Each file will have the `"command"` key inserted into its existing `nav` object alongside the existing `commandCentre` key. No other changes needed.
+### The fix: Defer content layout changes until after the animation
 
+The core principle is: **animate the shell (widths, padding) smoothly, and only swap feed columns after the animation settles.**
+
+#### Changes
+
+**1. `src/components/app/AppLayout.tsx`** (2 changes)
+- Replace `transition-[max-width]` with a simpler approach: use `will-change: max-width` and keep the 500ms ease-in-out but add `transform: translateZ(0)` to promote compositing
+- For the `GlobalFeedNav` wrapper, simplify to just `opacity` and `transform` transitions (remove `max-height` which triggers layout). Use a fixed height with `overflow: hidden` and toggle between `h-12` and `h-0`
+
+**2. `src/components/app/feeds/HomeFeed.tsx`** (1 change, lines 872-885)
+- Delay the `colCount` update by 500ms after `isCollapsed` changes, so the masonry grid doesn't re-column during the width animation. Use `setTimeout` gated by a `useRef` to debounce.
+
+**3. `src/components/app/navigation/DesktopSidebar.tsx`** (1 change)
+- Add `will-change: width` to hint the browser to optimize the sidebar width transition
+
+**4. `src/components/app/RightSidebar.tsx`** (1 change)
+- Add `will-change: padding` to the aside element
+
+### Technical detail
+
+The key insight is that `max-width: 80rem -> 100%` on a flex container with 17K DOM nodes forces a full layout recalculation on every animation frame. By deferring the masonry column change until the width animation finishes, we eliminate the worst source of jank: the entire feed restructuring mid-transition. The shell (sidebar widths, container max-width, nav bar) can animate smoothly because those are relatively cheap layout changes when the content inside doesn't simultaneously restructure.
+
+The `will-change` hints tell the browser to prepare compositor layers ahead of time, reducing paint thrashing during the transition.
