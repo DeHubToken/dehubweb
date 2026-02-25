@@ -1,43 +1,84 @@
 
 
-## Problem
+## Investigation: Home Feed Failing to Load
 
-The spring animation on the liquid glass tab indicators (`layoutId` motion divs) bounces/overshoots during transitions. Parent containers clip this bounce because:
+### Root Cause Identified
 
-1. **`overflow-x-auto` implicitly sets `overflow-y: auto`** — In CSS, setting one overflow axis to `scroll`/`auto` forces the other to `auto` (not `visible`). So the profile tabs' inner `overflow-x-auto` scrollbar container clips the vertical bounce.
-2. **`rounded-2xl` on bento containers** — Combined with any overflow setting, this clips content at the border radius corners.
+The home feed fails to load on non-fresh sessions because of **stale filter state persisted in sessionStorage** combined with **aggressive TanStack Query caching that prevents refetching**.
 
-## Affected Locations
+Here is what happens step by step:
 
-| Location | Container Issue |
-|---|---|
-| **ProfilePage.tsx** (line 308-309) | Outer bento `rounded-2xl`, inner flex `overflow-x-auto` |
-| **ExplorePage.tsx** (line 812) | Outer bento `rounded-2xl p-2` |
-| **CommentsSection.tsx** (line 793) | `flex gap-1 relative` (less affected) |
-| **AnimatedFilterPill** usages in VideosFeed, ImagesFeed | Already have `overflow-y-visible` (partially fixed) |
+1. User browses the home feed and selects filters (e.g., category "Advertising", W2E toggle on)
+2. These filters are saved to `sessionStorage` via `usePersistedFeedFilter`
+3. User navigates away or the app hot-reloads
+4. On return, the persisted filters are restored from `sessionStorage`
+5. The feed query fires with `category=Advertising&hasBounty=true` -- returning **0 results**
+6. TanStack Query caches this empty result with `staleTime: 5 min` and `gcTime: 60 min`
+7. `refetchOnMount: false` means it never re-fetches even when the component re-mounts
+8. `placeholderData: (previousData) => previousData` keeps showing old cached empty data
+9. The auto-retry hook (`useAutoRetryFeed`) retries 3 times but keeps hitting the same empty-result query with the same restrictive filters
+10. Result: permanently empty feed until cache is cleared
 
-## Fix
+On a fresh browser, `sessionStorage` is empty, so all filters default to "all"/"latest" with no content filters -- and data loads fine.
 
-For each tab row container that holds a layoutId glass indicator:
+### The Fix (3 changes)
 
-1. **Add explicit `overflow-y: visible`** on the scrollable flex row so the vertical bounce of the spring animation is not clipped, while horizontal scroll still works where needed.
-2. **Add `overflow: visible`** on the outer bento wrapper so `rounded-2xl` does not create a clipping context that cuts off the animated indicator.
-3. **Add small vertical padding** (`py-1`) on the inner flex to give the spring overshoot room to breathe without visually breaking the layout.
+#### 1. Reset persisted filters on app cold start (localStorage flag)
+Add a "session boundary" check: on app mount, if a fresh page load is detected (not a React navigation), clear the persisted feed filters. This ensures users always start with clean defaults when they open/refresh the app, while filters still persist during in-session navigation.
 
-### Specific changes:
+**File:** `src/components/app/feeds/HomeFeed.tsx` (and/or a shared init location)
 
-**ProfilePage.tsx**
-- Line 308: outer bento div — add `overflow-visible`
-- Line 309: inner flex div — change `overflow-x-auto` to `overflow-x-auto overflow-y-visible`, add `py-1`
+Add at the top of the HomeFeed component (or in the app shell):
+```typescript
+useEffect(() => {
+  const isNewPageLoad = !sessionStorage.getItem('feed-session-active');
+  if (isNewPageLoad) {
+    clearPersistedFeedFilters();
+    sessionStorage.setItem('feed-session-active', 'true');
+  }
+}, []);
+```
 
-**ExplorePage.tsx**
-- Line 812: outer bento div — add `overflow-visible`
-- Line 813: inner flex div — add `overflow-y-visible py-1`
+This way filters persist during tab navigation within the app but reset on actual page reload/new tab.
 
-**CommentsSection.tsx**
-- Line 793: flex container — add `overflow-y-visible py-1`
+#### 2. Enable `refetchOnMount` in the unified feed hook
+Change `refetchOnMount: false` to `refetchOnMount: 'always'` (or just remove the line) so that when the HomeFeed component mounts, it always fires a fresh API call instead of relying on potentially stale cached empty results.
 
-**AnimatedFilterPill usages** (VideosFeed, ImagesFeed, etc.) already have `overflow-y-visible` and `py-1`, so those are fine.
+**File:** `src/hooks/use-unified-feed.ts` (line 442)
 
-This is a CSS-only fix — no logic or component API changes.
+```typescript
+// Before:
+refetchOnMount: false,
+
+// After:
+refetchOnMount: true,
+```
+
+#### 3. Lower `gcTime` to prevent stale empty caches persisting too long
+Reduce `gcTime` from 60 minutes to 10 minutes so empty/stale query caches are garbage collected faster.
+
+**File:** `src/hooks/use-unified-feed.ts` (line 440)
+
+```typescript
+// Before:
+gcTime: 1000 * 60 * 60,  // 60 min
+
+// After:
+gcTime: 1000 * 60 * 10,  // 10 min
+```
+
+### Summary
+
+| Problem | Fix |
+|---------|-----|
+| Persisted filters restore restrictive params that return 0 results | Clear persisted filters on fresh page load |
+| `refetchOnMount: false` prevents fresh data on revisit | Set `refetchOnMount: true` |
+| Empty cache lives for 60 min blocking recovery | Reduce `gcTime` to 10 min |
+
+### Technical Details
+
+- `usePersistedFeedFilter` stores to `sessionStorage` under key `feed-filter-states`
+- The network logs confirm the feed request used `category=Advertising&hasBounty=true` which are leftover filter values
+- The auto-retry mechanism retries with the same bad params so it never recovers
+- `placeholderData: (previousData) => previousData` makes TanStack Query show stale data instead of loading states, masking the problem
 
