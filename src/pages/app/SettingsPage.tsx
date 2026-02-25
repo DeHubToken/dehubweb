@@ -839,13 +839,6 @@ function PrivacySettings() {
             />
           </div>
           <SettingToggle
-            icon={Users}
-            title={t('settings.showActivityStatus')}
-            description={t('settings.showActivityStatusDesc')}
-            defaultChecked
-            comingSoon
-          />
-          <SettingToggle
             icon={Globe}
             title={t('settings.searchEngineIndexing')}
             description={t('settings.searchEngineIndexingDesc')}
