@@ -220,6 +220,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const redirectProcessedRef = useRef(false);
   // Ref to track if user explicitly clicked "Connect Wallet" (prevents auto-auth on page load)
   const wagmiAuthIntentRef = useRef(false);
+  // State mirror of wagmiAuthIntentRef — allows handleWagmiConnect effect to re-fire when
+  // user clicks "Connect Wallet" even if wagmi is already connected (ref changes don't trigger effects).
+  const [wagmiAuthIntentState, setWagmiAuthIntentState] = useState(false);
   // Ref to prevent concurrent auth flows (handleWagmiConnect fires multiple times due to deps)
   const wagmiAuthInProgressRef = useRef(false);
 
@@ -228,6 +231,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const setWagmiAuthIntent = useCallback((value: boolean) => {
     console.log('[Auth] Setting wagmiAuthIntent:', value);
     wagmiAuthIntentRef.current = value;
+    setWagmiAuthIntentState(value);
   }, []);
 
 
@@ -393,11 +397,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           localStorage.setItem('dehub_connection_source', 'wagmi');
           // Reset intent only after successful auth, or on error
           await completeDeHubAuthWagmi(wagmiAddress);
-          wagmiAuthIntentRef.current = false;
+          setWagmiAuthIntent(false);
           closeLoginModal();
         } catch (err) {
           console.error('[Auth] Wagmi auth failed:', err);
-          wagmiAuthIntentRef.current = false; // Reset on failure too
+          setWagmiAuthIntent(false); // Reset on failure too
           setConnectionSource(null);
           localStorage.removeItem('dehub_connection_source');
         } finally {
@@ -408,7 +412,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     handleWagmiConnect();
-  }, [isWagmiConnected, wagmiAddress, isAuthenticated, isConnecting, isLoading, walletAddress, connectionSource, isProcessingRedirect]);
+  }, [isWagmiConnected, wagmiAddress, isAuthenticated, isConnecting, isLoading, walletAddress, connectionSource, isProcessingRedirect, wagmiAuthIntentState]);
 
 
   // Handle Web3Auth redirect result (mobile email/SMS login)
@@ -495,13 +499,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         || connectors.find(c => c.id === 'app.phantom');
       if (!injectedConnector) return;
 
-      wagmiAuthIntentRef.current = true;
+      setWagmiAuthIntent(true);
       try {
         await connectAsync({ connector: injectedConnector });
         // wagmi useEffect will pick up the connection and start DeHub auth
       } catch (err) {
         console.warn('[Auth] In-app browser auto-connect failed:', err);
-        wagmiAuthIntentRef.current = false;
+        setWagmiAuthIntent(false);
       }
     };
 

@@ -7,6 +7,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { useAccount } from 'wagmi';
 import { useTranslation } from 'react-i18next';
 import { Mail, Wallet, Loader2, ChevronRight, Smartphone } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -56,6 +57,7 @@ type LoginStep = 'main' | 'email' | 'sms' | 'wallets';
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const { connectWithProvider, connectWithEmail, connectWithSMS, setWagmiAuthIntent, isConnecting } = useAuth();
+  const { isConnected: isWagmiAlreadyConnected, address: wagmiCurrentAddress } = useAccount();
   const { t } = useTranslation();
   const [step, setStep] = useState<LoginStep>('main');
   const [email, setEmail] = useState('');
@@ -138,6 +140,14 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const handleWalletConnect = (wallet: WalletId, connect: () => void) => {
     setActiveProvider(wallet);
     setWagmiAuthIntent(true);
+
+    // If wagmi is already connected (kept alive from a previous session with an expired token),
+    // don't call connect() again — it would be a no-op or create a conflicting pairing.
+    // The wagmiAuthIntentState change (from setWagmiAuthIntent above) causes handleWagmiConnect
+    // to re-fire and pick up the existing connection to complete DeHub auth.
+    if (isWagmiAlreadyConnected && wagmiCurrentAddress) {
+      return;
+    }
 
     // Mobile: Use deep link to open wallet app and load dapp in its in-app browser.
     // Only redirect when NOT already in a wallet's in-app browser (where ethereum is injected).

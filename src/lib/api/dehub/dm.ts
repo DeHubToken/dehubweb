@@ -328,27 +328,79 @@ export async function sendMessage(
 
     console.log('[DM API] Sending message via dm-send edge function', { type, hasMedia: !!mediaUrl });
 
-    const { data: edgeData, error: edgeError } = await supabase.functions.invoke('dm-send', {
-      body: edgeBody,
-      headers: {
-        'x-wallet-address': sender,
-        'x-dehub-token': token,
-      },
-    });
+    const EDGE_TIMEOUT_MS = 12_000;
 
-    if (edgeError) {
-      console.error('[DM API] dm-send edge function error:', edgeError);
-      throw new Error(edgeError.message || 'Failed to send message');
+    const tryEdgeFunction = async () => {
+      const invokePromise = supabase.functions.invoke('dm-send', {
+        body: edgeBody,
+        headers: {
+          'x-wallet-address': sender,
+          'x-dehub-token': token,
+        },
+      });
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Edge function timeout')), EDGE_TIMEOUT_MS)
+      );
+      const { data: edgeData, error: edgeError } = await Promise.race([
+        invokePromise,
+        timeoutPromise,
+      ]);
+      if (edgeError) throw edgeError;
+      if (!edgeData?.ok) throw new Error(edgeData?.error || 'Edge function rejected');
+      return edgeData?.result?.data || edgeData?.result || {};
+    };
+
+    const tryDeHubDirect = async () => {
+      const dmBody: Record<string, unknown> = {
+        senderAddress: sender,
+        content,
+        type,
+        transactionHash: `0x${Date.now().toString(16)}`,
+      };
+      if (mediaUrl) dmBody.mediaUrl = mediaUrl;
+      if (isNewConversation && recipientAddress) {
+        dmBody.receiverAddress = recipientAddress.toLowerCase();
+      } else {
+        dmBody.conversationId = conversationId;
+      }
+      if (type === 'tip' && tipAmount !== undefined) {
+        dmBody.tipAmount = tipAmount;
+        dmBody.tipCurrency = tipCurrency || 'DHB';
+      }
+      const response = await apiCall<any>('/api/dm/tnx', {
+        method: 'POST',
+        body: dmBody,
+        requiresAuth: true,
+      });
+      const d = response?.data || response?.result?.data || response?.result || response;
+      return d;
+    };
+
+    try {
+      const d = await tryEdgeFunction();
+      return toMessage(d);
+    } catch (edgeErr) {
+      const msg = edgeErr instanceof Error ? edgeErr.message : String(edgeErr);
+      const isRetryable =
+        msg.includes('timeout') ||
+        msg.includes('fetch') ||
+        msg.includes('network') ||
+        msg.includes('Failed to fetch') ||
+        msg.includes('Load failed') ||
+        msg.includes('ERR_CONNECTION') ||
+        (edgeErr instanceof TypeError && msg.toLowerCase().includes('fetch'));
+      if (isRetryable) {
+        console.warn('[DM API] Edge function unreachable, falling back to DeHub API:', edgeErr);
+        try {
+          const d = await tryDeHubDirect();
+          return toMessage(d);
+        } catch (dehubErr) {
+          console.error('[DM API] DeHub fallback also failed:', dehubErr);
+          throw new Error(msg || 'Failed to send message');
+        }
+      }
+      throw new Error(msg || 'Failed to send message');
     }
-
-    if (!edgeData?.ok) {
-      console.error('[DM API] dm-send rejected:', edgeData?.error);
-      throw new Error(edgeData?.error || 'Failed to send message');
-    }
-
-    console.log('[DM API] sendMessage response:', edgeData);
-    const d = edgeData?.result?.data || edgeData?.result || {};
-    return toMessage(d);
   } catch (error) {
     console.error('[DM API] sendMessage failed:', error);
     throw error;
