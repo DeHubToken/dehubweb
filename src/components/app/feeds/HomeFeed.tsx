@@ -866,15 +866,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const LIVE_INSERT_AFTER = RADIO_INSERT_AFTER + 4;
 
   // Detect number of masonry columns based on viewport + sidebar state
+  // Multi-column masonry only when sidebar is collapsed; standard mode is always 1 column
   const [colCount, setColCount] = useState(1);
   useEffect(() => {
     const update = () => {
-      const w = window.innerWidth;
-      if (isCollapsed) {
-        setColCount(w >= 1280 ? 3 : 2);
-      } else {
-        setColCount(w >= 1536 ? 3 : w >= 1024 ? 2 : 1);
+      if (!isCollapsed) {
+        setColCount(1);
+        return;
       }
+      const w = window.innerWidth;
+      setColCount(w >= 1280 ? 3 : 2);
     };
     update();
     window.addEventListener('resize', update);
