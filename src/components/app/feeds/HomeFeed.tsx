@@ -967,14 +967,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return columns;
   };
 
-  const renderMasonryGrid = (nodes: ReactNode[], feedItems?: FeedItemType[]) => {
+  const renderMasonryGrid = (nodes: ReactNode[], feedItems?: FeedItemType[], columnFill: 'balance' | 'auto' = 'balance') => {
     if (colCount <= 1) {
       return <div className="space-y-3">{nodes}</div>;
     }
     // Use CSS multi-column layout for true browser-balanced masonry
-    // The browser knows actual rendered heights, eliminating gaps from weight estimates
+    // columnFill: 'auto' fills columns sequentially (no bottom gaps before carousels)
+    // columnFill: 'balance' equalizes column heights (used for last segment)
     return (
-      <div style={{ columnCount: colCount, columnGap: '0.75rem' }}>
+      <div style={{ columnCount: colCount, columnGap: '0.75rem', columnFill }}>
         {nodes.map((node, i) => (
           <div key={i} className="mb-3" style={{ breakInside: 'avoid' }}>
             {node}
@@ -1001,8 +1002,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       const afterShorts = shouldSplitForShorts ? items.slice(adaptiveShortsIndex) : items;
       const afterShortsBase = shouldSplitForShorts ? adaptiveShortsIndex : 0;
 
-      // Generous spacing: ~16 items (3-col) or ~12 items (2-col) between each carousel
-      const MIN_ITEMS_BETWEEN = colCount === 3 ? 16 : 12;
+      // Spacing between carousels: enough items for good column balance
+      const MIN_ITEMS_BETWEEN = colCount === 3 ? 12 : 9;
       // First carousel after a decent chunk of content
       const firstOffset = Math.min(afterShorts.length, MIN_ITEMS_BETWEEN);
       const secondOffset = Math.min(afterShorts.length, firstOffset + MIN_ITEMS_BETWEEN);
@@ -1017,6 +1018,19 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         lastSplit = sp;
       }
       segments.push({ items: afterShorts.slice(lastSplit), startIndex: afterShortsBase + lastSplit });
+
+      // Orphan merging: if the last segment has fewer items than colCount, merge into previous
+      if (segments.length > 1) {
+        const lastSeg = segments[segments.length - 1];
+        if (lastSeg.items.length > 0 && lastSeg.items.length < colCount) {
+          const prev = segments[segments.length - 2];
+          segments[segments.length - 2] = {
+            items: [...prev.items, ...lastSeg.items],
+            startIndex: prev.startIndex,
+          };
+          segments.pop();
+        }
+      }
 
       const fullWidthInserts: (ReactNode | null)[] = [
         <div key="leaderboard-carousel" className="my-3"><LeaderboardCarousel /></div>,
@@ -1052,19 +1066,25 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               <ShortsReel shorts={shorts} />
             </div>
           )}
-          {segments.map((seg, segIdx) => (
-            <div key={`multi-seg-${segIdx}`}>
-              {seg.items.length > 0 && (
-                <div className="mt-3">
-                  {renderMasonryGrid(
-                    seg.items.map((item, i) => renderFeedItem(item, seg.startIndex + i)),
-                    seg.items
-                  )}
-                </div>
-              )}
-              {segIdx < fullWidthInserts.length && fullWidthInserts[segIdx]}
-            </div>
-          ))}
+          {segments.map((seg, segIdx) => {
+            const isLastSegment = segIdx === segments.length - 1;
+            // Use 'auto' for segments before carousels (no bottom gaps), 'balance' for the last segment
+            const fill = isLastSegment ? 'balance' : 'auto';
+            return (
+              <div key={`multi-seg-${segIdx}`}>
+                {seg.items.length > 0 && (
+                  <div className="mt-3">
+                    {renderMasonryGrid(
+                      seg.items.map((item, i) => renderFeedItem(item, seg.startIndex + i)),
+                      seg.items,
+                      fill
+                    )}
+                  </div>
+                )}
+                {segIdx < fullWidthInserts.length && fullWidthInserts[segIdx]}
+              </div>
+            );
+          })}
         </>
       );
     }
