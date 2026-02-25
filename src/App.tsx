@@ -131,7 +131,6 @@ function AppContent() {
             <Route path="/:username" element={<ProfilePage />} />
 
 
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
