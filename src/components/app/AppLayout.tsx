@@ -13,6 +13,7 @@ import { RadioMiniPlayer } from '@/components/app/radio';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { GlobalFeedNav } from './GlobalFeedNav';
+import { cn } from '@/lib/utils';
 import SinglePostPage from '@/pages/app/SinglePostPage';
 
 interface AppLayoutContentProps {
@@ -166,16 +167,22 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-clip" style={{ touchAction: 'manipulation', overscrollBehavior: 'none' }}>
-      <div className={`flex w-full relative min-h-screen transition-all duration-500 ease-in-out ${isCollapsed ? 'mx-0' : 'max-w-7xl mx-auto'}`}>
+      <div
+        className="flex w-full relative min-h-screen mx-auto transition-[max-width] duration-500 ease-in-out motion-reduce:transition-none"
+        style={{ maxWidth: isCollapsed ? '100%' : '80rem' }}
+      >
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
         <main className="flex-1 min-h-screen pt-11 pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black">
-          {/* Global feed nav — shown on all pages in collapsed desktop mode */}
-          {isCollapsed && (
-            <div className="hidden lg:block">
-              <GlobalFeedNav />
-            </div>
-          )}
+          {/* Global feed nav — keep mounted and animate in/out to avoid rigid multi-step jumps */}
+          <div
+            className={cn(
+              'hidden lg:block overflow-hidden transition-[max-height,opacity,transform] duration-500 ease-in-out motion-reduce:transition-none',
+              isCollapsed ? 'max-h-24 opacity-100 translate-y-0' : 'max-h-0 opacity-0 -translate-y-1 pointer-events-none'
+            )}
+          >
+            <GlobalFeedNav />
+          </div>
           {/* Persistent page cache — all visited pages stay mounted */}
           <PersistentPageCache />
           
