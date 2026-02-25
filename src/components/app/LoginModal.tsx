@@ -17,7 +17,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getWalletDeepLink, isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { WalletButton } from '@rainbow-me/rainbowkit';
 import dehubLogo from '@/assets/dehub-logo-white.png';
-import phantomLogo from '@/assets/phantom-logo.png';
 
 // Social provider icons
 // Social provider icons
@@ -217,7 +216,10 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   );
   
   const PhantomIcon = () => (
-    <img src={phantomLogo} width="20" height="20" alt="Phantom" className="rounded-full object-contain" />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="20" height="20">
+      <path fill="#AB9FF2" d="M109.8 15.6C102.3 8.3 92.7 4.5 82.2 4.5h-5.7l-4.2 1.1C64 12.8 45.6 28.6 34.6 47.9c-4.9 8.5-8.4 17.6-10.4 27.2l-.3 1.5c-2.7-.3-5.5-.6-8.3-.9-2.7-.3-5.5-.4-8.2-.4-7.4 0-14.1.9-20.2 2.7l-1.1.3-.3 1.1C-3.3 92.7-5.1 106.3-5 119.9c0 4.1 3.4 7.5 7.5 7.6h.2c1.9 0 3.8-.7 5.1-2l.7-.7c4.3-4.2 9.8-6.9 15.8-7.6 13.4-1.8 15.2 1.3 16.2 3 2.4 4 6.3 7.6 10.2 7.6h.2c1.9 0 3.7-.7 5.1-2l.7-.7c4.3-4.1 9.8-6.8 15.7-7.6 13.6-1.8 15.2 1.5 16.2 3.2 2.3 4 6.4 7.5 9.9 7.1h.2c1.9 0 3.7-.7 5.1-2l.7-.7c4.3-4.1 9.8-6.8 15.7-7.6 9.9-1.3 14.1-.9 16.5 1.9l1 1.1 1.4-.5c6.7-2.4 11.4-8.2 12.5-15.2 1.2-8.3-3.1-16.4-10.6-20.3l-1.3-.7v-1.5c0-23.9-7.5-46-21.7-64l-.9-1.1z"/>
+      <path fill="#FFF" d="M98.4 54.3c-4.4 0-8.1 3.7-8.1 8.1s3.7 8.1 8.1 8.1 8.1-3.7 8.1-8.1-3.7-8.1-8.1-8.1zM64.2 54.3c-4.4 0-8.1 3.7-8.1 8.1s3.7 8.1 8.1 8.1 8.1-3.7 8.1-8.1-3.7-8.1-8.1-8.1z"/>
+    </svg>
   );
 
   const TrustIcon = () => (
