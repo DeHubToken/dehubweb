@@ -127,6 +127,21 @@ export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory 
   });
 }
 
+export function useTotalFeatureCount() {
+  return useQuery({
+    queryKey: ['feature-requests-total-count'],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from('feature_requests')
+        .select('*', { count: 'exact', head: true });
+      if (error) throw error;
+      return count ?? 0;
+    },
+    staleTime: 60_000,
+    gcTime: 5 * 60_000,
+  });
+}
+
 export function useShippedFeatures() {
   return useQuery({
     queryKey: ['feature-requests-shipped'],
