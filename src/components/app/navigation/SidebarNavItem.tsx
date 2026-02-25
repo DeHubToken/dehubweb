@@ -22,6 +22,8 @@ interface SidebarNavItemProps {
   onClick?: (e: React.MouseEvent) => void;
   variant?: 'mobile' | 'desktop';
   collapsed?: boolean;
+  /** When true, labels are always hidden (overrides xl: breakpoint show) */
+  forceCollapsed?: boolean;
   avatarUrl?: string | null;
   avatarFallback?: string;
   notificationCount?: number;
@@ -38,6 +40,7 @@ export function SidebarNavItem({
   onClick,
   variant = 'desktop',
   collapsed = false,
+  forceCollapsed = false,
   avatarUrl,
   avatarFallback,
   notificationCount,
@@ -62,9 +65,13 @@ export function SidebarNavItem({
   const isDesktop = variant === 'desktop';
   const showAvatar = avatarUrl !== undefined;
   
+  const isForceCollapsed = forceCollapsed;
   const collapsedItemClass = collapsed
-    ? 'w-9 h-9 xl:w-full xl:h-auto justify-center xl:justify-start px-0 xl:px-2.5 xl:py-2.5 xl:gap-3'
+    ? isForceCollapsed
+      ? 'w-9 h-9 justify-center px-0'
+      : 'w-9 h-9 xl:w-full xl:h-auto justify-center xl:justify-start px-0 xl:px-2.5 xl:py-2.5 xl:gap-3'
     : 'gap-3 px-2.5 py-2.5';
+  const labelClass = isForceCollapsed ? "hidden" : collapsed ? "hidden xl:inline" : "";
 
   // Shared glass indicator element
   const glassIndicator = isActive && (
@@ -93,14 +100,14 @@ export function SidebarNavItem({
           "relative z-10 rounded-xl flex items-center justify-center flex-shrink-0",
           isDesktop ? "w-9 h-9" : "w-10 h-10",
           isDesktop
-            ? isActive ? "bg-transparent" : collapsed ? "bg-transparent xl:bg-zinc-800" : "bg-zinc-800"
+            ? isActive ? "bg-transparent" : (collapsed && !isForceCollapsed) ? "bg-transparent xl:bg-zinc-800" : isForceCollapsed ? "bg-transparent" : "bg-zinc-800"
             : isActive
               ? "bg-white/[0.10] backdrop-blur-sm border border-white/[0.12]"
               : "bg-white/[0.06] backdrop-blur-sm border border-white/[0.08]"
         )}>
           <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
         </div>
-        <span className={cn("relative z-10 truncate", collapsed && "hidden xl:inline")}>{translatedLabel}</span>
+        <span className={cn("relative z-10 truncate", labelClass)}>{translatedLabel}</span>
       </a>
     );
   }
@@ -136,7 +143,7 @@ export function SidebarNavItem({
           isDesktop
             ? isActive 
               ? "bg-transparent" 
-              : collapsed ? "bg-transparent xl:bg-zinc-800" : "bg-zinc-800"
+              : (collapsed && !isForceCollapsed) ? "bg-transparent xl:bg-zinc-800" : isForceCollapsed ? "bg-transparent" : "bg-zinc-800"
             : isActive
               ? "bg-white/[0.10] backdrop-blur-sm border border-white/[0.12]"
               : "bg-white/[0.06] backdrop-blur-sm border border-white/[0.08]"
@@ -149,7 +156,7 @@ export function SidebarNavItem({
           )}
         </div>
       )}
-      <span className={cn("relative z-10 truncate", collapsed && "hidden xl:inline")}>{translatedLabel}</span>
+      <span className={cn("relative z-10 truncate", labelClass)}>{translatedLabel}</span>
     </NavLink>
   );
 }
