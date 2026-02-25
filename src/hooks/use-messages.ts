@@ -64,8 +64,9 @@ export function useConversations(searchQuery: string = '') {
       }
     },
     enabled: isAuthenticated,
-    staleTime: 60 * 1000, // 1 minute
-    refetchOnWindowFocus: false, // Realtime handles DM updates — no need to refetch on focus
+    staleTime: 15 * 1000,
+    refetchInterval: 20 * 1000, // poll every 20s — replaces Supabase realtime for conversation list
+    refetchOnWindowFocus: true,
   });
 
   // Server-side search is now used via the query parameter
@@ -112,8 +113,8 @@ export function useMessages(conversationId: string | null) {
     },
     initialPageParam: 0,
     enabled: isAuthenticated && !!conversationId,
-    staleTime: 60 * 1000, // 1 minute
-    // No polling — Realtime subscription handles new messages
+    staleTime: 3 * 1000,
+    refetchInterval: 5 * 1000, // poll every 5s for new messages — replaces Supabase realtime
   });
 
   // Flatten pages into single array (newest last for chat display)

@@ -1,5 +1,4 @@
 import { DEHUB_API_BASE, apiCall, getAuthToken } from './core';
-import { supabase } from '@/integrations/supabase/client';
 import type { DeHubUser, DeHubNFT } from './types';
 
 export type DMMessageType = 'text' | 'image' | 'gif' | 'audio' | 'video' | 'tip';
@@ -503,57 +502,45 @@ export async function sendMessage(
 
     const sender = senderAddress.toLowerCase();
 
-    // Always use dm-send edge function for all message types
-    // Images are pre-uploaded via dm-upload-media edge function, so we just pass the URL
-    const currentUser = JSON.parse(localStorage.getItem('dehub_user') || '{}');
-
-    const edgeBody: Record<string, unknown> = {
-      sender,
+    // Build DeHub /api/dm/tnx request body
+    const dmBody: Record<string, unknown> = {
+      senderAddress: sender,
       content,
       type,
-      sender_username: currentUser?.username,
-      sender_display_name: currentUser?.displayName,
-      sender_avatar_url: currentUser?.avatarImageUrl,
+      transactionHash: `0x${Date.now().toString(16)}`,
     };
 
-    if (mediaUrl) {
-      edgeBody.mediaUrl = mediaUrl;
-    }
+    if (mediaUrl) dmBody.mediaUrl = mediaUrl;
 
     if (isNewConversation && recipientAddress) {
-      edgeBody.receiver = recipientAddress.toLowerCase();
+      dmBody.receiverAddress = recipientAddress.toLowerCase();
       console.log('[DM API] Sending message to new conversation with recipient:', recipientAddress);
     } else {
-      edgeBody.conversationId = conversationId;
+      dmBody.conversationId = conversationId;
     }
 
     if (type === 'tip' && tipAmount !== undefined) {
-      edgeBody.tipAmount = tipAmount;
-      edgeBody.tipCurrency = tipCurrency || 'DHB';
+      dmBody.tipAmount = tipAmount;
+      dmBody.tipCurrency = tipCurrency || 'DHB';
     }
 
-    console.log('[DM API] Sending message via dm-send edge function', { type, hasMedia: !!mediaUrl });
-    const { data: edgeData, error: edgeError } = await supabase.functions.invoke('dm-send', {
-      body: edgeBody,
+    console.log('[DM API] Sending message directly to DeHub /api/dm/tnx', { type, hasMedia: !!mediaUrl });
+
+    const tnxResponse = await fetch(`${DEHUB_API_BASE}/api/dm/tnx`, {
+      method: 'POST',
       headers: {
-        'x-wallet-address': sender,
-        'x-dehub-token': token,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
+      body: JSON.stringify(dmBody),
     });
 
-    if (edgeError) {
-      console.error('[DM API] dm-send edge function error:', edgeError);
-      throw new Error(edgeError.message || 'Failed to send message');
+    if (!tnxResponse.ok) {
+      const errData = await tnxResponse.json().catch(() => ({})) as Record<string, string>;
+      throw new Error(errData.message || errData.error || `Failed to send message: ${tnxResponse.status}`);
     }
 
-    console.log('[DM API] dm-send edge response:', edgeData);
-
-    if (!edgeData?.ok) {
-      console.error('[DM API] DeHub API rejected DM:', edgeData?.error, edgeData?.dehubResponse);
-      throw new Error(edgeData?.error || 'Failed to send message');
-    }
-
-    let data: any = edgeData?.result;
+    let data: any = await tnxResponse.json().catch(() => ({}));
 
     console.log('[DM API] sendMessage response:', data);
 
@@ -662,7 +649,10 @@ export async function searchUsersForDM(
 
     let accounts: DeHubUser[] = [];
 
-    if (response?.accounts?.items && Array.isArray(response.accounts.items)) {
+    if (response?.users && Array.isArray(response.users)) {
+      accounts = response.users;
+    }
+    else if (response?.accounts?.items && Array.isArray(response.accounts.items)) {
       accounts = response.accounts.items;
     }
     else if (response?.result?.accounts && Array.isArray(response.result.accounts)) {
@@ -690,7 +680,7 @@ export async function searchUsersForDM(
       isVerified: acc.isVerified || acc.verified,
       is_verified: acc.is_verified || acc.verified,
       bio: acc.bio,
-      dmSettings: acc.dmSettings,
+      dmSettings: acc.dmSettings || acc.dmSetting,
     }));
 
     console.log('[DM API] searchUsersForDM returning', { count: items.length });
@@ -915,32 +905,34 @@ export async function uploadChatImage(file: File): Promise<{ url: string }> {
   }
 
   try {
-    // Upload via dm-upload-media edge function (uses service role key, bypasses RLS)
     const formData = new FormData();
     formData.append('file', file, file.name);
 
-    console.log('[DM API] Uploading via dm-upload-media edge function');
+    console.log('[DM API] Uploading via DeHub /api/dm/upload');
 
-    const { data, error } = await supabase.functions.invoke('dm-upload-media', {
-      body: formData,
+    const response = await fetch(`${DEHUB_API_BASE}/api/dm/upload`, {
+      method: 'POST',
       headers: {
-        'x-wallet-address': walletAddress.toLowerCase(),
-        'x-dehub-token': token,
+        'Authorization': `Bearer ${token}`,
       },
+      body: formData,
     });
 
-    if (error) {
-      console.error('[DM API] dm-upload-media edge function error:', error);
-      throw new Error(error.message || 'Upload failed');
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({})) as Record<string, string>;
+      throw new Error(errData.message || errData.error || `Upload failed: ${response.status}`);
     }
 
-    if (!data?.ok || !data?.url) {
-      console.error('[DM API] dm-upload-media returned error:', data);
-      throw new Error(data?.error || 'Upload failed - no URL returned');
+    const data = await response.json();
+    const url = data?.url || data?.result?.url || data?.data?.url;
+
+    if (!url) {
+      console.error('[DM API] /api/dm/upload returned no URL:', data);
+      throw new Error('Upload failed - no URL returned');
     }
 
-    console.log('[DM API] Image uploaded successfully:', data.url);
-    return { url: data.url };
+    console.log('[DM API] Media uploaded successfully:', url);
+    return { url };
   } catch (error) {
     console.error('[DM API] uploadChatImage failed:', error);
     throw error;
