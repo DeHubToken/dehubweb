@@ -14,7 +14,7 @@ export function FeedSkeleton() {
   return (
     <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
       {/* Tab bar skeleton — icon-only pills in a rounded-2xl container */}
-      <div className="bg-zinc-900 rounded-2xl flex">
+      <div className="bg-zinc-900 rounded-xl flex">
         {Array.from({ length: 7 }).map((_, i) => (
           <div key={i} className="flex-1 flex items-center justify-center py-2.5">
             <Skeleton className={`w-4 h-4 rounded ${SK}`} />

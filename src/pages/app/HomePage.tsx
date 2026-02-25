@@ -497,9 +497,9 @@ export default function HomePage() {
     <div>
       {/* Tab Navigation */}
       <div className="sticky top-11 lg:top-0 bg-black z-50 p-2 sm:p-3 lg:mt-0">
-        <div className="bg-zinc-900 rounded-2xl overflow-visible">
+        <div className="bg-zinc-900 rounded-xl overflow-visible">
           <div ref={homeTabLayerRef} className="relative overflow-visible">
-            <GlassIndicator rect={homeTabRect} borderRadius="1rem" />
+            <GlassIndicator rect={homeTabRect} borderRadius="0.75rem" />
             <div className="relative z-20 flex scrollbar-hide">
               {FEED_TABS.map((tab) => {
                 const isActive = activeTab === tab.value;
@@ -509,7 +509,7 @@ export default function HomePage() {
                     ref={setHomeTabRef(tab.value)}
                     onClick={() => handleTabClick(tab.value)}
                     className={cn(
-                      'relative z-40 flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 rounded-2xl',
+                      'relative z-40 flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 rounded-xl',
                       isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
                     )}
                   >
@@ -521,7 +521,7 @@ export default function HomePage() {
               {/* Settings Button - toggles current tab's filters */}
               <button
                 onClick={() => handleTabClick(activeTab)}
-                className="flex items-center justify-center px-3 py-2.5 rounded-2xl text-white hover:bg-white/5"
+                className="flex items-center justify-center px-3 py-2.5 rounded-xl text-white hover:bg-white/5"
                 aria-label="Feed settings"
               >
                 <Settings2 className="w-4 h-4" />
