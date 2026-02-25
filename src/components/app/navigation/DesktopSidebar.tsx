@@ -92,28 +92,28 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     <>
       <aside className={cn(
         "hidden lg:flex sticky top-0 h-screen px-2 pb-2 flex-col overflow-hidden items-center transition-[width,padding] duration-500 ease-in-out motion-reduce:transition-none z-0 isolate will-change-[width]",
-        isCollapsed ? "w-[60px] pt-[2px]" : "w-[60px] pt-[2px] xl:w-[231px] xl:px-[18px] xl:items-stretch xl:pt-0 xl:-mt-[3px]"
+        isCollapsed ? "w-[60px] pt-[2px]" : "w-[60px] pt-[2px] lg:w-[231px] lg:px-[18px] lg:items-stretch lg:pt-0 lg:-mt-[3px]"
       )}>
         {/* Logo & Coin Balance */}
-        <div className={cn("flex items-center justify-between w-full", isCollapsed ? "mb-6" : "mb-6 xl:mb-3")}>
-          <div className={cn("flex items-center mt-[10px]", isCollapsed ? "mx-auto" : "mx-auto xl:mx-0")}>
+        <div className={cn("flex items-center justify-between w-full", isCollapsed ? "mb-6" : "mb-6 lg:mb-3")}>
+          <div className={cn("flex items-center mt-[10px]", isCollapsed ? "mx-auto" : "mx-auto lg:mx-0")}>
             <button
               onClick={toggleCollapse}
               className={cn(
                 "flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-lg hover:bg-zinc-800 transition-colors",
-                isCollapsed ? "hidden" : "hidden xl:flex mr-1.5"
+                isCollapsed ? "hidden" : "hidden lg:flex mr-1.5"
               )}
               aria-label="Toggle sidebar"
             >
               <Menu className="w-[18px] h-[18px] text-zinc-400" />
             </button>
             <button onClick={handleLogoClick} className="block cursor-pointer">
-              <img src={dehubLogo} alt="dehub" className={cn("h-[50.8px] w-auto relative -top-[3px]", isCollapsed ? "hidden" : "hidden xl:block")} />
-              <img src={dehubLogoCompact} alt="dehub" className={cn("h-[32px] w-auto", isCollapsed ? "block" : "xl:hidden")} />
+              <img src={dehubLogo} alt="dehub" className={cn("h-[50.8px] w-auto relative -top-[3px]", isCollapsed ? "hidden" : "hidden lg:block")} />
+              <img src={dehubLogoCompact} alt="dehub" className={cn("h-[32px] w-auto", isCollapsed ? "block" : "lg:hidden")} />
             </button>
           </div>
           {isAuthenticated && stickToBanner && (
-            <div className={cn("mt-[10px]", isCollapsed ? "hidden" : "hidden xl:block")}>
+            <div className={cn("mt-[10px]", isCollapsed ? "hidden" : "hidden lg:block")}>
               <CoinBalanceMenu 
                 balance={coinBalance} 
                 variant="desktop" 
@@ -127,7 +127,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         <div className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0">
           <div className={cn(
             "p-1 space-y-2 flex flex-col items-center overflow-y-auto overflow-x-hidden scrollbar-invisible h-full",
-            !isCollapsed && "xl:p-2.5 xl:space-y-[2px] xl:items-stretch"
+            !isCollapsed && "lg:p-2.5 lg:space-y-[2px] lg:items-stretch"
           )}>
           {navItemsWithoutAI.map((item) => {
             const isActive = !item.external && location.pathname.startsWith(item.path);
@@ -156,7 +156,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     to="/app/assistant"
                     className={cn(
                       'relative flex items-center rounded-xl text-left transition-colors text-[15px] text-white',
-                      isCollapsed ? 'w-9 h-9 justify-center' : 'w-9 h-9 xl:w-full xl:h-auto justify-center xl:justify-start xl:px-2.5 xl:py-2.5 xl:gap-3',
+                      isCollapsed ? 'w-9 h-9 justify-center' : 'w-9 h-9 lg:w-full lg:h-auto justify-center lg:justify-start lg:px-2.5 lg:py-2.5 lg:gap-3',
                       isAIActive ? 'font-semibold' : 'hover:bg-zinc-800/50'
                     )}
                   >
@@ -170,11 +170,11 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     )}
                     <div className={cn(
                       "relative z-10 w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
-                      isAIActive ? "bg-transparent" : isCollapsed ? "bg-transparent" : "xl:bg-zinc-800 bg-transparent"
+                      isAIActive ? "bg-transparent" : isCollapsed ? "bg-transparent" : "lg:bg-zinc-800 bg-transparent"
                     )}>
                       <Sparkles className="w-5 h-5" />
                     </div>
-                    <span className={cn("relative z-10 truncate", isCollapsed ? "hidden" : "hidden xl:inline")}>{t('nav.assistant')}</span>
+                    <span className={cn("relative z-10 truncate", isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.assistant')}</span>
                   </NavLink>
                 )}
               </React.Fragment>
@@ -186,7 +186,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         </div>
 
         {/* Post / Login Button */}
-        <div className="mt-3 flex items-center justify-center xl:block">
+        <div className="mt-3 flex items-center justify-center lg:block">
           <LiquidGlassBubble 
             shimmer
             noBorder
@@ -195,27 +195,27 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           >
             <div className={cn(
               "flex items-center gap-2 font-semibold text-white justify-center",
-              isCollapsed ? "py-[7px] text-[13.5px]" : "py-[7px] xl:py-3 text-[13.5px]"
+              isCollapsed ? "py-[7px] text-[13.5px]" : "py-[7px] lg:py-3 text-[13.5px]"
             )}>
               {isAuthenticated ? (
                 <>
                    <PenSquare className="w-[18px] h-[18px] flex-shrink-0" />
-                   <span className={cn(isCollapsed ? "hidden" : "hidden xl:inline")}>{t('nav.create')}</span>
+                   <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.create')}</span>
                 </>
               ) : isConnecting ? (
                 <>
                    <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin flex-shrink-0" />
-                   <span className={cn(isCollapsed ? "hidden" : "hidden xl:inline")}>{t('nav.connecting')}</span>
+                   <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.connecting')}</span>
                 </>
               ) : needsSignature ? (
                 <>
                    <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
-                   <span className={cn(isCollapsed ? "hidden" : "hidden xl:inline")}>{t('nav.signMessage')}</span>
+                   <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.signMessage')}</span>
                 </>
               ) : (
                 <>
                    <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
-                   <span className={cn(isCollapsed ? "hidden" : "hidden xl:inline")}>{t('nav.login')}</span>
+                   <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.login')}</span>
                 </>
               )}
             </div>

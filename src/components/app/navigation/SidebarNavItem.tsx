@@ -69,9 +69,9 @@ export function SidebarNavItem({
   const collapsedItemClass = collapsed
     ? isForceCollapsed
       ? 'w-9 h-9 justify-center px-0'
-      : 'w-9 h-9 xl:w-full xl:h-auto justify-center xl:justify-start px-0 xl:px-2.5 xl:py-2.5 xl:gap-3'
+      : 'w-9 h-9 lg:w-full lg:h-auto justify-center lg:justify-start px-0 lg:px-2.5 lg:py-2.5 lg:gap-3'
     : 'gap-3 px-2.5 py-2.5';
-  const labelClass = isForceCollapsed ? "hidden" : collapsed ? "hidden xl:inline" : "";
+  const labelClass = isForceCollapsed ? "hidden" : collapsed ? "hidden lg:inline" : "";
 
   // Shared glass indicator element — key forces full remount on collapse toggle
   const glassIndicator = isActive && (
@@ -101,7 +101,7 @@ export function SidebarNavItem({
           "relative z-10 rounded-xl flex items-center justify-center flex-shrink-0",
           isDesktop ? "w-9 h-9" : "w-10 h-10",
           isDesktop
-            ? isActive ? "bg-transparent" : (collapsed && !isForceCollapsed) ? "bg-transparent xl:bg-zinc-800" : isForceCollapsed ? "bg-transparent" : "bg-zinc-800"
+            ? isActive ? "bg-transparent" : (collapsed && !isForceCollapsed) ? "bg-transparent lg:bg-zinc-800" : isForceCollapsed ? "bg-transparent" : "bg-zinc-800"
             : isActive
               ? "bg-white/[0.10] backdrop-blur-sm border border-white/[0.12]"
               : "bg-white/[0.06] backdrop-blur-sm border border-white/[0.08]"
@@ -142,9 +142,9 @@ export function SidebarNavItem({
           "relative z-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
           isDesktop ? "w-9 h-9" : "w-10 h-10",
           isDesktop
-            ? isActive 
+             ? isActive 
               ? "bg-transparent" 
-              : (collapsed && !isForceCollapsed) ? "bg-transparent xl:bg-zinc-800" : isForceCollapsed ? "bg-transparent" : "bg-zinc-800"
+              : (collapsed && !isForceCollapsed) ? "bg-transparent lg:bg-zinc-800" : isForceCollapsed ? "bg-transparent" : "bg-zinc-800"
             : isActive
               ? "bg-white/[0.10] backdrop-blur-sm border border-white/[0.12]"
               : "bg-white/[0.06] backdrop-blur-sm border border-white/[0.08]"
