@@ -314,6 +314,21 @@ Deno.serve(async (req) => {
     if (mode === "light") {
       console.log("Starting LIGHT leaderboard cache refresh (snapshot-based)...");
 
+      // Guard: don't recompute if today's snapshot is missing — avoids bad deltas
+      const todayStr = new Date().toISOString().split("T")[0];
+      const { count: todaySnapCount } = await supabase
+        .from("leaderboard_snapshots")
+        .select("id", { count: "exact", head: true })
+        .eq("snapshot_date", todayStr);
+
+      if (!todaySnapCount || todaySnapCount === 0) {
+        console.warn("[light] No snapshot for today yet — skipping to avoid bad deltas");
+        return new Response(
+          JSON.stringify({ success: true, mode: "light", message: "Skipped: no today snapshot yet" }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
+        );
+      }
+
       const { data: holdingsCache } = await supabase
         .from("leaderboard_cache")
         .select("data")
