@@ -1278,17 +1278,6 @@ function ContentSettings() {
         </div>
       </div>
 
-      {/* Feed Preferences */}
-      <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.feedPreferences')}</h3>
-        <SettingToggle
-          icon={Repeat2}
-          title={t('settings.showReposts')}
-          description={t('settings.showRepostsDesc')}
-          defaultChecked
-          comingSoon
-        />
-      </div>
 
 
 
