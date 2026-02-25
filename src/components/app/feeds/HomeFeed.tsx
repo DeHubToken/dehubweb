@@ -971,12 +971,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     if (colCount <= 1) {
       return <div className="space-y-3">{nodes}</div>;
     }
-    const columns = distributeToColumns(nodes, colCount, feedItems);
+    // Use CSS multi-column layout for true browser-balanced masonry
+    // The browser knows actual rendered heights, eliminating gaps from weight estimates
     return (
-      <div className="flex gap-3">
-        {columns.map((col, i) => (
-          <div key={`masonry-col-${i}`} className="flex-1 min-w-0 space-y-3">
-            {col}
+      <div style={{ columnCount: colCount, columnGap: '0.75rem' }}>
+        {nodes.map((node, i) => (
+          <div key={i} className="mb-3" style={{ breakInside: 'avoid' }}>
+            {node}
           </div>
         ))}
       </div>
