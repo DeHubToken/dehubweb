@@ -8,6 +8,7 @@
  */
 
 import { useRef, useMemo, useEffect, useCallback } from 'react';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
@@ -130,10 +131,14 @@ interface CollageViewProps {
 }
 
 function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNextPage }: CollageViewProps) {
+  const { isCollapsed } = useSidebarCollapse();
   return (
     <div className="p-1 sm:p-2 pt-0 sm:pt-0">
       <div 
-        className="grid grid-cols-3 gap-0.5 sm:gap-1 overflow-hidden rounded-t-2xl"
+        className={cn(
+          "grid gap-0.5 sm:gap-1 overflow-hidden rounded-t-2xl",
+          isCollapsed ? "grid-cols-4" : "grid-cols-3"
+        )}
         style={{ gridAutoFlow: 'dense' }}
       >
         {posts.map((post, index) => {
