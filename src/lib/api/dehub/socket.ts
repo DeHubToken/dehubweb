@@ -35,10 +35,12 @@ export function getSocket(): Socket {
     currentToken = token;
     socket = io(DEHUB_API_BASE, {
       auth: token ? { token: `Bearer ${token}` } : undefined,
-      transports: ['websocket'],
+      transports: ['websocket', 'polling'],
       reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionAttempts: 5,
+      reconnectionDelay: 2000,
+      reconnectionDelayMax: 10000,
+      reconnectionAttempts: 3,
+      timeout: 10000,
     });
 
     socket.on('connect', () => {

@@ -1,5 +1,5 @@
-import { supabase } from '@/integrations/supabase/client';
 import { DEHUB_API_BASE, apiCall, getAuthToken } from './core';
+import { getSocket } from './socket';
 import type { DeHubUser, DeHubNFT } from './types';
 
 export type DMMessageType = 'text' | 'image' | 'gif' | 'audio' | 'video' | 'tip';
@@ -292,50 +292,43 @@ export async function sendMessage(
       console.log('[DM API] Sending message to new conversation with recipient:', recipientAddress);
     }
 
-    const currentUser = JSON.parse(localStorage.getItem('dehub_user') || '{}');
-    const edgeBody: Record<string, unknown> = {
-      sender,
+    const payload: Record<string, unknown> = {
       content,
-      type,
-      sender_username: currentUser?.username,
-      sender_display_name: currentUser?.displayName,
-      sender_avatar_url: currentUser?.avatarImageUrl,
+      messageType: type,
+      token: `Bearer ${token}`,
     };
 
-    if (mediaUrl) edgeBody.mediaUrl = mediaUrl;
+    if (mediaUrl) payload.mediaUrl = mediaUrl;
 
     if (isNewConversation && recipientAddress) {
-      edgeBody.receiver = recipientAddress.toLowerCase();
+      payload.receiver = recipientAddress.toLowerCase();
     } else {
-      edgeBody.conversationId = conversationId;
+      payload.conversationId = conversationId;
     }
 
     if (type === 'tip' && tipAmount !== undefined) {
-      edgeBody.tipAmount = tipAmount;
-      edgeBody.tipCurrency = tipCurrency || 'DHB';
+      payload.tipAmount = tipAmount;
+      payload.tipCurrency = tipCurrency || 'DHB';
     }
 
-    console.log('[DM API] Sending message via dm-send edge function', { type, hasMedia: !!mediaUrl });
-    const { data: edgeData, error: edgeError } = await supabase.functions.invoke('dm-send', {
-      body: edgeBody,
-      headers: {
-        'x-wallet-address': sender,
-        'x-dehub-token': token,
-      },
+    console.log('[DM API] Sending message via socket sendMessage event', { type, hasMedia: !!mediaUrl });
+    const s = getSocket();
+
+    const ack = await new Promise<any>((resolve, reject) => {
+      const timer = setTimeout(() => resolve({ timeout: true }), 5000);
+      s.emit('sendMessage', payload, (response: any) => {
+        clearTimeout(timer);
+        if (response?.error) reject(new Error(response.error));
+        else resolve(response);
+      });
     });
 
-    if (edgeError) {
-      console.error('[DM API] dm-send edge function error:', edgeError);
-      throw new Error(edgeError.message || 'Failed to send message');
+    if (ack?.error) {
+      throw new Error(ack.error);
     }
 
-    if (!edgeData?.ok) {
-      console.error('[DM API] dm-send rejected:', edgeData?.error);
-      throw new Error(edgeData?.error || 'Failed to send message');
-    }
-
-    console.log('[DM API] sendMessage response:', edgeData);
-    const d = edgeData?.result?.data || edgeData?.result || {};
+    console.log('[DM API] sendMessage ack:', ack);
+    const d = ack?.result?.data || ack?.result || ack?.data || ack || {};
 
     return {
       id: d.id || d._id || `msg-${Date.now()}`,
