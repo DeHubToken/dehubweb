@@ -868,65 +868,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Live carousel insert position: 4 posts after the radio carousel
   const LIVE_INSERT_AFTER = RADIO_INSERT_AFTER + 4;
 
+  // Masonry column classes based on sidebar state
+  // Collapsed: 2 cols default, 3 at xl; Expanded: 1 col on small, 2 at lg, 3 at 2xl
+  const masonryClasses = isCollapsed
+    ? "columns-2 xl:columns-3 gap-3"
+    : "columns-1 lg:columns-2 2xl:columns-3 gap-3";
+
   // Render feed items with shorts and radio carousels inserted
-  // When collapsed, returns segments: alternating arrays of feed items and full-width inserts
+  // Segments feed into alternating masonry containers and full-width inserts
   const renderFeedWithShorts = () => {
-    if (!isCollapsed) {
-      // Original single-column behavior
-      const elements: React.ReactNode[] = [];
-      let shortsInserted = false;
-      let radioInserted = false;
-      let liveInserted = false;
-      let whoToFollowInserted = false;
-
-      items.forEach((item, index) => {
-        elements.push(renderFeedItem(item, index));
-
-        if ((index + 1) === 3 && !whoToFollowInserted) {
-          elements.push(<div key={`who-to-follow-${index}`}><MobileWhoToFollowCarousel /></div>);
-          whoToFollowInserted = true;
-        }
-
-        if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0 && !shortsInserted) {
-          elements.push(<div key={`shorts-carousel-${index}`}><ShortsReel shorts={shorts} /></div>);
-          shortsInserted = true;
-        }
-
-        if ((index + 1) === RADIO_INSERT_AFTER && radioStations.length > 0 && !radioInserted) {
-          elements.push(<div key={`radio-carousel-${index}`}><RadioCarouselSection /></div>);
-          radioInserted = true;
-        }
-
-        if ((index + 1) === LIVE_INSERT_AFTER && liveNowStreams.length > 0 && !liveInserted) {
-          elements.push(
-            <div key={`live-now-${index}`} className="space-y-2">
-              <div className="flex items-center gap-2 px-1">
-                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                <h3 className="text-white font-semibold text-sm">Livestreams</h3>
-              </div>
-              <SwipeableCarousel>
-                <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-4">
-                  {liveNowStreams.map((stream) => (
-                    <div key={stream.id} className="flex-shrink-0 w-72 sm:w-80">
-                      <LiveCard stream={stream} />
-                    </div>
-                  ))}
-                </div>
-              </SwipeableCarousel>
-            </div>
-          );
-          liveInserted = true;
-        }
-      });
-
-      if (items.length > 0 && items.length < SHORTS_INSERT_INTERVAL && shorts.length > 0 && !shortsInserted) {
-        elements.push(<div key="shorts-carousel-end"><ShortsReel shorts={shorts} /></div>);
-      }
-
-      return <div className="space-y-3">{elements}</div>;
-    }
-
-    // Collapsed masonry mode: segment feed items around full-width inserts
     type Segment = { type: 'cards'; items: React.ReactNode[] } | { type: 'fullwidth'; node: React.ReactNode };
     const segments: Segment[] = [];
     let currentCards: React.ReactNode[] = [];
@@ -1000,7 +950,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             return <div key={`fw-${i}`} className="mb-3">{seg.node}</div>;
           }
           return (
-            <div key={`cols-${i}`} className="columns-2 xl:columns-3 gap-3">
+            <div key={`cols-${i}`} className={masonryClasses}>
               {seg.items}
             </div>
           );
@@ -1113,7 +1063,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`}>
               {/* Render optimistic posts */}
               {optimisticPosts.length > 0 && (
-                <div className={cn(isCollapsed ? "columns-2 xl:columns-3 gap-3" : "space-y-3", "mb-3")}>
+                <div className={cn(masonryClasses, "mb-3")}>
                   {optimisticPosts.map((op) => {
                     const feedItem: FeedItemType = { type: op.type, data: op.data as any };
                     return renderFeedItem(feedItem, -999);
@@ -1123,7 +1073,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               
               {/* Render pinned post */}
               {pinnedItem && (
-                <div className={cn(isCollapsed ? "columns-2 xl:columns-3 gap-3" : "space-y-3", "mb-3")}>
+                <div className={cn(masonryClasses, "mb-3")}>
                   {renderFeedItem(pinnedItem, -1)}
                 </div>
               )}
