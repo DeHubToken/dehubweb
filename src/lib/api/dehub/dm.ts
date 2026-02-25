@@ -1,34 +1,6 @@
+import { supabase } from '@/integrations/supabase/client';
 import { DEHUB_API_BASE, apiCall, getAuthToken } from './core';
-import { getSocket } from './socket';
 import type { DeHubUser, DeHubNFT } from './types';
-
-/**
- * Send a DM message via DeHub Socket.io (sendMessage event).
- * The doc says: "Prefer bundling txHash into the sendMessage socket event."
- * Uses the shared socket singleton so we don't open a new connection per message.
- */
-function sendDMSocket(payload: Record<string, unknown>): Promise<any> {
-  return new Promise((resolve, reject) => {
-    const s = getSocket();
-
-    const emit = () => {
-      s.emit('sendMessage', payload, (ack: any) => {
-        console.log('[DM Socket] sendMessage ack:', ack);
-        if (ack?.error) reject(new Error(ack.error));
-        else resolve(ack);
-      });
-      // Resolve with null after timeout if no ack (free message, server may not ack)
-      setTimeout(() => resolve(null), 5000);
-    };
-
-    if (s.connected) {
-      emit();
-    } else {
-      s.once('connect', emit);
-      s.once('connect_error', (err) => reject(err));
-    }
-  });
-}
 
 export type DMMessageType = 'text' | 'image' | 'gif' | 'audio' | 'video' | 'tip';
 
@@ -320,56 +292,60 @@ export async function sendMessage(
       console.log('[DM API] Sending message to new conversation with recipient:', recipientAddress);
     }
 
-    const socketPayload: Record<string, unknown> = {
-      senderAddress: sender,
+    const currentUser = JSON.parse(localStorage.getItem('dehub_user') || '{}');
+    const edgeBody: Record<string, unknown> = {
+      sender,
       content,
       type,
-      transactionHash: `0x${Date.now().toString(16)}`,
+      sender_username: currentUser?.username,
+      sender_display_name: currentUser?.displayName,
+      sender_avatar_url: currentUser?.avatarImageUrl,
     };
 
-    if (isNewConversation && recipientAddress) {
-      socketPayload.receiverAddress = recipientAddress.toLowerCase();
-    } else {
-      socketPayload.conversationId = conversationId;
-    }
+    if (mediaUrl) edgeBody.mediaUrl = mediaUrl;
 
-    if (mediaUrl) socketPayload.mediaUrl = mediaUrl;
+    if (isNewConversation && recipientAddress) {
+      edgeBody.receiver = recipientAddress.toLowerCase();
+    } else {
+      edgeBody.conversationId = conversationId;
+    }
 
     if (type === 'tip' && tipAmount !== undefined) {
-      socketPayload.tipAmount = tipAmount;
-      socketPayload.tipCurrency = tipCurrency || 'DHB';
+      edgeBody.tipAmount = tipAmount;
+      edgeBody.tipCurrency = tipCurrency || 'DHB';
     }
 
-    console.log('[DM API] Sending message via socket sendMessage event', { type, hasMedia: !!mediaUrl });
-    const data: any = await sendDMSocket(socketPayload);
+    console.log('[DM API] Sending message via dm-send edge function', { type, hasMedia: !!mediaUrl });
+    const { data: edgeData, error: edgeError } = await supabase.functions.invoke('dm-send', {
+      body: edgeBody,
+      headers: {
+        'x-wallet-address': sender,
+        'x-dehub-token': token,
+      },
+    });
 
-    console.log('[DM API] sendMessage socket response:', data);
-
-    const d = data?.result || data?.data || data;
-
-    if (d && (d.id || d._id)) {
-      const receiverAddr = recipientAddress?.toLowerCase();
-      const finalConversationId = d.conversationId || d.conversation_id || receiverAddr || conversationId;
-      return {
-        id: d.id || d._id,
-        conversationId: finalConversationId,
-        sender: d.sender || { address: sender },
-        content: d.content || content,
-        type: (d.type || d.messageType || type) as DMMessageType,
-        mediaUrl: d.mediaUrl || d.imageUrl || mediaUrl,
-        createdAt: d.createdAt || new Date().toISOString(),
-      };
+    if (edgeError) {
+      console.error('[DM API] dm-send edge function error:', edgeError);
+      throw new Error(edgeError.message || 'Failed to send message');
     }
 
-    // Optimistic fallback
+    if (!edgeData?.ok) {
+      console.error('[DM API] dm-send rejected:', edgeData?.error);
+      throw new Error(edgeData?.error || 'Failed to send message');
+    }
+
+    console.log('[DM API] sendMessage response:', edgeData);
+    const d = edgeData?.result?.data || edgeData?.result || {};
+
     return {
-      id: `msg-${Date.now()}`,
-      conversationId: isNewConversation && recipientAddress ? recipientAddress.toLowerCase() : conversationId,
+      id: d.id || d._id || `msg-${Date.now()}`,
+      conversationId: d.conversation_id || d.conversationId
+        || (isNewConversation && recipientAddress ? recipientAddress.toLowerCase() : conversationId),
       sender: { address: sender },
-      content,
-      type,
-      mediaUrl,
-      createdAt: new Date().toISOString(),
+      content: d.content || content,
+      type: (d.message_type || type) as DMMessageType,
+      mediaUrl: d.media_url || mediaUrl,
+      createdAt: d.created_at || new Date().toISOString(),
     };
   } catch (error) {
     console.error('[DM API] sendMessage failed:', error);
