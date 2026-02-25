@@ -350,5 +350,25 @@
   "hero": { "title": "عالم جديد", "subtitle": "بانتظارك", "comingSoon": "قريباً", "iosComingSoon": "تطبيق iOS سيكون متاحاً قريباً!" },
   "creators": { "title": "طلب الانضمام كمبدع", "subtitle": "انضم إلى شبكة مبدعي DeHub", "xUsername": "اسم المستخدم في X (Twitter)", "youtubeUsername": "اسم المستخدم في YouTube", "twitchUsername": "اسم المستخدم في Twitch", "instagramUsername": "اسم المستخدم في Instagram", "tiktokUsername": "اسم المستخدم في TikTok", "otherSocials": "حسابات أخرى", "totalFollowerReach": "إجمالي عدد المتابعين", "expectedCompensation": "التعويض المتوقع", "submit": "إرسال الطلب", "submitting": "جارٍ الإرسال...", "submitted": "تم إرسال الطلب!", "submittedDesc": "شكراً! سنراجع طلبك.", "failedSubmit": "فشل الإرسال", "emailRequired": "البريد الإلكتروني مطلوب", "email": "البريد الإلكتروني", "emailPlaceholder": "your@email.com" },
   "assistant": { "title": "المساعد", "welcome": "استخدم الحقل أدناه أو الأزرار للبدء.", "welcomeAlt": "مرحباً! اسألني أي شيء.", "thinking": "أفكر...", "errorGeneric": "حدث خطأ. حاول مرة أخرى.", "noResponse": "تعذر إنشاء رد.", "dropImageHere": "اسحب الصورة هنا", "toAttachForEditing": "لإرفاقها للتعديل", "aiPersonality": "الشخصية", "aiSettings": "الإعدادات", "chatModel": "نموذج الدردشة", "imageModel": "نموذج الصور", "videoModel": "نموذج الفيديو", "aiVoice": "الصوت", "premium": "مميز", "standard": "قياسي", "fast": "سريع", "alwaysSpeakReplies": "نطق الردود دائماً", "alwaysSpeakRepliesDesc": "نطق جميع الردود", "whatsNew": "ما الجديد؟", "generateImage": "إنشاء صورة", "editImage": "تعديل صورة", "generateVideo": "إنشاء فيديو", "attachFile": "إرفاق ملف", "voiceInput": "إدخال صوتي", "stopRecording": "إيقاف التسجيل", "stopSpeaking": "إيقاف النطق", "listening": "أستمع...", "describeEdits": "صف التعديلات...", "askAnything": "اسأل أي شيء...", "imageAttached": "تم إرفاق الصورة - صف التعديلات", "imageCopied": "تم نسخ الصورة", "imageCopyFailed": "فشل نسخ الصورة", "approve": "موافقة", "reject": "رفض", "transferComplete": "اكتمل التحويل", "transferCancelled": "تم إلغاء التحويل", "hash": "هاش", "pinSet": "تم تعيين PIN", "setPin": "تعيين PIN", "autoMode": "الوضع التلقائي", "on": "تشغيل", "off": "إيقاف", "setTransferPin": "تعيين PIN التحويل", "requiredBeforeApproving": "مطلوب قبل الموافقة على التحويلات", "enterPin": "أدخل PIN من 4-6 أرقام", "setPinButton": "تعيين PIN", "removeExistingPin": "إزالة PIN الحالي", "pinSetSuccess": "تم تعيين PIN بنجاح", "pinTooShort": "يجب أن يكون PIN 4 أرقام على الأقل", "pinRemoved": "تم إزالة PIN", "autoModeDisabled": "تم إيقاف الوضع التلقائي", "autoModeEnabled": "تم تشغيل الوضع التلقائي", "safetyBlocked": "لا يمكن إنشاء هذا المحتوى على DeHub. جرّب شيئاً آخر 🎨", "officialLogo": "إليك شعار DeHub الرسمي! 🎨", "generateImageOf": "إنشاء صورة لـ ", "generateVideoOf": "إنشاء فيديو لـ ", "whatsHappeningNews": "ما أخبار اليوم؟", "loginRequired": "سجّل الدخول للوصول إلى المساعد." },
-  "aiChat": { "title": "المساعد", "welcomePost": "أرى هذا {{type}}. {{context}}\n\nماذا تريد أن تعرف عنه؟", "welcomeGeneral": "مرحباً! أنا مساعدك. اسألني أي شيء.", "thinking": "أفكر...", "errorGeneric": "حدث خطأ. حاول مرة أخرى.", "noResponse": "تعذر إنشاء رد.", "askAboutPost": "اسأل عن هذا المنشور...", "askAnything": "اسألني أي شيء...", "describeEdits": "صف التعديلات...", "listening": "أستمع...", "stopSpeaking": "إيقاف النطق", "attachImage": "إرفاق صورة", "post": "منشور", "officialLogo": "إليك شعار DeHub الرسمي! 🎨", "editedImage": "إليك صورتك المعدلة!", "generatedImage": "إليك صورتك المُنشأة!" }
+  "aiChat": { "title": "المساعد", "welcomePost": "أرى هذا {{type}}. {{context}}\n\nماذا تريد أن تعرف عنه؟", "welcomeGeneral": "مرحباً! أنا مساعدك. اسألني أي شيء.", "thinking": "أفكر...", "errorGeneric": "حدث خطأ. حاول مرة أخرى.", "noResponse": "تعذر إنشاء رد.", "askAboutPost": "اسأل عن هذا المنشور...", "askAnything": "اسألني أي شيء...", "describeEdits": "صف التعديلات...", "listening": "أستمع...", "stopSpeaking": "إيقاف النطق", "attachImage": "إرفاق صورة", "post": "منشور", "officialLogo": "إليك شعار DeHub الرسمي! 🎨", "editedImage": "إليك صورتك المعدلة!", "generatedImage": "إليك صورتك المُنشأة!" },
+  "loginModal": {
+    "title": "تسجيل الدخول",
+    "continueEmail": "المتابعة بالبريد الإلكتروني",
+    "continueSMS": "المتابعة بالرسائل النصية",
+    "continueGoogle": "المتابعة مع Google",
+    "continueX": "المتابعة مع X",
+    "connectWallet": "ربط المحفظة",
+    "emailPlaceholder": "أدخل بريدك الإلكتروني",
+    "invalidEmail": "يرجى إدخال بريد إلكتروني صالح",
+    "sendingLink": "جارٍ إرسال الرابط...",
+    "continue": "متابعة",
+    "magicLinkInfo": "سنرسل لك رابطاً سحرياً لتسجيل الدخول",
+    "invalidPhone": "يرجى إدخال رقم هاتف صالح مع رمز الدولة",
+    "sendingCode": "جارٍ إرسال الرمز...",
+    "smsInfo": "سنرسل لك رمز تحقق عبر الرسائل النصية",
+    "or": "أو",
+    "termsNotice": "بالمتابعة، فإنك توافق على شروط الخدمة وسياسة الخصوصية",
+    "walletInfoDesktop": "اربط محفظتك لتسجيل الدخول بأمان",
+    "walletInfoMobile": "MetaMask وTrust وPhantom ستفتح تطبيقها مباشرة. Rabby سيستخدم WalletConnect."
+  }
 }

@@ -901,5 +901,6 @@
     "fillRequired": "عمر كل الخانات المطلوبة",
     "submitted": "الطلب تقدم بنجاح!",
     "failedSubmit": "ما قدرش يقدم الطلب. عاود."
-  }
+  },
+  "loginModal": { "title": "دخول", "continueEmail": "كمّل بالإيميل", "continueSMS": "كمّل بالميساج", "continueGoogle": "كمّل بـ Google", "continueX": "كمّل بـ X", "connectWallet": "ربط المحفظة", "emailPlaceholder": "دخل الإيميل ديالك", "invalidEmail": "دخل إيميل صحيح", "sendingLink": "كيتصيفط اللينك...", "continue": "كمّل", "magicLinkInfo": "غادي نصيفطو ليك لينك سحري باش تدخل", "invalidPhone": "دخل رقم تيليفون صحيح مع كود البلاد", "sendingCode": "كيتصيفط الكود...", "smsInfo": "غادي نصيفطو ليك كود التأكيد فالميساج", "or": "ولا", "termsNotice": "إيلا كمّلتي راك موافق على شروط الخدمة وسياسة الخصوصية", "walletInfoDesktop": "ربط المحفظة ديالك باش تدخل بالأمان", "walletInfoMobile": "MetaMask وTrust وPhantom غادي يحلو التطبيق ديالهم مباشرة. Rabby غادي يستعمل WalletConnect." }
 }

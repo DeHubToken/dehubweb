@@ -810,5 +810,25 @@
     "fillRequired": "Silakan isi semua kolom yang diperlukan",
     "submitted": "Aplikasi berhasil dikirim!",
     "failedSubmit": "Gagal mengirim aplikasi. Silakan coba lagi."
+  },
+  "loginModal": {
+    "title": "Masuk",
+    "continueEmail": "Lanjutkan dengan Email",
+    "continueSMS": "Lanjutkan dengan SMS",
+    "continueGoogle": "Lanjutkan dengan Google",
+    "continueX": "Lanjutkan dengan X",
+    "connectWallet": "Hubungkan Dompet",
+    "emailPlaceholder": "Masukkan email Anda",
+    "invalidEmail": "Masukkan alamat email yang valid",
+    "sendingLink": "Mengirim tautan...",
+    "continue": "Lanjutkan",
+    "magicLinkInfo": "Kami akan mengirimkan tautan ajaib untuk masuk",
+    "invalidPhone": "Masukkan nomor telepon yang valid dengan kode negara",
+    "sendingCode": "Mengirim kode...",
+    "smsInfo": "Kami akan mengirimkan kode verifikasi melalui SMS",
+    "or": "atau",
+    "termsNotice": "Dengan melanjutkan, Anda menyetujui Ketentuan Layanan dan Kebijakan Privasi kami",
+    "walletInfoDesktop": "Hubungkan dompet Anda untuk masuk dengan aman",
+    "walletInfoMobile": "MetaMask, Trust & Phantom akan membuka aplikasinya langsung. Rabby akan menggunakan WalletConnect."
   }
 }

@@ -901,5 +901,25 @@
     "fillRequired": "Lütfen tüm gerekli alanları doldurun",
     "submitted": "Başvuru başarıyla gönderildi!",
     "failedSubmit": "Başvuru gönderilemedi. Lütfen tekrar deneyin."
+  },
+  "loginModal": {
+    "title": "Giriş Yap",
+    "continueEmail": "E-posta ile Devam Et",
+    "continueSMS": "SMS ile Devam Et",
+    "continueGoogle": "Google ile Devam Et",
+    "continueX": "X ile Devam Et",
+    "connectWallet": "Cüzdan Bağla",
+    "emailPlaceholder": "E-postanızı girin",
+    "invalidEmail": "Lütfen geçerli bir e-posta adresi girin",
+    "sendingLink": "Bağlantı gönderiliyor...",
+    "continue": "Devam Et",
+    "magicLinkInfo": "Giriş için size sihirli bir bağlantı göndereceğiz",
+    "invalidPhone": "Lütfen ülke kodu ile geçerli bir telefon numarası girin",
+    "sendingCode": "Kod gönderiliyor...",
+    "smsInfo": "SMS ile doğrulama kodu göndereceğiz",
+    "or": "veya",
+    "termsNotice": "Devam ederek Hizmet Şartlarımızı ve Gizlilik Politikamızı kabul etmiş olursunuz",
+    "walletInfoDesktop": "Güvenli giriş için cüzdanınızı bağlayın",
+    "walletInfoMobile": "MetaMask, Trust ve Phantom uygulamalarını doğrudan açacaktır. Rabby WalletConnect kullanacaktır."
   }
 }

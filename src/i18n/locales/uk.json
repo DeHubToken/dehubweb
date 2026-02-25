@@ -45,5 +45,25 @@
   "buyCoins": { "title": "Купити монети", "network": "Мережа", "token": "Токен", "selectToken": "Обрати токен", "amountUsd": "Сума (USD)", "customAmount": "Довільна сума", "minPurchase": "Мінімальна покупка 5$", "youPay": "Ви платите", "youReceive": "Ви отримаєте (приблизно)", "paymentMethod": "Спосіб оплати", "cardBank": "Картка / Банк", "cardBankDesc": "Visa, Mastercard, Apple Pay", "fiatOnramp": "Фіатна рампа", "fiatOnrampDesc": "Купити крипто за фіат", "buy": "Купити {{symbol}}", "processing": "Обробка...", "disclaimer": "Купуючи, ви приймаєте умови. Покупки крипто не повертаються.", "loginDescription": "Увійдіть щоб купити монети.", "noTokens": "Немає доступних токенів", "supplyWarning": "Лише {{supply}} {{symbol}} доступно.", "walletNotConnected": "Гаманець не підключено", "redirecting": "Перенаправлення на оплату...", "sessionCreated": "Сесію створено", "failedPurchase": "Покупка не вдалася", "redirectingOnramp": "Перенаправлення...", "onrampCreated": "Сесію рампи створено", "failedOnramp": "Рампа не вдалася" },
   "agents": { "title": "ШІ-агенти", "connectToManage": "Увійдіть щоб керувати ШІ-агентами", "signInToCreate": "Увійдіть щоб створювати та керувати агентами.", "description": "Створюйте ШІ-агентів для взаємодії з DeHub через MCP.", "apiDocs": "Документація API", "newAgent": "Новий ШІ-агент", "createDescription": "Створити нового агента", "agentName": "Назва агента", "agentNamePlaceholder": "мій-агент", "agentDescription": "Опис", "agentDescriptionPlaceholder": "Що робить ваш агент?", "createAgent": "Створити агента", "creating": "Створення...", "cancel": "Скасувати", "createNew": "Створити нового агента", "noAgents": "Немає агентів. Створіть першого!", "active": "Активний", "inactive": "Неактивний", "apiKey": "API-ключ", "created": "Створено", "delete": "Видалити", "deleteConfirm": "Видалити агента? Не можна скасувати.", "agentCreated": "ШІ-агент створений!", "saveApiKey": "Збережіть API-ключ - ви більше його не побачите.", "agentDeleted": "Агента видалено", "failedCreate": "Створення не вдалося", "failedDelete": "Видалення не вдалося", "apiKeyCopied": "API-ключ скопійовано" },
   "hero": { "title": "Новий Світ", "subtitle": "Чекає", "comingSoon": "Скоро", "iosComingSoon": "iOS-додаток буде скоро!" },
-  "creators": { "title": "Заявка автора", "subtitle": "Приєднуйтесь до мережі авторів DeHub", "xUsername": "Ім'я X (Twitter)", "youtubeUsername": "Ім'я YouTube", "twitchUsername": "Ім'я Twitch", "instagramUsername": "Ім'я Instagram", "tiktokUsername": "Ім'я TikTok", "otherSocials": "Інші соцмережі", "totalFollowerReach": "Загальний охоплення підписників", "followerReachPlaceholder": "напр. 500К на всіх платформах", "emailOrTelegram": "Email або Telegram ID", "emailPlaceholder": "ви@email.ua або @ім'я", "expectedCompensation": "Очікувана компенсація", "compensationPlaceholder": "напр. $100/місяць", "submitApplication": "Надіслати заявку", "submitting": "Надсилання...", "fillRequired": "Заповніть обов'язкові поля", "submitted": "Заявку надіслано!", "failedSubmit": "Не вдалося надіслати. Спробуйте ще раз." }
+  "creators": { "title": "Заявка автора", "subtitle": "Приєднуйтесь до мережі авторів DeHub", "xUsername": "Ім'я X (Twitter)", "youtubeUsername": "Ім'я YouTube", "twitchUsername": "Ім'я Twitch", "instagramUsername": "Ім'я Instagram", "tiktokUsername": "Ім'я TikTok", "otherSocials": "Інші соцмережі", "totalFollowerReach": "Загальний охоплення підписників", "followerReachPlaceholder": "напр. 500К на всіх платформах", "emailOrTelegram": "Email або Telegram ID", "emailPlaceholder": "ви@email.ua або @ім'я", "expectedCompensation": "Очікувана компенсація", "compensationPlaceholder": "напр. $100/місяць", "submitApplication": "Надіслати заявку", "submitting": "Надсилання...", "fillRequired": "Заповніть обов'язкові поля", "submitted": "Заявку надіслано!", "failedSubmit": "Не вдалося надіслати. Спробуйте ще раз." },
+  "loginModal": {
+    "title": "Увійти",
+    "continueEmail": "Продовжити з Email",
+    "continueSMS": "Продовжити з SMS",
+    "continueGoogle": "Продовжити з Google",
+    "continueX": "Продовжити з X",
+    "connectWallet": "Підключити гаманець",
+    "emailPlaceholder": "Введіть ваш email",
+    "invalidEmail": "Введіть дійсну адресу електронної пошти",
+    "sendingLink": "Надсилання посилання...",
+    "continue": "Продовжити",
+    "magicLinkInfo": "Ми надішлемо вам магічне посилання для входу",
+    "invalidPhone": "Введіть дійсний номер телефону з кодом країни",
+    "sendingCode": "Надсилання коду...",
+    "smsInfo": "Ми надішлемо вам код підтвердження через SMS",
+    "or": "або",
+    "termsNotice": "Продовжуючи, ви погоджуєтесь з Умовами використання та Політикою конфіденційності",
+    "walletInfoDesktop": "Підключіть гаманець для безпечного входу",
+    "walletInfoMobile": "MetaMask, Trust та Phantom відкриють свій додаток напряму. Rabby використає WalletConnect."
+  }
 }

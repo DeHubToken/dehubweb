@@ -45,5 +45,25 @@
   "buyCoins": { "title": "Mua xu", "network": "Mạng", "token": "Token", "selectToken": "Chọn token", "amountUsd": "Số tiền (USD)", "customAmount": "Số tiền tùy chỉnh", "minPurchase": "Mua tối thiểu $5", "youPay": "Bạn trả", "youReceive": "Bạn nhận (ước tính)", "paymentMethod": "Phương thức thanh toán", "cardBank": "Thẻ / Ngân hàng", "cardBankDesc": "Visa, Mastercard, Apple Pay", "fiatOnramp": "Nạp tiền fiat", "fiatOnrampDesc": "Mua crypto trực tiếp bằng fiat", "buy": "Mua {{symbol}}", "processing": "Đang xử lý...", "disclaimer": "Khi mua, bạn đồng ý với điều khoản. Mua crypto không hoàn lại.", "loginDescription": "Đăng nhập để mua xu.", "noTokens": "Không có token khả dụng", "supplyWarning": "Chỉ còn {{supply}} {{symbol}}.", "walletNotConnected": "Ví chưa kết nối", "redirecting": "Đang chuyển hướng thanh toán...", "sessionCreated": "Phiên đã tạo", "failedPurchase": "Mua thất bại", "redirectingOnramp": "Đang chuyển hướng...", "onrampCreated": "Phiên nạp đã tạo", "failedOnramp": "Nạp thất bại" },
   "agents": { "title": "Tác nhân AI", "connectToManage": "Đăng nhập để quản lý tác nhân AI", "signInToCreate": "Đăng nhập để tạo và quản lý tác nhân.", "description": "Tạo tác nhân AI tương tác với DeHub qua MCP.", "apiDocs": "Tài liệu API", "newAgent": "Tác nhân AI mới", "createDescription": "Tạo tác nhân mới", "agentName": "Tên tác nhân", "agentNamePlaceholder": "tác-nhân-của-tôi", "agentDescription": "Mô tả", "agentDescriptionPlaceholder": "Tác nhân làm gì?", "createAgent": "Tạo tác nhân", "creating": "Đang tạo...", "cancel": "Hủy", "createNew": "Tạo tác nhân mới", "noAgents": "Chưa có tác nhân. Tạo cái đầu tiên!", "active": "Hoạt động", "inactive": "Không hoạt động", "apiKey": "Khóa API", "created": "Đã tạo", "delete": "Xóa", "deleteConfirm": "Xóa tác nhân? Không thể hoàn tác.", "agentCreated": "Đã tạo tác nhân AI!", "saveApiKey": "Lưu khóa API - bạn không thể xem lại.", "agentDeleted": "Đã xóa tác nhân", "failedCreate": "Tạo thất bại", "failedDelete": "Xóa thất bại", "apiKeyCopied": "Đã sao chép khóa API" },
   "hero": { "title": "Thế Giới Mới", "subtitle": "Đang Chờ", "comingSoon": "Sắp ra mắt", "iosComingSoon": "Ứng dụng iOS sẽ sớm có!" },
-  "creators": { "title": "Đơn ứng tuyển nhà sáng tạo", "subtitle": "Tham gia mạng lưới nhà sáng tạo DeHub", "xUsername": "Tên X (Twitter)", "youtubeUsername": "Tên YouTube", "twitchUsername": "Tên Twitch", "instagramUsername": "Tên Instagram", "tiktokUsername": "Tên TikTok", "otherSocials": "Mạng xã hội khác", "totalFollowerReach": "Tổng lượt theo dõi", "followerReachPlaceholder": "VD: 500K trên tất cả nền tảng", "emailOrTelegram": "Email hoặc Telegram ID", "emailPlaceholder": "ban@email.com hoặc @tên", "expectedCompensation": "Thù lao mong đợi", "compensationPlaceholder": "VD: $100/tháng", "submitApplication": "Gửi đơn", "submitting": "Đang gửi...", "fillRequired": "Vui lòng điền đầy đủ", "submitted": "Đã gửi đơn thành công!", "failedSubmit": "Gửi thất bại. Vui lòng thử lại." }
+  "creators": { "title": "Đơn ứng tuyển nhà sáng tạo", "subtitle": "Tham gia mạng lưới nhà sáng tạo DeHub", "xUsername": "Tên X (Twitter)", "youtubeUsername": "Tên YouTube", "twitchUsername": "Tên Twitch", "instagramUsername": "Tên Instagram", "tiktokUsername": "Tên TikTok", "otherSocials": "Mạng xã hội khác", "totalFollowerReach": "Tổng lượt theo dõi", "followerReachPlaceholder": "VD: 500K trên tất cả nền tảng", "emailOrTelegram": "Email hoặc Telegram ID", "emailPlaceholder": "ban@email.com hoặc @tên", "expectedCompensation": "Thù lao mong đợi", "compensationPlaceholder": "VD: $100/tháng", "submitApplication": "Gửi đơn", "submitting": "Đang gửi...", "fillRequired": "Vui lòng điền đầy đủ", "submitted": "Đã gửi đơn thành công!", "failedSubmit": "Gửi thất bại. Vui lòng thử lại." },
+  "loginModal": {
+    "title": "Đăng nhập",
+    "continueEmail": "Tiếp tục với Email",
+    "continueSMS": "Tiếp tục với SMS",
+    "continueGoogle": "Tiếp tục với Google",
+    "continueX": "Tiếp tục với X",
+    "connectWallet": "Kết nối Ví",
+    "emailPlaceholder": "Nhập email của bạn",
+    "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ",
+    "sendingLink": "Đang gửi liên kết...",
+    "continue": "Tiếp tục",
+    "magicLinkInfo": "Chúng tôi sẽ gửi cho bạn liên kết đăng nhập",
+    "invalidPhone": "Vui lòng nhập số điện thoại hợp lệ với mã quốc gia",
+    "sendingCode": "Đang gửi mã...",
+    "smsInfo": "Chúng tôi sẽ gửi mã xác minh qua SMS",
+    "or": "hoặc",
+    "termsNotice": "Bằng cách tiếp tục, bạn đồng ý với Điều khoản Dịch vụ và Chính sách Bảo mật",
+    "walletInfoDesktop": "Kết nối ví để đăng nhập an toàn",
+    "walletInfoMobile": "MetaMask, Trust & Phantom sẽ mở ứng dụng trực tiếp. Rabby sẽ dùng WalletConnect."
+  }
 }

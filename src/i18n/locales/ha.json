@@ -840,5 +840,25 @@
     "fillRequired": "Da fatan cika duk filayen da ake buƙata",
     "submitted": "An miƙa nema cikin nasara!",
     "failedSubmit": "Ba a iya miƙa nema ba. Da fatan za a sake gwadawa."
+  },
+  "loginModal": {
+    "title": "Shiga",
+    "continueEmail": "Ci gaba da Email",
+    "continueSMS": "Ci gaba da SMS",
+    "continueGoogle": "Ci gaba da Google",
+    "continueX": "Ci gaba da X",
+    "connectWallet": "Haɗa Wallet",
+    "emailPlaceholder": "Shigar da email ɗinka",
+    "invalidEmail": "Da fatan za a shigar da adireshin email ɗin da ya dace",
+    "sendingLink": "Ana aika haɗin...",
+    "continue": "Ci gaba",
+    "magicLinkInfo": "Za mu aiko maka haɗin sihiri don shiga",
+    "invalidPhone": "Da fatan za a shigar da lambar waya mai inganci tare da lambar ƙasa",
+    "sendingCode": "Ana aika lambar...",
+    "smsInfo": "Za mu aiko maka lambar tabbatarwa ta SMS",
+    "or": "ko",
+    "termsNotice": "Idan ka ci gaba, ka yarda da Sharuɗɗanmu na Sabis da Manufar Sirri",
+    "walletInfoDesktop": "Haɗa wallet ɗinka don shiga cikin aminci",
+    "walletInfoMobile": "MetaMask, Trust & Phantom za su buɗe app ɗinsu kai tsaye. Rabby zai yi amfani da WalletConnect."
   }
 }

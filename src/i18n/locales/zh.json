@@ -378,5 +378,25 @@
   "buyCoins": { "title": "购买代币", "network": "网络", "token": "代币", "selectToken": "选择代币", "amountUsd": "金额 (USD)", "customAmount": "自定义金额", "minPurchase": "最低购买$5", "youPay": "您支付", "youReceive": "您收到（估计）", "paymentMethod": "支付方式", "cardBank": "卡/银行", "cardBankDesc": "Visa, Mastercard, Apple Pay", "fiatOnramp": "法币入金", "fiatOnrampDesc": "直接用法币购买加密货币", "buy": "购买 {{symbol}}", "processing": "处理中...", "disclaimer": "购买即表示同意我们的条款。加密货币购买不可退款。", "loginDescription": "登录以购买代币。", "noTokens": "无可用代币", "supplyWarning": "仅有{{supply}}个{{symbol}}可用。", "walletNotConnected": "钱包未连接", "redirecting": "正在跳转...", "sessionCreated": "会话已创建", "failedPurchase": "购买失败", "redirectingOnramp": "正在跳转...", "onrampCreated": "入金会话已创建", "failedOnramp": "入金失败" },
   "agents": { "title": "AI代理", "connectToManage": "登录以管理AI代理", "signInToCreate": "登录以创建和管理您的AI代理。", "description": "创建通过MCP协议与DeHub交互的AI代理。", "apiDocs": "API文档", "newAgent": "新建AI代理", "createDescription": "创建新代理", "agentName": "代理名称", "agentNamePlaceholder": "我的代理", "agentDescription": "描述", "agentDescriptionPlaceholder": "您的代理做什么？", "createAgent": "创建代理", "creating": "创建中...", "cancel": "取消", "createNew": "创建新代理", "noAgents": "暂无代理。创建第一个吧！", "active": "活跃", "inactive": "未激活", "apiKey": "API密钥", "created": "已创建", "delete": "删除", "deleteConfirm": "删除此代理？此操作不可撤销。", "agentCreated": "AI代理已创建！", "saveApiKey": "保存您的API密钥 - 之后无法再次查看。", "agentDeleted": "代理已删除", "failedCreate": "创建失败", "failedDelete": "删除失败", "apiKeyCopied": "API密钥已复制" },
   "hero": { "title": "新世界", "subtitle": "等待着你", "comingSoon": "即将推出", "iosComingSoon": "iOS应用即将推出！" },
-  "creators": { "title": "创作者申请", "subtitle": "加入DeHub创作者网络", "xUsername": "X (Twitter) 用户名", "youtubeUsername": "YouTube 用户名", "twitchUsername": "Twitch 用户名", "instagramUsername": "Instagram 用户名", "tiktokUsername": "TikTok 用户名", "otherSocials": "其他社交媒体", "totalFollowerReach": "总粉丝覆盖", "expectedCompensation": "期望报酬", "submit": "提交申请", "submitting": "提交中...", "submitted": "申请已提交！", "submittedDesc": "谢谢！我们将审核您的申请。", "failedSubmit": "提交失败", "emailRequired": "邮箱必填", "email": "邮箱", "emailPlaceholder": "your@email.com" }
+  "creators": { "title": "创作者申请", "subtitle": "加入DeHub创作者网络", "xUsername": "X (Twitter) 用户名", "youtubeUsername": "YouTube 用户名", "twitchUsername": "Twitch 用户名", "instagramUsername": "Instagram 用户名", "tiktokUsername": "TikTok 用户名", "otherSocials": "其他社交媒体", "totalFollowerReach": "总粉丝覆盖", "expectedCompensation": "期望报酬", "submit": "提交申请", "submitting": "提交中...", "submitted": "申请已提交！", "submittedDesc": "谢谢！我们将审核您的申请。", "failedSubmit": "提交失败", "emailRequired": "邮箱必填", "email": "邮箱", "emailPlaceholder": "your@email.com" },
+  "loginModal": {
+    "title": "登录",
+    "continueEmail": "使用邮箱继续",
+    "continueSMS": "使用短信继续",
+    "continueGoogle": "使用 Google 继续",
+    "continueX": "使用 X 继续",
+    "connectWallet": "连接钱包",
+    "emailPlaceholder": "输入您的邮箱",
+    "invalidEmail": "请输入有效的邮箱地址",
+    "sendingLink": "正在发送链接...",
+    "continue": "继续",
+    "magicLinkInfo": "我们将发送一个魔法链接帮您登录",
+    "invalidPhone": "请输入带国家代码的有效电话号码",
+    "sendingCode": "正在发送验证码...",
+    "smsInfo": "我们将通过短信发送验证码",
+    "or": "或",
+    "termsNotice": "继续即表示您同意我们的服务条款和隐私政策",
+    "walletInfoDesktop": "连接您的钱包以安全登录",
+    "walletInfoMobile": "MetaMask、Trust 和 Phantom 将直接打开其应用。Rabby 将使用 WalletConnect。"
+  }
 }

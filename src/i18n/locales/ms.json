@@ -542,5 +542,25 @@
     "fillRequired": "Sila isi semua ruangan yang diperlukan",
     "submitted": "Permohonan berjaya dihantar!",
     "failedSubmit": "Gagal menghantar permohonan. Sila cuba lagi."
+  },
+  "loginModal": {
+    "title": "Log masuk",
+    "continueEmail": "Teruskan dengan E-mel",
+    "continueSMS": "Teruskan dengan SMS",
+    "continueGoogle": "Teruskan dengan Google",
+    "continueX": "Teruskan dengan X",
+    "connectWallet": "Sambung Dompet",
+    "emailPlaceholder": "Masukkan e-mel anda",
+    "invalidEmail": "Sila masukkan alamat e-mel yang sah",
+    "sendingLink": "Menghantar pautan...",
+    "continue": "Teruskan",
+    "magicLinkInfo": "Kami akan menghantar pautan ajaib untuk log masuk",
+    "invalidPhone": "Sila masukkan nombor telefon yang sah dengan kod negara",
+    "sendingCode": "Menghantar kod...",
+    "smsInfo": "Kami akan menghantar kod pengesahan melalui SMS",
+    "or": "atau",
+    "termsNotice": "Dengan meneruskan, anda bersetuju dengan Terma Perkhidmatan dan Dasar Privasi kami",
+    "walletInfoDesktop": "Sambungkan dompet anda untuk log masuk dengan selamat",
+    "walletInfoMobile": "MetaMask, Trust & Phantom akan membuka aplikasi mereka terus. Rabby akan menggunakan WalletConnect."
   }
 }

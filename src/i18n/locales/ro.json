@@ -107,5 +107,25 @@
   "hero": { "title": "O Lume Nouă", "subtitle": "Te Așteaptă", "comingSoon": "În Curând", "iosComingSoon": "Aplicația iOS va fi disponibilă în curând!" },
   "creators": {
     "title": "Aplicație Creator", "subtitle": "Alătură-te rețelei de creatori DeHub", "xUsername": "Utilizator X (Twitter)", "youtubeUsername": "Utilizator YouTube", "twitchUsername": "Utilizator Twitch", "instagramUsername": "Utilizator Instagram", "tiktokUsername": "Utilizator TikTok", "otherSocials": "Alte rețele sociale", "totalFollowerReach": "Audiență totală", "followerReachPlaceholder": "ex., 500K pe toate platformele", "emailOrTelegram": "Email sau Telegram ID de contact", "emailPlaceholder": "tu@exemplu.com sau @utilizator", "expectedCompensation": "Compensație așteptată", "compensationPlaceholder": "ex., $100/lună", "submitApplication": "Trimite aplicația", "submitting": "Se trimite...", "fillRequired": "Te rog completează toate câmpurile obligatorii", "submitted": "Aplicație trimisă cu succes!", "failedSubmit": "Nu s-a putut trimite aplicația. Te rog încearcă din nou."
+  },
+  "loginModal": {
+    "title": "Autentificare",
+    "continueEmail": "Continuă cu Email",
+    "continueSMS": "Continuă cu SMS",
+    "continueGoogle": "Continuă cu Google",
+    "continueX": "Continuă cu X",
+    "connectWallet": "Conectează Portofelul",
+    "emailPlaceholder": "Introduceți emailul",
+    "invalidEmail": "Vă rugăm introduceți o adresă de email validă",
+    "sendingLink": "Se trimite linkul...",
+    "continue": "Continuă",
+    "magicLinkInfo": "Vă vom trimite un link magic pentru autentificare",
+    "invalidPhone": "Vă rugăm introduceți un număr de telefon valid cu codul țării",
+    "sendingCode": "Se trimite codul...",
+    "smsInfo": "Vă vom trimite un cod de verificare prin SMS",
+    "or": "sau",
+    "termsNotice": "Continuând, sunteți de acord cu Termenii de Serviciu și Politica de Confidențialitate",
+    "walletInfoDesktop": "Conectați portofelul pentru autentificare securizată",
+    "walletInfoMobile": "MetaMask, Trust și Phantom vor deschide aplicația direct. Rabby va folosi WalletConnect."
   }
 }

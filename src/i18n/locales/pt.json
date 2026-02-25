@@ -350,5 +350,25 @@
   "buyCoins": { "title": "Comprar moedas", "network": "Rede", "token": "Token", "selectToken": "Selecionar token", "amountUsd": "Valor (USD)", "customAmount": "Valor personalizado", "minPurchase": "Compra mínima de $5", "youPay": "Você paga", "youReceive": "Você recebe (est.)", "paymentMethod": "Método de pagamento", "cardBank": "Cartão / Banco", "cardBankDesc": "Visa, Mastercard, Apple Pay", "fiatOnramp": "Rampa fiat", "fiatOnrampDesc": "Comprar cripto com fiat", "buy": "Comprar {{symbol}}", "processing": "Processando...", "disclaimer": "Ao comprar, você aceita nossos termos. Compras de cripto não são reembolsáveis.", "loginDescription": "Faça login para comprar moedas.", "noTokens": "Nenhum token disponível", "supplyWarning": "Apenas {{supply}} {{symbol}} disponíveis.", "walletNotConnected": "Carteira não conectada", "redirecting": "Redirecionando...", "sessionCreated": "Sessão criada", "failedPurchase": "Falha na compra", "redirectingOnramp": "Redirecionando...", "onrampCreated": "Sessão criada", "failedOnramp": "Falha na rampa" },
   "agents": { "title": "Agentes IA", "connectToManage": "Faça login para gerenciar agentes", "signInToCreate": "Faça login para criar seus agentes IA.", "description": "Crie agentes IA que interagem com DeHub via MCP.", "apiDocs": "Docs API", "newAgent": "Novo agente IA", "createDescription": "Crie um novo agente", "agentName": "Nome do agente", "agentNamePlaceholder": "meu-agente", "agentDescription": "Descrição", "agentDescriptionPlaceholder": "O que seu agente faz?", "createAgent": "Criar agente", "creating": "Criando...", "cancel": "Cancelar", "createNew": "Criar novo agente", "noAgents": "Sem agentes. Crie o primeiro!", "active": "Ativo", "inactive": "Inativo", "apiKey": "Chave API", "created": "Criado", "delete": "Excluir", "deleteConfirm": "Excluir este agente? Ação irreversível.", "agentCreated": "Agente IA criado!", "saveApiKey": "Salve sua chave API.", "agentDeleted": "Agente excluído", "failedCreate": "Falha ao criar", "failedDelete": "Falha ao excluir", "apiKeyCopied": "Chave API copiada" },
   "hero": { "title": "Um Novo Mundo", "subtitle": "Aguarda", "comingSoon": "Em Breve", "iosComingSoon": "O app iOS estará disponível em breve!" },
-  "creators": { "title": "Candidatura de Criador", "subtitle": "Junte-se à rede de criadores DeHub", "xUsername": "Usuário X (Twitter)", "youtubeUsername": "Usuário YouTube", "twitchUsername": "Usuário Twitch", "instagramUsername": "Usuário Instagram", "tiktokUsername": "Usuário TikTok", "otherSocials": "Outras redes sociais", "totalFollowerReach": "Alcance total de seguidores", "expectedCompensation": "Compensação esperada", "submit": "Enviar candidatura", "submitting": "Enviando...", "submitted": "Candidatura enviada!", "submittedDesc": "Obrigado! Analisaremos sua candidatura.", "failedSubmit": "Falha ao enviar", "emailRequired": "Email obrigatório", "email": "Email", "emailPlaceholder": "seu@email.com" }
+  "creators": { "title": "Candidatura de Criador", "subtitle": "Junte-se à rede de criadores DeHub", "xUsername": "Usuário X (Twitter)", "youtubeUsername": "Usuário YouTube", "twitchUsername": "Usuário Twitch", "instagramUsername": "Usuário Instagram", "tiktokUsername": "Usuário TikTok", "otherSocials": "Outras redes sociais", "totalFollowerReach": "Alcance total de seguidores", "expectedCompensation": "Compensação esperada", "submit": "Enviar candidatura", "submitting": "Enviando...", "submitted": "Candidatura enviada!", "submittedDesc": "Obrigado! Analisaremos sua candidatura.", "failedSubmit": "Falha ao enviar", "emailRequired": "Email obrigatório", "email": "Email", "emailPlaceholder": "seu@email.com" },
+  "loginModal": {
+    "title": "Entrar",
+    "continueEmail": "Continuar com Email",
+    "continueSMS": "Continuar com SMS",
+    "continueGoogle": "Continuar com Google",
+    "continueX": "Continuar com X",
+    "connectWallet": "Conectar Carteira",
+    "emailPlaceholder": "Digite seu email",
+    "invalidEmail": "Por favor digite um email válido",
+    "sendingLink": "Enviando link...",
+    "continue": "Continuar",
+    "magicLinkInfo": "Enviaremos um link mágico para entrar",
+    "invalidPhone": "Por favor digite um número de telefone válido com código do país",
+    "sendingCode": "Enviando código...",
+    "smsInfo": "Enviaremos um código de verificação por SMS",
+    "or": "ou",
+    "termsNotice": "Ao continuar, você concorda com nossos Termos de Serviço e Política de Privacidade",
+    "walletInfoDesktop": "Conecte sua carteira para entrar com segurança",
+    "walletInfoMobile": "MetaMask, Trust e Phantom abrirão o app diretamente. Rabby usará WalletConnect."
+  }
 }

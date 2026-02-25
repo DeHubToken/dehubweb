@@ -908,5 +908,25 @@
     "fillRequired": "Please fill in all required fields",
     "submitted": "Application submitted successfully!",
     "failedSubmit": "Failed to submit application. Please try again."
+  },
+  "loginModal": {
+    "title": "Log in",
+    "continueEmail": "Continue with Email",
+    "continueSMS": "Continue with SMS",
+    "continueGoogle": "Continue with Google",
+    "continueX": "Continue with X",
+    "connectWallet": "Connect Wallet",
+    "emailPlaceholder": "Enter your email",
+    "invalidEmail": "Please enter a valid email address",
+    "sendingLink": "Sending link...",
+    "continue": "Continue",
+    "magicLinkInfo": "We'll send you a magic link to sign in",
+    "invalidPhone": "Please enter a valid phone number with country code",
+    "sendingCode": "Sending code...",
+    "smsInfo": "We'll send you a verification code via SMS",
+    "or": "or",
+    "termsNotice": "By continuing, you agree to our Terms of Service and Privacy Policy",
+    "walletInfoDesktop": "Connect your wallet to sign in securely",
+    "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect."
   }
 }

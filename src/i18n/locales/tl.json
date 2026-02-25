@@ -492,5 +492,25 @@
     "fillRequired": "Mangyaring punan ang lahat ng kinakailangang field",
     "submitted": "Matagumpay na naisumite ang aplikasyon!",
     "failedSubmit": "Hindi naisumite ang aplikasyon. Subukan muli."
+  },
+  "loginModal": {
+    "title": "Mag-log in",
+    "continueEmail": "Magpatuloy sa Email",
+    "continueSMS": "Magpatuloy sa SMS",
+    "continueGoogle": "Magpatuloy sa Google",
+    "continueX": "Magpatuloy sa X",
+    "connectWallet": "Ikonekta ang Wallet",
+    "emailPlaceholder": "Ilagay ang iyong email",
+    "invalidEmail": "Maglagay ng wastong email address",
+    "sendingLink": "Nagpapadala ng link...",
+    "continue": "Magpatuloy",
+    "magicLinkInfo": "Magpapadala kami ng magic link para mag-sign in",
+    "invalidPhone": "Maglagay ng wastong numero ng telepono na may country code",
+    "sendingCode": "Nagpapadala ng code...",
+    "smsInfo": "Magpapadala kami ng verification code sa SMS",
+    "or": "o",
+    "termsNotice": "Sa pagpapatuloy, sumasang-ayon ka sa aming Mga Tuntunin ng Serbisyo at Patakaran sa Privacy",
+    "walletInfoDesktop": "Ikonekta ang iyong wallet para mag-sign in nang ligtas",
+    "walletInfoMobile": "MetaMask, Trust at Phantom ay direktang magbubukas ng kanilang app. Rabby ay gagamit ng WalletConnect."
   }
 }

@@ -841,5 +841,6 @@
     "fillRequired": "Tafadhali jaza sehemu zote zinazohitajika",
     "submitted": "Ombi limewasilishwa kwa mafanikio!",
     "failedSubmit": "Imeshindwa kuwasilisha ombi. Tafadhali jaribu tena."
-  }
+  },
+  "loginModal": { "title": "Ingia", "continueEmail": "Endelea na Email", "continueSMS": "Endelea na SMS", "continueGoogle": "Endelea na Google", "continueX": "Endelea na X", "connectWallet": "Unganisha Pochi", "emailPlaceholder": "Ingiza email yako", "invalidEmail": "Tafadhali ingiza anwani sahihi ya email", "sendingLink": "Inatuma kiungo...", "continue": "Endelea", "magicLinkInfo": "Tutakutumia kiungo cha kichawi ili uingie", "invalidPhone": "Tafadhali ingiza nambari sahihi ya simu na msimbo wa nchi", "sendingCode": "Inatuma msimbo...", "smsInfo": "Tutakutumia msimbo wa uthibitisho kupitia SMS", "or": "au", "termsNotice": "Kwa kuendelea, unakubali Masharti yetu ya Huduma na Sera ya Faragha", "walletInfoDesktop": "Unganisha pochi yako ili uingie kwa usalama", "walletInfoMobile": "MetaMask, Trust na Phantom zitafungua programu yao moja kwa moja. Rabby itatumia WalletConnect." }
 }

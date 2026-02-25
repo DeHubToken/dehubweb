@@ -908,5 +908,25 @@
     "fillRequired": "Molimo ispunite sva obavezna polja",
     "submitted": "Prijava uspješno poslana!",
     "failedSubmit": "Slanje prijave nije uspjelo. Pokušajte ponovo."
+  },
+  "loginModal": {
+    "title": "Prijava",
+    "continueEmail": "Nastavi s e-mailom",
+    "continueSMS": "Nastavi s SMS-om",
+    "continueGoogle": "Nastavi s Googleom",
+    "continueX": "Nastavi s X-om",
+    "connectWallet": "Poveži novčanik",
+    "emailPlaceholder": "Unesite svoj e-mail",
+    "invalidEmail": "Unesite valjanu e-mail adresu",
+    "sendingLink": "Slanje linka...",
+    "continue": "Nastavi",
+    "magicLinkInfo": "Poslat ćemo vam čarobni link za prijavu",
+    "invalidPhone": "Unesite valjani broj telefona s pozivnim brojem",
+    "sendingCode": "Slanje koda...",
+    "smsInfo": "Poslat ćemo vam verifikacijski kod putem SMS-a",
+    "or": "ili",
+    "termsNotice": "Nastavkom se slažete s našim Uvjetima korištenja i Politikom privatnosti",
+    "walletInfoDesktop": "Povežite novčanik za sigurnu prijavu",
+    "walletInfoMobile": "MetaMask, Trust i Phantom će otvoriti svoju aplikaciju izravno. Rabby će koristiti WalletConnect."
   }
 }

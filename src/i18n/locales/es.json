@@ -892,5 +892,25 @@
     "fillRequired": "Por favor completa todos los campos requeridos",
     "submitted": "¡Solicitud enviada exitosamente!",
     "failedSubmit": "Error al enviar solicitud. Inténtalo de nuevo."
+  },
+  "loginModal": {
+    "title": "Iniciar sesión",
+    "continueEmail": "Continuar con Email",
+    "continueSMS": "Continuar con SMS",
+    "continueGoogle": "Continuar con Google",
+    "continueX": "Continuar con X",
+    "connectWallet": "Conectar Billetera",
+    "emailPlaceholder": "Ingresa tu email",
+    "invalidEmail": "Por favor ingresa un email válido",
+    "sendingLink": "Enviando enlace...",
+    "continue": "Continuar",
+    "magicLinkInfo": "Te enviaremos un enlace mágico para iniciar sesión",
+    "invalidPhone": "Por favor ingresa un número de teléfono válido con código de país",
+    "sendingCode": "Enviando código...",
+    "smsInfo": "Te enviaremos un código de verificación por SMS",
+    "or": "o",
+    "termsNotice": "Al continuar, aceptas nuestros Términos de Servicio y Política de Privacidad",
+    "walletInfoDesktop": "Conecta tu billetera para iniciar sesión de forma segura",
+    "walletInfoMobile": "MetaMask, Trust y Phantom abrirán su app directamente. Rabby usará WalletConnect."
   }
 }

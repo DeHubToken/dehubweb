@@ -7,6 +7,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Mail, Wallet, Loader2, ChevronRight, Smartphone } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -55,6 +56,7 @@ type LoginStep = 'main' | 'email' | 'sms' | 'wallets';
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const { connectWithProvider, connectWithEmail, connectWithSMS, setWagmiAuthIntent, isConnecting } = useAuth();
+  const { t } = useTranslation();
   const [step, setStep] = useState<LoginStep>('main');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -97,7 +99,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setEmailError('Please enter a valid email address');
+      setEmailError(t('loginModal.invalidEmail'));
       return;
     }
 
@@ -118,7 +120,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     const phoneRegex = /^\+?[1-9]\d{6,14}$/;
     const cleanedPhone = phone.replace(/[\s\-()]/g, '');
     if (!phoneRegex.test(cleanedPhone)) {
-      setPhoneError('Please enter a valid phone number with country code');
+      setPhoneError(t('loginModal.invalidPhone'));
       return;
     }
 
@@ -159,7 +161,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
         >
           <Mail className="w-5 h-5" />
-          <span>Continue with Email</span>
+          <span>{t('loginModal.continueEmail')}</span>
         </Button>
 
         <Button
@@ -168,7 +170,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
         >
           <Smartphone className="w-5 h-5" />
-          <span>Continue with SMS</span>
+          <span>{t('loginModal.continueSMS')}</span>
         </Button>
 
         <Button
@@ -181,7 +183,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           ) : (
             <GoogleIcon />
           )}
-          <span>Continue with Google</span>
+          <span>{t('loginModal.continueGoogle')}</span>
         </Button>
 
         <Button
@@ -194,13 +196,13 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           ) : (
             <XIcon />
           )}
-          <span>Continue with X</span>
+          <span>{t('loginModal.continueX')}</span>
         </Button>
       </div>
 
       <div className="flex items-center gap-3 py-2">
         <Separator className="flex-1 bg-white/10" />
-        <span className="text-white/40 text-sm">or</span>
+        <span className="text-white/40 text-sm">{t('loginModal.or')}</span>
         <Separator className="flex-1 bg-white/10" />
       </div>
 
@@ -211,7 +213,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         className="w-full h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-center gap-3 border-white/10"
       >
         <Wallet className="w-5 h-5" />
-        <span>Connect Wallet</span>
+        <span>{t('loginModal.connectWallet')}</span>
       </Button>
     </div>
   );
@@ -306,8 +308,8 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
       <p className="text-white/40 text-[10px] text-center mt-2 px-2">
         {isMobileDevice()
-          ? 'MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect.'
-          : 'Connect your wallet to sign in securely'}
+          ? t('loginModal.walletInfoMobile')
+          : t('loginModal.walletInfoDesktop')}
       </p>
     </div>
   );
@@ -319,7 +321,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         <div className="space-y-2">
           <Input
             type="email"
-            placeholder="Enter your email"
+            placeholder={t('loginModal.emailPlaceholder')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isConnecting}
@@ -339,15 +341,15 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           {activeProvider === 'email' ? (
             <span className="flex items-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin" />
-              Sending link...
+              {t('loginModal.sendingLink')}
             </span>
           ) : (
-            'Continue'
+            t('loginModal.continue')
           )}
         </Button>
 
         <p className="text-white/40 text-xs text-center">
-          We'll send you a magic link to sign in
+          {t('loginModal.magicLinkInfo')}
         </p>
       </form>
     </div>
@@ -379,15 +381,15 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           {activeProvider === 'sms' ? (
             <span className="flex items-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin" />
-              Sending code...
+              {t('loginModal.sendingCode')}
             </span>
           ) : (
-            'Continue'
+            t('loginModal.continue')
           )}
         </Button>
 
         <p className="text-white/40 text-xs text-center">
-          We'll send you a verification code via SMS
+          {t('loginModal.smsInfo')}
         </p>
       </form>
     </div>
@@ -409,10 +411,10 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     </>
   );
 
-  const titleText = step === 'main' ? 'Log in'
-    : step === 'email' ? 'Continue with Email'
-    : step === 'sms' ? 'Continue with SMS'
-    : 'Connect Wallet';
+  const titleText = step === 'main' ? t('loginModal.title')
+    : step === 'email' ? t('loginModal.continueEmail')
+    : step === 'sms' ? t('loginModal.continueSMS')
+    : t('loginModal.connectWallet');
 
   const bodyContent = (
     <>
@@ -424,7 +426,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </div>
       <div className="px-6 py-4 bg-black/20 border-t border-white/10">
         <p className="text-xs text-white/40 text-center">
-          By continuing, you agree to our Terms of Service and Privacy Policy
+          {t('loginModal.termsNotice')}
         </p>
       </div>
     </>

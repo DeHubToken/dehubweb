@@ -378,5 +378,25 @@
   "buyCoins": { "title": "コインを購入", "network": "ネットワーク", "token": "トークン", "selectToken": "トークンを選択", "amountUsd": "金額（USD）", "customAmount": "カスタム金額", "minPurchase": "最低購入額$5", "youPay": "お支払い", "youReceive": "受取（推定）", "paymentMethod": "支払い方法", "cardBank": "カード / 銀行", "cardBankDesc": "Visa, Mastercard, Apple Pay", "fiatOnramp": "法定通貨入金", "fiatOnrampDesc": "法定通貨で直接購入", "buy": "{{symbol}}を購入", "processing": "処理中...", "disclaimer": "購入により利用規約に同意します。暗号通貨の購入は返金不可です。", "loginDescription": "ログインしてコインを購入。", "noTokens": "利用可能なトークンなし", "supplyWarning": "{{supply}}{{symbol}}のみ利用可能です。", "walletNotConnected": "ウォレット未接続", "redirecting": "リダイレクト中...", "sessionCreated": "セッション作成", "failedPurchase": "購入失敗", "redirectingOnramp": "リダイレクト中...", "onrampCreated": "入金セッション作成", "failedOnramp": "入金失敗" },
   "agents": { "title": "AIエージェント", "connectToManage": "ログインしてAIエージェントを管理", "signInToCreate": "ログインしてAIエージェントを作成・管理。", "description": "MCPプロトコルでDeHubと対話するAIエージェントを作成。", "apiDocs": "APIドキュメント", "newAgent": "新しいAIエージェント", "createDescription": "新しいエージェントを作成", "agentName": "エージェント名", "agentNamePlaceholder": "マイエージェント", "agentDescription": "説明", "agentDescriptionPlaceholder": "エージェントは何をしますか？", "createAgent": "エージェントを作成", "creating": "作成中...", "cancel": "キャンセル", "createNew": "新規作成", "noAgents": "まだエージェントがありません。最初のエージェントを作成！", "active": "アクティブ", "inactive": "非アクティブ", "apiKey": "APIキー", "created": "作成日", "delete": "削除", "deleteConfirm": "このエージェントを削除しますか？元に戻せません。", "agentCreated": "AIエージェントが作成されました！", "saveApiKey": "APIキーを保存してください - 再表示できません。", "agentDeleted": "エージェントが削除されました", "failedCreate": "作成に失敗", "failedDelete": "削除に失敗", "apiKeyCopied": "APIキーがコピーされました" },
   "hero": { "title": "新しい世界が", "subtitle": "待っています", "comingSoon": "近日公開", "iosComingSoon": "iOSアプリは近日公開予定です！" },
-  "creators": { "title": "クリエイター応募", "subtitle": "DeHubクリエイターネットワークに参加", "xUsername": "X (Twitter) ユーザー名", "youtubeUsername": "YouTube ユーザー名", "twitchUsername": "Twitch ユーザー名", "instagramUsername": "Instagram ユーザー名", "tiktokUsername": "TikTok ユーザー名", "otherSocials": "その他のSNS", "totalFollowerReach": "総フォロワーリーチ", "expectedCompensation": "希望報酬", "submit": "応募を送信", "submitting": "送信中...", "submitted": "応募が送信されました！", "submittedDesc": "ありがとうございます！応募を確認します。", "failedSubmit": "送信に失敗", "emailRequired": "メールは必須です", "email": "メール", "emailPlaceholder": "your@email.com" }
+  "creators": { "title": "クリエイター応募", "subtitle": "DeHubクリエイターネットワークに参加", "xUsername": "X (Twitter) ユーザー名", "youtubeUsername": "YouTube ユーザー名", "twitchUsername": "Twitch ユーザー名", "instagramUsername": "Instagram ユーザー名", "tiktokUsername": "TikTok ユーザー名", "otherSocials": "その他のSNS", "totalFollowerReach": "総フォロワーリーチ", "expectedCompensation": "希望報酬", "submit": "応募を送信", "submitting": "送信中...", "submitted": "応募が送信されました！", "submittedDesc": "ありがとうございます！応募を確認します。", "failedSubmit": "送信に失敗", "emailRequired": "メールは必須です", "email": "メール", "emailPlaceholder": "your@email.com" },
+  "loginModal": {
+    "title": "ログイン",
+    "continueEmail": "メールで続ける",
+    "continueSMS": "SMSで続ける",
+    "continueGoogle": "Googleで続ける",
+    "continueX": "Xで続ける",
+    "connectWallet": "ウォレットを接続",
+    "emailPlaceholder": "メールアドレスを入力",
+    "invalidEmail": "有効なメールアドレスを入力してください",
+    "sendingLink": "リンクを送信中...",
+    "continue": "続ける",
+    "magicLinkInfo": "サインイン用のマジックリンクを送信します",
+    "invalidPhone": "国番号付きの有効な電話番号を入力してください",
+    "sendingCode": "コードを送信中...",
+    "smsInfo": "SMS で確認コードを送信します",
+    "or": "または",
+    "termsNotice": "続行することで、利用規約とプライバシーポリシーに同意したことになります",
+    "walletInfoDesktop": "ウォレットを接続して安全にサインイン",
+    "walletInfoMobile": "MetaMask、Trust、Phantom はアプリを直接開きます。Rabby は WalletConnect を使用します。"
+  }
 }

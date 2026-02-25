@@ -838,5 +838,25 @@
     "fillRequired": "Biko mejupụta ebe niile achọrọ",
     "submitted": "Enyefeela arịrịọ nke ọma!",
     "failedSubmit": "Enweghị ike inyefe arịrịọ. Biko nwaa ọzọ."
+  },
+  "loginModal": {
+    "title": "Banye",
+    "continueEmail": "Gaa n'ihu na Email",
+    "continueSMS": "Gaa n'ihu na SMS",
+    "continueGoogle": "Gaa n'ihu na Google",
+    "continueX": "Gaa n'ihu na X",
+    "connectWallet": "Jikọọ Wallet",
+    "emailPlaceholder": "Tinye email gị",
+    "invalidEmail": "Biko tinye adreesị email ziri ezi",
+    "sendingLink": "Na-eziga njikọ...",
+    "continue": "Gaa n'ihu",
+    "magicLinkInfo": "Anyị ga-ezitere gị njikọ magic iji banye",
+    "invalidPhone": "Biko tinye nọmba ekwentị kwesịrị ekwesị na koodu mba",
+    "sendingCode": "Na-eziga koodu...",
+    "smsInfo": "Anyị ga-ezitere gị koodu nkwenye site na SMS",
+    "or": "ma ọ bụ",
+    "termsNotice": "Site n'ịga n'ihu, ị kwenyere na Usoro Ọrụ anyị na Amụma Nzuzo",
+    "walletInfoDesktop": "Jikọọ wallet gị iji banye n'ụzọ nchekwa",
+    "walletInfoMobile": "MetaMask, Trust na Phantom ga-emeghe app ha ozugbo. Rabby ga-eji WalletConnect."
   }
 }
