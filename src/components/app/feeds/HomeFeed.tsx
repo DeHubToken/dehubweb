@@ -54,7 +54,7 @@ import {
   mapToTextPost,
 } from '@/hooks/use-unified-feed';
 import { useDeHubStoryUsers, useDeHubLive, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
-import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
+import { usePersistedFeedFilter, usePersistedContentFilters, clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { getMediaUrl, getNFTInfo, getCategories } from '@/lib/api/dehub';
 import type { DeHubCategory } from '@/lib/api/dehub';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
@@ -311,6 +311,15 @@ function SortFilterSection({
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
+
+  // Clear persisted filters on fresh page load (not in-app navigation)
+  useEffect(() => {
+    const isNewPageLoad = !sessionStorage.getItem('feed-session-active');
+    if (isNewPageLoad) {
+      clearPersistedFeedFilters();
+      sessionStorage.setItem('feed-session-active', 'true');
+    }
+  }, []);
 
   // Native touch event listeners on bento wrapper to reliably block propagation
   useEffect(() => {
