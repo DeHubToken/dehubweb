@@ -65,6 +65,7 @@ import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
+import { LeaderboardCarousel } from '@/components/app/feeds/LeaderboardCarousel';
 
 import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.types';
 
@@ -80,6 +81,7 @@ type FeedItemType =
 
 const PAGE_SIZE = 20;
 const SHORTS_INSERT_INTERVAL = 5;
+const LEADERBOARD_INSERT_AFTER = 8;
 const RADIO_INSERT_AFTER = 12;
 /** Insert an all-time most-liked post every N items in trending feed */
 const CLASSIC_INSERT_INTERVAL = 6;
@@ -1001,6 +1003,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
       const fullWidthAfter: ReactNode[] = [];
 
+      // Leaderboard carousel after the grid
+      fullWidthAfter.push(<div key="leaderboard-carousel" className="mb-3"><LeaderboardCarousel /></div>);
+
       // Radio carousel after the grid
       if (radioStations.length > 0) {
         fullWidthAfter.push(<div key="radio-carousel" className="mb-3"><RadioCarouselSection /></div>);
@@ -1046,6 +1051,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     const segments: Segment[] = [];
     let currentCards: ReactNode[] = [];
     let shortsInserted = false;
+    let leaderboardInserted = false;
     let radioInserted = false;
     let liveInserted = false;
     let whoToFollowInserted = false;
@@ -1073,6 +1079,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0 && !shortsInserted) {
         addFullWidth(<div key={`shorts-carousel-${index}`}><ShortsReel shorts={shorts} /></div>);
         shortsInserted = true;
+      }
+
+      if ((index + 1) === LEADERBOARD_INSERT_AFTER && !leaderboardInserted) {
+        addFullWidth(<div key={`leaderboard-carousel-${index}`}><LeaderboardCarousel /></div>);
+        leaderboardInserted = true;
       }
 
       if ((index + 1) === RADIO_INSERT_AFTER && radioStations.length > 0 && !radioInserted) {
