@@ -1,4 +1,5 @@
 import { DEHUB_API_BASE, apiCall, getAuthToken } from './core';
+import { supabase } from '@/integrations/supabase/client';
 import type { DeHubUser, DeHubNFT } from './types';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -90,159 +91,25 @@ export async function getConversations(
         return { items: [], totalCount: 0, hasMore: false };
       }
 
-      // 1. Fetch from Supabase (Local/Reliable conversations)
-      console.log('[DM API] Fetching conversations from Supabase for:', userAddress);
-      let supabaseConversations: DeHubConversation[] = [];
-      try {
-        const { data: sData, error: sError } = await (supabase as any)
-          .from('direct_messages')
-          .select('sender_address, receiver_address, conversation_id, content, message_type, media_url, created_at')
-          .or(`sender_address.eq.${userAddress},receiver_address.eq.${userAddress}`)
-          .order('created_at', { ascending: false });
-
-        if (!sError && sData) {
-          // Group by unique other user
-          const conversationsMap = new Map<string, DeHubConversation>();
-
-          sData.forEach((m: any) => {
-            const otherAddress = m.sender_address === userAddress ? m.receiver_address : m.sender_address;
-            if (otherAddress === 'unknown' || otherAddress === userAddress) return; // Skip self-conversations
-
-            if (!conversationsMap.has(otherAddress)) {
-              conversationsMap.set(otherAddress, {
-                id: otherAddress, // Always use address as conversation ID
-                participants: [{ address: otherAddress } as any],
-                otherUser: {
-                  address: otherAddress,
-                  // Will be enriched with profile data below
-                } as any,
-                lastMessage: {
-                  id: m.id || `msg-${m.created_at}`,
-                  conversationId: otherAddress,
-                  sender: {
-                    address: m.sender_address,
-                    username: m.sender_username,
-                    displayName: m.sender_display_name,
-                    avatarImageUrl: m.sender_avatar_url,
-                  } as any,
-                  content: m.content,
-                  type: m.message_type as DMMessageType,
-                  createdAt: m.created_at,
-                },
-                unreadCount: 0,
-                createdAt: m.created_at,
-                updatedAt: m.created_at,
-              });
-            }
-
-            // Try to enrich otherUser profile from messages sent BY the other user
-            if (m.sender_address !== userAddress) {
-              const conv = conversationsMap.get(otherAddress)!;
-              const ou = conv.otherUser as any;
-              if (!ou.username && m.sender_username) ou.username = m.sender_username;
-              if (!ou.displayName && m.sender_display_name) ou.displayName = m.sender_display_name;
-              if (!ou.avatarImageUrl && m.sender_avatar_url) ou.avatarImageUrl = m.sender_avatar_url;
-            }
-          });
-
-          supabaseConversations = Array.from(conversationsMap.values());
-
-          // Fetch profiles from DeHub for any conversations missing user info
-          const addressesNeedingProfile = supabaseConversations
-            .filter(c => !(c.otherUser as any)?.username && !(c.otherUser as any)?.displayName)
-            .map(c => (c.otherUser as any)?.address)
-            .filter(Boolean);
-
-          if (addressesNeedingProfile.length > 0) {
-            const profilePromises = addressesNeedingProfile.map(async (addr: string) => {
-              try {
-                const res = await apiCall<any>(`/api/account_info/${addr}`, {});
-                return { address: addr, profile: res?.result || res };
-              } catch {
-                return { address: addr, profile: null };
-              }
-            });
-            const profiles = await Promise.all(profilePromises);
-
-            profiles.forEach(({ address: addr, profile }) => {
-              if (!profile) return;
-              const conv = supabaseConversations.find(c => (c.otherUser as any)?.address === addr);
-              if (conv) {
-                const ou = conv.otherUser as any;
-                ou.username = profile.username || ou.username;
-                ou.displayName = profile.displayName || profile.display_name || ou.displayName;
-                ou.avatarImageUrl = profile.avatarImageUrl || profile.avatarUrl || ou.avatarImageUrl;
-                ou.isVerified = profile.isVerified || profile.is_verified;
-              }
-            });
-          }
-
-          console.log(`[DM API] Found ${supabaseConversations.length} conversations in Supabase`);
-        }
-      } catch (err) {
-        console.warn('[DM API] Supabase fetch failed:', err);
-      }
-
-      // 2. Fetch from DeHub API
+      // Fetch from DeHub API only
       let dehubItems: DeHubConversation[] = [];
       try {
         console.log('[DM API] Fetching from /api/dm/contacts/' + userAddress);
         const response = await apiCall<any>(
           `/api/dm/contacts/${userAddress}`,
-          {
-            params: { page, limit },
-            requiresAuth: true,
-          }
+          { params: { page, limit }, requiresAuth: true }
         );
         console.log('[DM API] getConversations raw response:', response);
 
-        if (Array.isArray(response)) {
-          dehubItems = response;
-        }
-        else if (response?.result && Array.isArray(response.result)) {
-          dehubItems = response.result;
-        }
-        else if (response?.result?.items && Array.isArray(response.result.items)) {
-          dehubItems = response.result.items;
-        }
-        else if (response?.items && Array.isArray(response.items)) {
-          dehubItems = response.items;
-        }
+        if (Array.isArray(response)) dehubItems = response;
+        else if (response?.result && Array.isArray(response.result)) dehubItems = response.result;
+        else if (response?.result?.items && Array.isArray(response.result.items)) dehubItems = response.result.items;
+        else if (response?.items && Array.isArray(response.items)) dehubItems = response.items;
       } catch (err) {
         console.warn('[DM API] DeHub getConversations failed:', err);
       }
 
-      // Merge conversations
-      const allConversationsMap = new Map<string, DeHubConversation>();
-
-      // Add DeHub items first (will have full user profiles)
-      dehubItems.forEach(c => {
-        const address = c.otherUser?.address || c.participants?.find(p => p.address?.toLowerCase() !== userAddress)?.address;
-        if (address) allConversationsMap.set(address.toLowerCase(), c);
-      });
-
-      // Add Supabase items (fill gaps or update last message)
-      supabaseConversations.forEach(c => {
-        const address = c.otherUser?.address?.toLowerCase();
-        if (address) {
-          if (!allConversationsMap.has(address)) {
-            allConversationsMap.set(address, c);
-          } else {
-            // Update last message if Supabase one is newer, but preserve profiles
-            const existing = allConversationsMap.get(address)!;
-            const existingTime = new Date(existing.updatedAt).getTime();
-            const newTime = new Date(c.updatedAt).getTime();
-
-            if (newTime > existingTime) {
-              // Only update last message and time, keep DeHub's richer profile
-              existing.lastMessage = c.lastMessage || existing.lastMessage;
-              existing.updatedAt = c.updatedAt;
-            }
-          }
-        }
-      });
-
-      const items = Array.from(allConversationsMap.values())
+      const items = dehubItems
         .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
       console.log('[DM API] Returning merged conversations:', { count: items.length });
@@ -354,123 +221,42 @@ export async function getMessages(
   }
 
   try {
-    // 1. Fetch from Supabase (Realtime / Reliable source)
-    console.log('[DM API] Fetching messages from Supabase for:', conversationId);
-    let supabaseMessages: DeHubDMMessage[] = [];
+    // Fetch from DeHub API only
+    let items: DeHubDMMessage[] = [];
+    let hasMore = false;
+    let totalCount = 0;
 
-    // Get current user's wallet address to properly filter messages
-    const currentUserAddress = localStorage.getItem('dehub_wallet')?.toLowerCase();
-    const isWalletConvId = conversationId.startsWith('0x');
-
-    let supabaseQuery = (supabase as any)
-      .from('direct_messages')
-      .select('*');
-
-    if (isWalletConvId && currentUserAddress) {
-      // For wallet-address-based conversations, filter to ONLY messages between
-      // the current user and the other user. Do NOT use conversation_id here because
-      // conversation_id = receiver address, so other users' messages to the same
-      // receiver would also match, causing message mixing across conversations.
-      const otherAddress = conversationId.toLowerCase();
-      supabaseQuery = supabaseQuery.or(
-        `and(sender_address.eq.${currentUserAddress},receiver_address.eq.${otherAddress}),and(sender_address.eq.${otherAddress},receiver_address.eq.${currentUserAddress})`
-      );
-    } else {
-      supabaseQuery = supabaseQuery.eq('conversation_id', conversationId);
-    }
-
-    const { data: sData, error: sError } = await supabaseQuery
-      .order('created_at', { ascending: false })
-      .range(page * limit, (page + 1) * limit - 1);
-
-    if (!sError && sData) {
-      supabaseMessages = sData.map((m: any) => ({
-        id: m.id,
-        conversationId: m.conversation_id || conversationId,
-        sender: {
-          address: m.sender_address,
-          username: m.sender_username,
-          displayName: m.sender_display_name,
-          avatarImageUrl: m.sender_avatar_url,
-        },
-        content: m.content,
-        type: m.message_type as DMMessageType,
-        mediaUrl: m.media_url,
-        createdAt: m.created_at,
-      }));
-      console.log(`[DM API] Found ${supabaseMessages.length} messages in Supabase`);
-    }
-
-    // 2. Fetch from DeHub API
-    let dehubItems: DeHubDMMessage[] = [];
-    let dehubHasMore = false;
-    let dehubTotal = 0;
-
-    // Only call DeHub messages API if conversationId looks like a MongoDB ID (not a wallet address)
-    const isWalletAddress = conversationId.startsWith('0x');
-    try {
-      if (isWalletAddress) {
-        console.log('[DM API] Skipping DeHub messages API for wallet address conversationId, using Supabase only');
-        throw new Error('Wallet address used as conversationId - skip DeHub API');
-      }
-      const response = await apiCall<any>(`/api/dm/messages/${conversationId}`, {
-        params: { page, limit },
-        requiresAuth: true,
-      });
-      console.log('[DM API] getMessages raw response:', response);
-
-      if (response?.result?.items && Array.isArray(response.result.items)) {
-        dehubItems = response.result.items;
-        dehubHasMore = response.result.hasMore ?? dehubItems.length >= limit;
-        dehubTotal = response.result.totalCount || dehubItems.length;
-      }
-      else if (response?.result && Array.isArray(response.result)) {
-        dehubItems = response.result;
-        dehubHasMore = dehubItems.length >= limit;
-        dehubTotal = dehubItems.length;
-      }
-      else if (Array.isArray(response)) {
-        dehubItems = response;
-        dehubHasMore = dehubItems.length >= limit;
-        dehubTotal = dehubItems.length;
-      }
-      else if (response?.items && Array.isArray(response.items)) {
-        dehubItems = response.items;
-        dehubHasMore = response.hasMore ?? dehubItems.length >= limit;
-        dehubTotal = response.totalCount || dehubItems.length;
-      }
-      else if (response?.messages && Array.isArray(response.messages)) {
-        dehubItems = response.messages;
-        dehubHasMore = response.hasMore ?? dehubItems.length >= limit;
-        dehubTotal = response.totalCount || dehubItems.length;
-      }
-    } catch (err) {
-      console.warn('[DM API] DeHub getMessages failed, using Supabase only:', err);
-    }
-
-    // Merge messages, removing duplicates by ID or content/timestamp proximity
-    // For now, simple merge and sort
-    const allMessagesMap = new Map<string, DeHubDMMessage>();
-
-    // Add DeHub messages first
-    dehubItems.forEach(m => {
-      const id = m.id || `${m.content}-${m.createdAt}`;
-      allMessagesMap.set(id, m);
+    const response = await apiCall<any>(`/api/dm/messages/${conversationId}`, {
+      params: { page, limit },
+      requiresAuth: true,
     });
+    console.log('[DM API] getMessages raw response:', response);
 
-    // Add Supabase messages (overwrite if ID matches, or add if new)
-    supabaseMessages.forEach(m => {
-      allMessagesMap.set(m.id, m);
-    });
+    if (response?.result?.items && Array.isArray(response.result.items)) {
+      items = response.result.items;
+      hasMore = response.result.hasMore ?? items.length >= limit;
+      totalCount = response.result.totalCount || items.length;
+    } else if (response?.result && Array.isArray(response.result)) {
+      items = response.result;
+      hasMore = items.length >= limit;
+      totalCount = items.length;
+    } else if (response?.items && Array.isArray(response.items)) {
+      items = response.items;
+      hasMore = response.hasMore ?? items.length >= limit;
+      totalCount = response.totalCount || items.length;
+    } else if (response?.messages && Array.isArray(response.messages)) {
+      items = response.messages;
+      hasMore = response.hasMore ?? items.length >= limit;
+      totalCount = response.totalCount || items.length;
+    } else if (Array.isArray(response)) {
+      items = response;
+      hasMore = items.length >= limit;
+      totalCount = items.length;
+    }
 
-    const items = Array.from(allMessagesMap.values())
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-    return {
-      items,
-      totalCount: Math.max(dehubTotal, items.length),
-      hasMore: dehubHasMore || (supabaseMessages.length >= limit)
-    };
+    return { items, totalCount, hasMore };
   } catch (error) {
     console.error('[DM API] getMessages failed:', error);
     throw error;
@@ -502,46 +288,51 @@ export async function sendMessage(
     }
 
     const sender = senderAddress.toLowerCase();
+    const currentUser = JSON.parse(localStorage.getItem('dehub_user') || '{}');
 
-    // Build DeHub /api/dm/tnx request body
-    const dmBody: Record<string, unknown> = {
-      senderAddress: sender,
+    const edgeBody: Record<string, unknown> = {
+      sender,
       content,
       type,
-      transactionHash: `0x${Date.now().toString(16)}`,
+      sender_username: currentUser?.username,
+      sender_display_name: currentUser?.displayName,
+      sender_avatar_url: currentUser?.avatarImageUrl,
     };
 
-    if (mediaUrl) dmBody.mediaUrl = mediaUrl;
+    if (mediaUrl) edgeBody.mediaUrl = mediaUrl;
 
     if (isNewConversation && recipientAddress) {
-      dmBody.receiverAddress = recipientAddress.toLowerCase();
+      edgeBody.receiver = recipientAddress.toLowerCase();
       console.log('[DM API] Sending message to new conversation with recipient:', recipientAddress);
     } else {
-      dmBody.conversationId = conversationId;
+      edgeBody.conversationId = conversationId;
     }
 
     if (type === 'tip' && tipAmount !== undefined) {
-      dmBody.tipAmount = tipAmount;
-      dmBody.tipCurrency = tipCurrency || 'DHB';
+      edgeBody.tipAmount = tipAmount;
+      edgeBody.tipCurrency = tipCurrency || 'DHB';
     }
 
-    console.log('[DM API] Sending message directly to DeHub /api/dm/tnx', { type, hasMedia: !!mediaUrl });
-
-    const tnxResponse = await fetch(`${DEHUB_API_BASE}/api/dm/tnx`, {
-      method: 'POST',
+    console.log('[DM API] Sending message via dm-send edge function', { type, hasMedia: !!mediaUrl });
+    const { data: edgeData, error: edgeError } = await supabase.functions.invoke('dm-send', {
+      body: edgeBody,
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'x-wallet-address': sender,
+        'x-dehub-token': token,
       },
-      body: JSON.stringify(dmBody),
     });
 
-    if (!tnxResponse.ok) {
-      const errData = await tnxResponse.json().catch(() => ({})) as Record<string, string>;
-      throw new Error(errData.message || errData.error || `Failed to send message: ${tnxResponse.status}`);
+    if (edgeError) {
+      console.error('[DM API] dm-send edge function error:', edgeError);
+      throw new Error(edgeError.message || 'Failed to send message');
     }
 
-    let data: any = await tnxResponse.json().catch(() => ({}));
+    if (!edgeData?.ok) {
+      console.error('[DM API] DeHub API rejected DM:', edgeData?.error);
+      throw new Error(edgeData?.error || 'Failed to send message');
+    }
+
+    let data: any = edgeData?.result;
 
     console.log('[DM API] sendMessage response:', data);
 

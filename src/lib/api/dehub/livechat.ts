@@ -224,3 +224,26 @@ export async function updateLiveChatRoomSettings(
   }
   return response as LiveChatRoom;
 }
+
+export async function sendLiveChatMessage(
+  roomId: string,
+  content: string,
+  type: 'text' | 'image' | 'gif' = 'text',
+  imageUrl?: string
+): Promise<LiveChatMessage> {
+  const body: Record<string, unknown> = { content, messageType: type };
+  if (imageUrl) body.imageUrl = imageUrl;
+
+  const response = await apiCall<{ result: LiveChatMessage } | LiveChatMessage>(
+    `/api/livechat/rooms/${roomId}/messages`,
+    {
+      method: 'POST',
+      body,
+      requiresAuth: true,
+    }
+  );
+  if (response && typeof response === 'object' && 'result' in response && !Array.isArray((response as any).result)) {
+    return (response as { result: LiveChatMessage }).result;
+  }
+  return response as LiveChatMessage;
+}

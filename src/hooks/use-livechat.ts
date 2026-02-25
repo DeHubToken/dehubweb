@@ -4,8 +4,8 @@ import {
   getLiveChatRoom,
   getLiveChatMessages as fetchApiMessages,
   getLiveChatUserProfile,
+  sendLiveChatMessage,
   getMediaUrl,
-  getAuthToken,
   type LiveChatRoom,
   type LiveChatMessage,
   type LiveChatUserProfile,
@@ -90,27 +90,21 @@ function deduplicateMessages(msgs: SupabaseLiveChatMessage[]): SupabaseLiveChatM
 
 /**
  * Fetch messages from DeHub API as source of truth.
- * Supabase Realtime provides instant delivery for our own users.
- * Periodic polling catches messages from other clients (mobile app).
+ * Polling every 5s catches messages from all clients (web + mobile).
+ * Optimistic updates provide instant local feedback on send.
  */
 export function useLiveChatMessages(roomId: string | null) {
   const [messages, setMessages] = useState<SupabaseLiveChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
-  const channelRef = useRef<RealtimeChannel | null>(null);
   const { isAuthenticated, user, walletAddress } = useAuth();
 
-  // Fetch from both DeHub API and Supabase, merging results
   const fetchFromApi = useCallback(async (showLoading = false) => {
     if (!roomId) return;
     if (showLoading) setIsLoading(true);
     try {
-      // Use DeHub API as sole source of truth for initial load.
-      // Supabase Realtime handles new messages — no need to REST-query the table
-      // (which adds DB load and fails with 503 when the DB is overloaded).
       const apiMessages = await fetchApiMessages(roomId, { limit: 200 });
       const apiMapped = apiMessages.map(apiMsgToLocal);
-
       setMessages((prev) => {
         const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
         const merged = deduplicateMessages([...apiMapped, ...optimistic]);
@@ -124,7 +118,7 @@ export function useLiveChatMessages(roomId: string | null) {
     }
   }, [roomId]);
 
-  // Subscribe to Realtime + set up polling
+  // Initial fetch + poll every 5s for new messages (replaces Supabase Realtime)
   useEffect(() => {
     if (!roomId) {
       setMessages([]);
@@ -133,55 +127,11 @@ export function useLiveChatMessages(roomId: string | null) {
     }
 
     fetchFromApi(true);
-
-    // Supabase Realtime for instant delivery of our own messages
-    const channel = supabase
-      .channel(`livechat:${roomId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'livechat_messages',
-          filter: `room_id=eq.${roomId}`,
-        },
-        (payload) => {
-          const newMsg = payload.new as SupabaseLiveChatMessage;
-          setMessages((prev) => {
-            if (prev.some((m) => m.id === newMsg.id)) return prev;
-            return [...prev, newMsg];
-          });
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'livechat_messages',
-          filter: `room_id=eq.${roomId}`,
-        },
-        (payload) => {
-          const updated = payload.new as SupabaseLiveChatMessage;
-          setMessages((prev) =>
-            prev.map((m) => (m.id === updated.id ? updated : m))
-          );
-        }
-      )
-      .subscribe();
-
-    channelRef.current = channel;
-
-    // No polling — Realtime handles incoming messages.
-    // fetchFromApi is called on mount and after sending a message.
-
-    return () => {
-      channel.unsubscribe();
-      channelRef.current = null;
-    };
+    const interval = setInterval(() => fetchFromApi(false), 5000);
+    return () => clearInterval(interval);
   }, [roomId, fetchFromApi]);
 
-  // Send via Edge Function
+  // Send via DeHub API directly
   const send = useCallback(
     async (
       content: string,
@@ -208,35 +158,9 @@ export function useLiveChatMessages(roomId: string | null) {
       setMessages((prev) => [...prev, optimisticMsg]);
 
       try {
-        const token = getAuthToken();
-        const { data, error } = await supabase.functions.invoke('livechat-send', {
-          body: {
-            room_id: roomId,
-            content,
-            message_type: type,
-            image_url: imageUrl,
-            sender_username: user?.username,
-            sender_display_name: user?.displayName,
-            sender_avatar_url: user?.avatarImageUrl,
-          },
-          headers: {
-            'x-wallet-address': walletAddress.toLowerCase(),
-            'x-dehub-token': token || '',
-          },
-        });
-
-        if (error) {
-          console.error('[LiveChat] Edge function error:', error);
-          setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
-          throw new Error('Failed to send message');
-        }
-
-        const realMsg = data?.result as SupabaseLiveChatMessage | undefined;
-        if (realMsg) {
-          setMessages((prev) =>
-            prev.map((m) => (m.id === optimisticId ? realMsg : m))
-          );
-        }
+        await sendLiveChatMessage(roomId, content, type as 'text' | 'image' | 'gif', imageUrl);
+        // Refetch to replace optimistic message with real one from server
+        await fetchFromApi(false);
       } catch (err) {
         setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
         console.error('[LiveChat] Failed to send message:', err);
@@ -245,7 +169,7 @@ export function useLiveChatMessages(roomId: string | null) {
         setIsSending(false);
       }
     },
-    [roomId, isAuthenticated, walletAddress, user]
+    [roomId, isAuthenticated, walletAddress, user, fetchFromApi]
   );
 
   return { messages, isLoading, isSending, send, refetch: () => fetchFromApi(false) };
