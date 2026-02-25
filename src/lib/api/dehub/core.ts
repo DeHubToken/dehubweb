@@ -115,13 +115,9 @@ export async function apiCall<T>(
       errorMessage.includes('token expired') ||
       errorMessage.includes('jwt');
 
-    if (response.status === 403 && isAuthError) {
-      clearAuthSession();
-      throw new AuthenticationError('Session expired. Please sign in again.');
-    }
-
-    if (response.status === 401) {
-      clearAuthSession();
+    if ((response.status === 403 && isAuthError) || response.status === 401) {
+      // Don't clear auth session here — let the useReauthHandler attempt
+      // a silent re-sign first. Only clear on explicit disconnect.
       throw new AuthenticationError('Session expired. Please sign in again.');
     }
     

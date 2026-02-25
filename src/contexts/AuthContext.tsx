@@ -377,17 +377,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (!hasUserIntent && !isReturningWagmiUser) {
           // Wagmi auto-reconnected from localStorage but user didn't click "Connect Wallet"
-          // and there's no valid DeHub session - silently disconnect to prevent unwanted auth popup
-          console.log('[Auth] Wagmi auto-reconnected without user intent, disconnecting silently');
-
-          // Clear source if no token - this prevents Reown from trying to switch network on next load
-          if (!hasToken) {
-            console.log('[Auth] No valid token found, clearing Wagmi storage');
-            localStorage.removeItem('dehub_connection_source');
-            clearWagmiStorage();
-          }
-
-          wagmiDisconnect();
+          // and there's no valid DeHub session. Keep wagmi connected so user can click
+          // "Connect Wallet" and go straight to signature without a fresh connection.
+          console.log('[Auth] Wagmi auto-reconnected without user intent, keeping connection alive');
           return;
         }
 
@@ -1040,11 +1032,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const refreshSession = async (): Promise<boolean> => {
+    // If token is still valid, no refresh needed
     const token = getAuthToken();
-    if (!token || isTokenExpired()) {
-      return false;
+    if (token && !isTokenExpired()) return true;
+
+    // For wagmi users: if wagmi is still connected, re-sign silently
+    const savedSource = localStorage.getItem('dehub_connection_source');
+    if ((connectionSource === 'wagmi' || savedSource === 'wagmi') && isWagmiConnected && wagmiAddress) {
+      try {
+        console.log('[Auth] Attempting silent wagmi re-auth for', wagmiAddress);
+        setConnectionSource('wagmi');
+        localStorage.setItem('dehub_connection_source', 'wagmi');
+        await completeDeHubAuthWagmi(wagmiAddress);
+        return true;
+      } catch (e) {
+        console.warn('[Auth] Silent wagmi re-auth failed:', e);
+        return false;
+      }
     }
-    return true;
+
+    // For Web3Auth users: if Web3Auth is still connected, re-sign
+    if (connectionSource === 'web3auth' || savedSource === 'web3auth') {
+      try {
+        const w3a = await getOrInitWeb3Auth();
+        if (w3a.connected && w3a.provider) {
+          console.log('[Auth] Attempting silent Web3Auth re-auth');
+          await completeDeHubAuth(w3a.provider);
+          return true;
+        }
+      } catch (e) {
+        console.warn('[Auth] Silent Web3Auth re-auth failed:', e);
+        return false;
+      }
+    }
+
+    return false;
   };
 
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
