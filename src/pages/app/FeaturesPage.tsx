@@ -33,11 +33,9 @@ import {
   useSubmitFeatureRequest,
   useVoteFeatureRequest,
   CATEGORY_LABELS,
-  STATUS_LABELS,
   type FeatureCategory,
   type FeatureSort,
   type FeatureRequest,
-  type FeatureStatus,
 } from '@/hooks/use-feature-requests';
 import { z } from 'zod';
 import { useFeatureRequestComments, useSubmitComment, useDeleteComment } from '@/hooks/use-feature-request-comments';
@@ -65,23 +63,7 @@ const SORTS: { id: FeatureSort; labelKey: string }[] = [
   { id: 'newest', labelKey: 'features.newest' },
 ];
 
-const STATUS_COLORS: Record<FeatureStatus, string> = {
-  open: 'text-zinc-300',
-  under_review: 'text-amber-400',
-  planned: 'text-blue-400',
-  in_progress: 'text-purple-400',
-  completed: 'text-emerald-400',
-  declined: 'text-red-400',
-};
-
-const STATUS_I18N_KEYS: Record<FeatureStatus, string> = {
-  open: 'features.statusOpen',
-  under_review: 'features.statusUnderReview',
-  planned: 'features.statusPlanned',
-  in_progress: 'features.statusInProgress',
-  completed: 'features.statusCompleted',
-  declined: 'features.statusDeclined',
-};
+// Status type kept for data model but no badge displayed on cards
 
 function formatTimeAgo(dateStr: string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -171,12 +153,6 @@ function FeatureCard({
         timestamp={formatTimeAgo(feature.created_at)}
       />
 
-      {/* Status badge - top right, liquid glass style */}
-      <div className="absolute top-0 right-0 z-10">
-        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap bg-gradient-to-br from-white/15 via-white/8 to-white/3 backdrop-blur-xl border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)] ${STATUS_COLORS[feature.status]}`}>
-          {t(STATUS_I18N_KEYS[feature.status])}
-        </span>
-      </div>
 
       {/* Content */}
       <div className="pt-1 space-y-2">
