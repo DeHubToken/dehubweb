@@ -102,7 +102,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
                   className="p-2 rounded-full transition-colors mr-[-16.5px]"
                   aria-label="Toggle menu"
                 >
-                  <Menu className="w-[33px] h-[33px] text-zinc-400" />
+                  <Menu className="w-[31px] h-[31px] text-white" />
                 </button>
               )}
             </DrawerTrigger>
@@ -118,7 +118,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
             className="p-2 rounded-full transition-colors mr-[-16.5px]"
             aria-label="Log in"
           >
-            <Menu className="w-[33px] h-[33px] text-zinc-400" />
+            <Menu className="w-[31px] h-[31px] text-white" />
           </button>
         )}
       </div>
