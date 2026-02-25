@@ -8,7 +8,7 @@
  * @module components/app/feeds/HomeFeed
  */
 
-import { useEffect, useRef, useMemo, useCallback, useState } from 'react';
+import { useEffect, useRef, useMemo, useCallback, useState, type ReactNode } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery } from '@tanstack/react-query';
@@ -826,10 +826,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               : `bento-image-${(item.data as ImagePost).id}`;
 
     return (
-      <div key={key} className={cn(
-        "rounded-xl border border-white/[0.08] bg-transparent p-3",
-        isCollapsed && "break-inside-avoid mb-3"
-      )}>
+      <div key={key} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
         {card}
       </div>
     );
@@ -868,18 +865,52 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Live carousel insert position: 4 posts after the radio carousel
   const LIVE_INSERT_AFTER = RADIO_INSERT_AFTER + 4;
 
-  // Masonry column classes based on sidebar state
-  // Collapsed: 2 cols default, 3 at xl; Expanded: 1 col on small, 2 at lg, 3 at 2xl
-  const masonryClasses = isCollapsed
-    ? "columns-2 xl:columns-3 gap-3"
-    : "columns-1 lg:columns-2 2xl:columns-3 gap-3";
+  // Detect number of masonry columns based on viewport + sidebar state
+  const [colCount, setColCount] = useState(1);
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      if (isCollapsed) {
+        setColCount(w >= 1280 ? 3 : 2);
+      } else {
+        setColCount(w >= 1536 ? 3 : w >= 1024 ? 2 : 1);
+      }
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, [isCollapsed]);
+
+  // Distribute items round-robin into columns for true masonry
+  const distributeToColumns = (nodes: ReactNode[], cols: number): ReactNode[][] => {
+    if (cols <= 1) return [nodes];
+    const columns: ReactNode[][] = Array.from({ length: cols }, () => []);
+    nodes.forEach((node, i) => columns[i % cols].push(node));
+    return columns;
+  };
+
+  const renderMasonryGrid = (nodes: ReactNode[]) => {
+    if (colCount <= 1) {
+      return <div className="space-y-3">{nodes}</div>;
+    }
+    const columns = distributeToColumns(nodes, colCount);
+    return (
+      <div className="flex gap-3">
+        {columns.map((col, i) => (
+          <div key={`masonry-col-${i}`} className="flex-1 min-w-0 space-y-3">
+            {col}
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   // Render feed items with shorts and radio carousels inserted
   // Segments feed into alternating masonry containers and full-width inserts
   const renderFeedWithShorts = () => {
-    type Segment = { type: 'cards'; items: React.ReactNode[] } | { type: 'fullwidth'; node: React.ReactNode };
+    type Segment = { type: 'cards'; items: ReactNode[] } | { type: 'fullwidth'; node: ReactNode };
     const segments: Segment[] = [];
-    let currentCards: React.ReactNode[] = [];
+    let currentCards: ReactNode[] = [];
     let shortsInserted = false;
     let radioInserted = false;
     let liveInserted = false;
@@ -892,7 +923,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       }
     };
 
-    const addFullWidth = (node: React.ReactNode) => {
+    const addFullWidth = (node: ReactNode) => {
       flushCards();
       segments.push({ type: 'fullwidth', node });
     };
@@ -938,7 +969,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     });
 
     if (items.length > 0 && items.length < SHORTS_INSERT_INTERVAL && shorts.length > 0 && !shortsInserted) {
-      currentCards.push(<div key="shorts-carousel-end" className="break-inside-avoid mb-3"><ShortsReel shorts={shorts} /></div>);
+      currentCards.push(<div key="shorts-carousel-end"><ShortsReel shorts={shorts} /></div>);
     }
 
     flushCards();
@@ -950,8 +981,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             return <div key={`fw-${i}`} className="mb-3">{seg.node}</div>;
           }
           return (
-            <div key={`cols-${i}`} className={masonryClasses}>
-              {seg.items}
+            <div key={`cols-${i}`} className="mb-3">
+              {renderMasonryGrid(seg.items)}
             </div>
           );
         })}
@@ -1063,18 +1094,18 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`}>
               {/* Render optimistic posts */}
               {optimisticPosts.length > 0 && (
-                <div className={cn(masonryClasses, "mb-3")}>
-                  {optimisticPosts.map((op) => {
+                <div className="mb-3">
+                  {renderMasonryGrid(optimisticPosts.map((op) => {
                     const feedItem: FeedItemType = { type: op.type, data: op.data as any };
                     return renderFeedItem(feedItem, -999);
-                  })}
+                  }))}
                 </div>
               )}
               
               {/* Render pinned post */}
               {pinnedItem && (
-                <div className={cn(masonryClasses, "mb-3")}>
-                  {renderFeedItem(pinnedItem, -1)}
+                <div className="mb-3">
+                  {renderMasonryGrid([renderFeedItem(pinnedItem, -1)])}
                 </div>
               )}
               
