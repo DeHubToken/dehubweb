@@ -122,7 +122,6 @@ function AppContent() {
               <Route path="tv" element={null} />
               <Route path="features" element={null} />
               <Route path="jobs" element={null} />
-              {/* Dynamic routes — rendered via Outlet */}
               <Route path="post/:postId" element={<SinglePostPage />} />
               <Route path="video/:tokenId" element={<SinglePostPage />} />
               <Route path="post/:postId/info" element={<PostInfoPage />} />
