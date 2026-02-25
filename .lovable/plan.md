@@ -1,84 +1,118 @@
 
 
-## Investigation: Home Feed Failing to Load
+## Investigation: Wallet Connection Fails After Repeated Use & Unnecessary Re-authentication
 
-### Root Cause Identified
+### Problems Identified
 
-The home feed fails to load on non-fresh sessions because of **stale filter state persisted in sessionStorage** combined with **aggressive TanStack Query caching that prevents refetching**.
+There are **3 distinct issues** causing wallet users to get kicked out and fail to reconnect:
 
-Here is what happens step by step:
+---
 
-1. User browses the home feed and selects filters (e.g., category "Advertising", W2E toggle on)
-2. These filters are saved to `sessionStorage` via `usePersistedFeedFilter`
-3. User navigates away or the app hot-reloads
-4. On return, the persisted filters are restored from `sessionStorage`
-5. The feed query fires with `category=Advertising&hasBounty=true` -- returning **0 results**
-6. TanStack Query caches this empty result with `staleTime: 5 min` and `gcTime: 60 min`
-7. `refetchOnMount: false` means it never re-fetches even when the component re-mounts
-8. `placeholderData: (previousData) => previousData` keeps showing old cached empty data
-9. The auto-retry hook (`useAutoRetryFeed`) retries 3 times but keeps hitting the same empty-result query with the same restrictive filters
-10. Result: permanently empty feed until cache is cleared
+### Problem 1: `clearStaleWagmiState()` nukes wagmi state on every page load
 
-On a fresh browser, `sessionStorage` is empty, so all filters default to "all"/"latest" with no content filters -- and data loads fine.
+In `src/lib/wagmi.ts` (lines 26-46), `clearStaleWagmiState()` runs synchronously at module import time. It checks if the DeHub token is valid AND if `dehub_connection_source === 'wagmi'`. If the token has expired (24h), it **wipes all wagmi/WalletConnect localStorage keys** — including the keys RainbowKit needs to remember which connector was used and re-establish the connection.
 
-### The Fix (3 changes)
+This means: after 24 hours, the next page load destroys the connector state. When the user clicks "Connect Wallet" again, RainbowKit/wagmi can't find the previous session, and the WalletConnect relay may have stale pairing data that conflicts with a fresh connection attempt. The second signature popup never appears because the connector is in a broken half-state.
 
-#### 1. Reset persisted filters on app cold start (localStorage flag)
-Add a "session boundary" check: on app mount, if a fresh page load is detected (not a React navigation), clear the persisted feed filters. This ensures users always start with clean defaults when they open/refresh the app, while filters still persist during in-session navigation.
+**Fix**: Only clear wagmi state during an explicit `disconnect()` call, not proactively on page load. If the DeHub token is expired but wagmi can still connect, let it connect — the `handleWagmiConnect` effect will prompt for a fresh signature. Remove the `clearStaleWagmiState()` call from module scope.
 
-**File:** `src/components/app/feeds/HomeFeed.tsx` (and/or a shared init location)
+---
 
-Add at the top of the HomeFeed component (or in the app shell):
+### Problem 2: `handleWagmiConnect` silently disconnects returning users without valid tokens
+
+In `AuthContext.tsx` (lines 378-392), when wagmi auto-reconnects from localStorage but there's no valid DeHub token AND no `wagmiAuthIntentRef`, the code **silently disconnects wagmi and clears storage**. This is the "kicking users out" behavior.
+
+The intent was to prevent unwanted signature popups on page load. But it's too aggressive — it destroys the wagmi connection state that would have been needed when the user clicks "Connect Wallet" moments later. After this cleanup, clicking the wallet button tries to establish a fresh connection, but the old WalletConnect pairing data is partially cleared, causing the relay handshake to fail silently.
+
+**Fix**: Don't disconnect wagmi when it auto-reconnects without user intent. Instead, just skip the DeHub auth flow. Keep wagmi connected but unauthenticated. When the user clicks "Connect Wallet", the `wagmiAuthIntentRef` flag will be set, and the existing wagmi connection can be reused — going straight to the signature step without needing a fresh wallet connection.
+
+---
+
+### Problem 3: `refreshSession` is a no-op — it never actually refreshes
+
+In `AuthContext.tsx` (lines 1042-1048), `refreshSession` just checks if the token exists and isn't expired. It never calls the DeHub API to get a new token. So when the `useReauthHandler` hook calls `refreshSession()` after a 401, it always returns `false` for expired tokens, forcing a full re-login.
+
+**Fix**: Implement actual session refresh in `refreshSession`. For wagmi users, if wagmi is still connected, request a new signature and call `authenticateWallet` to get a fresh token — all without showing the login modal. For Web3Auth users, if Web3Auth is still connected, do the same via the provider. This is the "sign again for re-auth" behavior you want.
+
+---
+
+### Implementation Plan
+
+#### File 1: `src/lib/wagmi.ts`
+- **Remove** the `clearStaleWagmiState()` function call at module scope (lines 44)
+- Keep the `clearWagmiStorage()` export for explicit disconnect use
+
+#### File 2: `src/contexts/AuthContext.tsx`
+
+**Change A** — Don't disconnect wagmi on auto-reconnect without intent (lines 378-392):
 ```typescript
-useEffect(() => {
-  const isNewPageLoad = !sessionStorage.getItem('feed-session-active');
-  if (isNewPageLoad) {
-    clearPersistedFeedFilters();
-    sessionStorage.setItem('feed-session-active', 'true');
+// BEFORE: Aggressively disconnects
+if (!hasUserIntent && !isReturningWagmiUser) {
+  clearWagmiStorage();
+  wagmiDisconnect();
+  return;
+}
+
+// AFTER: Just skip auth, keep wagmi connected for when user clicks "Connect"
+if (!hasUserIntent && !isReturningWagmiUser) {
+  console.log('[Auth] Wagmi auto-reconnected without intent, keeping connection alive');
+  return; // Don't disconnect — user can click "Connect Wallet" to trigger auth
+}
+```
+
+**Change B** — Implement real `refreshSession` (lines 1042-1048):
+```typescript
+const refreshSession = async (): Promise<boolean> => {
+  // If token is still valid, no refresh needed
+  const token = getAuthToken();
+  if (token && !isTokenExpired()) return true;
+
+  // For wagmi users: if wagmi is still connected, re-sign silently
+  if (connectionSource === 'wagmi' && isWagmiConnected && wagmiAddress) {
+    try {
+      await completeDeHubAuthWagmi(wagmiAddress);
+      return true;
+    } catch (e) {
+      console.warn('[Auth] Silent wagmi re-auth failed:', e);
+      return false;
+    }
   }
-}, []);
+
+  // For Web3Auth users: if Web3Auth is still connected, re-sign
+  if (connectionSource === 'web3auth') {
+    try {
+      const w3a = await getOrInitWeb3Auth();
+      if (w3a.connected && w3a.provider) {
+        await completeDeHubAuth(w3a.provider);
+        return true;
+      }
+    } catch (e) {
+      console.warn('[Auth] Silent Web3Auth re-auth failed:', e);
+      return false;
+    }
+  }
+
+  return false;
+};
 ```
 
-This way filters persist during tab navigation within the app but reset on actual page reload/new tab.
+**Change C** — Don't clear wagmi storage in the token-expired branch on mount (line 386-387):
+Remove the `clearWagmiStorage()` call from the "no valid token found" branch so the connector state survives for the next connect attempt.
 
-#### 2. Enable `refetchOnMount` in the unified feed hook
-Change `refetchOnMount: false` to `refetchOnMount: 'always'` (or just remove the line) so that when the HomeFeed component mounts, it always fires a fresh API call instead of relying on potentially stale cached empty results.
-
-**File:** `src/hooks/use-unified-feed.ts` (line 442)
-
-```typescript
-// Before:
-refetchOnMount: false,
-
-// After:
-refetchOnMount: true,
-```
-
-#### 3. Lower `gcTime` to prevent stale empty caches persisting too long
-Reduce `gcTime` from 60 minutes to 10 minutes so empty/stale query caches are garbage collected faster.
-
-**File:** `src/hooks/use-unified-feed.ts` (line 440)
-
-```typescript
-// Before:
-gcTime: 1000 * 60 * 60,  // 60 min
-
-// After:
-gcTime: 1000 * 60 * 10,  // 10 min
-```
+#### File 3: `src/lib/api/dehub/core.ts`
+- **Remove** the `clearAuthSession()` call from the 401/403 handler (lines 119, 124). Instead, throw `AuthenticationError` without wiping session — let the `useReauthHandler` attempt a refresh first. Currently it wipes tokens *before* the reauth handler even gets a chance to try.
 
 ### Summary
 
-| Problem | Fix |
-|---------|-----|
-| Persisted filters restore restrictive params that return 0 results | Clear persisted filters on fresh page load |
-| `refetchOnMount: false` prevents fresh data on revisit | Set `refetchOnMount: true` |
-| Empty cache lives for 60 min blocking recovery | Reduce `gcTime` to 10 min |
+| Problem | Root Cause | Fix |
+|---------|-----------|-----|
+| Wallet stops connecting after a few uses | `clearStaleWagmiState()` destroys connector state on page load | Remove proactive cleanup; only clear on explicit disconnect |
+| Users get kicked out unnecessarily | `handleWagmiConnect` disconnects wagmi when no DeHub token exists | Keep wagmi connected, just skip DeHub auth until user clicks Connect |
+| Can't seamlessly re-auth | `refreshSession` is a no-op; 401 handler wipes tokens immediately | Implement real re-sign flow; don't clear tokens before reauth attempt |
 
 ### Technical Details
 
-- `usePersistedFeedFilter` stores to `sessionStorage` under key `feed-filter-states`
-- The network logs confirm the feed request used `category=Advertising&hasBounty=true` which are leftover filter values
-- The auto-retry mechanism retries with the same bad params so it never recovers
-- `placeholderData: (previousData) => previousData` makes TanStack Query show stale data instead of loading states, masking the problem
+- The wagmi connector state stored in localStorage includes WalletConnect pairing topics, relay session data, and connector IDs. Clearing these mid-session breaks the relay handshake for the next connection attempt.
+- RainbowKit's `WalletButton.Custom` calls wagmi `connectAsync` internally. If previous pairing data is partially cleared, the WalletConnect relay can't establish a new session, causing the signature popup to never appear.
+- The `completeDeHubAuthWagmi` function already handles the full sign → authenticate → save flow. Calling it from `refreshSession` gives users seamless re-auth with just a wallet signature prompt — no need to go through the full connection flow again.
 
