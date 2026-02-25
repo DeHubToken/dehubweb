@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { PenSquare, Sparkles, LogIn } from 'lucide-react';
+import { PenSquare, Sparkles, LogIn, Menu } from 'lucide-react';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { SidebarNavItem } from './SidebarNavItem';
@@ -91,7 +91,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   return (
     <>
       <aside className={cn(
-        "hidden lg:flex sticky top-0 h-screen px-2 pb-2 flex-col overflow-hidden items-center z-0 isolate transition-[width,padding] duration-300 ease-in-out",
+        "hidden lg:flex sticky top-0 h-screen px-2 pb-2 flex-col overflow-hidden items-center transition-all duration-200 z-0 isolate",
         isCollapsed ? "w-[60px] pt-[2px]" : "w-[60px] pt-[2px] xl:w-[231px] xl:px-[18px] xl:items-stretch xl:pt-0"
       )}>
         {/* Logo & Coin Balance */}
@@ -105,33 +105,10 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               )}
               aria-label="Toggle sidebar"
             >
-              <div className="relative w-[18px] h-[14px]">
-                <motion.span
-                  className="absolute left-0 w-full h-[1.5px] bg-zinc-400 rounded-full origin-center"
-                  animate={isCollapsed ? { top: '50%', rotate: 45, translateY: '-50%' } : { top: 0, rotate: 0, translateY: 0 }}
-                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                />
-                <motion.span
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-[1.5px] bg-zinc-400 rounded-full"
-                  animate={isCollapsed ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-                  transition={{ duration: 0.2, ease: 'easeInOut' }}
-                />
-                <motion.span
-                  className="absolute left-0 w-full h-[1.5px] bg-zinc-400 rounded-full origin-center"
-                  animate={isCollapsed ? { bottom: '50%', rotate: -45, translateY: '50%' } : { bottom: 0, rotate: 0, translateY: 0 }}
-                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                />
-              </div>
+              <Menu className="w-[18px] h-[18px] text-zinc-400" />
             </button>
             <button onClick={handleLogoClick} className="block cursor-pointer">
-              <motion.img
-                src={dehubLogo}
-                alt="dehub"
-                className={cn("h-[50.8px] w-auto relative -top-[3px]", isCollapsed ? "hidden" : "hidden xl:block")}
-                initial={false}
-                animate={{ opacity: isCollapsed ? 0 : 1 }}
-                transition={{ duration: 0.25 }}
-              />
+              <img src={dehubLogo} alt="dehub" className={cn("h-[50.8px] w-auto relative -top-[3px]", isCollapsed ? "hidden" : "hidden xl:block")} />
               <img src={dehubLogoCompact} alt="dehub" className={cn("h-[32px] w-auto", isCollapsed ? "block" : "xl:hidden")} />
             </button>
           </div>
