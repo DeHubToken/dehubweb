@@ -6,6 +6,7 @@ import { MobileBottomNav } from './MobileBottomNav';
 import { GlobalDropZoneProvider, useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { RadioPlayerProvider } from '@/hooks';
 import { CoinPlacementProvider } from '@/hooks/use-coin-placement';
+import { SidebarCollapseProvider } from '@/contexts/SidebarCollapseContext';
 import { PostModal } from '@/features/post/PostModal';
 import { DevelopmentNoticeModal } from './modals';
 import { RadioMiniPlayer } from '@/components/app/radio';
@@ -207,12 +208,14 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   return (
-    <RadioPlayerProvider>
-      <CoinPlacementProvider>
-        <GlobalDropZoneProvider>
-          <AppLayoutContent>{children}</AppLayoutContent>
-        </GlobalDropZoneProvider>
-      </CoinPlacementProvider>
-    </RadioPlayerProvider>
+    <SidebarCollapseProvider>
+      <RadioPlayerProvider>
+        <CoinPlacementProvider>
+          <GlobalDropZoneProvider>
+            <AppLayoutContent>{children}</AppLayoutContent>
+          </GlobalDropZoneProvider>
+        </CoinPlacementProvider>
+      </RadioPlayerProvider>
+    </SidebarCollapseProvider>
   );
 }

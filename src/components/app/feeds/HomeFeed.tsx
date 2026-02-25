@@ -16,6 +16,7 @@ import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
 import { HomeFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { toast } from 'sonner';
 import { 
@@ -311,6 +312,7 @@ function SortFilterSection({
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
+  const { isCollapsed } = useSidebarCollapse();
 
   // Clear persisted filters on fresh page load (not in-app navigation)
   useEffect(() => {
@@ -877,7 +879,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       // Insert Who to Follow carousel after 3 posts (mobile/tablet only)
       if ((index + 1) === 3 && !whoToFollowInserted) {
         elements.push(
-          <MobileWhoToFollowCarousel key={`who-to-follow-${index}`} />
+          <div key={`who-to-follow-${index}`} className={isCollapsed ? "col-span-2" : undefined}>
+            <MobileWhoToFollowCarousel />
+          </div>
         );
         whoToFollowInserted = true;
       }
@@ -885,7 +889,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       // Insert shorts carousel after every SHORTS_INSERT_INTERVAL posts (5)
       if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0 && !shortsInserted) {
         elements.push(
-          <ShortsReel key={`shorts-carousel-${index}`} shorts={shorts} />
+          <div key={`shorts-carousel-${index}`} className={isCollapsed ? "col-span-2" : undefined}>
+            <ShortsReel shorts={shorts} />
+          </div>
         );
         shortsInserted = true;
       }
@@ -893,7 +899,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       // Insert radio carousel after RADIO_INSERT_AFTER posts (12)
       if ((index + 1) === RADIO_INSERT_AFTER && radioStations.length > 0 && !radioInserted) {
         elements.push(
-          <RadioCarouselSection key={`radio-carousel-${index}`} />
+          <div key={`radio-carousel-${index}`} className={isCollapsed ? "col-span-2" : undefined}>
+            <RadioCarouselSection />
+          </div>
         );
         radioInserted = true;
       }
@@ -901,7 +909,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       // Insert Live Now carousel 4 posts after the radio carousel
       if ((index + 1) === LIVE_INSERT_AFTER && liveNowStreams.length > 0 && !liveInserted) {
         elements.push(
-          <div key={`live-now-${index}`} className="space-y-2">
+          <div key={`live-now-${index}`} className={cn("space-y-2", isCollapsed && "col-span-2")}>
             <div className="flex items-center gap-2 px-1">
               <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
               <h3 className="text-white font-semibold text-sm">Livestreams</h3>
@@ -924,7 +932,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     // If we have items but haven't inserted shorts yet (less than 5 items), add at the end
     if (items.length > 0 && items.length < SHORTS_INSERT_INTERVAL && shorts.length > 0 && !shortsInserted) {
       elements.push(
-        <ShortsReel key="shorts-carousel-end" shorts={shorts} />
+        <div key="shorts-carousel-end" className={isCollapsed ? "col-span-2" : undefined}>
+          <ShortsReel shorts={shorts} />
+        </div>
       );
     }
 
@@ -1032,7 +1042,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
           ) : (
-            <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`} className="space-y-3">
+            <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`} className={cn(
+              isCollapsed ? "grid grid-cols-2 gap-3" : "space-y-3"
+            )}>
               {/* Render optimistic posts first (newly created, not yet minted) */}
               {optimisticPosts.map((op) => {
                 const feedItem: FeedItemType = { 
