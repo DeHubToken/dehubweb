@@ -9,6 +9,8 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTabIndicator } from '@/hooks/use-tab-indicator';
+import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2 } from 'lucide-react';
 import featuresLightbulb from '@/assets/features-lightbulb.png';
 import { TranslatableText } from '@/components/app/TranslatableText';
@@ -523,6 +525,8 @@ export default function FeaturesPage() {
   const [activeTab, setActiveTab] = useState<PageTab>('requests');
   const [sort, setSort] = useState<FeatureSort>('most_voted');
   const [category, setCategory] = useState<FeatureCategory | 'all'>('all');
+  const { layerRef: featuresCatLayerRef, setRef: setFeaturesCatRef, rect: featuresCatRect, onScroll: onFeaturesCatScroll } = useTabIndicator(category);
+  const { layerRef: featuresSortLayerRef, setRef: setFeaturesSortRef, rect: featuresSortRect, onScroll: onFeaturesSortScroll } = useTabIndicator(sort);
   const [searchInput, setSearchInput] = useState('');
   const search = useDebouncedValue(searchInput, 300);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -629,55 +633,49 @@ export default function FeaturesPage() {
             {/* Category Pills */}
             <div className="relative mb-3">
               <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
-              <div className="flex gap-2 overflow-x-auto scrollbar-invisible pb-1">
-                {CATEGORIES.map((cat) => (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => setCategory(cat.id)}
-                    className={`relative px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
-                      category === cat.id
-                        ? 'text-white'
-                        : 'text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    {category === cat.id && (
-                      <motion.div
-                        layoutId="category-pill"
-                        className="absolute inset-0 rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]"
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                      />
-                    )}
-                    <span className="relative z-10">{t(cat.labelKey)}</span>
-                  </button>
-                ))}
+              <div ref={featuresCatLayerRef} className="relative overflow-visible">
+                <GlassIndicator rect={featuresCatRect} borderRadius="0.5rem" />
+                <div className="relative z-20 flex gap-2 overflow-x-auto scrollbar-invisible pb-1" onScroll={onFeaturesCatScroll}>
+                  {CATEGORIES.map((cat) => (
+                    <button
+                      key={cat.id}
+                      ref={setFeaturesCatRef(cat.id)}
+                      type="button"
+                      onClick={() => setCategory(cat.id)}
+                      className={`relative z-40 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
+                        category === cat.id
+                          ? 'text-white'
+                          : 'text-zinc-400 hover:text-white'
+                      }`}
+                    >
+                      <span className="relative z-10">{t(cat.labelKey)}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
             {/* Sort Tabs */}
-            <div className="flex gap-1.5 overflow-x-auto scrollbar-invisible">
-              {SORTS.map((s) => {
-                const isActive = sort === s.id;
-                return (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => setSort(s.id)}
-                    className={`relative px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                      isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-                    }`}
-                  >
-                    {isActive && (
-                      <motion.div
-                        layoutId="features-sort"
-                        className="absolute inset-0 rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                      />
-                    )}
-                    <span className="relative z-10">{t(s.labelKey)}</span>
-                  </button>
-                );
-              })}
+            <div ref={featuresSortLayerRef} className="relative overflow-visible">
+              <GlassIndicator rect={featuresSortRect} borderRadius="0.5rem" />
+              <div className="relative z-20 flex gap-1.5 overflow-x-auto scrollbar-invisible" onScroll={onFeaturesSortScroll}>
+                {SORTS.map((s) => {
+                  const isActive = sort === s.id;
+                  return (
+                    <button
+                      key={s.id}
+                      ref={setFeaturesSortRef(s.id)}
+                      type="button"
+                      onClick={() => setSort(s.id)}
+                      className={`relative z-40 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                        isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+                      }`}
+                    >
+                      <span className="relative z-10">{t(s.labelKey)}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </>
         )}

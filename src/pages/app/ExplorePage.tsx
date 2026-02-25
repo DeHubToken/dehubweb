@@ -1,4 +1,6 @@
 import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
+import { useTabIndicator } from '@/hooks/use-tab-indicator';
+import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useTranslation } from 'react-i18next';
 import searchIcon from '@/assets/icons/search-icon.png';
@@ -306,6 +308,7 @@ export default function ExplorePage() {
   const navigate = useNavigate();
   
   const [activeTab, setActiveTab] = useState('all');
+  const { layerRef: exploreTabLayerRef, setRef: setExploreTabRef, rect: exploreTabRect } = useTabIndicator(activeTab);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -810,41 +813,38 @@ export default function ExplorePage() {
 
         {/* Tabs Bento */}
         <div className="bg-zinc-900 rounded-2xl p-2 overflow-visible">
-          <div className="flex w-full overflow-y-visible py-1">
-            {EXPLORE_TABS.map((tab) => (
-              <button
-                key={tab.value}
-                onClick={() => setActiveTab(tab.value)}
-                className={cn(
-                  'relative flex-1 flex items-center justify-center gap-2 px-2 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
-                  activeTab === tab.value
-                    ? 'text-white'
-                    : 'text-zinc-400 hover:text-white'
-                )}
-              >
-                {activeTab === tab.value && (
-                  <motion.div
-                    layoutId="explore-tab-indicator"
-                    className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10 flex items-center gap-2">
-                  {tab.value === 'all' ? (
-                    <>
-                      <span className="sm:hidden">All</span>
-                      <tab.icon className="w-4 h-4 hidden sm:block" />
-                      <span className="hidden sm:inline">{tab.label}</span>
-                    </>
-                  ) : (
-                    <>
-                      <tab.icon className="w-4 h-4" />
-                      <span className="hidden sm:inline">{tab.label}</span>
-                    </>
+          <div ref={exploreTabLayerRef} className="relative overflow-visible">
+            <GlassIndicator rect={exploreTabRect} />
+            <div className="relative z-20 flex w-full">
+              {EXPLORE_TABS.map((tab) => (
+                <button
+                  key={tab.value}
+                  ref={setExploreTabRef(tab.value)}
+                  onClick={() => setActiveTab(tab.value)}
+                  className={cn(
+                    'relative z-40 flex-1 flex items-center justify-center gap-2 px-2 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
+                    activeTab === tab.value
+                      ? 'text-white'
+                      : 'text-zinc-400 hover:text-white'
                   )}
-                </span>
-              </button>
-            ))}
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    {tab.value === 'all' ? (
+                      <>
+                        <span className="sm:hidden">All</span>
+                        <tab.icon className="w-4 h-4 hidden sm:block" />
+                        <span className="hidden sm:inline">{tab.label}</span>
+                      </>
+                    ) : (
+                      <>
+                        <tab.icon className="w-4 h-4" />
+                        <span className="hidden sm:inline">{tab.label}</span>
+                      </>
+                    )}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

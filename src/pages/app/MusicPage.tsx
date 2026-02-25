@@ -9,6 +9,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import { useTabIndicator } from '@/hooks/use-tab-indicator';
+import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Play, Music, Mic2, Radio, Disc3 } from 'lucide-react';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
@@ -246,6 +248,7 @@ function AudioTrackCard({ track }: { track: AudioTrack }) {
 export default function MusicPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<MusicTabValue>('all');
+  const { layerRef: musicTabLayerRef, setRef: setMusicTabRef, rect: musicTabRect, onScroll: onMusicTabScroll } = useTabIndicator(activeTab);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -333,33 +336,30 @@ export default function MusicPage() {
     <div className="min-h-screen">
       {/* Tab Navigation */}
       <div className="sticky top-11 lg:top-0 bg-black z-10 p-2 sm:p-3">
-        <div className="bg-zinc-900 rounded-2xl p-2">
-          <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
-            {MUSIC_TABS.map((tab) => {
-              const isActive = activeTab === tab.value;
-              return (
-                <button
-                  key={tab.value}
-                  onClick={() => setActiveTab(tab.value)}
-                  className={cn(
-                    'relative flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
-                    isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
-                  )}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="music-tab"
-                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center gap-2">
-                    <tab.icon className="w-4 h-4" />
-                    <span className="hidden sm:inline">{t(tab.labelKey)}</span>
-                  </span>
-                </button>
-              );
-            })}
+        <div className="bg-zinc-900 rounded-2xl p-2 overflow-visible">
+          <div ref={musicTabLayerRef} className="relative overflow-visible">
+            <GlassIndicator rect={musicTabRect} />
+            <div className="relative z-20 flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide" onScroll={onMusicTabScroll}>
+              {MUSIC_TABS.map((tab) => {
+                const isActive = activeTab === tab.value;
+                return (
+                  <button
+                    key={tab.value}
+                    ref={setMusicTabRef(tab.value)}
+                    onClick={() => setActiveTab(tab.value)}
+                    className={cn(
+                      'relative z-40 flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
+                      isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
+                    )}
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      <tab.icon className="w-4 h-4" />
+                      <span className="hidden sm:inline">{t(tab.labelKey)}</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

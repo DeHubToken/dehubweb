@@ -10,6 +10,8 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { useTabIndicator } from '@/hooks/use-tab-indicator';
+import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { flushSync } from 'react-dom';
 import { useSearchParams, useNavigationType } from 'react-router-dom';
 import { Settings2 } from 'lucide-react';
@@ -91,6 +93,7 @@ export default function HomePage() {
   
   // Tab state - initialized from sessionStorage for back navigation
   const [activeTab, setActiveTab] = useState(getInitialTab);
+  const { layerRef: homeTabLayerRef, setRef: setHomeTabRef, rect: homeTabRect, onScroll: onHomeTabScroll } = useTabIndicator(activeTab);
   const [refreshKey, setRefreshKey] = useState(0);
 
   // Lazy mount: only mount a feed on its first visit, then keep it alive.
@@ -494,39 +497,36 @@ export default function HomePage() {
     <div>
       {/* Tab Navigation */}
       <div className="sticky top-11 lg:top-0 bg-black z-10 p-2 sm:p-3 lg:mt-0">
-        <div className="bg-zinc-900 rounded-2xl p-1">
-          <div className="flex gap-1 sm:gap-2 scrollbar-hide">
-            {FEED_TABS.map((tab) => {
-              const isActive = activeTab === tab.value;
-              return (
-                <button
-                  key={tab.value}
-                  onClick={() => handleTabClick(tab.value)}
-                  className={cn(
-                    'relative flex-1 flex items-center justify-center px-3 sm:px-4 py-2 rounded-xl',
-                    isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
-                  )}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="home-feed-tab"
-                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  <tab.icon className="relative z-10 w-4 h-4" />
-                </button>
-              );
-            })}
-            
-            {/* Settings Button - toggles current tab's filters */}
-            <button
-              onClick={() => handleTabClick(activeTab)}
-              className="flex items-center justify-center px-3 py-2 rounded-xl text-white hover:bg-white/5"
-              aria-label="Feed settings"
-            >
-              <Settings2 className="w-4 h-4" />
-            </button>
+        <div className="bg-zinc-900 rounded-2xl p-1 overflow-visible">
+          <div ref={homeTabLayerRef} className="relative overflow-visible">
+            <GlassIndicator rect={homeTabRect} />
+            <div className="relative z-20 flex gap-1 sm:gap-2 scrollbar-hide">
+              {FEED_TABS.map((tab) => {
+                const isActive = activeTab === tab.value;
+                return (
+                  <button
+                    key={tab.value}
+                    ref={setHomeTabRef(tab.value)}
+                    onClick={() => handleTabClick(tab.value)}
+                    className={cn(
+                      'relative z-40 flex-1 flex items-center justify-center px-3 sm:px-4 py-2 rounded-xl',
+                      isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
+                    )}
+                  >
+                    <tab.icon className="relative z-10 w-4 h-4" />
+                  </button>
+                );
+              })}
+              
+              {/* Settings Button - toggles current tab's filters */}
+              <button
+                onClick={() => handleTabClick(activeTab)}
+                className="flex items-center justify-center px-3 py-2 rounded-xl text-white hover:bg-white/5"
+                aria-label="Feed settings"
+              >
+                <Settings2 className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
