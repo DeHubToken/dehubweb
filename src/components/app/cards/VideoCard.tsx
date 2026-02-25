@@ -39,6 +39,7 @@ import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAutoplay } from '@/contexts/AutoplayContext';
 
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
@@ -449,6 +450,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
+  const { autoplayEnabled } = useAutoplay();
   const isOwnPost = walletAddress && video.creatorId?.toLowerCase() === walletAddress.toLowerCase();
   const [isMuted, setIsMuted] = useState(() => videoPlaybackManager.globalMuted);
   const [showControls, setShowControls] = useState(false);
@@ -491,17 +493,32 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   useEffect(() => {
     videoPlaybackManager.register(instanceId, pauseVideo);
 
-    // Auto-pause when scrolled out of view
+    // Auto-pause when scrolled out of view + auto-play when scrolled into view (if enabled)
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting && isPlaying) {
             pauseVideo();
             videoPlaybackManager.stop(instanceId);
+          } else if (entry.isIntersecting && autoplayEnabled && !isPlaying && !(video.isPPV || video.isLocked) && video.videoUrl && !hasError) {
+            // Autoplay muted when scrolled into view
+            const vid = videoRef.current;
+            if (vid) {
+              vid.muted = true;
+              setIsMuted(true);
+              videoPlaybackManager.play(instanceId);
+              setIsLoading(true);
+              vid.play().then(() => {
+                setIsPlaying(true);
+                setIsLoading(false);
+              }).catch(() => {
+                setIsLoading(false);
+              });
+            }
           }
         });
       },
-      { threshold: 0.3 } // Pause when less than 30% visible
+      { threshold: 0.5 } // Trigger when 50% visible
     );
 
     if (containerRef.current) {
@@ -512,7 +529,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
       videoPlaybackManager.unregister(instanceId);
       observer.disconnect();
     };
-  }, [instanceId, pauseVideo, isPlaying]);
+  }, [instanceId, pauseVideo, isPlaying, autoplayEnabled, video.isPPV, video.isLocked, video.videoUrl, hasError]);
 
   // Show controls briefly after any user interaction, then auto-hide
   const showControlsBriefly = useCallback(() => {

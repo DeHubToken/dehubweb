@@ -7,6 +7,7 @@ import { GlobalDropZoneProvider, useGlobalDropZone } from '@/hooks/use-global-dr
 import { RadioPlayerProvider } from '@/hooks';
 import { CoinPlacementProvider } from '@/hooks/use-coin-placement';
 import { SidebarCollapseProvider, useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
+import { AutoplayProvider } from '@/contexts/AutoplayContext';
 import { PostModal } from '@/features/post/PostModal';
 import { DevelopmentNoticeModal } from './modals';
 import { RadioMiniPlayer } from '@/components/app/radio';
@@ -227,13 +228,15 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   return (
     <SidebarCollapseProvider>
-      <RadioPlayerProvider>
-        <CoinPlacementProvider>
-          <GlobalDropZoneProvider>
-            <AppLayoutContent>{children}</AppLayoutContent>
-          </GlobalDropZoneProvider>
-        </CoinPlacementProvider>
-      </RadioPlayerProvider>
+      <AutoplayProvider>
+        <RadioPlayerProvider>
+          <CoinPlacementProvider>
+            <GlobalDropZoneProvider>
+              <AppLayoutContent>{children}</AppLayoutContent>
+            </GlobalDropZoneProvider>
+          </CoinPlacementProvider>
+        </RadioPlayerProvider>
+      </AutoplayProvider>
     </SidebarCollapseProvider>
   );
 }
