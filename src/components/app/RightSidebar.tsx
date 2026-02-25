@@ -32,7 +32,7 @@ function SearchBar() {
         onChange={(e) => setSearchValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Search..."
-        className="w-full pl-10 bg-zinc-900 border-0 rounded-full text-white placeholder:text-zinc-500 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-[42px]"
+        className="w-full pl-10 bg-zinc-900 border-0 rounded-2xl text-white placeholder:text-zinc-500 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-[46px]"
       />
     </div>
   );
