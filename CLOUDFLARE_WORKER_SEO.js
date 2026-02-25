@@ -8,6 +8,7 @@
  */
 
 const SUPABASE_FUNCTION_URL = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/ssr-seo';
+const SUPABASE_BACKEND_ORIGIN = 'https://aigxuutjaqsywioxjefr.supabase.co';
 
 const BOT_AGENTS = [
   'facebookexternalhit',
@@ -27,6 +28,14 @@ const BOT_AGENTS = [
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    // Same-origin proxy for backend requests from custom domain (avoids direct browser path issues)
+    if (url.pathname.startsWith('/__backend/')) {
+      const proxiedPath = url.pathname.replace('/__backend', '') || '/';
+      const targetUrl = `${SUPABASE_BACKEND_ORIGIN}${proxiedPath}${url.search}`;
+      return fetch(new Request(targetUrl, request));
+    }
+
     const userAgent = request.headers.get('User-Agent') || '';
     const isBot = BOT_AGENTS.some(bot => userAgent.toLowerCase().includes(bot));
 
