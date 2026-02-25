@@ -16,7 +16,7 @@ import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
 import { HomeFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { AnimatedFilterPill } from '@/components/app/feeds/AnimatedFilterPill';
+import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { toast } from 'sonner';
 import { 
   SORT_OPTIONS, 
@@ -178,19 +178,12 @@ function SortFilterSection({
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
         <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
-            {SORT_OPTIONS.map((option) => (
-              <AnimatedFilterPill
-                key={option.label}
-                layoutId="home-sort"
-                isActive={selectedSort.label === option.label}
-                onClick={() => onSortSelect(option)}
-              >
-              {t(`filters.${option.value === 'most-viewed' ? 'mostViewed' : option.value === 'most-liked' ? 'mostLiked' : option.value === 'most-comments' ? 'mostComments' : option.value}`, option.label)}
-              </AnimatedFilterPill>
-            ))}
-          </div>
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
+          <GlassFilterRow
+            items={SORT_OPTIONS.map((o) => ({ key: o.label, label: t(`filters.${o.value === 'most-viewed' ? 'mostViewed' : o.value === 'most-liked' ? 'mostLiked' : o.value === 'most-comments' ? 'mostComments' : o.value}`, o.label) }))}
+            activeKey={selectedSort.label}
+            onSelect={(key) => { const o = SORT_OPTIONS.find(x => x.label === key); if (o) onSortSelect(o); }}
+          />
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none z-20" />
         </div>
       </div>
 
@@ -253,19 +246,12 @@ function SortFilterSection({
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.uploadDate')}</span>
         <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
-            {DATE_FILTER_OPTIONS.map((option) => (
-              <AnimatedFilterPill
-                key={option.value}
-                layoutId="home-date"
-                isActive={selectedDate.value === option.value}
-                onClick={() => onDateSelect(option)}
-              >
-                {option.label}
-              </AnimatedFilterPill>
-            ))}
-          </div>
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
+          <GlassFilterRow
+            items={DATE_FILTER_OPTIONS.map((o) => ({ key: o.value, label: o.label }))}
+            activeKey={selectedDate.value}
+            onSelect={(key) => { const o = DATE_FILTER_OPTIONS.find(x => x.value === key); if (o) onDateSelect(o); }}
+          />
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none z-20" />
         </div>
       </div>
 
@@ -273,19 +259,12 @@ function SortFilterSection({
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.postType')}</span>
         <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
-            {POST_TYPE_FILTERS.map((option) => (
-              <AnimatedFilterPill
-                key={option.value}
-                layoutId="home-posttype"
-                isActive={selectedPostType === option.value}
-                onClick={() => onPostTypeSelect(option.value)}
-              >
-                {t(`filters.${option.value === 'all' ? 'all' : option.value === 'video' ? 'videos' : option.value === 'feed-images' ? 'images' : 'text'}`, option.label)}
-              </AnimatedFilterPill>
-            ))}
-          </div>
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
+          <GlassFilterRow
+            items={POST_TYPE_FILTERS.map((o) => ({ key: o.value, label: t(`filters.${o.value === 'all' ? 'all' : o.value === 'video' ? 'videos' : o.value === 'feed-images' ? 'images' : 'text'}`, o.label) }))}
+            activeKey={selectedPostType}
+            onSelect={(key) => onPostTypeSelect(key as PostTypeFilterValue)}
+          />
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none z-20" />
         </div>
       </div>
 

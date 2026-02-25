@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { subHours, subDays, subWeeks, subMonths } from 'date-fns';
-import { AnimatedFilterPill } from '@/components/app/feeds/AnimatedFilterPill';
+import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 const COLORS = ['#22c55e', '#3b82f6', '#eab308', '#ef4444', '#a855f7', '#ec4899', '#14b8a6', '#f97316'];
@@ -94,18 +94,11 @@ export function IncomeChart() {
             <span className="text-emerald-400 text-sm font-semibold">{totalEarned} DHB</span>
           )}
         </div>
-        <div className="flex items-center gap-1 pl-1 py-1">
-          {timeFilters.map((filter) => (
-            <AnimatedFilterPill
-              key={filter}
-              layoutId="income-time"
-              isActive={activeFilter === filter}
-              onClick={() => setActiveFilter(filter)}
-            >
-              {filter}
-            </AnimatedFilterPill>
-          ))}
-        </div>
+        <GlassFilterRow
+          items={timeFilters.map((f) => ({ key: f, label: f }))}
+          activeKey={activeFilter}
+          onSelect={(key) => setActiveFilter(key)}
+        />
       </div>
 
       {/* Donut Chart with Legend */}

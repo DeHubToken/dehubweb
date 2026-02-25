@@ -15,7 +15,7 @@ import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, ImageIcon, Grid3x3, Loa
 import { ImagesFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AnimatedFilterPill } from '@/components/app/feeds/AnimatedFilterPill';
+import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { ImageCard } from '@/components/app/cards';
 import { useAuth } from '@/contexts/AuthContext';
 import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
@@ -55,19 +55,12 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
       <div className="relative">
-        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
-          {SORT_OPTIONS.map((option) => (
-            <AnimatedFilterPill
-              key={option.label}
-              layoutId="images-sort"
-              isActive={selected.label === option.label}
-              onClick={() => onSelect(option)}
-            >
-              {t(`filters.${option.value === 'most-viewed' ? 'mostViewed' : option.value === 'most-liked' ? 'mostLiked' : option.value === 'most-comments' ? 'mostComments' : option.value}`, option.label)}
-            </AnimatedFilterPill>
-          ))}
-        </div>
-        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
+        <GlassFilterRow
+          items={SORT_OPTIONS.map((o) => ({ key: o.label, label: t(`filters.${o.value === 'most-viewed' ? 'mostViewed' : o.value === 'most-liked' ? 'mostLiked' : o.value === 'most-comments' ? 'mostComments' : o.value}`, o.label) }))}
+          activeKey={selected.label}
+          onSelect={(key) => { const o = SORT_OPTIONS.find(x => x.label === key); if (o) onSelect(o); }}
+        />
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none z-20" />
       </div>
     </div>
   );
@@ -79,19 +72,12 @@ function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterO
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.uploadDate')}</span>
       <div className="relative">
-        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
-          {DATE_FILTER_OPTIONS.map((option) => (
-            <AnimatedFilterPill
-              key={option.label}
-              layoutId="images-date"
-              isActive={selected.label === option.label}
-              onClick={() => onSelect(option)}
-            >
-              {option.value === 'all' ? t('filters.all') : option.label}
-            </AnimatedFilterPill>
-          ))}
-        </div>
-        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
+        <GlassFilterRow
+          items={DATE_FILTER_OPTIONS.map((o) => ({ key: o.label, label: o.value === 'all' ? t('filters.all') : o.label }))}
+          activeKey={selected.label}
+          onSelect={(key) => { const o = DATE_FILTER_OPTIONS.find(x => x.label === key); if (o) onSelect(o); }}
+        />
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none z-20" />
       </div>
     </div>
   );
