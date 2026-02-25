@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useLayoutEffect, type ReactNode } from 'react';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
+import { cn } from '@/lib/utils';
 import { Outlet, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { AppSidebar } from './AppSidebar';
 import { RightSidebar } from './RightSidebar';
@@ -24,6 +26,7 @@ const HOME_SCROLL_POSITION_KEY = 'home-scroll-position';
 
 function AppLayoutContent({ children }: AppLayoutContentProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isCollapsed } = useSidebarCollapse();
   const { isPostModalOpen, closePostModal, pendingFiles, clearPendingFiles } = useGlobalDropZone();
   const location = useLocation();
   const navigate = useNavigate();
@@ -164,7 +167,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-clip" style={{ touchAction: 'manipulation', overscrollBehavior: 'none' }}>
-      <div className="flex max-w-7xl mx-auto w-full relative min-h-screen">
+      <div className={cn("flex w-full relative min-h-screen", isCollapsed ? "max-w-full" : "max-w-7xl mx-auto")}>
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
         <main className="flex-1 min-h-screen pt-11 pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black">
