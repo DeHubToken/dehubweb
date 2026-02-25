@@ -227,14 +227,14 @@ export function ImageCollageSkeleton() {
 }
 
 // ============================================================================
-// CATEGORY PILLS SKELETON
+// FILTER PILLS SKELETON (GlassFilterRow style)
 // ============================================================================
 
 export function CategoryPillsSkeleton() {
   return (
     <div className="p-3">
-      <div className="flex gap-2 overflow-hidden">
-        {Array.from({ length: 8 }).map((_, i) => (
+      <div className="flex gap-1.5 overflow-hidden">
+        {Array.from({ length: 6 }).map((_, i) => (
           <Skeleton 
             key={i} 
             className={cn("h-8 rounded-xl flex-shrink-0", i === 0 ? "w-14" : "w-20")} 
