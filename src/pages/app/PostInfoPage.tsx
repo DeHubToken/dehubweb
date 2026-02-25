@@ -384,7 +384,7 @@ export default function PostInfoPage() {
   if (isOptimisticPost) {
     return (
       <div className="min-h-screen bg-black">
-        <div className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div className="sticky top-0 z-50 bg-black border-b border-white/10">
           <div className="flex items-center gap-4 p-4">
             <button
               onClick={() => navigate(-1)}
@@ -442,7 +442,7 @@ export default function PostInfoPage() {
   if (error || !nftInfo) {
     return (
       <div className="min-h-screen bg-black">
-        <div className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div className="sticky top-0 z-50 bg-black border-b border-white/10">
           <div className="flex items-center gap-4 p-4">
             <button
               onClick={() => navigate(-1)}
@@ -485,7 +485,7 @@ export default function PostInfoPage() {
   return (
     <div className="min-h-screen bg-black">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-white/10">
+      <div className="sticky top-0 z-50 bg-black border-b border-white/10">
         <div className="flex items-center gap-4 p-4">
           <button
             onClick={() => navigate(-1)}
