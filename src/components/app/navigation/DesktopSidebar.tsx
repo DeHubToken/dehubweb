@@ -108,7 +108,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               <Menu className="w-[18px] h-[18px] text-zinc-400" />
             </button>
             <button onClick={handleLogoClick} className="block cursor-pointer">
-              <img src={dehubLogo} alt="dehub" className={cn("h-[50.8px] w-auto", isCollapsed ? "hidden" : "hidden xl:block")} />
+              <img src={dehubLogo} alt="dehub" className={cn("h-[50.8px] w-auto relative -top-[3px]", isCollapsed ? "hidden" : "hidden xl:block")} />
               <img src={dehubLogoCompact} alt="dehub" className={cn("h-[28px] w-auto", isCollapsed ? "block" : "xl:hidden")} />
             </button>
           </div>
