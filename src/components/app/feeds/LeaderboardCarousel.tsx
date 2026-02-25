@@ -52,7 +52,7 @@ const LeaderboardCard = memo(function LeaderboardCard({
         {rank <= 3 ? (
           <img src={MEDALS[rank - 1]} alt={`#${rank}`} className="w-7 h-7 object-contain" />
         ) : (
-          <div className="w-6 h-6 rounded-lg bg-zinc-700 flex items-center justify-center text-xs font-bold text-white">
+          <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-xs font-bold text-white">
             {rank}
           </div>
         )}
