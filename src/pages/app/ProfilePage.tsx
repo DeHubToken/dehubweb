@@ -305,8 +305,8 @@ export default function ProfilePage() {
         />
 
         {/* Profile Tabs Bento */}
-        <div className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/[0.08] rounded-2xl p-1.5 relative">
-          <div className="flex gap-0.5 overflow-x-auto scrollbar-hide">
+        <div className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/[0.08] rounded-2xl p-1.5 relative overflow-visible">
+          <div className="flex gap-0.5 overflow-x-auto overflow-y-visible scrollbar-hide py-1">
             {data.PROFILE_TABS.map((tab) => {
               const isActive = activeTab === tab.value;
               return (
