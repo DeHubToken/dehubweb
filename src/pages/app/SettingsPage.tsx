@@ -633,7 +633,7 @@ function NotificationSettings() {
             icon={Mail}
             title={t('settings.emailNotifications')}
             description={t('settings.emailNotificationsDesc')}
-            defaultChecked
+            defaultChecked={false}
             comingSoon
           />
           <SettingToggle
