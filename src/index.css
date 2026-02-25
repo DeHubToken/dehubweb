@@ -601,3 +601,19 @@ body.immersive-video-mode main {
   z-index: 1;
 }
 
+/* ============================================================
+   REDUCE MOTION — toggled via .reduce-motion on <html>
+   Disables all CSS animations, transitions, and transforms.
+   ============================================================ */
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+html.reduce-motion .hover-scale {
+  transform: none !important;
+}

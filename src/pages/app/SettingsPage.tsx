@@ -72,6 +72,7 @@ import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { useAutoplay } from '@/contexts/AutoplayContext';
+import { useAnimations } from '@/contexts/AnimationsContext';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import { FollowRequestsDrawer } from '@/components/app/profile/FollowRequestsDrawer';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -1050,6 +1051,23 @@ function AutoPlayToggle() {
   );
 }
 
+function ShowAnimationsToggle() {
+  const { t } = useTranslation();
+  const { animationsEnabled, setAnimationsEnabled } = useAnimations();
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <Sparkles className="w-5 h-5 text-zinc-500" />
+        <div>
+          <p className="text-white font-medium">{t('settings.showAnimations')}</p>
+          <p className="text-zinc-500 text-sm">{t('settings.showAnimationsDesc')}</p>
+        </div>
+      </div>
+      <Switch checked={animationsEnabled} onCheckedChange={setAnimationsEnabled} />
+    </div>
+  );
+}
+
 function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: string) => void }) {
   const { t } = useTranslation();
   const { isCollapsed, setCollapsed } = useSidebarCollapse();
@@ -1152,18 +1170,9 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.media')}</h3>
         <div className="space-y-4">
           <AutoPlayToggle />
-          <SettingToggle
-            icon={Sparkles}
-            title={t('settings.showAnimations')}
-            description={t('settings.showAnimationsDesc')}
-            defaultChecked
-            comingSoon
-          />
+          <ShowAnimationsToggle />
         </div>
       </div>
-
-
-
 
     </div>
   );
