@@ -987,7 +987,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   };
 
   return (
-    <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
+    <div className={cn("pt-0 sm:pt-0 space-y-3", isCollapsed ? "p-1" : "p-2 sm:p-3")}>
       {/* Filters - ALWAYS accessible so users can change settings even when feed is empty/retrying */}
       <AnimatePresence mode="wait">
         {showFilters && (
