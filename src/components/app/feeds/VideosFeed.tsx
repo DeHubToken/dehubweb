@@ -79,8 +79,8 @@ const FALLBACK_CATEGORIES: DeHubCategory[] = [
   { id: 'programming', name: 'Programming', slug: 'programming' },
 ];
 
-const LIVE_CATEGORIES_INSERT_AFTER = 5;
-const SHORTS_INSERT_AFTER = 9;
+const LIVE_CATEGORIES_INSERT_AFTER = 6;
+const SHORTS_INSERT_AFTER = 10;
 
 // Shared filter pill styles
 const ACTIVE_FILTER_CLASS = 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]';
@@ -894,7 +894,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                 </div>
               );
               
-              // Insert live categories carousel after 5 posts (index 4, since 0-indexed)
+              // Insert live categories carousel after 6 posts (index 5, since 0-indexed)
               if (index === LIVE_CATEGORIES_INSERT_AFTER - 1) {
                 elements.push(
                   <div key="live-categories-carousel" className={cn(isCollapsed && "sm:col-span-2")}>
@@ -903,7 +903,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                 );
               }
               
-              // Insert shorts carousel after 9 posts (index 8)
+              // Insert shorts carousel after 10 posts (index 9)
               if (index === SHORTS_INSERT_AFTER - 1 && shorts.length > 0) {
                 elements.push(<ShortsReel key="shorts-carousel" shorts={shorts} />);
               }
