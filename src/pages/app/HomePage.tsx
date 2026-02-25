@@ -95,7 +95,7 @@ export default function HomePage() {
   
   // Tab state - initialized from sessionStorage for back navigation
   const [activeTab, setActiveTab] = useState(getInitialTab);
-  const { layerRef: homeTabLayerRef, setRef: setHomeTabRef, rect: homeTabRect, onScroll: onHomeTabScroll } = useTabIndicator(activeTab);
+  const { layerRef: homeTabLayerRef, setRef: setHomeTabRef, rect: homeTabRect, onScroll: onHomeTabScroll } = useTabIndicator(activeTab, isCollapsed);
   const [refreshKey, setRefreshKey] = useState(0);
 
   // Lazy mount: only mount a feed on its first visit, then keep it alive.
