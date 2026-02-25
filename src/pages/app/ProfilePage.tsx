@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AtSign, ChevronLeft, Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AppLayout } from '@/components/app/AppLayout';
@@ -304,25 +305,33 @@ export default function ProfilePage() {
         />
 
         {/* Profile Tabs Bento */}
-        <div className="bg-zinc-900 rounded-2xl p-2 relative">
-          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
-            {data.PROFILE_TABS.map((tab) => (
-              <button
-                key={tab.value}
-                onClick={() => setActiveTab(tab.value)}
-                className={cn(
-                  'flex-1 flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-colors min-w-[60px]',
-                  activeTab === tab.value
-                    ? 'bg-zinc-800 text-white'
-                    : 'text-zinc-500 hover:bg-zinc-800/50 hover:text-white'
-                )}
-              >
-                <tab.icon className="w-5 h-5" />
-                <span className="text-xs font-medium">{tab.count}</span>
-              </button>
-            ))}
+        <div className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/[0.08] rounded-2xl p-1.5 relative">
+          <div className="flex gap-0.5 overflow-x-auto scrollbar-hide">
+            {data.PROFILE_TABS.map((tab) => {
+              const isActive = activeTab === tab.value;
+              return (
+                <button
+                  key={tab.value}
+                  onClick={() => setActiveTab(tab.value)}
+                  className={cn(
+                    'relative flex-1 flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-colors min-w-[52px]',
+                    isActive ? 'text-white' : 'text-zinc-500 hover:text-white'
+                  )}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="profile-tab-indicator"
+                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  <tab.icon className="w-[18px] h-[18px] relative z-10" />
+                  <span className="text-[10px] font-medium relative z-10">{tab.count}</span>
+                </button>
+              );
+            })}
           </div>
-          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none rounded-r-2xl" />
+          <div className="absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-black/40 to-transparent pointer-events-none rounded-r-2xl" />
         </div>
 
         {/* Tab Content - all panels rendered, inactive hidden via CSS */}
