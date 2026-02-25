@@ -825,13 +825,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               : item.type === 'video' ? `bento-video-${(item.data as VideoItem).id}`
               : `bento-image-${(item.data as ImagePost).id}`;
 
-    const isTextPost = item.type === 'post';
-
     return (
-      <div key={key} className={cn(
-        "rounded-xl border border-white/[0.08] bg-transparent p-3",
-        isCollapsed && isTextPost && "col-span-1 max-w-[50%]"
-      )}>
+      <div key={key} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
         {card}
       </div>
     );
