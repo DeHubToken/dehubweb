@@ -1,5 +1,34 @@
 import { DEHUB_API_BASE, apiCall, getAuthToken } from './core';
+import { getSocket } from './socket';
 import type { DeHubUser, DeHubNFT } from './types';
+
+/**
+ * Send a DM message via DeHub Socket.io (sendMessage event).
+ * The doc says: "Prefer bundling txHash into the sendMessage socket event."
+ * Uses the shared socket singleton so we don't open a new connection per message.
+ */
+function sendDMSocket(payload: Record<string, unknown>): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const s = getSocket();
+
+    const emit = () => {
+      s.emit('sendMessage', payload, (ack: any) => {
+        console.log('[DM Socket] sendMessage ack:', ack);
+        if (ack?.error) reject(new Error(ack.error));
+        else resolve(ack);
+      });
+      // Resolve with null after timeout if no ack (free message, server may not ack)
+      setTimeout(() => resolve(null), 5000);
+    };
+
+    if (s.connected) {
+      emit();
+    } else {
+      s.once('connect', emit);
+      s.once('connect_error', (err) => reject(err));
+    }
+  });
+}
 
 export type DMMessageType = 'text' | 'image' | 'gif' | 'audio' | 'video' | 'tip';
 
@@ -291,55 +320,51 @@ export async function sendMessage(
       console.log('[DM API] Sending message to new conversation with recipient:', recipientAddress);
     }
 
-    // For new conversations use the recipient address as roomId;
-    // for existing ones use the conversationId directly.
-    const roomId = isNewConversation && recipientAddress
-      ? recipientAddress.toLowerCase()
-      : conversationId;
-
-    const msgBody: Record<string, unknown> = {
+    const socketPayload: Record<string, unknown> = {
+      senderAddress: sender,
       content,
-      messageType: type,
+      type,
+      transactionHash: `0x${Date.now().toString(16)}`,
     };
 
-    if (mediaUrl) msgBody.imageUrl = mediaUrl;
-
-    if (type === 'tip' && tipAmount !== undefined) {
-      msgBody.tipAmount = tipAmount;
-      msgBody.tipCurrency = tipCurrency || 'DHB';
+    if (isNewConversation && recipientAddress) {
+      socketPayload.receiverAddress = recipientAddress.toLowerCase();
+    } else {
+      socketPayload.conversationId = conversationId;
     }
 
-    console.log('[DM API] Sending message via /api/livechat/rooms/' + roomId + '/messages', { type, hasMedia: !!mediaUrl });
-    const data: any = await apiCall<any>(`/api/livechat/rooms/${roomId}/messages`, {
-      method: 'POST',
-      body: msgBody,
-      requiresAuth: true,
-    });
+    if (mediaUrl) socketPayload.mediaUrl = mediaUrl;
 
-    console.log('[DM API] sendMessage response:', data);
+    if (type === 'tip' && tipAmount !== undefined) {
+      socketPayload.tipAmount = tipAmount;
+      socketPayload.tipCurrency = tipCurrency || 'DHB';
+    }
 
-    // livechat response: { result: { id, roomId, content, sender, createdAt, ... } }
-    // or unwrapped directly
-    const d = data?.result || data;
+    console.log('[DM API] Sending message via socket sendMessage event', { type, hasMedia: !!mediaUrl });
+    const data: any = await sendDMSocket(socketPayload);
+
+    console.log('[DM API] sendMessage socket response:', data);
+
+    const d = data?.result || data?.data || data;
 
     if (d && (d.id || d._id)) {
       const receiverAddr = recipientAddress?.toLowerCase();
-      const finalConversationId = d.roomId || d.conversationId || d.conversation_id || receiverAddr || conversationId;
+      const finalConversationId = d.conversationId || d.conversation_id || receiverAddr || conversationId;
       return {
         id: d.id || d._id,
         conversationId: finalConversationId,
         sender: d.sender || { address: sender },
         content: d.content || content,
-        type: (d.messageType || d.type || type) as DMMessageType,
-        mediaUrl: d.imageUrl || d.mediaUrl || mediaUrl,
+        type: (d.type || d.messageType || type) as DMMessageType,
+        mediaUrl: d.mediaUrl || d.imageUrl || mediaUrl,
         createdAt: d.createdAt || new Date().toISOString(),
       };
     }
 
-    // Optimistic fallback if server returns no body
+    // Optimistic fallback
     return {
       id: `msg-${Date.now()}`,
-      conversationId: roomId,
+      conversationId: isNewConversation && recipientAddress ? recipientAddress.toLowerCase() : conversationId,
       sender: { address: sender },
       content,
       type,
