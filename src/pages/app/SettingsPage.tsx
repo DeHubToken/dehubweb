@@ -1259,20 +1259,21 @@ function ContentSettings() {
             icon={Filter}
             title={t('settings.filterExplicit')}
             description={t('settings.filterExplicitDesc')}
-            defaultChecked
+            defaultChecked={false}
             comingSoon
           />
           <SettingToggle
             icon={Eye}
             title={t('settings.showSensitive')}
             description={t('settings.showSensitiveDesc')}
+            defaultChecked={false}
             comingSoon
           />
           <SettingToggle
             icon={AlertTriangle}
             title={t('settings.enableContentWarnings')}
             description={t('settings.enableContentWarningsDesc')}
-            defaultChecked
+            defaultChecked={false}
             comingSoon
           />
         </div>
