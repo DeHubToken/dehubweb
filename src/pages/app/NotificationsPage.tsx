@@ -282,7 +282,8 @@ function NotificationItem({
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [isClosing, setIsClosing] = useState(false);
-  
+  const [isDismissed, setIsDismissed] = useState(false);
+
   // Prefer fresh enriched avatar over stale API snapshot
   const enriched = notification.actorAddress ? enrichedAvatars.get(notification.actorAddress.toLowerCase()) : undefined;
   const freshAvatarPath = enriched?.avatarUrl;
@@ -329,7 +330,9 @@ function NotificationItem({
     }
   };
 
-  return (
+  
+
+  return isDismissed ? null : (
     <div 
       onClick={handleClick}
       className={`flex items-start gap-3 p-4 rounded-xl transition-colors cursor-pointer ${
@@ -409,6 +412,7 @@ function NotificationItem({
               e.stopPropagation();
               setIsClosing(true);
               bundle.allIds.forEach(id => onMarkAsRead(id));
+              setTimeout(() => setIsDismissed(true), 500);
             }}
             disabled={isClosing}
             className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50 flex-shrink-0"
