@@ -25,17 +25,15 @@ function SearchBar() {
   };
 
   return (
-    <div className="bg-zinc-900 rounded-xl p-[3px] -mt-[5px]">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-        <Input
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Search..."
-          className="w-full pl-10 bg-zinc-800 border-0 rounded-[9px] text-white placeholder:text-zinc-500 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-9"
-        />
-      </div>
+    <div className="relative">
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+      <Input
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+        onKeyDown={handleKeyDown}
+        placeholder="Search..."
+        className="w-full pl-10 bg-zinc-900 border-0 rounded-full text-white placeholder:text-zinc-500 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-[42px]"
+      />
     </div>
   );
 }
