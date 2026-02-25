@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTabIndicator } from '@/hooks/use-tab-indicator';
+import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { 
   Settings as SettingsIcon, 
   User, 
@@ -100,6 +102,7 @@ const tabs = [
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
+  const { layerRef: settingsTabLayerRef, setRef: setSettingsTabRef, rect: settingsTabRect } = useTabIndicator(activeTab);
   const [theme, setTheme] = useState('system');
   const [selectedChainId, setSelectedChainId] = useState<ChainId>(() => {
     const stored = localStorage.getItem('preferred-chain-id');
@@ -158,31 +161,28 @@ export default function SettingsPage() {
         </div>
 
         {/* Tab Icons */}
-        <div className="flex gap-[6px] sm:gap-2">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.value}
-                onClick={() => setActiveTab(tab.value)}
-                className={`relative p-[11px] sm:p-3 rounded-xl transition-colors ${
-                  activeTab === tab.value
-                    ? 'text-white'
-                    : 'text-zinc-500 hover:text-white'
-                }`}
-                title={t(tab.label)}
-              >
-                {activeTab === tab.value && (
-                  <motion.div
-                    layoutId="settings-tab"
-                    className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <Icon className="relative z-10 w-[18px] h-[18px] sm:w-5 sm:h-5" />
-              </button>
-            );
-          })}
+        <div ref={settingsTabLayerRef} className="relative overflow-visible">
+          <GlassIndicator rect={settingsTabRect} />
+          <div className="relative z-20 flex gap-[6px] sm:gap-2">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.value}
+                  ref={setSettingsTabRef(tab.value)}
+                  onClick={() => setActiveTab(tab.value)}
+                  className={`relative z-40 p-[11px] sm:p-3 rounded-xl transition-colors ${
+                    activeTab === tab.value
+                      ? 'text-white'
+                      : 'text-zinc-500 hover:text-white'
+                  }`}
+                  title={t(tab.label)}
+                >
+                  <Icon className="relative z-10 w-[18px] h-[18px] sm:w-5 sm:h-5" />
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 

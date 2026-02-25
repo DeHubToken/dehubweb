@@ -10,6 +10,8 @@ import { useState, useMemo, useRef, useCallback, useEffect, useId } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Play, Music, Mic2, Radio, Disc3, ChevronRight, Pause, Volume2, VolumeX, Loader2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useTabIndicator } from '@/hooks/use-tab-indicator';
+import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { MusicFeedSkeleton, MusicVideoCardSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
@@ -544,6 +546,7 @@ interface MusicFeedProps {
 
 export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFeedProps) {
   const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('all');
+  const { layerRef: musicSubTabLayerRef, setRef: setMusicSubTabRef, rect: musicSubTabRect, onScroll: onMusicSubTabScroll } = useTabIndicator(activeSubTab);
   const [showStagesModal, setShowStagesModal] = useState(false);
   const { walletAddress, isAuthenticated } = useAuth();
 
@@ -669,36 +672,33 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
             transition={{ duration: 0.2 }}
             className="flex-shrink-0 px-2 sm:px-3 pb-2 bg-black overflow-y-clip overflow-x-visible"
           >
-            <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pl-1 py-1 overflow-y-visible">
-              {MUSIC_SUB_TABS.map((tab) => {
-                const isActive = activeSubTab === tab.value;
-                return (
-                  <button
-                    key={tab.value}
-                    onClick={() => setActiveSubTab(tab.value)}
-                    className={cn(
-                      'relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors text-xs whitespace-nowrap font-medium',
-                      isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-                    )}
-                  >
-                    {isActive && (
-                      <motion.div
-                        layoutId="music-sub-tab"
-                        className="absolute inset-0 rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                      />
-                    )}
-                    <span className="relative z-10 flex items-center gap-1.5">
-                      {tab.icon ? (
-                        <tab.icon className="w-3.5 h-3.5" />
-                      ) : tab.customIcon ? (
-                        <img src={tab.customIcon} alt="" className="w-3.5 h-3.5 object-contain" />
-                      ) : null}
-                      {tab.label}
-                    </span>
-                  </button>
-                );
-              })}
+            <div ref={musicSubTabLayerRef} className="relative overflow-visible">
+              <GlassIndicator rect={musicSubTabRect} borderRadius="0.5rem" />
+              <div className="relative z-20 flex gap-1.5 overflow-x-auto scrollbar-hide pl-1 py-1" onScroll={onMusicSubTabScroll}>
+                {MUSIC_SUB_TABS.map((tab) => {
+                  const isActive = activeSubTab === tab.value;
+                  return (
+                    <button
+                      key={tab.value}
+                      ref={setMusicSubTabRef(tab.value)}
+                      onClick={() => setActiveSubTab(tab.value)}
+                      className={cn(
+                        'relative z-40 flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors text-xs whitespace-nowrap font-medium',
+                        isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+                      )}
+                    >
+                      <span className="relative z-10 flex items-center gap-1.5">
+                        {tab.icon ? (
+                          <tab.icon className="w-3.5 h-3.5" />
+                        ) : tab.customIcon ? (
+                          <img src={tab.customIcon} alt="" className="w-3.5 h-3.5 object-contain" />
+                        ) : null}
+                        {tab.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </motion.div>
         )}

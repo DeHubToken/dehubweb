@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { useTabIndicator } from '@/hooks/use-tab-indicator';
+import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, RefreshCw, ThumbsUp, Loader2, History, Ticket } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
@@ -63,6 +65,7 @@ function BookmarksSkeleton() {
 export default function BookmarksPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<BookmarkType>('all');
+  const { layerRef: bookmarksTabLayerRef, setRef: setBookmarksTabRef, rect: bookmarksTabRect, onScroll: onBookmarksTabScroll } = useTabIndicator(activeTab);
   const [searchQuery, setSearchQuery] = useState('');
   const { isAuthenticated } = useAuth();
   const { 
@@ -149,32 +152,29 @@ export default function BookmarksPage() {
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-          {tabKeys.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.value;
-            return (
-              <button
-                key={tab.value}
-                onClick={() => setActiveTab(tab.value)}
-                className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
-                  isActive ? 'text-white' : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
-                }`}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="bookmarks-tab"
-                    className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10 flex items-center gap-2">
-                  <Icon className="w-4 h-4" />
-                  {t(tab.labelKey)}
-                </span>
-              </button>
-            );
-          })}
+        <div ref={bookmarksTabLayerRef} className="relative overflow-visible">
+          <GlassIndicator rect={bookmarksTabRect} />
+          <div className="relative z-20 flex gap-2 overflow-x-auto scrollbar-hide" onScroll={onBookmarksTabScroll}>
+            {tabKeys.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.value;
+              return (
+                <button
+                  key={tab.value}
+                  ref={setBookmarksTabRef(tab.value)}
+                  onClick={() => setActiveTab(tab.value)}
+                  className={`relative z-40 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
+                    isActive ? 'text-white' : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
+                  }`}
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Icon className="w-4 h-4" />
+                    {t(tab.labelKey)}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 

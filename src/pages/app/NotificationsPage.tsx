@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { useTabIndicator } from '@/hooks/use-tab-indicator';
+import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useTranslation } from 'react-i18next';
 import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Repeat2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -421,6 +423,7 @@ function NotificationItem({
 export default function NotificationsPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<NotificationTypeFilter>('all');
+  const { layerRef: notifTabLayerRef, setRef: setNotifTabRef, rect: notifTabRect, onScroll: onNotifTabScroll } = useTabIndicator(activeTab);
   const { isAuthenticated } = useAuth();
   
   // Notification preference toggles (local state for now)
@@ -710,49 +713,47 @@ export default function NotificationsPage() {
 
       {/* Tabs */}
       <div className="px-3 sm:px-4 py-2">
-        <div className="bg-zinc-900 rounded-2xl p-2">
-          <div 
-            className="flex overflow-x-auto gap-1 scrollbar-hide"
-            style={{
-              maskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent 100%)'
-            }}
-          >
-            {tabs.map((tab) => {
-              const count = getTabCount(tab.value);
-              return (
-                <button
-                  key={tab.value}
-                  onClick={() => setActiveTab(tab.value)}
-                  className={`relative flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
-                    activeTab === tab.value
-                      ? 'text-white'
-                      : 'text-zinc-400 hover:text-white'
-                  }`}
-                >
-                  {activeTab === tab.value && (
-                    <motion.div
-                      layoutId="notif-tab"
-                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center gap-2">
-                    <tab.icon className="w-4 h-4" />
-                    <span className="hidden sm:inline">{t(tab.labelKey)}</span>
-                    {count > 0 && (
-                      <span className={`ml-1 px-1.5 py-0.5 text-xs rounded-lg transition-colors duration-200 ${
-                        activeTab === tab.value
-                          ? 'bg-white/20 text-white'
-                          : 'bg-red-500 text-white'
-                      }`}>
-                        {count > 99 ? '99+' : count}
-                      </span>
-                    )}
-                  </span>
-                </button>
-              );
-            })}
+        <div className="bg-zinc-900 rounded-2xl p-2 overflow-visible">
+          <div ref={notifTabLayerRef} className="relative overflow-visible">
+            <GlassIndicator rect={notifTabRect} />
+            <div 
+              className="relative z-20 flex overflow-x-auto gap-1 scrollbar-hide"
+              onScroll={onNotifTabScroll}
+              style={{
+                maskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent 100%)'
+              }}
+            >
+              {tabs.map((tab) => {
+                const count = getTabCount(tab.value);
+                return (
+                  <button
+                    key={tab.value}
+                    ref={setNotifTabRef(tab.value)}
+                    onClick={() => setActiveTab(tab.value)}
+                    className={`relative z-40 flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
+                      activeTab === tab.value
+                        ? 'text-white'
+                        : 'text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      <tab.icon className="w-4 h-4" />
+                      <span className="hidden sm:inline">{t(tab.labelKey)}</span>
+                      {count > 0 && (
+                        <span className={`ml-1 px-1.5 py-0.5 text-xs rounded-lg transition-colors duration-200 ${
+                          activeTab === tab.value
+                            ? 'bg-white/20 text-white'
+                            : 'bg-red-500 text-white'
+                        }`}>
+                          {count > 99 ? '99+' : count}
+                        </span>
+                      )}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

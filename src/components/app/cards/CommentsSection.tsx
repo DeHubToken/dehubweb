@@ -11,6 +11,8 @@
  */
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { useTabIndicator } from '@/hooks/use-tab-indicator';
+import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
@@ -385,6 +387,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const isMobile = useIsMobile();
   
   const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'search'>('replies');
+  const { layerRef: commentsTabLayerRef, setRef: setCommentsTabRef, rect: commentsTabRect } = useTabIndicator(activeTab);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'recent' | 'oldest' | 'liked'>('recent');
   const [newComment, setNewComment] = useState('');
@@ -790,26 +793,23 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
       <div className="flex justify-between items-center gap-1 mb-3">
         {/* Left side - Tab buttons */}
-        <div className="flex gap-1 relative overflow-y-visible py-1">
-          {['replies', 'quotes', 'search'].map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => setActiveTab(tab as typeof activeTab)}
-              className="px-4 py-2 flex items-center justify-center transition-all rounded-xl relative z-10 text-zinc-400 hover:text-zinc-200"
-            >
-              {activeTab === tab && (
-                <motion.div
-                  layoutId="comments-tab-indicator"
-                  className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                />
-              )}
-              <span className={cn("relative z-10", activeTab === tab && "text-white")}>
-                {tab === 'replies' ? <MessageSquare className="w-5 h-5" /> : tab === 'quotes' ? <Quote className="w-5 h-5" /> : <Search className="w-5 h-5" />}
-              </span>
-            </button>
-          ))}
+        <div ref={commentsTabLayerRef} className="relative overflow-visible">
+          <GlassIndicator rect={commentsTabRect} />
+          <div className="relative z-20 flex gap-1">
+            {(['replies', 'quotes', 'search'] as const).map((tab) => (
+              <button
+                key={tab}
+                ref={setCommentsTabRef(tab)}
+                type="button"
+                onClick={() => setActiveTab(tab)}
+                className="relative z-40 px-4 py-2 flex items-center justify-center transition-all rounded-xl text-zinc-400 hover:text-zinc-200"
+              >
+                <span className={cn("relative z-10", activeTab === tab && "text-white")}>
+                  {tab === 'replies' ? <MessageSquare className="w-5 h-5" /> : tab === 'quotes' ? <Quote className="w-5 h-5" /> : <Search className="w-5 h-5" />}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Right side - Sort toggle */}
