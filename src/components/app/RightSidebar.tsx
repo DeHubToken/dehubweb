@@ -43,7 +43,7 @@ function SearchBar() {
 export const RightSidebar = memo(function RightSidebar({ showSearch = true }: RightSidebarProps) {
   const { isCollapsed } = useSidebarCollapse();
   return (
-    <aside className={cn("hidden lg:block w-80 xl:w-88 h-screen sticky top-0 pb-4 overflow-y-auto scrollbar-hide z-0 isolate transition-all duration-500 ease-in-out", isCollapsed ? "pl-0 pr-2 pt-[6px]" : "px-4 pt-[10px]")}>
+    <aside className={cn("hidden lg:block w-80 xl:w-88 h-screen sticky top-0 pb-4 overflow-y-auto scrollbar-hide z-0 isolate transition-[padding] duration-500 ease-in-out motion-reduce:transition-none", isCollapsed ? "pl-0 pr-2 pt-[6px]" : "px-4 pt-[10px]")}>
       {showSearch && <SearchBar />}
       <div className="mt-[11px] space-y-4">
         <TabbedSidePanel />
