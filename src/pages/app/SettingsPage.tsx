@@ -73,6 +73,7 @@ import { usePrivacySettings } from '@/hooks/use-privacy-settings';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 import { useAnimations } from '@/contexts/AnimationsContext';
+import { useBrowserNotifications, requestNotificationPermission } from '@/hooks/use-browser-notifications';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import { FollowRequestsDrawer } from '@/components/app/profile/FollowRequestsDrawer';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -586,6 +587,7 @@ function ProfileSettings() {
 function NotificationSettings() {
   const { t } = useTranslation();
   const { isAuthenticated } = useAuthContext();
+  const { isEnabled: browserNotifsEnabled, setEnabled: setBrowserNotifsEnabled } = useBrowserNotifications();
 
   const { data: pushPrefs, isLoading: prefsLoading } = useQuery({
     queryKey: ['push-preferences'],
@@ -640,8 +642,24 @@ function NotificationSettings() {
             icon={Bell}
             title={t('settings.pushNotifications')}
             description={t('settings.pushNotificationsDesc')}
-            defaultChecked
-            comingSoon
+            defaultChecked={browserNotifsEnabled}
+            onCheckedChange={async (checked) => {
+              if (checked) {
+                const result = await requestNotificationPermission();
+                if (result === 'granted') {
+                  setBrowserNotifsEnabled(true);
+                  toast.success(t('settings.browserNotificationsEnabled', 'Browser notifications enabled'));
+                } else if (result === 'denied') {
+                  setBrowserNotifsEnabled(false);
+                  toast.error(t('settings.browserNotificationsDenied', 'Notifications blocked. Enable them in your browser settings.'));
+                } else {
+                  setBrowserNotifsEnabled(false);
+                  toast.error(t('settings.browserNotificationsUnsupported', 'Browser notifications are not supported'));
+                }
+              } else {
+                setBrowserNotifsEnabled(false);
+              }
+            }}
           />
         </div>
       </div>
