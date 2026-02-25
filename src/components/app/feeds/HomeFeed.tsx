@@ -870,18 +870,28 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Detect number of masonry columns based on viewport + sidebar state
   // Multi-column masonry only when sidebar is collapsed; standard mode is always 1 column
   const [colCount, setColCount] = useState(1);
+  const colChangeTimer = useRef<ReturnType<typeof setTimeout>>();
   useEffect(() => {
-    const update = () => {
-      if (!isCollapsed) {
-        setColCount(1);
-        return;
-      }
+    // Clear any pending deferred update
+    if (colChangeTimer.current) clearTimeout(colChangeTimer.current);
+
+    const computeCols = () => {
+      if (!isCollapsed) return 1;
       const w = window.innerWidth;
-      setColCount(w >= 1280 ? 3 : 2);
+      return w >= 1280 ? 3 : 2;
     };
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
+
+    // Defer column change by 500ms so masonry doesn't re-layout during the width animation
+    colChangeTimer.current = setTimeout(() => {
+      setColCount(computeCols());
+    }, 500);
+
+    const onResize = () => setColCount(computeCols());
+    window.addEventListener('resize', onResize);
+    return () => {
+      if (colChangeTimer.current) clearTimeout(colChangeTimer.current);
+      window.removeEventListener('resize', onResize);
+    };
   }, [isCollapsed]);
 
   // Estimate height weight for a feed item to balance columns

@@ -91,7 +91,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   return (
     <>
       <aside className={cn(
-        "hidden lg:flex sticky top-0 h-screen px-2 pb-2 flex-col overflow-hidden items-center transition-[width,padding] duration-500 ease-in-out motion-reduce:transition-none z-0 isolate",
+        "hidden lg:flex sticky top-0 h-screen px-2 pb-2 flex-col overflow-hidden items-center transition-[width,padding] duration-500 ease-in-out motion-reduce:transition-none z-0 isolate will-change-[width]",
         isCollapsed ? "w-[60px] pt-[2px]" : "w-[60px] pt-[2px] xl:w-[231px] xl:px-[18px] xl:items-stretch xl:pt-0"
       )}>
         {/* Logo & Coin Balance */}
