@@ -563,7 +563,11 @@
     "invalidContractAddress": "ልክ ያልሆነ የውል አድራሻ",
     "cannotReadContract": "የቶከን ውል ማንበብ አልተቻለም። አድራሻው ትክክል መሆኑን ያረጋግጡ።",
     "imported": "{{symbol}} ገብቷል",
-    "custom": "ብጁ"
+    "custom": "ብጁ",
+    "stake": "ስቴክ",
+    "cashOut": "ጥሬ ገንዘብ",
+    "stakeComingSoon": "ስቴኪንግ በቅርቡ ይመጣል!",
+    "cashOutComingSoon": "ጥሬ ገንዘብ ማውጣት በቅርቡ ይመጣል!"
   },
   "explorePage": {
     "searchPlaceholder": "ሰዎች፣ ልጥፎች ወይም ይዘት ፈልግ...",

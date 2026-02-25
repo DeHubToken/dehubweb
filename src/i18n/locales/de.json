@@ -394,7 +394,11 @@
     "invalidContractAddress": "Ungültige Vertragsadresse",
     "cannotReadContract": "Token-Vertrag konnte nicht gelesen werden. Stellen Sie sicher, dass die Adresse korrekt ist.",
     "imported": "{{symbol}} importiert",
-    "custom": "BENUTZERDEFINIERT"
+    "custom": "BENUTZERDEFINIERT",
+    "stake": "Staken",
+    "cashOut": "Auszahlen",
+    "stakeComingSoon": "Staking kommt bald!",
+    "cashOutComingSoon": "Auszahlung kommt bald!"
   },
   "publicChat": {
     "title": "Öffentlicher Chat",

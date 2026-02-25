@@ -554,7 +554,11 @@
     "invalidContractAddress": "Dirección de contrato inválida",
     "cannotReadContract": "No se puede leer el contrato del token. Asegúrate de que la dirección sea correcta.",
     "imported": "Importado {{symbol}}",
-    "custom": "PERSONALIZADO"
+    "custom": "PERSONALIZADO",
+    "stake": "Stake",
+    "cashOut": "Retirar",
+    "stakeComingSoon": "¡Staking próximamente!",
+    "cashOutComingSoon": "¡Retiro próximamente!"
   },
   "features": {
     "title": "Solicitudes de funciones",

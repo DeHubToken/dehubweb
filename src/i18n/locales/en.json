@@ -570,7 +570,11 @@
     "invalidContractAddress": "Invalid contract address",
     "cannotReadContract": "Could not read token contract. Make sure the address is correct.",
     "imported": "Imported {{symbol}}",
-    "custom": "CUSTOM"
+    "custom": "CUSTOM",
+    "stake": "Stake",
+    "cashOut": "Cash Out",
+    "stakeComingSoon": "Staking coming soon!",
+    "cashOutComingSoon": "Cash out coming soon!"
   },
   "bookmarks": {
     "title": "Your Bookmarks",

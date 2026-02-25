@@ -563,7 +563,11 @@
     "invalidContractAddress": "آدرس قرارداد نامعتبر",
     "cannotReadContract": "خواندن قرارداد توکن ممکن نیست. مطمئن شوید آدرس صحیح است.",
     "imported": "{{symbol}} وارد شد",
-    "custom": "سفارشی"
+    "custom": "سفارشی",
+    "stake": "استیک",
+    "cashOut": "برداشت",
+    "stakeComingSoon": "استیکینگ به زودی!",
+    "cashOutComingSoon": "برداشت به زودی!"
   },
   "auth": { "loginRequired": "ورود لازم است" },
   "explorePage": { "searchPlaceholder": "جستجوی افراد، پست‌ها یا محتوا...", "filters": "فیلترها", "clearAll": "پاک کردن همه", "category": "دسته‌بندی", "contentType": "نوع محتوا", "bounty": "جایزه", "ppv": "PPV", "gated": "محدود", "datePosted": "تاریخ انتشار", "engagement": "تعامل", "follow": "دنبال کردن", "loginDescription": "وارد شوید تا پست‌ها، سازندگان و جوامع را در DeHub کاوش کنید.", "noResults": "نتیجه‌ای یافت نشد", "noResultsDesc": "کلمات کلیدی دیگری امتحان کنید یا محتوای محبوب را مرور کنید.", "searchHistory": "تاریخچه جستجو", "clearHistory": "پاک کردن تاریخچه", "trending": "پرطرفدار", "trendingSearches": "جستجوهای محبوب", "suggestedCreators": "سازندگان پیشنهادی", "people": "افراد", "posts": "پست‌ها", "seeAllPeople": "مشاهده همه افراد", "results": "نتیجه", "loadMore": "بارگذاری بیشتر", "searching": "در حال جستجو...", "searchError": "جستجو ممکن نیست. لطفاً دوباره امتحان کنید.", "retry": "تلاش مجدد", "resultsFor": "نتایج برای \"{{query}}\"", "resultsFound": "{{count}} نتیجه یافت شد", "content": "محتوا", "loadingMore": "بارگذاری بیشتر...", "noMoreResults": "نتیجه دیگری نیست", "noResultsFor": "نتیجه‌ای برای \"{{query}}\" یافت نشد", "tryDifferent": "چیز دیگری جستجو کنید", "tipRemoveAt": "نکته: @ را حذف کنید تا به جای نام کاربری دقیق، محتوا جستجو شود", "noRecentSearches": "جستجوی اخیری نیست. شروع به کاوش کنید!", "nothingTrending": "هنوز چیزی پرطرفدار نیست! به زودی بررسی کنید.", "viewAllPeople": "مشاهده همه {{count}} نفر", "noFilterResults": "نتیجه‌ای یافت نشد", "selectLabel": "انتخاب {{label}}", "search": "جستجو...", "country": "کشور", "date": "تاریخ", "likes": "لایک‌ها", "shares": "اشتراک‌ها", "comments": "نظرات", "anyTime": "هر زمانی", "today": "امروز", "thisWeek": "این هفته", "thisMonth": "این ماه", "thisYear": "امسال", "any": "همه", "gaming": "بازی", "music": "موسیقی", "art": "هنر", "programming": "برنامه‌نویسی", "crypto": "رمزارز", "entertainment": "سرگرمی", "all": "همه", "global": "جهانی" },

@@ -381,7 +381,11 @@
     "invalidContractAddress": "Geçersiz sözleşme adresi",
     "cannotReadContract": "Token sözleşmesi okunamadı. Adresin doğru olduğundan emin olun.",
     "imported": "{{symbol}} içe aktarıldı",
-    "custom": "ÖZEL"
+    "custom": "ÖZEL",
+    "stake": "Stake",
+    "cashOut": "Çek",
+    "stakeComingSoon": "Staking yakında geliyor!",
+    "cashOutComingSoon": "Çekim yakında geliyor!"
   },
   "publicChat": {
     "title": "Genel Sohbet",

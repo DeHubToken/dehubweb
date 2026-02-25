@@ -570,7 +570,11 @@
     "invalidContractAddress": "Μη έγκυρη διεύθυνση συμβολαίου",
     "cannotReadContract": "Δεν ήταν δυνατή η ανάγνωση του συμβολαίου token. Βεβαιωθείτε ότι η διεύθυνση είναι σωστή.",
     "imported": "Εισήχθη {{symbol}}",
-    "custom": "ΠΡΟΣΑΡΜΟΣΜΕΝΟ"
+    "custom": "ΠΡΟΣΑΡΜΟΣΜΕΝΟ",
+    "stake": "Stake",
+    "cashOut": "Ανάληψη",
+    "stakeComingSoon": "Το staking έρχεται σύντομα!",
+    "cashOutComingSoon": "Η ανάληψη έρχεται σύντομα!"
   },
   "bookmarks": {
     "title": "Οι Σελιδοδείκτες Σας",

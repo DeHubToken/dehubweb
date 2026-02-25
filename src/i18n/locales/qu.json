@@ -564,7 +564,11 @@
     "invalidContractAddress": "Mana allin contrato churana",
     "cannotReadContract": "Mana token contrato ñawiriyta atinchu. Churana allin kachun qhaway.",
     "imported": "{{symbol}} apamusqa",
-    "custom": "SAPAQ"
+    "custom": "SAPAQ",
+    "stake": "Stake",
+    "cashOut": "Qullqi Hurquy",
+    "stakeComingSoon": "Staking qhipaman hamunqa!",
+    "cashOutComingSoon": "Qullqi hurquy qhipaman hamunqa!"
   },
   "explorePage": { "searchPlaceholder": "Runata, churasqata icha willakuyta maskay...", "filters": "Chiqinchakuna", "clearAll": "Llapanta pichay", "category": "Raki", "contentType": "Willakuy Riki", "bounty": "Chanin", "ppv": "PPV", "gated": "Harkasqa", "datePosted": "Pacha Churasqa", "engagement": "Tinkuy", "follow": "Qatiy", "loginDescription": "Yaykuy DeHub-pi churasqakunata, ruwaqkunata, ayllukunata maskanaykipaq.", "noResults": "Mana ima tarisqachu", "noResultsDesc": "Huk rimakunata maskay icha trending willakuykunata qhaway.", "searchHistory": "Maskay Kawsasqan", "clearHistory": "Kawsasqanta pichay", "trending": "Trending", "trendingSearches": "Trending Maskana", "suggestedCreators": "Yuyaychisqa Ruwaqkuna", "people": "Runakuna", "posts": "Churasqakuna", "seeAllPeople": "Llaparunata qhaway", "results": "tarisqa", "loadMore": "Astawanta chaskiy", "searching": "Maskachkan...", "searchError": "Mana maskayta atikunchu. Musuqmanta ruwaway.", "retry": "Musuqmanta", "resultsFor": "\"{{query}}\" tarisqakuna", "resultsFound": "{{count}} tarisqa", "content": "Willakuy", "loadingMore": "Astawanta chaskichkan...", "noMoreResults": "Mana astawanñachu", "noResultsFor": "Mana ima tarisqachu \"{{query}}\" nisqapaq", "tryDifferent": "Hukta maskayta qallariy", "tipRemoveAt": "Yuyaychay: @ qichuy willakuyta maskanapaq", "noRecentSearches": "Mana maskay kanchu. Maskay qallariy!", "nothingTrending": "Mana ima trendingchu! Kutimuynankama.", "viewAllPeople": "Llaparunata {{count}} qhaway", "noFilterResults": "Mana tarisqachu", "selectLabel": "{{label}} akllay", "search": "Maskay...", "country": "Suyu", "date": "Pacha", "likes": "Kusiy", "shares": "Rakiy", "comments": "Rimaykuna", "anyTime": "Maypacha", "today": "Kunan", "thisWeek": "Kay simana", "thisMonth": "Kay killa", "thisYear": "Kay wata", "any": "Mayqin", "gaming": "Pukllana", "music": "Takiy", "art": "Ruwana", "programming": "Kamachiy", "crypto": "Crypto", "entertainment": "Kusikuy", "all": "Llapan", "global": "Tiqsimuyu" },
   "bookmarks": {

@@ -570,7 +570,11 @@
     "invalidContractAddress": "Ungültige Vertrags-Adrässe",
     "cannotReadContract": "Token-Vertrag cha nid gläse wärde. Stell sicher dass d Adrässe korrekt isch.",
     "imported": "{{symbol}} importiert",
-    "custom": "EIGENE"
+    "custom": "EIGENE",
+    "stake": "Stake",
+    "cashOut": "Uszahle",
+    "stakeComingSoon": "Staking chunnt bald!",
+    "cashOutComingSoon": "Uszahlig chunnt bald!"
   },
   "bookmarks": {
     "title": "Dini Lesezeiche",
