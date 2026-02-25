@@ -656,7 +656,7 @@ export default function ExplorePage() {
   return (
     <div className="min-h-screen">
       {/* Search Header - Bento Style */}
-      <div className="sticky top-11 lg:top-0 bg-black z-10 p-2 sm:p-3 space-y-2 sm:space-y-3">
+      <div className="sticky top-11 lg:top-0 bg-black z-50 p-2 sm:p-3 space-y-2 sm:space-y-3">
         {/* Search Input Bento */}
         <div className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
           <div className="relative flex gap-2">
