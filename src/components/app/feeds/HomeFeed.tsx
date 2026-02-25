@@ -931,23 +931,23 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const renderFeedWithShorts = () => {
     const isMultiCol = colCount > 1;
 
-    // --- MULTI-COLUMN: continuous masonry, full-width inserts go ABOVE/BELOW the grid ---
+    // --- MULTI-COLUMN: continuous masonry, full-width inserts spliced after 8 posts ---
     if (isMultiCol) {
-      const allCards = items.map((item, index) => renderFeedItem(item, index));
-      const fullWidthBefore: ReactNode[] = [];
+      const SHORTS_AFTER = 8; // Insert shorts carousel after first 8 posts
+      const beforeShorts = items.slice(0, Math.min(SHORTS_AFTER, items.length));
+      const afterShorts = items.slice(Math.min(SHORTS_AFTER, items.length));
+
+      const beforeCards = beforeShorts.map((item, index) => renderFeedItem(item, index));
+      const afterCards = afterShorts.map((item, index) => renderFeedItem(item, SHORTS_AFTER + index));
+
       const fullWidthAfter: ReactNode[] = [];
 
-      // Shorts carousel above the grid if we have shorts
-      if (shorts.length > 0) {
-        fullWidthBefore.push(<div key="shorts-carousel" className="mb-3"><ShortsReel shorts={shorts} /></div>);
-      }
-
-      // Radio carousel below the grid
+      // Radio carousel after the grid
       if (radioStations.length > 0) {
         fullWidthAfter.push(<div key="radio-carousel" className="mb-3"><RadioCarouselSection /></div>);
       }
 
-      // Live streams below the grid
+      // Live streams after the grid
       if (liveNowStreams.length > 0) {
         fullWidthAfter.push(
           <div key="live-now" className="mb-3 space-y-2">
@@ -970,8 +970,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
       return (
         <>
-          {fullWidthBefore}
-          {renderMasonryGrid(allCards, items)}
+          {renderMasonryGrid(beforeCards, beforeShorts)}
+          {shorts.length > 0 && <div className="my-3"><ShortsReel shorts={shorts} /></div>}
+          {afterCards.length > 0 && <div className="mt-3">{renderMasonryGrid(afterCards, afterShorts)}</div>}
           {fullWidthAfter}
         </>
       );
