@@ -29,6 +29,7 @@ import {
   useFeatureRequests,
   useShippedFeatures,
   useUserVotes,
+  useTotalFeatureCount,
   useSubmitFeatureRequest,
   useVoteFeatureRequest,
   CATEGORY_LABELS,
@@ -556,7 +557,7 @@ export default function FeaturesPage() {
     setDrawerOpen(true);
   };
 
-  const totalCount = features.length;
+  const { data: totalCount = features.length } = useTotalFeatureCount();
   const shippedCount = shippedFeatures?.length ?? 0;
 
   return (
