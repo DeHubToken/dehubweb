@@ -848,5 +848,25 @@
     "fillRequired": "Abeg fill all required fields",
     "submitted": "Application don submit well well!",
     "failedSubmit": "E no fit submit application. Try again."
+  },
+  "loginModal": {
+    "title": "Log in",
+    "continueEmail": "Continue with Email",
+    "continueSMS": "Continue with SMS",
+    "continueGoogle": "Continue with Google",
+    "continueX": "Continue with X",
+    "connectWallet": "Connect Wallet",
+    "emailPlaceholder": "Enter your email",
+    "invalidEmail": "Abeg enter correct email address",
+    "sendingLink": "Dey send link...",
+    "continue": "Continue",
+    "magicLinkInfo": "We go send you magic link to sign in",
+    "invalidPhone": "Abeg enter correct phone number with country code",
+    "sendingCode": "Dey send code...",
+    "smsInfo": "We go send you verification code for SMS",
+    "or": "or",
+    "termsNotice": "If you continue, you don agree to our Terms of Service and Privacy Policy",
+    "walletInfoDesktop": "Connect your wallet to sign in securely",
+    "walletInfoMobile": "MetaMask, Trust & Phantom go open dia app direct. Rabby go use WalletConnect."
   }
 }

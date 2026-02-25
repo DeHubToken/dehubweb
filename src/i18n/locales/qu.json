@@ -841,5 +841,6 @@
     "fillRequired": "Tukuy munasqa ch'urakunata hunt'achiy",
     "submitted": "Mañakuy allinta apachisqa!",
     "failedSubmit": "Mana mañakuyta apachita atirqanchu. Musuqmanta ruwaway."
-  }
+  },
+  "loginModal": { "title": "Yaykuy", "continueEmail": "Email-wan qatiy", "continueSMS": "SMS-wan qatiy", "continueGoogle": "Google-wan qatiy", "continueX": "X-wan qatiy", "connectWallet": "Wallet-ta t'inkiy", "emailPlaceholder": "Email-niykita churay", "invalidEmail": "Allin email churay", "sendingLink": "T'inkita apachispa...", "continue": "Qatiy", "magicLinkInfo": "Huk t'inkita apachisqayki yaykunaykipaq", "invalidPhone": "Allin telefono yupayta suyupa yupayninwan churay", "sendingCode": "Yupay apachispa...", "smsInfo": "SMS-wan huk chiqaqchay yupayta apachisqayki", "or": "utaq", "termsNotice": "Qatispa, Kamachiy Simikunata Pakay Kamachiykunatawan chaskinkichis", "walletInfoDesktop": "Wallet-niykita t'inkiy allin yaykuypaq", "walletInfoMobile": "MetaMask, Trust & Phantom app-ninkuta kichankum. Rabby WalletConnect-ta llamk'achin." }
 }

@@ -45,5 +45,25 @@
   "buyCoins": { "title": "Kup monety", "network": "Sieć", "token": "Token", "selectToken": "Wybierz token", "amountUsd": "Kwota (USD)", "customAmount": "Niestandardowa kwota", "minPurchase": "Minimalny zakup 5$", "youPay": "Płacisz", "youReceive": "Otrzymasz (szac.)", "paymentMethod": "Metoda płatności", "cardBank": "Karta / Bank", "cardBankDesc": "Visa, Mastercard, Apple Pay", "fiatOnramp": "Rampa fiat", "fiatOnrampDesc": "Kup krypto za fiat", "buy": "Kup {{symbol}}", "processing": "Przetwarzanie...", "disclaimer": "Kupując, akceptujesz regulamin. Zakupy krypto nie podlegają zwrotowi.", "loginDescription": "Zaloguj się aby kupić monety.", "noTokens": "Brak dostępnych tokenów", "supplyWarning": "Tylko {{supply}} {{symbol}} dostępne.", "walletNotConnected": "Portfel niepodłączony", "redirecting": "Przekierowanie do płatności...", "sessionCreated": "Sesja utworzona", "failedPurchase": "Zakup nieudany", "redirectingOnramp": "Przekierowanie...", "onrampCreated": "Sesja rampy utworzona", "failedOnramp": "Rampa nieudana" },
   "agents": { "title": "Agenci AI", "connectToManage": "Zaloguj się aby zarządzać agentami AI", "signInToCreate": "Zaloguj się aby tworzyć i zarządzać agentami.", "description": "Twórz agentów AI do interakcji z DeHub przez MCP.", "apiDocs": "Dokumentacja API", "newAgent": "Nowy agent AI", "createDescription": "Utwórz nowego agenta", "agentName": "Nazwa agenta", "agentNamePlaceholder": "mój-agent", "agentDescription": "Opis", "agentDescriptionPlaceholder": "Co robi twój agent?", "createAgent": "Utwórz agenta", "creating": "Tworzenie...", "cancel": "Anuluj", "createNew": "Utwórz nowego agenta", "noAgents": "Brak agentów. Utwórz pierwszego!", "active": "Aktywny", "inactive": "Nieaktywny", "apiKey": "Klucz API", "created": "Utworzony", "delete": "Usuń", "deleteConfirm": "Usunąć agenta? Nie można cofnąć.", "agentCreated": "Agent AI utworzony!", "saveApiKey": "Zapisz klucz API - nie zobaczysz go ponownie.", "agentDeleted": "Agent usunięty", "failedCreate": "Tworzenie nieudane", "failedDelete": "Usuwanie nieudane", "apiKeyCopied": "Klucz API skopiowany" },
   "hero": { "title": "Nowy Świat", "subtitle": "Czeka", "comingSoon": "Wkrótce", "iosComingSoon": "Aplikacja iOS będzie wkrótce dostępna!" },
-  "creators": { "title": "Aplikacja twórcy", "subtitle": "Dołącz do sieci twórców DeHub", "xUsername": "Nazwa X (Twitter)", "youtubeUsername": "Nazwa YouTube", "twitchUsername": "Nazwa Twitch", "instagramUsername": "Nazwa Instagram", "tiktokUsername": "Nazwa TikTok", "otherSocials": "Inne media społecznościowe", "totalFollowerReach": "Łączny zasięg obserwujących", "followerReachPlaceholder": "np. 500K na wszystkich platformach", "emailOrTelegram": "Email lub Telegram ID", "emailPlaceholder": "ty@email.pl lub @nazwa", "expectedCompensation": "Oczekiwane wynagrodzenie", "compensationPlaceholder": "np. 100$/miesiąc", "submitApplication": "Wyślij zgłoszenie", "submitting": "Wysyłanie...", "fillRequired": "Wypełnij wymagane pola", "submitted": "Zgłoszenie wysłane!", "failedSubmit": "Nie udało się wysłać. Spróbuj ponownie." }
+  "creators": { "title": "Aplikacja twórcy", "subtitle": "Dołącz do sieci twórców DeHub", "xUsername": "Nazwa X (Twitter)", "youtubeUsername": "Nazwa YouTube", "twitchUsername": "Nazwa Twitch", "instagramUsername": "Nazwa Instagram", "tiktokUsername": "Nazwa TikTok", "otherSocials": "Inne media społecznościowe", "totalFollowerReach": "Łączny zasięg obserwujących", "followerReachPlaceholder": "np. 500K na wszystkich platformach", "emailOrTelegram": "Email lub Telegram ID", "emailPlaceholder": "ty@email.pl lub @nazwa", "expectedCompensation": "Oczekiwane wynagrodzenie", "compensationPlaceholder": "np. 100$/miesiąc", "submitApplication": "Wyślij zgłoszenie", "submitting": "Wysyłanie...", "fillRequired": "Wypełnij wymagane pola", "submitted": "Zgłoszenie wysłane!", "failedSubmit": "Nie udało się wysłać. Spróbuj ponownie." },
+  "loginModal": {
+    "title": "Zaloguj się",
+    "continueEmail": "Kontynuuj z e-mailem",
+    "continueSMS": "Kontynuuj z SMS",
+    "continueGoogle": "Kontynuuj z Google",
+    "continueX": "Kontynuuj z X",
+    "connectWallet": "Połącz portfel",
+    "emailPlaceholder": "Wpisz swój e-mail",
+    "invalidEmail": "Wpisz prawidłowy adres e-mail",
+    "sendingLink": "Wysyłanie linku...",
+    "continue": "Kontynuuj",
+    "magicLinkInfo": "Wyślemy Ci magiczny link do zalogowania",
+    "invalidPhone": "Wpisz prawidłowy numer telefonu z kodem kraju",
+    "sendingCode": "Wysyłanie kodu...",
+    "smsInfo": "Wyślemy Ci kod weryfikacyjny SMS",
+    "or": "lub",
+    "termsNotice": "Kontynuując, akceptujesz nasze Warunki korzystania z usługi i Politykę prywatności",
+    "walletInfoDesktop": "Połącz portfel, aby zalogować się bezpiecznie",
+    "walletInfoMobile": "MetaMask, Trust i Phantom otworzą swoją aplikację bezpośrednio. Rabby użyje WalletConnect."
+  }
 }

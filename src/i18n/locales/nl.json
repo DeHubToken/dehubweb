@@ -82,5 +82,25 @@
   "buyCoins": { "title": "Koop Munten", "network": "Netwerk", "token": "Token", "selectToken": "Selecteer", "amountUsd": "Bedrag (USD)", "customAmount": "Aangepast bedrag", "minPurchase": "Minimaal $5", "youPay": "Je betaalt", "youReceive": "Je ontvangt", "paymentMethod": "Betaalmethode", "cardBank": "Kaart/Bank", "cardBankDesc": "Visa, Mastercard", "fiatOnramp": "Fiat Onramp", "fiatOnrampDesc": "Koop met fiat", "buy": "Koop {{symbol}}", "processing": "Verwerken...", "disclaimer": "Niet restitueerbaar", "loginDescription": "Log in om te kopen", "noTokens": "Geen tokens", "supplyWarning": "Slechts {{supply}} beschikbaar", "walletNotConnected": "Portemonnee niet verbonden", "redirecting": "Doorsturen...", "sessionCreated": "Sessie gemaakt", "failedPurchase": "Fout bij aankoop", "redirectingOnramp": "Doorsturen...", "onrampCreated": "Sessie gemaakt", "failedOnramp": "Fout" },
   "agents": { "title": "AI Agenten", "connectToManage": "Verbind om te beheren", "signInToCreate": "Log in om te maken", "description": "Maak AI agenten", "apiDocs": "API Doc", "newAgent": "Nieuwe Agent", "createDescription": "Maak een agent", "agentName": "Naam", "agentNamePlaceholder": "mijn-agent", "agentDescription": "Beschrijving", "agentDescriptionPlaceholder": "Wat doet het?", "createAgent": "Maak", "creating": "Maken...", "cancel": "Annuleren", "createNew": "Maak Nieuwe", "noAgents": "Geen agenten", "active": "Actief", "inactive": "Inactief", "apiKey": "API Sleutel", "created": "Gemaakt", "delete": "Verwijder", "deleteConfirm": "Zeker weten?", "agentCreated": "Gemaakt!", "saveApiKey": "Bewaar sleutel", "agentDeleted": "Verwijderd", "failedCreate": "Maken mislukt", "failedDelete": "Verwijderen mislukt", "apiKeyCopied": "Gekopieerd" },
   "hero": { "title": "Een Nieuwe Wereld", "subtitle": "Wacht Op Jou", "comingSoon": "Binnenkort", "iosComingSoon": "iOS app komt binnenkort!" },
-  "creators": { "title": "Maker Aanvraag", "subtitle": "Word lid van DeHub", "xUsername": "X (Twitter)", "youtubeUsername": "YouTube", "twitchUsername": "Twitch", "instagramUsername": "Instagram", "tiktokUsername": "TikTok", "otherSocials": "Andere Socials", "totalFollowerReach": "Totaal Bereik", "followerReachPlaceholder": "bijv. 500K", "emailOrTelegram": "Email/Telegram", "emailPlaceholder": "contact", "expectedCompensation": "Verwachte Vergoeding", "compensationPlaceholder": "bijv. $100/maand", "submitApplication": "Indienen", "submitting": "Verzenden...", "fillRequired": "Vul alles in", "submitted": "Verzonden!", "failedSubmit": "Verzenden mislukt" }
+  "creators": { "title": "Maker Aanvraag", "subtitle": "Word lid van DeHub", "xUsername": "X (Twitter)", "youtubeUsername": "YouTube", "twitchUsername": "Twitch", "instagramUsername": "Instagram", "tiktokUsername": "TikTok", "otherSocials": "Andere Socials", "totalFollowerReach": "Totaal Bereik", "followerReachPlaceholder": "bijv. 500K", "emailOrTelegram": "Email/Telegram", "emailPlaceholder": "contact", "expectedCompensation": "Verwachte Vergoeding", "compensationPlaceholder": "bijv. $100/maand", "submitApplication": "Indienen", "submitting": "Verzenden...", "fillRequired": "Vul alles in", "submitted": "Verzonden!", "failedSubmit": "Verzenden mislukt" },
+  "loginModal": {
+    "title": "Inloggen",
+    "continueEmail": "Doorgaan met e-mail",
+    "continueSMS": "Doorgaan met SMS",
+    "continueGoogle": "Doorgaan met Google",
+    "continueX": "Doorgaan met X",
+    "connectWallet": "Portemonnee verbinden",
+    "emailPlaceholder": "Voer je e-mail in",
+    "invalidEmail": "Voer een geldig e-mailadres in",
+    "sendingLink": "Link wordt verzonden...",
+    "continue": "Doorgaan",
+    "magicLinkInfo": "We sturen je een magische link om in te loggen",
+    "invalidPhone": "Voer een geldig telefoonnummer in met landcode",
+    "sendingCode": "Code wordt verzonden...",
+    "smsInfo": "We sturen je een verificatiecode via SMS",
+    "or": "of",
+    "termsNotice": "Door verder te gaan, ga je akkoord met onze Servicevoorwaarden en Privacybeleid",
+    "walletInfoDesktop": "Verbind je portemonnee om veilig in te loggen",
+    "walletInfoMobile": "MetaMask, Trust & Phantom openen hun app direct. Rabby gebruikt WalletConnect."
+  }
 }

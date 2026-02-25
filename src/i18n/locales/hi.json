@@ -622,5 +622,25 @@
     "fillRequired": "कृपया सभी आवश्यक फ़ील्ड भरें",
     "submitted": "आवेदन सफलतापूर्वक सबमिट किया गया!",
     "failedSubmit": "आवेदन सबमिट करने में विफल। कृपया पुनः प्रयास करें।"
+  },
+  "loginModal": {
+    "title": "लॉग इन",
+    "continueEmail": "ईमेल से जारी रखें",
+    "continueSMS": "SMS से जारी रखें",
+    "continueGoogle": "Google से जारी रखें",
+    "continueX": "X से जारी रखें",
+    "connectWallet": "वॉलेट कनेक्ट करें",
+    "emailPlaceholder": "अपना ईमेल दर्ज करें",
+    "invalidEmail": "कृपया एक वैध ईमेल पता दर्ज करें",
+    "sendingLink": "लिंक भेजा जा रहा है...",
+    "continue": "जारी रखें",
+    "magicLinkInfo": "हम आपको साइन इन के लिए एक मैजिक लिंक भेजेंगे",
+    "invalidPhone": "कृपया देश कोड के साथ एक वैध फ़ोन नंबर दर्ज करें",
+    "sendingCode": "कोड भेजा जा रहा है...",
+    "smsInfo": "हम आपको SMS से एक सत्यापन कोड भेजेंगे",
+    "or": "या",
+    "termsNotice": "जारी रखकर, आप हमारी सेवा की शर्तों और गोपनीयता नीति से सहमत होते हैं",
+    "walletInfoDesktop": "सुरक्षित रूप से साइन इन करने के लिए अपना वॉलेट कनेक्ट करें",
+    "walletInfoMobile": "MetaMask, Trust और Phantom अपना ऐप सीधे खोलेंगे। Rabby WalletConnect का उपयोग करेगा।"
   }
 }

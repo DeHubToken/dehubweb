@@ -908,5 +908,6 @@
     "fillRequired": "Bitte füll alli erforderliche Fälder us",
     "submitted": "Bewärbig erfolgriich iigereicht!",
     "failedSubmit": "Bewärbig iireiche fehlgschlage. Bitte probier s nomol."
-  }
+  },
+  "loginModal": { "title": "Aamälde", "continueEmail": "Wiiter mit E-Mail", "continueSMS": "Wiiter mit SMS", "continueGoogle": "Wiiter mit Google", "continueX": "Wiiter mit X", "connectWallet": "Wallet verbinde", "emailPlaceholder": "Gib dini E-Mail ii", "invalidEmail": "Bitte gib e gültigi E-Mail-Adrässe ii", "sendingLink": "Link wird gschickt...", "continue": "Wiiter", "magicLinkInfo": "Mir schicked dir en magische Link zum Aamälde", "invalidPhone": "Bitte gib e gültigi Telefonnummere mit Ländervorwahl ii", "sendingCode": "Code wird gschickt...", "smsInfo": "Mir schicked dir en Bestätigungscode per SMS", "or": "oder", "termsNotice": "Wänn du wiitermachsch, stimmsch du üserne Nutzigsbedingige und Dateschutzrichtlinie zue", "walletInfoDesktop": "Verbind dis Wallet zum sicher aamälde", "walletInfoMobile": "MetaMask, Trust & Phantom mached ihri App diräkt uf. Rabby bruucht WalletConnect." }
 }

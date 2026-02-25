@@ -901,5 +901,6 @@
     "fillRequired": "እባክህ ሁሉንም አስፈላጊ መስኮች ሙላ",
     "submitted": "ማመልከቻ በተሳካ ሁኔታ ቀርቧል!",
     "failedSubmit": "ማመልከቻ ማቅረብ አልተሳካም። እባክህ ደግመህ ሞክር።"
-  }
+  },
+  "loginModal": { "title": "ግባ", "continueEmail": "በኢሜል ቀጥል", "continueSMS": "በSMS ቀጥል", "continueGoogle": "በGoogle ቀጥል", "continueX": "በX ቀጥል", "connectWallet": "ዋሌት አገናኝ", "emailPlaceholder": "ኢሜልዎን ያስገቡ", "invalidEmail": "እባክዎ ትክክለኛ ኢሜል አድራሻ ያስገቡ", "sendingLink": "ማገናኛ በመላክ ላይ...", "continue": "ቀጥል", "magicLinkInfo": "ለመግባት አስማት ማገናኛ እንልክልዎታለን", "invalidPhone": "እባክዎ ከአገር ኮድ ጋር ትክክለኛ ስልክ ቁጥር ያስገቡ", "sendingCode": "ኮድ በመላክ ላይ...", "smsInfo": "በSMS የማረጋገጫ ኮድ እንልክልዎታለን", "or": "ወይም", "termsNotice": "በመቀጠል፣ የአገልግሎት ውሎቻችንን እና የግላዊነት መመሪያችንን ተቀብለዋል", "walletInfoDesktop": "በደህንነት ለመግባት ዋሌትዎን ያገናኙ", "walletInfoMobile": "MetaMask፣ Trust እና Phantom መተግበሪያቸውን በቀጥታ ይከፍታሉ። Rabby WalletConnect ይጠቀማል።" }
 }

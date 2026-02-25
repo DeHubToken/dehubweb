@@ -838,5 +838,6 @@
     "fillRequired": "لطفاً تمام فیلدهای الزامی را پر کنید",
     "submitted": "درخواست با موفقیت ارسال شد!",
     "failedSubmit": "ارسال درخواست ناموفق بود. لطفاً دوباره تلاش کنید."
-  }
+  },
+  "loginModal": { "title": "ورود", "continueEmail": "ادامه با ایمیل", "continueSMS": "ادامه با پیامک", "continueGoogle": "ادامه با Google", "continueX": "ادامه با X", "connectWallet": "اتصال کیف پول", "emailPlaceholder": "ایمیل خود را وارد کنید", "invalidEmail": "لطفاً یک آدرس ایمیل معتبر وارد کنید", "sendingLink": "در حال ارسال لینک...", "continue": "ادامه", "magicLinkInfo": "ما یک لینک جادویی برای ورود برایتان ارسال می‌کنیم", "invalidPhone": "لطفاً یک شماره تلفن معتبر با کد کشور وارد کنید", "sendingCode": "در حال ارسال کد...", "smsInfo": "ما یک کد تأیید از طریق پیامک برایتان ارسال می‌کنیم", "or": "یا", "termsNotice": "با ادامه دادن، شما با شرایط خدمات و سیاست حفظ حریم خصوصی ما موافقت می‌کنید", "walletInfoDesktop": "کیف پول خود را متصل کنید تا با امنیت وارد شوید", "walletInfoMobile": "MetaMask، Trust و Phantom اپلیکیشن خود را مستقیماً باز می‌کنند. Rabby از WalletConnect استفاده می‌کند." }
 }

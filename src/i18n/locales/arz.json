@@ -840,5 +840,25 @@
     "fillRequired": "املا كل الخانات المطلوبة",
     "submitted": "الطلب اتقدم بنجاح!",
     "failedSubmit": "فشل تقديم الطلب. حاول تاني."
+  },
+  "loginModal": {
+    "title": "تسجيل الدخول",
+    "continueEmail": "كمّل بالإيميل",
+    "continueSMS": "كمّل بالرسالة",
+    "continueGoogle": "كمّل بـ Google",
+    "continueX": "كمّل بـ X",
+    "connectWallet": "وصّل المحفظة",
+    "emailPlaceholder": "اكتب الإيميل بتاعك",
+    "invalidEmail": "اكتب إيميل صحيح",
+    "sendingLink": "بيتبعت اللينك...",
+    "continue": "كمّل",
+    "magicLinkInfo": "هنبعتلك لينك سحري عشان تسجل دخول",
+    "invalidPhone": "اكتب رقم تليفون صحيح مع كود البلد",
+    "sendingCode": "بيتبعت الكود...",
+    "smsInfo": "هنبعتلك كود تأكيد عن طريق رسالة",
+    "or": "أو",
+    "termsNotice": "لو كمّلت يبقى انت موافق على شروط الخدمة وسياسة الخصوصية",
+    "walletInfoDesktop": "وصّل محفظتك عشان تسجل دخول بأمان",
+    "walletInfoMobile": "MetaMask وTrust وPhantom هيفتحوا الأبلكيشن على طول. Rabby هيستخدم WalletConnect."
   }
 }

@@ -841,5 +841,25 @@
     "fillRequired": "Jọ̀wọ́ kún gbogbo àwọn ibi tí a nílò",
     "submitted": "A ti fi ìbéèrè ránṣẹ́ dáradára!",
     "failedSubmit": "Kò le fi ìbéèrè ránṣẹ́. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí."
+  },
+  "loginModal": {
+    "title": "Wọlé",
+    "continueEmail": "Tẹ̀síwájú pẹ̀lú Email",
+    "continueSMS": "Tẹ̀síwájú pẹ̀lú SMS",
+    "continueGoogle": "Tẹ̀síwájú pẹ̀lú Google",
+    "continueX": "Tẹ̀síwájú pẹ̀lú X",
+    "connectWallet": "So Wallet",
+    "emailPlaceholder": "Tẹ email rẹ sí",
+    "invalidEmail": "Jọ̀wọ́ tẹ àdírẹ́ẹ̀sì email tó tọ́",
+    "sendingLink": "Ń fi ìjápọ̀ ránṣẹ́...",
+    "continue": "Tẹ̀síwájú",
+    "magicLinkInfo": "A ó fi ìjápọ̀ àrà ránṣẹ́ fún ọ láti wọlé",
+    "invalidPhone": "Jọ̀wọ́ tẹ nọ́mbà fóònù tó tọ́ pẹ̀lú kóòdù orílẹ̀-èdè",
+    "sendingCode": "Ń fi kóòdù ránṣẹ́...",
+    "smsInfo": "A ó fi kóòdù ìjẹ́rìísí ránṣẹ́ nípasẹ̀ SMS",
+    "or": "tàbí",
+    "termsNotice": "Nípa títẹ̀síwájú, o fara mọ́ Àwọn Òfin Iṣẹ́ àti Ìlànà Ìpamọ́ wa",
+    "walletInfoDesktop": "So wallet rẹ láti wọlé lọ́nà ààbò",
+    "walletInfoMobile": "MetaMask, Trust àti Phantom yóò ṣí app wọn tààrà. Rabby yóò lo WalletConnect."
   }
 }
