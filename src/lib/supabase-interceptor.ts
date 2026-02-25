@@ -21,24 +21,15 @@ export function installSupabaseInterceptor(): void {
   window.fetch = async function (...args: Parameters<typeof fetch>): Promise<Response> {
     const [input, init] = args;
     const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : (input as Request).url;
-
-    // Only intercept backend calls
+    
+    // Only intercept Supabase calls
     if (!url.includes(supabaseUrl)) {
       return originalFetch.apply(this, args);
     }
-
-    const host = window.location.hostname;
-    const useSameOriginBackendProxy = host === 'dehub.io' || host === 'www.dehub.io';
-    const proxiedUrl = useSameOriginBackendProxy
-      ? (() => {
-          const parsed = new URL(url);
-          return `${window.location.origin}/__backend${parsed.pathname}${parsed.search}`;
-        })()
-      : url;
-
+    
     const method = init?.method || (typeof input !== 'string' && 'method' in input ? (input as Request).method : 'GET');
     const start = performance.now();
-
+    
     let type: 'rest' | 'edge_function' | 'storage' = 'rest';
     let target = 'unknown';
     
@@ -57,20 +48,8 @@ export function installSupabaseInterceptor(): void {
       target = match?.[1] || 'unknown';
     }
     
-    const executeFetch = (): Promise<Response> => {
-      if (proxiedUrl === url) {
-        return originalFetch.apply(this, args);
-      }
-
-      if (typeof input === 'string' || input instanceof URL) {
-        return originalFetch.call(this, proxiedUrl, init);
-      }
-
-      return originalFetch.call(this, new Request(proxiedUrl, input));
-    };
-
     try {
-      const response = await executeFetch();
+      const response = await originalFetch.apply(this, args);
       const durationMs = Math.round(performance.now() - start);
       
       trackUsage({
