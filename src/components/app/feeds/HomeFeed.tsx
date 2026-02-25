@@ -879,7 +879,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       // Insert Who to Follow carousel after 3 posts (mobile/tablet only)
       if ((index + 1) === 3 && !whoToFollowInserted) {
         elements.push(
-          <div key={`who-to-follow-${index}`} className={isCollapsed ? "col-span-2" : undefined}>
+          <div key={`who-to-follow-${index}`} className={isCollapsed ? "col-span-2 xl:col-span-3" : undefined}>
             <MobileWhoToFollowCarousel />
           </div>
         );
@@ -889,7 +889,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       // Insert shorts carousel after every SHORTS_INSERT_INTERVAL posts (5)
       if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0 && !shortsInserted) {
         elements.push(
-          <div key={`shorts-carousel-${index}`} className={isCollapsed ? "col-span-2" : undefined}>
+          <div key={`shorts-carousel-${index}`} className={isCollapsed ? "col-span-2 xl:col-span-3" : undefined}>
             <ShortsReel shorts={shorts} />
           </div>
         );
@@ -899,7 +899,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       // Insert radio carousel after RADIO_INSERT_AFTER posts (12)
       if ((index + 1) === RADIO_INSERT_AFTER && radioStations.length > 0 && !radioInserted) {
         elements.push(
-          <div key={`radio-carousel-${index}`} className={isCollapsed ? "col-span-2" : undefined}>
+          <div key={`radio-carousel-${index}`} className={isCollapsed ? "col-span-2 xl:col-span-3" : undefined}>
             <RadioCarouselSection />
           </div>
         );
@@ -909,7 +909,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       // Insert Live Now carousel 4 posts after the radio carousel
       if ((index + 1) === LIVE_INSERT_AFTER && liveNowStreams.length > 0 && !liveInserted) {
         elements.push(
-          <div key={`live-now-${index}`} className={cn("space-y-2", isCollapsed && "col-span-2")}>
+          <div key={`live-now-${index}`} className={cn("space-y-2", isCollapsed && "col-span-2 xl:col-span-3")}>
             <div className="flex items-center gap-2 px-1">
               <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
               <h3 className="text-white font-semibold text-sm">Livestreams</h3>
@@ -932,7 +932,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     // If we have items but haven't inserted shorts yet (less than 5 items), add at the end
     if (items.length > 0 && items.length < SHORTS_INSERT_INTERVAL && shorts.length > 0 && !shortsInserted) {
       elements.push(
-        <div key="shorts-carousel-end" className={isCollapsed ? "col-span-2" : undefined}>
+        <div key="shorts-carousel-end" className={isCollapsed ? "col-span-2 xl:col-span-3" : undefined}>
           <ShortsReel shorts={shorts} />
         </div>
       );
@@ -987,7 +987,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   };
 
   return (
-    <div className={cn("pt-0 sm:pt-0 space-y-3 transition-all duration-300 ease-out", isCollapsed ? "p-1" : "p-2 sm:p-3")}>
+    <div className={cn("pt-0 sm:pt-0 space-y-3 transition-[padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]", isCollapsed ? "p-1" : "p-2 sm:p-3")}>
       {/* Filters - ALWAYS accessible so users can change settings even when feed is empty/retrying */}
       <AnimatePresence mode="wait">
         {showFilters && (
@@ -1043,7 +1043,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             <EmptyState />
           ) : (
             <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`} className={cn(
-              isCollapsed ? "grid grid-cols-2 xl:grid-cols-3 gap-3" : "space-y-3"
+              "grid transition-[grid-template-columns,gap] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              isCollapsed ? "grid-cols-2 xl:grid-cols-3 gap-3" : "grid-cols-1 gap-3"
             )}>
               {/* Render optimistic posts first (newly created, not yet minted) */}
               {optimisticPosts.map((op) => {

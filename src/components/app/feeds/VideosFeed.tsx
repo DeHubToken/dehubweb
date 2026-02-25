@@ -703,7 +703,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   }
 
   return (
-    <div className={cn("pt-0 sm:pt-0 transition-all duration-300 ease-out", isCollapsed ? "p-1" : "p-2 sm:p-3")}>
+    <div className={cn("pt-0 sm:pt-0 transition-[padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]", isCollapsed ? "p-1" : "p-2 sm:p-3")}>
       {/* Filters */}
       <AnimatePresence mode="wait">
         {showFilters && (
@@ -882,7 +882,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         <FilteredEmptyState />
       ) : (
         <div key={`${selectedSort.value}-${selectedUploadDate.value}`}>
-          <div className={cn(isCollapsed ? "grid grid-cols-2 xl:grid-cols-3 gap-3" : "space-y-5")}>
+          <div className={cn("grid transition-[grid-template-columns,gap] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]", isCollapsed ? "grid-cols-2 xl:grid-cols-3 gap-3" : "grid-cols-1 gap-5")}>
             {/* Skip first 3 videos ONLY if featured row is shown (only for "Latest" sort), then insert carousels at intervals */}
             {(videos.length >= 3 && selectedSort.value === 'latest' ? videos.slice(3) : videos).map((video, index) => {
               const elements: React.ReactNode[] = [];
