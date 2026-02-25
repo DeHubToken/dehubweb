@@ -1043,7 +1043,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             <EmptyState />
           ) : (
             <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`} className={cn(
-              isCollapsed ? "grid grid-cols-2 2xl:grid-cols-3 gap-3" : "space-y-3"
+              isCollapsed ? "grid grid-cols-2 xl:grid-cols-3 gap-3" : "space-y-3"
             )}>
               {/* Render optimistic posts first (newly created, not yet minted) */}
               {optimisticPosts.map((op) => {

@@ -9,6 +9,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
@@ -58,6 +59,7 @@ const HOME_STATE_STORAGE_KEY = 'home-feed-state';
 
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { isCollapsed } = useSidebarCollapse();
   
   // Detect back navigation for tab-change scroll logic
   // Note: Actual scroll position restoration is handled by AppLayout
@@ -496,7 +498,7 @@ export default function HomePage() {
   return (
     <div>
       {/* Tab Navigation */}
-      <div className="sticky top-11 lg:top-0 bg-black z-50 p-2 sm:p-3 lg:mt-0">
+      <div className={cn("sticky top-11 lg:top-0 bg-black z-50 p-2 sm:p-3 lg:mt-0", isCollapsed && "pl-2 pr-0")}>
         <div className="bg-zinc-900 rounded-xl overflow-visible">
           <div ref={homeTabLayerRef} className="relative overflow-visible">
             <GlassIndicator rect={homeTabRect} borderRadius="0.75rem" />
