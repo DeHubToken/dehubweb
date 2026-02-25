@@ -1,21 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   getLiveChatRooms,
   getLiveChatRoom,
   getLiveChatMessages as fetchApiMessages,
+  sendLiveChatMessage,
   getLiveChatUserProfile,
   type LiveChatRoom,
   type LiveChatMessage,
   type LiveChatUserProfile,
 } from '@/lib/api/dehub';
-import {
-  getSocket,
-  joinRoom,
-  leaveRoom,
-  MSG_EVENTS,
-  PRESENCE_EVENTS,
-} from '@/lib/api/dehub/socket';
-import { getAuthToken } from '@/lib/api/dehub/core';
 import { useAuth } from '@/contexts/AuthContext';
 
 /** Shape of a livechat message used internally in the UI */
@@ -79,29 +72,6 @@ function apiMsgToLocal(msg: LiveChatMessage, roomId?: string): SupabaseLiveChatM
   };
 }
 
-/** Try to normalize a raw socket message payload into LiveChatMessage shape */
-function normalizeSocketMsg(raw: any, roomId: string): SupabaseLiveChatMessage | null {
-  if (!raw || typeof raw !== 'object') return null;
-
-  const id = raw.id || raw._id;
-  if (!id) return null;
-
-  const sender = raw.sender || {};
-  return {
-    id: String(id),
-    room_id: raw.roomId || roomId,
-    sender_address: sender.address || raw.senderAddress || '',
-    sender_username: sender.username || raw.senderUsername || null,
-    sender_display_name: sender.displayName || raw.senderDisplayName || null,
-    sender_avatar_url: sender.avatarUrl || sender.avatarImageUrl || raw.senderAvatarUrl || null,
-    content: raw.content || raw.text || '',
-    message_type: raw.messageType || raw.type || 'text',
-    image_url: raw.imageUrl || raw.image_url || null,
-    is_pinned: raw.isPinned || false,
-    created_at: raw.createdAt || raw.created_at || new Date().toISOString(),
-  };
-}
-
 /** Deduplicate messages by id, keeping latest version */
 function deduplicateMessages(msgs: SupabaseLiveChatMessage[]): SupabaseLiveChatMessage[] {
   const seen = new Map<string, SupabaseLiveChatMessage>();
@@ -113,23 +83,24 @@ function deduplicateMessages(msgs: SupabaseLiveChatMessage[]): SupabaseLiveChatM
   );
 }
 
+const POLL_INTERVAL_MS = 5000;
+
 /**
- * Real-time livechat messages via DeHub Socket.io.
+ * Livechat messages via DeHub REST API with 5-second polling.
  *
  * Flow:
  * 1. Initial load: REST GET /api/livechat/rooms/{roomId}/messages
- * 2. Real-time: socket joinRoom → listen for message events
- * 3. Send: socket sendMessage event (optimistic update on UI)
- * 4. Cleanup: leaveRoom on unmount
+ * 2. Real-time: poll every 5s for new messages
+ * 3. Send: REST POST via sendLiveChatMessage edge function
+ * 4. Cleanup: clear interval on unmount
  */
 export function useLiveChatMessages(roomId: string | null) {
   const [messages, setMessages] = useState<SupabaseLiveChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
   const { isAuthenticated, user, walletAddress } = useAuth();
+  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // ── Initial REST load ──────────────────────────────────────────────────────
   const fetchFromApi = useCallback(async (showLoading = false) => {
     if (!roomId) return;
     if (showLoading) setIsLoading(true);
@@ -147,7 +118,6 @@ export function useLiveChatMessages(roomId: string | null) {
     }
   }, [roomId]);
 
-  // ── Socket real-time subscription ─────────────────────────────────────────
   useEffect(() => {
     if (!roomId) {
       setMessages([]);
@@ -155,57 +125,20 @@ export function useLiveChatMessages(roomId: string | null) {
       return;
     }
 
-    // 1. Load initial messages via REST
+    // 1. Initial load
     fetchFromApi(true);
 
-    // 2. Connect socket and join the room
-    const s = getSocket();
-
-    const onConnect = () => {
-      setIsConnected(true);
-      joinRoom(roomId);
-      console.log('[LiveChat] Socket connected, joined room:', roomId);
-    };
-
-    const onDisconnect = () => {
-      setIsConnected(false);
-      console.log('[LiveChat] Socket disconnected');
-    };
-
-    // Handle incoming message events (try all possible event names)
-    const handleNewMessage = (raw: any) => {
-      console.log('[LiveChat] Incoming socket message:', raw);
-      const msg = normalizeSocketMsg(raw, roomId);
-      if (!msg) return;
-      setMessages((prev) => {
-        // Remove optimistic copy with same content from same sender if any
-        const withoutOptimistic = prev.filter(
-          (m) => !(m.id.startsWith('temp-') && m.content === msg.content && m.sender_address === msg.sender_address)
-        );
-        return deduplicateMessages([...withoutOptimistic, msg]);
-      });
-    };
-
-    // Register all possible event names
-    MSG_EVENTS.forEach((evt) => s.on(evt, handleNewMessage));
-
-    if (s.connected) {
-      onConnect();
-    } else {
-      s.once('connect', onConnect);
-    }
-
-    s.on('disconnect', onDisconnect);
+    // 2. Poll every 5s
+    pollingRef.current = setInterval(() => fetchFromApi(false), POLL_INTERVAL_MS);
 
     return () => {
-      leaveRoom(roomId);
-      MSG_EVENTS.forEach((evt) => s.off(evt, handleNewMessage));
-      s.off('connect', onConnect);
-      s.off('disconnect', onDisconnect);
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
     };
   }, [roomId, fetchFromApi]);
 
-  // ── Send ──────────────────────────────────────────────────────────────────
   const send = useCallback(
     async (
       content: string,
@@ -233,29 +166,8 @@ export function useLiveChatMessages(roomId: string | null) {
       setMessages((prev) => [...prev, optimisticMsg]);
 
       try {
-        const s = getSocket();
-        const token = getAuthToken();
-
-        await new Promise<void>((resolve, reject) => {
-          const payload: Record<string, unknown> = {
-            roomId,
-            content,
-            messageType: type,
-          };
-          if (imageUrl) payload.imageUrl = imageUrl;
-          if (token) payload.token = `Bearer ${token}`;
-
-          s.emit('sendMessage', payload, (ack: any) => {
-            console.log('[LiveChat] sendMessage ack:', ack);
-            if (ack?.error) reject(new Error(ack.error));
-            else resolve();
-          });
-
-          // Timeout if no ack
-          setTimeout(() => resolve(), 3000);
-        });
-
-        // Refetch to confirm from server (socket event may also arrive)
+        await sendLiveChatMessage(roomId, content, type, imageUrl);
+        // Refetch to get server-confirmed message
         await fetchFromApi(false);
       } catch (err) {
         setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
@@ -268,79 +180,17 @@ export function useLiveChatMessages(roomId: string | null) {
     [roomId, isAuthenticated, walletAddress, user, fetchFromApi]
   );
 
-  return { messages, isLoading, isSending, isConnected, send, refetch: () => fetchFromApi(false) };
+  return { messages, isLoading, isSending, isConnected: true, send, refetch: () => fetchFromApi(false) };
 }
 
 /**
- * Track online users in a livechat room via DeHub socket presence events.
- * Falls back gracefully if the server doesn't emit presence events.
+ * Placeholder presence hook — returns empty list.
+ * Real presence would require socket or a dedicated API endpoint.
  */
-export function useLiveChatPresence(roomId: string | null) {
-  const [onlineUsers, setOnlineUsers] = useState<
-    Array<{ address: string; username?: string; avatar?: string }>
-  >([]);
-  const { isAuthenticated, user, walletAddress } = useAuth();
-
-  useEffect(() => {
-    if (!roomId) {
-      setOnlineUsers([]);
-      return;
-    }
-
-    const s = getSocket();
-
-    const handlePresence = (raw: any) => {
-      console.log('[LiveChat] Presence update:', raw);
-
-      // Server might send array of users or a map
-      let users: Array<{ address: string; username?: string; avatar?: string }> = [];
-
-      if (Array.isArray(raw)) {
-        users = raw.map((u: any) => ({
-          address: u.address || u.walletAddress || '',
-          username: u.username || undefined,
-          avatar: u.avatarUrl || u.avatar || undefined,
-        }));
-      } else if (raw?.users && Array.isArray(raw.users)) {
-        users = raw.users.map((u: any) => ({
-          address: u.address || '',
-          username: u.username || undefined,
-          avatar: u.avatarUrl || u.avatar || undefined,
-        }));
-      }
-
-      setOnlineUsers(users);
-    };
-
-    PRESENCE_EVENTS.forEach((evt) => s.on(evt, handlePresence));
-
-    // Announce our own presence when joining
-    const announcePresence = () => {
-      if (isAuthenticated && walletAddress) {
-        s.emit('presence', {
-          roomId,
-          address: walletAddress.toLowerCase(),
-          username: user?.username,
-          avatar: user?.avatarImageUrl,
-        });
-      }
-    };
-
-    if (s.connected) {
-      announcePresence();
-    } else {
-      s.once('connect', announcePresence);
-    }
-
-    return () => {
-      PRESENCE_EVENTS.forEach((evt) => s.off(evt, handlePresence));
-      s.off('connect', announcePresence);
-    };
-  }, [roomId, isAuthenticated, walletAddress, user?.username, user?.avatarImageUrl]);
-
+export function useLiveChatPresence(_roomId: string | null) {
   return {
-    onlineUsers,
-    onlineCount: onlineUsers.length,
+    onlineUsers: [] as Array<{ address: string; username?: string; avatar?: string }>,
+    onlineCount: 0,
   };
 }
 
