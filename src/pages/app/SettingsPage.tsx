@@ -70,6 +70,7 @@ import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import { FollowRequestsDrawer } from '@/components/app/profile/FollowRequestsDrawer';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -1034,6 +1035,7 @@ function BlockedUsersSection() {
 function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: string) => void }) {
   const { t } = useTranslation();
   const { stickToBanner, setStickToBanner } = useCoinPlacement();
+  const { isCollapsed, setCollapsed } = useSidebarCollapse();
   const [feedLayout, setFeedLayout] = useState('comfortable');
   return (
     <div className="space-y-6">
@@ -1129,7 +1131,8 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
             icon={LayoutGrid}
             title={t('settings.compactMode')}
             description={t('settings.compactModeDesc')}
-            comingSoon
+            defaultChecked={isCollapsed}
+            onCheckedChange={(checked) => setCollapsed(checked)}
           />
         </div>
       </div>

@@ -3,20 +3,24 @@ import { createContext, useContext, useState, useCallback, type ReactNode } from
 interface SidebarCollapseContextType {
   isCollapsed: boolean;
   toggleCollapse: () => void;
+  setCollapsed: (value: boolean) => void;
 }
 
 const SidebarCollapseContext = createContext<SidebarCollapseContextType>({
   isCollapsed: false,
   toggleCollapse: () => {},
+  setCollapsed: () => {},
 });
 
 const STORAGE_KEY = 'sidebar-collapsed';
 
 export function SidebarCollapseProvider({ children }: { children: ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(() => {
-    // Always start expanded – clear any stale persisted collapsed state
-    try { localStorage.removeItem(STORAGE_KEY); } catch {}
-    return false;
+    try {
+      return localStorage.getItem(STORAGE_KEY) === 'true';
+    } catch {
+      return false;
+    }
   });
 
   const toggleCollapse = useCallback(() => {
@@ -27,8 +31,13 @@ export function SidebarCollapseProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const setCollapsed = useCallback((value: boolean) => {
+    setIsCollapsed(value);
+    try { localStorage.setItem(STORAGE_KEY, String(value)); } catch {}
+  }, []);
+
   return (
-    <SidebarCollapseContext.Provider value={{ isCollapsed, toggleCollapse }}>
+    <SidebarCollapseContext.Provider value={{ isCollapsed, toggleCollapse, setCollapsed }}>
       {children}
     </SidebarCollapseContext.Provider>
   );
