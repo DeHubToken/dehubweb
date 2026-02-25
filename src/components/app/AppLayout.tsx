@@ -12,6 +12,7 @@ import { DevelopmentNoticeModal } from './modals';
 import { RadioMiniPlayer } from '@/components/app/radio';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
+import { GlobalFeedNav } from './GlobalFeedNav';
 import SinglePostPage from '@/pages/app/SinglePostPage';
 
 interface AppLayoutContentProps {
@@ -169,6 +170,12 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
         <main className="flex-1 min-h-screen pt-11 pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black">
+          {/* Global feed nav — shown on all pages in collapsed desktop mode */}
+          {isCollapsed && (
+            <div className="hidden lg:block">
+              <GlobalFeedNav />
+            </div>
+          )}
           {/* Persistent page cache — all visited pages stay mounted */}
           <PersistentPageCache />
           

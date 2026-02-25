@@ -109,6 +109,23 @@ export default function HomePage() {
       return next;
     });
   }, [activeTab]);
+  
+  // Listen for tab changes from GlobalFeedNav (collapsed mode)
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === HOME_STATE_STORAGE_KEY && e.newValue) {
+        try {
+          const { tab } = JSON.parse(e.newValue);
+          if (tab && tab !== activeTab) {
+            setActiveTab(tab);
+          }
+        } catch { /* ignore */ }
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, [activeTab]);
+  
   const [isRefreshing, setIsRefreshing] = useState(false);
   
   // Filter states for each feed type
@@ -498,7 +515,7 @@ export default function HomePage() {
   return (
     <div>
       {/* Tab Navigation */}
-      <div className={cn("sticky top-11 lg:top-0 bg-black z-50 p-2 sm:p-3 lg:mt-0", isCollapsed && "pl-2 pr-0")}>
+      <div className={cn("sticky top-11 lg:top-0 bg-black z-50 p-2 sm:p-3 lg:mt-0", isCollapsed && "pl-2 pr-0", isCollapsed && "lg:hidden")}>
         <div className="bg-zinc-900 rounded-xl overflow-visible">
           <div ref={homeTabLayerRef} className="relative overflow-visible">
             <GlassIndicator rect={homeTabRect} borderRadius="0.75rem" layoutKey={`${isCollapsed}-${activeTab}`} />
