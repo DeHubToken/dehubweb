@@ -45,11 +45,15 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     
+    if (isCollapsed) {
+      // In full-screen mode, clicking logo re-expands the sidebar
+      toggleCollapse();
+      return;
+    }
+    
     if (location.pathname === '/app') {
-      // Already on home - just scroll to top, don't trigger full refresh
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      // Coming from another app page - navigate without refresh
       navigate('/app');
     }
   };
