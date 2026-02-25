@@ -228,7 +228,7 @@ export async function updateLiveChatRoomSettings(
 export async function sendLiveChatMessage(
   roomId: string,
   content: string,
-  type: 'text' | 'image' | 'gif' = 'text',
+  type: 'text' | 'image' | 'gif' | 'voice' = 'text',
   imageUrl?: string
 ): Promise<LiveChatMessage> {
   const body: Record<string, unknown> = { content, messageType: type };

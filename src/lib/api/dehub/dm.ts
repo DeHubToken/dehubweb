@@ -315,38 +315,82 @@ export async function sendMessage(
       edgeBody.tipCurrency = tipCurrency || 'DHB';
     }
 
-    console.log('[DM API] Sending message via dm-send edge function', { type, hasMedia: !!mediaUrl });
-    const { data: edgeData, error: edgeError } = await supabase.functions.invoke('dm-send', {
-      body: edgeBody,
-      headers: {
-        'x-wallet-address': sender,
-        'x-dehub-token': token,
-      },
-    });
-
-    if (edgeError) {
-      console.error('[DM API] dm-send edge function error:', edgeError);
-      throw new Error(edgeError.message || 'Failed to send message');
-    }
-
-    if (!edgeData?.ok) {
-      console.error('[DM API] dm-send rejected:', edgeData?.error);
-      throw new Error(edgeData?.error || 'Failed to send message');
-    }
-
-    console.log('[DM API] sendMessage response:', edgeData);
-    const d = edgeData?.result?.data || edgeData?.result || {};
-
-    return {
-      id: d.id || d._id || `msg-${Date.now()}`,
-      conversationId: d.conversation_id || d.conversationId
+    const toMessage = (raw: any): DeHubDMMessage => ({
+      id: raw?.id || raw?._id || `msg-${Date.now()}`,
+      conversationId: raw?.conversation_id || raw?.conversationId
         || (isNewConversation && recipientAddress ? recipientAddress.toLowerCase() : conversationId),
       sender: { address: sender },
-      content: d.content || content,
-      type: (d.message_type || type) as DMMessageType,
-      mediaUrl: d.media_url || mediaUrl,
-      createdAt: d.created_at || new Date().toISOString(),
-    };
+      content: raw?.content || content,
+      type: (raw?.message_type || type) as DMMessageType,
+      mediaUrl: raw?.media_url || mediaUrl,
+      createdAt: raw?.created_at || new Date().toISOString(),
+    });
+
+    console.log('[DM API] Sending message via dm-send edge function', { type, hasMedia: !!mediaUrl });
+
+    try {
+      const { data: edgeData, error: edgeError } = await supabase.functions.invoke('dm-send', {
+        body: edgeBody,
+        headers: {
+          'x-wallet-address': sender,
+          'x-dehub-token': token,
+        },
+      });
+
+      if (edgeError) {
+        throw edgeError;
+      }
+
+      if (!edgeData?.ok) {
+        throw new Error(edgeData?.error || 'Failed to send message');
+      }
+
+      console.log('[DM API] sendMessage response:', edgeData);
+      const d = edgeData?.result?.data || edgeData?.result || {};
+      return toMessage(d);
+    } catch (edgeErr) {
+      const errorMessage = edgeErr instanceof Error ? edgeErr.message : String(edgeErr || '');
+      const isNetworkError =
+        errorMessage.toLowerCase().includes('failed to send a request to the edge function') ||
+        errorMessage.toLowerCase().includes('failed to fetch') ||
+        errorMessage.toLowerCase().includes('timed out') ||
+        errorMessage.toLowerCase().includes('timeout');
+
+      if (!isNetworkError) {
+        throw edgeErr;
+      }
+
+      console.warn('[DM API] dm-send unreachable, falling back to direct DeHub API call');
+
+      const dmBody: Record<string, unknown> = {
+        senderAddress: sender,
+        content,
+        type,
+        transactionHash: `0x${Date.now().toString(16)}`,
+      };
+
+      if (mediaUrl) dmBody.mediaUrl = mediaUrl;
+
+      if (isNewConversation && recipientAddress) {
+        dmBody.receiverAddress = recipientAddress.toLowerCase();
+      } else {
+        dmBody.conversationId = conversationId;
+      }
+
+      if (type === 'tip' && tipAmount !== undefined) {
+        dmBody.tipAmount = tipAmount;
+        dmBody.tipCurrency = tipCurrency || 'DHB';
+      }
+
+      const fallback = await apiCall<any>('/api/dm/tnx', {
+        method: 'POST',
+        body: dmBody,
+        requiresAuth: true,
+      });
+
+      const fallbackData = fallback?.result?.data || fallback?.result || fallback?.data || fallback || {};
+      return toMessage(fallbackData);
+    }
   } catch (error) {
     console.error('[DM API] sendMessage failed:', error);
     throw error;
