@@ -1,63 +1,64 @@
 
 
-## Root Cause Found
+## Collapsible Sidebar with 2-Column Feed
 
-The snapshots are garbage. Look at account `0x0851...` (the whale):
-- **Real on-chain balance**: 56.1M DHB (has been this for 400+ days)
-- **Snapshots Feb 14-24**: Show 50M (wrong -- this came from the DeHub API which lies)
-- **Snapshot Feb 25 (today)**: Shows 56.1M (correct -- today's snapshot was created after the on-chain code was added)
-- **Snapshot Feb 13 and before**: Shows 56.1M (correct -- these were created by the old backfill function which used on-chain RPC)
+### What Changes
 
-So the daily leaderboard shows `56.1M - 50M = +6.1M delta` which is fake. The whale didn't gain anything. The snapshot was just wrong.
+**1. Sidebar collapse state** -- needs to be shared across components so that `DesktopSidebar`, `AppLayout`, and `HomeFeed` all react to it.
 
-**The core problem**: Snapshots are created from DeHub API data (line 591: `balance: e.total`), and the DeHub API returns inaccurate balances. The old backfill function used Alchemy RPC and got correct data, but then the full refresh started writing API-sourced snapshots that overwrote/replaced accurate data.
+**2. DesktopSidebar (`src/components/app/navigation/DesktopSidebar.tsx`)**
+- Add a hamburger menu button (Menu icon from lucide) to the left of the DeHub logo
+- Shift logo slightly right to accommodate the button
+- When clicked, toggles a `collapsed` state
+- When collapsed: sidebar shrinks to `w-[60px]` (already the non-xl width), hides text labels, shows only icons -- essentially forces the compact mode at all screen sizes
 
-## Plan
+**3. AppLayout (`src/components/app/AppLayout.tsx`)**
+- Lift sidebar collapsed state here (or use a context/provider) so both `DesktopSidebar` and the feed can access it
+- When sidebar is collapsed, the `main` area gets more horizontal space
+- Right sidebar stays unchanged
 
-Since you chose "on-chain block estimate" and "gains + losses":
-
-**For daily and weekly holdings only**, bypass snapshots entirely and do a pure on-chain comparison:
-
-1. **Add `eth_blockNumber` + historical block estimation** to the edge function
-   - Get current block number on Base and BNB
-   - Estimate block N days ago: `currentBlock - (blocksPerDay * daysAgo)`
-   - Base: ~43,200 blocks/day (2s block time)
-   - BNB: ~28,800 blocks/day (3s block time)
-
-2. **Add `getHistoricalOnChainBalance`** function
-   - Same as `getOnChainBalance` but passes a historical block tag instead of "latest"
-   - Queries `balanceOf` and `userInfos` at the estimated past block
-
-3. **Modify `computeSnapshotDelta`** for `useOnChain` path:
-   - Current: fetches on-chain "now" but still uses snapshots for "past" (broken)
-   - New: fetch on-chain "now" AND on-chain "N days ago" using block estimation
-   - Skip the snapshot `pastMap` entirely for daily/weekly holdings
-
-4. **Show both gains AND losses** for daily/weekly holdings:
-   - Remove the `.filter(e.delta > 0)` gate for these periods
-   - Keep it for other sort modes/periods
-
-5. **No changes** to monthly, yearly, or all-time (they continue using snapshots)
+**4. HomeFeed (`src/components/app/feeds/HomeFeed.tsx`)**
+- When sidebar is collapsed, the feed container switches from `space-y-3` (single column) to a CSS grid: `grid grid-cols-2 gap-3`
+- Each post card rendered inside the grid will naturally size to half-width
+- The bento wrapper in `renderFeedItem` (line 827) stays the same -- it just flows into the grid
+- Shorts carousels and other full-width inserts span both columns (`col-span-2`)
 
 ### Technical Details
 
-```text
-Current flow (broken):
-  daily holdings = on-chain NOW - snapshot YESTERDAY (API-sourced, wrong)
+**State management**: Create a simple React context `SidebarCollapseContext` (new file `src/contexts/SidebarCollapseContext.tsx`) that exposes `{ isCollapsed, toggleCollapse }`. Wrap it in `AppLayout`. This avoids prop drilling through multiple layers.
 
-New flow (fix):
-  daily holdings = on-chain NOW (latest block) - on-chain YESTERDAY (estimated block)
-  weekly holdings = on-chain NOW (latest block) - on-chain 7 DAYS AGO (estimated block)
+**DesktopSidebar changes**:
+- The aside currently uses `w-[60px] xl:w-[231px]`. When collapsed, force `w-[60px]` regardless of breakpoint
+- Add `<Menu />` icon button in the logo row, visible only at `xl:` (when full sidebar is shown -- at smaller sizes it's already compact)
+- When collapsed, hide all text labels (same as current non-xl behavior)
+
+**HomeFeed changes**:
+- Consume `SidebarCollapseContext`
+- The feed items container (line 1035) changes from `space-y-3` to `grid grid-cols-2 gap-3` when collapsed
+- Full-width elements (shorts carousel, radio carousel, who-to-follow) get `col-span-2`
+- Individual post/video/image cards naturally fill one grid cell each
+
+**Files to create**:
+- `src/contexts/SidebarCollapseContext.tsx` -- context + provider
+
+**Files to modify**:
+- `src/components/app/AppLayout.tsx` -- wrap with SidebarCollapseProvider, pass state
+- `src/components/app/navigation/DesktopSidebar.tsx` -- add burger button, consume context for collapse
+- `src/components/app/feeds/HomeFeed.tsx` -- consume context, switch to grid layout when collapsed
+
+### Visual Result
+
+```text
+EXPANDED (current):                    COLLAPSED (new):
+┌──────────┬────────────┬─────┐       ┌───┬──────────────────────┬─────┐
+│ ☰ DEHUB  │  Feed      │Right│       │ ☰ │  Feed (2-col grid)   │Right│
+│ Profile  │  [Post 1]  │ Bar │       │ 🏠│  [Post1]  [Post2]    │ Bar │
+│ Explore  │  [Post 2]  │     │       │ 🔍│  [Post3]  [Post4]    │     │
+│ Notifs   │  [Post 3]  │     │       │ 🔔│  [Post5]  [Post6]    │     │
+│ Messages │  ...       │     │       │ 💬│  ...                 │     │
+│ ...      │            │     │       │   │                      │     │
+└──────────┴────────────┴─────┘       └───┴──────────────────────┴─────┘
 ```
 
-The `rpcCall` function already exists but only supports `"latest"`. It needs a `blockTag` parameter (already present in `backfill-leaderboard-snapshots/index.ts` which does exactly this). The batch function needs the same treatment.
-
-### Files Changed
-
-- `supabase/functions/refresh-leaderboard-cache/index.ts` -- add historical block support, modify delta computation for daily/weekly holdings, allow negative deltas
-
-### Risk
-
-- Fetching on-chain balances for ~500 wallets at 2 different block heights = ~3000 RPC calls. At batch size 10 this takes ~50 batches x 2 time points = ~100 sequential rounds. Should complete within edge function timeout but will be slower than snapshot-based approach.
-- Block estimation has small time offset (~minutes) but is acceptable for daily/weekly granularity.
+The burger icon is always visible in the top-left of the sidebar (next to the logo). Clicking it toggles between the two states. The collapsed state persists in `localStorage` so it remembers user preference.
 
