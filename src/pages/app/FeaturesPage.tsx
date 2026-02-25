@@ -442,15 +442,15 @@ function ShippedCard({ feature }: { feature: FeatureRequest }) {
       onClick={() => setExpanded(!expanded)}
     >
       <div className="flex flex-col items-center justify-center min-w-[40px]">
-        <div className="w-8 h-8 rounded-lg bg-emerald-900/40 flex items-center justify-center">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+        <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+          <CheckCircle2 className="w-4 h-4 text-white/70" />
         </div>
       </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-start gap-2 mb-1.5">
           <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight flex-1 min-w-0" as="h3" hideControls />
-          <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 bg-emerald-900/40 text-emerald-400">
+          <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 bg-white/10 text-white/70">
             {t('features.shippedBadge')}
           </span>
         </div>
@@ -597,7 +597,7 @@ export default function FeaturesPage() {
             <CheckCircle2 className="w-3.5 h-3.5" />
             {t('features.shipped')}
             {shippedCount > 0 && (
-              <span className="text-[10px] bg-emerald-900/40 text-emerald-400 px-1.5 py-0.5 rounded-md font-semibold">
+              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {shippedCount}
               </span>
             )}
