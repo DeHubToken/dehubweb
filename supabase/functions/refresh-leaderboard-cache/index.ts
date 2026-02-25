@@ -6,6 +6,87 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+// ── On-chain balance helpers (Alchemy RPC) ──────────────────────────
+const DHB_BASE = "0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c";
+const DHB_BNB = "0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7";
+const STAKING_CONTRACT = "0x26d2Cd7763106FDcE443faDD36163E2ad33A76E6";
+const BALANCE_OF_SELECTOR = "0x70a08231";
+const USER_INFOS_SELECTOR = "0x43b0215f";
+const BNB_PUBLIC_RPCS = [
+  "https://bsc-dataseed1.binance.org",
+  "https://bsc-dataseed2.binance.org",
+  "https://bsc-dataseed3.binance.org",
+];
+
+function encodeCall(selector: string, address: string): string {
+  const cleaned = address.replace("0x", "").toLowerCase().padStart(64, "0");
+  return selector + cleaned;
+}
+
+function hexToNumber(hex: string): number {
+  if (!hex || hex === "0x" || hex === "0x0") return 0;
+  try { return Number(BigInt(hex)) / 1e18; } catch { return 0; }
+}
+
+function hexFirstSlotToNumber(hex: string): number {
+  if (!hex || hex === "0x" || hex === "0x0") return 0;
+  try {
+    const firstSlot = hex.length >= 66 ? "0x" + hex.slice(2, 66) : hex;
+    return Number(BigInt(firstSlot)) / 1e18;
+  } catch { return 0; }
+}
+
+async function rpcCall(rpcUrl: string, to: string, data: string): Promise<string> {
+  const res = await fetch(rpcUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_call", params: [{ to, data }, "latest"] }),
+  });
+  const json = await res.json();
+  return json.result || "0x0";
+}
+
+async function bnbRpcCall(alchemyBnbRpc: string, to: string, data: string): Promise<string> {
+  const result = await rpcCall(alchemyBnbRpc, to, data);
+  if (result && result !== "0x0" && result !== "0x") return result;
+  for (const rpc of BNB_PUBLIC_RPCS) {
+    try {
+      const fallback = await rpcCall(rpc, to, data);
+      if (fallback && fallback !== "0x0" && fallback !== "0x") return fallback;
+    } catch { continue; }
+  }
+  return result;
+}
+
+async function getOnChainBalance(address: string, baseRpc: string, bnbRpc: string): Promise<number> {
+  const holdingsData = encodeCall(BALANCE_OF_SELECTOR, address);
+  const stakingData = encodeCall(USER_INFOS_SELECTOR, address);
+  const [baseHoldings, bnbHoldings, bnbStaked] = await Promise.all([
+    rpcCall(baseRpc, DHB_BASE, holdingsData),
+    bnbRpcCall(bnbRpc, DHB_BNB, holdingsData),
+    bnbRpcCall(bnbRpc, STAKING_CONTRACT, stakingData),
+  ]);
+  return hexToNumber(baseHoldings) + hexToNumber(bnbHoldings) + hexFirstSlotToNumber(bnbStaked);
+}
+
+/** Fetch on-chain balances for a batch of addresses, 10 at a time */
+async function batchOnChainBalances(
+  addresses: string[],
+  baseRpc: string,
+  bnbRpc: string,
+): Promise<Map<string, number>> {
+  const result = new Map<string, number>();
+  const BATCH = 10;
+  for (let i = 0; i < addresses.length; i += BATCH) {
+    const batch = addresses.slice(i, i + BATCH);
+    const balances = await Promise.all(
+      batch.map((addr) => getOnChainBalance(addr, baseRpc, bnbRpc))
+    );
+    batch.forEach((addr, idx) => result.set(addr.toLowerCase(), balances[idx]));
+  }
+  return result;
+}
+
 // ── DeHub API ───────────────────────────────────────────────────────
 const DEHUB_API_BASE = "https://api.dehub.io";
 const API_SORT_MODES = ["sentTips", "receivedTips"] as const;
@@ -99,6 +180,7 @@ async function computeSnapshotDelta(
   allEntries: EnrichedEntry[],
   sortMode: string,
   period: string,
+  rpcConfig?: { baseRpc: string; bnbRpc: string },
 ): Promise<SnapshotDeltaResult> {
   try {
     const daysAgo = PERIOD_DAYS[period];
@@ -186,40 +268,50 @@ async function computeSnapshotDelta(
       return (entry as any)[sortMode] ?? 0;
     };
 
-    // Use today's snapshot as "current" for ALL sort modes (snapshot-vs-snapshot)
-    // This prevents fake deltas caused by API values differing from snapshot values
-    const currentSnapshotFieldMap: Record<string, string> = {
-      holdings: "balance",
-      sentTips: "sent_tips",
-      receivedTips: "received_tips",
-      followers: "followers",
-      likes: "likes",
-      subscribers: "subscribers",
-    };
-    const currentSnapshotField = currentSnapshotFieldMap[sortMode] || sortMode;
-    let currentMap: Map<string, number> | null = null;
-    const todayStr = new Date().toISOString().split("T")[0];
-    const { data: currentSnaps } = await supabase
-      .from("leaderboard_snapshots")
-      .select(`account, ${currentSnapshotField}`)
-      .eq("snapshot_date", todayStr);
-
-    if (currentSnaps && currentSnaps.length > 0) {
-      currentMap = new Map<string, number>();
-      for (const snap of currentSnaps) {
-        currentMap.set(snap.account.toLowerCase(), (snap as any)[currentSnapshotField] ?? 0);
-      }
-      console.log(`[delta] ${sortMode}/${period}: using today's snapshot (${currentSnaps.length} entries) for current values`);
-    } else {
-      console.log(`[delta] ${sortMode}/${period}: no today snapshot found, falling back to API values`);
-    }
-
     const requireRealPast = (period === "day" || period === "week") &&
       ["followers", "likes", "subscribers"].includes(sortMode);
 
     const entries = sortMode === "holdings"
       ? allEntries.filter(e => !HOLDINGS_PERIOD_EXCLUDED.has(e.account.toLowerCase()))
       : allEntries;
+
+    // For daily/weekly holdings: use live on-chain Alchemy balances for accuracy
+    const useOnChain = sortMode === "holdings" && (period === "day" || period === "week") && rpcConfig;
+
+    let currentMap: Map<string, number> | null = null;
+
+    if (useOnChain) {
+      console.log(`[delta] ${sortMode}/${period}: fetching LIVE on-chain balances via Alchemy for ${entries.length} addresses...`);
+      const addresses = entries.map(e => e.account.toLowerCase());
+      currentMap = await batchOnChainBalances(addresses, rpcConfig!.baseRpc, rpcConfig!.bnbRpc);
+      console.log(`[delta] ${sortMode}/${period}: got ${currentMap.size} on-chain balances`);
+    } else {
+      // Use today's snapshot as "current" for other sort modes (snapshot-vs-snapshot)
+      const currentSnapshotFieldMap: Record<string, string> = {
+        holdings: "balance",
+        sentTips: "sent_tips",
+        receivedTips: "received_tips",
+        followers: "followers",
+        likes: "likes",
+        subscribers: "subscribers",
+      };
+      const currentSnapshotField = currentSnapshotFieldMap[sortMode] || sortMode;
+      const todayStr = new Date().toISOString().split("T")[0];
+      const { data: currentSnaps } = await supabase
+        .from("leaderboard_snapshots")
+        .select(`account, ${currentSnapshotField}`)
+        .eq("snapshot_date", todayStr);
+
+      if (currentSnaps && currentSnaps.length > 0) {
+        currentMap = new Map<string, number>();
+        for (const snap of currentSnaps) {
+          currentMap.set(snap.account.toLowerCase(), (snap as any)[currentSnapshotField] ?? 0);
+        }
+        console.log(`[delta] ${sortMode}/${period}: using today's snapshot (${currentSnaps.length} entries) for current values`);
+      } else {
+        console.log(`[delta] ${sortMode}/${period}: no today snapshot found, falling back to API values`);
+      }
+    }
 
     const withDeltas: EnrichedEntry[] = entries
       .filter((e) => {
@@ -250,7 +342,11 @@ async function computeSnapshotDelta(
         } else {
           delta = 0;
         }
-        return { ...entry, delta };
+        // When using on-chain data, update total/badgeBalance to reflect real balance
+        const updatedEntry = useOnChain && currentMap
+          ? { ...entry, delta, total: currentVal, badgeBalance: currentVal }
+          : { ...entry, delta };
+        return updatedEntry;
       });
 
     const sorted = withDeltas
@@ -303,7 +399,18 @@ Deno.serve(async (req) => {
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const alchemyKey = Deno.env.get("ALCHEMY_API_KEY");
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Build RPC config for on-chain lookups (daily/weekly holdings)
+    const rpcConfig = alchemyKey ? {
+      baseRpc: `https://base-mainnet.g.alchemy.com/v2/${alchemyKey}`,
+      bnbRpc: `https://bnb-mainnet.g.alchemy.com/v2/${alchemyKey}`,
+    } : undefined;
+
+    if (!rpcConfig) {
+      console.warn("[refresh] ALCHEMY_API_KEY not set — daily/weekly holdings will use snapshot-based deltas");
+    }
 
     const results: { sort: string; period: string; success: boolean; error?: string }[] = [];
 
@@ -353,7 +460,7 @@ Deno.serve(async (req) => {
 
       for (const sortMode of ALL_SORT_MODES) {
         for (const period of LIGHT_PERIODS) {
-          const result = await computeSnapshotDelta(supabase, allEntries, sortMode, period);
+          const result = await computeSnapshotDelta(supabase, allEntries, sortMode, period, sortMode === "holdings" ? rpcConfig : undefined);
           results.push(result);
         }
       }
@@ -530,7 +637,7 @@ Deno.serve(async (req) => {
 
       // ── Cache time-based periods using snapshot deltas ──
       for (const period of ["day", "week", "month", "year"] as const) {
-        const result = await computeSnapshotDelta(supabase, nonZeroPeriod, "holdings", period);
+        const result = await computeSnapshotDelta(supabase, nonZeroPeriod, "holdings", period, rpcConfig);
         results.push(result);
       }
     } catch (err) {
