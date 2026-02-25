@@ -23,6 +23,7 @@ import { ShortsReel } from '@/components/app/cards/ShortsReel';
 
 import { useUnifiedFeed, mapToVideoItem, type UnifiedFeedParams, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -427,6 +428,7 @@ function CategoryFilterSection({
 export function VideosFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: VideosFeedProps) {
   const navigate = useNavigate();
   const { t } = useI18n();
+  const { isCollapsed } = useSidebarCollapse();
   const { isAuthenticated } = useAuth();
   
   // Sort is now client-side - default to "Latest" for instant loading - persisted to sessionStorage
@@ -701,7 +703,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   }
 
   return (
-    <div className="p-2 sm:p-3 pt-0 sm:pt-0">
+    <div className={cn("pt-0 sm:pt-0 transition-all duration-300 ease-out", isCollapsed ? "p-1" : "p-2 sm:p-3")}>
       {/* Filters */}
       <AnimatePresence mode="wait">
         {showFilters && (
@@ -880,7 +882,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         <FilteredEmptyState />
       ) : (
         <div key={`${selectedSort.value}-${selectedUploadDate.value}`}>
-          <div className="space-y-5">
+          <div className={cn(isCollapsed ? "grid grid-cols-2 xl:grid-cols-3 gap-3" : "space-y-5")}>
             {/* Skip first 3 videos ONLY if featured row is shown (only for "Latest" sort), then insert carousels at intervals */}
             {(videos.length >= 3 && selectedSort.value === 'latest' ? videos.slice(3) : videos).map((video, index) => {
               const elements: React.ReactNode[] = [];
@@ -894,12 +896,12 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
               
               // Insert live categories carousel after 5 posts (index 4, since 0-indexed)
               if (index === LIVE_CATEGORIES_INSERT_AFTER - 1) {
-                elements.push(<LiveCategoriesCarousel key="live-categories-carousel" />);
+                elements.push(<div key="live-categories-carousel" className={cn(isCollapsed && "col-span-2 xl:col-span-3")}><LiveCategoriesCarousel /></div>);
               }
               
               // Insert shorts carousel after 9 posts (index 8)
               if (index === SHORTS_INSERT_AFTER - 1 && shorts.length > 0) {
-                elements.push(<ShortsReel key="shorts-carousel" shorts={shorts} />);
+                elements.push(<div key="shorts-carousel" className={cn(isCollapsed && "col-span-2 xl:col-span-3")}><ShortsReel shorts={shorts} /></div>);
               }
               
               return elements;
