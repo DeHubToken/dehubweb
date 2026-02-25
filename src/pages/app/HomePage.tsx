@@ -498,7 +498,7 @@ export default function HomePage() {
   return (
     <div>
       {/* Tab Navigation */}
-      <div className={cn("sticky top-11 lg:top-0 bg-black z-50 lg:mt-0", isCollapsed ? "p-1" : "p-2 sm:p-3")}>
+      <div className={cn("sticky top-11 lg:top-0 bg-black z-50 lg:mt-0 transition-all duration-300 ease-out", isCollapsed ? "p-1" : "p-2 sm:p-3")}>
         <div className="bg-zinc-900 rounded-xl overflow-visible">
           <div ref={homeTabLayerRef} className="relative overflow-visible">
             <GlassIndicator rect={homeTabRect} borderRadius="0.75rem" />
