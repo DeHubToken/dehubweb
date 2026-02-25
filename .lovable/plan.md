@@ -1,41 +1,31 @@
 
-## Analysis: Why the Collapse/Expand Animation Feels Rigid
 
-After inspecting the codebase and profiling the transition, the root cause is **multiple independent CSS transitions fighting each other at different timings**, plus **layout reflows from content changes** that happen mid-animation.
+## Plan: Keep Left Sidebar Expanded Longer — Feed Shrinks First
 
-### The specific problems
+### Problem
+Currently, the left sidebar collapses to icon-only at the `xl` breakpoint (1280px), meaning as soon as the viewport drops below 1280px the sidebar loses its labels while the feed stays large. The user wants the opposite priority: the feed should compress first, and the sidebar should remain fully expanded down to the `lg` breakpoint (1024px).
 
-1. **`max-width` transition on the outer container** (AppLayout line 171-172): Animating `max-width` from `80rem` to `100%` causes the browser to recalculate layout for the entire page on every frame. With 17,000+ DOM nodes and a masonry grid that re-columns based on `isCollapsed`, this is extremely expensive.
+### Approach
+Change all `xl:` responsive classes that control the sidebar's expanded state to `lg:` instead. Since the sidebar and feed are in a flex layout, the feed (`flex-1`) will naturally shrink as the sidebar takes more space. No changes to collapsed/fullscreen mode.
 
-2. **Feed grid instantly jumps from 1-column to 3-column masonry** (HomeFeed line 872-885): The `colCount` state changes synchronously with `isCollapsed`, so mid-animation the entire feed snaps from single-column to multi-column layout. This creates the visible "multi-step" jank.
+### Files to Change
 
-3. **GlobalFeedNav animating `max-height` + `opacity` + `transform`** simultaneously while the container is also changing width creates compounding layout shifts.
+**1. `src/components/app/navigation/DesktopSidebar.tsx`**
+- Line 95: Change `xl:w-[231px] xl:px-[18px] xl:items-stretch xl:pt-0 xl:-mt-[3px]` → use `lg:` prefix instead of `xl:`
+- All other `xl:` prefixes controlling expanded-state visibility (logo, menu toggle, labels, coin balance, buttons) — approximately 15 occurrences — change from `xl:` to `lg:`
+- This keeps the sidebar at 231px from 1024px upward in normal mode
 
-4. **Right sidebar padding transition** adds yet another element reflowing during the same 500ms window.
+**2. `src/components/app/navigation/SidebarNavItem.tsx`**
+- Lines 72, 74, 104, 147: Change `xl:` responsive classes to `lg:` so nav item labels and layout respond at the same breakpoint as the sidebar container
 
-5. **`transition-[width,padding]` on the left sidebar** is correct but fights with the `max-width` transition on the parent container.
+**3. `src/components/app/RightSidebar.tsx`**
+- Optionally reduce right sidebar width slightly at the old `lg` range (e.g., `lg:w-72 xl:w-80`) to give more room to the feed at narrower widths
 
-### The fix: Defer content layout changes until after the animation
+### What Won't Change
+- Collapsed/fullscreen mode (`isCollapsed` state) — untouched, all those code paths use the `isCollapsed` conditional, not the breakpoint
+- Mobile layout — unchanged (below `lg`)
+- The sidebar still collapses to 60px icons when user manually clicks the collapse toggle
 
-The core principle is: **animate the shell (widths, padding) smoothly, and only swap feed columns after the animation settles.**
+### Result
+At 1024–1280px the user will see: full expanded sidebar (231px) + right sidebar (320px) + a narrower feed in the middle — instead of the current icon-only sidebar with an oversized feed.
 
-#### Changes
-
-**1. `src/components/app/AppLayout.tsx`** (2 changes)
-- Replace `transition-[max-width]` with a simpler approach: use `will-change: max-width` and keep the 500ms ease-in-out but add `transform: translateZ(0)` to promote compositing
-- For the `GlobalFeedNav` wrapper, simplify to just `opacity` and `transform` transitions (remove `max-height` which triggers layout). Use a fixed height with `overflow: hidden` and toggle between `h-12` and `h-0`
-
-**2. `src/components/app/feeds/HomeFeed.tsx`** (1 change, lines 872-885)
-- Delay the `colCount` update by 500ms after `isCollapsed` changes, so the masonry grid doesn't re-column during the width animation. Use `setTimeout` gated by a `useRef` to debounce.
-
-**3. `src/components/app/navigation/DesktopSidebar.tsx`** (1 change)
-- Add `will-change: width` to hint the browser to optimize the sidebar width transition
-
-**4. `src/components/app/RightSidebar.tsx`** (1 change)
-- Add `will-change: padding` to the aside element
-
-### Technical detail
-
-The key insight is that `max-width: 80rem -> 100%` on a flex container with 17K DOM nodes forces a full layout recalculation on every animation frame. By deferring the masonry column change until the width animation finishes, we eliminate the worst source of jank: the entire feed restructuring mid-transition. The shell (sidebar widths, container max-width, nav bar) can animate smoothly because those are relatively cheap layout changes when the content inside doesn't simultaneously restructure.
-
-The `will-change` hints tell the browser to prepare compositor layers ahead of time, reducing paint thrashing during the transition.
