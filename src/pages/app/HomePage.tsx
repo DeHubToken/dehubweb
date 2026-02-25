@@ -501,7 +501,7 @@ export default function HomePage() {
       <div className={cn("sticky top-11 lg:top-0 bg-black z-50 p-2 sm:p-3 lg:mt-0", isCollapsed && "pl-2 pr-0")}>
         <div className="bg-zinc-900 rounded-xl overflow-visible">
           <div ref={homeTabLayerRef} className="relative overflow-visible">
-            <GlassIndicator rect={homeTabRect} borderRadius="0.75rem" />
+            <GlassIndicator rect={homeTabRect} borderRadius="0.75rem" layoutKey={`${isCollapsed}-${activeTab}`} />
             <div className="relative z-20 flex scrollbar-hide">
               {FEED_TABS.map((tab) => {
                 const isActive = activeTab === tab.value;
