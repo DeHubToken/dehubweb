@@ -999,13 +999,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       const afterShorts = shouldSplitForShorts ? items.slice(adaptiveShortsIndex) : [];
 
       // Split afterShorts into segments for interleaving carousels
-      // Leaderboard at ~LEADERBOARD_INSERT_AFTER items after shorts, Radio at ~RADIO_INSERT_AFTER
-      const leaderboardOffset = Math.max(0, LEADERBOARD_INSERT_AFTER - adaptiveShortsIndex);
-      const radioOffset = Math.max(leaderboardOffset + 2, RADIO_INSERT_AFTER - adaptiveShortsIndex);
-      const liveOffset = radioOffset + 4;
+      // Ensure generous spacing between each carousel so content fills in between
+      const MIN_ITEMS_BETWEEN = colCount === 3 ? 8 : 6; // more items between carousels in 3-col
+      const leaderboardOffset = Math.min(afterShorts.length, Math.max(MIN_ITEMS_BETWEEN, LEADERBOARD_INSERT_AFTER - adaptiveShortsIndex));
+      const radioOffset = Math.min(afterShorts.length, leaderboardOffset + MIN_ITEMS_BETWEEN);
+      const liveOffset = Math.min(afterShorts.length, radioOffset + MIN_ITEMS_BETWEEN);
 
       // Build segments: chunks of afterShorts items with full-width inserts between them
-      const splitPoints = [leaderboardOffset, radioOffset, liveOffset].filter(p => p > 0 && p < afterShorts.length);
+      const splitPoints = [leaderboardOffset, radioOffset, liveOffset].filter((p, i, arr) => p > 0 && p < afterShorts.length && (i === 0 || p > arr[i - 1]));
       const segments: { items: typeof afterShorts; startIndex: number }[] = [];
       let lastSplit = 0;
       for (const sp of splitPoints) {
