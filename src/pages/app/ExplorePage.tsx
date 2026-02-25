@@ -809,8 +809,8 @@ export default function ExplorePage() {
         </AnimatePresence>
 
         {/* Tabs Bento */}
-        <div className="bg-zinc-900 rounded-2xl p-2">
-          <div className="flex w-full">
+        <div className="bg-zinc-900 rounded-2xl p-2 overflow-visible">
+          <div className="flex w-full overflow-y-visible py-1">
             {EXPLORE_TABS.map((tab) => (
               <button
                 key={tab.value}

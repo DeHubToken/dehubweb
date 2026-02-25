@@ -790,7 +790,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
       <div className="flex justify-between items-center gap-1 mb-3">
         {/* Left side - Tab buttons */}
-        <div className="flex gap-1 relative">
+        <div className="flex gap-1 relative overflow-y-visible py-1">
           {['replies', 'quotes', 'search'].map((tab) => (
             <button
               key={tab}
