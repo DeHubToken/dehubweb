@@ -314,7 +314,7 @@ export default function ProfilePage() {
                   key={tab.value}
                   onClick={() => setActiveTab(tab.value)}
                   className={cn(
-                    'relative flex-1 flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-colors min-w-[52px]',
+                    'relative flex-1 flex flex-col items-center gap-0.5 px-2 pt-[7px] pb-[5px] rounded-xl transition-colors min-w-[52px]',
                     isActive ? 'text-white' : 'text-zinc-500 hover:text-white'
                   )}
                 >
