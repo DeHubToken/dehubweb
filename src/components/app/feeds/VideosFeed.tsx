@@ -896,7 +896,11 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
               
               // Insert live categories carousel after 5 posts (index 4, since 0-indexed)
               if (index === LIVE_CATEGORIES_INSERT_AFTER - 1) {
-                elements.push(<LiveCategoriesCarousel key="live-categories-carousel" />);
+                elements.push(
+                  <div key="live-categories-carousel" className={cn(isCollapsed && "sm:col-span-2")}>
+                    <LiveCategoriesCarousel />
+                  </div>
+                );
               }
               
               // Insert shorts carousel after 9 posts (index 8)
