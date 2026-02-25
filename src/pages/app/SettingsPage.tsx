@@ -1127,13 +1127,6 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
               ]}
             />
           </div>
-          <SettingToggle
-            icon={LayoutGrid}
-            title={t('settings.compactMode')}
-            description={t('settings.compactModeDesc')}
-            defaultChecked={isCollapsed}
-            onCheckedChange={(checked) => setCollapsed(checked)}
-          />
         </div>
       </div>
 
