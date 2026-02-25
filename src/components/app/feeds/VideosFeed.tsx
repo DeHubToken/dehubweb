@@ -8,6 +8,7 @@
  */
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
@@ -427,6 +428,7 @@ function CategoryFilterSection({
 export function VideosFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: VideosFeedProps) {
   const navigate = useNavigate();
   const { t } = useI18n();
+  const { isCollapsed } = useSidebarCollapse();
   const { isAuthenticated } = useAuth();
   
   // Sort is now client-side - default to "Latest" for instant loading - persisted to sessionStorage
@@ -880,7 +882,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         <FilteredEmptyState />
       ) : (
         <div key={`${selectedSort.value}-${selectedUploadDate.value}`}>
-          <div className="space-y-5">
+          <div className={cn("space-y-5", isCollapsed && "sm:grid sm:grid-cols-2 sm:gap-4 sm:space-y-0")}>
             {/* Skip first 3 videos ONLY if featured row is shown (only for "Latest" sort), then insert carousels at intervals */}
             {(videos.length >= 3 && selectedSort.value === 'latest' ? videos.slice(3) : videos).map((video, index) => {
               const elements: React.ReactNode[] = [];
