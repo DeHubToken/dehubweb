@@ -893,6 +893,61 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     }
   };
 
+  const calculateColumnWeights = (feedItems: FeedItemType[], cols: number): number[] => {
+    const weights = new Array(cols).fill(0);
+    feedItems.forEach((item) => {
+      let minIdx = 0;
+      for (let c = 1; c < cols; c++) {
+        if (weights[c] < weights[minIdx]) minIdx = c;
+      }
+      weights[minIdx] += getItemWeight(item);
+    });
+    return weights;
+  };
+
+  const getWeightSpread = (weights: number[]): number => {
+    if (weights.length === 0) return 0;
+    return Math.max(...weights) - Math.min(...weights);
+  };
+
+  // Pick a flexible shorts insertion point that minimizes visible column imbalance
+  const getAdaptiveShortsInsertIndex = (feedItems: FeedItemType[], cols: number): number | null => {
+    if (cols <= 1 || feedItems.length < cols * 2) return null;
+
+    const targetIndex = Math.min(feedItems.length, 8);
+    const minInsert = Math.min(feedItems.length, Math.max(cols * 2, 5));
+    const maxInsert = Math.min(feedItems.length, Math.max(minInsert, targetIndex + cols * 4));
+
+    let best: { index: number; score: number } | null = null;
+
+    for (let index = minInsert; index <= maxInsert; index++) {
+      const before = feedItems.slice(0, index);
+      const after = feedItems.slice(index);
+      if (before.length < cols) continue;
+
+      const beforeSpread = getWeightSpread(calculateColumnWeights(before, cols));
+      const afterSpread = after.length >= cols
+        ? getWeightSpread(calculateColumnWeights(after, cols))
+        : 0;
+
+      const distancePenalty = Math.abs(index - targetIndex) * 0.12;
+      const shortTailPenalty = after.length > 0 && after.length < cols ? 2 : 0;
+      const score = beforeSpread * 1.6 + afterSpread * 0.7 + distancePenalty + shortTailPenalty;
+
+      if (!best || score < best.score) {
+        best = { index, score };
+      }
+    }
+
+    if (!best) return null;
+
+    // If no balanced split exists, keep masonry continuous and place shorts after the grid
+    const maxAcceptableScore = cols === 3 ? 3.6 : 3.0;
+    if (best.score > maxAcceptableScore) return feedItems.length;
+
+    return best.index;
+  };
+
   // Distribute items into columns using shortest-column-first (height-balanced)
   const distributeToColumns = (nodes: ReactNode[], cols: number, feedItems?: FeedItemType[]): ReactNode[][] => {
     if (cols <= 1) return [nodes];
@@ -931,14 +986,18 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const renderFeedWithShorts = () => {
     const isMultiCol = colCount > 1;
 
-    // --- MULTI-COLUMN: continuous masonry, full-width inserts spliced after 8 posts ---
+    // --- MULTI-COLUMN: adaptive shorts placement with masonry-safe fallback ---
     if (isMultiCol) {
-      const SHORTS_AFTER = 8; // Insert shorts carousel after first 8 posts
-      const beforeShorts = items.slice(0, Math.min(SHORTS_AFTER, items.length));
-      const afterShorts = items.slice(Math.min(SHORTS_AFTER, items.length));
+      const adaptiveShortsIndex = shorts.length > 0
+        ? (getAdaptiveShortsInsertIndex(items, colCount) ?? items.length)
+        : items.length;
+
+      const shouldSplitForShorts = shorts.length > 0 && adaptiveShortsIndex > 0 && adaptiveShortsIndex < items.length;
+      const beforeShorts = shouldSplitForShorts ? items.slice(0, adaptiveShortsIndex) : items;
+      const afterShorts = shouldSplitForShorts ? items.slice(adaptiveShortsIndex) : [];
 
       const beforeCards = beforeShorts.map((item, index) => renderFeedItem(item, index));
-      const afterCards = afterShorts.map((item, index) => renderFeedItem(item, SHORTS_AFTER + index));
+      const afterCards = afterShorts.map((item, index) => renderFeedItem(item, adaptiveShortsIndex + index));
 
       const fullWidthAfter: ReactNode[] = [];
 
@@ -970,8 +1029,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
       return (
         <>
-          {renderMasonryGrid(beforeCards, beforeShorts)}
-          {shorts.length > 0 && <div className="my-3"><ShortsReel shorts={shorts} /></div>}
+          {beforeCards.length > 0 && renderMasonryGrid(beforeCards, beforeShorts)}
+          {shorts.length > 0 && (
+            <div className={cn(shouldSplitForShorts ? 'my-3' : 'mt-3')}>
+              <ShortsReel shorts={shorts} />
+            </div>
+          )}
           {afterCards.length > 0 && <div className="mt-3">{renderMasonryGrid(afterCards, afterShorts)}</div>}
           {fullWidthAfter}
         </>
