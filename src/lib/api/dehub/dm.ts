@@ -653,7 +653,7 @@ export async function searchUsersForDM(
   console.log('[DM API] searchUsersForDM called', { query: trimmedQuery, page, limit });
 
   try {
-    const response = await apiCall<any>("/api/search/accounts", {
+    const response = await apiCall<any>("/api/dm/search", {
       params: { q: trimmedQuery, page, limit },
       requiresAuth: true,
     });
