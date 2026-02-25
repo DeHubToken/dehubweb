@@ -281,6 +281,7 @@ function NotificationItem({
 }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [isClosing, setIsClosing] = useState(false);
   
   // Prefer fresh enriched avatar over stale API snapshot
   const enriched = notification.actorAddress ? enrichedAvatars.get(notification.actorAddress.toLowerCase()) : undefined;
@@ -406,15 +407,16 @@ function NotificationItem({
             key="mark-read"
             onClick={(e) => {
               e.stopPropagation();
+              setIsClosing(true);
               bundle.allIds.forEach(id => onMarkAsRead(id));
             }}
-            disabled={isMarkingAsRead}
+            disabled={isClosing}
             className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50 flex-shrink-0"
             title="Mark as read"
             initial={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.5, transition: { delay: 0.35, duration: 0.2 } }}
           >
-            {isMarkingAsRead ? (
+            {isClosing ? (
               <motion.span
                 key="closing"
                 initial={{ rotateX: 0 }}
