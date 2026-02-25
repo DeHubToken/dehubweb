@@ -882,19 +882,39 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return () => window.removeEventListener('resize', update);
   }, [isCollapsed]);
 
-  // Distribute items round-robin into columns for true masonry
-  const distributeToColumns = (nodes: ReactNode[], cols: number): ReactNode[][] => {
+  // Estimate height weight for a feed item to balance columns
+  const getItemWeight = (item: FeedItemType): number => {
+    switch (item.type) {
+      case 'video': return 2;    // videos are medium height
+      case 'image': return 3;    // images tend to be tallest
+      case 'post': return 1;     // text posts are shortest
+      case 'shorts': return 2;
+      default: return 1.5;
+    }
+  };
+
+  // Distribute items into columns using shortest-column-first (height-balanced)
+  const distributeToColumns = (nodes: ReactNode[], cols: number, feedItems?: FeedItemType[]): ReactNode[][] => {
     if (cols <= 1) return [nodes];
     const columns: ReactNode[][] = Array.from({ length: cols }, () => []);
-    nodes.forEach((node, i) => columns[i % cols].push(node));
+    const colWeights = new Array(cols).fill(0);
+    nodes.forEach((node, i) => {
+      // Find the column with the lowest accumulated weight
+      let minIdx = 0;
+      for (let c = 1; c < cols; c++) {
+        if (colWeights[c] < colWeights[minIdx]) minIdx = c;
+      }
+      columns[minIdx].push(node);
+      colWeights[minIdx] += feedItems ? getItemWeight(feedItems[i]) : 1.5;
+    });
     return columns;
   };
 
-  const renderMasonryGrid = (nodes: ReactNode[]) => {
+  const renderMasonryGrid = (nodes: ReactNode[], feedItems?: FeedItemType[]) => {
     if (colCount <= 1) {
       return <div className="space-y-3">{nodes}</div>;
     }
-    const columns = distributeToColumns(nodes, colCount);
+    const columns = distributeToColumns(nodes, colCount, feedItems);
     return (
       <div className="flex gap-3">
         {columns.map((col, i) => (
@@ -909,6 +929,55 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Render feed items with shorts and radio carousels inserted
   // Segments feed into alternating masonry containers and full-width inserts
   const renderFeedWithShorts = () => {
+    const isMultiCol = colCount > 1;
+
+    // --- MULTI-COLUMN: continuous masonry, full-width inserts go ABOVE/BELOW the grid ---
+    if (isMultiCol) {
+      const allCards = items.map((item, index) => renderFeedItem(item, index));
+      const fullWidthBefore: ReactNode[] = [];
+      const fullWidthAfter: ReactNode[] = [];
+
+      // Shorts carousel above the grid if we have shorts
+      if (shorts.length > 0) {
+        fullWidthBefore.push(<div key="shorts-carousel" className="mb-3"><ShortsReel shorts={shorts} /></div>);
+      }
+
+      // Radio carousel below the grid
+      if (radioStations.length > 0) {
+        fullWidthAfter.push(<div key="radio-carousel" className="mb-3"><RadioCarouselSection /></div>);
+      }
+
+      // Live streams below the grid
+      if (liveNowStreams.length > 0) {
+        fullWidthAfter.push(
+          <div key="live-now" className="mb-3 space-y-2">
+            <div className="flex items-center gap-2 px-1">
+              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+              <h3 className="text-white font-semibold text-sm">Livestreams</h3>
+            </div>
+            <SwipeableCarousel>
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-4">
+                {liveNowStreams.map((stream) => (
+                  <div key={stream.id} className="flex-shrink-0 w-72 sm:w-80">
+                    <LiveCard stream={stream} />
+                  </div>
+                ))}
+              </div>
+            </SwipeableCarousel>
+          </div>
+        );
+      }
+
+      return (
+        <>
+          {fullWidthBefore}
+          {renderMasonryGrid(allCards, items)}
+          {fullWidthAfter}
+        </>
+      );
+    }
+
+    // --- SINGLE COLUMN: keep full-width inserts inline as before ---
     type Segment = { type: 'cards'; items: ReactNode[] } | { type: 'fullwidth'; node: ReactNode };
     const segments: Segment[] = [];
     let currentCards: ReactNode[] = [];
@@ -1099,14 +1168,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                   {renderMasonryGrid(optimisticPosts.map((op) => {
                     const feedItem: FeedItemType = { type: op.type, data: op.data as any };
                     return renderFeedItem(feedItem, -999);
-                  }))}
+                  }), optimisticPosts.map((op) => ({ type: op.type, data: op.data as any })))}
                 </div>
               )}
               
               {/* Render pinned post */}
               {pinnedItem && (
                 <div className="mb-3">
-                  {renderMasonryGrid([renderFeedItem(pinnedItem, -1)])}
+                  {renderMasonryGrid([renderFeedItem(pinnedItem, -1)], [pinnedItem])}
                 </div>
               )}
               
