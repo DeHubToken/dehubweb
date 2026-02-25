@@ -48,7 +48,9 @@ function clearStaleWagmiState() {
   }
 }
 
-clearStaleWagmiState();
+// NOTE: clearStaleWagmiState() is NOT called at module scope anymore.
+// Wagmi state is only cleared during explicit disconnect (clearWagmiStorage).
+// This preserves connector state so returning users can re-sign without a fresh connection.
 
 // RainbowKit connectors: MetaMask, Phantom, Trust, Rabby only
 // These handle desktop extension AND mobile (SDK relay / deep link → sign → return to browser)
