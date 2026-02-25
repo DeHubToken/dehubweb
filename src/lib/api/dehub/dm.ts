@@ -291,58 +291,55 @@ export async function sendMessage(
       console.log('[DM API] Sending message to new conversation with recipient:', recipientAddress);
     }
 
-    const dmBody: Record<string, unknown> = {
-      senderAddress: sender,
+    // For new conversations use the recipient address as roomId;
+    // for existing ones use the conversationId directly.
+    const roomId = isNewConversation && recipientAddress
+      ? recipientAddress.toLowerCase()
+      : conversationId;
+
+    const msgBody: Record<string, unknown> = {
       content,
-      type,
-      transactionHash: `0x${Date.now().toString(16)}`,
+      messageType: type,
     };
 
-    if (isNewConversation && recipientAddress) {
-      dmBody.receiverAddress = recipientAddress.toLowerCase();
-    } else {
-      dmBody.conversationId = conversationId;
-    }
-
-    if (mediaUrl) dmBody.mediaUrl = mediaUrl;
+    if (mediaUrl) msgBody.imageUrl = mediaUrl;
 
     if (type === 'tip' && tipAmount !== undefined) {
-      dmBody.tipAmount = tipAmount;
-      dmBody.tipCurrency = tipCurrency || 'DHB';
+      msgBody.tipAmount = tipAmount;
+      msgBody.tipCurrency = tipCurrency || 'DHB';
     }
 
-    console.log('[DM API] Sending message via DeHub /api/dm/tnx', { type, hasMedia: !!mediaUrl });
-    const data: any = await apiCall<any>('/api/dm/tnx', {
+    console.log('[DM API] Sending message via /api/livechat/rooms/' + roomId + '/messages', { type, hasMedia: !!mediaUrl });
+    const data: any = await apiCall<any>(`/api/livechat/rooms/${roomId}/messages`, {
       method: 'POST',
-      body: dmBody,
+      body: msgBody,
       requiresAuth: true,
     });
 
     console.log('[DM API] sendMessage response:', data);
 
-    // Handle nested data or direct response
-    const d = data?.data || data?.result?.data || data?.result || data;
+    // livechat response: { result: { id, roomId, content, sender, createdAt, ... } }
+    // or unwrapped directly
+    const d = data?.result || data;
 
-    if (d && (d._id || d.id)) {
-      // Use the receiver address as conversationId (matches Supabase storage)
-      // Don't use DeHub _id as it breaks Supabase queries
-      const receiverAddr = recipientAddress?.toLowerCase() || d.receiverAddress || d.receiver_address;
-      const finalConversationId = d.conversationId || d.conversation_id || receiverAddr || conversationId;
+    if (d && (d.id || d._id)) {
+      const receiverAddr = recipientAddress?.toLowerCase();
+      const finalConversationId = d.roomId || d.conversationId || d.conversation_id || receiverAddr || conversationId;
       return {
         id: d.id || d._id,
         conversationId: finalConversationId,
-        sender: d.sender || { address: d.sender_address || d.senderAddress || sender },
-        content: d.content || d.text || content,
-        type: d.type || d.message_type || type,
-        mediaUrl: d.mediaUrl || d.media_url,
-        createdAt: d.createdAt || d.created_at || new Date().toISOString(),
+        sender: d.sender || { address: sender },
+        content: d.content || content,
+        type: (d.messageType || d.type || type) as DMMessageType,
+        mediaUrl: d.imageUrl || d.mediaUrl || mediaUrl,
+        createdAt: d.createdAt || new Date().toISOString(),
       };
     }
 
-    console.warn('[DM API] Unknown response format for sendMessage:', data);
+    // Optimistic fallback if server returns no body
     return {
       id: `msg-${Date.now()}`,
-      conversationId,
+      conversationId: roomId,
       sender: { address: sender },
       content,
       type,
