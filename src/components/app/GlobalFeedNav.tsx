@@ -6,7 +6,7 @@
  * active feed tab; on other pages clicking a tab navigates to /app with that tab.
  */
 
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
@@ -33,8 +33,33 @@ export function GlobalFeedNav() {
   const navigate = useNavigate();
   const isHomePage = location.pathname === '/app';
 
-  // Derive active tab: on home page use persisted tab, otherwise none highlighted
-  const activeTab = isHomePage ? getPersistedTab() : '';
+  const [activeTab, setActiveTab] = useState(() => isHomePage ? getPersistedTab() : '');
+
+  // Listen for tab changes from HomePage swipes via custom event
+  useEffect(() => {
+    const handler = () => {
+      if (isHomePage) {
+        setActiveTab(getPersistedTab());
+      }
+    };
+    window.addEventListener('home-tab-changed', handler);
+    // Also sync on storage events (cross-tab)
+    const storageHandler = (e: StorageEvent) => {
+      if (e.key === HOME_STATE_STORAGE_KEY && isHomePage) {
+        setActiveTab(getPersistedTab());
+      }
+    };
+    window.addEventListener('storage', storageHandler);
+    return () => {
+      window.removeEventListener('home-tab-changed', handler);
+      window.removeEventListener('storage', storageHandler);
+    };
+  }, [isHomePage]);
+
+  // Sync when navigating to/from home page
+  useEffect(() => {
+    setActiveTab(isHomePage ? getPersistedTab() : '');
+  }, [isHomePage]);
 
   const { layerRef, setRef, rect } = useTabIndicator(activeTab, true);
 

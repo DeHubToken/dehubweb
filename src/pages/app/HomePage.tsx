@@ -138,10 +138,12 @@ export default function HomePage() {
   const [showMusicFilters, setShowMusicFilters] = useState(false);
   const [showStagesModal, setShowStagesModal] = useState(false);
   
-  // Save tab state to sessionStorage whenever it changes
+  // Save tab state to sessionStorage whenever it changes and notify GlobalFeedNav
   useEffect(() => {
     try {
       sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: activeTab }));
+      // Dispatch custom event so GlobalFeedNav updates its indicator
+      window.dispatchEvent(new CustomEvent('home-tab-changed'));
     } catch {
       // Ignore storage errors
     }
