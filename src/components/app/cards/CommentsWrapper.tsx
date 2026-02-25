@@ -3,12 +3,14 @@
  * ===============
  * Mobile: non-modal drawer (no overlay blur, video stays visible)
  * Desktop: inline expandable section below the post card
+ * Collapsed sidebar (multi-column): compact height to fit smaller cards
  */
 
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { CommentsSection } from './CommentsSection';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 
 interface CommentsWrapperProps {
   open: boolean;
@@ -18,6 +20,7 @@ interface CommentsWrapperProps {
 
 export function CommentsWrapper({ open, onOpenChange, tokenId }: CommentsWrapperProps) {
   const isMobile = useIsMobile();
+  const { isCollapsed } = useSidebarCollapse();
 
   if (isMobile) {
     return (
@@ -35,6 +38,9 @@ export function CommentsWrapper({ open, onOpenChange, tokenId }: CommentsWrapper
   }
 
   // Desktop: inline expandable section
+  // When sidebar is collapsed (multi-column feed), use compact sizing
+  const isCompact = isCollapsed;
+
   return (
     <AnimatePresence>
       {open && (
@@ -45,7 +51,9 @@ export function CommentsWrapper({ open, onOpenChange, tokenId }: CommentsWrapper
           transition={{ duration: 0.3, ease: 'easeInOut' }}
           className="overflow-hidden"
         >
-          <div className="bg-zinc-900/80 backdrop-blur-2xl rounded-2xl border border-white/10 mt-3 px-4 pb-4 pt-2 max-h-[70vh] overflow-y-auto">
+          <div className={`bg-zinc-900/80 backdrop-blur-2xl rounded-2xl border border-white/10 mt-3 overflow-y-auto ${
+            isCompact ? 'px-2 pb-2 pt-1 max-h-[40vh] text-sm' : 'px-4 pb-4 pt-2 max-h-[70vh]'
+          }`}>
             <CommentsSection
               tokenId={tokenId}
               onClose={() => onOpenChange(false)}
