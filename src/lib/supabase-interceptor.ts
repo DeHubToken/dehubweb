@@ -57,16 +57,22 @@ export function installSupabaseInterceptor(): void {
       target = match?.[1] || 'unknown';
     }
     
-    const executeFetch = (): Promise<Response> => {
+    const executeFetch = async (): Promise<Response> => {
       if (proxiedUrl === url) {
         return originalFetch.apply(this, args);
       }
 
       if (typeof input === 'string' || input instanceof URL) {
-        return originalFetch.call(this, proxiedUrl, init);
+        const proxyResponse = await originalFetch.call(this, proxiedUrl, init);
+        if (proxyResponse.status !== 404) return proxyResponse;
+        return originalFetch.call(this, url, init);
       }
 
-      return originalFetch.call(this, new Request(proxiedUrl, input));
+      const proxiedRequest = new Request(proxiedUrl, input);
+      const fallbackRequest = new Request(url, input);
+      const proxyResponse = await originalFetch.call(this, proxiedRequest);
+      if (proxyResponse.status !== 404) return proxyResponse;
+      return originalFetch.call(this, fallbackRequest);
     };
 
     try {
