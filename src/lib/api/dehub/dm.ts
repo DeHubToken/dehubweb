@@ -1,7 +1,6 @@
 import { DEHUB_API_BASE, apiCall, getAuthToken } from './core';
 import { supabase } from '@/integrations/supabase/client';
 import type { DeHubUser, DeHubNFT } from './types';
-import { supabase } from '@/integrations/supabase/client';
 
 export type DMMessageType = 'text' | 'image' | 'gif' | 'audio' | 'video' | 'tip';
 
