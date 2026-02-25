@@ -40,7 +40,7 @@ function SearchBar() {
 
 export const RightSidebar = memo(function RightSidebar({ showSearch = true }: RightSidebarProps) {
   return (
-    <aside className="hidden lg:block w-80 xl:w-88 h-screen sticky top-0 p-4 overflow-y-auto scrollbar-hide z-0 isolate">
+    <aside className="hidden lg:block w-80 xl:w-88 h-screen sticky top-0 px-4 pt-[10px] pb-4 overflow-y-auto scrollbar-hide z-0 isolate">
       {showSearch && <SearchBar />}
       <div className="mt-[11px] space-y-4">
         <TabbedSidePanel />
