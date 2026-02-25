@@ -6,7 +6,7 @@ import { MobileBottomNav } from './MobileBottomNav';
 import { GlobalDropZoneProvider, useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { RadioPlayerProvider } from '@/hooks';
 import { CoinPlacementProvider } from '@/hooks/use-coin-placement';
-import { SidebarCollapseProvider } from '@/contexts/SidebarCollapseContext';
+import { SidebarCollapseProvider, useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { PostModal } from '@/features/post/PostModal';
 import { DevelopmentNoticeModal } from './modals';
 import { RadioMiniPlayer } from '@/components/app/radio';
@@ -25,6 +25,7 @@ const HOME_SCROLL_POSITION_KEY = 'home-scroll-position';
 function AppLayoutContent({ children }: AppLayoutContentProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { isPostModalOpen, closePostModal, pendingFiles, clearPendingFiles } = useGlobalDropZone();
+  const { isCollapsed } = useSidebarCollapse();
   const location = useLocation();
   const navigate = useNavigate();
   
@@ -164,7 +165,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-clip" style={{ touchAction: 'manipulation', overscrollBehavior: 'none' }}>
-      <div className="flex max-w-7xl mx-auto w-full relative min-h-screen">
+      <div className={`flex w-full relative min-h-screen ${isCollapsed ? 'mx-0' : 'max-w-7xl mx-auto'}`}>
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
         <main className="flex-1 min-h-screen pt-11 pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black">
