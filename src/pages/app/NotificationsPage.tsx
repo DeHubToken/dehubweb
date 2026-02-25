@@ -401,7 +401,7 @@ function NotificationItem({
       )}
 
       {/* Mark as read button - only show for unread notifications */}
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {hasUnread && (
           <motion.button
             key="mark-read"
@@ -414,22 +414,24 @@ function NotificationItem({
             className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50 flex-shrink-0"
             title="Mark as read"
             initial={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5, transition: { delay: 0.35, duration: 0.2 } }}
+            exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] } }}
           >
-            {isClosing ? (
-              <motion.span
-                key="closing"
-                initial={{ rotateX: 0 }}
-                animate={{ rotateX: 180 }}
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
-                className="block"
-                style={{ transformStyle: 'preserve-3d' }}
+            <motion.div
+              animate={isClosing ? { rotateX: 180 } : { rotateX: 0 }}
+              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+              style={{ transformStyle: 'preserve-3d' }}
+            >
+              <motion.div
+                animate={isClosing ? { color: 'rgba(161, 161, 170, 0.3)' } : { color: 'rgba(161, 161, 170, 1)' }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
               >
-                <Mail className="w-4 h-4 text-zinc-400" />
-              </motion.span>
-            ) : (
-              <MailOpen className="w-4 h-4 text-zinc-400" />
-            )}
+                {isClosing ? (
+                  <Mail className="w-4 h-4" style={{ color: 'inherit' }} />
+                ) : (
+                  <MailOpen className="w-4 h-4" style={{ color: 'inherit' }} />
+                )}
+              </motion.div>
+            </motion.div>
           </motion.button>
         )}
       </AnimatePresence>
