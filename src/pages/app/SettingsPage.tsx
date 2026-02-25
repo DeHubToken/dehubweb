@@ -1118,8 +1118,8 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
               </div>
             </div>
             <SettingDrawerSelect
-              value={feedLayout}
-              onValueChange={() => toast.info(t('settings.comingSoon', 'Coming soon'))}
+              value={isCollapsed ? 'compact' : 'comfortable'}
+              onValueChange={(val) => setCollapsed(val === 'compact')}
               title={t('settings.feedLayout')}
               options={[
                 { value: 'comfortable', label: t('settings.comfortable'), description: t('settings.comfortableDesc') },
