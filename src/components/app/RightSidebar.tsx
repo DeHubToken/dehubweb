@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { TabbedSidePanel } from './sidebar';
 import { WhatsHappening } from './WhatsHappening';
 import { useSearchHistory } from '@/hooks/use-search-history';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
+import { cn } from '@/lib/utils';
 
 interface RightSidebarProps {
   showSearch?: boolean;
@@ -39,8 +41,9 @@ function SearchBar() {
 }
 
 export const RightSidebar = memo(function RightSidebar({ showSearch = true }: RightSidebarProps) {
+  const { isCollapsed } = useSidebarCollapse();
   return (
-    <aside className="hidden lg:block w-80 xl:w-88 h-screen sticky top-0 px-4 pt-[10px] pb-4 overflow-y-auto scrollbar-hide z-0 isolate">
+    <aside className={cn("hidden lg:block w-80 xl:w-88 h-screen sticky top-0 pt-[10px] pb-4 overflow-y-auto scrollbar-hide z-0 isolate", isCollapsed ? "pl-0 pr-2" : "px-4")}>
       {showSearch && <SearchBar />}
       <div className="mt-[11px] space-y-4">
         <TabbedSidePanel />
