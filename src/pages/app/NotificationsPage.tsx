@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useTranslation } from 'react-i18next';
-import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Repeat2 } from 'lucide-react';
+import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2 } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -399,23 +400,37 @@ function NotificationItem({
       )}
 
       {/* Mark as read button - only show for unread notifications */}
-      {hasUnread && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            bundle.allIds.forEach(id => onMarkAsRead(id));
-          }}
-          disabled={isMarkingAsRead}
-          className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50 flex-shrink-0"
-          title="Mark as read"
-        >
-          {isMarkingAsRead ? (
-            <Loader2 className="w-4 h-4 text-zinc-400 animate-spin" />
-          ) : (
-            <MailOpen className="w-4 h-4 text-zinc-400" />
-          )}
-        </button>
-      )}
+      <AnimatePresence>
+        {hasUnread && (
+          <motion.button
+            key="mark-read"
+            onClick={(e) => {
+              e.stopPropagation();
+              bundle.allIds.forEach(id => onMarkAsRead(id));
+            }}
+            disabled={isMarkingAsRead}
+            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50 flex-shrink-0"
+            title="Mark as read"
+            initial={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5, transition: { delay: 0.35, duration: 0.2 } }}
+          >
+            {isMarkingAsRead ? (
+              <motion.span
+                key="closing"
+                initial={{ rotateX: 0 }}
+                animate={{ rotateX: 180 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                className="block"
+                style={{ transformStyle: 'preserve-3d' }}
+              >
+                <Mail className="w-4 h-4 text-zinc-400" />
+              </motion.span>
+            ) : (
+              <MailOpen className="w-4 h-4 text-zinc-400" />
+            )}
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
