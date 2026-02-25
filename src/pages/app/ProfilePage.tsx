@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import { useState, useMemo, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -92,6 +92,47 @@ export default function ProfilePage() {
   // All data fetching + derived state
   const data = useProfilePage();
 
+  const tabsIndicatorLayerRef = useRef<HTMLDivElement>(null);
+  const tabButtonRefs = useRef<Partial<Record<TabValue, HTMLButtonElement | null>>>({});
+  const [tabIndicator, setTabIndicator] = useState({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    ready: false,
+  });
+
+  const updateTabIndicator = useCallback(() => {
+    const layerEl = tabsIndicatorLayerRef.current;
+    const activeButton = tabButtonRefs.current[activeTab];
+
+    if (!layerEl || !activeButton) return;
+
+    const layerRect = layerEl.getBoundingClientRect();
+    const buttonRect = activeButton.getBoundingClientRect();
+
+    setTabIndicator({
+      x: buttonRect.left - layerRect.left,
+      y: buttonRect.top - layerRect.top,
+      width: buttonRect.width,
+      height: buttonRect.height,
+      ready: true,
+    });
+  }, [activeTab]);
+
+  const handleTabsScroll = useCallback(() => {
+    window.requestAnimationFrame(updateTabIndicator);
+  }, [updateTabIndicator]);
+
+  useLayoutEffect(() => {
+    updateTabIndicator();
+  }, [updateTabIndicator, data.PROFILE_TABS.length]);
+
+  useEffect(() => {
+    const onResize = () => window.requestAnimationFrame(updateTabIndicator);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [updateTabIndicator]);
   // Follow logic
   const { isFollowLoading, handleFollow, handleUnfollow } = useProfileFollow({
     profile: data.profile,
@@ -306,34 +347,46 @@ export default function ProfilePage() {
 
         {/* Profile Tabs Bento */}
         <div className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/[0.08] rounded-2xl p-1.5 relative overflow-visible">
-          <div className="overflow-visible py-1">
-            <div className="flex gap-0.5 overflow-x-auto scrollbar-hide">
-            {data.PROFILE_TABS.map((tab) => {
-              const isActive = activeTab === tab.value;
-              return (
-                <button
-                  key={tab.value}
-                  onClick={() => setActiveTab(tab.value)}
-                  className={cn(
-                    'relative flex-1 flex flex-col items-center gap-0.5 px-2 pt-[7px] pb-[5px] rounded-xl transition-colors min-w-[52px]',
-                    isActive ? 'text-white' : 'text-zinc-500 hover:text-white'
-                  )}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="profile-tab-indicator"
-                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  <tab.icon className="w-[18px] h-[18px] relative z-10" />
-                  <span className="text-[10px] font-medium relative z-10">{tab.count}</span>
-                </button>
-              );
-            })}
+          <div ref={tabsIndicatorLayerRef} className="relative overflow-visible py-1">
+            {tabIndicator.ready && (
+              <motion.div
+                className="pointer-events-none absolute z-30 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                animate={{
+                  x: tabIndicator.x,
+                  y: tabIndicator.y,
+                  width: tabIndicator.width,
+                  height: tabIndicator.height,
+                }}
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              />
+            )}
+
+            <div
+              className="relative z-20 flex gap-0.5 overflow-x-auto scrollbar-hide"
+              onScroll={handleTabsScroll}
+            >
+              {data.PROFILE_TABS.map((tab) => {
+                const isActive = activeTab === tab.value;
+                return (
+                  <button
+                    key={tab.value}
+                    ref={(el) => {
+                      tabButtonRefs.current[tab.value] = el;
+                    }}
+                    onClick={() => setActiveTab(tab.value)}
+                    className={cn(
+                      'relative z-40 flex-1 flex flex-col items-center gap-0.5 px-2 pt-[7px] pb-[5px] rounded-xl transition-colors min-w-[52px]',
+                      isActive ? 'text-white' : 'text-zinc-500 hover:text-white'
+                    )}
+                  >
+                    <tab.icon className="w-[18px] h-[18px] relative z-10" />
+                    <span className="text-[10px] font-medium relative z-10">{tab.count}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
-          <div className="absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-black/40 to-transparent pointer-events-none rounded-r-2xl" />
+          <div className="absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-black/40 to-transparent pointer-events-none rounded-r-2xl z-10" />
         </div>
 
         {/* Tab Content - all panels rendered, inactive hidden via CSS */}
