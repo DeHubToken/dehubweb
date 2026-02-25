@@ -1,67 +1,63 @@
 
 
-## Root Cause Analysis: Daily/Weekly Leaderboard Bad Data
+## Root Cause Found
 
-### The Problem
+The snapshots are garbage. Look at account `0x0851...` (the whale):
+- **Real on-chain balance**: 56.1M DHB (has been this for 400+ days)
+- **Snapshots Feb 14-24**: Show 50M (wrong -- this came from the DeHub API which lies)
+- **Snapshot Feb 25 (today)**: Shows 56.1M (correct -- today's snapshot was created after the on-chain code was added)
+- **Snapshot Feb 13 and before**: Shows 56.1M (correct -- these were created by the old backfill function which used on-chain RPC)
 
-The leaderboard delta computation is producing inflated/fake numbers because of a **timing race between the light and full refresh cron jobs**.
+So the daily leaderboard shows `56.1M - 50M = +6.1M delta` which is fake. The whale didn't gain anything. The snapshot was just wrong.
 
-### Timeline of Events
+**The core problem**: Snapshots are created from DeHub API data (line 591: `balance: e.total`), and the DeHub API returns inaccurate balances. The old backfill function used Alchemy RPC and got correct data, but then the full refresh started writing API-sourced snapshots that overwrote/replaced accurate data.
 
-1. **Light refresh** (Job 10) runs at **00:00 UTC** every 6 hours
-2. **Full refresh** (Job 9) runs at **03:00 UTC** daily
+## Plan
 
-The light refresh at midnight ran **before** the full refresh created today's snapshot (Feb 25). Here's what the data shows:
+Since you chose "on-chain block estimate" and "gains + losses":
 
-- **No snapshot exists for 2026-02-25** (confirmed by query returning empty)
-- Latest snapshots are from Feb 24 (503 entries, 353 non-zero) and Feb 23
+**For daily and weekly holdings only**, bypass snapshots entirely and do a pure on-chain comparison:
 
-### How the Bug Manifests
+1. **Add `eth_blockNumber` + historical block estimation** to the edge function
+   - Get current block number on Base and BNB
+   - Estimate block N days ago: `currentBlock - (blocksPerDay * daysAgo)`
+   - Base: ~43,200 blocks/day (2s block time)
+   - BNB: ~28,800 blocks/day (3s block time)
 
-The `computeSnapshotDelta` function (line 189-215) tries to use **today's snapshot** as the "current" value to ensure snapshot-vs-snapshot comparison. When no today snapshot exists, it **falls back to raw API cache values** (line 214).
+2. **Add `getHistoricalOnChainBalance`** function
+   - Same as `getOnChainBalance` but passes a historical block tag instead of "latest"
+   - Queries `balanceOf` and `userInfos` at the estimated past block
 
-This creates mismatches:
+3. **Modify `computeSnapshotDelta`** for `useOnChain` path:
+   - Current: fetches on-chain "now" but still uses snapshots for "past" (broken)
+   - New: fetch on-chain "now" AND on-chain "N days ago" using block estimation
+   - Skip the snapshot `pastMap` entirely for daily/weekly holdings
 
-- **Account `0x0851...` (coinage)**: Snapshot balance on Feb 23 and Feb 24 = **50,000,000**. But the holdings/all API cache says **56,142,985**. Delta = **+6,142,985** (fake -- it's not a real daily change, it's the gap between API and snapshot values).
-- **Account `0x388bee...` (jimminycrockett)**: An EXTRA_WALLET not in the week-ago snapshot, so delta = full current value = **10,000,001** (also misleading).
+4. **Show both gains AND losses** for daily/weekly holdings:
+   - Remove the `.filter(e.delta > 0)` gate for these periods
+   - Keep it for other sort modes/periods
 
-### Why This Keeps Recurring
+5. **No changes** to monthly, yearly, or all-time (they continue using snapshots)
 
-Every day between **00:00 and 03:00 UTC**, the light refresh overwrites the period caches with bad deltas. Even after the full refresh at 03:00 fixes them by creating today's snapshot, the next midnight light refresh will break them again for 3 hours. If users check during this window, they see bad data.
+### Technical Details
 
-Additionally, the 06:00 and 12:00 light refreshes work fine because by then the full refresh has created today's snapshot.
+```text
+Current flow (broken):
+  daily holdings = on-chain NOW - snapshot YESTERDAY (API-sourced, wrong)
 
-### The Fix
-
-Two changes needed in `refresh-leaderboard-cache/index.ts`:
-
-1. **In light mode**: Before computing deltas, check if today's snapshot exists. If it doesn't, **skip the recomputation** and leave the existing cache intact rather than overwriting it with bad data. Add a guard at the top of the light mode block:
-
-```typescript
-// Light mode guard: don't recompute if today's snapshot is missing
-const todayStr = new Date().toISOString().split("T")[0];
-const { count: todaySnapCount } = await supabase
-  .from("leaderboard_snapshots")
-  .select("id", { count: "exact", head: true })
-  .eq("snapshot_date", todayStr);
-
-if (!todaySnapCount || todaySnapCount === 0) {
-  console.warn("[light] No snapshot for today yet — skipping to avoid bad deltas");
-  return new Response(
-    JSON.stringify({ success: true, mode: "light", message: "Skipped: no today snapshot" }),
-    { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
-  );
-}
+New flow (fix):
+  daily holdings = on-chain NOW (latest block) - on-chain YESTERDAY (estimated block)
+  weekly holdings = on-chain NOW (latest block) - on-chain 7 DAYS AGO (estimated block)
 ```
 
-2. **Shift the light refresh schedule** so midnight doesn't conflict. Change Job 10 from `0 */6 * * *` (0, 6, 12, 18) to `0 6,12,18 * * *` (skip midnight entirely since the 3 AM full refresh handles it).
+The `rpcCall` function already exists but only supports `"latest"`. It needs a `blockTag` parameter (already present in `backfill-leaderboard-snapshots/index.ts` which does exactly this). The batch function needs the same treatment.
 
-### Files to Change
+### Files Changed
 
-- `supabase/functions/refresh-leaderboard-cache/index.ts` -- Add the snapshot-exists guard in light mode (around line 314-333)
-- Cron job update via SQL: reschedule Job 10 to skip midnight
+- `supabase/functions/refresh-leaderboard-cache/index.ts` -- add historical block support, modify delta computation for daily/weekly holdings, allow negative deltas
 
-### Immediate Fix
+### Risk
 
-Trigger a full refresh now to create today's snapshot and fix the current bad data.
+- Fetching on-chain balances for ~500 wallets at 2 different block heights = ~3000 RPC calls. At batch size 10 this takes ~50 batches x 2 time points = ~100 sequential rounds. Should complete within edge function timeout but will be slower than snapshot-based approach.
+- Block estimation has small time offset (~minutes) but is acceptable for daily/weekly granularity.
 
