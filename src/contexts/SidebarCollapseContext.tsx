@@ -13,13 +13,7 @@ const SidebarCollapseContext = createContext<SidebarCollapseContextType>({
 const STORAGE_KEY = 'sidebar-collapsed';
 
 export function SidebarCollapseProvider({ children }: { children: ReactNode }) {
-  const [isCollapsed, setIsCollapsed] = useState(() => {
-    try {
-      return localStorage.getItem(STORAGE_KEY) === 'true';
-    } catch {
-      return false;
-    }
-  });
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleCollapse = useCallback(() => {
     setIsCollapsed((prev) => {
