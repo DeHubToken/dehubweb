@@ -4,7 +4,7 @@ import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
-import { useCoinPlacement } from '@/hooks/use-coin-placement';
+
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
 import dehubLogo from '@/assets/dehub-logo-white.png';
@@ -20,7 +20,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user, openLoginModal } = useAuth();
-  const { stickToBanner } = useCoinPlacement();
+  
   const { data: unreadCount } = useUnreadNotificationCount();
 
   // Coin balance
@@ -54,10 +54,6 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
       </div>
       
       <div className="flex items-center gap-3">
-        {/* Coin Balance (when stickToBanner is enabled and user is logged in) */}
-        {isAuthenticated && stickToBanner && (
-          <CoinBalanceMenu balance={coinBalance} variant="mobile" />
-        )}
         
         {/* Notifications Button - only visible when logged in */}
         {isAuthenticated && (

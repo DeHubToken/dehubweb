@@ -1034,7 +1034,6 @@ function BlockedUsersSection() {
 
 function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: string) => void }) {
   const { t } = useTranslation();
-  const { stickToBanner, setStickToBanner } = useCoinPlacement();
   const { isCollapsed, setCollapsed } = useSidebarCollapse();
   const [feedLayout, setFeedLayout] = useState('comfortable');
   return (
@@ -1151,26 +1150,6 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
         </div>
       </div>
 
-      {/* Coin Placement */}
-      <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.coinPlacement')}</h3>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Coins className="w-5 h-5 text-zinc-500" />
-              <div>
-                <p className="text-white font-medium">{t('settings.stickCoinBanner')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.stickCoinBannerDesc')}</p>
-              </div>
-            </div>
-            <Switch
-              checked={stickToBanner}
-              onCheckedChange={setStickToBanner}
-              className="data-[state=checked]:bg-white data-[state=unchecked]:bg-zinc-700"
-            />
-          </div>
-        </div>
-      </div>
 
 
 
