@@ -96,7 +96,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
       )}>
         {/* Logo & Coin Balance */}
         <div className="mb-6 flex items-center justify-between w-full">
-          <div className={cn("flex items-center", isCollapsed ? "mt-[10px] mx-auto" : "mt-[6px] mx-auto xl:mx-0")}>
+          <div className={cn("flex items-center mt-[10px]", isCollapsed ? "mx-auto" : "mx-auto xl:mx-0")}>
             <button
               onClick={toggleCollapse}
               className={cn(
