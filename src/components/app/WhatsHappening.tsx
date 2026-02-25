@@ -60,8 +60,8 @@ export function WhatsHappening() {
   const queryClient = useQueryClient();
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
-      <div className="flex items-center justify-between mb-4 pr-1.5">
-        <h3 className="font-bold text-lg text-white">Talk of The Town</h3>
+      <div className="flex items-center justify-center mb-4">
+        <h3 className="font-bold text-lg text-white text-center">Talk of The Town</h3>
       </div>
       <div className="flex flex-col items-center justify-center py-8 text-center">
         <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
