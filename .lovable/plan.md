@@ -1,64 +1,64 @@
 
 
-## Collapsible Sidebar with 2-Column Feed
+## Fix: Uneven Card Heights in Multi-Column Grid
+
+### The Problem
+
+In the 2/3-column collapsed layout, each grid row is as tall as its tallest card. Since card types have very different natural heights:
+- **PostCard** (text-only): ~100-200px
+- **VideoCard**: forced `aspect-video` (~56% width ratio)
+- **ImageCard**: variable, up to `max-h-[600px]`
+
+...shorter cards leave large black gaps beneath them in each row.
+
+### Recommended Solution: CSS Masonry via `columns`
+
+Instead of CSS Grid (`grid-cols-2/3`), switch to a **CSS multi-column layout** (`columns-2` / `columns-3`). This produces a Pinterest/Masonry-style flow where each card stacks tightly below the previous one in its column, eliminating vertical gaps entirely.
 
 ### What Changes
 
-**1. Sidebar collapse state** -- needs to be shared across components so that `DesktopSidebar`, `AppLayout`, and `HomeFeed` all react to it.
+**File: `src/components/app/feeds/HomeFeed.tsx`**
 
-**2. DesktopSidebar (`src/components/app/navigation/DesktopSidebar.tsx`)**
-- Add a hamburger menu button (Menu icon from lucide) to the left of the DeHub logo
-- Shift logo slightly right to accommodate the button
-- When clicked, toggles a `collapsed` state
-- When collapsed: sidebar shrinks to `w-[60px]` (already the non-xl width), hides text labels, shows only icons -- essentially forces the compact mode at all screen sizes
+1. Replace `grid grid-cols-2 xl:grid-cols-3 gap-3` with `columns-2 xl:columns-3 gap-3`
+2. Wrap each feed item in `break-inside-avoid mb-3` so cards don't split across columns
+3. Full-width inserts (Shorts carousel, Radio, Live, Who-to-follow) get `column-span-all` — but since CSS `column-span: all` has limited browser support, these sections will be rendered **outside** the multi-column container (before/after), keeping the same visual insert positions
 
-**3. AppLayout (`src/components/app/AppLayout.tsx`)**
-- Lift sidebar collapsed state here (or use a context/provider) so both `DesktopSidebar` and the feed can access it
-- When sidebar is collapsed, the `main` area gets more horizontal space
-- Right sidebar stays unchanged
+**File: `src/components/app/feeds/HomeFeed.tsx` — `renderFeedWithShorts()`**
 
-**4. HomeFeed (`src/components/app/feeds/HomeFeed.tsx`)**
-- When sidebar is collapsed, the feed container switches from `space-y-3` (single column) to a CSS grid: `grid grid-cols-2 gap-3`
-- Each post card rendered inside the grid will naturally size to half-width
-- The bento wrapper in `renderFeedItem` (line 827) stays the same -- it just flows into the grid
-- Shorts carousels and other full-width inserts span both columns (`col-span-2`)
+The current function interleaves carousels into a flat list. For the masonry approach when collapsed:
+- Split the feed items into segments separated by full-width inserts
+- Render each segment in its own `columns-2/3` container
+- Render full-width inserts (Shorts, Radio, Live) between segments at full width
 
-### Technical Details
-
-**State management**: Create a simple React context `SidebarCollapseContext` (new file `src/contexts/SidebarCollapseContext.tsx`) that exposes `{ isCollapsed, toggleCollapse }`. Wrap it in `AppLayout`. This avoids prop drilling through multiple layers.
-
-**DesktopSidebar changes**:
-- The aside currently uses `w-[60px] xl:w-[231px]`. When collapsed, force `w-[60px]` regardless of breakpoint
-- Add `<Menu />` icon button in the logo row, visible only at `xl:` (when full sidebar is shown -- at smaller sizes it's already compact)
-- When collapsed, hide all text labels (same as current non-xl behavior)
-
-**HomeFeed changes**:
-- Consume `SidebarCollapseContext`
-- The feed items container (line 1035) changes from `space-y-3` to `grid grid-cols-2 gap-3` when collapsed
-- Full-width elements (shorts carousel, radio carousel, who-to-follow) get `col-span-2`
-- Individual post/video/image cards naturally fill one grid cell each
-
-**Files to create**:
-- `src/contexts/SidebarCollapseContext.tsx` -- context + provider
-
-**Files to modify**:
-- `src/components/app/AppLayout.tsx` -- wrap with SidebarCollapseProvider, pass state
-- `src/components/app/navigation/DesktopSidebar.tsx` -- add burger button, consume context for collapse
-- `src/components/app/feeds/HomeFeed.tsx` -- consume context, switch to grid layout when collapsed
+When **not** collapsed, everything stays exactly as it is today (single column, `space-y-3`).
 
 ### Visual Result
 
 ```text
-EXPANDED (current):                    COLLAPSED (new):
-┌──────────┬────────────┬─────┐       ┌───┬──────────────────────┬─────┐
-│ ☰ DEHUB  │  Feed      │Right│       │ ☰ │  Feed (2-col grid)   │Right│
-│ Profile  │  [Post 1]  │ Bar │       │ 🏠│  [Post1]  [Post2]    │ Bar │
-│ Explore  │  [Post 2]  │     │       │ 🔍│  [Post3]  [Post4]    │     │
-│ Notifs   │  [Post 3]  │     │       │ 🔔│  [Post5]  [Post6]    │     │
-│ Messages │  ...       │     │       │ 💬│  ...                 │     │
-│ ...      │            │     │       │   │                      │     │
-└──────────┴────────────┴─────┘       └───┴──────────────────────┴─────┘
+BEFORE (grid):                    AFTER (masonry columns):
+┌──────────┬──────────┐          ┌──────────┬──────────┐
+│ Text post│ Video    │          │ Text post│ Video    │
+│ (short)  │ (tall)   │          │          │          │
+│          │          │          ├──────────┤          │
+│ BLACK    │          │          │ Image    │          │
+│ GAP      │          │          │          ├──────────┤
+├──────────┼──────────┤          │          │ Text     │
+│ Image    │ Text     │          ├──────────┤          │
+│ (tall)   │ (short)  │          │ Video    ├──────────┤
+│          │          │          │          │ Image    │
+│          │ BLACK    │          │          │          │
+│          │ GAP      │          │          │          │
+└──────────┴──────────┘          └──────────┴──────────┘
 ```
 
-The burger icon is always visible in the top-left of the sidebar (next to the logo). Clicking it toggles between the two states. The collapsed state persists in `localStorage` so it remembers user preference.
+### Technical Details
+
+- `columns-2` / `columns-3` is well-supported in all modern browsers
+- `break-inside: avoid` prevents a single card from being split across two columns
+- `mb-3` on each item provides consistent vertical spacing (replaces `gap-3` which doesn't apply in column layout)
+- Full-width sections break out of the column container to span the entire width
+- No changes to individual card components — only the container layout changes
+
+### Files to Modify
+- `src/components/app/feeds/HomeFeed.tsx` — container classes + renderFeedWithShorts segmentation logic
 
