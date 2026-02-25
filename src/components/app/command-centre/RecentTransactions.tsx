@@ -1,5 +1,5 @@
 import { Loader2 } from 'lucide-react';
-import { AnimatedFilterPill } from '@/components/app/feeds/AnimatedFilterPill';
+import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
@@ -122,17 +122,12 @@ export function RecentTransactions() {
       </div>
 
       {/* Time Filters */}
-      <div className="flex items-center gap-1 mb-4 pl-1 py-1 w-fit">
-        {timeFilters.map((filter) => (
-          <AnimatedFilterPill
-            key={filter}
-            layoutId="recent-txns-time"
-            isActive={activeFilter === filter}
-            onClick={() => setActiveFilter(filter)}
-          >
-            {filter}
-          </AnimatedFilterPill>
-        ))}
+      <div className="mb-4 w-fit">
+        <GlassFilterRow
+          items={timeFilters.map((f) => ({ key: f, label: f }))}
+          activeKey={activeFilter}
+          onSelect={(key) => setActiveFilter(key)}
+        />
       </div>
 
       {isLoading ? (

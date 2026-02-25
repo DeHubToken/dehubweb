@@ -4,8 +4,8 @@
  * Displays top DHB token holders and tippers from the DeHub API.
  */
 
-import { useState, useMemo, useCallback, useLayoutEffect, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useMemo, useCallback, useRef, useLayoutEffect, useEffect } from 'react';
+import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw } from 'lucide-react';
@@ -325,67 +325,24 @@ export default function LeaderboardPage() {
 
         {/* Category Tabs - Horizontally scrollable */}
         <div className="relative mb-3">
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
-          <div className="flex gap-2 overflow-x-auto scrollbar-invisible pb-1">
-            {categories.map((cat) => {
-              const Icon = cat.icon;
-              const isActive = category === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => { setCategory(cat.id); setSortDirection('desc'); }}
-                  className={`relative flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
-                    isActive ? 'text-white' : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
-                  }`}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="leaderboard-category"
-                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center gap-1.5">
-                    <Icon className="w-4 h-4" />
-                    {t(cat.labelKey)}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          <GlassFilterRow
+            items={categories.map((cat) => ({ key: cat.id, label: <span className="flex items-center gap-1.5"><cat.icon className="w-4 h-4" />{t(cat.labelKey)}</span> }))}
+            activeKey={category}
+            onSelect={(key) => { setCategory(key as CategoryType); setSortDirection('desc'); }}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
+          />
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-20" />
         </div>
 
         {/* Time Period Tabs + Sort Toggle */}
         <div className="flex items-center gap-2 mb-4">
-          <div className="flex gap-1.5 overflow-x-auto scrollbar-invisible">
-            {timePeriods.map((period) => {
-              const isActive = timePeriod === period.id;
-              return (
-                <button
-                  key={period.id}
-                  type="button"
-                  onClick={() => {
-                    setTimePeriod(period.id);
-                    setShimmerKey(k => k + 1);
-                    setSortDirection('desc');
-                  }}
-                  className={`relative px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                    isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-                  }`}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="leaderboard-period"
-                      className="absolute inset-0 rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  <span className="relative z-10">{t(period.labelKey)}</span>
-                </button>
-              );
-            })}
-          </div>
+          <GlassFilterRow
+            items={timePeriods.map((p) => ({ key: p.id, label: t(p.labelKey) }))}
+            activeKey={timePeriod}
+            onSelect={(key) => { setTimePeriod(key as LeaderboardPeriod); setShimmerKey(k => k + 1); setSortDirection('desc'); }}
+            buttonClassName="text-sm"
+          />
           <button
             type="button"
             onClick={() => setSortDirection(d => d === 'desc' ? 'asc' : 'desc')}
