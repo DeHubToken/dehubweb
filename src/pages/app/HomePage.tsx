@@ -615,12 +615,12 @@ export default function HomePage() {
           </div>
         )}
         {visitedTabs.has('videos') && (
-          <div style={{ display: activeTab === 'videos' ? 'block' : 'none' }}>
+          <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: activeTab === 'videos' ? 'block' : 'none' }}>
             <VideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
           </div>
         )}
         {visitedTabs.has('images') && (
-          <div style={{ display: activeTab === 'images' ? 'block' : 'none' }}>
+          <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: activeTab === 'images' ? 'block' : 'none' }}>
             <ImagesFeed
               showCollage={showImagesCollage}
               showFilters={showImagesFilters}
@@ -633,27 +633,27 @@ export default function HomePage() {
           </div>
         )}
         {visitedTabs.has('shorts') && (
-          <div style={{ display: activeTab === 'shorts' ? 'block' : 'none' }}>
+          <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: activeTab === 'shorts' ? 'block' : 'none' }}>
             <ShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
           </div>
         )}
         {visitedTabs.has('live') && (
-          <div style={{ display: activeTab === 'live' ? 'block' : 'none' }}>
+          <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: activeTab === 'live' ? 'block' : 'none' }}>
             <LiveFeed key={refreshKey} isRefreshing={isRefreshing} />
           </div>
         )}
         {visitedTabs.has('music') && (
-          <div style={{ display: activeTab === 'music' ? 'block' : 'none' }}>
+          <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: activeTab === 'music' ? 'block' : 'none' }}>
             <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
           </div>
         )}
         {visitedTabs.has('ppv') && (
-          <div style={{ display: activeTab === 'ppv' ? 'block' : 'none' }}>
+          <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: activeTab === 'ppv' ? 'block' : 'none' }}>
             <PPVFeed />
           </div>
         )}
         {visitedTabs.has('w2e') && (
-          <div style={{ display: activeTab === 'w2e' ? 'block' : 'none' }}>
+          <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: activeTab === 'w2e' ? 'block' : 'none' }}>
             <W2EFeed />
           </div>
         )}
