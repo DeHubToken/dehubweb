@@ -54,7 +54,7 @@ export function GlobalFeedNav() {
   }, [isHomePage, navigate]);
 
   return (
-    <div className="sticky top-0 bg-black z-50 p-2 pl-2 pr-0">
+    <div className="sticky top-0 bg-black z-50 p-2 pl-2 pr-2">
       <div className="bg-zinc-900 rounded-xl overflow-visible">
         <div ref={layerRef} className="relative overflow-visible">
           <GlassIndicator rect={rect} borderRadius="0.75rem" layoutKey={`global-${activeTab}`} />
