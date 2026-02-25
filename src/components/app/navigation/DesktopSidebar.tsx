@@ -9,7 +9,7 @@ import { SidebarNavItem } from './SidebarNavItem';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
-import { useCoinPlacement } from '@/hooks/use-coin-placement';
+
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
@@ -26,7 +26,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { isAuthenticated, user, walletAddress, connect, isConnecting, needsSignature } = useAuth();
-  const { stickToBanner } = useCoinPlacement();
+  
   const { isCollapsed, toggleCollapse } = useSidebarCollapse();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const { data: unreadCount } = useUnreadNotificationCount();
@@ -112,15 +112,6 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               <img src={dehubLogoCompact} alt="dehub" className={cn("h-[32px] w-auto", isCollapsed ? "block" : "lg:hidden")} />
             </button>
           </div>
-          {isAuthenticated && stickToBanner && (
-            <div className={cn("mt-[10px]", isCollapsed ? "hidden" : "hidden lg:block")}>
-              <CoinBalanceMenu 
-                balance={coinBalance} 
-                variant="desktop" 
-                onAuthRequired={handleCoinClick}
-              />
-            </div>
-          )}
         </div>
 
         {/* Navigation Bento - scrollable */}
