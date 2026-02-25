@@ -998,23 +998,27 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       const beforeShorts = shouldSplitForShorts ? items.slice(0, adaptiveShortsIndex) : items;
       const afterShorts = shouldSplitForShorts ? items.slice(adaptiveShortsIndex) : [];
 
-      const beforeCards = beforeShorts.map((item, index) => renderFeedItem(item, index));
-      const afterCards = afterShorts.map((item, index) => renderFeedItem(item, adaptiveShortsIndex + index));
+      // Split afterShorts into segments for interleaving carousels
+      // Leaderboard at ~LEADERBOARD_INSERT_AFTER items after shorts, Radio at ~RADIO_INSERT_AFTER
+      const leaderboardOffset = Math.max(0, LEADERBOARD_INSERT_AFTER - adaptiveShortsIndex);
+      const radioOffset = Math.max(leaderboardOffset + 2, RADIO_INSERT_AFTER - adaptiveShortsIndex);
+      const liveOffset = radioOffset + 4;
 
-      const fullWidthAfter: ReactNode[] = [];
-
-      // Leaderboard carousel after the grid
-      fullWidthAfter.push(<div key="leaderboard-carousel" className="mb-3"><LeaderboardCarousel /></div>);
-
-      // Radio carousel after the grid
-      if (radioStations.length > 0) {
-        fullWidthAfter.push(<div key="radio-carousel" className="mb-3"><RadioCarouselSection /></div>);
+      // Build segments: chunks of afterShorts items with full-width inserts between them
+      const splitPoints = [leaderboardOffset, radioOffset, liveOffset].filter(p => p > 0 && p < afterShorts.length);
+      const segments: { items: typeof afterShorts; startIndex: number }[] = [];
+      let lastSplit = 0;
+      for (const sp of splitPoints) {
+        segments.push({ items: afterShorts.slice(lastSplit, sp), startIndex: adaptiveShortsIndex + lastSplit });
+        lastSplit = sp;
       }
+      segments.push({ items: afterShorts.slice(lastSplit), startIndex: adaptiveShortsIndex + lastSplit });
 
-      // Live streams after the grid
-      if (liveNowStreams.length > 0) {
-        fullWidthAfter.push(
-          <div key="live-now" className="mb-3 space-y-2">
+      const fullWidthInserts: (ReactNode | null)[] = [
+        <div key="leaderboard-carousel" className="my-3"><LeaderboardCarousel /></div>,
+        radioStations.length > 0 ? <div key="radio-carousel" className="my-3"><RadioCarouselSection /></div> : null,
+        liveNowStreams.length > 0 ? (
+          <div key="live-now" className="my-3 space-y-2">
             <div className="flex items-center gap-2 px-1">
               <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
               <h3 className="text-white font-semibold text-sm">Livestreams</h3>
@@ -1029,19 +1033,33 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               </div>
             </SwipeableCarousel>
           </div>
-        );
-      }
+        ) : null,
+      ];
 
       return (
         <>
-          {beforeCards.length > 0 && renderMasonryGrid(beforeCards, beforeShorts)}
+          {beforeShorts.length > 0 && renderMasonryGrid(
+            beforeShorts.map((item, i) => renderFeedItem(item, i)),
+            beforeShorts
+          )}
           {shorts.length > 0 && (
             <div className={cn(shouldSplitForShorts ? 'my-3' : 'mt-3')}>
               <ShortsReel shorts={shorts} />
             </div>
           )}
-          {afterCards.length > 0 && <div className="mt-3">{renderMasonryGrid(afterCards, afterShorts)}</div>}
-          {fullWidthAfter}
+          {segments.map((seg, segIdx) => (
+            <div key={`multi-seg-${segIdx}`}>
+              {seg.items.length > 0 && (
+                <div className="mt-3">
+                  {renderMasonryGrid(
+                    seg.items.map((item, i) => renderFeedItem(item, seg.startIndex + i)),
+                    seg.items
+                  )}
+                </div>
+              )}
+              {segIdx < fullWidthInserts.length && fullWidthInserts[segIdx]}
+            </div>
+          ))}
         </>
       );
     }
