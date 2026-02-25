@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getDPayTransactions, type DPayTransaction } from '@/lib/api/dpay';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { getAccountInfo } from '@/lib/api/dehub/users';
 import { format, subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import { useState, useMemo } from 'react';
 
@@ -29,6 +30,8 @@ interface UnifiedTransaction {
   createdAt: string;
   isCredit: boolean;
   description: string;
+  counterpartyAddress?: string;
+  counterpartyUsername?: string;
 }
 
 function formatDPayTx(tx: DPayTransaction): UnifiedTransaction {
@@ -82,15 +85,69 @@ export function RecentTransactions() {
     staleTime: 30_000,
   });
 
-  const isLoading = dpayLoading || ppvLoading;
+  // Fetch tip records (sent and received)
+  const { data: tipRecords = [], isLoading: tipsLoading } = useQuery({
+    queryKey: ['tip-records', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return [];
+      const addr = walletAddress.toLowerCase();
+      const { data, error } = await supabase
+        .from('tip_records')
+        .select('*')
+        .or(`sender_address.ilike.${addr},receiver_address.ilike.${addr}`)
+        .order('created_at', { ascending: false })
+        .limit(50);
+      if (error) { console.warn('[RecentTx] Tips query error:', error); return []; }
+      return data || [];
+    },
+    enabled: isAuthenticated && !!walletAddress,
+    staleTime: 30_000,
+  });
+
+  // Resolve usernames for counterparty addresses in tips
+  const counterpartyAddresses = useMemo(() => {
+    if (!walletAddress || tipRecords.length === 0) return [];
+    const addr = walletAddress.toLowerCase();
+    const unique = new Set<string>();
+    tipRecords.forEach((tip: any) => {
+      const isSender = tip.sender_address?.toLowerCase() === addr;
+      const counterparty = isSender ? tip.receiver_address : tip.sender_address;
+      if (counterparty) unique.add(counterparty.toLowerCase());
+    });
+    return Array.from(unique);
+  }, [tipRecords, walletAddress]);
+
+  const { data: usernameMap = {} } = useQuery({
+    queryKey: ['tip-usernames', counterpartyAddresses],
+    queryFn: async () => {
+      const map: Record<string, string> = {};
+      // Resolve up to 10 addresses to avoid too many API calls
+      const toResolve = counterpartyAddresses.slice(0, 10);
+      const results = await Promise.allSettled(
+        toResolve.map(async (addr) => {
+          try {
+            const user = await getAccountInfo(addr);
+            if (user?.username) map[addr] = user.username;
+            else if (user?.displayName) map[addr] = user.displayName;
+          } catch { /* ignore */ }
+        })
+      );
+      return map;
+    },
+    enabled: counterpartyAddresses.length > 0,
+    staleTime: 5 * 60_000,
+  });
+
+  const isLoading = dpayLoading || ppvLoading || tipsLoading;
 
   const recent = useMemo(() => {
     const unified: UnifiedTransaction[] = [];
+    const addr = walletAddress?.toLowerCase() || '';
 
     dpayTxs.forEach(tx => unified.push(formatDPayTx(tx)));
 
     ppvPurchases.forEach((p: any) => {
-      const isBuyer = p.buyer_address?.toLowerCase() === walletAddress?.toLowerCase();
+      const isBuyer = p.buyer_address?.toLowerCase() === addr;
       const amount = Number(p.amount).toLocaleString(undefined, { maximumFractionDigits: 0 });
       unified.push({
         id: p.id,
@@ -102,6 +159,31 @@ export function RecentTransactions() {
       });
     });
 
+    // Add tip records
+    tipRecords.forEach((tip: any) => {
+      const isSender = tip.sender_address?.toLowerCase() === addr;
+      const amount = Number(tip.amount).toLocaleString(undefined, { maximumFractionDigits: 0 });
+      const counterpartyAddr = isSender
+        ? tip.receiver_address?.toLowerCase()
+        : tip.sender_address?.toLowerCase();
+      const counterpartyName = usernameMap[counterpartyAddr]
+        ? `@${usernameMap[counterpartyAddr]}`
+        : `${counterpartyAddr?.slice(0, 6)}...${counterpartyAddr?.slice(-4)}`;
+
+      unified.push({
+        id: tip.id,
+        type: 'tip',
+        amount: Number(tip.amount),
+        createdAt: tip.created_at,
+        isCredit: !isSender,
+        description: isSender
+          ? `You tipped ${counterpartyName} ${amount} DHB`
+          : `${counterpartyName} tipped you ${amount} DHB`,
+        counterpartyAddress: counterpartyAddr,
+        counterpartyUsername: usernameMap[counterpartyAddr],
+      });
+    });
+
     // Filter by time window
     const startDate = getFilterStartDate(activeFilter);
     const filtered = startDate
@@ -109,8 +191,8 @@ export function RecentTransactions() {
       : unified;
 
     filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    return filtered.slice(0, 10);
-  }, [dpayTxs, ppvPurchases, walletAddress, activeFilter]);
+    return filtered.slice(0, 15);
+  }, [dpayTxs, ppvPurchases, tipRecords, walletAddress, activeFilter, usernameMap]);
 
   return (
     <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
