@@ -1,27 +1,43 @@
 
 
-## Current Status of `get-badge-balance`
+## Problem
 
-It is **still in use** in one place:
+The spring animation on the liquid glass tab indicators (`layoutId` motion divs) bounces/overshoots during transitions. Parent containers clip this bounce because:
 
-- `src/hooks/use-verify-unlock.ts` calls it directly
-- `VerifyUnlockButton` (used in `ImageCard` and `VideoCard`) depends on that hook to verify DHB balance before unlocking gated content
+1. **`overflow-x-auto` implicitly sets `overflow-y: auto`** — In CSS, setting one overflow axis to `scroll`/`auto` forces the other to `auto` (not `visible`). So the profile tabs' inner `overflow-x-auto` scrollbar container clips the vertical bounce.
+2. **`rounded-2xl` on bento containers** — Combined with any overflow setting, this clips content at the border radius corners.
 
-## Option to Remove It
+## Affected Locations
 
-Refactor `use-verify-unlock.ts` to check the user's `badgeBalance` from the DeHub API profile (already fetched via `use-dehub-profile`) instead of calling the edge function. This would:
+| Location | Container Issue |
+|---|---|
+| **ProfilePage.tsx** (line 308-309) | Outer bento `rounded-2xl`, inner flex `overflow-x-auto` |
+| **ExplorePage.tsx** (line 812) | Outer bento `rounded-2xl p-2` |
+| **CommentsSection.tsx** (line 793) | `flex gap-1 relative` (less affected) |
+| **AnimatedFilterPill** usages in VideosFeed, ImagesFeed | Already have `overflow-y-visible` (partially fixed) |
 
-1. **Eliminate** the last consumer of `get-badge-balance`
-2. Allow full deletion of the edge function and its `config.toml` entry
-3. Save edge function invocations every time someone unlocks gated content
+## Fix
 
-**Tradeoff**: The DeHub API balance is cached for a few minutes, so a user who just bought DHB might need to wait briefly. In practice this is rarely an issue since the profile data refreshes frequently.
+For each tab row container that holds a layoutId glass indicator:
 
-## Implementation Steps
+1. **Add explicit `overflow-y: visible`** on the scrollable flex row so the vertical bounce of the spring animation is not clipped, while horizontal scroll still works where needed.
+2. **Add `overflow: visible`** on the outer bento wrapper so `rounded-2xl` does not create a clipping context that cuts off the animated indicator.
+3. **Add small vertical padding** (`py-1`) on the inner flex to give the spring overshoot room to breathe without visually breaking the layout.
 
-1. Update `use-verify-unlock.ts` to accept `badgeBalance` from the caller (or use the existing profile hook) instead of fetching from the edge function
-2. Update `VerifyUnlockButton` to pass the cached balance
-3. Delete `supabase/functions/get-badge-balance/index.ts`
-4. Remove the `[functions.get-badge-balance]` block from `supabase/config.toml`
-5. Delete the deployed edge function
+### Specific changes:
+
+**ProfilePage.tsx**
+- Line 308: outer bento div — add `overflow-visible`
+- Line 309: inner flex div — change `overflow-x-auto` to `overflow-x-auto overflow-y-visible`, add `py-1`
+
+**ExplorePage.tsx**
+- Line 812: outer bento div — add `overflow-visible`
+- Line 813: inner flex div — add `overflow-y-visible py-1`
+
+**CommentsSection.tsx**
+- Line 793: flex container — add `overflow-y-visible py-1`
+
+**AnimatedFilterPill usages** (VideosFeed, ImagesFeed, etc.) already have `overflow-y-visible` and `py-1`, so those are fine.
+
+This is a CSS-only fix — no logic or component API changes.
 
