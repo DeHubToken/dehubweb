@@ -563,7 +563,11 @@
     "invalidContractAddress": "عنوان عقد مش صحيح",
     "cannotReadContract": "مش قادر يقرأ عقد التوكن. اتأكد إن العنوان صحيح.",
     "imported": "تم استيراد {{symbol}}",
-    "custom": "مخصص"
+    "custom": "مخصص",
+    "stake": "ستايك",
+    "cashOut": "سحب",
+    "stakeComingSoon": "الستايكنج قريب!",
+    "cashOutComingSoon": "السحب قريب!"
   },
   "explorePage": { "searchPlaceholder": "دور على ناس أو بوستات أو محتوى...", "filters": "فلاتر", "clearAll": "امسح الكل", "category": "فئة", "contentType": "نوع المحتوى", "bounty": "مكافأة", "ppv": "PPV", "gated": "مقيد", "datePosted": "تاريخ النشر", "engagement": "تفاعل", "follow": "تابع", "loginDescription": "سجل دخول عشان تكتشف بوستات وصُنّاع ومجتمعات على DeHub.", "noResults": "مفيش نتايج", "noResultsDesc": "جرب كلمات تانية أو شوف المحتوى الترندينج.", "searchHistory": "سجل البحث", "clearHistory": "امسح السجل", "trending": "ترندينج", "trendingSearches": "بحث ترندينج", "suggestedCreators": "صُنّاع مقترحين", "people": "ناس", "posts": "بوستات", "seeAllPeople": "شوف كل الناس", "results": "نتايج", "loadMore": "حمّل أكتر", "searching": "بدور...", "searchError": "مش قادر يدور. حاول تاني.", "retry": "حاول تاني", "resultsFor": "نتايج لـ \"{{query}}\"", "resultsFound": "لقينا {{count}} نتيجة", "content": "محتوى", "loadingMore": "بيحمّل أكتر...", "noMoreResults": "مفيش نتايج تاني", "noResultsFor": "مفيش نتايج لـ \"{{query}}\"", "tryDifferent": "جرب دور على حاجة تانية", "tipRemoveAt": "نصيحة: شيل الـ @ عشان تدور على محتوى مش يوزرنيم", "noRecentSearches": "مفيش بحث قريب. ابدأ اكتشف!", "nothingTrending": "مفيش ترندينج دلوقتي! ارجع قريب.", "viewAllPeople": "شوف كل {{count}} ناس", "noFilterResults": "مفيش نتايج", "selectLabel": "اختار {{label}}", "search": "دور...", "country": "البلد", "date": "التاريخ", "likes": "لايكات", "shares": "شيرات", "comments": "تعليقات", "anyTime": "أي وقت", "today": "النهاردة", "thisWeek": "الأسبوع ده", "thisMonth": "الشهر ده", "thisYear": "السنة دي", "any": "الكل", "gaming": "ألعاب", "music": "موسيقى", "art": "فن", "programming": "برمجة", "crypto": "كريبتو", "entertainment": "ترفيه", "all": "الكل", "global": "عالمي" },
   "bookmarks": {

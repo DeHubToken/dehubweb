@@ -325,7 +325,11 @@
     "invalidContractAddress": "無効なコントラクトアドレス",
     "cannotReadContract": "トークンコントラクトを読み取れません。アドレスが正しいか確認してください。",
     "imported": "{{symbol}}をインポートしました",
-    "custom": "カスタム"
+    "custom": "カスタム",
+    "stake": "ステーク",
+    "cashOut": "出金",
+    "stakeComingSoon": "ステーキングは近日公開！",
+    "cashOutComingSoon": "出金は近日公開！"
   },
   "publicChat": {
     "title": "パブリックチャット",

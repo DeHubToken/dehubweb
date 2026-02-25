@@ -325,7 +325,11 @@
     "invalidContractAddress": "无效的合约地址",
     "cannotReadContract": "无法读取代币合约。请确保地址正确。",
     "imported": "已导入 {{symbol}}",
-    "custom": "自定义"
+    "custom": "自定义",
+    "stake": "质押",
+    "cashOut": "提现",
+    "stakeComingSoon": "质押功能即将推出！",
+    "cashOutComingSoon": "提现功能即将推出！"
   },
   "publicChat": {
     "title": "公共聊天",

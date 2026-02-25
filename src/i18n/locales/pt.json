@@ -325,7 +325,11 @@
     "invalidContractAddress": "Endereço de contrato inválido",
     "cannotReadContract": "Não foi possível ler o contrato do token. Verifique se o endereço está correto.",
     "imported": "{{symbol}} importado",
-    "custom": "PERSONALIZADO"
+    "custom": "PERSONALIZADO",
+    "stake": "Stake",
+    "cashOut": "Sacar",
+    "stakeComingSoon": "Staking em breve!",
+    "cashOutComingSoon": "Saque em breve!"
   },
   "publicChat": { "title": "Chat Público", "subtitle": "Participe da conversa da comunidade", "searchMessages": "Pesquisar mensagens", "searchPlaceholder": "Pesquisar...", "resultsCount": "{{count}} resultados", "noResults": "Nenhuma mensagem encontrada", "allThingsDeHub": "Tudo sobre o DeHub", "noRooms": "Nenhuma sala de chat disponível", "checkBackLater": "Volte mais tarde ou crie uma nova sala", "noMessages": "Ainda não há mensagens", "beFirst": "Seja o primeiro a dizer algo!", "failedToLoad": "Falha ao carregar o chat", "tryAgain": "Tentar novamente", "sending": "Enviando...", "signInToSend": "Faça login para enviar mensagens", "signInToModerate": "Faça login para moderar", "pinned": "Fixado", "unpin": "Desfixar", "pinMessage": "Fixar mensagem", "banUser": "Banir usuário", "unbanUser": "Desbanir usuário", "moderator": "Moderador", "createRoom": "Criar nova sala", "roomSettings": "Configurações da sala", "messagePinned": "Mensagem fixada", "messageUnpinned": "Mensagem desfixada", "online": "{{count}} online" },
   "auth": {

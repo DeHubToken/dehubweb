@@ -570,7 +570,11 @@
     "invalidContractAddress": "Nevažeća adresa ugovora",
     "cannotReadContract": "Nije moguće pročitati ugovor tokena. Provjerite je li adresa ispravna.",
     "imported": "Uvezeno {{symbol}}",
-    "custom": "PRILAGOĐENO"
+    "custom": "PRILAGOĐENO",
+    "stake": "Stake",
+    "cashOut": "Isplata",
+    "stakeComingSoon": "Staking uskoro dolazi!",
+    "cashOutComingSoon": "Isplata uskoro dolazi!"
   },
   "bookmarks": {
     "title": "Vaše oznake",

@@ -394,7 +394,11 @@
     "invalidContractAddress": "Adresse de contrat invalide",
     "cannotReadContract": "Impossible de lire le contrat du token. Vérifiez que l'adresse est correcte.",
     "imported": "{{symbol}} importé",
-    "custom": "PERSONNALISÉ"
+    "custom": "PERSONNALISÉ",
+    "stake": "Staker",
+    "cashOut": "Retirer",
+    "stakeComingSoon": "Le staking arrive bientôt !",
+    "cashOutComingSoon": "Le retrait arrive bientôt !"
   },
   "publicChat": {
     "title": "Chat Public",

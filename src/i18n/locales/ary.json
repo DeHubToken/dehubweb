@@ -563,7 +563,11 @@
     "invalidContractAddress": "عنوان عقد غلط",
     "cannotReadContract": "ما قدرش يقرا عقد التوكن. تأكد بلي العنوان صحيح.",
     "imported": "تستورد {{symbol}}",
-    "custom": "مخصص"
+    "custom": "مخصص",
+    "stake": "ستايك",
+    "cashOut": "سحب",
+    "stakeComingSoon": "الستايكينغ قريباً!",
+    "cashOutComingSoon": "السحب قريباً!"
   },
   "explorePage": {
     "searchPlaceholder": "قلّب على ناس أو بوستات أو محتوى...",

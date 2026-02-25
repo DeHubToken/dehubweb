@@ -564,7 +564,11 @@
     "invalidContractAddress": "Àdírẹ́sì adéhùn tí kò tọ́",
     "cannotReadContract": "Kò le ka adéhùn tọ́kẹ̀nì. Rí i dájú pé àdírẹ́sì tọ́.",
     "imported": "A ti gbe {{symbol}} wọlé",
-    "custom": "ÀDÁNI"
+    "custom": "ÀDÁNI",
+    "stake": "Stake",
+    "cashOut": "Gba Owó",
+    "stakeComingSoon": "Staking ń bọ̀ láìpẹ́!",
+    "cashOutComingSoon": "Gbígba owó ń bọ̀ láìpẹ́!"
   },
   "explorePage": { "searchPlaceholder": "Wá àwọn ènìyàn, àròkọ tàbí àkóónú...", "filters": "Àyọ̀kà", "clearAll": "Pa gbogbo rẹ̀", "category": "Ẹ̀ka", "contentType": "Irú Àkóónú", "bounty": "Ẹ̀san", "ppv": "PPV", "gated": "Dílọ́wọ́", "datePosted": "Ọjọ́ Fifiránṣẹ́", "engagement": "Ìfọwọ́sowọ́pọ̀", "follow": "Tẹ̀lé", "loginDescription": "Wọlé láti ṣàwárí àwọn àròkọ, olùdásílẹ̀ àti àwùjọ lórí DeHub.", "noResults": "Kò sí èsì", "noResultsDesc": "Gbìyànjú àwọn ọ̀rọ̀ míràn tàbí wo àkóónú tó ń trendì.", "searchHistory": "Ìtàn Ìwádìí", "clearHistory": "Pa ìtàn", "trending": "Tó Ń Trendì", "trendingSearches": "Àwọn Ìwádìí Tó Ń Trendì", "suggestedCreators": "Olùdásílẹ̀ Tí A Dámọ̀ràn", "people": "Àwọn Ènìyàn", "posts": "Àwọn Àròkọ", "seeAllPeople": "Wo gbogbo ènìyàn", "results": "èsì", "loadMore": "Rù síi", "searching": "Ó ń wá...", "searchError": "Kò le wá. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí.", "retry": "Gbìyànjú lẹ́ẹ̀kan sí", "resultsFor": "Èsì fún \"{{query}}\"", "resultsFound": "A rí èsì {{count}}", "content": "Àkóónú", "loadingMore": "Ó ń rù síi...", "noMoreResults": "Kò sí èsì mọ́", "noResultsFor": "Kò sí èsì fún \"{{query}}\"", "tryDifferent": "Gbìyànjú láti wá nǹkan mìíràn", "tipRemoveAt": "Ìdámọ̀ràn: Mú @ kúrò láti wá àkóónú dípò orúkọ aṣàmúlò", "noRecentSearches": "Kò sí ìwádìí àìpẹ́. Bẹ̀rẹ̀ láti ṣàwárí!", "nothingTrending": "Kò sí ohun tó ń trendì! Padà wá láìpẹ́.", "viewAllPeople": "Wo gbogbo {{count}} ènìyàn", "noFilterResults": "Kò sí èsì", "selectLabel": "Yan {{label}}", "search": "Wá...", "country": "Orílẹ̀-èdè", "date": "Ọjọ́", "likes": "Fẹ́ràn", "shares": "Pín", "comments": "Àsọyé", "anyTime": "Àkókò kankan", "today": "Lónìí", "thisWeek": "Ọ̀sẹ̀ yìí", "thisMonth": "Oṣù yìí", "thisYear": "Ọdún yìí", "any": "Èyíkéyìí", "gaming": "Eré", "music": "Orin", "art": "Ọnà", "programming": "Kóòdù", "crypto": "Crypto", "entertainment": "Ìgbádùn", "all": "Gbogbo", "global": "Àgbáyé" },
   "bookmarks": {
