@@ -996,24 +996,26 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
       const shouldSplitForShorts = shorts.length > 0 && adaptiveShortsIndex > 0 && adaptiveShortsIndex < items.length;
       const beforeShorts = shouldSplitForShorts ? items.slice(0, adaptiveShortsIndex) : items;
-      const afterShorts = shouldSplitForShorts ? items.slice(adaptiveShortsIndex) : [];
+      // When no shorts split, treat ALL items as afterShorts so carousels still get interleaved
+      const afterShorts = shouldSplitForShorts ? items.slice(adaptiveShortsIndex) : items;
+      const afterShortsBase = shouldSplitForShorts ? adaptiveShortsIndex : 0;
 
-      // Split afterShorts into segments for interleaving carousels
-      // Ensure generous spacing between each carousel so content fills in between
-      const MIN_ITEMS_BETWEEN = colCount === 3 ? 8 : 6; // more items between carousels in 3-col
-      const leaderboardOffset = Math.min(afterShorts.length, Math.max(MIN_ITEMS_BETWEEN, LEADERBOARD_INSERT_AFTER - adaptiveShortsIndex));
-      const radioOffset = Math.min(afterShorts.length, leaderboardOffset + MIN_ITEMS_BETWEEN);
-      const liveOffset = Math.min(afterShorts.length, radioOffset + MIN_ITEMS_BETWEEN);
+      // Generous spacing: ~16 items (3-col) or ~12 items (2-col) between each carousel
+      const MIN_ITEMS_BETWEEN = colCount === 3 ? 16 : 12;
+      // First carousel after a decent chunk of content
+      const firstOffset = Math.min(afterShorts.length, MIN_ITEMS_BETWEEN);
+      const secondOffset = Math.min(afterShorts.length, firstOffset + MIN_ITEMS_BETWEEN);
+      const thirdOffset = Math.min(afterShorts.length, secondOffset + MIN_ITEMS_BETWEEN);
 
       // Build segments: chunks of afterShorts items with full-width inserts between them
-      const splitPoints = [leaderboardOffset, radioOffset, liveOffset].filter((p, i, arr) => p > 0 && p < afterShorts.length && (i === 0 || p > arr[i - 1]));
+      const splitPoints = [firstOffset, secondOffset, thirdOffset].filter((p, i, arr) => p > 0 && p < afterShorts.length && (i === 0 || p > arr[i - 1]));
       const segments: { items: typeof afterShorts; startIndex: number }[] = [];
       let lastSplit = 0;
       for (const sp of splitPoints) {
-        segments.push({ items: afterShorts.slice(lastSplit, sp), startIndex: adaptiveShortsIndex + lastSplit });
+        segments.push({ items: afterShorts.slice(lastSplit, sp), startIndex: afterShortsBase + lastSplit });
         lastSplit = sp;
       }
-      segments.push({ items: afterShorts.slice(lastSplit), startIndex: adaptiveShortsIndex + lastSplit });
+      segments.push({ items: afterShorts.slice(lastSplit), startIndex: afterShortsBase + lastSplit });
 
       const fullWidthInserts: (ReactNode | null)[] = [
         <div key="leaderboard-carousel" className="my-3"><LeaderboardCarousel /></div>,
@@ -1039,7 +1041,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
       return (
         <>
-          {beforeShorts.length > 0 && renderMasonryGrid(
+          {/* Only render beforeShorts separately if we actually split for shorts */}
+          {shouldSplitForShorts && beforeShorts.length > 0 && renderMasonryGrid(
             beforeShorts.map((item, i) => renderFeedItem(item, i)),
             beforeShorts
           )}
