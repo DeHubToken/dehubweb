@@ -1058,7 +1058,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             beforeShorts
           )}
           {shorts.length > 0 && (
-            <div className={cn(shouldSplitForShorts ? 'my-3' : 'mt-3')}>
+            <div className={cn(shouldSplitForShorts ? 'my-3' : 'mt-3', isCollapsed && 'mt-5')}>
               <ShortsReel shorts={shorts} />
             </div>
           )}
