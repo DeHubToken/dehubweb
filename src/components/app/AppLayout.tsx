@@ -165,7 +165,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-clip" style={{ touchAction: 'manipulation', overscrollBehavior: 'none' }}>
-      <div className={`flex w-full relative min-h-screen ${isCollapsed ? 'mx-0' : 'max-w-7xl mx-auto'}`}>
+      <div className={`flex w-full relative min-h-screen transition-all duration-500 ease-in-out ${isCollapsed ? 'mx-0' : 'max-w-7xl mx-auto'}`}>
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
         <main className="flex-1 min-h-screen pt-11 pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black">
