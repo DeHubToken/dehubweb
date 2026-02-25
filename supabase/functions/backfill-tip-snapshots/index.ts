@@ -220,7 +220,7 @@ const MIN_TIP_AMOUNT = 0.1;
 
 async function backfillTipRecords(
   baseRpc: string,
-  supabase: ReturnType<typeof createClient>,
+  supabase: any,
   daysBack: number
 ): Promise<Response> {
   console.log(`Backfilling tip_records for last ${daysBack} days on Base...`);
@@ -260,9 +260,9 @@ async function backfillTipRecords(
   let inserted = 0;
   for (let i = 0; i < tipRecords.length; i += 500) {
     const batch = tipRecords.slice(i, i + 500);
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from("tip_records")
-      .upsert(batch, { onConflict: "tx_hash", ignoreDuplicates: true });
+      .upsert(batch as any, { onConflict: "tx_hash", ignoreDuplicates: true });
     if (error) console.error(`Batch error at ${i}:`, error);
     else inserted += batch.length;
   }

@@ -2,7 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-request-id, prefer',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
@@ -13,6 +13,17 @@ function jsonOk(data: Record<string, unknown>): Response {
     status: 200,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
+}
+
+async function fetchWithTimeout(url: string, init: RequestInit, timeoutMs = 8000): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 Deno.serve(async (req) => {
@@ -94,29 +105,39 @@ Deno.serve(async (req) => {
       type,
     });
 
-    // 1. Attempt to send via DeHub API
+    // 1. Attempt to send via DeHub API (bounded timeout so Supabase fallback always runs)
     let dehubData: any = {};
     let dehubOk = false;
 
-    try {
-      const response = await fetch(`${DEHUB_API_BASE}/api/dm/tnx`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${dehubToken}`,
-        },
-        body: JSON.stringify(dmBody),
-      });
+    const shouldCallDeHub = !(conversationId?.startsWith('new_') || conversationId?.startsWith('0x'));
 
-      dehubData = await response.json().catch(() => ({}));
-      dehubOk = response.ok;
+    if (shouldCallDeHub) {
+      try {
+        const response = await fetchWithTimeout(`${DEHUB_API_BASE}/api/dm/tnx`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${dehubToken}`,
+          },
+          body: JSON.stringify(dmBody),
+        });
 
-      if (!dehubOk) {
-        console.warn('[dm-send] DeHub API error (continuing with Supabase fallback):', dehubData);
+        dehubData = await response.json().catch(() => ({}));
+        dehubOk = response.ok;
+
+        if (!dehubOk) {
+          console.warn('[dm-send] DeHub API error (continuing with Supabase fallback):', dehubData);
+        }
+      } catch (err) {
+        const isTimeout = err instanceof DOMException && err.name === 'AbortError';
+        console.error(
+          `[dm-send] DeHub API ${isTimeout ? 'timeout' : 'fetch failure'} (continuing with Supabase fallback):`,
+          err
+        );
       }
-    } catch (err) {
-      console.error('[dm-send] DeHub API fetch failed:', err);
+    } else {
+      console.log('[dm-send] Skipping DeHub API for wallet-based conversation');
     }
 
     // 2. Always save to Supabase for reliability and Realtime
