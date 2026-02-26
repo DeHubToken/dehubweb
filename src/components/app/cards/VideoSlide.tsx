@@ -200,24 +200,28 @@ export const VideoSlide = memo(function VideoSlide({
         </div>
       )}
 
-      {/* Progress bar at bottom */}
+      {/* Bottom 15% seek zone + progress bar */}
       <div
         ref={progressBarRef}
-        className={cn(
-          "absolute bottom-0 left-0 right-0 z-20 cursor-pointer touch-none",
-          isSeeking ? "h-2" : "h-1 hover:h-2",
-          "transition-[height] duration-150"
-        )}
+        className="absolute bottom-0 left-0 right-0 z-20 cursor-pointer touch-none select-none"
+        style={{ height: '15%' }}
         onPointerDown={handleProgressPointerDown}
         onPointerMove={handleProgressPointerMove}
         onPointerUp={handleProgressPointerUp}
         onPointerCancel={handleProgressPointerUp}
       >
-        <div className="absolute inset-0 bg-white/20" />
-        <div
-          className="absolute top-0 left-0 bottom-0 bg-white/80"
-          style={{ width: `${progress * 100}%` }}
-        />
+        {/* Visual progress bar pinned to very bottom */}
+        <div className={cn(
+          "absolute bottom-0 left-0 right-0",
+          isSeeking ? "h-2" : "h-1",
+          "transition-[height] duration-150"
+        )}>
+          <div className="absolute inset-0 bg-white/20" />
+          <div
+            className="absolute top-0 left-0 bottom-0 bg-white/80"
+            style={{ width: `${progress * 100}%` }}
+          />
+        </div>
       </div>
     </div>
   );
