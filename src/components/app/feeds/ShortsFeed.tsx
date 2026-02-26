@@ -118,6 +118,8 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     ? rawAvatarUrl 
     : buildAvatarUrl(minterAddress, rawAvatarUrl);
   
+  const voteType = nft.voteType ?? nft.userVote ?? nft.myVote ?? null;
+
   return {
     id,
     type: 'short',
@@ -139,6 +141,8 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     creatorUsername: nft.minterUsername || nft.mintername || nft.creator?.username || 'user',
     creatorId: minterAddress,
     displayName: nft.minterDisplayName || undefined,
+    isLiked: nft.isLiked ?? voteType === 'for',
+    isDisliked: nft.isDisliked ?? voteType === 'against',
   } as ShortVideo & { durationSeconds: number; uploadedAgo: string; handle: string };
 }
 
