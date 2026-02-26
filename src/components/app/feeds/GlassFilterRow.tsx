@@ -63,7 +63,7 @@ export function GlassFilterRow<T extends string>({
   }, [update]);
 
   return (
-    <div className={cn('relative', className)}>
+    <div className={cn('relative', className)} style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
       {/* Overlay layer for indicator - overflow visible so spring bounce isn't clipped */}
       <div ref={layerRef} className="absolute inset-0 overflow-visible pointer-events-none z-10">
         <GlassIndicator rect={rect} borderRadius={borderRadius} />

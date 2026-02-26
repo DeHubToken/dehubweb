@@ -793,7 +793,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
       <div className="flex justify-between items-center gap-1 mb-3">
         {/* Left side - Tab buttons */}
-        <div ref={commentsTabLayerRef} className="relative overflow-visible">
+        <div ref={commentsTabLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <GlassIndicator rect={commentsTabRect} />
           <div className="relative z-20 flex gap-1">
             {(['replies', 'quotes', 'search'] as const).map((tab) => (

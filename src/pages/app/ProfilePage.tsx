@@ -310,7 +310,7 @@ export default function ProfilePage() {
         />
 
         {/* Profile Tabs Bento */}
-        <div className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/[0.08] rounded-2xl p-1.5 relative overflow-visible">
+        <div className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/[0.08] rounded-2xl p-1.5 relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <div ref={tabsIndicatorLayerRef} className="relative overflow-visible">
             <GlassIndicator rect={tabIndicator} />
 
