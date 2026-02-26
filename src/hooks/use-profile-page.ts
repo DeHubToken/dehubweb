@@ -1,7 +1,7 @@
 import { useMemo, useEffect, useRef, useCallback, useState } from 'react';
 import { useSearchParams, useParams } from 'react-router-dom';
 import { Home, MessageSquare, Image, Film, Star, Play, Radio, PieChart } from 'lucide-react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery as useInfiniteQueryTQ, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile, useDeHubUserContent, separateUserContent } from '@/hooks/use-dehub-profile';
 import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
@@ -12,7 +12,7 @@ import { getBadgeUrl } from '@/lib/staking-badges';
 import { useStories, useWatchedStories } from '@/hooks/use-stories';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
-import { getUserComments, blockUser, unblockUser } from '@/lib/api/dehub';
+import { getUserComments, blockUser, unblockUser, getUserReposts } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { TabValue } from '@/components/app/profile/ProfileConstants';
@@ -66,6 +66,18 @@ export function useProfilePage() {
     enabled: !!apiProfile?.walletAddress,
   });
 
+  // Fetch user reposts
+  const { data: repostsData } = useQuery({
+    queryKey: ['user-reposts', apiProfile?.walletAddress],
+    queryFn: async () => {
+      if (!apiProfile?.walletAddress) throw new Error('No address');
+      const res = await getUserReposts(apiProfile.walletAddress, 1, 50);
+      return res.result || [];
+    },
+    enabled: !!apiProfile?.walletAddress,
+    staleTime: 2 * 60 * 1000,
+  });
+
   const profile = apiProfile;
   const isOwnProfile = !routeUsername && (!userId || (currentUser?.address === userId) || (currentWalletAddress === userId));
   const isViewingOwnProfile = isOwnProfile || (apiProfile?.walletAddress && apiProfile.walletAddress.toLowerCase() === currentWalletAddress?.toLowerCase());
@@ -82,11 +94,34 @@ export function useProfilePage() {
     const allNFTs = userContentData.pages.flatMap(page => page.data || []);
     const separated = separateUserContent(allNFTs);
 
-    const unified: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string }> = [
+    const unified: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean; repostedAt?: string }> = [
       ...separated.posts.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
       ...separated.images.map(i => ({ type: 'image' as const, data: i, createdAt: i.createdAt || '' })),
       ...separated.videos.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '' })),
     ];
+
+    // Merge reposts into the unified feed
+    if (repostsData?.length) {
+      const repostItems = separateUserContent(repostsData as any);
+      const repostUnified = [
+        ...repostItems.posts.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '', isRepost: true, repostedAt: (repostsData as any[]).find(r => String(r.tokenId) === String(p.id?.replace('text-', '')))?.repostedAt || p.createdAt || '' })),
+        ...repostItems.images.map(i => ({ type: 'image' as const, data: i, createdAt: i.createdAt || '', isRepost: true, repostedAt: (repostsData as any[]).find(r => String(r.tokenId) === String(i.id?.replace('image-', '')))?.repostedAt || i.createdAt || '' })),
+        ...repostItems.videos.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '', isRepost: true, repostedAt: (repostsData as any[]).find(r => String(r.tokenId) === String(v.id?.replace('video-', '')))?.repostedAt || v.createdAt || '' })),
+      ];
+      // Use repostedAt for sorting reposts, not original createdAt
+      repostUnified.forEach(item => {
+        if (item.repostedAt) {
+          item.createdAt = item.repostedAt;
+        }
+      });
+      // Add reposts, deduplicating by ID
+      const existingIds = new Set(unified.map(u => u.data.id));
+      repostUnified.forEach(r => {
+        if (!existingIds.has(r.data.id)) {
+          unified.push(r);
+        }
+      });
+    }
 
     unified.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
@@ -96,7 +131,7 @@ export function useProfilePage() {
       ALL_PROFILE_VIDEOS: separated.videos,
       ALL_CONTENT: unified,
     };
-  }, [userContentData]);
+  }, [userContentData, repostsData]);
 
   // Comment count for posts tab
   const { data: commentCountData } = useQuery({

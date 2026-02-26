@@ -108,6 +108,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       await repostPost(numericId);
       toast.success('Reposted!');
       queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+      queryClient.invalidateQueries({ queryKey: ['user-reposts'] });
     } catch {
       toast.error('Failed to repost');
     }

@@ -1,5 +1,5 @@
 import { apiCall } from './core';
-import type { DeHubUser } from './types';
+import type { DeHubUser, DeHubNFT } from './types';
 
 export interface VoteResponse {
   success: boolean;
@@ -217,6 +217,12 @@ export async function toggleCommentLike(params: {
 }
 
 // ============ Repost / Quote Post ============
+
+export async function getUserReposts(address: string, page: number = 1, limit: number = 20): Promise<{ result: DeHubNFT[]; pagination?: { page: number; limit: number; totalCount: number; totalPages: number; hasMore: boolean } }> {
+  return apiCall<{ result: DeHubNFT[]; pagination?: any }>("/api/reposts", {
+    params: { address, page, limit },
+  });
+}
 
 export async function repostPost(tokenId: number): Promise<{ result: boolean }> {
   return apiCall<{ result: boolean }>("/api/repost", {

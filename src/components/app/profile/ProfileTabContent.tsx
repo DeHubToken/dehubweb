@@ -1,4 +1,5 @@
 import React from 'react';
+import { Repeat2 } from 'lucide-react';
 import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight, Image, Play } from 'lucide-react';
 import { useInfiniteQuery, useQueries } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -37,7 +38,7 @@ interface ProfileTabContentProps {
   activeTab: TabValue;
   profileAddress: string;
   // Content arrays
-  ALL_CONTENT: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string }>;
+  ALL_CONTENT: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean }>;
   PROFILE_POSTS: TextPost[];
   PROFILE_IMAGES: ImagePost[];
   ALL_PROFILE_VIDEOS: VideoItem[];
@@ -238,7 +239,7 @@ function HomeTabPanel({
   isViewingOwnProfile,
   optimisticPosts,
 }: {
-  ALL_CONTENT: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string }>;
+  ALL_CONTENT: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean }>;
   isViewingOwnProfile: boolean | undefined;
   optimisticPosts: OptimisticPost[];
 }) {
@@ -291,6 +292,12 @@ function HomeTabPanel({
           : <VideoCard key={item.data.id} video={item.data as VideoItem} />;
         return (
           <div key={item.data.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+            {item.isRepost && (
+              <div className="flex items-center gap-1.5 text-zinc-500 text-xs mb-2 pl-1">
+                <Repeat2 className="w-3.5 h-3.5" />
+                <span className="font-medium">Reposted</span>
+              </div>
+            )}
             {card}
           </div>
         );
