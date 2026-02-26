@@ -88,7 +88,7 @@ export function useConversations(searchQuery: string = '') {
  * Hook to fetch messages for a specific conversation with infinite scroll
  */
 export function useMessages(conversationId: string | null) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
   const queryClient = useQueryClient();
 
   const query = useInfiniteQuery({
@@ -135,9 +135,14 @@ export function useMessages(conversationId: string | null) {
   useEffect(() => {
     if (!isAuthenticated || !conversationId) return;
 
+    const isWalletAddressConversation = /^0x[0-9a-fA-F]{40}$/i.test(conversationId);
     console.log('[useMessages] Setting up realtime subscription for:', conversationId);
 
-    // Subscribe to new messages in direct_messages table
+    const invalidate = () => {
+      queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
+    };
+
+    // Primary channel: messages where conversation_id = otherAddress (messages I sent)
     const channel = supabase
       .channel(`dm:${conversationId}`)
       .on(
@@ -146,22 +151,49 @@ export function useMessages(conversationId: string | null) {
           event: 'INSERT',
           schema: 'public',
           table: 'direct_messages',
-          // Filter by conversation_id OR addresses (to catch new conversations where ID isn't known yet)
           filter: `conversation_id=eq.${conversationId}`,
         },
         (payload) => {
-          console.log('[useMessages] New message received via Realtime:', payload);
-          // Invalidate this thread only — useDMRealtime handles conversations globally
-          queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
+          console.log('[useMessages] New message received via Realtime (outbound):', payload);
+          invalidate();
         }
       )
       .subscribe();
 
+    // For wallet-address conversations, also subscribe to the reverse direction:
+    // messages the other user sends TO me are stored with conversation_id = myAddress.
+    let reverseChannel: ReturnType<typeof supabase.channel> | null = null;
+    if (isWalletAddressConversation && walletAddress) {
+      const myAddr = walletAddress.toLowerCase();
+      const otherAddr = conversationId.toLowerCase();
+      reverseChannel = supabase
+        .channel(`dm-inbound:${myAddr}:from:${otherAddr}`)
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'direct_messages',
+            // conversation_id = myAddress means someone sent TO me
+            filter: `conversation_id=eq.${myAddr}`,
+          },
+          (payload: any) => {
+            // Only invalidate if the sender is the person we're chatting with
+            if (payload?.new?.sender_address?.toLowerCase() === otherAddr) {
+              console.log('[useMessages] New message received via Realtime (inbound):', payload);
+              invalidate();
+            }
+          }
+        )
+        .subscribe();
+    }
+
     return () => {
       console.log('[useMessages] Cleaning up realtime subscription for:', conversationId);
       supabase.removeChannel(channel);
+      if (reverseChannel) supabase.removeChannel(reverseChannel);
     };
-  }, [conversationId, isAuthenticated, queryClient]);
+  }, [conversationId, isAuthenticated, walletAddress, queryClient]);
 
   return {
     messages,

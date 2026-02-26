@@ -207,6 +207,27 @@ export async function deleteConversation(conversationId: string): Promise<{ succ
   });
 }
 
+/**
+ * Convert a Supabase direct_messages row to DeHubDMMessage shape.
+ * Used when fetching messages for wallet-address-keyed conversations.
+ */
+function supabaseRowToMessage(row: any): DeHubDMMessage {
+  return {
+    id: String(row.id),
+    conversationId: row.conversation_id,
+    sender: {
+      address: row.sender_address,
+      username: row.sender_username,
+      displayName: row.sender_display_name,
+      avatarImageUrl: row.sender_avatar_url,
+    } as any,
+    content: row.content || '',
+    type: (row.message_type || 'text') as DMMessageType,
+    mediaUrl: row.media_url || undefined,
+    createdAt: row.created_at || new Date().toISOString(),
+  };
+}
+
 export async function getMessages(
   conversationId: string,
   page: number = 0,
@@ -217,6 +238,46 @@ export async function getMessages(
   if (conversationId.startsWith('new_')) {
     console.log('[DM API] Virtual conversation - returning empty messages');
     return { items: [], totalCount: 0, hasMore: false };
+  }
+
+  // Wallet-address-keyed conversation (e.g. "0xceb0...").
+  // The edge function stores messages in Supabase with conversation_id = receiver's address.
+  // DeHub API /api/dm/messages/{id} only accepts its own UUID/ObjectId format — passing a
+  // wallet address returns 400 "Invalid or missing ID format".
+  // Fetch from Supabase directly, querying both send and receive directions.
+  const isWalletAddress = /^0x[0-9a-fA-F]{40}$/i.test(conversationId);
+  if (isWalletAddress) {
+    const myAddress = localStorage.getItem('dehub_wallet')?.toLowerCase();
+    if (!myAddress) {
+      console.warn('[DM API] getMessages: no local wallet address, cannot fetch Supabase messages');
+      return { items: [], totalCount: 0, hasMore: false };
+    }
+
+    const otherAddress = conversationId.toLowerCase();
+    const from = page * limit;
+    const to = from + limit - 1;
+
+    console.log('[DM API] Wallet-address conversation — fetching from Supabase', { myAddress, otherAddress });
+
+    const { data, error } = await supabase
+      .from('direct_messages')
+      .select('*')
+      // Bidirectional: messages I sent OR messages they sent to me
+      .or(
+        `and(sender_address.eq.${myAddress},receiver_address.eq.${otherAddress}),` +
+        `and(sender_address.eq.${otherAddress},receiver_address.eq.${myAddress})`
+      )
+      .order('created_at', { ascending: false })
+      .range(from, to);
+
+    if (error) {
+      console.error('[DM API] Supabase getMessages error:', error);
+      return { items: [], totalCount: 0, hasMore: false };
+    }
+
+    const items = (data || []).map(supabaseRowToMessage);
+    console.log('[DM API] Supabase getMessages returned', items.length, 'messages');
+    return { items, totalCount: items.length, hasMore: items.length >= limit };
   }
 
   try {
