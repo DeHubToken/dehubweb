@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
-import { DEHUB_API_BASE, apiCall, getAuthToken } from './core';
+import { apiCall, getAuthToken } from './core';
 import type { DeHubUser, DeHubNFT } from './types';
 
 export type DMMessageType = 'text' | 'image' | 'gif' | 'audio' | 'video' | 'tip';
@@ -416,61 +416,15 @@ export async function sendMessage(
       ]);
       if (edgeError) throw edgeError;
       if (!edgeData?.ok) throw new Error(edgeData?.error || 'Edge function rejected');
-      // Log DeHub sync status so it's visible in browser console
-      console.log(`[DM API] Edge function result — source: ${edgeData?.source}, dehubStatus: ${edgeData?.dehubStatus}`);
       return edgeData?.result?.data || edgeData?.result || {};
-    };
-
-    const tryDeHubDirect = async () => {
-      const dmBody: Record<string, unknown> = {
-        senderAddress: sender,
-        content,
-        type,
-        transactionHash: `0x${Date.now().toString(16)}`,
-      };
-      if (mediaUrl) dmBody.mediaUrl = mediaUrl;
-      if (isNewConversation && recipientAddress) {
-        dmBody.receiverAddress = recipientAddress.toLowerCase();
-      } else {
-        dmBody.conversationId = conversationId;
-      }
-      if (type === 'tip' && tipAmount !== undefined) {
-        dmBody.tipAmount = tipAmount;
-        dmBody.tipCurrency = tipCurrency || 'DHB';
-      }
-      const response = await apiCall<any>('/api/dm/tnx', {
-        method: 'POST',
-        body: dmBody,
-        requiresAuth: true,
-      });
-      const d = response?.data || response?.result?.data || response?.result || response;
-      return d;
     };
 
     try {
       const d = await tryEdgeFunction();
       return toMessage(d);
-    } catch (edgeErr) {
-      const msg = edgeErr instanceof Error ? edgeErr.message : String(edgeErr);
-      const isRetryable =
-        msg.includes('timeout') ||
-        msg.includes('fetch') ||
-        msg.includes('network') ||
-        msg.includes('Failed to fetch') ||
-        msg.includes('Load failed') ||
-        msg.includes('ERR_CONNECTION') ||
-        (edgeErr instanceof TypeError && msg.toLowerCase().includes('fetch'));
-      if (isRetryable) {
-        console.warn('[DM API] Edge function unreachable, falling back to DeHub API:', edgeErr);
-        try {
-          const d = await tryDeHubDirect();
-          return toMessage(d);
-        } catch (dehubErr) {
-          console.error('[DM API] DeHub fallback also failed:', dehubErr);
-          throw new Error(msg || 'Failed to send message');
-        }
-      }
-      throw new Error(msg || 'Failed to send message');
+    } catch (err) {
+      console.error('[DM API] sendMessage failed:', err);
+      throw new Error(err instanceof Error ? err.message : 'Failed to send message');
     }
   } catch (error) {
     console.error('[DM API] sendMessage failed:', error);
@@ -807,31 +761,23 @@ export async function uploadChatImage(file: File): Promise<{ url: string }> {
     const formData = new FormData();
     formData.append('file', file, file.name);
 
-    console.log('[DM API] Uploading via DeHub /api/dm/upload');
+    console.log('[DM API] Uploading via dm-upload-media edge function (chat-media bucket)');
 
-    const response = await fetch(`${DEHUB_API_BASE}/api/dm/upload`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+    const { data, error } = await supabase.functions.invoke('dm-upload-media', {
       body: formData,
+      headers: {
+        'x-wallet-address': walletAddress.toLowerCase(),
+        'x-dehub-token': token,
+      },
     });
 
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({})) as Record<string, string>;
-      throw new Error(errData.message || errData.error || `Upload failed: ${response.status}`);
+    if (error) throw error;
+    if (!data?.ok || !data?.url) {
+      throw new Error(data?.error || 'Upload failed — no URL returned');
     }
 
-    const data = await response.json();
-    const url = data?.url || data?.result?.url || data?.data?.url;
-
-    if (!url) {
-      console.error('[DM API] /api/dm/upload returned no URL:', data);
-      throw new Error('Upload failed - no URL returned');
-    }
-
-    console.log('[DM API] Media uploaded successfully:', url);
-    return { url };
+    console.log('[DM API] Media uploaded successfully:', data.url);
+    return { url: data.url };
   } catch (error) {
     console.error('[DM API] uploadChatImage failed:', error);
     throw error;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Search, Plus, MessageCircle, RefreshCw } from 'lucide-react';
@@ -136,27 +136,36 @@ export default function MessagesPage() {
 
   const createConversation = useCreateConversation();
 
-  // Handle incoming "open DM with" navigation from profile page
+  // Capture navigation state into a ref immediately (before it can be cleared)
+  const pendingDmRef = useRef<{ address: string; username?: string } | null>(null);
   useEffect(() => {
     const state = location.state as { openDmWith?: string; username?: string } | null;
-    if (!state?.openDmWith || !isAuthenticated) return;
-    
-    const targetAddress = state.openDmWith.toLowerCase();
-    const existing = conversations?.find(c => 
+    if (state?.openDmWith) {
+      pendingDmRef.current = { address: state.openDmWith, username: state.username };
+      window.history.replaceState({}, document.title);
+    }
+  }, []); // run once on mount to capture state before it disappears
+
+  // Process the pending DM once conversations have finished loading
+  useEffect(() => {
+    if (!pendingDmRef.current || !isAuthenticated || isLoading) return;
+    const { address, username } = pendingDmRef.current;
+    pendingDmRef.current = null;
+
+    const targetAddress = address.toLowerCase();
+    const existing = conversations?.find(c =>
       c.otherUser?.address?.toLowerCase() === targetAddress
     );
-    
+
     if (existing) {
       setSelectedConversation(existing);
-    } else if (!isLoading) {
+    } else {
       createConversation.mutateAsync({
-        recipientAddress: state.openDmWith,
-        recipientUser: { address: state.openDmWith, username: state.username } as any,
+        recipientAddress: address,
+        recipientUser: { address, username } as any,
       }).then(conv => setSelectedConversation(conv)).catch(() => {});
     }
-    
-    window.history.replaceState({}, document.title);
-  }, [location.state, isAuthenticated, conversations, isLoading]);
+  }, [isAuthenticated, conversations, isLoading]);
 
   // Block access for unauthenticated users
   if (!isAuthenticated) {
