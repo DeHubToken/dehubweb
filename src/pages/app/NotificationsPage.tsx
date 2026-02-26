@@ -24,7 +24,7 @@ import notificationsIcon from '@/assets/icons/notifications-icon.png';
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
-import { supabase } from '@/integrations/supabase/client';
+
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Switch } from '@/components/ui/switch';
 
@@ -487,20 +487,29 @@ export default function NotificationsPage() {
     // Mark as in-flight immediately to prevent duplicate calls
     uniqueNew.forEach(addr => enrichedRef.current.add(addr));
     
-    supabase.functions.invoke('batch-avatars', {
-      body: { addresses: uniqueNew },
-    }).then(({ data }) => {
-      if (data?.success && data.avatars) {
-        setEnrichedAvatars(prev => {
-          const next = new Map(prev);
-          for (const [addr, info] of Object.entries(data.avatars)) {
-            next.set(addr, info as EnrichedAvatar);
+    Promise.allSettled(
+      uniqueNew.map(async (addr) => {
+        try {
+          const { getAccountInfo } = await import('@/lib/api/dehub');
+          const { extractAvatarPath, buildAvatarUrl } = await import('@/lib/media-url');
+          const user = await getAccountInfo(addr);
+          const rawPath = extractAvatarPath(user);
+          const avatarUrl = buildAvatarUrl(user.address || addr, rawPath);
+          return { addr, info: { address: addr, avatarUrl, username: user.username || null, displayName: user.displayName || null } };
+        } catch {
+          return { addr, info: { address: addr, avatarUrl: null, username: null, displayName: null } };
+        }
+      })
+    ).then((results) => {
+      setEnrichedAvatars(prev => {
+        const next = new Map(prev);
+        for (const r of results) {
+          if (r.status === 'fulfilled') {
+            next.set(r.value.addr, r.value.info as EnrichedAvatar);
           }
-          return next;
-        });
-      }
-    }).catch(err => {
-      console.warn('Failed to enrich notification avatars:', err);
+        }
+        return next;
+      });
     });
   }, [allNotifications]);
 
