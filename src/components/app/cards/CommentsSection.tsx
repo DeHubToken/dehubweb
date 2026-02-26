@@ -318,7 +318,7 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
                   Copy Link
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => toast.info('Bug reported, fix will be live soon!')}
+                  onClick={() => toast.info('Repost from comments coming soon!')}
                   className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
                 >
                   <Repeat2 className="w-4 h-4" />

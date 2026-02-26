@@ -496,13 +496,24 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setShareSheetOpen(false);
   };
 
-  const handleRepost = () => {
-    toast.info('Bug reported, fix will be live soon!');
+  const handleRepost = async () => {
+    if (!walletAddress) { setShareSheetOpen(false); return; }
+    const id = currentShort?.id;
+    if (!id) return;
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) return;
+    try {
+      const { repostPost } = await import('@/lib/api/dehub');
+      await repostPost(numericId);
+      toast.success('Reposted!');
+    } catch {
+      toast.error('Failed to repost');
+    }
     setShareSheetOpen(false);
   };
 
   const handleQuote = () => {
-    toast.info('Bug reported, fix will be live soon!');
+    toast.info('Quote for shorts coming soon!');
     setShareSheetOpen(false);
   };
 
