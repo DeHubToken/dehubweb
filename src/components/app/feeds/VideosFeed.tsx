@@ -779,19 +779,25 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                 onClick={() => navigate(`/app/post/${video.id}`)}
                 className="relative aspect-video rounded-xl overflow-hidden group cursor-pointer text-left"
               >
-                <img
-                  src={video.thumbnail}
-                  alt={video.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+                {video.videoUrl ? (
+                  <video
+                    src={video.videoUrl}
+                    poster={video.thumbnail}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="auto"
+                  />
+                ) : (
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
-                
-                {/* Play button overlay */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="w-12 h-12 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
-                    <Play className="w-6 h-6 text-white fill-white ml-0.5" />
-                  </div>
-                </div>
                 
                 {/* Creator info at top */}
                 <div className="absolute top-2 left-2 right-2 flex items-center gap-1.5">
@@ -832,19 +838,25 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                   onClick={() => navigate(`/app/post/${video.id}`)}
                   className="relative flex-shrink-0 w-[70%] aspect-video rounded-xl overflow-hidden group cursor-pointer text-left"
                 >
-                  <img
-                    src={video.thumbnail}
-                    alt={video.title}
-                    className="w-full h-full object-cover"
-                  />
+                  {video.videoUrl ? (
+                    <video
+                      src={video.videoUrl}
+                      poster={video.thumbnail}
+                      className="w-full h-full object-cover"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="auto"
+                    />
+                  ) : (
+                    <img
+                      src={video.thumbnail}
+                      alt={video.title}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
-                  
-                  {/* Play button overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
-                      <Play className="w-5 h-5 text-white fill-white ml-0.5" />
-                    </div>
-                  </div>
                   
                   {/* Creator info at top */}
                   <div className="absolute top-2 left-2 right-2 flex items-center gap-1.5">
