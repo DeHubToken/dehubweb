@@ -1,39 +1,32 @@
 
 
-## Current State
+## Problem
 
-There's already a **Push Notifications** toggle in Settings (line 639-645) using the `Bell` icon. It's currently marked `comingSoon` with `defaultChecked` set to true.
+The `GlassFilterRow` component uses an overlay layer with `overflow-visible` so the framer-motion spring bounce animation isn't clipped. But this means when users scroll a long carousel, the glass indicator remains visible outside the container bounds (e.g. sticking out to the left), which looks broken.
 
-## Plan
+## Solution: `overflow: clip` with `overflow-clip-margin`
 
-Make this existing toggle functional instead of "coming soon":
+CSS `overflow: clip` is the perfect middle ground:
+- Unlike `overflow: hidden`, it does **not** create a scroll container (won't interfere with the inner scrollable div)
+- It clips content that overflows the container bounds
+- Combined with `overflow-clip-margin`, we can allow a small bleed area (e.g. 8px) so the spring bounce overshoot still looks natural
 
-### 1. Update `src/pages/app/SettingsPage.tsx`
-- Remove `comingSoon` prop from the Push Notifications toggle
-- Set `defaultChecked={false}` (off by default)
-- Add an `onCheckedChange` handler that:
-  - When turned ON: calls `Notification.requestPermission()`
-    - If granted → save preference to localStorage, show success toast
-    - If denied → revert toggle to off, show toast explaining how to enable in browser settings
-    - If unsupported → revert toggle to off, show "not supported" toast
-  - When turned OFF: clear localStorage preference, no more browser notifications
+## Changes
 
-### 2. Create `src/hooks/use-browser-notifications.ts`
-- Custom hook that reads/writes `dehub_browser_notifications` from localStorage
-- Exposes `isEnabled`, `setEnabled(bool)`, and `showNotification(title, body, icon)`
-- `showNotification` only fires when `document.hidden` is true (tab not focused) and permission is granted
+### `src/components/app/feeds/GlassFilterRow.tsx`
+- Add `overflow-x: clip` and `overflow-clip-margin: 8px` (via inline style) to the outer container div (line 66)
+- This clips the indicator when it's scrolled far outside the viewport, but allows ~8px of spring overshoot
+- Keep the indicator layer as `overflow-visible` (no change needed there)
 
-### 3. Update `src/hooks/use-notifications.ts`
-- Import `useBrowserNotifications` hook
-- When polling detects new unread notifications (compare against a `lastSeenTimestamp` in localStorage), call `showNotification` for each new one
-- Track `lastSeenTimestamp` to avoid duplicate browser notifications
+### Same pattern for manual usages
+Search for any direct `useTabIndicator` + `GlassIndicator` usage outside of `GlassFilterRow` (e.g. `HomePage.tsx`, `FeaturesPage.tsx`, `ProfilePage.tsx`) and apply the same `overflow-x: clip` style to their outer wrappers.
 
-### 4. Update translations (all 38 locale files)
-- Add keys: `browserNotificationsEnabled`, `browserNotificationsDenied`, `browserNotificationsUnsupported`
-- Reuse existing `pushNotifications` / `pushNotificationsDesc` keys (no change needed there)
+### Technical detail
+```css
+/* On the outer container */
+overflow-x: clip;
+overflow-clip-margin: 8px; /* allows spring bounce bleed */
+```
 
-### Safety
-- Permission requested only on explicit user toggle action (not on page load)
-- Follows Google's recommended pattern — no flagging risk
-- Respects browser-level denial gracefully
+This is a CSS-only fix — no JS logic changes needed. The `overflow-clip-margin` property has good browser support (Chrome 90+, Firefox 102+, Safari 16+).
 
