@@ -589,6 +589,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     return nonPPV.slice(0, 10).map((item) => {
       const id = String(item.tokenId);
       const minterAddress = item.minter || '';
+      const voteType = (item as any).voteType ?? (item as any).userVote ?? (item as any).myVote ?? null;
       const avatarUrl = item.minterAvatarUrl
         ? (item.minterAvatarUrl.startsWith('http') ? item.minterAvatarUrl : buildAvatarUrl(minterAddress, item.minterAvatarUrl))
         : undefined;
@@ -612,6 +613,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         creatorUsername: item.minterUsername || 'user',
         creatorId: minterAddress,
         displayName: item.minterDisplayName || undefined,
+        isLiked: (item as any).isLiked ?? voteType === 'for',
+        isDisliked: (item as any).isDisliked ?? voteType === 'against',
       };
     });
   }, [scrollFeed.data]);
