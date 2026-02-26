@@ -610,7 +610,7 @@ export default function FeaturesPage() {
             {/* Category Pills */}
             <div className="relative mb-3">
               <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
-              <div ref={featuresCatLayerRef} className="relative overflow-visible">
+              <div ref={featuresCatLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
                 <GlassIndicator rect={featuresCatRect} borderRadius="0.5rem" />
                 <div className="relative z-20 flex gap-2 overflow-x-auto scrollbar-invisible pb-1" onScroll={onFeaturesCatScroll}>
                   {CATEGORIES.map((cat) => (
@@ -633,7 +633,7 @@ export default function FeaturesPage() {
             </div>
 
             {/* Sort Tabs */}
-            <div ref={featuresSortLayerRef} className="relative overflow-visible">
+            <div ref={featuresSortLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
               <GlassIndicator rect={featuresSortRect} borderRadius="0.5rem" />
               <div className="relative z-20 flex gap-1.5 overflow-x-auto scrollbar-invisible" onScroll={onFeaturesSortScroll}>
                 {SORTS.map((s) => {

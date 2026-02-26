@@ -805,7 +805,7 @@ export default function ExplorePage() {
         </AnimatePresence>
 
         {/* Tabs Bento */}
-        <div className="bg-zinc-900 rounded-2xl p-2 overflow-visible">
+        <div className="bg-zinc-900 rounded-2xl p-2" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <div ref={exploreTabLayerRef} className="relative overflow-visible">
             <GlassIndicator rect={exploreTabRect} />
             <div className="relative z-20 flex w-full">

@@ -736,7 +736,7 @@ export default function NotificationsPage() {
 
       {/* Tabs */}
       <div className="px-3 sm:px-4 py-2">
-        <div className="bg-zinc-900 rounded-2xl p-2 overflow-visible">
+        <div className="bg-zinc-900 rounded-2xl p-2" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <div ref={notifTabLayerRef} className="relative overflow-visible">
             <GlassIndicator rect={notifTabRect} />
             <div 
