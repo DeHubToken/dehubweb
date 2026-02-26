@@ -87,10 +87,13 @@ Deno.serve(async (req) => {
       transactionHash: body.transactionHash || `0x${Date.now().toString(16)}`,
     };
 
+    // Always pass receiverAddress when we know the other user's wallet.
     if (targetReceiver) {
       dmBody.receiverAddress = targetReceiver;
     }
-    if (conversationId && !conversationId.startsWith('new_')) {
+    // Only pass conversationId if it's a real DeHub ID — NOT a wallet address.
+    // Wallet addresses are invalid conversation IDs on DeHub's side.
+    if (conversationId && !conversationId.startsWith('new_') && !/^0x[0-9a-fA-F]{40}$/i.test(conversationId)) {
       dmBody.conversationId = conversationId;
     }
 
@@ -103,17 +106,23 @@ Deno.serve(async (req) => {
       targetReceiver,
       conversationId,
       type,
+      dmBodyKeys: Object.keys(dmBody),
     });
 
-    // 1. Attempt to send via DeHub API (bounded timeout so Supabase fallback always runs)
+    // 1. Always attempt DeHub API as long as we have a valid target.
+    //    Previously this was skipped for wallet-address conversationIds, meaning only the
+    //    first message ever reached DeHub. Fixed: try for every message.
     let dehubData: any = {};
     let dehubOk = false;
 
-    const shouldCallDeHub = !(conversationId?.startsWith('new_') || conversationId?.startsWith('0x'));
+    const canCallDeHub = !!(
+      targetReceiver ||
+      (conversationId && !conversationId.startsWith('new_') && !/^0x[0-9a-fA-F]{40}$/i.test(conversationId))
+    );
 
-    if (shouldCallDeHub) {
+    if (canCallDeHub) {
       try {
-        const response = await fetchWithTimeout(`${DEHUB_API_BASE}/api/dm/tnx`, {
+        const dehubResponse = await fetchWithTimeout(`${DEHUB_API_BASE}/api/dm/tnx`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -123,21 +132,29 @@ Deno.serve(async (req) => {
           body: JSON.stringify(dmBody),
         });
 
-        dehubData = await response.json().catch(() => ({}));
-        dehubOk = response.ok;
+        dehubData = await dehubResponse.json().catch(() => ({}));
+        dehubOk = dehubResponse.ok;
 
-        if (!dehubOk) {
-          console.warn('[dm-send] DeHub API error (continuing with Supabase fallback):', dehubData);
+        if (dehubOk) {
+          console.log('[dm-send] DeHub API success, status:', dehubResponse.status, '| response:', JSON.stringify(dehubData).substring(0, 300));
+        } else {
+          // Log full details so we can diagnose exactly what DeHub rejects
+          console.warn(
+            `[dm-send] DeHub API rejected — status: ${dehubResponse.status} | body sent:`,
+            JSON.stringify(dmBody),
+            '| response:',
+            JSON.stringify(dehubData)
+          );
         }
       } catch (err) {
         const isTimeout = err instanceof DOMException && err.name === 'AbortError';
         console.error(
-          `[dm-send] DeHub API ${isTimeout ? 'timeout' : 'fetch failure'} (continuing with Supabase fallback):`,
+          `[dm-send] DeHub API ${isTimeout ? 'timed out' : 'fetch failed'} (Supabase fallback active):`,
           err
         );
       }
     } else {
-      console.log('[dm-send] Skipping DeHub API for wallet-based conversation');
+      console.warn('[dm-send] Cannot determine a valid target for DeHub API', { conversationId, receiver, targetReceiver });
     }
 
     // 2. Always save to Supabase for reliability and Realtime
@@ -171,12 +188,13 @@ Deno.serve(async (req) => {
 
     console.log('[dm-send] Message saved successfully');
 
-    // Return a combined response. If DeHub failed but Supabase succeeded, we still return ok: true
-    // but include the info so the frontend knows how to handle it.
+    // Return a combined response. If DeHub failed but Supabase succeeded, we still return ok: true.
+    // Also expose dehubStatus so the frontend can see what happened on DeHub's side.
     return jsonOk({
       ok: true,
       result: dehubOk ? dehubData : { success: true, data: supabaseData },
-      source: dehubOk ? 'dehub' : 'supabase'
+      source: dehubOk ? 'dehub' : 'supabase',
+      dehubStatus: dehubOk ? 'ok' : (canCallDeHub ? 'rejected' : 'skipped'),
     });
 
   } catch (err) {

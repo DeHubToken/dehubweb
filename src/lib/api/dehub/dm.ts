@@ -365,9 +365,17 @@ export async function sendMessage(
 
     if (mediaUrl) edgeBody.mediaUrl = mediaUrl;
 
+    const isWalletAddressId = /^0x[0-9a-fA-F]{40}$/i.test(conversationId);
+
     if (isNewConversation && recipientAddress) {
+      // Brand-new conversation: send receiver address, no conversationId
       edgeBody.receiver = recipientAddress.toLowerCase();
+    } else if (isWalletAddressId) {
+      // Wallet-address-resolved conversation: still pass as receiver so edge function
+      // can set receiverAddress on the DeHub API call (not as conversationId which DeHub rejects)
+      edgeBody.receiver = conversationId.toLowerCase();
     } else {
+      // Real DeHub conversation ID: pass as conversationId
       edgeBody.conversationId = conversationId;
     }
 
@@ -408,6 +416,8 @@ export async function sendMessage(
       ]);
       if (edgeError) throw edgeError;
       if (!edgeData?.ok) throw new Error(edgeData?.error || 'Edge function rejected');
+      // Log DeHub sync status so it's visible in browser console
+      console.log(`[DM API] Edge function result — source: ${edgeData?.source}, dehubStatus: ${edgeData?.dehubStatus}`);
       return edgeData?.result?.data || edgeData?.result || {};
     };
 
