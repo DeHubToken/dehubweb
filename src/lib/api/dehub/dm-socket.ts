@@ -99,6 +99,11 @@ function getDmSocket(): Socket {
       // Suppress noisy logs after repeated failures
       console.warn('[DM Socket] Connection error:', err.message);
     });
+
+    // Debug: log all incoming events from server
+    dmSocket.onAny((event, ...args) => {
+      console.log('[DM Socket] ← server event:', event, args);
+    });
   }
 
   return dmSocket;
@@ -136,6 +141,7 @@ export function emitCreateAndStart(userId: string): Promise<DmConversation> {
 
     socket.once('createAndStart', onSuccess);
     socket.once('error', onError);
+    console.log('[DM Socket] → createAndStart emit', { _id: userId });
     socket.emit('createAndStart', { _id: userId });
   });
 }
