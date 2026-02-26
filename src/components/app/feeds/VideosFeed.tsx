@@ -442,6 +442,13 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false);
 
+  // Staged autoplay: first only 1 video, then expand to 3 after initial render
+  const [autoplayLimit, setAutoplayLimit] = useState(1);
+  useEffect(() => {
+    const timer = setTimeout(() => setAutoplayLimit(3), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Auth-guarded sort selection
   const handleSortSelect = useCallback((option: SortOption) => {
     if (option.value === 'subscribed') {
@@ -774,7 +781,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         <div className="mb-3">
           {/* Desktop/Tablet: 3 thumbnails in a row */}
           <div className="hidden sm:grid grid-cols-3 gap-2">
-            {videos.slice(0, 3).map((video) => (
+            {videos.slice(0, 3).map((video, idx) => (
               <button 
                 key={`featured-${video.id}`}
                 onClick={() => navigate(`/app/post/${video.id}`)}
@@ -785,6 +792,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                     src={video.videoUrl}
                     poster={video.thumbnail}
                     className="w-full h-full group-hover:scale-105 transition-transform duration-300"
+                    disabled={idx >= autoplayLimit}
                   />
                 ) : (
                   <img
@@ -828,7 +836,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
           <div className="sm:hidden relative">
             <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none z-10" />
             <SwipeableCarousel className="flex gap-2 overflow-x-auto scrollbar-hide">
-              {videos.slice(0, 3).map((video) => (
+              {videos.slice(0, 3).map((video, idx) => (
                 <button 
                   key={`featured-mobile-${video.id}`}
                   onClick={() => navigate(`/app/post/${video.id}`)}
@@ -839,6 +847,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                       src={video.videoUrl}
                       poster={video.thumbnail}
                       className="w-full h-full"
+                      disabled={idx >= autoplayLimit}
                     />
                   ) : (
                     <img

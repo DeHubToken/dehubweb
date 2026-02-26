@@ -16,6 +16,8 @@ interface AutoplayVideoProps {
   threshold?: number;
   /** Root margin for earlier/later trigger. Default "100px" */
   rootMargin?: string;
+  /** When true, video won't load or play regardless of visibility. Used for staged loading. */
+  disabled?: boolean;
 }
 
 export const AutoplayVideo = memo(function AutoplayVideo({
@@ -24,6 +26,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
   className,
   threshold = 0.5,
   rootMargin = '100px',
+  disabled = false,
 }: AutoplayVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -44,29 +47,31 @@ export const AutoplayVideo = memo(function AutoplayVideo({
     return () => observer.disconnect();
   }, [threshold, rootMargin]);
 
-  // Play/pause based on visibility
+  // Play/pause based on visibility and disabled state
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (isVisible) {
+    if (isVisible && !disabled) {
       video.play().catch(() => {});
     } else {
       video.pause();
     }
-  }, [isVisible]);
+  }, [isVisible, disabled]);
+
+  const shouldLoad = isVisible && !disabled;
 
   return (
     <div ref={containerRef} className={className}>
       <video
         ref={videoRef}
-        src={isVisible ? src : undefined}
+        src={shouldLoad ? src : undefined}
         poster={poster}
         className="w-full h-full object-cover"
         loop
         muted
         playsInline
-        preload={isVisible ? 'auto' : 'none'}
+        preload={shouldLoad ? 'auto' : 'none'}
       />
     </div>
   );
