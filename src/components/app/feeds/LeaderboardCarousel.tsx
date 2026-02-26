@@ -16,8 +16,15 @@ import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
+import medal4 from '@/assets/medal-4.png';
+import medal5 from '@/assets/medal-5.png';
+import medal6 from '@/assets/medal-6.png';
+import medal7 from '@/assets/medal-7.png';
+import medal8 from '@/assets/medal-8.png';
+import medal9 from '@/assets/medal-9.png';
+import medal10 from '@/assets/medal-10.png';
 
-const MEDALS = [medal1, medal2, medal3];
+const MEDALS = [medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10];
 
 const formatNumber = (num: number | undefined): string => {
   if (num === undefined || num === null) return '0';
@@ -49,8 +56,14 @@ const LeaderboardCard = memo(function LeaderboardCard({
     >
       {/* Rank + Medal */}
       <div className="flex items-center justify-between mb-2">
-        {rank <= 3 ? (
-          <img src={MEDALS[rank - 1]} alt={`#${rank}`} className="w-7 h-7 object-contain" />
+        {rank <= 10 ? (
+          <div className={`medal-shine-container ${rank <= 3 ? 'w-7 h-7' : 'w-6 h-6'}`}>
+            <img src={MEDALS[rank - 1]} alt={`#${rank}`} className={`${rank <= 3 ? 'w-7 h-7' : 'w-6 h-6'} object-contain`} />
+            <div 
+              className="medal-shine-overlay"
+              style={{ '--medal-mask': `url(${MEDALS[rank - 1]})` } as React.CSSProperties}
+            />
+          </div>
         ) : (
           <div className="w-6 h-6 rounded-lg bg-zinc-700 flex items-center justify-center text-xs font-bold text-white">
             {rank}
@@ -69,8 +82,10 @@ const LeaderboardCard = memo(function LeaderboardCard({
         />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-0.5">
-            <span className="text-sm font-semibold text-white truncate">{displayName}</span>
-            {badgeUrl && <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0" />}
+            <span className="relative inline-flex items-baseline shrink min-w-0">
+              <span className="text-sm font-semibold text-white truncate">{displayName}</span>
+              {badgeUrl && <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />}
+            </span>
           </div>
           <span className="text-xs text-zinc-500 truncate block">{handle}</span>
         </div>
