@@ -11,7 +11,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { ScheduleSheet } from './ScheduleSheet';
 import { DraftsSheet, type Draft } from './DraftsSheet';
 import { format } from 'date-fns';
-import { UserMentionDropdown, searchUsers, type MentionUser } from '@/components/app/mentions';
+import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -596,9 +596,9 @@ export function PostContentArea({
               if (mention.handleKeyDown(e)) {
                 if (e.key === 'Enter' || e.key === 'Tab') {
                   e.preventDefault();
-                  const users = searchUsers(mention.query, 5);
-                  if (users[mention.selectedIndex]) {
-                    mention.handleSelect(users[mention.selectedIndex]);
+                  const liveResults = (window as any).__mentionResults || [];
+                  if (liveResults[mention.selectedIndex]) {
+                    mention.handleSelect(liveResults[mention.selectedIndex]);
                   }
                 }
               }
@@ -625,9 +625,9 @@ export function PostContentArea({
                 if (mention.handleKeyDown(e)) {
                   if (e.key === 'Enter' || e.key === 'Tab') {
                     e.preventDefault();
-                    const users = searchUsers(mention.query, 5);
-                    if (users[mention.selectedIndex]) {
-                      mention.handleSelect(users[mention.selectedIndex]);
+                    const liveResults = (window as any).__mentionResults || [];
+                    if (liveResults[mention.selectedIndex]) {
+                      mention.handleSelect(liveResults[mention.selectedIndex]);
                     }
                   }
                 }
