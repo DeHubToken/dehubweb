@@ -19,10 +19,12 @@ import type { DmMessage, DmConversation, DmMsgType } from './dm';
 export interface SendMessagePayload {
   dmId: string;
   content: string;
-  msgType: DmMsgType;
-  gifUrl?: string;
+  type: DmMsgType;
+  gif?: string;
   replyTo?: string;
   txHash?: string;
+  tipTxHash?: string;
+  voiceDuration?: number;
 }
 
 export interface EditedMessage {
@@ -114,14 +116,16 @@ export function emitCreateAndStart(userId: string): Promise<DmConversation> {
 
     const timeout = setTimeout(() => {
       socket.off('createAndStart', onSuccess);
-      socket.off('dmError', onError);
+      socket.off('error', onError);
       reject(new Error('createAndStart timeout'));
     }, 15000);
 
-    const onSuccess = (data: DmConversation) => {
+    const onSuccess = (response: any) => {
       clearTimeout(timeout);
-      socket.off('dmError', onError);
-      resolve(data);
+      socket.off('error', onError);
+      // Server responds with { msg, data: { ...dm, dmFee } }
+      const conversation: DmConversation = response?.data || response;
+      resolve(conversation);
     };
 
     const onError = (err: DmSocketError) => {
@@ -131,8 +135,8 @@ export function emitCreateAndStart(userId: string): Promise<DmConversation> {
     };
 
     socket.once('createAndStart', onSuccess);
-    socket.once('dmError', onError);
-    socket.emit('createAndStart', { userId });
+    socket.once('error', onError);
+    socket.emit('createAndStart', { _id: userId });
   });
 }
 
@@ -192,8 +196,8 @@ export function onFeeConfirmed(cb: (data: FeeConfirmedData) => void): () => void
 
 export function onDmError(cb: (err: DmSocketError) => void): () => void {
   const socket = getDmSocket();
-  socket.on('dmError', cb);
-  return () => socket.off('dmError', cb);
+  socket.on('error', cb);
+  return () => socket.off('error', cb);
 }
 
 // ─── Connection management ────────────────────────────────────────────────────

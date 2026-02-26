@@ -269,10 +269,11 @@ export function useSendMessage(conversationId: string) {
       const payload: SendMessagePayload = {
         dmId: conversationId,
         content,
-        msgType,
-        gifUrl,
+        type: msgType,
+        gif: gifUrl,
         replyTo,
         txHash,
+        voiceDuration,
       };
       emitSendMessage(payload);
 
