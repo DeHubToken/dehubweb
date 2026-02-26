@@ -120,13 +120,17 @@ export const VideoSlide = memo(function VideoSlide({
 
   const handleProgressPointerMove = useCallback((e: React.PointerEvent) => {
     if (!isSeeking) return;
+    e.stopPropagation();
+    e.preventDefault();
     seekToPosition(e.clientX);
   }, [isSeeking, seekToPosition]);
 
   const handleProgressPointerUp = useCallback((e: React.PointerEvent) => {
     if (!isSeeking) return;
     e.stopPropagation();
+    e.preventDefault();
     setIsSeeking(false);
+    (e.target as HTMLElement).releasePointerCapture(e.pointerId);
   }, [isSeeking]);
 
   return (
