@@ -109,13 +109,13 @@ export function CardHeader({
         </Avatar>
         <div className="flex flex-col min-w-0">
           <div className="flex items-center gap-1.5 min-w-0">
-            <span className="relative inline-flex items-baseline shrink min-w-0">
+            <span className={`relative inline-flex items-baseline shrink min-w-0${badgeUrl ? ' pr-3' : ''}`}>
               <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
               {badgeUrl && (
-                <img 
-                  src={badgeUrl} 
-                  alt="Badge" 
-                  className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" 
+                <img
+                  src={badgeUrl}
+                  alt="Badge"
+                  className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0"
                 />
               )}
             </span>

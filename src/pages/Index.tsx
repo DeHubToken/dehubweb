@@ -7,12 +7,16 @@ const SKIP_LANDING_KEY = "dehub_skip_landing";
 const Index = () => {
   const navigate = useNavigate();
 
+  // Synchronous guard — skip rendering the hero at all for returning users
+  const shouldSkip = typeof window !== 'undefined' && localStorage.getItem(SKIP_LANDING_KEY) === "true";
+
   useEffect(() => {
-    // Check if user has previously closed the hero - skip to app
-    if (localStorage.getItem(SKIP_LANDING_KEY) === "true") {
+    if (shouldSkip) {
       navigate("/app", { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, shouldSkip]);
+
+  if (shouldSkip) return null;
 
   return <FuturisticAlienHero />;
 };

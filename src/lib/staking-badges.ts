@@ -35,6 +35,7 @@ const MIN_BADGE_THRESHOLD = 10000;
 /** Username-based badge overrides (always get this badge regardless of balance) */
 const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
   "maldoteth": "Meglodon",
+  "mal": "Meglodon",
 };
 
 // Import all badge images

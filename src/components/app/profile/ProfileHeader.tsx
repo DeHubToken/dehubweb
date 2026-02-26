@@ -338,13 +338,13 @@ export function ProfileHeader({
         <div>
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <span className="relative inline-flex items-baseline">
+              <span className={`relative inline-flex items-baseline${badgeUrl ? ' pr-3.5' : ''}`}>
                 <h2 className="text-xl font-bold text-white">{profile.name}</h2>
                 {badgeUrl && (
-                  <img 
-                    src={badgeUrl} 
-                    alt="Badge tier" 
-                    className="w-[12px] h-[12px] shrink-0 absolute -top-1 -right-3.5" 
+                  <img
+                    src={badgeUrl}
+                    alt="Badge tier"
+                    className="w-[10px] h-[10px] shrink-0 absolute -top-1 right-0"
                   />
                 )}
               </span>

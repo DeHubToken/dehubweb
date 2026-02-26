@@ -586,15 +586,6 @@ export default function PostInfoPage() {
                   </p>
                 </div>
               </div>
-              {(nftInfo as any).categories && (nftInfo as any).categories.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {(nftInfo as any).categories.map((cat: string, i: number) => (
-                    <span key={i} className="px-2 py-1 text-xs bg-white/10 rounded-lg text-white/70">
-                      {cat}
-                    </span>
-                  ))}
-                </div>
-              )}
             </section>
           )}
 
@@ -883,24 +874,6 @@ export default function PostInfoPage() {
               )}
               {nftInfo.description && (
                 <p className="text-sm text-white/70">{nftInfo.description}</p>
-              )}
-              {nftInfo.category && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {(Array.isArray(nftInfo.category) ? nftInfo.category : [nftInfo.category]).map((cat, i) => (
-                    <span key={i} className="px-2 py-1 text-xs bg-white/10 rounded-lg text-white/70">
-                      {cat}
-                    </span>
-                  ))}
-                </div>
-              )}
-              {nftInfo.tags && nftInfo.tags.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {nftInfo.tags.map((tag, i) => (
-                    <span key={i} className="text-xs text-primary">
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
               )}
             </section>
           )}

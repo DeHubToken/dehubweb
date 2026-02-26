@@ -768,11 +768,11 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
       />
 
       {/* PPV Drawer - controlled, rendered at root level for mobile compatibility */}
-      {isPPV && post.ppvPrice && (
+      {(isPPV || isComboLocked) && (
         <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
           <PPVDrawerContent
             tokenId={post.id}
-            price={Number(post.ppvPrice)}
+            price={Number(post.ppvPrice ?? 0)}
             currency={post.ppvCurrency || 'DHB'}
             creatorAddress={post.creatorId}
             chainId={post.chainId}
@@ -780,6 +780,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
             onUnlocked={() => {
               setLocallyUnlocked(true);
               markTokenUnlocked(post.id);
+              toast.success('Content unlocked!');
               queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
               queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
               queryClient.invalidateQueries({ queryKey: ['nft-info', post.id] });
