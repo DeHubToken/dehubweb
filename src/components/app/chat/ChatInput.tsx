@@ -8,42 +8,53 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
+interface ChatInputSendArgs {
+  content: string;
+  type: 'msg' | 'media' | 'gif' | 'voice';
+  mediaFile?: File;
+  gifUrl?: string;
+  duration?: number;
+}
+
 interface ChatInputProps {
-  onSendMessage: (content: string, type: 'text' | 'image' | 'gif' | 'audio', imageUrl?: string) => void;
+  onSendMessage: (args: ChatInputSendArgs) => void;
 }
 
 export function ChatInput({ onSendMessage }: ChatInputProps) {
   const [message, setMessage] = useState('');
   const [isEnhancing, setIsEnhancing] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [audioPreview, setAudioPreview] = useState<{ blob: Blob; duration: number } | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const [audioPreview, setAudioPreview] = useState<{ file: File; blob: Blob; duration: number } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSend = () => {
-    // Handle audio message
     if (audioPreview) {
-      // Convert blob to base64 data URL for sending
-      const reader = new FileReader();
-      reader.onload = () => {
-        const dataUrl = reader.result as string;
-        onSendMessage(`🎤 Voice message (${audioPreview.duration}s)`, 'audio', dataUrl);
-        setAudioPreview(null);
-        setMessage('');
-      };
-      reader.readAsDataURL(audioPreview.blob);
-      return;
-    }
-
-    if (imagePreview) {
-      onSendMessage(message.trim(), 'image', imagePreview);
-      setImagePreview(null);
+      onSendMessage({
+        content: '',
+        type: 'voice',
+        mediaFile: audioPreview.file,
+        duration: audioPreview.duration,
+      });
+      setAudioPreview(null);
       setMessage('');
       return;
     }
-    
+
+    if (imageFile) {
+      onSendMessage({
+        content: message.trim(),
+        type: 'media',
+        mediaFile: imageFile,
+      });
+      clearImage();
+      setMessage('');
+      return;
+    }
+
     if (!message.trim()) return;
-    onSendMessage(message.trim(), 'text');
+    onSendMessage({ content: message.trim(), type: 'msg' });
     setMessage('');
   };
 
@@ -60,29 +71,27 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
   };
 
   const handleGifSelect = (gifUrl: string) => {
-    onSendMessage('', 'gif', gifUrl);
+    onSendMessage({ content: '', type: 'gif', gifUrl });
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error('Image must be less than 5MB');
-        return;
-      }
-      
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreview(e.target?.result as string);
-        setAudioPreview(null); // Clear audio if image is added
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Image must be less than 10MB');
+      return;
     }
+
+    setImageFile(file);
+    setImagePreviewUrl(URL.createObjectURL(file));
+    setAudioPreview(null);
   };
 
   const handleVoiceRecordingComplete = (blob: Blob, duration: number) => {
-    setAudioPreview({ blob, duration });
-    setImagePreview(null); // Clear image if audio is recorded
+    const file = new File([blob], `voice-${Date.now()}.webm`, { type: blob.type || 'audio/webm' });
+    setAudioPreview({ file, blob, duration });
+    clearImage();
     toast.success(`Recording saved (${duration}s)`);
   };
 
@@ -91,16 +100,14 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
       toast.error('Enter some text to enhance');
       return;
     }
-    
+
     setIsEnhancing(true);
-    
     try {
       const { data, error } = await supabase.functions.invoke('enhance-text', {
         body: { text: message.trim() }
       });
 
       if (error) {
-        console.error('Enhancement error:', error);
         toast.error(error.message || 'Failed to enhance text');
         return;
       }
@@ -112,7 +119,6 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
         toast.error(data.error);
       }
     } catch (err) {
-      console.error('Enhancement error:', err);
       toast.error('Failed to enhance text');
     } finally {
       setIsEnhancing(false);
@@ -120,16 +126,14 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
     }
   };
 
-  const removeImagePreview = () => {
-    setImagePreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+  const clearImage = () => {
+    if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
+    setImageFile(null);
+    setImagePreviewUrl(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const removeAudioPreview = () => {
-    setAudioPreview(null);
-  };
+  const removeAudioPreview = () => setAudioPreview(null);
 
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -140,15 +144,15 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
   return (
     <div className="p-3 lg:pl-4 border-t border-transparent bg-zinc-900">
       {/* Image Preview */}
-      {imagePreview && (
+      {imagePreviewUrl && (
         <div className="mb-2 relative inline-block">
-          <img 
-            src={imagePreview} 
-            alt="Preview" 
+          <img
+            src={imagePreviewUrl}
+            alt="Preview"
             className="h-20 rounded-lg object-cover"
           />
           <button
-            onClick={removeImagePreview}
+            onClick={clearImage}
             className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
           >
             <X className="w-3 h-3 text-white" />
@@ -171,7 +175,7 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
           </button>
         </div>
       )}
-      
+
       {/* Input Area */}
       <div className="relative">
         <Textarea
@@ -183,14 +187,14 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
           className="min-h-[56px] max-h-32 resize-none bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-28 focus-visible:ring-0 focus-visible:ring-offset-0"
           rows={2}
         />
-        
-        {/* Action buttons - bottom right */}
+
+        {/* Action buttons */}
         <div className="absolute bottom-0 right-0 flex items-center gap-0.5">
-          <EmojiGifPicker 
-            onEmojiSelect={handleEmojiSelect} 
+          <EmojiGifPicker
+            onEmojiSelect={handleEmojiSelect}
             onGifSelect={handleGifSelect}
           />
-          
+
           <Button
             type="button"
             variant="ghost"
@@ -208,11 +212,11 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
             className="hidden"
           />
 
-          <VoiceRecorder 
+          <VoiceRecorder
             onRecordingComplete={handleVoiceRecordingComplete}
-            disabled={!!imagePreview}
+            disabled={!!imagePreviewUrl}
           />
-          
+
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -232,14 +236,14 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
             </TooltipTrigger>
             <TooltipContent>AI Enhance - Fix spelling & grammar</TooltipContent>
           </Tooltip>
-          
+
           <Button
             type="button"
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
             onClick={handleSend}
-            disabled={!message.trim() && !imagePreview && !audioPreview}
+            disabled={!message.trim() && !imageFile && !audioPreview}
           >
             <Send className="w-5 h-5" />
           </Button>

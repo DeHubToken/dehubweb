@@ -2,16 +2,17 @@
  * Direct Messages Hooks
  * =====================
  * React Query hooks for managing DM conversations and messages.
+ * Uses Socket.io /dm namespace for real-time events.
  */
 
-import React, { useState, useMemo, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
 import {
+  getContacts,
   getConversations,
   getMessages,
-  sendMessage,
+  uploadAndSendMedia,
   createConversation,
   markConversationAsRead,
   deleteConversation,
@@ -24,17 +25,26 @@ import {
   updateGroup,
   leaveGroup,
   blockUserInGroup,
-  uploadChatImage,
   getUserOnlineStatus,
   getDMVideos,
   type DeHubConversation,
-  type DeHubDMMessage,
+  type DmMessage,
+  type DmMsgType,
   type DeHubUser,
   type GroupInfo,
-  type DMMessageType,
 } from '@/lib/api/dehub';
+import {
+  emitCreateAndStart,
+  emitSendMessage,
+  emitReadReceipt,
+  onDmSendMessage,
+  onEditMessage,
+  onDmDeleteMessage,
+  type SendMessagePayload,
+} from '@/lib/api/dehub/dm-socket';
 
-// Query keys for cache management
+// ─── Query keys ───────────────────────────────────────────────────────────────
+
 export const messagesKeys = {
   all: ['messages'] as const,
   conversations: () => [...messagesKeys.all, 'conversations'] as const,
@@ -43,38 +53,45 @@ export const messagesKeys = {
   userSearch: (query: string) => [...messagesKeys.all, 'userSearch', query] as const,
 };
 
-/**
- * Hook to fetch and manage conversation list
- */
+// ─── Conversations ────────────────────────────────────────────────────────────
+
 export function useConversations(searchQuery: string = '') {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
+  const queryClient = useQueryClient();
 
   const query = useQuery({
     queryKey: [...messagesKeys.conversations(), searchQuery],
     queryFn: async () => {
-      console.log('[useConversations] Fetching conversations...', { searchQuery, isAuthenticated });
+      console.log('[useConversations] Fetching...', { searchQuery, walletAddress });
       try {
-        // Pass undefined for empty search to use contacts endpoint instead of broken search
-        const response = await getConversations(0, 50, searchQuery || undefined);
-        console.log('[useConversations] Response:', response);
-        return response.items || [];
+        if (searchQuery) {
+          const response = await getConversations(0, 50, searchQuery);
+          return response.items || [];
+        }
+        if (!walletAddress) return [];
+        return await getContacts(walletAddress, 0, 50);
       } catch (error) {
-        console.error('[useConversations] Error fetching conversations:', error);
+        console.error('[useConversations] Error:', error);
         throw error;
       }
     },
     enabled: isAuthenticated,
     staleTime: 15 * 1000,
-    refetchInterval: 20 * 1000, // poll every 20s — replaces Supabase realtime for conversation list
     refetchOnWindowFocus: true,
   });
 
-  // Server-side search is now used via the query parameter
-  // No need for client-side filtering anymore
-  const filteredConversations = query.data || [];
+  // Real-time: when any DM message arrives, refresh the conversations list
+  // (updates last message preview + unread count)
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const unsub = onDmSendMessage(() => {
+      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+    });
+    return unsub;
+  }, [isAuthenticated, queryClient]);
 
   return {
-    conversations: filteredConversations,
+    conversations: query.data || [],
     allConversations: query.data || [],
     isLoading: query.isLoading,
     isError: query.isError,
@@ -84,116 +101,107 @@ export function useConversations(searchQuery: string = '') {
   };
 }
 
-/**
- * Hook to fetch messages for a specific conversation with infinite scroll
- */
+// ─── Messages ─────────────────────────────────────────────────────────────────
+
 export function useMessages(conversationId: string | null) {
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
   const query = useInfiniteQuery({
     queryKey: messagesKeys.messages(conversationId || ''),
     queryFn: async ({ pageParam = 0 }) => {
-      console.log('[useMessages] Fetching messages...', { conversationId, pageParam });
       if (!conversationId) return { items: [], totalCount: 0, hasMore: false };
-      try {
-        const result = await getMessages(conversationId, pageParam, 30);
-        console.log('[useMessages] Response:', result);
-        return result;
-      } catch (error) {
-        console.error('[useMessages] Error:', error);
-        throw error;
-      }
+      return getMessages(conversationId, pageParam, 30);
     },
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.hasMore) {
-        return allPages.length;
-      }
-      return undefined;
-    },
+    getNextPageParam: (lastPage, allPages) => lastPage.hasMore ? allPages.length : undefined,
     initialPageParam: 0,
     enabled: isAuthenticated && !!conversationId,
-    staleTime: 3 * 1000,
-    refetchInterval: 5 * 1000, // poll every 5s for new messages — replaces Supabase realtime
+    staleTime: 10 * 1000,
   });
 
-  // Flatten pages into single array (newest last for chat display)
-  const messages = query.data?.pages
-    .flatMap((page) => page.items)
+  // Flatten pages → single array, oldest first for chat display
+  const messages: DmMessage[] = query.data?.pages
+    .flatMap(page => page.items)
     .reverse() || [];
 
-  // Mark as read when viewing
-  const markAsRead = useMutation({
-    mutationFn: () => markConversationAsRead(conversationId!),
-    onSuccess: () => {
-      // Update conversation unread count in cache
-      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
-    },
-  });
-
-  // Supabase Realtime Subscription for instant updates
+  // Real-time: new messages from socket
   useEffect(() => {
     if (!isAuthenticated || !conversationId) return;
 
-    const isWalletAddressConversation = /^0x[0-9a-fA-F]{40}$/i.test(conversationId);
-    console.log('[useMessages] Setting up realtime subscription for:', conversationId);
-
-    const invalidate = () => {
-      queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
-    };
-
-    // Primary channel: messages where conversation_id = otherAddress (messages I sent)
-    const channel = supabase
-      .channel(`dm:${conversationId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'direct_messages',
-          filter: `conversation_id=eq.${conversationId}`,
-        },
-        (payload) => {
-          console.log('[useMessages] New message received via Realtime (outbound):', payload);
-          invalidate();
-        }
-      )
-      .subscribe();
-
-    // For wallet-address conversations, also subscribe to the reverse direction:
-    // messages the other user sends TO me are stored with conversation_id = myAddress.
-    let reverseChannel: ReturnType<typeof supabase.channel> | null = null;
-    if (isWalletAddressConversation && walletAddress) {
-      const myAddr = walletAddress.toLowerCase();
-      const otherAddr = conversationId.toLowerCase();
-      reverseChannel = supabase
-        .channel(`dm-inbound:${myAddr}:from:${otherAddr}`)
-        .on(
-          'postgres_changes',
-          {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'direct_messages',
-            // conversation_id = myAddress means someone sent TO me
-            filter: `conversation_id=eq.${myAddr}`,
-          },
-          (payload: any) => {
-            // Only invalidate if the sender is the person we're chatting with
-            if (payload?.new?.sender_address?.toLowerCase() === otherAddr) {
-              console.log('[useMessages] New message received via Realtime (inbound):', payload);
-              invalidate();
+    const unsubSend = onDmSendMessage((msg) => {
+      if (msg.conversation !== conversationId) return;
+      queryClient.setQueryData(
+        messagesKeys.messages(conversationId),
+        (old: any) => {
+          if (!old?.pages) return old;
+          const pages = old.pages as Array<{ items: DmMessage[]; totalCount: number; hasMore: boolean }>;
+          // Prepend to first page (newest first storage order)
+          const newPages = [...pages];
+          if (newPages[0]) {
+            // Avoid duplicates
+            const existing = newPages[0].items.some(m => m._id === msg._id);
+            if (!existing) {
+              newPages[0] = { ...newPages[0], items: [msg, ...newPages[0].items] };
             }
           }
-        )
-        .subscribe();
-    }
+          return { ...old, pages: newPages };
+        }
+      );
+    });
+
+    const unsubEdit = onEditMessage((data) => {
+      queryClient.setQueryData(
+        messagesKeys.messages(conversationId),
+        (old: any) => {
+          if (!old?.pages) return old;
+          const pages = old.pages.map((page: any) => ({
+            ...page,
+            items: page.items.map((m: DmMessage) =>
+              m._id === data._id
+                ? { ...m, content: data.content, isEdited: true, editedAt: data.editedAt }
+                : m
+            ),
+          }));
+          return { ...old, pages };
+        }
+      );
+    });
+
+    const unsubDelete = onDmDeleteMessage((data) => {
+      queryClient.setQueryData(
+        messagesKeys.messages(conversationId),
+        (old: any) => {
+          if (!old?.pages) return old;
+          const pages = old.pages.map((page: any) => ({
+            ...page,
+            items: page.items.map((m: DmMessage) =>
+              m._id === data._id ? { ...m, isDeleted: true, content: '' } : m
+            ),
+          }));
+          return { ...old, pages };
+        }
+      );
+    });
 
     return () => {
-      console.log('[useMessages] Cleaning up realtime subscription for:', conversationId);
-      supabase.removeChannel(channel);
-      if (reverseChannel) supabase.removeChannel(reverseChannel);
+      unsubSend();
+      unsubEdit();
+      unsubDelete();
     };
-  }, [conversationId, isAuthenticated, walletAddress, queryClient]);
+  }, [conversationId, isAuthenticated, queryClient]);
+
+  // Mark as read via socket
+  const markAsRead = useMutation({
+    mutationFn: () => {
+      if (conversationId && !conversationId.startsWith('new_') && !/^0x[0-9a-fA-F]{40}$/i.test(conversationId)) {
+        emitReadReceipt(conversationId);
+      }
+      return markConversationAsRead(conversationId!);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+    },
+  });
 
   return {
     messages,
@@ -208,113 +216,191 @@ export function useMessages(conversationId: string | null) {
   };
 }
 
+// ─── Create and Start ─────────────────────────────────────────────────────────
+
 /**
- * Hook for sending messages with optimistic updates
+ * Emit createAndStart to get/create a DM conversation.
+ * Returns DmConversation including dmFee.
  */
+export function useCreateAndStart() {
+  return useMutation({
+    mutationFn: (userId: string) => emitCreateAndStart(userId),
+  });
+}
+
+// ─── Send Message ─────────────────────────────────────────────────────────────
+
 export function useSendMessage(conversationId: string) {
   const queryClient = useQueryClient();
-  const { user } = useAuth();
+  const { user, walletAddress } = useAuth();
 
   return useMutation({
     mutationFn: async ({
       content,
-      type = 'text',
-      mediaUrl,
-      tipAmount,
-      tipCurrency,
+      msgType = 'msg',
+      gifUrl,
+      mediaFile,
+      voiceDuration,
+      replyTo,
+      txHash,
     }: {
       content: string;
-      type?: DMMessageType;
-      mediaUrl?: string;
-      tipAmount?: number;
-      tipCurrency?: string;
-    }) => {
-      return sendMessage(conversationId, content, type, mediaUrl, tipAmount, tipCurrency);
-    },
-    onMutate: async ({ content, type, mediaUrl }) => {
-      // Cancel outgoing refetches
-      await queryClient.cancelQueries({ queryKey: messagesKeys.messages(conversationId) });
+      msgType?: DmMsgType;
+      gifUrl?: string;
+      mediaFile?: File;
+      voiceDuration?: number;
+      replyTo?: string;
+      txHash?: string;
+    }): Promise<DmMessage> => {
+      if (msgType === 'media' || msgType === 'voice') {
+        if (!mediaFile) throw new Error('No file provided for media/voice message');
+        const senderId = user?._id || walletAddress || '';
+        return uploadAndSendMedia(mediaFile, conversationId, senderId, {
+          content,
+          msgType,
+          voiceDuration,
+          replyTo,
+          txHash,
+        });
+      }
 
-      // Snapshot previous value
+      // Text / GIF — emit via socket (fire and forget)
+      const payload: SendMessagePayload = {
+        dmId: conversationId,
+        content,
+        msgType,
+        gifUrl,
+        replyTo,
+        txHash,
+      };
+      emitSendMessage(payload);
+
+      // Return an optimistic message (server echo arrives via socket listener)
+      const tempMessage: DmMessage = {
+        _id: `temp-${Date.now()}`,
+        conversation: conversationId,
+        sender: {
+          _id: user?._id || walletAddress || '',
+          username: user?.username || '',
+          address: walletAddress || '',
+          displayName: user?.displayName || user?.display_name || '',
+          avatarImageUrl: user?.avatarImageUrl || '',
+        },
+        content,
+        msgType,
+        mediaUrls: gifUrl ? [{ url: gifUrl, type: 'image', mimeType: 'image/gif' }] : [],
+        voiceDuration: null,
+        isRead: false,
+        isEdited: false,
+        editedAt: null,
+        isForwarded: false,
+        replyTo: null,
+        paymentStatus: null,
+        paymentTxHash: null,
+        tipAmount: null,
+        tipSymbol: null,
+        isDeleted: false,
+        author: 'me',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      return tempMessage;
+    },
+
+    onMutate: async ({ content, msgType, gifUrl, mediaFile }) => {
+      await queryClient.cancelQueries({ queryKey: messagesKeys.messages(conversationId) });
       const previousMessages = queryClient.getQueryData(messagesKeys.messages(conversationId));
 
-      // Optimistically add the message
-      const optimisticMessage: DeHubDMMessage = {
-        id: `temp-${Date.now()}`,
-        conversationId,
+      // Optimistic: prepend temp message
+      const optimisticMessage: DmMessage = {
+        _id: `temp-${Date.now()}`,
+        conversation: conversationId,
         sender: {
-          address: user?.address,
-          username: user?.username,
-          displayName: user?.displayName,
-          avatarImageUrl: user?.avatarImageUrl,
-        } as DeHubUser,
+          _id: user?._id || '',
+          username: user?.username || '',
+          address: walletAddress || '',
+          displayName: user?.displayName || user?.display_name || '',
+          avatarImageUrl: user?.avatarImageUrl || '',
+        },
         content,
-        type: type as DMMessageType || 'text',
-        mediaUrl,
+        msgType: msgType || 'msg',
+        mediaUrls: mediaFile
+          ? [{ url: URL.createObjectURL(mediaFile), type: 'image', mimeType: mediaFile.type }]
+          : gifUrl ? [{ url: gifUrl, type: 'image', mimeType: 'image/gif' }] : [],
+        voiceDuration: null,
+        isRead: false,
+        isEdited: false,
+        editedAt: null,
+        isForwarded: false,
+        replyTo: null,
+        paymentStatus: null,
+        paymentTxHash: null,
+        tipAmount: null,
+        tipSymbol: null,
+        isDeleted: false,
+        author: 'me',
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       queryClient.setQueryData(messagesKeys.messages(conversationId), (old: any) => {
         if (!old?.pages) return old;
         const newPages = [...old.pages];
         if (newPages[0]) {
-          newPages[0] = {
-            ...newPages[0],
-            items: [optimisticMessage, ...newPages[0].items],
-          };
+          newPages[0] = { ...newPages[0], items: [optimisticMessage, ...newPages[0].items] };
         }
         return { ...old, pages: newPages };
       });
 
       return { previousMessages };
     },
-    onError: (_err, _variables, context) => {
-      // Rollback on error
+
+    onError: (_err, _vars, context) => {
       if (context?.previousMessages) {
         queryClient.setQueryData(messagesKeys.messages(conversationId), context.previousMessages);
       }
     },
+
     onSettled: () => {
-      // Refetch to sync with server
       queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
     },
   });
 }
 
-/**
- * Hook for creating a new conversation
- * Takes recipientAddress and optional user data to construct virtual conversation
- */
+// ─── Create Conversation (virtual, for new DM flow) ───────────────────────────
+
 export function useCreateConversation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ recipientAddress, recipientUser }: { recipientAddress: string; recipientUser?: Partial<import('@/lib/api/dehub').DeHubUser> }) =>
-      createConversation(recipientAddress, recipientUser),
+    mutationFn: ({ recipientAddress, recipientUser }: {
+      recipientAddress: string;
+      recipientUser?: Partial<DeHubUser>;
+    }) => createConversation(recipientAddress, recipientUser),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
     },
   });
 }
 
-/**
- * Hook for deleting a conversation
- */
+// ─── Delete Conversation ──────────────────────────────────────────────────────
+
 export function useDeleteConversation() {
   const queryClient = useQueryClient();
+  const { walletAddress } = useAuth();
 
   return useMutation({
-    mutationFn: (conversationId: string) => deleteConversation(conversationId),
+    mutationFn: (conversationId: string) =>
+      deleteConversation(conversationId, walletAddress || undefined),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
     },
   });
 }
 
-/**
- * Hook for searching users to start a new conversation
- */
+// ─── User search ──────────────────────────────────────────────────────────────
+
 export function useUserSearchForDM(query: string) {
   const { isAuthenticated } = useAuth();
   const debouncedQuery = query.trim();
@@ -327,106 +413,66 @@ export function useUserSearchForDM(query: string) {
   });
 }
 
-/**
- * Get total unread count across all conversations
- */
+// ─── Unread count ─────────────────────────────────────────────────────────────
+
 export function useTotalUnreadCount() {
   const { conversations } = useConversations();
   return conversations.reduce((sum, conv) => sum + (conv.unreadCount || 0), 0);
 }
 
-// ============================================
-// BLOCK / UNBLOCK HOOKS
-// ============================================
+// ─── Block / Unblock ──────────────────────────────────────────────────────────
 
-/**
- * Hook for blocking a conversation
- */
 export function useBlockConversation() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (conversationId: string) => blockConversation(conversationId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() }); },
   });
 }
 
-/**
- * Hook for unblocking a conversation
- */
 export function useUnblockConversation() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (conversationId: string) => unblockConversation(conversationId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() }); },
   });
 }
 
-// ============================================
-// GROUP CHAT HOOKS
-// ============================================
+// ─── Group Chat ───────────────────────────────────────────────────────────────
 
-/**
- * Hook for creating a new group chat
- */
 export function useCreateGroup() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({ name, memberAddresses, description }: {
-      name: string;
-      memberAddresses: string[];
-      description?: string
+      name: string; memberAddresses: string[]; description?: string;
     }) => createGroup(name, memberAddresses, description),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() }); },
   });
 }
 
-/**
- * Hook for fetching group info
- */
 export function useGroupInfo(groupId: string | null) {
   const { isAuthenticated } = useAuth();
-
   return useQuery({
     queryKey: [...messagesKeys.conversation(groupId || ''), 'groupInfo'],
     queryFn: () => getGroupInfo(groupId!),
     enabled: isAuthenticated && !!groupId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 }
 
-/**
- * Hook for joining a group
- */
 export function useJoinGroup() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (groupId: string) => joinGroup(groupId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() }); },
   });
 }
 
-/**
- * Hook for updating a group
- */
 export function useUpdateGroup() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({ groupId, updates }: {
-      groupId: string;
-      updates: { name?: string; description?: string; avatarUrl?: string }
+      groupId: string; updates: { name?: string; description?: string; avatarUrl?: string };
     }) => updateGroup(groupId, updates),
     onSuccess: (_, { groupId }) => {
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversation(groupId) });
@@ -435,26 +481,16 @@ export function useUpdateGroup() {
   });
 }
 
-/**
- * Hook for leaving a group
- */
 export function useLeaveGroup() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (groupId: string) => leaveGroup(groupId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() }); },
   });
 }
 
-/**
- * Hook for blocking a user in a group (admin action)
- */
 export function useBlockUserInGroup() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({ groupId, userAddress }: { groupId: string; userAddress: string }) =>
       blockUserInGroup(groupId, userAddress),
@@ -464,61 +500,29 @@ export function useBlockUserInGroup() {
   });
 }
 
-// ============================================
-// MEDIA UPLOAD HOOKS
-// ============================================
+// ─── User Status ──────────────────────────────────────────────────────────────
 
-/**
- * Hook for uploading chat images
- */
-export function useUploadChatImage() {
-  return useMutation({
-    mutationFn: (file: File) => uploadChatImage(file),
-  });
-}
-
-// ============================================
-// USER STATUS HOOKS
-// ============================================
-
-/**
- * Hook for fetching a user's online status
- */
 export function useUserOnlineStatus(address: string | null) {
   const { isAuthenticated } = useAuth();
-
   return useQuery({
     queryKey: [...messagesKeys.all, 'userStatus', address],
     queryFn: () => getUserOnlineStatus(address!),
     enabled: isAuthenticated && !!address,
-    staleTime: 2 * 60 * 1000, // 2 minutes
-    refetchInterval: 3 * 60 * 1000, // Refresh every 3 minutes
+    staleTime: 2 * 60 * 1000,
+    refetchInterval: 3 * 60 * 1000,
   });
 }
 
-// ============================================
-// DM VIDEOS HOOK
-// ============================================
+// ─── DM Videos ────────────────────────────────────────────────────────────────
 
-/**
- * Hook for fetching videos shared in DMs
- */
 export function useDMVideos() {
   const { isAuthenticated } = useAuth();
-
   return useInfiniteQuery({
     queryKey: [...messagesKeys.all, 'dmVideos'],
-    queryFn: async ({ pageParam = 0 }) => {
-      return getDMVideos(pageParam, 20);
-    },
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.hasMore) {
-        return allPages.length;
-      }
-      return undefined;
-    },
+    queryFn: async ({ pageParam = 0 }) => getDMVideos(pageParam, 20),
+    getNextPageParam: (lastPage, allPages) => lastPage.hasMore ? allPages.length : undefined,
     initialPageParam: 0,
     enabled: isAuthenticated,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 }
