@@ -220,6 +220,8 @@ async function computeSnapshotDelta(
 
     // For daily/weekly holdings: pure on-chain comparison (bypass snapshots entirely)
     const useOnChain = sortMode === "holdings" && (period === "day" || period === "week") && rpcConfig;
+    // For monthly/yearly holdings: hybrid mode — snapshots for known wallets, on-chain for new ones
+    const useHybridOnChain = sortMode === "holdings" && (period === "month" || period === "year") && rpcConfig;
 
     if (useOnChain) {
       console.log(`[delta] ${sortMode}/${period}: PURE ON-CHAIN mode — fetching current + historical blocks for ${entries.length} addresses...`);
@@ -283,7 +285,7 @@ async function computeSnapshotDelta(
       return { sort: sortMode, period, success: true };
     }
 
-    // ── Snapshot-based path (for month/year/all or non-holdings sort modes) ──
+    // ── Snapshot-based path (with hybrid on-chain for month/year holdings) ──
 
     const pastDate = new Date();
     pastDate.setDate(pastDate.getDate() - daysAgo);
@@ -356,6 +358,42 @@ async function computeSnapshotDelta(
       console.log(`[delta] ${sortMode}/${period}: no valid snapshot found for ${pastDateStr}`);
     }
 
+    // ── Hybrid on-chain: fetch historical balances for NEW wallets not in past snapshot ──
+    let hybridPastMap: Map<string, number> | null = null;
+    if (useHybridOnChain && pastMap.size > 0) {
+      const newAddresses = entries
+        .map(e => e.account.toLowerCase())
+        .filter(addr => !pastMap.has(addr));
+
+      if (newAddresses.length > 0) {
+        console.log(`[delta] ${sortMode}/${period}: HYBRID mode — ${pastMap.size} from snapshot, ${newAddresses.length} new wallets need on-chain lookup`);
+
+        try {
+          const [baseCurrentBlock, bnbCurrentBlock] = await Promise.all([
+            getCurrentBlockNumber(rpcConfig!.baseRpc),
+            getCurrentBlockNumber(rpcConfig!.bnbRpc),
+          ]);
+
+          const baseHistBlock = Math.max(0, baseCurrentBlock - (BASE_BLOCKS_PER_DAY * daysAgo));
+          const bnbHistBlock = Math.max(0, bnbCurrentBlock - (BNB_BLOCKS_PER_DAY * daysAgo));
+          const baseHistHex = "0x" + baseHistBlock.toString(16);
+          const bnbHistHex = "0x" + bnbHistBlock.toString(16);
+
+          console.log(`[delta] ${sortMode}/${period}: fetching on-chain history for ${newAddresses.length} new holders at blocks Base=${baseHistBlock}, BNB=${bnbHistBlock}`);
+
+          hybridPastMap = await batchOnChainBalancesAtBlock(
+            newAddresses, rpcConfig!.baseRpc, rpcConfig!.bnbRpc, baseHistHex, bnbHistHex,
+          );
+
+          console.log(`[delta] ${sortMode}/${period}: got ${hybridPastMap.size} historical on-chain balances for new holders`);
+        } catch (rpcErr) {
+          console.warn(`[delta] ${sortMode}/${period}: hybrid on-chain lookup failed, using snapshot-only:`, rpcErr);
+        }
+      } else {
+        console.log(`[delta] ${sortMode}/${period}: all ${entries.length} wallets found in snapshot, no on-chain needed`);
+      }
+    }
+
     const getEntryValue = (entry: EnrichedEntry): number => {
       if (sortMode === "holdings") return entry.total;
       if (sortMode === "sentTips") return entry.sentTips;
@@ -408,7 +446,12 @@ async function computeSnapshotDelta(
         } else {
           currentVal = getEntryValue(entry);
         }
-        const pastVal = pastMap.get(addr);
+
+        // Check snapshot first, then hybrid on-chain for new wallets
+        let pastVal = pastMap.get(addr);
+        if (pastVal === undefined && hybridPastMap) {
+          pastVal = hybridPastMap.get(addr);
+        }
         const isExtraWallet = EXTRA_WALLET_ADDRESSES.has(addr);
 
         let delta: number;
@@ -425,13 +468,19 @@ async function computeSnapshotDelta(
         return { ...entry, delta };
       });
 
+    // For month/year holdings with hybrid on-chain: show both gains AND losses like daily/weekly
+    const isHybridHoldings = useHybridOnChain && hybridPastMap;
     const sorted = withDeltas
-      .filter((e) => e.delta !== undefined && e.delta > 0)
-      .sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0));
+      .filter((e) => e.delta !== undefined && (isHybridHoldings ? e.delta !== 0 : e.delta > 0))
+      .sort((a, b) => isHybridHoldings
+        ? Math.abs(b.delta ?? 0) - Math.abs(a.delta ?? 0)
+        : (b.delta ?? 0) - (a.delta ?? 0)
+      );
 
     const periodData = {
       result: { byWalletBalance: sorted },
-      hasHistoricalData: pastMap.size > 0,
+      hasHistoricalData: pastMap.size > 0 || !!hybridPastMap,
+      ...(isHybridHoldings ? { hybridOnChainMode: true } : {}),
     };
 
     const { error } = await supabase.from("leaderboard_cache").upsert(
@@ -443,7 +492,13 @@ async function computeSnapshotDelta(
       console.error(`Error caching ${sortMode}/${period}:`, error);
       return { sort: sortMode, period, success: false, error: error.message };
     }
-    console.log(`[delta] ${sortMode}/${period}: ${sorted.length} entries with positive delta`);
+    if (isHybridHoldings) {
+      const gains = sorted.filter(e => (e.delta ?? 0) > 0).length;
+      const losses = sorted.filter(e => (e.delta ?? 0) < 0).length;
+      console.log(`[delta] ${sortMode}/${period}: ${sorted.length} entries (${gains} gains, ${losses} losses) — hybrid on-chain mode`);
+    } else {
+      console.log(`[delta] ${sortMode}/${period}: ${sorted.length} entries with positive delta`);
+    }
     return { sort: sortMode, period, success: true };
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Unknown error";
@@ -480,7 +535,7 @@ Deno.serve(async (req) => {
     } : undefined;
 
     if (!rpcConfig) {
-      console.warn("[refresh] ALCHEMY_API_KEY not set — daily/weekly holdings will use snapshot-based deltas");
+      console.warn("[refresh] ALCHEMY_API_KEY not set — daily/weekly/monthly/yearly holdings will use snapshot-based deltas only");
     }
 
     const results: { sort: string; period: string; success: boolean; error?: string }[] = [];
