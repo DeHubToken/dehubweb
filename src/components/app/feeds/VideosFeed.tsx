@@ -920,7 +920,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
               
               // Insert shorts carousel after 10 posts (index 9)
               if (index === SHORTS_INSERT_AFTER - 1 && shorts.length > 0) {
-                elements.push(<ShortsReel key="shorts-carousel" shorts={shorts} />);
+                elements.push(<div key="shorts-carousel" className={cn(isCollapsed && "sm:col-span-2")}><ShortsReel shorts={shorts} /></div>);
               }
               
               return elements;
