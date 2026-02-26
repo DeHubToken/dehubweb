@@ -95,6 +95,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [overlaysHidden, setOverlaysHidden] = useState(false);
+  const [isTimelineSeeking, setIsTimelineSeeking] = useState(false);
   
   // Gesture tracking for overlay hide/show
   const overlaySwipeStartY = useRef<number | null>(null);
@@ -642,7 +643,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           {/* Draggable carousel container */}
           <motion.div
             className="absolute inset-0"
-            drag="y"
+            drag={isTimelineSeeking ? false : 'y'}
+            dragListener={!isTimelineSeeking}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={0.15}
             onDrag={handleDrag}
@@ -674,6 +676,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       isMuted={isMuted}
                       onTimeUpdate={isActive ? trackView : undefined}
                       onTap={togglePlayPause}
+                      onSeekStart={() => setIsTimelineSeeking(true)}
+                      onSeekEnd={() => setIsTimelineSeeking(false)}
                       showPlayIndicator={isActive ? showPlayIndicator : null}
                     />
                   </motion.div>

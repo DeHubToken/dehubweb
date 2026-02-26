@@ -19,6 +19,8 @@ interface VideoSlideProps {
   isMuted: boolean;
   onTimeUpdate?: (currentTime: number, duration: number) => void;
   onTap?: () => void;
+  onSeekStart?: () => void;
+  onSeekEnd?: () => void;
   showPlayIndicator?: 'play' | 'pause' | null;
 }
 
@@ -28,6 +30,8 @@ export const VideoSlide = memo(function VideoSlide({
   isMuted,
   onTimeUpdate,
   onTap,
+  onSeekStart,
+  onSeekEnd,
   showPlayIndicator,
 }: VideoSlideProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -114,9 +118,10 @@ export const VideoSlide = memo(function VideoSlide({
     e.stopPropagation();
     e.preventDefault();
     setIsSeeking(true);
+    onSeekStart?.();
     seekToPosition(e.clientX);
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-  }, [seekToPosition]);
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  }, [seekToPosition, onSeekStart]);
 
   const handleProgressPointerMove = useCallback((e: React.PointerEvent) => {
     if (!isSeeking) return;
@@ -130,8 +135,12 @@ export const VideoSlide = memo(function VideoSlide({
     e.stopPropagation();
     e.preventDefault();
     setIsSeeking(false);
-    (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-  }, [isSeeking]);
+    onSeekEnd?.();
+    const el = e.currentTarget as HTMLElement;
+    if (el.hasPointerCapture(e.pointerId)) {
+      el.releasePointerCapture(e.pointerId);
+    }
+  }, [isSeeking, onSeekEnd]);
 
   return (
     <div className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
@@ -207,6 +216,7 @@ export const VideoSlide = memo(function VideoSlide({
       {/* Bottom 15% seek zone + progress bar */}
       <div
         ref={progressBarRef}
+        data-no-swipe
         className="absolute bottom-0 left-0 right-0 z-20 cursor-pointer touch-none select-none"
         style={{ height: '15%' }}
         onPointerDown={handleProgressPointerDown}
