@@ -16,6 +16,7 @@ import { AnimatePresence } from 'framer-motion';
 import { ShortsViewer } from './ShortsViewer';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import type { ShortVideo } from '@/types/feed.types';
+import { AutoplayVideo } from '@/components/app/AutoplayVideo';
 
 // Module-level cache: survives unmount/remount, keeps images warm in browser memory
 const preloadedThumbnails = new Set<string>();
@@ -91,15 +92,11 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
               {/* Thumbnail */}
               <div className="relative aspect-[9/16] rounded-xl overflow-hidden">
                 {short.videoUrl ? (
-                  <video
+                  <AutoplayVideo
                     src={short.videoUrl}
                     poster={short.thumbnail}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    preload="auto"
+                    className="w-full h-full group-hover:scale-105 transition-transform duration-300"
+                    threshold={0.3}
                   />
                 ) : (
                   <img

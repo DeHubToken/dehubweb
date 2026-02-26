@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ShortsReel } from '@/components/app/cards/ShortsReel';
+import { AutoplayVideo } from '@/components/app/AutoplayVideo';
 
 import { useUnifiedFeed, mapToVideoItem, type UnifiedFeedParams, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { useAuth } from '@/contexts/AuthContext';
@@ -780,15 +781,10 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                 className="relative aspect-video rounded-xl overflow-hidden group cursor-pointer text-left"
               >
                 {video.videoUrl ? (
-                  <video
+                  <AutoplayVideo
                     src={video.videoUrl}
                     poster={video.thumbnail}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    preload="auto"
+                    className="w-full h-full group-hover:scale-105 transition-transform duration-300"
                   />
                 ) : (
                   <img
@@ -839,15 +835,10 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                   className="relative flex-shrink-0 w-[70%] aspect-video rounded-xl overflow-hidden group cursor-pointer text-left"
                 >
                   {video.videoUrl ? (
-                    <video
+                    <AutoplayVideo
                       src={video.videoUrl}
                       poster={video.thumbnail}
-                      className="w-full h-full object-cover"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      preload="auto"
+                      className="w-full h-full"
                     />
                   ) : (
                     <img
