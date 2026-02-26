@@ -70,6 +70,8 @@ export interface UnifiedFeedItem {
   commentCount: number;
   videoDuration?: number;
   minterUsername?: string;
+  /** Some API responses use 'mintername' instead of 'minterUsername' */
+  mintername?: string;
   minterDisplayName?: string;
   minterAvatarUrl?: string;
   minterAboutMe?: string;
@@ -197,14 +199,14 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     durationSeconds: item.videoDuration || 0,
     title: item.name || 'Untitled',
     description: item.description,
-    channel: item.minterDisplayName || item.minterUsername || 'Unknown Creator',
+    channel: item.minterDisplayName || item.minterUsername || item.mintername || 'Unknown Creator',
     channelAvatar,
     verified: false,
     views: formatViews(item.views),
     uploadedAgo: formatTimeAgo(item.createdAt),
     status: item.status,
     creatorId: item.minter,
-    creatorUsername: item.minterUsername,
+    creatorUsername: item.minterUsername || item.mintername,
     creatorBadgeBalance: item.minterUser?.badgeBalance,
     isLiked: item.isLiked ?? false,
     isDisliked: item.isDisliked ?? false,
@@ -245,7 +247,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
   return {
     id,
     type: 'image',
-    username: item.minterUsername || item.minterDisplayName || 'unknown',
+    username: item.minterUsername || item.mintername || item.minterDisplayName || 'unknown',
     verified: false,
     avatar,
     image,
@@ -259,7 +261,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     timeAgo: formatTimeAgo(item.createdAt),
     status: item.status,
     creatorId: item.minter,
-    creatorUsername: item.minterUsername,
+    creatorUsername: item.minterUsername || item.mintername,
     creatorBadgeBalance: item.minterUser?.badgeBalance,
     isLiked: item.isLiked ?? false,
     isDisliked: item.isDisliked ?? false,
@@ -296,8 +298,8 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     type: 'post',
     author: {
       id: item.minter,
-      name: item.minterDisplayName || item.minterUsername || 'Unknown',
-      handle: item.minterUsername || item.minter,
+      name: item.minterDisplayName || item.minterUsername || item.mintername || 'Unknown',
+      handle: item.minterUsername || item.mintername || item.minter,
       avatarSeed: avatarUrl,
       verified: false,
       badgeBalance: item.minterUser?.badgeBalance,
