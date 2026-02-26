@@ -34,6 +34,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -62,12 +63,28 @@ export const AutoplayVideo = memo(function AutoplayVideo({
     }
   }, [isVisible, disabled]);
 
-  // Reset loaded state when src changes or becomes disabled
+  // Reset state when src changes or becomes disabled
   useEffect(() => {
-    if (disabled) setHasLoaded(false);
+    if (disabled) {
+      setHasLoaded(false);
+      setHasError(false);
+    }
   }, [disabled, src]);
 
   const shouldLoad = isVisible && !disabled;
+
+  // If video has a format error (H.265/HEVC), just show poster
+  if (hasError) {
+    return (
+      <div ref={containerRef} className={cn("relative", className)}>
+        {poster ? (
+          <img src={poster} alt="" className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full bg-white/[0.06]" />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} className={cn("relative", className)}>
@@ -91,6 +108,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
         playsInline
         preload={shouldLoad ? 'auto' : 'none'}
         onLoadedData={() => setHasLoaded(true)}
+        onError={() => setHasError(true)}
       />
     </div>
   );
