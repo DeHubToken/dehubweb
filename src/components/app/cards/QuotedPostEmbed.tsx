@@ -71,14 +71,14 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
               {displayName.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <span className="text-sm font-semibold text-white truncate max-w-[120px]">{displayName}</span>
+          <span className="text-sm font-semibold text-white truncate">{displayName}</span>
           <CheckCircle className="w-3.5 h-3.5 text-blue-400 shrink-0 hidden" />
           <span className="text-xs text-zinc-500 truncate">@{handle}</span>
         </div>
 
         {/* Text content */}
         {content && (
-          <p className="text-sm text-zinc-300 line-clamp-3 leading-relaxed">{content}</p>
+          <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">{content}</p>
         )}
       </div>
     </div>
