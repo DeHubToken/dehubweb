@@ -361,7 +361,7 @@ export function ActionBar({
             aria-label="Repost"
           >
             <Repeat2 className="w-5 h-5" />
-            {(repostCount ?? 0) > 0 && <span className="text-xs text-zinc-400">{formatCount(repostCount)}</span>}
+            <span className="text-xs text-zinc-400">{formatCount(repostCount ?? 0)}</span>
           </button>
 
           
