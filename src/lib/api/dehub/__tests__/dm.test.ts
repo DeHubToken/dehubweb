@@ -90,50 +90,7 @@ describe('getMessages', () => {
   });
 });
 
-// ── sendMessage ──
-
-describe('sendMessage', () => {
-  it('sends text via /api/dm/tnx', async () => {
-    mockFetch({ result: { id: 'm1', content: 'hello', type: 'text' } });
-    const { sendMessage } = await import('@/lib/api/dehub/dm');
-    const result = await sendMessage('conv-1', 'hello');
-    expect(fetchUrl()).toContain('/api/dm/tnx');
-    const body = JSON.parse(fetchOpts()?.body as string);
-    expect(body.content).toBe('hello');
-    expect(body.sender).toBe('0xabc123');
-  });
-
-  it('sends to new conversation with receiver field', async () => {
-    mockFetch({ result: { id: 'm1', content: 'hi' } });
-    const { sendMessage } = await import('@/lib/api/dehub/dm');
-    await sendMessage('new_0xDEF', 'hi');
-    const body = JSON.parse(fetchOpts()?.body as string);
-    expect(body.receiver).toBe('0xdef');
-    expect(body.conversationId).toBeUndefined();
-  });
-
-  it('includes tip fields for tip type', async () => {
-    mockFetch({ result: { id: 'm1' } });
-    const { sendMessage } = await import('@/lib/api/dehub/dm');
-    await sendMessage('conv-1', 'tip!', 'tip', undefined, 100, 'DHB');
-    const body = JSON.parse(fetchOpts()?.body as string);
-    expect(body.tipAmount).toBe(100);
-    expect(body.tipCurrency).toBe('DHB');
-  });
-
-  it('throws when no wallet address', async () => {
-    localStorage.removeItem('dehub_wallet');
-    mockFetch({});
-    const { sendMessage } = await import('@/lib/api/dehub/dm');
-    await expect(sendMessage('conv-1', 'hi')).rejects.toThrow('Wallet address not found');
-  });
-
-  it('throws when no token', async () => {
-    localStorage.clear();
-    const { sendMessage } = await import('@/lib/api/dehub/dm');
-    await expect(sendMessage('conv-1', 'hi')).rejects.toThrow('Authentication required');
-  });
-});
+// ── sendMessage (now uses socket, tested via use-messages hook) ──
 
 // ── createConversation ──
 

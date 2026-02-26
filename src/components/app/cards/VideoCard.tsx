@@ -1163,7 +1163,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         {/* Play/Pause button overlay - double click/tap for fullscreen */}
         {(!isPlaying || (showControls && !isTouchDevice)) && !isLoading && (
           <div 
-            className={`absolute inset-0 flex items-center justify-center bg-black/20 ${isTouchDevice ? 'opacity-100' : 'opacity-0 group-hover/thumb:opacity-100'} transition-opacity`}
+            className={`absolute inset-0 flex items-center justify-center bg-black/20 ${isFullscreen && isPlaying ? 'opacity-0 pointer-events-none' : isTouchDevice ? 'opacity-100' : 'opacity-0 group-hover/thumb:opacity-100'} transition-opacity`}
             onDoubleClick={(e) => {
               e.stopPropagation();
               const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();

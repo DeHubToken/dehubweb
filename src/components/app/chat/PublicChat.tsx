@@ -130,13 +130,14 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [messages.length]);
 
-  const handleSendMessage = async (content: string, type: 'text' | 'image' | 'gif', imageUrl?: string) => {
+  const handleSendMessage = async (args: { content: string; type: string }) => {
     if (!isAuthenticated) {
       toast.error('Sign in to send messages');
       return;
     }
+    const type = args.type === 'media' ? 'image' : args.type === 'msg' ? 'text' : args.type as 'text' | 'image' | 'gif';
     try {
-      await send(content, type, imageUrl);
+      await send(args.content, type);
     } catch {
       toast.error('Failed to send message');
     }
