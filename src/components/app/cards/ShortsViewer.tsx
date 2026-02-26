@@ -471,11 +471,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const endInRightZone = touch.clientX > screenWidth * 0.8;
     
     if (overlaysHidden) {
-      // Restore overlays: tap in edge zones OR swipe up in bottom/right zone
-      if (isTap && (endInBottomZone || endInTopZone || endInRightZone)) {
-        setOverlaysHidden(false);
-      } else if (isVerticalSwipe && deltaY < -40 && (inBottomZone || inRightZone)) {
-        // Swipe UP in bottom/right zone restores overlays
+      // Restore overlays: only swipe UP in edge zones (not taps — taps should go to timeline seeker)
+      if (isVerticalSwipe && deltaY < -40 && (inBottomZone || inRightZone)) {
         setOverlaysHidden(false);
       }
     } else {
