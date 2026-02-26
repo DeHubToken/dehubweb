@@ -80,15 +80,16 @@ export function useConversations(searchQuery: string = '') {
     refetchOnWindowFocus: true,
   });
 
-  // Real-time: when any DM message arrives, refresh the conversations list
-  // (updates last message preview + unread count)
+  // Real-time: when any DM message arrives, refresh the conversations list.
+  // Only subscribe after the first successful REST fetch (avoids eager socket connect on load).
+  const hasData = !!query.data;
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !hasData) return;
     const unsub = onDmSendMessage(() => {
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
     });
     return unsub;
-  }, [isAuthenticated, queryClient]);
+  }, [isAuthenticated, hasData, queryClient]);
 
   return {
     conversations: query.data || [],

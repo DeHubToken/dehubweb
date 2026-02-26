@@ -75,12 +75,14 @@ function getDmSocket(): Socket {
     currentToken = token;
     dmSocket = io(`${DEHUB_API_BASE}/dm`, {
       auth: token ? { token: `Bearer ${token}` } : undefined,
-      transports: ['websocket', 'polling'],
+      // Start with polling (better CORS compat), then upgrade to WebSocket
+      transports: ['polling', 'websocket'],
       reconnection: true,
-      reconnectionDelay: 2000,
-      reconnectionDelayMax: 10000,
-      reconnectionAttempts: 5,
-      timeout: 10000,
+      reconnectionDelay: 3000,
+      reconnectionDelayMax: 15000,
+      // Limit retries — if /dm namespace isn't on server, don't spam
+      reconnectionAttempts: 3,
+      timeout: 15000,
     });
 
     dmSocket.on('connect', () => {
@@ -92,6 +94,7 @@ function getDmSocket(): Socket {
     });
 
     dmSocket.on('connect_error', (err) => {
+      // Suppress noisy logs after repeated failures
       console.warn('[DM Socket] Connection error:', err.message);
     });
   }

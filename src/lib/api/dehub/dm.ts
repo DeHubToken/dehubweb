@@ -372,26 +372,15 @@ export async function deleteConversation(
   }
 
   try {
-    await apiCall<any>(`/dm/conversation/${dmId}`, {
-      method: 'DELETE',
-      body: address ? { address } : undefined,
+    await apiCall<any>('/api/dm/delete-messages', {
+      method: 'POST',
+      body: { conversationId: dmId },
       requiresAuth: true,
     });
     return { success: true };
   } catch (err) {
     console.error('[DM API] deleteConversation failed:', err);
-    // Fallback to old endpoint
-    try {
-      await apiCall<any>('/api/dm/delete-messages', {
-        method: 'POST',
-        body: { conversationId: dmId },
-        requiresAuth: true,
-      });
-      return { success: true };
-    } catch (fallbackErr) {
-      console.error('[DM API] deleteConversation fallback also failed:', fallbackErr);
-      throw fallbackErr;
-    }
+    throw err;
   }
 }
 
@@ -485,7 +474,7 @@ export async function uploadAndSendMedia(
   if (opts?.replyTo) formData.append('replyTo', opts.replyTo);
   if (opts?.txHash) formData.append('txHash', opts.txHash);
 
-  const response = await fetch(`${DEHUB_API_BASE}/dm/upload`, {
+  const response = await fetch(`${DEHUB_API_BASE}/api/dm/upload`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -562,8 +551,8 @@ export async function searchUsersForDM(
   console.log('[DM API] searchUsersForDM called', { query: trimmedQuery });
 
   try {
-    const response = await apiCall<any>('/dm/search', {
-      params: { searchQuery: trimmedQuery, page, limit },
+    const response = await apiCall<any>('/api/dm/search', {
+      params: { q: trimmedQuery, page, limit },
       requiresAuth: true,
     });
     console.log('[DM API] searchUsersForDM response:', response);
@@ -575,17 +564,6 @@ export async function searchUsersForDM(
     else if (response?.accounts && Array.isArray(response.accounts)) accounts = response.accounts;
     else if (response?.result && Array.isArray(response.result)) accounts = response.result;
     else if (Array.isArray(response)) accounts = response;
-
-    // Fallback to old endpoint if new one returns nothing
-    if (!accounts.length) {
-      const fallback = await apiCall<any>('/api/dm/search', {
-        params: { q: trimmedQuery, page, limit },
-        requiresAuth: true,
-      }).catch(() => null);
-      if (fallback?.users) accounts = fallback.users;
-      else if (fallback?.accounts?.items) accounts = fallback.accounts.items;
-      else if (Array.isArray(fallback)) accounts = fallback;
-    }
 
     const items: DeHubUser[] = accounts.map((acc: any) => ({
       _id: acc._id || acc.id,
