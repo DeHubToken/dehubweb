@@ -13,11 +13,13 @@ import React, { Suspense, useState, useEffect, useRef, memo } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import {
   FeedSkeleton,
+  ExploreSkeleton,
   ProfileSkeleton,
   MessagesSkeleton,
   NotificationsSkeleton,
   LeaderboardSkeleton,
   SettingsSkeleton,
+  FeaturesSkeleton,
   GridSkeleton,
   GenericPageSkeleton,
 } from './PageSkeletons';
@@ -51,7 +53,7 @@ interface CachedPageConfig {
 
 const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'home', path: '/app', component: HomePage, skeleton: FeedSkeleton },
-  { key: 'explore', path: '/app/explore', component: ExplorePage, skeleton: FeedSkeleton },
+  { key: 'explore', path: '/app/explore', component: ExplorePage, skeleton: ExploreSkeleton },
   { key: 'notifications', path: '/app/notifications', component: NotificationsPage, skeleton: NotificationsSkeleton },
   { key: 'messages', path: '/app/messages', component: MessagesPage, skeleton: MessagesSkeleton },
   { key: 'assistant', path: '/app/assistant', component: AssistantPage, skeleton: GenericPageSkeleton },
@@ -64,7 +66,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'tv', path: '/app/tv', component: TVPage, skeleton: GridSkeleton },
   { key: 'buy', path: '/app/buy', component: BuyCoinsPage, skeleton: GenericPageSkeleton },
   { key: 'agents', path: '/app/agents', component: AgentsPage, skeleton: GenericPageSkeleton },
-  { key: 'features', path: ['/app/features', '/features'], component: FeaturesPage, skeleton: GenericPageSkeleton },
+  { key: 'features', path: ['/app/features', '/features'], component: FeaturesPage, skeleton: FeaturesSkeleton },
   { key: 'careers', path: ['/app/jobs', '/jobs'], component: CareersPage, skeleton: GenericPageSkeleton },
   { key: 'profile', path: '/app/profile', component: ProfilePage, skeleton: ProfileSkeleton },
 ];
