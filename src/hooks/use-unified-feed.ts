@@ -124,6 +124,7 @@ export interface UnifiedFeedItem {
   updatedAt?: string;
   totalReposts?: number;
   reposts?: number;
+  ppvBuyerCount?: number;
 }
 
 export interface UnifiedFeedResponse {
@@ -213,6 +214,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     likeCount: item.likes ?? item.totalVotes?.for ?? 0,
     dislikeCount: item.dislikes ?? item.totalVotes?.against ?? 0,
     commentCount: item.commentCount || 0,
+    ppvBuyerCount: item.ppvBuyerCount || 0,
     isPPV,
     ppvPrice: item.streamInfo?.payPerViewAmount,
     ppvCurrency: 'DHB',
@@ -265,6 +267,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     creatorBadgeBalance: item.minterUser?.badgeBalance,
     isLiked: item.isLiked ?? false,
     isDisliked: item.isDisliked ?? false,
+    ppvBuyerCount: item.ppvBuyerCount || 0,
     createdAt: item.createdAt,
     isPPV: item.streamInfo?.isPayPerView ?? false,
     ppvPrice: item.streamInfo?.payPerViewAmount,

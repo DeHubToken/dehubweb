@@ -30,6 +30,7 @@ import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
 
 import { DeletePostModal } from '../modals/DeletePostModal';
+import { QuotePostModal } from '../modals/QuotePostModal';
 import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
@@ -39,7 +40,7 @@ import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { useImageTranslation } from '@/hooks/use-image-translation';
 import { useAuth } from '@/contexts/AuthContext';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
-import { updateTokenVisibility, type TokenVisibility } from '@/lib/api/dehub';
+import { updateTokenVisibility, repostPost, type TokenVisibility } from '@/lib/api/dehub';
 import { cacheImageForNavigation } from '@/lib/post-cache';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import {
@@ -314,6 +315,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
+  const [showQuoteModal, setShowQuoteModal] = useState(false);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -376,6 +378,41 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
     setShowTranslationSheet(false);
     clearResult();
   }, [clearResult]);
+
+  // Repost handler
+  const handleRepost = useCallback(async () => {
+    if (!walletAddress) { openLoginModal(); return; }
+    const numericId = parseInt(post.id, 10);
+    if (isNaN(numericId)) return;
+    try {
+      await repostPost(numericId);
+      toast.success('Reposted!');
+      queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+      queryClient.invalidateQueries({ queryKey: ['user-reposts'] });
+    } catch {
+      toast.error('Failed to repost');
+    }
+  }, [post.id, walletAddress, openLoginModal, queryClient]);
+
+  // Quote handler
+  const handleQuote = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    setShowQuoteModal(true);
+  }, [walletAddress, openLoginModal]);
+
+  // Build minimal NFT for quote modal
+  const postAsNFT = {
+    tokenId: parseInt(post.id, 10) || 0,
+    name: post.title || post.caption || '',
+    description: post.description || post.caption || '',
+    imageUrl: post.image || '',
+    postType: 'feed-images' as const,
+    minter: post.creatorId || '',
+    minterUsername: post.creatorUsername || '',
+    minterDisplayName: post.username,
+    minterAvatarUrl: post.avatar,
+    createdAt: post.createdAt || '',
+  };
 
   // Navigate to single post page when clicking non-interactive areas
   // Pre-cache post data for instant display on the single post page
@@ -681,6 +718,8 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           postId={post.id} 
           className="p-0" 
           onComment={() => setShowComments(true)} 
+          onRepost={handleRepost}
+          onQuote={handleQuote}
           isLiked={post.isLiked} 
           isDisliked={post.isDisliked}
           likeCount={post.likes}
@@ -883,6 +922,13 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           </DrawerContent>
         </Drawer>
       )}
+
+      {/* Quote Post Modal */}
+      <QuotePostModal
+        open={showQuoteModal}
+        onOpenChange={setShowQuoteModal}
+        quotedPost={postAsNFT as any}
+      />
     </div>
   );
 });

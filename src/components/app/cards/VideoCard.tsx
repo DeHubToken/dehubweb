@@ -33,6 +33,7 @@ import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
+import { QuotePostModal } from '../modals/QuotePostModal';
 import { TipModal } from '../modals/TipModal';
 import { CommentsWrapper } from './CommentsWrapper';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
@@ -42,6 +43,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 
 import { cacheVideoForNavigation } from '@/lib/post-cache';
+import { repostPost } from '@/lib/api/dehub';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import {
   Drawer,
@@ -445,6 +447,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
+  const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
@@ -482,6 +485,40 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     handleTranslate: handleVideoTranslate,
     handleShowOriginal: handleVideoShowOriginal,
   } = useTranslation(videoText);
+
+  // Repost handler
+  const handleRepost = useCallback(async () => {
+    if (!walletAddress) { openLoginModal(); return; }
+    const numericId = parseInt(video.id, 10);
+    if (isNaN(numericId)) return;
+    try {
+      await repostPost(numericId);
+      toast.success('Reposted!');
+      queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+      queryClient.invalidateQueries({ queryKey: ['user-reposts'] });
+    } catch {
+      toast.error('Failed to repost');
+    }
+  }, [video.id, walletAddress, openLoginModal, queryClient]);
+
+  const handleQuote = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    setShowQuoteModal(true);
+  }, [walletAddress, openLoginModal]);
+
+  const videoAsNFT = {
+    tokenId: parseInt(video.id, 10) || 0,
+    name: video.title || '',
+    description: video.description || '',
+    imageUrl: video.thumbnail || '',
+    videoUrl: video.videoUrl || '',
+    postType: 'video' as const,
+    minter: video.creatorId || '',
+    minterUsername: video.creatorUsername || '',
+    minterDisplayName: video.channel,
+    minterAvatarUrl: video.channelAvatar,
+    createdAt: video.createdAt || '',
+  };
 
   // Pause callback for the playback manager
   const pauseVideo = useCallback(() => {
@@ -1368,6 +1405,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           isLiked={video.isLiked} 
           isDisliked={video.isDisliked}
           onComment={() => setShowComments(!showComments)}
+          onRepost={handleRepost}
+          onQuote={handleQuote}
           likeCount={video.likeCount}
           dislikeCount={video.dislikeCount}
           commentCount={video.commentCount}
@@ -1642,6 +1681,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           </DrawerContent>
         </Drawer>
       )}
+
+      {/* Quote Post Modal */}
+      <QuotePostModal
+        open={showQuoteModal}
+        onOpenChange={setShowQuoteModal}
+        quotedPost={videoAsNFT as any}
+      />
     </div>
   );
 });

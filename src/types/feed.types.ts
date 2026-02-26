@@ -95,6 +95,8 @@ export interface VideoItem extends BaseFeedItem {
   dislikeCount?: number;
   /** Number of comments */
   commentCount?: number;
+  /** Number of PPV buyers */
+  ppvBuyerCount?: number;
   /** Whether content is pay-per-view */
   isPPV?: boolean;
   /** PPV price amount */
@@ -162,6 +164,8 @@ export interface ImagePost extends BaseFeedItem {
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
   isDisliked?: boolean;
+  /** Number of PPV buyers */
+  ppvBuyerCount?: number;
   /** Whether content is pay-per-view */
   isPPV?: boolean;
   /** PPV price amount */
