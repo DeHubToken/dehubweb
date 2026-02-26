@@ -12,7 +12,7 @@ import { getBadgeUrl } from '@/lib/staking-badges';
 import { useStories, useWatchedStories } from '@/hooks/use-stories';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
-import { getUserComments, blockUser, unblockUser, getUserReposts } from '@/lib/api/dehub';
+import { getUserComments, blockUser, unblockUser, getUserReposts, getNFTInfo } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { TabValue } from '@/components/app/profile/ProfileConstants';
@@ -66,13 +66,28 @@ export function useProfilePage() {
     enabled: !!apiProfile?.walletAddress,
   });
 
-  // Fetch user reposts
+  // Fetch user reposts (and enrich quote posts with quoted post data)
   const { data: repostsData } = useQuery({
     queryKey: ['user-reposts', apiProfile?.walletAddress],
     queryFn: async () => {
       if (!apiProfile?.walletAddress) throw new Error('No address');
       const res = await getUserReposts(apiProfile.walletAddress, 1, 50);
-      return res.result || [];
+      const items = res.result || [];
+      
+      // For quote posts that have quotedTokenId but no quotedPost object, fetch the quoted post
+      const enrichPromises = items.map(async (item: any) => {
+        if (item.isQuotePost && item.quotedTokenId && !item.quotedPost) {
+          try {
+            const quoted = await getNFTInfo(String(item.quotedTokenId));
+            return { ...item, quotedPost: quoted };
+          } catch {
+            return item;
+          }
+        }
+        return item;
+      });
+      
+      return Promise.all(enrichPromises);
     },
     enabled: !!apiProfile?.walletAddress,
     staleTime: 2 * 60 * 1000,
