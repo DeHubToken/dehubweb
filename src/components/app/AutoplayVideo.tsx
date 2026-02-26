@@ -3,10 +3,12 @@
  * ========================
  * Lazy-loading video that only plays when visible on screen.
  * Uses IntersectionObserver to start/stop playback and control preloading.
+ * Shows a skeleton shimmer while the video is loading.
  * Prevents bandwidth waste from off-screen videos.
  */
 
 import { useRef, useEffect, useState, memo } from 'react';
+import { cn } from '@/lib/utils';
 
 interface AutoplayVideoProps {
   src: string;
@@ -31,6 +33,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -59,10 +62,25 @@ export const AutoplayVideo = memo(function AutoplayVideo({
     }
   }, [isVisible, disabled]);
 
+  // Reset loaded state when src changes or becomes disabled
+  useEffect(() => {
+    if (disabled) setHasLoaded(false);
+  }, [disabled, src]);
+
   const shouldLoad = isVisible && !disabled;
 
   return (
-    <div ref={containerRef} className={className}>
+    <div ref={containerRef} className={cn("relative", className)}>
+      {/* Skeleton shimmer — visible until video has loaded data */}
+      {!hasLoaded && (
+        <div className="absolute inset-0 z-[1]">
+          {poster ? (
+            <img src={poster} alt="" className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full animate-pulse bg-white/[0.06]" />
+          )}
+        </div>
+      )}
       <video
         ref={videoRef}
         src={shouldLoad ? src : undefined}
@@ -72,6 +90,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
         muted
         playsInline
         preload={shouldLoad ? 'auto' : 'none'}
+        onLoadedData={() => setHasLoaded(true)}
       />
     </div>
   );
