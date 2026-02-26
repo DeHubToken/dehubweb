@@ -120,6 +120,8 @@ export interface UnifiedFeedItem {
   };
   createdAt: string;
   updatedAt?: string;
+  totalReposts?: number;
+  reposts?: number;
 }
 
 export interface UnifiedFeedResponse {
@@ -306,7 +308,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     status: item.status,
     stats: {
       comments: item.commentCount || 0,
-      reposts: 0,
+      reposts: item.totalReposts || item.reposts || 0,
       likes: item.likes ?? item.totalVotes?.for ?? 0,
     },
     isLiked: item.isLiked ?? false,

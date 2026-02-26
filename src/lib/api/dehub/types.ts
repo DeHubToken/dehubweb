@@ -157,6 +157,24 @@ export interface DeHubNFT {
   chainId?: number;
   mintTxHash?: string;
   status?: string;
+
+  // Quote post / repost fields
+  isQuotePost?: boolean;
+  quotedTokenId?: number | null;
+  quotedPost?: DeHubNFT | null;
+  reposts?: number;
+  totalReposts?: number;
+  quotes?: number;
+
+  // Moderation / visibility
+  isHidden?: boolean;
+  isDeleted?: boolean;
+
+  // Pay-per-view
+  ppvBuyerCount?: number;
+
+  // Staking
+  minterStaked?: number;
 }
 
 export interface DeHubComment {
