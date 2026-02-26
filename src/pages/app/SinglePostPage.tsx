@@ -479,15 +479,17 @@ function DesktopCreatorInfo({
             }}
           />
         )}
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="font-semibold text-white text-base">{channel}</span>
-          {verified && (
-            <svg className="w-4 h-4 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-            </svg>
-          )}
+        <div className="flex flex-col min-w-0">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{channel}</span>
+            {verified && (
+              <svg className="w-4 h-4 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+              </svg>
+            )}
+          </div>
           {creatorUsername && (
-            <span className="text-zinc-400 text-sm">@{creatorUsername.replace('@', '')}</span>
+            <span className="text-zinc-500 text-xs truncate max-w-[160px] sm:max-w-none">@{creatorUsername.replace('@', '')}</span>
           )}
         </div>
       </button>
