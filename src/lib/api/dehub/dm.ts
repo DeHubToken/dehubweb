@@ -90,7 +90,7 @@ export async function getConversations(
         return { items: [], totalCount: 0, hasMore: false };
       }
 
-      // Fetch from DeHub API only
+      // Fetch from DeHub API
       let dehubItems: DeHubConversation[] = [];
       try {
         console.log('[DM API] Fetching from /api/dm/contacts/' + userAddress);
@@ -108,7 +108,89 @@ export async function getConversations(
         console.warn('[DM API] DeHub getConversations failed:', err);
       }
 
-      const items = dehubItems
+      // Also build conversations from Supabase direct_messages (our own storage)
+      const supabaseItems: DeHubConversation[] = [];
+      try {
+        const { data: allMessages, error: sbError } = await supabase
+          .from('direct_messages')
+          .select('*')
+          .or(`sender_address.eq.${userAddress},receiver_address.eq.${userAddress}`)
+          .order('created_at', { ascending: false })
+          .limit(200);
+
+        if (!sbError && allMessages && allMessages.length > 0) {
+          // Group by the other party's address:
+          // - latestMsg: most recent message (first row per contact, since sorted desc)
+          // - profileInfo: best available profile data (from any received message)
+          const contactMap = new Map<string, { latestMsg: any; profileInfo: any | null }>();
+          for (const msg of allMessages) {
+            const otherAddr = msg.sender_address?.toLowerCase() === userAddress
+              ? msg.receiver_address?.toLowerCase()
+              : msg.sender_address?.toLowerCase();
+            if (!otherAddr || otherAddr === userAddress) continue;
+            const isReceived = msg.sender_address?.toLowerCase() === otherAddr;
+            const existing = contactMap.get(otherAddr);
+            if (!existing) {
+              contactMap.set(otherAddr, {
+                latestMsg: msg,
+                profileInfo: isReceived ? {
+                  username: msg.sender_username,
+                  displayName: msg.sender_display_name,
+                  avatarImageUrl: msg.sender_avatar_url,
+                } : null,
+              });
+            } else if (!existing.profileInfo && isReceived) {
+              // Pick up profile info from any received message, even if not the latest
+              existing.profileInfo = {
+                username: msg.sender_username,
+                displayName: msg.sender_display_name,
+                avatarImageUrl: msg.sender_avatar_url,
+              };
+            }
+          }
+
+          for (const [addr, { latestMsg, profileInfo }] of contactMap) {
+            const otherUser: any = {
+              address: addr,
+              username: profileInfo?.username,
+              displayName: profileInfo?.displayName,
+              avatarImageUrl: profileInfo?.avatarImageUrl,
+            };
+            supabaseItems.push({
+              id: addr,
+              participants: [otherUser],
+              otherUser,
+              lastMessage: {
+                id: latestMsg.id,
+                conversationId: addr,
+                sender: { address: latestMsg.sender_address } as any,
+                content: latestMsg.content || '',
+                type: (latestMsg.message_type || 'text') as DMMessageType,
+                mediaUrl: latestMsg.media_url || undefined,
+                createdAt: latestMsg.created_at,
+              },
+              unreadCount: 0,
+              createdAt: latestMsg.created_at,
+              updatedAt: latestMsg.created_at,
+            });
+          }
+          console.log('[DM API] Supabase conversations:', supabaseItems.length);
+        }
+      } catch (err) {
+        console.warn('[DM API] Supabase getConversations failed:', err);
+      }
+
+      // Merge: Supabase items as base, DeHub items overwrite by other-user address (they may have richer profile data)
+      const mergedMap = new Map<string, DeHubConversation>();
+      for (const item of supabaseItems) {
+        mergedMap.set(item.id.toLowerCase(), item);
+      }
+      for (const item of dehubItems) {
+        const key = item.otherUser?.address?.toLowerCase() || item.id.toLowerCase();
+        mergedMap.set(key, item);
+      }
+
+      const items = [...mergedMap.values()]
         .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
       console.log('[DM API] Returning merged conversations:', { count: items.length });
@@ -397,7 +479,7 @@ export async function sendMessage(
 
     console.log('[DM API] Sending message via dm-send edge function', { type, hasMedia: !!mediaUrl });
 
-    const EDGE_TIMEOUT_MS = 12_000;
+    const EDGE_TIMEOUT_MS = 25_000;
 
     const tryEdgeFunction = async () => {
       const invokePromise = supabase.functions.invoke('dm-send', {
