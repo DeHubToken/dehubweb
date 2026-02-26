@@ -11,6 +11,7 @@ import { useRef, useEffect, useState, useCallback, memo } from 'react';
 import { Play, Pause } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { ShortVideo } from '@/types/feed.types';
+import { cn } from '@/lib/utils';
 
 interface VideoSlideProps {
   short: ShortVideo;
@@ -32,6 +33,9 @@ export const VideoSlide = memo(function VideoSlide({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoAspect, setVideoAspect] = useState<'portrait' | 'landscape' | 'square'>('portrait');
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [isSeeking, setIsSeeking] = useState(false);
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
   // Handle video metadata load to detect aspect ratio
   const handleLoadedMetadata = useCallback(() => {
@@ -83,16 +87,47 @@ export const VideoSlide = memo(function VideoSlide({
     }
   }, [isMuted]);
 
-  // Handle time update for view tracking
+  // Handle time update for view tracking + progress
   const handleTimeUpdate = useCallback(() => {
-    if (videoRef.current && onTimeUpdate) {
+    if (videoRef.current && !isSeeking) {
       const ct = videoRef.current.currentTime;
       const dur = videoRef.current.duration;
       if (dur > 0) {
-        onTimeUpdate(ct, dur);
+        setProgress(ct / dur);
+        onTimeUpdate?.(ct, dur);
       }
     }
-  }, [onTimeUpdate]);
+  }, [onTimeUpdate, isSeeking]);
+
+  // Seek to position from progress bar interaction
+  const seekToPosition = useCallback((clientX: number) => {
+    const bar = progressBarRef.current;
+    const video = videoRef.current;
+    if (!bar || !video || !video.duration) return;
+    const rect = bar.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    video.currentTime = ratio * video.duration;
+    setProgress(ratio);
+  }, []);
+
+  const handleProgressPointerDown = useCallback((e: React.PointerEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setIsSeeking(true);
+    seekToPosition(e.clientX);
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+  }, [seekToPosition]);
+
+  const handleProgressPointerMove = useCallback((e: React.PointerEvent) => {
+    if (!isSeeking) return;
+    seekToPosition(e.clientX);
+  }, [isSeeking, seekToPosition]);
+
+  const handleProgressPointerUp = useCallback((e: React.PointerEvent) => {
+    if (!isSeeking) return;
+    e.stopPropagation();
+    setIsSeeking(false);
+  }, [isSeeking]);
 
   return (
     <div className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
@@ -164,6 +199,26 @@ export const VideoSlide = memo(function VideoSlide({
           </motion.div>
         </div>
       )}
+
+      {/* Progress bar at bottom */}
+      <div
+        ref={progressBarRef}
+        className={cn(
+          "absolute bottom-0 left-0 right-0 z-20 cursor-pointer touch-none",
+          isSeeking ? "h-2" : "h-1 hover:h-2",
+          "transition-[height] duration-150"
+        )}
+        onPointerDown={handleProgressPointerDown}
+        onPointerMove={handleProgressPointerMove}
+        onPointerUp={handleProgressPointerUp}
+        onPointerCancel={handleProgressPointerUp}
+      >
+        <div className="absolute inset-0 bg-white/20" />
+        <div
+          className="absolute top-0 left-0 bottom-0 bg-white/80"
+          style={{ width: `${progress * 100}%` }}
+        />
+      </div>
     </div>
   );
 });
