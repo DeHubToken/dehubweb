@@ -26,6 +26,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { VideoSlide } from './VideoSlide';
+import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
 
 interface ShortsViewerProps {
   shorts: ShortVideo[];
@@ -221,19 +222,28 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   }, [inlineCommentText, currentShort?.id, isPostingComment, isAuthenticated, queryClient]);
   
   // Sync voting state from short data when changing videos
+  // Check vote cache first to preserve optimistic updates across scroll
   useEffect(() => {
-    setIsLiked(currentShort?.isLiked ?? false);
-    setIsDisliked(currentShort?.isDisliked ?? false);
-    const likes = typeof currentShort?.likes === 'string' 
-      ? parseInt(currentShort.likes.replace(/[^0-9]/g, '')) || 0 
-      : (currentShort?.likes as unknown as number) || 0;
-    setLocalLikeCount(likes);
-    setLocalDislikeCount(0);
+    const cached = currentShort?.id ? getVoteCache(String(currentShort.id)) : null;
+    if (cached) {
+      setIsLiked(cached.isLiked);
+      setIsDisliked(cached.isDisliked);
+      setLocalLikeCount(cached.likeCount);
+      setLocalDislikeCount(cached.dislikeCount);
+    } else {
+      setIsLiked(currentShort?.isLiked ?? false);
+      setIsDisliked(currentShort?.isDisliked ?? false);
+      const likes = typeof currentShort?.likes === 'string' 
+        ? parseInt(currentShort.likes.replace(/[^0-9]/g, '')) || 0 
+        : (currentShort?.likes as unknown as number) || 0;
+      setLocalLikeCount(likes);
+      setLocalDislikeCount(0);
+    }
     setShowComments(false);
     setInlineCommentText('');
     setIsDescriptionExpanded(false);
     setIsPaused(false);
-  }, [currentIndex, currentShort?.likes, currentShort?.isLiked, currentShort?.isDisliked]);
+  }, [currentIndex, currentShort?.id, currentShort?.likes, currentShort?.isLiked, currentShort?.isDisliked]);
   
   // Handle voting
   const handleVote = useCallback(async (vote: boolean) => {
@@ -251,40 +261,33 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
     setIsVoting(true);
     
-    // Optimistic update
+    // Compute new optimistic state
+    let newLiked = isLiked;
+    let newDisliked = isDisliked;
+    let likeDelta = 0;
+    let dislikeDelta = 0;
+
     if (isRemovingVote) {
-      if (vote) {
-        setIsLiked(false);
-        setLocalLikeCount(prev => Math.max(0, prev - 1));
-      } else {
-        setIsDisliked(false);
-        setLocalDislikeCount(prev => Math.max(0, prev - 1));
-      }
+      if (vote) { newLiked = false; likeDelta = -1; }
+      else { newDisliked = false; dislikeDelta = -1; }
     } else if (isSwitchingVote) {
-      if (vote) {
-        setIsLiked(true);
-        setIsDisliked(false);
-        setLocalLikeCount(prev => prev + 1);
-        setLocalDislikeCount(prev => Math.max(0, prev - 1));
-        setJustVoted('like');
-      } else {
-        setIsDisliked(true);
-        setIsLiked(false);
-        setLocalDislikeCount(prev => prev + 1);
-        setLocalLikeCount(prev => Math.max(0, prev - 1));
-        setJustVoted('dislike');
-      }
+      if (vote) { newLiked = true; newDisliked = false; likeDelta = 1; dislikeDelta = -1; setJustVoted('like'); }
+      else { newDisliked = true; newLiked = false; dislikeDelta = 1; likeDelta = -1; setJustVoted('dislike'); }
     } else {
-      if (vote) {
-        setIsLiked(true);
-        setLocalLikeCount(prev => prev + 1);
-        setJustVoted('like');
-      } else {
-        setIsDisliked(true);
-        setLocalDislikeCount(prev => prev + 1);
-        setJustVoted('dislike');
-      }
+      if (vote) { newLiked = true; likeDelta = 1; setJustVoted('like'); }
+      else { newDisliked = true; dislikeDelta = 1; setJustVoted('dislike'); }
     }
+
+    // Apply optimistic UI
+    setIsLiked(newLiked);
+    setIsDisliked(newDisliked);
+    setLocalLikeCount(prev => {
+      const newCount = Math.max(0, prev + likeDelta);
+      // Cache after computing final values
+      setVoteCache(tokenId, { isLiked: newLiked, isDisliked: newDisliked, likeCount: newCount, dislikeCount: Math.max(0, localDislikeCount + dislikeDelta) });
+      return newCount;
+    });
+    setLocalDislikeCount(prev => Math.max(0, prev + dislikeDelta));
     
     setTimeout(() => setJustVoted(null), 400);
 
@@ -292,40 +295,17 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       await voteOnPost({ tokenId: parseInt(tokenId, 10), voteType: vote ? 'for' : 'against' });
     } catch (error) {
       // Revert on error
-      if (isRemovingVote) {
-        if (vote) {
-          setIsLiked(true);
-          setLocalLikeCount(prev => prev + 1);
-        } else {
-          setIsDisliked(true);
-          setLocalDislikeCount(prev => prev + 1);
-        }
-      } else if (isSwitchingVote) {
-        if (vote) {
-          setIsLiked(false);
-          setIsDisliked(true);
-          setLocalLikeCount(prev => Math.max(0, prev - 1));
-          setLocalDislikeCount(prev => prev + 1);
-        } else {
-          setIsDisliked(false);
-          setIsLiked(true);
-          setLocalDislikeCount(prev => Math.max(0, prev - 1));
-          setLocalLikeCount(prev => prev + 1);
-        }
-      } else {
-        if (vote) {
-          setIsLiked(false);
-          setLocalLikeCount(prev => Math.max(0, prev - 1));
-        } else {
-          setIsDisliked(false);
-          setLocalDislikeCount(prev => Math.max(0, prev - 1));
-        }
-      }
+      setIsLiked(isLiked);
+      setIsDisliked(isDisliked);
+      setLocalLikeCount(prev => Math.max(0, prev - likeDelta));
+      setLocalDislikeCount(prev => Math.max(0, prev - dislikeDelta));
+      // Clear stale cache on error
+      setVoteCache(tokenId, { isLiked, isDisliked, likeCount: Math.max(0, localLikeCount), dislikeCount: Math.max(0, localDislikeCount) });
       toast.error('Failed to vote. Please try again.');
     } finally {
       setIsVoting(false);
     }
-  }, [currentShort?.id, isVoting, isLiked, isDisliked, isAuthenticated]);
+  }, [currentShort?.id, isVoting, isLiked, isDisliked, isAuthenticated, localLikeCount, localDislikeCount]);
 
   // Lock body scroll when viewer is open
   useEffect(() => {
