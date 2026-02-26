@@ -691,15 +691,15 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 <div 
                   className="absolute inset-0 z-[25] pointer-events-none"
                 >
-                  {/* Top zone */}
+              {/* Top zone - for swipe-up to restore overlays */}
                   <div 
                     className="absolute inset-x-0 top-0 h-[20%] pointer-events-auto"
                     onTouchStart={handleOverlayGestureTouchStart}
                     onTouchEnd={handleOverlayGestureTouchEnd}
                   />
-                  {/* Bottom zone */}
+                  {/* Bottom zone - only cover top portion, leave bottom 15% free for timeline seeker */}
                   <div 
-                    className="absolute inset-x-0 bottom-0 h-[20%] pointer-events-auto"
+                    className="absolute inset-x-0 bottom-[15%] h-[5%] pointer-events-auto"
                     onTouchStart={handleOverlayGestureTouchStart}
                     onTouchEnd={handleOverlayGestureTouchEnd}
                   />
