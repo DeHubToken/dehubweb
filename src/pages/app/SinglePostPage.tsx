@@ -216,6 +216,8 @@ function toTextPost(nft: DeHubNFT): TextPost {
       reposts: nft.totalReposts || nft.reposts || 0,
       likes: nft.totalVotes?.for || 0,
     },
+    isQuotePost: !!nft.isQuotePost,
+    quotedPost: nft.quotedPost || null,
   };
 }
 
