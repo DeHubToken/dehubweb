@@ -22,7 +22,8 @@ const AutoplayContext = createContext<AutoplayContextType>({
 export function AutoplayProvider({ children }: { children: ReactNode }) {
   const [autoplayEnabled, setAutoplayState] = useState(() => {
     try {
-      return localStorage.getItem(STORAGE_KEY) === 'true';
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored === null ? true : stored === 'true';
     } catch {
       return false;
     }
