@@ -467,7 +467,7 @@ function DesktopCreatorInfo({
       <button
         onClick={handleProfileClick}
         disabled={!isClickable}
-        className={`flex items-center gap-3 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
+        className={`flex items-center gap-3 text-left ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
       >
         {channelAvatar && (
           <img 
