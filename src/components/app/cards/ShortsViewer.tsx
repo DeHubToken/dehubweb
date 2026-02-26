@@ -470,9 +470,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const endInBottomZone = touch.clientY > screenHeight * 0.8;
     const endInRightZone = touch.clientX > screenWidth * 0.8;
     
+    // Ignore navigation-sized swipes (those that change slides) — only respond to small deliberate gestures
+    const isNavigationSwipe = Math.abs(deltaY) > 80;
+    
     if (overlaysHidden) {
-      // Restore overlays: only swipe UP in edge zones (not taps — taps should go to timeline seeker)
-      if (isVerticalSwipe && deltaY < -40 && (inBottomZone || inRightZone)) {
+      // Restore overlays: only small swipe UP in edge zones (not taps, not navigation swipes)
+      if (isVerticalSwipe && !isNavigationSwipe && deltaY < -40 && (inBottomZone || inRightZone)) {
         setOverlaysHidden(false);
       }
     } else {
