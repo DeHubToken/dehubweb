@@ -2,8 +2,8 @@
  * UserMentionDropdown Component
  * =============================
  * Displays a dropdown of matching users when typing @mention.
- * Shows up to 5 most relevant matches after typing 1+ characters.
- * Uses React Portal to escape parent stacking contexts (e.g., Drawer/Dialog).
+ * Searches the live DeHub API with debounced queries.
+ * Uses React Portal to escape parent stacking contexts.
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -11,22 +11,10 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
-import { getMediaUrl, type DeHubUser } from '@/lib/api/dehub';
+import { searchUsers as apiSearchUsers } from '@/lib/api/dehub/users';
+import { getMediaUrl } from '@/lib/api/dehub/core';
+import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-// Mock users for demo - in production this would come from API
-const MOCK_USERS: DeHubUser[] = [
-  { id: '1', username: 'malik', displayName: 'Malik Jan', avatarImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100', isVerified: false },
-  { id: '2', username: 'mikehales', displayName: 'Mike Hales', avatarImageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100', isVerified: false },
-  { id: '3', username: 'indijay', displayName: 'Indi Jay', avatarImageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100', isVerified: false },
-  { id: '4', username: 'bailey', displayName: 'Bailey Young', avatarImageUrl: 'https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=100', isVerified: false },
-  { id: '5', username: 'cryptoqueen', displayName: 'Crypto Queen', avatarImageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100', isVerified: false },
-  { id: '6', username: 'web3wizard', displayName: 'Web3 Wizard', avatarImageUrl: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100', isVerified: false },
-  { id: '7', username: 'nftcollector', displayName: 'NFT Collector', avatarImageUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100', isVerified: false },
-  { id: '8', username: 'defidev', displayName: 'DeFi Dev', avatarImageUrl: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100', isVerified: false },
-  { id: '9', username: 'tokenmaster', displayName: 'Token Master', avatarImageUrl: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100', isVerified: false },
-  { id: '10', username: 'blockchainguru', displayName: 'Blockchain Guru', avatarImageUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100', isVerified: false },
-];
 
 export interface MentionUser {
   id: string;
@@ -46,61 +34,12 @@ interface UserMentionDropdownProps {
   onSelectedIndexChange: (index: number) => void;
 }
 
-// Fuzzy search function - returns relevance score
-function fuzzyMatch(query: string, text: string): number {
-  const queryLower = query.toLowerCase();
-  const textLower = text.toLowerCase();
-  
-  // Exact match at start gets highest score
-  if (textLower.startsWith(queryLower)) return 100;
-  
-  // Contains query gets medium score
-  if (textLower.includes(queryLower)) return 50;
-  
-  // Fuzzy character matching
-  let score = 0;
-  let queryIndex = 0;
-  
-  for (let i = 0; i < textLower.length && queryIndex < queryLower.length; i++) {
-    if (textLower[i] === queryLower[queryIndex]) {
-      score += 10;
-      queryIndex++;
-    }
-  }
-  
-  // All query chars found
-  if (queryIndex === queryLower.length) {
-    return score;
-  }
-  
-  return 0;
-}
-
-// Search users with fuzzy matching
-export function searchUsers(query: string, limit: number = 5): MentionUser[] {
-  if (!query || query.length < 1) return [];
-  
-  const scored = MOCK_USERS.map(user => {
-    const usernameScore = fuzzyMatch(query, user.username || '');
-    const displayNameScore = fuzzyMatch(query, user.displayName || '');
-    const maxScore = Math.max(usernameScore, displayNameScore);
-    
-    return {
-      user: {
-        id: user.id || user._id || '',
-        username: user.username || '',
-        displayName: user.displayName || user.display_name || null,
-        avatarUrl: getMediaUrl(user.avatarImageUrl || user.avatarUrl || user.avatar_url || undefined) || null,
-        isVerified: user.isVerified || user.is_verified || false,
-      },
-      score: maxScore,
-    };
-  })
-  .filter(item => item.score > 0)
-  .sort((a, b) => b.score - a.score)
-  .slice(0, limit);
-  
-  return scored.map(item => item.user);
+// Legacy export for compatibility — now delegates to the API-backed dropdown
+export function searchUsers(_query: string, _limit: number = 5): MentionUser[] {
+  // This is now a no-op stub; the dropdown handles async search internally.
+  // Kept for callers that reference it for keyboard selection — they fall through
+  // to handleSelect which uses the internal results state.
+  return [];
 }
 
 export function UserMentionDropdown({
@@ -113,21 +52,72 @@ export function UserMentionDropdown({
   onSelectedIndexChange,
 }: UserMentionDropdownProps) {
   const [users, setUsers] = useState<MentionUser[]>([]);
+  const [loading, setLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const latestQueryRef = useRef(query);
 
-  // Search users when query changes
+  // Debounced API search
   useEffect(() => {
-    if (query.length >= 1) {
-      const results = searchUsers(query, 5);
-      setUsers(results);
-      // Reset selection when results change
-      if (results.length > 0 && selectedIndex >= results.length) {
-        onSelectedIndexChange(0);
-      }
-    } else {
+    latestQueryRef.current = query;
+
+    if (!query || query.length < 1) {
       setUsers([]);
+      setLoading(false);
+      return;
     }
-  }, [query, selectedIndex, onSelectedIndexChange]);
+
+    setLoading(true);
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const response = await apiSearchUsers({ q: query, limit: 8 });
+        // Only apply results if query hasn't changed
+        if (latestQueryRef.current !== query) return;
+
+        const items: any[] = Array.isArray(response)
+          ? response
+          : (response as any)?.data || (response as any)?.result || [];
+
+        const mapped: MentionUser[] = items.slice(0, 5).map((u: any) => ({
+          id: u._id || u.id || u.address || '',
+          username: u.username || '',
+          displayName: u.displayName || u.display_name || null,
+          avatarUrl: getMediaUrl(u.avatarImageUrl || u.avatarUrl || u.avatar_url || undefined) || null,
+          isVerified: u.isVerified || u.is_verified || false,
+        }));
+
+        setUsers(mapped);
+        if (mapped.length > 0 && selectedIndex >= mapped.length) {
+          onSelectedIndexChange(0);
+        }
+      } catch (err) {
+        console.error('[Mentions] search failed:', err);
+        setUsers([]);
+      } finally {
+        if (latestQueryRef.current === query) {
+          setLoading(false);
+        }
+      }
+    }, 250);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [query]);
+
+  // Expose users for keyboard selection from parent
+  useEffect(() => {
+    if (users.length > 0) {
+      // Store on window for parent keyboard handler access
+      (window as any).__mentionResults = users;
+    } else {
+      delete (window as any).__mentionResults;
+    }
+    return () => { delete (window as any).__mentionResults; };
+  }, [users]);
 
   // Handle click outside
   useEffect(() => {
@@ -146,56 +136,91 @@ export function UserMentionDropdown({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen || users.length === 0) return null;
+  if (!isOpen) return null;
 
-  // Use portal to render dropdown at document body level
-  // This escapes any parent stacking contexts (Drawer, Dialog, etc.)
+  const showEmpty = !loading && users.length === 0 && query.length >= 2;
+
   return createPortal(
     <AnimatePresence>
       <motion.div
         ref={dropdownRef}
-        initial={{ opacity: 0, y: 4, scale: 0.98 }}
+        initial={{ opacity: 0, y: 6, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 4, scale: 0.98 }}
-        transition={{ duration: 0.12, ease: 'easeOut' }}
-        className="fixed z-[9999] w-[260px] bg-zinc-900 border border-white/15 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden"
-        style={{ 
-          top: position.top, 
+        exit={{ opacity: 0, y: 6, scale: 0.96 }}
+        transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+        className="fixed z-[9999] w-[280px] overflow-hidden rounded-2xl border border-white/10 bg-black/70 shadow-[0_12px_40px_rgba(0,0,0,0.6)]"
+        style={{
+          top: position.top,
           left: position.left,
-          backdropFilter: 'blur(20px)',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
         }}
       >
-        <div className="py-1.5">
-          {users.map((user, index) => (
-            <button
-              key={user.id}
-              onClick={() => onSelect(user)}
-              onMouseEnter={() => onSelectedIndexChange(index)}
-              className={cn(
-                "w-full flex items-center gap-2.5 px-3 py-2 text-left transition-all duration-100",
-                index === selectedIndex
-                  ? "bg-white/10"
-                  : "hover:bg-white/5"
-              )}
-            >
-              <Avatar className="w-7 h-7 flex-shrink-0">
-                <AvatarImage src={user.avatarUrl || undefined} />
-                <AvatarFallback className="bg-zinc-700 text-white text-xs">
-                  {user.username?.charAt(0).toUpperCase() || 'U'}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1">
-                  <span className="text-sm font-medium text-white truncate">
-                    {user.displayName || user.username}
-                  </span>
-                  {user.isVerified && <VerifiedBadge className="w-3 h-3" />}
-                </div>
-                <span className="text-xs text-zinc-500">@{user.username}</span>
-              </div>
-            </button>
-          ))}
+        {/* Header */}
+        <div className="px-3.5 pt-2.5 pb-1.5">
+          <span className="text-[11px] font-medium uppercase tracking-wider text-white/40">
+            Mention a user
+          </span>
         </div>
+
+        {/* Loading state */}
+        {loading && users.length === 0 && (
+          <div className="flex items-center justify-center py-6">
+            <Loader2 className="w-4 h-4 text-white/30 animate-spin" />
+          </div>
+        )}
+
+        {/* Empty state */}
+        {showEmpty && (
+          <div className="px-3.5 py-4 text-center">
+            <span className="text-xs text-white/30">No users found</span>
+          </div>
+        )}
+
+        {/* User list */}
+        {users.length > 0 && (
+          <div className="py-1 px-1">
+            {users.map((user, index) => (
+              <button
+                key={user.id || user.username}
+                onClick={() => onSelect(user)}
+                onMouseEnter={() => onSelectedIndexChange(index)}
+                className={cn(
+                  "w-full flex items-center gap-3 px-2.5 py-2 rounded-xl text-left transition-colors duration-100",
+                  index === selectedIndex
+                    ? "bg-white/10"
+                    : "bg-transparent hover:bg-white/5"
+                )}
+              >
+                <Avatar className="w-8 h-8 flex-shrink-0 rounded-lg">
+                  <AvatarImage src={user.avatarUrl || undefined} className="object-cover" />
+                  <AvatarFallback className="bg-white/10 text-white/70 text-xs rounded-lg">
+                    {(user.username || 'U').charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="flex-1 min-w-0 flex flex-col">
+                  <div className="flex items-center gap-1">
+                    <span className="text-[13px] font-medium text-white truncate">
+                      {user.displayName || user.username}
+                    </span>
+                    {user.isVerified && <VerifiedBadge className="w-3.5 h-3.5" />}
+                  </div>
+                  <span className="text-[11px] text-white/40 truncate">
+                    @{user.username}
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Loading indicator when updating results */}
+        {loading && users.length > 0 && (
+          <div className="flex justify-center pb-2">
+            <div className="w-1 h-1 rounded-full bg-white/20 animate-pulse" />
+          </div>
+        )}
       </motion.div>
     </AnimatePresence>,
     document.body
