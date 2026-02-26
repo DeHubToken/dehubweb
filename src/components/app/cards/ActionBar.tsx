@@ -360,8 +360,8 @@ export function ActionBar({
             className="flex items-center gap-1 text-white hover:text-zinc-400 transition-colors"
             aria-label="Repost"
           >
-            <Repeat2 className="w-5 h-5" />
-            <span className="text-xs text-zinc-400">{formatCount(repostCount ?? 0)}</span>
+            <Repeat2 className="w-[23px] h-[23px]" />
+            <span className="text-sm text-zinc-400">{formatCount(repostCount ?? 0)}</span>
           </button>
 
           
