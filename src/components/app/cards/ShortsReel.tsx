@@ -90,25 +90,25 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
             >
               {/* Thumbnail */}
               <div className="relative aspect-[9/16] rounded-xl overflow-hidden">
-                <img
-                  src={short.thumbnail}
-                  alt=""
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+                {short.videoUrl ? (
+                  <video
+                    src={short.videoUrl}
+                    poster={short.thumbnail}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="auto"
+                  />
+                ) : (
+                  <img
+                    src={short.thumbnail}
+                    alt=""
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
-                
-                {/* Creator info at top */}
-                <div className="absolute top-2 left-2 right-2 flex items-center gap-1.5">
-                  <ShortAvatar avatar={short.avatar} username={short.username} />
-                  <span className="text-white text-[10px] font-medium truncate">{short.username}</span>
-                </div>
-                
-                {/* Play overlay on hover */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
-                    <Play className="w-5 h-5 text-white fill-white" />
-                  </div>
-                </div>
                 
                 {/* Stats at bottom - using real views from API */}
                 <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between">
