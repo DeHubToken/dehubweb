@@ -313,6 +313,8 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     },
     isLiked: item.isLiked ?? false,
     isDisliked: item.isDisliked ?? false,
+    isQuotePost: !!(item as any).isQuotePost,
+    quotedPost: (item as any).quotedPost || null,
   };
 }
 

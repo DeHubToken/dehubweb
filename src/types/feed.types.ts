@@ -52,6 +52,10 @@ export interface TextPost extends BaseFeedItem {
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
   isDisliked?: boolean;
+  /** Whether this is a quote post */
+  isQuotePost?: boolean;
+  /** The quoted post data (for rendering embedded quote) */
+  quotedPost?: import('@/lib/api/dehub/types').DeHubNFT | null;
 }
 
 /**

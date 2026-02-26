@@ -61,6 +61,8 @@ interface ActionBarProps {
   commentCount?: number;
   /** Share count to display */
   shareCount?: number;
+  /** Repost count to display */
+  repostCount?: number;
   /** Whether this is an optimistic (processing) post */
   isOptimistic?: boolean;
   /** Handler for like action (overrides default voteOnPost) */
@@ -94,6 +96,7 @@ export function ActionBar({
   dislikeCount,
   commentCount: rawCommentCount,
   shareCount,
+  repostCount,
   isOptimistic = false,
 }: ActionBarProps) {
   // Add localStorage delta to comment count for instant feedback
@@ -252,12 +255,20 @@ export function ActionBar({
   };
 
   const handleRepost = () => {
-    toast.info('Bug reported, fix will be live soon!');
+    if (onRepost) {
+      onRepost();
+    } else {
+      toast.info('Repost not available for this post');
+    }
     setSheetOpen(false);
   };
 
   const handleQuote = () => {
-    toast.info('Bug reported, fix will be live soon!');
+    if (onQuote) {
+      onQuote();
+    } else {
+      toast.info('Quote not available for this post');
+    }
     setSheetOpen(false);
   };
 
@@ -335,7 +346,7 @@ export function ActionBar({
             <span className="text-xs text-zinc-400">{formatCount(commentCount)}</span>
           </button>
           
-          {/* Share - Bottom sheet for all devices with liquid glass effect */}
+          {/* Repost - opens share sheet with repost/quote options */}
           <button 
             onClick={() => {
               if (isOptimistic) {
@@ -347,11 +358,13 @@ export function ActionBar({
               }
             }}
             className="flex items-center gap-1 text-white hover:text-zinc-400 transition-colors"
-            aria-label="Share"
+            aria-label="Repost"
           >
-            <Share2 className="w-5 h-5" />
-            <span className="text-xs text-zinc-400">{formatCount(shareCount)}</span>
+            <Repeat2 className="w-5 h-5" />
+            {(repostCount ?? 0) > 0 && <span className="text-xs text-zinc-400">{formatCount(repostCount)}</span>}
           </button>
+
+          
           <Drawer open={sheetOpen} onOpenChange={setSheetOpen}>
             <DrawerContent glass className="px-4 pb-6">
               <DrawerHeader className="relative">

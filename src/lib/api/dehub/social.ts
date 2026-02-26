@@ -215,3 +215,29 @@ export async function toggleCommentLike(params: {
   }
   return response as CommentLikeResponse;
 }
+
+// ============ Repost / Quote Post ============
+
+export async function repostPost(tokenId: number): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>("/api/repost", {
+    method: "POST",
+    body: { tokenId },
+    requiresAuth: true,
+  });
+}
+
+export async function quotePost(params: {
+  quotedTokenId: number;
+  content: string;
+  category?: string;
+}): Promise<{ result: any }> {
+  return apiCall<{ result: any }>("/api/quote", {
+    method: "POST",
+    body: {
+      quotedTokenId: params.quotedTokenId,
+      description: params.content,
+      category: params.category || 'general',
+    },
+    requiresAuth: true,
+  });
+}

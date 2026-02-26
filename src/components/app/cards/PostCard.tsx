@@ -12,22 +12,24 @@
 import { useState, memo, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Pencil, Trash2 } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Pencil, Trash2, Repeat2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
+import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { TranslatableText, useTranslation } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
+import { QuotePostModal } from '../modals/QuotePostModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { useAuth } from '@/contexts/AuthContext';
-import { updateTokenVisibility, type TokenVisibility } from '@/lib/api/dehub';
+import { updateTokenVisibility, repostPost, type TokenVisibility } from '@/lib/api/dehub';
 import { cacheTextPostForNavigation } from '@/lib/post-cache';
 import {
   Drawer,
@@ -64,6 +66,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showReportModal, setShowReportModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
@@ -96,6 +99,38 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
     cacheTextPostForNavigation(queryClient, post);
     navigate(`/app/post/${post.id}`);
   }, [navigate, post.id, queryClient, post]);
+
+  const handleRepost = useCallback(async () => {
+    if (!walletAddress) { openLoginModal(); return; }
+    const numericId = parseInt(post.id, 10);
+    if (isNaN(numericId)) return;
+    try {
+      await repostPost(numericId);
+      toast.success('Reposted!');
+      queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+    } catch {
+      toast.error('Failed to repost');
+    }
+  }, [post.id, walletAddress, openLoginModal, queryClient]);
+
+  const handleQuote = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    setShowQuoteModal(true);
+  }, [walletAddress, openLoginModal]);
+
+  // Build a minimal DeHubNFT for the quote modal from post data
+  const postAsNFT = {
+    tokenId: parseInt(post.id, 10) || 0,
+    name: post.content?.slice(0, 100) || '',
+    description: post.content,
+    imageUrl: '',
+    postType: 'image' as const,
+    minter: post.author.id,
+    minterUsername: post.author.handle,
+    minterDisplayName: post.author.name,
+    minterAvatarUrl: post.author.avatarSeed,
+    createdAt: post.createdAt || '',
+  };
 
   return (
     <div 
@@ -196,6 +231,11 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       <div className="pt-3 space-y-2">
         <TranslatableText text={isTranslated ? translatedText : post.content} className="text-white/90 text-sm sm:text-base" as="p" />
 
+        {/* Quoted post embed (Twitter-style) */}
+        {post.isQuotePost && post.quotedPost && (
+          <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
+        )}
+
         {/* Metadata: timestamp and views */}
         <PostMetadata 
           timestamp={post.createdAt} 
@@ -214,10 +254,13 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             postId={post.id} 
             className="p-0"
             onComment={() => setShowComments(prev => !prev)}
+            onRepost={handleRepost}
+            onQuote={handleQuote}
             isLiked={post.isLiked}
             isDisliked={post.isDisliked}
             likeCount={post.stats.likes}
             commentCount={post.stats.comments}
+            repostCount={post.stats.reposts}
             isOptimistic={post.isOptimistic}
           />
         </div>
@@ -269,6 +312,13 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         onSuccess={() => {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
         }}
+      />
+
+      {/* Quote Post Modal */}
+      <QuotePostModal
+        open={showQuoteModal}
+        onOpenChange={setShowQuoteModal}
+        quotedPost={postAsNFT}
       />
     </div>
   );
