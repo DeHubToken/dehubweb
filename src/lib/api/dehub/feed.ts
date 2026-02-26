@@ -263,7 +263,16 @@ export async function getCategories(): Promise<DeHubCategory[]> {
 }
 
 export async function getServerTime(): Promise<{ time: string }> {
-  return apiCall<{ time: string }>("/api/getServerTime");
+  const response = await apiCall<any>("/api/getServerTime");
+  // New shape: { status: true, data: <unix_timestamp>, note: "s" }
+  if (response && typeof response === 'object' && 'data' in response && typeof response.data === 'number') {
+    return { time: new Date(response.data * 1000).toISOString() };
+  }
+  // Legacy shape: { time: string }
+  if (response && typeof response === 'object' && 'time' in response) {
+    return response as { time: string };
+  }
+  return { time: new Date().toISOString() };
 }
 
 export async function claimBounty(tokenId: number | string): Promise<{

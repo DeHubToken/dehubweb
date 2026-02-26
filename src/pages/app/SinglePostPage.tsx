@@ -213,7 +213,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
     content: nft.description || nft.title || nft.name || '',
     stats: {
       comments: nft.commentCount || nft.comment_count || 0,
-      reposts: 0,
+      reposts: nft.totalReposts || nft.reposts || 0,
       likes: nft.totalVotes?.for || 0,
     },
   };

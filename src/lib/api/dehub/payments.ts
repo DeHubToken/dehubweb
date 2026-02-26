@@ -3,10 +3,11 @@ import { apiCall } from './core';
 export interface DPayToken {
   symbol: string;
   name: string;
-  address: string;
-  chainId: number;
-  decimals: number;
+  address?: string;
+  chainId?: number;
+  decimals?: number;
   logoUrl?: string;
+  balance?: number;
 }
 
 export interface DPayTransaction {
@@ -34,20 +35,49 @@ export interface CheckoutSession {
   [key: string]: unknown;
 }
 
-export async function getDHBPrice(): Promise<{ price: number; change_24h: number }> {
-  return apiCall<{ price: number; change_24h: number }>("/api/dpay/price");
+export interface DHBPriceResponse {
+  price: number;
+  tokenSymbol?: string;
+  currency?: string;
+  /** @deprecated No longer returned by API */
+  change_24h?: number;
 }
 
-export async function getDHBPriceByChain(chainId: number): Promise<{ price: number; change_24h: number }> {
-  return apiCall<{ price: number; change_24h: number }>(`/api/dpay/price/${chainId}`);
+export async function getDHBPrice(): Promise<DHBPriceResponse> {
+  return apiCall<DHBPriceResponse>("/api/dpay/price");
+}
+
+export async function getDHBPriceByChain(chainId: number): Promise<DHBPriceResponse> {
+  return apiCall<DHBPriceResponse>(`/api/dpay/price/${chainId}`);
 }
 
 export async function getAvailableTokens(): Promise<DPayToken[]> {
-  const response = await apiCall<{ result: DPayToken[] } | DPayToken[]>("/api/dpay/available/tokens");
+  const response = await apiCall<any>("/api/dpay/available/tokens");
+
+  // New shape: { balance: { [chainId]: { [symbol]: amount } } }
+  if (response && typeof response === 'object' && 'balance' in response) {
+    const tokens: DPayToken[] = [];
+    const balance = response.balance as Record<string, Record<string, number>>;
+    for (const [chainId, symbols] of Object.entries(balance)) {
+      for (const [symbol, amount] of Object.entries(symbols)) {
+        tokens.push({
+          symbol,
+          name: symbol,
+          address: '',
+          chainId: Number(chainId),
+          decimals: 18,
+          balance: amount,
+        });
+      }
+    }
+    return tokens;
+  }
+
+  // Legacy: { result: DPayToken[] } or DPayToken[]
   if (response && typeof response === 'object' && 'result' in response) {
     return response.result;
   }
-  return response as DPayToken[];
+  return Array.isArray(response) ? response : [];
 }
 
 export async function getAvailableGas(): Promise<Record<string, unknown>> {

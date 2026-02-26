@@ -16,6 +16,7 @@ export interface DPayToken {
   chainId?: number;
   address?: string;
   decimals?: number;
+  balance?: number;
 }
 
 export interface DPayPrice {
@@ -154,7 +155,25 @@ export async function getAvailableTokens(): Promise<DPayToken[]> {
     const data = await response.json();
     console.log('[DPay API] Tokens response:', data);
 
-    // Handle various response formats
+    // New shape: { balance: { [chainId]: { [symbol]: amount } } }
+    if (data && typeof data === 'object' && 'balance' in data) {
+      const tokens: DPayToken[] = [];
+      const balance = data.balance as Record<string, Record<string, number>>;
+      for (const [chainId, symbols] of Object.entries(balance)) {
+        for (const [symbol, amount] of Object.entries(symbols)) {
+          tokens.push({
+            symbol,
+            name: symbol,
+            chainId: Number(chainId),
+            decimals: 18,
+            balance: amount,
+          });
+        }
+      }
+      return tokens.length > 0 ? tokens : [{ symbol: 'DHB', name: 'DeHub Token', decimals: 18 }];
+    }
+
+    // Handle legacy response formats
     const tokens = data?.result || data?.tokens || data || [];
 
     if (Array.isArray(tokens)) {

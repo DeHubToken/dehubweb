@@ -132,7 +132,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     views: formatViews(nft.views || nft.view_count).replace(' views', ''),
     stats: {
       comments: nft.commentCount || nft.comment_count || 0,
-      reposts: 0,
+      reposts: nft.totalReposts || nft.reposts || 0,
       likes: nft.totalVotes?.for || nft.like_count || 0,
     },
   };
