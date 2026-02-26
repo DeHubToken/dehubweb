@@ -57,11 +57,21 @@ export const AutoplayVideo = memo(function AutoplayVideo({
     if (!video) return;
 
     if (isVisible && !disabled) {
-      video.play().catch(() => {});
+      // Delay lets src settle after layout shifts (sidebar collapse etc.)
+      const timer = setTimeout(async () => {
+        try {
+          await video.play();
+        } catch {
+          // Autoplay blocked — ensure muted and retry
+          video.muted = true;
+          try { await video.play(); } catch { /* wait for user interaction */ }
+        }
+      }, 80);
+      return () => clearTimeout(timer);
     } else {
       video.pause();
     }
-  }, [isVisible, disabled]);
+  }, [isVisible, disabled, src]);
 
   // Reset state when src changes or becomes disabled
   useEffect(() => {
