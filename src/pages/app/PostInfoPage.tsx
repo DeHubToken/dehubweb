@@ -878,12 +878,6 @@ export default function PostInfoPage() {
             </section>
           )}
           
-          {/* NFT Status Banner */}
-          <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 text-center">
-            <p className="text-sm text-primary">
-              This post is minted as an NFT on {chainInfo.name}
-            </p>
-          </div>
         </div>
       </div>
 
