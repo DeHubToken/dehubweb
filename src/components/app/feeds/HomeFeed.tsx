@@ -1072,7 +1072,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             return (
               <div key={`multi-seg-${segIdx}`}>
                 {seg.items.length > 0 && (
-                  <div className={segIdx === 0 ? "" : "mt-3"}>
+                  <div className="mt-3">
                     {renderMasonryGrid(
                       seg.items.map((item, i) => renderFeedItem(item, seg.startIndex + i)),
                       seg.items
