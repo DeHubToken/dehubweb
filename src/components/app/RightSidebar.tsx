@@ -13,7 +13,7 @@ interface RightSidebarProps {
 }
 
 // Inner search component that uses router hooks (isolates re-renders)
-function SearchBar() {
+function SearchBar({ compact }: { compact?: boolean }) {
   const [searchValue, setSearchValue] = useState('');
   const navigate = useNavigate();
   const { addToHistory } = useSearchHistory();
@@ -34,7 +34,10 @@ function SearchBar() {
         onChange={(e) => setSearchValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Search..."
-        className="w-full pl-10 bg-zinc-900 border-0 rounded-xl text-white placeholder:text-zinc-500 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-[34px] text-sm"
+        className={cn(
+          "w-full pl-10 bg-zinc-900 border-0 rounded-xl text-white placeholder:text-zinc-500 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0",
+          compact ? "h-[34px] text-sm" : "h-[38px]"
+        )}
       />
     </div>
   );
@@ -46,7 +49,7 @@ export const RightSidebar = memo(function RightSidebar({ showSearch = true }: Ri
     <aside className={cn("hidden lg:block w-72 xl:w-80 2xl:w-88 h-screen sticky top-0 pb-4 overflow-y-auto scrollbar-hide z-0 isolate transition-[padding] duration-500 ease-in-out motion-reduce:transition-none will-change-[padding]", isCollapsed ? "pl-0 pr-2 pt-[6px]" : "px-4 pt-[8px]")}>
       {showSearch && (
         <div className={isCollapsed ? "mt-[6px]" : undefined}>
-          <SearchBar />
+          <SearchBar compact={isCollapsed} />
         </div>
       )}
       <div className={cn("space-y-4", isCollapsed ? "mt-[5px]" : "mt-[11px]")}>
