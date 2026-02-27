@@ -219,11 +219,27 @@ export function LiveStreamCardSkeleton() {
 // ============================================================================
 
 export function ImageCollageSkeleton({ cols = 3 }: { cols?: number }) {
+  const count = cols * 4;
   return (
-    <div className={cn("grid gap-1", cols === 4 ? "grid-cols-4" : "grid-cols-3")}>
-      {Array.from({ length: cols * 4 }).map((_, i) => (
-        <Skeleton key={i} className="aspect-square rounded-sm" />
-      ))}
+    <div 
+      className={cn(
+        "grid gap-0.5 sm:gap-1 overflow-hidden rounded-t-2xl",
+        cols === 4 ? "grid-cols-4" : "grid-cols-3"
+      )}
+      style={{ gridAutoFlow: 'dense' }}
+    >
+      {Array.from({ length: count }).map((_, i) => {
+        const isLarge = i % 4 === 0;
+        return (
+          <Skeleton 
+            key={i} 
+            className={cn(
+              "aspect-square rounded-none",
+              isLarge && "col-span-2 row-span-2"
+            )} 
+          />
+        );
+      })}
     </div>
   );
 }
