@@ -1,5 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { apiCall, getAuthToken, DEHUB_API_BASE } from './core';
+import { getAccountInfo } from './users';
 import type { DeHubUser, DeHubNFT } from './types';
 
 // ─── Legacy types (kept for backward compat with GroupSettingsDrawer etc.) ────
@@ -334,11 +335,41 @@ export async function getContacts(
   // Merge Supabase conversations (wallet-based DMs)
   const supabaseConvs = await getContactsFromSupabase(myAddress);
   const existingIds = new Set(dehubItems.map(c => (c.otherUser?.address || c.id || '').toLowerCase()));
-  for (const conv of supabaseConvs) {
-    const peer = (conv.otherUser?.address || conv.id?.replace('new_', '') || '').toLowerCase();
-    if (peer && !existingIds.has(peer)) {
-      dehubItems.push(conv);
-      existingIds.add(peer);
+
+  // Enrich with DeHub profile (displayName, username) when missing — fetch in parallel
+  const enriched = await Promise.all(
+    supabaseConvs.map(async (conv) => {
+      const peer = (conv.otherUser?.address || conv.id?.replace('new_', '') || '').toLowerCase();
+      if (!peer || existingIds.has(peer)) return null;
+      const hasProfile = !!(conv.otherUser?.displayName || conv.otherUser?.username);
+      if (!hasProfile) {
+        try {
+          const profile = await getAccountInfo(peer);
+          if (profile) {
+            conv.otherUser = {
+              ...conv.otherUser,
+              address: peer,
+              _id: peer,
+              username: profile.username || conv.otherUser?.username || '',
+              displayName: profile.displayName || profile.display_name || conv.otherUser?.displayName || '',
+              avatarImageUrl: profile.avatarImageUrl || profile.avatarUrl || conv.otherUser?.avatarImageUrl || '',
+            } as DeHubUser;
+          }
+        } catch {
+          // Keep address fallback if API fails
+        }
+      }
+      return conv;
+    })
+  );
+
+  for (const conv of enriched) {
+    if (conv) {
+      const peer = (conv.otherUser?.address || conv.id?.replace('new_', '') || '').toLowerCase();
+      if (peer) {
+        dehubItems.push(conv);
+        existingIds.add(peer);
+      }
     }
   }
 
