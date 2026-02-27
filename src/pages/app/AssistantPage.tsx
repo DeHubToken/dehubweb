@@ -1767,12 +1767,10 @@ export default function AssistantPage() {
                       if (handled) {
                         if (e.key === 'Enter' || e.key === 'Tab') {
                           e.preventDefault();
-                          import('@/components/app/mentions').then(({ searchUsers }) => {
-                            const users = searchUsers(mention.query, 5);
-                            if (users[mention.selectedIndex]) {
-                              mention.handleSelect(users[mention.selectedIndex]);
-                            }
-                          });
+                          const liveResults = (window as any).__mentionResults || [];
+                          if (liveResults[mention.selectedIndex]) {
+                            mention.handleSelect(liveResults[mention.selectedIndex]);
+                          }
                         }
                         return;
                       }

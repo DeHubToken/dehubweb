@@ -3,6 +3,8 @@ import { Send, Users, Loader2, Mic } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { UserMentionDropdown } from '@/components/app/mentions';
+import { useMention } from '@/hooks/use-mention';
 import { TranslatableText, replaceLinksWithEmoji, SharedTranslationContext } from '../TranslatableText';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
@@ -27,8 +29,14 @@ export function SidebarChat() {
   const translateSignal = 0;
   const originalSignal = 0;
   const bottomRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress } = useAuth();
+
+  const mention = useMention({
+    inputRef: textareaRef,
+    onMentionInsert: (_user, newText) => setNewMessage(newText.slice(0, 169)),
+  });
 
   // Use the first available room
   const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
@@ -109,6 +117,19 @@ export function SidebarChat() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (mention.isOpen) {
+      const handled = mention.handleKeyDown(e);
+      if (handled) {
+        if (e.key === 'Enter' || e.key === 'Tab') {
+          e.preventDefault();
+          const liveResults = (window as any).__mentionResults || [];
+          if (liveResults[mention.selectedIndex]) {
+            mention.handleSelect(liveResults[mention.selectedIndex]);
+          }
+        }
+        return;
+      }
+    }
     if (e.key === 'Enter') {
       e.preventDefault();
       handleSend();
@@ -193,12 +214,15 @@ export function SidebarChat() {
       <div className="p-3">
         <div className="relative">
           <Textarea
+            ref={textareaRef}
             placeholder="Type a message..."
             value={newMessage}
             onChange={(e) => {
               const val = e.target.value;
               if (val.length <= 169) {
-                setNewMessage(replaceLinksWithEmoji(val));
+                const processed = replaceLinksWithEmoji(val);
+                setNewMessage(processed);
+                mention.handleInput(processed, e.target.selectionStart);
               }
             }}
             onKeyDown={handleKeyDown}
@@ -206,6 +230,15 @@ export function SidebarChat() {
             className="min-h-[44px] resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-24 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
             rows={1}
             style={{ fieldSizing: 'content' } as React.CSSProperties}
+          />
+          <UserMentionDropdown
+            query={mention.query}
+            isOpen={mention.isOpen}
+            position={mention.position}
+            selectedIndex={mention.selectedIndex}
+            onSelectedIndexChange={mention.setSelectedIndex}
+            onSelect={mention.handleSelect}
+            onClose={mention.handleClose}
           />
           <div className="absolute bottom-0 right-0 flex items-center gap-0.5">
             <EmojiGifPicker

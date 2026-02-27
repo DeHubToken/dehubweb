@@ -4,7 +4,7 @@
  * Comments drawer for stories, matching the shorts comments UX.
  */
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { X, Send, ThumbsUp, ThumbsDown, ArrowUpDown, Loader2 } from 'lucide-react';
@@ -12,6 +12,8 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
+import { UserMentionDropdown } from '@/components/app/mentions';
+import { useMention } from '@/hooks/use-mention';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useStoryComments, type StoryComment } from '@/hooks/use-story-comments';
@@ -96,7 +98,13 @@ export function StoryCommentsDrawer({ isOpen, onClose, storyId }: StoryCommentsD
   const { walletAddress, user } = useAuth();
   const [newComment, setNewComment] = useState('');
   const [sortBy, setSortBy] = useState<'recent' | 'oldest'>('recent');
-  
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const mention = useMention({
+    inputRef,
+    onMentionInsert: (_user, newText) => setNewComment(newText),
+  });
+
   const { comments, commentCount, isLoading, isPosting, postComment, deleteComment } = useStoryComments(storyId);
 
   const sortedComments = useMemo(() => {
@@ -183,18 +191,45 @@ export function StoryCommentsDrawer({ isOpen, onClose, storyId }: StoryCommentsD
 
         {/* Comment input */}
         <div className="p-4 border-t border-zinc-800/50 flex-shrink-0">
-          <div className="flex items-center gap-2">
+          <div className="relative flex items-center gap-2">
             <Input
+              ref={inputRef}
               value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setNewComment(val);
+                mention.handleInput(val, e.target.selectionStart ?? val.length);
+              }}
               placeholder="Add a comment..."
               className="flex-1 bg-white/5 border-zinc-700 text-white placeholder:text-zinc-500"
               onKeyDown={(e) => {
+                if (mention.isOpen) {
+                  const handled = mention.handleKeyDown(e);
+                  if (handled) {
+                    if (e.key === 'Enter' || e.key === 'Tab') {
+                      e.preventDefault();
+                      const liveResults = (window as any).__mentionResults || [];
+                      if (liveResults[mention.selectedIndex]) {
+                        mention.handleSelect(liveResults[mention.selectedIndex]);
+                      }
+                    }
+                    return;
+                  }
+                }
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
                   handleSubmit();
                 }
               }}
+            />
+            <UserMentionDropdown
+              query={mention.query}
+              isOpen={mention.isOpen}
+              position={mention.position}
+              selectedIndex={mention.selectedIndex}
+              onSelectedIndexChange={mention.setSelectedIndex}
+              onSelect={mention.handleSelect}
+              onClose={mention.handleClose}
             />
             <button
               onClick={handleSubmit}

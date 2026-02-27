@@ -8,6 +8,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageSquare, Send, Loader2, Users, Mic, Languages, RotateCcw } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import { UserMentionDropdown } from '@/components/app/mentions';
+import { useMention } from '@/hooks/use-mention';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { replaceLinksWithEmoji, renderTextWithLinks } from '@/components/app/TranslatableText';
 import { useTranslation as useTextTranslation } from '@/components/app/TranslatableText';
@@ -72,7 +74,13 @@ interface LivePostChatProps {
 export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps) {
   const [newMessage, setNewMessage] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { isAuthenticated, walletAddress } = useAuth();
+
+  const mention = useMention({
+    inputRef: textareaRef,
+    onMentionInsert: (_user, newText) => setNewMessage(newText),
+  });
 
   // Use stream ID as the room ID for live chat
   const { messages, isLoading, isSending, send } = useLiveChatMessages(streamId);
@@ -133,6 +141,19 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (mention.isOpen) {
+      const handled = mention.handleKeyDown(e);
+      if (handled) {
+        if (e.key === 'Enter' || e.key === 'Tab') {
+          e.preventDefault();
+          const liveResults = (window as any).__mentionResults || [];
+          if (liveResults[mention.selectedIndex]) {
+            mention.handleSelect(liveResults[mention.selectedIndex]);
+          }
+        }
+        return;
+      }
+    }
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -224,13 +245,27 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
       <div className="pt-2">
         <div className="relative">
           <Textarea
+            ref={textareaRef}
             value={newMessage}
-            onChange={(e) => setNewMessage(replaceLinksWithEmoji(e.target.value))}
+            onChange={(e) => {
+              const val = replaceLinksWithEmoji(e.target.value);
+              setNewMessage(val);
+              mention.handleInput(val, e.target.selectionStart);
+            }}
             onKeyDown={handleKeyDown}
             placeholder={isOffline ? 'Chat is offline' : 'Type a message...'}
             disabled={isOffline || !isAuthenticated}
             className="min-h-[56px] max-h-32 resize-none bg-white/5 border-white/10 text-white placeholder:text-zinc-500 text-sm rounded-xl pr-24"
             rows={2}
+          />
+          <UserMentionDropdown
+            query={mention.query}
+            isOpen={mention.isOpen}
+            position={mention.position}
+            selectedIndex={mention.selectedIndex}
+            onSelectedIndexChange={mention.setSelectedIndex}
+            onSelect={mention.handleSelect}
+            onClose={mention.handleClose}
           />
           <div className="absolute bottom-2 right-2 flex items-center gap-1">
             <VoiceRecorder

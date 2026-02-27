@@ -27,6 +27,8 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { VideoSlide } from './VideoSlide';
 import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
+import { UserMentionDropdown } from '@/components/app/mentions';
+import { useMention } from '@/hooks/use-mention';
 
 interface ShortsViewerProps {
   shorts: ShortVideo[];
@@ -111,6 +113,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [localDislikeCount, setLocalDislikeCount] = useState(0);
   const [isVoting, setIsVoting] = useState(false);
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
+
+  const inlineCommentRef = useRef<HTMLInputElement>(null);
+  const mention = useMention({
+    inputRef: inlineCommentRef,
+    onMentionInsert: (_user, newText) => setInlineCommentText(newText),
+  });
   
   // Follow state
   const [isFollowing, setIsFollowing] = useState(false);
@@ -930,12 +938,30 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               </div>
               
               {/* Comment input */}
-              <div className="flex items-center gap-2 mt-3 flex-shrink-0">
+              <div className="relative flex items-center gap-2 mt-3 flex-shrink-0">
                 <input
+                  ref={inlineCommentRef}
                   type="text"
                   value={inlineCommentText}
-                  onChange={(e) => setInlineCommentText(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setInlineCommentText(val);
+                    mention.handleInput(val, e.target.selectionStart ?? val.length);
+                  }}
                   onKeyDown={(e) => {
+                    if (mention.isOpen) {
+                      const handled = mention.handleKeyDown(e);
+                      if (handled) {
+                        if (e.key === 'Enter' || e.key === 'Tab') {
+                          e.preventDefault();
+                          const liveResults = (window as any).__mentionResults || [];
+                          if (liveResults[mention.selectedIndex]) {
+                            mention.handleSelect(liveResults[mention.selectedIndex]);
+                          }
+                        }
+                        return;
+                      }
+                    }
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
                       handlePostInlineComment();
@@ -943,6 +969,15 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   }}
                   placeholder="Add a comment..."
                   className="flex-1 bg-transparent text-white text-xs placeholder:text-white/40 outline-none"
+                />
+                <UserMentionDropdown
+                  query={mention.query}
+                  isOpen={mention.isOpen}
+                  position={mention.position}
+                  selectedIndex={mention.selectedIndex}
+                  onSelectedIndexChange={mention.setSelectedIndex}
+                  onSelect={mention.handleSelect}
+                  onClose={mention.handleClose}
                 />
                 <button
                   onClick={handlePostInlineComment}

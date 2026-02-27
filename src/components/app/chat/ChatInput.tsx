@@ -4,6 +4,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Image, Send, Sparkles, Loader2, X } from 'lucide-react';
 import { EmojiGifPicker } from './EmojiGifPicker';
 import { VoiceRecorder } from './VoiceRecorder';
+import { UserMentionDropdown } from '@/components/app/mentions';
+import { useMention } from '@/hooks/use-mention';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -28,6 +30,11 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
   const [audioPreview, setAudioPreview] = useState<{ file: File; blob: Blob; duration: number } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const mention = useMention({
+    inputRef: textareaRef,
+    onMentionInsert: (_user, newText) => setMessage(newText),
+  });
 
   const handleSend = () => {
     if (audioPreview) {
@@ -59,6 +66,19 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (mention.isOpen) {
+      const handled = mention.handleKeyDown(e);
+      if (handled) {
+        if (e.key === 'Enter' || e.key === 'Tab') {
+          e.preventDefault();
+          const liveResults = (window as any).__mentionResults || [];
+          if (liveResults[mention.selectedIndex]) {
+            mention.handleSelect(liveResults[mention.selectedIndex]);
+          }
+        }
+        return;
+      }
+    }
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -66,7 +86,9 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
   };
 
   const handleEmojiSelect = (emoji: string) => {
-    setMessage(prev => prev + emoji);
+    const newVal = message + emoji;
+    setMessage(newVal);
+    mention.handleInput(newVal, newVal.length);
     textareaRef.current?.focus();
   };
 
@@ -182,10 +204,24 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
           ref={textareaRef}
           placeholder="Type a message..."
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => {
+            const val = e.target.value;
+            setMessage(val);
+            mention.handleInput(val, e.target.selectionStart);
+          }}
           onKeyDown={handleKeyDown}
           className="min-h-[56px] max-h-32 resize-none bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-28 focus-visible:ring-0 focus-visible:ring-offset-0"
           rows={2}
+        />
+
+        <UserMentionDropdown
+          query={mention.query}
+          isOpen={mention.isOpen}
+          position={mention.position}
+          selectedIndex={mention.selectedIndex}
+          onSelectedIndexChange={mention.setSelectedIndex}
+          onSelect={mention.handleSelect}
+          onClose={mention.handleClose}
         />
 
         {/* Action buttons */}

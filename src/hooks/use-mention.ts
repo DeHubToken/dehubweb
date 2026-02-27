@@ -9,7 +9,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import type { MentionUser } from '@/components/app/mentions';
 
 interface UseMentionOptions {
-  inputRef: React.RefObject<HTMLTextAreaElement | HTMLDivElement | null>;
+  inputRef: React.RefObject<HTMLTextAreaElement | HTMLInputElement | HTMLDivElement | null>;
   onMentionInsert?: (user: MentionUser, newText: string) => void;
 }
 
@@ -104,8 +104,8 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
       }
     }
     
-    // For textareas
-    if (input instanceof HTMLTextAreaElement) {
+    // For textareas and inputs
+    if (input instanceof HTMLTextAreaElement || input instanceof HTMLInputElement) {
       const rect = input.getBoundingClientRect();
       // Position above the textarea
       let top = rect.top - dropdownHeight - 6;
@@ -140,8 +140,8 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
     
     if (cursorPos === undefined) {
       const input = inputRef.current;
-      if (input instanceof HTMLTextAreaElement) {
-        cursorPos = input.selectionStart;
+      if (input instanceof HTMLTextAreaElement || input instanceof HTMLInputElement) {
+        cursorPos = input.selectionStart ?? text.length;
       } else if (input instanceof HTMLDivElement) {
         const selection = window.getSelection();
         if (selection && selection.rangeCount > 0) {
@@ -179,11 +179,12 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
     if (!isOpen) return false;
     
     switch (e.key) {
-      case 'ArrowDown':
+      case 'ArrowDown': {
         e.preventDefault();
-        setSelectedIndex(prev => Math.min(prev + 1, 4)); // Max 5 items
+        const maxIdx = Math.max(0, ((window as any).__mentionResults?.length ?? 5) - 1);
+        setSelectedIndex(prev => Math.min(prev + 1, maxIdx));
         return true;
-        
+      }
       case 'ArrowUp':
         e.preventDefault();
         setSelectedIndex(prev => Math.max(prev - 1, 0));
@@ -216,8 +217,8 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
     const input = inputRef.current;
     let cursorPos = text.length;
     
-    if (input instanceof HTMLTextAreaElement) {
-      cursorPos = input.selectionStart;
+    if (input instanceof HTMLTextAreaElement || input instanceof HTMLInputElement) {
+      cursorPos = input.selectionStart ?? text.length;
     } else if (input instanceof HTMLDivElement) {
       const selection = window.getSelection();
       if (selection && selection.rangeCount > 0) {
@@ -247,7 +248,7 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
     
     // Focus input and set cursor after mention
     setTimeout(() => {
-      if (input instanceof HTMLTextAreaElement) {
+      if (input instanceof HTMLTextAreaElement || input instanceof HTMLInputElement) {
         input.focus();
         const newCursorPos = startIndex + mention.length;
         input.setSelectionRange(newCursorPos, newCursorPos);

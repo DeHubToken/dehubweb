@@ -39,6 +39,8 @@ import {
 } from '@/hooks/use-feature-requests';
 import { z } from 'zod';
 import { useFeatureRequestComments, useSubmitComment, useDeleteComment } from '@/hooks/use-feature-request-comments';
+import { UserMentionDropdown } from '@/components/app/mentions';
+import { useMention } from '@/hooks/use-mention';
 
 const featureSchema = z.object({
   title: z.string().trim().min(1, 'Title is required').max(100, 'Title must be under 100 characters'),
@@ -95,7 +97,13 @@ function FeatureCard({
   const { t } = useTranslation();
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
+  const commentInputRef = useRef<HTMLInputElement>(null);
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
+
+  const mention = useMention({
+    inputRef: commentInputRef,
+    onMentionInsert: (_user, newText) => setCommentText(newText.slice(0, 500)),
+  });
 
   const { data: comments, isLoading: commentsLoading } = useFeatureRequestComments(showComments ? feature.id : null);
   const submitComment = useSubmitComment();
@@ -243,13 +251,42 @@ function FeatureCard({
                 )}
 
                 {/* Comment input */}
-                <form onSubmit={handleSubmitComment} className="flex gap-2">
+                <form onSubmit={handleSubmitComment} className="relative flex gap-2">
                   <Input
+                    ref={commentInputRef}
                     value={commentText}
-                    onChange={(e) => setCommentText(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setCommentText(val);
+                      mention.handleInput(val, e.target.selectionStart ?? val.length);
+                    }}
+                    onKeyDown={(e) => {
+                      if (mention.isOpen) {
+                        const handled = mention.handleKeyDown(e);
+                        if (handled) {
+                          if (e.key === 'Enter' || e.key === 'Tab') {
+                            e.preventDefault();
+                            const liveResults = (window as any).__mentionResults || [];
+                            if (liveResults[mention.selectedIndex]) {
+                              mention.handleSelect(liveResults[mention.selectedIndex]);
+                            }
+                          }
+                          return;
+                        }
+                      }
+                    }}
                     placeholder={t('features.addComment')}
                     maxLength={500}
                     className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs h-8"
+                  />
+                  <UserMentionDropdown
+                    query={mention.query}
+                    isOpen={mention.isOpen}
+                    position={mention.position}
+                    selectedIndex={mention.selectedIndex}
+                    onSelectedIndexChange={mention.setSelectedIndex}
+                    onSelect={mention.handleSelect}
+                    onClose={mention.handleClose}
                   />
                   <button
                     type="submit"

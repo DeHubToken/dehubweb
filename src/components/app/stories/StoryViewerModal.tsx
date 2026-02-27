@@ -27,6 +27,8 @@ import { useStoryViews } from '@/hooks/use-story-views';
 import { useStoryComments } from '@/hooks/use-story-comments';
 import { StorySlide } from './StorySlide';
 import { StoryCommentsDrawer } from './StoryCommentsDrawer';
+import { UserMentionDropdown } from '@/components/app/mentions';
+import { useMention } from '@/hooks/use-mention';
 
 interface StoryViewerModalProps {
   isOpen: boolean;
@@ -64,6 +66,12 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
   const [inlineCommentText, setInlineCommentText] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
+  const inlineCommentRef = useRef<HTMLInputElement>(null);
+
+  const mention = useMention({
+    inputRef: inlineCommentRef,
+    onMentionInsert: (_user, newText) => setInlineCommentText(newText),
+  });
   
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
@@ -669,12 +677,30 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
               </div>
               
               {/* Comment input */}
-              <div className="flex items-center gap-2 mt-3 pt-3 flex-shrink-0">
+              <div className="relative flex items-center gap-2 mt-3 pt-3 flex-shrink-0">
                 <input
+                  ref={inlineCommentRef}
                   type="text"
                   value={inlineCommentText}
-                  onChange={(e) => setInlineCommentText(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setInlineCommentText(val);
+                    mention.handleInput(val, e.target.selectionStart ?? val.length);
+                  }}
                   onKeyDown={(e) => {
+                    if (mention.isOpen) {
+                      const handled = mention.handleKeyDown(e);
+                      if (handled) {
+                        if (e.key === 'Enter' || e.key === 'Tab') {
+                          e.preventDefault();
+                          const liveResults = (window as any).__mentionResults || [];
+                          if (liveResults[mention.selectedIndex]) {
+                            mention.handleSelect(liveResults[mention.selectedIndex]);
+                          }
+                        }
+                        return;
+                      }
+                    }
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
                       handlePostInlineComment();
@@ -682,6 +708,15 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
                   }}
                   placeholder="Add a comment..."
                   className="flex-1 bg-transparent text-white text-xs placeholder:text-white/40 outline-none"
+                />
+                <UserMentionDropdown
+                  query={mention.query}
+                  isOpen={mention.isOpen}
+                  position={mention.position}
+                  selectedIndex={mention.selectedIndex}
+                  onSelectedIndexChange={mention.setSelectedIndex}
+                  onSelect={mention.handleSelect}
+                  onClose={mention.handleClose}
                 />
                 <button
                   onClick={handlePostInlineComment}
