@@ -347,39 +347,66 @@ export function ShortsFeedSkeleton() {
 }
 
 /**
- * Music feed skeleton
+ * Music feed skeleton - matches AllSection layout with carousels
  */
 export function MusicFeedSkeleton() {
   return (
     <div className="space-y-4">
-      {/* Sub-tab pills */}
-      <div className="flex gap-2 overflow-hidden">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="h-9 w-20 rounded-xl flex-shrink-0" />
+      {/* Sub-tab pills (All, Tracks, Videos, Podcasts, Radio, Stages) */}
+      <div className="flex gap-1.5 overflow-hidden pl-1">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} className="h-8 w-[72px] rounded-lg flex-shrink-0" />
         ))}
       </div>
-      {/* Videos carousel placeholder */}
+
+      {/* Music Videos carousel section */}
       <div className="space-y-3">
         <div className="flex justify-between items-center">
-          <Skeleton className="h-5 w-32 rounded" />
+          <Skeleton className="h-5 w-36 rounded" />
           <Skeleton className="h-4 w-16 rounded" />
         </div>
-        <div className="flex gap-3 overflow-hidden">
+        <div className="flex gap-3 overflow-hidden pr-8">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="w-48 flex-shrink-0">
+            <div key={i} className="w-[280px] flex-shrink-0">
               <MusicVideoCardSkeleton />
             </div>
           ))}
         </div>
       </div>
-      {/* Radio section placeholder */}
+
+      {/* Radio Stations carousel section */}
       <div className="space-y-3">
-        <Skeleton className="h-5 w-40 rounded" />
-        <div className="flex gap-3 overflow-hidden">
-          {Array.from({ length: 4 }).map((_, i) => (
+        <div className="flex justify-between items-center">
+          <Skeleton className="h-5 w-32 rounded" />
+          <Skeleton className="h-4 w-16 rounded" />
+        </div>
+        <div className="flex gap-3 overflow-hidden pr-8">
+          {Array.from({ length: 3 }).map((_, i) => (
             <Skeleton key={i} className="w-[280px] h-20 rounded-xl flex-shrink-0" />
           ))}
         </div>
+      </div>
+
+      {/* Stages section */}
+      <div className="space-y-3">
+        <Skeleton className="h-5 w-20 rounded" />
+        <div className="flex gap-3 overflow-hidden pr-8">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="w-[200px] h-16 rounded-xl flex-shrink-0" />
+          ))}
+        </div>
+      </div>
+
+      {/* Tracks section */}
+      <div className="space-y-3">
+        <Skeleton className="h-5 w-16 rounded" />
+        <Skeleton className="h-4 w-32 rounded" />
+      </div>
+
+      {/* Podcasts section */}
+      <div className="space-y-3">
+        <Skeleton className="h-5 w-20 rounded" />
+        <Skeleton className="h-4 w-32 rounded" />
       </div>
     </div>
   );

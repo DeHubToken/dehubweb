@@ -363,8 +363,12 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
     <div>
       <SectionHeader icon={Play} title="Music Videos" onSeeAll={videos.length > 0 ? onSeeAll : undefined} />
       {isLoading ? (
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="w-6 h-6 text-white animate-spin" />
+        <div className="flex gap-3 overflow-hidden pr-8">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="w-[280px] flex-shrink-0">
+              <MusicVideoCardSkeleton />
+            </div>
+          ))}
         </div>
       ) : videos.length === 0 ? (
         <p className="text-zinc-500 text-sm">No music videos yet</p>
@@ -506,7 +510,9 @@ function MusicVideosSection({ walletAddress }: { walletAddress: string | null })
     return (
       <div className="space-y-3 pb-32">
         {Array.from({ length: 4 }).map((_, i) => (
-          <MusicVideoCardSkeleton key={i} />
+          <div key={i} className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3">
+            <MusicVideoCardSkeleton />
+          </div>
         ))}
       </div>
     );
