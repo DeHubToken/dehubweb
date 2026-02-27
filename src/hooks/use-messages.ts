@@ -130,7 +130,12 @@ export function useMessages(conversationId: string | null) {
     if (!isAuthenticated || !conversationId) return;
 
     const unsubSend = onDmSendMessage((msg) => {
-      if (msg.conversation !== conversationId) return;
+      // For real conversation IDs: exact match
+      // For virtual IDs (new_0x...): match by the other user's address embedded in the ID
+      const isMatch = msg.conversation === conversationId ||
+        (conversationId.startsWith('new_') &&
+          msg.sender?.address?.toLowerCase() === conversationId.replace('new_', '').toLowerCase());
+      if (!isMatch) return;
       queryClient.setQueryData(
         messagesKeys.messages(conversationId),
         (old: any) => {

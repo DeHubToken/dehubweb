@@ -37,6 +37,7 @@ import { toast } from 'sonner';
 import {
   emitReadReceipt,
   onConversationDeleted,
+  onDmSendMessage,
 } from '@/lib/api/dehub/dm-socket';
 
 interface DirectMessageChatProps {
@@ -242,7 +243,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     if (hasInitialized.current) return;
     hasInitialized.current = true;
 
-    const userId = otherUser?._id || otherUser?.address;
+    // Prefer wallet address — server's createAndStart handler looks up users by address
+    const userId = otherUser?.address || otherUser?._id;
     if (!userId) return;
 
     createAndStart.mutate(userId, {
@@ -318,6 +320,18 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     }
     prevMessagesLenRef.current = messages.length;
   }, [messages.length]);
+
+  // If createAndStart failed and conversation ID is still virtual, resolve it from incoming messages
+  useEffect(() => {
+    if (!resolvedConversationId.startsWith('new_')) return;
+    const otherAddress = resolvedConversationId.replace('new_', '').toLowerCase();
+    const unsub = onDmSendMessage((msg) => {
+      if (msg.conversation && msg.sender?.address?.toLowerCase() === otherAddress) {
+        setResolvedConversationId(msg.conversation);
+      }
+    });
+    return unsub;
+  }, [resolvedConversationId]);
 
   // Handle conversationDeleted event
   useEffect(() => {

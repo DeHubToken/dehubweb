@@ -118,31 +118,45 @@ function getDmSocket(): Socket {
 export function emitCreateAndStart(userId: string): Promise<DmConversation> {
   return new Promise((resolve, reject) => {
     const socket = getDmSocket();
+    let settled = false;
 
-    const timeout = setTimeout(() => {
-      socket.off('createAndStart', onSuccess);
-      socket.off('error', onError);
-      reject(new Error('createAndStart timeout'));
+    const settle = (conversation: DmConversation | null, error?: Error) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+      socket.off('createAndStart', onEvent);
+      socket.off('error', onErrorEvent);
+      if (error) reject(error);
+      else resolve(conversation!);
+    };
+
+    const timeoutId = setTimeout(() => {
+      settle(null, new Error('createAndStart timeout'));
     }, 15000);
 
-    const onSuccess = (response: any) => {
-      clearTimeout(timeout);
-      socket.off('error', onError);
+    const onEvent = (response: any) => {
       // Server responds with { msg, data: { ...dm, dmFee } }
       const conversation: DmConversation = response?.data || response;
-      resolve(conversation);
+      settle(conversation);
     };
 
-    const onError = (err: DmSocketError) => {
-      clearTimeout(timeout);
-      socket.off('createAndStart', onSuccess);
-      reject(new Error(err.message || 'DM socket error'));
+    const onErrorEvent = (err: DmSocketError) => {
+      settle(null, new Error(err.message || 'DM socket error'));
     };
 
-    socket.once('createAndStart', onSuccess);
-    socket.once('error', onError);
+    socket.once('createAndStart', onEvent);
+    socket.once('error', onErrorEvent);
     console.log('[DM Socket] → createAndStart emit', { _id: userId });
-    socket.emit('createAndStart', { _id: userId });
+    // Emit with ACK callback — some NestJS gateways return via ACK instead of a separate event
+    socket.emit('createAndStart', { _id: userId }, (ackResponse: any) => {
+      if (!ackResponse) return; // server doesn't use ACK for this event
+      if (ackResponse?.error || ackResponse?.status === 'error') {
+        settle(null, new Error(ackResponse.error || ackResponse.message || 'ACK error'));
+      } else {
+        const conversation: DmConversation = ackResponse?.data || ackResponse;
+        settle(conversation);
+      }
+    });
   });
 }
 
