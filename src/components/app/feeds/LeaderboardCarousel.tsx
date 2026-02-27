@@ -54,10 +54,10 @@ const LeaderboardCard = memo(function LeaderboardCard({
       onClick={onClick}
       className="flex-shrink-0 w-[160px] bg-white/[0.04] border border-white/[0.08] rounded-xl p-3 cursor-pointer hover:bg-white/[0.08] transition-colors"
     >
-      {/* Rank + Medal */}
-      <div className="flex items-center justify-between mb-2">
+      {/* Rank + Name */}
+      <div className="flex items-center gap-2 mb-2">
         {rank <= 10 ? (
-          <div className={`medal-shine-container ${rank <= 3 ? 'w-7 h-7' : 'w-6 h-6'}`}>
+          <div className={`medal-shine-container flex-shrink-0 ${rank <= 3 ? 'w-7 h-7' : 'w-6 h-6'}`}>
             <img src={MEDALS[rank - 1]} alt={`#${rank}`} className={`${rank <= 3 ? 'w-7 h-7' : 'w-6 h-6'} object-contain`} />
             <div 
               className="medal-shine-overlay"
@@ -65,21 +65,10 @@ const LeaderboardCard = memo(function LeaderboardCard({
             />
           </div>
         ) : (
-          <div className="w-6 h-6 rounded-lg bg-zinc-700 flex items-center justify-center text-xs font-bold text-white">
+          <div className="w-6 h-6 rounded-lg bg-zinc-700 flex-shrink-0 flex items-center justify-center text-xs font-bold text-white">
             {rank}
           </div>
         )}
-        <span className="text-xs text-zinc-500 tabular-nums">{formatNumber(entry.total)} DHB</span>
-      </div>
-
-      {/* Avatar + Name */}
-      <div className="flex items-center gap-2">
-        <LeaderboardUserAvatar
-          avatarUrl={avatarUrl}
-          fallbackSeed={entry.account}
-          displayName={displayName}
-          size="sm"
-        />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-0.5">
             <span className="relative inline-flex items-baseline shrink min-w-0">
@@ -87,8 +76,18 @@ const LeaderboardCard = memo(function LeaderboardCard({
               {badgeUrl && <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />}
             </span>
           </div>
-          <span className="text-xs text-zinc-500 truncate block">{handle}</span>
         </div>
+      </div>
+
+      {/* Avatar + Balance */}
+      <div className="flex items-center gap-2">
+        <LeaderboardUserAvatar
+          avatarUrl={avatarUrl}
+          fallbackSeed={entry.account}
+          displayName={displayName}
+          size="sm"
+        />
+        <span className="text-xs text-zinc-500 tabular-nums">{formatNumber(entry.total)} DHB</span>
       </div>
     </div>
   );
