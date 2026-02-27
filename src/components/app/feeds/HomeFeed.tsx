@@ -881,8 +881,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
     const computeCols = () => {
       if (!isCollapsed) return 1;
-      const w = window.innerWidth;
-      return w >= 1280 ? 3 : 2;
+      // Always 3 columns in collapsed desktop mode — content scales down at narrower widths
+      return 3;
     };
 
     // Defer column change by 500ms so masonry doesn't re-layout during the width animation
