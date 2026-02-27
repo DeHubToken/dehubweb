@@ -496,8 +496,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     status: 'minted',
   });
 
-  // Map unified feed items to ShortVideo format
+  // Shorts carousel disabled – feature not ready yet
   const shorts = useMemo((): ShortVideo[] => {
+    return []; // disabled
     if (!scrollFeed.data?.pages) return [];
     const allItems = scrollFeed.data.pages.flatMap(page => page.items || []);
     // Exclude PPV content from shorts carousels
