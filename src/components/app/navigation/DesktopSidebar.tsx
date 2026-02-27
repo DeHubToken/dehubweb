@@ -95,8 +95,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         isCollapsed ? "w-[60px] pt-[2px]" : "w-[60px] pt-[2px] lg:w-[231px] lg:px-[18px] lg:items-stretch lg:pt-0 lg:-mt-[3px]"
       )}>
         {/* Logo & Coin Balance */}
-        <div className={cn("flex items-center justify-between w-full", isCollapsed ? "mb-[14px]" : "mb-[14px] lg:mb-[8px]")}>
-          <div className={cn("flex items-center", isCollapsed ? "mt-[10px] mx-auto" : "mt-[10px] mx-auto lg:mx-0 lg:mt-[4px]")}>
+        <div className={cn("flex items-center justify-between w-full", isCollapsed ? "mb-[14px]" : "mb-[14px] lg:mb-[5px]")}>
+          <div className={cn("flex items-center", isCollapsed ? "mt-[10px] mx-auto" : "mt-[10px] mx-auto lg:mx-0 lg:mt-[7px]")}>
             <button
               onClick={toggleCollapse}
               className={cn(
