@@ -8,7 +8,7 @@
 import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { CheckCircle, Play } from 'lucide-react';
+import { CheckCircle, Play, Images } from 'lucide-react';
 import { getMediaUrl } from '@/lib/api/dehub/core';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import type { DeHubNFT } from '@/lib/api/dehub/types';
@@ -29,8 +29,13 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
   const handle = quotedPost.minterUsername || quotedPost.mintername || quotedPost.minter?.slice(0, 8);
   const content = quotedPost.description || quotedPost.name || '';
   const hasVideo = quotedPost.postType === 'video' && quotedPost.videoUrl;
-  const hasImage = quotedPost.postType === 'image' || (quotedPost.imageUrl && !hasVideo);
-  const thumbnailUrl = getMediaUrl(quotedPost.imageUrl) || getMediaUrl(quotedPost.thumbnail_url);
+  
+  // For images: check postType, imageUrls array, or fallback to imageUrl when no video
+  const firstImageUrl = quotedPost.imageUrls?.[0] || quotedPost.imageUrl;
+  const hasImage = !hasVideo && (quotedPost.postType === 'image' || !!firstImageUrl);
+  const thumbnailUrl = hasVideo
+    ? (getMediaUrl(quotedPost.thumbnail_url) || getMediaUrl(quotedPost.imageUrl))
+    : getMediaUrl(firstImageUrl);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -56,6 +61,12 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
               <div className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
                 <Play className="w-5 h-5 text-white fill-white ml-0.5" />
               </div>
+            </div>
+          )}
+          {hasImage && (quotedPost.imageUrls?.length ?? 0) > 1 && (
+            <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1">
+              <Images className="w-3.5 h-3.5 text-white" />
+              <span className="text-xs text-white font-medium">{quotedPost.imageUrls!.length}</span>
             </div>
           )}
         </div>
