@@ -79,6 +79,8 @@ export function useConversations(searchQuery: string = '') {
     enabled: isAuthenticated,
     staleTime: 15 * 1000,
     refetchOnWindowFocus: true,
+    // Poll to pick up new Supabase conversations (when other user sends first)
+    refetchInterval: 20 * 1000,
   });
 
   // Real-time: when any DM message arrives, refresh the conversations list.

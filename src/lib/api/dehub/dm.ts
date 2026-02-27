@@ -240,8 +240,68 @@ function parseDmMessage(raw: any, myAddress: string): DmMessage {
 // ─── Contacts & Conversations ─────────────────────────────────────────────────
 
 /**
+ * Fetch conversations from Supabase direct_messages (wallet-based DMs).
+ * Returns DeHubConversation[] for peers the user has chatted with via dm-send.
+ */
+async function getContactsFromSupabase(myAddress: string): Promise<DeHubConversation[]> {
+  const my = myAddress.toLowerCase();
+  const { data: rows, error } = await supabase
+    .from('direct_messages')
+    .select('id, sender_address, receiver_address, content, message_type, created_at, sender_username, sender_display_name, sender_avatar_url')
+    .or(`sender_address.eq.${my},receiver_address.eq.${my}`)
+    .order('created_at', { ascending: false })
+    .limit(200);
+
+  if (error) {
+    console.warn('[DM API] getContactsFromSupabase failed:', error);
+    return [];
+  }
+
+  // Group by peer address, keep latest message per peer
+  const byPeer = new Map<string, { row: Record<string, unknown>; isFromOther: boolean }>();
+  for (const row of rows || []) {
+    const sender = (row.sender_address || '').toLowerCase();
+    const receiver = (row.receiver_address || '').toLowerCase();
+    const peer = sender === my ? receiver : sender;
+    if (!peer || peer === my) continue;
+    if (byPeer.has(peer)) continue; // already have latest (we ordered desc)
+    byPeer.set(peer, { row, isFromOther: sender !== my });
+  }
+
+  const conversations: DeHubConversation[] = Array.from(byPeer.entries()).map(([peerAddress, { row, isFromOther }]) => {
+    const r = row as Record<string, unknown>;
+    const lastMsgType = (r.message_type as string) || 'text';
+    const lastMsgContent = (r.content as string) || '';
+    return {
+      id: `new_${peerAddress}`,
+      participants: [{ address: peerAddress, _id: peerAddress } as DeHubUser],
+      otherUser: {
+        address: peerAddress,
+        _id: peerAddress,
+        username: isFromOther ? ((r.sender_username as string) || '') : '',
+        displayName: isFromOther ? ((r.sender_display_name as string) || '') : '',
+        avatarImageUrl: isFromOther ? ((r.sender_avatar_url as string) || '') : '',
+      } as DeHubUser,
+      lastMessage: {
+        id: (r.id as string) || '',
+        conversationId: `new_${peerAddress}`,
+        sender: { address: r.sender_address as string } as DeHubUser,
+        content: lastMsgContent,
+        type: (lastMsgType === 'image' || lastMsgType === 'media' ? 'image' : lastMsgType === 'gif' ? 'gif' : 'text') as DMMessageType,
+        createdAt: (r.created_at as string) || new Date().toISOString(),
+      } as DeHubDMMessage,
+      unreadCount: 0,
+      createdAt: (r.created_at as string) || new Date().toISOString(),
+      updatedAt: (r.created_at as string) || new Date().toISOString(),
+    };
+  });
+
+  return conversations;
+}
+
+/**
  * Fetch DM contacts list for the given wallet address.
- * Returns DeHubConversation[] for backward compat with MessagesPage.
+ * Merges DeHub API contacts with Supabase direct_messages conversations.
  */
 export async function getContacts(
   address: string,
@@ -251,26 +311,46 @@ export async function getContacts(
   if (!address) return [];
   const myAddress = address.toLowerCase();
 
+  let dehubItems: DeHubConversation[] = [];
   try {
-    const response = await apiCall<any>(`/api/dm/contacts/${address}`, {
+    const response = await apiCall<unknown>(`/api/dm/contacts/${address}`, {
       params: { page, limit },
       requiresAuth: true,
     });
     console.log('[DM API] getContacts raw response:', response);
 
-    let items: any[] = [];
+    let items: unknown[] = [];
+    const r = response as Record<string, unknown>;
     if (Array.isArray(response)) items = response;
-    else if (response?.result && Array.isArray(response.result)) items = response.result;
-    else if (response?.result?.items && Array.isArray(response.result.items)) items = response.result.items;
-    else if (response?.items && Array.isArray(response.items)) items = response.items;
+    else if (Array.isArray(r?.result)) items = r.result as unknown[];
+    else if (r?.result && Array.isArray((r.result as Record<string, unknown>)?.items)) items = ((r.result as Record<string, unknown>).items as unknown[]) || [];
+    else if (Array.isArray(r?.items)) items = r.items as unknown[];
 
-    const mapped = items.map(item => mapApiConversationToDeHub(item, myAddress));
-    console.log('[DM API] getContacts mapped:', mapped.length, 'conversations');
-    return mapped;
+    dehubItems = items.map((item: unknown) => mapApiConversationToDeHub(item as Record<string, unknown>, myAddress));
   } catch (err) {
-    console.error('[DM API] getContacts failed:', err);
-    throw err;
+    console.warn('[DM API] getContacts DeHub failed (will use Supabase):', err);
   }
+
+  // Merge Supabase conversations (wallet-based DMs)
+  const supabaseConvs = await getContactsFromSupabase(myAddress);
+  const existingIds = new Set(dehubItems.map(c => (c.otherUser?.address || c.id || '').toLowerCase()));
+  for (const conv of supabaseConvs) {
+    const peer = (conv.otherUser?.address || conv.id?.replace('new_', '') || '').toLowerCase();
+    if (peer && !existingIds.has(peer)) {
+      dehubItems.push(conv);
+      existingIds.add(peer);
+    }
+  }
+
+  // Sort by last activity (newest first)
+  dehubItems.sort((a, b) => {
+    const ta = new Date(a.updatedAt || a.lastMessage?.createdAt || 0).getTime();
+    const tb = new Date(b.updatedAt || b.lastMessage?.createdAt || 0).getTime();
+    return tb - ta;
+  });
+
+  console.log('[DM API] getContacts mapped:', dehubItems.length, 'conversations (DeHub + Supabase)');
+  return dehubItems.slice(0, limit);
 }
 
 export async function getConversations(
