@@ -79,7 +79,7 @@ export function GlobalFeedNav() {
   }, [isHomePage, navigate]);
 
   return (
-    <div className="sticky top-0 bg-black z-50 px-2 sm:px-3 pt-2 pb-2">
+    <div className="sticky top-0 bg-black z-50 p-2 sm:p-3 pb-2 sm:pb-2">
       <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
         <div ref={layerRef} className="relative overflow-visible">
           <GlassIndicator rect={rect} borderRadius="0.75rem" layoutKey={`global-${activeTab}`} />
