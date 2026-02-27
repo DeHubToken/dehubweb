@@ -77,14 +77,15 @@ function getDmSocket(): Socket {
     currentToken = token;
     dmSocket = io(`${DEHUB_API_BASE}/dm`, {
       auth: token ? { token: `Bearer ${token}` } : undefined,
-      // Start with polling (better CORS compat), then upgrade to WebSocket
-      transports: ['polling', 'websocket'],
+      // Try WebSocket first (like main socket). If WS fails, fall back to polling.
+      // This avoids a WebSocket probe that creates a second SID and then disconnects,
+      // which can cause the server to wipe the Redis session for the polling socket.
+      transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionDelay: 3000,
       reconnectionDelayMax: 15000,
-      // Limit retries — if /dm namespace isn't on server, don't spam
-      reconnectionAttempts: 3,
-      timeout: 15000,
+      reconnectionAttempts: 5,
+      timeout: 20000,
     });
 
     dmSocket.on('connect', () => {

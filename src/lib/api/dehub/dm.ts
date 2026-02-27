@@ -386,6 +386,168 @@ export async function deleteConversation(
 
 // ─── Messages ─────────────────────────────────────────────────────────────────
 
+/**
+ * Check if conversationId is a virtual/wallet-based conversation (new_0x... or raw 0x...).
+ */
+function isVirtualConversation(conversationId: string): boolean {
+  return conversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(conversationId);
+}
+
+/**
+ * Fetch messages from Supabase direct_messages for wallet-based conversations.
+ * Used when createAndStart fails or for new conversations before DeHub has a real dmId.
+ */
+async function getMessagesFromSupabase(
+  myAddress: string,
+  otherAddress: string,
+  page: number,
+  limit: number
+): Promise<{ items: DmMessage[]; totalCount: number; hasMore: boolean }> {
+  const my = myAddress.toLowerCase();
+  const other = otherAddress.toLowerCase();
+
+  const { data: rows, error } = await supabase
+    .from('direct_messages')
+    .select('*')
+    .or(`and(sender_address.eq.${my},receiver_address.eq.${other}),and(sender_address.eq.${other},receiver_address.eq.${my})`)
+    .order('created_at', { ascending: false })
+    .range(page * limit, (page + 1) * limit - 1);
+
+  if (error) {
+    console.warn('[DM API] getMessagesFromSupabase failed:', error);
+    return { items: [], totalCount: 0, hasMore: false };
+  }
+
+  const items: DmMessage[] = (rows || []).map((row: any) => {
+    const senderAddr = (row.sender_address || '').toLowerCase();
+    const author: 'me' | 'other' = senderAddr === my ? 'me' : 'other';
+    const msgType: DmMsgType =
+      row.message_type === 'image' || row.message_type === 'media' ? 'media' :
+      row.message_type === 'gif' ? 'gif' :
+      row.message_type === 'audio' || row.message_type === 'voice' ? 'voice' :
+      'msg';
+    return {
+      _id: row.id,
+      conversation: other,
+      sender: {
+        _id: senderAddr,
+        username: row.sender_username || '',
+        address: senderAddr,
+        displayName: row.sender_display_name || '',
+        avatarImageUrl: row.sender_avatar_url || '',
+      },
+      content: row.content || '',
+      msgType,
+      mediaUrls: row.media_url ? [{ url: row.media_url, type: 'image', mimeType: 'image/*' }] : [],
+      voiceDuration: null,
+      isRead: false,
+      isEdited: false,
+      editedAt: null,
+      isForwarded: false,
+      replyTo: null,
+      paymentStatus: null,
+      paymentTxHash: null,
+      tipAmount: null,
+      tipSymbol: null,
+      isDeleted: false,
+      author,
+      createdAt: row.created_at || new Date().toISOString(),
+      updatedAt: row.created_at || new Date().toISOString(),
+    };
+  });
+
+  return {
+    items,
+    totalCount: items.length,
+    hasMore: items.length >= limit,
+  };
+}
+
+/**
+ * Send a message via REST (dm-send edge function).
+ * Used for virtual conversations when socket/createAndStart fails.
+ */
+export async function sendMessageViaRest(
+  conversationId: string,
+  content: string,
+  msgType: DmMsgType = 'msg',
+  opts?: { gifUrl?: string; mediaUrl?: string; replyTo?: string }
+): Promise<DmMessage> {
+  const token = getAuthToken();
+  if (!token) throw new Error('Authentication required');
+
+  const sender = (localStorage.getItem('dehub_wallet') || '').toLowerCase();
+  if (!sender) throw new Error('Wallet address not found');
+
+  const isNew = conversationId.startsWith('new_');
+  const receiver = isNew ? conversationId.replace('new_', '').toLowerCase() : null;
+  const realConvId = /^0x[0-9a-fA-F]{40}$/i.test(conversationId) ? conversationId.toLowerCase() : null;
+
+  if (!receiver && !realConvId) {
+    throw new Error('Invalid conversation: need receiver address or real conversation ID');
+  }
+
+  const currentUser = JSON.parse(localStorage.getItem('dehub_user') || '{}');
+  const body: Record<string, unknown> = {
+    sender,
+    content,
+    type: msgType === 'msg' ? 'text' : msgType === 'media' ? 'image' : msgType === 'voice' ? 'audio' : msgType,
+    sender_username: currentUser?.username,
+    sender_display_name: currentUser?.displayName,
+    sender_avatar_url: currentUser?.avatarImageUrl,
+  };
+  if (receiver) body.receiver = receiver;
+  else body.conversationId = conversationId;
+  if (opts?.gifUrl || opts?.mediaUrl) body.mediaUrl = opts.gifUrl || opts.mediaUrl;
+  if (opts?.replyTo) body.replyTo = opts.replyTo;
+
+  const { data, error } = await supabase.functions.invoke('dm-send', {
+    body,
+    headers: {
+      'x-wallet-address': sender,
+      'x-dehub-token': token,
+    },
+  });
+
+  if (error) throw error;
+  if (!data?.ok) throw new Error(data?.error || 'Failed to send message');
+
+  const row = data?.result?.data || data?.result;
+  if (!row) {
+    return parseDmMessage({ _id: `temp-${Date.now()}`, content, sender: { address: sender }, conversation: receiver || conversationId, msgType, createdAt: new Date().toISOString() }, sender);
+  }
+  // Map Supabase row to DmMessage
+  const mappedMsgType: DmMsgType = row.message_type === 'image' || row.message_type === 'media' ? 'media' : row.message_type === 'gif' ? 'gif' : row.message_type === 'voice' ? 'voice' : 'msg';
+  return {
+    _id: row.id,
+    conversation: row.conversation_id || receiver || conversationId,
+    sender: {
+      _id: sender,
+      username: currentUser?.username || '',
+      address: sender,
+      displayName: currentUser?.displayName || '',
+      avatarImageUrl: currentUser?.avatarImageUrl || '',
+    },
+    content: row.content || content,
+    msgType: mappedMsgType,
+    mediaUrls: row.media_url ? [{ url: row.media_url, type: 'image', mimeType: 'image/*' }] : [],
+    voiceDuration: null,
+    isRead: false,
+    isEdited: false,
+    editedAt: null,
+    isForwarded: false,
+    replyTo: null,
+    paymentStatus: null,
+    paymentTxHash: null,
+    tipAmount: null,
+    tipSymbol: null,
+    isDeleted: false,
+    author: 'me',
+    createdAt: row.created_at || new Date().toISOString(),
+    updatedAt: row.created_at || new Date().toISOString(),
+  };
+}
+
 export async function getMessages(
   conversationId: string,
   page: number = 0,
@@ -393,11 +555,15 @@ export async function getMessages(
 ): Promise<{ items: DmMessage[]; totalCount: number; hasMore: boolean }> {
   console.log('[DM API] getMessages called', { conversationId, page, limit });
 
-  if (conversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(conversationId)) {
-    return { items: [], totalCount: 0, hasMore: false };
-  }
+  const myAddress = (localStorage.getItem('dehub_wallet') || '').toLowerCase();
 
-  const myAddress = localStorage.getItem('dehub_wallet')?.toLowerCase() || '';
+  // Virtual conversation: fetch from Supabase (dm-send saves there)
+  if (isVirtualConversation(conversationId)) {
+    const otherAddress = conversationId.startsWith('new_')
+      ? conversationId.replace('new_', '')
+      : conversationId;
+    return getMessagesFromSupabase(myAddress, otherAddress, page, limit);
+  }
 
   try {
     const response = await apiCall<any>(`/api/dm/messages/${conversationId}`, {

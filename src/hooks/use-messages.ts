@@ -13,6 +13,7 @@ import {
   getConversations,
   getMessages,
   uploadAndSendMedia,
+  sendMessageViaRest,
   createConversation,
   markConversationAsRead,
   deleteConversation,
@@ -108,6 +109,7 @@ export function useMessages(conversationId: string | null) {
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
+  const isVirtual = conversationId?.startsWith('new_') || (conversationId ? /^0x[0-9a-fA-F]{40}$/i.test(conversationId) : false);
   const query = useInfiniteQuery({
     queryKey: messagesKeys.messages(conversationId || ''),
     queryFn: async ({ pageParam = 0 }) => {
@@ -118,6 +120,8 @@ export function useMessages(conversationId: string | null) {
     initialPageParam: 0,
     enabled: isAuthenticated && !!conversationId,
     staleTime: 10 * 1000,
+    // Poll for new messages when using Supabase (virtual conv) — no socket events
+    refetchInterval: isVirtual ? 5000 : false,
   });
 
   // Flatten pages → single array, oldest first for chat display
@@ -270,7 +274,13 @@ export function useSendMessage(conversationId: string) {
         });
       }
 
-      // Text / GIF — emit via socket (fire and forget)
+      // Virtual conversation (new_0x... or 0x...): use REST API — socket expects real dmId
+      const isVirtual = conversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(conversationId);
+      if (isVirtual) {
+        return sendMessageViaRest(conversationId, content, msgType, { gifUrl, replyTo });
+      }
+
+      // Real conversation: emit via socket (fire and forget)
       const payload: SendMessagePayload = {
         dmId: conversationId,
         content,
