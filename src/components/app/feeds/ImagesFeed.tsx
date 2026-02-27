@@ -259,7 +259,7 @@ function EndlessScrollView({
       
       <div ref={scrollTargetRef} />
       {orderedPosts.map((post) => (
-        <div key={post.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+        <div key={post.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
           <ImageCard post={post} />
         </div>
       ))}

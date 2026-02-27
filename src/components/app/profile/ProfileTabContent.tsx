@@ -175,7 +175,7 @@ export function ProfileTabContent({
         ) : (
           <div className="space-y-3">
             {PROFILE_IMAGES.map((image) => (
-              <div key={image.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+              <div key={image.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
                 <ImageCard post={image} />
               </div>
             ))}
@@ -190,7 +190,7 @@ export function ProfileTabContent({
         ) : (
           <div className="space-y-3">
             {ALL_PROFILE_VIDEOS.map((video) => (
-              <div key={video.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+              <div key={video.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
                 <VideoCard video={video} />
               </div>
             ))}
@@ -279,7 +279,7 @@ function HomeTabPanel({
           ? <ImageCard key={op.id} post={op.data as ImagePost} />
           : <VideoCard key={op.id} video={op.data as VideoItem} />;
         return (
-          <div key={op.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+          <div key={op.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
             {card}
           </div>
         );
@@ -291,7 +291,7 @@ function HomeTabPanel({
           ? <ImageCard key={item.data.id} post={item.data as ImagePost} />
           : <VideoCard key={item.data.id} video={item.data as VideoItem} />;
         return (
-          <div key={item.data.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+          <div key={item.data.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
             {item.isRepost && (
               <div className="flex items-center gap-1.5 text-zinc-500 text-xs mb-2 pl-1">
                 <Repeat2 className="w-3.5 h-3.5" />
@@ -369,7 +369,7 @@ function PostsTabPanel({
       {mergedItems.map((item) => {
         if (item.type === 'post') {
           return (
-            <div key={item.data.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+            <div key={item.data.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
               <PostCard post={item.data as TextPost} />
             </div>
           );
