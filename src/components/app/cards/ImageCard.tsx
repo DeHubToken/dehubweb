@@ -577,7 +577,6 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                 <p className="text-white/70 text-xs">
                   Must be holding {formatCompact(Number(post.lockedPrice))} {post.lockedCurrency || 'DHB'}
                 </p>
-                <p className="text-white/50 text-[10px] mt-1">PPV</p>
               </div>
             </div>
           </>
@@ -605,7 +604,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                 <p className="text-white/70 text-xs">
                   Unlock for {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
                 </p>
-                <p className="text-white/50 text-[10px] mt-1">PPV</p>
+                
               </div>
             </div>
           </>

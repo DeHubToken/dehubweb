@@ -1089,7 +1089,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               <p className="text-white/70 text-xs">
                 Must be holding {formatCompact(Number(video.lockedPrice))} {video.lockedCurrency || 'DHB'}
               </p>
-              <p className="text-white/50 text-[10px] mt-1">PPV</p>
             </div>
           </>
         ) : isPPVLocked ? (
@@ -1114,7 +1113,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               <p className="text-white/70 text-xs">
                 {t('drawers.unlockFor')} {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
               </p>
-              <p className="text-white/50 text-[10px] mt-1">PPV</p>
+              
             </div>
           </>
         ) : isHoldingsLocked ? (
