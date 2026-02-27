@@ -69,7 +69,7 @@ export function LiveCard({ stream }: LiveCardProps) {
   return (
     <div 
       onClick={handleCardClick}
-      className="rounded-xl border border-white/[0.08] bg-transparent p-3 cursor-pointer isolate"
+      className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3 cursor-pointer isolate"
     >
       {/* Header with AI and menu buttons */}
       <div className="flex items-start justify-between">

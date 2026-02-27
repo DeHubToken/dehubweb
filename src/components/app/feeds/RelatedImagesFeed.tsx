@@ -157,14 +157,14 @@ export function RelatedImagesFeed({ currentPostId }: RelatedImagesFeedProps) {
     <div className="flex flex-col gap-4 pt-[30px]">
       {/* Ad Video - First Slot */}
       {adVideo && (
-        <div className="relative rounded-xl border border-white/[0.08] bg-transparent p-3">
+        <div className="relative rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
           <VideoCard video={adToVideoItem(adVideo)} />
         </div>
       )}
 
       {/* Latest Images */}
       {images.map((img) => (
-        <div key={img.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+        <div key={img.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
           <ImageCard post={img} />
         </div>
       ))}

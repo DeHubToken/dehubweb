@@ -59,7 +59,7 @@ export function StoriesBarSkeleton() {
 
 export function VideoCardSkeleton() {
   return (
-    <div className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
       {/* Header */}
       <div className="pb-3 flex items-center gap-3">
         <Skeleton className="w-9 h-9 rounded-md flex-shrink-0" />
@@ -89,7 +89,7 @@ export function VideoCardSkeleton() {
 
 export function ImageCardSkeleton() {
   return (
-    <div className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
       {/* Header */}
       <div className="pb-3 flex items-center gap-3">
         <Skeleton className="w-9 h-9 rounded-md flex-shrink-0" />
@@ -118,7 +118,7 @@ export function ImageCardSkeleton() {
 
 export function PostCardSkeleton() {
   return (
-    <div className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
       {/* Header */}
       <div className="flex items-center gap-3 mb-3">
         <Skeleton className="w-9 h-9 rounded-md flex-shrink-0" />
@@ -192,7 +192,7 @@ export function MusicVideoCardSkeleton() {
 
 export function LiveStreamCardSkeleton() {
   return (
-    <div className="rounded-xl border border-white/[0.08] bg-transparent p-3 flex-shrink-0 w-72 sm:w-80">
+    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3 flex-shrink-0 w-72 sm:w-80">
       {/* Header */}
       <div className="flex items-center gap-3 pb-3">
         <Skeleton className="w-9 h-9 rounded-md flex-shrink-0" />

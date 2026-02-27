@@ -161,7 +161,7 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
   };
 
   return (
-    <div className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">

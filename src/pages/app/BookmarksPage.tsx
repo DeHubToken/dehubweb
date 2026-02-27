@@ -43,7 +43,7 @@ function BookmarksSkeleton() {
   return (
     <div className="space-y-4">
       {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+        <div key={i} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
           <div className="pb-3 flex items-center gap-3">
             <Skeleton className="w-10 h-10 rounded-md" />
             <div className="space-y-2 flex-1">
