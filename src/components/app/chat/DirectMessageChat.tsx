@@ -222,6 +222,15 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const isInitialMount = useRef(true);
   const hasInitialized = useRef(false);
 
+  // When parent upgrades conversation to one with real dmId (e.g. after getContacts returns DeHub data), use it
+  useEffect(() => {
+    const convId = conversation.id;
+    const isRealId = !convId.startsWith('new_') && !/^0x[0-9a-fA-F]{40}$/i.test(convId);
+    if (isRealId && convId !== resolvedConversationId) {
+      setResolvedConversationId(convId);
+    }
+  }, [conversation.id, resolvedConversationId]);
+
   const isGroupChat = conversation.isGroup || !!conversation.groupInfo;
 
   // Get the other participant

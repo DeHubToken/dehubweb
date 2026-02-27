@@ -167,6 +167,32 @@ export default function MessagesPage() {
     }
   }, [isAuthenticated, conversations, isLoading]);
 
+  // When conversations list gets a real dmId for the same peer (e.g. after getContacts returns DeHub data),
+  // upgrade selectedConversation so we use socket/DeHub instead of Supabase
+  useEffect(() => {
+    if (!selectedConversation || !conversations?.length) return;
+    const selId = selectedConversation.id;
+    const isVirtual = selId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(selId);
+    if (!isVirtual) return;
+    const peerAddr = (selId.startsWith('new_') ? selId.replace('new_', '') : selId).toLowerCase();
+    const realConv = conversations.find(
+      c => !c.id.startsWith('new_') && !/^0x[0-9a-fA-F]{40}$/i.test(c.id) &&
+        c.otherUser?.address?.toLowerCase() === peerAddr
+    );
+    if (realConv) {
+      setSelectedConversation(realConv);
+    }
+  }, [selectedConversation, conversations]);
+
+  // Refetch conversations more often when we have a virtual convo selected, to pick up real dmId from DeHub sooner
+  const hasVirtualSelected = selectedConversation &&
+    (selectedConversation.id.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(selectedConversation.id));
+  useEffect(() => {
+    if (!hasVirtualSelected) return;
+    const t = setInterval(() => refetch(), 5000);
+    return () => clearInterval(t);
+  }, [hasVirtualSelected, refetch]);
+
   // Block access for unauthenticated users
   if (!isAuthenticated) {
     return (
