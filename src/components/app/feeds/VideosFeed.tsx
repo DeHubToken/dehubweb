@@ -792,7 +792,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
               
               // Add video card wrapped in bento container
               elements.push(
-                <div key={video.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+                <div key={video.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3">
                   <VideoCard video={video} />
                 </div>
               );
