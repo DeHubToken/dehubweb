@@ -3,11 +3,13 @@
  * ========================
  * Shimmering skeleton loaders matching the liquid glass bento card UI.
  * Avatars are rounded-md, action buttons are rounded-xl, cards use border-white/[0.08].
+ * Collapse-aware: skeletons match multi-column layouts in fullscreen mode.
  * 
  * @module components/app/feeds/FeedSkeletons
  */
 
 import { cn } from '@/lib/utils';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 
 // ============================================================================
 // BASE SKELETON
@@ -216,10 +218,10 @@ export function LiveStreamCardSkeleton() {
 // IMAGE COLLAGE SKELETON
 // ============================================================================
 
-export function ImageCollageSkeleton() {
+export function ImageCollageSkeleton({ cols = 3 }: { cols?: number }) {
   return (
-    <div className="grid grid-cols-3 gap-1">
-      {Array.from({ length: 12 }).map((_, i) => (
+    <div className={cn("grid gap-1", cols === 4 ? "grid-cols-4" : "grid-cols-3")}>
+      {Array.from({ length: cols * 4 }).map((_, i) => (
         <Skeleton key={i} className="aspect-square rounded-sm" />
       ))}
     </div>
@@ -246,13 +248,27 @@ export function CategoryPillsSkeleton() {
 }
 
 // ============================================================================
-// COMPOSITE SKELETONS - Full feed loading states
+// COMPOSITE SKELETONS - Full feed loading states (collapse-aware)
 // ============================================================================
 
 /**
- * Home feed skeleton - mix of content types
+ * Home feed skeleton - matches 3-column masonry in collapsed mode
  */
 export function HomeFeedSkeleton() {
+  const { isCollapsed } = useSidebarCollapse();
+
+  if (isCollapsed) {
+    return (
+      <div style={{ columnCount: 3, columnGap: '0.75rem' }}>
+        {[VideoCardSkeleton, PostCardSkeleton, ImageCardSkeleton, VideoCardSkeleton, PostCardSkeleton, ImageCardSkeleton, PostCardSkeleton, VideoCardSkeleton, PostCardSkeleton].map((Card, i) => (
+          <div key={i} className="mb-3" style={{ breakInside: 'avoid' }}>
+            <Card />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3">
       <VideoCardSkeleton />
@@ -265,39 +281,51 @@ export function HomeFeedSkeleton() {
 }
 
 /**
- * Videos feed skeleton
+ * Videos feed skeleton - matches 2-column grid in collapsed mode
  */
 export function VideosFeedSkeleton() {
+  const { isCollapsed } = useSidebarCollapse();
+
   return (
     <div className="space-y-3">
       <CategoryPillsSkeleton />
-      <VideoCardSkeleton />
-      <VideoCardSkeleton />
-      <VideoCardSkeleton />
+      <div className={cn("space-y-3", isCollapsed && "sm:grid sm:grid-cols-2 sm:gap-4 sm:space-y-0")}>
+        {Array.from({ length: isCollapsed ? 6 : 3 }).map((_, i) => (
+          <VideoCardSkeleton key={i} />
+        ))}
+      </div>
     </div>
   );
 }
 
 /**
- * Images feed skeleton - collage mode
+ * Images feed skeleton - matches 4-col collage in collapsed mode
  */
 export function ImagesFeedSkeleton() {
+  const { isCollapsed } = useSidebarCollapse();
+
   return (
     <div className="space-y-3">
       <CategoryPillsSkeleton />
-      <ImageCollageSkeleton />
+      <ImageCollageSkeleton cols={isCollapsed ? 4 : 3} />
     </div>
   );
 }
 
 /**
- * Shorts feed skeleton
+ * Shorts feed skeleton - wider grid in collapsed mode
  */
 export function ShortsFeedSkeleton() {
+  const { isCollapsed } = useSidebarCollapse();
+
   return (
     <div className="space-y-3">
       <CategoryPillsSkeleton />
-      <ShortsGridSkeleton />
+      <div className={cn("grid gap-1", isCollapsed ? "grid-cols-4 sm:grid-cols-5" : "grid-cols-3")}>
+        {Array.from({ length: isCollapsed ? 10 : 6 }).map((_, i) => (
+          <Skeleton key={i} className="aspect-[9/16] rounded-lg" />
+        ))}
+      </div>
     </div>
   );
 }
@@ -347,6 +375,15 @@ export function MusicFeedSkeleton() {
 export function LiveFeedSkeleton() {
   return (
     <div className="space-y-4">
+      {/* Streams skeleton */}
+      <div className="space-y-3">
+        <Skeleton className="h-5 w-20 rounded ml-1" />
+        <div className="flex gap-3 overflow-hidden pr-12">
+          <LiveStreamCardSkeleton />
+          <LiveStreamCardSkeleton />
+          <LiveStreamCardSkeleton />
+        </div>
+      </div>
       {/* Categories skeleton */}
       <div className="space-y-3">
         <Skeleton className="h-5 w-24 rounded ml-1" />
@@ -357,15 +394,6 @@ export function LiveFeedSkeleton() {
               <Skeleton className="h-3 w-20 rounded mt-1.5" />
             </div>
           ))}
-        </div>
-      </div>
-      {/* Streams skeleton */}
-      <div className="space-y-3">
-        <Skeleton className="h-5 w-20 rounded ml-1" />
-        <div className="flex gap-3 overflow-hidden pr-12">
-          <LiveStreamCardSkeleton />
-          <LiveStreamCardSkeleton />
-          <LiveStreamCardSkeleton />
         </div>
       </div>
     </div>
