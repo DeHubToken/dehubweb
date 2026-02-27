@@ -9,6 +9,7 @@ import {
   type LiveChatMessage,
   type LiveChatUserProfile,
 } from '@/lib/api/dehub';
+import { getSocket, joinRoom, leaveRoom, emitSendMessage, onLiveChatMessage } from '@/lib/api/dehub/socket';
 import { useAuth } from '@/contexts/AuthContext';
 
 /** Shape of a livechat message used internally in the UI */
@@ -83,23 +84,43 @@ function deduplicateMessages(msgs: SupabaseLiveChatMessage[]): SupabaseLiveChatM
   );
 }
 
-const POLL_INTERVAL_MS = 5000;
+/** Normalize socket message to our format (handles various server shapes) */
+function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChatMessage | null {
+  const m = msg as Record<string, unknown>;
+  if (!m || typeof m !== 'object') return null;
+  const id = String(m.id ?? m._id ?? '');
+  if (!id) return null;
+  const sender = m.sender as Record<string, unknown> | undefined;
+  return {
+    id,
+    room_id: roomId,
+    sender_address: (sender?.address ?? m.senderAddress ?? '') as string,
+    sender_username: (sender?.username ?? m.senderUsername ?? null) as string | null,
+    sender_display_name: (sender?.displayName ?? sender?.display_name ?? m.senderDisplayName ?? null) as string | null,
+    sender_avatar_url: (sender?.avatarUrl ?? sender?.avatarImageUrl ?? sender?.avatar_image_url ?? m.imageUrl ?? null) as string | null,
+    content: (m.content ?? '') as string,
+    message_type: (m.type ?? m.messageType ?? m.message_type ?? 'text') as string,
+    image_url: (m.imageUrl ?? m.image_url ?? null) as string | null,
+    is_pinned: (m.isPinned ?? m.is_pinned ?? false) as boolean,
+    created_at: (m.createdAt ?? m.created_at ?? new Date().toISOString()) as string,
+  };
+}
 
 /**
- * Livechat messages via DeHub REST API with 5-second polling.
+ * Livechat messages via Socket.IO (like mobile app).
  *
  * Flow:
- * 1. Initial load: REST GET /api/livechat/rooms/{roomId}/messages
- * 2. Real-time: poll every 5s for new messages
- * 3. Send: REST POST via sendLiveChatMessage edge function
- * 4. Cleanup: clear interval on unmount
+ * 1. Initial load: REST GET for history (one-time)
+ * 2. Real-time: socket joinRoom + onLiveChatMessage (no polling)
+ * 3. Send: socket emitSendMessage
+ * 4. Fallback: REST send if socket not connected
  */
 export function useLiveChatMessages(roomId: string | null) {
   const [messages, setMessages] = useState<SupabaseLiveChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
   const { isAuthenticated, user, walletAddress } = useAuth();
-  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchFromApi = useCallback(async (showLoading = false) => {
     if (!roomId) return;
@@ -125,17 +146,28 @@ export function useLiveChatMessages(roomId: string | null) {
       return;
     }
 
-    // 1. Initial load
+    // 1. Initial load (REST for history)
     fetchFromApi(true);
 
-    // 2. Poll every 5s
-    pollingRef.current = setInterval(() => fetchFromApi(false), POLL_INTERVAL_MS);
+    // 2. Join room via socket
+    joinRoom(roomId);
+    setIsConnected(true);
+
+    // 3. Listen for new messages via socket
+    const unsub = onLiveChatMessage((msg) => {
+      const m = msg as Record<string, unknown>;
+      const msgRoomId = (m.roomId ?? m.room_id ?? '') as string;
+      if (msgRoomId && msgRoomId !== roomId) return;
+      const local = socketMsgToLocal(msg, roomId);
+      if (local) {
+        setMessages((prev) => deduplicateMessages([...prev.filter((x) => x.id !== local.id), local]));
+      }
+    });
 
     return () => {
-      if (pollingRef.current) {
-        clearInterval(pollingRef.current);
-        pollingRef.current = null;
-      }
+      leaveRoom(roomId);
+      unsub();
+      setIsConnected(false);
     };
   }, [roomId, fetchFromApi]);
 
@@ -148,7 +180,6 @@ export function useLiveChatMessages(roomId: string | null) {
       if (!roomId || !isAuthenticated || !walletAddress) return;
       setIsSending(true);
 
-      // Optimistic message
       const optimisticId = `temp-${Date.now()}`;
       const optimisticMsg: SupabaseLiveChatMessage = {
         id: optimisticId,
@@ -166,9 +197,14 @@ export function useLiveChatMessages(roomId: string | null) {
       setMessages((prev) => [...prev, optimisticMsg]);
 
       try {
-        await sendLiveChatMessage(roomId, content, type, imageUrl);
-        // Refetch to get server-confirmed message
-        await fetchFromApi(false);
+        const socket = getSocket();
+        if (socket.connected) {
+          emitSendMessage({ roomId, content, messageType: type, imageUrl });
+          setTimeout(() => fetchFromApi(false), 2000);
+        } else {
+          await sendLiveChatMessage(roomId, content, type, imageUrl);
+          await fetchFromApi(false);
+        }
       } catch (err) {
         setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
         console.error('[LiveChat] Failed to send message:', err);
@@ -180,7 +216,7 @@ export function useLiveChatMessages(roomId: string | null) {
     [roomId, isAuthenticated, walletAddress, user, fetchFromApi]
   );
 
-  return { messages, isLoading, isSending, isConnected: true, send, refetch: () => fetchFromApi(false) };
+  return { messages, isLoading, isSending, isConnected, send, refetch: () => fetchFromApi(false) };
 }
 
 /**

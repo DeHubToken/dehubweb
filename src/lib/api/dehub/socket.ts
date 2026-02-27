@@ -94,6 +94,31 @@ export function leaveRoom(roomId: string) {
   socket.emit('leaveRoom', { roomId });
 }
 
+/** Send a livechat message via socket. */
+export function emitSendMessage(payload: {
+  roomId: string;
+  content: string;
+  messageType?: 'text' | 'image' | 'gif' | 'voice';
+  imageUrl?: string;
+}) {
+  const s = getSocket();
+  s.emit('sendMessage', payload);
+}
+
+/** Subscribe to incoming livechat messages. Returns unsubscribe fn. */
+export function onLiveChatMessage(cb: (msg: unknown) => void): () => void {
+  const s = getSocket();
+  const handler = (data: unknown) => cb(data);
+  for (const evt of MSG_EVENTS) {
+    s.on(evt, handler);
+  }
+  return () => {
+    for (const evt of MSG_EVENTS) {
+      s.off(evt, handler);
+    }
+  };
+}
+
 /** Disconnect and clear the singleton (e.g. on logout). */
 export function disconnectSocket() {
   if (socket) {
