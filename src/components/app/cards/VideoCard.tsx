@@ -538,11 +538,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             pauseVideo();
             videoPlaybackManager.stop(instanceId);
           } else if (entry.isIntersecting && autoplayEnabled && !isPlaying && !(video.isPPV || video.isLocked) && video.videoUrl && !hasError) {
-            // Autoplay muted when scrolled into view
+            // Autoplay when scrolled into view — respect global mute preference
             const vid = videoRef.current;
             if (vid) {
-              vid.muted = true;
-              setIsMuted(true);
+              const shouldMute = videoPlaybackManager.globalMuted;
+              vid.muted = shouldMute;
+              setIsMuted(shouldMute);
               videoPlaybackManager.play(instanceId);
               setIsLoading(true);
               vid.play().then(() => {
