@@ -1060,24 +1060,33 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             beforeShorts.map((item, i) => renderFeedItem(item, i)),
             beforeShorts
           )}
-          {shorts.length > 0 && (
-            <div className={cn(shouldSplitForShorts ? 'my-3' : 'mt-3', isCollapsed && 'mt-5')}>
+          {shouldSplitForShorts && shorts.length > 0 && (
+            <div className={cn('my-3', isCollapsed && 'mt-5')}>
               <ShortsReel shorts={shorts} />
             </div>
           )}
-          {segments.map((seg, segIdx) => (
-            <div key={`multi-seg-${segIdx}`}>
-              {seg.items.length > 0 && (
-                <div className="mt-3">
-                  {renderMasonryGrid(
-                    seg.items.map((item, i) => renderFeedItem(item, seg.startIndex + i)),
-                    seg.items
-                  )}
-                </div>
-              )}
-              {segIdx < fullWidthInserts.length && fullWidthInserts[segIdx]}
-            </div>
-          ))}
+          {segments.map((seg, segIdx) => {
+            // When not splitting for shorts, render ShortsReel before the first fullWidthInsert (after first segment)
+            const showShortsHere = !shouldSplitForShorts && shorts.length > 0 && segIdx === 0;
+            return (
+              <div key={`multi-seg-${segIdx}`}>
+                {seg.items.length > 0 && (
+                  <div className="mt-3">
+                    {renderMasonryGrid(
+                      seg.items.map((item, i) => renderFeedItem(item, seg.startIndex + i)),
+                      seg.items
+                    )}
+                  </div>
+                )}
+                {showShortsHere && (
+                  <div className={cn('my-3', isCollapsed && 'mt-5')}>
+                    <ShortsReel shorts={shorts} />
+                  </div>
+                )}
+                {segIdx < fullWidthInserts.length && fullWidthInserts[segIdx]}
+              </div>
+            );
+          })}
         </>
       );
     }
