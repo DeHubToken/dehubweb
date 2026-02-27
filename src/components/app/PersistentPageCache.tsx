@@ -11,6 +11,8 @@
 
 import React, { Suspense, useState, useEffect, useRef, memo } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
+import { cn } from '@/lib/utils';
 import {
   FeedSkeleton,
   ExploreSkeleton,
@@ -86,10 +88,14 @@ const CachedPage = memo(function CachedPage({
 }) {
   const Component = config.component;
   const SkeletonComponent = config.skeleton;
+  const { isCollapsed } = useSidebarCollapse();
+
+  // Apply top spacing in collapsed mode for all pages except home (which handles it internally)
+  const needsCollapsedSpacing = isCollapsed && isActive && config.key !== 'home';
 
   return (
     <div
-      className={isActive ? 'animate-fade-in' : ''}
+      className={cn(isActive ? 'animate-fade-in' : '', needsCollapsedSpacing && 'pt-2')}
       style={
         isActive
           ? undefined
