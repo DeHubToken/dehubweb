@@ -1285,7 +1285,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
           ) : (
-            <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`}>
+            <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`} className={cn(isCollapsed && "mt-3")}>
               {/* Render optimistic posts */}
               {optimisticPosts.length > 0 && (
                 <div className="mb-3">
