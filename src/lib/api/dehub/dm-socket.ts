@@ -14,6 +14,12 @@ import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
 import type { DmMessage, DmConversation, DmMsgType } from './dm';
 
+/** Get wallet address from localStorage (set on login). */
+function getWalletAddress(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('dehub_wallet');
+}
+
 // ─── Socket event payload types ───────────────────────────────────────────────
 
 export interface SendMessagePayload {
@@ -75,17 +81,30 @@ function getDmSocket(): Socket {
 
   if (!dmSocket) {
     currentToken = token;
+    const address = getWalletAddress();
+    const handshakeAuth: Record<string, string> = {};
+    if (token) handshakeAuth.token = `Bearer ${token}`;
+    if (address) handshakeAuth.address = address.toLowerCase();
+    handshakeAuth.clientType = 'web';
+    handshakeAuth.platform = 'web';
+
     dmSocket = io(`${DEHUB_API_BASE}/dm`, {
-      auth: token ? { token: `Bearer ${token}` } : undefined,
-      // Try WebSocket first (like main socket). If WS fails, fall back to polling.
-      // This avoids a WebSocket probe that creates a second SID and then disconnects,
-      // which can cause the server to wipe the Redis session for the polling socket.
-      transports: ['websocket', 'polling'],
+      auth: Object.keys(handshakeAuth).length ? handshakeAuth : undefined,
+      query: handshakeAuth,
+      path: '/socket.io',
+      transports: ['polling', 'websocket'],
+      upgrade: true,
+      forceNew: true,
+      autoConnect: true,
       reconnection: true,
-      reconnectionDelay: 3000,
-      reconnectionDelayMax: 15000,
-      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 20,
       timeout: 20000,
+      extraHeaders: {
+        'X-Client-Type': 'web',
+        'X-Platform': 'web',
+      },
     });
 
     dmSocket.on('connect', () => {
@@ -135,9 +154,9 @@ export function emitCreateAndStart(userId: string): Promise<DmConversation> {
       settle(null, new Error('createAndStart timeout'));
     }, 15000);
 
-    const onEvent = (response: any) => {
+    const onEvent = (response: { data?: DmConversation } | DmConversation) => {
       // Server responds with { msg, data: { ...dm, dmFee } }
-      const conversation: DmConversation = response?.data || response;
+      const conversation: DmConversation = (response as { data?: DmConversation })?.data || (response as DmConversation);
       settle(conversation);
     };
 
@@ -149,12 +168,13 @@ export function emitCreateAndStart(userId: string): Promise<DmConversation> {
     socket.once('error', onErrorEvent);
     console.log('[DM Socket] → createAndStart emit', { _id: userId });
     // Emit with ACK callback — some NestJS gateways return via ACK instead of a separate event
-    socket.emit('createAndStart', { _id: userId }, (ackResponse: any) => {
+    socket.emit('createAndStart', { _id: userId }, (ackResponse: { data?: DmConversation; error?: string; message?: string; status?: string } | DmConversation | null) => {
       if (!ackResponse) return; // server doesn't use ACK for this event
-      if (ackResponse?.error || ackResponse?.status === 'error') {
-        settle(null, new Error(ackResponse.error || ackResponse.message || 'ACK error'));
+      const ack = ackResponse as { error?: string; message?: string; status?: string; data?: DmConversation };
+      if (ack?.error || ack?.status === 'error') {
+        settle(null, new Error(ack.error || ack.message || 'ACK error'));
       } else {
-        const conversation: DmConversation = ackResponse?.data || ackResponse;
+        const conversation: DmConversation = ack?.data || (ackResponse as DmConversation);
         settle(conversation);
       }
     });

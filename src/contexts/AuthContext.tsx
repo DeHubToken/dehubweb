@@ -27,7 +27,7 @@ import {
   isTokenExpired,
   type DeHubUser
 } from '@/lib/api/dehub';
-import { disconnectDmSocket } from '@/lib/api/dehub/dm-socket';
+import { disconnectDmSocket, reconnectDmSocket } from '@/lib/api/dehub/dm-socket';
 import {
   initWeb3Auth,
   disconnectWeb3Auth,
@@ -316,6 +316,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     init();
   }, []);
+
+  // Reconnect DM socket when user logs in (ensures fresh connection with new token/address)
+  useEffect(() => {
+    if (user && walletAddress && getAuthToken()) {
+      reconnectDmSocket();
+    }
+  }, [user, walletAddress]);
 
   // Wagmi Auto-connect logic
   useEffect(() => {

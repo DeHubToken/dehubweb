@@ -21,6 +21,11 @@ import { DEHUB_API_BASE, getAuthToken } from './core';
 let socket: Socket | null = null;
 let currentToken: string | null = null;
 
+function getWalletAddress(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('dehub_wallet');
+}
+
 /** Lazily create (or reuse) the socket connection. */
 export function getSocket(): Socket {
   const token = getAuthToken();
@@ -33,14 +38,30 @@ export function getSocket(): Socket {
 
   if (!socket) {
     currentToken = token;
+    const address = getWalletAddress();
+    const handshakeAuth: Record<string, string> = {};
+    if (token) handshakeAuth.token = `Bearer ${token}`;
+    if (address) handshakeAuth.address = address.toLowerCase();
+    handshakeAuth.clientType = 'web';
+    handshakeAuth.platform = 'web';
+
     socket = io(DEHUB_API_BASE, {
-      auth: token ? { token: `Bearer ${token}` } : undefined,
-      transports: ['websocket', 'polling'],
+      auth: Object.keys(handshakeAuth).length ? handshakeAuth : undefined,
+      query: handshakeAuth,
+      path: '/socket.io',
+      transports: ['polling', 'websocket'],
+      upgrade: true,
+      forceNew: true,
+      autoConnect: true,
       reconnection: true,
-      reconnectionDelay: 2000,
-      reconnectionDelayMax: 10000,
-      reconnectionAttempts: 3,
-      timeout: 10000,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 20,
+      timeout: 20000,
+      extraHeaders: {
+        'X-Client-Type': 'web',
+        'X-Platform': 'web',
+      },
     });
 
     socket.on('connect', () => {
