@@ -33,19 +33,32 @@ export async function authenticateWallet(
   timestamp: number,
   chainId: number = 8453,
 ): Promise<AuthResponse> {
-  const response = await fetch(`${DEHUB_API_BASE}/api/web/auth`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-    },
-    body: JSON.stringify({
-      address: address.toLowerCase(),
-      sig: signature,
-      timestamp,
-      chainId,
-    }),
+  const body = JSON.stringify({
+    address: address.toLowerCase(),
+    sig: signature,
+    timestamp,
+    chainId,
   });
+  const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+  };
+
+  // Try /api/auth first (generates isMobile:true JWT which works with DM socket).
+  // Fall back to /api/web/auth if /api/auth doesn't exist.
+  let response = await fetch(`${DEHUB_API_BASE}/api/auth`, {
+    method: "POST",
+    headers,
+    body,
+  });
+
+  if (response.status === 404 || response.status === 405) {
+    response = await fetch(`${DEHUB_API_BASE}/api/web/auth`, {
+      method: "POST",
+      headers,
+      body,
+    });
+  }
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
