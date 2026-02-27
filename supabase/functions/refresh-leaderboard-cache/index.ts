@@ -457,7 +457,7 @@ async function computeSnapshotDelta(
         let delta: number;
         if (requireRealPast) {
           const hasTruePastData = pastVal !== undefined && pastVal > 0;
-          delta = hasTruePastData ? currentVal - pastVal : 0;
+          delta = hasTruePastData ? currentVal - pastVal! : 0;
         } else if (pastVal !== undefined) {
           delta = currentVal - pastVal;
         } else if (isExtraWallet && currentVal > 0) {
