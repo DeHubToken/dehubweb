@@ -1227,7 +1227,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   };
 
   return (
-    <div className={cn("p-2 sm:p-3 pt-0 sm:pt-0 space-y-3")}>
+    <div className={cn("p-2 sm:p-3 pt-0 sm:pt-0 space-y-3", isCollapsed && "pt-2 sm:pt-2")}>
       {/* Filters - ALWAYS accessible so users can change settings even when feed is empty/retrying */}
       <AnimatePresence mode="wait">
         {showFilters && (
@@ -1285,7 +1285,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
           ) : (
-            <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`} className={cn(isCollapsed && "mt-3")}>
+            <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`}>
               {/* Render optimistic posts */}
               {optimisticPosts.length > 0 && (
                 <div className="mb-3">
