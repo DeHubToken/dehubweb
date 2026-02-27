@@ -449,6 +449,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const isPlayingRef = useRef(false);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -523,10 +524,17 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   // Pause callback for the playback manager
   const pauseVideo = useCallback(() => {
     videoRef.current?.pause();
+    isPlayingRef.current = false;
     setIsPlaying(false);
   }, []);
 
-  // Register with playback manager and setup IntersectionObserver
+  // Keep refs in sync for autoplay-related values
+  const autoplayEnabledRef = useRef(autoplayEnabled);
+  autoplayEnabledRef.current = autoplayEnabled;
+  const hasErrorRef = useRef(hasError);
+  hasErrorRef.current = hasError;
+
+  // Register with playback manager and setup IntersectionObserver (stable — no isPlaying dep)
   useEffect(() => {
     videoPlaybackManager.register(instanceId, pauseVideo, (muted: boolean) => {
       // Callback for manager to force mute/unmute this video
@@ -538,10 +546,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting && isPlaying) {
+          if (!entry.isIntersecting && isPlayingRef.current) {
             pauseVideo();
             videoPlaybackManager.stop(instanceId);
-          } else if (entry.isIntersecting && autoplayEnabled && !isPlaying && !(video.isPPV || video.isLocked) && video.videoUrl && !hasError) {
+          } else if (entry.isIntersecting && autoplayEnabledRef.current && !isPlayingRef.current && !(video.isPPV || video.isLocked) && video.videoUrl && !hasErrorRef.current) {
             const vid = videoRef.current;
             if (vid) {
               // Ask manager if this video should own audio
@@ -551,6 +559,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               setIsMuted(shouldMute);
               setIsLoading(true);
               vid.play().then(() => {
+                isPlayingRef.current = true;
                 setIsPlaying(true);
                 setIsLoading(false);
               }).catch(() => {
@@ -571,7 +580,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
       videoPlaybackManager.unregister(instanceId);
       observer.disconnect();
     };
-  }, [instanceId, pauseVideo, isPlaying, autoplayEnabled, video.isPPV, video.isLocked, video.videoUrl, hasError]);
+  }, [instanceId, pauseVideo, video.isPPV, video.isLocked, video.videoUrl]);
 
   // Show controls briefly after any user interaction, then auto-hide
   const showControlsBriefly = useCallback(() => {
@@ -604,14 +613,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     
     if (isPlaying) {
       videoRef.current?.pause();
+      isPlayingRef.current = false;
       setIsPlaying(false);
       videoPlaybackManager.stop(instanceId);
       showControlsBriefly();
     } else {
       // Claim audio ownership for this video (user-initiated play)
       videoPlaybackManager.claimAudio(instanceId);
-      const ownsAudio = true; // we just claimed it
-      const shouldMute = videoPlaybackManager.globalMuted || !ownsAudio;
+      const shouldMute = videoPlaybackManager.globalMuted;
       setIsMuted(shouldMute);
       if (videoRef.current) {
         videoRef.current.muted = shouldMute;
@@ -621,6 +630,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
       videoPlaybackManager.play(instanceId);
       setIsLoading(true);
       videoRef.current?.play().then(() => {
+        isPlayingRef.current = true;
         setIsPlaying(true);
         setIsLoading(false);
         showControlsBriefly();
@@ -710,6 +720,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   }, []);
 
   const handleVideoEnded = useCallback(() => {
+    isPlayingRef.current = false;
     setIsPlaying(false);
     videoPlaybackManager.stop(instanceId);
   }, [instanceId]);
