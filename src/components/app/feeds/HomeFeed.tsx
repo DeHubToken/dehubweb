@@ -1276,9 +1276,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         <HomeFeedSkeleton />
       ) : (
         <>
-          <div className={cn(isCollapsed && 'mt-1.5')}>
+          {/* Stories carousel hidden for now */}
+          {/* <div className={cn(isCollapsed && 'mt-1.5')}>
             <StoriesBar users={storyUsers} isLoading={isLoadingState} shorts={shorts} />
-          </div>
+          </div> */}
 
 
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
