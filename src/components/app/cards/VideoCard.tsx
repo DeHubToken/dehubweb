@@ -528,7 +528,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
 
   // Register with playback manager and setup IntersectionObserver
   useEffect(() => {
-    videoPlaybackManager.register(instanceId, pauseVideo);
+    videoPlaybackManager.register(instanceId, pauseVideo, (muted: boolean) => {
+      // Callback for manager to force mute/unmute this video
+      if (videoRef.current) videoRef.current.muted = muted;
+      setIsMuted(muted);
+    });
 
     // Auto-pause when scrolled out of view + auto-play when scrolled into view (if enabled)
     const observer = new IntersectionObserver(
@@ -538,13 +542,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             pauseVideo();
             videoPlaybackManager.stop(instanceId);
           } else if (entry.isIntersecting && autoplayEnabled && !isPlaying && !(video.isPPV || video.isLocked) && video.videoUrl && !hasError) {
-            // Autoplay when scrolled into view — respect global mute preference
             const vid = videoRef.current;
             if (vid) {
-              const shouldMute = videoPlaybackManager.globalMuted;
+              // Ask manager if this video should own audio
+              const ownsAudio = videoPlaybackManager.play(instanceId);
+              const shouldMute = videoPlaybackManager.globalMuted || !ownsAudio;
               vid.muted = shouldMute;
               setIsMuted(shouldMute);
-              videoPlaybackManager.play(instanceId);
               setIsLoading(true);
               vid.play().then(() => {
                 setIsPlaying(true);
@@ -556,7 +560,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           }
         });
       },
-      { threshold: 0.5 } // Trigger when 50% visible
+      { threshold: 0.5 }
     );
 
     if (containerRef.current) {
@@ -604,14 +608,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
       videoPlaybackManager.stop(instanceId);
       showControlsBriefly();
     } else {
-      // Sync mute state from global manager before playing
-      const currentGlobalMuted = videoPlaybackManager.globalMuted;
-      setIsMuted(currentGlobalMuted);
+      // Claim audio ownership for this video (user-initiated play)
+      videoPlaybackManager.claimAudio(instanceId);
+      const ownsAudio = true; // we just claimed it
+      const shouldMute = videoPlaybackManager.globalMuted || !ownsAudio;
+      setIsMuted(shouldMute);
       if (videoRef.current) {
-        videoRef.current.muted = currentGlobalMuted;
+        videoRef.current.muted = shouldMute;
       }
       
-      // Notify manager - this will pause any other playing video
+      // Notify manager
       videoPlaybackManager.play(instanceId);
       setIsLoading(true);
       videoRef.current?.play().then(() => {
@@ -630,11 +636,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     e.stopPropagation();
     const newMuted = !isMuted;
     setIsMuted(newMuted);
-    videoPlaybackManager.globalMuted = newMuted; // Persist globally for future videos
+    videoPlaybackManager.globalMuted = newMuted;
+    if (!newMuted) {
+      // User unmuted — claim audio ownership so other videos get muted
+      videoPlaybackManager.claimAudio(instanceId);
+    }
     if (videoRef.current) {
       videoRef.current.muted = newMuted;
     }
-  }, [isMuted]);
+  }, [isMuted, instanceId]);
 
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -878,6 +888,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           setIsMuted(prev => {
             const newMuted = !prev;
             videoPlaybackManager.globalMuted = newMuted;
+            if (!newMuted) videoPlaybackManager.claimAudio(instanceId);
             if (videoRef.current) videoRef.current.muted = newMuted;
             return newMuted;
           });
