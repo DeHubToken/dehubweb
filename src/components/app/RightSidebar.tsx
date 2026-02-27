@@ -36,7 +36,7 @@ function SearchBar({ compact }: { compact?: boolean }) {
         placeholder="Search..."
         className={cn(
           "w-full pl-10 bg-zinc-900 border-0 rounded-xl text-white placeholder:text-zinc-500 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0",
-          compact ? "h-[36px] text-sm" : "h-[38px]"
+          compact ? "h-[36px] text-sm" : "h-[36px]"
         )}
       />
     </div>
