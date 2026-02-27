@@ -1,76 +1,53 @@
 
 
-## DeHub API Audit — Current State vs Live API
+## Problem Analysis
 
-### Summary of Findings
+Two issues in the video feed:
 
-After comparing all 18 API modules against live API responses, here's what's new, changed, or missing:
+1. **Mute doesn't carry forward**: When a user unmutes a video and scrolls, the next video's autoplay forces `muted = true` (hardcoded at line 544 of VideoCard.tsx), ignoring the `globalMuted` preference they just set.
 
----
+2. **Fullscreen grid conflict**: In wide/collapsed-sidebar mode, two video cards can be visible simultaneously. The `VideoPlaybackManager.play()` method pauses the previous video, so only one ever plays — but both should play in a grid layout.
 
-### 1. New Fields in Feed/NFT Responses (NOT in our types)
+## Plan
 
-The live `/api/feed` endpoint now returns these fields that our `DeHubNFT` type doesn't include:
+### Step 1: Fix mute propagation in autoplay
 
-- **`isQuotePost`** (boolean) — whether the post is a quote post
-- **`quotedTokenId`** (number | null) — the token ID being quoted
-- **`quotedPost`** (nested DeHubNFT object) — full embedded quoted post data
-- **`reposts`** (number) — repost count
-- **`quotes`** (number) — quote count
-- **`ppvBuyerCount`** (number) — pay-per-view buyer count
-- **`isHidden`** (boolean) — content visibility flag (already partially handled but not in type)
-- **`isDeleted`** (boolean) — soft-delete flag
-- **`minterStaked`** (number) — minter's staked amount
+In `VideoCard.tsx` line 544, replace the hardcoded `vid.muted = true; setIsMuted(true)` with a read from `videoPlaybackManager.globalMuted`. This way, if the user unmuted a previous video, the next autoplay video inherits that unmuted state.
 
-### 2. Feed Mapping Gaps
+### Step 2: Add multi-play support to VideoPlaybackManager
 
-All feed mappers (`use-unified-feed.ts`, `SinglePostPage.tsx`, `use-bookmarks.ts`, `HomeFeed.tsx`) hardcode `reposts: 0` instead of reading `item.totalReposts` or the new `item.reposts` field. The API now provides this data.
+Upgrade the manager from tracking a single `currentlyPlaying` to a `Set` of currently playing IDs. Add a mode or method that allows multiple concurrent videos (for the grid/feed context) while still supporting single-play for contexts like TV player or dedicated video pages.
 
-### 3. Quote Post / Repost Feature
+- Add `playInFeed(id)` — registers as playing without pausing others (used by autoplay in feed grid)
+- Keep `play(id)` — exclusive single-play (used by manual click, TV player, etc.)
+- `stop(id)` — removes from the active set
 
-The API now fully supports quote posts with embedded `quotedPost` data. Our UI has repost/quote buttons but they show a "Bug reported, fix will be live soon!" toast. The API infrastructure is ready to support this feature now.
+### Step 3: Update VideoCard autoplay observer to use `playInFeed`
 
-### 4. DPay/Price Response Shape Change
+In the IntersectionObserver callback (line 540-554), call `videoPlaybackManager.playInFeed(instanceId)` instead of `play(instanceId)` so grid-visible videos don't pause each other.
 
-Our type expects `{ price: number; change_24h: number }` but the live API returns:
-```json
-{ "price": 0.000591, "tokenSymbol": "DHB", "currency": "usd" }
+### Step 4: Keep manual play exclusive
+
+When the user explicitly clicks play (`handlePlayClick`), continue using `videoPlaybackManager.play(instanceId)` so it pauses other feed videos — the user's intent is to focus on that one video.
+
+### Technical Details
+
+```text
+VideoPlaybackManager changes:
+─────────────────────────────
+- currentlyPlaying: VideoInstance | null  →  activePlaying: Set<string>
++ playInFeed(id): adds to set, no pausing
++ play(id): pauses ALL others, adds to set  (exclusive)
++ stop(id): removes from set
++ stopAll(): clears set (for tab switches etc.)
+
+VideoCard autoplay observer:
+────────────────────────────
+- vid.muted = true;
++ vid.muted = videoPlaybackManager.globalMuted;
+- setIsMuted(true);
++ setIsMuted(videoPlaybackManager.globalMuted);
+- videoPlaybackManager.play(instanceId);
++ videoPlaybackManager.playInFeed(instanceId);
 ```
-No `change_24h` field — it has `tokenSymbol` and `currency` instead. This won't break (we just get `undefined` for `change_24h`) but the type is inaccurate.
-
-### 5. Available Tokens Response Shape Change
-
-Our type expects `DPayToken[]` but the live API returns:
-```json
-{ "balance": { "8453": { "DHB": 1438.59 } } }
-```
-This is a completely different shape — the `getAvailableTokens()` function likely returns incorrect data.
-
-### 6. Server Time Response
-
-API returns `{ status: true, data: 1772131592, note: "s" }` but our function expects `{ time: string }`. The actual time is in `data` as a unix timestamp, not `time` as a string.
-
-### 7. Pagination in Feed
-
-Feed now returns structured pagination: `{ pagination: { page, limit, totalCount, totalPages, hasMore } }`. Our `searchNFTs` already handles this correctly.
-
-### 8. Categories Response
-
-Returns a flat string array — our handler already handles this correctly.
-
----
-
-### Recommended Implementation Plan
-
-**Step 1: Update `DeHubNFT` type** — Add `isQuotePost`, `quotedTokenId`, `quotedPost`, `reposts`, `quotes`, `ppvBuyerCount`, `isHidden`, `isDeleted`, `minterStaked` fields.
-
-**Step 2: Fix feed mappers** — Replace hardcoded `reposts: 0` with `item.totalReposts || item.reposts || 0` across all feed mappers.
-
-**Step 3: Fix `getDHBPrice` return type** — Update to match actual API response shape (`tokenSymbol`, `currency` instead of `change_24h`).
-
-**Step 4: Fix `getAvailableTokens`** — Update to handle the `{ balance: { chainId: { symbol: amount } } }` response shape.
-
-**Step 5: Fix `getServerTime`** — Update to read `data` field (unix timestamp) instead of `time` (string).
-
-**Step 6: Enable quote post display** — Use `quotedPost` data to render embedded quoted posts in the feed (the API now provides full nested post data).
 
