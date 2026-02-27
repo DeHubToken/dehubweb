@@ -92,7 +92,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     <>
       <aside className={cn(
         "hidden lg:flex sticky top-0 h-screen px-2 pb-2 flex-col overflow-hidden items-center transition-[width,padding] duration-500 ease-in-out motion-reduce:transition-none z-0 isolate will-change-[width]",
-        isCollapsed ? "w-[60px] pt-[2px]" : "w-[60px] pt-[2px] lg:w-[231px] lg:px-[18px] lg:items-stretch lg:pt-0 lg:-mt-[3px]"
+        isCollapsed ? "w-[60px] pt-[12px]" : "w-[60px] pt-[2px] lg:w-[231px] lg:px-[18px] lg:items-stretch lg:pt-0 lg:-mt-[3px]"
       )}>
         {/* Logo & Coin Balance */}
         <div className={cn("flex items-center justify-between w-full", isCollapsed ? "mb-[14px]" : "mb-[14px] lg:mb-[5px]")}>
