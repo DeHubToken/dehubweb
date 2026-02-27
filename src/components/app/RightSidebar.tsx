@@ -36,7 +36,7 @@ function SearchBar({ compact }: { compact?: boolean }) {
         placeholder="Search..."
         className={cn(
           "w-full pl-10 bg-zinc-900 border-0 rounded-xl text-white placeholder:text-zinc-500 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0",
-          compact ? "h-[34px] text-sm" : "h-[38px]"
+          compact ? "h-[36px] text-sm" : "h-[38px]"
         )}
       />
     </div>
@@ -46,13 +46,13 @@ function SearchBar({ compact }: { compact?: boolean }) {
 export const RightSidebar = memo(function RightSidebar({ showSearch = true }: RightSidebarProps) {
   const { isCollapsed } = useSidebarCollapse();
   return (
-    <aside className={cn("hidden lg:block w-72 xl:w-80 2xl:w-88 h-screen sticky top-0 pb-4 overflow-y-auto scrollbar-hide z-0 isolate transition-[padding] duration-500 ease-in-out motion-reduce:transition-none will-change-[padding]", isCollapsed ? "pl-0 pr-2 pt-[6px]" : "px-4 pt-[8px]")}>
+    <aside className={cn("hidden lg:block w-72 xl:w-80 2xl:w-88 h-screen sticky top-0 pb-4 overflow-y-auto scrollbar-hide z-0 isolate transition-[padding] duration-500 ease-in-out motion-reduce:transition-none will-change-[padding]", isCollapsed ? "pl-0 pr-2 pt-[12px]" : "px-4 pt-[8px]")}>
       {showSearch && (
-        <div className={isCollapsed ? "mt-[6px]" : undefined}>
+        <div>
           <SearchBar compact={isCollapsed} />
         </div>
       )}
-      <div className={cn("space-y-4", isCollapsed ? "mt-[5px]" : "mt-[11px]")}>
+      <div className={cn("space-y-4", isCollapsed ? "mt-[8px]" : "mt-[11px]")}>
         <TabbedSidePanel />
         <WhatsHappening />
       </div>
