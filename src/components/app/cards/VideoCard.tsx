@@ -541,9 +541,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             // Autoplay muted when scrolled into view
             const vid = videoRef.current;
             if (vid) {
-              vid.muted = true;
-              setIsMuted(true);
-              videoPlaybackManager.play(instanceId);
+              vid.muted = videoPlaybackManager.globalMuted;
+              setIsMuted(videoPlaybackManager.globalMuted);
+              videoPlaybackManager.playInFeed(instanceId);
               setIsLoading(true);
               vid.play().then(() => {
                 setIsPlaying(true);

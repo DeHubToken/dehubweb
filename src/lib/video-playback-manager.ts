@@ -1,9 +1,9 @@
 /**
  * Video Playback Manager
  * ======================
- * Singleton that ensures only one video plays at a time across the app.
- * Videos register/unregister themselves and the manager handles pausing
- * when a new video starts playing.
+ * Singleton that ensures only one video plays at a time across the app
+ * (exclusive mode) OR allows multiple feed videos to play simultaneously
+ * (feed mode). Videos register/unregister themselves.
  */
 
 type VideoInstance = {
@@ -13,7 +13,7 @@ type VideoInstance = {
 
 class VideoPlaybackManager {
   private static instance: VideoPlaybackManager;
-  private currentlyPlaying: VideoInstance | null = null;
+  private activePlaying: Set<string> = new Set();
   private registeredVideos: Map<string, VideoInstance> = new Map();
   private _globalMuted: boolean = true; // Start muted by default
 
@@ -26,67 +26,67 @@ class VideoPlaybackManager {
     return VideoPlaybackManager.instance;
   }
 
-  /**
-   * Get the global mute preference
-   */
   get globalMuted(): boolean {
     return this._globalMuted;
   }
 
-  /**
-   * Set the global mute preference (persists for all future videos)
-   */
   set globalMuted(muted: boolean) {
     this._globalMuted = muted;
   }
 
-  /**
-   * Register a video instance with the manager
-   */
   register(id: string, pause: () => void): void {
     this.registeredVideos.set(id, { id, pause });
   }
 
-  /**
-   * Unregister a video instance when unmounting
-   */
   unregister(id: string): void {
     this.registeredVideos.delete(id);
-    if (this.currentlyPlaying?.id === id) {
-      this.currentlyPlaying = null;
-    }
+    this.activePlaying.delete(id);
   }
 
   /**
-   * Notify that a video has started playing.
-   * Pauses any other currently playing video.
+   * Exclusive play — pauses ALL other videos, then marks this one active.
+   * Use for manual user clicks, TV player, dedicated video pages.
    */
   play(id: string): void {
-    // Pause the current video if different
-    if (this.currentlyPlaying && this.currentlyPlaying.id !== id) {
-      this.currentlyPlaying.pause();
+    // Pause every other active video
+    for (const activeId of this.activePlaying) {
+      if (activeId !== id) {
+        const video = this.registeredVideos.get(activeId);
+        video?.pause();
+      }
     }
-    
-    const video = this.registeredVideos.get(id);
-    if (video) {
-      this.currentlyPlaying = video;
-    }
+    this.activePlaying.clear();
+    this.activePlaying.add(id);
   }
 
   /**
-   * Notify that a video has stopped playing
+   * Feed play — marks as active WITHOUT pausing others.
+   * Use for autoplay in scrollable feed/grid where multiple videos can be visible.
    */
+  playInFeed(id: string): void {
+    this.activePlaying.add(id);
+  }
+
   stop(id: string): void {
-    if (this.currentlyPlaying?.id === id) {
-      this.currentlyPlaying = null;
-    }
+    this.activePlaying.delete(id);
   }
 
-  /**
-   * Get the currently playing video ID
-   */
+  stopAll(): void {
+    for (const activeId of this.activePlaying) {
+      const video = this.registeredVideos.get(activeId);
+      video?.pause();
+    }
+    this.activePlaying.clear();
+  }
+
   getCurrentlyPlayingId(): string | null {
-    return this.currentlyPlaying?.id ?? null;
+    // Return first active for backward compat
+    const first = this.activePlaying.values().next();
+    return first.done ? null : first.value;
+  }
+
+  isActive(id: string): boolean {
+    return this.activePlaying.has(id);
   }
 }
 
