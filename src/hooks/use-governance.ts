@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import { getBadgeName, BADGE_LEVELS } from '@/lib/staking-badges';
 
 export type GovernanceSort = 'most_voted' | 'newest';
-export type GovernanceStatus = 'open' | 'completed';
+export type GovernanceStatus = 'open' | 'completed' | 'passed' | 'rejected';
 
 export interface GovernanceProposal {
   id: string;
@@ -104,7 +104,7 @@ export function useCompletedProposals() {
       const { data, error } = await supabase
         .from('governance_proposals')
         .select('*')
-        .eq('status', 'completed')
+        .in('status', ['completed', 'passed', 'rejected'])
         .order('updated_at', { ascending: false });
       if (error) throw error;
       return (data || []) as GovernanceProposal[];
