@@ -219,118 +219,121 @@ export function ProfileHeader({
               </button>
             )}
           </div>
-          <div className="flex items-center gap-2">
-            {isViewingOwnProfile ? (
-              <Button
-                variant="glass" 
-                size="sm" 
-                className="rounded-xl gap-2"
-                onClick={() => navigate('/app/settings')}
-              >
-                <Pencil className="w-4 h-4" />
-                Edit Profile
-              </Button>
-            ) : isBlocked ? (
-              <Button 
-                size="sm" 
-                variant="outline"
-                className="rounded-xl border-red-500/50 text-red-400 gap-2 cursor-default"
-                disabled
-              >
-                <Ban className="w-4 h-4" />
-                Blocked
-              </Button>
-            ) : (
-              <>
-                {isPending && !isFollowing && (
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    className="rounded-xl border-zinc-600 text-zinc-300 gap-2 cursor-default"
-                    disabled
-                  >
-                    <Clock className="w-4 h-4" />
-                    Requested
-                  </Button>
-                )}
-                {!isFollowing && !isPending && (
-                  <Button 
-                    size="sm" 
-                    variant="glass"
-                    className="rounded-xl gap-2"
-                    onClick={handleFollow}
-                    disabled={isFollowLoading}
-                  >
-                    {isFollowLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <UserPlus className="w-4 h-4" />
-                    )}
-                    {isTargetPrivate ? 'Request' : 'Follow'}
-                  </Button>
-                )}
-                {isFollowing && (
-                  <Button 
-                    size="sm" 
-                    variant="glass"
-                    className="rounded-xl gap-2"
-                    onClick={() => setShowUnfollowConfirm(true)}
-                    disabled={isFollowLoading}
-                  >
-                    {isFollowLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Check className="w-4 h-4" />
-                    )}
-                    Following
-                  </Button>
-                )}
-                {isFollowing && !isSubscribed && hasPlans && (
-                  <Button 
-                    size="sm" 
-                    className="rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
-                    onClick={() => setActiveTab('subscribers')}
-                  >
-                    <Star className="w-4 h-4" />
-                    Subscribe
-                  </Button>
-                )}
-                {isFollowing && isSubscribed && (
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    className="rounded-xl border-green-500/50 text-green-400 gap-2 cursor-default"
-                    disabled
-                  >
-                    <Star className="w-4 h-4" />
-                    Subscribed
-                  </Button>
-                )}
-              </>
-            )}
-            <Drawer open={shareSheetOpen} onOpenChange={(open) => {
-              if (!isAuthenticated && open) {
-                setLoginModalOpen(true);
-                return;
-              }
-              setShareSheetOpen(open);
-            }}>
-              <DrawerTrigger asChild>
-                <Button 
+          <div className="flex flex-col items-end gap-2">
+            <div className="flex items-center gap-2">
+              {isViewingOwnProfile ? (
+                <Button
                   variant="glass" 
-                  size="icon" 
-                  className="rounded-xl h-9 w-9"
+                  size="sm" 
+                  className="rounded-xl gap-2"
+                  onClick={() => navigate('/app/settings')}
                 >
-                  <Plus className="w-4 h-4" />
+                  <Pencil className="w-4 h-4" />
+                  Edit Profile
                 </Button>
-              </DrawerTrigger>
-              <DrawerContent glass className="px-4 pb-8">
-                <DrawerHeader className="sr-only">
-                  <DrawerTitle>Profile Options</DrawerTitle>
-                </DrawerHeader>
-                <ShareOptions />
-              </DrawerContent>
-            </Drawer>
+              ) : isBlocked ? (
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  className="rounded-xl border-red-500/50 text-red-400 gap-2 cursor-default"
+                  disabled
+                >
+                  <Ban className="w-4 h-4" />
+                  Blocked
+                </Button>
+              ) : (
+                <>
+                  {isPending && !isFollowing && (
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="rounded-xl border-zinc-600 text-zinc-300 gap-2 cursor-default"
+                      disabled
+                    >
+                      <Clock className="w-4 h-4" />
+                      Requested
+                    </Button>
+                  )}
+                  {!isFollowing && !isPending && (
+                    <Button 
+                      size="sm" 
+                      variant="glass"
+                      className="rounded-xl gap-2"
+                      onClick={handleFollow}
+                      disabled={isFollowLoading}
+                    >
+                      {isFollowLoading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <UserPlus className="w-4 h-4" />
+                      )}
+                      {isTargetPrivate ? 'Request' : 'Follow'}
+                    </Button>
+                  )}
+                  {isFollowing && (
+                    <Button 
+                      size="sm" 
+                      variant="glass"
+                      className="rounded-xl gap-2"
+                      onClick={() => setShowUnfollowConfirm(true)}
+                      disabled={isFollowLoading}
+                    >
+                      {isFollowLoading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Check className="w-4 h-4" />
+                      )}
+                      Following
+                    </Button>
+                  )}
+                  {isFollowing && !isSubscribed && hasPlans && (
+                    <Button 
+                      size="sm" 
+                      className="rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
+                      onClick={() => setActiveTab('subscribers')}
+                    >
+                      <Star className="w-4 h-4" />
+                      Subscribe
+                    </Button>
+                  )}
+                  {isFollowing && isSubscribed && (
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="rounded-xl border-green-500/50 text-green-400 gap-2 cursor-default"
+                      disabled
+                    >
+                      <Star className="w-4 h-4" />
+                      Subscribed
+                    </Button>
+                  )}
+                </>
+              )}
+              <Drawer open={shareSheetOpen} onOpenChange={(open) => {
+                if (!isAuthenticated && open) {
+                  setLoginModalOpen(true);
+                  return;
+                }
+                setShareSheetOpen(open);
+              }}>
+                <DrawerTrigger asChild>
+                  <Button 
+                    variant="glass" 
+                    size="icon" 
+                    className="rounded-xl h-9 w-9"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent glass className="px-4 pb-8">
+                  <DrawerHeader className="sr-only">
+                    <DrawerTitle>Profile Options</DrawerTitle>
+                  </DrawerHeader>
+                  <ShareOptions />
+                </DrawerContent>
+              </Drawer>
+            </div>
+            <ProfileSocialLinks customs={profile.customs} />
           </div>
         </div>
 
@@ -405,8 +408,6 @@ export function ProfileHeader({
             )}
           </div>
           
-          {/* Social Links */}
-          <ProfileSocialLinks customs={profile.customs} />
 
           {/* Followers/Following */}
           {(!hideFollowerCounts || isViewingOwnProfile) && (
