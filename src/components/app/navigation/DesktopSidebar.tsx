@@ -103,7 +103,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             <button
               onClick={toggleCollapse}
               className={cn(
-                "flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-lg hover:bg-zinc-800 transition-colors",
+                "flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-lg hover:bg-zinc-800 transition-colors relative -top-[1.5px]",
                 isCollapsed ? "hidden" : "hidden lg:flex mr-1.5"
               )}
               aria-label="Toggle sidebar"
