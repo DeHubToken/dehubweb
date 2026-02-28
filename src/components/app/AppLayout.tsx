@@ -9,6 +9,8 @@ import { CoinPlacementProvider } from '@/hooks/use-coin-placement';
 import { SidebarCollapseProvider, useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { AutoplayProvider } from '@/contexts/AutoplayContext';
 import { AnimationsProvider } from '@/contexts/AnimationsContext';
+import { PiPProvider } from '@/contexts/PiPContext';
+import { FloatingPiPOverlay } from '@/components/app/tv/FloatingPiPOverlay';
 import { PostModal } from '@/features/post/PostModal';
 import { DevelopmentNoticeModal } from './modals';
 import { RadioMiniPlayer } from '@/components/app/radio';
@@ -231,13 +233,16 @@ export function AppLayout({ children }: AppLayoutProps) {
     <SidebarCollapseProvider>
       <AutoplayProvider>
         <AnimationsProvider>
-          <RadioPlayerProvider>
-            <CoinPlacementProvider>
-              <GlobalDropZoneProvider>
-                <AppLayoutContent>{children}</AppLayoutContent>
-              </GlobalDropZoneProvider>
-            </CoinPlacementProvider>
-          </RadioPlayerProvider>
+          <PiPProvider>
+            <RadioPlayerProvider>
+              <CoinPlacementProvider>
+                <GlobalDropZoneProvider>
+                  <AppLayoutContent>{children}</AppLayoutContent>
+                  <FloatingPiPOverlay />
+                </GlobalDropZoneProvider>
+              </CoinPlacementProvider>
+            </RadioPlayerProvider>
+          </PiPProvider>
         </AnimationsProvider>
       </AutoplayProvider>
     </SidebarCollapseProvider>

@@ -12,6 +12,7 @@
 
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { Play, Pause, Tv, Loader2, Volume2, VolumeX, RotateCcw, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
+import { usePiP } from '@/contexts/PiPContext';
 import { cn } from '@/lib/utils';
 import Hls from 'hls.js';
 import { TVChannel } from '@/lib/api/live-tv';
@@ -33,6 +34,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
   const hlsRef = useRef<Hls | null>(null);
   const isStoppingRef = useRef(false);
   const cardId = `tv-${channel.id}`;
+  const { addPiP, removePiP, isPiP } = usePiP();
   
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -442,15 +444,22 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                const video = videoRef.current;
-                if (!video) return;
-                if (document.pictureInPictureElement) {
-                  document.exitPictureInPicture().catch(() => {});
+                if (isPiP(channel.id)) {
+                  removePiP(channel.id);
                 } else {
-                  video.requestPictureInPicture?.().catch(() => {});
+                  addPiP({
+                    id: channel.id,
+                    name: channel.name,
+                    streamUrl: channel.streamUrl,
+                    logo: channel.logo,
+                    country: channel.country,
+                  });
                 }
               }}
-              className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
+              className={cn(
+                "w-10 h-10 rounded-xl backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors",
+                isPiP(channel.id) ? "bg-white/20" : "bg-black/40"
+              )}
             >
               <PictureInPicture2 className="w-5 h-5 text-white" />
             </button>
