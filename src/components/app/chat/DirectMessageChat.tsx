@@ -6,7 +6,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw, DollarSign } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw, DollarSign, Play, Pause } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput } from './ChatInput';
@@ -43,6 +43,65 @@ import {
 interface DirectMessageChatProps {
   conversation: DeHubConversation;
   onBack: () => void;
+}
+
+function VoiceMessagePlayer({
+  audioUrl,
+  duration,
+  isPending,
+}: {
+  audioUrl?: string;
+  duration?: number | null;
+  isPending: boolean;
+}) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const togglePlay = () => {
+    if (!audioUrl) return;
+    if (!audioRef.current) {
+      audioRef.current = new Audio(audioUrl);
+      audioRef.current.onended = () => setIsPlaying(false);
+    }
+    if (isPlaying) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  useEffect(() => () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+  }, []);
+
+  if (isPending) {
+    return (
+      <div className="flex items-center gap-2 min-w-[120px] py-2 px-3 rounded-lg bg-zinc-700/50">
+        <Loader2 className="w-4 h-4 animate-spin text-zinc-400 flex-shrink-0" />
+        <span className="text-sm text-zinc-400">Uploading voice...</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2 min-w-[120px]">
+      <button
+        type="button"
+        onClick={togglePlay}
+        className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-700/50 hover:bg-zinc-600/50 transition-colors text-sm"
+      >
+        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+        <span>🎤 Voice</span>
+        {duration != null && <span className="text-xs text-zinc-400">{duration}s</span>}
+      </button>
+    </div>
+  );
 }
 
 function MessageBubble({
@@ -104,16 +163,25 @@ function MessageBubble({
               <TranslatableText text={message.content} className="text-sm break-words" as="p" />
             )}
 
-            {/* Media (image) */}
-            {message.msgType === 'media' && primaryMediaUrl && (
+            {/* Media (image) — show loading when upload pending / mediaUrls empty */}
+            {message.msgType === 'media' && (
               <div>
-                <img
-                  src={primaryMediaUrl}
-                  alt="Shared image"
-                  className="max-w-full max-h-64 rounded-lg object-cover"
-                />
-                {message.content && (
-                  <TranslatableText text={message.content} className="text-sm mt-1" as="p" />
+                {primaryMediaUrl ? (
+                  <>
+                    <img
+                      src={getMediaUrl(primaryMediaUrl)!}
+                      alt="Shared image"
+                      className="max-w-full max-h-64 rounded-lg object-cover"
+                    />
+                    {message.content && (
+                      <TranslatableText text={message.content} className="text-sm mt-1" as="p" />
+                    )}
+                  </>
+                ) : (
+                  <div className="flex items-center gap-2 min-w-[120px] py-4 px-3 rounded-lg bg-zinc-700/50">
+                    <Loader2 className="w-5 h-5 animate-spin text-zinc-400 flex-shrink-0" />
+                    <span className="text-sm text-zinc-400">Uploading image...</span>
+                  </div>
                 )}
               </div>
             )}
@@ -127,15 +195,13 @@ function MessageBubble({
               />
             )}
 
-            {/* Voice message */}
+            {/* Voice message — show player when mediaUrls available, else pending */}
             {message.msgType === 'voice' && (
-              <div className="flex items-center gap-2 min-w-[120px]">
-                <div className="w-2 h-2 rounded-full bg-green-400 flex-shrink-0" />
-                <span className="text-sm">🎤 Voice</span>
-                {message.voiceDuration != null && (
-                  <span className="text-xs text-zinc-400 ml-1">{message.voiceDuration}s</span>
-                )}
-              </div>
+              <VoiceMessagePlayer
+                audioUrl={primaryMediaUrl ? (getMediaUrl(primaryMediaUrl) || primaryMediaUrl) : undefined}
+                duration={message.voiceDuration}
+                isPending={!primaryMediaUrl}
+              />
             )}
 
             {/* Pending payment indicator */}

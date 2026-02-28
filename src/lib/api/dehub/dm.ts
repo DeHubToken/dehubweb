@@ -75,7 +75,8 @@ export interface DmMessage {
   sender: DmSender;
   content: string;
   msgType: DmMsgType;
-  mediaUrls: Array<{ url: string; type: string; mimeType: string }>;
+  mediaUrls: Array<{ url: string; type: string; mimeType?: string }>;
+  uploadStatus?: 'pending' | 'success' | 'failed' | 'simple';
   voiceDuration: number | null;
   isRead: boolean;
   isEdited: boolean;
@@ -221,6 +222,7 @@ function parseDmMessage(raw: any, myAddress: string): DmMessage {
     content: raw.content || '',
     msgType,
     mediaUrls: Array.isArray(raw.mediaUrls) ? raw.mediaUrls : [],
+    uploadStatus: raw.uploadStatus ?? undefined,
     voiceDuration: raw.voiceDuration ?? null,
     isRead: raw.isRead ?? false,
     isEdited: raw.isEdited ?? false,

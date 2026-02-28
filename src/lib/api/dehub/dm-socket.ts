@@ -235,6 +235,18 @@ export function onFeeConfirmed(cb: (data: FeeConfirmedData) => void): () => void
   return () => socket.off('feeConfirmed', cb);
 }
 
+/** Revalidated message (e.g. after media upload completes). */
+export interface ReValidateMessageData {
+  dmId: string;
+  message: DmMessage;
+}
+
+export function onReValidateMessage(cb: (data: ReValidateMessageData) => void): () => void {
+  const socket = getDmSocket();
+  socket.on('ReValidateMessage', cb);
+  return () => socket.off('ReValidateMessage', cb);
+}
+
 export function onDmError(cb: (err: DmSocketError) => void): () => void {
   const socket = getDmSocket();
   socket.on('error', cb);

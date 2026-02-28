@@ -10,7 +10,7 @@ export const DEHUB_API_BASE = "https://api.dehub.io";
  */
 export function getMediaUrl(relativePath?: string): string | undefined {
   if (!relativePath) return undefined;
-  if (relativePath.startsWith("data:")) {
+  if (relativePath.startsWith("data:") || relativePath.startsWith("blob:")) {
     return relativePath;
   }
   if (relativePath.startsWith("http://") || relativePath.startsWith("https://")) {

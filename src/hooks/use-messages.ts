@@ -41,6 +41,7 @@ import {
   onDmSendMessage,
   onEditMessage,
   onDmDeleteMessage,
+  onReValidateMessage,
   type SendMessagePayload,
 } from '@/lib/api/dehub/dm-socket';
 
@@ -136,9 +137,8 @@ export function useMessages(conversationId: string | null) {
     if (!isAuthenticated || !conversationId) return;
 
     const unsubSend = onDmSendMessage((msg) => {
-      // For real conversation IDs: exact match
-      // For virtual IDs (new_0x...): match by the other user's address embedded in the ID
-      const isMatch = msg.conversation === conversationId ||
+      const dmId = msg.conversation || (msg as any).dmId;
+      const isMatch = dmId === conversationId ||
         (conversationId.startsWith('new_') &&
           msg.sender?.address?.toLowerCase() === conversationId.replace('new_', '').toLowerCase());
       if (!isMatch) return;
@@ -147,14 +147,24 @@ export function useMessages(conversationId: string | null) {
         (old: any) => {
           if (!old?.pages) return old;
           const pages = old.pages as Array<{ items: DmMessage[]; totalCount: number; hasMore: boolean }>;
-          // Prepend to first page (newest first storage order)
-          const newPages = [...pages];
-          if (newPages[0]) {
-            // Avoid duplicates
-            const existing = newPages[0].items.some(m => m._id === msg._id);
-            if (!existing) {
-              newPages[0] = { ...newPages[0], items: [msg, ...newPages[0].items] };
-            }
+          const newPages = pages.map(page => ({ ...page, items: [...page.items] }));
+          const firstItems = newPages[0]?.items ?? [];
+          const existingIdx = firstItems.findIndex(m => m._id === msg._id);
+          const normalizedMsg: DmMessage = {
+            ...msg,
+            conversation: dmId || conversationId,
+          } as DmMessage;
+          if (existingIdx >= 0) {
+            // Update in place (e.g. media upload completed — merge mediaUrls, uploadStatus)
+            const merged = {
+              ...firstItems[existingIdx],
+              ...normalizedMsg,
+              mediaUrls: (normalizedMsg.mediaUrls?.length ? normalizedMsg.mediaUrls : firstItems[existingIdx].mediaUrls) ?? [],
+              uploadStatus: normalizedMsg.uploadStatus ?? firstItems[existingIdx].uploadStatus,
+            };
+            newPages[0].items[existingIdx] = merged;
+          } else {
+            newPages[0] = { ...newPages[0], items: [normalizedMsg, ...firstItems] };
           }
           return { ...old, pages: newPages };
         }
@@ -195,10 +205,28 @@ export function useMessages(conversationId: string | null) {
       );
     });
 
+    const unsubRevalidate = onReValidateMessage(({ dmId, message }) => {
+      if (dmId !== conversationId) return;
+      queryClient.setQueryData(
+        messagesKeys.messages(conversationId),
+        (old: any) => {
+          if (!old?.pages) return old;
+          const pages = old.pages.map((page: any) => ({
+            ...page,
+            items: page.items.map((m: DmMessage) =>
+              m._id === message._id ? { ...m, ...message, mediaUrls: message.mediaUrls ?? m.mediaUrls, uploadStatus: message.uploadStatus ?? m.uploadStatus } : m
+            ),
+          }));
+          return { ...old, pages };
+        }
+      );
+    });
+
     return () => {
       unsubSend();
       unsubEdit();
       unsubDelete();
+      unsubRevalidate();
     };
   }, [conversationId, isAuthenticated, queryClient]);
 
@@ -326,7 +354,7 @@ export function useSendMessage(conversationId: string) {
       return tempMessage;
     },
 
-    onMutate: async ({ content, msgType, gifUrl, mediaFile }) => {
+    onMutate: async ({ content, msgType, gifUrl, mediaFile, voiceDuration }) => {
       await queryClient.cancelQueries({ queryKey: messagesKeys.messages(conversationId) });
       const previousMessages = queryClient.getQueryData(messagesKeys.messages(conversationId));
 
@@ -344,9 +372,9 @@ export function useSendMessage(conversationId: string) {
         content,
         msgType: msgType || 'msg',
         mediaUrls: mediaFile
-          ? [{ url: URL.createObjectURL(mediaFile), type: 'image', mimeType: mediaFile.type }]
+          ? [{ url: URL.createObjectURL(mediaFile), type: msgType === 'voice' ? 'audio' : 'image', mimeType: mediaFile.type }]
           : gifUrl ? [{ url: gifUrl, type: 'image', mimeType: 'image/gif' }] : [],
-        voiceDuration: null,
+        voiceDuration: voiceDuration ?? null,
         isRead: false,
         isEdited: false,
         editedAt: null,
@@ -380,8 +408,14 @@ export function useSendMessage(conversationId: string) {
       }
     },
 
-    onSettled: () => {
+    onSettled: (_data, _err, variables) => {
       queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
+      // Media/voice uploads return pending initially; backend updates when CDN job completes. Refetch after delay.
+      if (variables?.mediaFile && (variables?.msgType === 'media' || variables?.msgType === 'voice')) {
+        setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
+        }, 3000);
+      }
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
     },
   });
