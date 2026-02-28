@@ -5,6 +5,7 @@
  * Mirrors the Feature Requests UI pattern but without categories.
  */
 
+import governanceShieldIcon from '@/assets/governance-shield.png';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -614,9 +615,7 @@ export default function GovernancePage() {
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 flex items-center justify-center border border-white/20">
-              <ShieldCheck className="w-6 h-6 text-white" />
-            </div>
+            <img src={governanceShieldIcon} alt="Governance" className="w-12 h-12 object-contain" />
             <div>
               <h1 className="text-xl font-bold text-white">{t('governance.title')}</h1>
               <p className="text-zinc-500 text-sm">{t('governance.proposalCount', { count: totalCount })}</p>
