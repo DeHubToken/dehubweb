@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks';
 import { Slider } from '@/components/ui/slider';
 import { getCountryFlag } from '@/lib/api/radio-browser';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { RadioFullscreenVisualizer } from './RadioFullscreenVisualizer';
 
 export function RadioMiniPlayer() {
@@ -32,6 +32,7 @@ export function RadioMiniPlayer() {
   const [showVolume, setShowVolume] = useState(false);
   const [showVisualizer, setShowVisualizer] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const isDragging = useRef(false);
   
   if (!currentStation) return null;
   
@@ -43,18 +44,24 @@ export function RadioMiniPlayer() {
     return (
       <AnimatePresence>
         <motion.div
+          drag
+          dragMomentum={false}
+          dragElastic={0.1}
+          dragConstraints={{ top: -500, left: -500, right: 100, bottom: 100 }}
+          onDragStart={() => { isDragging.current = true; }}
+          onDragEnd={() => { setTimeout(() => { isDragging.current = false; }, 50); }}
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0, opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           className={cn(
-            'fixed bottom-16 right-4 z-50',
+            'fixed bottom-16 right-4 z-50 cursor-grab active:cursor-grabbing',
             'md:bottom-[74px] md:right-6',
             'lg:bottom-6 lg:right-6'
           )}
         >
           <button
-            onClick={togglePlayPause}
+            onClick={() => { if (!isDragging.current) togglePlayPause(); }}
             className="relative w-14 h-14 rounded-xl overflow-hidden bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl group"
           >
             {/* Station Logo */}
@@ -96,7 +103,7 @@ export function RadioMiniPlayer() {
           
           {/* Expand Button */}
           <button
-            onClick={() => setIsMinimized(false)}
+            onClick={() => { if (!isDragging.current) setIsMinimized(false); }}
             className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-lg"
           >
             <Maximize2 className="w-3 h-3 text-black" />
