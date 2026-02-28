@@ -18,12 +18,10 @@ import {
   drawBars,
   drawWaveform,
   drawCircular,
-  drawSpectrum,
   drawMirror,
   drawRings,
   drawPulse,
   drawTerrain,
-  resetSpectrum,
   resetRings,
   resetPulse,
   resetTerrain,
@@ -39,7 +37,6 @@ const STYLES: { value: VisualizerStyle; label: string }[] = [
   { value: 'bars', label: 'Bars' },
   { value: 'waveform', label: 'Wave' },
   { value: 'circular', label: 'Radial' },
-  { value: 'spectrum', label: 'Spectrum' },
   { value: 'mirror', label: 'Mirror' },
   { value: 'rings', label: 'Rings' },
   { value: 'pulse', label: 'Pulse' },
@@ -143,9 +140,6 @@ export function RadioFullscreenVisualizer({
       case 'circular':
         drawCircular(ctx, frequencyData, cssW, cssH, activeHue);
         break;
-      case 'spectrum':
-        drawSpectrum(ctx, frequencyData, cssW, cssH, activeHue);
-        break;
       case 'mirror':
         drawMirror(ctx, frequencyData, cssW, cssH, activeHue);
         break;
@@ -211,7 +205,7 @@ export function RadioFullscreenVisualizer({
   }, [isOpen, onClose, resetControlsTimer, nextStyle, prevStyle]);
 
   useEffect(() => {
-    resetSpectrum();
+    resetRings();
     resetRings();
     resetPulse();
     resetTerrain();
@@ -222,7 +216,7 @@ export function RadioFullscreenVisualizer({
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
-      resetSpectrum();
+      resetRings();
       resetRings();
       resetPulse();
       resetTerrain();
