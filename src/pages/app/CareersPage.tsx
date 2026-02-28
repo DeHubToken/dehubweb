@@ -8,6 +8,7 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -81,6 +82,7 @@ const initialBDMForm: BDMFormData = {
 
 export default function CareersPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [bdmFormOpen, setBdmFormOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<BDMFormData>(initialBDMForm);
@@ -93,7 +95,7 @@ export default function CareersPage() {
   const handleBDMSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.email.trim()) {
-      toast.error('Name and email are required');
+      toast.error(t('careers.nameEmailRequired'));
       return;
     }
     setIsSubmitting(true);
@@ -111,12 +113,12 @@ export default function CareersPage() {
         why_hire_you: formData.why_hire_you.trim() || null,
       });
       if (error) throw error;
-      toast.success("Application submitted successfully! We'll be in touch.");
+      toast.success(t('careers.applicationSuccess'));
       setFormData(initialBDMForm);
       setBdmFormOpen(false);
     } catch (error) {
       console.error('Error submitting application:', error);
-      toast.error('Failed to submit. Please try again.');
+      toast.error(t('careers.applicationFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -127,17 +129,15 @@ export default function CareersPage() {
       {/* Header bento */}
       <div className="rounded-2xl p-4 sm:p-6 mb-4 bg-gradient-to-br from-white/[0.06] via-white/[0.03] to-transparent backdrop-blur-xl border border-white/[0.08]">
         <div className="flex items-center gap-3 mb-3">
-          <img src={careersBriefcase} alt="Careers" className="w-10 h-10 object-contain" />
+          <img src={careersBriefcase} alt={t('careers.title')} className="w-10 h-10 object-contain" />
           <div>
-            <h1 className="text-xl font-bold text-white">Careers at DeHub</h1>
-            <p className="text-zinc-500 text-sm">Join the team building the future of decentralised social media</p>
+            <h1 className="text-xl font-bold text-white">{t('careers.title')}</h1>
+            <p className="text-zinc-500 text-sm">{t('careers.subtitle')}</p>
           </div>
         </div>
 
         <p className="text-zinc-300 text-sm leading-relaxed">
-          We're looking for passionate individuals who want to be part of the next wave of social media —
-          one that puts creators and communities first. All roles are <span className="text-white font-medium">fully remote</span> with
-          <span className="text-white font-medium"> flexible hours</span>.
+          {t('careers.intro')}
         </p>
       </div>
 
@@ -149,56 +149,46 @@ export default function CareersPage() {
           <div className="p-3">
             <div className="flex items-start justify-between gap-4 mb-2">
               <div>
-                <h2 className="text-lg font-bold text-white">Business Development Managers</h2>
-                <p className="text-zinc-400 text-xs mt-0.5">Partnerships & Growth</p>
+                <h2 className="text-lg font-bold text-white">{t('careers.bdmTitle')}</h2>
+                <p className="text-zinc-400 text-xs mt-0.5">{t('careers.bdmCategory')}</p>
               </div>
               <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap bg-gradient-to-br from-white/15 via-white/8 to-white/3 backdrop-blur-xl border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)] text-emerald-400">
-                Open
+                {t('careers.open')}
               </span>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-5">
-              <Tag icon={<DollarSign className="w-3.5 h-3.5" />} label="Negotiable Salary + OTE Commission" />
-              <Tag icon={<Clock className="w-3.5 h-3.5" />} label="Flexible Hours" />
-              <Tag icon={<MapPin className="w-3.5 h-3.5" />} label="Fully Remote" />
+              <Tag icon={<DollarSign className="w-3.5 h-3.5" />} label={t('careers.negotiableSalaryOTE')} />
+              <Tag icon={<Clock className="w-3.5 h-3.5" />} label={t('careers.flexibleHoursTag')} />
+              <Tag icon={<MapPin className="w-3.5 h-3.5" />} label={t('careers.fullyRemoteTag')} />
             </div>
 
-            <Section title="About the Role">
-              <p>
-                As one of our Business Development Managers at DeHub, you will be part of the driving force behind our partnership
-                strategy. Your mission is to identify, engage, and close deals with companies across both Web2
-                and Web3 — from gaming studios and content platforms to blockchain projects and DeFi protocols.
-                This is an OTE (On-Target Earnings) commission-based position: the harder you hustle, the more you earn.
-                The role is simple, bring on companies, projects, communities or any large profile accounts on to DeHub, and get paid.
-              </p>
+            <Section title={t('careers.aboutTheRole')}>
+              <p>{t('careers.bdmAbout')}</p>
             </Section>
 
-            <Section title="Key Responsibilities">
+            <Section title={t('careers.keyResponsibilities')}>
               <ul className="space-y-2.5">
-                <BulletItem icon={<Handshake className="w-4 h-4" />} text="Identify and secure strategic partnerships with Web2 and Web3 companies that align with DeHub's mission" />
-                <BulletItem icon={<Target className="w-4 h-4" />} text="Build and manage a pipeline of prospective partners, sponsors, and integration opportunities" />
-                <BulletItem icon={<Globe className="w-4 h-4" />} text="Represent DeHub at industry events, conferences, and virtual summits" />
-                <BulletItem icon={<TrendingUp className="w-4 h-4" />} text="Negotiate partnership terms, revenue-sharing models, and co-marketing agreements" />
-                <BulletItem icon={<Sparkles className="w-4 h-4" />} text="Collaborate with the product and marketing teams to develop joint campaigns and integrations" />
+                <BulletItem icon={<Handshake className="w-4 h-4" />} text={t('careers.bdmResp1')} />
+                <BulletItem icon={<Target className="w-4 h-4" />} text={t('careers.bdmResp2')} />
+                <BulletItem icon={<Globe className="w-4 h-4" />} text={t('careers.bdmResp3')} />
+                <BulletItem icon={<TrendingUp className="w-4 h-4" />} text={t('careers.bdmResp4')} />
+                <BulletItem icon={<Sparkles className="w-4 h-4" />} text={t('careers.bdmResp5')} />
               </ul>
             </Section>
 
-            <Section title="What We're Looking For">
+            <Section title={t('careers.whatWereLooking')}>
               <ul className="space-y-2.5">
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Proven experience in business development, partnerships, or sales within tech, gaming, or Web3" />
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Strong existing network in the crypto/Web3 or creator economy space is a huge plus" />
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Excellent communication and negotiation skills — you can close deals and build lasting relationships" />
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Self-motivated and comfortable working autonomously in a remote-first environment" />
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Genuine interest in decentralised social media, NFTs, or blockchain technology" />
+                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text={t('careers.bdmReq1')} />
+                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text={t('careers.bdmReq2')} />
+                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text={t('careers.bdmReq3')} />
+                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text={t('careers.bdmReq4')} />
+                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text={t('careers.bdmReq5')} />
               </ul>
             </Section>
 
-            <Section title="Compensation">
-              <p>
-                This role offers a <span className="text-white font-medium">negotiable base salary</span> plus
-                an <span className="text-white font-medium">uncapped OTE commission structure</span> tied directly
-                to the partnerships you bring in. Top performers have unlimited earning potential.
-              </p>
+            <Section title={t('careers.compensation')}>
+              <p>{t('careers.bdmComp')}</p>
             </Section>
 
             <Button
@@ -209,12 +199,12 @@ export default function CareersPage() {
               {bdmFormOpen ? (
                 <>
                   <ChevronUp className="w-4 h-4 mr-2" />
-                  Close Application
+                  {t('careers.closeApplication')}
                 </>
               ) : (
                 <>
                   <Briefcase className="w-4 h-4 mr-2" />
-                  Apply as BDM
+                  {t('careers.applyBDM')}
                 </>
               )}
             </Button>
@@ -223,45 +213,45 @@ export default function CareersPage() {
           {/* BDM Application Form */}
           {bdmFormOpen && (
             <form onSubmit={handleBDMSubmit} className="border-t border-white/[0.08] p-4 space-y-5">
-              <h3 className="text-white font-semibold text-sm mb-1">Your Application</h3>
+              <h3 className="text-white font-semibold text-sm mb-1">{t('careers.yourApplication')}</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField label="Full Name" required>
+                <FormField label={t('careers.fullName')} required>
                   <Input name="name" placeholder="Jane Smith" value={formData.name} onChange={handleChange} required maxLength={100} className="bg-white/5 border-white/10 text-white rounded-xl" />
                 </FormField>
-                <FormField label="Email" required>
+                <FormField label={t('careers.email')} required>
                   <Input name="email" type="email" placeholder="you@example.com" value={formData.email} onChange={handleChange} required maxLength={255} className="bg-white/5 border-white/10 text-white rounded-xl" />
                 </FormField>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField label="Telegram">
+                <FormField label={t('careers.telegram')}>
                   <Input name="telegram" placeholder="@username" value={formData.telegram} onChange={handleChange} maxLength={100} className="bg-white/5 border-white/10 text-white rounded-xl" />
                 </FormField>
-                <FormField label="X (Twitter)">
+                <FormField label={t('careers.xTwitter')}>
                   <Input name="twitter" placeholder="@username" value={formData.twitter} onChange={handleChange} maxLength={100} className="bg-white/5 border-white/10 text-white rounded-xl" />
                 </FormField>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField label="Instagram">
+                <FormField label={t('careers.instagram')}>
                   <Input name="instagram" placeholder="@username" value={formData.instagram} onChange={handleChange} maxLength={100} className="bg-white/5 border-white/10 text-white rounded-xl" />
                 </FormField>
-                <FormField label="LinkedIn">
+                <FormField label={t('careers.linkedin')}>
                   <Input name="linkedin" placeholder="linkedin.com/in/you" value={formData.linkedin} onChange={handleChange} maxLength={255} className="bg-white/5 border-white/10 text-white rounded-xl" />
                 </FormField>
               </div>
-              <FormField label="Other Socials">
-                <Input name="other_socials" placeholder="TikTok, YouTube, Discord, etc." value={formData.other_socials} onChange={handleChange} maxLength={500} className="bg-white/5 border-white/10 text-white rounded-xl" />
+              <FormField label={t('careers.otherSocials')}>
+                <Input name="other_socials" placeholder={t('careers.otherSocialsPlaceholder')} value={formData.other_socials} onChange={handleChange} maxLength={500} className="bg-white/5 border-white/10 text-white rounded-xl" />
               </FormField>
-              <FormField label="Past Experience">
-                <Textarea name="past_experience" placeholder="Tell us about your relevant BD, partnerships, or sales experience..." value={formData.past_experience} onChange={handleChange} maxLength={2000} className="bg-white/5 border-white/10 text-white min-h-[120px] rounded-xl" />
+              <FormField label={t('careers.pastExperience')}>
+                <Textarea name="past_experience" placeholder={t('careers.pastExperiencePlaceholder')} value={formData.past_experience} onChange={handleChange} maxLength={2000} className="bg-white/5 border-white/10 text-white min-h-[120px] rounded-xl" />
               </FormField>
-              <FormField label="Why should we hire you?">
-                <Textarea name="why_hire_you" placeholder="What makes you the right person for this role?" value={formData.why_hire_you} onChange={handleChange} maxLength={2000} className="bg-white/5 border-white/10 text-white min-h-[120px] rounded-xl" />
+              <FormField label={t('careers.whyHireYou')}>
+                <Textarea name="why_hire_you" placeholder={t('careers.whyHireYouPlaceholder')} value={formData.why_hire_you} onChange={handleChange} maxLength={2000} className="bg-white/5 border-white/10 text-white min-h-[120px] rounded-xl" />
               </FormField>
               <Button type="submit" disabled={isSubmitting} variant="glass" className="w-full h-12 rounded-xl font-semibold">
                 {isSubmitting ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Submitting...</>
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t('careers.submitting')}</>
                 ) : (
-                  <><Send className="w-4 h-4 mr-2" />Submit Application</>
+                  <><Send className="w-4 h-4 mr-2" />{t('careers.submitApplication')}</>
                 )}
               </Button>
             </form>
@@ -273,55 +263,46 @@ export default function CareersPage() {
           <div className="p-3">
             <div className="flex items-start justify-between gap-4 mb-2">
               <div>
-                <h2 className="text-lg font-bold text-white">Brand Ambassador</h2>
-                <p className="text-zinc-400 text-xs mt-0.5">Community & Evangelism</p>
+                <h2 className="text-lg font-bold text-white">{t('careers.ambassadorTitle')}</h2>
+                <p className="text-zinc-400 text-xs mt-0.5">{t('careers.ambassadorCategory')}</p>
               </div>
               <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap bg-gradient-to-br from-white/15 via-white/8 to-white/3 backdrop-blur-xl border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)] text-emerald-400">
-                Open
+                {t('careers.open')}
               </span>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-5">
-              <Tag icon={<DollarSign className="w-3.5 h-3.5" />} label="Negotiable Monthly Salary" />
-              <Tag icon={<Clock className="w-3.5 h-3.5" />} label="Flexible Hours" />
-              <Tag icon={<MapPin className="w-3.5 h-3.5" />} label="Fully Remote" />
+              <Tag icon={<DollarSign className="w-3.5 h-3.5" />} label={t('careers.negotiableMonthly')} />
+              <Tag icon={<Clock className="w-3.5 h-3.5" />} label={t('careers.flexibleHoursTag')} />
+              <Tag icon={<MapPin className="w-3.5 h-3.5" />} label={t('careers.fullyRemoteTag')} />
             </div>
 
-            <Section title="About the Role">
-              <p>
-                As a DeHub Brand Ambassador you are the face and voice of the platform in your community.
-                Your job is to spread the word about DeHub across every channel you touch — social media,
-                IRL meetups, gaming events, university campuses, and beyond. This is a paid monthly salary role,
-                not commission-based; you'll earn a consistent income while growing alongside the platform.
-              </p>
+            <Section title={t('careers.aboutTheRole')}>
+              <p>{t('careers.ambassadorAbout')}</p>
             </Section>
 
-            <Section title="Key Responsibilities">
+            <Section title={t('careers.keyResponsibilities')}>
               <ul className="space-y-2.5">
-                <BulletItem icon={<Megaphone className="w-4 h-4" />} text="Create and share authentic content about DeHub across your personal social channels" />
-                <BulletItem icon={<Heart className="w-4 h-4" />} text="Actively engage with the DeHub community on the app — post, comment, and interact with other users" />
-                <BulletItem icon={<Globe className="w-4 h-4" />} text="Attend and represent DeHub at real-life events, meetups, and conferences in your area" />
-                <BulletItem icon={<Users className="w-4 h-4" />} text="Onboard new users and creators to the platform through your personal network" />
-                <BulletItem icon={<Sparkles className="w-4 h-4" />} text="Provide feedback and ideas from the community to help shape the product roadmap" />
+                <BulletItem icon={<Megaphone className="w-4 h-4" />} text={t('careers.ambassadorResp1')} />
+                <BulletItem icon={<Heart className="w-4 h-4" />} text={t('careers.ambassadorResp2')} />
+                <BulletItem icon={<Globe className="w-4 h-4" />} text={t('careers.ambassadorResp3')} />
+                <BulletItem icon={<Users className="w-4 h-4" />} text={t('careers.ambassadorResp4')} />
+                <BulletItem icon={<Sparkles className="w-4 h-4" />} text={t('careers.ambassadorResp5')} />
               </ul>
             </Section>
 
-            <Section title="What We're Looking For">
+            <Section title={t('careers.whatWereLooking')}>
               <ul className="space-y-2.5">
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Active social media presence with genuine engagement (follower count matters less than authenticity)" />
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Passion for Web3, crypto, gaming, or creator culture" />
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Strong communication skills and ability to explain complex concepts simply" />
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Self-starter who can plan and execute campaigns independently" />
-                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text="Previous ambassador, influencer, or community management experience is a bonus" />
+                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text={t('careers.ambassadorReq1')} />
+                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text={t('careers.ambassadorReq2')} />
+                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text={t('careers.ambassadorReq3')} />
+                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text={t('careers.ambassadorReq4')} />
+                <BulletItem icon={<CheckCircle2 className="w-4 h-4" />} text={t('careers.ambassadorReq5')} />
               </ul>
             </Section>
 
-            <Section title="Compensation">
-              <p>
-                Brand Ambassadors receive a <span className="text-white font-medium">negotiable monthly salary</span> paid
-                consistently. Additional bonuses may be awarded based on campaign performance, user sign-ups,
-                and community growth milestones.
-              </p>
+            <Section title={t('careers.compensation')}>
+              <p>{t('careers.ambassadorComp')}</p>
             </Section>
 
             <Button
@@ -330,7 +311,7 @@ export default function CareersPage() {
               className="w-full rounded-xl font-semibold h-11 mt-2"
             >
               <Users className="w-4 h-4 mr-2" />
-              Apply as Brand Ambassador
+              {t('careers.applyAmbassador')}
               <ExternalLink className="w-3.5 h-3.5 ml-2 opacity-50" />
             </Button>
           </div>
@@ -340,7 +321,7 @@ export default function CareersPage() {
       {/* Footer */}
       <div className="mt-8 text-center">
         <p className="text-zinc-500 text-xs">
-          Don't see a role that fits? Reach out to us on{' '}
+          {t('careers.footerText')}{' '}
           <a href="mailto:dev@dehub.io" className="text-zinc-300 underline underline-offset-2 hover:text-white transition-colors">
             dev@dehub.io
           </a>
