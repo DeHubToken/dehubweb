@@ -8,7 +8,7 @@
  */
 
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { Tv, Volume2, VolumeX, Maximize, Minimize, Play, Pause } from 'lucide-react';
+import { Tv, Volume2, VolumeX, Maximize, Minimize, Play, Pause, PictureInPicture2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Hls from 'hls.js';
 import type { TVChannel } from '@/lib/api/live-tv';
@@ -240,6 +240,21 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
               ) : (
                 <Volume2 className="w-4 h-4 text-white" />
               )}
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const video = videoRef.current;
+                if (!video) return;
+                if (document.pictureInPictureElement) {
+                  document.exitPictureInPicture().catch(() => {});
+                } else {
+                  video.requestPictureInPicture?.().catch(() => {});
+                }
+              }}
+              className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
+            >
+              <PictureInPicture2 className="w-4 h-4 text-white" />
             </button>
             <button
               onClick={handleFullscreen}
