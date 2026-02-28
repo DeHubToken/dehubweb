@@ -656,7 +656,7 @@ export default function ExplorePage() {
   return (
     <div className="min-h-screen">
       {/* Search Header - Bento Style */}
-      <div className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 space-y-2 sm:space-y-3">
+      <div className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-1 sm:px-3 sm:pt-1 sm:pb-1 lg:pt-2 space-y-2 sm:space-y-3">
         {/* Search Input Bento */}
         <div className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
           <div className="relative flex gap-2">
@@ -736,7 +736,7 @@ export default function ExplorePage() {
       </div>
 
       {/* Content */}
-      <div className="p-2 sm:p-3 space-y-2 mt-[3px]">
+      <div className="p-2 sm:p-3 space-y-2">
         <AnimatePresence mode="wait">
           {isSearching ? (
             <motion.div
