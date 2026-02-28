@@ -101,6 +101,9 @@ function AppContent() {
             <Route path="/features" element={<AppLayout />}>
               <Route index element={null} />
             </Route>
+            <Route path="/governance" element={<AppLayout />}>
+              <Route index element={null} />
+            </Route>
 
             {/* App routes with shared layout */}
             {/* Cached pages render null here — PersistentPageCache manages them */}
