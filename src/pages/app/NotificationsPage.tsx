@@ -348,7 +348,7 @@ function NotificationItem({
   return (
     <div 
       onClick={handleClick}
-      className={`flex items-start gap-3 p-4 rounded-xl transition-colors cursor-pointer ${
+      className={`flex items-start gap-3 p-4 transition-colors cursor-pointer ${
         notification.read ? 'bg-zinc-900/50' : 'bg-zinc-800/80 hover:bg-zinc-800'
       }`}
     >
