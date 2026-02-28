@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useTranslation } from 'react-i18next';
-import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2 } from 'lucide-react';
+import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -17,6 +17,7 @@ import {
   type DeHubNotification,
   type NotificationCategory,
 } from '@/hooks/use-notifications';
+import { useCustomNotifications, useCustomUnreadCount, useMarkCustomNotificationAsRead, useMarkAllCustomNotificationsAsRead } from '@/hooks/use-custom-notifications';
 import { formatDistanceToNow } from 'date-fns';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
@@ -139,7 +140,7 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   livestreams: ['livestream_start'],
 };
 
-function getNotificationIcon(type: DeHubNotification['type']) {
+function getNotificationIcon(type: string) {
   switch (type) {
     case 'like':
       return <Heart className="w-4 h-4 text-pink-500" />;
@@ -161,6 +162,8 @@ function getNotificationIcon(type: DeHubNotification['type']) {
       return <Zap className="w-4 h-4 text-red-500" />;
     case 'video_removal':
       return <AlertTriangle className="w-4 h-4 text-red-500" />;
+    case 'feature_request_like':
+      return <Star className="w-4 h-4 text-yellow-500" />;
     default:
       return <Bell className="w-4 h-4 text-zinc-500" />;
   }
@@ -170,6 +173,12 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
   const tr = t || ((key: string) => key);
   const actorName = notification.actorUsername || 'Someone';
   
+  // Handle custom notification types outside the typed switch
+  if ((notification.type as string) === 'feature_request_like') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return title ? `${actorName} liked your feature request "${title}"` : `${actorName} liked your feature request`;
+  }
+
   // Backend-aggregated follow
   if (notification.type === 'following' && (notification as any).aggregatedCount > 1) {
     const othersCount = (notification as any).aggregatedCount - 1;
@@ -236,6 +245,11 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
 }
 
 function getNavigationLink(notification: DeHubNotification): string | null {
+  // Handle custom notification types
+  if ((notification.type as string) === 'feature_request_like') {
+    return '/features';
+  }
+
   switch (notification.type) {
     case 'like':
     case 'comment':
@@ -459,10 +473,20 @@ export default function NotificationsPage() {
   });
   
   // Fetch all notifications and filter client-side by type
-  const { notifications: allNotifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useNotifications();
+  const { notifications: dehubNotifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useNotifications();
   const { data: unreadCount } = useUnreadNotificationCount();
   const markAllAsRead = useMarkAllNotificationsAsRead();
   const markAsRead = useMarkNotificationAsRead();
+  
+  // Fetch custom notifications (feature request likes, etc.)
+  const { customNotifications, isLoading: customLoading } = useCustomNotifications();
+  const { data: customUnreadCount } = useCustomUnreadCount();
+  const markCustomAsRead = useMarkCustomNotificationAsRead();
+  const markAllCustomAsRead = useMarkAllCustomNotificationsAsRead();
+  
+  // Merge DeHub + custom notifications, sorted by date
+  const allNotifications = [...dehubNotifications, ...customNotifications]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   
   // Batch-avatar enrichment for fresh profile pictures
   const [enrichedAvatars, setEnrichedAvatars] = useState<Map<string, EnrichedAvatar>>(new Map());
@@ -522,13 +546,20 @@ export default function NotificationsPage() {
 
   const handleMarkAllAsRead = () => {
     markAllAsRead.mutate(undefined);
+    markAllCustomAsRead.mutate();
   };
 
   const handleMarkAsRead = (notificationId: string) => {
     setMarkingNotificationId(notificationId);
-    markAsRead.mutate(notificationId, {
-      onSettled: () => setMarkingNotificationId(null),
-    });
+    if (notificationId.startsWith('custom_')) {
+      markCustomAsRead.mutate(notificationId, {
+        onSettled: () => setMarkingNotificationId(null),
+      });
+    } else {
+      markAsRead.mutate(notificationId, {
+        onSettled: () => setMarkingNotificationId(null),
+      });
+    }
   };
 
   // Filter notifications by selected tab type
@@ -539,8 +570,8 @@ export default function NotificationsPage() {
         return allowedTypes ? allowedTypes.includes(n.type) : true;
       });
 
-  // Get total unread count
-  const totalUnread = unreadCount?.total ?? 0;
+  // Get total unread count (DeHub + custom)
+  const totalUnread = (unreadCount?.total ?? 0) + (customUnreadCount ?? 0);
   
   // Get count per tab (count matching notification types in current data)
   const getTabCount = (tabValue: NotificationTypeFilter): number => {

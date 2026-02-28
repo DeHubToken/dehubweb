@@ -270,6 +270,48 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_notifications: {
+        Row: {
+          actor_address: string
+          actor_avatar: string | null
+          actor_username: string | null
+          content: string
+          created_at: string
+          id: string
+          read: boolean
+          recipient_address: string
+          reference_id: string | null
+          reference_title: string | null
+          type: string
+        }
+        Insert: {
+          actor_address: string
+          actor_avatar?: string | null
+          actor_username?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          recipient_address: string
+          reference_id?: string | null
+          reference_title?: string | null
+          type?: string
+        }
+        Update: {
+          actor_address?: string
+          actor_avatar?: string | null
+          actor_username?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          recipient_address?: string
+          reference_id?: string | null
+          reference_title?: string | null
+          type?: string
+        }
+        Relationships: []
+      }
       direct_messages: {
         Row: {
           content: string
