@@ -312,7 +312,7 @@ export default function LeaderboardPage() {
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
       {/* Header */}
-      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
+      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-2">
         <div className="flex items-center gap-4 mb-4">
           <div className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden">
             <img src={trophyIcon} alt="Trophy" className="w-11 h-11 object-contain" />
