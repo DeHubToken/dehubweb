@@ -104,9 +104,9 @@ export function RadioMiniPlayer() {
           {/* Expand Button */}
           <button
             onClick={() => { if (!isDragging.current) setIsMinimized(false); }}
-            className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-lg"
+            className="absolute -top-2 -right-2 w-6 h-6 rounded-lg bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center shadow-lg"
           >
-            <Maximize2 className="w-3 h-3 text-black" />
+            <Maximize2 className="w-3 h-3 text-white" />
           </button>
         </motion.div>
       </AnimatePresence>
