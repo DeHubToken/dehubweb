@@ -46,7 +46,7 @@ const proposalSchema = z.object({
   description: z.string().trim().min(1, 'Description is required').max(1000, 'Description must be under 1,000 characters'),
 });
 
-type PageTab = 'proposals' | 'completed';
+type PageTab = 'proposals' | 'passed' | 'rejected';
 
 const SORTS: { id: GovernanceSort; label: string }[] = [
   { id: 'most_voted', label: 'Most Voted' },
@@ -433,6 +433,7 @@ function GovernanceSkeletons() {
 // ──────────────────────────────────────────────────
 function CompletedCard({ proposal }: { proposal: GovernanceProposal }) {
   const [expanded, setExpanded] = useState(false);
+  const isPassed = proposal.status === 'passed' || (proposal.status === 'completed' && proposal.like_count > proposal.dislike_count);
 
   return (
     <div
@@ -440,16 +441,21 @@ function CompletedCard({ proposal }: { proposal: GovernanceProposal }) {
       onClick={() => setExpanded(!expanded)}
     >
       <div className="flex flex-col items-center justify-center min-w-[40px]">
-        <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-          <CheckCircle2 className="w-4 h-4 text-white/70" />
+        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isPassed ? 'bg-emerald-500/15' : 'bg-red-500/15'}`}>
+          {isPassed
+            ? <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            : <X className="w-4 h-4 text-red-400" />
+          }
         </div>
       </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-start gap-2 mb-1.5">
           <TranslatableText text={proposal.title} className="text-white font-semibold text-sm leading-tight flex-1 min-w-0" as="h3" hideControls />
-          <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 bg-white/10 text-white/70">
-            Completed
+          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 ${
+            isPassed ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'
+          }`}>
+            {isPassed ? 'Passed' : 'Rejected'}
           </span>
         </div>
 
@@ -592,7 +598,10 @@ export default function GovernancePage() {
   };
 
   const { data: totalCount = proposals.length } = useTotalGovernanceCount();
-  const completedCount = completedProposals?.length ?? 0;
+  const passedProposals = useMemo(() => (completedProposals ?? []).filter(p => p.status === 'passed' || (p.status === 'completed' && p.like_count > p.dislike_count)), [completedProposals]);
+  const rejectedProposals = useMemo(() => (completedProposals ?? []).filter(p => p.status === 'rejected' || (p.status === 'completed' && p.like_count <= p.dislike_count)), [completedProposals]);
+  const passedCount = passedProposals.length;
+  const rejectedCount = rejectedProposals.length;
 
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
@@ -638,8 +647,8 @@ export default function GovernancePage() {
         {/* Page Tabs */}
         <div className="relative flex gap-1 bg-zinc-800/40 rounded-xl p-1 mb-3">
           <div
-            className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] transition-transform duration-300 ease-out ${
-              activeTab === 'completed' ? 'translate-x-[calc(100%+4px)]' : 'translate-x-0'
+            className={`absolute top-1 bottom-1 w-[calc(33.333%-3px)] rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] transition-transform duration-300 ease-out ${
+              activeTab === 'passed' ? 'translate-x-[calc(100%+2px)]' : activeTab === 'rejected' ? 'translate-x-[calc(200%+4px)]' : 'translate-x-0'
             }`}
           />
           <button
@@ -653,16 +662,31 @@ export default function GovernancePage() {
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('completed')}
+            onClick={() => setActiveTab('passed')}
             className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
-              activeTab === 'completed' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+              activeTab === 'passed' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
             <CheckCircle2 className="w-3.5 h-3.5" />
-            Completed
-            {completedCount > 0 && (
-              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
-                {completedCount}
+            Passed
+            {passedCount > 0 && (
+              <span className="text-[10px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded-md font-semibold">
+                {passedCount}
+              </span>
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('rejected')}
+            className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
+              activeTab === 'rejected' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+            }`}
+          >
+            <X className="w-3.5 h-3.5" />
+            Rejected
+            {rejectedCount > 0 && (
+              <span className="text-[10px] bg-red-500/15 text-red-400 px-1.5 py-0.5 rounded-md font-semibold">
+                {rejectedCount}
               </span>
             )}
           </button>
@@ -736,14 +760,14 @@ export default function GovernancePage() {
         </>
       )}
 
-      {/* Completed Tab */}
-      {activeTab === 'completed' && (
+      {/* Passed Tab */}
+      {activeTab === 'passed' && (
         <>
           {isLoadingCompleted ? (
             <GovernanceSkeletons />
-          ) : completedProposals && completedProposals.length > 0 ? (
+          ) : passedProposals.length > 0 ? (
             <div className="space-y-3">
-              {completedProposals.map((proposal) => (
+              {passedProposals.map((proposal) => (
                 <CompletedCard key={proposal.id} proposal={proposal} />
               ))}
             </div>
@@ -752,8 +776,31 @@ export default function GovernancePage() {
               <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
                 <CheckCircle2 className="w-8 h-8 text-zinc-600" />
               </div>
-              <h3 className="text-white font-semibold mb-1">No completed proposals yet</h3>
-              <p className="text-zinc-500 text-sm">Completed proposals will appear here</p>
+              <h3 className="text-white font-semibold mb-1">No passed proposals yet</h3>
+              <p className="text-zinc-500 text-sm">Passed proposals will appear here</p>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Rejected Tab */}
+      {activeTab === 'rejected' && (
+        <>
+          {isLoadingCompleted ? (
+            <GovernanceSkeletons />
+          ) : rejectedProposals.length > 0 ? (
+            <div className="space-y-3">
+              {rejectedProposals.map((proposal) => (
+                <CompletedCard key={proposal.id} proposal={proposal} />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-zinc-900 rounded-2xl p-8 text-center">
+              <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
+                <X className="w-8 h-8 text-zinc-600" />
+              </div>
+              <h3 className="text-white font-semibold mb-1">No rejected proposals yet</h3>
+              <p className="text-zinc-500 text-sm">Rejected proposals will appear here</p>
             </div>
           )}
         </>
