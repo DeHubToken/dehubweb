@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Repeat2 } from 'lucide-react';
-import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight, Image, Play } from 'lucide-react';
-import { useInfiniteQuery, useQueries } from '@tanstack/react-query';
+import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight, Image, Play, Pencil, Trash2 } from 'lucide-react';
+import { useInfiniteQuery, useQueries, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { CardHeader } from '@/components/app/cards/CardHeader';
@@ -12,7 +12,7 @@ import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { PlanCard } from '@/components/app/subscriptions';
 import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
-import { getUserComments, getNFTInfo, getMediaUrl } from '@/lib/api/dehub';
+import { getUserComments, getNFTInfo, getMediaUrl, editComment, deleteComment } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import { buildImageUrl } from '@/lib/media-url';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -165,6 +165,8 @@ export function ProfileTabContent({
           isFetchingNextPage={isFetchingNextPage}
           fetchNextPage={fetchNextPage}
           navigate={navigate}
+          isViewingOwnProfile={isViewingOwnProfile}
+          profileAddress={profileAddress}
         />
       </TabPanel>
 
@@ -314,6 +316,8 @@ function PostsTabPanel({
   isFetchingNextPage,
   fetchNextPage,
   navigate,
+  isViewingOwnProfile,
+  profileAddress,
 }: {
   PROFILE_POSTS: TextPost[];
   allComments: ApiCommentResponse[];
@@ -322,6 +326,8 @@ function PostsTabPanel({
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
   navigate: (to: string) => void;
+  isViewingOwnProfile: boolean | undefined;
+  profileAddress: string;
 }) {
   // Collect unique tokenIds from comments to batch-fetch parent posts
   const uniqueTokenIds = React.useMemo(() => {
@@ -381,6 +387,7 @@ function PostsTabPanel({
             key={comment.id}
             comment={comment}
             parentPost={parentPost}
+            isOwnComment={!!isViewingOwnProfile}
             onClick={() => {
               if (comment.tokenId) {
                 navigate(`/app/post/${comment.tokenId}?comment=${comment.id}`);
@@ -514,7 +521,12 @@ function SubscribersTabPanel({
 // Comment Card for profile replies tab
 // ============================================================================
 
-function CommentCard({ comment, parentPost, onClick }: { comment: ApiCommentResponse; parentPost?: DeHubNFT; onClick: () => void }) {
+function CommentCard({ comment, parentPost, isOwnComment, onClick }: { comment: ApiCommentResponse; parentPost?: DeHubNFT; isOwnComment?: boolean; onClick: () => void }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(comment.content);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const queryClient = useQueryClient();
+
   // The user comments API returns an 'author' object with full profile data
   const author = (comment as any).author;
   
@@ -538,6 +550,31 @@ function CommentCard({ comment, parentPost, onClick }: { comment: ApiCommentResp
   const parentCreator = parentPost?.minterDisplayName || parentPost?.minterUsername || parentPost?.mintername;
   const parentIsVideo = parentPost?.postType === 'video' || parentPost?.media_type === 'video';
   const parentIsImage = parentPost?.postType === 'image' || parentPost?.media_type === 'image';
+
+  const handleEdit = async () => {
+    if (!editText.trim()) return;
+    try {
+      await editComment({ commentId: comment.id, content: editText });
+      queryClient.invalidateQueries({ queryKey: ['user-comments'] });
+      setIsEditing(false);
+    } catch (err) {
+      console.error('Edit comment error:', err);
+    }
+  };
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isDeleting) return;
+    setIsDeleting(true);
+    try {
+      await deleteComment(comment.id);
+      queryClient.invalidateQueries({ queryKey: ['user-comments'] });
+    } catch (err) {
+      console.error('Delete comment error:', err);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <div
@@ -605,9 +642,26 @@ function CommentCard({ comment, parentPost, onClick }: { comment: ApiCommentResp
 
         {/* Content - matches PostCard text style */}
         <div className="pt-3 space-y-2">
-          <p className="text-white/90 text-sm sm:text-base whitespace-pre-wrap break-words line-clamp-4">
-            {comment.content}
-          </p>
+          {isEditing ? (
+            <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+              <input
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                className="flex-1 bg-zinc-800 text-white text-sm rounded-lg px-3 py-1.5 border border-zinc-700 focus:outline-none focus:border-zinc-500"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleEdit();
+                  else if (e.key === 'Escape') { setEditText(comment.content); setIsEditing(false); }
+                }}
+              />
+              <button onClick={(e) => { e.stopPropagation(); handleEdit(); }} className="text-green-400 hover:text-green-300">✓</button>
+              <button onClick={(e) => { e.stopPropagation(); setEditText(comment.content); setIsEditing(false); }} className="text-zinc-400 hover:text-white">✕</button>
+            </div>
+          ) : (
+            <p className="text-white/90 text-sm sm:text-base whitespace-pre-wrap break-words line-clamp-4">
+              {comment.content}
+            </p>
+          )}
 
           {comment.imageUrl && (
             <div className="mt-2 rounded-lg overflow-hidden">
@@ -637,6 +691,25 @@ function CommentCard({ comment, parentPost, onClick }: { comment: ApiCommentResp
                 <Share2 className="w-4 h-4" />
                 0
               </span>
+              {isOwnComment && !isEditing && (
+                <>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
+                    className="flex items-center gap-1.5 text-zinc-400 hover:text-white text-xs px-2 py-1.5 rounded-xl transition-colors"
+                    aria-label="Edit"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    disabled={isDeleting}
+                    className="flex items-center gap-1.5 text-zinc-400 hover:text-red-400 text-xs px-2 py-1.5 rounded-xl transition-colors"
+                    aria-label="Delete"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </>
+              )}
             </div>
             <div className="flex items-center gap-2">
               <Bookmark className="w-4 h-4 text-zinc-400" />
