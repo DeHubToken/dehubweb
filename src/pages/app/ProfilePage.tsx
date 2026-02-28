@@ -310,7 +310,7 @@ export default function ProfilePage() {
         />
 
         {/* Profile Tabs Bento */}
-        <div className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/[0.08] rounded-2xl p-1.5 relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+        <div className="bg-zinc-900 rounded-xl p-1.5 relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <div ref={tabsIndicatorLayerRef} className="relative overflow-visible">
             <GlassIndicator rect={tabIndicator} />
 
@@ -337,7 +337,7 @@ export default function ProfilePage() {
               })}
             </div>
           </div>
-          <div className="absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-black/40 to-transparent pointer-events-none rounded-r-2xl z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none rounded-r-xl z-10" />
         </div>
 
         {/* Tab Content - all panels rendered, inactive hidden via CSS */}
