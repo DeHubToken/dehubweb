@@ -469,16 +469,27 @@ function DesktopCreatorInfo({
         disabled={!isClickable}
         className={`flex items-center gap-3 text-left ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
       >
-        {channelAvatar && (
-          <img 
-            src={channelAvatar} 
-            alt={channel}
-            className="w-10 h-10 rounded-md object-cover shrink-0"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/placeholder.svg';
-            }}
-          />
-        )}
+        <div className="w-10 h-10 rounded-md shrink-0 overflow-hidden bg-zinc-700 flex items-center justify-center">
+          {channelAvatar && channelAvatar !== '/placeholder.svg' ? (
+            <img 
+              src={channelAvatar} 
+              alt={channel}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none';
+                const parent = (e.target as HTMLImageElement).parentElement;
+                if (parent) {
+                  const fallback = document.createElement('span');
+                  fallback.className = 'text-white font-medium text-sm';
+                  fallback.textContent = (channel || '?').charAt(0).toUpperCase();
+                  parent.appendChild(fallback);
+                }
+              }}
+            />
+          ) : (
+            <span className="text-white font-medium text-sm">{(channel || '?').charAt(0).toUpperCase()}</span>
+          )}
+        </div>
         <div className="flex flex-col min-w-0">
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{channel}</span>
