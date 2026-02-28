@@ -11,7 +11,7 @@
  */
 
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { Play, Pause, Tv, Loader2, Volume2, VolumeX, RotateCcw, Maximize, Minimize } from 'lucide-react';
+import { Play, Pause, Tv, Loader2, Volume2, VolumeX, RotateCcw, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Hls from 'hls.js';
 import { TVChannel } from '@/lib/api/live-tv';
@@ -383,6 +383,23 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
               ) : (
                 <Volume2 className="w-5 h-5 text-white" />
               )}
+            </button>
+
+            {/* PiP Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const video = videoRef.current;
+                if (!video) return;
+                if (document.pictureInPictureElement) {
+                  document.exitPictureInPicture().catch(() => {});
+                } else {
+                  video.requestPictureInPicture?.().catch(() => {});
+                }
+              }}
+              className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
+            >
+              <PictureInPicture2 className="w-5 h-5 text-white" />
             </button>
 
             {/* Fullscreen Button */}
