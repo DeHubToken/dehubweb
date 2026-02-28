@@ -97,7 +97,7 @@ const CachedPage = memo(function CachedPage({
 
   return (
     <div
-      className={cn(isActive ? 'animate-fade-in' : '', needsCollapsedSpacing && 'pt-1')}
+      className={cn(isActive ? 'animate-fade-in' : '')}
       style={
         isActive
           ? undefined
