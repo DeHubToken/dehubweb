@@ -471,8 +471,8 @@ export default function LeaderboardPage() {
 
                   {/* Value */}
                   <div className={`col-span-3 sm:col-span-6 text-right font-medium ${
-                    isTimeDelta && entry.delta !== undefined && entry.delta > 0 ? 'text-green-400' :
-                    isTimeDelta && entry.delta !== undefined && entry.delta < 0 ? 'text-red-400' :
+                    isTimeDelta && entry.delta !== undefined && Math.abs(entry.delta) > 0.01 && entry.delta > 0 ? 'text-green-400' :
+                    isTimeDelta && entry.delta !== undefined && Math.abs(entry.delta) > 0.01 && entry.delta < 0 ? 'text-red-400' :
                     'text-white'
                   }`}>
                     {formatDisplayValue(entry)}
