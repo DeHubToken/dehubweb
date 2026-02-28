@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 import { X } from 'lucide-react';
+import { motion, useAnimation } from 'framer-motion';
 import { useNebulaPrefetch } from '@/hooks/use-nebula-prefetch';
 import { cn } from '@/lib/utils';
 import dehubLogoCenter from '@/assets/dehub-logo-center.png';
@@ -34,9 +35,75 @@ export const FuturisticAlienHero = () => {
   const navigate = useNavigate();
   const { masterGlitch, corruptedTitle, corruptedSubtitle, showPixelCorruption } = useGlitchEffect();
   const [isCloseButtonGlitching, setIsCloseButtonGlitching] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
+  const controls = useAnimation();
+  
+  // Swipe tracking
+  const touchStartY = useRef(0);
+  const touchCurrentY = useRef(0);
+  const isSwiping = useRef(false);
   
   // Prefetch app data on first user interaction (mousemove/touch/scroll)
   useNebulaPrefetch();
+
+  const handleEnterApp = useCallback(() => {
+    if (isExiting) return;
+    setIsExiting(true);
+    localStorage.setItem(SKIP_LANDING_KEY, "true");
+    controls.start({
+      y: '-100%',
+      opacity: 0,
+      transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
+    }).then(() => {
+      navigate('/app');
+    });
+  }, [isExiting, controls, navigate]);
+
+  // Swipe down to close
+  useEffect(() => {
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY.current = e.touches[0].clientY;
+      touchCurrentY.current = e.touches[0].clientY;
+      isSwiping.current = false;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      touchCurrentY.current = e.touches[0].clientY;
+      const deltaY = touchCurrentY.current - touchStartY.current;
+      
+      // Only track downward swipes
+      if (deltaY > 20) {
+        isSwiping.current = true;
+        // Live drag: translate nebula up proportionally (inverted)
+        const progress = Math.min(deltaY / 300, 1);
+        controls.set({
+          y: `${-progress * 30}%`,
+          opacity: 1 - progress * 0.5,
+        });
+      }
+    };
+
+    const handleTouchEnd = () => {
+      const deltaY = touchCurrentY.current - touchStartY.current;
+      if (isSwiping.current && deltaY > 100) {
+        handleEnterApp();
+      } else if (isSwiping.current) {
+        // Snap back
+        controls.start({ y: 0, opacity: 1, transition: { duration: 0.3 } });
+      }
+      isSwiping.current = false;
+    };
+
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [controls, handleEnterApp]);
   
   // Close button glitch effect - triggers every 4-6 seconds
   useEffect(() => {
@@ -58,12 +125,6 @@ export const FuturisticAlienHero = () => {
       clearInterval(interval);
     };
   }, []);
-
-  const handleEnterApp = () => {
-    // Save preference to skip landing next time
-    localStorage.setItem(SKIP_LANDING_KEY, "true");
-    navigate('/app');
-  };
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -176,7 +237,12 @@ export const FuturisticAlienHero = () => {
   }, []);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-black scanline-overlay" style={cursorStyle}>
+    <motion.div 
+      className="relative h-screen w-full overflow-hidden bg-black scanline-overlay"
+      style={cursorStyle}
+      animate={controls}
+      initial={{ y: 0, opacity: 1 }}
+    >
       <PixelCorruption visible={showPixelCorruption} />
       <canvas ref={mountRef} className="absolute top-0 left-0 w-full h-full z-0" />
       
@@ -211,6 +277,6 @@ export const FuturisticAlienHero = () => {
           <SocialLinks />
         </div>
       </section>
-    </div>
+    </motion.div>
   );
 };
