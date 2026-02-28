@@ -51,7 +51,7 @@ export const FuturisticAlienHero = () => {
     setIsExiting(true);
     localStorage.setItem(SKIP_LANDING_KEY, "true");
     controls.start({
-      y: '-100%',
+      y: '100%',
       opacity: 0,
       transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
     }).then(() => {
@@ -59,7 +59,7 @@ export const FuturisticAlienHero = () => {
     });
   }, [isExiting, controls, navigate]);
 
-  // Swipe down to close
+  // Swipe/scroll down to close (touch + trackpad wheel)
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
       touchStartY.current = e.touches[0].clientY;
@@ -74,10 +74,9 @@ export const FuturisticAlienHero = () => {
       // Only track downward swipes
       if (deltaY > 20) {
         isSwiping.current = true;
-        // Live drag: translate nebula up proportionally (inverted)
         const progress = Math.min(deltaY / 300, 1);
         controls.set({
-          y: `${-progress * 30}%`,
+          y: `${progress * 30}%`,
           opacity: 1 - progress * 0.5,
         });
       }
@@ -88,20 +87,51 @@ export const FuturisticAlienHero = () => {
       if (isSwiping.current && deltaY > 100) {
         handleEnterApp();
       } else if (isSwiping.current) {
-        // Snap back
         controls.start({ y: 0, opacity: 1, transition: { duration: 0.3 } });
       }
       isSwiping.current = false;
     };
 
+    // Trackpad / mouse wheel: accumulate scroll and trigger
+    let wheelAccum = 0;
+    let wheelTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const handleWheel = (e: WheelEvent) => {
+      // Positive deltaY = scroll down
+      if (e.deltaY > 0) {
+        wheelAccum += e.deltaY;
+        const progress = Math.min(wheelAccum / 300, 1);
+        controls.set({
+          y: `${progress * 30}%`,
+          opacity: 1 - progress * 0.5,
+        });
+
+        if (wheelAccum > 150) {
+          handleEnterApp();
+          wheelAccum = 0;
+          return;
+        }
+
+        // Reset accumulator after inactivity
+        if (wheelTimer) clearTimeout(wheelTimer);
+        wheelTimer = setTimeout(() => {
+          wheelAccum = 0;
+          controls.start({ y: 0, opacity: 1, transition: { duration: 0.3 } });
+        }, 400);
+      }
+    };
+
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
     window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('wheel', handleWheel, { passive: true });
 
     return () => {
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('wheel', handleWheel);
+      if (wheelTimer) clearTimeout(wheelTimer);
     };
   }, [controls, handleEnterApp]);
   
