@@ -1,35 +1,39 @@
 
 
-## Problem
+## Investigation Summary
 
-The leaderboard edge function has a bug on line 474 where **month and year periods only show sellers (negative delta) when hybrid on-chain mode activates** — which only happens when new wallets not in the snapshot need on-chain lookup.
+I traced the full wallet login flow from button click to signature popup. The code path is:
 
-The condition:
-```text
-isHybridHoldings ? e.delta !== 0 : e.delta > 0
+1. `LoginModal.handleWalletConnect()` → sets `wagmiAuthIntent(true)` → calls RainbowKit `connect()`
+2. Wagmi connects → `handleWagmiConnect` effect fires in `AuthContext`
+3. Effect reaches `completeDeHubAuthWagmi()` → calls `signMessageAsync({ message, account })`
+
+### Root Cause (Most Likely)
+
+In `completeDeHubAuthWagmi` (AuthContext.tsx line 540-542), the `account` parameter is passed as a **lowercased** address:
+
+```js
+const authAddress = address.toLowerCase();
+// ...
+const signature = await signMessageAsync({ 
+  message,
+  account: authAddress as `0x${string}`  // lowercase!
+});
 ```
 
-- Day/Week (pure on-chain, line 263-264): filters `delta !== 0` → shows both gains AND losses ✓
-- Month/Year when hybridPastMap exists: filters `delta !== 0` → shows both ✓
-- Month/Year when ALL wallets are in snapshot (hybridPastMap is null): filters `delta > 0` → **hides sellers** ✗
+Wagmi v2 / viem expect a **checksummed** (mixed-case) address. Passing a non-checksummed address can cause `signMessageAsync` to silently fail — the wallet never receives the sign request, so the user never sees the popup. This may have started failing after a wagmi/viem minor version bump that added stricter address validation.
 
-## Fix
+Additionally, the `completeDeHubAuthWagmi` function has **no try/catch** around `signMessageAsync` — any error thrown here bubbles up to the `handleWagmiConnect` effect's catch block which only logs to console and resets state, with no user-facing error message about the signature failure.
 
-In `supabase/functions/refresh-leaderboard-cache/index.ts`, change line 472-478 so that month/year holdings always show bidirectional data (both gains and losses), regardless of whether hybrid on-chain was used:
+### Plan
 
-```text
-Current (line 472-474):
-  const isHybridHoldings = useHybridOnChain && hybridPastMap;
-  const sorted = withDeltas
-    .filter((e) => e.delta !== undefined && (isHybridHoldings ? e.delta !== 0 : e.delta > 0))
+**File: `src/contexts/AuthContext.tsx`**
 
-Fixed:
-  const isBidirectional = useHybridOnChain || useOnChain;
-  const sorted = withDeltas
-    .filter((e) => e.delta !== undefined && (isBidirectional ? e.delta !== 0 : e.delta > 0))
-```
+1. **Fix `signMessageAsync` account parameter** (line 540-543): Either remove the `account` parameter entirely (let wagmi use the connected account automatically), or convert to checksummed using `getAddress()` from viem (already imported).
 
-And update the sort on line 475-477 and the log on line 495 to use `isBidirectional` instead of `isHybridHoldings`.
+2. **Add error handling around `signMessageAsync`** (line 540): Wrap the signature call in a try/catch that shows a user-facing toast if the wallet rejects or fails to show the popup, and logs the specific error for debugging.
 
-This ensures month/year always show both buyers and sellers, matching the day/week behavior. A cache refresh will be needed after deploying.
+3. **Add defensive logging** before `signMessageAsync`: Log the exact account address format being used and the connector state to help diagnose future issues.
+
+The simplest and most robust fix is to **remove the `account` parameter** from `signMessageAsync` — wagmi already knows which account is connected and will use it automatically. The lowercase address is still used for the message text and the backend auth call, which is correct.
 
