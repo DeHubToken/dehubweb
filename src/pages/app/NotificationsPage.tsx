@@ -618,7 +618,6 @@ export default function NotificationsPage() {
                     
                     <button
                       onClick={() => {
-                        // TODO: Implement clear all notifications API
                         console.log('Clear all notifications');
                       }}
                       className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-colors"
@@ -739,51 +738,49 @@ export default function NotificationsPage() {
               </Sheet>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Tabs */}
-      <div className="px-3 sm:px-4 py-2">
-        <div className="bg-zinc-900 rounded-2xl p-2" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
-          <div ref={notifTabLayerRef} className="relative overflow-visible">
-            <GlassIndicator rect={notifTabRect} />
-            <div 
-              className="relative z-20 flex overflow-x-auto gap-1 scrollbar-hide"
-              onScroll={onNotifTabScroll}
-              style={{
-                maskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent 100%)'
-              }}
-            >
-              {tabs.map((tab) => {
-                const count = getTabCount(tab.value);
-                return (
-                  <button
-                    key={tab.value}
-                    ref={setNotifTabRef(tab.value)}
-                    onClick={() => setActiveTab(tab.value)}
-                    className={`relative z-40 flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
-                      activeTab === tab.value
-                        ? 'text-white'
-                        : 'text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    <span className="relative z-10 flex items-center gap-2">
-                      <tab.icon className="w-4 h-4" />
-                      <span className="hidden sm:inline">{t(tab.labelKey)}</span>
-                      {count > 0 && (
-                        <span className={`ml-1 px-1.5 py-0.5 text-xs rounded-lg transition-colors duration-200 ${
-                          activeTab === tab.value
-                            ? 'bg-white/20 text-white'
-                            : 'bg-red-500 text-white'
-                        }`}>
-                          {count > 99 ? '99+' : count}
-                        </span>
-                      )}
-                    </span>
-                  </button>
-                );
-              })}
+          {/* Tabs - merged into header bento */}
+          <div className="mt-3 -mx-2" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+            <div ref={notifTabLayerRef} className="relative overflow-visible">
+              <GlassIndicator rect={notifTabRect} />
+              <div 
+                className="relative z-20 flex overflow-x-auto gap-1 scrollbar-hide"
+                onScroll={onNotifTabScroll}
+                style={{
+                  maskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent 100%)',
+                  WebkitMaskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent 100%)'
+                }}
+              >
+                {tabs.map((tab) => {
+                  const count = getTabCount(tab.value);
+                  return (
+                    <button
+                      key={tab.value}
+                      ref={setNotifTabRef(tab.value)}
+                      onClick={() => setActiveTab(tab.value)}
+                      className={`relative z-40 flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
+                        activeTab === tab.value
+                          ? 'text-white'
+                          : 'text-zinc-400 hover:text-white'
+                      }`}
+                    >
+                      <span className="relative z-10 flex items-center gap-2">
+                        <tab.icon className="w-4 h-4" />
+                        <span className="hidden sm:inline">{t(tab.labelKey)}</span>
+                        {count > 0 && (
+                          <span className={`ml-1 px-1.5 py-0.5 text-xs rounded-lg transition-colors duration-200 ${
+                            activeTab === tab.value
+                              ? 'bg-white/20 text-white'
+                              : 'bg-red-500 text-white'
+                          }`}>
+                            {count > 99 ? '99+' : count}
+                          </span>
+                        )}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
