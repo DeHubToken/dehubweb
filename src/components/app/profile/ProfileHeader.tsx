@@ -120,7 +120,7 @@ export function ProfileHeader({
   const [showUnfollowConfirm, setShowUnfollowConfirm] = useState(false);
 
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
+    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
       {/* Cover Photo */}
       <button 
         className="aspect-[3/1] bg-zinc-800 w-full cursor-pointer"
