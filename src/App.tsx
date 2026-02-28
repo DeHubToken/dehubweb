@@ -121,6 +121,7 @@ function AppContent() {
               <Route path="agents" element={null} />
               <Route path="tv" element={null} />
               <Route path="features" element={null} />
+              <Route path="governance" element={null} />
               <Route path="jobs" element={null} />
               <Route path="post/:postId" element={<SinglePostPage />} />
               <Route path="video/:tokenId" element={<SinglePostPage />} />
