@@ -388,7 +388,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
                 <button
                   type="button"
                   onClick={stopSpeaking}
-                  className="text-cyan-400 hover:text-cyan-300 transition-colors p-1 animate-pulse shrink-0 mb-0.5"
+                  className="text-white hover:text-white/80 transition-colors p-1 animate-pulse shrink-0 mb-0.5"
                 >
                   <VolumeX className="w-5 h-5" />
                 </button>
