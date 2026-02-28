@@ -42,6 +42,9 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
   const [showVideo, setShowVideo] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isInPiP, setIsInPiP] = useState(false);
+  const isMutedRef = useRef(isMuted);
+  isMutedRef.current = isMuted;
 
   /**
    * Full stop — destroys HLS instance, clears video source.
@@ -192,6 +195,56 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
       setIsMuted(!isMuted);
     }
   };
+
+  // Toggle mute programmatically (used by PiP media session)
+  const toggleMuteProgrammatic = useCallback(() => {
+    if (videoRef.current) {
+      const newMuted = !videoRef.current.muted;
+      videoRef.current.muted = newMuted;
+      setIsMuted(newMuted);
+    }
+  }, []);
+
+  // PiP: set up MediaSession mute/unmute via next/previous track buttons
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const onEnterPiP = () => {
+      setIsInPiP(true);
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: `${channel.name} ${isMutedRef.current ? '🔇' : '🔊'}`,
+          artist: 'DeHub TV',
+        });
+        const muteHandler = () => {
+          toggleMuteProgrammatic();
+          // Update metadata to reflect mute state
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: `${channel.name} ${isMutedRef.current ? '🔇' : '🔊'}`,
+            artist: 'DeHub TV',
+          });
+        };
+        navigator.mediaSession.setActionHandler('nexttrack', muteHandler);
+        navigator.mediaSession.setActionHandler('previoustrack', muteHandler);
+      }
+    };
+
+    const onLeavePiP = () => {
+      setIsInPiP(false);
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.setActionHandler('nexttrack', null);
+        navigator.mediaSession.setActionHandler('previoustrack', null);
+      }
+    };
+
+    video.addEventListener('enterpictureinpicture', onEnterPiP);
+    video.addEventListener('leavepictureinpicture', onLeavePiP);
+    return () => {
+      video.removeEventListener('enterpictureinpicture', onEnterPiP);
+      video.removeEventListener('leavepictureinpicture', onLeavePiP);
+    };
+  }, [channel.name, toggleMuteProgrammatic]);
 
   const handleFullscreen = (e: React.MouseEvent) => {
     e.stopPropagation();
