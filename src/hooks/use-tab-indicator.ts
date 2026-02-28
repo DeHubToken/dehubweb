@@ -63,8 +63,14 @@ export function useTabIndicator<T extends string>(activeTab: T, layoutShiftKey?:
   }, [update]);
 
   const setRef = useCallback((key: T) => (el: HTMLElement | null) => {
+    const prev = buttonRefs.current[key];
     buttonRefs.current[key] = el;
-  }, []);
+    // When a ref is first assigned for the active tab, trigger an update
+    // so the indicator appears on initial render without needing a click.
+    if (el && !prev) {
+      requestAnimationFrame(update);
+    }
+  }, [update]);
 
   useLayoutEffect(() => {
     update();
