@@ -26,6 +26,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { SORT_OPTIONS, DATE_FILTER_OPTIONS, applySorting, filterByDate, getApiSortMode, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
 import type { ShortVideo } from '@/types/feed.types';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
+import { AutoplayVideo } from '@/components/app/AutoplayVideo';
 
 // ============================================================================
 // CONSTANTS
@@ -309,6 +311,7 @@ interface ShortsFeedProps {
 
 export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: ShortsFeedProps) {
   const { t } = useI18n();
+  const { isCollapsed } = useSidebarCollapse();
   // Sort is now client-side - default to "Latest" instead of "Random" to avoid 5-page prefetch - persisted
   const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('shorts', 'sort', SORT_OPTIONS[0]);
   // Duration and upload date are client-side filters - persisted
@@ -570,19 +573,27 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
         ) : (
           <div key={`${selectedSort.value}-${selectedUploadDate.value}`}>
             {/* Shorts Grid - TikTok Style */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            <div className={cn("grid gap-2 sm:gap-3", isCollapsed ? "grid-cols-2 lg:grid-cols-3" : "grid-cols-2")}>
               {shorts.map((short, index) => (
                 <div
                   key={short.id}
                   onClick={() => handleShortClick(index)}
                   className="relative aspect-[9/16] bg-zinc-900 rounded-xl overflow-hidden cursor-pointer group"
                 >
-                  {/* Thumbnail */}
-                  <img
-                    src={short.thumbnail}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
+                  {/* Thumbnail / Autoplay for first 3 */}
+                  {index < 3 && short.videoUrl ? (
+                    <AutoplayVideo
+                      src={short.videoUrl}
+                      poster={short.thumbnail}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={short.thumbnail}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  )}
 
                   {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
