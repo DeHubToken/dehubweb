@@ -144,7 +144,7 @@ export function LiveCard({ stream }: LiveCardProps) {
         <ActionBar 
           postId={stream.id} 
           className="p-0 mb-2" 
-          onComment={() => setShowComments(true)}
+          onComment={() => setShowComments(prev => !prev)}
           likeCount={stream.likeCount}
           commentCount={stream.commentCount}
         />
