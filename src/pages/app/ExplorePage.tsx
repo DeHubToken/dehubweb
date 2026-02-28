@@ -647,11 +647,6 @@ export default function ExplorePage() {
   const showResults = isSearching && !showLoading && (searchResults.users.length > 0 || searchResults.posts.length > 0);
   const showNoResults = isSearching && !showLoading && searchResults.users.length === 0 && searchResults.posts.length === 0;
 
-  if (!isAuthenticated) {
-    return (
-      <AuthGate description={t('explorePage.loginDescription')} />
-    );
-  }
 
   return (
     <div className="min-h-screen">
