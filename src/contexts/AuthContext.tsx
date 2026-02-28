@@ -541,7 +541,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       signature = await signMessageAsync({ 
         message,
-        account: getAddress(address)
+        account: address as `0x${string}`,
       });
     } catch (signError: any) {
       console.error('[Auth] signMessageAsync failed:', signError);
