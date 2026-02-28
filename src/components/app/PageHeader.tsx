@@ -39,7 +39,7 @@ export function PageHeader({
 
   return (
     <div className={cn(
-      'sticky top-0 bg-black z-50 px-3 pt-0 pb-3 sm:p-4',
+      'sticky top-0 bg-black z-50 px-3 pt-0 pb-3 sm:p-4 -mt-[5px]',
       className
     )}>
       <div className="flex items-center gap-3">
