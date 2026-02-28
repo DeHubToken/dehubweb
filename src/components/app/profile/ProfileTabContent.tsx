@@ -152,6 +152,7 @@ export function ProfileTabContent({
           ALL_CONTENT={ALL_CONTENT}
           isViewingOwnProfile={isViewingOwnProfile}
           optimisticPosts={optimisticPosts}
+          isLoading={showLoading}
         />
       </TabPanel>
 
@@ -167,12 +168,13 @@ export function ProfileTabContent({
           navigate={navigate}
           isViewingOwnProfile={isViewingOwnProfile}
           profileAddress={profileAddress}
+          isLoadingContent={showLoading}
         />
       </TabPanel>
 
       {/* IMAGES TAB */}
       <TabPanel tab="images">
-        {PROFILE_IMAGES.length === 0 ? (
+        {showLoading ? null : PROFILE_IMAGES.length === 0 ? (
           <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" title="No images yet" subtitle="Image posts will appear here" />
         ) : (
           <div className="space-y-3">
@@ -187,7 +189,7 @@ export function ProfileTabContent({
 
       {/* VIDEOS TAB */}
       <TabPanel tab="videos">
-        {ALL_PROFILE_VIDEOS.length === 0 ? (
+        {showLoading ? null : ALL_PROFILE_VIDEOS.length === 0 ? (
           <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt="Videos" title="No videos yet" subtitle="Video posts will appear here" />
         ) : (
           <div className="space-y-3">
@@ -240,14 +242,17 @@ function HomeTabPanel({
   ALL_CONTENT,
   isViewingOwnProfile,
   optimisticPosts,
+  isLoading,
 }: {
   ALL_CONTENT: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean }>;
   isViewingOwnProfile: boolean | undefined;
   optimisticPosts: OptimisticPost[];
+  isLoading: boolean;
 }) {
   const hasOptimisticPosts = isViewingOwnProfile && optimisticPosts.length > 0;
   
   if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
+    if (isLoading) return null;
     return <ProfileEmptyState iconSrc={home3dIcon} iconAlt="All" iconClassName="opacity-90" title="No posts yet" subtitle="Content will appear here when posted" />;
   }
   
@@ -318,6 +323,7 @@ function PostsTabPanel({
   navigate,
   isViewingOwnProfile,
   profileAddress,
+  isLoadingContent,
 }: {
   PROFILE_POSTS: TextPost[];
   allComments: ApiCommentResponse[];
@@ -328,6 +334,7 @@ function PostsTabPanel({
   navigate: (to: string) => void;
   isViewingOwnProfile: boolean | undefined;
   profileAddress: string;
+  isLoadingContent: boolean;
 }) {
   // Collect unique tokenIds from comments to batch-fetch parent posts
   const uniqueTokenIds = React.useMemo(() => {
@@ -366,7 +373,7 @@ function PostsTabPanel({
 
   const isLoadingAll = isLoadingComments && allComments.length === 0;
 
-  if (mergedItems.length === 0 && !isLoadingAll) {
+  if (mergedItems.length === 0 && !isLoadingAll && !isLoadingContent) {
     return <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" title="No posts, comments, or replies yet" subtitle="They will appear here" />;
   }
 
