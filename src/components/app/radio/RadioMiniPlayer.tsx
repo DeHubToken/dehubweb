@@ -7,7 +7,7 @@
  * @module components/app/radio/RadioMiniPlayer
  */
 
-import { Play, Pause, X, Radio, Volume2, VolumeX, Loader2, Maximize2, Minus } from 'lucide-react';
+import { Play, Pause, X, Radio, Volume2, VolumeX, Loader2, Maximize2, Minus, GripVertical } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -33,12 +33,45 @@ export function RadioMiniPlayer() {
   const [showVisualizer, setShowVisualizer] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [pinchScale, setPinchScale] = useState(1);
+  const [isResizing, setIsResizing] = useState(false);
   const isDragging = useRef(false);
   const pinchStartDist = useRef<number | null>(null);
   const pinchStartScale = useRef(1);
+  const resizeStartX = useRef(0);
+  const resizeStartScale = useRef(1);
   const barRef = useRef<HTMLDivElement>(null);
 
-  // Pinch-to-resize handlers
+  // Desktop mouse resize from corners
+  const handleResizeMouseDown = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setIsResizing(true);
+    resizeStartX.current = e.clientX;
+    resizeStartScale.current = pinchScale;
+
+    const onMouseMove = (ev: MouseEvent) => {
+      const delta = ev.clientX - resizeStartX.current;
+      const newScale = Math.max(0.4, Math.min(1, resizeStartScale.current + delta / 400));
+      setPinchScale(newScale);
+    };
+    const onMouseUp = () => {
+      setIsResizing(false);
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      // Check if should minimize
+      setPinchScale(prev => {
+        if (prev < 0.5) {
+          setIsMinimized(true);
+          return 1;
+        }
+        return prev;
+      });
+    };
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  }, [pinchScale]);
+
+  // Pinch-to-resize handlers (mobile)
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (e.touches.length === 2) {
       const dx = e.touches[0].clientX - e.touches[1].clientX;
@@ -65,10 +98,8 @@ export function RadioMiniPlayer() {
       if (pinchScale < 0.5) {
         setIsMinimized(true);
         setPinchScale(1);
-      } else {
-        // Snap back to full size
-        setPinchScale(1);
       }
+      // Otherwise keep the current scale — don't snap back
     }
   }, [pinchScale]);
   
@@ -178,7 +209,8 @@ export function RadioMiniPlayer() {
             // Desktop: fixed width on right side
             'lg:left-auto lg:right-4 lg:mx-0 lg:w-[400px] lg:max-w-none',
             'bg-black/30 backdrop-blur-[40px] saturate-[180%] border border-white/[0.08]',
-            'rounded-2xl p-3 shadow-2xl'
+            'rounded-2xl p-3 shadow-2xl',
+            isResizing && 'pointer-events-auto'
           )}
         >
           <div className="flex items-center gap-3">
@@ -293,6 +325,32 @@ export function RadioMiniPlayer() {
               step={1}
               className="flex-1"
             />
+          </div>
+
+          {/* Desktop resize handles on corners */}
+          <div
+            onMouseDown={handleResizeMouseDown}
+            className="hidden lg:block absolute -left-1 -top-1 w-4 h-4 cursor-nw-resize group"
+          >
+            <div className="absolute inset-1 rounded-full bg-white/0 group-hover:bg-white/20 transition-colors" />
+          </div>
+          <div
+            onMouseDown={handleResizeMouseDown}
+            className="hidden lg:block absolute -right-1 -top-1 w-4 h-4 cursor-ne-resize group"
+          >
+            <div className="absolute inset-1 rounded-full bg-white/0 group-hover:bg-white/20 transition-colors" />
+          </div>
+          <div
+            onMouseDown={handleResizeMouseDown}
+            className="hidden lg:block absolute -left-1 -bottom-1 w-4 h-4 cursor-sw-resize group"
+          >
+            <div className="absolute inset-1 rounded-full bg-white/0 group-hover:bg-white/20 transition-colors" />
+          </div>
+          <div
+            onMouseDown={handleResizeMouseDown}
+            className="hidden lg:block absolute -right-1 -bottom-1 w-4 h-4 cursor-se-resize group"
+          >
+            <div className="absolute inset-1 rounded-full bg-white/0 group-hover:bg-white/20 transition-colors" />
           </div>
         </motion.div>
       </AnimatePresence>
