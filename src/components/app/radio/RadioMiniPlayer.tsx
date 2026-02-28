@@ -169,18 +169,19 @@ export function RadioMiniPlayer() {
               </h4>
             </div>
             
-            {/* Minimize Button */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => setIsMinimized(true)}
-                  className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
-                >
-                  <Minus className="w-4 h-4 text-zinc-400" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>Minimize player</TooltipContent>
-            </Tooltip>
+            {/* Play/Pause Button - Liquid glass squared */}
+            <button
+              onClick={togglePlayPause}
+              className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center flex-shrink-0 hover:bg-white/10 transition-colors"
+            >
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 text-white animate-spin" />
+              ) : isPlaying ? (
+                <Pause className="w-4 h-4 text-white fill-white" />
+              ) : (
+                <Play className="w-4 h-4 text-white fill-white ml-0.5" />
+              )}
+            </button>
             
             {/* Fullscreen Visualizer Button */}
             <Tooltip>
@@ -195,19 +196,18 @@ export function RadioMiniPlayer() {
               <TooltipContent>Fullscreen visualizer</TooltipContent>
             </Tooltip>
             
-            {/* Play/Pause Button - Liquid glass squared */}
-            <button
-              onClick={togglePlayPause}
-              className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center flex-shrink-0 hover:bg-white/10 transition-colors"
-            >
-              {isLoading ? (
-                <Loader2 className="w-4 h-4 text-white animate-spin" />
-              ) : isPlaying ? (
-                <Pause className="w-4 h-4 text-white fill-white" />
-              ) : (
-                <Play className="w-4 h-4 text-white fill-white ml-0.5" />
-              )}
-            </button>
+            {/* Minimize Button */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setIsMinimized(true)}
+                  className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+                >
+                  <Minus className="w-4 h-4 text-zinc-400" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Minimize player</TooltipContent>
+            </Tooltip>
             
             {/* Close Button */}
             <button
