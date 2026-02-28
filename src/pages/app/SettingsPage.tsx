@@ -137,7 +137,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen p-3 sm:p-4">
+    <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
