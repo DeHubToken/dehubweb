@@ -33,7 +33,7 @@ import { TranslatableText, useTranslation } from '../TranslatableText';
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, editComment, addCommentWithImage, addVoiceComment, uploadChatImage, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { incrementCommentCount } from '@/lib/comment-count-cache';
 
@@ -124,6 +124,7 @@ interface CommentItemProps {
   onShare: (id: string) => void;
   onBookmark: (id: string) => void;
   onEdit: (id: string, newContent: string) => void;
+  onDelete: (id: string) => void;
   onUserPress: (username: string) => void;
   isReply?: boolean;
   isOwnComment?: boolean;
@@ -173,7 +174,7 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
-function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onBookmark, onEdit, onUserPress, isReply, isOwnComment }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onBookmark, onEdit, onDelete, onUserPress, isReply, isOwnComment }: CommentItemProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
@@ -288,13 +289,22 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
               </button>
             )}
             {isOwnComment && !isEditing && (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="text-white hover:text-zinc-400 transition-colors"
-                aria-label="Edit"
-              >
-                <Pencil className="w-4 h-4" />
-              </button>
+              <>
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="text-white hover:text-zinc-400 transition-colors"
+                  aria-label="Edit"
+                >
+                  <Pencil className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => onDelete(comment.id)}
+                  className="text-white hover:text-red-400 transition-colors"
+                  aria-label="Delete"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </>
             )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -688,6 +698,17 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     setNewComment('');
   };
 
+  const handleDeleteComment = async (commentId: string) => {
+    try {
+      await deleteComment(commentId);
+      queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
+      toast.success('Comment deleted');
+    } catch (err) {
+      console.error('Delete comment error:', err);
+      toast.error('Failed to delete comment');
+    }
+  };
+
   const handleEditComment = async (commentId: string, newContent: string) => {
     if (!newContent.trim()) return;
     try {
@@ -868,6 +889,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                         onShare={() => {}} 
                         onBookmark={() => {}}
                         onEdit={handleEditComment}
+                        onDelete={handleDeleteComment}
                         onUserPress={handleUserPress}
                         isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
                       />
@@ -882,6 +904,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                           onShare={() => {}} 
                           onBookmark={() => {}}
                           onEdit={handleEditComment}
+                          onDelete={handleDeleteComment}
                           onUserPress={handleUserPress}
                           isReply
                           isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
@@ -937,6 +960,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                         onShare={() => {}} 
                         onBookmark={() => {}}
                         onEdit={handleEditComment}
+                        onDelete={handleDeleteComment}
                         onUserPress={handleUserPress}
                         isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
                       />
@@ -951,6 +975,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                           onShare={() => {}} 
                           onBookmark={() => {}}
                           onEdit={handleEditComment}
+                          onDelete={handleDeleteComment}
                           onUserPress={handleUserPress}
                           isReply
                           isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
