@@ -26,6 +26,7 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
 import ethLogo from '@/assets/eth-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
+import btcLogo from '@/assets/btc-logo.png';
 import baseLogo from '@/assets/icons/base-logo.png';
 
 const CHAIN_OPTIONS: { id: ChainId; name: string; icon: string }[] = [
@@ -39,6 +40,7 @@ const TOKEN_ICONS: Record<string, string> = {
   ETH: ethLogo,
   BNB: bnbLogo,
   USDT: usdtLogo,
+  BTC: btcLogo,
   WETH: ethLogo,
   WBNB: bnbLogo,
 };
@@ -120,7 +122,7 @@ export default function FullWalletPage() {
         });
       }
     }
-    const ORDER: Record<string, number> = { DHB: 0, ETH: 1, BNB: 2, USDT: 3 };
+    const ORDER: Record<string, number> = { DHB: 0, ETH: 1, BNB: 2, BTC: 3, USDT: 4 };
     return Array.from(map.values()).sort((a, b) => (ORDER[a.symbol] ?? 99) - (ORDER[b.symbol] ?? 99));
   }, [allTokens]);
 
