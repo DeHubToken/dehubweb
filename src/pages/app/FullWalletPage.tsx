@@ -1,4 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
+import { cn } from '@/lib/utils';
 import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart, User, Lock, Minus } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -55,6 +57,7 @@ interface GroupedToken {
 
 export default function FullWalletPage() {
   const { isAuthenticated, walletAddress } = useAuth();
+  const { isCollapsed } = useSidebarCollapse();
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
@@ -173,7 +176,7 @@ export default function FullWalletPage() {
   };
 
   return (
-    <div className="px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 min-h-screen max-w-2xl mx-auto">
+    <div className={cn("px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 min-h-screen", isCollapsed ? "" : "max-w-2xl mx-auto")}>
       {/* Header - only show back button and title when navigated from command centre */}
       {location.state?.from === 'command-centre' && (
         <div className="flex items-center gap-3 mb-5">
