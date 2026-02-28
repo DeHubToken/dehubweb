@@ -231,6 +231,7 @@ export function RadioMiniPlayer() {
               )}
             </button>
             <Slider
+              variant="lava"
               value={[volume * 100]}
               onValueChange={([val]) => setVolume(val / 100)}
               max={100}
