@@ -310,12 +310,12 @@ export default function ProfilePage() {
         />
 
         {/* Profile Tabs Bento */}
-        <div className="bg-zinc-900 rounded-xl p-1.5 relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+        <div className="bg-zinc-900 rounded-xl relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <div ref={tabsIndicatorLayerRef} className="relative overflow-visible">
-            <GlassIndicator rect={tabIndicator} />
+            <GlassIndicator rect={tabIndicator} borderRadius="0.75rem" />
 
             <div
-              className="relative z-20 flex gap-0.5 overflow-x-auto scrollbar-hide"
+              className="relative z-20 flex overflow-x-auto scrollbar-hide"
               onScroll={handleTabsScroll}
             >
               {data.PROFILE_TABS.map((tab) => {
@@ -326,7 +326,7 @@ export default function ProfilePage() {
                     ref={setTabRef(tab.value)}
                     onClick={() => setActiveTab(tab.value)}
                     className={cn(
-                      'relative z-40 flex-1 flex flex-col items-center gap-0.5 px-2 pt-[7px] pb-[5px] rounded-xl transition-colors min-w-[52px]',
+                      'relative z-40 flex-1 flex flex-col items-center justify-center gap-0.5 px-2 py-2 rounded-xl transition-colors min-w-[52px]',
                       isActive ? 'text-white' : 'text-zinc-500 hover:text-white'
                     )}
                   >
