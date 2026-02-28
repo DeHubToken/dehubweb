@@ -443,5 +443,6 @@
     "nameEmailRequired": "이름과 이메일은 필수입니다",
     "applicationSuccess": "지원서가 성공적으로 제출되었습니다! 연락드리겠습니다.",
     "applicationFailed": "제출에 실패했습니다. 다시 시도해 주세요."
-  }
+  },
+  "governance": { "title": "거버넌스", "proposalCount": "{{count}}개 제안 제출됨", "proposalCount_other": "{{count}}개 제안 제출됨", "propose": "제안하기", "searchProposals": "제안 검색...", "proposals": "제안", "passed": "통과", "rejected": "거부", "mostVoted": "최다 투표", "newest": "최신", "governanceBadge": "거버넌스", "weightedVotes": "가중: {{for}} 찬성 · {{against}} 반대", "weightedVotesFor": "{{count}} 가중 찬성표", "noCommentsYet": "아직 댓글이 없습니다", "addComment": "댓글 추가...", "submitProposal": "거버넌스 제안 제출", "titleLabel": "제목", "titlePlaceholder": "예: 스테이킹 보상 10% 증가", "descriptionLabel": "설명", "descriptionPlaceholder": "제안을 자세히 설명하세요...", "submitProposalBtn": "제안 제출", "titleRequired": "제목은 필수입니다", "titleMaxLength": "제목은 100자 이내여야 합니다", "descriptionRequired": "설명은 필수입니다", "descriptionMaxLength": "설명은 1,000자 이내여야 합니다", "noProposalsYet": "아직 제안이 없습니다", "beFirstToSubmit": "첫 번째 제안을 제출하세요", "noPassedYet": "아직 통과된 제안이 없습니다", "passedAppearHere": "통과된 제안이 여기에 표시됩니다", "noRejectedYet": "아직 거부된 제안이 없습니다", "rejectedAppearHere": "거부된 제안이 여기에 표시됩니다", "yourVoteWeight": "투표 가중치:", "holdTokensToVote": "DHB 토큰을 보유하여 투표하세요", "mustHoldTokens": "제안에 투표하려면 DHB 토큰을 보유해야 합니다.", "justNow": "방금", "minutesAgo": "{{count}}분 전", "hoursAgo": "{{count}}시간 전", "daysAgo": "{{count}}일 전", "monthsAgo": "{{count}}개월 전" }
 }
