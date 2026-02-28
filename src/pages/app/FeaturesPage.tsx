@@ -122,7 +122,7 @@ function FeatureCard({
   const avatarUrl = dynamicAvatarUrl || storedAvatarUrl;
 
   const displayName = feature.author_username || feature.author_wallet_address.slice(0, 6);
-  const handle = feature.author_username || `${feature.author_wallet_address.slice(0, 6)}...${feature.author_wallet_address.slice(-4)}`;
+  const handle = feature.author_username ? `@${feature.author_username}` : `${feature.author_wallet_address.slice(0, 6)}...${feature.author_wallet_address.slice(-4)}`;
 
   // Determine like/dislike state from currentVote
   const isLiked = currentVote === 1;
