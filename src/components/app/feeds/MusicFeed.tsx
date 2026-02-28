@@ -431,6 +431,11 @@ function AllSection({
   onGoToVideos: () => void;
   onOpenStages: () => void;
 }) {
+  // Show full skeleton on initial load (no videos loaded yet and still fetching)
+  if (isLoadingVideos && musicVideos.length === 0) {
+    return <MusicFeedSkeleton />;
+  }
+
   return (
     <div className="space-y-4 pb-32">
       <MusicVideosCarousel videos={musicVideos} totalCount={totalVideoCount} isLoading={isLoadingVideos} onSeeAll={onGoToVideos} />
