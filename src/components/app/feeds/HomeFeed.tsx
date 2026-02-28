@@ -638,7 +638,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         views: formatViews(views),
         stats: {
           comments: pinnedPost.commentCount || pinnedPost.comment_count || 0,
-          reposts: pinnedPost.totalReposts || pinnedPost.reposts || 0,
+          reposts: (pinnedPost.totalReposts || pinnedPost.reposts || 0) + (pinnedPost.quotes || 0),
           likes: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
         },
       };

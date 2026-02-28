@@ -124,6 +124,7 @@ export interface UnifiedFeedItem {
   updatedAt?: string;
   totalReposts?: number;
   reposts?: number;
+  quotes?: number;
   ppvBuyerCount?: number;
 }
 
@@ -229,6 +230,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     createdAt: item.createdAt,
     isOwner: item.isOwner ?? false,
     isUnlocked: item.isUnlocked ?? false,
+    repostCount: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
   };
 }
 
@@ -282,6 +284,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     bountyCurrency: item.streamInfo?.addBountyTokenSymbol || 'DHB',
     isOwner: item.isOwner ?? false,
     isUnlocked: item.isUnlocked ?? false,
+    repostCount: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
   };
 }
 
@@ -313,7 +316,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     status: item.status,
     stats: {
       comments: item.commentCount || 0,
-      reposts: item.totalReposts || item.reposts || 0,
+      reposts: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
       likes: item.likes ?? item.totalVotes?.for ?? 0,
     },
     isLiked: item.isLiked ?? false,

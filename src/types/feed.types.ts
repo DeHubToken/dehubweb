@@ -119,6 +119,8 @@ export interface VideoItem extends BaseFeedItem {
   bountyAmount?: number;
   /** Bounty: reward currency (DHB, USDC) */
   bountyCurrency?: string;
+  /** Number of reposts + quotes */
+  repostCount?: number;
   /** Whether this is an ad/sponsored post */
   isAd?: boolean;
   /** Whether the current viewer is the content owner */
@@ -188,6 +190,8 @@ export interface ImagePost extends BaseFeedItem {
   bountyAmount?: number;
   /** Bounty: reward currency (DHB, USDC) */
   bountyCurrency?: string;
+  /** Number of reposts + quotes */
+  repostCount?: number;
   /** Whether the current viewer is the content owner */
   isOwner?: boolean;
   /** Whether the content has been unlocked for the current viewer (purchased/earned) */
