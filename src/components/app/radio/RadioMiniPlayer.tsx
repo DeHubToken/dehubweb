@@ -117,12 +117,18 @@ export function RadioMiniPlayer() {
     <>
       <AnimatePresence>
         <motion.div
+          drag
+          dragMomentum={false}
+          dragElastic={0.1}
+          dragConstraints={{ top: -500, left: -500, right: 500, bottom: 100 }}
+          onDragStart={() => { isDragging.current = true; }}
+          onDragEnd={() => { setTimeout(() => { isDragging.current = false; }, 50); }}
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           className={cn(
-            'fixed bottom-16 md:bottom-[74px] lg:bottom-4 z-50',
+            'fixed bottom-16 md:bottom-[74px] lg:bottom-4 z-50 cursor-grab active:cursor-grabbing',
             // Mobile: 95% width with side margins
             'left-[2.5%] right-[2.5%]',
             // Tablet/iPad: centered with offset
