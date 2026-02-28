@@ -121,6 +121,12 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     setShowVideo(true);
     setIsPaused(false);
     
+    // Unmute on first play — user explicitly clicked play
+    setIsMuted(false);
+    if (video) video.muted = false;
+    videoPlaybackManager.globalMuted = false;
+    videoPlaybackManager.claimAudio(cardId);
+    
     if (Hls.isSupported()) {
       const hls = new Hls({
         enableWorker: true,
@@ -447,6 +453,11 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
                 if (isPiP(channel.id)) {
                   removePiP(channel.id);
                 } else {
+                  // Mute the original player when opening PiP
+                  if (videoRef.current) {
+                    videoRef.current.muted = true;
+                    setIsMuted(true);
+                  }
                   addPiP({
                     id: channel.id,
                     name: channel.name,
