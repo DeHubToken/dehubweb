@@ -799,20 +799,16 @@ export async function uploadChatImage(file: File): Promise<{ url: string }> {
   return { url: data.url };
 }
 
+/**
+ * Mark conversation as read.
+ * Per chat-system.md, read receipts are via Socket: socket.emit('readReceipt', { dmId }).
+ * No REST endpoint exists for this — emitReadReceipt in dm-socket handles it.
+ */
 export async function markConversationAsRead(conversationId: string): Promise<{ success: boolean }> {
-  if (conversationId.startsWith('new_')) return { success: true };
-
-  try {
-    const response = await apiCall<any>('/api/dm/tnx', {
-      method: 'PUT',
-      body: { conversationId, read: true },
-      requiresAuth: true,
-    });
-    return { success: response?.success !== false };
-  } catch (error) {
-    console.error('[DM API] markConversationAsRead failed:', error);
-    return { success: false };
+  if (conversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(conversationId)) {
+    return { success: true };
   }
+  return { success: true };
 }
 
 // ─── User search ──────────────────────────────────────────────────────────────
