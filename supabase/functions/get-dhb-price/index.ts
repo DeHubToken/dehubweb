@@ -12,6 +12,9 @@ const CORE_TOKENS: { address: string; symbol: string }[] = [
   { address: '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2', symbol: 'USDT' },
   { address: '0x55d398326f99059fF775485246999027B3197955', symbol: 'USDT' },
   { address: '0xdAC17F958D2ee523a2206206994597C13D831ec7', symbol: 'USDT' },
+  { address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', symbol: 'BTC' },
+  { address: '0x236aa50979D5f3De3Bd1Eeb40E81137F22ab794b', symbol: 'BTC' },
+  { address: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', symbol: 'BTC' },
 ];
 
 const COINGECKO_IDS: Record<string, string> = {
@@ -19,6 +22,7 @@ const COINGECKO_IDS: Record<string, string> = {
   ETH: 'ethereum',
   BNB: 'binancecoin',
   USDT: 'tether',
+  BTC: 'bitcoin',
 };
 
 async function getDexScreenerPrice(address: string): Promise<number | null> {
@@ -94,7 +98,7 @@ serve(async (req) => {
     }
 
     // CoinGecko fallback for missing core symbols
-    const coreSymbols = ['DHB', 'ETH', 'BNB', 'USDT'];
+    const coreSymbols = ['DHB', 'ETH', 'BNB', 'USDT', 'BTC'];
     const missingSymbols = coreSymbols.filter(s => prices[s] === undefined || prices[s] === 0);
     if (missingSymbols.length > 0) {
       const geckoIds = missingSymbols.map(s => COINGECKO_IDS[s]).filter(Boolean);

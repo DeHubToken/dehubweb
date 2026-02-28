@@ -37,6 +37,6 @@ export function useTokenPrices(extraTokens?: { address: string; symbol: string }
     queryFn: () => fetchTokenPrices(extraTokens),
     staleTime: 60_000,
     refetchInterval: 120_000,
-    placeholderData: { DHB: 0, ETH: 0, BNB: 0, USDT: 1, WETH: 0, WBNB: 0 },
+    placeholderData: { DHB: 0, ETH: 0, BNB: 0, USDT: 1, BTC: 0, WETH: 0, WBNB: 0 },
   });
 }
