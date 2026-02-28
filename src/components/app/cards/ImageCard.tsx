@@ -433,7 +433,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
     <div 
       ref={viewRef} 
       onClick={handleCardClick}
-      className="overflow-hidden cursor-pointer isolate"
+      className="overflow-visible cursor-pointer isolate"
     >
       {/* Header with AI and menu buttons */}
       <div className="flex items-start justify-between">
