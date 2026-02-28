@@ -11,7 +11,7 @@
 
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio, Ticket } from 'lucide-react';
+import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio, Ticket, Coins } from 'lucide-react';
 import { toast } from 'sonner';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getNFTInfo, DeHubNFT, updateTokenVisibility, TokenVisibility } from '@/lib/api/dehub';
@@ -476,6 +476,7 @@ export default function PostInfoPage() {
   const dislikes = nftInfo.totalVotes?.against ?? nftInfo.dislike_count ?? 0;
   const views = nftInfo.views ?? nftInfo.view_count ?? 0;
   const comments = nftInfo.commentCount ?? nftInfo.comment_count ?? 0;
+  const totalTips = nftInfo.minterUser?.receivedTips ?? 0;
   const likeRatio = likes + dislikes > 0 ? Math.round((likes / (likes + dislikes)) * 100) : 100;
   
   // Get creator info
@@ -825,6 +826,15 @@ export default function PostInfoPage() {
                 <div>
                   <p className="text-lg font-bold text-white">{comments.toLocaleString()}</p>
                   <p className="text-xs text-white/60">Comments</p>
+                </div>
+              </div>
+
+              {/* Total Tips */}
+              <div className="col-span-2 bg-white/5 rounded-lg p-3 flex items-center gap-3">
+                <Coins className="w-5 h-5 text-white" />
+                <div>
+                  <p className="text-lg font-bold text-white">{totalTips.toLocaleString()} DHB</p>
+                  <p className="text-xs text-white/60">Total Tips Received (Creator)</p>
                 </div>
               </div>
             </div>
