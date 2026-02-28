@@ -1,6 +1,7 @@
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 
 interface PageHeaderProps {
   title?: string;
@@ -20,6 +21,7 @@ export function PageHeader({
 }: PageHeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isCollapsed } = useSidebarCollapse();
 
   /**
    * Handle back navigation with fallback
@@ -27,9 +29,6 @@ export function PageHeader({
    * - Otherwise, navigate to fallback route (handles direct URL access)
    */
   const handleBack = () => {
-    // location.key will be 'default' only when there's no history
-    // This is more reliable than window.history.length which can include entries
-    // from before the app was loaded
     if (location.key && location.key !== 'default') {
       navigate(-1);
     } else {
@@ -39,7 +38,8 @@ export function PageHeader({
 
   return (
     <div className={cn(
-      'sticky top-0 bg-black z-50 px-3 pt-0 pb-3 sm:p-4 -mt-[5px]',
+      'sticky bg-black z-40 px-3 pt-0 pb-3 sm:p-4',
+      isCollapsed ? 'top-0 lg:top-12' : 'top-0',
       className
     )}>
       <div className="flex items-center gap-3">

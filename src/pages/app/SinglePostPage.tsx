@@ -788,7 +788,7 @@ export default function SinglePostPage() {
     <div className="flex flex-col">
       <PageHeader showBack={hasHistory} />
       
-      <div className="px-3 sm:px-4 pb-8">
+      <div className="px-3 sm:px-4 pb-8 pt-2">
         <div className="max-w-2xl mx-auto">
           {renderContent()}
           {/* Related Images Feed - below image posts */}
