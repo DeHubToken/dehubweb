@@ -262,7 +262,7 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
               onClick={() => onLike(comment.id)}
               className={cn(
                 "flex items-center gap-1 transition-colors",
-                comment.isLiked ? "text-blue-400" : "text-white hover:text-zinc-400"
+                comment.isLiked ? "text-white" : "text-white/60 hover:text-white"
               )}
               aria-label="Like"
             >
