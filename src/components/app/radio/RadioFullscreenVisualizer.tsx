@@ -55,6 +55,7 @@ export function RadioFullscreenVisualizer({
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number | null>(null);
+  const canvasSizeRef = useRef({ w: 0, h: 0 });
   
   const [style, setStyle] = useState<VisualizerStyle>('bars');
   const [styleIndex, setStyleIndex] = useState(0);
@@ -63,6 +64,28 @@ export function RadioFullscreenVisualizer({
   const lavaHueRef = useRef(0);
   const [showControls, setShowControls] = useState(true);
   const hideControlsTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  // Resize canvas separately from draw loop
+  const resizeCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    const w = Math.round(rect.width);
+    const h = Math.round(rect.height);
+    if (canvasSizeRef.current.w !== w || canvasSizeRef.current.h !== h) {
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvasSizeRef.current = { w, h };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    return () => window.removeEventListener('resize', resizeCanvas);
+  }, [isOpen, resizeCanvas]);
 
   const nextStyle = useCallback(() => {
     const newIndex = (styleIndex + 1) % STYLES.length;
@@ -90,10 +113,16 @@ export function RadioFullscreenVisualizer({
     if (!ctx) return;
 
     const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
+    const { w: cssW, h: cssH } = canvasSizeRef.current;
+    
+    // Ensure canvas is sized
+    if (cssW === 0 || cssH === 0) {
+      resizeCanvas();
+      animationRef.current = requestAnimationFrame(draw);
+      return;
+    }
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     const frequencyData = new Uint8Array(analyser.frequencyBinCount);
     const timeData = new Uint8Array(analyser.frequencyBinCount);
@@ -106,33 +135,33 @@ export function RadioFullscreenVisualizer({
 
     switch (style) {
       case 'bars':
-        drawBars(ctx, frequencyData, rect.width, rect.height, activeHue);
+        drawBars(ctx, frequencyData, cssW, cssH, activeHue);
         break;
       case 'waveform':
-        drawWaveform(ctx, timeData, rect.width, rect.height, activeHue);
+        drawWaveform(ctx, timeData, cssW, cssH, activeHue);
         break;
       case 'circular':
-        drawCircular(ctx, frequencyData, rect.width, rect.height, activeHue);
+        drawCircular(ctx, frequencyData, cssW, cssH, activeHue);
         break;
       case 'spectrum':
-        drawSpectrum(ctx, frequencyData, rect.width, rect.height, activeHue);
+        drawSpectrum(ctx, frequencyData, cssW, cssH, activeHue);
         break;
       case 'mirror':
-        drawMirror(ctx, frequencyData, rect.width, rect.height, activeHue);
+        drawMirror(ctx, frequencyData, cssW, cssH, activeHue);
         break;
       case 'rings':
-        drawRings(ctx, frequencyData, rect.width, rect.height, activeHue);
+        drawRings(ctx, frequencyData, cssW, cssH, activeHue);
         break;
       case 'pulse':
-        drawPulse(ctx, frequencyData, rect.width, rect.height, activeHue);
+        drawPulse(ctx, frequencyData, cssW, cssH, activeHue);
         break;
       case 'terrain':
-        drawTerrain(ctx, frequencyData, rect.width, rect.height, activeHue);
+        drawTerrain(ctx, frequencyData, cssW, cssH, activeHue);
         break;
     }
 
     animationRef.current = requestAnimationFrame(draw);
-  }, [style, hue, lavaMode, getAnalyser]);
+  }, [style, hue, lavaMode, getAnalyser, resizeCanvas]);
 
   useEffect(() => {
     if (isOpen && isPlaying) {

@@ -11,7 +11,7 @@ function getColors(hue: number) {
   };
 }
 
-// Classic WMP-style frequency bars
+// Classic WMP-style frequency bars - full width
 export function drawBars(
   ctx: CanvasRenderingContext2D,
   frequencyData: Uint8Array,
@@ -19,19 +19,19 @@ export function drawBars(
   height: number,
   hue: number = 260
 ) {
-  const barCount = 32;
-  const barWidth = width / barCount - 2;
-  const barSpacing = 2;
+  const barCount = 48;
+  const gap = 2;
+  const barWidth = (width - gap * (barCount - 1)) / barCount;
   const colors = getColors(hue);
 
   ctx.clearRect(0, 0, width, height);
 
   for (let i = 0; i < barCount; i++) {
-    const dataIndex = Math.floor((i / barCount) * frequencyData.length);
+    const dataIndex = Math.floor((i / barCount) * (frequencyData.length * 0.6));
     const value = frequencyData[dataIndex] / 255;
     const barHeight = value * height * 0.9;
 
-    const x = i * (barWidth + barSpacing);
+    const x = i * (barWidth + gap);
     const y = height - barHeight;
 
     // Create gradient for each bar
@@ -106,13 +106,13 @@ export function drawCircular(
 
   const centerX = width / 2;
   const centerY = height / 2;
-  const radius = Math.min(width, height) / 3;
-  const barCount = 64;
+  const radius = Math.min(width, height) * 0.28;
+  const barCount = 128;
 
   for (let i = 0; i < barCount; i++) {
-    const dataIndex = Math.floor((i / barCount) * frequencyData.length);
+    const dataIndex = Math.floor((i / barCount) * (frequencyData.length * 0.6));
     const value = frequencyData[dataIndex] / 255;
-    const barHeight = value * radius * 0.8;
+    const barHeight = value * radius * 0.9;
 
     const angle = (i / barCount) * Math.PI * 2 - Math.PI / 2;
     const x1 = centerX + Math.cos(angle) * radius;
@@ -126,7 +126,7 @@ export function drawCircular(
 
     ctx.beginPath();
     ctx.strokeStyle = gradient;
-    ctx.lineWidth = 3;
+    ctx.lineWidth = Math.max(2, (Math.PI * 2 * radius) / barCount * 0.7);
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.stroke();
@@ -239,17 +239,17 @@ export function drawMirror(
   const colors = getColors(hue);
   ctx.clearRect(0, 0, width, height);
 
-  const barCount = 32;
-  const barWidth = width / barCount - 2;
-  const barSpacing = 2;
+  const barCount = 48;
+  const gap = 2;
+  const barWidth = (width - gap * (barCount - 1)) / barCount;
   const centerY = height / 2;
 
   for (let i = 0; i < barCount; i++) {
-    const dataIndex = Math.floor((i / barCount) * frequencyData.length);
+    const dataIndex = Math.floor((i / barCount) * (frequencyData.length * 0.6));
     const value = frequencyData[dataIndex] / 255;
     const barHeight = value * (height / 2) * 0.85;
 
-    const x = i * (barWidth + barSpacing);
+    const x = i * (barWidth + gap);
 
     // Create gradient
     const gradient = ctx.createLinearGradient(x, centerY - barHeight, x, centerY + barHeight);
