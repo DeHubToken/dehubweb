@@ -9,7 +9,7 @@
 
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Minimize2, Palette, Radio, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Minimize2, Palette, Radio, ChevronLeft, ChevronRight, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks';
 import { Slider } from '@/components/ui/slider';
@@ -59,6 +59,8 @@ export function RadioFullscreenVisualizer({
   const [style, setStyle] = useState<VisualizerStyle>('bars');
   const [styleIndex, setStyleIndex] = useState(0);
   const [hue, setHue] = useState(260);
+  const [lavaMode, setLavaMode] = useState(false);
+  const lavaHueRef = useRef(0);
   const [showControls, setShowControls] = useState(true);
   const hideControlsTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -75,16 +77,15 @@ export function RadioFullscreenVisualizer({
   }, [styleIndex]);
 
   const draw = useCallback(() => {
-    if (!canvasRef.current) return;
-    
-    // Safely call getAnalyser - it might not be available yet
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
     const analyser = typeof getAnalyser === 'function' ? getAnalyser() : null;
     if (!analyser) {
       animationRef.current = requestAnimationFrame(draw);
       return;
     }
 
-    const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
@@ -100,35 +101,38 @@ export function RadioFullscreenVisualizer({
     analyser.getByteFrequencyData(frequencyData);
     analyser.getByteTimeDomainData(timeData);
 
+    // In lava mode, cycle hue continuously
+    const activeHue = lavaMode ? (lavaHueRef.current = (lavaHueRef.current + 0.5) % 360) : hue;
+
     switch (style) {
       case 'bars':
-        drawBars(ctx, frequencyData, rect.width, rect.height, hue);
+        drawBars(ctx, frequencyData, rect.width, rect.height, activeHue);
         break;
       case 'waveform':
-        drawWaveform(ctx, timeData, rect.width, rect.height, hue);
+        drawWaveform(ctx, timeData, rect.width, rect.height, activeHue);
         break;
       case 'circular':
-        drawCircular(ctx, frequencyData, rect.width, rect.height, hue);
+        drawCircular(ctx, frequencyData, rect.width, rect.height, activeHue);
         break;
       case 'spectrum':
-        drawSpectrum(ctx, frequencyData, rect.width, rect.height, hue);
+        drawSpectrum(ctx, frequencyData, rect.width, rect.height, activeHue);
         break;
       case 'mirror':
-        drawMirror(ctx, frequencyData, rect.width, rect.height, hue);
+        drawMirror(ctx, frequencyData, rect.width, rect.height, activeHue);
         break;
       case 'rings':
-        drawRings(ctx, frequencyData, rect.width, rect.height, hue);
+        drawRings(ctx, frequencyData, rect.width, rect.height, activeHue);
         break;
       case 'pulse':
-        drawPulse(ctx, frequencyData, rect.width, rect.height, hue);
+        drawPulse(ctx, frequencyData, rect.width, rect.height, activeHue);
         break;
       case 'terrain':
-        drawTerrain(ctx, frequencyData, rect.width, rect.height, hue);
+        drawTerrain(ctx, frequencyData, rect.width, rect.height, activeHue);
         break;
     }
 
     animationRef.current = requestAnimationFrame(draw);
-  }, [style, hue, getAnalyser]);
+  }, [style, hue, lavaMode, getAnalyser]);
 
   useEffect(() => {
     if (isOpen && isPlaying) {
@@ -319,9 +323,25 @@ export function RadioFullscreenVisualizer({
               </div>
 
               <div className="flex items-center justify-center gap-3">
+                {/* Lava mode toggle */}
+                <button
+                  onClick={() => setLavaMode(!lavaMode)}
+                  className={cn(
+                    "w-9 h-9 rounded-xl flex items-center justify-center border transition-colors",
+                    lavaMode
+                      ? "bg-white/20 border-white/30 text-white"
+                      : "bg-black/40 backdrop-blur-[24px] saturate-[180%] border-white/10 text-zinc-400 hover:text-white"
+                  )}
+                >
+                  <Flame className="w-4 h-4" />
+                </button>
+
                 <Palette className="w-4 h-4 text-zinc-400" />
                 <div 
-                  className="w-32 sm:w-48 h-3 rounded-full relative overflow-hidden"
+                  className={cn(
+                    "w-32 sm:w-48 h-3 rounded-full relative overflow-hidden transition-opacity",
+                    lavaMode && "opacity-30 pointer-events-none"
+                  )}
                   style={{
                     background: 'linear-gradient(to right, hsl(0, 80%, 60%), hsl(60, 80%, 60%), hsl(120, 80%, 60%), hsl(180, 80%, 60%), hsl(240, 80%, 60%), hsl(300, 80%, 60%), hsl(360, 80%, 60%))'
                   }}
@@ -336,7 +356,7 @@ export function RadioFullscreenVisualizer({
                     min={0}
                     max={360}
                     step={1}
-                    onValueChange={(value) => setHue(value[0])}
+                    onValueChange={(value) => { setLavaMode(false); setHue(value[0]); }}
                     className="absolute inset-0 w-full [&_[role=slider]]:h-4 [&_[role=slider]]:w-4 [&_[role=slider]]:-top-0.5 [&_[role=slider]]:border-2 [&_[role=slider]]:border-white [&_[role=slider]]:shadow-lg [&_.relative]:bg-transparent [&_[data-orientation=horizontal]]:h-3 [&_[class*=Range]]:bg-transparent [&_[class*=Track]]:bg-transparent"
                   />
                 </div>
