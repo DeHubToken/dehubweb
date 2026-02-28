@@ -537,10 +537,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log('[Auth] Message:', message);
     toast.info('Please sign the message in your wallet...');
 
-    const signature = await signMessageAsync({ 
-      message,
-      account: authAddress as `0x${string}`
-    });
+    let signature: string;
+    try {
+      signature = await signMessageAsync({ 
+        message,
+        account: getAddress(address)
+      });
+    } catch (signError: any) {
+      console.error('[Auth] signMessageAsync failed:', signError);
+      const userRejected = signError?.code === 4001 || signError?.message?.includes('rejected');
+      toast.error(userRejected ? 'Signature rejected. Please try again.' : 'Wallet signature failed. Please try again.');
+      throw signError;
+    }
     
     console.log('[Auth] Wagmi signature received, authenticating with backend...');
 
