@@ -105,7 +105,7 @@ export const LeaderboardCarousel = memo(function LeaderboardCarousel() {
   });
 
   const entries = (data?.result?.byWalletBalance || [])
-    .filter((e: LeaderboardEntry) => e.username)
+    .filter((e: LeaderboardEntry) => e.username && e.username.toLowerCase() !== 'dehubdev1')
     .sort((a, b) => (b.total ?? 0) - (a.total ?? 0))
     .slice(0, 15);
 
