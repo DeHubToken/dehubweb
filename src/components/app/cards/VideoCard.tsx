@@ -160,16 +160,23 @@ function MobileCreatorInfo({
           disabled={!isClickable}
           className={`flex items-center gap-2 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
         >
-          {channelAvatar && (
+          {channelAvatar && channelAvatar.startsWith('http') ? (
             <img 
               src={channelAvatar} 
               alt={channel}
               className="w-9 h-9 rounded-md object-cover shrink-0"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = '/placeholder.svg';
+                (e.target as HTMLImageElement).style.display = 'none';
+                const fallback = (e.target as HTMLImageElement).nextElementSibling;
+                if (fallback) fallback.classList.remove('hidden');
               }}
             />
-          )}
+          ) : null}
+          <div className={`w-9 h-9 rounded-md bg-zinc-700 flex items-center justify-center shrink-0 text-white text-sm font-semibold ${
+            channelAvatar && channelAvatar.startsWith('http') ? 'hidden' : ''
+          }`}>
+            {(channel || '?').charAt(0).toUpperCase()}
+          </div>
           <div className="flex flex-col items-start min-w-0">
             <div className="flex items-center gap-1.5">
               <span className="font-semibold text-white text-sm leading-tight truncate">{channel}</span>
