@@ -434,8 +434,9 @@ function NotificationItem({
             exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] } }}
           >
             <motion.div
-              animate={isClosing ? { opacity: 0.3 } : { opacity: 1 }}
-              transition={{ duration: 0.4, ease: 'easeOut' }}
+              animate={isClosing ? { rotateX: 180 } : { rotateX: 0 }}
+              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+              style={{ transformStyle: 'preserve-3d' }}
               className="text-zinc-400"
             >
               {isClosing ? (
