@@ -471,5 +471,6 @@
     "nameEmailRequired": "名前とメールアドレスは必須です",
     "applicationSuccess": "応募が正常に送信されました！ご連絡いたします。",
     "applicationFailed": "送信に失敗しました。もう一度お試しください。"
-  }
+  },
+  "governance": { "title": "ガバナンス", "proposalCount": "{{count}}件の提案が提出されました", "proposalCount_other": "{{count}}件の提案が提出されました", "propose": "提案する", "searchProposals": "提案を検索...", "proposals": "提案", "passed": "可決", "rejected": "否決", "mostVoted": "最多投票", "newest": "最新", "governanceBadge": "ガバナンス", "weightedVotes": "加重: {{for}} 賛成 · {{against}} 反対", "weightedVotesFor": "{{count}} 加重賛成票", "noCommentsYet": "まだコメントはありません", "addComment": "コメントを追加...", "submitProposal": "ガバナンス提案を提出", "titleLabel": "タイトル", "titlePlaceholder": "例：ステーキング報酬を10%増加", "descriptionLabel": "説明", "descriptionPlaceholder": "提案を詳しく説明してください...", "submitProposalBtn": "提案を提出", "titleRequired": "タイトルは必須です", "titleMaxLength": "タイトルは100文字以内", "descriptionRequired": "説明は必須です", "descriptionMaxLength": "説明は1,000文字以内", "noProposalsYet": "まだ提案はありません", "beFirstToSubmit": "最初の提案を提出しましょう", "noPassedYet": "まだ可決された提案はありません", "passedAppearHere": "可決された提案がここに表示されます", "noRejectedYet": "まだ否決された提案はありません", "rejectedAppearHere": "否決された提案がここに表示されます", "yourVoteWeight": "あなたの投票重み：", "holdTokensToVote": "DHBトークンを保有して投票", "mustHoldTokens": "提案に投票するにはDHBトークンを保有する必要があります。", "justNow": "たった今", "minutesAgo": "{{count}}分前", "hoursAgo": "{{count}}時間前", "daysAgo": "{{count}}日前", "monthsAgo": "{{count}}ヶ月前" }
 }
