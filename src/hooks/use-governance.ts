@@ -1,0 +1,287 @@
+/**
+ * Governance Hook
+ * ===============
+ * Data fetching and mutations for the governance proposal board.
+ * Uses Supabase directly with weighted voting based on badge tier.
+ */
+
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
+import { getBadgeName, BADGE_LEVELS } from '@/lib/staking-badges';
+
+export type GovernanceSort = 'most_voted' | 'newest';
+export type GovernanceStatus = 'open' | 'completed';
+
+export interface GovernanceProposal {
+  id: string;
+  title: string;
+  description: string;
+  status: GovernanceStatus;
+  author_wallet_address: string;
+  author_username: string | null;
+  author_avatar: string | null;
+  vote_count: number;
+  like_count: number;
+  dislike_count: number;
+  comment_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Badge tier → vote weight mapping.
+ * Crab (10k) = 1, up to Megalodon (50M) = 13.
+ */
+const BADGE_VOTE_WEIGHT: Record<string, number> = {
+  "Crab": 1,
+  "Lobster": 2,
+  "Piranha": 3,
+  "Tortoise": 4,
+  "Cobra": 5,
+  "Octopus": 6,
+  "Crocodite": 7,
+  "Dolphin": 8,
+  "Tiger Shark": 9,
+  "Killer Whale": 10,
+  "Great White Shark": 11,
+  "Blue Whale": 12,
+  "Meglodon": 13,
+};
+
+export function getVoteWeight(badgeBalance: number | undefined | null, username?: string | null): { weight: number; badgeName: string | null } {
+  const badgeName = getBadgeName(badgeBalance, username);
+  if (!badgeName) return { weight: 0, badgeName: null };
+  return { weight: BADGE_VOTE_WEIGHT[badgeName] || 1, badgeName };
+}
+
+export { BADGE_VOTE_WEIGHT };
+
+const PAGE_SIZE = 15;
+
+export function useGovernanceProposals(sort: GovernanceSort, search: string) {
+  return useInfiniteQuery({
+    queryKey: ['governance-proposals', sort, search],
+    queryFn: async ({ pageParam = 0 }) => {
+      let query = supabase
+        .from('governance_proposals')
+        .select('*')
+        .neq('status', 'completed');
+
+      if (search.trim()) {
+        query = query.or(`title.ilike.%${search.trim()}%,description.ilike.%${search.trim()}%`);
+      }
+
+      switch (sort) {
+        case 'most_voted':
+          query = query.order('vote_count', { ascending: false }).order('created_at', { ascending: false });
+          break;
+        case 'newest':
+          query = query.order('created_at', { ascending: false });
+          break;
+      }
+
+      query = query.range(pageParam, pageParam + PAGE_SIZE - 1);
+      const { data, error } = await query;
+      if (error) throw error;
+      return (data || []) as GovernanceProposal[];
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < PAGE_SIZE) return undefined;
+      return allPages.length * PAGE_SIZE;
+    },
+    staleTime: 60_000,
+    gcTime: 5 * 60_000,
+  });
+}
+
+export function useCompletedProposals() {
+  return useQuery({
+    queryKey: ['governance-proposals-completed'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('governance_proposals')
+        .select('*')
+        .eq('status', 'completed')
+        .order('updated_at', { ascending: false });
+      if (error) throw error;
+      return (data || []) as GovernanceProposal[];
+    },
+    staleTime: 60_000,
+  });
+}
+
+export function useTotalGovernanceCount() {
+  return useQuery({
+    queryKey: ['governance-proposals-total-count'],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from('governance_proposals')
+        .select('*', { count: 'exact', head: true });
+      if (error) throw error;
+      return count ?? 0;
+    },
+    staleTime: 60_000,
+  });
+}
+
+export function useGovernanceUserVotes() {
+  const { walletAddress } = useAuth();
+  return useQuery({
+    queryKey: ['governance-votes', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return {};
+      const { data, error } = await supabase
+        .from('governance_votes')
+        .select('proposal_id, vote_type')
+        .eq('wallet_address', walletAddress.toLowerCase());
+      if (error) throw error;
+      const voteMap: Record<string, number> = {};
+      for (const vote of data || []) {
+        voteMap[vote.proposal_id] = vote.vote_type;
+      }
+      return voteMap;
+    },
+    enabled: !!walletAddress,
+    staleTime: 60_000,
+  });
+}
+
+export function useSubmitGovernanceProposal() {
+  const queryClient = useQueryClient();
+  const { walletAddress, user } = useAuth();
+
+  return useMutation({
+    mutationFn: async ({ title, description }: { title: string; description: string }) => {
+      if (!walletAddress) throw new Error('Not authenticated');
+      const { data, error } = await supabase
+        .from('governance_proposals')
+        .insert({
+          title: title.trim(),
+          description: description.trim(),
+          author_wallet_address: walletAddress.toLowerCase(),
+          author_username: user?.username || null,
+          author_avatar: user?.avatarImageUrl || null,
+        })
+        .select()
+        .single()
+        .setHeader('x-wallet-address', walletAddress.toLowerCase());
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['governance-proposals'] });
+      queryClient.invalidateQueries({ queryKey: ['governance-proposals-total-count'] });
+      toast.success('Governance proposal submitted!');
+    },
+    onError: () => {
+      toast.error('Failed to submit proposal');
+    },
+  });
+}
+
+export function useVoteGovernanceProposal() {
+  const queryClient = useQueryClient();
+  const { walletAddress } = useAuth();
+
+  return useMutation({
+    mutationFn: async ({ proposalId, voteType, currentVote, voteWeight, badgeName }: {
+      proposalId: string;
+      voteType: 1 | -1;
+      currentVote: number | undefined;
+      voteWeight: number;
+      badgeName: string | null;
+    }) => {
+      if (!walletAddress) throw new Error('Not authenticated');
+      if (voteWeight === 0) throw new Error('You must hold tokens to vote');
+
+      const wallet = walletAddress.toLowerCase();
+
+      if (currentVote === voteType) {
+        // Remove vote
+        const { error } = await supabase
+          .from('governance_votes')
+          .delete()
+          .eq('proposal_id', proposalId)
+          .eq('wallet_address', wallet)
+          .setHeader('x-wallet-address', wallet);
+        if (error) throw error;
+        return { action: 'removed' as const };
+      } else {
+        // Upsert vote with weight
+        const { error } = await supabase
+          .from('governance_votes')
+          .upsert(
+            {
+              proposal_id: proposalId,
+              wallet_address: wallet,
+              vote_type: voteType,
+              vote_weight: voteWeight,
+              badge_name: badgeName,
+            },
+            { onConflict: 'proposal_id,wallet_address' }
+          )
+          .setHeader('x-wallet-address', wallet);
+        if (error) throw error;
+        return { action: 'voted' as const };
+      }
+    },
+    onMutate: async ({ proposalId, voteType, currentVote, voteWeight }) => {
+      await queryClient.cancelQueries({ queryKey: ['governance-proposals'] });
+      await queryClient.cancelQueries({ queryKey: ['governance-votes'] });
+
+      const previousRequests = queryClient.getQueriesData({ queryKey: ['governance-proposals'] });
+      const previousVotes = queryClient.getQueryData(['governance-votes', walletAddress]);
+
+      // Optimistic vote map update
+      queryClient.setQueryData(['governance-votes', walletAddress], (old: Record<string, number> | undefined) => {
+        const newVotes = { ...(old || {}) };
+        if (currentVote === voteType) {
+          delete newVotes[proposalId];
+        } else {
+          newVotes[proposalId] = voteType;
+        }
+        return newVotes;
+      });
+
+      // Optimistic vote count update (weighted)
+      queryClient.setQueriesData({ queryKey: ['governance-proposals'] }, (old: any) => {
+        if (!old?.pages) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page: GovernanceProposal[]) =>
+            page.map((p) => {
+              if (p.id !== proposalId) return p;
+              let delta = voteType * voteWeight;
+              if (currentVote === voteType) {
+                delta = -voteType * voteWeight;
+              } else if (currentVote) {
+                delta = (voteType - currentVote) * voteWeight;
+              }
+              return { ...p, vote_count: p.vote_count + delta };
+            })
+          ),
+        };
+      });
+
+      return { previousRequests, previousVotes };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previousRequests) {
+        for (const [key, data] of context.previousRequests) {
+          queryClient.setQueryData(key, data);
+        }
+      }
+      if (context?.previousVotes) {
+        queryClient.setQueryData(['governance-votes', walletAddress], context.previousVotes);
+      }
+      toast.error('Vote failed. You must hold DHB tokens to vote.');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['governance-proposals'] });
+      queryClient.invalidateQueries({ queryKey: ['governance-votes'] });
+    },
+  });
+}

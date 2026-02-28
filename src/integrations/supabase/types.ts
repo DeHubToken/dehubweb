@@ -475,6 +475,130 @@ export type Database = {
         }
         Relationships: []
       }
+      governance_comments: {
+        Row: {
+          avatar: string | null
+          content: string
+          created_at: string
+          id: string
+          proposal_id: string
+          username: string | null
+          wallet_address: string
+        }
+        Insert: {
+          avatar?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          proposal_id: string
+          username?: string | null
+          wallet_address: string
+        }
+        Update: {
+          avatar?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          proposal_id?: string
+          username?: string | null
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "governance_comments_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "governance_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      governance_proposals: {
+        Row: {
+          author_avatar: string | null
+          author_username: string | null
+          author_wallet_address: string
+          comment_count: number
+          created_at: string
+          description: string
+          dislike_count: number
+          id: string
+          like_count: number
+          status: string
+          title: string
+          updated_at: string
+          vote_count: number
+        }
+        Insert: {
+          author_avatar?: string | null
+          author_username?: string | null
+          author_wallet_address: string
+          comment_count?: number
+          created_at?: string
+          description: string
+          dislike_count?: number
+          id?: string
+          like_count?: number
+          status?: string
+          title: string
+          updated_at?: string
+          vote_count?: number
+        }
+        Update: {
+          author_avatar?: string | null
+          author_username?: string | null
+          author_wallet_address?: string
+          comment_count?: number
+          created_at?: string
+          description?: string
+          dislike_count?: number
+          id?: string
+          like_count?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          vote_count?: number
+        }
+        Relationships: []
+      }
+      governance_votes: {
+        Row: {
+          badge_name: string | null
+          created_at: string
+          id: string
+          proposal_id: string
+          vote_type: number
+          vote_weight: number
+          wallet_address: string
+        }
+        Insert: {
+          badge_name?: string | null
+          created_at?: string
+          id?: string
+          proposal_id: string
+          vote_type: number
+          vote_weight?: number
+          wallet_address: string
+        }
+        Update: {
+          badge_name?: string | null
+          created_at?: string
+          id?: string
+          proposal_id?: string
+          vote_type?: number
+          vote_weight?: number
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "governance_votes_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "governance_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       job_applications: {
         Row: {
           created_at: string

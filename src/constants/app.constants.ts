@@ -22,6 +22,7 @@ import {
   BookOpen,
   Lightbulb,
   Briefcase,
+  ShieldCheck,
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
@@ -39,6 +40,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: BookOpen, label: 'Docs', path: 'https://dehub.io/docs', external: true },
   { icon: FileText, label: 'Blog', path: 'https://docs.dhb.gg/docs/blog', external: true },
   { icon: Lightbulb, label: 'Feature Requests', path: '/features' },
+  { icon: ShieldCheck, label: 'Governance', path: '/app/governance' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: Home, label: 'Home', path: '/app' },
 ];
