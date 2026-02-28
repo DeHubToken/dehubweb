@@ -413,7 +413,7 @@ function ImmersiveVideoHeader({
   if (!showBack) return null;
 
   return (
-    <div className="absolute top-2 left-2 z-20">
+    <div className="absolute top-2 left-2 z-50">
       <button
         onClick={handleBack}
         className="h-8 w-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 hover:bg-black/60 transition-colors flex items-center justify-center"
