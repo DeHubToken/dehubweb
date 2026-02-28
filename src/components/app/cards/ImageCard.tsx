@@ -716,7 +716,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         <ActionBar 
           postId={post.id} 
           className="p-0" 
-          onComment={() => setShowComments(true)} 
+          onComment={() => setShowComments(prev => !prev)} 
           onRepost={handleRepost}
           onQuote={handleQuote}
           isLiked={post.isLiked} 
