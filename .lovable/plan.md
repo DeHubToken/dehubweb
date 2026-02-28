@@ -1,39 +1,41 @@
 
 
-## Investigation Summary
+## Problem Analysis
 
-I traced the full wallet login flow from button click to signature popup. The code path is:
+Two issues identified:
 
-1. `LoginModal.handleWalletConnect()` → sets `wagmiAuthIntent(true)` → calls RainbowKit `connect()`
-2. Wagmi connects → `handleWagmiConnect` effect fires in `AuthContext`
-3. Effect reaches `completeDeHubAuthWagmi()` → calls `signMessageAsync({ message, account })`
+1. **Username update silently fails**: The `updateProfile` API call at `/api/update_profile` returns a success response even when the username is taken — the API likely just ignores the username field and updates everything else. The `onSuccess` handler shows "Profile updated" toast, but the username didn't actually change. The settings page does NOT check username availability before submitting.
 
-### Root Cause (Most Likely)
+2. **No real-time username availability feedback**: The settings page username input (line 490-496 of SettingsPage.tsx) is a plain `Input` with no availability check. The `UsernameRequiredModal` already has this pattern implemented (debounced check + visual feedback), but SettingsPage doesn't use it.
 
-In `completeDeHubAuthWagmi` (AuthContext.tsx line 540-542), the `account` parameter is passed as a **lowercased** address:
+## Implementation Plan
 
-```js
-const authAddress = address.toLowerCase();
-// ...
-const signature = await signMessageAsync({ 
-  message,
-  account: authAddress as `0x${string}`  // lowercase!
-});
-```
+### 1. Add username availability check to Settings profile tab
 
-Wagmi v2 / viem expect a **checksummed** (mixed-case) address. Passing a non-checksummed address can cause `signMessageAsync` to silently fail — the wallet never receives the sign request, so the user never sees the popup. This may have started failing after a wagmi/viem minor version bump that added stricter address validation.
+- Import `checkUsernameAvailability` from `@/lib/api/dehub`
+- Add state: `usernameAvailable`, `usernameError`, `isCheckingUsername`
+- Use `useDebouncedValue` hook on the username field
+- Run availability check when debounced username changes AND differs from `originalValues.username`
+- Skip check if username equals the user's current username
 
-Additionally, the `completeDeHubAuthWagmi` function has **no try/catch** around `signMessageAsync` — any error thrown here bubbles up to the `handleWagmiConnect` effect's catch block which only logs to console and resets state, with no user-facing error message about the signature failure.
+### 2. Show inline feedback on the username input
 
-### Plan
+- Below the username input, show:
+  - A green checkmark + "Available" when available
+  - A red X + "Username is already taken" when taken
+  - A spinner while checking
+- Replace the current hint text (`settings.usernameHint`) with dynamic status
 
-**File: `src/contexts/AuthContext.tsx`**
+### 3. Block save when username is taken
 
-1. **Fix `signMessageAsync` account parameter** (line 540-543): Either remove the `account` parameter entirely (let wagmi use the connected account automatically), or convert to checksummed using `getAddress()` from viem (already imported).
+- In `handleSave`, prevent submission if `usernameAvailable === false`
+- Disable the Save button when `isCheckingUsername` is true or `usernameAvailable === false`
+- Show a toast error if user somehow tries to save with an unavailable username
 
-2. **Add error handling around `signMessageAsync`** (line 540): Wrap the signature call in a try/catch that shows a user-facing toast if the wallet rejects or fails to show the popup, and logs the specific error for debugging.
+### Technical Details
 
-3. **Add defensive logging** before `signMessageAsync`: Log the exact account address format being used and the connector state to help diagnose future issues.
-
-The simplest and most robust fix is to **remove the `account` parameter** from `signMessageAsync` — wagmi already knows which account is connected and will use it automatically. The lowercase address is still used for the message text and the backend auth call, which is correct.
+- Reuse the same `checkUsernameAvailability` GET endpoint already used in `UsernameRequiredModal`
+- Debounce at 300ms (matching existing pattern)
+- Only trigger check when username differs from original (avoid checking user's own current username)
+- Files to modify: `src/pages/app/SettingsPage.tsx`
 
