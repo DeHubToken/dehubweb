@@ -4,8 +4,12 @@ const DOCS_BASE = 'https://dehubdocs.lovable.app/docs';
 
 const DocsPage = () => {
   const location = useLocation();
-  // Strip "/docs" prefix and pass the rest as sub-path
-  const subPath = location.pathname.replace(/^\/docs/, '');
+  // Handle both /docs/* and /blog routes
+  let subPath = location.pathname.replace(/^\/docs/, '');
+  // If accessed via /blog, map to /docs/blog
+  if (location.pathname === '/blog') {
+    subPath = '/blog';
+  }
   const iframeSrc = `${DOCS_BASE}${subPath}${location.hash}`;
 
   return (
