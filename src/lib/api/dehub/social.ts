@@ -224,6 +224,49 @@ export async function getUserReposts(address: string, page: number = 1, limit: n
   });
 }
 
+/**
+ * Get list of users who reposted a specific post (by tokenId).
+ * Tries /api/reposts?tokenId=X — returns user account objects.
+ */
+export async function getPostReposters(
+  tokenId: string | number,
+  page: number = 1,
+  limit: number = 50
+): Promise<{ items: FollowListItem[]; pagination?: any }> {
+  try {
+    const response = await apiCall<{ result: any; status?: boolean }>("/api/reposts", {
+      params: { tokenId, page, limit },
+    });
+    
+    const raw: any = (response && typeof response === 'object' && 'result' in response)
+      ? (response as any).result
+      : response;
+
+    let items: any[];
+    if (raw && typeof raw === 'object' && !Array.isArray(raw) && Array.isArray(raw.items)) {
+      items = raw.items.map((entry: any) => entry.user || entry.account || entry);
+    } else if (Array.isArray(raw)) {
+      items = raw.map((entry: any) => entry.user || entry.account || entry);
+    } else {
+      return { items: [] };
+    }
+
+    const normalized: FollowListItem[] = items.map((u: any) => ({
+      address: u.address || u.walletAddress || u.minter || '',
+      username: u.username || u.minterUsername || undefined,
+      displayName: u.displayName || u.display_name || u.minterDisplayName || undefined,
+      avatarImageUrl: u.avatarImageUrl || u.avatar_url || u.avatarUrl || undefined,
+      isVerified: u.isVerified || false,
+      isFollowing: u.isFollowing || false,
+      followsYou: u.followsYou || false,
+    }));
+
+    return { items: normalized.filter(i => !!i.address), pagination: raw?.pagination };
+  } catch {
+    return { items: [] };
+  }
+}
+
 export async function repostPost(tokenId: number): Promise<{ result: boolean }> {
   return apiCall<{ result: boolean }>("/api/repost", {
     method: "POST",
