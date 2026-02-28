@@ -7,13 +7,14 @@
  */
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation as useI18n } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2 } from 'lucide-react';
+import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2, Languages, RotateCcw } from 'lucide-react';
 import featuresLightbulb from '@/assets/features-lightbulb.png';
-import { TranslatableText } from '@/components/app/TranslatableText';
+import { TranslatableText, useTranslation as useContentTranslation } from '@/components/app/TranslatableText';
+import { PostMetadata } from '@/components/app/cards/PostMetadata';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -94,7 +95,8 @@ function FeatureCard({
   onVote: (featureId: string, voteType: 1 | -1, currentVote: number | undefined) => void;
   voteDisabled: boolean;
 }) {
-  const { t } = useTranslation();
+  const { t } = useI18n();
+  const { isTranslated, isLoading: isTranslateLoading, error: translateError, handleTranslate, handleShowOriginal } = useContentTranslation(feature.title + ' ' + feature.description);
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
   const commentInputRef = useRef<HTMLInputElement>(null);
@@ -174,7 +176,18 @@ function FeatureCard({
           </span>
         </div>
 
-        {/* Action Bar - same as PostCard */}
+        {/* Translate control */}
+        <PostMetadata
+          timestamp={feature.created_at}
+          translateControl={{
+            isTranslated,
+            isLoading: isTranslateLoading,
+            error: translateError,
+            onTranslate: handleTranslate,
+            onShowOriginal: handleShowOriginal,
+          }}
+        />
+
         <div className="pt-1">
           <ActionBar
             postId={feature.id}
@@ -319,7 +332,7 @@ function SubmitFeatureDrawer({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const { t } = useTranslation();
+  const { t } = useI18n();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<FeatureCategory>('new_feature');
@@ -470,7 +483,8 @@ function FeatureSkeletons() {
 // Shipped Feature Card (simpler, no voting)
 // ──────────────────────────────────────────────────
 function ShippedCard({ feature }: { feature: FeatureRequest }) {
-  const { t } = useTranslation();
+  const { t } = useI18n();
+  const { isTranslated: isShippedTranslated, isLoading: isShippedTranslateLoading, error: shippedTranslateError, handleTranslate: handleShippedTranslate, handleShowOriginal: handleShippedShowOriginal } = useContentTranslation(feature.title + ' ' + feature.description);
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -494,12 +508,22 @@ function ShippedCard({ feature }: { feature: FeatureRequest }) {
 
         <TranslatableText text={feature.description} className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`} as="p" />
 
+        {/* Translate control */}
+        <PostMetadata
+          timestamp={feature.updated_at}
+          translateControl={{
+            isTranslated: isShippedTranslated,
+            isLoading: isShippedTranslateLoading,
+            error: shippedTranslateError,
+            onTranslate: handleShippedTranslate,
+            onShowOriginal: handleShippedShowOriginal,
+          }}
+        />
+
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded-lg text-[10px] font-medium">
             {CATEGORY_LABELS[feature.category]}
           </span>
-          <span className="text-zinc-700 text-[11px]">·</span>
-          <span className="text-zinc-500 text-[11px]">{formatTimeAgo(feature.updated_at)}</span>
         </div>
       </div>
     </div>
@@ -534,7 +558,7 @@ function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () =
 // Main Page
 // ──────────────────────────────────────────────────
 export default function FeaturesPage() {
-  const { t } = useTranslation();
+  const { t } = useI18n();
   const { isAuthenticated, openLoginModal } = useAuth();
   const [activeTab, setActiveTab] = useState<PageTab>('requests');
   const [sort, setSort] = useState<FeatureSort>('most_voted');
