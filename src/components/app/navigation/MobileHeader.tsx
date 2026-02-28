@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
+import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import { useCallback } from 'react';
@@ -22,6 +23,8 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   const { isAuthenticated, user, openLoginModal } = useAuth();
   
   const { data: unreadCount } = useUnreadNotificationCount();
+  const { data: customUnread } = useCustomUnreadCount();
+  const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);
 
   // Coin balance
   const coinBalance = 0; // TODO: Get from user wallet
@@ -63,9 +66,9 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
             aria-label="Notifications"
           >
             <Bell className="w-[26px] h-[26px]" />
-            {unreadCount?.total !== undefined && unreadCount.total > 0 && (
+            {totalNotifUnread > 0 && (
               <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full">
-                {unreadCount.total > 99 ? '99+' : unreadCount.total}
+                {totalNotifUnread > 99 ? '99+' : totalNotifUnread}
               </span>
             )}
           </button>

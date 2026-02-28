@@ -11,6 +11,7 @@ import { AuthPrompt } from '../AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
 
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
+import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
 import { cn } from '@/lib/utils';
@@ -30,6 +31,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const { isCollapsed, toggleCollapse } = useSidebarCollapse();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const { data: unreadCount } = useUnreadNotificationCount();
+  const { data: customUnread } = useCustomUnreadCount();
+  const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);
 
   // Get balance from user or default to 0
   const coinBalance = 0; // TODO: Get from user wallet
@@ -142,7 +145,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   onClick={isProfileItem ? handleProfileClick : undefined}
                   avatarUrl={isProfileItem && isAuthenticated ? userAvatarUrl : undefined}
                   avatarFallback={isProfileItem && isAuthenticated ? displayName.charAt(0).toUpperCase() : undefined}
-                  notificationCount={isNotificationsItem ? unreadCount?.total : undefined}
+                  notificationCount={isNotificationsItem ? totalNotifUnread : undefined}
                   layoutId={isCollapsed ? 'sidebar-nav-collapsed' : 'sidebar-nav-expanded'}
                 />
                 {isAfterMessages && (
