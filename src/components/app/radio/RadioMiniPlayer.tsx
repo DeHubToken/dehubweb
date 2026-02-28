@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks';
 import { Slider } from '@/components/ui/slider';
 import { getCountryFlag } from '@/lib/api/radio-browser';
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { RadioFullscreenVisualizer } from './RadioFullscreenVisualizer';
 
 export function RadioMiniPlayer() {
@@ -32,7 +32,45 @@ export function RadioMiniPlayer() {
   const [showVolume, setShowVolume] = useState(false);
   const [showVisualizer, setShowVisualizer] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [pinchScale, setPinchScale] = useState(1);
   const isDragging = useRef(false);
+  const pinchStartDist = useRef<number | null>(null);
+  const pinchStartScale = useRef(1);
+  const barRef = useRef<HTMLDivElement>(null);
+
+  // Pinch-to-resize handlers
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      pinchStartDist.current = Math.hypot(dx, dy);
+      pinchStartScale.current = pinchScale;
+    }
+  }, [pinchScale]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (e.touches.length === 2 && pinchStartDist.current !== null) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const dist = Math.hypot(dx, dy);
+      const newScale = Math.max(0.3, Math.min(1, pinchStartScale.current * (dist / pinchStartDist.current)));
+      setPinchScale(newScale);
+    }
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (pinchStartDist.current !== null) {
+      pinchStartDist.current = null;
+      // If pinched small enough, minimize
+      if (pinchScale < 0.5) {
+        setIsMinimized(true);
+        setPinchScale(1);
+      } else {
+        // Snap back to full size
+        setPinchScale(1);
+      }
+    }
+  }, [pinchScale]);
   
   if (!currentStation) return null;
   
@@ -117,6 +155,7 @@ export function RadioMiniPlayer() {
     <>
       <AnimatePresence>
         <motion.div
+          ref={barRef}
           drag
           dragMomentum={false}
           dragElastic={0.1}
@@ -124,11 +163,14 @@ export function RadioMiniPlayer() {
           onDragStart={() => { isDragging.current = true; }}
           onDragEnd={() => { setTimeout(() => { isDragging.current = false; }, 50); }}
           initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
+          animate={{ y: 0, opacity: 1, scale: pinchScale }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
           className={cn(
-            'fixed bottom-16 md:bottom-[74px] lg:bottom-4 z-50 cursor-grab active:cursor-grabbing',
+            'fixed bottom-16 md:bottom-[74px] lg:bottom-4 z-50 cursor-grab active:cursor-grabbing origin-bottom-right',
             // Mobile: 95% width with side margins
             'left-[2.5%] right-[2.5%]',
             // Tablet/iPad: centered with offset
