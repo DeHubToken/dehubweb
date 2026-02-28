@@ -70,7 +70,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'buy', path: '/app/buy', component: BuyCoinsPage, skeleton: GenericPageSkeleton },
   { key: 'agents', path: '/app/agents', component: AgentsPage, skeleton: GenericPageSkeleton },
   { key: 'features', path: ['/app/features', '/features'], component: FeaturesPage, skeleton: FeaturesSkeleton },
-  { key: 'governance', path: '/app/governance', component: GovernancePage, skeleton: FeaturesSkeleton },
+  { key: 'governance', path: ['/app/governance', '/governance'], component: GovernancePage, skeleton: FeaturesSkeleton },
   { key: 'careers', path: ['/app/jobs', '/jobs'], component: CareersPage, skeleton: GenericPageSkeleton },
   { key: 'profile', path: '/app/profile', component: ProfilePage, skeleton: ProfileSkeleton },
 ];
