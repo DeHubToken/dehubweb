@@ -111,7 +111,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               {isCollapsed ? (
                 <img src={dehubLogoCompact} alt="dehub" className="h-[32px] w-auto" />
               ) : (
-                <img src={dehubLogo} alt="dehub" className="h-[50.8px] w-auto relative -top-[3px]" />
+                <img src={dehubLogo} alt="dehub" className="h-[40.6px] w-auto relative -top-[3px]" />
               )}
             </button>
           </div>
