@@ -121,6 +121,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     bountyCurrency,
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
+    repostCount: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
   };
 }
 
@@ -180,6 +181,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     bountyCurrency: streamInfo?.addBountyTokenSymbol || 'DHB',
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
+    repostCount: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
   };
 }
 
@@ -213,7 +215,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
     content: nft.description || nft.title || nft.name || '',
     stats: {
       comments: nft.commentCount || nft.comment_count || 0,
-      reposts: nft.totalReposts || nft.reposts || 0,
+      reposts: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
       likes: nft.totalVotes?.for || 0,
     },
     isQuotePost: !!nft.isQuotePost,
