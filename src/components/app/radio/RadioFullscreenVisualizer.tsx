@@ -9,7 +9,8 @@
 
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Minimize2, Palette, Radio, ChevronLeft, ChevronRight, Flame } from 'lucide-react';
+import { Minimize2, Palette, Radio, ChevronLeft, ChevronRight } from 'lucide-react';
+import lavaLampIcon from '@/assets/lava-lamp-icon.png';
 import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks';
 import { Slider } from '@/components/ui/slider';
@@ -356,7 +357,7 @@ export function RadioFullscreenVisualizer({
                       : "bg-black/40 backdrop-blur-[24px] saturate-[180%] border-white/10 text-zinc-400 hover:text-white"
                   )}
                 >
-                  <Flame className="w-4 h-4" />
+                  <img src={lavaLampIcon} alt="Lava mode" className="w-4 h-4 invert" />
                 </button>
 
                 <Palette className="w-4 h-4 text-zinc-400" />
