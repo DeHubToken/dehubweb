@@ -594,17 +594,20 @@ export default function PostInfoPage() {
           <section className="bg-white/5 rounded-xl p-4 border border-white/10">
             <h2 className="text-sm font-medium text-white/60 mb-3">Creator</h2>
             <div className="flex items-center gap-3">
-              {creatorAvatar ? (
-                <img 
-                  src={creatorAvatar} 
-                  alt={creatorName}
-                  className="w-12 h-12 rounded-xl object-cover bg-white/10"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
-                  <User className="w-6 h-6 text-white/60" />
-                </div>
-              )}
+              <div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center overflow-hidden shrink-0">
+                {creatorAvatar && creatorAvatar !== '/placeholder.svg' ? (
+                  <img 
+                    src={creatorAvatar} 
+                    alt={creatorName}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <span className="text-white font-medium">{(creatorName || '?').charAt(0).toUpperCase()}</span>
+                )}
+              </div>
               <div className="flex-1 min-w-0">
                 <p className="text-white font-medium truncate">{creatorName}</p>
                 <p className="text-sm font-mono text-white/60 truncate">
