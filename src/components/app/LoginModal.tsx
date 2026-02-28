@@ -262,7 +262,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       <WalletButton.Custom wallet="metamask">
         {({ ready, connect }) => (
           <Button
-            disabled={!ready || isConnecting}
+            disabled={isConnecting}
             onClick={() => handleWalletConnect('metamask', connect)}
             className={walletButtonClass}
           >
@@ -280,7 +280,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       <WalletButton.Custom wallet="phantom">
         {({ ready, connect }) => (
           <Button
-            disabled={!ready || isConnecting}
+            disabled={isConnecting}
             onClick={() => handleWalletConnect('phantom', connect)}
             className={walletButtonClass}
           >
@@ -298,7 +298,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       <WalletButton.Custom wallet={isMobileDevice() && !isWalletInAppBrowser() ? "walletconnect" : "trust"}>
         {({ ready, connect }) => (
           <Button
-            disabled={!ready || isConnecting}
+            disabled={isConnecting}
             onClick={() => handleWalletConnect('trust', connect)}
             className={walletButtonClass}
           >
@@ -316,7 +316,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       <WalletButton.Custom wallet={isMobileDevice() && !isWalletInAppBrowser() ? "walletconnect" : "rabby"}>
         {({ ready, connect }) => (
           <Button
-            disabled={!ready || isConnecting}
+            disabled={isConnecting}
             onClick={() => handleWalletConnect('rabby', connect)}
             className={walletButtonClass}
           >
