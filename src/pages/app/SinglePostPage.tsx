@@ -30,6 +30,7 @@ import { PostCard } from '@/components/app/cards/PostCard';
 import { LiveStreamCard } from '@/components/app/cards/LiveStreamCard';
 import { RelatedVideosFeed } from '@/components/app/feeds/RelatedVideosFeed';
 import { RelatedImagesFeed } from '@/components/app/feeds/RelatedImagesFeed';
+import { RelatedPostsFeed } from '@/components/app/feeds/RelatedPostsFeed';
 import { LivePostChat } from '@/components/app/cards/LivePostChat';
 import { PostAIChat } from '@/components/app/cards/PostAIChat';
 import { ReportModal } from '@/components/app/modals/ReportModal';
@@ -612,6 +613,7 @@ export default function SinglePostPage() {
   const contentType = post ? getContentType(post) : null;
   const isVideoPost = contentType === 'video';
   const isImagePost = contentType === 'image';
+  const isTextPost = contentType === 'post' || contentType === null;
   // Hide mobile header for video posts by adding a class to the body
   useEffect(() => {
     if (isVideoPost) {
@@ -791,6 +793,7 @@ export default function SinglePostPage() {
           {renderContent()}
           {/* Related Images Feed - below image posts */}
           {isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
+          {!isImagePost && !isVideoPost && id && <RelatedPostsFeed currentPostId={id} />}
         </div>
       </div>
     </div>
