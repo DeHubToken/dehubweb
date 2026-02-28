@@ -33,7 +33,7 @@ import { TranslatableText, useTranslation } from '../TranslatableText';
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, followUser, unfollowUser, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { incrementCommentCount } from '@/lib/comment-count-cache';
 
@@ -396,7 +396,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const { user, isAuthenticated, walletAddress } = useAuth();
   const isMobile = useIsMobile();
   
-  const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'search'>('replies');
+  const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'reposts' | 'search'>('replies');
   const { layerRef: commentsTabLayerRef, setRef: setCommentsTabRef, rect: commentsTabRect } = useTabIndicator(activeTab);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'recent' | 'oldest' | 'liked'>('recent');
@@ -429,6 +429,15 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     queryKey: ['comments', tokenId, walletAddress],
     queryFn: () => getNFTComments(tokenId, 0, 20, walletAddress?.toLowerCase()),
     staleTime: 30000,
+  });
+
+  // Fetch reposters when tab is active
+  const [repostLoadingFollows, setRepostLoadingFollows] = useState<Set<string>>(new Set());
+  const { data: repostersData, isLoading: isLoadingReposters } = useQuery({
+    queryKey: ['post-reposters', tokenId],
+    queryFn: () => getPostReposters(tokenId),
+    enabled: activeTab === 'reposts',
+    staleTime: 60000,
   });
 
   // Combine API comments with optimistic ones and apply like overrides
@@ -817,7 +826,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         <div ref={commentsTabLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <GlassIndicator rect={commentsTabRect} />
           <div className="relative z-20 flex gap-1">
-            {(['replies', 'quotes', 'search'] as const).map((tab) => (
+            {(['replies', 'quotes', 'reposts', 'search'] as const).map((tab) => (
               <button
                 key={tab}
                 ref={setCommentsTabRef(tab)}
@@ -826,7 +835,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                 className="relative z-40 px-4 py-2 flex items-center justify-center transition-all rounded-xl text-zinc-400 hover:text-zinc-200"
               >
                 <span className={cn("relative z-10", activeTab === tab && "text-white")}>
-                  {tab === 'replies' ? <MessageSquare className="w-5 h-5" /> : tab === 'quotes' ? <Quote className="w-5 h-5" /> : <Search className="w-5 h-5" />}
+                  {tab === 'replies' ? <MessageSquare className="w-5 h-5" /> : tab === 'quotes' ? <Quote className="w-5 h-5" /> : tab === 'reposts' ? <Repeat2 className="w-5 h-5" /> : <Search className="w-5 h-5" />}
                 </span>
               </button>
             ))}
@@ -936,6 +945,96 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
             >
               No quotes yet. Be the first!
             </motion.p>
+          </div>
+        )}
+
+        {/* Reposts Tab */}
+        {activeTab === 'reposts' && (
+          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
+            {isLoadingReposters ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+              </div>
+            ) : repostersData?.items && repostersData.items.length > 0 ? (
+              <div className="space-y-2">
+                {repostersData.items.map((user) => {
+                  const displayName = user.displayName || user.username || user.address?.slice(0, 8) || 'Unknown';
+                  const avatarUrl = user.avatarImageUrl
+                    ? (user.avatarImageUrl.startsWith('http') ? user.avatarImageUrl : `https://api.dehub.io/${user.avatarImageUrl}`)
+                    : undefined;
+                  return (
+                    <button
+                      key={user.address}
+                      onClick={() => {
+                        if (user.username) {
+                          navigate(`/${user.username.replace('@', '')}`);
+                        } else if (user.address) {
+                          navigate(`/app/profile?id=${user.address}`);
+                        }
+                      }}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
+                    >
+                      <Avatar className="w-10 h-10 rounded-lg">
+                        {avatarUrl ? <AvatarImage src={avatarUrl} alt={displayName} /> : null}
+                        <AvatarFallback className="bg-zinc-800 text-white rounded-lg text-sm">
+                          {displayName[0].toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <span className="font-semibold text-white text-sm truncate block">{displayName}</span>
+                        {user.username && (
+                          <span className="text-zinc-500 text-xs truncate block">@{user.username.replace('@', '')}</span>
+                        )}
+                      </div>
+                      {user.address?.toLowerCase() !== walletAddress?.toLowerCase() && (
+                        <button
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            if (!walletAddress) return;
+                            setRepostLoadingFollows(prev => new Set(prev).add(user.address));
+                            try {
+                              if (user.isFollowing) {
+                                await unfollowUser(user.address);
+                              } else {
+                                await followUser(user.address);
+                              }
+                              queryClient.invalidateQueries({ queryKey: ['post-reposters', tokenId] });
+                            } catch {
+                              toast.error('Action failed');
+                            } finally {
+                              setRepostLoadingFollows(prev => {
+                                const next = new Set(prev);
+                                next.delete(user.address);
+                                return next;
+                              });
+                            }
+                          }}
+                          disabled={repostLoadingFollows.has(user.address)}
+                          className={cn(
+                            "shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                            user.isFollowing
+                              ? "bg-zinc-800 text-white hover:bg-red-500/20 hover:text-red-400"
+                              : "bg-white/10 text-white hover:bg-white/20"
+                          )}
+                        >
+                          {repostLoadingFollows.has(user.address) ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          ) : user.isFollowing ? 'Following ✓' : 'Follow'}
+                        </button>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
+              >
+                No reposts yet
+              </motion.p>
+            )}
           </div>
         )}
 
