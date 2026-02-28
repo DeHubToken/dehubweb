@@ -46,15 +46,15 @@ export function FundActions() {
   };
 
   return (
-    <div className="flex gap-2">
+    <>
       {/* Add Funds Button */}
-      <Button variant="glass" className="text-sm h-9 px-2.5 sm:px-4 rounded-lg" onClick={() => setAddFundsOpen(true)}>
+      <Button variant="glass" className="flex-1 text-sm h-9 px-2.5 sm:px-4 rounded-xl" onClick={() => setAddFundsOpen(true)}>
         <ArrowDownToLine className="w-3.5 h-3.5 sm:mr-1.5" />
         <span className="hidden sm:inline">{t('commandCentre.addFunds')}</span>
       </Button>
 
       {/* Withdraw Button */}
-      <Button variant="glass" className="text-sm h-9 px-2.5 sm:px-4 rounded-lg" onClick={() => setWithdrawOpen(true)}>
+      <Button variant="glass" className="flex-1 text-sm h-9 px-2.5 sm:px-4 rounded-xl" onClick={() => setWithdrawOpen(true)}>
         <ArrowUpFromLine className="w-3.5 h-3.5 sm:mr-1.5" />
         <span className="hidden sm:inline">{t('commandCentre.withdraw')}</span>
       </Button>
@@ -148,6 +148,6 @@ export function FundActions() {
           </div>
         </DrawerContent>
       </Drawer>
-    </div>
+    </>
   );
 }
