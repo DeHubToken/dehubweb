@@ -11,7 +11,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { Play, ChevronRight, Heart, Eye } from 'lucide-react';
+import { Play, ChevronRight, ThumbsUp, Eye } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { ShortsViewer } from './ShortsViewer';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -114,7 +114,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                     <span className="text-white text-xs font-medium">{short.views || '0'}</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Heart className="w-3 h-3 text-white" />
+                    <ThumbsUp className="w-3 h-3 text-white" />
                     <span className="text-white text-xs font-medium">{short.likes}</span>
                   </div>
                 </div>

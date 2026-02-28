@@ -13,7 +13,7 @@ import {
   Camera,
   Link2,
   Mail,
-  Heart,
+  ThumbsUp,
   MessageSquare,
   Users,
   Moon,
@@ -669,7 +669,7 @@ function NotificationSettings() {
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.activity')}</h3>
         <div className="space-y-4">
           <SettingToggle
-            icon={Heart}
+            icon={ThumbsUp}
             title={t('settings.likes')}
             description={t('settings.likesDesc')}
             defaultChecked={pushPrefs?.likes ?? true}

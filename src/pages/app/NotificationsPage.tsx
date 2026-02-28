@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useTranslation } from 'react-i18next';
-import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star } from 'lucide-react';
+import { Settings, ThumbsUp, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -119,7 +119,7 @@ type NotificationTypeFilter = 'all' | 'likes' | 'follows' | 'comments' | 'repost
 
 const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.ElementType }[] = [
   { labelKey: 'notifications.all', value: 'all', icon: Bell },
-  { labelKey: 'notifications.likes', value: 'likes', icon: Heart },
+  { labelKey: 'notifications.likes', value: 'likes', icon: ThumbsUp },
   { labelKey: 'notifications.follows', value: 'follows', icon: UserPlus },
   { labelKey: 'notifications.comments', value: 'comments', icon: MessageCircle },
   { labelKey: 'notifications.reposts', value: 'reposts', icon: Repeat2 },
@@ -143,12 +143,12 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
 function getNotificationIcon(type: string) {
   switch (type) {
     case 'like':
-      return <Heart className="w-4 h-4 text-pink-500" />;
+      return <ThumbsUp className="w-4 h-4 text-pink-500" />;
     case 'comment':
     case 'comment_reply':
       return <MessageCircle className="w-4 h-4 text-blue-400" />;
     case 'comment_like':
-      return <Heart className="w-4 h-4 text-pink-400" />;
+      return <ThumbsUp className="w-4 h-4 text-pink-400" />;
     case 'tip':
       return <DollarSign className="w-4 h-4 text-yellow-500" />;
     case 'subscription':
@@ -671,7 +671,7 @@ export default function NotificationsPage() {
                       <div className="flex items-center justify-between p-4 rounded-xl bg-white/10">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                            <Heart className="w-5 h-5 text-white" />
+                            <ThumbsUp className="w-5 h-5 text-white" />
                           </div>
                           <div>
                             <p className="text-white font-medium">{t('notifications.likes')}</p>
