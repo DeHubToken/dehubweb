@@ -122,7 +122,7 @@ export function RadioMiniPlayer() {
             'md:left-0 md:right-[3px] md:mx-auto md:max-w-[446px]',
             // Desktop: fixed width on right side
             'lg:left-auto lg:right-4 lg:mx-0 lg:w-[400px] lg:max-w-none',
-            'bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10',
+            'bg-black/30 backdrop-blur-[40px] saturate-[180%] border border-white/[0.08]',
             'rounded-2xl p-3 shadow-2xl'
           )}
         >
