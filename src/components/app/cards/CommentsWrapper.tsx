@@ -1,8 +1,8 @@
 /**
  * CommentsWrapper
  * ===============
- * Mobile: non-modal drawer (no overlay blur, video stays visible)
- * Desktop: inline expandable section below the post card
+ * Mobile/Tablet (< lg): non-modal drawer (no overlay blur, video stays visible)
+ * Desktop (lg+): inline expandable section below the post card
  * Collapsed sidebar (multi-column): compact height to fit smaller cards
  */
 
@@ -11,6 +11,7 @@ import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { CommentsSection } from './CommentsSection';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
+import { useState, useEffect } from 'react';
 
 interface CommentsWrapperProps {
   open: boolean;
@@ -18,11 +19,22 @@ interface CommentsWrapperProps {
   tokenId: string;
 }
 
+function useIsTabletOrMobile() {
+  const [isTabletOrMobile, setIsTabletOrMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsTabletOrMobile(window.innerWidth < 1024);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+  return isTabletOrMobile;
+}
+
 export function CommentsWrapper({ open, onOpenChange, tokenId }: CommentsWrapperProps) {
-  const isMobile = useIsMobile();
+  const isTabletOrMobile = useIsTabletOrMobile();
   const { isCollapsed } = useSidebarCollapse();
 
-  if (isMobile) {
+  if (isTabletOrMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange} modal={false}>
         <DrawerContent glass hideHandle noOverlay className="max-h-[75vh] flex flex-col overflow-hidden !bg-black/60 !backdrop-blur-[24px] border border-white/[0.08]">
