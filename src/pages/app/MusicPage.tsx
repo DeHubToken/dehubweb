@@ -335,7 +335,7 @@ export default function MusicPage() {
   return (
     <div className="min-h-screen">
       {/* Tab Navigation */}
-      <div className="sticky top-11 lg:top-0 bg-black z-50 p-2 sm:p-3">
+      <div className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
         <div className="bg-zinc-900 rounded-2xl p-2 overflow-visible">
           <div ref={musicTabLayerRef} className="relative overflow-visible">
             <GlassIndicator rect={musicTabRect} />
