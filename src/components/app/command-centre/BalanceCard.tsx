@@ -1,5 +1,6 @@
-import { Loader2 } from 'lucide-react';
+import { Loader2, Wallet } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { FundActions } from './FundActions';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -93,14 +94,18 @@ export function BalanceCard() {
         </div>
       </div>
 
-      {/* Wallet button */}
-      <Button
-        variant="glass"
-        className="w-full mt-4 rounded-xl"
-        onClick={() => navigate('/app/wallet', { state: { from: 'command-centre' } })}
-      >
-        {t('commandCentre.fullWallet')}
-      </Button>
+      {/* Action buttons */}
+      <div className="flex gap-2 mt-4">
+        <FundActions />
+        <Button
+          variant="glass"
+          className="flex-1 rounded-xl"
+          onClick={() => navigate('/app/wallet', { state: { from: 'command-centre' } })}
+        >
+          <Wallet className="w-3.5 h-3.5 mr-1.5" />
+          {t('commandCentre.fullWallet')}
+        </Button>
+      </div>
     </div>
   );
 }

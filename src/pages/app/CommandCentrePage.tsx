@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { OverviewTab } from '@/components/app/command-centre/OverviewTab';
-import { FundActions } from '@/components/app/command-centre/FundActions';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 
@@ -16,7 +15,6 @@ export default function CommandCentrePage() {
     <div className="px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 min-h-screen">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-[1.1rem] sm:text-[1.32rem] font-bold text-white">{t('commandCentre.title')}</h1>
-        <FundActions />
       </div>
 
       <OverviewTab />
