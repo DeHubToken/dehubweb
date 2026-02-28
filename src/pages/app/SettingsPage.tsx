@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -65,8 +65,9 @@ import { AuthGate } from '@/components/app/AuthGate';
 import { Search } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser } from '@/lib/api/dehub';
-import { getBlockListPaginated, unblockUser as apiUnblockUser, type BlockedUser } from '@/lib/api/dehub';
+import { getBlockListPaginated, unblockUser as apiUnblockUser, type BlockedUser, checkUsernameAvailability } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
@@ -239,6 +240,9 @@ function ProfileSettings() {
   const [avatarFile, setAvatarFile] = useState<File | undefined>();
   const [coverFile, setCoverFile] = useState<File | undefined>();
   const [isLoading, setIsLoading] = useState(true);
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
+  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
+  const debouncedUsername = useDebouncedValue(username, 300);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
   
@@ -304,6 +308,36 @@ function ProfileSettings() {
     loadProfile();
   }, [authUser?.address]);
   
+  // Check username availability
+  useEffect(() => {
+    if (!debouncedUsername || debouncedUsername === originalValues.username) {
+      setUsernameAvailable(null);
+      setIsCheckingUsername(false);
+      return;
+    }
+    if (debouncedUsername.length < 3) {
+      setUsernameAvailable(null);
+      setIsCheckingUsername(false);
+      return;
+    }
+    let cancelled = false;
+    setIsCheckingUsername(true);
+    checkUsernameAvailability(debouncedUsername)
+      .then((res) => {
+        if (!cancelled) {
+          setUsernameAvailable(res.available);
+          setIsCheckingUsername(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setUsernameAvailable(null);
+          setIsCheckingUsername(false);
+        }
+      });
+    return () => { cancelled = true; };
+  }, [debouncedUsername, originalValues.username]);
+
   const hasChanges = 
     displayName !== originalValues.displayName ||
     username !== originalValues.username ||
@@ -317,6 +351,8 @@ function ProfileSettings() {
     facebookLink !== originalValues.facebookLink ||
     !!avatarFile ||
     !!coverFile;
+
+  const canSave = hasChanges && !isCheckingUsername && usernameAvailable !== false;
   
   const updateMutation = useMutation({
     mutationFn: async (data: UpdateProfileData) => {
@@ -376,6 +412,14 @@ function ProfileSettings() {
   };
   
   const handleSave = () => {
+    if (usernameAvailable === false) {
+      toast.error(t('settings.usernameTaken') || 'Username is already taken');
+      return;
+    }
+    if (isCheckingUsername) {
+      toast.error('Please wait, checking username availability...');
+      return;
+    }
     const data: UpdateProfileData = {};
     
     if (displayName) data.displayName = displayName;
@@ -412,7 +456,7 @@ function ProfileSettings() {
         {hasChanges && (
           <Button
             onClick={handleSave}
-            disabled={updateMutation.isPending}
+            disabled={updateMutation.isPending || !canSave}
             className="bg-white/10 backdrop-blur-md border border-white/10 text-white font-semibold hover:bg-white/15 hover:shadow-[0_0_15px_rgba(255,255,255,0.08)] rounded-xl transition-all duration-200"
           >
             {updateMutation.isPending ? (
@@ -491,9 +535,33 @@ function ProfileSettings() {
             placeholder={t('settings.usernamePlaceholder')}
             value={username}
             onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-            className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
+            className={`bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 ${
+              usernameAvailable === false ? 'border-red-500' : usernameAvailable === true ? 'border-green-500' : ''
+            }`}
           />
-          <p className="text-zinc-500 text-xs mt-1">{t('settings.usernameHint')}</p>
+          <div className="mt-1 flex items-center gap-1 min-h-[18px]">
+            {isCheckingUsername && (
+              <>
+                <Loader2 className="w-3 h-3 text-zinc-400 animate-spin" />
+                <span className="text-zinc-400 text-xs">Checking...</span>
+              </>
+            )}
+            {!isCheckingUsername && usernameAvailable === true && username !== originalValues.username && (
+              <>
+                <Check className="w-3 h-3 text-green-500" />
+                <span className="text-green-500 text-xs">Available</span>
+              </>
+            )}
+            {!isCheckingUsername && usernameAvailable === false && (
+              <>
+                <X className="w-3 h-3 text-red-500" />
+                <span className="text-red-500 text-xs">Username is already taken</span>
+              </>
+            )}
+            {!isCheckingUsername && usernameAvailable === null && (
+              <span className="text-zinc-500 text-xs">{t('settings.usernameHint')}</span>
+            )}
+          </div>
         </div>
       </div>
 
