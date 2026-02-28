@@ -469,10 +469,10 @@ async function computeSnapshotDelta(
       });
 
     // For month/year holdings with hybrid on-chain: show both gains AND losses like daily/weekly
-    const isHybridHoldings = useHybridOnChain && hybridPastMap;
+    const isBidirectional = useHybridOnChain || useOnChain;
     const sorted = withDeltas
-      .filter((e) => e.delta !== undefined && (isHybridHoldings ? e.delta !== 0 : e.delta > 0))
-      .sort((a, b) => isHybridHoldings
+      .filter((e) => e.delta !== undefined && (isBidirectional ? e.delta !== 0 : e.delta > 0))
+      .sort((a, b) => isBidirectional
         ? Math.abs(b.delta ?? 0) - Math.abs(a.delta ?? 0)
         : (b.delta ?? 0) - (a.delta ?? 0)
       );
@@ -480,7 +480,7 @@ async function computeSnapshotDelta(
     const periodData = {
       result: { byWalletBalance: sorted },
       hasHistoricalData: pastMap.size > 0 || !!hybridPastMap,
-      ...(isHybridHoldings ? { hybridOnChainMode: true } : {}),
+      ...(isBidirectional ? { hybridOnChainMode: true } : {}),
     };
 
     const { error } = await supabase.from("leaderboard_cache").upsert(
@@ -492,7 +492,7 @@ async function computeSnapshotDelta(
       console.error(`Error caching ${sortMode}/${period}:`, error);
       return { sort: sortMode, period, success: false, error: error.message };
     }
-    if (isHybridHoldings) {
+    if (isBidirectional) {
       const gains = sorted.filter(e => (e.delta ?? 0) > 0).length;
       const losses = sorted.filter(e => (e.delta ?? 0) < 0).length;
       console.log(`[delta] ${sortMode}/${period}: ${sorted.length} entries (${gains} gains, ${losses} losses) — hybrid on-chain mode`);
