@@ -203,19 +203,19 @@ export default function FullWalletPage() {
       </div>
 
       {/* Action buttons — horizontally scrollable */}
-      <div className={cn("flex gap-2 mb-4 overflow-x-auto scrollbar-hide pb-1", isCollapsed && "flex-wrap")}>
-        <Button variant="glass" className={cn("flex-col h-auto py-3 gap-1.5 rounded-xl min-w-[72px] flex-shrink-0", isCollapsed && "flex-1")} onClick={() => setReceiveDialogOpen(true)}>
+      <div className="flex gap-2 mb-4 pb-1">
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => setReceiveDialogOpen(true)}>
           <ArrowDownToLine className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap">{t('wallet.receive')}</span>
         </Button>
-        <Button variant="glass" className={cn("flex-col h-auto py-3 gap-1.5 rounded-xl min-w-[72px] flex-shrink-0", isCollapsed && "flex-1")} onClick={() => {
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => {
           if (allWithBalance.length > 0) handleSend(allWithBalance[0]);
           else toast.info(t('wallet.noTokensToSend'));
         }}>
           <Send className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap">{t('wallet.send')}</span>
         </Button>
-        <Button variant="glass" className={cn("flex-col h-auto py-3 gap-1.5 rounded-xl min-w-[72px] flex-shrink-0", isCollapsed && "flex-1")} onClick={async () => {
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={async () => {
           try {
             const res = await createOnrampSession({
               walletAddress: walletAddress || '',
@@ -236,15 +236,15 @@ export default function FullWalletPage() {
           <ShoppingCart className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap">{t('wallet.buy')}</span>
         </Button>
-        <Button variant="glass" className={cn("flex-col h-auto py-3 gap-1.5 rounded-xl min-w-[72px] flex-shrink-0", isCollapsed && "flex-1")} onClick={() => toast.info(t('wallet.stakeComingSoon'))}>
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => toast.info(t('wallet.stakeComingSoon'))}>
           <Lock className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap">{t('wallet.stake')}</span>
         </Button>
-        <Button variant="glass" className={cn("flex-col h-auto py-3 gap-1.5 rounded-xl min-w-[72px] flex-shrink-0", isCollapsed && "flex-1")} onClick={() => toast.info(t('wallet.cashOutComingSoon'))}>
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => toast.info(t('wallet.cashOutComingSoon'))}>
           <Minus className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap">{t('wallet.cashOut')}</span>
         </Button>
-        <Button variant="glass" className={cn("flex-col h-auto py-3 gap-1.5 rounded-xl min-w-[72px] flex-shrink-0", isCollapsed && "flex-1")} onClick={() => setImportDialogOpen(true)}>
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => setImportDialogOpen(true)}>
           <Plus className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap">{t('wallet.import')}</span>
         </Button>
