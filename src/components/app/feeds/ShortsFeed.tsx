@@ -580,12 +580,14 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   onClick={() => handleShortClick(index)}
                   className="relative aspect-[9/16] bg-zinc-900 rounded-xl overflow-hidden cursor-pointer group"
                 >
-                  {/* Thumbnail / Autoplay for first 3 */}
-                  {index < 3 && short.videoUrl ? (
+                  {/* Autoplay when 70% visible, stops when <70% visible */}
+                  {short.videoUrl ? (
                     <AutoplayVideo
                       src={short.videoUrl}
                       poster={short.thumbnail}
                       className="w-full h-full object-cover"
+                      threshold={0.7}
+                      rootMargin="200px"
                     />
                   ) : (
                     <img
