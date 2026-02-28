@@ -10,6 +10,22 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { getBadgeName, BADGE_LEVELS } from '@/lib/staking-badges';
+import { Interface } from 'ethers';
+import {
+  writeContractAA,
+  getWalletAddress,
+  getERC20Balance,
+  switchChain,
+  parseTxError,
+} from '@/lib/contracts/aa-utils';
+import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+
+const GOVERNANCE_VOTE_FEE = 2000; // DHB per vote
+const GOVERNANCE_TREASURY = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
+
+const erc20TransferInterface = new Interface([
+  'function transfer(address to, uint256 amount) returns (bool)',
+]);
 
 export type GovernanceSort = 'most_voted' | 'newest';
 export type GovernanceStatus = 'open' | 'completed' | 'passed' | 'rejected';
@@ -210,7 +226,34 @@ export function useVoteGovernanceProposal() {
         if (error) throw error;
         return { action: 'removed' as const };
       } else {
-        // Upsert vote with weight
+        // ── Charge 2,000 DHB vote fee ──────────────────────────
+        const chainConfig = getChainConfig(BASE_CHAIN_ID);
+        await switchChain(BASE_CHAIN_ID);
+        const signerAddress = await getWalletAddress();
+        const amountWei = toWei(GOVERNANCE_VOTE_FEE, DHB_TOKEN.decimals);
+        const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+
+        if (balance < amountWei) {
+          const balanceHuman = Number(balance) / 1e18;
+          throw new Error(
+            `Insufficient DHB balance. Need ${GOVERNANCE_VOTE_FEE.toLocaleString()} DHB but have ${balanceHuman.toFixed(2)} DHB`
+          );
+        }
+
+        toast.loading('Processing vote fee...', { id: 'governance-vote-fee' });
+
+        const txResult = await writeContractAA(
+          chainConfig.dhbToken,
+          erc20TransferInterface,
+          'transfer',
+          [GOVERNANCE_TREASURY, amountWei],
+          { context: 'Governance vote fee', chainId: BASE_CHAIN_ID }
+        );
+
+        await txResult.wait(1);
+        toast.dismiss('governance-vote-fee');
+
+        // ── Record vote in DB ──────────────────────────────────
         const { error } = await supabase
           .from('governance_votes')
           .upsert(
@@ -268,7 +311,8 @@ export function useVoteGovernanceProposal() {
 
       return { previousRequests, previousVotes };
     },
-    onError: (_err, _vars, context) => {
+    onError: (err: any, _vars, context) => {
+      toast.dismiss('governance-vote-fee');
       if (context?.previousRequests) {
         for (const [key, data] of context.previousRequests) {
           queryClient.setQueryData(key, data);
@@ -277,7 +321,8 @@ export function useVoteGovernanceProposal() {
       if (context?.previousVotes) {
         queryClient.setQueryData(['governance-votes', walletAddress], context.previousVotes);
       }
-      toast.error('Vote failed. You must hold DHB tokens to vote.');
+      const msg = parseTxError(err) || err?.message || 'Vote failed. You must hold DHB tokens to vote.';
+      toast.error(msg);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['governance-proposals'] });
