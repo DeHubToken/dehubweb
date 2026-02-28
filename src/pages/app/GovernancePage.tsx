@@ -41,29 +41,19 @@ import {
 import { useGovernanceComments, useSubmitGovernanceComment, useDeleteGovernanceComment } from '@/hooks/use-governance-comments';
 import { z } from 'zod';
 
-const proposalSchema = z.object({
-  title: z.string().trim().min(1, 'Title is required').max(100, 'Title must be under 100 characters'),
-  description: z.string().trim().min(1, 'Description is required').max(1000, 'Description must be under 1,000 characters'),
-});
-
 type PageTab = 'proposals' | 'passed' | 'rejected';
 
-const SORTS: { id: GovernanceSort; label: string }[] = [
-  { id: 'most_voted', label: 'Most Voted' },
-  { id: 'newest', label: 'Newest' },
-];
-
-function formatTimeAgo(dateStr: string): string {
+function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
-  if (seconds < 60) return 'just now';
+  if (seconds < 60) return t('governance.justNow');
   const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 60) return t('governance.minutesAgo', { count: minutes });
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return t('governance.hoursAgo', { count: hours });
   const days = Math.floor(hours / 24);
-  if (days < 30) return `${days}d ago`;
+  if (days < 30) return t('governance.daysAgo', { count: days });
   const months = Math.floor(days / 30);
-  return `${months}mo ago`;
+  return t('governance.monthsAgo', { count: months });
 }
 
 // ──────────────────────────────────────────────────
@@ -84,6 +74,7 @@ function GovernanceCard({
   userBadgeBalance: number | undefined;
   username: string | null | undefined;
 }) {
+  const { t } = useTranslation();
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
   const commentInputRef = useRef<HTMLInputElement>(null);
@@ -148,7 +139,7 @@ function GovernanceCard({
         contentType="post"
         creatorId={proposal.author_wallet_address}
         creatorUsername={proposal.author_username || undefined}
-        timestamp={formatTimeAgo(proposal.created_at)}
+        timestamp={formatTimeAgo(proposal.created_at, t)}
       />
 
       <div className="pt-1 space-y-2">
@@ -158,10 +149,10 @@ function GovernanceCard({
         {/* Governance badge + vote weight indicator */}
         <div className="flex items-center gap-2">
           <span className="text-zinc-300 text-[10px] font-medium px-2 py-0.5 rounded-lg bg-gradient-to-br from-white/15 via-white/8 to-white/3 backdrop-blur-xl border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)]">
-            Governance
+            {t('governance.governanceBadge')}
           </span>
           <span className="text-zinc-500 text-[10px]">
-            Weighted: {proposal.like_count} for · {proposal.dislike_count} against
+            {t('governance.weightedVotes', { for: proposal.like_count, against: proposal.dislike_count })}
           </span>
         </div>
 
@@ -219,7 +210,7 @@ function GovernanceCard({
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
                               <span className="text-zinc-400 text-[11px] font-medium">{commentName}</span>
-                              <span className="text-zinc-600 text-[10px]">{formatTimeAgo(comment.created_at)}</span>
+                              <span className="text-zinc-600 text-[10px]">{formatTimeAgo(comment.created_at, t)}</span>
                               {isOwn && (
                                 <button
                                   type="button"
@@ -237,7 +228,7 @@ function GovernanceCard({
                     })}
                   </div>
                 ) : (
-                  <p className="text-zinc-600 text-xs text-center py-2 mb-2">No comments yet</p>
+                  <p className="text-zinc-600 text-xs text-center py-2 mb-2">{t('governance.noCommentsYet')}</p>
                 )}
 
                 <form onSubmit={handleSubmitComment} className="relative flex gap-2">
@@ -264,7 +255,7 @@ function GovernanceCard({
                         }
                       }
                     }}
-                    placeholder="Add a comment..."
+                    placeholder={t('governance.addComment')}
                     maxLength={500}
                     className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs h-8"
                   />
@@ -308,11 +299,17 @@ function SubmitProposalDrawer({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t } = useTranslation();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const submitMutation = useSubmitGovernanceProposal();
+
+  const proposalSchema = useMemo(() => z.object({
+    title: z.string().trim().min(1, t('governance.titleRequired')).max(100, t('governance.titleMaxLength')),
+    description: z.string().trim().min(1, t('governance.descriptionRequired')).max(1000, t('governance.descriptionMaxLength')),
+  }), [t]);
 
   const handleSubmit = () => {
     const result = proposalSchema.safeParse({ title, description });
@@ -341,7 +338,7 @@ function SubmitProposalDrawer({
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[85vh]">
         <DrawerHeader className="relative">
-          <DrawerTitle className="text-white text-lg font-bold">Submit Governance Proposal</DrawerTitle>
+          <DrawerTitle className="text-white text-lg font-bold">{t('governance.submitProposal')}</DrawerTitle>
           <button
             type="button"
             onClick={() => onOpenChange(false)}
@@ -353,11 +350,11 @@ function SubmitProposalDrawer({
 
         <div className="px-4 pb-6 space-y-4">
           <div>
-            <label className="text-zinc-400 text-xs font-medium mb-1 block">Title</label>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">{t('governance.titleLabel')}</label>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Increase staking rewards by 10%"
+              placeholder={t('governance.titlePlaceholder')}
               maxLength={100}
               className="bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl"
             />
@@ -368,11 +365,11 @@ function SubmitProposalDrawer({
           </div>
 
           <div>
-            <label className="text-zinc-400 text-xs font-medium mb-1 block">Description</label>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">{t('governance.descriptionLabel')}</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe your proposal in detail..."
+              placeholder={t('governance.descriptionPlaceholder')}
               maxLength={1000}
               rows={4}
               className="w-full bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
@@ -394,7 +391,7 @@ function SubmitProposalDrawer({
             ) : (
               <>
                 <ShieldCheck className="w-4 h-4" />
-                Submit Proposal
+                {t('governance.submitProposalBtn')}
               </>
             )}
           </Button>
@@ -432,6 +429,7 @@ function GovernanceSkeletons() {
 // Completed Proposal Card
 // ──────────────────────────────────────────────────
 function CompletedCard({ proposal }: { proposal: GovernanceProposal }) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const isPassed = proposal.status === 'passed' || (proposal.status === 'completed' && proposal.like_count > proposal.dislike_count);
 
@@ -455,16 +453,16 @@ function CompletedCard({ proposal }: { proposal: GovernanceProposal }) {
           <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 ${
             isPassed ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'
           }`}>
-            {isPassed ? 'Passed' : 'Rejected'}
+            {isPassed ? t('governance.passed') : t('governance.rejected')}
           </span>
         </div>
 
         <TranslatableText text={proposal.description} className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`} as="p" />
 
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-zinc-500 text-[11px]">{formatTimeAgo(proposal.updated_at)}</span>
+          <span className="text-zinc-500 text-[11px]">{formatTimeAgo(proposal.updated_at, t)}</span>
           <span className="text-zinc-700 text-[11px]">·</span>
-          <span className="text-zinc-500 text-[11px]">{proposal.like_count} weighted votes for</span>
+          <span className="text-zinc-500 text-[11px]">{t('governance.weightedVotesFor', { count: proposal.like_count })}</span>
         </div>
       </div>
     </div>
@@ -499,6 +497,7 @@ function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () =
 // Vote Weight Info Panel
 // ──────────────────────────────────────────────────
 function VoteWeightInfo({ badgeBalance, username }: { badgeBalance: number | undefined; username: string | null | undefined }) {
+  const { t } = useTranslation();
   const { weight, badgeName } = getVoteWeight(badgeBalance, username);
   const badgeImageUrl = getBadgeUrl(badgeBalance, username);
   const [showTiers, setShowTiers] = useState(false);
@@ -510,9 +509,9 @@ function VoteWeightInfo({ badgeBalance, username }: { badgeBalance: number | und
           {badgeImageUrl && <img src={badgeImageUrl} alt={badgeName || ''} className="w-5 h-5" />}
           <span className="text-zinc-300 text-xs font-medium">
             {weight > 0 ? (
-              <>Your vote weight: <span className="text-white font-bold">{weight}×</span> ({badgeName})</>
+              <>{t('governance.yourVoteWeight')} <span className="text-white font-bold">{weight}×</span> ({badgeName})</>
             ) : (
-              <span className="text-zinc-500">Hold DHB tokens to vote</span>
+              <span className="text-zinc-500">{t('governance.holdTokensToVote')}</span>
             )}
           </span>
         </div>
@@ -555,6 +554,7 @@ function VoteWeightInfo({ badgeBalance, username }: { badgeBalance: number | und
 // Main Page
 // ──────────────────────────────────────────────────
 export default function GovernancePage() {
+  const { t } = useTranslation();
   const { isAuthenticated, openLoginModal, user } = useAuth();
   const [activeTab, setActiveTab] = useState<PageTab>('proposals');
   const [sort, setSort] = useState<GovernanceSort>('most_voted');
@@ -562,6 +562,11 @@ export default function GovernancePage() {
   const [searchInput, setSearchInput] = useState('');
   const search = useDebouncedValue(searchInput, 300);
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const SORTS: { id: GovernanceSort; label: string }[] = useMemo(() => [
+    { id: 'most_voted', label: t('governance.mostVoted') },
+    { id: 'newest', label: t('governance.newest') },
+  ], [t]);
 
   const { data: proposalsData, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGovernanceProposals(sort, search);
   const proposals = useMemo(() => proposalsData?.pages.flat() ?? [], [proposalsData]);
@@ -581,12 +586,12 @@ export default function GovernancePage() {
       }
       const { weight, badgeName } = getVoteWeight(userBadgeBalance, username);
       if (weight === 0) {
-        toast.error('You must hold DHB tokens to vote on governance proposals.');
+        toast.error(t('governance.mustHoldTokens'));
         return;
       }
       voteMutation.mutate({ proposalId, voteType, currentVote, voteWeight: weight, badgeName });
     },
-    [isAuthenticated, openLoginModal, voteMutation, userBadgeBalance, username]
+    [isAuthenticated, openLoginModal, voteMutation, userBadgeBalance, username, t]
   );
 
   const handleSubmitClick = () => {
@@ -613,8 +618,8 @@ export default function GovernancePage() {
               <ShieldCheck className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white">Governance</h1>
-              <p className="text-zinc-500 text-sm">{totalCount} {totalCount === 1 ? 'proposal' : 'proposals'} submitted</p>
+              <h1 className="text-xl font-bold text-white">{t('governance.title')}</h1>
+              <p className="text-zinc-500 text-sm">{t('governance.proposalCount', { count: totalCount })}</p>
             </div>
           </div>
           <Button
@@ -624,7 +629,7 @@ export default function GovernancePage() {
             size="sm"
           >
             <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">Propose</span>
+            <span className="hidden sm:inline">{t('governance.propose')}</span>
           </Button>
         </div>
 
@@ -637,7 +642,7 @@ export default function GovernancePage() {
         <div className="relative mb-3">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
-            placeholder="Search proposals..."
+            placeholder={t('governance.searchProposals')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
@@ -658,7 +663,7 @@ export default function GovernancePage() {
               activeTab === 'proposals' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
-            Proposals
+            {t('governance.proposals')}
           </button>
           <button
             type="button"
@@ -668,7 +673,7 @@ export default function GovernancePage() {
             }`}
           >
             <CheckCircle2 className="w-3.5 h-3.5" />
-            Passed
+            {t('governance.passed')}
             {passedCount > 0 && (
               <span className="text-[10px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded-md font-semibold">
                 {passedCount}
@@ -683,7 +688,7 @@ export default function GovernancePage() {
             }`}
           >
             <X className="w-3.5 h-3.5" />
-            Rejected
+            {t('governance.rejected')}
             {rejectedCount > 0 && (
               <span className="text-[10px] bg-red-500/15 text-red-400 px-1.5 py-0.5 rounded-md font-semibold">
                 {rejectedCount}
@@ -745,15 +750,15 @@ export default function GovernancePage() {
               <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
                 <ShieldCheck className="w-8 h-8 text-zinc-600" />
               </div>
-              <h3 className="text-white font-semibold mb-1">No proposals yet</h3>
-              <p className="text-zinc-500 text-sm mb-4">Be the first to submit a governance proposal</p>
+              <h3 className="text-white font-semibold mb-1">{t('governance.noProposalsYet')}</h3>
+              <p className="text-zinc-500 text-sm mb-4">{t('governance.beFirstToSubmit')}</p>
               <Button
                 onClick={handleSubmitClick}
                 variant="glass"
                 className="rounded-xl font-semibold"
               >
                 <Plus className="w-4 h-4" />
-                Submit Proposal
+                {t('governance.submitProposalBtn')}
               </Button>
             </div>
           )}
@@ -776,8 +781,8 @@ export default function GovernancePage() {
               <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
                 <CheckCircle2 className="w-8 h-8 text-zinc-600" />
               </div>
-              <h3 className="text-white font-semibold mb-1">No passed proposals yet</h3>
-              <p className="text-zinc-500 text-sm">Passed proposals will appear here</p>
+              <h3 className="text-white font-semibold mb-1">{t('governance.noPassedYet')}</h3>
+              <p className="text-zinc-500 text-sm">{t('governance.passedAppearHere')}</p>
             </div>
           )}
         </>
@@ -799,8 +804,8 @@ export default function GovernancePage() {
               <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
                 <X className="w-8 h-8 text-zinc-600" />
               </div>
-              <h3 className="text-white font-semibold mb-1">No rejected proposals yet</h3>
-              <p className="text-zinc-500 text-sm">Rejected proposals will appear here</p>
+              <h3 className="text-white font-semibold mb-1">{t('governance.noRejectedYet')}</h3>
+              <p className="text-zinc-500 text-sm">{t('governance.rejectedAppearHere')}</p>
             </div>
           )}
         </>
