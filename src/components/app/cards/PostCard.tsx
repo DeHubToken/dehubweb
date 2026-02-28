@@ -137,7 +137,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
     <div 
       ref={viewRef} 
       onClick={handleCardClick}
-      className="overflow-hidden relative cursor-pointer isolate"
+      className="overflow-visible relative cursor-pointer isolate"
     >
       <CardHeader
         username={post.author.name}
