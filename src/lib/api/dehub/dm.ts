@@ -892,123 +892,43 @@ export async function unblockConversation(conversationId: string): Promise<{ suc
 }
 
 // ─── Group Chat ───────────────────────────────────────────────────────────────
+// Note: DeHub backend does not support group DMs (chat-system.md: "All DMs are 1:1 only").
+// These functions fail gracefully with a clear error.
+
+const GROUP_NOT_SUPPORTED = 'Group chat is not supported. DeHub DMs are 1:1 only.';
 
 export async function createGroup(
-  name: string,
-  memberAddresses: string[],
-  description?: string
+  _name: string,
+  _memberAddresses: string[],
+  _description?: string
 ): Promise<DeHubConversation> {
-  const token = getAuthToken();
-  if (!token) throw new Error('Authentication required');
-
-  try {
-    const response = await apiCall<any>('/api/dm/group', {
-      method: 'POST',
-      body: { name, memberAddresses, description },
-      requiresAuth: true,
-    });
-
-    if (response?.result) return response.result;
-    if (response?.id || response?._id) {
-      return {
-        id: response._id || response.id,
-        participants: response.members || [],
-        unreadCount: 0,
-        createdAt: response.createdAt || new Date().toISOString(),
-        updatedAt: response.updatedAt || new Date().toISOString(),
-        isGroup: true,
-        groupInfo: {
-          id: response._id || response.id,
-          name: response.name || name,
-          description: response.description,
-          creatorAddress: response.creatorAddress,
-          memberCount: memberAddresses.length,
-          createdAt: response.createdAt || new Date().toISOString(),
-          updatedAt: response.updatedAt || new Date().toISOString(),
-        },
-      };
-    }
-    throw new Error('Invalid response from createGroup');
-  } catch (error) {
-    console.error('[DM API] createGroup failed:', error);
-    throw error;
-  }
+  throw new Error(GROUP_NOT_SUPPORTED);
 }
 
-export async function getGroupInfo(groupId: string): Promise<GroupInfo> {
-  try {
-    const response = await apiCall<any>('/api/dm/group/info', {
-      method: 'POST',
-      body: { groupId },
-      requiresAuth: true,
-    });
-    return response?.result || response;
-  } catch (error) {
-    console.error('[DM API] getGroupInfo failed:', error);
-    throw error;
-  }
+export async function getGroupInfo(_groupId: string): Promise<GroupInfo> {
+  throw new Error(GROUP_NOT_SUPPORTED);
 }
 
-export async function joinGroup(groupId: string): Promise<{ success: boolean }> {
-  try {
-    const response = await apiCall<any>('/api/dm/group/join', {
-      method: 'POST',
-      body: { groupId },
-      requiresAuth: true,
-    });
-    return { success: response?.success !== false };
-  } catch (error) {
-    console.error('[DM API] joinGroup failed:', error);
-    throw error;
-  }
+export async function joinGroup(_groupId: string): Promise<{ success: boolean }> {
+  throw new Error(GROUP_NOT_SUPPORTED);
 }
 
 export async function updateGroup(
-  groupId: string,
-  updates: { name?: string; description?: string; avatarUrl?: string }
+  _groupId: string,
+  _updates: { name?: string; description?: string; avatarUrl?: string }
 ): Promise<GroupInfo> {
-  try {
-    const response = await apiCall<any>('/api/dm/group', {
-      method: 'PUT',
-      body: { groupId, ...updates },
-      requiresAuth: true,
-    });
-    return response?.result || response;
-  } catch (error) {
-    console.error('[DM API] updateGroup failed:', error);
-    throw error;
-  }
+  throw new Error(GROUP_NOT_SUPPORTED);
 }
 
-export async function leaveGroup(groupId: string): Promise<{ success: boolean }> {
-  try {
-    const response = await apiCall<any>('/api/dm/group-user-exit', {
-      method: 'POST',
-      body: { groupId },
-      requiresAuth: true,
-    });
-    return { success: response?.success !== false };
-  } catch (error) {
-    console.error('[DM API] leaveGroup failed:', error);
-    throw error;
-  }
+export async function leaveGroup(_groupId: string): Promise<{ success: boolean }> {
+  throw new Error(GROUP_NOT_SUPPORTED);
 }
 
 export async function blockUserInGroup(
-  groupId: string,
-  userAddress: string
+  _groupId: string,
+  _userAddress: string
 ): Promise<{ success: boolean }> {
-  try {
-    const response = await apiCall<any>('/api/dm/group-user-block', {
-      method: 'POST',
-      body: { groupId, userAddress },
-      requiresAuth: true,
-    });
-    return { success: response?.success !== false };
-  } catch (error) {
-    console.error('[DM API] blockUserInGroup failed:', error);
-    throw error;
-  }
+  throw new Error(GROUP_NOT_SUPPORTED);
 }
 
 // ─── User Status ──────────────────────────────────────────────────────────────

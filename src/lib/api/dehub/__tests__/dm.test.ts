@@ -116,13 +116,11 @@ describe('markConversationAsRead', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('calls PUT /api/dm/tnx', async () => {
-    mockFetch({ success: true });
+  it('returns success without REST call (read receipts via socket)', async () => {
     const { markConversationAsRead } = await import('@/lib/api/dehub/dm');
-    await markConversationAsRead('conv-1');
-    expect(fetchOpts()?.method).toBe('PUT');
-    const body = JSON.parse(fetchOpts()?.body as string);
-    expect(body.read).toBe(true);
+    const result = await markConversationAsRead('conv-1');
+    expect(result.success).toBe(true);
+    // No fetch call — read receipts use socket only per chat-system.md
   });
 });
 
@@ -200,28 +198,23 @@ describe('getUserOnlineStatus', () => {
   });
 });
 
-// ── Group operations ──
+// ── Group operations (DeHub backend does not support group DMs — 1:1 only) ──
 
 describe('group operations', () => {
-  it('createGroup sends POST /api/dm/group', async () => {
-    mockFetch({ result: { id: 'g1', name: 'Test Group' } });
+  it('createGroup throws clear error (group not supported)', async () => {
     const { createGroup } = await import('@/lib/api/dehub/dm');
-    const result = await createGroup('Test Group', ['0x1', '0x2'], 'A group');
-    expect(fetchUrl()).toContain('/api/dm/group');
-    expect(fetchOpts()?.method).toBe('POST');
+    await expect(createGroup('Test Group', ['0x1', '0x2'], 'A group')).rejects.toThrow(
+      'Group chat is not supported'
+    );
   });
 
-  it('joinGroup sends POST /api/dm/group/join', async () => {
-    mockFetch({ success: true });
+  it('joinGroup throws clear error', async () => {
     const { joinGroup } = await import('@/lib/api/dehub/dm');
-    await joinGroup('g1');
-    expect(fetchUrl()).toContain('/api/dm/group/join');
+    await expect(joinGroup('g1')).rejects.toThrow('Group chat is not supported');
   });
 
-  it('leaveGroup sends POST /api/dm/group-user-exit', async () => {
-    mockFetch({ success: true });
+  it('leaveGroup throws clear error', async () => {
     const { leaveGroup } = await import('@/lib/api/dehub/dm');
-    await leaveGroup('g1');
-    expect(fetchUrl()).toContain('/api/dm/group-user-exit');
+    await expect(leaveGroup('g1')).rejects.toThrow('Group chat is not supported');
   });
 });
