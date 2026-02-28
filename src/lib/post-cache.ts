@@ -65,6 +65,7 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
     locked_currency: video.lockedCurrency,
     isOwner: video.isOwner,
     isUnlocked: video.isUnlocked,
+    totalReposts: video.repostCount || 0,
     // Preserve the original timestamp - uploadedAgo is already formatted, so we need to pass createdAt
     createdAt: video.createdAt,
     // Include bounty data in streamInfo for proper reconstruction
@@ -115,6 +116,7 @@ function imagePostToNFT(post: ImagePost): Partial<DeHubNFT> {
     locked_currency: post.lockedCurrency,
     isOwner: post.isOwner,
     isUnlocked: post.isUnlocked,
+    totalReposts: post.repostCount || 0,
     streamInfo: {
       ...(post.bountyAmount != null && { addBountyAmount: post.bountyAmount }),
       ...(post.bountyViews != null && { addBountyFirstXViewers: post.bountyViews }),
@@ -149,6 +151,7 @@ function textPostToNFT(post: TextPost): Partial<DeHubNFT> {
       against: 0,
     },
     commentCount: post.stats.comments || 0,
+    totalReposts: post.stats.reposts || 0,
     // Preserve the original timestamp
     createdAt: post.createdAt,
   };
