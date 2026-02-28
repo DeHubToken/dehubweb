@@ -165,6 +165,8 @@ export function useGovernanceUserVotes() {
   });
 }
 
+const GOVERNANCE_PROPOSAL_FEE = 10000; // DHB per proposal
+
 export function useSubmitGovernanceProposal() {
   const queryClient = useQueryClient();
   const { walletAddress, user } = useAuth();
@@ -172,6 +174,35 @@ export function useSubmitGovernanceProposal() {
   return useMutation({
     mutationFn: async ({ title, description }: { title: string; description: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
+
+      // ── Charge 10,000 DHB proposal fee ─────────────────────
+      const chainConfig = getChainConfig(BASE_CHAIN_ID);
+      await switchChain(BASE_CHAIN_ID);
+      const signerAddress = await getWalletAddress();
+      const amountWei = toWei(GOVERNANCE_PROPOSAL_FEE, DHB_TOKEN.decimals);
+      const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+
+      if (balance < amountWei) {
+        const balanceHuman = Number(balance) / 1e18;
+        throw new Error(
+          `Insufficient DHB balance. Need ${GOVERNANCE_PROPOSAL_FEE.toLocaleString()} DHB but have ${balanceHuman.toFixed(2)} DHB`
+        );
+      }
+
+      toast.loading('Processing proposal fee...', { id: 'governance-proposal-fee' });
+
+      const txResult = await writeContractAA(
+        chainConfig.dhbToken,
+        erc20TransferInterface,
+        'transfer',
+        [GOVERNANCE_TREASURY, amountWei],
+        { context: 'Governance proposal fee', chainId: BASE_CHAIN_ID }
+      );
+
+      await txResult.wait(1);
+      toast.dismiss('governance-proposal-fee');
+
+      // ── Record proposal in DB ──────────────────────────────
       const { data, error } = await supabase
         .from('governance_proposals')
         .insert({
@@ -192,8 +223,10 @@ export function useSubmitGovernanceProposal() {
       queryClient.invalidateQueries({ queryKey: ['governance-proposals-total-count'] });
       toast.success('Governance proposal submitted!');
     },
-    onError: () => {
-      toast.error('Failed to submit proposal');
+    onError: (err: any) => {
+      toast.dismiss('governance-proposal-fee');
+      const msg = parseTxError(err) || err?.message || 'Failed to submit proposal';
+      toast.error(msg);
     },
   });
 }
