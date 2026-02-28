@@ -348,8 +348,8 @@ function NotificationItem({
   return (
     <div 
       onClick={handleClick}
-      className={`flex items-start gap-3 p-4 transition-colors cursor-pointer ${
-        notification.read ? 'bg-zinc-900/50' : 'bg-zinc-800/80 hover:bg-zinc-800'
+      className={`flex items-start gap-3 p-4 transition-colors duration-300 cursor-pointer ${
+        (notification.read || isClosing) ? 'bg-zinc-900/50' : 'bg-zinc-800/80 hover:bg-zinc-800'
       }`}
     >
       {/* Avatar with type icon overlay */}
@@ -378,7 +378,7 @@ function NotificationItem({
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <p className={`text-sm ${notification.read ? 'text-zinc-400' : 'text-white'}`}>
+        <p className={`text-sm ${(notification.read || isClosing) ? 'text-zinc-400' : 'text-white'}`}>
           {getNotificationContent(notification, bundle, t)}
         </p>
         
