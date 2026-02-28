@@ -696,147 +696,40 @@ export default function ExplorePage() {
             </button>
           </div>
           
-        </div>
-
-        {/* Filters Panel */}
-        <AnimatePresence>
-          {showFilters && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="relative z-20"
-            >
-              <div className="bg-zinc-900 rounded-2xl p-4 space-y-4 pb-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-white font-semibold">{t('explorePage.filters')}</h3>
-                  {(activeFilterCount > 0 || selectedCategory !== 'All') && (
-                    <button
-                      onClick={resetFilters}
-                      className="flex items-center gap-1 text-sm text-zinc-400 hover:text-white transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                      {t('explorePage.clearAll')}
-                    </button>
-                  )}
-                </div>
-
-                {/* Category Filters */}
-                {isSearching && (
-                  <div className="space-y-2">
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider">{t('explorePage.category')}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {SEARCH_CATEGORY_KEYS.map((catKey, idx) => (
-                        <FilterPill
-                          key={catKey}
-                          label={t(`explorePage.${catKey}`)}
-                          active={selectedCategory === SEARCH_CATEGORIES_RAW[idx]}
-                          onClick={() => setSelectedCategory(SEARCH_CATEGORIES_RAW[idx])}
-                          layoutId="explore-category"
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Content Type Filters */}
-                <div className="space-y-2">
-                  <p className="text-xs text-zinc-500 uppercase tracking-wider">{t('explorePage.contentType')}</p>
-                  <div className="flex flex-wrap gap-2">
-                    <FilterPill
-                      label={t('explorePage.bounty')}
-                      active={filters.w2e}
-                      onClick={() => setFilters(f => ({ ...f, w2e: !f.w2e }))}
-                    />
-                    <FilterPill
-                      label={t('explorePage.ppv')}
-                      active={filters.ppv}
-                      onClick={() => setFilters(f => ({ ...f, ppv: !f.ppv }))}
-                    />
-                    <FilterPill
-                      label={t('explorePage.gated')}
-                      active={filters.gated}
-                      onClick={() => setFilters(f => ({ ...f, gated: !f.gated }))}
-                    />
-                  </div>
-                </div>
-
-                {/* Date Filter */}
-                <div className="space-y-2">
-                  <p className="text-xs text-zinc-500 uppercase tracking-wider">{t('explorePage.datePosted')}</p>
-                  <div className="flex flex-wrap gap-2">
-                    <FilterDropdown
-                      label={t('explorePage.date')}
-                      value={filters.date}
-                      options={DATE_OPTIONS_RAW}
-                      onChange={(v) => setFilters(f => ({ ...f, date: v }))}
-                      displayValue={t(`explorePage.${DATE_OPTION_KEYS[DATE_OPTIONS_RAW.indexOf(filters.date)]}`)}
-                    />
-                  </div>
-                </div>
-
-                {/* Engagement Filters */}
-                <div className="space-y-2 relative z-30">
-                  <p className="text-xs text-zinc-500 uppercase tracking-wider">{t('explorePage.engagement')}</p>
-                  <div className="flex flex-wrap gap-2">
-                    <FilterDropdown
-                      label={t('explorePage.likes')}
-                      value={filters.likes}
-                      options={ENGAGEMENT_OPTIONS}
-                      onChange={(v) => setFilters(f => ({ ...f, likes: v }))}
-                    />
-                    <FilterDropdown
-                      label={t('explorePage.shares')}
-                      value={filters.shares}
-                      options={ENGAGEMENT_OPTIONS}
-                      onChange={(v) => setFilters(f => ({ ...f, shares: v }))}
-                    />
-                    <FilterDropdown
-                      label={t('explorePage.comments')}
-                      value={filters.comments}
-                      options={ENGAGEMENT_OPTIONS}
-                      onChange={(v) => setFilters(f => ({ ...f, comments: v }))}
-                    />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Tabs Bento */}
-        <div className="bg-zinc-900 rounded-2xl p-2" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
-          <div ref={exploreTabLayerRef} className="relative overflow-visible">
-            <GlassIndicator rect={exploreTabRect} />
-            <div className="relative z-20 flex w-full">
-              {EXPLORE_TABS.map((tab) => (
-                <button
-                  key={tab.value}
-                  ref={setExploreTabRef(tab.value)}
-                  onClick={() => setActiveTab(tab.value)}
-                  className={cn(
-                    'relative z-40 flex-1 flex items-center justify-center gap-2 px-2 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
-                    activeTab === tab.value
-                      ? 'text-white'
-                      : 'text-zinc-400 hover:text-white'
-                  )}
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    {tab.value === 'all' ? (
-                      <>
-                        <span className="sm:hidden">All</span>
-                        <tab.icon className="w-4 h-4 hidden sm:block" />
-                        <span className="hidden sm:inline">{tab.label}</span>
-                      </>
-                    ) : (
-                      <>
-                        <tab.icon className="w-4 h-4" />
-                        <span className="hidden sm:inline">{tab.label}</span>
-                      </>
+          {/* Tabs - merged into search bento */}
+          <div className="mt-3 -mx-1" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+            <div ref={exploreTabLayerRef} className="relative overflow-visible">
+              <GlassIndicator rect={exploreTabRect} />
+              <div className="relative z-20 flex w-full">
+                {EXPLORE_TABS.map((tab) => (
+                  <button
+                    key={tab.value}
+                    ref={setExploreTabRef(tab.value)}
+                    onClick={() => setActiveTab(tab.value)}
+                    className={cn(
+                      'relative z-40 flex-1 flex items-center justify-center gap-2 px-2 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
+                      activeTab === tab.value
+                        ? 'text-white'
+                        : 'text-zinc-400 hover:text-white'
                     )}
-                  </span>
-                </button>
-              ))}
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      {tab.value === 'all' ? (
+                        <>
+                          <span className="sm:hidden">All</span>
+                          <tab.icon className="w-4 h-4 hidden sm:block" />
+                          <span className="hidden sm:inline">{tab.label}</span>
+                        </>
+                      ) : (
+                        <>
+                          <tab.icon className="w-4 h-4" />
+                          <span className="hidden sm:inline">{tab.label}</span>
+                        </>
+                      )}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
