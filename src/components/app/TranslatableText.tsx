@@ -174,6 +174,29 @@ export function SharedTranslationProvider({ children }: { children: ReactNode })
   );
 }
 
+/**
+ * Hook to control translation from outside TranslatableText (e.g. a translate button in PostMetadata).
+ * Must be used inside a SharedTranslationProvider.
+ */
+export function useSharedTranslationControl() {
+  const ctx = useContext(SharedTranslationContext);
+  const [isTranslated, setIsTranslated] = useState(false);
+
+  return {
+    isTranslated,
+    isLoading: false,
+    error: null as string | null,
+    handleTranslate: useCallback(() => {
+      ctx?.requestTranslate();
+      setIsTranslated(true);
+    }, [ctx]),
+    handleShowOriginal: useCallback(() => {
+      ctx?.requestOriginal();
+      setIsTranslated(false);
+    }, [ctx]),
+  };
+}
+
 const MIN_TEXT_LENGTH_FOR_TRANSLATION = 1;
 
 // Custom hook for translation logic (shared between components)

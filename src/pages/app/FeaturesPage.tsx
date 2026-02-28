@@ -11,9 +11,9 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2, Languages, RotateCcw } from 'lucide-react';
+import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2 } from 'lucide-react';
 import featuresLightbulb from '@/assets/features-lightbulb.png';
-import { TranslatableText, useTranslation as useContentTranslation } from '@/components/app/TranslatableText';
+import { TranslatableText, SharedTranslationProvider, useSharedTranslationControl } from '@/components/app/TranslatableText';
 import { PostMetadata } from '@/components/app/cards/PostMetadata';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -96,7 +96,7 @@ function FeatureCard({
   voteDisabled: boolean;
 }) {
   const { t } = useI18n();
-  const { isTranslated, isLoading: isTranslateLoading, error: translateError, handleTranslate, handleShowOriginal } = useContentTranslation(feature.title + ' ' + feature.description);
+  const { isTranslated, isLoading: isTranslateLoading, error: translateError, handleTranslate, handleShowOriginal } = useSharedTranslationControl();
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
   const commentInputRef = useRef<HTMLInputElement>(null);
@@ -484,7 +484,7 @@ function FeatureSkeletons() {
 // ──────────────────────────────────────────────────
 function ShippedCard({ feature }: { feature: FeatureRequest }) {
   const { t } = useI18n();
-  const { isTranslated: isShippedTranslated, isLoading: isShippedTranslateLoading, error: shippedTranslateError, handleTranslate: handleShippedTranslate, handleShowOriginal: handleShippedShowOriginal } = useContentTranslation(feature.title + ' ' + feature.description);
+  const { isTranslated: isShippedTranslated, isLoading: isShippedTranslateLoading, error: shippedTranslateError, handleTranslate: handleShippedTranslate, handleShowOriginal: handleShippedShowOriginal } = useSharedTranslationControl();
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -727,13 +727,14 @@ export default function FeaturesPage() {
           ) : features.length > 0 ? (
             <div className="space-y-3">
               {features.map((feature) => (
-                <FeatureCard
-                  key={feature.id}
-                  feature={feature}
-                  currentVote={userVotes?.[feature.id]}
-                  onVote={handleVote}
-                  voteDisabled={voteMutation.isPending}
-                />
+                <SharedTranslationProvider key={feature.id}>
+                  <FeatureCard
+                    feature={feature}
+                    currentVote={userVotes?.[feature.id]}
+                    onVote={handleVote}
+                    voteDisabled={voteMutation.isPending}
+                  />
+                </SharedTranslationProvider>
               ))}
               {/* Infinite scroll sentinel */}
               {hasNextPage && (
@@ -771,7 +772,9 @@ export default function FeaturesPage() {
           ) : shippedFeatures && shippedFeatures.length > 0 ? (
             <div className="space-y-3">
               {shippedFeatures.map((feature) => (
-                <ShippedCard key={feature.id} feature={feature} />
+                <SharedTranslationProvider key={feature.id}>
+                  <ShippedCard feature={feature} />
+                </SharedTranslationProvider>
               ))}
             </div>
           ) : (
