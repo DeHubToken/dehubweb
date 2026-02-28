@@ -169,45 +169,12 @@ export function RadioMiniPlayer() {
               </h4>
             </div>
             
-            {/* Volume Control */}
-            <div className="hidden sm:flex items-center gap-2">
-              <button
-                onClick={() => setShowVolume(!showVolume)}
-                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
-              >
-                {isMuted ? (
-                  <VolumeX className="w-4 h-4 text-zinc-400" />
-                ) : (
-                  <Volume2 className="w-4 h-4 text-zinc-400" />
-                )}
-              </button>
-              
-              <AnimatePresence>
-                {showVolume && (
-                  <motion.div
-                    initial={{ width: 0, opacity: 0 }}
-                    animate={{ width: 80, opacity: 1 }}
-                    exit={{ width: 0, opacity: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <Slider
-                      value={[volume * 100]}
-                      onValueChange={([val]) => setVolume(val / 100)}
-                      max={100}
-                      step={1}
-                      className="w-20"
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            
             {/* Minimize Button */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   onClick={() => setIsMinimized(true)}
-                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
+                  className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
                 >
                   <Minus className="w-4 h-4 text-zinc-400" />
                 </button>
@@ -220,7 +187,7 @@ export function RadioMiniPlayer() {
               <TooltipTrigger asChild>
                 <button
                   onClick={() => setShowVisualizer(true)}
-                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
+                  className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
                 >
                   <Maximize2 className="w-4 h-4 text-zinc-400" />
                 </button>
@@ -228,27 +195,48 @@ export function RadioMiniPlayer() {
               <TooltipContent>Fullscreen visualizer</TooltipContent>
             </Tooltip>
             
-            {/* Play/Pause Button */}
+            {/* Play/Pause Button - Liquid glass squared */}
             <button
               onClick={togglePlayPause}
-              className="w-10 h-10 rounded-full bg-white flex items-center justify-center flex-shrink-0 hover:bg-zinc-200 transition-colors"
+              className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center flex-shrink-0 hover:bg-white/10 transition-colors"
             >
               {isLoading ? (
-                <Loader2 className="w-5 h-5 text-black animate-spin" />
+                <Loader2 className="w-4 h-4 text-white animate-spin" />
               ) : isPlaying ? (
-                <Pause className="w-5 h-5 text-black fill-black" />
+                <Pause className="w-4 h-4 text-white fill-white" />
               ) : (
-                <Play className="w-5 h-5 text-black fill-black ml-0.5" />
+                <Play className="w-4 h-4 text-white fill-white ml-0.5" />
               )}
             </button>
             
             {/* Close Button */}
             <button
               onClick={stop}
-              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
+              className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
             >
               <X className="w-4 h-4 text-zinc-400" />
             </button>
+          </div>
+          
+          {/* Volume bar below controls */}
+          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/[0.06]">
+            <button
+              onClick={() => setVolume(isMuted ? 0.7 : 0)}
+              className="flex-shrink-0"
+            >
+              {isMuted ? (
+                <VolumeX className="w-3.5 h-3.5 text-zinc-500" />
+              ) : (
+                <Volume2 className="w-3.5 h-3.5 text-zinc-400" />
+              )}
+            </button>
+            <Slider
+              value={[volume * 100]}
+              onValueChange={([val]) => setVolume(val / 100)}
+              max={100}
+              step={1}
+              className="flex-1"
+            />
           </div>
         </motion.div>
       </AnimatePresence>
