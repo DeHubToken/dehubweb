@@ -66,17 +66,17 @@ export async function getNFTComments(
 }
 
 export async function postComment(tokenId: string, content: string, replyToId?: string): Promise<PostCommentResponse> {
-  const params: Record<string, string> = {
-    streamTokenId: tokenId,
+  const body: Record<string, unknown> = {
+    streamTokenId: Number(tokenId),
     content,
   };
   if (replyToId) {
-    params.commentId = replyToId;
+    body.commentId = Number(replyToId);
   }
-  
+
   return apiCall<PostCommentResponse>("/api/request_comment", {
-    method: "GET",
-    params,
+    method: "POST",
+    body,
     requiresAuth: true,
   });
 }
