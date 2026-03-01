@@ -25,6 +25,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
   { code: 'be', name: 'Belarusian', nativeName: 'Беларуская' },
   { code: 'bn', name: 'Bengali', nativeName: 'বাংলা' },
+  { code: 'bg', name: 'Bulgarian', nativeName: 'Български' },
   { code: 'my', name: 'Burmese', nativeName: 'မြန်မာ' },
   { code: 'cs', name: 'Czech', nativeName: 'Čeština' },
   { code: 'zh', name: 'Chinese', nativeName: '中文' },
@@ -84,6 +85,7 @@ export const SUPPORTED_LANGUAGES = [
 const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   es: () => import('./locales/es.json'),
   fr: () => import('./locales/fr.json'),
+  bg: () => import('./locales/bg.json'),
   cs: () => import('./locales/cs.json'),
   de: () => import('./locales/de.json'),
   hu: () => import('./locales/hu.json'),
