@@ -105,6 +105,9 @@ function AppContent() {
             <Route path="/governance" element={<AppLayout />}>
               <Route index element={null} />
             </Route>
+            <Route path="/stake" element={<AppLayout />}>
+              <Route index element={null} />
+            </Route>
 
             {/* App routes with shared layout */}
             {/* Cached pages render null here — PersistentPageCache manages them */}
@@ -126,6 +129,7 @@ function AppContent() {
               <Route path="tv" element={null} />
               <Route path="features" element={null} />
               <Route path="governance" element={null} />
+              <Route path="stake" element={null} />
               <Route path="jobs" element={null} />
               <Route path="post/:postId" element={<SinglePostPage />} />
               <Route path="video/:tokenId" element={<SinglePostPage />} />
