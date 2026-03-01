@@ -77,6 +77,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   kk: 'Kazakh',
   he: 'Hebrew',
   id: 'Indonesian',
+  mr: 'Marathi',
   ms: 'Malay',
   ro: 'Romanian',
   hu: 'Hungarian',
