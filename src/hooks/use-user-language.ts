@@ -61,6 +61,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   pl: 'Polish',
   tr: 'Turkish',
   uk: 'Ukrainian',
+  ur: 'Urdu',
   uz: 'Uzbek',
   cs: 'Czech',
   sv: 'Swedish',
