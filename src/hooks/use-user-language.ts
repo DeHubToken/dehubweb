@@ -77,6 +77,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   cs: 'Czech',
   sv: 'Swedish',
   da: 'Danish',
+  dcc: 'Deccan',
   fi: 'Finnish',
   no: 'Norwegian',
   el: 'Greek',
