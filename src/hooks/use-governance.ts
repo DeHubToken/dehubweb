@@ -150,12 +150,12 @@ export function useGovernanceUserVotes() {
       if (!walletAddress) return {};
       const { data, error } = await supabase
         .from('governance_votes')
-        .select('proposal_id, vote_type')
+        .select('proposal_id, vote_type, vote_weight')
         .eq('wallet_address', walletAddress.toLowerCase());
       if (error) throw error;
-      const voteMap: Record<string, number> = {};
+      const voteMap: Record<string, { type: number; weight: number }> = {};
       for (const vote of data || []) {
-        voteMap[vote.proposal_id] = vote.vote_type;
+        voteMap[vote.proposal_id] = { type: vote.vote_type, weight: vote.vote_weight };
       }
       return voteMap;
     },
@@ -283,13 +283,17 @@ export function useVoteGovernanceProposal() {
       const previousRequests = queryClient.getQueriesData({ queryKey: ['governance-proposals'] });
       const previousVotes = queryClient.getQueryData(['governance-votes', walletAddress]);
 
+      // Get old vote weight from cached data
+      const oldVotes = previousVotes as Record<string, { type: number; weight: number }> | undefined;
+      const oldWeight = oldVotes?.[proposalId]?.weight ?? voteWeight;
+
       // Optimistic vote map update
-      queryClient.setQueryData(['governance-votes', walletAddress], (old: Record<string, number> | undefined) => {
+      queryClient.setQueryData(['governance-votes', walletAddress], (old: Record<string, { type: number; weight: number }> | undefined) => {
         const newVotes = { ...(old || {}) };
         if (currentVote === voteType) {
           delete newVotes[proposalId];
         } else {
-          newVotes[proposalId] = voteType;
+          newVotes[proposalId] = { type: voteType, weight: voteWeight };
         }
         return newVotes;
       });
@@ -306,13 +310,13 @@ export function useVoteGovernanceProposal() {
               let dislikeDelta = 0;
 
               if (currentVote === voteType) {
-                // Removing vote
-                if (voteType === 1) likeDelta = -voteWeight;
-                else dislikeDelta = -voteWeight;
+                // Removing vote — use old weight
+                if (voteType === 1) likeDelta = -oldWeight;
+                else dislikeDelta = -oldWeight;
               } else if (currentVote) {
-                // Changing vote
-                if (currentVote === 1) { likeDelta = -voteWeight; dislikeDelta = voteWeight; }
-                else { dislikeDelta = -voteWeight; likeDelta = voteWeight; }
+                // Changing vote — remove old weight, add new weight
+                if (currentVote === 1) { likeDelta = -oldWeight; dislikeDelta = voteWeight; }
+                else { dislikeDelta = -oldWeight; likeDelta = voteWeight; }
               } else {
                 // New vote
                 if (voteType === 1) likeDelta = voteWeight;

@@ -733,7 +733,7 @@ export default function GovernancePage() {
                 <GovernanceCard
                   key={proposal.id}
                   proposal={proposal}
-                  currentVote={userVotes?.[proposal.id]}
+                  currentVote={userVotes?.[proposal.id]?.type}
                   onVote={handleVote}
                   voteDisabled={voteMutation.isPending}
                   userBadgeBalance={userBadgeBalance}
