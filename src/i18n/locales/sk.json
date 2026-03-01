@@ -296,4 +296,6 @@
     "schedule": "Program",
     "watchNow": "Sledovať teraz"
   }
+  ,"loginModal": { "title": "Prihlásiť sa", "continueEmail": "Pokračovať s e-mailom", "continueSMS": "Pokračovať s SMS", "continueGoogle": "Pokračovať s Google", "continueX": "Pokračovať s X", "continueDiscord": "Pokračovať s Discord", "connectWallet": "Pripojiť peňaženku", "emailPlaceholder": "Zadajte váš e-mail", "invalidEmail": "Zadajte platný e-mail", "sendingLink": "Odosielanie odkazu...", "continue": "Pokračovať", "magicLinkInfo": "Pošleme vám magický odkaz na prihlásenie", "invalidPhone": "Zadajte platné telefónne číslo s kódom krajiny", "sendingCode": "Odosielanie kódu...", "smsInfo": "Pošleme vám overovací kód cez SMS", "or": "alebo", "termsNotice": "Pokračovaním súhlasíte s podmienkami služby a zásadami ochrany súkromia", "walletInfoDesktop": "Pripojte peňaženku pre bezpečné prihlásenie", "walletInfoMobile": "MetaMask, Trust a Phantom otvoria svoju aplikáciu. Rabby použije WalletConnect." }
+  ,"sidebar": { "talkOfTheTown": "Téma dňa", "nothingTrending": "Zatiaľ nič netrenduje" }
 }

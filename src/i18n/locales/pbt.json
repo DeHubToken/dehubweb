@@ -296,4 +296,6 @@
     "schedule": "مهال ویش",
     "watchNow": "اوس وګوره"
   }
+  ,"loginModal": { "title": "ننوتل", "continueEmail": "د بریښنالیک سره دوام ورکړئ", "continueSMS": "د SMS سره دوام ورکړئ", "continueGoogle": "د ګوګل سره دوام ورکړئ", "continueX": "د X سره دوام ورکړئ", "continueDiscord": "د Discord سره دوام ورکړئ", "connectWallet": "بټوه وصل کړئ", "emailPlaceholder": "خپل بریښنالیک دننه کړئ", "invalidEmail": "سم بریښنالیک دننه کړئ", "sendingLink": "لینک لیږل کیږي...", "continue": "دوام ورکړئ", "magicLinkInfo": "موږ تاسو ته د ننوتلو لپاره جادوګره لینک لیږو", "invalidPhone": "د هیواد کوډ سره سم ټلیفون شمیره دننه کړئ", "sendingCode": "کوډ لیږل کیږي...", "smsInfo": "موږ تاسو ته د SMS له لارې تصدیق کوډ لیږو", "or": "یا", "termsNotice": "دوام ورکولو سره تاسو زموږ د خدمت شرایطو او محرمیت تګلارې ته موافقه کوئ", "walletInfoDesktop": "خپله بټوه وصل کړئ ترڅو په خوندي ډول ننوځئ", "walletInfoMobile": "MetaMask، Trust او Phantom به خپل اپلیکیشن خلاص کړي. Rabby به WalletConnect وکاروي." }
+  ,"sidebar": { "talkOfTheTown": "د ښار خبرې", "nothingTrending": "تر اوسه هیڅ شی تریند نه دی" }
 }

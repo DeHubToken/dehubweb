@@ -405,4 +405,6 @@
     "schedule": "সূচি",
     "watchNow": "এহন দেহো"
   }
+  ,"loginModal": { "title": "লগইন গরো", "continueEmail": "ইমেইলে আগাও", "continueSMS": "SMS এ আগাও", "continueGoogle": "গুগলে আগাও", "continueX": "X এ আগাও", "continueDiscord": "Discord এ আগাও", "connectWallet": "ওয়ালেট কানেক্ট গরো", "emailPlaceholder": "তোয়ার ইমেইল দেও", "invalidEmail": "সঠিক ইমেইল দেও", "sendingLink": "লিংক পাঠাইতেছে...", "continue": "আগাও", "magicLinkInfo": "আমরা তোয়ারে ম্যাজিক লিংক পাঠামু", "invalidPhone": "দেশের কোডসহ সঠিক ফোন নম্বর দেও", "sendingCode": "কোড পাঠাইতেছে...", "smsInfo": "আমরা তোয়ারে SMS এ ভেরিফিকেশন কোড পাঠামু", "or": "বা", "termsNotice": "আগাইলে তুই সেবার শর্ত আর গোপনীয়তা নীতিতে রাজি", "walletInfoDesktop": "নিরাপদে লগইনের জইন্যে ওয়ালেট কানেক্ট গরো", "walletInfoMobile": "MetaMask, Trust আর Phantom সরাসরি অ্যাপ খুলবো। Rabby WalletConnect ব্যবহার গরবো।" }
+  ,"sidebar": { "talkOfTheTown": "আলোচনার বিষয়", "nothingTrending": "এহনো কিছু ট্রেন্ডিং নাই" }
 }

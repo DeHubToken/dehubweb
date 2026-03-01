@@ -312,4 +312,6 @@
     "schedule": "ຕາຕະລາງ",
     "watchNow": "ເບິ່ງຕອນນີ້"
   }
+  ,"loginModal": { "title": "ເຂົ້າສູ່ລະບົບ", "continueEmail": "ສືບຕໍ່ດ້ວຍອີເມວ", "continueSMS": "ສືບຕໍ່ດ້ວຍ SMS", "continueGoogle": "ສືບຕໍ່ດ້ວຍ Google", "continueX": "ສືບຕໍ່ດ້ວຍ X", "continueDiscord": "ສືບຕໍ່ດ້ວຍ Discord", "connectWallet": "ເຊື່ອಮຕໍ່ກະເປົາ", "emailPlaceholder": "ໃສ່ອີເມວຂອງທ່ານ", "invalidEmail": "ກະລຸນາໃສ່ອີເມວທີ່ຖືກຕ້ອງ", "sendingLink": "ກຳລັງສົ່ງລິ້ງ...", "continue": "ສືບຕໍ່", "magicLinkInfo": "ພວກເຮົາຈະສົ່ງລິ້ງວິເສດໃຫ້ທ່ານ", "invalidPhone": "ກະລຸນາໃສ່ເບີໂທທີ່ຖືກຕ້ອງພ້ອมລະຫັດປະເທດ", "sendingCode": "ກຳລັງສົ່ງລະຫັດ...", "smsInfo": "ພວກເຮົາຈະສົ່ງລະຫັດຢືນຢັນທາງ SMS", "or": "ຫຼື", "termsNotice": "ໂດຍການສືບຕໍ່ ທ່ານຍອಮຮັບເງື່ອນໄຂການໃຊ້ງານແລະນະໂຍບາຍຄວາມເປັນສ່ວນຕົວ", "walletInfoDesktop": "ເຊື່ອມຕໍ່ກະເປົາເພື່ອເຂົ້າສູ່ລະບົບຢ່າງປອດໄພ", "walletInfoMobile": "MetaMask, Trust ແລະ Phantom ຈະເປີດແອັບໂດຍກົງ. Rabby ຈະໃຊ້ WalletConnect." }
+  ,"sidebar": { "talkOfTheTown": "ເລື່ອງທີ່ຄົນເວົ້າ", "nothingTrending": "ຍັງບໍ່ມີເທຣນ" }
 }

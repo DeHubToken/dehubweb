@@ -405,4 +405,6 @@
     "schedule": "الجدول",
     "watchNow": "شوف هسه"
   }
+  ,"loginModal": { "title": "سجّل دخول", "continueEmail": "استمر بالإيميل", "continueSMS": "استمر بالرسائل", "continueGoogle": "استمر بقوقل", "continueX": "استمر بـ X", "continueDiscord": "استمر بديسكورد", "connectWallet": "وصّل المحفظة", "emailPlaceholder": "دخّل إيميلك", "invalidEmail": "دخّل إيميل صحيح", "sendingLink": "يبعث الرابط...", "continue": "استمر", "magicLinkInfo": "بنبعث لك رابط سحري لتسجيل الدخول", "invalidPhone": "دخّل رقم تلفون صحيح مع رمز البلد", "sendingCode": "يبعث الرمز...", "smsInfo": "بنبعث لك رمز تحقق بالرسائل", "or": "أو", "termsNotice": "بالاستمرار، أنت توافق على شروط الخدمة وسياسة الخصوصية", "walletInfoDesktop": "وصّل محفظتك لتسجيل الدخول بأمان", "walletInfoMobile": "MetaMask و Trust و Phantom بيفتحون تطبيقاتهم مباشرة. Rabby بيستخدم WalletConnect." }
+  ,"sidebar": { "talkOfTheTown": "حديث المدينة", "nothingTrending": "ما كو شي رائج" }
 }
