@@ -823,9 +823,6 @@ export default function NotificationsPage() {
             <div className="p-8 flex flex-col items-center justify-center text-center">
               <Bell className="w-12 h-12 text-zinc-600 mb-4" />
               <h3 className="text-white font-semibold text-lg mb-2">{t('notifications.noNotificationsYet')}</h3>
-              <p className="text-zinc-500 text-sm max-w-xs">
-                {t('notifications.noNotificationsDesc')}
-              </p>
             </div>
           ) : (
             <div className="divide-y divide-zinc-800">
