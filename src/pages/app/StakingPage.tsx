@@ -412,12 +412,12 @@ export default function StakingPage() {
                 placeholder="Amount DHB"
                 value={stakeAmount}
                 onChange={(e) => setStakeAmount(e.target.value)}
-                className="w-full px-3 py-2.5 pr-14 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50"
+                className="w-full px-3 py-2.5 pr-14 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-white/30"
               />
               <button
                 type="button"
                 onClick={() => setStakeAmount(userUnstaked.toString())}
-                className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase hover:bg-emerald-500/30 transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md bg-white/10 text-white/70 text-[10px] font-bold uppercase hover:bg-white/20 hover:text-white transition-colors"
               >
                 Max
               </button>
@@ -428,8 +428,8 @@ export default function StakingPage() {
               className={cn(
                 "px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all flex-shrink-0",
                 (isStaking || isApproving)
-                  ? "bg-emerald-500/20 text-emerald-400/60 cursor-not-allowed"
-                  : "bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/20"
+                  ? "bg-white/10 text-white/40 cursor-not-allowed"
+                  : "bg-white/10 text-white hover:bg-white/20 border border-white/15"
               )}
             >
               {isApproving ? (
