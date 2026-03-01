@@ -19,6 +19,7 @@ import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import { clearWagmiStorage } from '@/lib/wagmi';
 import { getAddress, recoverMessageAddress } from 'viem';
+import { privateKeyToAccount } from 'viem/accounts';
 import {
   authenticateWallet,
   getAccountInfo,
@@ -196,6 +197,96 @@ function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[key
     case 'github': return AUTH_CONNECTION.GITHUB;
     default: return AUTH_CONNECTION.GOOGLE;
   }
+}
+
+/**
+ * Sign an auth message using the EOA private key directly.
+ * Web3Auth with AA wraps personal_sign in ERC-6492 (Safe smart account),
+ * which the backend cannot verify via ecrecover. This bypasses the AA
+ * wrapper by extracting the raw private key and signing with viem.
+ *
+ * Returns { address, signature } for the EOA, or null if private key
+ * is not available (fallback to the AA-wrapped flow).
+ */
+async function signWithEoaDirectly(
+  provider: any,
+  timestamp: number,
+  displayedDate: Date,
+): Promise<{ address: string; signature: string } | null> {
+  try {
+    // Try to get the raw private key from the Web3Auth provider.
+    let privKey: string | null = null;
+    for (const method of ['eth_private_key', 'private_key']) {
+      try {
+        privKey = await provider.request({ method }) as string;
+        if (privKey) break;
+      } catch { /* try next */ }
+    }
+    if (!privKey) {
+      console.warn('[Auth] EOA direct sign: private key not available from provider');
+      return null;
+    }
+
+    const hexKey = privKey.startsWith('0x') ? privKey : `0x${privKey}`;
+    const account = privateKeyToAccount(hexKey as `0x${string}`);
+    const eoaAddress = account.address.toLowerCase();
+
+    console.log('[Auth] EOA direct sign: derived EOA address:', eoaAddress);
+
+    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${eoaAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+
+    const signature = await account.signMessage({ message });
+    console.log('[Auth] EOA direct sign: standard ECDSA signature produced, length:', signature.length);
+
+    return { address: eoaAddress, signature };
+  } catch (e) {
+    console.warn('[Auth] EOA direct sign failed, falling back to provider signing:', e);
+    return null;
+  }
+}
+/**
+ * Sign auth message using the provider's personal_sign (original flow).
+ * Used for external wallets and as fallback when EOA direct sign is unavailable.
+ */
+async function signWithProvider(
+  provider: any,
+  displayedDate: Date,
+  flowLabel: string,
+): Promise<{ address: string; signature: string }> {
+  console.log(`[Auth] [${flowLabel}] Fetching accounts...`);
+  let accounts: string[] = [];
+  for (let i = 0; i < 10; i++) {
+    accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+    if (accounts?.length) break;
+    await new Promise(r => setTimeout(r, 50));
+  }
+  if (!accounts?.length) throw new Error('No accounts available for signing');
+  const address = accounts[0].toLowerCase();
+  console.log(`[Auth] [${flowLabel}] Address:`, address);
+
+  const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${address}.\nIt is ${displayedDate.toUTCString()}.`;
+
+  console.log(`[Auth] [${flowLabel}] Requesting signature...`);
+  let signature: string;
+  try {
+    signature = await provider.request({
+      method: 'personal_sign',
+      params: [message, address],
+    }) as string;
+  } catch (e) {
+    console.warn(`[Auth] [${flowLabel}] personal_sign fallback...`, e);
+    signature = await provider.request({
+      method: 'personal_sign',
+      params: [address, message],
+    }) as string;
+  }
+
+  console.log(`[Auth] [${flowLabel}] Signature format:`, {
+    length: signature.length,
+    preview: signature.slice(0, 20) + '...' + signature.slice(-20),
+  });
+
+  return { address, signature };
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -609,64 +700,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const signingProvider = provider;
 
     try {
-      // Get AA address
-      console.log('[Auth] [REDIRECT] Fetching accounts...');
-      let accounts: string[] = [];
-      for (let i = 0; i < 10; i++) {
-        accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-        if (accounts?.length) break;
-        console.log(`[Auth] [REDIRECT] No accounts yet, retry ${i+1}/10...`);
-        await new Promise(r => setTimeout(r, 50));
-      }
-
-      if (!accounts?.length) {
-        toast.error('Could not find your wallet address', { id: toastId });
-        throw new Error('No accounts available from provider after redirect');
-      }
-      
-      const authAddress = accounts[0].toLowerCase();
-      console.log('[Auth] [REDIRECT] Account:', authAddress);
-
-
-      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-
-      console.log('[Auth] [REDIRECT] Requesting signature...');
-      toast.loading('Please sign the message in your wallet...', { id: toastId });
-
+      let authAddressForApi: string;
       let signature: string;
-      try {
-        signature = await signingProvider.request({
-          method: 'personal_sign',
-          params: [message, authAddress],
-        }) as string;
-      } catch (e) {
-        console.warn('[Auth] [REDIRECT] personal_sign failed, trying fallback...', e);
-        signature = await signingProvider.request({
-          method: 'personal_sign',
-          params: [authAddress, message],
-        }) as string;
-      }
-      
-      // Same as POPUP: send (Smart Account, original signature) so backend builds correct message.
-      // Backend verifies via ERC-1271 for Smart Accounts.
-      let authAddressForApi = authAddress;
-      let sigToRecover = signature;
-      const ERC6492_MAGIC_R = '6492649264926492649264926492649264926492649264926492649264926492';
-      const isERC6492R = signature.toLowerCase().endsWith(ERC6492_MAGIC_R);
-      console.log('[Auth] [REDIRECT] Signature format:', { length: signature.length, isERC6492: isERC6492R });
-      if (isERC6492R) {
-        const innerSig = extractEoaSignatureFromErc6492(signature);
-        if (innerSig) sigToRecover = innerSig;
-      }
-      if (sigToRecover.length === 132 || sigToRecover.length === 130) {
-        try {
-          const normalizedSig = normalizeSignatureV(sigToRecover);
-          await recoverMessageAddress({ message, signature: normalizedSig as `0x${string}` });
-          // Keep original signature for API
-          console.log('[Auth] [REDIRECT] Smart Account: sending (SA, orig sig) for ERC-1271');
-        } catch (e) {
-          console.warn('[Auth] [REDIRECT] Recovery failed:', e);
-        }
+
+      // Social login redirect: try EOA direct signing to bypass AA/ERC-6492
+      const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
+      if (eoaResult) {
+        authAddressForApi = eoaResult.address;
+        signature = eoaResult.signature;
+        console.log('[Auth] [REDIRECT] Using EOA direct signature for', authAddressForApi);
+      } else {
+        console.warn('[Auth] [REDIRECT] EOA direct sign unavailable, falling back to provider signing');
+        toast.loading('Please sign the message in your wallet...', { id: toastId });
+        const fallback = await signWithProvider(signingProvider, displayedDate, 'REDIRECT');
+        authAddressForApi = fallback.address;
+        signature = fallback.signature;
       }
 
       console.log('[Auth] [REDIRECT] Signature received, authenticating with backend...');
@@ -733,69 +781,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const signingProvider = provider;
 
     try {
-      // Get address from provider
-      console.log('[Auth] [POPUP] Fetching accounts...');
-      let accounts: string[] = [];
-      for (let i = 0; i < 10; i++) {
-        accounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-        if (accounts?.length) break;
-        await new Promise(r => setTimeout(r, 50));
-      }
-      
-      if (!accounts?.length) throw new Error('No accounts available for signing');
-      const authAddress = accounts[0].toLowerCase();
-      console.log('[Auth] [POPUP] Address:', authAddress);
-
-
-      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-
-      console.log('[Auth] [POPUP] Requesting signature...');
-      toast.loading('Signing in...', { id: toastId });
-
+      let authAddressForApi: string;
       let signature: string;
-      try {
-        signature = await signingProvider.request({
-          method: 'personal_sign',
-          params: [message, authAddress],
-        }) as string;
-      } catch (e) {
-        console.warn('[Auth] [POPUP] personal_sign fallback...', e);
-        signature = await signingProvider.request({
-          method: 'personal_sign',
-          params: [authAddress, message],
-        }) as string;
-      }
 
-      // Detect signature format for debugging
-      const ERC6492_MAGIC = '6492649264926492649264926492649264926492649264926492649264926492';
-      const isERC6492 = signature.toLowerCase().endsWith(ERC6492_MAGIC);
-      console.log('[Auth] [POPUP] Signature format:', {
-        length: signature.length,
-        isERC6492,
-        preview: signature.slice(0, 20) + '...' + signature.slice(-20),
-      });
-
-      // DeHub backend reconstructs message with the address we send: "Your wallet address is {address}".
-      // The user signed a message with authAddress (Smart Account). So we MUST send (Smart Account, original signature)
-      // so the backend builds the same message. Backend verifies via ERC-1271 for Smart Accounts.
-      // Do NOT send recovered EOA — that would make the backend build a different message and verification would fail.
-      let authAddressForApi = authAddress;
+      // For social logins, try EOA direct signing to bypass AA/ERC-6492 wrapper.
+      // The backend uses ecrecover which cannot verify ERC-6492/ERC-1271 signatures.
       if (isSocial) {
-        let sigToRecover = signature;
-        if (isERC6492) {
-          const innerSig = extractEoaSignatureFromErc6492(signature);
-          if (innerSig) sigToRecover = innerSig;
+        const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
+        if (eoaResult) {
+          authAddressForApi = eoaResult.address;
+          signature = eoaResult.signature;
+          console.log('[Auth] [POPUP] Using EOA direct signature for', authAddressForApi);
+        } else {
+          console.warn('[Auth] [POPUP] EOA direct sign unavailable, falling back to provider signing');
+          // Fallback: use provider signing (may produce ERC-6492 — will likely fail on backend)
+          const fallback = await signWithProvider(signingProvider, displayedDate, 'POPUP');
+          authAddressForApi = fallback.address;
+          signature = fallback.signature;
         }
-        if (sigToRecover.length === 132 || sigToRecover.length === 130) {
-          try {
-            const normalizedSig = normalizeSignatureV(sigToRecover);
-            await recoverMessageAddress({ message, signature: normalizedSig as `0x${string}` });
-            // Keep original signature for API; only use normalized for recovery (debug/logging)
-            console.log('[Auth] [POPUP] Smart Account: sending (SA, orig sig) for ERC-1271 verification');
-          } catch (e) {
-            console.warn('[Auth] [POPUP] Recovery failed:', e);
-          }
-        }
+      } else {
+        // External wallet — standard provider signing
+        const result = await signWithProvider(signingProvider, displayedDate, 'POPUP');
+        authAddressForApi = result.address;
+        signature = result.signature;
       }
 
       console.log('[Auth] [POPUP] Signature received, authenticating...');
