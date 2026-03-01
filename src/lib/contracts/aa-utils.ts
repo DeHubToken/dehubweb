@@ -535,13 +535,14 @@ export async function approveERC20(
  */
 export async function getERC20Balance(
   tokenAddress: string,
-  ownerAddress: string
+  ownerAddress: string,
+  chainId?: ChainId
 ): Promise<bigint> {
   const erc20Interface = new Interface([
     'function balanceOf(address owner) view returns (uint256)',
   ]);
   
-  return readContract<bigint>(tokenAddress, erc20Interface, 'balanceOf', [ownerAddress]);
+  return readContract<bigint>(tokenAddress, erc20Interface, 'balanceOf', [ownerAddress], chainId);
 }
 
 /**

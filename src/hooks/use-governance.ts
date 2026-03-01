@@ -180,12 +180,12 @@ export function useSubmitGovernanceProposal() {
       await switchChain(BASE_CHAIN_ID);
       const signerAddress = await getWalletAddress();
       const amountWei = toWei(GOVERNANCE_PROPOSAL_FEE, DHB_TOKEN.decimals);
-      const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+      const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress, BASE_CHAIN_ID);
 
       if (balance < amountWei) {
         const balanceHuman = Number(balance) / 1e18;
         throw new Error(
-          `Insufficient DHB balance. Need ${GOVERNANCE_PROPOSAL_FEE.toLocaleString()} DHB but have ${balanceHuman.toFixed(2)} DHB`
+          `Insufficient DHB on Base. Need ${GOVERNANCE_PROPOSAL_FEE.toLocaleString()} DHB on Base chain but have ${balanceHuman.toFixed(2)} DHB. Please bridge or transfer DHB to Base.`
         );
       }
 
@@ -264,12 +264,12 @@ export function useVoteGovernanceProposal() {
         await switchChain(BASE_CHAIN_ID);
         const signerAddress = await getWalletAddress();
         const amountWei = toWei(GOVERNANCE_VOTE_FEE, DHB_TOKEN.decimals);
-        const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+        const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress, BASE_CHAIN_ID);
 
         if (balance < amountWei) {
           const balanceHuman = Number(balance) / 1e18;
           throw new Error(
-            `Insufficient DHB balance. Need ${GOVERNANCE_VOTE_FEE.toLocaleString()} DHB but have ${balanceHuman.toFixed(2)} DHB`
+            `Insufficient DHB on Base. Need ${GOVERNANCE_VOTE_FEE.toLocaleString()} DHB on Base chain but have ${balanceHuman.toFixed(2)} DHB. Please bridge or transfer DHB to Base.`
           );
         }
 
