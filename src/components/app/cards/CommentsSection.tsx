@@ -799,6 +799,12 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           parentId: replyTarget?.id,
         });
       } else {
+        console.log('[CommentsSection] posting comment:', {
+          tokenId,
+          content: newComment,
+          replyToId: replyTarget?.id,
+          mentions: newComment.match(/@\w+/g) || [],
+        });
         await postComment(tokenId, newComment, replyTarget?.id);
       }
       await queryClient.refetchQueries({ queryKey: ['comments', tokenId] });

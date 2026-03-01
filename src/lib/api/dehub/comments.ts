@@ -74,11 +74,22 @@ export async function postComment(tokenId: string, content: string, replyToId?: 
     body.commentId = Number(replyToId);
   }
 
-  return apiCall<PostCommentResponse>("/api/request_comment", {
+  const hasMention = /@\w+/.test(content);
+  console.log('[postComment] →', {
+    method: 'POST',
+    body,
+    hasMention,
+    mentions: hasMention ? content.match(/@\w+/g) : [],
+  });
+
+  const result = await apiCall<PostCommentResponse>("/api/request_comment", {
     method: "POST",
     body,
     requiresAuth: true,
   });
+
+  console.log('[postComment] ← response:', result);
+  return result;
 }
 
 export async function addComment(params: {
