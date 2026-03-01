@@ -46,18 +46,20 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
     return `${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
   }
   
-  // If it's any api.dehub.io URL (avatars or other paths), extract extension and rebuild with CDN
+  // If it's any api.dehub.io URL, extract the path portion and rebuild with CDN
   if (apiAvatarPath.includes('api.dehub.io')) {
-    const ext = getExtension(apiAvatarPath);
-    return `${DEHUB_CDN_BASE}avatars/${address}.${ext}?v=${cacheBust}`;
+    // Extract relative path after the domain (e.g. "avatars/0x9e19...jpg")
+    const match = apiAvatarPath.match(/api\.dehub\.io\/(.+)/);
+    if (match) {
+      return `${DEHUB_CDN_BASE}${match[1]}${match[1].includes('?') ? '&' : '?'}v=${cacheBust}`;
+    }
   }
   
   // Other full URLs (dicebear, external CDNs, etc.) - return as-is
   if (apiAvatarPath.startsWith('http')) return apiAvatarPath;
   
-  // Relative path - build CDN URL
-  const ext = getExtension(apiAvatarPath);
-  return `${DEHUB_CDN_BASE}avatars/${address}.${ext}?v=${cacheBust}`;
+  // Relative path - preserve API path as-is (contains correct address in filename)
+  return `${DEHUB_CDN_BASE}${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
 }
 
 /**
