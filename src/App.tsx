@@ -92,7 +92,7 @@ function AppContent() {
             <Route path="/" element={<Index />} />
             <Route path="/docs" element={<DocsPage />} />
             <Route path="/docs/*" element={<DocsPage />} />
-            <Route path="/blog" element={<DocsPage />} />
+            
             <Route path="/delete-account" element={<DeleteAccount />} />
             <Route path="/creators" element={<CreatorsPage />} />
             <Route path="/jobs" element={<AppLayout />}>
