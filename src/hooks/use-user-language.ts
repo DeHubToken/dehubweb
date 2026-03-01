@@ -103,6 +103,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   ne: 'Nepali',
   tl: 'Tagalog',
   pcm: 'Nigerian Pidgin',
+  wes: 'Pidgin, Cameroon',
   ha: 'Hausa',
   hr: 'Croatian',
   yo: 'Yoruba',
