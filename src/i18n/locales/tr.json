@@ -803,6 +803,7 @@
     "offerSubmitted": "{{handle}} için {{amount}} DHB teklif gönderildi",
     "followers": "Takipçiler",
     "following": "Takip Edilenler",
+    "joined": "Katıldı",
     "loginDescription": "Profilinizi görüntülemek ve yönetmek için giriş yapın."
   },
   "messages": {

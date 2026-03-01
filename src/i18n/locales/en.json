@@ -833,6 +833,7 @@
     "offerSubmitted": "Offer of {{amount}} DHB submitted for {{handle}}",
     "followers": "Followers",
     "following": "Following",
+    "joined": "Joined",
     "loginDescription": "Log in to view and manage your profile."
   },
   "tv": {
