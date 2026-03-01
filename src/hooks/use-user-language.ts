@@ -87,6 +87,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   arz: 'Egyptian Arabic',
   ary: 'Moroccan Arabic',
   fa: 'Persian',
+  om: 'Oromo',
   af: 'Afrikaans',
   qu: 'Quechua',
   am: 'Amharic',
