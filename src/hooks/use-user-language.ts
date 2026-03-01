@@ -86,6 +86,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   bn: 'Bengali',
   be: 'Belarusian',
   bg: 'Bulgarian',
+  da: 'Danish',
   my: 'Burmese',
   ne: 'Nepali',
   tl: 'Tagalog',
