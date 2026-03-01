@@ -53,6 +53,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   zh: 'Chinese',
   ja: 'Japanese',
   ko: 'Korean',
+  lo: 'Lao',
   ar: 'Arabic',
   hi: 'Hindi',
   ta: 'Tamil',
