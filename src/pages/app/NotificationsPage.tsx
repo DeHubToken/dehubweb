@@ -797,7 +797,7 @@ export default function NotificationsPage() {
                       }`}
                     >
                       <span className="relative z-10 flex items-center gap-1">
-                        <tab.icon className="w-5 h-5" />
+                        <tab.icon className="w-[22.5px] h-[22.5px]" />
                         {count > 0 && (
                           <span className={`px-1.5 py-0.5 text-xs rounded-lg transition-colors duration-200 ${
                             activeTab === tab.value
