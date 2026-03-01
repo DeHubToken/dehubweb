@@ -356,7 +356,7 @@ export default function StakingPage() {
             <Gift className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400/70 flex-shrink-0" />
             <div className="min-w-0">
               <p className="text-[10px] text-white/40 uppercase tracking-wider">Rewards</p>
-              <p className="text-sm font-bold text-white truncate">{formatNumber(userEarned, 4)} <span className="text-white/40 text-xs">DHB</span></p>
+              <p className="text-sm font-bold text-white truncate">{formatNumber(userEarned, 2)} <span className="text-white/40 text-xs">DHB</span></p>
             </div>
           </div>
           <button
