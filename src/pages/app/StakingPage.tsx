@@ -67,17 +67,17 @@ function StatCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.4 }}
-      className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-4 sm:p-5"
+      className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-3 sm:p-4 lg:p-3"
     >
       <div className={cn("absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl opacity-20", accent)} />
-      <div className="flex items-start gap-3">
-        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex-shrink-0 flex items-center justify-center bg-white/5 border border-white/10">
+      <div className="flex items-start gap-3 lg:gap-0">
+        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex-shrink-0 flex items-center justify-center bg-white/5 border border-white/10 lg:hidden">
           <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white/70" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] sm:text-xs text-white/50 uppercase tracking-wider mb-1 truncate">{label}</p>
-          <p className="text-lg sm:text-xl lg:text-2xl font-bold text-white break-all leading-tight">{value}</p>
-          {subtitle && <p className="text-[10px] sm:text-xs text-white/40 mt-0.5 truncate">{subtitle}</p>}
+          <p className="text-[10px] sm:text-xs lg:text-[10px] text-white/50 uppercase tracking-wider mb-1 truncate">{label}</p>
+          <p className="text-lg sm:text-xl lg:text-base font-bold text-white break-all leading-tight">{value}</p>
+          {subtitle && <p className="text-[10px] sm:text-xs lg:text-[10px] text-white/40 mt-0.5 truncate">{subtitle}</p>}
         </div>
       </div>
     </motion.div>
