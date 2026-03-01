@@ -1,5 +1,5 @@
 import { useMemo, useEffect, useRef, useCallback, useState } from 'react';
-import { useSearchParams, useParams } from 'react-router-dom';
+import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { Home, MessageSquare, Image, Film, Star, Play, Radio, PieChart } from 'lucide-react';
 import { useQuery, useInfiniteQuery as useInfiniteQueryTQ, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
@@ -22,6 +22,7 @@ const PULL_THRESHOLD = 80;
 export function useProfilePage() {
   const [searchParams] = useSearchParams();
   const { username: routeUsername } = useParams<{ username: string }>();
+  const navigate = useNavigate();
   const userId = searchParams.get('id');
   const { user: currentUser, walletAddress: currentWalletAddress, isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
@@ -55,6 +56,25 @@ export function useProfilePage() {
     address: currentWalletAddress || undefined,
     enabled: !!(lookupUserId || lookupUsername),
   });
+
+  // If the URL contains a wallet address but the profile has a username, replace the URL
+  useEffect(() => {
+    if (apiProfile?.handle) {
+      const cleanHandle = apiProfile.handle.replace('@', '');
+      if (!cleanHandle) return;
+
+      // Route like /0xABC... → /username
+      if (routeUsername && /^0x[a-fA-F0-9]{40}$/i.test(routeUsername)) {
+        if (cleanHandle.toLowerCase() !== routeUsername.toLowerCase()) {
+          navigate(`/${cleanHandle}`, { replace: true });
+        }
+      }
+      // Route like /app/profile?id=0xABC... → /username
+      else if (userId && !routeUsername) {
+        navigate(`/${cleanHandle}`, { replace: true });
+      }
+    }
+  }, [routeUsername, userId, apiProfile?.handle, navigate]);
 
   // Fetch user content
   const {
