@@ -695,27 +695,25 @@ export default function GovernancePage() {
           </div>
         </div>
 
-        {/* Sort (only on proposals tab) */}
-        {activeTab === 'proposals' && (
-          <div ref={sortLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
-            <GlassIndicator rect={sortRect} borderRadius="0.5rem" />
-            <div className="relative z-20 flex gap-1.5 overflow-x-auto scrollbar-invisible" onScroll={onSortScroll}>
-              {SORTS.map((s) => (
-                <button
-                  key={s.id}
-                  ref={setSortRef(s.id)}
-                  type="button"
-                  onClick={() => setSort(s.id)}
-                  className={`relative z-40 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                    sort === s.id ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-                  }`}
-                >
-                  <span className="relative z-10">{s.label}</span>
-                </button>
-              ))}
-            </div>
+        {/* Sort */}
+        <div ref={sortLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+          <GlassIndicator rect={sortRect} borderRadius="0.5rem" />
+          <div className="relative z-20 flex gap-1.5 overflow-x-auto scrollbar-invisible" onScroll={onSortScroll}>
+            {SORTS.map((s) => (
+              <button
+                key={s.id}
+                ref={setSortRef(s.id)}
+                type="button"
+                onClick={() => setSort(s.id)}
+                className={`relative z-40 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                  sort === s.id ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+                }`}
+              >
+                <span className="relative z-10">{s.label}</span>
+              </button>
+            ))}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Proposals Tab */}
