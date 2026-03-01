@@ -775,7 +775,10 @@ Deno.serve(async (req) => {
       }
 
       // ── Cache time-based periods using snapshot deltas ──
-      for (const period of ["day", "week", "month", "year"] as const) {
+      const holdingsPeriods = filterPeriods
+        ? (["day", "week", "month", "year"] as const).filter(p => filterPeriods!.includes(p))
+        : ["day", "week", "month", "year"] as const;
+      for (const period of holdingsPeriods) {
         const result = await computeSnapshotDelta(supabase, nonZeroPeriod, "holdings", period, rpcConfig);
         results.push(result);
       }
@@ -790,99 +793,109 @@ Deno.serve(async (req) => {
     // ────────────────────────────────────────────────────────────────
     // 2. SOCIAL METRICS (followers, likes, subscribers)
     // ────────────────────────────────────────────────────────────────
+    const skipSocial = filterSorts && !filterSorts.some(s => ["followers", "likes", "subscribers"].includes(s));
     const SOCIAL_METRICS = ["followers", "likes", "subscribers"] as const;
 
-    try {
-      const { data: holdingsCache } = await supabase
-        .from("leaderboard_cache")
-        .select("data")
-        .eq("sort_mode", "holdings")
-        .eq("period", "all")
-        .single();
+    if (!skipSocial) {
+      try {
+        const { data: holdingsCache } = await supabase
+          .from("leaderboard_cache")
+          .select("data")
+          .eq("sort_mode", "holdings")
+          .eq("period", "all")
+          .single();
 
-      const allEntries: EnrichedEntry[] = (holdingsCache?.data as any)?.result?.byWalletBalance ?? [];
+        const allEntries: EnrichedEntry[] = (holdingsCache?.data as any)?.result?.byWalletBalance ?? [];
 
-      for (const metric of SOCIAL_METRICS) {
-        const sortedAll = [...allEntries].sort((a, b) => (b[metric] ?? 0) - (a[metric] ?? 0));
+        for (const metric of SOCIAL_METRICS) {
+          const sortedAll = [...allEntries].sort((a, b) => (b[metric] ?? 0) - (a[metric] ?? 0));
 
-        const allData = { result: { byWalletBalance: sortedAll } };
+          const allData = { result: { byWalletBalance: sortedAll } };
 
-        const { error: allMetricErr } = await supabase.from("leaderboard_cache").upsert(
-          { sort_mode: metric, period: "all", data: allData, updated_at: new Date().toISOString() },
-          { onConflict: "sort_mode,period" }
-        );
+          const { error: allMetricErr } = await supabase.from("leaderboard_cache").upsert(
+            { sort_mode: metric, period: "all", data: allData, updated_at: new Date().toISOString() },
+            { onConflict: "sort_mode,period" }
+          );
 
-        if (allMetricErr) {
-          console.error(`Error caching ${metric}/all:`, allMetricErr);
-          results.push({ sort: metric, period: "all", success: false, error: allMetricErr.message });
-        } else {
-          console.log(`${metric}/all: ${sortedAll.length} entries`);
-          results.push({ sort: metric, period: "all", success: true });
+          if (allMetricErr) {
+            console.error(`Error caching ${metric}/all:`, allMetricErr);
+            results.push({ sort: metric, period: "all", success: false, error: allMetricErr.message });
+          } else {
+            console.log(`${metric}/all: ${sortedAll.length} entries`);
+            results.push({ sort: metric, period: "all", success: true });
+          }
+
+          for (const period of ["day", "week", "month", "year"] as const) {
+            const result = await computeSnapshotDelta(supabase, allEntries, metric, period);
+            results.push(result);
+          }
         }
-
-        for (const period of ["day", "week", "month", "year"] as const) {
-          const result = await computeSnapshotDelta(supabase, allEntries, metric, period);
-          results.push(result);
+      } catch (socialErr) {
+        const msg = socialErr instanceof Error ? socialErr.message : "Unknown error";
+        console.error("Error building social metrics leaderboards:", msg);
+        for (const metric of SOCIAL_METRICS) {
+          PERIODS.forEach((period) =>
+            results.push({ sort: metric, period, success: false, error: msg })
+          );
         }
       }
-    } catch (socialErr) {
-      const msg = socialErr instanceof Error ? socialErr.message : "Unknown error";
-      console.error("Error building social metrics leaderboards:", msg);
-      for (const metric of SOCIAL_METRICS) {
-        PERIODS.forEach((period) =>
-          results.push({ sort: metric, period, success: false, error: msg })
-        );
-      }
+    } else {
+      console.log("Skipping social metrics (filtered out)");
     }
 
     // ────────────────────────────────────────────────────────────────
     // 3. TIP CATEGORIES (sentTips, receivedTips) - API + snapshot deltas
     // ────────────────────────────────────────────────────────────────
-    try {
-      for (const sort of API_SORT_MODES) {
-        try {
-          console.log(`Fetching ${sort}/all from API...`);
-          const data = await fetchDeHubLeaderboard(sort, "all");
-          const { error } = await supabase.from("leaderboard_cache").upsert(
-            { sort_mode: sort, period: "all", data, updated_at: new Date().toISOString() },
-            { onConflict: "sort_mode,period" }
-          );
-          if (error) {
-            console.error(`Error caching ${sort}/all:`, error);
-            results.push({ sort, period: "all", success: false, error: error.message });
-          } else {
-            results.push({ sort, period: "all", success: true });
+    const skipTips = filterSorts && !filterSorts.some(s => ["sentTips", "receivedTips"].includes(s));
+    if (!skipTips) {
+      try {
+        for (const sort of API_SORT_MODES) {
+          try {
+            console.log(`Fetching ${sort}/all from API...`);
+            const data = await fetchDeHubLeaderboard(sort, "all");
+            const { error } = await supabase.from("leaderboard_cache").upsert(
+              { sort_mode: sort, period: "all", data, updated_at: new Date().toISOString() },
+              { onConflict: "sort_mode,period" }
+            );
+            if (error) {
+              console.error(`Error caching ${sort}/all:`, error);
+              results.push({ sort, period: "all", success: false, error: error.message });
+            } else {
+              results.push({ sort, period: "all", success: true });
+            }
+          } catch (err) {
+            const msg = err instanceof Error ? err.message : "Unknown error";
+            console.error(`Error fetching ${sort}/all:`, msg);
+            results.push({ sort, period: "all", success: false, error: msg });
           }
-        } catch (err) {
-          const msg = err instanceof Error ? err.message : "Unknown error";
-          console.error(`Error fetching ${sort}/all:`, msg);
-          results.push({ sort, period: "all", success: false, error: msg });
+        }
+
+        const { data: holdingsCacheForTips } = await supabase
+          .from("leaderboard_cache")
+          .select("data")
+          .eq("sort_mode", "holdings")
+          .eq("period", "all")
+          .single();
+
+        const allEntriesForTips: EnrichedEntry[] = (holdingsCacheForTips?.data as any)?.result?.byWalletBalance ?? [];
+
+        for (const tipSort of ["sentTips", "receivedTips"] as const) {
+          for (const period of ["day", "week", "month", "year"] as const) {
+            const result = await computeSnapshotDelta(supabase, allEntriesForTips, tipSort, period);
+            results.push(result);
+          }
+        }
+      } catch (tipErr) {
+        const msg = tipErr instanceof Error ? tipErr.message : "Unknown error";
+        console.error("Error building tip leaderboards:", msg);
+        for (const sort of API_SORT_MODES) {
+          PERIODS.forEach((period) =>
+            results.push({ sort, period, success: false, error: msg })
+          );
         }
       }
-
-      const { data: holdingsCacheForTips } = await supabase
-        .from("leaderboard_cache")
-        .select("data")
-        .eq("sort_mode", "holdings")
-        .eq("period", "all")
-        .single();
-
-      const allEntriesForTips: EnrichedEntry[] = (holdingsCacheForTips?.data as any)?.result?.byWalletBalance ?? [];
-
-      for (const tipSort of ["sentTips", "receivedTips"] as const) {
-        for (const period of ["day", "week", "month", "year"] as const) {
-          const result = await computeSnapshotDelta(supabase, allEntriesForTips, tipSort, period);
-          results.push(result);
-        }
-      }
-    } catch (tipErr) {
-      const msg = tipErr instanceof Error ? tipErr.message : "Unknown error";
-      console.error("Error building tip leaderboards:", msg);
-      for (const sort of API_SORT_MODES) {
-        PERIODS.forEach((period) =>
-          results.push({ sort, period, success: false, error: msg })
-        );
-      }
+    } else {
+      console.log("Skipping tip categories (filtered out)");
     }
 
     const successCount = results.filter((r) => r.success).length;
