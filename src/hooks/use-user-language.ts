@@ -64,6 +64,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   ta: 'Tamil',
   te: 'Telugu',
   th: 'Thai',
+  tts: 'Thai, Northeastern',
   vi: 'Vietnamese',
   nl: 'Dutch',
   pl: 'Polish',
