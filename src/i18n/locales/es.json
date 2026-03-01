@@ -509,7 +509,14 @@
     "token": "Token",
     "action": "Acción",
     "viewTx": "Ver tx",
-    "loadingSubscriptions": "Cargando suscripciones..."
+    "loadingSubscriptions": "Cargando suscripciones...",
+    "txPurchased": "Compraste {{amount}} DHB",
+    "txSold": "Vendiste {{amount}} DHB",
+    "txTransfer": "Transferencia de {{amount}} DHB",
+    "txPpvUnlock": "Desbloqueo PPV — {{amount}} DHB",
+    "txPpvSale": "Venta PPV — {{amount}} DHB",
+    "txTipSent": "Propina a {{name}} — {{amount}} DHB",
+    "txTipReceived": "{{name}} te dio propina — {{amount}} DHB"
   },
   "wallet": {
     "title": "Billetera",

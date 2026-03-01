@@ -571,7 +571,14 @@
     "token": "Token",
     "action": "İşlem",
     "viewTx": "İşlemi gör",
-    "loadingSubscriptions": "Abonelikler yükleniyor..."
+    "loadingSubscriptions": "Abonelikler yükleniyor...",
+    "txPurchased": "{{amount}} DHB satın alındı",
+    "txSold": "{{amount}} DHB satıldı",
+    "txTransfer": "{{amount}} DHB transferi",
+    "txPpvUnlock": "PPV kilidi açıldı — {{amount}} DHB",
+    "txPpvSale": "PPV satışı — {{amount}} DHB",
+    "txTipSent": "{{name}} kişisine bahşiş — {{amount}} DHB",
+    "txTipReceived": "{{name}} bahşiş gönderdi — {{amount}} DHB"
   },
   "bookmarks": {
     "title": "Yer İmleriniz",

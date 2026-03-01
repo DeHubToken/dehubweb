@@ -349,7 +349,14 @@
     "token": "Token",
     "action": "Aktion",
     "viewTx": "Tx anzeigen",
-    "loadingSubscriptions": "Abonnements werden geladen..."
+    "loadingSubscriptions": "Abonnements werden geladen...",
+    "txPurchased": "{{amount}} DHB gekauft",
+    "txSold": "{{amount}} DHB verkauft",
+    "txTransfer": "Überweisung von {{amount}} DHB",
+    "txPpvUnlock": "PPV freigeschaltet — {{amount}} DHB",
+    "txPpvSale": "PPV Verkauf — {{amount}} DHB",
+    "txTipSent": "Trinkgeld an {{name}} — {{amount}} DHB",
+    "txTipReceived": "{{name}} hat Trinkgeld gesendet — {{amount}} DHB"
   },
   "wallet": {
     "title": "Geldbörse",
