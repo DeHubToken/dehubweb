@@ -6,7 +6,7 @@
  */
 
 import governanceShieldIcon from '@/assets/governance-shield.png';
-import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -560,6 +560,7 @@ export default function GovernancePage() {
   const { isAuthenticated, openLoginModal, user } = useAuth();
   const [activeTab, setActiveTab] = useState<PageTab>('proposals');
   const [sort, setSort] = useState<GovernanceSort>('most_voted');
+  const { layerRef: tabLayerRef, setRef: setTabRef, rect: tabRect, onScroll: onTabScroll } = useTabIndicator(activeTab);
   const { layerRef: sortLayerRef, setRef: setSortRef, rect: sortRect, onScroll: onSortScroll } = useTabIndicator(sort);
   const [searchInput, setSearchInput] = useState('');
   const search = useDebouncedValue(searchInput, 300);
@@ -650,70 +651,48 @@ export default function GovernancePage() {
         </div>
 
         {/* Page Tabs */}
-        <div className="relative flex gap-1 rounded-xl mb-3">
-          <button
-            type="button"
-            onClick={() => setActiveTab('proposals')}
-            className="relative z-10 flex-1"
-          >
-            {activeTab === 'proposals' ? (
-              <LiquidGlassBubble shimmer={false} className="w-full">
-                <span className="flex items-center justify-center text-sm font-medium text-white">{t('governance.proposals')}</span>
-              </LiquidGlassBubble>
-            ) : (
-              <span className="flex items-center justify-center py-2.5 text-sm font-medium text-zinc-500 hover:text-zinc-300 transition-colors">{t('governance.proposals')}</span>
-            )}
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('passed')}
-            className="relative z-10 flex-1"
-          >
-            {activeTab === 'passed' ? (
-              <LiquidGlassBubble shimmer={false} className="w-full">
-                <span className="flex items-center justify-center gap-1.5 text-sm font-medium text-white">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  {t('governance.passed')}
-                  {passedCount > 0 && (
-                    <span className="text-[10px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded-md font-semibold">{passedCount}</span>
-                  )}
-                </span>
-              </LiquidGlassBubble>
-            ) : (
-              <span className="flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium text-zinc-500 hover:text-zinc-300 transition-colors">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                {t('governance.passed')}
-                {passedCount > 0 && (
-                  <span className="text-[10px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded-md font-semibold">{passedCount}</span>
-                )}
-              </span>
-            )}
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('rejected')}
-            className="relative z-10 flex-1"
-          >
-            {activeTab === 'rejected' ? (
-              <LiquidGlassBubble shimmer={false} className="w-full">
-                <span className="flex items-center justify-center gap-1.5 text-sm font-medium text-white">
-                  <X className="w-3.5 h-3.5" />
-                  {t('governance.rejected')}
-                  {rejectedCount > 0 && (
-                    <span className="text-[10px] bg-red-500/15 text-red-400 px-1.5 py-0.5 rounded-md font-semibold">{rejectedCount}</span>
-                  )}
-                </span>
-              </LiquidGlassBubble>
-            ) : (
-              <span className="flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium text-zinc-500 hover:text-zinc-300 transition-colors">
-                <X className="w-3.5 h-3.5" />
-                {t('governance.rejected')}
-                {rejectedCount > 0 && (
-                  <span className="text-[10px] bg-red-500/15 text-red-400 px-1.5 py-0.5 rounded-md font-semibold">{rejectedCount}</span>
-                )}
-              </span>
-            )}
-          </button>
+        <div ref={tabLayerRef} className="relative mb-3" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+          <GlassIndicator rect={tabRect} borderRadius="0.5rem" />
+          <div className="relative z-20 flex gap-1" onScroll={onTabScroll}>
+            <button
+              type="button"
+              ref={setTabRef('proposals')}
+              onClick={() => setActiveTab('proposals')}
+              className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                activeTab === 'proposals' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+              }`}
+            >
+              {t('governance.proposals')}
+            </button>
+            <button
+              type="button"
+              ref={setTabRef('passed')}
+              onClick={() => setActiveTab('passed')}
+              className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-1.5 ${
+                activeTab === 'passed' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+              }`}
+            >
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              {t('governance.passed')}
+              {passedCount > 0 && (
+                <span className="text-[10px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded-md font-semibold">{passedCount}</span>
+              )}
+            </button>
+            <button
+              type="button"
+              ref={setTabRef('rejected')}
+              onClick={() => setActiveTab('rejected')}
+              className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-1.5 ${
+                activeTab === 'rejected' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+              }`}
+            >
+              <X className="w-3.5 h-3.5" />
+              {t('governance.rejected')}
+              {rejectedCount > 0 && (
+                <span className="text-[10px] bg-red-500/15 text-red-400 px-1.5 py-0.5 rounded-md font-semibold">{rejectedCount}</span>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Sort (only on proposals tab) */}
