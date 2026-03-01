@@ -79,6 +79,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   hu: 'Hungarian',
   sk: 'Slovak',
   bn: 'Bengali',
+  be: 'Belarusian',
   my: 'Burmese',
   ne: 'Nepali',
   tl: 'Tagalog',
