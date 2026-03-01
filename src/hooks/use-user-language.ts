@@ -90,6 +90,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   fa: 'Persian',
   om: 'Oromo',
   af: 'Afrikaans',
+  si: 'Sinhala',
   qu: 'Quechua',
   am: 'Amharic',
   sw: 'Swahili',
