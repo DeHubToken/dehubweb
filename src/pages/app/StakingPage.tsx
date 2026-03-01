@@ -390,7 +390,7 @@ export default function StakingPage() {
       )}
 
       {/* Stake / Unstake Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+      <div className={cn("grid gap-4 mb-6", userStaked > 0 ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1")}>
         {/* Stake */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -434,43 +434,45 @@ export default function StakingPage() {
           </div>
         </motion.div>
 
-        {/* Unstake */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
-        >
-          <div className="flex items-center gap-2 mb-4">
-            <ArrowUpFromLine className="w-4 h-4 text-amber-400" />
-            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Unstake DHB</h2>
-          </div>
-          <p className="text-xs text-white/40 mb-4">
-            Withdraw your staked DHB. Tokens will be returned to your wallet.
-          </p>
-          <div className="flex gap-2">
-            <input
-              type="number"
-              placeholder="Amount DHB"
-              value={unstakeAmount}
-              onChange={(e) => setUnstakeAmount(e.target.value)}
-              className="flex-1 min-w-0 px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-amber-500/50"
-            />
-            <button
-              onClick={handleUnstake}
-              disabled={isUnstaking || !unstakeAmount}
-              className={cn(
-                "px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all flex-shrink-0",
-                isUnstaking
-                  ? "bg-amber-500/20 text-amber-400/60 cursor-not-allowed"
-                  : "bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 border border-amber-500/20"
-              )}
-            >
-              {isUnstaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Clock className="w-4 h-4" />}
-              Unstake
-            </button>
-          </div>
-        </motion.div>
+        {/* Unstake — only visible when user has staked balance */}
+        {userStaked > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
+          >
+            <div className="flex items-center gap-2 mb-4">
+              <ArrowUpFromLine className="w-4 h-4 text-amber-400" />
+              <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Unstake DHB</h2>
+            </div>
+            <p className="text-xs text-white/40 mb-4">
+              Withdraw your staked DHB. Tokens will be returned to your wallet.
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="number"
+                placeholder="Amount DHB"
+                value={unstakeAmount}
+                onChange={(e) => setUnstakeAmount(e.target.value)}
+                className="flex-1 min-w-0 px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-amber-500/50"
+              />
+              <button
+                onClick={handleUnstake}
+                disabled={isUnstaking || !unstakeAmount}
+                className={cn(
+                  "px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all flex-shrink-0",
+                  isUnstaking
+                    ? "bg-amber-500/20 text-amber-400/60 cursor-not-allowed"
+                    : "bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 border border-amber-500/20"
+                )}
+              >
+                {isUnstaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Clock className="w-4 h-4" />}
+                Unstake
+              </button>
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* Chain Breakdown */}
