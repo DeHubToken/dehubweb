@@ -702,25 +702,14 @@ export default function ExplorePage() {
                     ref={setExploreTabRef(tab.value)}
                     onClick={() => setActiveTab(tab.value)}
                     className={cn(
-                      'relative z-40 flex-1 flex items-center justify-center gap-2 px-2 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
+                      'relative z-40 flex-1 flex items-center justify-center px-2 py-2 rounded-xl transition-colors',
                       activeTab === tab.value
                         ? 'text-white'
                         : 'text-zinc-400 hover:text-white'
                     )}
                   >
-                    <span className="relative z-10 flex items-center gap-2">
-                      {tab.value === 'all' ? (
-                        <>
-                          <span className="sm:hidden">All</span>
-                          <tab.icon className="w-4 h-4 hidden sm:block" />
-                          <span className="hidden sm:inline">{tab.label}</span>
-                        </>
-                      ) : (
-                        <>
-                          <tab.icon className="w-4 h-4" />
-                          <span className="hidden sm:inline">{tab.label}</span>
-                        </>
-                      )}
+                    <span className="relative z-10">
+                      <tab.icon className="w-5 h-5" />
                     </span>
                   </button>
                 ))}
