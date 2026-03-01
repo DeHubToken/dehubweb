@@ -1,14 +1,13 @@
 /**
  * Staking Page
  * ============
- * Displays DHB staking stats, stake/unstake for BNB (contract) and Base (transfer).
+ * Chain-abstracted DHB staking. Auto-detects which chain(s) user has balance on.
  */
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, CheckCircle } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserBNBStaking, type UnstakeEvent } from '@/hooks/use-staking-data';
+import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle } from 'lucide-react';
+import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserStakingData, type UnstakeEvent } from '@/hooks/use-staking-data';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { sendERC20Token } from '@/lib/wallet/send';
@@ -84,32 +83,33 @@ function StatCard({
   );
 }
 
-type StakingChain = 'BNB' | 'Base';
-
 export default function StakingPage() {
-  const { t } = useTranslation();
   const { isCollapsed } = useSidebarCollapse();
   const { data: stats, isLoading: statsLoading, refetch: refetchStats } = useStakingStats();
   const { data: unstakeQueue, isLoading: queueLoading, refetch: refetchQueue } = useUnstakeQueue();
-  const { data: userBNB, refetch: refetchUserBNB } = useUserBNBStaking();
+  const { data: userData, refetch: refetchUser } = useUserStakingData();
   const { tvl, dhbPrice } = useStakingTVL();
 
-  const [activeChain, setActiveChain] = useState<StakingChain>('BNB');
   const [stakeAmount, setStakeAmount] = useState('');
   const [unstakeAmount, setUnstakeAmount] = useState('');
   const [isApproving, setIsApproving] = useState(false);
   const [isStaking, setIsStaking] = useState(false);
   const [isUnstaking, setIsUnstaking] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
+  // Track which chain we're currently staking on (for multi-chain flow)
+  const [stakingChainLabel, setStakingChainLabel] = useState('');
 
   const handleRefresh = () => {
     refetchStats();
     refetchQueue();
-    refetchUserBNB();
+    refetchUser();
   };
 
-  // ── BNB Staking (contract-based) ─────────────────────────────
-  const handleBNBStake = async () => {
+  /**
+   * Smart stake: auto-detect chain with balance, stake there.
+   * If both chains have balance, stake on first available and notify user to repeat.
+   */
+  const handleStake = async () => {
     const amount = parseFloat(stakeAmount);
     if (!amount || amount <= 0) {
       toast({ title: 'Invalid amount', description: 'Please enter a valid amount to stake.', variant: 'destructive' });
@@ -124,47 +124,102 @@ export default function StakingPage() {
         return;
       }
 
-      // Check allowance
-      const amountWei = parseUnits(stakeAmount, 18);
-      const currentAllowance = userBNB?.allowance ?? BigInt(0);
+      // Detect which chain(s) have balance
+      const hasBNB = userData?.hasBNBBalance ?? false;
+      const hasBase = userData?.hasBaseBalance ?? false;
 
-      if (currentAllowance < amountWei) {
-        // Need approval first
-        setIsApproving(true);
-        toast({ title: 'Approving DHB...', description: 'Please confirm the approval transaction.' });
-        const approvalResult = await approveBNBStaking(stakeAmount);
-        const approvalReceipt = await approvalResult.wait();
-        if (approvalReceipt.status !== 1) {
-          toast({ title: 'Approval failed', description: 'Token approval was reverted.', variant: 'destructive' });
-          return;
-        }
-        toast({ title: 'Approved ✅', description: 'DHB approved. Now staking...' });
-        setIsApproving(false);
+      if (!hasBNB && !hasBase) {
+        toast({ title: 'No DHB balance', description: 'You don\'t have DHB tokens on either chain.', variant: 'destructive' });
+        return;
       }
 
-      // Stake
-      toast({ title: 'Staking DHB...', description: 'Please confirm the stake transaction.' });
-      const result = await stakeBNB(stakeAmount);
-      const receipt = await result.wait();
+      const bothChains = hasBNB && hasBase;
 
-      if (receipt.status === 1) {
-        toast({ title: 'Staked successfully! ✅', description: `${stakeAmount} DHB staked on BNB Chain.` });
-        setStakeAmount('');
-        refetchStats();
-        refetchUserBNB();
+      // Determine which chain to stake on
+      // Prefer BNB (has contract staking), fall back to Base
+      const targetChain: 'BNB' | 'Base' = hasBNB ? 'BNB' : 'Base';
+      setStakingChainLabel(targetChain);
+
+      if (bothChains) {
+        toast({
+          title: 'DHB found on both chains',
+          description: `Staking on ${targetChain} first. After this completes, come back to stake your ${targetChain === 'BNB' ? 'Base' : 'BNB'} balance.`,
+        });
+      }
+
+      if (targetChain === 'BNB') {
+        await stakeBNBFlow(amount);
       } else {
-        toast({ title: 'Stake failed', description: 'Transaction reverted.', variant: 'destructive' });
+        await stakeBaseFlow(amount);
       }
     } catch (err: any) {
-      console.error('[Staking] BNB stake error:', err);
+      console.error('[Staking] Stake error:', err);
       toast({ title: 'Stake failed', description: err?.message || 'Unknown error', variant: 'destructive' });
     } finally {
       setIsStaking(false);
       setIsApproving(false);
+      setStakingChainLabel('');
     }
   };
 
-  const handleBNBUnstake = async () => {
+  const stakeBNBFlow = async (amount: number) => {
+    // Check allowance
+    const amountWei = parseUnits(stakeAmount, 18);
+    const currentAllowance = userData?.bnbAllowance ?? BigInt(0);
+
+    if (currentAllowance < amountWei) {
+      setIsApproving(true);
+      toast({ title: 'Approving DHB...', description: 'Please confirm the approval transaction.' });
+      const approvalResult = await approveBNBStaking(stakeAmount);
+      const approvalReceipt = await approvalResult.wait();
+      if (approvalReceipt.status !== 1) {
+        toast({ title: 'Approval failed', description: 'Token approval was reverted.', variant: 'destructive' });
+        return;
+      }
+      toast({ title: 'Approved ✅', description: 'DHB approved. Now staking...' });
+      setIsApproving(false);
+    }
+
+    toast({ title: 'Staking DHB...', description: 'Please confirm the stake transaction.' });
+    const result = await stakeBNB(stakeAmount);
+    const receipt = await result.wait();
+
+    if (receipt.status === 1) {
+      toast({ title: 'Staked successfully! ✅', description: `${stakeAmount} DHB staked on BNB Chain.` });
+      setStakeAmount('');
+      refetchStats();
+      refetchUser();
+    } else {
+      toast({ title: 'Stake failed', description: 'Transaction reverted.', variant: 'destructive' });
+    }
+  };
+
+  const stakeBaseFlow = async (amount: number) => {
+    await switchChain(BASE_CHAIN_ID);
+    const dhbTokenAddress = CHAIN_CONFIGS[BASE_CHAIN_ID]?.dhbToken;
+    if (!dhbTokenAddress) {
+      toast({ title: 'Error', description: 'DHB token not configured for Base.', variant: 'destructive' });
+      return;
+    }
+
+    toast({ title: 'Staking DHB...', description: 'Please confirm the stake transaction.' });
+    const result = await sendERC20Token(dhbTokenAddress, BASE_STAKING_ADDRESS, stakeAmount, 18, BASE_CHAIN_ID as any);
+    const receipt = await result.wait();
+
+    if (receipt.status === 1) {
+      toast({ title: 'Staked successfully! ✅', description: `${stakeAmount} DHB staked on Base.` });
+      setStakeAmount('');
+      refetchStats();
+      refetchUser();
+    } else {
+      toast({ title: 'Stake failed', description: 'Transaction reverted.', variant: 'destructive' });
+    }
+  };
+
+  /**
+   * Smart unstake: detect where user has staked balance
+   */
+  const handleUnstake = async () => {
     const amount = parseFloat(unstakeAmount);
     if (!amount || amount <= 0) {
       toast({ title: 'Invalid amount', description: 'Please enter a valid amount to unstake.', variant: 'destructive' });
@@ -179,27 +234,39 @@ export default function StakingPage() {
         return;
       }
 
-      toast({ title: 'Unstaking DHB...', description: 'Please confirm the unstake transaction.' });
-      const result = await unstakeBNB(unstakeAmount);
-      const receipt = await result.wait();
+      const hasStakedBNB = (userData?.totalStaked ?? 0) > 0;
 
-      if (receipt.status === 1) {
-        toast({ title: 'Unstaked successfully! ✅', description: `${unstakeAmount} DHB unstaked from BNB Chain.` });
-        setUnstakeAmount('');
-        refetchStats();
-        refetchUserBNB();
+      if (hasStakedBNB) {
+        // Unstake from BNB contract
+        toast({ title: 'Unstaking DHB...', description: 'Please confirm the unstake transaction.' });
+        const result = await unstakeBNB(unstakeAmount);
+        const receipt = await result.wait();
+
+        if (receipt.status === 1) {
+          toast({ title: 'Unstaked successfully! ✅', description: `${unstakeAmount} DHB unstaked.` });
+          setUnstakeAmount('');
+          refetchStats();
+          refetchUser();
+        } else {
+          toast({ title: 'Unstake failed', description: 'Transaction reverted.', variant: 'destructive' });
+        }
       } else {
-        toast({ title: 'Unstake failed', description: 'Transaction reverted.', variant: 'destructive' });
+        // Base unstake goes into queue
+        toast({
+          title: 'Unstake initiated ⏳',
+          description: `${unstakeAmount} DHB unstake request submitted. You will be notified when complete.`,
+        });
+        setUnstakeAmount('');
       }
     } catch (err: any) {
-      console.error('[Staking] BNB unstake error:', err);
+      console.error('[Staking] Unstake error:', err);
       toast({ title: 'Unstake failed', description: err?.message || 'Unknown error', variant: 'destructive' });
     } finally {
       setIsUnstaking(false);
     }
   };
 
-  const handleBNBClaim = async () => {
+  const handleClaim = async () => {
     setIsClaiming(true);
     try {
       const walletAddress = await getWalletAddress();
@@ -214,7 +281,7 @@ export default function StakingPage() {
 
       if (receipt.status === 1) {
         toast({ title: 'Rewards claimed! 🎉', description: 'Your staking rewards have been sent to your wallet.' });
-        refetchUserBNB();
+        refetchUser();
       } else {
         toast({ title: 'Claim failed', description: 'Transaction reverted.', variant: 'destructive' });
       }
@@ -226,89 +293,9 @@ export default function StakingPage() {
     }
   };
 
-  // ── Base Staking (transfer-based) ────────────────────────────
-  const handleBaseStake = async () => {
-    const amount = parseFloat(stakeAmount);
-    if (!amount || amount <= 0) {
-      toast({ title: 'Invalid amount', description: 'Please enter a valid amount to stake.', variant: 'destructive' });
-      return;
-    }
-    
-    setIsStaking(true);
-    try {
-      const walletAddress = await getWalletAddress();
-      if (!walletAddress) {
-        toast({ title: 'Not connected', description: 'Please connect your wallet first.', variant: 'destructive' });
-        return;
-      }
-
-      await switchChain(BASE_CHAIN_ID);
-
-      const dhbTokenAddress = CHAIN_CONFIGS[BASE_CHAIN_ID]?.dhbToken;
-      if (!dhbTokenAddress) {
-        toast({ title: 'Error', description: 'DHB token not configured for Base.', variant: 'destructive' });
-        return;
-      }
-
-      const result = await sendERC20Token(
-        dhbTokenAddress,
-        BASE_STAKING_ADDRESS,
-        stakeAmount,
-        18,
-        BASE_CHAIN_ID as any
-      );
-
-      toast({ title: 'Stake initiated', description: `Staking ${stakeAmount} DHB on Base. Tx: ${result.hash.slice(0, 10)}...` });
-      
-      const receipt = await result.wait();
-      if (receipt.status === 1) {
-        toast({ title: 'Stake successful! ✅', description: `${stakeAmount} DHB staked on Base chain.` });
-        setStakeAmount('');
-        refetchStats();
-      } else {
-        toast({ title: 'Stake failed', description: 'Transaction reverted.', variant: 'destructive' });
-      }
-    } catch (err: any) {
-      console.error('[Staking] Base stake error:', err);
-      toast({ title: 'Stake failed', description: err?.message || 'Unknown error', variant: 'destructive' });
-    } finally {
-      setIsStaking(false);
-    }
-  };
-
-  const handleBaseUnstake = async () => {
-    const amount = parseFloat(unstakeAmount);
-    if (!amount || amount <= 0) {
-      toast({ title: 'Invalid amount', description: 'Please enter a valid amount to unstake.', variant: 'destructive' });
-      return;
-    }
-
-    setIsUnstaking(true);
-    try {
-      const walletAddress = await getWalletAddress();
-      if (!walletAddress) {
-        toast({ title: 'Not connected', description: 'Please connect your wallet first.', variant: 'destructive' });
-        return;
-      }
-
-      toast({ 
-        title: 'Unstake initiated ⏳', 
-        description: `${unstakeAmount} DHB unstake request submitted. You will be notified when complete.` 
-      });
-      setUnstakeAmount('');
-    } catch (err: any) {
-      console.error('[Staking] Unstake error:', err);
-      toast({ title: 'Unstake failed', description: err?.message || 'Unknown error', variant: 'destructive' });
-    } finally {
-      setIsUnstaking(false);
-    }
-  };
-
-  const handleStake = activeChain === 'BNB' ? handleBNBStake : handleBaseStake;
-  const handleUnstake = activeChain === 'BNB' ? handleBNBUnstake : handleBaseUnstake;
-
-  const userStaked = userBNB ? parseFloat(userBNB.staked) : 0;
-  const userEarned = userBNB ? parseFloat(userBNB.earned) : 0;
+  const userStaked = userData?.totalStaked ?? 0;
+  const userUnstaked = userData?.totalUnstaked ?? 0;
+  const userEarned = userData ? parseFloat(userData.bnbEarned) : 0;
 
   return (
     <div className={cn("min-h-screen pb-24 px-3 sm:px-4 max-w-5xl mx-auto", isCollapsed && "pt-16 md:pt-0")}>
@@ -343,73 +330,62 @@ export default function StakingPage() {
         <StatCard icon={Activity} label="Unstake Events" value={queueLoading ? '—' : `${unstakeQueue?.length ?? 0}`} subtitle="Recent unstakes" accent="bg-rose-500" delay={0.15} />
       </div>
 
-      {/* Chain Selector Tabs */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="flex gap-2 mb-4"
-      >
-        <button
-          onClick={() => setActiveChain('BNB')}
-          className={cn(
-            "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all border",
-            activeChain === 'BNB'
-              ? "bg-yellow-500/15 text-yellow-400 border-yellow-500/30"
-              : "bg-white/[0.03] text-white/50 border-white/10 hover:bg-white/[0.06]"
-          )}
-        >
-          <img src={bnbLogo} alt="BNB" className="w-5 h-5 rounded-full" />
-          BNB Chain
-        </button>
-        <button
-          onClick={() => setActiveChain('Base')}
-          className={cn(
-            "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all border",
-            activeChain === 'Base'
-              ? "bg-blue-500/15 text-blue-400 border-blue-500/30"
-              : "bg-white/[0.03] text-white/50 border-white/10 hover:bg-white/[0.06]"
-          )}
-        >
-          <img src={baseLogo} alt="Base" className="w-5 h-5 rounded-full" />
-          Base
-        </button>
-      </motion.div>
-
-      {/* BNB User Stats (only shown when BNB is selected and user is connected) */}
-      {activeChain === 'BNB' && userBNB && (
+      {/* User Balance Row — Staked + Unstaked + Rewards + Claim */}
+      {userData && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4"
+          transition={{ delay: 0.2 }}
+          className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6"
         >
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 flex items-center gap-3">
-            <Lock className="w-5 h-5 text-yellow-400/70 flex-shrink-0" />
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
+            <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400/70 flex-shrink-0" />
             <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">Your Staked</p>
-              <p className="text-sm font-bold text-white">{formatNumber(userStaked)} <span className="text-white/40 text-xs">DHB</span></p>
+              <p className="text-[10px] text-white/40 uppercase tracking-wider">Staked</p>
+              <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)} <span className="text-white/40 text-xs">DHB</span></p>
             </div>
           </div>
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 flex items-center gap-3">
-            <Gift className="w-5 h-5 text-emerald-400/70 flex-shrink-0" />
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
+            <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400/70 flex-shrink-0" />
             <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">Pending Rewards</p>
-              <p className="text-sm font-bold text-white">{formatNumber(userEarned, 4)} <span className="text-white/40 text-xs">DHB</span></p>
+              <p className="text-[10px] text-white/40 uppercase tracking-wider">Unstaked</p>
+              <p className="text-sm font-bold text-white truncate">{formatNumber(userUnstaked)} <span className="text-white/40 text-xs">DHB</span></p>
+            </div>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
+            <Gift className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400/70 flex-shrink-0" />
+            <div className="min-w-0">
+              <p className="text-[10px] text-white/40 uppercase tracking-wider">Rewards</p>
+              <p className="text-sm font-bold text-white truncate">{formatNumber(userEarned, 4)} <span className="text-white/40 text-xs">DHB</span></p>
             </div>
           </div>
           <button
-            onClick={handleBNBClaim}
+            onClick={handleClaim}
             disabled={isClaiming || userEarned <= 0}
             className={cn(
-              "rounded-xl border p-4 flex items-center justify-center gap-2 text-sm font-medium transition-all",
+              "rounded-xl border p-3 sm:p-4 flex items-center justify-center gap-2 text-sm font-medium transition-all",
               isClaiming || userEarned <= 0
                 ? "bg-white/[0.02] border-white/5 text-white/30 cursor-not-allowed"
                 : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20"
             )}
           >
             {isClaiming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Gift className="w-4 h-4" />}
-            Claim Rewards
+            Claim
           </button>
+        </motion.div>
+      )}
+
+      {/* Multi-chain notice */}
+      {userData?.hasBothChains && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex items-start gap-2.5 p-3 rounded-xl border border-amber-500/20 bg-amber-500/5 mb-4"
+        >
+          <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-amber-300/80">
+            You have DHB on both BNB and Base chains. Staking will process one chain at a time — come back after to stake the other.
+          </p>
         </motion.div>
       )}
 
@@ -424,14 +400,10 @@ export default function StakingPage() {
         >
           <div className="flex items-center gap-2 mb-4">
             <ArrowDownToLine className="w-4 h-4 text-emerald-400" />
-            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">
-              Stake on {activeChain}
-            </h2>
+            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Stake DHB</h2>
           </div>
           <p className="text-xs text-white/40 mb-4">
-            {activeChain === 'BNB'
-              ? 'Stake DHB via the BNB staking contract. Approval is required before your first stake.'
-              : 'Stake DHB by transferring to the Base staking address. Your tokens will be locked and you\'ll earn rewards.'}
+            Stake your DHB tokens to earn rewards. The correct chain will be detected automatically.
           </p>
           <div className="flex gap-2">
             <input
@@ -454,7 +426,7 @@ export default function StakingPage() {
               {isApproving ? (
                 <><Loader2 className="w-4 h-4 animate-spin" /> Approving...</>
               ) : isStaking ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> Staking...</>
+                <><Loader2 className="w-4 h-4 animate-spin" /> {stakingChainLabel || 'Staking'}...</>
               ) : (
                 <><ArrowDownToLine className="w-4 h-4" /> Stake</>
               )}
@@ -471,14 +443,10 @@ export default function StakingPage() {
         >
           <div className="flex items-center gap-2 mb-4">
             <ArrowUpFromLine className="w-4 h-4 text-amber-400" />
-            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">
-              Unstake from {activeChain}
-            </h2>
+            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Unstake DHB</h2>
           </div>
           <p className="text-xs text-white/40 mb-4">
-            {activeChain === 'BNB'
-              ? 'Unstake your DHB directly from the BNB staking contract. Tokens are returned to your wallet.'
-              : 'Request to unstake your DHB. You\'ll be placed in the unstake queue and notified when complete.'}
+            Withdraw your staked DHB. Tokens will be returned to your wallet.
           </p>
           <div className="flex gap-2">
             <input
