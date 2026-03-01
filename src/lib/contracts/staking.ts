@@ -4,8 +4,8 @@
  * Addresses and helpers for DHB staking on BNB and Base chains.
  */
 
-import { Interface } from 'ethers';
-import { readContract } from './aa-utils';
+import { Interface, parseUnits } from 'ethers';
+import { readContract, writeContractAA, getWalletAddress, switchChain, type AAWriteResult } from './aa-utils';
 import { CHAIN_CONFIGS, BNB_CHAIN_ID, BASE_CHAIN_ID } from './dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
 
@@ -20,6 +20,16 @@ const BNB_STAKING_DHB_TOKEN = '0x680d3113caf77b61b510f332d5ef4cf5b41a761d';
 
 const erc20Interface = new Interface([
   'function balanceOf(address owner) view returns (uint256)',
+  'function approve(address spender, uint256 amount) returns (bool)',
+  'function allowance(address owner, address spender) view returns (uint256)',
+]);
+
+const stakingInterface = new Interface([
+  'function stake(uint256 amount)',
+  'function unstake(uint256 amount)',
+  'function claim()',
+  'function earned(address account) view returns (uint256)',
+  'function balanceOf(address account) view returns (uint256)',
 ]);
 
 /**
@@ -51,6 +61,119 @@ export async function getTotalStaked(chainId: ChainId): Promise<bigint> {
     console.error(`[Staking] Failed to read totalStaked on chain ${chainId}:`, err);
     return BigInt(0);
   }
+}
+
+/**
+ * Get user's staked balance on BNB staking contract
+ */
+export async function getUserStakedBNB(userAddress: string): Promise<bigint> {
+  try {
+    return await readContract<bigint>(
+      BNB_STAKING_CONTRACT,
+      stakingInterface,
+      'balanceOf',
+      [userAddress],
+      BNB_CHAIN_ID
+    );
+  } catch (err) {
+    console.error('[Staking] Failed to read user staked balance:', err);
+    return BigInt(0);
+  }
+}
+
+/**
+ * Get user's pending rewards on BNB staking contract
+ */
+export async function getUserEarnedBNB(userAddress: string): Promise<bigint> {
+  try {
+    return await readContract<bigint>(
+      BNB_STAKING_CONTRACT,
+      stakingInterface,
+      'earned',
+      [userAddress],
+      BNB_CHAIN_ID
+    );
+  } catch (err) {
+    console.error('[Staking] Failed to read earned rewards:', err);
+    return BigInt(0);
+  }
+}
+
+/**
+ * Get user's DHB token allowance for the BNB staking contract
+ */
+export async function getStakingAllowance(userAddress: string): Promise<bigint> {
+  try {
+    return await readContract<bigint>(
+      BNB_STAKING_DHB_TOKEN,
+      erc20Interface,
+      'allowance',
+      [userAddress, BNB_STAKING_CONTRACT],
+      BNB_CHAIN_ID
+    );
+  } catch (err) {
+    console.error('[Staking] Failed to read allowance:', err);
+    return BigInt(0);
+  }
+}
+
+/**
+ * Approve DHB token spending for BNB staking contract
+ */
+export async function approveBNBStaking(amount: string): Promise<AAWriteResult> {
+  await switchChain(BNB_CHAIN_ID);
+  const amountWei = parseUnits(amount, 18);
+  return writeContractAA(
+    BNB_STAKING_DHB_TOKEN,
+    erc20Interface,
+    'approve',
+    [BNB_STAKING_CONTRACT, amountWei],
+    { context: 'approve DHB for staking', chainId: BNB_CHAIN_ID }
+  );
+}
+
+/**
+ * Stake DHB on BNB chain via staking contract
+ */
+export async function stakeBNB(amount: string): Promise<AAWriteResult> {
+  await switchChain(BNB_CHAIN_ID);
+  const amountWei = parseUnits(amount, 18);
+  return writeContractAA(
+    BNB_STAKING_CONTRACT,
+    stakingInterface,
+    'stake',
+    [amountWei],
+    { context: 'stake DHB', chainId: BNB_CHAIN_ID }
+  );
+}
+
+/**
+ * Unstake DHB on BNB chain via staking contract
+ */
+export async function unstakeBNB(amount: string): Promise<AAWriteResult> {
+  await switchChain(BNB_CHAIN_ID);
+  const amountWei = parseUnits(amount, 18);
+  return writeContractAA(
+    BNB_STAKING_CONTRACT,
+    stakingInterface,
+    'unstake',
+    [amountWei],
+    { context: 'unstake DHB', chainId: BNB_CHAIN_ID }
+  );
+}
+
+/**
+ * Claim rewards on BNB staking contract
+ */
+export async function claimBNBRewards(): Promise<AAWriteResult> {
+  await switchChain(BNB_CHAIN_ID);
+  return writeContractAA(
+    BNB_STAKING_CONTRACT,
+    stakingInterface,
+    'claim',
+    [],
+    { context: 'claim staking rewards', chainId: BNB_CHAIN_ID }
+  );
 }
 
 /**

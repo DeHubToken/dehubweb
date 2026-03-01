@@ -1,21 +1,22 @@
 /**
  * Staking Page
  * ============
- * Displays DHB staking stats, stake/unstake for Base chain.
+ * Displays DHB staking stats, stake/unstake for BNB (contract) and Base (transfer).
  */
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock } from 'lucide-react';
+import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, CheckCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useStakingStats, useUnstakeQueue, useStakingTVL, type UnstakeEvent } from '@/hooks/use-staking-data';
+import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserBNBStaking, type UnstakeEvent } from '@/hooks/use-staking-data';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { sendERC20Token } from '@/lib/wallet/send';
-import { BASE_STAKING_ADDRESS } from '@/lib/contracts/staking';
-import { BASE_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
-import { getWalletAddress } from '@/lib/contracts/aa-utils';
+import { BASE_STAKING_ADDRESS, approveBNBStaking, stakeBNB, unstakeBNB, claimBNBRewards } from '@/lib/contracts/staking';
+import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
+import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
 import { toast } from '@/hooks/use-toast';
+import { parseUnits } from 'ethers';
 import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
 import baseLogo from '@/assets/icons/base-logo.png';
@@ -83,24 +84,150 @@ function StatCard({
   );
 }
 
+type StakingChain = 'BNB' | 'Base';
+
 export default function StakingPage() {
   const { t } = useTranslation();
   const { isCollapsed } = useSidebarCollapse();
   const { data: stats, isLoading: statsLoading, refetch: refetchStats } = useStakingStats();
   const { data: unstakeQueue, isLoading: queueLoading, refetch: refetchQueue } = useUnstakeQueue();
+  const { data: userBNB, refetch: refetchUserBNB } = useUserBNBStaking();
   const { tvl, dhbPrice } = useStakingTVL();
 
+  const [activeChain, setActiveChain] = useState<StakingChain>('BNB');
   const [stakeAmount, setStakeAmount] = useState('');
+  const [unstakeAmount, setUnstakeAmount] = useState('');
+  const [isApproving, setIsApproving] = useState(false);
   const [isStaking, setIsStaking] = useState(false);
   const [isUnstaking, setIsUnstaking] = useState(false);
-  const [unstakeAmount, setUnstakeAmount] = useState('');
+  const [isClaiming, setIsClaiming] = useState(false);
 
   const handleRefresh = () => {
     refetchStats();
     refetchQueue();
+    refetchUserBNB();
   };
 
-  const handleStake = async () => {
+  // ── BNB Staking (contract-based) ─────────────────────────────
+  const handleBNBStake = async () => {
+    const amount = parseFloat(stakeAmount);
+    if (!amount || amount <= 0) {
+      toast({ title: 'Invalid amount', description: 'Please enter a valid amount to stake.', variant: 'destructive' });
+      return;
+    }
+
+    setIsStaking(true);
+    try {
+      const walletAddress = await getWalletAddress();
+      if (!walletAddress) {
+        toast({ title: 'Not connected', description: 'Please connect your wallet first.', variant: 'destructive' });
+        return;
+      }
+
+      // Check allowance
+      const amountWei = parseUnits(stakeAmount, 18);
+      const currentAllowance = userBNB?.allowance ?? BigInt(0);
+
+      if (currentAllowance < amountWei) {
+        // Need approval first
+        setIsApproving(true);
+        toast({ title: 'Approving DHB...', description: 'Please confirm the approval transaction.' });
+        const approvalResult = await approveBNBStaking(stakeAmount);
+        const approvalReceipt = await approvalResult.wait();
+        if (approvalReceipt.status !== 1) {
+          toast({ title: 'Approval failed', description: 'Token approval was reverted.', variant: 'destructive' });
+          return;
+        }
+        toast({ title: 'Approved ✅', description: 'DHB approved. Now staking...' });
+        setIsApproving(false);
+      }
+
+      // Stake
+      toast({ title: 'Staking DHB...', description: 'Please confirm the stake transaction.' });
+      const result = await stakeBNB(stakeAmount);
+      const receipt = await result.wait();
+
+      if (receipt.status === 1) {
+        toast({ title: 'Staked successfully! ✅', description: `${stakeAmount} DHB staked on BNB Chain.` });
+        setStakeAmount('');
+        refetchStats();
+        refetchUserBNB();
+      } else {
+        toast({ title: 'Stake failed', description: 'Transaction reverted.', variant: 'destructive' });
+      }
+    } catch (err: any) {
+      console.error('[Staking] BNB stake error:', err);
+      toast({ title: 'Stake failed', description: err?.message || 'Unknown error', variant: 'destructive' });
+    } finally {
+      setIsStaking(false);
+      setIsApproving(false);
+    }
+  };
+
+  const handleBNBUnstake = async () => {
+    const amount = parseFloat(unstakeAmount);
+    if (!amount || amount <= 0) {
+      toast({ title: 'Invalid amount', description: 'Please enter a valid amount to unstake.', variant: 'destructive' });
+      return;
+    }
+
+    setIsUnstaking(true);
+    try {
+      const walletAddress = await getWalletAddress();
+      if (!walletAddress) {
+        toast({ title: 'Not connected', description: 'Please connect your wallet first.', variant: 'destructive' });
+        return;
+      }
+
+      toast({ title: 'Unstaking DHB...', description: 'Please confirm the unstake transaction.' });
+      const result = await unstakeBNB(unstakeAmount);
+      const receipt = await result.wait();
+
+      if (receipt.status === 1) {
+        toast({ title: 'Unstaked successfully! ✅', description: `${unstakeAmount} DHB unstaked from BNB Chain.` });
+        setUnstakeAmount('');
+        refetchStats();
+        refetchUserBNB();
+      } else {
+        toast({ title: 'Unstake failed', description: 'Transaction reverted.', variant: 'destructive' });
+      }
+    } catch (err: any) {
+      console.error('[Staking] BNB unstake error:', err);
+      toast({ title: 'Unstake failed', description: err?.message || 'Unknown error', variant: 'destructive' });
+    } finally {
+      setIsUnstaking(false);
+    }
+  };
+
+  const handleBNBClaim = async () => {
+    setIsClaiming(true);
+    try {
+      const walletAddress = await getWalletAddress();
+      if (!walletAddress) {
+        toast({ title: 'Not connected', description: 'Please connect your wallet first.', variant: 'destructive' });
+        return;
+      }
+
+      toast({ title: 'Claiming rewards...', description: 'Please confirm the claim transaction.' });
+      const result = await claimBNBRewards();
+      const receipt = await result.wait();
+
+      if (receipt.status === 1) {
+        toast({ title: 'Rewards claimed! 🎉', description: 'Your staking rewards have been sent to your wallet.' });
+        refetchUserBNB();
+      } else {
+        toast({ title: 'Claim failed', description: 'Transaction reverted.', variant: 'destructive' });
+      }
+    } catch (err: any) {
+      console.error('[Staking] Claim error:', err);
+      toast({ title: 'Claim failed', description: err?.message || 'Unknown error', variant: 'destructive' });
+    } finally {
+      setIsClaiming(false);
+    }
+  };
+
+  // ── Base Staking (transfer-based) ────────────────────────────
+  const handleBaseStake = async () => {
     const amount = parseFloat(stakeAmount);
     if (!amount || amount <= 0) {
       toast({ title: 'Invalid amount', description: 'Please enter a valid amount to stake.', variant: 'destructive' });
@@ -114,6 +241,8 @@ export default function StakingPage() {
         toast({ title: 'Not connected', description: 'Please connect your wallet first.', variant: 'destructive' });
         return;
       }
+
+      await switchChain(BASE_CHAIN_ID);
 
       const dhbTokenAddress = CHAIN_CONFIGS[BASE_CHAIN_ID]?.dhbToken;
       if (!dhbTokenAddress) {
@@ -140,14 +269,14 @@ export default function StakingPage() {
         toast({ title: 'Stake failed', description: 'Transaction reverted.', variant: 'destructive' });
       }
     } catch (err: any) {
-      console.error('[Staking] Stake error:', err);
+      console.error('[Staking] Base stake error:', err);
       toast({ title: 'Stake failed', description: err?.message || 'Unknown error', variant: 'destructive' });
     } finally {
       setIsStaking(false);
     }
   };
 
-  const handleUnstake = async () => {
+  const handleBaseUnstake = async () => {
     const amount = parseFloat(unstakeAmount);
     if (!amount || amount <= 0) {
       toast({ title: 'Invalid amount', description: 'Please enter a valid amount to unstake.', variant: 'destructive' });
@@ -162,7 +291,6 @@ export default function StakingPage() {
         return;
       }
 
-      // Unstake goes into queue — notify user
       toast({ 
         title: 'Unstake initiated ⏳', 
         description: `${unstakeAmount} DHB unstake request submitted. You will be notified when complete.` 
@@ -175,6 +303,12 @@ export default function StakingPage() {
       setIsUnstaking(false);
     }
   };
+
+  const handleStake = activeChain === 'BNB' ? handleBNBStake : handleBaseStake;
+  const handleUnstake = activeChain === 'BNB' ? handleBNBUnstake : handleBaseUnstake;
+
+  const userStaked = userBNB ? parseFloat(userBNB.staked) : 0;
+  const userEarned = userBNB ? parseFloat(userBNB.earned) : 0;
 
   return (
     <div className={cn("min-h-screen pb-24 px-3 sm:px-4 max-w-5xl mx-auto", isCollapsed && "pt-16 md:pt-0")}>
@@ -201,57 +335,103 @@ export default function StakingPage() {
         </button>
       </motion.div>
 
-      {/* Stats Grid — single column on small, 2-col on sm, 4-col on lg */}
+      {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-        <StatCard
-          icon={Lock}
-          label="Total Staked"
-          value={statsLoading ? '—' : formatNumber(stats?.totalStaked ?? '0')}
-          subtitle="DHB across all chains"
-          accent="bg-blue-500"
-          delay={0}
-        />
-        <StatCard
-          icon={DollarSign}
-          label="Total Value Locked"
-          value={statsLoading ? '—' : formatUSD(tvl)}
-          subtitle={`@ $${dhbPrice.toFixed(6)}/DHB`}
-          accent="bg-emerald-500"
-          delay={0.05}
-        />
-        <StatCard
-          icon={TrendingUp}
-          label="Est. APY"
-          value={`${ESTIMATED_APY}%`}
-          subtitle="Variable rate"
-          accent="bg-purple-500"
-          delay={0.1}
-        />
-        <StatCard
-          icon={Activity}
-          label="Unstake Events"
-          value={queueLoading ? '—' : `${unstakeQueue?.length ?? 0}`}
-          subtitle="Recent unstakes"
-          accent="bg-rose-500"
-          delay={0.15}
-        />
+        <StatCard icon={Lock} label="Total Staked" value={statsLoading ? '—' : formatNumber(stats?.totalStaked ?? '0')} subtitle="DHB across all chains" accent="bg-blue-500" delay={0} />
+        <StatCard icon={DollarSign} label="Total Value Locked" value={statsLoading ? '—' : formatUSD(tvl)} subtitle={`@ $${dhbPrice.toFixed(6)}/DHB`} accent="bg-emerald-500" delay={0.05} />
+        <StatCard icon={TrendingUp} label="Est. APY" value={`${ESTIMATED_APY}%`} subtitle="Variable rate" accent="bg-purple-500" delay={0.1} />
+        <StatCard icon={Activity} label="Unstake Events" value={queueLoading ? '—' : `${unstakeQueue?.length ?? 0}`} subtitle="Recent unstakes" accent="bg-rose-500" delay={0.15} />
       </div>
 
-      {/* Stake / Unstake Actions + Chain Breakdown — side by side on desktop */}
+      {/* Chain Selector Tabs */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="flex gap-2 mb-4"
+      >
+        <button
+          onClick={() => setActiveChain('BNB')}
+          className={cn(
+            "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all border",
+            activeChain === 'BNB'
+              ? "bg-yellow-500/15 text-yellow-400 border-yellow-500/30"
+              : "bg-white/[0.03] text-white/50 border-white/10 hover:bg-white/[0.06]"
+          )}
+        >
+          <img src={bnbLogo} alt="BNB" className="w-5 h-5 rounded-full" />
+          BNB Chain
+        </button>
+        <button
+          onClick={() => setActiveChain('Base')}
+          className={cn(
+            "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all border",
+            activeChain === 'Base'
+              ? "bg-blue-500/15 text-blue-400 border-blue-500/30"
+              : "bg-white/[0.03] text-white/50 border-white/10 hover:bg-white/[0.06]"
+          )}
+        >
+          <img src={baseLogo} alt="Base" className="w-5 h-5 rounded-full" />
+          Base
+        </button>
+      </motion.div>
+
+      {/* BNB User Stats (only shown when BNB is selected and user is connected) */}
+      {activeChain === 'BNB' && userBNB && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4"
+        >
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 flex items-center gap-3">
+            <Lock className="w-5 h-5 text-yellow-400/70 flex-shrink-0" />
+            <div className="min-w-0">
+              <p className="text-[10px] text-white/40 uppercase tracking-wider">Your Staked</p>
+              <p className="text-sm font-bold text-white">{formatNumber(userStaked)} <span className="text-white/40 text-xs">DHB</span></p>
+            </div>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 flex items-center gap-3">
+            <Gift className="w-5 h-5 text-emerald-400/70 flex-shrink-0" />
+            <div className="min-w-0">
+              <p className="text-[10px] text-white/40 uppercase tracking-wider">Pending Rewards</p>
+              <p className="text-sm font-bold text-white">{formatNumber(userEarned, 4)} <span className="text-white/40 text-xs">DHB</span></p>
+            </div>
+          </div>
+          <button
+            onClick={handleBNBClaim}
+            disabled={isClaiming || userEarned <= 0}
+            className={cn(
+              "rounded-xl border p-4 flex items-center justify-center gap-2 text-sm font-medium transition-all",
+              isClaiming || userEarned <= 0
+                ? "bg-white/[0.02] border-white/5 text-white/30 cursor-not-allowed"
+                : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20"
+            )}
+          >
+            {isClaiming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Gift className="w-4 h-4" />}
+            Claim Rewards
+          </button>
+        </motion.div>
+      )}
+
+      {/* Stake / Unstake Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-        {/* Stake on Base */}
+        {/* Stake */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.25 }}
           className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
         >
           <div className="flex items-center gap-2 mb-4">
             <ArrowDownToLine className="w-4 h-4 text-emerald-400" />
-            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Stake on Base</h2>
+            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">
+              Stake on {activeChain}
+            </h2>
           </div>
           <p className="text-xs text-white/40 mb-4">
-            Stake DHB by transferring to the Base staking address. Your tokens will be locked and you'll earn rewards.
+            {activeChain === 'BNB'
+              ? 'Stake DHB via the BNB staking contract. Approval is required before your first stake.'
+              : 'Stake DHB by transferring to the Base staking address. Your tokens will be locked and you\'ll earn rewards.'}
           </p>
           <div className="flex gap-2">
             <input
@@ -263,33 +443,42 @@ export default function StakingPage() {
             />
             <button
               onClick={handleStake}
-              disabled={isStaking || !stakeAmount}
+              disabled={isStaking || isApproving || !stakeAmount}
               className={cn(
                 "px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all flex-shrink-0",
-                isStaking 
+                (isStaking || isApproving)
                   ? "bg-emerald-500/20 text-emerald-400/60 cursor-not-allowed"
                   : "bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/20"
               )}
             >
-              {isStaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowDownToLine className="w-4 h-4" />}
-              Stake
+              {isApproving ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Approving...</>
+              ) : isStaking ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Staking...</>
+              ) : (
+                <><ArrowDownToLine className="w-4 h-4" /> Stake</>
+              )}
             </button>
           </div>
         </motion.div>
 
-        {/* Unstake from Base */}
+        {/* Unstake */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25 }}
+          transition={{ delay: 0.3 }}
           className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
         >
           <div className="flex items-center gap-2 mb-4">
             <ArrowUpFromLine className="w-4 h-4 text-amber-400" />
-            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Unstake from Base</h2>
+            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">
+              Unstake from {activeChain}
+            </h2>
           </div>
           <p className="text-xs text-white/40 mb-4">
-            Request to unstake your DHB. You'll be placed in the unstake queue and notified when processing is complete.
+            {activeChain === 'BNB'
+              ? 'Unstake your DHB directly from the BNB staking contract. Tokens are returned to your wallet.'
+              : 'Request to unstake your DHB. You\'ll be placed in the unstake queue and notified when complete.'}
           </p>
           <div className="flex gap-2">
             <input
@@ -320,12 +509,11 @@ export default function StakingPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
+        transition={{ delay: 0.35 }}
         className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5 mb-6"
       >
         <h2 className="text-sm font-semibold text-white/70 mb-4 uppercase tracking-wider">Chain Breakdown</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* BNB */}
           <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/5">
             <img src={bnbLogo} alt="BNB" className="w-8 h-8 rounded-full flex-shrink-0" />
             <div className="flex-1 min-w-0">
@@ -337,7 +525,6 @@ export default function StakingPage() {
               <p className="text-xs text-white/40">DHB</p>
             </div>
           </div>
-          {/* Base */}
           <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/5">
             <img src={baseLogo} alt="Base" className="w-8 h-8 rounded-full flex-shrink-0" />
             <div className="flex-1 min-w-0">
@@ -356,7 +543,7 @@ export default function StakingPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.35 }}
+        transition={{ delay: 0.4 }}
         className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden"
       >
         <div className="p-5 border-b border-white/5">
@@ -376,7 +563,6 @@ export default function StakingPage() {
           </div>
         ) : (
           <div className="divide-y divide-white/5">
-            {/* Table header — hidden on mobile, show list instead */}
             <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_80px_40px] gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
               <span>Wallet</span>
               <span className="text-right">Amount</span>
@@ -392,37 +578,17 @@ export default function StakingPage() {
                 transition={{ delay: 0.02 * idx }}
                 className="px-4 sm:px-5 py-3 hover:bg-white/[0.02] transition-colors"
               >
-                {/* Desktop row */}
                 <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_80px_40px] gap-2 items-center">
-                  <span className="text-sm text-white/70 font-mono">
-                    {truncateAddress(event.wallet)}
-                  </span>
-                  <span className="text-sm text-white font-medium text-right">
-                    {event.amount} <span className="text-white/40 text-xs">DHB</span>
-                  </span>
+                  <span className="text-sm text-white/70 font-mono">{truncateAddress(event.wallet)}</span>
+                  <span className="text-sm text-white font-medium text-right">{event.amount} <span className="text-white/40 text-xs">DHB</span></span>
                   <span className="text-center">
-                    <span className={cn(
-                      "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium",
-                      event.chain === 'BNB' 
-                        ? "bg-yellow-500/10 text-yellow-400/80" 
-                        : "bg-blue-500/10 text-blue-400/80"
-                    )}>
-                      {event.chain}
-                    </span>
+                    <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium", event.chain === 'BNB' ? "bg-yellow-500/10 text-yellow-400/80" : "bg-blue-500/10 text-blue-400/80")}>{event.chain}</span>
                   </span>
-                  <span className="text-xs text-white/40 text-right">
-                    {timeAgo(event.timestamp)}
-                  </span>
-                  <a
-                    href={getExplorerUrl(event.txHash, event.chain)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center w-7 h-7 rounded-lg hover:bg-white/10 transition-colors"
-                  >
+                  <span className="text-xs text-white/40 text-right">{timeAgo(event.timestamp)}</span>
+                  <a href={getExplorerUrl(event.txHash, event.chain)} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-7 h-7 rounded-lg hover:bg-white/10 transition-colors">
                     <ExternalLink className="w-3.5 h-3.5 text-white/30" />
                   </a>
                 </div>
-                {/* Mobile card */}
                 <div className="flex sm:hidden items-center justify-between gap-2">
                   <div className="min-w-0">
                     <span className="text-sm text-white/70 font-mono block">{truncateAddress(event.wallet)}</span>
@@ -431,10 +597,7 @@ export default function StakingPage() {
                   <div className="text-right flex items-center gap-2 flex-shrink-0">
                     <div>
                       <span className="text-sm text-white font-medium block">{event.amount} DHB</span>
-                      <span className={cn(
-                        "inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium",
-                        event.chain === 'BNB' ? "bg-yellow-500/10 text-yellow-400/80" : "bg-blue-500/10 text-blue-400/80"
-                      )}>{event.chain}</span>
+                      <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium", event.chain === 'BNB' ? "bg-yellow-500/10 text-yellow-400/80" : "bg-blue-500/10 text-blue-400/80")}>{event.chain}</span>
                     </div>
                     <a href={getExplorerUrl(event.txHash, event.chain)} target="_blank" rel="noopener noreferrer" className="w-7 h-7 flex items-center justify-center">
                       <ExternalLink className="w-3.5 h-3.5 text-white/30" />
