@@ -34,20 +34,20 @@ interface UnifiedTransaction {
   counterpartyUsername?: string;
 }
 
-function formatDPayTx(tx: DPayTransaction): UnifiedTransaction {
+function formatDPayTx(tx: DPayTransaction, t: (key: string, opts?: any) => string): UnifiedTransaction {
   const amount = tx.amount.toLocaleString(undefined, { maximumFractionDigits: 0 });
   let description: string;
   let isCredit = false;
   switch (tx.type) {
     case 'buy':
-      description = `You purchased ${amount} DHB`;
+      description = t('commandCentre.txPurchased', { amount });
       isCredit = true;
       break;
     case 'sell':
-      description = `You sold ${amount} DHB`;
+      description = t('commandCentre.txSold', { amount });
       break;
     case 'transfer':
-      description = `Transfer of ${amount} DHB`;
+      description = t('commandCentre.txTransfer', { amount });
       break;
     default:
       description = `${tx.type} — ${amount} DHB`;
@@ -144,7 +144,7 @@ export function RecentTransactions() {
     const unified: UnifiedTransaction[] = [];
     const addr = walletAddress?.toLowerCase() || '';
 
-    dpayTxs.forEach(tx => unified.push(formatDPayTx(tx)));
+    dpayTxs.forEach(tx => unified.push(formatDPayTx(tx, t)));
 
     ppvPurchases.forEach((p: any) => {
       const isBuyer = p.buyer_address?.toLowerCase() === addr;
@@ -155,7 +155,7 @@ export function RecentTransactions() {
         amount: Number(p.amount),
         createdAt: p.created_at,
         isCredit: !isBuyer,
-        description: isBuyer ? `PPV unlock — ${amount} DHB` : `PPV sale — ${amount} DHB`,
+        description: isBuyer ? t('commandCentre.txPpvUnlock', { amount }) : t('commandCentre.txPpvSale', { amount }),
       });
     });
 
@@ -177,8 +177,8 @@ export function RecentTransactions() {
         createdAt: tip.created_at,
         isCredit: !isSender,
         description: isSender
-          ? `You tipped ${counterpartyName} ${amount} DHB`
-          : `${counterpartyName} tipped you ${amount} DHB`,
+          ? t('commandCentre.txTipSent', { name: counterpartyName, amount })
+          : t('commandCentre.txTipReceived', { name: counterpartyName, amount }),
         counterpartyAddress: counterpartyAddr,
         counterpartyUsername: usernameMap[counterpartyAddr],
       });
@@ -192,7 +192,7 @@ export function RecentTransactions() {
 
     filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     return filtered.slice(0, 15);
-  }, [dpayTxs, ppvPurchases, tipRecords, walletAddress, activeFilter, usernameMap]);
+  }, [dpayTxs, ppvPurchases, tipRecords, walletAddress, activeFilter, usernameMap, t]);
 
   return (
     <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
