@@ -296,4 +296,6 @@
     "schedule": "Schedule",
     "watchNow": "Watch now"
   }
+  ,"loginModal": { "title": "Log in", "continueEmail": "Continue wit Email", "continueSMS": "Continue wit SMS", "continueGoogle": "Continue wit Google", "continueX": "Continue wit X", "continueDiscord": "Continue wit Discord", "connectWallet": "Connect wallet", "emailPlaceholder": "Put your email", "invalidEmail": "Put correct email", "sendingLink": "Sending link...", "continue": "Continue", "magicLinkInfo": "We go send you magic link for log in", "invalidPhone": "Put correct phone number wit country code", "sendingCode": "Sending code...", "smsInfo": "We go send you verification code for SMS", "or": "or", "termsNotice": "If you continue, you agree for Terms of Service and Privacy Policy", "walletInfoDesktop": "Connect your wallet for log in safe", "walletInfoMobile": "MetaMask, Trust and Phantom go open dia app. Rabby go use WalletConnect." }
+  ,"sidebar": { "talkOfTheTown": "Wetin people dey talk", "nothingTrending": "Nothing dey trend yet" }
 }

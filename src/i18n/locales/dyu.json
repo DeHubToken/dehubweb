@@ -405,4 +405,6 @@
     "schedule": "Waati tablo",
     "watchNow": "A filɛ sisan"
   }
+  ,"loginModal": { "title": "Don", "continueEmail": "Ka taa ni email ye", "continueSMS": "Ka taa ni SMS ye", "continueGoogle": "Ka taa ni Google ye", "continueX": "Ka taa ni X ye", "continueDiscord": "Ka taa ni Discord ye", "connectWallet": "Wari-bɔɔrɔ cɛ", "emailPlaceholder": "I ka email sɛbɛn", "invalidEmail": "Email ɲuman sɛbɛn", "sendingLink": "Link bɛ ci la...", "continue": "Ka taa", "magicLinkInfo": "An bɛ magic link ci i ma", "invalidPhone": "Telefɔn nimɔrɔ ɲuman sɛbɛn ni jamana kode ye", "sendingCode": "Kode bɛ ci la...", "smsInfo": "An bɛ kode ci i ma SMS fɛ", "or": "walima", "termsNotice": "Ni i taa, i bɛ sɔn ka ɲɛnabɔli sariyaw ni gundokolow ladamu", "walletInfoDesktop": "I ka wari-bɔɔrɔ cɛ ka don lakanannen na", "walletInfoMobile": "MetaMask, Trust ani Phantom bɛ u ka app dayɛlɛ. Rabby bɛ WalletConnect kɛ." }
+  ,"sidebar": { "talkOfTheTown": "Dugu kuma", "nothingTrending": "Fɛn si tɛ trend la fɔlɔ" }
 }

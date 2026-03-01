@@ -296,4 +296,6 @@
     "schedule": "ตาราง",
     "watchNow": "เบิ่งตอนนี้"
   }
+  ,"loginModal": { "title": "เข้าสู่ระบบ", "continueEmail": "ต่อด้วยอีเมล", "continueSMS": "ต่อด้วย SMS", "continueGoogle": "ต่อด้วย Google", "continueX": "ต่อด้วย X", "continueDiscord": "ต่อด้วย Discord", "connectWallet": "เชื่อมต่อกระเป๋า", "emailPlaceholder": "ใส่อีเมลของเจ้า", "invalidEmail": "ใส่อีเมลที่ถูกต้อง", "sendingLink": "ส่งลิงก์อยู่...", "continue": "ต่อไป", "magicLinkInfo": "เราจะส่งลิงก์วิเศษให้เจ้า", "invalidPhone": "ใส่เบอร์โทรที่ถูกต้องพร้อมรหัสประเทศ", "sendingCode": "ส่งรหัสอยู่...", "smsInfo": "เราจะส่งรหัสยืนยันทาง SMS", "or": "หรือ", "termsNotice": "โดยการดำเนินการต่อ เจ้ายอมรับข้อกำหนดการใช้งานและนโยบายความเป็นส่วนตัว", "walletInfoDesktop": "เชื่อมต่อกระเป๋าเพื่อเข้าสู่ระบบอย่างปลอดภัย", "walletInfoMobile": "MetaMask, Trust และ Phantom จะเปิดแอปโดยตรง Rabby จะใช้ WalletConnect" }
+  ,"sidebar": { "talkOfTheTown": "เรื่องฮ็อต", "nothingTrending": "ยังบ่มีเทรนด์" }
 }

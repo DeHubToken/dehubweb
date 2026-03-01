@@ -405,4 +405,6 @@
     "schedule": "شیڈول",
     "watchNow": "ابھی دیکھو"
   }
+  ,"loginModal": { "title": "لاگ ان کرو", "continueEmail": "ای میل سے جاری رکھو", "continueSMS": "SMS سے جاری رکھو", "continueGoogle": "گوگل سے جاری رکھو", "continueX": "X سے جاری رکھو", "continueDiscord": "Discord سے جاری رکھو", "connectWallet": "والیٹ جوڑو", "emailPlaceholder": "اپنا ای میل ڈالو", "invalidEmail": "صحیح ای میل ڈالو", "sendingLink": "لنک بھیج رہے ہیں...", "continue": "جاری رکھو", "magicLinkInfo": "ہم تمہیں میجک لنک بھیجیں گے", "invalidPhone": "ملکی کوڈ کے ساتھ صحیح نمبر ڈالو", "sendingCode": "کوڈ بھیج رہے ہیں...", "smsInfo": "ہم SMS سے تصدیقی کوڈ بھیجیں گے", "or": "یا", "termsNotice": "جاری رکھ کے تم خدمت شرائط اور رازداری پالیسی سے متفق ہو", "walletInfoDesktop": "محفوظ لاگ ان کے لیے والیٹ جوڑو", "walletInfoMobile": "MetaMask, Trust اور Phantom اپنی ایپ کھولیں گے۔ Rabby WalletConnect استعمال کریگا۔" }
+  ,"sidebar": { "talkOfTheTown": "شہر کی چرچا", "nothingTrending": "ابھی کچھ ٹرینڈنگ نہیں" }
 }

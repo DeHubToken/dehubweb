@@ -405,4 +405,6 @@
     "schedule": "节目表",
     "watchNow": "即刻看"
   }
+  ,"loginModal": { "title": "登录", "continueEmail": "用邮箱继续", "continueSMS": "用短信继续", "continueGoogle": "用谷歌继续", "continueX": "用 X 继续", "continueDiscord": "用 Discord 继续", "connectWallet": "连接钱包", "emailPlaceholder": "输入你个邮箱", "invalidEmail": "请输入正确个邮箱", "sendingLink": "发链接中...", "continue": "继续", "magicLinkInfo": "阿拉会发一个魔法链接给你", "invalidPhone": "请输入带国家代码个正确电话号码", "sendingCode": "发验证码中...", "smsInfo": "阿拉会通过短信发验证码给你", "or": "或", "termsNotice": "继续即表示你同意服务条款和隐私政策", "walletInfoDesktop": "连接钱包安全登录", "walletInfoMobile": "MetaMask、Trust 和 Phantom 会直接打开应用。Rabby 会使用 WalletConnect。" }
+  ,"sidebar": { "talkOfTheTown": "热门话题", "nothingTrending": "暂无热门" }
 }
