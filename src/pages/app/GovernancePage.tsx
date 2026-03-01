@@ -92,7 +92,12 @@ function GovernanceCard({
   const deleteComment = useDeleteGovernanceComment();
 
   const KNOWN_AVATAR_ADDRESSES: Record<string, string> = {
+    '0xmaldoteth': '0x9324840523a5d17dd12a2f11a9472e5a199c1937',
     maldoteth: '0x9324840523a5d17dd12a2f11a9472e5a199c1937',
+  };
+
+  const KNOWN_DISPLAY_NAMES: Record<string, string> = {
+    maldoteth: 'mal',
   };
 
   const resolvedAddress = KNOWN_AVATAR_ADDRESSES[proposal.author_wallet_address.toLowerCase()] || proposal.author_wallet_address;
@@ -102,8 +107,9 @@ function GovernanceCard({
   const dynamicAvatarUrl = useProfileAvatar(resolvedAddress, storedAvatarUrl || undefined);
   const avatarUrl = dynamicAvatarUrl || storedAvatarUrl;
 
-  const displayName = proposal.author_username || proposal.author_wallet_address.slice(0, 6);
-  const handle = proposal.author_username ? `@${proposal.author_username}` : `${proposal.author_wallet_address.slice(0, 6)}...${proposal.author_wallet_address.slice(-4)}`;
+  const username_raw = proposal.author_username || '';
+  const displayName = KNOWN_DISPLAY_NAMES[username_raw.toLowerCase()] || username_raw || proposal.author_wallet_address.slice(0, 6);
+  const handle = username_raw ? `@${username_raw}` : `${proposal.author_wallet_address.slice(0, 6)}...${proposal.author_wallet_address.slice(-4)}`;
 
   const isLiked = currentVote === 1;
   const isDisliked = currentVote === -1;
