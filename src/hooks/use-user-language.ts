@@ -110,6 +110,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   yo: 'Yoruba',
   ig: 'Igbo',
   arz: 'Egyptian Arabic',
+  ajp: 'Arabic, South Levantine Spoken',
   ary: 'Moroccan Arabic',
   fa: 'Persian',
   pa: 'Punjabi',
