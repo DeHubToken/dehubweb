@@ -214,16 +214,40 @@ async function signWithEoaDirectly(
   displayedDate: Date,
 ): Promise<{ address: string; signature: string } | null> {
   try {
-    // Try to get the raw private key from the Web3Auth provider.
-    let privKey: string | null = null;
-    for (const method of ['eth_private_key', 'private_key']) {
-      try {
-        privKey = await provider.request({ method }) as string;
-        if (privKey) break;
-      } catch { /* try next */ }
+    // The AA provider wraps the EOA provider. eth_private_key is only available
+    // on the inner EOA provider, not on the AA wrapper. Try multiple sources:
+    // 1. The AA provider's state.eoaProvider (AccountAbstractionProvider stores it)
+    // 2. The provider itself (if no AA is configured)
+    const providersToTry: any[] = [];
+
+    // Try to extract the inner EOA provider from the AA wrapper
+    if (provider?.state?.eoaProvider) {
+      console.log('[Auth] EOA direct sign: found eoaProvider in AA provider state');
+      providersToTry.push(provider.state.eoaProvider);
     }
+    // Also try the provider's _providerEngineProxy (BaseProvider internals)
+    if (provider?._providerEngineProxy && provider._providerEngineProxy !== provider) {
+      providersToTry.push(provider._providerEngineProxy);
+    }
+    // Finally try the provider itself
+    providersToTry.push(provider);
+
+    let privKey: string | null = null;
+    for (const p of providersToTry) {
+      for (const method of ['eth_private_key', 'private_key']) {
+        try {
+          privKey = await p.request({ method }) as string;
+          if (privKey) {
+            console.log('[Auth] EOA direct sign: got private key via', method, 'from', p === provider ? 'main provider' : 'inner provider');
+            break;
+          }
+        } catch { /* try next */ }
+      }
+      if (privKey) break;
+    }
+
     if (!privKey) {
-      console.warn('[Auth] EOA direct sign: private key not available from provider');
+      console.warn('[Auth] EOA direct sign: private key not available from any provider');
       return null;
     }
 
