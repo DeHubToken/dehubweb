@@ -51,6 +51,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   pt: 'Portuguese',
   ru: 'Russian',
   zh: 'Chinese',
+  hne: 'Chhattisgarhi',
   cjy: 'Chinese, Jinyu',
   ja: 'Japanese',
   ko: 'Korean',
