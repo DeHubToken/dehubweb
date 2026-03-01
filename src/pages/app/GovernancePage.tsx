@@ -675,7 +675,7 @@ export default function GovernancePage() {
         </div>
 
         {/* Page Tabs */}
-        <div ref={tabLayerRef} className="relative mb-3 rounded-xl bg-white/[0.06] p-1" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+        <div ref={tabLayerRef} className="relative mb-3 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-1" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <GlassIndicator rect={tabRect} borderRadius="0.5rem" />
           <div className="relative z-20 flex gap-1" onScroll={onTabScroll}>
             <button
