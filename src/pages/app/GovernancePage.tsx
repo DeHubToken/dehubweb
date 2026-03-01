@@ -154,15 +154,30 @@ function GovernanceCard({
         <TranslatableText text={proposal.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
         <TranslatableText text={proposal.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />
 
-        {/* Governance badge + vote weight indicator */}
-        <div className="flex items-center gap-2">
-          <span className="text-zinc-300 text-[10px] font-medium px-2 py-0.5 rounded-lg bg-gradient-to-br from-white/15 via-white/8 to-white/3 backdrop-blur-xl border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)]">
-            {t('governance.governanceBadge')}
-          </span>
-          <span className="text-zinc-500 text-[10px]">
-            {t('governance.weightedVotes', { for: proposal.like_count, against: proposal.dislike_count })}
-          </span>
-        </div>
+        {/* Vote ratio bar */}
+        {(() => {
+          const total = (proposal.like_count ?? 0) + (proposal.dislike_count ?? 0);
+          const forPct = total > 0 ? Math.round(((proposal.like_count ?? 0) / total) * 100) : 50;
+          const againstPct = 100 - forPct;
+          return (
+            <div className="space-y-1">
+              <div className="flex justify-between text-[10px]">
+                <span className="text-emerald-400 font-medium">{t('governance.governanceBadge')} · {forPct}% {t('governance.forLabel', 'For')}</span>
+                <span className="text-red-400 font-medium">{againstPct}% {t('governance.againstLabel', 'Against')}</span>
+              </div>
+              <div className="h-1.5 rounded-full bg-white/5 overflow-hidden flex">
+                {total > 0 ? (
+                  <>
+                    <div className="bg-emerald-500 rounded-l-full transition-all duration-300" style={{ width: `${forPct}%` }} />
+                    <div className="bg-red-500 rounded-r-full transition-all duration-300" style={{ width: `${againstPct}%` }} />
+                  </>
+                ) : (
+                  <div className="bg-zinc-700 w-full rounded-full" />
+                )}
+              </div>
+            </div>
+          );
+        })()}
 
         <div className="pt-1">
           <ActionBar
