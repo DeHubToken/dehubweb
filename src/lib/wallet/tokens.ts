@@ -103,11 +103,11 @@ export async function getERC20Metadata(tokenAddress: string, chainId?: ChainId):
 /**
  * Format a bigint balance to a human-readable string
  */
-export function formatBalance(balance: bigint, decimals: number, maxDecimals: number = 6): string {
+export function formatBalance(balance: bigint, decimals: number, maxDecimals: number = 2): string {
   const raw = formatUnits(balance, decimals);
   const num = parseFloat(raw);
   if (num === 0) return '0';
-  if (num < 0.000001) return '<0.000001';
+  if (num < 0.01) return '<0.01';
   // Use at most maxDecimals significant decimal places
   const fixed = num.toFixed(maxDecimals);
   // Remove trailing zeros
