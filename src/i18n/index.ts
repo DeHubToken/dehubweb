@@ -57,7 +57,6 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'id', name: 'Indonesian', nativeName: 'Bahasa Indonesia' },
   { code: 'it', name: 'Italian', nativeName: 'Italiano' },
   { code: 'ja', name: 'Japanese', nativeName: '日本語' },
-  { code: 'ka', name: 'Georgian', nativeName: 'ქართული' },
   { code: 'kk', name: 'Kazakh', nativeName: 'Қазақша' },
   { code: 'ko', name: 'Korean', nativeName: '한국어' },
   { code: 'lo', name: 'Lao', nativeName: 'ລາວ' },
