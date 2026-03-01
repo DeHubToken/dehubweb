@@ -38,7 +38,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Wallet, label: 'Wallet', path: '/app/wallet' },
   { icon: BookOpen, label: 'Docs', path: 'https://dehub.io/docs', external: true },
-  { icon: FileText, label: 'Blog', path: '/blog' },
+  { icon: FileText, label: 'Blog', path: '/docs/blog' },
   { icon: Lightbulb, label: 'Feature Requests', path: '/features' },
   { icon: ShieldCheck, label: 'Governance', path: '/governance' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
