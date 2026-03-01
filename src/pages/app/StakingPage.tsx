@@ -68,7 +68,7 @@ function StatCard({
       transition={{ delay, duration: 0.4 }}
       className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-3 sm:p-4 lg:p-3"
     >
-      <div className={cn("absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl opacity-20", accent)} />
+      <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl opacity-10 bg-white" />
       <div className="flex items-start gap-3 lg:gap-0">
         <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex-shrink-0 flex items-center justify-center bg-white/5 border border-white/10 lg:hidden">
           <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white/70" />
@@ -339,21 +339,21 @@ export default function StakingPage() {
           className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6"
         >
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
-            <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400/70 flex-shrink-0" />
+            <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
             <div className="min-w-0">
               <p className="text-[10px] text-white/40 uppercase tracking-wider">Staked</p>
               <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)} <span className="text-white/40 text-xs">DHB</span></p>
             </div>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
-            <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400/70 flex-shrink-0" />
+            <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
             <div className="min-w-0">
               <p className="text-[10px] text-white/40 uppercase tracking-wider">Unstaked</p>
               <p className="text-sm font-bold text-white truncate">{formatNumber(userUnstaked)} <span className="text-white/40 text-xs">DHB</span></p>
             </div>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
-            <Gift className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400/70 flex-shrink-0" />
+            <Gift className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
             <div className="min-w-0">
               <p className="text-[10px] text-white/40 uppercase tracking-wider">Rewards</p>
               <p className="text-sm font-bold text-white truncate">{formatNumber(userEarned, 2)} <span className="text-white/40 text-xs">DHB</span></p>
