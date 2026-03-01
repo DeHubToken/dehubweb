@@ -53,6 +53,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'ro', name: 'Romanian', nativeName: 'Română' },
   { code: 'ru', name: 'Russian', nativeName: 'Русский' },
   { code: 'es', name: 'Spanish', nativeName: 'Español' },
+  { code: 'si', name: 'Sinhala', nativeName: 'සිංහල' },
   { code: 'sw', name: 'Swahili', nativeName: 'Kiswahili' },
   { code: 'tl', name: 'Tagalog', nativeName: 'Tagalog' },
   { code: 'th', name: 'Thai', nativeName: 'ไทย' },
@@ -109,6 +110,7 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   sa: () => import('./locales/sa.json'),
   my: () => import('./locales/my.json'),
   om: () => import('./locales/om.json'),
+  si: () => import('./locales/si.json'),
   sw: () => import('./locales/sw.json'),
   zu: () => import('./locales/zu.json'),
 };
