@@ -105,6 +105,10 @@ export function ActionBar({
   // Add localStorage delta to comment count for instant feedback
   const commentCountDelta = postId ? getCommentCountDelta(postId) : 0;
   const commentCount = (rawCommentCount ?? 0) + commentCountDelta;
+  
+  // Optimistic repost count: increment locally on repost for instant feedback
+  const [repostDelta, setRepostDelta] = useState(0);
+  const displayRepostCount = (repostCount ?? 0) + repostDelta;
   // On mount, check global vote cache for recent votes on this post
   const cachedVote = postId ? getVoteCache(postId) : null;
 
@@ -259,6 +263,8 @@ export function ActionBar({
 
   const handleRepost = () => {
     if (onRepost) {
+      // Optimistically increment repost count immediately
+      setRepostDelta(prev => prev + 1);
       onRepost();
     } else {
       toast.info('Repost not available for this post');
@@ -364,7 +370,7 @@ export function ActionBar({
             aria-label="Repost"
           >
             <Repeat2 className="w-[25px] h-[25px]" />
-            <span className="text-xs text-zinc-400">{formatCount(repostCount ?? 0)}</span>
+            <span className="text-xs text-zinc-400">{formatCount(displayRepostCount)}</span>
           </button>
 
           
