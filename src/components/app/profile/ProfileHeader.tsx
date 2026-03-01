@@ -2,6 +2,7 @@ import {
   UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check, Ban
 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
@@ -117,6 +118,7 @@ export function ProfileHeader({
 }: ProfileHeaderProps) {
   const navigate = useNavigate();
 
+  const { t } = useTranslation();
   const [showUnfollowConfirm, setShowUnfollowConfirm] = useState(false);
 
   return (
@@ -283,7 +285,7 @@ export function ProfileHeader({
                       ) : (
                         <Check className="w-4 h-4" />
                       )}
-                      Following
+                      {t('profile.following')}
                     </Button>
                   )}
                   {isFollowing && !isSubscribed && hasPlans && (
@@ -397,7 +399,7 @@ export function ProfileHeader({
           )}
           
           <div className="flex items-center gap-2 mt-3 text-zinc-500 text-sm">
-            <span>Joined {profile.joinedDate}</span>
+            <span>{t('profile.joined')} {profile.joinedDate}</span>
             {profile.bio && !isViewingOwnProfile && (
               <BioTranslateButton
                 bio={profile.bio}
@@ -421,12 +423,12 @@ export function ProfileHeader({
                   className="hover:underline"
                 >
                   <span className="font-bold text-white">{profile.following.toLocaleString()}</span>
-                  <span className="text-zinc-500 ml-1">Following</span>
+                  <span className="text-zinc-500 ml-1">{t('profile.following')}</span>
                 </button>
               ) : (
                 <div>
                   <span className="font-bold text-white">{profile.following.toLocaleString()}</span>
-                  <span className="text-zinc-500 ml-1">Following</span>
+                  <span className="text-zinc-500 ml-1">{t('profile.following')}</span>
                 </div>
               )}
               {(showFollowersFollowing || isViewingOwnProfile) ? (
@@ -438,12 +440,12 @@ export function ProfileHeader({
                   className="hover:underline"
                 >
                   <span className="font-bold text-white">{profile.followers.toLocaleString()}</span>
-                  <span className="text-zinc-500 ml-1">Followers</span>
+                  <span className="text-zinc-500 ml-1">{t('profile.followers')}</span>
                 </button>
               ) : (
                 <div>
                   <span className="font-bold text-white">{profile.followers.toLocaleString()}</span>
-                  <span className="text-zinc-500 ml-1">Followers</span>
+                  <span className="text-zinc-500 ml-1">{t('profile.followers')}</span>
                 </div>
               )}
             </div>

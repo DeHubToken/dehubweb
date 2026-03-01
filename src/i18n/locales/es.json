@@ -814,6 +814,7 @@
     "offerSubmitted": "Oferta de {{amount}} DHB enviada para {{handle}}",
     "followers": "Seguidores",
     "following": "Siguiendo",
+    "joined": "Se unió",
     "loginDescription": "Inicia sesión para ver y gestionar tu perfil."
   },
   "tv": {
