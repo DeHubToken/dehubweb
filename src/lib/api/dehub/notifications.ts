@@ -1,13 +1,14 @@
 import { apiCall } from './core';
 import type { DeHubUser, DeHubNFT } from './types';
 
-export type NotificationType = 
-  | 'like' 
-  | 'comment' 
+export type NotificationType =
+  | 'like'
+  | 'comment'
   | 'comment_reply'
   | 'comment_like'
+  | 'mention'
   | 'following'
-  | 'tip' 
+  | 'tip'
   | 'subscription'
   | 'ppv_purchase'
   | 'video_milestone'
@@ -143,28 +144,30 @@ export async function getNotifications(
   if (response && typeof response === 'object' && 'result' in response) {
     const result = response.result;
     if (Array.isArray(result)) {
+      console.log('[Notifications] raw types from API:', result.map((n: any) => n.type));
       const items = result
         .filter(item => item && item._id)
         .map(normalizeNotification);
-      return { 
-        items, 
-        totalCount: items.length, 
-        hasMore: items.length >= limit 
+      return {
+        items,
+        totalCount: items.length,
+        hasMore: items.length >= limit
       };
     }
   }
-  
+
   if (Array.isArray(response)) {
+    console.log('[Notifications] raw types from API:', response.map((n: any) => n.type));
     const items = response
       .filter(item => item && item._id)
       .map(normalizeNotification);
-    return { 
-      items, 
-      totalCount: items.length, 
-      hasMore: items.length >= limit 
+    return {
+      items,
+      totalCount: items.length,
+      hasMore: items.length >= limit
     };
   }
-  
+
   return { items: [], totalCount: 0, hasMore: false };
 }
 

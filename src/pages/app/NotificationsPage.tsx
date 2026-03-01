@@ -133,7 +133,7 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
   likes: ['like', 'comment_like'],
   follows: ['following'],
-  comments: ['comment', 'comment_reply'],
+  comments: ['comment', 'comment_reply', 'mention'],
   reposts: ['repost', 'quote'],
   subscriptions: ['subscription', 'ppv_purchase'],
   tips: ['tip'],
@@ -147,6 +147,8 @@ function getNotificationIcon(type: string) {
     case 'comment':
     case 'comment_reply':
       return <MessageCircle className="w-4 h-4 text-blue-400" />;
+    case 'mention':
+      return <MessageCircle className="w-4 h-4 text-violet-400" />;
     case 'comment_like':
       return <ThumbsUp className="w-4 h-4 text-pink-400" />;
     case 'tip':
@@ -208,6 +210,8 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
       return tr('notifications.commentedPost', { name: actorName });
     case 'comment_reply':
       return tr('notifications.repliedComment', { name: actorName });
+    case 'mention':
+      return `${actorName} mentioned you in a comment`;
     case 'tip':
       const tipAmount = notification.amount ? ` ${notification.amount} ${notification.currency || 'DHB'}` : '';
       return tr('notifications.tippedYou', { name: actorName }) + tipAmount;
@@ -255,6 +259,7 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     case 'comment':
     case 'comment_reply':
     case 'comment_like':
+    case 'mention':
     case 'tip':
     case 'video_milestone':
       return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
