@@ -406,13 +406,22 @@ export default function StakingPage() {
             Stake your DHB tokens to earn rewards. The correct chain will be detected automatically.
           </p>
           <div className="flex gap-2">
-            <input
-              type="number"
-              placeholder="Amount DHB"
-              value={stakeAmount}
-              onChange={(e) => setStakeAmount(e.target.value)}
-              className="flex-1 min-w-0 px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50"
-            />
+            <div className="relative flex-1 min-w-0">
+              <input
+                type="number"
+                placeholder="Amount DHB"
+                value={stakeAmount}
+                onChange={(e) => setStakeAmount(e.target.value)}
+                className="w-full px-3 py-2.5 pr-14 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50"
+              />
+              <button
+                type="button"
+                onClick={() => setStakeAmount(userUnstaked.toString())}
+                className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase hover:bg-emerald-500/30 transition-colors"
+              >
+                Max
+              </button>
+            </div>
             <button
               onClick={handleStake}
               disabled={isStaking || isApproving || !stakeAmount}
@@ -450,13 +459,22 @@ export default function StakingPage() {
               Withdraw your staked DHB. Tokens will be returned to your wallet.
             </p>
             <div className="flex gap-2">
-              <input
-                type="number"
-                placeholder="Amount DHB"
-                value={unstakeAmount}
-                onChange={(e) => setUnstakeAmount(e.target.value)}
-                className="flex-1 min-w-0 px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-amber-500/50"
-              />
+              <div className="relative flex-1 min-w-0">
+                <input
+                  type="number"
+                  placeholder="Amount DHB"
+                  value={unstakeAmount}
+                  onChange={(e) => setUnstakeAmount(e.target.value)}
+                  className="w-full px-3 py-2.5 pr-14 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-amber-500/50"
+                />
+                <button
+                  type="button"
+                  onClick={() => setUnstakeAmount(userStaked.toString())}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 text-[10px] font-bold uppercase hover:bg-amber-500/30 transition-colors"
+                >
+                  Max
+                </button>
+              </div>
               <button
                 onClick={handleUnstake}
                 disabled={isUnstaking || !unstakeAmount}
