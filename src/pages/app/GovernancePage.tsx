@@ -6,6 +6,7 @@
  */
 
 import governanceShieldIcon from '@/assets/governance-shield.png';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -649,48 +650,67 @@ export default function GovernancePage() {
         </div>
 
         {/* Page Tabs */}
-        <div className="relative flex gap-1 bg-zinc-800/40 rounded-xl p-1 mb-3">
-          <div
-            className={`absolute top-1 bottom-1 w-[calc(33.333%-3px)] rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] transition-transform duration-300 ease-out ${
-              activeTab === 'passed' ? 'translate-x-[calc(100%+2px)]' : activeTab === 'rejected' ? 'translate-x-[calc(200%+4px)]' : 'translate-x-0'
-            }`}
-          />
+        <div className="relative flex gap-1 rounded-xl mb-3">
           <button
             type="button"
             onClick={() => setActiveTab('proposals')}
-            className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 ${
-              activeTab === 'proposals' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-            }`}
+            className="relative z-10 flex-1"
           >
-            {t('governance.proposals')}
+            {activeTab === 'proposals' ? (
+              <LiquidGlassBubble shimmer={false} className="w-full">
+                <span className="flex items-center justify-center text-sm font-medium text-white">{t('governance.proposals')}</span>
+              </LiquidGlassBubble>
+            ) : (
+              <span className="flex items-center justify-center py-2.5 text-sm font-medium text-zinc-500 hover:text-zinc-300 transition-colors">{t('governance.proposals')}</span>
+            )}
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('passed')}
-            className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
-              activeTab === 'passed' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-            }`}
+            className="relative z-10 flex-1"
           >
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            {t('governance.passed')}
-            {passedCount > 0 && (
-              <span className="text-[10px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded-md font-semibold">
-                {passedCount}
+            {activeTab === 'passed' ? (
+              <LiquidGlassBubble shimmer={false} className="w-full">
+                <span className="flex items-center justify-center gap-1.5 text-sm font-medium text-white">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  {t('governance.passed')}
+                  {passedCount > 0 && (
+                    <span className="text-[10px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded-md font-semibold">{passedCount}</span>
+                  )}
+                </span>
+              </LiquidGlassBubble>
+            ) : (
+              <span className="flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium text-zinc-500 hover:text-zinc-300 transition-colors">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                {t('governance.passed')}
+                {passedCount > 0 && (
+                  <span className="text-[10px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded-md font-semibold">{passedCount}</span>
+                )}
               </span>
             )}
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('rejected')}
-            className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
-              activeTab === 'rejected' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-            }`}
+            className="relative z-10 flex-1"
           >
-            <X className="w-3.5 h-3.5" />
-            {t('governance.rejected')}
-            {rejectedCount > 0 && (
-              <span className="text-[10px] bg-red-500/15 text-red-400 px-1.5 py-0.5 rounded-md font-semibold">
-                {rejectedCount}
+            {activeTab === 'rejected' ? (
+              <LiquidGlassBubble shimmer={false} className="w-full">
+                <span className="flex items-center justify-center gap-1.5 text-sm font-medium text-white">
+                  <X className="w-3.5 h-3.5" />
+                  {t('governance.rejected')}
+                  {rejectedCount > 0 && (
+                    <span className="text-[10px] bg-red-500/15 text-red-400 px-1.5 py-0.5 rounded-md font-semibold">{rejectedCount}</span>
+                  )}
+                </span>
+              </LiquidGlassBubble>
+            ) : (
+              <span className="flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium text-zinc-500 hover:text-zinc-300 transition-colors">
+                <X className="w-3.5 h-3.5" />
+                {t('governance.rejected')}
+                {rejectedCount > 0 && (
+                  <span className="text-[10px] bg-red-500/15 text-red-400 px-1.5 py-0.5 rounded-md font-semibold">{rejectedCount}</span>
+                )}
               </span>
             )}
           </button>
