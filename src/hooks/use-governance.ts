@@ -185,7 +185,7 @@ export function useSubmitGovernanceProposal() {
       if (balance < amountWei) {
         const balanceHuman = Number(balance) / 1e18;
         throw new Error(
-          `Insufficient DHB on Base. Need ${GOVERNANCE_PROPOSAL_FEE.toLocaleString()} DHB on Base chain but have ${balanceHuman.toFixed(2)} DHB. Please bridge or transfer DHB to Base.`
+          `Insufficient unstaked DHB on Base. Need ${GOVERNANCE_PROPOSAL_FEE.toLocaleString()} liquid (unstaked) DHB on Base but have ${balanceHuman.toFixed(2)} DHB. Staked DHB cannot be used for fees.`
         );
       }
 
@@ -269,7 +269,7 @@ export function useVoteGovernanceProposal() {
         if (balance < amountWei) {
           const balanceHuman = Number(balance) / 1e18;
           throw new Error(
-            `Insufficient DHB on Base. Need ${GOVERNANCE_VOTE_FEE.toLocaleString()} DHB on Base chain but have ${balanceHuman.toFixed(2)} DHB. Please bridge or transfer DHB to Base.`
+            `Insufficient unstaked DHB on Base. Need ${GOVERNANCE_VOTE_FEE.toLocaleString()} liquid (unstaked) DHB on Base but have ${balanceHuman.toFixed(2)} DHB. Staked DHB cannot be used for fees.`
           );
         }
 
