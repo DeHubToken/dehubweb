@@ -210,26 +210,10 @@
     "error": "یو تېروتنه وشوه. بیا هڅه وکړه."
   },
   "governance": {
-    "title": "حاکمیت",
-    "proposals": "وړاندیزونه",
-    "createProposal": "وړاندیز جوړ کړه",
-    "vote": "رایه",
-    "voted": "رایه ورکړه",
-    "active": "فعال",
-    "passed": "تیر شوی",
-    "rejected": "رد شوی",
-    "pending": "انتظار کې",
-    "quorum": "نصاب",
-    "timeLeft": "پاتې وخت",
-    "description": "تفصیل",
-    "discussion": "بحث",
-    "results": "پایلې",
-    "proposalTitle": "د وړاندیز سرلیک",
-    "proposalDescription": "د وړاندیز تفصیل",
-    "submitProposal": "وړاندیز واستوه",
-    "voteFor": "موافق",
-    "voteAgainst": "مخالف",
-    "abstain": "بېطرفه"
+    "title": "حاکمیت", "proposalCount": "{{count}} وړاندیز وراندې شوی", "proposalCount_other": "{{count}} وړاندیزونه وراندې شوي", "propose": "وړاندیز وکړه", "searchProposals": "وړاندیزونه ولټوه...", "proposals": "وړاندیزونه", "passed": "تیر شوی", "rejected": "رد شوی", "mostVoted": "ډېرې رایې", "newest": "نوی", "governanceBadge": "حاکمیت", "weightedVotes": "وزني: {{for}} پکښې · {{against}} پرضد", "weightedVotesFor": "{{count}} وزني رایې پکښې", "noCommentsYet": "تر اوسه هیڅ نظر نشته", "addComment": "نظر ورکړه...", "submitProposal": "د حاکمیت وړاندیز واستوه", "titleLabel": "سرلیک", "titlePlaceholder": "لکه: د سټیکنګ انعام ١٠٪ زیات کړه", "descriptionLabel": "تفصیل", "descriptionPlaceholder": "خپل وړاندیز په تفصیل سره بیان کړه...", "submitProposalBtn": "وړاندیز واستوه", "titleRequired": "سرلیک اړین دی", "titleMaxLength": "سرلیک باید له ١٠٠ توري لږ وي", "descriptionRequired": "تفصیل اړینه ده", "descriptionMaxLength": "تفصیل باید له ١٬٠٠٠ توري لږ وي", "noProposalsYet": "تر اوسه هیڅ وړاندیز نشته", "beFirstToSubmit": "لومړی شه چې د حاکمیت وړاندیز واستوه", "noPassedYet": "تر اوسه هیڅ تیر شوی وړاندیز نشته", "passedAppearHere": "تیر شوي وړاندیزونه به دلته ښکاره شي", "noRejectedYet": "تر اوسه هیڅ رد شوی وړاندیز نشته", "rejectedAppearHere": "رد شوي وړاندیزونه به دلته ښکاره شي", "yourVoteWeight": "ستاسو رایې وزن:", "holdTokensToVote": "رایه ورکولو لپاره DHB ټوکن ولرئ", "mustHoldTokens": "د حاکمیت وړاندیزونو باندې رایه ورکولو لپاره تاسو باید DHB ټوکن ولرئ.", "justNow": "اوس مهال", "minutesAgo": "{{count}} دقیقې مخکې", "hoursAgo": "{{count}} ساعته مخکې", "daysAgo": "{{count}} ورځې مخکې", "monthsAgo": "{{count}} میاشتې مخکې"
+  },
+  "commandCentre": {
+    "title": "د حکم مرکز", "overview": "لنډیز", "subscriptions": "ګډون", "transactions": "لیږدونه", "totalBalance": "د بټوې ټول ارزښت", "totalDhbBalance": "ټول DHB بیلانس", "otherAssets": "نور شتمنۍ", "fullWallet": "بټوه", "signInBalance": "بیلانس لیدو لپاره ننوځئ", "incomeChart": "عاید", "topSourceOfIncome": "تر ټولو لوړ عاید سرچینه", "cameFrom": "څخه راغلی", "noIncomeData": "تر اوسه د عاید ډاټا نشته", "noIncomeInPeriod": "پدې موده کې عاید نشته", "recentTransactions": "وروستي لیږدونه", "viewAll": "ټول وګوره", "noTransactionsYet": "تر اوسه لیږدونه نشته", "subscriptionsSummary": "ګډون", "viewDetails": "تفصیلات وګوره", "active": "فعال", "total": "ټول", "yourPlans": "ستاسو پلانونه", "estMonthlySpend": "اټکلي میاشتني لګښت", "noSubscriptionsYet": "تر اوسه ګډون نشته", "addFunds": "جمع کړه", "withdraw": "وباسه", "buy": "واخله", "transferToMe": "ماته واستوه", "transfer": "لیږد", "bankCard": "بانکي کارت", "soon": "ژر", "transferDhb": "DHB لیږد", "walletAddressOrUsername": "د بټوې پته یا کارن نوم", "send": "واستوه", "purchaseWithCard": "د کارت سره واخله", "copyWalletAddress": "د بټوې پته کاپي کړه", "sendToWalletOrUsername": "بټوې یا کارن نوم ته واستوه", "withdrawToBank": "بانک ته وباسه", "yourSubscriptions": "ستاسو ګډون", "activeSubscriptions": "فعال ګډون", "creators": "جوړونکي", "yourPlansAsCreator": "ستاسو پلانونه (جوړونکی)", "plans": "پلانونه", "noSubscriptionsTable": "تر اوسه ګډون نشته", "subscribeToCreators": "خپل فعالیت دلته لیدو لپاره جوړونکو سره ګډون وکړئ", "subscriptionList": "د ګډون لیست", "creator": "جوړونکی", "plan": "پلان", "price": "بیه", "period": "موده", "status": "حالت", "remaining": "پاتې", "expired": "ختم شوی", "inactive": "غیر فعال", "signInSubscriptions": "ګډون لیدو لپاره ننوځئ", "connectWalletSubscriptions": "د ګډون فعالیت لیدو لپاره بټوه وصل کړئ", "totalVolume": "ټول حجم", "incomeVsExpenditure": "عاید په مقابل کې لګښت", "transactionBreakdown": "د لیږدونو تفصیل", "largestCategory": "تر ټولو لویه برخه", "transactionList": "د لیږدونو لیست", "noChartData": "تر اوسه د چارت ډاټا نشته", "noTransactionsFound": "لیږدونه ونه موندل شوې. لومړی پیرود وکړئ!", "noTransactionsInPeriod": "پدې موده کې لیږدونه نشته.", "failedLoadTransactions": "لیږدونه لوډ نشوې", "date": "نېټه", "type": "ډول", "amount": "مقدار", "token": "ټوکن", "action": "عمل", "viewTx": "لیږد وګوره", "loadingSubscriptions": "ګډون لوډ کیږي..."
   },
   "careers": {
     "title": "دندې",

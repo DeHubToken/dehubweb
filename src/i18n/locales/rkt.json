@@ -210,26 +210,10 @@
     "error": "কিছু একটা সমস্যা হইছে। আবার চেষ্টা করো।"
   },
   "governance": {
-    "title": "গভর্ন্যান্স",
-    "proposals": "প্রস্তাব",
-    "createProposal": "প্রস্তাব বানাও",
-    "vote": "ভোট",
-    "voted": "ভোট দিছে",
-    "active": "সক্রিয়",
-    "passed": "পাস",
-    "rejected": "বাতিল",
-    "pending": "অপেক্ষায়",
-    "quorum": "কোরাম",
-    "timeLeft": "বাকি সময়",
-    "description": "বর্ণনা",
-    "discussion": "আলোচনা",
-    "results": "ফলাফল",
-    "proposalTitle": "প্রস্তাবের নাম",
-    "proposalDescription": "প্রস্তাবের বর্ণনা",
-    "submitProposal": "প্রস্তাব জমা দাও",
-    "voteFor": "পক্ষে",
-    "voteAgainst": "বিপক্ষে",
-    "abstain": "নিরপেক্ষ"
+    "title": "গভর্ন্যান্স", "proposalCount": "{{count}} টা প্রস্তাব জমা হইছে", "proposalCount_other": "{{count}} টা প্রস্তাব জমা হইছে", "propose": "প্রস্তাব দাও", "searchProposals": "প্রস্তাব খোঁজো...", "proposals": "প্রস্তাব", "passed": "পাস", "rejected": "বাতিল", "mostVoted": "বেশি ভোট", "newest": "নতুন", "governanceBadge": "গভর্ন্যান্স", "weightedVotes": "ওজনযুক্ত: {{for}} পক্ষে · {{against}} বিপক্ষে", "weightedVotesFor": "{{count}} ওজনযুক্ত ভোট পক্ষে", "noCommentsYet": "এখনো কোনো মন্তব্য নাই", "addComment": "মন্তব্য দাও...", "submitProposal": "গভর্ন্যান্স প্রস্তাব জমা দাও", "titleLabel": "শিরোনাম", "titlePlaceholder": "যেমন: স্টেকিং পুরস্কার ১০% বাড়াও", "descriptionLabel": "বর্ণনা", "descriptionPlaceholder": "তোমার প্রস্তাব বিস্তারিত বর্ণনা করো...", "submitProposalBtn": "প্রস্তাব জমা দাও", "titleRequired": "শিরোনাম লাগবে", "titleMaxLength": "শিরোনাম ১০০ অক্ষরের কম হইতে হইবে", "descriptionRequired": "বর্ণনা লাগবে", "descriptionMaxLength": "বর্ণনা ১,০০০ অক্ষরের কম হইতে হইবে", "noProposalsYet": "এখনো কোনো প্রস্তাব নাই", "beFirstToSubmit": "প্রথম গভর্ন্যান্স প্রস্তাব জমা দাও", "noPassedYet": "এখনো কোনো পাস প্রস্তাব নাই", "passedAppearHere": "পাস প্রস্তাব এখানে দেখাইবে", "noRejectedYet": "এখনো কোনো বাতিল প্রস্তাব নাই", "rejectedAppearHere": "বাতিল প্রস্তাব এখানে দেখাইবে", "yourVoteWeight": "তোমার ভোটের ওজন:", "holdTokensToVote": "ভোট দেওয়ার জন্য DHB টোকেন ধরো", "mustHoldTokens": "গভর্ন্যান্স প্রস্তাবে ভোট দেওয়ার জন্য DHB টোকেন ধরতে হইবে।", "justNow": "এইমাত্র", "minutesAgo": "{{count}} মিনিট আগে", "hoursAgo": "{{count}} ঘণ্টা আগে", "daysAgo": "{{count}} দিন আগে", "monthsAgo": "{{count}} মাস আগে"
+  },
+  "commandCentre": {
+    "title": "কমান্ড সেন্টার", "overview": "সারসংক্ষেপ", "subscriptions": "সাবস্ক্রিপশন", "transactions": "লেনদেন", "totalBalance": "ওয়ালেটের মোট মূল্য", "totalDhbBalance": "মোট DHB ব্যালেন্স", "otherAssets": "অন্য সম্পদ", "fullWallet": "ওয়ালেট", "signInBalance": "ব্যালেন্স দেখতে লগ ইন করো", "incomeChart": "আয়", "topSourceOfIncome": "বেশি আয়ের উৎস", "cameFrom": "থেকে আসছে", "noIncomeData": "এখনো আয়ের ডেটা নাই", "noIncomeInPeriod": "এই সময়ে আয় নাই", "recentTransactions": "সাম্প্রতিক লেনদেন", "viewAll": "সব দেখো", "noTransactionsYet": "এখনো লেনদেন নাই", "subscriptionsSummary": "সাবস্ক্রিপশন", "viewDetails": "বিস্তারিত দেখো", "active": "সক্রিয়", "total": "মোট", "yourPlans": "তোমার প্ল্যান", "estMonthlySpend": "আনুমানিক মাসিক খরচ", "noSubscriptionsYet": "এখনো সাবস্ক্রিপশন নাই", "addFunds": "জমা করো", "withdraw": "তুলো", "buy": "কিনো", "transferToMe": "আমারে পাঠাও", "transfer": "ট্রান্সফার", "bankCard": "ব্যাংক কার্ড", "soon": "শীঘ্রই", "transferDhb": "DHB ট্রান্সফার", "walletAddressOrUsername": "ওয়ালেট ঠিকানা বা ইউজারনেম", "send": "পাঠাও", "purchaseWithCard": "কার্ডে কিনো", "copyWalletAddress": "ওয়ালেট ঠিকানা কপি করো", "sendToWalletOrUsername": "ওয়ালেট বা ইউজারনেমে পাঠাও", "withdrawToBank": "ব্যাংকে তুলো", "yourSubscriptions": "তোমার সাবস্ক্রিপশন", "activeSubscriptions": "সক্রিয় সাবস্ক্রিপশন", "creators": "ক্রিয়েটর", "yourPlansAsCreator": "তোমার প্ল্যান (ক্রিয়েটর)", "plans": "প্ল্যান", "noSubscriptionsTable": "এখনো সাবস্ক্রিপশন নাই", "subscribeToCreators": "ক্রিয়েটরদের সাবস্ক্রাইব করো", "subscriptionList": "সাবস্ক্রিপশন তালিকা", "creator": "ক্রিয়েটর", "plan": "প্ল্যান", "price": "দাম", "period": "সময়কাল", "status": "অবস্থা", "remaining": "বাকি", "expired": "মেয়াদ শেষ", "inactive": "নিষ্ক্রিয়", "signInSubscriptions": "সাবস্ক্রিপশন দেখতে লগ ইন করো", "connectWalletSubscriptions": "সাবস্ক্রিপশন দেখতে ওয়ালেট সংযুক্ত করো", "totalVolume": "মোট পরিমাণ", "incomeVsExpenditure": "আয় বনাম ব্যয়", "transactionBreakdown": "লেনদেনের বিবরণ", "largestCategory": "বড় বিভাগ", "transactionList": "লেনদেন তালিকা", "noChartData": "এখনো চার্ট ডেটা নাই", "noTransactionsFound": "লেনদেন পাওয়া যায় নাই। প্রথম ক্রয় করো!", "noTransactionsInPeriod": "এই সময়ে লেনদেন নাই।", "failedLoadTransactions": "লেনদেন লোড হয় নাই", "date": "তারিখ", "type": "ধরন", "amount": "পরিমাণ", "token": "টোকেন", "action": "কাজ", "viewTx": "লেনদেন দেখো", "loadingSubscriptions": "সাবস্ক্রিপশন লোড হইতাছে..."
   },
   "careers": {
     "title": "চাকরি",
