@@ -1,4 +1,5 @@
 import { Loader2 } from 'lucide-react';
+import { TranslatableText } from '@/components/app/TranslatableText';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -228,7 +229,7 @@ export function RecentTransactions() {
               <div key={tx.id} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
                 <div className="flex items-center gap-2 min-w-0">
                   <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${tx.isCredit ? 'bg-emerald-400' : 'bg-red-400'}`} />
-                  <p className="text-sm text-zinc-400 truncate">{tx.description}</p>
+                  <TranslatableText text={tx.description} className="text-sm text-zinc-400 truncate" as="p" hideControls />
                 </div>
                 <span className="text-zinc-500 text-sm whitespace-nowrap ml-4">{dateStr}</span>
               </div>
