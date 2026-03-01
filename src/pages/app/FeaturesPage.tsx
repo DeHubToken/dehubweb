@@ -150,7 +150,7 @@ function FeatureCard({
   };
 
   return (
-    <div className="overflow-hidden relative">
+    <div className="overflow-visible relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3">
       {/* Header - PostCard style */}
       <CardHeader
         username={displayName}
@@ -489,7 +489,7 @@ function ShippedCard({ feature }: { feature: FeatureRequest }) {
 
   return (
     <div
-      className="bg-zinc-900 rounded-2xl p-4 flex gap-3 cursor-pointer hover:bg-zinc-800/70 transition-colors"
+      className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3 flex gap-3 cursor-pointer hover:bg-white/[0.05] transition-colors"
       onClick={() => setExpanded(!expanded)}
     >
       <div className="flex flex-col items-center justify-center min-w-[40px]">
