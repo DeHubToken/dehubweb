@@ -193,6 +193,7 @@ function GovernanceCard({
             likeCount={proposal.like_count ?? 0}
             dislikeCount={proposal.dislike_count ?? 0}
             commentCount={proposal.comment_count}
+            voteWeight={userWeight}
           />
         </div>
 
