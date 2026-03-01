@@ -59,6 +59,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   mag: 'Magahi',
   ar: 'Arabic',
   aec: "Arabic, Sa'idi Spoken",
+  acm: 'Arabic, Mesopotamian Spoken',
   hi: 'Hindi',
   ta: 'Tamil',
   te: 'Telugu',
