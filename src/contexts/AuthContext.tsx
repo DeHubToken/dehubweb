@@ -83,6 +83,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 function normalizeUser(userData: Partial<DeHubUser> | null | undefined, fallbackAddress: string): DeHubUser {
   const safe = userData ?? {};
+  // Compute badgeBalance: use API value, or fallback to sum of balanceData
+  const badgeBalance = safe.badgeBalance || (safe.balanceData?.reduce((sum, b) => sum + (b.walletBalance || 0) + (b.staked || 0), 0)) || 0;
   return {
     address: safe.address || fallbackAddress,
     username: safe.username || null,
@@ -99,6 +101,8 @@ function normalizeUser(userData: Partial<DeHubUser> | null | undefined, fallback
     online: safe.online ?? true,
     createdAt: safe.createdAt,
     lastLoginTimestamp: safe.lastLoginTimestamp,
+    badgeBalance,
+    balanceData: safe.balanceData,
   };
 }
 
