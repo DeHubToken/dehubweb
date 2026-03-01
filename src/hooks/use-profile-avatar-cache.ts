@@ -35,12 +35,12 @@ function extractUserAvatarUrl(user: DeHubUser): string | undefined {
  * Fetch a single avatar directly from the DeHub API.
  * TanStack Query handles deduplication and caching.
  */
-async function fetchAvatarDirect(address: string): Promise<string | undefined> {
+async function fetchAvatarDirect(address: string): Promise<string | null> {
   try {
     const user = await getAccountInfo(address);
-    return extractUserAvatarUrl(user);
+    return extractUserAvatarUrl(user) ?? null;
   } catch {
-    return undefined;
+    return null;
   }
 }
 
