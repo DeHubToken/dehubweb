@@ -1,41 +1,45 @@
 
 
-## Problem Analysis
+## Problem
 
-Two issues identified:
+The governance vote fee check reads the user's DHB balance on **Base chain only**, but the error message just says "Insufficient DHB balance" without specifying the chain. If the user holds DHB on BNB Chain but not enough on Base, the error is confusing.
 
-1. **Username update silently fails**: The `updateProfile` API call at `/api/update_profile` returns a success response even when the username is taken — the API likely just ignores the username field and updates everything else. The `onSuccess` handler shows "Profile updated" toast, but the username didn't actually change. The settings page does NOT check username availability before submitting.
+Additionally, `getERC20Balance` doesn't forward `chainId`, though in this case it defaults to Base which is correct for governance.
 
-2. **No real-time username availability feedback**: The settings page username input (line 490-496 of SettingsPage.tsx) is a plain `Input` with no availability check. The `UsernameRequiredModal` already has this pattern implemented (debounced check + visual feedback), but SettingsPage doesn't use it.
+## Plan
 
-## Implementation Plan
+### 1. Improve the error message in the vote flow (`src/hooks/use-governance.ts`)
 
-### 1. Add username availability check to Settings profile tab
+Change the insufficient balance error at line ~272 from:
+```
+Insufficient DHB balance. Need 2,000 DHB but have X DHB
+```
+to:
+```
+Insufficient DHB on Base. Need 2,000 DHB on Base chain but have X DHB. Please bridge or transfer DHB to Base.
+```
 
-- Import `checkUsernameAvailability` from `@/lib/api/dehub`
-- Add state: `usernameAvailable`, `usernameError`, `isCheckingUsername`
-- Use `useDebouncedValue` hook on the username field
-- Run availability check when debounced username changes AND differs from `originalValues.username`
-- Skip check if username equals the user's current username
+### 2. Same fix for the proposal fee error (~line 188)
 
-### 2. Show inline feedback on the username input
+Update the proposal submission balance error to also mention Base chain.
 
-- Below the username input, show:
-  - A green checkmark + "Available" when available
-  - A red X + "Username is already taken" when taken
-  - A spinner while checking
-- Replace the current hint text (`settings.usernameHint`) with dynamic status
+### 3. Pass `chainId` explicitly in `getERC20Balance` calls
 
-### 3. Block save when username is taken
+In both the vote and proposal flows, the code calls `getERC20Balance(chainConfig.dhbToken, signerAddress)` without a chain ID. While it defaults to Base, it's better to be explicit. However, `getERC20Balance` doesn't accept a `chainId` parameter — so either:
+- Add an optional `chainId` parameter to `getERC20Balance` and pass it through to `readContract`, or
+- Call `readContract` directly with `chainId` in the governance hook
 
-- In `handleSave`, prevent submission if `usernameAvailable === false`
-- Disable the Save button when `isCheckingUsername` is true or `usernameAvailable === false`
-- Show a toast error if user somehow tries to save with an unavailable username
+Recommended: Add `chainId` param to `getERC20Balance` in `aa-utils.ts` (line 536) and pass `BASE_CHAIN_ID` in both governance calls.
 
 ### Technical Details
 
-- Reuse the same `checkUsernameAvailability` GET endpoint already used in `UsernameRequiredModal`
-- Debounce at 300ms (matching existing pattern)
-- Only trigger check when username differs from original (avoid checking user's own current username)
-- Files to modify: `src/pages/app/SettingsPage.tsx`
+**File: `src/lib/contracts/aa-utils.ts`** (line 536-545)
+- Add optional `chainId` parameter to `getERC20Balance`
+- Forward it to `readContract`
+
+**File: `src/hooks/use-governance.ts`**
+- Line ~267: Pass `BASE_CHAIN_ID` to `getERC20Balance`
+- Line ~272: Update error message to mention Base chain
+- Line ~183: Pass `BASE_CHAIN_ID` to `getERC20Balance`
+- Line ~188: Update error message to mention Base chain
 
