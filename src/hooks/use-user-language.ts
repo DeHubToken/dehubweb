@@ -60,6 +60,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   ar: 'Arabic',
   aec: "Arabic, Sa'idi Spoken",
   acm: 'Arabic, Mesopotamian Spoken',
+  acw: 'Arabic, Hijazi Spoken',
   hi: 'Hindi',
   ta: 'Tamil',
   te: 'Telugu',
