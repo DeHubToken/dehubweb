@@ -302,13 +302,29 @@ export function useVoteGovernanceProposal() {
           pages: old.pages.map((page: GovernanceProposal[]) =>
             page.map((p) => {
               if (p.id !== proposalId) return p;
-              let delta = voteType * voteWeight;
+              let likeDelta = 0;
+              let dislikeDelta = 0;
+
               if (currentVote === voteType) {
-                delta = -voteType * voteWeight;
+                // Removing vote
+                if (voteType === 1) likeDelta = -voteWeight;
+                else dislikeDelta = -voteWeight;
               } else if (currentVote) {
-                delta = (voteType - currentVote) * voteWeight;
+                // Changing vote
+                if (currentVote === 1) { likeDelta = -voteWeight; dislikeDelta = voteWeight; }
+                else { dislikeDelta = -voteWeight; likeDelta = voteWeight; }
+              } else {
+                // New vote
+                if (voteType === 1) likeDelta = voteWeight;
+                else dislikeDelta = voteWeight;
               }
-              return { ...p, vote_count: p.vote_count + delta };
+
+              return {
+                ...p,
+                vote_count: p.vote_count + likeDelta - dislikeDelta,
+                like_count: (p.like_count ?? 0) + likeDelta,
+                dislike_count: (p.dislike_count ?? 0) + dislikeDelta,
+              };
             })
           ),
         };
