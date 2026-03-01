@@ -139,16 +139,18 @@ function GovernanceCard({
 
   return (
     <div className="overflow-visible relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3">
-      <CardHeader
-        username={displayName}
-        handle={handle}
-        avatarSeed={avatarUrl || proposal.author_wallet_address}
-        verified={false}
-        contentType="post"
-        creatorId={proposal.author_wallet_address}
-        creatorUsername={proposal.author_username || undefined}
-        timestamp={formatTimeAgo(proposal.created_at, t)}
-      />
+      <div className="flex items-start justify-between">
+        <CardHeader
+          username={displayName}
+          handle={handle}
+          avatarSeed={avatarUrl || proposal.author_wallet_address}
+          verified={false}
+          contentType="post"
+          creatorId={proposal.author_wallet_address}
+          creatorUsername={proposal.author_username || undefined}
+        />
+        <span className="text-zinc-500 text-[10px] shrink-0 pt-1">{formatTimeAgo(proposal.created_at, t)}</span>
+      </div>
 
       <div className="pt-1 space-y-2">
         <TranslatableText text={proposal.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
