@@ -516,9 +516,13 @@ Deno.serve(async (req) => {
 
   try {
     let mode = "full";
+    let filterPeriods: string[] | null = null;
+    let filterSorts: string[] | null = null;
     try {
       const body = await req.json();
       if (body?.mode === "light") mode = "light";
+      if (Array.isArray(body?.periods)) filterPeriods = body.periods;
+      if (Array.isArray(body?.sorts)) filterSorts = body.sorts;
     } catch {
       // No body or invalid JSON — default to full
     }
@@ -584,8 +588,17 @@ Deno.serve(async (req) => {
       const LIGHT_PERIODS = ["day", "week", "month", "year"] as const;
       const ALL_SORT_MODES = ["holdings", "followers", "likes", "subscribers", "sentTips", "receivedTips"] as const;
 
-      for (const sortMode of ALL_SORT_MODES) {
-        for (const period of LIGHT_PERIODS) {
+      const activePeriods = filterPeriods
+        ? LIGHT_PERIODS.filter(p => filterPeriods!.includes(p))
+        : [...LIGHT_PERIODS];
+      const activeSorts = filterSorts
+        ? ALL_SORT_MODES.filter(s => filterSorts!.includes(s))
+        : [...ALL_SORT_MODES];
+
+      console.log(`[light] Periods: ${activePeriods.join(", ")} | Sorts: ${activeSorts.join(", ")}`);
+
+      for (const sortMode of activeSorts) {
+        for (const period of activePeriods) {
           const result = await computeSnapshotDelta(supabase, allEntries, sortMode, period, sortMode === "holdings" ? rpcConfig : undefined);
           results.push(result);
         }
