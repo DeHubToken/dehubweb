@@ -390,6 +390,7 @@
     "continueSMS": "使用短信继续",
     "continueGoogle": "使用 Google 继续",
     "continueX": "使用 X 继续",
+    "continueDiscord": "使用 Discord 继续",
     "connectWallet": "连接钱包",
     "emailPlaceholder": "输入您的邮箱",
     "invalidEmail": "请输入有效的邮箱地址",
