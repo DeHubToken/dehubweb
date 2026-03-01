@@ -20,7 +20,6 @@ import {
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 
-const GOVERNANCE_VOTE_FEE = 2000; // DHB per vote
 const GOVERNANCE_TREASURY = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
 
 const erc20TransferInterface = new Interface([
@@ -259,33 +258,6 @@ export function useVoteGovernanceProposal() {
         if (error) throw error;
         return { action: 'removed' as const };
       } else {
-        // ── Charge 2,000 DHB vote fee ──────────────────────────
-        const chainConfig = getChainConfig(BASE_CHAIN_ID);
-        await switchChain(BASE_CHAIN_ID);
-        const signerAddress = await getWalletAddress();
-        const amountWei = toWei(GOVERNANCE_VOTE_FEE, DHB_TOKEN.decimals);
-        const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress, BASE_CHAIN_ID);
-
-        if (balance < amountWei) {
-          const balanceHuman = Number(balance) / 1e18;
-          throw new Error(
-            `Insufficient unstaked DHB on Base. Need ${GOVERNANCE_VOTE_FEE.toLocaleString()} liquid (unstaked) DHB on Base but have ${balanceHuman.toFixed(2)} DHB. Staked DHB cannot be used for fees.`
-          );
-        }
-
-        toast.loading('Processing vote fee...', { id: 'governance-vote-fee' });
-
-        const txResult = await writeContractAA(
-          chainConfig.dhbToken,
-          erc20TransferInterface,
-          'transfer',
-          [GOVERNANCE_TREASURY, amountWei],
-          { context: 'Governance vote fee', chainId: BASE_CHAIN_ID }
-        );
-
-        await txResult.wait(1);
-        toast.dismiss('governance-vote-fee');
-
         // ── Record vote in DB ──────────────────────────────────
         const { error } = await supabase
           .from('governance_votes')
