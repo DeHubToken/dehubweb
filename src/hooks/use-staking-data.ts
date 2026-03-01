@@ -5,16 +5,23 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchStakingStats, getUserStakedBNB, getUserEarnedBNB, getStakingAllowance } from '@/lib/contracts/staking';
 import { useTokenPrices } from './use-token-prices';
 import { supabase } from '@/integrations/supabase/client';
-import { fromWei } from '@/lib/contracts/dhb-token';
+import { fromWei, CHAIN_CONFIGS, BNB_CHAIN_ID, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { getWalletAddress } from '@/lib/contracts/aa-utils';
+import { readContract } from '@/lib/contracts/aa-utils';
+import { Interface } from 'ethers';
+import type { ChainId } from '@/components/app/ChainSelector';
 
 export interface UnstakeEvent {
   wallet: string;
-  amount: string;       // human-readable
+  amount: string;
   txHash: string;
   timestamp: number;
   chain: 'BNB' | 'Base';
 }
+
+const erc20BalanceInterface = new Interface([
+  'function balanceOf(address owner) view returns (uint256)',
+]);
 
 async function fetchUnstakeQueue(): Promise<UnstakeEvent[]> {
   try {
@@ -48,10 +55,56 @@ export function useStakingStats() {
   });
 }
 
-export function useUserBNBStaking() {
+/**
+ * Get user's unstaked DHB balance on a specific chain
+ */
+async function getUserDHBBalance(userAddress: string, chainId: ChainId): Promise<bigint> {
+  const config = CHAIN_CONFIGS[chainId];
+  if (!config?.dhbToken) return BigInt(0);
+  
+  // For BNB staking, the DHB token address might differ
+  const tokenAddress = chainId === BNB_CHAIN_ID
+    ? '0x680d3113caf77b61b510f332d5ef4cf5b41a761d'
+    : config.dhbToken;
+
+  try {
+    return await readContract<bigint>(
+      tokenAddress,
+      erc20BalanceInterface,
+      'balanceOf',
+      [userAddress],
+      chainId
+    );
+  } catch {
+    return BigInt(0);
+  }
+}
+
+export interface UserStakingData {
+  // BNB
+  bnbStaked: string;
+  bnbStakedRaw: bigint;
+  bnbBalance: string;
+  bnbBalanceRaw: bigint;
+  bnbEarned: string;
+  bnbEarnedRaw: bigint;
+  bnbAllowance: bigint;
+  // Base
+  baseBalance: string;
+  baseBalanceRaw: bigint;
+  // Combined
+  totalStaked: number;
+  totalUnstaked: number;
+  hasBNBBalance: boolean;
+  hasBaseBalance: boolean;
+  hasBothChains: boolean;
+  userAddress: string;
+}
+
+export function useUserStakingData() {
   return useQuery({
-    queryKey: ['user-bnb-staking'],
-    queryFn: async () => {
+    queryKey: ['user-staking-data'],
+    queryFn: async (): Promise<UserStakingData | null> => {
       let userAddress: string;
       try {
         userAddress = await getWalletAddress();
@@ -59,24 +112,59 @@ export function useUserBNBStaking() {
         return null;
       }
 
-      const [stakedRaw, earnedRaw, allowanceRaw] = await Promise.all([
+      const [bnbStakedRaw, bnbEarnedRaw, bnbAllowance, bnbBalanceRaw, baseBalanceRaw] = await Promise.all([
         getUserStakedBNB(userAddress),
         getUserEarnedBNB(userAddress),
         getStakingAllowance(userAddress),
+        getUserDHBBalance(userAddress, BNB_CHAIN_ID),
+        getUserDHBBalance(userAddress, BASE_CHAIN_ID),
       ]);
 
+      const bnbStaked = fromWei(bnbStakedRaw);
+      const bnbBalance = fromWei(bnbBalanceRaw);
+      const baseBalance = fromWei(baseBalanceRaw);
+      const bnbEarned = fromWei(bnbEarnedRaw);
+
+      const bnbBalNum = parseFloat(bnbBalance);
+      const baseBalNum = parseFloat(baseBalance);
+
       return {
-        staked: fromWei(stakedRaw),
-        stakedRaw,
-        earned: fromWei(earnedRaw),
-        earnedRaw,
-        allowance: allowanceRaw,
+        bnbStaked,
+        bnbStakedRaw,
+        bnbBalance,
+        bnbBalanceRaw,
+        bnbEarned,
+        bnbEarnedRaw,
+        bnbAllowance,
+        baseBalance,
+        baseBalanceRaw,
+        totalStaked: parseFloat(bnbStaked), // BNB contract tracks staked; Base is transfer-based
+        totalUnstaked: bnbBalNum + baseBalNum,
+        hasBNBBalance: bnbBalNum > 0,
+        hasBaseBalance: baseBalNum > 0,
+        hasBothChains: bnbBalNum > 0 && baseBalNum > 0,
         userAddress,
       };
     },
     staleTime: 30_000,
     refetchInterval: 60_000,
   });
+}
+
+// Keep backward compat
+export function useUserBNBStaking() {
+  const { data, ...rest } = useUserStakingData();
+  return {
+    data: data ? {
+      staked: data.bnbStaked,
+      stakedRaw: data.bnbStakedRaw,
+      earned: data.bnbEarned,
+      earnedRaw: data.bnbEarnedRaw,
+      allowance: data.bnbAllowance,
+      userAddress: data.userAddress,
+    } : undefined,
+    ...rest,
+  };
 }
 
 export function useUnstakeQueue() {
