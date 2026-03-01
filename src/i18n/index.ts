@@ -19,6 +19,7 @@ const defaultLang = savedLang || browserLang;
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', name: 'English', nativeName: 'English' },
+  { code: 'om', name: 'Oromo', nativeName: 'Afaan Oromoo' },
   { code: 'af', name: 'Afrikaans', nativeName: 'Afrikaans' },
   { code: 'am', name: 'Amharic', nativeName: 'አማርኛ' },
   { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
@@ -105,6 +106,7 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   qu: () => import('./locales/qu.json'),
   am: () => import('./locales/am.json'),
   sa: () => import('./locales/sa.json'),
+  om: () => import('./locales/om.json'),
   sw: () => import('./locales/sw.json'),
   zu: () => import('./locales/zu.json'),
 };
