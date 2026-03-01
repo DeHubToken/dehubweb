@@ -248,9 +248,10 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
             ref={textareaRef}
             value={newMessage}
             onChange={(e) => {
+              const cursorPos = e.target.selectionStart;
               const val = replaceLinksWithEmoji(e.target.value);
               setNewMessage(val);
-              mention.handleInput(val, e.target.selectionStart);
+              mention.handleInput(val, cursorPos ?? undefined);
             }}
             onKeyDown={handleKeyDown}
             placeholder={isOffline ? 'Chat is offline' : 'Type a message...'}

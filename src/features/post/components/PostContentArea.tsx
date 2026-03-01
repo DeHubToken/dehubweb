@@ -138,9 +138,10 @@ export function PostContentArea({
     inputRef: editorRef,
     onMentionInsert: (user, newText) => {
       setText(newText);
-      // Update contentEditable to match
       if (editorRef.current) {
         editorRef.current.textContent = newText;
+        // Re-apply link chips after mention insertion
+        setTimeout(processLinks, 0);
       }
     },
   });
@@ -584,40 +585,18 @@ export function PostContentArea({
             </motion.div>
           )}
         </AnimatePresence>
-        {/* Mobile: Text input below avatar (avatar is absolute positioned) */}
-        <div className="flex flex-col sm:hidden mt-12">
-          {/* Title input */}
-          <div
-            ref={editorRef}
-            contentEditable
-            onInput={handleInput}
-            onPaste={handlePaste}
-            onKeyDown={(e) => {
-              if (mention.handleKeyDown(e)) {
-                if (e.key === 'Enter' || e.key === 'Tab') {
-                  e.preventDefault();
-                  const liveResults = (window as any).__mentionResults || [];
-                  if (liveResults[mention.selectedIndex]) {
-                    mention.handleSelect(liveResults[mention.selectedIndex]);
-                  }
-                }
-              }
-            }}
-            data-placeholder={hasVideo ? "Add a title..." : "What's happening?"}
-            className="bg-transparent text-white text-base resize-none outline-none min-h-[48px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 empty:before:pointer-events-none"
-            style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
-          />
-        </div>
-
-        {/* Desktop: Avatar + text side by side */}
-        <div className="hidden sm:flex gap-3">
-          <Avatar className="w-10 h-10 flex-shrink-0 rounded-xl">
-            <AvatarImage src={userAvatarUrl || undefined} className="rounded-xl" />
-            <AvatarFallback className="rounded-xl">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            {/* Title input */}
+        {/* Unified: Avatar (desktop flex row) + single contentEditable for both mobile/desktop */}
+        <div className="flex gap-3">
+          {/* Desktop avatar — hidden on mobile (mobile has absolute avatar above) */}
+          <div className="hidden sm:flex flex-shrink-0">
+            <Avatar className="w-10 h-10 rounded-xl">
+              <AvatarImage src={userAvatarUrl || undefined} className="rounded-xl" />
+              <AvatarFallback className="rounded-xl">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+          </div>
+          <div className="flex-1 min-w-0 mt-12 sm:mt-0">
             <div
+              ref={editorRef}
               contentEditable
               onInput={handleInput}
               onPaste={handlePaste}
@@ -633,7 +612,7 @@ export function PostContentArea({
                 }
               }}
               data-placeholder={hasVideo ? "Add a title..." : "What's happening?"}
-              className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[60px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
+              className="w-full bg-transparent text-white text-base sm:text-lg resize-none outline-none min-h-[48px] sm:min-h-[60px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 sm:empty:before:text-white/70 empty:before:pointer-events-none"
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
             />
           </div>

@@ -36,6 +36,8 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { getNFTComments, postComment, toggleCommentLike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, followUser, unfollowUser, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { incrementCommentCount } from '@/lib/comment-count-cache';
+import { useMention } from '@/hooks/use-mention';
+import { UserMentionDropdown } from '@/components/app/mentions';
 
 // ============================================================================
 // TYPES
@@ -421,6 +423,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const [commentImagePreview, setCommentImagePreview] = useState<string | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const mention = useMention({
+    inputRef,
+    onMentionInsert: (_user, newText) => setNewComment(newText),
+  });
 
   const MAX_VOICE_DURATION = 30;
 
@@ -1186,13 +1192,29 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                     ref={inputRef}
                     placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Add a reply...'}
                     value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
+                    onChange={(e) => {
+                      setNewComment(e.target.value);
+                      mention.handleInput(e.target.value, e.target.selectionStart ?? undefined);
+                    }}
                     className={cn(
                       "flex-1 bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500",
                       isMobile ? "py-2.5 min-h-[80px] max-h-[120px]" : "py-2.5 min-h-[40px] max-h-[120px]"
                     )}
                     rows={isMobile ? 3 : 1}
                     onKeyDown={(e) => {
+                      if (mention.isOpen) {
+                        const handled = mention.handleKeyDown(e);
+                        if (handled) {
+                          if (e.key === 'Enter' || e.key === 'Tab') {
+                            e.preventDefault();
+                            const liveResults = (window as any).__mentionResults || [];
+                            if (liveResults[mention.selectedIndex]) {
+                              mention.handleSelect(liveResults[mention.selectedIndex]);
+                            }
+                          }
+                          return;
+                        }
+                      }
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
                         if (canPost) handlePostComment();
@@ -1206,6 +1228,15 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                       target.style.height = 'auto';
                       target.style.height = Math.min(target.scrollHeight, 120) + 'px';
                     }}
+                  />
+                  <UserMentionDropdown
+                    query={mention.query}
+                    isOpen={mention.isOpen}
+                    position={mention.position}
+                    selectedIndex={mention.selectedIndex}
+                    onSelectedIndexChange={mention.setSelectedIndex}
+                    onSelect={mention.handleSelect}
+                    onClose={mention.handleClose}
                   />
                   {/* Mobile: buttons inside the bento, bottom-right */}
                   {isMobile && (
