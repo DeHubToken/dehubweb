@@ -54,6 +54,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'tr', name: 'Turkish', nativeName: 'Türkçe' },
   { code: 'uk', name: 'Ukrainian', nativeName: 'Українська' },
   { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt' },
+  { code: 'sa', name: 'Sanskrit', nativeName: 'संस्कृतम्' },
   { code: 'yo', name: 'Yoruba', nativeName: 'Yorùbá' },
   { code: 'zu', name: 'Zulu', nativeName: 'isiZulu' },
 ];
@@ -96,6 +97,7 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   el: () => import('./locales/el.json'),
   qu: () => import('./locales/qu.json'),
   am: () => import('./locales/am.json'),
+  sa: () => import('./locales/sa.json'),
   sw: () => import('./locales/sw.json'),
   zu: () => import('./locales/zu.json'),
 };
