@@ -56,6 +56,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   ar: 'Arabic',
   hi: 'Hindi',
   ta: 'Tamil',
+  te: 'Telugu',
   th: 'Thai',
   vi: 'Vietnamese',
   nl: 'Dutch',
