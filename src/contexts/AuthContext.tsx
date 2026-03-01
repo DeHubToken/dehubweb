@@ -19,7 +19,7 @@ import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import { clearWagmiStorage } from '@/lib/wagmi';
 import { getAddress, recoverMessageAddress } from 'viem';
-import { privateKeyToAccount } from 'viem/accounts';
+
 import {
   authenticateWallet,
   getAccountInfo,
@@ -214,74 +214,82 @@ async function signWithEoaDirectly(
   displayedDate: Date,
 ): Promise<{ address: string; signature: string } | null> {
   try {
-    // The AA provider wraps the EOA provider. eth_private_key is only available
-    // on the inner EOA provider, not on the AA wrapper.
-    // Strategy: access the Web3Auth instance's commonJRPCProvider (the EOA provider
-    // before AA wrapping) which supports eth_private_key.
-    const providersToTry: any[] = [];
+    // Web3Auth v10 with AA does NOT expose eth_private_key on any provider.
+    // Instead, we find the underlying EOA provider and call personal_sign on it.
+    // The EOA provider produces a standard ECDSA signature (132 chars),
+    // unlike the AA provider which wraps it in ERC-6492 (2242 chars).
 
-    // 1. Get the Web3Auth instance's commonJRPCProvider (EOA provider before AA)
+    let eoaProvider: any = null;
+
+    // 1. Try AA provider's state.eoaProvider (primary path)
     try {
       const w3a = await getOrInitWeb3Auth();
-      // commonJRPCProvider is the underlying EOA provider (protected but accessible at runtime)
-      const commonProvider = (w3a as any).commonJRPCProvider;
-      if (commonProvider) {
-        console.log('[Auth] EOA direct sign: found commonJRPCProvider on Web3Auth instance');
-        providersToTry.push(commonProvider);
-        // Also try the engine proxy on the commonJRPCProvider
-        if (commonProvider._providerEngineProxy) {
-          providersToTry.push(commonProvider._providerEngineProxy);
-        }
-      }
-      // 2. Try the accountAbstractionProvider's state.eoaProvider
-      const aaProvider = (w3a as any).aaProvider || w3a.accountAbstractionProvider;
+      const aaProvider = (w3a as any).aaProvider || (w3a as any).accountAbstractionProvider;
       if (aaProvider?.state?.eoaProvider) {
-        console.log('[Auth] EOA direct sign: found eoaProvider in AA provider state');
-        providersToTry.push(aaProvider.state.eoaProvider);
+        eoaProvider = aaProvider.state.eoaProvider;
+        console.log('[Auth] EOA direct sign: found eoaProvider via Web3Auth AA provider state');
+      }
+      // 2. Try commonJRPCProvider (the EOA provider before AA wrapping)
+      if (!eoaProvider) {
+        const commonProvider = (w3a as any).commonJRPCProvider;
+        if (commonProvider) {
+          eoaProvider = commonProvider;
+          console.log('[Auth] EOA direct sign: found commonJRPCProvider on Web3Auth instance');
+        }
       }
     } catch (e) {
       console.warn('[Auth] EOA direct sign: could not access Web3Auth internals:', e);
     }
 
-    // 3. Try provider's own internal references
-    if (provider?.state?.eoaProvider) {
-      providersToTry.push(provider.state.eoaProvider);
-    }
-    if (provider?._providerEngineProxy && provider._providerEngineProxy !== provider) {
-      providersToTry.push(provider._providerEngineProxy);
-    }
-    // 4. Finally try the provider itself
-    providersToTry.push(provider);
-
-    let privKey: string | null = null;
-    for (const p of providersToTry) {
-      for (const method of ['eth_private_key', 'private_key']) {
-        try {
-          privKey = await p.request({ method }) as string;
-          if (privKey) {
-            console.log('[Auth] EOA direct sign: got private key via', method);
-            break;
-          }
-        } catch { /* try next */ }
-      }
-      if (privKey) break;
+    // 3. Try the passed provider's own state.eoaProvider
+    if (!eoaProvider && provider?.state?.eoaProvider) {
+      eoaProvider = provider.state.eoaProvider;
+      console.log('[Auth] EOA direct sign: found eoaProvider in passed provider state');
     }
 
-    if (!privKey) {
-      console.warn('[Auth] EOA direct sign: private key not available from any provider');
+    if (!eoaProvider) {
+      console.warn('[Auth] EOA direct sign: no EOA provider found, cannot produce standard ECDSA signature');
       return null;
     }
 
-    const hexKey = privKey.startsWith('0x') ? privKey : `0x${privKey}`;
-    const account = privateKeyToAccount(hexKey as `0x${string}`);
-    const eoaAddress = account.address.toLowerCase();
+    // Get the EOA address from the EOA provider
+    let accounts: string[];
+    try {
+      accounts = await eoaProvider.request({ method: 'eth_accounts' }) as string[];
+    } catch {
+      try {
+        accounts = await eoaProvider.request({ method: 'eth_requestAccounts' }) as string[];
+      } catch (e2) {
+        console.warn('[Auth] EOA direct sign: could not get accounts from EOA provider:', e2);
+        return null;
+      }
+    }
 
-    console.log('[Auth] EOA direct sign: derived EOA address:', eoaAddress);
+    if (!accounts || accounts.length === 0) {
+      console.warn('[Auth] EOA direct sign: EOA provider returned no accounts');
+      return null;
+    }
+
+    const eoaAddress = accounts[0].toLowerCase();
+    console.log('[Auth] EOA direct sign: EOA address:', eoaAddress);
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${eoaAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    const signature = await account.signMessage({ message });
-    console.log('[Auth] EOA direct sign: standard ECDSA signature produced, length:', signature.length);
+    // Call personal_sign on the EOA provider (NOT the AA provider)
+    // This produces a standard ECDSA signature the backend can verify
+    const signature = await eoaProvider.request({
+      method: 'personal_sign',
+      params: [
+        `0x${Buffer.from(message, 'utf8').toString('hex')}`,
+        eoaAddress,
+      ],
+    }) as string;
+
+    console.log('[Auth] EOA direct sign: signature produced, length:', signature.length);
+
+    if (signature.length > 200) {
+      console.warn('[Auth] EOA direct sign: signature is suspiciously long (' + signature.length + ' chars), may still be ERC-6492 wrapped');
+    }
 
     return { address: eoaAddress, signature };
   } catch (e) {
