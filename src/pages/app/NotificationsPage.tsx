@@ -776,12 +776,7 @@ export default function NotificationsPage() {
             <div ref={notifTabLayerRef} className="relative overflow-visible">
               <GlassIndicator rect={notifTabRect} />
               <div 
-                className="relative z-20 flex overflow-x-auto gap-1 scrollbar-hide"
-                onScroll={onNotifTabScroll}
-                style={{
-                  maskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent 100%)',
-                  WebkitMaskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent 100%)'
-                }}
+                className="relative z-20 flex w-full"
               >
                 {tabs.map((tab) => {
                   const count = getTabCount(tab.value);
@@ -790,7 +785,7 @@ export default function NotificationsPage() {
                       key={tab.value}
                       ref={setNotifTabRef(tab.value)}
                       onClick={() => setActiveTab(tab.value)}
-                      className={`relative z-40 flex-shrink-0 flex items-center justify-center px-[15.5px] py-[10.4px] rounded-xl transition-colors duration-200 ${
+                      className={`relative z-40 flex-1 flex items-center justify-center px-2 py-[10.4px] rounded-xl transition-colors duration-200 ${
                         activeTab === tab.value
                           ? 'text-white'
                           : 'text-zinc-400 hover:text-white'
