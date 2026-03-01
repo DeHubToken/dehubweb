@@ -1034,5 +1034,6 @@
     "hoursAgo": "hace {{count}}h",
     "daysAgo": "hace {{count}}d",
     "monthsAgo": "hace {{count}}me"
-  }
+  },
+  "sidebar": { "talkOfTheTown": "Lo más comentado", "nothingTrending": "Nada en tendencia aún" }
 }

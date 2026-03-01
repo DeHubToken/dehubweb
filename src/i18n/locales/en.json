@@ -1053,5 +1053,9 @@
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
     "monthsAgo": "{{count}}mo ago"
+  },
+  "sidebar": {
+    "talkOfTheTown": "Talk of The Town",
+    "nothingTrending": "Nothing trending yet"
   }
 }
