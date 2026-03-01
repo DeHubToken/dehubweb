@@ -349,7 +349,14 @@
     "token": "Jeton",
     "action": "Action",
     "viewTx": "Voir tx",
-    "loadingSubscriptions": "Chargement des abonnements..."
+    "loadingSubscriptions": "Chargement des abonnements...",
+    "txPurchased": "Achat de {{amount}} DHB",
+    "txSold": "Vente de {{amount}} DHB",
+    "txTransfer": "Transfert de {{amount}} DHB",
+    "txPpvUnlock": "Déblocage PPV — {{amount}} DHB",
+    "txPpvSale": "Vente PPV — {{amount}} DHB",
+    "txTipSent": "Pourboire envoyé à {{name}} — {{amount}} DHB",
+    "txTipReceived": "{{name}} vous a envoyé un pourboire — {{amount}} DHB"
   },
   "wallet": {
     "title": "Portefeuille",
