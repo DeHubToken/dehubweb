@@ -69,6 +69,8 @@ interface ActionBarProps {
   onLike?: () => void;
   /** Handler for dislike action (overrides default voteOnPost) */
   onDislike?: () => void;
+  /** Vote weight multiplier for optimistic count updates (default: 1) */
+  voteWeight?: number;
 }
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
@@ -98,6 +100,7 @@ export function ActionBar({
   shareCount,
   repostCount,
   isOptimistic = false,
+  voteWeight = 1,
 }: ActionBarProps) {
   // Add localStorage delta to comment count for instant feedback
   const commentCountDelta = postId ? getCommentCountDelta(postId) : 0;
@@ -179,14 +182,14 @@ export function ActionBar({
     let newLikeCount = localLikeCount, newDislikeCount = localDislikeCount;
 
     if (isRemovingVote) {
-      if (vote) { newLiked = false; newLikeCount = Math.max(0, newLikeCount - 1); }
-      else { newDisliked = false; newDislikeCount = Math.max(0, newDislikeCount - 1); }
+      if (vote) { newLiked = false; newLikeCount = Math.max(0, newLikeCount - voteWeight); }
+      else { newDisliked = false; newDislikeCount = Math.max(0, newDislikeCount - voteWeight); }
     } else if (isSwitchingVote) {
-      if (vote) { newLiked = true; newDisliked = false; newLikeCount++; newDislikeCount = Math.max(0, newDislikeCount - 1); }
-      else { newDisliked = true; newLiked = false; newDislikeCount++; newLikeCount = Math.max(0, newLikeCount - 1); }
+      if (vote) { newLiked = true; newDisliked = false; newLikeCount += voteWeight; newDislikeCount = Math.max(0, newDislikeCount - voteWeight); }
+      else { newDisliked = true; newLiked = false; newDislikeCount += voteWeight; newLikeCount = Math.max(0, newLikeCount - voteWeight); }
     } else {
-      if (vote) { newLiked = true; newLikeCount++; }
-      else { newDisliked = true; newDislikeCount++; }
+      if (vote) { newLiked = true; newLikeCount += voteWeight; }
+      else { newDisliked = true; newDislikeCount += voteWeight; }
     }
 
     setIsVoting(true);
