@@ -790,17 +790,16 @@ export default function NotificationsPage() {
                       key={tab.value}
                       ref={setNotifTabRef(tab.value)}
                       onClick={() => setActiveTab(tab.value)}
-                      className={`relative z-40 flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
+                      className={`relative z-40 flex-shrink-0 flex items-center justify-center px-3 py-2 rounded-xl transition-colors duration-200 ${
                         activeTab === tab.value
                           ? 'text-white'
                           : 'text-zinc-400 hover:text-white'
                       }`}
                     >
-                      <span className="relative z-10 flex items-center gap-2">
-                        <tab.icon className="w-4 h-4" />
-                        <span className="hidden sm:inline">{t(tab.labelKey)}</span>
+                      <span className="relative z-10 flex items-center gap-1">
+                        <tab.icon className="w-5 h-5" />
                         {count > 0 && (
-                          <span className={`ml-1 px-1.5 py-0.5 text-xs rounded-lg transition-colors duration-200 ${
+                          <span className={`px-1.5 py-0.5 text-xs rounded-lg transition-colors duration-200 ${
                             activeTab === tab.value
                               ? 'bg-white/20 text-white'
                               : 'bg-red-500 text-white'
