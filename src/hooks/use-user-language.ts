@@ -68,6 +68,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   no: 'Norwegian',
   el: 'Greek',
   gsw: 'Swiss German',
+  ka: 'Georgian',
   he: 'Hebrew',
   id: 'Indonesian',
   ms: 'Malay',
