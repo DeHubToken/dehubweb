@@ -15,7 +15,8 @@ const DocsPage = () => {
   // Listen for route change messages from the docs iframe
   useEffect(() => {
     const handler = (event: MessageEvent) => {
-      if (event.origin !== 'https://dehubdocs.lovable.app') return;
+      // Accept from dehubdocs production and preview origins
+      if (!event.origin.includes('dehubdocs')) return;
       if (event.data?.type === 'docs-route-change' && typeof event.data.path === 'string') {
         // Convert /docs/overview -> /docs/overview in parent
         const docsPath = event.data.path; // e.g. "/docs/overview"
