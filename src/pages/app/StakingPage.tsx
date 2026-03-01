@@ -54,7 +54,7 @@ function getExplorerUrl(txHash: string, chain: 'BNB' | 'Base'): string {
   return `${base}/tx/${txHash}`;
 }
 
-const ESTIMATED_APY = 12;
+const ESTIMATED_APY = 0;
 
 function StatCard({ 
   icon: Icon, label, value, subtitle, accent, delay = 0 
