@@ -8,6 +8,7 @@
 
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { LayoutGrid, TrendingUp } from 'lucide-react';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { cn } from '@/lib/utils';
@@ -58,17 +59,19 @@ function deriveTrendingCategories(queryClient: ReturnType<typeof useQueryClient>
 export function WhatsHappening() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
       <div className="flex items-center justify-center mb-4">
-        <h3 className="font-bold text-lg text-white text-center">Talk of The Town</h3>
+        <h3 className="font-bold text-lg text-white text-center">{t('sidebar.talkOfTheTown')}</h3>
       </div>
       <div className="flex flex-col items-center justify-center py-8 text-center">
         <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
           <LayoutGrid className="w-6 h-6 text-zinc-500" />
         </div>
-        <p className="text-zinc-400 text-sm">Nothing trending yet</p>
+        <p className="text-zinc-400 text-sm">{t('sidebar.nothingTrending')}</p>
       </div>
     </div>
   );
 }
+
