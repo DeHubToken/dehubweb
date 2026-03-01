@@ -55,6 +55,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   ja: 'Japanese',
   ko: 'Korean',
   lo: 'Lao',
+  mag: 'Magahi',
   ar: 'Arabic',
   aec: "Arabic, Sa'idi Spoken",
   hi: 'Hindi',
