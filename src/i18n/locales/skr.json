@@ -210,26 +210,10 @@
     "error": "کجھ غلط ہو گیا۔ ولا کوشش کرو۔"
   },
   "governance": {
-    "title": "حکمرانی",
-    "proposals": "تجویزاں",
-    "createProposal": "تجویز بݨاؤ",
-    "vote": "ووٹ ڏیو",
-    "voted": "ووٹ ڏتا",
-    "active": "فعال",
-    "passed": "منظور",
-    "rejected": "رد",
-    "pending": "زیرِ التوا",
-    "quorum": "کورم",
-    "timeLeft": "باقی وقت",
-    "description": "تفصیل",
-    "discussion": "بحث",
-    "results": "نتیجے",
-    "proposalTitle": "تجویز دا عنوان",
-    "proposalDescription": "تجویز دی تفصیل",
-    "submitProposal": "تجویز جمع کراؤ",
-    "voteFor": "حق وِچ",
-    "voteAgainst": "خلاف",
-    "abstain": "غیر جانبدار"
+    "title": "حکمرانی", "proposalCount": "{{count}} تجویز جمع ہوئی", "proposalCount_other": "{{count}} تجویزاں جمع ہوئیاں", "propose": "تجویز ڏیو", "searchProposals": "تجویزاں ڳولو...", "proposals": "تجویزاں", "passed": "منظور", "rejected": "رد", "mostVoted": "سب توں ودھ ووٹ", "newest": "نویں", "governanceBadge": "حکمرانی", "weightedVotes": "وزنی: {{for}} حق وِچ · {{against}} خلاف", "weightedVotesFor": "{{count}} وزنی ووٹ حق وِچ", "noCommentsYet": "ابھی تائیں کوئی تبصرہ کائنی", "addComment": "تبصرہ ڈالو...", "submitProposal": "حکمرانی تجویز جمع کراؤ", "titleLabel": "عنوان", "titlePlaceholder": "مثلاً: سٹیکنگ انعام 10% ودھاؤ", "descriptionLabel": "تفصیل", "descriptionPlaceholder": "اپݨی تجویز تفصیل نال ٻیان کرو...", "submitProposalBtn": "تجویز جمع کراؤ", "titleRequired": "عنوان ضروری ہے", "titleMaxLength": "عنوان 100 حرف توں کم ہوݨا چاہیدا", "descriptionRequired": "تفصیل ضروری ہے", "descriptionMaxLength": "تفصیل 1,000 حرف توں کم ہوݨی چاہیدی", "noProposalsYet": "ابھی تائیں کوئی تجویز کائنی", "beFirstToSubmit": "پہلے بݨ کے حکمرانی تجویز جمع کراؤ", "noPassedYet": "ابھی تائیں کوئی منظور تجویز کائنی", "passedAppearHere": "منظور تجویزاں ایتھے آسن", "noRejectedYet": "ابھی تائیں کوئی رد تجویز کائنی", "rejectedAppearHere": "رد تجویزاں ایتھے آسن", "yourVoteWeight": "تہاݙے ووٹ دا وزن:", "holdTokensToVote": "ووٹ ڏینے کیتے DHB ٹوکن رکھو", "mustHoldTokens": "حکمرانی تجویزاں تے ووٹ ڏینے کیتے DHB ٹوکن رکھݨے ضروری ہن۔", "justNow": "ابھی", "minutesAgo": "{{count}} منٹ پہلے", "hoursAgo": "{{count}} گھنٹے پہلے", "daysAgo": "{{count}} ݙینہہ پہلے", "monthsAgo": "{{count}} مہینے پہلے"
+  },
+  "commandCentre": {
+    "title": "کمانڈ سینٹر", "overview": "جائزہ", "subscriptions": "سبسکرپشن", "transactions": "لین دین", "totalBalance": "والٹ دی کل قیمت", "totalDhbBalance": "کل DHB بیلنس", "otherAssets": "ہور اثاثے", "fullWallet": "والٹ", "signInBalance": "بیلنس ڳولنے کیتے لاگ ان کرو", "incomeChart": "کمائی", "topSourceOfIncome": "سب توں ودھ کمائی دا ذریعہ", "cameFrom": "توں آئی", "noIncomeData": "ابھی تائیں کمائی دا ڈیٹا کائنی", "noIncomeInPeriod": "ایں عرصے وِچ کمائی کائنی", "recentTransactions": "تازہ لین دین", "viewAll": "سب ݙیکھو", "noTransactionsYet": "ابھی تائیں لین دین کائنی", "subscriptionsSummary": "سبسکرپشن", "viewDetails": "تفصیلات ݙیکھو", "active": "فعال", "total": "کل", "yourPlans": "تہاݙے پلان", "estMonthlySpend": "اندازاً ماہانہ خرچ", "noSubscriptionsYet": "ابھی تائیں سبسکرپشن کائنی", "addFunds": "جمع کراؤ", "withdraw": "کڈھو", "buy": "خریدو", "transferToMe": "میکوں بھیجو", "transfer": "ٹرانسفر", "bankCard": "بینک کارڈ", "soon": "جلد", "transferDhb": "DHB ٹرانسفر", "walletAddressOrUsername": "والٹ ایڈریس یا یوزرنیم", "send": "بھیجو", "purchaseWithCard": "کارڈ نال خریدو", "copyWalletAddress": "والٹ ایڈریس نقل کرو", "sendToWalletOrUsername": "والٹ یا یوزرنیم تے بھیجو", "withdrawToBank": "بینک وِچ کڈھو", "yourSubscriptions": "تہاݙی سبسکرپشن", "activeSubscriptions": "فعال سبسکرپشن", "creators": "تخلیق کار", "yourPlansAsCreator": "تہاݙے پلان (تخلیق کار)", "plans": "پلان", "noSubscriptionsTable": "ابھی تائیں سبسکرپشن کائنی", "subscribeToCreators": "تخلیق کاراں کوں سبسکرائب کرو", "subscriptionList": "سبسکرپشن لسٹ", "creator": "تخلیق کار", "plan": "پلان", "price": "قیمت", "period": "مدت", "status": "حالت", "remaining": "باقی", "expired": "ختم", "inactive": "غیر فعال", "signInSubscriptions": "سبسکرپشن ݙیکھنے کیتے لاگ ان کرو", "connectWalletSubscriptions": "سبسکرپشن ݙیکھنے کیتے والٹ جوڑو", "totalVolume": "کل حجم", "incomeVsExpenditure": "آمدنی بمقابلہ اخراجات", "transactionBreakdown": "لین دین دی تفصیل", "largestCategory": "سب توں وݙی قسم", "transactionList": "لین دین لسٹ", "noChartData": "ابھی تائیں چارٹ ڈیٹا کائنی", "noTransactionsFound": "لین دین کائنی ملے۔ پہلی خریداری کرو!", "noTransactionsInPeriod": "ایں عرصے وِچ لین دین کائنی۔", "failedLoadTransactions": "لین دین لوڈ کائنی ہوئے", "date": "تاریخ", "type": "قسم", "amount": "رقم", "token": "ٹوکن", "action": "عمل", "viewTx": "لین دین ݙیکھو", "loadingSubscriptions": "سبسکرپشن لوڈ ہو ریاں ہن..."
   },
   "careers": {
     "title": "نوکریاں",

@@ -210,26 +210,10 @@
     "error": "มีปัญหาเกิดขึ้น กะรุนาลองใหม่"
   },
   "governance": {
-    "title": "การปกครอง",
-    "proposals": "ข้อเสนอ",
-    "createProposal": "สร้างข้อเสนอ",
-    "vote": "ลงคะแนน",
-    "voted": "ลงคะแนนแล้ว",
-    "active": "กำลังดำเนินการ",
-    "passed": "ผ่านแล้ว",
-    "rejected": "ถูกปฏิเสธ",
-    "pending": "รอ",
-    "quorum": "องค์ประชุม",
-    "timeLeft": "เวลาที่เหลือ",
-    "description": "รายละเอียด",
-    "discussion": "สนทนา",
-    "results": "ผลลัพธ์",
-    "proposalTitle": "หัวข้อข้อเสนอ",
-    "proposalDescription": "รายละเอียดข้อเสนอ",
-    "submitProposal": "ส่งข้อเสนอ",
-    "voteFor": "เห็นด้วย",
-    "voteAgainst": "ค้าน",
-    "abstain": "งดออกเสียง"
+    "title": "การปกครอง", "proposalCount": "{{count}} ข้อเสนอที่ส่ง", "proposalCount_other": "{{count}} ข้อเสนอที่ส่ง", "propose": "เสนอ", "searchProposals": "ค้นหาข้อเสนอ...", "proposals": "ข้อเสนอ", "passed": "ผ่านแล้ว", "rejected": "ถูกปฏิเสธ", "mostVoted": "โหวตมากสุด", "newest": "ใหม่สุด", "governanceBadge": "การปกครอง", "weightedVotes": "ถ่วงน้ำหนัก: {{for}} เห็นด้วย · {{against}} ค้าน", "weightedVotesFor": "{{count}} โหวตถ่วงน้ำหนักเห็นด้วย", "noCommentsYet": "ยังบ่มีความเห็น", "addComment": "เพิ่มความเห็น...", "submitProposal": "ส่งข้อเสนอการปกครอง", "titleLabel": "หัวข้อ", "titlePlaceholder": "เช่น: เพิ่มรางวัล Staking 10%", "descriptionLabel": "รายละเอียด", "descriptionPlaceholder": "อธิบายข้อเสนอของท่าน...", "submitProposalBtn": "ส่งข้อเสนอ", "titleRequired": "ต้องมีหัวข้อ", "titleMaxLength": "หัวข้อต้องน้อยกว่า 100 ตัวอักษร", "descriptionRequired": "ต้องมีรายละเอียด", "descriptionMaxLength": "รายละเอียดต้องน้อยกว่า 1,000 ตัวอักษร", "noProposalsYet": "ยังบ่มีข้อเสนอ", "beFirstToSubmit": "เป็นคนแรกที่ส่งข้อเสนอ", "noPassedYet": "ยังบ่มีข้อเสนอที่ผ่าน", "passedAppearHere": "ข้อเสนอที่ผ่านจะแสดงตรงนี้", "noRejectedYet": "ยังบ่มีข้อเสนอที่ถูกปฏิเสธ", "rejectedAppearHere": "ข้อเสนอที่ถูกปฏิเสธจะแสดงตรงนี้", "yourVoteWeight": "น้ำหนักโหวตของท่าน:", "holdTokensToVote": "ถือ DHB โทเค็นเพื่อโหวต", "mustHoldTokens": "ต้องถือ DHB โทเค็นเพื่อโหวตข้อเสนอการปกครอง", "justNow": "เมื่อกี้", "minutesAgo": "{{count}} นาทีก่อน", "hoursAgo": "{{count}} ชั่วโมงก่อน", "daysAgo": "{{count}} วันก่อน", "monthsAgo": "{{count}} เดือนก่อน"
+  },
+  "commandCentre": {
+    "title": "ศูนย์บัญชาการ", "overview": "ภาพรวม", "subscriptions": "การสมัครสมาชิก", "transactions": "ธุรกรรม", "totalBalance": "มูลค่ากระเป๋าทั้งหมด", "totalDhbBalance": "ยอด DHB ทั้งหมด", "otherAssets": "สินทรัพย์อื่น", "fullWallet": "กระเป๋า", "signInBalance": "เข้าสู่ระบบเพื่อดูยอดคงเหลือ", "incomeChart": "รายได้", "topSourceOfIncome": "แหล่งรายได้สูงสุด", "cameFrom": "มาจาก", "noIncomeData": "ยังบ่มีข้อมูลรายได้", "noIncomeInPeriod": "ไม่มีรายได้ในช่วงนี้", "recentTransactions": "ธุรกรรมล่าสุด", "viewAll": "ดูทั้งหมด", "noTransactionsYet": "ยังบ่มีธุรกรรม", "subscriptionsSummary": "การสมัครสมาชิก", "viewDetails": "ดูรายละเอียด", "active": "ใช้งานอยู่", "total": "รวม", "yourPlans": "แผนของท่าน", "estMonthlySpend": "ค่าใช้จ่ายรายเดือนโดยประมาณ", "noSubscriptionsYet": "ยังบ่มีการสมัครสมาชิก", "addFunds": "ฝาก", "withdraw": "ถอน", "buy": "ซื้อ", "transferToMe": "โอนให้ข้อย", "transfer": "โอน", "bankCard": "บัตรธนาคาร", "soon": "เร็วๆนี้", "transferDhb": "โอน DHB", "walletAddressOrUsername": "ที่อยู่กระเป๋าหรือชื่อผู้ใช้", "send": "ส่ง", "purchaseWithCard": "ซื้อด้วยบัตร", "copyWalletAddress": "คัดลอกที่อยู่กระเป๋า", "sendToWalletOrUsername": "ส่งไปยังกระเป๋าหรือชื่อผู้ใช้", "withdrawToBank": "ถอนไปธนาคาร", "yourSubscriptions": "การสมัครสมาชิกของท่าน", "activeSubscriptions": "สมาชิกที่ใช้งาน", "creators": "ผู้สร้าง", "yourPlansAsCreator": "แผนของท่าน (ผู้สร้าง)", "plans": "แผน", "noSubscriptionsTable": "ยังบ่มีการสมัครสมาชิก", "subscribeToCreators": "สมัครสมาชิกผู้สร้างเพื่อดูกิจกรรม", "subscriptionList": "รายการสมาชิก", "creator": "ผู้สร้าง", "plan": "แผน", "price": "ราคา", "period": "ระยะเวลา", "status": "สถานะ", "remaining": "เหลือ", "expired": "หมดอายุ", "inactive": "ไม่ใช้งาน", "signInSubscriptions": "เข้าสู่ระบบเพื่อดูสมาชิก", "connectWalletSubscriptions": "เชื่อมต่อกระเป๋าเพื่อดูกิจกรรม", "totalVolume": "ปริมาณทั้งหมด", "incomeVsExpenditure": "รายได้เทียบรายจ่าย", "transactionBreakdown": "รายละเอียดธุรกรรม", "largestCategory": "หมวดหมู่ใหญ่สุด", "transactionList": "รายการธุรกรรม", "noChartData": "ยังบ่มีข้อมูลกราฟ", "noTransactionsFound": "ไม่พบธุรกรรม ทำการซื้อครั้งแรก!", "noTransactionsInPeriod": "ไม่มีธุรกรรมในช่วงนี้", "failedLoadTransactions": "โหลดธุรกรรมล้มเหลว", "date": "วันที่", "type": "ประเภท", "amount": "จำนวน", "token": "โทเค็น", "action": "การดำเนินการ", "viewTx": "ดูธุรกรรม", "loadingSubscriptions": "กำลังโหลดสมาชิก..."
   },
   "careers": {
     "title": "อาชีพ",

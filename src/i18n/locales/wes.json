@@ -210,26 +210,10 @@
     "error": "Somtin go wrong. Try agen."
   },
   "governance": {
-    "title": "Governance",
-    "proposals": "Proposal dem",
-    "createProposal": "Mek proposal",
-    "vote": "Vote",
-    "voted": "Don vote",
-    "active": "Active",
-    "passed": "Pass",
-    "rejected": "Reject",
-    "pending": "A di wait",
-    "quorum": "Quorum",
-    "timeLeft": "Taim wey remain",
-    "description": "Wetin e be",
-    "discussion": "Tok about am",
-    "results": "Result dem",
-    "proposalTitle": "Proposal name",
-    "proposalDescription": "Wetin di proposal be",
-    "submitProposal": "Send proposal",
-    "voteFor": "Yes",
-    "voteAgainst": "No",
-    "abstain": "A no vote"
+    "title": "Governance", "proposalCount": "{{count}} proposal don submit", "proposalCount_other": "{{count}} proposal dem don submit", "propose": "Propose", "searchProposals": "Find proposal dem...", "proposals": "Proposal dem", "passed": "Pass", "rejected": "Reject", "mostVoted": "Most vote", "newest": "New one", "governanceBadge": "Governance", "weightedVotes": "Weight: {{for}} for · {{against}} against", "weightedVotesFor": "{{count}} weight vote for", "noCommentsYet": "No comment yet", "addComment": "Add comment...", "submitProposal": "Submit governance proposal", "titleLabel": "Title", "titlePlaceholder": "e.g. Increase staking reward by 10%", "descriptionLabel": "Description", "descriptionPlaceholder": "Describe ya proposal well well...", "submitProposalBtn": "Submit Proposal", "titleRequired": "Title dey required", "titleMaxLength": "Title must be under 100 characters", "descriptionRequired": "Description dey required", "descriptionMaxLength": "Description must be under 1,000 characters", "noProposalsYet": "No proposal yet", "beFirstToSubmit": "Be di first person wey submit governance proposal", "noPassedYet": "No pass proposal yet", "passedAppearHere": "Pass proposal dem go show for here", "noRejectedYet": "No reject proposal yet", "rejectedAppearHere": "Reject proposal dem go show for here", "yourVoteWeight": "Ya vote weight:", "holdTokensToVote": "Hold DHB token dem for vote", "mustHoldTokens": "You must hold DHB token dem for vote for governance proposal dem.", "justNow": "Just now", "minutesAgo": "{{count}}m ago", "hoursAgo": "{{count}}h ago", "daysAgo": "{{count}}d ago", "monthsAgo": "{{count}}mo ago"
+  },
+  "commandCentre": {
+    "title": "Command Center", "overview": "Overview", "subscriptions": "Subscription dem", "transactions": "Transaction dem", "totalBalance": "Total wallet value", "totalDhbBalance": "Total DHB Balance", "otherAssets": "Other asset dem", "fullWallet": "Wallet", "signInBalance": "Sign in for see ya balance", "incomeChart": "Earn", "topSourceOfIncome": "Top source of earning", "cameFrom": "come from", "noIncomeData": "No earning data yet", "noIncomeInPeriod": "No earning for dis time", "recentTransactions": "Recent transaction dem", "viewAll": "See all", "noTransactionsYet": "No transaction yet", "subscriptionsSummary": "Subscription dem", "viewDetails": "See details", "active": "Active", "total": "Total", "yourPlans": "Ya plans", "estMonthlySpend": "Est. monthly spend", "noSubscriptionsYet": "No subscription yet", "addFunds": "Deposit", "withdraw": "Withdraw", "buy": "Buy", "transferToMe": "Transfer to me", "transfer": "Transfer", "bankCard": "Bank Card", "soon": "SOON", "transferDhb": "Transfer DHB", "walletAddressOrUsername": "Wallet address or username", "send": "Send", "purchaseWithCard": "Buy with card", "copyWalletAddress": "Copy ya wallet address", "sendToWalletOrUsername": "Send to wallet or username", "withdrawToBank": "Withdraw to bank", "yourSubscriptions": "Ya subscription dem", "activeSubscriptions": "Active Subscription dem", "creators": "creator dem", "yourPlansAsCreator": "Ya plans (as creator)", "plans": "plans", "noSubscriptionsTable": "No subscription yet", "subscribeToCreators": "Subscribe to creator dem for see ya activity here", "subscriptionList": "Subscription list", "creator": "Creator", "plan": "Plan", "price": "Price", "period": "Period", "status": "Status", "remaining": "Remaining", "expired": "Expire", "inactive": "Inactive", "signInSubscriptions": "Sign in for see subscription dem", "connectWalletSubscriptions": "Connect ya wallet for see subscription activity", "totalVolume": "Total volume", "incomeVsExpenditure": "Income vs. Expenditure", "transactionBreakdown": "Transaction breakdown", "largestCategory": "Biggest category", "transactionList": "Transaction list", "noChartData": "No chart data yet", "noTransactionsFound": "No transaction dey. Make ya first purchase!", "noTransactionsInPeriod": "No transaction for dis time.", "failedLoadTransactions": "Transaction dem no fit load", "date": "Date", "type": "Type", "amount": "Amount", "token": "Token", "action": "Action", "viewTx": "See tx", "loadingSubscriptions": "Loading subscription dem..."
   },
   "careers": {
     "title": "Wok",
