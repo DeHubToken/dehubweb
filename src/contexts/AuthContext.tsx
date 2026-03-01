@@ -215,21 +215,42 @@ async function signWithEoaDirectly(
 ): Promise<{ address: string; signature: string } | null> {
   try {
     // The AA provider wraps the EOA provider. eth_private_key is only available
-    // on the inner EOA provider, not on the AA wrapper. Try multiple sources:
-    // 1. The AA provider's state.eoaProvider (AccountAbstractionProvider stores it)
-    // 2. The provider itself (if no AA is configured)
+    // on the inner EOA provider, not on the AA wrapper.
+    // Strategy: access the Web3Auth instance's commonJRPCProvider (the EOA provider
+    // before AA wrapping) which supports eth_private_key.
     const providersToTry: any[] = [];
 
-    // Try to extract the inner EOA provider from the AA wrapper
+    // 1. Get the Web3Auth instance's commonJRPCProvider (EOA provider before AA)
+    try {
+      const w3a = await getOrInitWeb3Auth();
+      // commonJRPCProvider is the underlying EOA provider (protected but accessible at runtime)
+      const commonProvider = (w3a as any).commonJRPCProvider;
+      if (commonProvider) {
+        console.log('[Auth] EOA direct sign: found commonJRPCProvider on Web3Auth instance');
+        providersToTry.push(commonProvider);
+        // Also try the engine proxy on the commonJRPCProvider
+        if (commonProvider._providerEngineProxy) {
+          providersToTry.push(commonProvider._providerEngineProxy);
+        }
+      }
+      // 2. Try the accountAbstractionProvider's state.eoaProvider
+      const aaProvider = (w3a as any).aaProvider || w3a.accountAbstractionProvider;
+      if (aaProvider?.state?.eoaProvider) {
+        console.log('[Auth] EOA direct sign: found eoaProvider in AA provider state');
+        providersToTry.push(aaProvider.state.eoaProvider);
+      }
+    } catch (e) {
+      console.warn('[Auth] EOA direct sign: could not access Web3Auth internals:', e);
+    }
+
+    // 3. Try provider's own internal references
     if (provider?.state?.eoaProvider) {
-      console.log('[Auth] EOA direct sign: found eoaProvider in AA provider state');
       providersToTry.push(provider.state.eoaProvider);
     }
-    // Also try the provider's _providerEngineProxy (BaseProvider internals)
     if (provider?._providerEngineProxy && provider._providerEngineProxy !== provider) {
       providersToTry.push(provider._providerEngineProxy);
     }
-    // Finally try the provider itself
+    // 4. Finally try the provider itself
     providersToTry.push(provider);
 
     let privKey: string | null = null;
@@ -238,7 +259,7 @@ async function signWithEoaDirectly(
         try {
           privKey = await p.request({ method }) as string;
           if (privKey) {
-            console.log('[Auth] EOA direct sign: got private key via', method, 'from', p === provider ? 'main provider' : 'inner provider');
+            console.log('[Auth] EOA direct sign: got private key via', method);
             break;
           }
         } catch { /* try next */ }
