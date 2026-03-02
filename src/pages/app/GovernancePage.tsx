@@ -8,6 +8,7 @@
 import governanceShieldIcon from '@/assets/governance-shield.png';
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -80,6 +81,8 @@ function GovernanceCard({
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
   const commentInputRef = useRef<HTMLInputElement>(null);
+  const commentSectionRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
 
   const mention = useMention({
@@ -198,118 +201,141 @@ function GovernanceCard({
         </div>
 
         {/* Comments Section */}
-        <AnimatePresence>
-          {showComments && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="border-t border-white/5 pt-3 mt-1">
-                {commentsLoading ? (
-                  <div className="flex justify-center py-3">
-                    <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
-                  </div>
-                ) : comments && comments.length > 0 ? (
-                  <div className="space-y-2.5 mb-3 max-h-60 overflow-y-auto scrollbar-invisible">
-                    {comments.map((comment) => {
-                      const commentAvatar = comment.avatar && comment.wallet_address
-                        ? buildAvatarUrl(comment.wallet_address, comment.avatar)
-                        : null;
-                      const commentName = comment.username
-                        ? `@${comment.username}`
-                        : `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;
-                      const isOwn = walletAddress?.toLowerCase() === comment.wallet_address.toLowerCase();
-
-                      return (
-                        <div key={comment.id} className="flex gap-2 group">
-                          <UserAvatar
-                            name={comment.username || comment.wallet_address.slice(0, 6)}
-                            handle={comment.username || comment.wallet_address}
-                            avatarUrl={commentAvatar}
-                            size="sm"
-                            className="w-6 h-6 shrink-0 mt-0.5"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-zinc-400 text-[11px] font-medium">{commentName}</span>
-                              <span className="text-zinc-600 text-[10px]">{formatTimeAgo(comment.created_at, t)}</span>
-                              {isOwn && (
-                                <button
-                                  type="button"
-                                  onClick={() => deleteComment.mutate({ commentId: comment.id, proposalId: proposal.id })}
-                                  className="opacity-0 group-hover:opacity-100 transition-opacity ml-auto"
-                                >
-                                  <Trash2 className="w-3 h-3 text-zinc-600 hover:text-red-400" />
-                                </button>
-                              )}
-                            </div>
-                            <TranslatableText text={comment.content} className="text-zinc-300 text-xs leading-relaxed" as="p" />
+        {(() => {
+          const commentsContent = (
+            <div className="border-t border-white/5 pt-3 mt-1" onClick={(e) => e.stopPropagation()}>
+              {commentsLoading ? (
+                <div className="flex justify-center py-3">
+                  <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
+                </div>
+              ) : comments && comments.length > 0 ? (
+                <div className="space-y-2.5 mb-3 max-h-60 overflow-y-auto scrollbar-invisible">
+                  {comments.map((comment) => {
+                    const commentAvatar = comment.avatar && comment.wallet_address
+                      ? buildAvatarUrl(comment.wallet_address, comment.avatar)
+                      : null;
+                    const commentName = comment.username
+                      ? `@${comment.username}`
+                      : `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;
+                    const isOwn = walletAddress?.toLowerCase() === comment.wallet_address.toLowerCase();
+                    return (
+                      <div key={comment.id} className="flex gap-2 group">
+                        <UserAvatar
+                          name={comment.username || comment.wallet_address.slice(0, 6)}
+                          handle={comment.username || comment.wallet_address}
+                          avatarUrl={commentAvatar}
+                          size="sm"
+                          className="w-6 h-6 shrink-0 mt-0.5"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-zinc-400 text-[11px] font-medium">{commentName}</span>
+                            <span className="text-zinc-600 text-[10px]">{formatTimeAgo(comment.created_at, t)}</span>
+                            {isOwn && (
+                              <button
+                                type="button"
+                                onClick={() => deleteComment.mutate({ commentId: comment.id, proposalId: proposal.id })}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity ml-auto"
+                              >
+                                <Trash2 className="w-3 h-3 text-zinc-600 hover:text-red-400" />
+                              </button>
+                            )}
                           </div>
+                          <TranslatableText text={comment.content} className="text-zinc-300 text-xs leading-relaxed" as="p" />
                         </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p className="text-zinc-600 text-xs text-center py-2 mb-2">{t('governance.noCommentsYet')}</p>
-                )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-zinc-600 text-xs text-center py-2 mb-2">{t('governance.noCommentsYet')}</p>
+              )}
 
-                <form onSubmit={handleSubmitComment} className="relative flex gap-2">
-                  <Input
-                    ref={commentInputRef}
-                    value={commentText}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setCommentText(val);
-                      mention.handleInput(val, e.target.selectionStart ?? val.length);
-                    }}
-                    onKeyDown={(e) => {
-                      if (mention.isOpen) {
-                        const handled = mention.handleKeyDown(e);
-                        if (handled) {
-                          if (e.key === 'Enter' || e.key === 'Tab') {
-                            e.preventDefault();
-                            const liveResults = (window as any).__mentionResults || [];
-                            if (liveResults[mention.selectedIndex]) {
-                              mention.handleSelect(liveResults[mention.selectedIndex]);
-                            }
+              <form onSubmit={handleSubmitComment} className="relative flex gap-2">
+                <Input
+                  ref={commentInputRef}
+                  value={commentText}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setCommentText(val);
+                    mention.handleInput(val, e.target.selectionStart ?? val.length);
+                  }}
+                  onKeyDown={(e) => {
+                    if (mention.isOpen) {
+                      const handled = mention.handleKeyDown(e);
+                      if (handled) {
+                        if (e.key === 'Enter' || e.key === 'Tab') {
+                          e.preventDefault();
+                          const liveResults = (window as any).__mentionResults || [];
+                          if (liveResults[mention.selectedIndex]) {
+                            mention.handleSelect(liveResults[mention.selectedIndex]);
                           }
-                          return;
                         }
+                        return;
                       }
-                    }}
-                    placeholder={t('governance.addComment')}
-                    maxLength={500}
-                    className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs h-8"
-                  />
-                  <UserMentionDropdown
-                    query={mention.query}
-                    isOpen={mention.isOpen}
-                    position={mention.position}
-                    selectedIndex={mention.selectedIndex}
-                    onSelectedIndexChange={mention.setSelectedIndex}
-                    onSelect={mention.handleSelect}
-                    onClose={mention.handleClose}
-                  />
-                  <button
-                    type="submit"
-                    disabled={!commentText.trim() || submitComment.isPending}
-                    className="w-8 h-8 flex items-center justify-center rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white disabled:opacity-30 transition-opacity"
-                  >
-                    {submitComment.isPending ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
-                      <Send className="w-3.5 h-3.5" />
-                    )}
-                  </button>
-                </form>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                    }
+                  }}
+                  placeholder={t('governance.addComment')}
+                  maxLength={500}
+                  className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs h-8"
+                />
+                <UserMentionDropdown
+                  query={mention.query}
+                  isOpen={mention.isOpen}
+                  position={mention.position}
+                  selectedIndex={mention.selectedIndex}
+                  onSelectedIndexChange={mention.setSelectedIndex}
+                  onSelect={mention.handleSelect}
+                  onClose={mention.handleClose}
+                />
+                <button
+                  type="submit"
+                  disabled={!commentText.trim() || submitComment.isPending}
+                  className="w-8 h-8 flex items-center justify-center rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white disabled:opacity-30 transition-opacity"
+                >
+                  {submitComment.isPending ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Send className="w-3.5 h-3.5" />
+                  )}
+                </button>
+              </form>
+            </div>
+          );
+
+          if (isMobile) {
+            return (
+              <Drawer open={showComments} onOpenChange={setShowComments}>
+                <DrawerContent className="bg-black/90 backdrop-blur-[24px] border-white/10 px-4 pb-6 max-h-[70vh]">
+                  <DrawerHeader className="px-0 pt-2 pb-0">
+                    <DrawerTitle className="text-white text-sm">{t('governance.comments', 'Comments')}</DrawerTitle>
+                  </DrawerHeader>
+                  {commentsContent}
+                </DrawerContent>
+              </Drawer>
+            );
+          }
+
+          return (
+            <AnimatePresence>
+              {showComments && (
+                <motion.div
+                  ref={commentSectionRef}
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                  onAnimationComplete={() => {
+                    commentSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                  }}
+                >
+                  {commentsContent}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          );
+        })()}
       </div>
     </div>
   );
