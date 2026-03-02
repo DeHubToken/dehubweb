@@ -308,18 +308,21 @@ export function ActionBar({
   );
 
   return (
-    <div className={cn(
-      "p-3",
-      showBorder && "border-t border-zinc-800",
-      className
-    )}>
+    <div
+      style={{ containerType: 'inline-size' }}
+      className={cn(
+        "p-3",
+        showBorder && "border-t border-zinc-800",
+        className
+      )}
+    >
       <div className="flex items-center justify-between">
-        {/* Primary actions */}
-        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+        {/* Primary actions — icons & gaps scale with container via clamp() */}
+        <div className="flex items-center gap-[clamp(0.25rem,2cqi,1rem)] min-w-0">
           <motion.button 
             onClick={() => handleVote(true)}
             className={cn(
-              "flex items-center gap-0.5 sm:gap-1 transition-colors text-white",
+              "flex items-center gap-[clamp(0.125rem,0.5cqi,0.25rem)] transition-colors text-white",
               isVoting && "opacity-50"
             )}
             aria-label="Like"
@@ -327,14 +330,14 @@ export function ActionBar({
             animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
-            <ThumbsUp className={cn("w-4 h-4 sm:w-5 sm:h-5", isLiked && "fill-current")} />
-            <span className="text-[10px] sm:text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
+            <ThumbsUp className={cn("w-[clamp(0.75rem,3.5cqi,1.25rem)] h-[clamp(0.75rem,3.5cqi,1.25rem)]", isLiked && "fill-current")} />
+            <span className="text-[clamp(8px,2.5cqi,12px)] text-zinc-400">{formatCount(localLikeCount)}</span>
           </motion.button>
           {!hideDislike && (
             <motion.button 
               onClick={() => handleVote(false)}
               className={cn(
-                "flex items-center gap-0.5 sm:gap-1 transition-colors text-white",
+                "flex items-center gap-[clamp(0.125rem,0.5cqi,0.25rem)] transition-colors text-white",
                 isVoting && "opacity-50"
               )}
               aria-label="Dislike"
@@ -342,17 +345,17 @@ export function ActionBar({
               animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <ThumbsDown className={cn("w-4 h-4 sm:w-5 sm:h-5", isDisliked && "fill-current")} />
-              <span className="text-[10px] sm:text-xs text-zinc-400">{formatCount(localDislikeCount)}</span>
+              <ThumbsDown className={cn("w-[clamp(0.75rem,3.5cqi,1.25rem)] h-[clamp(0.75rem,3.5cqi,1.25rem)]", isDisliked && "fill-current")} />
+              <span className="text-[clamp(8px,2.5cqi,12px)] text-zinc-400">{formatCount(localDislikeCount)}</span>
             </motion.button>
           )}
           <button 
             onClick={onComment}
-            className="flex items-center gap-0.5 sm:gap-1 text-white hover:text-zinc-400 transition-colors"
+            className="flex items-center gap-[clamp(0.125rem,0.5cqi,0.25rem)] text-white hover:text-zinc-400 transition-colors"
             aria-label="Comment"
           >
-            <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="text-[10px] sm:text-xs text-zinc-400">{formatCount(commentCount)}</span>
+            <MessageSquare className="w-[clamp(0.75rem,3.5cqi,1.25rem)] h-[clamp(0.75rem,3.5cqi,1.25rem)]" />
+            <span className="text-[clamp(8px,2.5cqi,12px)] text-zinc-400">{formatCount(commentCount)}</span>
           </button>
           
           {/* Repost - opens share sheet with repost/quote options */}
@@ -366,11 +369,11 @@ export function ActionBar({
                 setSheetOpen(true);
               }
             }}
-            className="flex items-center gap-0.5 sm:gap-1 text-white hover:text-zinc-400 transition-colors"
+            className="flex items-center gap-[clamp(0.125rem,0.5cqi,0.25rem)] text-white hover:text-zinc-400 transition-colors"
             aria-label="Repost"
           >
-            <Repeat2 className="w-5 h-5 sm:w-[25px] sm:h-[25px]" />
-            <span className="text-[10px] sm:text-xs text-zinc-400">{formatCount(displayRepostCount)}</span>
+            <Repeat2 className="w-[clamp(0.875rem,4cqi,1.5rem)] h-[clamp(0.875rem,4cqi,1.5rem)]" />
+            <span className="text-[clamp(8px,2.5cqi,12px)] text-zinc-400">{formatCount(displayRepostCount)}</span>
           </button>
 
           
@@ -387,7 +390,7 @@ export function ActionBar({
         </div>
 
         {/* Right side actions */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-[clamp(0.25rem,1.5cqi,0.75rem)]">
           <motion.button 
             onClick={toggleBookmark}
             className={cn(
@@ -400,14 +403,14 @@ export function ActionBar({
             animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
             transition={{ duration: 0.2, ease: "easeOut" }}
           >
-            <Bookmark className={cn("w-4 h-4 sm:w-5 sm:h-5", isBookmarked && "fill-current")} />
+            <Bookmark className={cn("w-[clamp(0.75rem,3.5cqi,1.25rem)] h-[clamp(0.75rem,3.5cqi,1.25rem)]", isBookmarked && "fill-current")} />
           </motion.button>
           <button 
             onClick={handleInfoClick}
             className="text-zinc-400 hover:text-white transition-colors"
             aria-label="Post info"
           >
-            <Info className="w-4 h-4 sm:w-5 sm:h-5" />
+            <Info className="w-[clamp(0.75rem,3.5cqi,1.25rem)] h-[clamp(0.75rem,3.5cqi,1.25rem)]" />
           </button>
         </div>
       </div>
