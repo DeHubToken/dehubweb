@@ -76,6 +76,9 @@
     "emailNotificationsDesc": "Recevoir des notifications par e-mail",
     "pushNotifications": "Notifications push",
     "pushNotificationsDesc": "Recevoir des notifications push dans le navigateur",
+    "browserNotificationsEnabled": "Notifications du navigateur activées",
+    "browserNotificationsDenied": "Notifications bloquées. Activez-les dans les paramètres du navigateur.",
+    "browserNotificationsUnsupported": "Les notifications du navigateur ne sont pas prises en charge",
     "activity": "Activité",
     "likes": "J'aime",
     "likesDesc": "Quand quelqu'un aime vos publications",
@@ -228,7 +231,8 @@
     "offersMade": "Offres faites",
     "noOffers": "Vous n'avez pas encore fait d'offres",
     "walletCopied": "Adresse du portefeuille copiée !",
-    "note": "Note"
+    "note": "Note",
+    "loginDescription": "Connectez-vous pour accéder et gérer les paramètres de votre compte."
   },
   "common": {
     "save": "Enregistrer",
