@@ -36,6 +36,14 @@ export interface DPayTransaction {
   chainId?: number;
 }
 
+/** Post-purchase polling: status by session ID (GET /dpay/tnxs?sid=...) */
+export interface DPaySessionStatus {
+  status_stripe?: 'pending' | 'succeeded' | 'failed' | 'canceled' | 'expired';
+  tokenSendStatus?: 'sent' | 'sending' | 'queued' | 'failed' | 'not_sent';
+  tokenSendTxnHash?: string;
+  [key: string]: unknown;
+}
+
 export interface OnrampSessionRequest {
   amount: number;
   currency: string;
@@ -288,16 +296,45 @@ export async function getAvailableGasTokens(): Promise<DPayToken[]> {
 }
 
 /**
- * Get user's dpay transaction history
+ * Poll transaction status by session ID (post-purchase flow)
+ * Call every 3s after redirect from Stripe until tokenSendStatus === 'sent' or 'failed'
  */
-export async function getDPayTransactions(): Promise<DPayTransaction[]> {
-  console.log('[DPay API] Fetching transactions...');
-  
+export async function getDPaySessionStatus(sessionId: string): Promise<DPaySessionStatus> {
   const token = getAuthToken();
   if (!token) {
     throw new Error('Authentication required');
   }
-  
+  const response = await fetch(`${DEHUB_API_BASE}/api/dpay/tnxs?sid=${encodeURIComponent(sessionId)}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch session status: ${response.status}`);
+  }
+  const data = await response.json();
+  const result = data?.result ?? data;
+  return {
+    status_stripe: result.status_stripe ?? result.statusStripe,
+    tokenSendStatus: result.tokenSendStatus ?? result.token_send_status,
+    tokenSendTxnHash: result.tokenSendTxnHash ?? result.token_send_txn_hash ?? result.txHash,
+    ...result,
+  };
+}
+
+/**
+ * Get user's dpay transaction history
+ */
+export async function getDPayTransactions(): Promise<DPayTransaction[]> {
+  console.log('[DPay API] Fetching transactions...');
+
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error('Authentication required');
+  }
+
   try {
     const response = await fetch(`${DEHUB_API_BASE}/api/dpay/tnxs`, {
       method: 'GET',
@@ -416,7 +453,8 @@ export async function createOnrampSession(request: OnrampSessionRequest): Promis
 }
 
 /**
- * Create a checkout session (alternative to onramp)
+ * Create a checkout session for fiat-to-DHB purchase (Stripe flow)
+ * Flow: POST /dpay/checkout → Stripe Checkout → webhook → Backend sends DHB → redirect
  */
 export async function createCheckoutSession(request: {
   amount: number;
@@ -425,14 +463,29 @@ export async function createCheckoutSession(request: {
   walletAddress: string;
   chainId?: number;
   tokensToReceive: number;
+  /** Deep link or URL after payment. e.g. "dehub://dpay-result" for mobile */
+  redirect?: string;
 }): Promise<{ checkoutUrl: string; sessionId: string }> {
   console.log('[DPay API] Creating checkout session...', request);
-  
+
   const token = getAuthToken();
   if (!token) {
     throw new Error('Authentication required');
   }
-  
+
+  const address = request.walletAddress;
+  const payload = {
+    chainId: request.chainId ?? 8453,
+    address,
+    receiverAddress: address,
+    amount: request.amount,
+    tokensToReceive: request.tokensToReceive,
+    tokenSymbol: request.tokenSymbol,
+    currency: (request.currency ?? 'usd').toLowerCase(),
+    redirect: request.redirect ?? 'dehub://dpay-result',
+    termsAndServicesAccepted: true,
+  };
+
   try {
     const response = await fetch(`${DEHUB_API_BASE}/api/dpay/checkout`, {
       method: 'POST',
@@ -440,15 +493,7 @@ export async function createCheckoutSession(request: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        amount: request.amount,
-        currency: request.currency ?? 'usd',
-        tokenSymbol: request.tokenSymbol,
-        walletAddress: request.walletAddress,
-        chainId: request.chainId ?? 8453,
-        termsAndServicesAccepted: true,
-        tokensToReceive: request.tokensToReceive,
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
