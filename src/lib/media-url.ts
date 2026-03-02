@@ -58,8 +58,14 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
   // Other full URLs (dicebear, external CDNs, etc.) - return as-is
   if (apiAvatarPath.startsWith('http')) return apiAvatarPath;
   
-  // Relative path - preserve API path as-is (contains correct address in filename)
-  return `${DEHUB_CDN_BASE}${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
+  // Strip known folder prefixes (statics/, nfts/) that don't exist on CDN
+  let cleanPath = apiAvatarPath;
+  if (cleanPath.startsWith('statics/')) {
+    cleanPath = cleanPath.replace(/^statics\//, '');
+  }
+  
+  // Relative path - use cleaned path with CDN base
+  return `${DEHUB_CDN_BASE}${cleanPath}${cleanPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
 }
 
 /**
