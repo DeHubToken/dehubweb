@@ -940,6 +940,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       const errorMessage = error.message || String(error);
       if (!isCancellationError(errorMessage)) {
+        // Log to backend for debugging
+        authLogger.error(`Social login failed: ${provider}`, {
+          provider,
+          errorMessage,
+          isRetry,
+          userAgent: navigator.userAgent,
+        }, error);
+
         // Auto-retry once on first failure (common when app/config not fully loaded)
         if (!isRetry) {
           console.log(`[Auth] First attempt failed, retrying in 2s...`);
@@ -978,6 +986,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Email login error:', error);
       const errorMessage = error.message || String(error);
       if (!isCancellationError(errorMessage)) {
+        authLogger.error('Email login failed', {
+          provider: 'email_passwordless',
+          errorMessage,
+          isRetry,
+          userAgent: navigator.userAgent,
+        }, error);
+
         if (!isRetry) {
           console.log('[Auth] Email login first attempt failed, retrying in 2s...');
           toast.info('Retrying...', { duration: 2000 });
@@ -1014,6 +1029,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('SMS login error:', error);
       const errorMessage = error.message || String(error);
       if (!isCancellationError(errorMessage)) {
+        authLogger.error('SMS login failed', {
+          provider: 'sms_passwordless',
+          errorMessage,
+          isRetry,
+          userAgent: navigator.userAgent,
+        }, error);
+
         if (!isRetry) {
           console.log('[Auth] SMS login first attempt failed, retrying in 2s...');
           toast.info('Retrying...', { duration: 2000 });

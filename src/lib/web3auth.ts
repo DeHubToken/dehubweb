@@ -584,6 +584,13 @@ export async function connectToSocialProvider(
     lastConnectedConnector = WALLET_CONNECTORS.AUTH;
     return provider;
   } catch (err) {
+    // Log all non-cancellation errors for debugging
+    const errMsg = String(err);
+    const isCancellation = /user (rejected|denied|closed|cancel)|popup.?closed|aborted|modal closed/i.test(errMsg);
+    if (!isCancellation) {
+      console.error(`[Web3Auth] connectToSocialProvider FAILED for ${authConnection}:`, err);
+    }
+
     if (isPopupBlockedError(err) && !forceRedirectMode) {
       console.warn('[Web3Auth] Popup blocked! Switching to REDIRECT mode...');
       forceRedirectMode = true;
