@@ -85,7 +85,18 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 function normalizeUser(userData: Partial<DeHubUser> | null | undefined, fallbackAddress: string): DeHubUser {
   const safe = userData ?? {};
   // Compute badgeBalance: use API value, or fallback to sum of balanceData
-  const badgeBalance = safe.badgeBalance || (safe.balanceData?.reduce((sum, b) => sum + (b.walletBalance || 0) + (b.staked || 0), 0)) || 0;
+  const rawBadgeBalance = safe.badgeBalance;
+  const numericRaw = typeof rawBadgeBalance === 'string' ? parseFloat(rawBadgeBalance) : (typeof rawBadgeBalance === 'number' ? rawBadgeBalance : NaN);
+  const computedFromBalanceData = safe.balanceData?.reduce((sum, b) => sum + (b.walletBalance || 0) + (b.staked || 0), 0) ?? 0;
+  const badgeBalance = (Number.isFinite(numericRaw) && numericRaw > 0) ? numericRaw : computedFromBalanceData;
+  console.warn('[normalizeUser] badge resolution', {
+    username: safe.username,
+    rawBadgeBalance,
+    rawType: typeof rawBadgeBalance,
+    computedFromBalanceData,
+    finalBadgeBalance: badgeBalance,
+    balanceDataLength: safe.balanceData?.length ?? 0,
+  });
   return {
     address: safe.address || fallbackAddress,
     username: safe.username || null,

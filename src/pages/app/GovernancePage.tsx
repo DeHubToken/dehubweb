@@ -611,8 +611,10 @@ export default function GovernancePage() {
         openLoginModal();
         return;
       }
+      console.warn('[GovernancePage] vote attempt', { userBadgeBalance, username, userObj: user });
       const { weight, badgeName } = getVoteWeight(userBadgeBalance, username);
       if (weight === 0) {
+        console.warn('[GovernancePage] vote blocked — weight=0', { userBadgeBalance, username, weight, badgeName });
         toast.error(t('governance.mustHoldTokens'));
         return;
       }
