@@ -407,4 +407,19 @@
   }
   ,"loginModal": { "title": "لاگ ان کرو", "continueEmail": "ای میل سے جاری رکھو", "continueSMS": "SMS سے جاری رکھو", "continueGoogle": "گوگل سے جاری رکھو", "continueX": "X سے جاری رکھو", "continueDiscord": "Discord سے جاری رکھو", "connectWallet": "والیٹ جوڑو", "emailPlaceholder": "اپنا ای میل ڈالو", "invalidEmail": "صحیح ای میل ڈالو", "sendingLink": "لنک بھیج رہے ہیں...", "continue": "جاری رکھو", "magicLinkInfo": "ہم تمہیں میجک لنک بھیجیں گے", "invalidPhone": "ملکی کوڈ کے ساتھ صحیح نمبر ڈالو", "sendingCode": "کوڈ بھیج رہے ہیں...", "smsInfo": "ہم SMS سے تصدیقی کوڈ بھیجیں گے", "or": "یا", "termsNotice": "جاری رکھ کے تم خدمت شرائط اور رازداری پالیسی سے متفق ہو", "walletInfoDesktop": "محفوظ لاگ ان کے لیے والیٹ جوڑو", "walletInfoMobile": "MetaMask, Trust اور Phantom اپنی ایپ کھولیں گے۔ Rabby WalletConnect استعمال کریگا۔" }
   ,"sidebar": { "talkOfTheTown": "شہر کی چرچا", "nothingTrending": "ابھی کچھ ٹرینڈنگ نہیں" }
+  ,"tip": { "sendTip": "ٹِپ بھیجو", "amount": "رقم", "recipient": "وصول کنندہ", "processing": "جاری ہے...", "success": "ٹِپ بھیج دیا!", "failed": "ٹِپ نہیں بھیجا گیا", "insufficientBalance": "بیلنس کم ہے", "minAmount": "کم از کم رقم", "confirmTip": "ٹِپ تصدیق کرو" }
+  ,"postOptions": { "deletePost": "پوسٹ مٹاؤ", "editPost": "پوسٹ ایڈٹ کرو", "reportPost": "پوسٹ رپورٹ کرو", "pinPost": "پوسٹ پِن کرو", "unpinPost": "اَن پِن کرو", "copyLink": "لنک نقل کرو", "muteConversation": "بات چیت میوٹ کرو" }
+  ,"filters": { "all": "سب", "latest": "تازہ ترین", "popular": "مقبول", "following": "فالو", "nearMe": "میرے نزدیک" }
+  ,"drawers": { "comments": "تبصرے", "likes": "پسند", "reposts": "ری پوسٹ", "shares": "شیئر", "close": "بند کرو" }
+  ,"publicChat": { "title": "عام چیٹ", "send": "بھیجو", "placeholder": "پیغام لکھو...", "rules": "چیٹ قواعد", "noMessages": "ابھی تک کوئی پیغام نہیں" }
+  ,"aiChat": { "title": "AI چیٹ", "newConversation": "نئی بات چیت", "deleteConversation": "بات چیت مٹاؤ", "placeholder": "AI سے پوچھو...", "generating": "بنا رہا ہے...", "error": "کچھ غلط ہو گیا" }
+  ,"explorePage": { "trending": "ٹرینڈنگ", "forYou": "تمہارے لیے", "news": "خبریں", "entertainment": "تفریح", "sports": "کھیل", "technology": "ٹیکنالوجی", "gaming": "گیمنگ" }
+  ,"features": { "decentralized": "غیر مرکزی", "encrypted": "خفیہ", "openSource": "اوپن سورس", "community": "کمیونٹی", "privacy": "رازداری", "freedom": "آزادی" }
+  ,"auth": { "signIn": "لاگ ان", "signUp": "سائن اپ", "signOut": "لاگ آؤٹ", "forgotPassword": "پاسورڈ بھول گئے؟", "resetPassword": "پاسورڈ ری سیٹ", "verifyEmail": "ای میل تصدیق کرو" }
+  ,"music": { "nowPlaying": "ابھی چل رہا ہے", "queue": "قطار", "shuffle": "شفل", "repeat": "دوبارہ", "volume": "آواز", "lyrics": "بول", "addToPlaylist": "پلے لسٹ میں ڈالو" }
+  ,"notFound": { "title": "صفحہ نہیں ملا", "description": "جو تم ڈھونڈ رہے ہو وہ نہیں ملا", "goHome": "گھر جاؤ" }
+  ,"buyCoins": { "title": "سکے خریدو", "amount": "رقم", "price": "قیمت", "buy": "خریدو", "processing": "جاری ہے...", "success": "خرید لیا!", "failed": "خرید نہیں ہوئی" }
+  ,"agents": { "title": "AI ایجنٹ", "create": "ایجنٹ بناؤ", "manage": "انتظام", "active": "فعال", "inactive": "غیر فعال", "apiKey": "API کلید", "description": "تفصیل" }
+  ,"hero": { "title": "مستقبل کا سوشل نیٹ ورک", "subtitle": "غیر مرکزی، محفوظ، تمہارے ہاتھ میں", "getStarted": "شروع کرو", "learnMore": "مزید جانو" }
+  ,"creators": { "title": "تخلیق کار", "apply": "درخواست دو", "benefits": "فائدے", "requirements": "ضروریات", "earnings": "کمائی" }
 }
