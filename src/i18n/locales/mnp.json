@@ -406,5 +406,20 @@
     "watchNow": "即刻看"
   }
   ,"loginModal": { "title": "登录", "continueEmail": "用邮箱继续", "continueSMS": "用短信继续", "continueGoogle": "用谷歌继续", "continueX": "用 X 继续", "continueDiscord": "用 Discord 继续", "connectWallet": "连接钱包", "emailPlaceholder": "输入你个邮箱", "invalidEmail": "请输入正确个邮箱", "sendingLink": "发链接中...", "continue": "继续", "magicLinkInfo": "阿拉会发一个魔法链接给你", "invalidPhone": "请输入带国家代码个正确电话号码", "sendingCode": "发验证码中...", "smsInfo": "阿拉会通过短信发验证码给你", "or": "或", "termsNotice": "继续即表示你同意服务条款和隐私政策", "walletInfoDesktop": "连接钱包安全登录", "walletInfoMobile": "MetaMask、Trust 和 Phantom 会直接打开应用。Rabby 会使用 WalletConnect。" }
-  ,"sidebar": { "talkOfTheTown": "热门话题", "nothingTrending": "暂无热门" }
+,"sidebar": { "talkOfTheTown": "热门话题", "nothingTrending": "暂无热门" }
+,"tip": { "title": "送打赏", "toCreator": "打赏 {{name}}", "quickAmounts": "快选金额", "customAmount": "或者输入金额", "sending": "送出中...", "sendAmount": "送 {{amount}} DHB" }
+,"postOptions": { "options": "选项", "sendTip": "送打赏", "queue": "排队", "watchList": "观看列表", "report": "举报", "download": "下载", "copyPostUrl": "复制帖子网址", "copyLink": "复制链接", "blockCreator": "拉黑创作者", "seeLessLikeThis": "少看这类其", "editPost": "编辑帖子", "deletePost": "删除帖子", "translateImage": "翻译图片", "notifyWhenLive": "开播通知", "activityLog": "活动记录", "endStream": "结束直播", "linkCopied": "链接复制了", "postUrlCopied": "帖子网址复制了" }
+,"filters": { "sort": "排序", "category": "分类", "searchCategories": "搜索分类...", "noMatches": "无匹配", "uploadDate": "上传日期", "postType": "帖子类型", "contentAccess": "内容权限", "contentType": "内容类型", "duration": "时长", "all": "全部", "latest": "最新", "following": "关注中", "subscribed": "已订阅", "mostViewed": "看最多", "mostLiked": "赞最多", "mostComments": "评论最多", "random": "随机", "videos": "视频", "images": "图片", "text": "文字", "ppv": "PPV", "bounty": "赏金", "locked": "锁住", "any": "任意", "resetFilters": "重置筛选" }
+,"drawers": { "ppvTitle": "付费内容", "unlockPrice": "解锁价格", "ppvDescription": "付一次永久解锁独家内容！💎", "unlockFor": "解锁", "bountyTitle": "赏金奖励", "firstViews": "头 {{count}} 次观看", "rewardedWatching": "看就有奖", "firstComments": "头 {{count}} 条评论", "rewardedEngaging": "互动有奖", "rewardPerUser": "每人奖励", "totalBountyPool": "总奖池", "bountyDescription": "看同互动来赚奖励！🎁", "bountyView": "看", "bountyClose": "关", "gatedTitle": "门槛内容", "mustHoldToView": "须持有才能看", "gatedDescription": "持有指定代币来看此内容！🔓", "setPpvPrice": "设PPV价格", "currency": "币种", "price": "价格", "cancel": "取消", "confirm": "确认", "paying": "付款中...", "payAmount": "付 {{amount}} {{currency}}" }
+,"publicChat": { "title": "公共聊天", "subtitle": "加入社区对话", "noMessages": "还无消息", "beFirst": "做第一个发言其人！", "signInToSend": "登录来发消息", "pinned": "置顶", "moderator": "管理员", "online": "{{count}} 在线" }
+,"aiChat": { "title": "助手", "thinking": "想一下...", "errorGeneric": "对不住，出错了。再试一下。", "noResponse": "生成不了回复。", "askAnything": "问什乇都行...", "post": "发布" }
+,"explorePage": { "searchPlaceholder": "搜索人、帖子或内容...", "filters": "筛选", "clearAll": "全部清除", "noResults": "无结果", "trending": "热门", "people": "人", "posts": "帖子", "loadMore": "加载更多", "searching": "搜索中...", "content": "内容", "all": "全部" }
+,"features": { "title": "功能请求", "submit": "提交", "searchPlaceholder": "搜索功能请求...", "requests": "请求", "shipped": "已上线", "all": "全部", "mostVoted": "最多投票", "newest": "最新", "noRequestsYet": "还无请求", "submitRequest": "提交请求" }
+,"auth": { "loginRequired": "须登录" }
+,"music": { "all": "全部", "tracks": "歌曲", "videos": "视频", "podcasts": "播客", "radio": "电台", "trendingTracks": "热门歌曲", "moreVideos": "更多视频", "newReleases": "新发布" }
+,"notFound": { "title": "页面找不着", "returnHome": "回首页" }
+,"buyCoins": { "title": "买币", "network": "网络", "token": "代币", "selectToken": "选代币", "amountUsd": "金额 (USD)", "buy": "买 {{symbol}}", "processing": "处理中...", "loginDescription": "登录来买币。" }
+,"agents": { "title": "AI 代理", "description": "创建能同 DeHub 交互其 AI 代理。", "newAgent": "新代理", "createAgent": "创建代理", "noAgents": "还无代理。创建第一个！", "active": "活跃", "inactive": "不活跃", "apiKey": "API Key", "delete": "删除" }
+,"hero": { "title": "新世界", "subtitle": "等着你", "comingSoon": "快来了", "iosComingSoon": "iOS 应用快来了！" }
+,"creators": { "title": "创作者申请", "subtitle": "加入 DeHub 创作者网络", "submitApplication": "提交申请", "submitting": "提交中...", "submitted": "申请提交成功！", "failedSubmit": "提交失败。再试一下。" }
 }
