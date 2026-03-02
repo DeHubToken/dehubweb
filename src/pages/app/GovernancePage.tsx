@@ -164,7 +164,7 @@ function GovernanceCard({
           return (
             <div className="space-y-1">
               <div className="flex justify-between text-[10px]">
-                <span className="text-emerald-400 font-medium">{t('governance.governanceBadge')} · {forPct}% {t('governance.forLabel', 'For')}</span>
+                <span className="text-emerald-400 font-medium">{forPct}% {t('governance.forLabel', 'For')}</span>
                 <span className="text-red-400 font-medium">{againstPct}% {t('governance.againstLabel', 'Against')}</span>
               </div>
               <div className="h-1.5 rounded-full bg-white/5 overflow-hidden flex">
