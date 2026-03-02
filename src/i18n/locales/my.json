@@ -528,5 +528,6 @@
     "active": "တက်ကြွ",
     "inactive": "မတက်ကြွ",
     "delete": "ဖျက်ရန်"
-  }
+  },
+  "sidebar": { "talkOfTheTown": "မြို့တွင်းစကားပြော", "nothingTrending": "ယခု ခေတ်ရေစီးကြောင်းမရှိပါ" }
 }

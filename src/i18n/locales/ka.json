@@ -976,5 +976,6 @@
     "backToBlog": "ბლოგზე დაბრუნება",
     "sharePost": "პოსტის გაზიარება",
     "relatedPosts": "დაკავშირებული პოსტები"
-  }
+  },
+  "sidebar": { "talkOfTheTown": "ქალაქის საუბარი", "nothingTrending": "ამჟამად არაფერი ტრენდულია" }
 }

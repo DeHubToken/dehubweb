@@ -528,5 +528,6 @@
     "active": "សកម្ម",
     "inactive": "អសកម្ម",
     "delete": "លុប"
-  }
+  },
+  "sidebar": { "talkOfTheTown": "ការនិយាយរបស់ទីក្រុង", "nothingTrending": "គ្មានអ្វីពេញនិយមឥឡូវនេះ" }
 }
