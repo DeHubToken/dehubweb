@@ -767,19 +767,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       let authAddressForApi: string;
       let signature: string;
 
-      // Social login redirect: try EOA direct signing to bypass AA/ERC-6492
-      const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
-      if (eoaResult) {
-        authAddressForApi = eoaResult.address;
-        signature = eoaResult.signature;
-        console.log('[Auth] [REDIRECT] Using EOA direct signature for', authAddressForApi);
-      } else {
-        console.warn('[Auth] [REDIRECT] EOA direct sign unavailable, falling back to provider signing');
-        toast.loading('Please sign the message in your wallet...', { id: toastId });
-        const fallback = await signWithProvider(signingProvider, displayedDate, 'REDIRECT');
-        authAddressForApi = fallback.address;
-        signature = fallback.signature;
-      }
+      // Social login redirect: use AA provider directly for Smart Account address + ERC-1271 signature.
+      // Backend verifies via ERC-1271 (same as mobile app flow).
+      const result = await signWithProvider(signingProvider, displayedDate, 'REDIRECT');
+      authAddressForApi = result.address;
+      signature = result.signature;
+      console.log('[Auth] [REDIRECT] Using AA provider signature for Smart Account:', authAddressForApi);
 
       console.log('[Auth] [REDIRECT] Signature received, authenticating with backend...');
       toast.loading('Verifying with DeHub...', { id: toastId });
@@ -848,21 +841,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       let authAddressForApi: string;
       let signature: string;
 
-      // For social logins, try EOA direct signing to bypass AA/ERC-6492 wrapper.
-      // The backend uses ecrecover which cannot verify ERC-6492/ERC-1271 signatures.
+      // For social logins (Web3Auth AA), use the AA provider directly.
+      // eth_accounts returns the Smart Account address (matches mobile app).
+      // personal_sign produces an ERC-1271 compatible signature.
+      // Backend verifies via ERC-1271 for Smart Accounts (same as mobile app flow).
+      // DO NOT use signWithEoaDirectly here — it returns the EOA address which maps
+      // to a different DeHub account (@chadman) instead of the Smart Account account (@early).
       if (isSocial) {
-        const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
-        if (eoaResult) {
-          authAddressForApi = eoaResult.address;
-          signature = eoaResult.signature;
-          console.log('[Auth] [POPUP] Using EOA direct signature for', authAddressForApi);
-        } else {
-          console.warn('[Auth] [POPUP] EOA direct sign unavailable, falling back to provider signing');
-          // Fallback: use provider signing (may produce ERC-6492 — will likely fail on backend)
-          const fallback = await signWithProvider(signingProvider, displayedDate, 'POPUP');
-          authAddressForApi = fallback.address;
-          signature = fallback.signature;
-        }
+        const result = await signWithProvider(signingProvider, displayedDate, 'POPUP');
+        authAddressForApi = result.address;
+        signature = result.signature;
+        console.log('[Auth] [POPUP] Using AA provider signature for Smart Account:', authAddressForApi);
       } else {
         // External wallet — standard provider signing
         const result = await signWithProvider(signingProvider, displayedDate, 'POPUP');

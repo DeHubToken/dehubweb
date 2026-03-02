@@ -41,6 +41,7 @@ export interface OnrampSessionRequest {
   currency: string;
   tokenSymbol: string;
   walletAddress: string;
+  chainId?: number;
 }
 
 export interface OnrampSessionResponse {
@@ -386,6 +387,7 @@ export async function createOnrampSession(request: OnrampSessionRequest): Promis
       source_currency: request.currency.toLowerCase(),
       destination_currency: request.tokenSymbol.toUpperCase(),
       destination_wallet_address: request.walletAddress,
+      chain_id: request.chainId ?? 8453,
     }),
   });
 
