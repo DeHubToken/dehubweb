@@ -8,6 +8,7 @@
 import governanceShieldIcon from '@/assets/governance-shield.png';
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -84,6 +85,7 @@ function GovernanceCard({
   const commentSectionRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
+  const navigate = useNavigate();
 
   const mention = useMention({
     inputRef: commentInputRef,
@@ -141,7 +143,10 @@ function GovernanceCard({
   const badgeImageUrl = getBadgeUrl(userBadgeBalance, username);
 
   return (
-    <div className="overflow-visible relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3">
+    <div
+      className="overflow-visible relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3 cursor-pointer hover:bg-white/[0.05] transition-colors"
+      onClick={() => navigate(`/app/governance/${proposal.id}`)}
+    >
       <div className="flex items-start justify-between">
         <CardHeader
           username={displayName}
@@ -184,7 +189,7 @@ function GovernanceCard({
           );
         })()}
 
-        <div className="pt-1">
+        <div className="pt-1" onClick={(e) => e.stopPropagation()}>
           <ActionBar
             postId={proposal.id}
             className="p-0"
@@ -482,13 +487,14 @@ function GovernanceSkeletons() {
 // ──────────────────────────────────────────────────
 function CompletedCard({ proposal }: { proposal: GovernanceProposal }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
   const isPassed = proposal.status === 'passed' || (proposal.status === 'completed' && proposal.like_count > proposal.dislike_count);
 
   return (
     <div
       className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3 flex gap-3 cursor-pointer hover:bg-white/[0.05] transition-colors"
-      onClick={() => setExpanded(!expanded)}
+      onClick={() => navigate(`/app/governance/${proposal.id}`)}
     >
       <div className="flex flex-col items-center justify-center min-w-[40px]">
         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isPassed ? 'bg-emerald-500/15' : 'bg-red-500/15'}`}>
