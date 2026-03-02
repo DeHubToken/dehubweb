@@ -315,7 +315,7 @@ export function ActionBar({
     )}>
       <div className="flex items-center justify-between">
         {/* Primary actions */}
-        <div className="flex items-center gap-2 lg:gap-3 xl:gap-4 min-w-0">
+        <div className="flex items-center gap-3 lg:gap-3 xl:gap-4 min-w-0">
           <motion.button 
             onClick={() => handleVote(true)}
             className={cn(
@@ -327,8 +327,8 @@ export function ActionBar({
             animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
-            <ThumbsUp className={cn("w-4 h-4 lg:w-[18px] lg:h-[18px] xl:w-5 xl:h-5", isLiked && "fill-current")} />
-            <span className="text-[10px] lg:text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
+            <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
+            <span className="text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
           </motion.button>
           {!hideDislike && (
             <motion.button 
@@ -342,8 +342,8 @@ export function ActionBar({
               animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <ThumbsDown className={cn("w-4 h-4 lg:w-[18px] lg:h-[18px] xl:w-5 xl:h-5", isDisliked && "fill-current")} />
-              <span className="text-[10px] lg:text-xs text-zinc-400">{formatCount(localDislikeCount)}</span>
+              <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
+              <span className="text-xs text-zinc-400">{formatCount(localDislikeCount)}</span>
             </motion.button>
           )}
           <button 
@@ -351,8 +351,8 @@ export function ActionBar({
             className="flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors"
             aria-label="Comment"
           >
-            <MessageSquare className="w-4 h-4 lg:w-[18px] lg:h-[18px] xl:w-5 xl:h-5" />
-            <span className="text-[10px] lg:text-xs text-zinc-400">{formatCount(commentCount)}</span>
+            <MessageSquare className="w-5 h-5" />
+            <span className="text-xs text-zinc-400">{formatCount(commentCount)}</span>
           </button>
           
           {/* Repost - opens share sheet with repost/quote options */}
@@ -369,8 +369,8 @@ export function ActionBar({
             className="flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors"
             aria-label="Repost"
           >
-            <Repeat2 className="w-4 h-4 sm:w-[18px] sm:h-[18px] lg:w-5 lg:h-5 xl:w-[22px] xl:h-[22px]" />
-            <span className="text-[10px] lg:text-xs text-zinc-400">{formatCount(displayRepostCount)}</span>
+            <Repeat2 className="w-5 h-5" />
+            <span className="text-xs text-zinc-400">{formatCount(displayRepostCount)}</span>
           </button>
 
           
@@ -387,7 +387,7 @@ export function ActionBar({
         </div>
 
         {/* Right side actions */}
-        <div className="flex items-center gap-2 lg:gap-3">
+        <div className="flex items-center gap-3">
           <motion.button 
             onClick={toggleBookmark}
             className={cn(
@@ -400,14 +400,14 @@ export function ActionBar({
             animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
             transition={{ duration: 0.2, ease: "easeOut" }}
           >
-            <Bookmark className={cn("w-4 h-4 lg:w-[18px] lg:h-[18px] xl:w-5 xl:h-5", isBookmarked && "fill-current")} />
+            <Bookmark className={cn("w-5 h-5", isBookmarked && "fill-current")} />
           </motion.button>
           <button 
             onClick={handleInfoClick}
             className="text-zinc-400 hover:text-white transition-colors"
             aria-label="Post info"
           >
-            <Info className="w-4 h-4 lg:w-[18px] lg:h-[18px] xl:w-5 xl:h-5" />
+            <Info className="w-5 h-5" />
           </button>
         </div>
       </div>
