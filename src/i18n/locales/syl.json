@@ -298,4 +298,19 @@
   }
   ,"loginModal": { "title": "লগইন করো", "continueEmail": "ইমেইলে আগাও", "continueSMS": "SMS এ আগাও", "continueGoogle": "গুগলে আগাও", "continueX": "X এ আগাও", "continueDiscord": "Discord এ আগাও", "connectWallet": "ওয়ালেট কানেক্ট করো", "emailPlaceholder": "তোমার ইমেইল দেও", "invalidEmail": "সঠিক ইমেইল দেও", "sendingLink": "লিংক পাঠাইতেছে...", "continue": "আগাও", "magicLinkInfo": "আমরা তোমারে ম্যাজিক লিংক পাঠামু", "invalidPhone": "দেশের কোডসহ সঠিক ফোন নম্বর দেও", "sendingCode": "কোড পাঠাইতেছে...", "smsInfo": "আমরা SMS এ ভেরিফিকেশন কোড পাঠামু", "or": "বা", "termsNotice": "আগাইলে তুমি সেবার শর্ত আর গোপনীয়তা নীতিতে রাজি", "walletInfoDesktop": "নিরাপদে লগইনের লাইগা ওয়ালেট কানেক্ট করো", "walletInfoMobile": "MetaMask, Trust আর Phantom সরাসরি অ্যাপ খুলবো। Rabby WalletConnect ব্যবহার করবো।" }
   ,"sidebar": { "talkOfTheTown": "আলোচনার বিষয়", "nothingTrending": "এহনো কিছু ট্রেন্ডিং নাই" }
+  ,"tip": { "sendTip": "টিপ পাঠাও", "amount": "পরিমাণ", "recipient": "যারে পাঠাইবা", "processing": "প্রসেস অইতাসে...", "success": "টিপ পাঠানো অইসে!", "failed": "টিপ পাঠানো ব্যর্থ", "insufficientBalance": "ব্যালেন্স কম", "minAmount": "সবচে কম পরিমাণ", "confirmTip": "টিপ নিশ্চিত করো" }
+  ,"postOptions": { "deletePost": "পোস্ট মুছো", "editPost": "পোস্ট এডিট করো", "reportPost": "পোস্ট রিপোর্ট করো", "pinPost": "পোস্ট পিন করো", "unpinPost": "আনপিন করো", "copyLink": "লিংক কপি করো", "muteConversation": "কথা মিউট করো" }
+  ,"filters": { "all": "সব", "latest": "সবচে নতুন", "popular": "জনপ্রিয়", "following": "ফলো করা", "nearMe": "কাছে" }
+  ,"drawers": { "comments": "মন্তব্য", "likes": "ভালা লাগা", "reposts": "রিপোস্ট", "shares": "শেয়ার", "close": "বন্ধ করো" }
+  ,"publicChat": { "title": "পাবলিক চ্যাট", "send": "পাঠাও", "placeholder": "মেসেজ লেখো...", "rules": "চ্যাট নিয়ম", "noMessages": "এহনো কোনো মেসেজ নাই" }
+  ,"aiChat": { "title": "AI চ্যাট", "newConversation": "নতুন কথা", "deleteConversation": "কথা মুছো", "placeholder": "AI রে জিগাও...", "generating": "বানাইতাসে...", "error": "কিছু একটা সমস্যা অইসে" }
+  ,"explorePage": { "trending": "ট্রেন্ডিং", "forYou": "তোমার লাইগা", "news": "খবর", "entertainment": "বিনোদন", "sports": "খেলা", "technology": "প্রযুক্তি", "gaming": "গেমিং" }
+  ,"features": { "decentralized": "বিকেন্দ্রীকৃত", "encrypted": "এনক্রিপ্টেড", "openSource": "ওপেন সোর্স", "community": "কমিউনিটি", "privacy": "প্রাইভেসি", "freedom": "স্বাধীনতা" }
+  ,"auth": { "signIn": "সাইন ইন", "signUp": "সাইন আপ", "signOut": "সাইন আউট", "forgotPassword": "পাসওয়ার্ড ভুলসো?", "resetPassword": "পাসওয়ার্ড রিসেট", "verifyEmail": "ইমেইল ভেরিফাই করো" }
+  ,"music": { "nowPlaying": "এহন চলতাসে", "queue": "কিউ", "shuffle": "শাফেল", "repeat": "রিপিট", "volume": "ভলিউম", "lyrics": "গানর কথা", "addToPlaylist": "প্লেলিস্টে দেও" }
+  ,"notFound": { "title": "পেজ পাওয়া যায় নাই", "description": "তুমি যেটা হুদতাসো সেটা নাই", "goHome": "ঘরে যাও" }
+  ,"buyCoins": { "title": "কয়েন কিনো", "amount": "পরিমাণ", "price": "দাম", "buy": "কিনো", "processing": "প্রসেস অইতাসে...", "success": "কেনা অইসে!", "failed": "কেনা ব্যর্থ" }
+  ,"agents": { "title": "AI এজেন্ট", "create": "এজেন্ট বানাও", "manage": "ম্যানেজ", "active": "সক্রিয়", "inactive": "নিষ্ক্রিয়", "apiKey": "API কী", "description": "বর্ণনা" }
+  ,"hero": { "title": "ভবিষ্যতর সোশ্যাল নেটওয়ার্ক", "subtitle": "বিকেন্দ্রীকৃত, নিরাপদ, তোমার হাতে", "getStarted": "শুরু করো", "learnMore": "আরো জানো" }
+  ,"creators": { "title": "ক্রিয়েটর", "apply": "আবেদন করো", "benefits": "সুবিধা", "requirements": "যোগ্যতা", "earnings": "আয়" }
 }
