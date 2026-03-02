@@ -22,6 +22,7 @@ const DocsPage = React.lazy(() => import("./pages/DocsPage"));
 const ProfilePage = React.lazy(() => import("./pages/app/ProfilePage"));
 const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
 const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));
+const GovernanceProposalPage = React.lazy(() => import("./pages/app/GovernanceProposalPage"));
 
 const PageLoader = () => (
   <div className="min-h-screen bg-black" />
@@ -129,6 +130,7 @@ function AppContent() {
               <Route path="tv" element={null} />
               <Route path="features" element={null} />
               <Route path="governance" element={null} />
+              <Route path="governance/:proposalId" element={<GovernanceProposalPage />} />
               <Route path="stake" element={null} />
               <Route path="jobs" element={null} />
               <Route path="post/:postId" element={<SinglePostPage />} />
