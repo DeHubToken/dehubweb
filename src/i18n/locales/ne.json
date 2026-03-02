@@ -528,5 +528,6 @@
     "active": "सक्रिय",
     "inactive": "निष्क्रिय",
     "delete": "मेट्नुहोस्"
-  }
+  },
+  "sidebar": { "talkOfTheTown": "शहरको चर्चा", "nothingTrending": "अहिले केही ट्रेन्डिङ छैन" }
 }

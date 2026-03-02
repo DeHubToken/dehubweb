@@ -976,5 +976,6 @@
     "backToBlog": "Блогқа қайту",
     "sharePost": "Жазбаны бөлісу",
     "relatedPosts": "Байланысты жазбалар"
-  }
+  },
+  "sidebar": { "talkOfTheTown": "Қаланың әңгімесі", "nothingTrending": "Қазір ештеңе трендте емес" }
 }

@@ -1040,5 +1040,6 @@
     "hoursAgo": "{{count}} होरापूर्वम्",
     "daysAgo": "{{count}} दिनपूर्वम्",
     "monthsAgo": "{{count}} मासपूर्वम्"
-  }
+  },
+  "sidebar": { "talkOfTheTown": "नगरस्य चर्चा", "nothingTrending": "अधुना किमपि प्रचलितं नास्ति" }
 }

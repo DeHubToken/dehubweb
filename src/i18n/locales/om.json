@@ -754,5 +754,6 @@
     "active": "Hojii irra",
     "inactive": "Hojii irra miti",
     "delete": "Haqi"
-  }
+  },
+  "sidebar": { "talkOfTheTown": "Dubbii Magaalaa", "nothingTrending": "Ammatti wanti trending hin jiru" }
 }
