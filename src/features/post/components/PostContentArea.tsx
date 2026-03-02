@@ -611,7 +611,7 @@ export function PostContentArea({
                   }
                 }
               }}
-              data-placeholder={hasVideo ? "Add a title..." : "What's happening?"}
+              data-placeholder={hasVideo ? "First line used as title..." : "What's happening?"}
               className="w-full bg-transparent text-white text-base sm:text-lg resize-none outline-none min-h-[48px] sm:min-h-[60px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 sm:empty:before:text-white/70 empty:before:pointer-events-none"
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
             />
