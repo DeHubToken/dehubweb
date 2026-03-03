@@ -144,6 +144,8 @@ export function FundActions() {
           </div>
         </DrawerContent>
       </Drawer>
+      {/* Swap Drawer */}
+      <SwapDrawer open={swapOpen} onOpenChange={setSwapOpen} />
     </>
   );
 }
