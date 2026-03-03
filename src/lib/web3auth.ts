@@ -388,7 +388,43 @@ async function getWeb3AuthClientId(): Promise<string> {
   return pendingClientIdFetch;
 }
 
+/**
+ * Detect a stale-deployment chunk load failure.
+ * When a new build is deployed, old JS files that reference stale chunk hashes
+ * (e.g. index-Cojt35o4.js) receive an HTML 404 page instead of JS, triggering this error.
+ * The only fix is a page reload to pick up the fresh HTML with correct chunk URLs.
+ */
+function isChunkLoadError(err: unknown): boolean {
+  const msg = String(err).toLowerCase();
+  return (
+    msg.includes('dynamically imported module') ||
+    msg.includes('error while initializing connector') ||
+    (msg.includes('failed to fetch') && msg.includes('.js'))
+  );
+}
+
+const CHUNK_RELOAD_KEY = 'web3auth-chunk-reload-attempted';
+
+/**
+ * Force a one-time page reload when a stale-chunk error is detected.
+ * SessionStorage flag prevents infinite reload loops.
+ */
+function handleChunkLoadError(): Promise<never> {
+  const alreadyReloaded = sessionStorage.getItem(CHUNK_RELOAD_KEY);
+  if (!alreadyReloaded) {
+    sessionStorage.setItem(CHUNK_RELOAD_KEY, 'true');
+    console.warn('[Web3Auth] Stale deployment detected — reloading page to get fresh assets...');
+    window.location.reload();
+    return new Promise<never>(() => {}); // never resolves — reload is in progress
+  }
+  // Already reloaded once, don't loop — clear flag and let the error surface
+  sessionStorage.removeItem(CHUNK_RELOAD_KEY);
+  return Promise.reject(new Error('Web3Auth chunk load failed after page reload. Please clear your browser cache.'));
+}
+
 function isRetryableInitError(err: unknown): boolean {
+  // Chunk load errors need a page reload, not a retry
+  if (isChunkLoadError(err)) return false;
   const msg = String(err).toLowerCase() + (err instanceof Error ? ' ' + String((err as any).cause || '').toLowerCase() : '');
   return (
     msg.includes('failed to fetch') ||
@@ -484,6 +520,11 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         lastError = error;
         console.error(`[Web3Auth] INITIALIZATION FAILED (attempt ${attempt + 1}/${INIT_RETRIES}):`, error);
         web3authInstance = null;
+
+        // Stale deployment: chunk hash no longer exists on server → reload page
+        if (isChunkLoadError(error)) {
+          throw await handleChunkLoadError();
+        }
 
         if (attempt < INIT_RETRIES - 1 && isRetryableInitError(error)) {
           console.warn(`[Web3Auth] Will retry in ${RETRY_DELAYS[attempt] / 1000}s (rate limit / fetch error)`);
@@ -584,11 +625,17 @@ export async function connectToSocialProvider(
     lastConnectedConnector = WALLET_CONNECTORS.AUTH;
     return provider;
   } catch (err) {
-    // Log all non-cancellation errors for debugging
     const errMsg = String(err);
     const isCancellation = /user (rejected|denied|closed|cancel)|popup.?closed|aborted|modal closed/i.test(errMsg);
     if (!isCancellation) {
       console.error(`[Web3Auth] connectToSocialProvider FAILED for ${authConnection}:`, err);
+    }
+
+    // Connector not ready: the 'auth' connector chunk failed to load (stale deployment).
+    // Force a page reload so the user gets fresh assets — same as the init chunk handler.
+    if (errMsg.toLowerCase().includes('connector is not ready') || errMsg.toLowerCase().includes('not ready yet')) {
+      console.warn('[Web3Auth] Auth connector not ready — likely stale deployment. Reloading...');
+      throw await handleChunkLoadError();
     }
 
     if (isPopupBlockedError(err) && !forceRedirectMode) {
