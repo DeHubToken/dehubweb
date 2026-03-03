@@ -612,7 +612,7 @@ export default function BuyCoinsPage() {
             ) : (
                 <div
                   ref={purchaseListRef}
-                  className="space-y-0 divide-y divide-zinc-800 max-h-[400px] overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                  className="space-y-0 max-h-[400px] overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 onScroll={(e) => {
                   const el = e.currentTarget;
                   if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100 && hasNextPage && !isFetchingNextPage) {
