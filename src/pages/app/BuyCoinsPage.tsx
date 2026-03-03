@@ -321,13 +321,13 @@ export default function BuyCoinsPage() {
           
           <div className="grid grid-cols-3 gap-2">
             {PRESET_AMOUNTS.map((amount) => {
-              const isActive = selectedAmount === amount && !customAmount;
+              const isActive = selectedAmount === amount;
               return (
                 <button
                   key={amount}
                   onClick={() => {
                     setSelectedAmount(amount);
-                    setCustomAmount('');
+                    setCustomAmount(String(amount));
                   }}
                   className={`relative py-3 rounded-xl font-medium transition-colors ${
                     isActive ? 'text-white' : 'bg-zinc-800 text-white hover:bg-zinc-700'
@@ -379,11 +379,6 @@ export default function BuyCoinsPage() {
 
         {/* Price Summary */}
         <div className="bg-zinc-900 rounded-2xl p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-zinc-400">{t('buyCoins.youPay')}</span>
-            <span className="text-white font-semibold text-lg">${effectiveAmount.toFixed(2)}</span>
-          </div>
-          
           <div>
             <div className="flex items-center justify-between">
               <span className="text-zinc-400">{t('buyCoins.youReceive')}</span>
