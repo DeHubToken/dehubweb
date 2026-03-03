@@ -24,6 +24,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'dyu', name: 'Jula', nativeName: 'Julakan' },
   { code: 'om', name: 'Oromo', nativeName: 'Afaan Oromoo' },
   { code: 'af', name: 'Afrikaans', nativeName: 'Afrikaans' },
+  { code: 'az', name: 'Azerbaijani', nativeName: 'Azərbaycan' },
   { code: 'am', name: 'Amharic', nativeName: 'አማርኛ' },
   { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
   { code: 'acm', name: 'Arabic, Mesopotamian Spoken', nativeName: 'عراقي' },
