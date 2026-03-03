@@ -132,13 +132,6 @@ export default function BuyCoinsPage() {
     staleTime: 30 * 1000,
   });
 
-  // Set default token when tokens load
-  useEffect(() => {
-    if (tokens && tokens.length > 0 && !selectedToken) {
-      const dhbToken = tokens.find(t => t.symbol === 'DHB');
-      setSelectedToken(dhbToken || tokens[0]);
-    }
-  }, [tokens, selectedToken]);
 
   // Invalidate wallet balances helper
   const refreshWalletBalances = useCallback(() => {
