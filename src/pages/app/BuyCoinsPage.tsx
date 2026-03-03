@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import { ShimmerHoverEffect } from '@/components/ui/shimmer-hover-effect';
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getDPayPrice,
