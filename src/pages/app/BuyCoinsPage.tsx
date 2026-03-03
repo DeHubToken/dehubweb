@@ -131,22 +131,26 @@ export default function BuyCoinsPage() {
 
       try {
         const status = await getDPaySessionStatus(sessionId);
-        console.log('[Buy] Polling session status:', status);
+          console.log('[Buy] Polling session status:', JSON.stringify(status));
 
-        if (status.tokenSendStatus === 'sent') {
-          clearInterval(pollingRef.current!);
-          pollingRef.current = null;
-          setPurchaseStatus('success');
-          toast.success('Tokens delivered to your wallet!');
-          refreshWalletBalances();
-        } else if (status.tokenSendStatus === 'failed' || status.status_stripe === 'failed' || status.status_stripe === 'canceled' || status.status_stripe === 'expired') {
-          clearInterval(pollingRef.current!);
-          pollingRef.current = null;
-          setPurchaseStatus('failed');
-          toast.error('Purchase failed. Please try again.');
-        } else if (status.status_stripe === 'succeeded' && (!status.tokenSendStatus || status.tokenSendStatus === 'queued' || status.tokenSendStatus === 'sending')) {
-          // Payment succeeded, tokens still processing — keep polling
-        }
+          const sendStatus = (status.tokenSendStatus || '').toLowerCase();
+          const stripeStatus = (status.status_stripe || '').toLowerCase();
+
+          // Success: tokens delivered
+          if (sendStatus === 'sent' || sendStatus === 'completed' || sendStatus === 'success') {
+            clearInterval(pollingRef.current!);
+            pollingRef.current = null;
+            setPurchaseStatus('success');
+            toast.success('Tokens delivered to your wallet!');
+            refreshWalletBalances();
+          } else if (sendStatus === 'failed' || stripeStatus === 'failed' || stripeStatus === 'canceled' || stripeStatus === 'expired') {
+            clearInterval(pollingRef.current!);
+            pollingRef.current = null;
+            setPurchaseStatus('failed');
+            toast.error('Purchase failed. Please try again.');
+          } else if (stripeStatus === 'succeeded' || stripeStatus === 'complete' || stripeStatus === 'paid') {
+            // Payment succeeded, tokens still processing — keep polling
+          }
       } catch (err) {
         console.warn('[Buy] Polling error:', err);
       }
@@ -456,6 +460,18 @@ export default function BuyCoinsPage() {
                 <p className="text-sm text-white/60">
                   Payment received! Delivering tokens to your wallet...
                 </p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="mt-1 text-white/40 hover:text-white/70 text-xs"
+                  onClick={() => {
+                    if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
+                    setPurchaseStatus('idle');
+                    refreshWalletBalances();
+                  }}
+                >
+                  Dismiss — check wallet manually
+                </Button>
               </div>
             )}
             {purchaseStatus === 'success' && (
