@@ -362,16 +362,23 @@ export async function getDPayTransactions(): Promise<DPayTransaction[]> {
     const transactions = data?.tnxs || data?.result || data?.transactions || data || [];
     
     if (Array.isArray(transactions)) {
-      return transactions.map((tx: any) => ({
-        id: tx._id || tx.id,
-        type: tx.type || 'buy',
-        amount: tx.amount,
-        tokenSymbol: tx.tokenSymbol || tx.symbol || 'DHB',
-        status: tx.status || 'completed',
-        createdAt: tx.createdAt || tx.created_at,
-        txHash: tx.txHash || tx.hash,
-        chainId: tx.chainId || tx.chain_id,
-      }));
+      return transactions
+        .filter((tx: any) => {
+          const status = tx.status_stripe || tx.status || '';
+          return status === 'complete' || status === 'completed';
+        })
+        .map((tx: any) => ({
+          id: tx._id || tx.id,
+          type: (tx.type === 'buy_token' || tx.type === 'buy') ? 'buy' : (tx.type || 'buy'),
+          amount: tx.amount,
+          tokenReceived: tx.tokenReceived ? parseFloat(tx.tokenReceived) : undefined,
+          tokenSymbol: tx.tokenSymbol || tx.symbol || 'DHB',
+          status: 'completed' as const,
+          createdAt: tx.createdAt || tx.created_at,
+          txHash: tx.tokenSendTxnHash || tx.txHash || tx.hash,
+          chainId: tx.chainId || tx.chain_id,
+          receiverAddress: tx.receiverAddress || tx.receiver_address,
+        }));
     }
 
     return [];
