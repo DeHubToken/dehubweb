@@ -108,6 +108,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt' },
   { code: 'sa', name: 'Sanskrit', nativeName: 'संस्कृतम्' },
   { code: 'yo', name: 'Yoruba', nativeName: 'Yorùbá' },
+  { code: 'no', name: 'Norwegian', nativeName: 'Norsk' },
   { code: 'fi', name: 'Finnish', nativeName: 'Suomi' },
   { code: 'zu', name: 'Zulu', nativeName: 'isiZulu' },
 ];
