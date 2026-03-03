@@ -600,7 +600,7 @@ export default function BuyCoinsPage() {
           <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800">
             <div className="flex items-center gap-2 mb-1">
               <Package className="w-4 h-4 text-zinc-400" />
-              <span className="text-sm text-zinc-400">Available Supply</span>
+              <span className="text-sm text-zinc-400">Available to buy now</span>
             </div>
             <div className="flex items-center gap-2">
               <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
