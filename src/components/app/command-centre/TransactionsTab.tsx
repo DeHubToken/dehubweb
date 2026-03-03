@@ -308,7 +308,7 @@ export function TransactionsTab() {
       {/* Transaction List */}
       <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
         <div className="flex items-center justify-between mb-4">
-          <span className="text-white font-semibold">Transaction list</span>
+          <span className="text-white font-semibold">Recent</span>
           <span className="text-xs text-zinc-500">
             {filteredTransactions.length} transaction{filteredTransactions.length !== 1 ? 's' : ''}
           </span>
