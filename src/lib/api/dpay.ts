@@ -365,7 +365,7 @@ export async function getDPayTransactions(): Promise<DPayTransaction[]> {
   }
 
   try {
-    const response = await fetch(`${DEHUB_API_BASE}/api/dpay/tnxs`, {
+    const response = await fetch(`${DEHUB_API_BASE}/api/dpay/tnxs?limit=100`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
