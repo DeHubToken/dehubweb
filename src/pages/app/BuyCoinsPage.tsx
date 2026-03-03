@@ -627,27 +627,28 @@ export default function BuyCoinsPage() {
                     : null;
                   return (
                     <div key={tx.id} className="flex items-center py-2.5 first:pt-0 last:pb-0">
-                      <div className="min-w-0 flex-1">
-                        <span className="text-sm text-zinc-300 truncate block">
-                          Purchased ${tx.amount} of Coins
-                        </span>
-                        {shortAddr && (
-                          <span className="text-xs text-zinc-500 font-mono">{shortAddr}</span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 ml-3 flex-shrink-0">
-                        <span className="text-zinc-500 text-xs whitespace-nowrap">{dateStr}</span>
-                        {explorerUrl ? (
-                          <a href={explorerUrl} target="_blank" rel="noopener noreferrer"
-                            className="inline-flex items-center px-2.5 py-1 rounded-lg bg-gradient-to-br from-white/15 via-white/8 to-white/5 backdrop-blur-xl border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] hover:from-white/25 hover:via-white/12 hover:to-white/8 transition-all cursor-pointer"
-                          >
-                            <span className="text-[11px] text-white whitespace-nowrap leading-none">View Tx</span>
-                          </a>
-                        ) : (
-                          <div className="w-[58px]" />
-                        )}
-                      </div>
-                    </div>
+                       <div className="min-w-0 flex-1">
+                         <span className="text-sm text-zinc-300 truncate block">
+                           {tx.status === 'completed' ? '✅' : tx.status === 'failed' ? '❌' : '⏳'}{' '}
+                           ${tx.amount} — {tx.approxTokensToReceive ? `~${Number(tx.approxTokensToReceive).toLocaleString()} DHB` : `${tx.tokenSymbol}`}
+                         </span>
+                         {shortAddr && (
+                           <span className="text-xs text-zinc-500 font-mono">{shortAddr}</span>
+                         )}
+                       </div>
+                       <div className="flex items-center gap-2 ml-3 flex-shrink-0">
+                         <span className="text-zinc-500 text-xs whitespace-nowrap">{dateStr}</span>
+                         {explorerUrl ? (
+                           <a href={explorerUrl} target="_blank" rel="noopener noreferrer"
+                             className="inline-flex items-center px-2.5 py-1 rounded-lg bg-gradient-to-br from-white/15 via-white/8 to-white/5 backdrop-blur-xl border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] hover:from-white/25 hover:via-white/12 hover:to-white/8 transition-all cursor-pointer"
+                           >
+                             <span className="text-[11px] text-white whitespace-nowrap leading-none">View Tx</span>
+                           </a>
+                         ) : (
+                           <div className="w-[58px]" />
+                         )}
+                       </div>
+                     </div>
                   );
                 })}
                 {isFetchingNextPage && (
