@@ -44,6 +44,13 @@ const TOKEN_ICONS: Record<string, string> = {
   WBNB: bnbLogo,
 };
 
+const fmtBal = (v: string) => {
+  const n = parseFloat(v);
+  if (isNaN(n) || n === 0) return '0';
+  if (n < 0.01) return '<0.01';
+  return n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+};
+
 // Grouped token: combines balances across chains
 interface GroupedToken {
   symbol: string;
@@ -325,7 +332,7 @@ export default function FullWalletPage() {
                     {chainInfo && <img src={chainInfo.icon} alt={chainInfo.name} className="w-6 h-6 rounded-md" />}
                     <div className="text-left flex-1 min-w-0">
                       <span className="text-sm font-medium text-white">{chainInfo?.name || `Chain ${token.chainId}`}</span>
-                      <p className="text-xs text-zinc-400">{token.formattedBalance} {token.symbol}</p>
+                      <p className="text-xs text-zinc-400">{fmtBal(token.formattedBalance)} {token.symbol}</p>
                     </div>
                   </button>
                 );
@@ -444,7 +451,7 @@ function GroupedTokenRow({ grouped, onClick }: { grouped: GroupedToken; onClick:
         </div>
       </div>
       <div className="text-right">
-        <span className={`text-sm font-medium ${hasBalance ? 'text-white' : 'text-zinc-600'}`}>{grouped.totalFormattedBalance}</span>
+        <span className={`text-sm font-medium ${hasBalance ? 'text-white' : 'text-zinc-600'}`}>{fmtBal(grouped.totalFormattedBalance)}</span>
       </div>
     </motion.div>
   );
@@ -479,7 +486,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, w
             <div>
               <span className="block">{grouped.symbol}</span>
               <span className="text-xs text-zinc-500 font-normal">
-                {grouped.totalFormattedBalance} {grouped.symbol}
+                {fmtBal(grouped.totalFormattedBalance)} {grouped.symbol}
               </span>
             </div>
           </DrawerTitle>
