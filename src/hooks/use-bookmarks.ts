@@ -246,17 +246,44 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
     ? (ppvQuery.data || [])
     : (activeQuery.data?.pages.flatMap(page => page.items) || []);
   
+  // Fetch user's PPV purchases to cross-reference unlock state
+  const ppvPurchasesQuery = useQuery({
+    queryKey: ['ppv-purchases-lookup', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return new Set<string>();
+      const { data, error } = await supabase
+        .from('ppv_purchases')
+        .select('token_id')
+        .eq('buyer_address', walletAddress.toLowerCase());
+      if (error) throw error;
+      return new Set((data || []).map(p => String(p.token_id)));
+    },
+    enabled: !!walletAddress && isAuthenticated,
+    staleTime: 2 * 60 * 1000,
+  });
+  const purchasedTokenIds = ppvPurchasesQuery.data || new Set<string>();
+
   // Map to feed items
   let feedItems = allNFTs.map(mapNFTToFeedItem);
   
-  // Mark PPV items as unlocked since user already paid
-  if (isPPVTab) {
-    feedItems = feedItems.map(item => {
-      if (item.type === 'video') return { ...item, isUnlocked: true };
-      if (item.type === 'image') return { ...item, isUnlocked: true };
-      return item;
-    });
-  }
+  // For PPV tab, mark all as unlocked (they're all purchased).
+  // For other tabs, only unlock PPV items the user has actually purchased.
+  feedItems = feedItems.map(item => {
+    if (item.type === 'post') return item;
+    const isPPVItem = ('isPPV' in item && item.isPPV);
+    if (!isPPVItem) return item;
+    
+    if (isPPVTab) {
+      return { ...item, isUnlocked: true };
+    }
+    // For non-PPV tabs: only unlock if user purchased this token
+    const hasPurchased = purchasedTokenIds.has(String(item.id));
+    if (hasPurchased) {
+      return { ...item, isUnlocked: true };
+    }
+    // Ensure PPV stays locked - don't let missing API flags bypass gating
+    return item;
+  });
   
   // Apply type filtering
   if (type === 'images') {
