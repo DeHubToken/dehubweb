@@ -185,6 +185,7 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   km: () => import('./locales/km.json'),
   kk: () => import('./locales/kk.json'),
   kn: () => import('./locales/kn.json'),
+  ku: () => import('./locales/ku.json'),
   lo: () => import('./locales/lo.json'),
   mag: () => import('./locales/mag.json'),
   qu: () => import('./locales/qu.json'),
