@@ -71,7 +71,7 @@ export function GlassFilterRow<T extends string>({
       {/* Scrollable button row */}
       <div
         ref={scrollRef}
-        className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1"
+        className="relative z-20 flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1"
         style={{ touchAction: 'pan-x' }}
       >
         {items.map((item) => {
