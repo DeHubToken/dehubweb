@@ -47,7 +47,8 @@ export function BalanceCard() {
     });
   }, [allTokens]);
 
-  const formattedBalance = Math.round(badgeBalance ?? 0).toLocaleString();
+  const rawBalance = badgeBalance ?? 0;
+  const formattedBalance = rawBalance === 0 ? '0' : rawBalance > 0 && rawBalance < 0.01 ? '<0.01' : Math.round(rawBalance).toLocaleString();
   const isLoading = badgeLoading || tokensLoading;
 
   if (!isAuthenticated) {
