@@ -61,6 +61,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   lo: 'Lao',
   mag: 'Magahi',
   ar: 'Arabic',
+  az: 'Azerbaijani',
   aec: "Arabic, Sa'idi Spoken",
   acm: 'Arabic, Mesopotamian Spoken',
   acw: 'Arabic, Hijazi Spoken',
