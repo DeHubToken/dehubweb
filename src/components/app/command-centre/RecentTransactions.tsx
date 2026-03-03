@@ -34,6 +34,8 @@ interface UnifiedTransaction {
   description: string;
   counterpartyAddress?: string;
   counterpartyUsername?: string;
+  txHash?: string;
+  chainId?: number;
 }
 
 function formatDPayTx(tx: DPayTransaction, t: (key: string, opts?: any) => string): UnifiedTransaction {
