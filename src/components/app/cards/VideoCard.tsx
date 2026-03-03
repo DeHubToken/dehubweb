@@ -380,7 +380,9 @@ interface ExpandableDescriptionProps {
   isImmersive: boolean;
 }
 
-function ExpandableDescription({ description, isImmersive }: ExpandableDescriptionProps) {
+function ExpandableDescription({ description: rawDescription, isImmersive }: ExpandableDescriptionProps) {
+  // Normalize consecutive newlines so double-breaks become single-breaks
+  const description = rawDescription.replace(/\n{2,}/g, '\n');
   const [isExpanded, setIsExpanded] = useState(false);
   const [needsExpansion, setNeedsExpansion] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
