@@ -41,7 +41,7 @@ export function BalanceCard() {
         name: NAMES[symbol],
         logo: LOGOS[symbol],
         balance: total > 0
-          ? total < 0.01 ? '<0.01' : total.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })
+          ? total < 0.01 ? total.toFixed(6) : total.toFixed(4).replace(/\.?0+$/, '')
           : '0.00',
       };
     });

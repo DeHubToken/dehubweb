@@ -749,7 +749,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
               <label className="text-sm text-zinc-400">{t('wallet.amount')}</label>
               {token && (
                 <button onClick={handleMax} className="text-xs text-white/60 hover:text-white transition-colors">
-                  Max: {token.formattedBalance}
+                  Max: {fmtBal(token.formattedBalance)}
                 </button>
               )}
             </div>
