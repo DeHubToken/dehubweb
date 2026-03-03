@@ -73,7 +73,7 @@ export function RoomSettingsModal({ open, onOpenChange, room, onUpdated }: RoomS
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 text-white max-w-sm">
+      <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl text-white max-w-sm">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-white">
             <Settings className="w-5 h-5" />

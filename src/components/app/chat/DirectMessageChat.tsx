@@ -673,7 +673,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
 
       {/* Delete confirmation dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent className="bg-zinc-900 border-zinc-800">
+        <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-white">Delete Conversation?</AlertDialogTitle>
             <AlertDialogDescription className="text-zinc-400">

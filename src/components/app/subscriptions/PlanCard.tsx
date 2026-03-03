@@ -130,7 +130,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
               )}
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="bg-zinc-900 border-zinc-800">
+          <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-white">Confirm Subscription</AlertDialogTitle>
               <AlertDialogDescription className="text-zinc-400">
