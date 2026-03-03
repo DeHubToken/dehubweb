@@ -65,6 +65,7 @@ import { AuthGate } from '@/components/app/AuthGate';
 import { Search } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser } from '@/lib/api/dehub';
+import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { getBlockListPaginated, unblockUser as apiUnblockUser, type BlockedUser, checkUsernameAvailability } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
@@ -358,25 +359,46 @@ function ProfileSettings() {
     mutationFn: async (data: UpdateProfileData) => {
       return updateProfile(data);
     },
-    onSuccess: async () => {
+    onSuccess: async (_result, variables) => {
       toast.success(t('settings.profileUpdated'));
+      
+      // Optimistically update profile cache with local previews so avatar/cover
+      // appear instantly everywhere, instead of waiting for CDN propagation.
+      if (variables.avatarImg || variables.coverImg) {
+        queryClient.setQueriesData<ProfileData>(
+          { queryKey: ['dehub-profile'] },
+          (old) => {
+            if (!old) return old;
+            return {
+              ...old,
+              ...(variables.avatarImg && avatarPreview ? { avatarUrl: avatarPreview } : {}),
+              ...(variables.coverImg && coverPreview ? { coverUrl: coverPreview } : {}),
+            };
+          }
+        );
+        // Also update user in AuthContext immediately
+        if (variables.avatarImg && avatarPreview) {
+          queryClient.invalidateQueries({ queryKey: ['profile-avatar'] });
+        }
+      }
+
       setAvatarFile(undefined);
       setCoverFile(undefined);
       await refreshUser();
       if (authUser?.address) {
         const userData = await getAccountInfo(authUser.address);
-        const customs = userData.customs as Record<string, string> | undefined;
+        const rawUser = userData as Record<string, unknown>;
         setOriginalValues({
           displayName: userData.displayName || userData.display_name || '',
           username: userData.username || '',
           bio: userData.aboutMe || userData.bio || '',
-          twitterLink: customs?.twitterLink || '',
-          discordLink: customs?.discordLink || '',
-          instagramLink: customs?.instagramLink || '',
-          tiktokLink: customs?.tiktokLink || '',
-          youtubeLink: customs?.youtubeLink || '',
-          telegramLink: customs?.telegramLink || '',
-          facebookLink: customs?.facebookLink || '',
+          twitterLink: (rawUser.twitterLink as string) || '',
+          discordLink: (rawUser.discordLink as string) || '',
+          instagramLink: (rawUser.instagramLink as string) || '',
+          tiktokLink: (rawUser.tiktokLink as string) || '',
+          youtubeLink: (rawUser.youtubeLink as string) || '',
+          telegramLink: (rawUser.telegramLink as string) || '',
+          facebookLink: (rawUser.facebookLink as string) || '',
         });
       }
       queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
