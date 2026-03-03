@@ -48,15 +48,13 @@ export function FundActions() {
   return (
     <>
       {/* Add Funds Button */}
-      <Button variant="glass" className="flex-1 text-sm h-9 px-2.5 sm:px-4 rounded-xl" onClick={() => setAddFundsOpen(true)}>
-        <ArrowDownToLine className="w-3.5 h-3.5 sm:mr-1.5" />
-        <span className="hidden sm:inline">{t('commandCentre.addFunds')}</span>
+      <Button variant="glass" className="flex-1 h-9 rounded-xl flex items-center justify-center" onClick={() => setAddFundsOpen(true)}>
+        <ArrowDownToLine className="w-4 h-4" />
       </Button>
 
       {/* Withdraw Button */}
-      <Button variant="glass" className="flex-1 text-sm h-9 px-2.5 sm:px-4 rounded-xl" onClick={() => setWithdrawOpen(true)}>
-        <ArrowUpFromLine className="w-3.5 h-3.5 sm:mr-1.5" />
-        <span className="hidden sm:inline">{t('commandCentre.withdraw')}</span>
+      <Button variant="glass" className="flex-1 h-9 rounded-xl flex items-center justify-center" onClick={() => setWithdrawOpen(true)}>
+        <ArrowUpFromLine className="w-4 h-4" />
       </Button>
 
       {/* Add Funds Drawer */}

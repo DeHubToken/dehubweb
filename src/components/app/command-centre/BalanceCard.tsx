@@ -99,11 +99,10 @@ export function BalanceCard() {
         <FundActions />
         <Button
           variant="glass"
-          className="flex-1 rounded-xl"
+          className="flex-1 h-9 rounded-xl flex items-center justify-center"
           onClick={() => navigate('/app/wallet', { state: { from: 'command-centre' } })}
         >
-          <Wallet className="w-3.5 h-3.5 mr-1.5" />
-          {t('commandCentre.fullWallet')}
+          <Wallet className="w-4 h-4" />
         </Button>
       </div>
     </div>
