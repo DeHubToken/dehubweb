@@ -425,7 +425,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
 
       {/* Leave confirmation */}
       <AlertDialog open={showLeaveConfirm} onOpenChange={setShowLeaveConfirm}>
-        <AlertDialogContent className="bg-zinc-900 border-zinc-800">
+        <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-white">Leave Group?</AlertDialogTitle>
             <AlertDialogDescription className="text-zinc-400">

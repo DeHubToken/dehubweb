@@ -98,7 +98,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-900/95 backdrop-blur-xl border-white/10 text-white max-w-md max-h-[85vh] overflow-y-auto">
+      <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl text-white max-w-md max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Star className="w-5 h-5 text-yellow-400" />

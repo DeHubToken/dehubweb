@@ -311,7 +311,7 @@ function GovernanceCard({
           if (isMobile) {
             return (
               <Drawer open={showComments} onOpenChange={setShowComments}>
-                <DrawerContent className="bg-black/90 backdrop-blur-[24px] border-white/10 px-4 pb-6 max-h-[70vh]">
+                <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-white/10 px-4 pb-6 max-h-[70vh]">
                   <DrawerHeader className="px-0 pt-2 pb-0">
                     <DrawerTitle className="text-white text-sm">{t('governance.comments', 'Comments')}</DrawerTitle>
                   </DrawerHeader>
