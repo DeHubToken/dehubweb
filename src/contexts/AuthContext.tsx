@@ -820,8 +820,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('[Auth] [REDIRECT] Sequence failed:', err);
       authLogger.error('Social auth sequence failed (redirect)', {
         errorMessage: err.message || String(err),
-        sigLength: typeof signature !== 'undefined' ? signature?.length : 'N/A',
-        address: typeof authAddressForApi !== 'undefined' ? authAddressForApi : 'N/A',
+        sigLength: 'N/A',
+        address: 'N/A',
       }, err);
       toast.error(err.message || 'Authentication failed', { id: 'auth-redirect' });
       setIsProcessingRedirect(false);
@@ -921,8 +921,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('[Auth] [POPUP] Sequence failed:', err);
       authLogger.error('Social auth sequence failed (popup)', {
         errorMessage: err.message || String(err),
-        sigLength: typeof signature !== 'undefined' ? signature?.length : 'N/A',
-        address: typeof authAddressForApi !== 'undefined' ? authAddressForApi : 'N/A',
+        sigLength: 'N/A',
+        address: 'N/A',
       }, err);
       toast.error(err.message || 'Authentication failed', { id: 'auth-popup' });
     }
