@@ -32,7 +32,12 @@ export function BalanceCard() {
   const otherBalances = useMemo(() => {
     return OTHER_SYMBOLS.map(symbol => {
       const matching = allTokens.filter(t => t.symbol === symbol);
+      let hasSmallBalance = false;
       const total = matching.reduce((sum, t) => {
+        if (t.formattedBalance === '<0.01') {
+          hasSmallBalance = true;
+          return sum;
+        }
         const val = parseFloat(t.formattedBalance);
         return sum + (isNaN(val) ? 0 : val);
       }, 0);
@@ -42,7 +47,7 @@ export function BalanceCard() {
         logo: LOGOS[symbol],
         balance: total > 0
           ? total < 0.01 ? '<0.01' : total.toFixed(4).replace(/\.?0+$/, '')
-          : '0',
+          : hasSmallBalance ? '<0.01' : '0',
       };
     });
   }, [allTokens]);
