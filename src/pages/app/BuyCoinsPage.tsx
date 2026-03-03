@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, CreditCard, Wallet, Loader2, Check, ChevronDown, AlertCircle, Zap, CheckCircle2, XCircle, TrendingUp, Activity, Package } from 'lucide-react';
+import { ArrowLeft, CreditCard, Wallet, Loader2, Check, ChevronDown, AlertCircle, Zap, CheckCircle2, XCircle, TrendingUp, Activity, Package, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
@@ -24,6 +24,7 @@ import {
   type DPayTransaction,
 } from '@/lib/api/dpay';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import {
   Drawer,
   DrawerContent,
@@ -57,6 +58,7 @@ export default function BuyCoinsPage() {
   // Post-purchase state
   const [purchaseStatus, setPurchaseStatus] = useState<'idle' | 'polling' | 'success' | 'failed'>('idle');
   const [purchaseSessionId, setPurchaseSessionId] = useState<string | null>(null);
+  const [txSearch, setTxSearch] = useState('');
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Fetch available tokens
@@ -591,26 +593,45 @@ export default function BuyCoinsPage() {
         {/* Purchase History */}
         <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800">
           <h3 className="text-white font-semibold mb-3 text-center">Recent Purchases</h3>
+          
+          {/* Search */}
+          <div className="relative mb-3">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <Input
+              type="text"
+              placeholder="Search wallet address..."
+              value={txSearch}
+              onChange={(e) => setTxSearch(e.target.value)}
+              className="pl-9 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl h-9 text-sm"
+            />
+          </div>
+
           {historyLoading ? (
             <div className="flex items-center justify-center py-6">
               <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
             </div>
           ) : purchaseHistory.length === 0 ? (
             <p className="text-zinc-500 text-sm text-center py-4">No purchases yet. Be the first!</p>
-          ) : (
-            <div className="space-y-0 divide-y divide-zinc-800">
-              {purchaseHistory.slice(0, 10).map((tx) => {
-                const dateStr = tx.createdAt ? format(new Date(tx.createdAt), 'dd MMM yyyy') : '';
-                const shortAddr = tx.receiverAddress
-                  ? `${tx.receiverAddress.slice(0, 6)}...${tx.receiverAddress.slice(-4)}`
-                  : null;
-                const explorerUrl = tx.txHash
-                  ? `https://basescan.org/tx/${tx.txHash}`
-                  : null;
-                return (
-                  <div key={tx.id} className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-emerald-400" />
+          ) : (() => {
+            const filtered = txSearch.trim()
+              ? purchaseHistory.filter(tx =>
+                  tx.receiverAddress?.toLowerCase().includes(txSearch.trim().toLowerCase())
+                )
+              : purchaseHistory;
+            return filtered.length === 0 ? (
+              <p className="text-zinc-500 text-sm text-center py-4">No transactions found for that address.</p>
+            ) : (
+              <div className="space-y-0 divide-y divide-zinc-800">
+                {filtered.slice(0, 10).map((tx) => {
+                  const dateStr = tx.createdAt ? format(new Date(tx.createdAt), 'dd MMM yyyy') : '';
+                  const shortAddr = tx.receiverAddress
+                    ? `${tx.receiverAddress.slice(0, 6)}...${tx.receiverAddress.slice(-4)}`
+                    : null;
+                  const explorerUrl = tx.txHash
+                    ? `https://basescan.org/tx/${tx.txHash}`
+                    : null;
+                  return (
+                    <div key={tx.id} className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0">
                       <div className="min-w-0">
                         <span className="text-sm text-zinc-300 truncate block">
                           Purchased ${tx.amount} of Coins
@@ -619,33 +640,22 @@ export default function BuyCoinsPage() {
                           <span className="text-xs text-zinc-500 font-mono">{shortAddr}</span>
                         )}
                       </div>
+                      <div className="flex items-center gap-2 ml-3 flex-shrink-0">
+                        <span className="text-zinc-500 text-xs whitespace-nowrap">{dateStr}</span>
+                        {explorerUrl && (
+                          <a href={explorerUrl} target="_blank" rel="noopener noreferrer">
+                            <LiquidGlassBubble className="cursor-pointer px-2 py-0.5">
+                              <span className="text-xs text-white whitespace-nowrap">View Tx</span>
+                            </LiquidGlassBubble>
+                          </a>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 ml-3">
-                      {explorerUrl ? (
-                        <a
-                          href={explorerUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs px-1.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition-colors"
-                        >
-                          View Tx
-                        </a>
-                      ) : (
-                        <span className={`text-xs px-1.5 py-0.5 rounded-md ${
-                          tx.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
-                          tx.status === 'failed' ? 'bg-red-500/20 text-red-400' :
-                          'bg-zinc-700 text-zinc-400'
-                        }`}>
-                          {tx.status}
-                        </span>
-                      )}
-                      <span className="text-zinc-500 text-xs whitespace-nowrap">{dateStr}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+                  );
+                })}
+              </div>
+            );
+          })()}
         </div>
 
         {/* Disclaimer */}
