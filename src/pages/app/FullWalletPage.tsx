@@ -355,7 +355,7 @@ export default function FullWalletPage() {
 
       {/* Receive Dialog */}
       <Dialog open={receiveDialogOpen} onOpenChange={setReceiveDialogOpen}>
-        <DialogContent className="bg-zinc-900 border-zinc-800 sm:max-w-sm">
+        <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl sm:max-w-sm">
           <DialogHeader>
             <DialogTitle className="text-white">{t('wallet.receiveTokens')}</DialogTitle>
           </DialogHeader>
@@ -365,9 +365,9 @@ export default function FullWalletPage() {
                 <QrCode className="w-32 h-32 text-zinc-900" />
               </div>
             </div>
-            <p className="text-xs text-zinc-500 text-center">{t('wallet.receiveDescription')}</p>
-            <div className="w-full bg-zinc-800 rounded-xl p-3">
-              <p className="text-xs text-zinc-400 font-mono break-all text-center">{walletAddress}</p>
+            <p className="text-xs text-white/40 text-center">{t('wallet.receiveDescription')}</p>
+            <div className="w-full bg-white/5 border border-white/10 rounded-xl p-3">
+              <p className="text-xs text-white/60 font-mono break-all text-center">{walletAddress}</p>
             </div>
             <Button variant="glass" className="w-full rounded-xl" onClick={handleCopy}>
               {copied ? <Check className="w-4 h-4 mr-2 text-emerald-400" /> : <Copy className="w-4 h-4 mr-2" />}
