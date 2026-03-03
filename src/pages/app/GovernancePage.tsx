@@ -14,9 +14,9 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2, ShieldCheck, Info } from 'lucide-react';
+import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2, ShieldCheck, Info, Languages, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
-import { TranslatableText } from '@/components/app/TranslatableText';
+import { TranslatableText, SharedTranslationProvider, useSharedTranslationControl } from '@/components/app/TranslatableText';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -160,9 +160,11 @@ function GovernanceCard({
         <span className="text-zinc-500 text-[10px] shrink-0 pt-1">{formatTimeAgo(proposal.created_at, t)}</span>
       </div>
 
-      <div className="pt-1 space-y-2">
-        <TranslatableText text={proposal.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
-        <TranslatableText text={proposal.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />
+      <SharedTranslationProvider>
+        <div className="pt-1 space-y-2">
+          <TranslatableText text={proposal.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
+          <TranslatableText text={proposal.description} className="text-zinc-400 text-sm leading-relaxed" as="p" hideControls />
+          <ProposalTranslateButton />
 
         {/* Vote ratio bar */}
         {(() => {
@@ -188,6 +190,10 @@ function GovernanceCard({
             </div>
           );
         })()}
+
+        <div onClick={(e) => e.stopPropagation()}>
+          <ProposalTranslateButton />
+        </div>
 
         <div className="pt-1" onClick={(e) => e.stopPropagation()}>
           <ActionBar
@@ -341,7 +347,8 @@ function GovernanceCard({
             </AnimatePresence>
           );
         })()}
-      </div>
+        </div>
+      </SharedTranslationProvider>
     </div>
   );
 }
@@ -459,7 +466,22 @@ function SubmitProposalDrawer({
 }
 
 // ──────────────────────────────────────────────────
-// Skeleton
+// Inline translate button for proposal cards
+// ──────────────────────────────────────────────────
+function ProposalTranslateButton() {
+  const { isTranslated, handleTranslate, handleShowOriginal } = useSharedTranslationControl();
+
+  return (
+    <button
+      onClick={(e) => { e.stopPropagation(); isTranslated ? handleShowOriginal() : handleTranslate(); }}
+      className="flex items-center gap-1 text-zinc-500 hover:text-white transition-colors text-[11px]"
+    >
+      {isTranslated ? <RotateCcw className="w-3 h-3" /> : <Languages className="w-3.5 h-3.5" />}
+      <span>{isTranslated ? 'Original' : 'Translate'}</span>
+    </button>
+  );
+}
+
 // ──────────────────────────────────────────────────
 function GovernanceSkeletons() {
   return (
@@ -505,24 +527,28 @@ function CompletedCard({ proposal }: { proposal: GovernanceProposal }) {
         </div>
       </div>
 
-      <div className="flex-1 min-w-0">
-        <div className="flex items-start gap-2 mb-1.5">
-          <TranslatableText text={proposal.title} className="text-white font-semibold text-sm leading-tight flex-1 min-w-0" as="h3" hideControls />
-          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 ${
-            isPassed ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'
-          }`}>
-            {isPassed ? t('governance.passed') : t('governance.rejected')}
-          </span>
-        </div>
+      <SharedTranslationProvider>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start gap-2 mb-1.5">
+            <TranslatableText text={proposal.title} className="text-white font-semibold text-sm leading-tight flex-1 min-w-0" as="h3" hideControls />
+            <span className={`text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 ${
+              isPassed ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'
+            }`}>
+              {isPassed ? t('governance.passed') : t('governance.rejected')}
+            </span>
+          </div>
 
-        <TranslatableText text={proposal.description} className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`} as="p" />
+          <TranslatableText text={proposal.description} className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`} as="p" hideControls />
 
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-zinc-500 text-[11px]">{formatTimeAgo(proposal.updated_at, t)}</span>
-          <span className="text-zinc-700 text-[11px]">·</span>
-          <span className="text-zinc-500 text-[11px]">{t('governance.weightedVotesFor', { count: proposal.like_count })}</span>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-zinc-500 text-[11px]">{formatTimeAgo(proposal.updated_at, t)}</span>
+            <span className="text-zinc-700 text-[11px]">·</span>
+            <span className="text-zinc-500 text-[11px]">{t('governance.weightedVotesFor', { count: proposal.like_count })}</span>
+            <span className="text-zinc-700 text-[11px]">·</span>
+            <ProposalTranslateButton />
+          </div>
         </div>
-      </div>
+      </SharedTranslationProvider>
     </div>
   );
 }
