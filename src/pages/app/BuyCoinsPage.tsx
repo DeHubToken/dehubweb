@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, CreditCard, Wallet, Loader2, Check, ChevronDown, AlertCircle, Zap } from 'lucide-react';
+import { ArrowLeft, CreditCard, Wallet, Loader2, Check, ChevronDown, AlertCircle, Zap, CheckCircle2, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { toast } from 'sonner';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getDPayPrice,
   getDPayPriceByChain,
@@ -16,6 +16,7 @@ import {
   getTokenAvailableSupply,
   createCheckoutSession,
   createOnrampSession,
+  getDPaySessionStatus,
   type DPayToken,
 } from '@/lib/api/dpay';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -38,6 +39,8 @@ type PaymentMethod = 'card' | 'onramp';
 export default function BuyCoinsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const queryClient = useQueryClient();
   const { isAuthenticated, walletAddress } = useAuth();
   const [selectedAmount, setSelectedAmount] = useState<number>(50);
   const [customAmount, setCustomAmount] = useState('');
@@ -45,6 +48,11 @@ export default function BuyCoinsPage() {
   const [selectedToken, setSelectedToken] = useState<DPayToken | null>(null);
   const [selectedChainId, setSelectedChainId] = useState(8453);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
+
+  // Post-purchase state
+  const [purchaseStatus, setPurchaseStatus] = useState<'idle' | 'polling' | 'success' | 'failed'>('idle');
+  const [purchaseSessionId, setPurchaseSessionId] = useState<string | null>(null);
+  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Fetch available tokens
   const { data: tokens, isLoading: tokensLoading } = useQuery({
@@ -96,11 +104,87 @@ export default function BuyCoinsPage() {
     }
   }, [tokens, selectedToken]);
 
+  // Invalidate wallet balances helper
+  const refreshWalletBalances = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
+  }, [queryClient]);
+
+  // Poll for session status after Stripe checkout
+  const startPolling = useCallback((sessionId: string) => {
+    setPurchaseSessionId(sessionId);
+    setPurchaseStatus('polling');
+
+    // Clear any existing polling
+    if (pollingRef.current) clearInterval(pollingRef.current);
+
+    let attempts = 0;
+    const maxAttempts = 60; // 3 minutes at 3s intervals
+
+    pollingRef.current = setInterval(async () => {
+      attempts++;
+      if (attempts > maxAttempts) {
+        clearInterval(pollingRef.current!);
+        pollingRef.current = null;
+        setPurchaseStatus('failed');
+        toast.error('Purchase verification timed out. Check your wallet later.');
+        return;
+      }
+
+      try {
+        const status = await getDPaySessionStatus(sessionId);
+        console.log('[Buy] Polling session status:', status);
+
+        if (status.tokenSendStatus === 'sent') {
+          clearInterval(pollingRef.current!);
+          pollingRef.current = null;
+          setPurchaseStatus('success');
+          toast.success('Tokens delivered to your wallet!');
+          refreshWalletBalances();
+        } else if (status.tokenSendStatus === 'failed' || status.status_stripe === 'failed' || status.status_stripe === 'canceled' || status.status_stripe === 'expired') {
+          clearInterval(pollingRef.current!);
+          pollingRef.current = null;
+          setPurchaseStatus('failed');
+          toast.error('Purchase failed. Please try again.');
+        } else if (status.status_stripe === 'succeeded' && (!status.tokenSendStatus || status.tokenSendStatus === 'queued' || status.tokenSendStatus === 'sending')) {
+          // Payment succeeded, tokens still processing — keep polling
+        }
+      } catch (err) {
+        console.warn('[Buy] Polling error:', err);
+      }
+    }, 3000);
+  }, [refreshWalletBalances]);
+
+  // Cleanup polling on unmount
+  useEffect(() => {
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current);
+    };
+  }, []);
+
+  // Handle return from Stripe (via URL params)
+  useEffect(() => {
+    const paymentStatus = searchParams.get('payment');
+    const sessionId = searchParams.get('session_id');
+
+    if (paymentStatus === 'success' && sessionId) {
+      // Clear URL params
+      setSearchParams({}, { replace: true });
+      startPolling(sessionId);
+    } else if (paymentStatus === 'cancel') {
+      setSearchParams({}, { replace: true });
+      toast.info('Payment cancelled.');
+    }
+  }, [searchParams, setSearchParams, startPolling]);
+
   // Create checkout session mutation
   const checkoutMutation = useMutation({
     mutationFn: createCheckoutSession,
     onSuccess: (data) => {
       if (data.checkoutUrl) {
+        // Start polling immediately — user will complete in the new tab
+        if (data.sessionId) {
+          startPolling(data.sessionId);
+        }
         window.open(data.checkoutUrl, '_blank');
         toast.success(t('buyCoins.redirecting'));
       } else if (data.sessionId) {
@@ -164,12 +248,14 @@ export default function BuyCoinsPage() {
         return;
       }
 
+      const webRedirect = `${window.location.origin}/app/buy?payment=success&session_id=__SESSION_ID__`;
       checkoutMutation.mutate({
         amount: effectiveAmount,
         tokenSymbol: symbol,
         walletAddress,
         chainId: selectedChainId,
         tokensToReceive,
+        redirect: webRedirect,
       });
     }
   };
@@ -399,6 +485,56 @@ export default function BuyCoinsPage() {
           )}
           {isPending ? t('buyCoins.processing') : t('buyCoins.buy', { symbol: selectedToken?.symbol || 'DHB' })}
         </Button>
+
+        {/* Purchase Status Overlay */}
+        {purchaseStatus !== 'idle' && (
+          <div className="bg-zinc-900 rounded-2xl p-6 text-center space-y-3 border border-white/10">
+            {purchaseStatus === 'polling' && (
+              <>
+                <Loader2 className="w-10 h-10 animate-spin text-primary mx-auto" />
+                <h3 className="text-white font-semibold text-lg">Processing Purchase</h3>
+                <p className="text-sm text-zinc-400">
+                  Payment received! Delivering tokens to your wallet...
+                </p>
+              </>
+            )}
+            {purchaseStatus === 'success' && (
+              <>
+                <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
+                <h3 className="text-white font-semibold text-lg">Purchase Complete!</h3>
+                <p className="text-sm text-zinc-400">
+                  Tokens have been delivered to your wallet.
+                </p>
+                <Button
+                  variant="glass"
+                  className="mt-2"
+                  onClick={() => {
+                    setPurchaseStatus('idle');
+                    navigate('/app/wallet');
+                  }}
+                >
+                  View Wallet
+                </Button>
+              </>
+            )}
+            {purchaseStatus === 'failed' && (
+              <>
+                <XCircle className="w-10 h-10 text-red-400 mx-auto" />
+                <h3 className="text-white font-semibold text-lg">Purchase Failed</h3>
+                <p className="text-sm text-zinc-400">
+                  Something went wrong. Please try again or contact support.
+                </p>
+                <Button
+                  variant="glass"
+                  className="mt-2"
+                  onClick={() => setPurchaseStatus('idle')}
+                >
+                  Try Again
+                </Button>
+              </>
+            )}
+          </div>
+        )}
 
         {/* Disclaimer */}
         <p className="text-xs text-zinc-500 text-center px-4">
