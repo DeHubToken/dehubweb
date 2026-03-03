@@ -848,6 +848,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       let authAddressForApi: string;
       let signature: string;
 
+      // Diagnostic: log Smart Account (AA) address for comparison with mobile app
+      try {
+        const w3aDiag = await getOrInitWeb3Auth();
+        const aaProvDiag = (w3aDiag as any).aaProvider || (w3aDiag as any).accountAbstractionProvider;
+        if (aaProvDiag) {
+          const aaAccts = await aaProvDiag.request({ method: 'eth_accounts' }) as string[];
+          console.log('[Auth] [POPUP] Smart Account (AA) address:', aaAccts[0], '← compare this with mobile app wallet address');
+        }
+      } catch (e) {
+        console.warn('[Auth] [POPUP] Could not get Smart Account address for diagnostic:', e);
+      }
+
       // For social logins, try EOA direct signing to bypass AA/ERC-6492 wrapper.
       // The backend uses ecrecover which cannot verify ERC-6492/ERC-1271 signatures.
       if (isSocial) {
@@ -855,7 +867,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (eoaResult) {
           authAddressForApi = eoaResult.address;
           signature = eoaResult.signature;
-          console.log('[Auth] [POPUP] Using EOA direct signature for', authAddressForApi);
+          console.log('[Auth] [POPUP] EOA address (used for auth):', authAddressForApi, '← DeHub account for this address:', '(see username in success log)');
         } else {
           console.warn('[Auth] [POPUP] EOA direct sign unavailable, falling back to provider signing');
           // Fallback: use provider signing (may produce ERC-6492 — will likely fail on backend)
