@@ -15,7 +15,6 @@ import {
   getAvailableGasTokens,
   getTokenAvailableSupply,
   createCheckoutSession,
-  createOnrampSession,
   getDPaySessionStatus,
   type DPayToken,
 } from '@/lib/api/dpay';
@@ -34,7 +33,7 @@ const CHAINS = [
   { id: 56, name: 'BNB', color: '#F0B90B' },
 ];
 
-type PaymentMethod = 'card' | 'onramp';
+type PaymentMethod = 'card';
 
 export default function BuyCoinsPage() {
   const { t } = useTranslation();
@@ -196,27 +195,12 @@ export default function BuyCoinsPage() {
     },
   });
 
-  // Create onramp session mutation
-  const onrampMutation = useMutation({
-    mutationFn: createOnrampSession,
-    onSuccess: (data) => {
-      if (data.url) {
-        window.open(data.url, '_blank');
-        toast.success(t('buyCoins.redirectingOnramp'));
-      } else {
-        toast.success(t('buyCoins.onrampCreated'));
-      }
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || t('buyCoins.failedOnramp'));
-    },
-  });
 
   const priceData = chainPriceData || generalPriceData;
   const effectiveAmount = customAmount ? Number(customAmount) : selectedAmount;
   const tokenPrice = priceData?.price || 0;
   const estimatedTokens = tokenPrice > 0 ? effectiveAmount / tokenPrice : 0;
-  const isPending = checkoutMutation.isPending || onrampMutation.isPending;
+  const isPending = checkoutMutation.isPending;
 
   const handlePurchase = () => {
     if (!walletAddress) {
@@ -231,14 +215,7 @@ export default function BuyCoinsPage() {
     const symbol = selectedToken?.symbol || 'DHB';
     const tokensToReceive = Math.floor(estimatedTokens);
 
-    if (paymentMethod === 'onramp') {
-      onrampMutation.mutate({
-        amount: effectiveAmount,
-        currency: 'usd',
-        tokenSymbol: symbol,
-        walletAddress,
-      });
-    } else {
+    {
       // Pre-check available supply to avoid 406 from the checkout API
       const supply = availableSupply ?? Infinity;
       if (tokensToReceive > supply) {
@@ -444,23 +421,6 @@ export default function BuyCoinsPage() {
             {paymentMethod === 'card' && <Check className="w-5 h-5 text-primary" />}
           </button>
 
-          <button
-            onClick={() => setPaymentMethod('onramp')}
-            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors ${
-              paymentMethod === 'onramp'
-                ? 'bg-white/10 border border-white/20'
-                : 'bg-zinc-800 hover:bg-zinc-700 border border-transparent'
-            }`}
-          >
-            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-              <Zap className="w-5 h-5 text-yellow-400" />
-            </div>
-            <div className="flex-1 text-left">
-              <p className="text-white font-medium">{t('buyCoins.fiatOnramp')}</p>
-              <p className="text-xs text-zinc-400">{t('buyCoins.fiatOnrampDesc')}</p>
-            </div>
-            {paymentMethod === 'onramp' && <Check className="w-5 h-5 text-primary" />}
-          </button>
         </div>
 
         {/* Buy Button */}
