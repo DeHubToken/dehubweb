@@ -46,7 +46,7 @@ export default function BuyCoinsPage() {
   const [selectedAmount, setSelectedAmount] = useState<number>(50);
   const [customAmount, setCustomAmount] = useState('');
   const [selectedToken] = useState<DPayToken | null>(null);
-  const [selectedChainId, setSelectedChainId] = useState(8453);
+  const [selectedChainId] = useState(8453);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
 
   // Post-purchase state
