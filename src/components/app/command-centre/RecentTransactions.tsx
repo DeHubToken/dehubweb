@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { getAccountInfo } from '@/lib/api/dehub/users';
 import { format, subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import { useState, useMemo } from 'react';
+import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 
@@ -67,6 +68,9 @@ export function RecentTransactions() {
     enabled: isAuthenticated,
     staleTime: 60_000,
   });
+
+  // On-chain DHB transfers (Base chain)
+  const { data: onchainTransfers = [], isLoading: onchainLoading } = useOnchainDHBTransfers(walletAddress);
 
   const { data: ppvPurchases = [], isLoading: ppvLoading } = useQuery({
     queryKey: ['ppv-purchases', walletAddress],
@@ -139,7 +143,7 @@ export function RecentTransactions() {
     staleTime: 5 * 60_000,
   });
 
-  const isLoading = dpayLoading || ppvLoading || tipsLoading;
+  const isLoading = dpayLoading || ppvLoading || tipsLoading || onchainLoading;
 
   const recent = useMemo(() => {
     const unified: UnifiedTransaction[] = [];
@@ -185,6 +189,35 @@ export function RecentTransactions() {
       });
     });
 
+    // Add on-chain DHB transfers (deduplicate against DPay txs by checking txHash)
+    const existingHashes = new Set(dpayTxs.map(tx => tx.txHash?.toLowerCase()).filter(Boolean));
+    onchainTransfers.forEach(transfer => {
+      // Skip if already captured by DPay API
+      if (existingHashes.has(transfer.txHash?.toLowerCase())) return;
+
+      const amountStr = transfer.formattedAmount;
+
+      let description: string;
+      if (transfer.isFiatPurchase) {
+        description = `Purchased ${amountStr} DHB`;
+      } else if (transfer.isIncoming) {
+        const fromShort = `${transfer.from.slice(0, 6)}...${transfer.from.slice(-4)}`;
+        description = `Received ${amountStr} DHB from ${fromShort}`;
+      } else {
+        const toShort = `${transfer.to.slice(0, 6)}...${transfer.to.slice(-4)}`;
+        description = `Sent ${amountStr} DHB to ${toShort}`;
+      }
+
+      unified.push({
+        id: `onchain-${transfer.txHash}-${transfer.from}`,
+        type: transfer.isFiatPurchase ? 'purchase' : 'transfer',
+        amount: transfer.amount,
+        createdAt: new Date(transfer.timestamp * 1000).toISOString(),
+        isCredit: transfer.isIncoming,
+        description,
+      });
+    });
+
     // Filter by time window
     const startDate = getFilterStartDate(activeFilter);
     const filtered = startDate
@@ -193,7 +226,7 @@ export function RecentTransactions() {
 
     filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     return filtered.slice(0, 15);
-  }, [dpayTxs, ppvPurchases, tipRecords, walletAddress, activeFilter, usernameMap, t]);
+  }, [dpayTxs, ppvPurchases, tipRecords, onchainTransfers, walletAddress, activeFilter, usernameMap, t]);
 
   return (
     <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
