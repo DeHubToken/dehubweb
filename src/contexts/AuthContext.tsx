@@ -223,17 +223,13 @@ async function signWithEoaDirectly(
   provider: any,
   timestamp: number,
   displayedDate: Date,
-  targetAddress?: string, // When set, embed this address in the message (Smart Account); EOA key still signs
 ): Promise<{ address: string; signature: string } | null> {
   try {
     // Web3Auth v10 with AA does NOT expose eth_private_key on any provider.
     // Instead, we find the underlying EOA provider and call personal_sign on it.
     // The EOA provider produces a standard ECDSA signature (132 chars),
     // unlike the AA provider which wraps it in ERC-6492 (2242 chars).
-    //
-    // When targetAddress is provided (Smart Account address), we embed it in the message
-    // so the backend can attempt ERC-1271 verification (ecrecover→EOA, then
-    // Safe.isValidSignature checks EOA is the Safe owner).
+    // DeHub backend uses ecrecover only, so EOA address + ECDSA is the only valid format.
 
     let eoaProvider: any = null;
 
@@ -287,11 +283,9 @@ async function signWithEoaDirectly(
     }
 
     const eoaAddress = accounts[0].toLowerCase();
-    // The address embedded in the message — Smart Account if provided, else EOA
-    const messageAddress = targetAddress || eoaAddress;
-    console.log('[Auth] EOA direct sign: EOA signer:', eoaAddress, targetAddress ? `| Smart Account in message: ${messageAddress}` : '');
+    console.log('[Auth] EOA direct sign: EOA signer:', eoaAddress);
 
-    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${messageAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${eoaAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
     // Call personal_sign on the EOA provider (NOT the AA provider)
     // This produces a standard ECDSA signature the backend can verify
@@ -309,8 +303,7 @@ async function signWithEoaDirectly(
       console.warn('[Auth] EOA direct sign: signature is suspiciously long (' + signature.length + ' chars), may still be ERC-6492 wrapped');
     }
 
-    // Return the targetAddress (Smart Account) when provided, otherwise EOA address
-    return { address: messageAddress, signature };
+    return { address: eoaAddress, signature };
   } catch (e) {
     console.warn('[Auth] EOA direct sign failed, falling back to provider signing:', e);
     return null;
@@ -774,58 +767,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       let authAddressForApi: string;
       let signature: string;
-      let preAuthResponse: any = null;
 
-      // Same 3-attempt strategy as popup flow: Smart Account first, then EOA, then AA provider.
-      let smartAccountAddress: string | null = null;
-      try {
-        const aaAccounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-        if (aaAccounts?.length) smartAccountAddress = aaAccounts[0].toLowerCase();
-      } catch {}
-
-      // Attempt 1: EOA signs message with Smart Account address embedded
-      if (smartAccountAddress) {
-        const saResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate, smartAccountAddress);
-        if (saResult) {
-          try {
-            console.log('[Auth] [REDIRECT] Trying Smart Account auth:', smartAccountAddress);
-            preAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, 8453);
-            authAddressForApi = saResult.address;
-            signature = saResult.signature;
-            console.log('[Auth] [REDIRECT] Smart Account auth OK — address:', authAddressForApi);
-          } catch (saErr: any) {
-            console.warn('[Auth] [REDIRECT] Smart Account auth failed (', saErr.message, ') — falling back to EOA');
-            preAuthResponse = null;
-          }
-        }
-      }
-
-      // Attempt 2: EOA address fallback
-      if (!preAuthResponse) {
-        const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
-        if (eoaResult) {
-          authAddressForApi = eoaResult.address;
-          signature = eoaResult.signature;
-          console.log('[Auth] [REDIRECT] EOA fallback sign OK — address:', authAddressForApi, 'sig length:', signature.length);
-        } else {
-          // Attempt 3: AA provider + ERC-6492 extraction
-          console.warn('[Auth] [REDIRECT] EOA direct sign unavailable, falling back to AA provider');
-          const aaResult = await signWithProvider(signingProvider, displayedDate, 'REDIRECT');
-          authAddressForApi = aaResult.address;
-          const innerSig = aaResult.signature.length > 200
-            ? extractEoaSignatureFromErc6492(aaResult.signature)
-            : null;
-          signature = innerSig ?? aaResult.signature;
-          console.log('[Auth] [REDIRECT] AA fallback — address:', authAddressForApi, 'sig length:', signature.length,
-            innerSig ? '(inner ECDSA extracted from ERC-6492)' : '(raw ERC-6492 — backend may reject)');
-        }
+      // DeHub backend uses standard ecrecover only — EOA address + ECDSA signature required.
+      const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
+      if (eoaResult) {
+        authAddressForApi = eoaResult.address;
+        signature = eoaResult.signature;
+        console.log('[Auth] [REDIRECT] EOA sign OK — address:', authAddressForApi, 'sig length:', signature.length);
+      } else {
+        // EOA provider inaccessible — fall back to AA provider
+        console.warn('[Auth] [REDIRECT] EOA direct sign unavailable, falling back to AA provider');
+        const aaResult = await signWithProvider(signingProvider, displayedDate, 'REDIRECT');
+        authAddressForApi = aaResult.address;
+        const innerSig = aaResult.signature.length > 200
+          ? extractEoaSignatureFromErc6492(aaResult.signature)
+          : null;
+        signature = innerSig ?? aaResult.signature;
+        console.log('[Auth] [REDIRECT] AA fallback — address:', authAddressForApi, 'sig length:', signature.length,
+          innerSig ? '(inner ECDSA extracted from ERC-6492)' : '(raw ERC-6492)');
       }
 
       console.log('[Auth] [REDIRECT] Signature received, authenticating with backend...');
       toast.loading('Verifying with DeHub...', { id: toastId });
 
       const BASE_CHAIN_ID = 8453;
-      const authResponse = preAuthResponse ?? await authenticateWallet(
+      const authResponse = await authenticateWallet(
         authAddressForApi,
         signature,
         timestamp,
@@ -892,66 +858,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       let authAddressForApi: string;
       let signature: string;
-      let preAuthResponse: any = null; // Pre-fetched if Smart Account auth succeeds on first try
 
-      // For social logins, use EOA direct signing to get a standard 65-byte ECDSA signature.
-      // Strategy: try Smart Account address first (matches mobile account), fall back to EOA.
-      //
-      // ATTEMPT 1 — Smart Account address + EOA ECDSA:
-      //   EOA signs a message embedding the Smart Account address.
-      //   Backend does ecrecover → gets EOA address → checks ERC-1271 on Safe (if deployed).
-      //   If backend supports ERC-1271, user logs into their Smart Account (mobile account).
-      //
-      // ATTEMPT 2 — EOA address + EOA ECDSA (fallback):
-      //   Standard ecrecover works directly; always succeeds, but uses the EOA account.
-      //
-      // ATTEMPT 3 — AA provider (last resort):
-      //   raw ERC-6492 or extracted inner ECDSA; used when EOA provider is inaccessible.
+      // DeHub backend uses standard ecrecover only — no EIP-1271 / Smart Account support.
+      // For social logins, sign with the underlying EOA key directly (standard 132-char ECDSA).
+      // If the EOA provider is inaccessible, fall back to AA provider + ERC-6492 extraction.
       if (isSocial) {
-        // Get the Smart Account address from the AA provider
-        let smartAccountAddress: string | null = null;
-        try {
-          const aaAccounts = await signingProvider.request({ method: 'eth_accounts' }) as string[];
-          if (aaAccounts?.length) smartAccountAddress = aaAccounts[0].toLowerCase();
-        } catch {}
-
-        // Attempt 1: EOA signs message with Smart Account address embedded
-        if (smartAccountAddress) {
-          const saResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate, smartAccountAddress);
-          if (saResult) {
-            try {
-              console.log('[Auth] [POPUP] Trying Smart Account auth:', smartAccountAddress);
-              preAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, 8453);
-              // Smart Account auth succeeded — use its credentials
-              authAddressForApi = saResult.address;
-              signature = saResult.signature;
-              console.log('[Auth] [POPUP] Smart Account auth OK — address:', authAddressForApi);
-            } catch (saErr: any) {
-              console.warn('[Auth] [POPUP] Smart Account auth failed (', saErr.message, ') — falling back to EOA');
-              preAuthResponse = null;
-            }
-          }
-        }
-
-        // Attempt 2: EOA address (fallback — backend always accepts ecrecover)
-        if (!preAuthResponse) {
-          const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
-          if (eoaResult) {
-            authAddressForApi = eoaResult.address;
-            signature = eoaResult.signature;
-            console.log('[Auth] [POPUP] EOA fallback sign OK — address:', authAddressForApi, 'sig length:', signature.length);
-          } else {
-            // Attempt 3: AA provider + ERC-6492 extraction
-            console.warn('[Auth] [POPUP] EOA direct sign unavailable, falling back to AA provider');
-            const aaResult = await signWithProvider(signingProvider, displayedDate, 'POPUP');
-            authAddressForApi = aaResult.address;
-            const innerSig = aaResult.signature.length > 200
-              ? extractEoaSignatureFromErc6492(aaResult.signature)
-              : null;
-            signature = innerSig ?? aaResult.signature;
-            console.log('[Auth] [POPUP] AA fallback — address:', authAddressForApi, 'sig length:', signature.length,
-              innerSig ? '(inner ECDSA extracted from ERC-6492)' : '(raw ERC-6492 — backend may reject)');
-          }
+        const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
+        if (eoaResult) {
+          authAddressForApi = eoaResult.address;
+          signature = eoaResult.signature;
+          console.log('[Auth] [POPUP] EOA sign OK — address:', authAddressForApi, 'sig length:', signature.length);
+        } else {
+          // EOA provider inaccessible — fall back to AA provider
+          console.warn('[Auth] [POPUP] EOA direct sign unavailable, falling back to AA provider');
+          const aaResult = await signWithProvider(signingProvider, displayedDate, 'POPUP');
+          authAddressForApi = aaResult.address;
+          const innerSig = aaResult.signature.length > 200
+            ? extractEoaSignatureFromErc6492(aaResult.signature)
+            : null;
+          signature = innerSig ?? aaResult.signature;
+          console.log('[Auth] [POPUP] AA fallback — address:', authAddressForApi, 'sig length:', signature.length,
+            innerSig ? '(inner ECDSA extracted from ERC-6492)' : '(raw ERC-6492)');
         }
       } else {
         // External wallet — standard provider signing
@@ -964,8 +891,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toast.loading('Almost there...', { id: toastId });
 
       const BASE_CHAIN_ID = 8453;
-      // Use pre-fetched auth response (Smart Account) or fetch now (EOA / external wallet)
-      const authResponse = preAuthResponse ?? await authenticateWallet(
+      const authResponse = await authenticateWallet(
         authAddressForApi,
         signature,
         timestamp,
