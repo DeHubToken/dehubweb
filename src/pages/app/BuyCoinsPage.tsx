@@ -329,17 +329,15 @@ export default function BuyCoinsPage() {
                     setSelectedAmount(amount);
                     setCustomAmount('');
                   }}
-                  className={`relative py-3 rounded-xl font-medium transition-colors overflow-hidden ${
+                  className={`relative py-3 rounded-xl font-medium transition-colors ${
                     isActive ? 'text-white' : 'bg-zinc-800 text-white hover:bg-zinc-700'
                   }`}
-                  style={{ zIndex: isActive ? 2 : 1 }}
                 >
                   {isActive && (
                     <motion.div
                       layoutId="buy-amount-toggle"
-                      className="absolute inset-0 z-[1] rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                      style={{ willChange: 'transform' }}
+                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
                   )}
                   <span className="relative z-[2]">${amount}</span>
