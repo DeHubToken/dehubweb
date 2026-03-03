@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from 'react';
 
 interface GlobalDropZoneContextType {
   isPostModalOpen: boolean;
@@ -6,6 +6,8 @@ interface GlobalDropZoneContextType {
   closePostModal: () => void;
   pendingFiles: FileList | null;
   clearPendingFiles: () => void;
+  suppressGlobalDrop: () => void;
+  unsuppressGlobalDrop: () => void;
 }
 
 const GlobalDropZoneContext = createContext<GlobalDropZoneContextType | null>(null);
@@ -14,6 +16,7 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [pendingFiles, setPendingFiles] = useState<FileList | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const suppressedRef = useRef(false);
 
   const openPostModal = useCallback(() => {
     setIsPostModalOpen(true);
@@ -27,11 +30,20 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
     setPendingFiles(null);
   }, []);
 
+  const suppressGlobalDrop = useCallback(() => {
+    suppressedRef.current = true;
+  }, []);
+
+  const unsuppressGlobalDrop = useCallback(() => {
+    suppressedRef.current = false;
+  }, []);
+
   // Global drag and drop handlers
   useEffect(() => {
     let dragCounter = 0;
 
     const handleDragEnter = (e: DragEvent) => {
+      if (suppressedRef.current) return;
       e.preventDefault();
       e.stopPropagation();
       dragCounter++;
@@ -42,6 +54,7 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
     };
 
     const handleDragLeave = (e: DragEvent) => {
+      if (suppressedRef.current) return;
       e.preventDefault();
       e.stopPropagation();
       dragCounter--;
@@ -52,11 +65,17 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
     };
 
     const handleDragOver = (e: DragEvent) => {
+      if (suppressedRef.current) return;
       e.preventDefault();
       e.stopPropagation();
     };
 
     const handleDrop = (e: DragEvent) => {
+      if (suppressedRef.current) {
+        dragCounter = 0;
+        setIsDragging(false);
+        return;
+      }
       e.preventDefault();
       e.stopPropagation();
       dragCounter = 0;
@@ -97,12 +116,14 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
       openPostModal, 
       closePostModal, 
       pendingFiles, 
-      clearPendingFiles 
+      clearPendingFiles,
+      suppressGlobalDrop,
+      unsuppressGlobalDrop,
     }}>
       {children}
       
       {/* Global drop overlay */}
-      {isDragging && (
+      {isDragging && !suppressedRef.current && (
         <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center pointer-events-none">
           <div className="border-2 border-dashed border-primary rounded-3xl p-12 flex flex-col items-center gap-4">
             <div className="w-16 h-16 rounded-xl bg-primary/20 flex items-center justify-center">
