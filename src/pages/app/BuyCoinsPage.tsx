@@ -570,11 +570,12 @@ export default function BuyCoinsPage() {
           ) : purchaseHistory.length === 0 ? (
             <p className="text-zinc-500 text-sm text-center py-4">No purchases yet. Be the first!</p>
           ) : (() => {
-            const filtered = txSearch.trim()
+            const isSearching = !!txSearch.trim();
+            const filtered = isSearching
               ? purchaseHistory.filter(tx =>
                   tx.receiverAddress?.toLowerCase().includes(txSearch.trim().toLowerCase())
                 )
-              : purchaseHistory;
+              : purchaseHistory.filter(tx => tx.status === 'completed');
             return filtered.length === 0 ? (
               <p className="text-zinc-500 text-sm text-center py-4">No transactions found for that address.</p>
             ) : (
