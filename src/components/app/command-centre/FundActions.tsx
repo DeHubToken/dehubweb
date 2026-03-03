@@ -61,13 +61,13 @@ export function FundActions() {
               </div>
             </button>
             <button
-              onClick={() => { setAddFundsOpen(false); window.open('https://app.uniswap.org/swap?chain=base', '_blank'); }}
+              onClick={() => { setAddFundsOpen(false); setTimeout(() => setSwapOpen(true), 200); }}
               className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
             >
               <Wallet className="w-5 h-5 text-white/70" />
               <div className="text-left">
                 <span className="text-sm font-medium text-white">Buy with Crypto</span>
-                <p className="text-xs text-white/40">Swap tokens on Uniswap DEX</p>
+                <p className="text-xs text-white/40">Swap ETH → DHB on Uniswap</p>
               </div>
             </button>
             <button
