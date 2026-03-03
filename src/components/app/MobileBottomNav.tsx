@@ -126,7 +126,14 @@ export function MobileBottomNav() {
   return (
     <>
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
-        <nav className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl overflow-hidden">
+        <nav
+          className={cn(
+            "bg-zinc-900/10 backdrop-blur-2xl border rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl overflow-hidden transition-all duration-1000",
+            showScrollHint
+              ? "border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.15),0_0_40px_rgba(255,255,255,0.05)]"
+              : "border-white/10"
+          )}
+        >
           {/* Nav items container */}
           <div 
             ref={scrollRef}
