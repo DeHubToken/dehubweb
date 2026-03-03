@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getDPayPrice,
@@ -289,13 +290,20 @@ export default function BuyCoinsPage() {
               <button
                 key={chain.id}
                 onClick={() => setSelectedChainId(chain.id)}
-                className={`flex-1 py-3 rounded-xl font-medium transition-all text-sm ${
+                className={`relative flex-1 py-3 rounded-xl font-medium transition-colors text-sm ${
                   selectedChainId === chain.id
-                    ? 'bg-white text-black'
+                    ? 'text-white'
                     : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                 }`}
               >
-                {chain.name}
+                {selectedChainId === chain.id && (
+                  <motion.div
+                    layoutId="buy-chain-toggle"
+                    className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{chain.name}</span>
               </button>
             ))}
           </div>
@@ -335,13 +343,20 @@ export default function BuyCoinsPage() {
                   setSelectedAmount(amount);
                   setCustomAmount('');
                 }}
-                className={`py-3 rounded-xl font-medium transition-all ${
+                className={`relative py-3 rounded-xl font-medium transition-colors ${
                   selectedAmount === amount && !customAmount
-                    ? 'bg-white text-black'
+                    ? 'text-white'
                     : 'bg-zinc-800 text-white hover:bg-zinc-700'
                 }`}
               >
-                ${amount}
+                {selectedAmount === amount && !customAmount && (
+                  <motion.div
+                    layoutId="buy-amount-toggle"
+                    className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">${amount}</span>
               </button>
             ))}
           </div>
