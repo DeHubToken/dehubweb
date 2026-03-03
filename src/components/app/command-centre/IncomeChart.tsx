@@ -89,7 +89,7 @@ export function IncomeChart() {
       {/* Header with time filters */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <div className="flex items-center gap-2 mr-auto">
-          <span className="text-zinc-400 text-sm">{t('commandCentre.incomeChart')}</span>
+          <span className="text-white font-semibold">{t('commandCentre.incomeChart')}</span>
           {totalEarned > 0 && (
             <span className="text-emerald-400 text-sm font-semibold">{totalEarned} DHB</span>
           )}
