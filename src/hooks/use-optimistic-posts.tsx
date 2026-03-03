@@ -1,11 +1,16 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
+
+const STORAGE_KEY = 'dehub-optimistic-posts';
+const MAX_AGE_MS = 30 * 60 * 1000; // 30 minutes
 
 export type OptimisticPost = {
   id: string;
   type: 'post' | 'image' | 'video';
   data: TextPost | ImagePost | VideoItem;
   createdAt: Date;
+  /** true when media URLs were blob: and won't survive refresh */
+  mediaExpired?: boolean;
 };
 
 interface OptimisticPostsContextValue {
@@ -17,8 +22,36 @@ interface OptimisticPostsContextValue {
 
 const OptimisticPostsContext = createContext<OptimisticPostsContextValue | undefined>(undefined);
 
+function loadFromStorage(): OptimisticPost[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as Array<OptimisticPost & { createdAt: string }>;
+    const now = Date.now();
+    return parsed
+      .map(p => ({ ...p, createdAt: new Date(p.createdAt) }))
+      .filter(p => now - p.createdAt.getTime() < MAX_AGE_MS)
+      .map(p => ({ ...p, mediaExpired: true })); // blob URLs don't survive refresh
+  } catch {
+    return [];
+  }
+}
+
+function saveToStorage(posts: OptimisticPost[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+  } catch {
+    // storage full or unavailable
+  }
+}
+
 export function OptimisticPostsProvider({ children }: { children: ReactNode }) {
-  const [optimisticPosts, setOptimisticPosts] = useState<OptimisticPost[]>([]);
+  const [optimisticPosts, setOptimisticPosts] = useState<OptimisticPost[]>(loadFromStorage);
+
+  // Sync to localStorage whenever posts change
+  useEffect(() => {
+    saveToStorage(optimisticPosts);
+  }, [optimisticPosts]);
 
   const addOptimisticPost = useCallback((post: OptimisticPost) => {
     setOptimisticPosts(prev => [post, ...prev]);
