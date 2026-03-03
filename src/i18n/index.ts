@@ -61,6 +61,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'ja', name: 'Japanese', nativeName: '日本語' },
   { code: 'jv', name: 'Javanese', nativeName: 'Basa Jawa' },
   { code: 'kk', name: 'Kazakh', nativeName: 'Қазақша' },
+  { code: 'ku', name: 'Kurdish', nativeName: 'Kurdî' },
   { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ' },
   { code: 'ko', name: 'Korean', nativeName: '한국어' },
   { code: 'lo', name: 'Lao', nativeName: 'ລາວ' },
