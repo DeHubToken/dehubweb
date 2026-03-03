@@ -826,7 +826,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
 
   return (
     <Dialog open={open} onOpenChange={v => { onOpenChange(v); if (!v) { setAddress(''); setTokenInfo(null); } }}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 sm:max-w-md">
+      <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-white">{t('wallet.importCustomToken')}</DialogTitle>
         </DialogHeader>
@@ -838,7 +838,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
                 key={chain.id}
                 onClick={() => { setChainId(chain.id); setTokenInfo(null); }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                  chainId === chain.id ? 'bg-zinc-700 text-white' : 'bg-zinc-800 text-zinc-500 hover:text-zinc-300'
+                  chainId === chain.id ? 'bg-white/15 text-white border border-white/20' : 'bg-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-white/10 border border-white/5'
                 }`}
               >
                 <img src={chain.icon} alt={chain.name} className="w-4 h-4 rounded-sm" />
@@ -847,14 +847,14 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
             ))}
           </div>
 
-          <p className="text-xs text-zinc-500">{t('wallet.importDescription', { network: CHAIN_CONFIGS[chainId]?.name || 'this network' })}</p>
+          <p className="text-xs text-zinc-400">{t('wallet.importDescription', { network: CHAIN_CONFIGS[chainId]?.name || 'this network' })}</p>
           <div className="space-y-2">
             <label className="text-sm text-zinc-400">{t('wallet.tokenContractAddress')}</label>
             <Input
               placeholder="0x..."
               value={address}
               onChange={e => { setAddress(e.target.value); setTokenInfo(null); }}
-              className="bg-zinc-800 border-zinc-700 text-white font-mono text-sm"
+              className="bg-white/5 border-white/10 text-white font-mono text-sm placeholder:text-zinc-500"
             />
           </div>
 
@@ -865,7 +865,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
             </Button>
           ) : (
             <>
-              <div className="bg-zinc-800/60 rounded-xl p-4 space-y-2">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-zinc-400">{t('wallet.name')}</span>
                   <span className="text-sm text-white font-medium">{tokenInfo.name}</span>
