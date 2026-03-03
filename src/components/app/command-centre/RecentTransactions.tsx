@@ -42,7 +42,7 @@ function formatDPayTx(tx: DPayTransaction, t: (key: string, opts?: any) => strin
   let isCredit = false;
   switch (tx.type) {
     case 'buy':
-      description = t('commandCentre.txPurchased', { amount });
+      description = `Purchased $${amount} of Coins`;
       isCredit = true;
       break;
     case 'sell':
@@ -208,20 +208,19 @@ export function RecentTransactions() {
     
     onchainTransfers.forEach(transfer => {
       const txHashLower = transfer.txHash?.toLowerCase();
-      // Skip if already captured by DPay API
+      // Skip if already captured by DPay API (exact hash match)
       if (txHashLower && dpayHashes.has(txHashLower)) return;
 
-      const amountStr = transfer.formattedAmount;
-      
-      // Mark as purchase if from a known gateway, matches a DPay buy txHash, or matches by amount+time
-      const isPurchase = transfer.isFiatPurchase 
+      // Skip if this is a purchase duplicate (gateway wallet, matching buy hash, or amount+time match)
+      const isPurchaseDuplicate = transfer.isFiatPurchase 
         || (txHashLower && dpayBuyHashes.has(txHashLower))
         || (transfer.isIncoming && matchesDPayBuyByAmountTime(transfer.amount, transfer.timestamp));
 
+      if (isPurchaseDuplicate) return;
+
+      const amountStr = transfer.formattedAmount;
       let description: string;
-      if (isPurchase) {
-        description = `Purchased ${amountStr} DHB`;
-      } else if (transfer.isIncoming) {
+      if (transfer.isIncoming) {
         const fromShort = `${transfer.from.slice(0, 6)}...${transfer.from.slice(-4)}`;
         description = `Received ${amountStr} DHB from ${fromShort}`;
       } else {
@@ -231,7 +230,7 @@ export function RecentTransactions() {
 
       unified.push({
         id: `onchain-${transfer.txHash}-${transfer.from}`,
-        type: isPurchase ? 'purchase' : 'transfer',
+        type: 'transfer',
         amount: transfer.amount,
         createdAt: new Date(transfer.timestamp * 1000).toISOString(),
         isCredit: transfer.isIncoming,

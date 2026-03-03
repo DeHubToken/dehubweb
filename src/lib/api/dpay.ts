@@ -408,8 +408,9 @@ export async function getAllDPayTransactions(): Promise<DPayTransaction[]> {
         })
         .map((tx: any) => ({
           id: tx._id || tx.id,
-          type: tx.type || 'buy',
-          amount: tx.tokenReceived ? parseFloat(tx.tokenReceived) : tx.amount,
+          type: (tx.type === 'buy_token' || tx.type === 'buy') ? 'buy' : (tx.type || 'buy'),
+          amount: tx.amount,
+          tokenReceived: tx.tokenReceived ? parseFloat(tx.tokenReceived) : undefined,
           tokenSymbol: tx.tokenSymbol || tx.symbol || 'DHB',
           status: 'completed',
           createdAt: tx.createdAt || tx.created_at,
