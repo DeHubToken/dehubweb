@@ -261,13 +261,15 @@ function ProfileSettings() {
         const loadedBio = userData.aboutMe || userData.bio || '';
         
         const customs = userData.customs as Record<string, string> | undefined;
-        const loadedTwitter = customs?.twitterLink || '';
-        const loadedDiscord = customs?.discordLink || '';
-        const loadedInstagram = customs?.instagramLink || '';
-        const loadedTiktok = customs?.tiktokLink || '';
-        const loadedYoutube = customs?.youtubeLink || '';
-        const loadedTelegram = customs?.telegramLink || '';
-        const loadedFacebook = customs?.facebookLink || '';
+        const raw = userData as Record<string, unknown>;
+        // Check both top-level API fields and customs object (API may return either)
+        const loadedTwitter = (raw.twitterLink as string) || customs?.twitterLink || '';
+        const loadedDiscord = (raw.discordLink as string) || customs?.discordLink || '';
+        const loadedInstagram = (raw.instagramLink as string) || customs?.instagramLink || '';
+        const loadedTiktok = (raw.tiktokLink as string) || customs?.tiktokLink || '';
+        const loadedYoutube = (raw.youtubeLink as string) || customs?.youtubeLink || '';
+        const loadedTelegram = (raw.telegramLink as string) || customs?.telegramLink || '';
+        const loadedFacebook = (raw.facebookLink as string) || customs?.facebookLink || '';
         
         setDisplayName(loadedDisplayName);
         setUsername(loadedUsername);
@@ -388,17 +390,18 @@ function ProfileSettings() {
       if (authUser?.address) {
         const userData = await getAccountInfo(authUser.address);
         const refreshedCustoms = userData.customs as Record<string, string> | undefined;
+        const refreshedRaw = userData as Record<string, unknown>;
         const newOriginals = {
           displayName: userData.displayName || userData.display_name || '',
           username: userData.username || '',
           bio: userData.aboutMe || userData.bio || '',
-          twitterLink: refreshedCustoms?.twitterLink || '',
-          discordLink: refreshedCustoms?.discordLink || '',
-          instagramLink: refreshedCustoms?.instagramLink || '',
-          tiktokLink: refreshedCustoms?.tiktokLink || '',
-          youtubeLink: refreshedCustoms?.youtubeLink || '',
-          telegramLink: refreshedCustoms?.telegramLink || '',
-          facebookLink: refreshedCustoms?.facebookLink || '',
+          twitterLink: (refreshedRaw.twitterLink as string) || refreshedCustoms?.twitterLink || '',
+          discordLink: (refreshedRaw.discordLink as string) || refreshedCustoms?.discordLink || '',
+          instagramLink: (refreshedRaw.instagramLink as string) || refreshedCustoms?.instagramLink || '',
+          tiktokLink: (refreshedRaw.tiktokLink as string) || refreshedCustoms?.tiktokLink || '',
+          youtubeLink: (refreshedRaw.youtubeLink as string) || refreshedCustoms?.youtubeLink || '',
+          telegramLink: (refreshedRaw.telegramLink as string) || refreshedCustoms?.telegramLink || '',
+          facebookLink: (refreshedRaw.facebookLink as string) || refreshedCustoms?.facebookLink || '',
         };
         setOriginalValues(newOriginals);
         // Sync form state so links don't disappear after save
