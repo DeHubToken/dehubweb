@@ -678,57 +678,6 @@ export default function BuyCoinsPage() {
         </p>
       </div>
 
-      {/* Token Selection Drawer */}
-      <Drawer open={isTokenDrawerOpen} onOpenChange={setIsTokenDrawerOpen}>
-        <DrawerContent glass className="max-h-[70vh]">
-          <DrawerHeader className="border-b border-white/10">
-            <DrawerTitle className="text-white">{t('buyCoins.selectToken')}</DrawerTitle>
-          </DrawerHeader>
-          <div className="p-4 space-y-2 overflow-y-auto">
-            {tokensLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
-              </div>
-            ) : tokens && tokens.length > 0 ? (
-              tokens.map((token) => (
-                <button
-                  key={token.symbol}
-                  onClick={() => {
-                    setSelectedToken(token);
-                    setIsTokenDrawerOpen(false);
-                  }}
-                  className={`w-full flex items-center justify-between p-3 rounded-xl transition-colors ${
-                    selectedToken?.symbol === token.symbol
-                      ? 'bg-white/10 border border-white/20'
-                      : 'hover:bg-zinc-800'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    {token.logoUrl ? (
-                      <img src={token.logoUrl} alt={token.symbol} className="w-10 h-10 rounded-xl" />
-                    ) : (
-                      <div className="w-10 h-10 rounded-xl bg-zinc-700 flex items-center justify-center text-white font-medium">
-                        {token.symbol[0]}
-                      </div>
-                    )}
-                    <div className="text-left">
-                      <p className="text-white font-medium">{token.symbol}</p>
-                      <p className="text-sm text-zinc-400">{token.name}</p>
-                    </div>
-                  </div>
-                  {selectedToken?.symbol === token.symbol && (
-                    <Check className="w-5 h-5 text-primary" />
-                  )}
-                </button>
-              ))
-            ) : (
-              <div className="text-center py-8 text-zinc-400">
-                <p>{t('buyCoins.noTokens')}</p>
-              </div>
-            )}
-          </div>
-        </DrawerContent>
-      </Drawer>
     </div>
   );
 }
