@@ -261,13 +261,15 @@ function ProfileSettings() {
         const loadedBio = userData.aboutMe || userData.bio || '';
         
         const customs = userData.customs as Record<string, string> | undefined;
-        const loadedTwitter = customs?.twitterLink || '';
-        const loadedDiscord = customs?.discordLink || '';
-        const loadedInstagram = customs?.instagramLink || '';
-        const loadedTiktok = customs?.tiktokLink || '';
-        const loadedYoutube = customs?.youtubeLink || '';
-        const loadedTelegram = customs?.telegramLink || '';
-        const loadedFacebook = customs?.facebookLink || '';
+        const raw = userData as Record<string, unknown>;
+        // Check both top-level API fields and customs object (API may return either)
+        const loadedTwitter = (raw.twitterLink as string) || customs?.twitterLink || '';
+        const loadedDiscord = (raw.discordLink as string) || customs?.discordLink || '';
+        const loadedInstagram = (raw.instagramLink as string) || customs?.instagramLink || '';
+        const loadedTiktok = (raw.tiktokLink as string) || customs?.tiktokLink || '';
+        const loadedYoutube = (raw.youtubeLink as string) || customs?.youtubeLink || '';
+        const loadedTelegram = (raw.telegramLink as string) || customs?.telegramLink || '';
+        const loadedFacebook = (raw.facebookLink as string) || customs?.facebookLink || '';
         
         setDisplayName(loadedDisplayName);
         setUsername(loadedUsername);
