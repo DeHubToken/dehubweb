@@ -30,12 +30,14 @@ export interface DPayTransaction {
   type: 'buy' | 'sell' | 'transfer';
   amount: number;
   tokenReceived?: number;
+  approxTokensToReceive?: string;
   tokenSymbol: string;
   status: 'pending' | 'completed' | 'failed';
   createdAt: string;
   txHash?: string;
   chainId?: number;
   receiverAddress?: string;
+  currency?: string;
 }
 
 /** Post-purchase polling: status by session ID (GET /dpay/tnxs?sid=...) */
