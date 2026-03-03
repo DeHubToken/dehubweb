@@ -513,7 +513,24 @@ function ProfileSettings() {
       </div>
 
       {/* Cover Image */}
-      <div className="relative aspect-[3/1] bg-zinc-800 rounded-xl overflow-hidden group">
+      <div 
+        className="relative aspect-[3/1] bg-zinc-800 rounded-xl overflow-hidden group"
+        onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+        onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); }}
+        onDrop={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const file = e.dataTransfer?.files?.[0];
+          if (file && file.type.startsWith('image/')) {
+            if (file.size > 10 * 1024 * 1024) {
+              toast.error(t('settings.imageTooLarge10'));
+              return;
+            }
+            setCoverFile(file);
+            setCoverPreview(URL.createObjectURL(file));
+          }
+        }}
+      >
         {coverPreview && (
           <img src={coverPreview} alt="Cover" className="w-full h-full object-cover" />
         )}
