@@ -85,32 +85,41 @@ export async function getAvailableGas(): Promise<Record<string, unknown>> {
   return response?.result ?? response as any;
 }
 
+export interface PaginatedTransactions {
+  transactions: DPayTransaction[];
+  total: number;
+  page: number;
+  hasMore: boolean;
+}
+
 export async function getDPayTransactions(params: {
   page?: number;
   limit?: number;
-} = {}): Promise<DPayTransaction[]> {
-  const response = await apiCall<{ result: DPayTransaction[] } | DPayTransaction[]>("/api/dpay/tnxs", {
-    params: { page: params.page, limit: params.limit },
+} = {}): Promise<PaginatedTransactions> {
+  const limit = params.limit || 10;
+  const page = params.page || 1;
+  const response = await apiCall<any>("/api/dpay/tnxs", {
+    params: { page, limit },
     requiresAuth: true,
   });
-  if (response && typeof response === 'object' && 'result' in response) {
-    return response.result;
-  }
-  return response as DPayTransaction[];
+  const tnxs = response?.tnxs ?? response?.result ?? (Array.isArray(response) ? response : []);
+  const total = response?.total ?? tnxs.length;
+  return { transactions: tnxs, total, page, hasMore: page * limit < total };
 }
 
 export async function getAllDPayTransactions(params: {
   page?: number;
   limit?: number;
-} = {}): Promise<DPayTransaction[]> {
-  const response = await apiCall<{ result: DPayTransaction[] } | DPayTransaction[]>("/api/dpay/tnxs", {
-    params: { page: params.page, limit: params.limit },
+} = {}): Promise<PaginatedTransactions> {
+  const limit = params.limit || 10;
+  const page = params.page || 1;
+  const response = await apiCall<any>("/api/dpay/tnxs", {
+    params: { page, limit },
     requiresAuth: false,
   });
-  if (response && typeof response === 'object' && 'result' in response) {
-    return response.result;
-  }
-  return response as DPayTransaction[];
+  const tnxs = response?.tnxs ?? response?.result ?? (Array.isArray(response) ? response : []);
+  const total = response?.total ?? tnxs.length;
+  return { transactions: tnxs, total, page, hasMore: page * limit < total };
 }
 
 export async function getDPayTotal(): Promise<DPayTotal> {
