@@ -223,6 +223,7 @@ async function signWithEoaDirectly(
   provider: any,
   timestamp: number,
   displayedDate: Date,
+  targetAddress?: string, // If provided, the auth message will use this address (e.g. Smart Account)
 ): Promise<{ address: string; signature: string } | null> {
   try {
     // Web3Auth v10 with AA does NOT expose eth_private_key on any provider.
@@ -282,9 +283,11 @@ async function signWithEoaDirectly(
     }
 
     const eoaAddress = accounts[0].toLowerCase();
-    console.log('[Auth] EOA direct sign: EOA address:', eoaAddress);
+    // Use targetAddress in the message if provided (e.g. Smart Account address for mobile parity)
+    const authAddress = targetAddress ? targetAddress.toLowerCase() : eoaAddress;
+    console.log('[Auth] EOA direct sign: EOA address:', eoaAddress, targetAddress ? `| target (SA): ${authAddress}` : '');
 
-    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${eoaAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
     // Call personal_sign on the EOA provider (NOT the AA provider)
     // This produces a standard ECDSA signature the backend can verify
@@ -302,7 +305,7 @@ async function signWithEoaDirectly(
       console.warn('[Auth] EOA direct sign: signature is suspiciously long (' + signature.length + ' chars), may still be ERC-6492 wrapped');
     }
 
-    return { address: eoaAddress, signature };
+    return { address: authAddress, signature };
   } catch (e) {
     console.warn('[Auth] EOA direct sign failed, falling back to provider signing:', e);
     return null;
@@ -767,7 +770,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       let authAddressForApi: string;
       let signature: string;
 
-      // Social login redirect: try EOA direct signing to bypass AA/ERC-6492
+      const BASE_CHAIN_ID = 8453;
+
+      // Try Smart Account address first (matches mobile app), fall back to EOA
+      let smartAccountAddress: string | null = null;
+      try {
+        const w3a = await getOrInitWeb3Auth();
+        const aaProvider = (w3a as any).aaProvider || (w3a as any).accountAbstractionProvider;
+        if (aaProvider) {
+          const aaAccts = await aaProvider.request({ method: 'eth_accounts' }) as string[];
+          smartAccountAddress = aaAccts[0]?.toLowerCase() || null;
+        }
+      } catch (e) {
+        console.warn('[Auth] [REDIRECT] Could not get Smart Account address:', e);
+      }
+
+      if (smartAccountAddress) {
+        const saResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate, smartAccountAddress);
+        if (saResult) {
+          try {
+            console.log('[Auth] [REDIRECT] Trying Smart Account address:', smartAccountAddress);
+            const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID);
+            const normalizedUser = normalizeUser(saAuthResponse.user, saResult.address);
+            localStorage.setItem('dehub_wallet', saResult.address);
+            localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
+            setWalletAddress(saResult.address);
+            setUser(normalizedUser);
+            if (saAuthResponse.result?.isNewAccount) setRequiresUsername(true);
+            queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+            queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+            queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+            toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!', { id: toastId });
+            console.log('[Auth] ✓ DeHub authentication complete via Smart Account (Redirect Flow)');
+            authLogger.info('Login success', { method: 'redirect-sa', address: saResult.address, username: normalizedUser.username, isNewAccount: !!saAuthResponse.result?.isNewAccount });
+            return;
+          } catch (saErr: any) {
+            console.warn('[Auth] [REDIRECT] Smart Account auth failed, falling back to EOA:', saErr?.message || saErr);
+          }
+        }
+      }
+
+      // Fall back to EOA address
       const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
       if (eoaResult) {
         authAddressForApi = eoaResult.address;
@@ -784,7 +827,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('[Auth] [REDIRECT] Signature received, authenticating with backend...');
       toast.loading('Verifying with DeHub...', { id: toastId });
 
-      const BASE_CHAIN_ID = 8453;
       const authResponse = await authenticateWallet(
         authAddressForApi,
         signature,
@@ -848,29 +890,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       let authAddressForApi: string;
       let signature: string;
 
-      // Diagnostic: log Smart Account (AA) address for comparison with mobile app
-      try {
-        const w3aDiag = await getOrInitWeb3Auth();
-        const aaProvDiag = (w3aDiag as any).aaProvider || (w3aDiag as any).accountAbstractionProvider;
-        if (aaProvDiag) {
-          const aaAccts = await aaProvDiag.request({ method: 'eth_accounts' }) as string[];
-          console.log('[Auth] [POPUP] Smart Account (AA) address:', aaAccts[0], '← compare this with mobile app wallet address');
-        }
-      } catch (e) {
-        console.warn('[Auth] [POPUP] Could not get Smart Account address for diagnostic:', e);
-      }
+      const BASE_CHAIN_ID = 8453;
 
-      // For social logins, try EOA direct signing to bypass AA/ERC-6492 wrapper.
-      // The backend uses ecrecover which cannot verify ERC-6492/ERC-1271 signatures.
+      // For social logins: try Smart Account address first (matches mobile app), fall back to EOA.
       if (isSocial) {
+        // Get Smart Account (AA) address — this is what the mobile app uses
+        let smartAccountAddress: string | null = null;
+        try {
+          const w3a = await getOrInitWeb3Auth();
+          const aaProvider = (w3a as any).aaProvider || (w3a as any).accountAbstractionProvider;
+          if (aaProvider) {
+            const aaAccts = await aaProvider.request({ method: 'eth_accounts' }) as string[];
+            smartAccountAddress = aaAccts[0]?.toLowerCase() || null;
+          }
+        } catch (e) {
+          console.warn('[Auth] [POPUP] Could not get Smart Account address:', e);
+        }
+
+        // Step 1: Try Smart Account address with EOA signature (matches mobile account)
+        if (smartAccountAddress) {
+          const saResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate, smartAccountAddress);
+          if (saResult) {
+            try {
+              console.log('[Auth] [POPUP] Trying Smart Account address:', smartAccountAddress);
+              toast.loading('Signing in...', { id: toastId });
+              const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID);
+              const normalizedUser = normalizeUser(saAuthResponse.user, saResult.address);
+              localStorage.setItem('dehub_wallet', saResult.address);
+              localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
+              setWalletAddress(saResult.address);
+              setUser(normalizedUser);
+              if (saAuthResponse.result?.isNewAccount) setRequiresUsername(true);
+              queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+              queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+              queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+              toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!', { id: toastId });
+              console.log('[Auth] ✓ DeHub authentication complete via Smart Account (Popup Flow)');
+              authLogger.info('Login success', { method: 'popup-sa', address: saResult.address, username: normalizedUser.username, isNewAccount: !!saAuthResponse.result?.isNewAccount });
+              return;
+            } catch (saErr: any) {
+              console.warn('[Auth] [POPUP] Smart Account auth failed, falling back to EOA:', saErr?.message || saErr);
+            }
+          }
+        }
+
+        // Step 2: Fall back to EOA address
         const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
         if (eoaResult) {
           authAddressForApi = eoaResult.address;
           signature = eoaResult.signature;
-          console.log('[Auth] [POPUP] EOA address (used for auth):', authAddressForApi, '← DeHub account for this address:', '(see username in success log)');
+          console.log('[Auth] [POPUP] Using EOA address for auth:', authAddressForApi);
         } else {
           console.warn('[Auth] [POPUP] EOA direct sign unavailable, falling back to provider signing');
-          // Fallback: use provider signing (may produce ERC-6492 — will likely fail on backend)
           const fallback = await signWithProvider(signingProvider, displayedDate, 'POPUP');
           authAddressForApi = fallback.address;
           signature = fallback.signature;
@@ -885,7 +956,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('[Auth] [POPUP] Signature received, authenticating...');
       toast.loading('Almost there...', { id: toastId });
 
-      const BASE_CHAIN_ID = 8453;
       const authResponse = await authenticateWallet(
         authAddressForApi,
         signature,
