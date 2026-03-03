@@ -91,6 +91,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'es', name: 'Spanish', nativeName: 'Español' },
   { code: 'sr', name: 'Serbian', nativeName: 'Српски' },
   { code: 'si', name: 'Sinhala', nativeName: 'සිංහල' },
+  { code: 'so', name: 'Somali', nativeName: 'Soomaali' },
   { code: 'sk', name: 'Slovak', nativeName: 'Slovenčina' },
   { code: 'sv', name: 'Swedish', nativeName: 'Svenska' },
   { code: 'sw', name: 'Swahili', nativeName: 'Kiswahili' },
