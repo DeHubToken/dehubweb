@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
 import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
+import { ShimmerHoverEffect } from '@/components/ui/shimmer-hover-effect';
 
 const SCROLL_HINT_KEY = 'dehub_nav_scroll_hint_seen';
 
@@ -129,22 +130,15 @@ export function MobileBottomNav() {
         <nav
           className="relative bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl transition-all duration-1000"
         >
-          {/* Right-to-center border glow during scroll hint */}
-          <div
-            className={cn(
-              "pointer-events-none absolute inset-0 rounded-2xl transition-opacity duration-700 z-20",
-              showScrollHint ? "opacity-100" : "opacity-0"
-            )}
-            style={{
-              background: 'linear-gradient(to left, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 30%, transparent 60%)',
-              boxShadow: '0 0 16px 4px rgba(255,255,255,0.25), 0 0 32px 8px rgba(255,255,255,0.1)',
-              mask: 'linear-gradient(to left, black 0%, black 30%, transparent 60%)',
-              WebkitMask: 'linear-gradient(to left, black 0%, black 30%, transparent 60%)',
-              border: '1px solid transparent',
-              borderImage: 'linear-gradient(to left, rgba(255,255,255,0.6), rgba(255,255,255,0.2) 40%, transparent 60%) 1',
-              borderRadius: 'inherit',
-            }}
-          />
+          {/* Shimmer effect during scroll hint */}
+          {showScrollHint && (
+            <ShimmerHoverEffect
+              intensity="strong"
+              duration={1200}
+              className="opacity-100 translate-x-full rounded-2xl z-20"
+              style={{ transitionProperty: 'opacity, transform', transitionDuration: '500ms, 1200ms' }}
+            />
+          )}
           {/* Nav items container */}
           <div 
             ref={scrollRef}
