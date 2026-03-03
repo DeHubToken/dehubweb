@@ -329,13 +329,17 @@ function NotificationItem({
   const freshAvatarPath = enriched?.avatarUrl;
   const staleAvatarPath = extractAvatarPath(notification) || notification.actorAvatar;
   
+  // If enrichment ran and returned no avatar, don't fall back to stale snapshot
+  const hasEnriched = enriched !== undefined;
+  const effectiveAvatarPath = hasEnriched ? freshAvatarPath : (freshAvatarPath || staleAvatarPath);
+  
   // If enriched avatar is already a full URL, use it directly with cache-busting
   const cacheBust = Math.floor(Date.now() / 300000);
-  const avatarUrl = freshAvatarPath?.startsWith('http')
-    ? `${freshAvatarPath}${freshAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`
-    : notification.actorAddress
-      ? buildAvatarUrl(notification.actorAddress, freshAvatarPath || staleAvatarPath)
-      : staleAvatarPath?.startsWith('http') ? staleAvatarPath : undefined;
+  const avatarUrl = effectiveAvatarPath?.startsWith('http')
+    ? `${effectiveAvatarPath}${effectiveAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`
+    : notification.actorAddress && effectiveAvatarPath
+      ? buildAvatarUrl(notification.actorAddress, effectiveAvatarPath)
+      : undefined;
   
    // No dicebear fallback — let AvatarFallback show the greyed-out letter
   const fallbackLetter = (enriched?.displayName || enriched?.username || notification.actorUsername || 'U').charAt(0).toUpperCase();
