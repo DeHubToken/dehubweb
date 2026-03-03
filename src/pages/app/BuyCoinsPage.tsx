@@ -601,13 +601,12 @@ export default function BuyCoinsPage() {
             <div className="space-y-0 divide-y divide-zinc-800">
               {purchaseHistory.slice(0, 10).map((tx) => {
                 const dateStr = tx.createdAt ? format(new Date(tx.createdAt), 'dd MMM yyyy') : '';
-                const amount = Math.round(tx.amount).toLocaleString();
                 return (
                   <div key={tx.id} className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0">
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-emerald-400" />
                       <span className="text-sm text-zinc-300 truncate">
-                        Purchased {amount} {tx.tokenSymbol || 'DHB'}
+                        Purchased ${tx.amount} of Coins
                       </span>
                     </div>
                     <div className="flex items-center gap-2 ml-3">
