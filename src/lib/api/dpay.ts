@@ -365,7 +365,7 @@ export async function getDPayTransactions(): Promise<DPayTransaction[]> {
   }
 
   try {
-    const response = await fetch(`${DEHUB_API_BASE}/api/dpay/tnxs`, {
+    const response = await fetch(`${DEHUB_API_BASE}/api/dpay/tnxs?limit=100`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -438,6 +438,18 @@ export async function getAllDPayTransactions(params: { page?: number; limit?: nu
           const stripeStatus = tx.status_stripe || tx.status || '';
           const isComplete = stripeStatus === 'complete' || stripeStatus === 'completed';
           const isFailed = stripeStatus === 'failed' || stripeStatus === 'expired';
+          // Extract failure reason from stripe_hooks
+          let failureReason: string | undefined;
+          if (isFailed) {
+            if (Array.isArray(tx.stripe_hooks) && tx.stripe_hooks.length > 0) {
+              const hookKey = Object.keys(tx.stripe_hooks[0])[0] || '';
+              failureReason = hookKey.replace('checkout.session.', '').replace(/[._]/g, ' ');
+            } else if (tx.tokenSendStatus === 'cancelled') {
+              failureReason = 'cancelled';
+            } else {
+              failureReason = stripeStatus;
+            }
+          }
           return {
             id: tx._id || tx.id,
             type: (tx.type === 'buy_token' || tx.type === 'buy') ? 'buy' : (tx.type || 'buy'),
@@ -446,6 +458,7 @@ export async function getAllDPayTransactions(params: { page?: number; limit?: nu
             approxTokensToReceive: tx.approxTokensToReceive ? String(tx.approxTokensToReceive) : undefined,
             tokenSymbol: tx.tokenSymbol || tx.symbol || 'DHB',
             status: isComplete ? 'completed' as const : isFailed ? 'failed' as const : 'pending' as const,
+            failureReason,
             createdAt: tx.createdAt || tx.created_at,
             txHash: tx.tokenSendTxnHash || tx.txHash || tx.hash,
             chainId: tx.chainId || tx.chain_id,
