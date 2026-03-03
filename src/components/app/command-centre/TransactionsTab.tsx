@@ -336,7 +336,7 @@ export function TransactionsTab() {
               const dateStr = date.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
               const isCredit = tx.type === 'buy';
               const explorerUrl = tx.txHash ? getExplorerTxUrl(tx.txHash, tx.chainId) : null;
-              const label = tx.type === 'buy' ? 'Coin Purchase' : tx.type === 'ppv' ? 'PPV Unlock' : tx.type === 'sell' ? 'Coin Sale' : 'Transfer';
+              const label = tx.type === 'buy' ? 'Coin Purchase' : (tx.type as string) === 'ppv' ? 'PPV Unlock' : tx.type === 'sell' ? 'Coin Sale' : 'Transfer';
 
               const row = (
                 <div key={tx.id} className={`flex items-center justify-between py-3 ${explorerUrl ? 'cursor-pointer hover:bg-zinc-800/50 -mx-2 px-2 rounded-xl transition-colors' : ''}`}>
