@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, CreditCard, Wallet, Loader2, Check, ChevronDown, AlertCircle, Zap, CheckCircle2, XCircle, TrendingUp, Activity, Package, Search } from 'lucide-react';
+import { ArrowLeft, CreditCard, Wallet, Loader2, Check, AlertCircle, Zap, CheckCircle2, XCircle, TrendingUp, Activity, Package, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
@@ -25,12 +25,6 @@ import {
 } from '@/lib/api/dpay';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from '@/components/ui/drawer';
 import { format } from 'date-fns';
 
 const PRESET_AMOUNTS = [10, 25, 50, 100, 250, 500];
@@ -50,8 +44,7 @@ export default function BuyCoinsPage() {
   const { isAuthenticated, walletAddress } = useAuth();
   const [selectedAmount, setSelectedAmount] = useState<number>(50);
   const [customAmount, setCustomAmount] = useState('');
-  const [isTokenDrawerOpen, setIsTokenDrawerOpen] = useState(false);
-  const [selectedToken, setSelectedToken] = useState<DPayToken | null>(null);
+  const [selectedToken] = useState<DPayToken | null>(null);
   const [selectedChainId, setSelectedChainId] = useState(8453);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
 
@@ -133,13 +126,6 @@ export default function BuyCoinsPage() {
     staleTime: 30 * 1000,
   });
 
-  // Set default token when tokens load
-  useEffect(() => {
-    if (tokens && tokens.length > 0 && !selectedToken) {
-      const dhbToken = tokens.find(t => t.symbol === 'DHB');
-      setSelectedToken(dhbToken || tokens[0]);
-    }
-  }, [tokens, selectedToken]);
 
   // Invalidate wallet balances helper
   const refreshWalletBalances = useCallback(() => {
@@ -329,27 +315,6 @@ export default function BuyCoinsPage() {
           </div>
         </div>
 
-        {/* Token Selection */}
-        <div className="bg-zinc-900 rounded-2xl p-4">
-          <label className="text-sm text-zinc-400 mb-2 block">{t('buyCoins.token')}</label>
-          <button
-            onClick={() => setIsTokenDrawerOpen(true)}
-            className="w-full flex items-center justify-between p-3 bg-zinc-800 rounded-xl hover:bg-zinc-700 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              {selectedToken?.logoUrl ? (
-                <img src={selectedToken.logoUrl} alt={selectedToken.symbol} className="w-8 h-8 rounded-xl" />
-              ) : (
-                <img src={dehubCoin} alt="DHB" className="w-8 h-8" />
-              )}
-              <div className="text-left">
-                <p className="text-white font-medium">{selectedToken?.symbol || 'DHB'}</p>
-                <p className="text-xs text-zinc-400">{selectedToken?.name || 'DeHub Token'}</p>
-              </div>
-            </div>
-            <ChevronDown className="w-5 h-5 text-zinc-400" />
-          </button>
-        </div>
 
         {/* Amount Selection */}
         <div className="bg-zinc-900 rounded-2xl p-4 space-y-4">
@@ -699,57 +664,6 @@ export default function BuyCoinsPage() {
         </p>
       </div>
 
-      {/* Token Selection Drawer */}
-      <Drawer open={isTokenDrawerOpen} onOpenChange={setIsTokenDrawerOpen}>
-        <DrawerContent glass className="max-h-[70vh]">
-          <DrawerHeader className="border-b border-white/10">
-            <DrawerTitle className="text-white">{t('buyCoins.selectToken')}</DrawerTitle>
-          </DrawerHeader>
-          <div className="p-4 space-y-2 overflow-y-auto">
-            {tokensLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
-              </div>
-            ) : tokens && tokens.length > 0 ? (
-              tokens.map((token) => (
-                <button
-                  key={token.symbol}
-                  onClick={() => {
-                    setSelectedToken(token);
-                    setIsTokenDrawerOpen(false);
-                  }}
-                  className={`w-full flex items-center justify-between p-3 rounded-xl transition-colors ${
-                    selectedToken?.symbol === token.symbol
-                      ? 'bg-white/10 border border-white/20'
-                      : 'hover:bg-zinc-800'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    {token.logoUrl ? (
-                      <img src={token.logoUrl} alt={token.symbol} className="w-10 h-10 rounded-xl" />
-                    ) : (
-                      <div className="w-10 h-10 rounded-xl bg-zinc-700 flex items-center justify-center text-white font-medium">
-                        {token.symbol[0]}
-                      </div>
-                    )}
-                    <div className="text-left">
-                      <p className="text-white font-medium">{token.symbol}</p>
-                      <p className="text-sm text-zinc-400">{token.name}</p>
-                    </div>
-                  </div>
-                  {selectedToken?.symbol === token.symbol && (
-                    <Check className="w-5 h-5 text-primary" />
-                  )}
-                </button>
-              ))
-            ) : (
-              <div className="text-center py-8 text-zinc-400">
-                <p>{t('buyCoins.noTokens')}</p>
-              </div>
-            )}
-          </div>
-        </DrawerContent>
-      </Drawer>
     </div>
   );
 }
