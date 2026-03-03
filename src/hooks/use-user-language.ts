@@ -127,6 +127,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   om: 'Oromo',
   af: 'Afrikaans',
   si: 'Sinhala',
+  so: 'Somali',
   qu: 'Quechua',
   am: 'Amharic',
   sw: 'Swahili',
