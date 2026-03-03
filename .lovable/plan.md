@@ -1,15 +1,21 @@
 
 
-## Locale Rebuild Project — COMPLETE ✅
+## Fix: Translate "Governance" in remaining locale files
 
-All 20 locale files have been rebuilt to match the full 33-section, ~1063-line `en.json` schema.
+### Problem
+The `nav.governance` key is left as the English word "Governance" in 5 locale files: `de.json` (German), `it.json` (Italian), `gsw.json` (Swiss German), `pcm.json` (Nigerian Pidgin), and `wes.json` (Cameroon Pidgin). 71 other locales have it properly translated.
 
-### Completed Batches:
-1. **Batch 1** ✅: `rkt.json`, `syl.json`, `tts.json`, `lo.json` (Tier 3)
-2. **Batch 2** ✅: `hne.json`, `cjy.json`, `mnp.json`, `aec.json`, `acw.json`
-3. **Batch 3** ✅: `acm.json`, `ajp.json`, `ayn.json` (Arabic dialects)
-4. **Batch 4** ✅: `dcc.json`, `ctg.json`, `mag.json`, `skr.json`, `dyu.json`
-5. **Batch 5** ✅: `wes.json`, `pbt.json` (Tier 1.5)
-6. **Final pass** ✅: `pcm.json`, `gsw.json`, `ary.json`, `qu.json`, `sa.json` — added missing `browserNotificationsEnabled/Denied/Unsupported` keys
+### Changes
 
-All locale files now have full UI coverage with no English fallbacks.
+Update `nav.governance` in these 5 files:
+
+| File | Current | Fix |
+|------|---------|-----|
+| `de.json` | "Governance" | "Verwaltung" |
+| `it.json` | "Governance" | "Governanza" |
+| `gsw.json` | "Governance" | "Verwaltig" |
+| `pcm.json` | "Governance" | "Rul Dem" |
+| `wes.json` | "Governance" | "Govnas" |
+
+Also update the `governance.title` and `governance.governanceBadge` keys in those same files where they're also set to "Governance".
+
