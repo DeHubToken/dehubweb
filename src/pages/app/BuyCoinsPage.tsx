@@ -601,22 +601,44 @@ export default function BuyCoinsPage() {
             <div className="space-y-0 divide-y divide-zinc-800">
               {purchaseHistory.slice(0, 10).map((tx) => {
                 const dateStr = tx.createdAt ? format(new Date(tx.createdAt), 'dd MMM yyyy') : '';
+                const shortAddr = tx.receiverAddress
+                  ? `${tx.receiverAddress.slice(0, 6)}...${tx.receiverAddress.slice(-4)}`
+                  : null;
+                const explorerUrl = tx.txHash
+                  ? `https://basescan.org/tx/${tx.txHash}`
+                  : null;
                 return (
                   <div key={tx.id} className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0">
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-emerald-400" />
-                      <span className="text-sm text-zinc-300 truncate">
-                        Purchased ${tx.amount} of Coins
-                      </span>
+                      <div className="min-w-0">
+                        <span className="text-sm text-zinc-300 truncate block">
+                          Purchased ${tx.amount} of Coins
+                        </span>
+                        {shortAddr && (
+                          <span className="text-xs text-zinc-500 font-mono">{shortAddr}</span>
+                        )}
+                      </div>
                     </div>
                     <div className="flex items-center gap-2 ml-3">
-                      <span className={`text-xs px-1.5 py-0.5 rounded-md ${
-                        tx.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
-                        tx.status === 'failed' ? 'bg-red-500/20 text-red-400' :
-                        'bg-zinc-700 text-zinc-400'
-                      }`}>
-                        {tx.status}
-                      </span>
+                      {explorerUrl ? (
+                        <a
+                          href={explorerUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs px-1.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition-colors"
+                        >
+                          View Tx
+                        </a>
+                      ) : (
+                        <span className={`text-xs px-1.5 py-0.5 rounded-md ${
+                          tx.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
+                          tx.status === 'failed' ? 'bg-red-500/20 text-red-400' :
+                          'bg-zinc-700 text-zinc-400'
+                        }`}>
+                          {tx.status}
+                        </span>
+                      )}
                       <span className="text-zinc-500 text-xs whitespace-nowrap">{dateStr}</span>
                     </div>
                   </div>

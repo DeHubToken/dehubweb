@@ -29,11 +29,13 @@ export interface DPayTransaction {
   id: string;
   type: 'buy' | 'sell' | 'transfer';
   amount: number;
+  tokenReceived?: number;
   tokenSymbol: string;
   status: 'pending' | 'completed' | 'failed';
   createdAt: string;
   txHash?: string;
   chainId?: number;
+  receiverAddress?: string;
 }
 
 /** Post-purchase polling: status by session ID (GET /dpay/tnxs?sid=...) */
@@ -417,6 +419,7 @@ export async function getAllDPayTransactions(): Promise<DPayTransaction[]> {
           txHash: tx.tokenSendTxnHash || tx.txHash || tx.hash,
           chainId: tx.chainId || tx.chain_id,
           from: tx.from || tx.sender,
+          receiverAddress: tx.receiverAddress || tx.receiver_address,
         }));
     }
 
