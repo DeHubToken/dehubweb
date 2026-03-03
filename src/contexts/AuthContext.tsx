@@ -738,7 +738,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
 
-    toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
+    toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!');
     console.log('[Auth] ✓ DeHub authentication complete (Wagmi)');
     authLogger.info('Login success', { method: 'wagmi', address: authAddress, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
   };
@@ -800,7 +800,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
             queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
             queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-            toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!', { id: toastId });
+            toast.success(saAuthResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: toastId });
             console.log('[Auth] ✓ DeHub authentication complete via Smart Account (Redirect Flow)');
             authLogger.info('Login success', { method: 'redirect-sa', address: saResult.address, username: normalizedUser.username, isNewAccount: !!saAuthResponse.result?.isNewAccount });
             return;
@@ -850,7 +850,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
 
-    toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!', { id: 'auth-redirect' });
+    toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: 'auth-redirect' });
       console.log('[Auth] ✓ DeHub authentication complete (Redirect Flow)');
       authLogger.info('Login success', { method: 'redirect', address: authAddressForApi, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
     } catch (err: any) {
@@ -924,7 +924,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
               queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
               queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-              toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!', { id: toastId });
+              toast.success(saAuthResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: toastId });
               console.log('[Auth] ✓ DeHub authentication complete via Smart Account (Popup Flow)');
               authLogger.info('Login success', { method: 'popup-sa', address: saResult.address, username: normalizedUser.username, isNewAccount: !!saAuthResponse.result?.isNewAccount });
               return;
@@ -979,7 +979,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
       queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
 
-      toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!', { id: 'auth-popup' });
+      toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: 'auth-popup' });
       console.log('[Auth] ✓ DeHub authentication complete (Popup Flow)');
       authLogger.info('Login success', { method: 'popup', address: authAddressForApi, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
     } catch (err: any) {
