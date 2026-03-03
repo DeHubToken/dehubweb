@@ -303,26 +303,29 @@ export default function BuyCoinsPage() {
         <div className="bg-zinc-900 rounded-2xl p-4">
           <label className="text-sm text-zinc-400 mb-2 block">{t('buyCoins.network')}</label>
           <div className="flex gap-2">
-            {CHAINS.map((chain) => (
-              <button
-                key={chain.id}
-                onClick={() => setSelectedChainId(chain.id)}
-                className={`relative flex-1 py-3 rounded-xl font-medium transition-colors text-sm ${
-                  selectedChainId === chain.id
-                    ? 'text-white'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                }`}
-              >
-                {selectedChainId === chain.id && (
-                  <motion.div
-                    layoutId="buy-chain-toggle"
-                    className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">{chain.name}</span>
-              </button>
-            ))}
+            {CHAINS.map((chain) => {
+              const isActive = selectedChainId === chain.id;
+              return (
+                <button
+                  key={chain.id}
+                  onClick={() => setSelectedChainId(chain.id)}
+                  className={`relative flex-1 py-3 rounded-xl font-medium transition-colors text-sm overflow-hidden ${
+                    isActive ? 'text-white' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                  }`}
+                  style={{ zIndex: isActive ? 2 : 1 }}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="buy-chain-toggle"
+                      className="absolute inset-0 z-[1] rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                      style={{ willChange: 'transform' }}
+                    />
+                  )}
+                  <span className="relative z-[2]">{chain.name}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -353,29 +356,32 @@ export default function BuyCoinsPage() {
           <label className="text-sm text-zinc-400 block">{t('buyCoins.amountUsd')}</label>
           
           <div className="grid grid-cols-3 gap-2">
-            {PRESET_AMOUNTS.map((amount) => (
-              <button
-                key={amount}
-                onClick={() => {
-                  setSelectedAmount(amount);
-                  setCustomAmount('');
-                }}
-                className={`relative py-3 rounded-xl font-medium transition-colors ${
-                  selectedAmount === amount && !customAmount
-                    ? 'text-white'
-                    : 'bg-zinc-800 text-white hover:bg-zinc-700'
-                }`}
-              >
-                {selectedAmount === amount && !customAmount && (
-                  <motion.div
-                    layoutId="buy-amount-toggle"
-                    className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">${amount}</span>
-              </button>
-            ))}
+            {PRESET_AMOUNTS.map((amount) => {
+              const isActive = selectedAmount === amount && !customAmount;
+              return (
+                <button
+                  key={amount}
+                  onClick={() => {
+                    setSelectedAmount(amount);
+                    setCustomAmount('');
+                  }}
+                  className={`relative py-3 rounded-xl font-medium transition-colors overflow-hidden ${
+                    isActive ? 'text-white' : 'bg-zinc-800 text-white hover:bg-zinc-700'
+                  }`}
+                  style={{ zIndex: isActive ? 2 : 1 }}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="buy-amount-toggle"
+                      className="absolute inset-0 z-[1] rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                      style={{ willChange: 'transform' }}
+                    />
+                  )}
+                  <span className="relative z-[2]">${amount}</span>
+                </button>
+              );
+            })}
           </div>
 
           <div className="relative">
