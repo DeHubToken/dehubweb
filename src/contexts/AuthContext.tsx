@@ -767,12 +767,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       let authAddressForApi: string;
       let signature: string;
 
-      // Social login redirect: use AA provider directly for Smart Account address + ERC-1271 signature.
-      // Backend verifies via ERC-1271 (same as mobile app flow).
-      const result = await signWithProvider(signingProvider, displayedDate, 'REDIRECT');
-      authAddressForApi = result.address;
-      signature = result.signature;
-      console.log('[Auth] [REDIRECT] Using AA provider signature for Smart Account:', authAddressForApi);
+      // Social login redirect: try EOA direct signing to produce a standard ECDSA signature.
+      // Fall back to AA provider (with ERC-6492 inner extraction) if EOA provider unavailable.
+      const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
+      if (eoaResult) {
+        authAddressForApi = eoaResult.address;
+        signature = eoaResult.signature;
+        console.log('[Auth] [REDIRECT] EOA direct sign OK — address:', authAddressForApi, 'sig length:', signature.length);
+      } else {
+        console.warn('[Auth] [REDIRECT] EOA direct sign unavailable, falling back to AA provider');
+        const aaResult = await signWithProvider(signingProvider, displayedDate, 'REDIRECT');
+        authAddressForApi = aaResult.address;
+        const innerSig = aaResult.signature.length > 200
+          ? extractEoaSignatureFromErc6492(aaResult.signature)
+          : null;
+        signature = innerSig ?? aaResult.signature;
+        console.log('[Auth] [REDIRECT] AA fallback — address:', authAddressForApi, 'sig length:', signature.length,
+          innerSig ? '(inner ECDSA extracted from ERC-6492)' : '(raw ERC-6492 — backend may reject)');
+      }
 
       console.log('[Auth] [REDIRECT] Signature received, authenticating with backend...');
       toast.loading('Verifying with DeHub...', { id: toastId });
@@ -806,6 +818,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       authLogger.info('Login success', { method: 'redirect', address: authAddressForApi, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
     } catch (err: any) {
       console.error('[Auth] [REDIRECT] Sequence failed:', err);
+      authLogger.error('Social auth sequence failed (redirect)', {
+        errorMessage: err.message || String(err),
+        sigLength: typeof signature !== 'undefined' ? signature?.length : 'N/A',
+        address: typeof authAddressForApi !== 'undefined' ? authAddressForApi : 'N/A',
+      }, err);
       toast.error(err.message || 'Authentication failed', { id: 'auth-redirect' });
       setIsProcessingRedirect(false);
       setIsLoading(false);
@@ -841,17 +858,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       let authAddressForApi: string;
       let signature: string;
 
-      // For social logins (Web3Auth AA), use the AA provider directly.
-      // eth_accounts returns the Smart Account address (matches mobile app).
-      // personal_sign produces an ERC-1271 compatible signature.
-      // Backend verifies via ERC-1271 for Smart Accounts (same as mobile app flow).
-      // DO NOT use signWithEoaDirectly here — it returns the EOA address which maps
-      // to a different DeHub account (@chadman) instead of the Smart Account account (@early).
+      // For social logins, use EOA direct signing first — produces a standard 65-byte ECDSA
+      // signature the backend can verify with ecrecover. The AA provider's personal_sign
+      // returns an ERC-6492 wrapped signature (~2242 chars) which the backend cannot verify.
+      // If EOA direct sign is unavailable, fall back to AA provider and try to extract
+      // the inner ECDSA from the ERC-6492 wrapper. Raw ERC-6492 is used as a last resort.
       if (isSocial) {
-        const result = await signWithProvider(signingProvider, displayedDate, 'POPUP');
-        authAddressForApi = result.address;
-        signature = result.signature;
-        console.log('[Auth] [POPUP] Using AA provider signature for Smart Account:', authAddressForApi);
+        const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
+        if (eoaResult) {
+          authAddressForApi = eoaResult.address;
+          signature = eoaResult.signature;
+          console.log('[Auth] [POPUP] EOA direct sign OK — address:', authAddressForApi, 'sig length:', signature.length);
+        } else {
+          console.warn('[Auth] [POPUP] EOA direct sign unavailable, falling back to AA provider');
+          const aaResult = await signWithProvider(signingProvider, displayedDate, 'POPUP');
+          authAddressForApi = aaResult.address;
+          const innerSig = aaResult.signature.length > 200
+            ? extractEoaSignatureFromErc6492(aaResult.signature)
+            : null;
+          signature = innerSig ?? aaResult.signature;
+          console.log('[Auth] [POPUP] AA fallback — address:', authAddressForApi, 'sig length:', signature.length,
+            innerSig ? '(inner ECDSA extracted from ERC-6492)' : '(raw ERC-6492 — backend may reject)');
+        }
       } else {
         // External wallet — standard provider signing
         const result = await signWithProvider(signingProvider, displayedDate, 'POPUP');
@@ -891,6 +919,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       authLogger.info('Login success', { method: 'popup', address: authAddressForApi, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
     } catch (err: any) {
       console.error('[Auth] [POPUP] Sequence failed:', err);
+      authLogger.error('Social auth sequence failed (popup)', {
+        errorMessage: err.message || String(err),
+        sigLength: typeof signature !== 'undefined' ? signature?.length : 'N/A',
+        address: typeof authAddressForApi !== 'undefined' ? authAddressForApi : 'N/A',
+      }, err);
       toast.error(err.message || 'Authentication failed', { id: 'auth-popup' });
     }
   };
