@@ -221,8 +221,7 @@ export function ProfileHeader({
               </button>
             )}
           </div>
-          <div className="flex flex-col items-end gap-2">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
               {isViewingOwnProfile ? (
                 <Button
                   variant="glass" 
@@ -335,9 +334,14 @@ export function ProfileHeader({
                 </DrawerContent>
               </Drawer>
             </div>
+        </div>
+
+        {/* Social links below buttons row */}
+        {profile.customs && (
+          <div className="flex justify-end mt-1 px-4 sm:px-6">
             <ProfileSocialLinks customs={profile.customs} />
           </div>
-        </div>
+        )}
 
         {/* Profile Info */}
         <div>
