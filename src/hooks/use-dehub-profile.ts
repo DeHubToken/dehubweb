@@ -212,8 +212,8 @@ export function useDeHubUserContent({ userId, viewerAddress, enabled = true, lim
       url.searchParams.set('minter', userId);
       url.searchParams.set('sortBy', 'createdAt');
       url.searchParams.set('sortOrder', 'desc');
-      // Only show minted (confirmed on-chain) content
-      url.searchParams.set('status', 'minted');
+      // Show all confirmed and pending content on profiles
+      url.searchParams.set('status', 'all');
       // address param is deprecated - viewer context comes from JWT token
       
       const token = getAuthToken();
