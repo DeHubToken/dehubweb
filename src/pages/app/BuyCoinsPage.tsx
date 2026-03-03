@@ -103,9 +103,9 @@ export default function BuyCoinsPage() {
 
   // Pre-fetch token supply so we can validate before checkout (prevents 406)
   const { data: availableSupply } = useQuery({
-    queryKey: ['dpay', 'supply', selectedToken?.symbol],
-    queryFn: () => getTokenAvailableSupply(selectedToken?.symbol || 'DHB'),
-    enabled: isAuthenticated && !!selectedToken,
+    queryKey: ['dpay', 'supply', 'DHB'],
+    queryFn: () => getTokenAvailableSupply('DHB'),
+    enabled: isAuthenticated,
     staleTime: 2 * 60 * 1000,
     refetchInterval: 5 * 60 * 1000,
   });
