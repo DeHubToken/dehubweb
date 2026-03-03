@@ -50,8 +50,7 @@ export default function BuyCoinsPage() {
   const { isAuthenticated, walletAddress } = useAuth();
   const [selectedAmount, setSelectedAmount] = useState<number>(50);
   const [customAmount, setCustomAmount] = useState('');
-  const [isTokenDrawerOpen, setIsTokenDrawerOpen] = useState(false);
-  const [selectedToken, setSelectedToken] = useState<DPayToken | null>(null);
+  const [selectedToken] = useState<DPayToken | null>(null);
   const [selectedChainId, setSelectedChainId] = useState(8453);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
 
