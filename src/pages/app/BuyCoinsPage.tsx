@@ -448,15 +448,18 @@ export default function BuyCoinsPage() {
 
         {/* Purchase Status Overlay */}
         {purchaseStatus !== 'idle' && (
-          <div className="bg-zinc-900 rounded-2xl p-6 text-center space-y-3 border border-white/10">
+          <div className="bg-zinc-900 rounded-2xl p-6 text-center border border-white/10 flex flex-col items-center justify-center min-h-[180px]">
             {purchaseStatus === 'polling' && (
-              <>
-                <Loader2 className="w-10 h-10 animate-spin text-primary mx-auto" />
-                <h3 className="text-white font-semibold text-lg">Processing Purchase</h3>
-                <p className="text-sm text-zinc-400">
+              <div className="flex flex-col items-center justify-center gap-3">
+                <div className="relative w-12 h-12">
+                  <div className="absolute inset-0 rounded-full border-2 border-primary/20" />
+                  <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-primary animate-spin" />
+                </div>
+                <h3 className="text-foreground font-semibold text-lg">Processing Purchase</h3>
+                <p className="text-sm text-muted-foreground">
                   Payment received! Delivering tokens to your wallet...
                 </p>
-              </>
+              </div>
             )}
             {purchaseStatus === 'success' && (
               <>
