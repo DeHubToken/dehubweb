@@ -321,7 +321,7 @@ export default function BuyCoinsPage() {
           
           <div className="grid grid-cols-3 gap-2">
             {PRESET_AMOUNTS.map((amount) => {
-              const isActive = selectedAmount === amount && !customAmount;
+              const isActive = selectedAmount === amount;
               return (
                 <button
                   key={amount}
