@@ -128,21 +128,27 @@ export function MobileBottomNav() {
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
         <nav
           className={cn(
-            "relative bg-zinc-900/10 backdrop-blur-2xl border rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl overflow-hidden transition-all duration-1000",
+            "relative bg-zinc-900/10 backdrop-blur-2xl border rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl transition-all duration-1000",
             showScrollHint
               ? "border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.08)]"
               : "border-white/10"
           )}
         >
-          {/* Right edge glow during scroll hint */}
+          {/* Right edge border glow during scroll hint */}
           <div
             className={cn(
-              "pointer-events-none absolute top-0 right-0 w-8 h-full rounded-r-2xl transition-opacity duration-1000 z-10",
+              "pointer-events-none absolute -top-[1px] -right-[1px] w-12 rounded-r-2xl transition-opacity duration-1000 z-20",
               showScrollHint ? "opacity-100" : "opacity-0"
             )}
             style={{
-              background: 'linear-gradient(to left, rgba(255,255,255,0.25), transparent)',
-              boxShadow: showScrollHint ? '4px 0 16px 2px rgba(255,255,255,0.15), 2px 0 8px rgba(255,255,255,0.1)' : 'none',
+              height: 'calc(100% + 2px)',
+              background: 'linear-gradient(to left, rgba(255,255,255,0.35), rgba(255,255,255,0.08) 60%, transparent)',
+              boxShadow: showScrollHint
+                ? '0 0 12px 3px rgba(255,255,255,0.2), 0 0 24px 6px rgba(255,255,255,0.1), inset -2px 0 8px rgba(255,255,255,0.15)'
+                : 'none',
+              borderRight: '1px solid rgba(255,255,255,0.4)',
+              borderTop: '1px solid rgba(255,255,255,0.15)',
+              borderBottom: '1px solid rgba(255,255,255,0.15)',
             }}
           />
           {/* Nav items container */}
