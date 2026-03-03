@@ -171,6 +171,7 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   arz: () => import('./locales/arz.json'),
   ajp: () => import('./locales/ajp.json'),
   ayn: () => import('./locales/ayn.json'),
+  apd: () => import('./locales/apd.json'),
   ary: () => import('./locales/ary.json'),
   fa: () => import('./locales/fa.json'),
   pbt: () => import('./locales/pbt.json'),
