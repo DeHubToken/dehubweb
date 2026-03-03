@@ -330,58 +330,38 @@ export function TransactionsTab() {
               : 'No transactions in this time period.'}
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-zinc-500 text-xs border-b border-zinc-800">
-                  <th className="text-left font-normal pb-3">Date</th>
-                  <th className="text-left font-normal pb-3">Type</th>
-                  <th className="text-left font-normal pb-3">Amount</th>
-                  <th className="text-left font-normal pb-3">Token</th>
-                  <th className="text-left font-normal pb-3">Status</th>
-                  <th className="text-left font-normal pb-3">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-800">
-                {filteredTransactions.map((tx) => {
-                  const date = new Date(tx.createdAt);
-                  const dateStr = date.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: '2-digit' });
-                  const isCredit = tx.type === 'buy';
-                  
-                  return (
-                    <tr key={tx.id} className="text-zinc-400">
-                      <td className="py-4">{dateStr}</td>
-                      <td className="py-4 capitalize">{tx.type}</td>
-                      <td className={`py-4 font-medium ${isCredit ? 'text-emerald-400' : 'text-red-400'}`}>
-                        {isCredit ? '+' : '-'} {tx.amount.toLocaleString()} DHB
-                      </td>
-                      <td className="py-4">{tx.tokenSymbol}</td>
-                      <td className="py-4">
-                        <span className={`text-xs px-2 py-0.5 rounded-lg ${
-                          tx.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
-                          tx.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
-                          'bg-red-500/20 text-red-400'
-                        }`}>
-                          {tx.status}
-                        </span>
-                      </td>
-                      <td className="py-4">
-                        {tx.txHash && (
-                          <a
-                            href={getExplorerTxUrl(tx.txHash, tx.chainId)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-400 hover:text-blue-300 text-xs"
-                          >
-                            View tx
-                          </a>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          <div className="divide-y divide-zinc-800">
+            {filteredTransactions.map((tx) => {
+              const date = new Date(tx.createdAt);
+              const dateStr = date.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
+              const isCredit = tx.type === 'buy';
+              const explorerUrl = tx.txHash ? getExplorerTxUrl(tx.txHash, tx.chainId) : null;
+              const label = tx.type === 'buy' ? 'Coin Purchase' : (tx.type as string) === 'ppv' ? 'PPV Unlock' : tx.type === 'sell' ? 'Coin Sale' : 'Transfer';
+
+              const row = (
+                <div key={tx.id} className={`flex items-center justify-between py-3 ${explorerUrl ? 'cursor-pointer hover:bg-zinc-800/50 -mx-2 px-2 rounded-xl transition-colors' : ''}`}>
+                  <div className="min-w-0">
+                    <span className="text-sm text-zinc-300 block">
+                      {label}: <span className={isCredit ? 'text-emerald-400' : 'text-red-400'}>${tx.amount.toLocaleString()}</span>
+                    </span>
+                    <span className="text-xs text-zinc-500">{dateStr}</span>
+                  </div>
+                  <span className={`text-xs px-2 py-0.5 rounded-lg flex-shrink-0 ${
+                    tx.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
+                    tx.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
+                    'bg-red-500/20 text-red-400'
+                  }`}>
+                    {tx.status}
+                  </span>
+                </div>
+              );
+
+              return explorerUrl ? (
+                <a key={tx.id} href={explorerUrl} target="_blank" rel="noopener noreferrer" className="block">
+                  {row}
+                </a>
+              ) : row;
+            })}
           </div>
         )}
       </div>
