@@ -229,7 +229,6 @@ async function signWithEoaDirectly(
     // Instead, we find the underlying EOA provider and call personal_sign on it.
     // The EOA provider produces a standard ECDSA signature (132 chars),
     // unlike the AA provider which wraps it in ERC-6492 (2242 chars).
-    // DeHub backend uses ecrecover only, so EOA address + ECDSA is the only valid format.
 
     let eoaProvider: any = null;
 
@@ -283,7 +282,7 @@ async function signWithEoaDirectly(
     }
 
     const eoaAddress = accounts[0].toLowerCase();
-    console.log('[Auth] EOA direct sign: EOA signer:', eoaAddress);
+    console.log('[Auth] EOA direct sign: EOA address:', eoaAddress);
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${eoaAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
@@ -768,23 +767,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       let authAddressForApi: string;
       let signature: string;
 
-      // DeHub backend uses standard ecrecover only — EOA address + ECDSA signature required.
+      // Social login redirect: try EOA direct signing to bypass AA/ERC-6492
       const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
       if (eoaResult) {
         authAddressForApi = eoaResult.address;
         signature = eoaResult.signature;
-        console.log('[Auth] [REDIRECT] EOA sign OK — address:', authAddressForApi, 'sig length:', signature.length);
+        console.log('[Auth] [REDIRECT] Using EOA direct signature for', authAddressForApi);
       } else {
-        // EOA provider inaccessible — fall back to AA provider
-        console.warn('[Auth] [REDIRECT] EOA direct sign unavailable, falling back to AA provider');
-        const aaResult = await signWithProvider(signingProvider, displayedDate, 'REDIRECT');
-        authAddressForApi = aaResult.address;
-        const innerSig = aaResult.signature.length > 200
-          ? extractEoaSignatureFromErc6492(aaResult.signature)
-          : null;
-        signature = innerSig ?? aaResult.signature;
-        console.log('[Auth] [REDIRECT] AA fallback — address:', authAddressForApi, 'sig length:', signature.length,
-          innerSig ? '(inner ECDSA extracted from ERC-6492)' : '(raw ERC-6492)');
+        console.warn('[Auth] [REDIRECT] EOA direct sign unavailable, falling back to provider signing');
+        toast.loading('Please sign the message in your wallet...', { id: toastId });
+        const fallback = await signWithProvider(signingProvider, displayedDate, 'REDIRECT');
+        authAddressForApi = fallback.address;
+        signature = fallback.signature;
       }
 
       console.log('[Auth] [REDIRECT] Signature received, authenticating with backend...');
@@ -819,11 +813,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       authLogger.info('Login success', { method: 'redirect', address: authAddressForApi, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
     } catch (err: any) {
       console.error('[Auth] [REDIRECT] Sequence failed:', err);
-      authLogger.error('Social auth sequence failed (redirect)', {
-        errorMessage: err.message || String(err),
-        sigLength: 'N/A',
-        address: 'N/A',
-      }, err);
       toast.error(err.message || 'Authentication failed', { id: 'auth-redirect' });
       setIsProcessingRedirect(false);
       setIsLoading(false);
@@ -859,26 +848,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       let authAddressForApi: string;
       let signature: string;
 
-      // DeHub backend uses standard ecrecover only — no EIP-1271 / Smart Account support.
-      // For social logins, sign with the underlying EOA key directly (standard 132-char ECDSA).
-      // If the EOA provider is inaccessible, fall back to AA provider + ERC-6492 extraction.
+      // For social logins, try EOA direct signing to bypass AA/ERC-6492 wrapper.
+      // The backend uses ecrecover which cannot verify ERC-6492/ERC-1271 signatures.
       if (isSocial) {
         const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
         if (eoaResult) {
           authAddressForApi = eoaResult.address;
           signature = eoaResult.signature;
-          console.log('[Auth] [POPUP] EOA sign OK — address:', authAddressForApi, 'sig length:', signature.length);
+          console.log('[Auth] [POPUP] Using EOA direct signature for', authAddressForApi);
         } else {
-          // EOA provider inaccessible — fall back to AA provider
-          console.warn('[Auth] [POPUP] EOA direct sign unavailable, falling back to AA provider');
-          const aaResult = await signWithProvider(signingProvider, displayedDate, 'POPUP');
-          authAddressForApi = aaResult.address;
-          const innerSig = aaResult.signature.length > 200
-            ? extractEoaSignatureFromErc6492(aaResult.signature)
-            : null;
-          signature = innerSig ?? aaResult.signature;
-          console.log('[Auth] [POPUP] AA fallback — address:', authAddressForApi, 'sig length:', signature.length,
-            innerSig ? '(inner ECDSA extracted from ERC-6492)' : '(raw ERC-6492)');
+          console.warn('[Auth] [POPUP] EOA direct sign unavailable, falling back to provider signing');
+          // Fallback: use provider signing (may produce ERC-6492 — will likely fail on backend)
+          const fallback = await signWithProvider(signingProvider, displayedDate, 'POPUP');
+          authAddressForApi = fallback.address;
+          signature = fallback.signature;
         }
       } else {
         // External wallet — standard provider signing
@@ -919,11 +902,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       authLogger.info('Login success', { method: 'popup', address: authAddressForApi, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
     } catch (err: any) {
       console.error('[Auth] [POPUP] Sequence failed:', err);
-      authLogger.error('Social auth sequence failed (popup)', {
-        errorMessage: err.message || String(err),
-        sigLength: 'N/A',
-        address: 'N/A',
-      }, err);
       toast.error(err.message || 'Authentication failed', { id: 'auth-popup' });
     }
   };
@@ -973,14 +951,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       const errorMessage = error.message || String(error);
       if (!isCancellationError(errorMessage)) {
-        // Log to backend for debugging
-        authLogger.error(`Social login failed: ${provider}`, {
-          provider,
-          errorMessage,
-          isRetry,
-          userAgent: navigator.userAgent,
-        }, error);
-
         // Auto-retry once on first failure (common when app/config not fully loaded)
         if (!isRetry) {
           console.log(`[Auth] First attempt failed, retrying in 2s...`);
@@ -1019,13 +989,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Email login error:', error);
       const errorMessage = error.message || String(error);
       if (!isCancellationError(errorMessage)) {
-        authLogger.error('Email login failed', {
-          provider: 'email_passwordless',
-          errorMessage,
-          isRetry,
-          userAgent: navigator.userAgent,
-        }, error);
-
         if (!isRetry) {
           console.log('[Auth] Email login first attempt failed, retrying in 2s...');
           toast.info('Retrying...', { duration: 2000 });
@@ -1062,13 +1025,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('SMS login error:', error);
       const errorMessage = error.message || String(error);
       if (!isCancellationError(errorMessage)) {
-        authLogger.error('SMS login failed', {
-          provider: 'sms_passwordless',
-          errorMessage,
-          isRetry,
-          userAgent: navigator.userAgent,
-        }, error);
-
         if (!isRetry) {
           console.log('[Auth] SMS login first attempt failed, retrying in 2s...');
           toast.info('Retrying...', { duration: 2000 });
@@ -1136,35 +1092,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const disconnect = async () => {
-    // ALWAYS clear local state first so the user is logged out immediately,
-    // regardless of whether provider disconnect succeeds.
-    clearAuthSession();
-    localStorage.removeItem('dehub_user');
-    localStorage.removeItem('dehub_wallet');
-    localStorage.removeItem('dehub_connection_source');
-    clearWagmiStorage();
-
-    setWalletAddress(null);
-    setUser(null);
-
-    disconnectDmSocket();
-    queryClient.clear();
-
-    const source = connectionSource;
-    setConnectionSource(null);
-
-    // Now attempt provider-level cleanup (best-effort, won't block logout)
     try {
-      if (source === 'web3auth') {
+      if (connectionSource === 'web3auth') {
         await disconnectWeb3Auth();
+      } else {
+        wagmiDisconnect();
       }
-    } catch (e) {
-      console.warn('[Auth] Web3Auth disconnect failed (user already logged out):', e);
-    }
-    try {
-      wagmiDisconnect();
-    } catch (e) {
-      console.warn('[Auth] Wagmi disconnect failed (user already logged out):', e);
+      
+      clearAuthSession();
+      localStorage.removeItem('dehub_user');
+      localStorage.removeItem('dehub_wallet');
+      localStorage.removeItem('dehub_connection_source');
+      clearWagmiStorage();
+
+      setWalletAddress(null);
+      setUser(null);
+      setConnectionSource(null);
+
+      disconnectDmSocket();
+      queryClient.clear();
+    } catch (error) {
+      console.error('Disconnect error:', error);
     }
   };
 
