@@ -414,7 +414,7 @@ export default function BuyCoinsPage() {
 
           {/* Available Supply */}
           {availableSupply !== undefined && availableSupply !== Infinity && availableSupply > 0 && (
-            <div className="border-t border-zinc-800 pt-3">
+            <div>
               <div className="flex items-center justify-between">
                 <span className="text-zinc-400 flex items-center gap-1.5">
                   <Package className="w-4 h-4" />
