@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { ShimmerHoverEffect } from "./shimmer-hover-effect";
 
 export interface LiquidGlassBubbleProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Chat tail direction: 'right' for user messages, 'left' for others, 'none' for no tail */
