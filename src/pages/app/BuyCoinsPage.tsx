@@ -575,7 +575,7 @@ export default function BuyCoinsPage() {
 
         {/* Purchase History */}
         <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800">
-          <h3 className="text-white font-semibold mb-3">Recent Purchases</h3>
+          <h3 className="text-white font-semibold mb-3 text-center">Recent Purchases</h3>
           {historyLoading ? (
             <div className="flex items-center justify-center py-6">
               <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
