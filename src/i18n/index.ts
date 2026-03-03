@@ -62,6 +62,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'lo', name: 'Lao', nativeName: 'ລາວ' },
   { code: 'mag', name: 'Magahi', nativeName: 'मगही' },
   { code: 'mr', name: 'Marathi', nativeName: 'मराठी' },
+  { code: 'mn', name: 'Mongolian', nativeName: 'Монгол' },
   { code: 'ms', name: 'Malay', nativeName: 'Bahasa Melayu' },
   { code: 'ary', name: 'Moroccan Arabic', nativeName: 'الدارجة' },
   { code: 'km', name: 'Khmer', nativeName: 'ខ្មែរ' },
