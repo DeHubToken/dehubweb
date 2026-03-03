@@ -629,21 +629,21 @@ export default function BuyCoinsPage() {
                   const explorerUrl = tx.txHash ? `https://basescan.org/tx/${tx.txHash}` : null;
                   const rowClass = `flex items-center py-2.5 first:pt-0 last:pb-0 ${isClickable ? 'hover:bg-white/5 rounded-lg px-1 -mx-1 cursor-pointer transition-colors' : ''}`;
                   const content = (
-                    <>
-                       <div className="min-w-0 flex-1">
-                          <span className="text-sm text-zinc-300 truncate block">
-                            {tx.status === 'completed' ? '✅' : tx.status === 'failed' ? '❌' : '⏳'}{' '}
-                            ${tx.amount} — {tx.approxTokensToReceive ? `~${Number(tx.approxTokensToReceive).toLocaleString()} DHB` : `${tx.tokenSymbol}`}
-                            {tx.status === 'failed' && (tx as any).failureReason && (
-                              <span className="text-xs text-red-400/70 ml-1 capitalize">({(tx as any).failureReason})</span>
-                            )}
-                          </span>
-                         {shortAddr && (
-                           <span className="text-xs text-zinc-500 font-mono">{shortAddr}</span>
-                         )}
-                       </div>
-                       <span className="text-zinc-500 text-xs whitespace-nowrap ml-3 flex-shrink-0">{dateStr}</span>
-                    </>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm text-zinc-300">
+                        {tx.status === 'completed' ? '✅' : tx.status === 'failed' ? '❌' : '⏳'}{' '}
+                        ${tx.amount} — {tx.approxTokensToReceive ? `~${Number(tx.approxTokensToReceive).toLocaleString()} DHB` : `${tx.tokenSymbol}`}
+                        {tx.status === 'failed' && (tx as any).failureReason && (
+                          <span className="text-xs text-red-400/70 ml-1 capitalize whitespace-nowrap">({(tx as any).failureReason})</span>
+                        )}
+                      </div>
+                      <div className="flex items-center justify-between">
+                        {shortAddr && (
+                          <span className="text-xs text-zinc-500 font-mono">{shortAddr}</span>
+                        )}
+                        <span className="text-zinc-500 text-xs whitespace-nowrap ml-auto">{dateStr}</span>
+                      </div>
+                    </div>
                   );
                   return isClickable ? (
                     <a key={tx.id} href={explorerUrl!} target="_blank" rel="noopener noreferrer" className={rowClass}>
