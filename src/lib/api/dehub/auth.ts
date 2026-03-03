@@ -44,21 +44,12 @@ export async function authenticateWallet(
     "Accept": "application/json",
   };
 
-  // Try /api/auth first (generates isMobile:true JWT which works with DM socket).
-  // Fall back to /api/web/auth if /api/auth doesn't exist.
-  let response = await fetch(`${DEHUB_API_BASE}/api/auth`, {
+  // DeHub API only exposes /api/web/auth (doc.md). /api/auth returns 404.
+  const response = await fetch(`${DEHUB_API_BASE}/api/web/auth`, {
     method: "POST",
     headers,
     body,
   });
-
-  if (response.status === 404 || response.status === 405) {
-    response = await fetch(`${DEHUB_API_BASE}/api/web/auth`, {
-      method: "POST",
-      headers,
-      body,
-    });
-  }
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
