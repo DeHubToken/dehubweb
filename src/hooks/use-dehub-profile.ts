@@ -84,6 +84,17 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
   // Get customs data for isPrivate fallback
   const customs = user.customs as Record<string, unknown> | undefined;
 
+  // Merge top-level social link fields into customs so ProfileSocialLinks can find them
+  const socialKeys = ['twitterLink', 'instagramLink', 'tiktokLink', 'youtubeLink', 'discordLink', 'telegramLink', 'facebookLink'] as const;
+  const rawUser = user as Record<string, unknown>;
+  const mergedCustoms: Record<string, unknown> = { ...(customs || {}) };
+  for (const key of socialKeys) {
+    const val = rawUser[key];
+    if (typeof val === 'string' && val.trim().length > 0 && !mergedCustoms[key]) {
+      mergedCustoms[key] = val;
+    }
+  }
+
   return {
     id: user._id || user.id || '',
     name: user.displayName || user.display_name || user.username || 'Unknown User',
@@ -105,7 +116,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     blockedYou: user.blockedYou ?? false,
     followersList,
     followingsList,
-    customs: user.customs as Record<string, unknown> | undefined,
+    customs: Object.keys(mergedCustoms).length > 0 ? mergedCustoms : undefined,
     badgeBalance: user.badgeBalance || (user.balanceData?.reduce((sum, b) => sum + (b.walletBalance || 0) + (b.staked || 0), 0)) || 0,
   };
 }
