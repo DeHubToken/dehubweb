@@ -387,19 +387,28 @@ function ProfileSettings() {
       await refreshUser();
       if (authUser?.address) {
         const userData = await getAccountInfo(authUser.address);
-        const rawUser = userData as Record<string, unknown>;
-        setOriginalValues({
+        const refreshedCustoms = userData.customs as Record<string, string> | undefined;
+        const newOriginals = {
           displayName: userData.displayName || userData.display_name || '',
           username: userData.username || '',
           bio: userData.aboutMe || userData.bio || '',
-          twitterLink: (rawUser.twitterLink as string) || '',
-          discordLink: (rawUser.discordLink as string) || '',
-          instagramLink: (rawUser.instagramLink as string) || '',
-          tiktokLink: (rawUser.tiktokLink as string) || '',
-          youtubeLink: (rawUser.youtubeLink as string) || '',
-          telegramLink: (rawUser.telegramLink as string) || '',
-          facebookLink: (rawUser.facebookLink as string) || '',
-        });
+          twitterLink: refreshedCustoms?.twitterLink || '',
+          discordLink: refreshedCustoms?.discordLink || '',
+          instagramLink: refreshedCustoms?.instagramLink || '',
+          tiktokLink: refreshedCustoms?.tiktokLink || '',
+          youtubeLink: refreshedCustoms?.youtubeLink || '',
+          telegramLink: refreshedCustoms?.telegramLink || '',
+          facebookLink: refreshedCustoms?.facebookLink || '',
+        };
+        setOriginalValues(newOriginals);
+        // Sync form state so links don't disappear after save
+        setTwitterLink(newOriginals.twitterLink);
+        setDiscordLink(newOriginals.discordLink);
+        setInstagramLink(newOriginals.instagramLink);
+        setTiktokLink(newOriginals.tiktokLink);
+        setYoutubeLink(newOriginals.youtubeLink);
+        setTelegramLink(newOriginals.telegramLink);
+        setFacebookLink(newOriginals.facebookLink);
       }
       queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
       queryClient.invalidateQueries({ queryKey: ['dehub-user-content'] });
@@ -447,13 +456,14 @@ function ProfileSettings() {
     if (displayName) data.displayName = displayName;
     if (username) data.username = username;
     if (bio) data.aboutMe = bio;
-    if (twitterLink) data.twitterLink = twitterLink;
-    if (discordLink) data.discordLink = discordLink;
-    if (instagramLink) data.instagramLink = instagramLink;
-    if (tiktokLink) data.tiktokLink = tiktokLink;
-    if (telegramLink) data.telegramLink = telegramLink;
-    if (youtubeLink) data.youtubeLink = youtubeLink;
-    if (facebookLink) data.facebookLink = facebookLink;
+    // Always send social links (even empty strings) so they persist correctly
+    data.twitterLink = twitterLink;
+    data.discordLink = discordLink;
+    data.instagramLink = instagramLink;
+    data.tiktokLink = tiktokLink;
+    data.telegramLink = telegramLink;
+    data.youtubeLink = youtubeLink;
+    data.facebookLink = facebookLink;
     if (avatarFile) data.avatarImg = avatarFile;
     if (coverFile) data.coverImg = coverFile;
     
