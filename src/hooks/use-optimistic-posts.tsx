@@ -27,7 +27,6 @@ function loadFromStorage(): OptimisticPost[] {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as Array<OptimisticPost & { createdAt: string }>;
-    const now = Date.now();
     return parsed
       .map(p => ({ ...p, createdAt: new Date(p.createdAt) }))
       .map(p => ({ ...p, mediaExpired: true })); // blob URLs don't survive refresh
