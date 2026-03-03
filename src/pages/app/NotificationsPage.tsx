@@ -131,9 +131,9 @@ const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.Eleme
 // Map tab filter to notification types
 const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
-  likes: ['like', 'comment_like'],
+  likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
   follows: ['following'],
-  comments: ['comment', 'comment_reply', 'mention'],
+  comments: ['comment', 'comment_reply', 'mention', 'feature_request_comment', 'governance_comment'],
   reposts: ['repost', 'quote'],
   subscriptions: ['subscription', 'ppv_purchase'],
   tips: ['tip'],
@@ -165,7 +165,11 @@ function getNotificationIcon(type: string) {
     case 'video_removal':
       return <AlertTriangle className="w-4 h-4 text-red-500" />;
     case 'feature_request_like':
+    case 'governance_vote':
       return <Star className="w-4 h-4 text-yellow-500" />;
+    case 'feature_request_comment':
+    case 'governance_comment':
+      return <MessageCircle className="w-4 h-4 text-blue-400" />;
     default:
       return <Bell className="w-4 h-4 text-zinc-500" />;
   }
@@ -179,6 +183,18 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
   if ((notification.type as string) === 'feature_request_like') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return title ? `${actorName} liked your feature request "${title}"` : `${actorName} liked your feature request`;
+  }
+  if ((notification.type as string) === 'feature_request_comment') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return title ? `${actorName} commented on your feature request "${title}"` : `${actorName} commented on your feature request`;
+  }
+  if ((notification.type as string) === 'governance_vote') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return title ? `${actorName} voted on your proposal "${title}"` : `${actorName} voted on your proposal`;
+  }
+  if ((notification.type as string) === 'governance_comment') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return title ? `${actorName} commented on your proposal "${title}"` : `${actorName} commented on your proposal`;
   }
 
   // Backend-aggregated follow
@@ -250,8 +266,12 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
 
 function getNavigationLink(notification: DeHubNotification): string | null {
   // Handle custom notification types
-  if ((notification.type as string) === 'feature_request_like') {
+  if ((notification.type as string) === 'feature_request_like' || (notification.type as string) === 'feature_request_comment') {
     return '/features';
+  }
+  if ((notification.type as string) === 'governance_vote' || (notification.type as string) === 'governance_comment') {
+    const refId = (notification as any)._customReferenceId;
+    return refId ? `/app/governance/${refId}` : '/governance';
   }
 
   switch (notification.type) {
