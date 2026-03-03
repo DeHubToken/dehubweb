@@ -189,16 +189,37 @@ export function RecentTransactions() {
       });
     });
 
-    // Add on-chain DHB transfers (deduplicate against DPay txs by checking txHash)
-    const existingHashes = new Set(dpayTxs.map(tx => tx.txHash?.toLowerCase()).filter(Boolean));
+    // Add on-chain DHB transfers (deduplicate against DPay txs by txHash)
+    const dpayHashes = new Set(dpayTxs.map(tx => tx.txHash?.toLowerCase()).filter(Boolean));
+    // Collect DPay buy txHashes so we can label matching on-chain transfers as purchases
+    const dpayBuyHashes = new Set(
+      dpayTxs.filter(tx => tx.type === 'buy').map(tx => tx.txHash?.toLowerCase()).filter(Boolean)
+    );
+    // Also match by amount+time for buys without txHash linkage
+    const dpayBuys = dpayTxs.filter(tx => tx.type === 'buy');
+    const matchesDPayBuyByAmountTime = (amount: number, timestamp: number) => {
+      return dpayBuys.some(buy => {
+        const amountMatch = Math.abs(buy.amount - amount) < 1; // within 1 DHB
+        const buyTime = new Date(buy.createdAt).getTime() / 1000;
+        const timeMatch = Math.abs(buyTime - timestamp) < 300; // within 5 minutes
+        return amountMatch && timeMatch;
+      });
+    };
+    
     onchainTransfers.forEach(transfer => {
+      const txHashLower = transfer.txHash?.toLowerCase();
       // Skip if already captured by DPay API
-      if (existingHashes.has(transfer.txHash?.toLowerCase())) return;
+      if (txHashLower && dpayHashes.has(txHashLower)) return;
 
       const amountStr = transfer.formattedAmount;
+      
+      // Mark as purchase if from a known gateway, matches a DPay buy txHash, or matches by amount+time
+      const isPurchase = transfer.isFiatPurchase 
+        || (txHashLower && dpayBuyHashes.has(txHashLower))
+        || (transfer.isIncoming && matchesDPayBuyByAmountTime(transfer.amount, transfer.timestamp));
 
       let description: string;
-      if (transfer.isFiatPurchase) {
+      if (isPurchase) {
         description = `Purchased ${amountStr} DHB`;
       } else if (transfer.isIncoming) {
         const fromShort = `${transfer.from.slice(0, 6)}...${transfer.from.slice(-4)}`;
@@ -210,7 +231,7 @@ export function RecentTransactions() {
 
       unified.push({
         id: `onchain-${transfer.txHash}-${transfer.from}`,
-        type: transfer.isFiatPurchase ? 'purchase' : 'transfer',
+        type: isPurchase ? 'purchase' : 'transfer',
         amount: transfer.amount,
         createdAt: new Date(transfer.timestamp * 1000).toISOString(),
         isCredit: transfer.isIncoming,
