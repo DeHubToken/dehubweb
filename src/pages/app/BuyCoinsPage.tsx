@@ -327,7 +327,7 @@ export default function BuyCoinsPage() {
                   key={amount}
                   onClick={() => {
                     setSelectedAmount(amount);
-                    setCustomAmount('');
+                    setCustomAmount(String(amount));
                   }}
                   className={`relative py-3 rounded-xl font-medium transition-colors ${
                     isActive ? 'text-white' : 'bg-zinc-800 text-white hover:bg-zinc-700'
