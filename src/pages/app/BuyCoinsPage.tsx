@@ -17,6 +17,7 @@ import {
   createCheckoutSession,
   getDPaySessionStatus,
   getDPayTransactions,
+  getAllDPayTransactions,
   getDPayTotal,
   type DPayToken,
   type DPayTransaction,
@@ -73,11 +74,10 @@ export default function BuyCoinsPage() {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Fetch user's purchase history
+  // Fetch ALL platform purchase history (public)
   const { data: purchaseHistory = [], isLoading: historyLoading } = useQuery({
-    queryKey: ['dpay', 'transactions'],
-    queryFn: getDPayTransactions,
-    enabled: isAuthenticated,
+    queryKey: ['dpay', 'all-transactions'],
+    queryFn: getAllDPayTransactions,
     staleTime: 60_000,
   });
 
@@ -575,13 +575,13 @@ export default function BuyCoinsPage() {
 
         {/* Purchase History */}
         <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800">
-          <h3 className="text-white font-semibold mb-3">Your Purchase History</h3>
+          <h3 className="text-white font-semibold mb-3">Recent Purchases</h3>
           {historyLoading ? (
             <div className="flex items-center justify-center py-6">
               <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
             </div>
           ) : purchaseHistory.length === 0 ? (
-            <p className="text-zinc-500 text-sm text-center py-4">No purchases yet. Make your first purchase above!</p>
+            <p className="text-zinc-500 text-sm text-center py-4">No purchases yet. Be the first!</p>
           ) : (
             <div className="space-y-0 divide-y divide-zinc-800">
               {purchaseHistory.slice(0, 10).map((tx) => {
