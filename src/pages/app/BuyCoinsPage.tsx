@@ -639,7 +639,7 @@ export default function BuyCoinsPage() {
                         <span className="text-zinc-500 text-xs whitespace-nowrap">{dateStr}</span>
                         {explorerUrl ? (
                           <a href={explorerUrl} target="_blank" rel="noopener noreferrer">
-                            <LiquidGlassBubble className="cursor-pointer px-2 py-0.5">
+                            <LiquidGlassBubble className="cursor-pointer !px-0 !py-0">
                               <span className="text-xs text-white whitespace-nowrap">View Tx</span>
                             </LiquidGlassBubble>
                           </a>
