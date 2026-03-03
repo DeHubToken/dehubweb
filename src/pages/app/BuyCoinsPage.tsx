@@ -384,7 +384,7 @@ export default function BuyCoinsPage() {
             <span className="text-white font-semibold text-lg">${effectiveAmount.toFixed(2)}</span>
           </div>
           
-          <div className="border-t border-zinc-800 pt-3">
+          <div>
             <div className="flex items-center justify-between">
               <span className="text-zinc-400">{t('buyCoins.youReceive')}</span>
               <div className="flex items-center gap-2">
