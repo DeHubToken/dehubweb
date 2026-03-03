@@ -329,27 +329,6 @@ export default function BuyCoinsPage() {
           </div>
         </div>
 
-        {/* Token Selection */}
-        <div className="bg-zinc-900 rounded-2xl p-4">
-          <label className="text-sm text-zinc-400 mb-2 block">{t('buyCoins.token')}</label>
-          <button
-            onClick={() => setIsTokenDrawerOpen(true)}
-            className="w-full flex items-center justify-between p-3 bg-zinc-800 rounded-xl hover:bg-zinc-700 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              {selectedToken?.logoUrl ? (
-                <img src={selectedToken.logoUrl} alt={selectedToken.symbol} className="w-8 h-8 rounded-xl" />
-              ) : (
-                <img src={dehubCoin} alt="DHB" className="w-8 h-8" />
-              )}
-              <div className="text-left">
-                <p className="text-white font-medium">{selectedToken?.symbol || 'DHB'}</p>
-                <p className="text-xs text-zinc-400">{selectedToken?.name || 'DeHub Token'}</p>
-              </div>
-            </div>
-            <ChevronDown className="w-5 h-5 text-zinc-400" />
-          </button>
-        </div>
 
         {/* Amount Selection */}
         <div className="bg-zinc-900 rounded-2xl p-4 space-y-4">
