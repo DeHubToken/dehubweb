@@ -45,6 +45,7 @@ const TOKEN_ICONS: Record<string, string> = {
 };
 
 const fmtBal = (v: string) => {
+  if (v === '<0.01') return '<0.01';
   const n = parseFloat(v);
   if (isNaN(n) || n === 0) return '0';
   if (n < 0.01) return '<0.01';
