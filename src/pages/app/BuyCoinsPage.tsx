@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, CreditCard, Wallet, Loader2, Check, ChevronDown, AlertCircle, Zap, CheckCircle2, XCircle } from 'lucide-react';
+import { ArrowLeft, CreditCard, Wallet, Loader2, Check, ChevronDown, AlertCircle, Zap, CheckCircle2, XCircle, TrendingUp, Activity, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
@@ -16,7 +16,10 @@ import {
   getTokenAvailableSupply,
   createCheckoutSession,
   getDPaySessionStatus,
+  getDPayTransactions,
+  getDPayTotal,
   type DPayToken,
+  type DPayTransaction,
 } from '@/lib/api/dpay';
 import dehubCoin from '@/assets/dehub-coin.png';
 import {
@@ -25,6 +28,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
+import { format } from 'date-fns';
 
 const PRESET_AMOUNTS = [10, 25, 50, 100, 250, 500];
 
@@ -67,6 +71,22 @@ export default function BuyCoinsPage() {
     queryFn: getAvailableGasTokens,
     enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000,
+  });
+
+  // Fetch user's purchase history
+  const { data: purchaseHistory = [], isLoading: historyLoading } = useQuery({
+    queryKey: ['dpay', 'transactions'],
+    queryFn: getDPayTransactions,
+    enabled: isAuthenticated,
+    staleTime: 60_000,
+  });
+
+  // Fetch platform-wide stats
+  const { data: platformStats } = useQuery({
+    queryKey: ['dpay', 'total'],
+    queryFn: getDPayTotal,
+    enabled: isAuthenticated,
+    staleTime: 5 * 60_000,
   });
 
   // Pre-fetch token supply so we can validate before checkout (prevents 406)
@@ -511,6 +531,86 @@ export default function BuyCoinsPage() {
             )}
           </div>
         )}
+
+        {/* Platform Stats Banner */}
+        {platformStats && (platformStats.totalVolume > 0 || platformStats.totalTransactions > 0) && (
+          <div className="bg-zinc-900 rounded-2xl p-4 flex items-center justify-around border border-zinc-800">
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-1.5 mb-1">
+                <TrendingUp className="w-4 h-4 text-emerald-400" />
+                <span className="text-xs text-zinc-400">Total Volume</span>
+              </div>
+              <span className="text-white font-semibold">
+                ${platformStats.totalVolume.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+              </span>
+            </div>
+            <div className="w-px h-10 bg-zinc-800" />
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-1.5 mb-1">
+                <Activity className="w-4 h-4 text-blue-400" />
+                <span className="text-xs text-zinc-400">Transactions</span>
+              </div>
+              <span className="text-white font-semibold">
+                {platformStats.totalTransactions.toLocaleString()}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Available Supply */}
+        {availableSupply !== undefined && availableSupply !== Infinity && availableSupply > 0 && (
+          <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800">
+            <div className="flex items-center gap-2 mb-1">
+              <Package className="w-4 h-4 text-zinc-400" />
+              <span className="text-sm text-zinc-400">Available Supply</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+              <span className="text-white font-semibold text-lg">
+                {Math.floor(availableSupply).toLocaleString()} {selectedToken?.symbol || 'DHB'}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Purchase History */}
+        <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800">
+          <h3 className="text-white font-semibold mb-3">Your Purchase History</h3>
+          {historyLoading ? (
+            <div className="flex items-center justify-center py-6">
+              <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
+            </div>
+          ) : purchaseHistory.length === 0 ? (
+            <p className="text-zinc-500 text-sm text-center py-4">No purchases yet. Make your first purchase above!</p>
+          ) : (
+            <div className="space-y-0 divide-y divide-zinc-800">
+              {purchaseHistory.slice(0, 10).map((tx) => {
+                const dateStr = tx.createdAt ? format(new Date(tx.createdAt), 'dd MMM yyyy') : '';
+                const amount = Math.round(tx.amount).toLocaleString();
+                return (
+                  <div key={tx.id} className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-emerald-400" />
+                      <span className="text-sm text-zinc-300 truncate">
+                        Purchased {amount} {tx.tokenSymbol || 'DHB'}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 ml-3">
+                      <span className={`text-xs px-1.5 py-0.5 rounded-md ${
+                        tx.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
+                        tx.status === 'failed' ? 'bg-red-500/20 text-red-400' :
+                        'bg-zinc-700 text-zinc-400'
+                      }`}>
+                        {tx.status}
+                      </span>
+                      <span className="text-zinc-500 text-xs whitespace-nowrap">{dateStr}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
 
         {/* Disclaimer */}
         <p className="text-xs text-zinc-500 text-center px-4">
