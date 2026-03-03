@@ -738,7 +738,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
 
-    toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
+    toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!');
     console.log('[Auth] ✓ DeHub authentication complete (Wagmi)');
     authLogger.info('Login success', { method: 'wagmi', address: authAddress, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
   };
