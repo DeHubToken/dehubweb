@@ -315,7 +315,7 @@ export default function BuyCoinsPage() {
             </div>
             {tokenPrice > 0 && (
               <p className="text-xs text-zinc-500 mt-1 text-right">
-                1 {selectedToken?.symbol || 'DHB'} ≈ ${tokenPrice.toFixed(4)}
+                1 {selectedToken?.symbol || 'DHB'} ≈ ${tokenPrice.toFixed(5)}
                 {priceData?.change24h != null && (
                   <span className={priceData.change24h >= 0 ? 'text-emerald-400 ml-2' : 'text-red-400 ml-2'}>
                     {priceData.change24h >= 0 ? '+' : ''}{priceData.change24h.toFixed(2)}%
