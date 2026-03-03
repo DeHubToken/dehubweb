@@ -380,8 +380,6 @@ export default function BuyCoinsPage() {
         {/* Price Summary */}
         <div className="bg-zinc-900 rounded-2xl p-4 space-y-3">
           <div>
-          
-          <div>
             <div className="flex items-center justify-between">
               <span className="text-zinc-400">{t('buyCoins.youReceive')}</span>
               <div className="flex items-center gap-2">
