@@ -56,7 +56,7 @@ function formatDPayTx(tx: DPayTransaction, t: (key: string, opts?: any) => strin
     default:
       description = `${tx.type} — ${amount} DHB`;
   }
-  return { id: tx.id, type: tx.type, amount: tx.amount, createdAt: tx.createdAt, isCredit, description };
+  return { id: tx.id, type: tx.type, amount: tx.amount, createdAt: tx.createdAt, isCredit, description, txHash: tx.txHash, chainId: tx.chainId };
 }
 
 export function RecentTransactions() {
