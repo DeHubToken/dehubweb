@@ -315,10 +315,18 @@ export async function getDPaySessionStatus(sessionId: string): Promise<DPaySessi
     throw new Error(`Failed to fetch session status: ${response.status}`);
   }
   const data = await response.json();
-  const result = data?.result ?? data;
+  console.log('[DPay API] Raw session status response:', JSON.stringify(data));
+  
+  // The API may return the transaction directly, in a result wrapper, or as an array
+  let result = data?.result ?? data;
+  if (Array.isArray(result)) {
+    // If array, take the first (most recent) entry
+    result = result[0] ?? {};
+  }
+  
   return {
-    status_stripe: result.status_stripe ?? result.statusStripe,
-    tokenSendStatus: result.tokenSendStatus ?? result.token_send_status,
+    status_stripe: result.status_stripe ?? result.statusStripe ?? result.stripe_status ?? result.status,
+    tokenSendStatus: result.tokenSendStatus ?? result.token_send_status ?? result.sendStatus,
     tokenSendTxnHash: result.tokenSendTxnHash ?? result.token_send_txn_hash ?? result.txHash,
     ...result,
   };
