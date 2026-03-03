@@ -193,8 +193,7 @@ export default function FullWalletPage() {
       <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 mb-4">
         <div className="flex items-center justify-between">
           <div className="min-w-0">
-            <span className="text-zinc-500 text-xs uppercase tracking-wider font-medium">DeHub Balance</span>
-            <div className="flex items-center gap-2 mt-0.5">
+            <div className="flex items-center gap-2">
               <img src={dehubCoin} alt="DHB" className="w-7 h-7" />
               <p className="text-white text-2xl font-bold">
                 {(() => {
@@ -202,7 +201,6 @@ export default function FullWalletPage() {
                   const bal = dhb ? parseFloat(dhb.totalFormattedBalance) : 0;
                   return isNaN(bal) ? '0' : Math.floor(bal).toLocaleString();
                 })()}
-                <span className="text-base font-semibold text-zinc-400 ml-1">DHB</span>
               </p>
             </div>
             <p className="text-zinc-500 text-xs mt-1">
