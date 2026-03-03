@@ -124,16 +124,22 @@ export function ProfileHeader({
   return (
     <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
       {/* Cover Photo */}
-      <button 
-        className="aspect-[3/1] bg-zinc-800 w-full cursor-pointer"
-        onClick={() => setFullscreenImage(profile.coverUrl || getDefaultBanner(profile.walletAddress))}
-      >
-        <img 
-          src={profile.coverUrl || getDefaultBanner(profile.walletAddress)} 
-          alt="Cover" 
-          className="w-full h-full object-cover" 
-        />
-      </button>
+      <div className="relative">
+        <button 
+          className="aspect-[3/1] bg-zinc-800 w-full cursor-pointer block"
+          onClick={() => setFullscreenImage(profile.coverUrl || getDefaultBanner(profile.walletAddress))}
+        >
+          <img 
+            src={profile.coverUrl || getDefaultBanner(profile.walletAddress)} 
+            alt="Cover" 
+            className="w-full h-full object-cover" 
+          />
+        </button>
+        {/* Social links overlaid on banner bottom-right */}
+        <div className="absolute bottom-2 right-2 z-10">
+          <ProfileSocialLinks customs={profile.customs} />
+        </div>
+      </div>
       
       {/* Profile Content */}
       <div className="px-4 sm:px-6 pb-4">
@@ -335,7 +341,6 @@ export function ProfileHeader({
                 </DrawerContent>
               </Drawer>
             </div>
-            <ProfileSocialLinks customs={profile.customs} />
           </div>
         </div>
 
