@@ -448,8 +448,7 @@ export default function BuyCoinsPage() {
 
         {/* Purchase Status Overlay */}
         {purchaseStatus !== 'idle' && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-            <div className="bg-zinc-900 rounded-2xl p-6 text-center space-y-3 border border-white/10 max-w-sm w-full mx-4">
+          <div className="bg-zinc-900 rounded-2xl p-6 text-center space-y-3 border border-white/10">
             {purchaseStatus === 'polling' && (
               <>
                 <Loader2 className="w-10 h-10 animate-spin text-primary mx-auto" />
@@ -494,7 +493,6 @@ export default function BuyCoinsPage() {
                 </Button>
               </>
             )}
-            </div>
           </div>
         )}
 
