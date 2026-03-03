@@ -101,6 +101,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   syl: 'Sylheti',
   sr: 'Serbian',
   bn: 'Bengali',
+  bho: 'Bhojpuri',
   be: 'Belarusian',
   bg: 'Bulgarian',
   my: 'Burmese',
