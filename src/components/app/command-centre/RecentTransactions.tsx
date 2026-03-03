@@ -241,6 +241,7 @@ export function RecentTransactions() {
         createdAt: new Date(transfer.timestamp * 1000).toISOString(),
         isCredit: transfer.isIncoming,
         description,
+        txHash: transfer.txHash,
       });
     });
 
