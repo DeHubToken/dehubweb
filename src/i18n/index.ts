@@ -31,6 +31,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'aec', name: "Arabic, Sa'idi Spoken", nativeName: 'صعيدي' },
   { code: 'ajp', name: 'Arabic, South Levantine Spoken', nativeName: 'شامي' },
   { code: 'ayn', name: 'Arabic, Sanaani Spoken', nativeName: 'صنعاني' },
+  { code: 'apd', name: 'Arabic, Sudanese Spoken', nativeName: 'عربي سوداني' },
   { code: 'bho', name: 'Bhojpuri', nativeName: 'भोजपुरी' },
   { code: 'be', name: 'Belarusian', nativeName: 'Беларуская' },
   { code: 'bn', name: 'Bengali', nativeName: 'বাংলা' },
