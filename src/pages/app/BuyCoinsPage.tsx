@@ -627,7 +627,7 @@ export default function BuyCoinsPage() {
                     : null;
                   const isClickable = tx.status === 'completed' && tx.txHash;
                   const explorerUrl = tx.txHash ? `https://basescan.org/tx/${tx.txHash}` : null;
-                  const rowClass = `flex items-center py-2.5 first:pt-0 last:pb-0 ${isClickable ? 'hover:bg-white/5 rounded-lg px-1 -mx-1 cursor-pointer transition-colors' : ''}`;
+                  const rowClass = `flex items-center py-2.5 first:pt-0 last:pb-0 ${isClickable ? 'hover:bg-white/5 px-4 -mx-4 cursor-pointer transition-colors' : ''}`;
                   const content = (
                     <div className="min-w-0 flex-1">
                       <div className="text-sm text-zinc-300">
