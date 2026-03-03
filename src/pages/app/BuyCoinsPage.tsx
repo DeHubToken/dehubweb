@@ -432,7 +432,7 @@ export default function BuyCoinsPage() {
 
           {/* Gas token info */}
           {gasTokens && gasTokens.length > 0 && (
-            <div className="border-t border-zinc-800 pt-3">
+            <div>
               <p className="text-xs text-zinc-500 flex items-center gap-1">
                 <Zap className="w-3 h-3" />
                 Gas: {gasTokens.map(g => g.symbol).join(', ')} available on {CHAINS.find(c => c.id === selectedChainId)?.name}
