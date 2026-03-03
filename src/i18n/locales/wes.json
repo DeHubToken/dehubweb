@@ -16,7 +16,7 @@
     "docs": "Docs",
     "roadmap": "Roadmap",
     "featureRequests": "Requests",
-    "governance": "Governance",
+    "governance": "Govnas",
     "careers": "Careers",
     "create": "Create",
     "login": "Log in",
@@ -1016,7 +1016,7 @@
     "applicationFailed": "E no fit submit. Abeg try again."
   },
   "governance": {
-    "title": "Governance",
+    "title": "Govnas",
     "proposalCount": "{{count}} proposal don submit",
     "proposalCount_other": "{{count}} proposals don submit",
     "propose": "Propose",
@@ -1026,7 +1026,7 @@
     "rejected": "Rejected",
     "mostVoted": "Most Voted",
     "newest": "Newest",
-    "governanceBadge": "Governance",
+    "governanceBadge": "Govnas",
     "weightedVotes": "Weighted: {{for}} for · {{against}} against",
     "weightedVotesFor": "{{count}} weighted votes for",
     "noCommentsYet": "No comments yet",
