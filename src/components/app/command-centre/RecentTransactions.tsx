@@ -285,8 +285,15 @@ export function RecentTransactions() {
         <div className="space-y-0 divide-y divide-zinc-800">
           {recent.map((tx) => {
             const dateStr = format(new Date(tx.createdAt), 'dd MMM');
+            const explorerUrl = tx.txHash
+              ? (tx.chainId === 56 ? `https://bscscan.com/tx/${tx.txHash}` : `https://basescan.org/tx/${tx.txHash}`)
+              : null;
             return (
-              <div key={tx.id} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
+              <div
+                key={tx.id}
+                className={`flex items-center justify-between py-3 first:pt-0 last:pb-0 ${explorerUrl ? 'cursor-pointer hover:bg-zinc-800/50 -mx-2 px-2 rounded-xl transition-colors' : ''}`}
+                onClick={() => explorerUrl && window.open(explorerUrl, '_blank')}
+              >
                 <div className="flex items-center gap-2 min-w-0">
                   <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${tx.isCredit ? 'bg-emerald-400' : 'bg-red-400'}`} />
                   <TranslatableText text={tx.description} className="text-sm text-zinc-400 truncate" as="p" hideControls />
