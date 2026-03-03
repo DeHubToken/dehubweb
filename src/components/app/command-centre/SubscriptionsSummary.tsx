@@ -58,7 +58,7 @@ export function SubscriptionsSummary() {
               <p className="text-white text-xl font-bold">{subscriptions.length}</p>
             </div>
             <div className="bg-zinc-800/50 rounded-xl p-3">
-              <span className="text-zinc-500 text-xs">{t('commandCentre.yourPlans')}</span>
+              <span className="text-zinc-500 text-xs">Plans</span>
               <p className="text-white text-xl font-bold">{plans.length}</p>
             </div>
           </div>
