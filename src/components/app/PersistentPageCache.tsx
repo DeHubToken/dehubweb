@@ -13,6 +13,7 @@ import React, { Suspense, useState, useEffect, useRef, memo } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
+import { lazyWithRetry } from '@/lib/lazy-with-retry';
 import {
   FeedSkeleton,
   ExploreSkeleton,
@@ -26,26 +27,26 @@ import {
   GenericPageSkeleton,
 } from './PageSkeletons';
 
-// Lazy page imports
-const HomePage = React.lazy(() => import('@/pages/app/HomePage'));
-const ExplorePage = React.lazy(() => import('@/pages/app/ExplorePage'));
-const ProfilePage = React.lazy(() => import('@/pages/app/ProfilePage'));
-const NotificationsPage = React.lazy(() => import('@/pages/app/NotificationsPage'));
-const MessagesPage = React.lazy(() => import('@/pages/app/MessagesPage'));
-const LeaderboardPage = React.lazy(() => import('@/pages/app/LeaderboardPage'));
-const BookmarksPage = React.lazy(() => import('@/pages/app/BookmarksPage'));
-const SettingsPage = React.lazy(() => import('@/pages/app/SettingsPage'));
-const CommandCentrePage = React.lazy(() => import('@/pages/app/CommandCentrePage'));
-const MusicPage = React.lazy(() => import('@/pages/app/MusicPage'));
-const TVPage = React.lazy(() => import('@/pages/app/TVPage'));
-const AssistantPage = React.lazy(() => import('@/pages/app/AssistantPage'));
-const BuyCoinsPage = React.lazy(() => import('@/pages/app/BuyCoinsPage'));
-const AgentsPage = React.lazy(() => import('@/pages/app/AgentsPage'));
-const FeaturesPage = React.lazy(() => import('@/pages/app/FeaturesPage'));
-const GovernancePage = React.lazy(() => import('@/pages/app/GovernancePage'));
-const FullWalletPage = React.lazy(() => import('@/pages/app/FullWalletPage'));
-const CareersPage = React.lazy(() => import('@/pages/app/CareersPage'));
-const StakingPage = React.lazy(() => import('@/pages/app/StakingPage'));
+// Lazy page imports with chunk-load retry
+const HomePage = lazyWithRetry(() => import('@/pages/app/HomePage'));
+const ExplorePage = lazyWithRetry(() => import('@/pages/app/ExplorePage'));
+const ProfilePage = lazyWithRetry(() => import('@/pages/app/ProfilePage'));
+const NotificationsPage = lazyWithRetry(() => import('@/pages/app/NotificationsPage'));
+const MessagesPage = lazyWithRetry(() => import('@/pages/app/MessagesPage'));
+const LeaderboardPage = lazyWithRetry(() => import('@/pages/app/LeaderboardPage'));
+const BookmarksPage = lazyWithRetry(() => import('@/pages/app/BookmarksPage'));
+const SettingsPage = lazyWithRetry(() => import('@/pages/app/SettingsPage'));
+const CommandCentrePage = lazyWithRetry(() => import('@/pages/app/CommandCentrePage'));
+const MusicPage = lazyWithRetry(() => import('@/pages/app/MusicPage'));
+const TVPage = lazyWithRetry(() => import('@/pages/app/TVPage'));
+const AssistantPage = lazyWithRetry(() => import('@/pages/app/AssistantPage'));
+const BuyCoinsPage = lazyWithRetry(() => import('@/pages/app/BuyCoinsPage'));
+const AgentsPage = lazyWithRetry(() => import('@/pages/app/AgentsPage'));
+const FeaturesPage = lazyWithRetry(() => import('@/pages/app/FeaturesPage'));
+const GovernancePage = lazyWithRetry(() => import('@/pages/app/GovernancePage'));
+const FullWalletPage = lazyWithRetry(() => import('@/pages/app/FullWalletPage'));
+const CareersPage = lazyWithRetry(() => import('@/pages/app/CareersPage'));
+const StakingPage = lazyWithRetry(() => import('@/pages/app/StakingPage'));
 
 // Pages that get cached (mount-once, hide with CSS)
 interface CachedPageConfig {
