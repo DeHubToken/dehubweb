@@ -99,6 +99,20 @@ export async function getDPayTransactions(params: {
   return response as DPayTransaction[];
 }
 
+export async function getAllDPayTransactions(params: {
+  page?: number;
+  limit?: number;
+} = {}): Promise<DPayTransaction[]> {
+  const response = await apiCall<{ result: DPayTransaction[] } | DPayTransaction[]>("/api/dpay/tnxs", {
+    params: { page: params.page, limit: params.limit },
+    requiresAuth: false,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as DPayTransaction[];
+}
+
 export async function getDPayTotal(): Promise<DPayTotal> {
   const response = await apiCall<{ result: DPayTotal }>("/api/dpay/total");
   return response?.result ?? response as any;

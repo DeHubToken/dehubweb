@@ -380,6 +380,48 @@ export async function getDPayTransactions(): Promise<DPayTransaction[]> {
 }
 
 /**
+ * Get ALL platform purchase history (public, no auth required)
+ */
+export async function getAllDPayTransactions(): Promise<DPayTransaction[]> {
+  console.log('[DPay API] Fetching all platform transactions...');
+
+  try {
+    const response = await fetch(`${DEHUB_API_BASE}/api/dpay/tnxs`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch transactions: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const transactions = data?.result || data?.transactions || data || [];
+    
+    if (Array.isArray(transactions)) {
+      return transactions.map((tx: any) => ({
+        id: tx._id || tx.id,
+        type: tx.type || 'buy',
+        amount: tx.amount,
+        tokenSymbol: tx.tokenSymbol || tx.symbol || 'DHB',
+        status: tx.status || 'completed',
+        createdAt: tx.createdAt || tx.created_at,
+        txHash: tx.txHash || tx.hash,
+        chainId: tx.chainId || tx.chain_id,
+        from: tx.from || tx.sender,
+      }));
+    }
+
+    return [];
+  } catch (error) {
+    console.error('[DPay API] Error fetching all transactions:', error);
+    throw error;
+  }
+}
+
+/**
  * Get total volume/stats
  */
 export async function getDPayTotal(): Promise<{ totalVolume: number; totalTransactions: number }> {
