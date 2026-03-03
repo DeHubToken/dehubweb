@@ -384,7 +384,7 @@ export default function BuyCoinsPage() {
             <span className="text-white font-semibold text-lg">${effectiveAmount.toFixed(2)}</span>
           </div>
           
-          <div className="border-t border-zinc-800 pt-3">
+          <div>
             <div className="flex items-center justify-between">
               <span className="text-zinc-400">{t('buyCoins.youReceive')}</span>
               <div className="flex items-center gap-2">
@@ -414,7 +414,7 @@ export default function BuyCoinsPage() {
 
           {/* Available Supply */}
           {availableSupply !== undefined && availableSupply !== Infinity && availableSupply > 0 && (
-            <div className="border-t border-zinc-800 pt-3">
+            <div>
               <div className="flex items-center justify-between">
                 <span className="text-zinc-400 flex items-center gap-1.5">
                   <Package className="w-4 h-4" />
@@ -432,7 +432,7 @@ export default function BuyCoinsPage() {
 
           {/* Gas token info */}
           {gasTokens && gasTokens.length > 0 && (
-            <div className="border-t border-zinc-800 pt-3">
+            <div>
               <p className="text-xs text-zinc-500 flex items-center gap-1">
                 <Zap className="w-3 h-3" />
                 Gas: {gasTokens.map(g => g.symbol).join(', ')} available on {CHAINS.find(c => c.id === selectedChainId)?.name}
@@ -612,7 +612,7 @@ export default function BuyCoinsPage() {
             ) : (
                 <div
                   ref={purchaseListRef}
-                  className="space-y-0 divide-y divide-zinc-800 max-h-[400px] overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                  className="space-y-0 max-h-[400px] overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 onScroll={(e) => {
                   const el = e.currentTarget;
                   if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100 && hasNextPage && !isFetchingNextPage) {
