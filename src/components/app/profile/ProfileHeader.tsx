@@ -338,7 +338,7 @@ export function ProfileHeader({
 
         {/* Social links below buttons row */}
         {profile.customs && (
-          <div className="flex justify-end mt-1 px-4 sm:px-6">
+          <div className="flex justify-end -mt-3 mb-1">
             <ProfileSocialLinks customs={profile.customs} />
           </div>
         )}
