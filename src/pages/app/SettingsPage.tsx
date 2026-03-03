@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -210,6 +211,13 @@ function ProfileSettings() {
   const { t } = useTranslation();
   const { user: authUser, refreshUser } = useAuthContext();
   const queryClient = useQueryClient();
+  const { suppressGlobalDrop, unsuppressGlobalDrop } = useGlobalDropZone();
+
+  // Suppress global drop-to-post while on edit profile
+  useEffect(() => {
+    suppressGlobalDrop();
+    return () => unsuppressGlobalDrop();
+  }, [suppressGlobalDrop, unsuppressGlobalDrop]);
   
   // Form state declarations
   const [displayName, setDisplayName] = useState('');
