@@ -163,6 +163,8 @@ export function RecentTransactions() {
         createdAt: p.created_at,
         isCredit: !isBuyer,
         description: isBuyer ? t('commandCentre.txPpvUnlock', { amount }) : t('commandCentre.txPpvSale', { amount }),
+        txHash: p.tx_hash,
+        chainId: p.chain_id,
       });
     });
 
