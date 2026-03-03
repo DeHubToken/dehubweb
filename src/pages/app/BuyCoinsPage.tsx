@@ -627,14 +627,9 @@ export default function BuyCoinsPage() {
                     : null;
                   const isClickable = tx.status === 'completed' && tx.txHash;
                   const explorerUrl = tx.txHash ? `https://basescan.org/tx/${tx.txHash}` : null;
-                  const Wrapper = isClickable ? 'a' : 'div';
-                  const wrapperProps = isClickable ? { href: explorerUrl!, target: '_blank', rel: 'noopener noreferrer' } : {};
-                  return (
-                    <Wrapper
-                      key={tx.id}
-                      {...wrapperProps}
-                      className={`flex items-center py-2.5 first:pt-0 last:pb-0 ${isClickable ? 'hover:bg-white/5 rounded-lg px-1 -mx-1 cursor-pointer transition-colors' : ''}`}
-                    >
+                  const rowClass = `flex items-center py-2.5 first:pt-0 last:pb-0 ${isClickable ? 'hover:bg-white/5 rounded-lg px-1 -mx-1 cursor-pointer transition-colors' : ''}`;
+                  const content = (
+                    <>
                        <div className="min-w-0 flex-1">
                           <span className="text-sm text-zinc-300 truncate block">
                             {tx.status === 'completed' ? '✅' : tx.status === 'failed' ? '❌' : '⏳'}{' '}
@@ -648,8 +643,16 @@ export default function BuyCoinsPage() {
                          )}
                        </div>
                        <span className="text-zinc-500 text-xs whitespace-nowrap ml-3 flex-shrink-0">{dateStr}</span>
-                    </Wrapper>
+                    </>
                   );
+                  return isClickable ? (
+                    <a key={tx.id} href={explorerUrl!} target="_blank" rel="noopener noreferrer" className={rowClass}>
+                      {content}
+                    </a>
+                  ) : (
+                    <div key={tx.id} className={rowClass}>
+                      {content}
+                    </div>
                   );
                 })}
                 {isFetchingNextPage && (
