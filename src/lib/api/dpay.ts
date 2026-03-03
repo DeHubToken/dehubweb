@@ -406,17 +406,21 @@ export async function getDPayTransactions(): Promise<DPayTransaction[]> {
 }
 
 /**
- * Get ALL platform purchase history (public, no auth required)
+ * Get platform purchase history with pagination (public, no auth required)
  */
-export async function getAllDPayTransactions(): Promise<DPayTransaction[]> {
-  console.log('[DPay API] Fetching all platform transactions...');
+export async function getAllDPayTransactions(params: { page?: number; limit?: number } = {}): Promise<{ transactions: DPayTransaction[]; hasMore: boolean; page: number }> {
+  const page = params.page || 1;
+  const limit = params.limit || 10;
+  console.log(`[DPay API] Fetching transactions page=${page} limit=${limit}...`);
 
   try {
-    const response = await fetch(`${DEHUB_API_BASE}/api/dpay/tnxs`, {
+    const url = new URL(`${DEHUB_API_BASE}/api/dpay/tnxs`);
+    url.searchParams.set('page', String(page));
+    url.searchParams.set('limit', String(limit));
+
+    const response = await fetch(url.toString(), {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
     });
 
     if (!response.ok) {
@@ -424,10 +428,10 @@ export async function getAllDPayTransactions(): Promise<DPayTransaction[]> {
     }
 
     const data = await response.json();
-    const transactions = data?.tnxs || data?.result || data?.transactions || data || [];
+    const raw = data?.tnxs || data?.result || data?.transactions || data || [];
     
-    if (Array.isArray(transactions)) {
-      return transactions
+    if (Array.isArray(raw)) {
+      const transactions = raw
         .filter((tx: any) => {
           const status = tx.status_stripe || tx.status || '';
           return status === 'complete' || status === 'completed';
@@ -438,18 +442,19 @@ export async function getAllDPayTransactions(): Promise<DPayTransaction[]> {
           amount: tx.amount,
           tokenReceived: tx.tokenReceived ? parseFloat(tx.tokenReceived) : undefined,
           tokenSymbol: tx.tokenSymbol || tx.symbol || 'DHB',
-          status: 'completed',
+          status: 'completed' as const,
           createdAt: tx.createdAt || tx.created_at,
           txHash: tx.tokenSendTxnHash || tx.txHash || tx.hash,
           chainId: tx.chainId || tx.chain_id,
           from: tx.from || tx.sender,
           receiverAddress: tx.receiverAddress || tx.receiver_address,
         }));
+      return { transactions, hasMore: raw.length >= limit, page };
     }
 
-    return [];
+    return { transactions: [], hasMore: false, page };
   } catch (error) {
-    console.error('[DPay API] Error fetching all transactions:', error);
+    console.error('[DPay API] Error fetching transactions:', error);
     throw error;
   }
 }

@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getDPayPrice,
   getDPayPriceByChain,
@@ -77,12 +77,27 @@ export default function BuyCoinsPage() {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Fetch ALL platform purchase history (public)
-  const { data: purchaseHistory = [], isLoading: historyLoading } = useQuery({
+  // Fetch paginated platform purchase history (public)
+  const {
+    data: purchasePages,
+    isLoading: historyLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ['dpay', 'all-transactions'],
-    queryFn: getAllDPayTransactions,
+    queryFn: ({ pageParam = 1 }) => getAllDPayTransactions({ page: pageParam, limit: 10 }),
+    getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.page + 1 : undefined,
+    initialPageParam: 1,
     staleTime: 60_000,
   });
+
+  const purchaseHistory = useMemo(
+    () => purchasePages?.pages.flatMap(p => p.transactions) ?? [],
+    [purchasePages]
+  );
+
+  const purchaseListRef = useRef<HTMLDivElement>(null);
 
   // Fetch platform-wide stats
   const { data: platformStats } = useQuery({
@@ -621,8 +636,17 @@ export default function BuyCoinsPage() {
             return filtered.length === 0 ? (
               <p className="text-zinc-500 text-sm text-center py-4">No transactions found for that address.</p>
             ) : (
-              <div className="space-y-0 divide-y divide-zinc-800">
-                {filtered.slice(0, 10).map((tx) => {
+              <div
+                ref={purchaseListRef}
+                className="space-y-0 divide-y divide-zinc-800 max-h-[400px] overflow-y-auto"
+                onScroll={(e) => {
+                  const el = e.currentTarget;
+                  if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100 && hasNextPage && !isFetchingNextPage) {
+                    fetchNextPage();
+                  }
+                }}
+              >
+                {filtered.map((tx) => {
                   const dateStr = tx.createdAt ? format(new Date(tx.createdAt), 'dd MMM yyyy') : '';
                   const shortAddr = tx.receiverAddress
                     ? `${tx.receiverAddress.slice(0, 6)}...${tx.receiverAddress.slice(-4)}`
@@ -653,6 +677,11 @@ export default function BuyCoinsPage() {
                     </div>
                   );
                 })}
+                {isFetchingNextPage && (
+                  <div className="flex items-center justify-center py-3">
+                    <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
+                  </div>
+                )}
               </div>
             );
           })()}
