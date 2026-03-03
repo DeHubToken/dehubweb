@@ -106,10 +106,10 @@ export async function getERC20Metadata(tokenAddress: string, chainId?: ChainId):
 export function formatBalance(balance: bigint, decimals: number, maxDecimals: number = 2): string {
   const raw = formatUnits(balance, decimals);
   const num = parseFloat(raw);
-  if (num === 0) return '0';
+  if (isNaN(num) || num === 0) return '0';
   if (num < 0.01) return '<0.01';
-  // Use at most maxDecimals significant decimal places
-  const fixed = num.toFixed(maxDecimals);
+  // Use at most maxDecimals significant decimal places, avoid scientific notation
+  const fixed = num.toFixed(Math.min(maxDecimals, 20));
   // Remove trailing zeros
   return fixed.replace(/\.?0+$/, '');
 }
