@@ -551,7 +551,24 @@ function ProfileSettings() {
 
       {/* Profile Picture */}
       <div className="flex items-center gap-4 -mt-10">
-        <div className="relative">
+        <div 
+          className="relative"
+          onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+          onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); }}
+          onDrop={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const file = e.dataTransfer?.files?.[0];
+            if (file && file.type.startsWith('image/')) {
+              if (file.size > 5 * 1024 * 1024) {
+                toast.error(t('settings.imageTooLarge5'));
+                return;
+              }
+              setAvatarFile(file);
+              setAvatarPreview(URL.createObjectURL(file));
+            }
+          }}
+        >
           <Avatar className="w-20 h-20 border-4 border-zinc-900">
             <AvatarImage src={avatarPreview} />
             <AvatarFallback className="bg-zinc-700 text-white text-xl font-medium">
