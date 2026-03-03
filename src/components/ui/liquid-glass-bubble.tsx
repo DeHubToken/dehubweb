@@ -66,13 +66,7 @@ const LiquidGlassBubble = React.forwardRef<HTMLDivElement, LiquidGlassBubbleProp
           )}
         >
           {/* Shimmer effect on hover */}
-          {shimmer && (
-            <div 
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500
-                bg-gradient-to-r from-transparent via-white/10 to-transparent
-                -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" 
-            />
-          )}
+          {shimmer && <ShimmerHoverEffect />}
           
           {/* Content */}
           <div className="relative z-10">
