@@ -390,17 +390,18 @@ function ProfileSettings() {
       if (authUser?.address) {
         const userData = await getAccountInfo(authUser.address);
         const refreshedCustoms = userData.customs as Record<string, string> | undefined;
+        const refreshedRaw = userData as Record<string, unknown>;
         const newOriginals = {
           displayName: userData.displayName || userData.display_name || '',
           username: userData.username || '',
           bio: userData.aboutMe || userData.bio || '',
-          twitterLink: refreshedCustoms?.twitterLink || '',
-          discordLink: refreshedCustoms?.discordLink || '',
-          instagramLink: refreshedCustoms?.instagramLink || '',
-          tiktokLink: refreshedCustoms?.tiktokLink || '',
-          youtubeLink: refreshedCustoms?.youtubeLink || '',
-          telegramLink: refreshedCustoms?.telegramLink || '',
-          facebookLink: refreshedCustoms?.facebookLink || '',
+          twitterLink: (refreshedRaw.twitterLink as string) || refreshedCustoms?.twitterLink || '',
+          discordLink: (refreshedRaw.discordLink as string) || refreshedCustoms?.discordLink || '',
+          instagramLink: (refreshedRaw.instagramLink as string) || refreshedCustoms?.instagramLink || '',
+          tiktokLink: (refreshedRaw.tiktokLink as string) || refreshedCustoms?.tiktokLink || '',
+          youtubeLink: (refreshedRaw.youtubeLink as string) || refreshedCustoms?.youtubeLink || '',
+          telegramLink: (refreshedRaw.telegramLink as string) || refreshedCustoms?.telegramLink || '',
+          facebookLink: (refreshedRaw.facebookLink as string) || refreshedCustoms?.facebookLink || '',
         };
         setOriginalValues(newOriginals);
         // Sync form state so links don't disappear after save
