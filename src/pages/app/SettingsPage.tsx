@@ -210,6 +210,13 @@ function ProfileSettings() {
   const { t } = useTranslation();
   const { user: authUser, refreshUser } = useAuthContext();
   const queryClient = useQueryClient();
+  const { suppressGlobalDrop, unsuppressGlobalDrop } = useGlobalDropZone();
+
+  // Suppress global drop-to-post while on edit profile
+  useEffect(() => {
+    suppressGlobalDrop();
+    return () => unsuppressGlobalDrop();
+  }, [suppressGlobalDrop, unsuppressGlobalDrop]);
   
   // Form state declarations
   const [displayName, setDisplayName] = useState('');
