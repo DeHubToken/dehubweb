@@ -64,7 +64,17 @@ export function useSubmitComment() {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['feature-request-comments', variables.featureRequestId] });
-      queryClient.invalidateQueries({ queryKey: ['feature-requests'] });
+      // Optimistically bump comment count without refetching the list (avoids reordering)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      queryClient.setQueriesData({ queryKey: ['feature-requests'] }, (old: any) => {
+        if (!old?.pages) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page: any[]) =>
+            page.map((fr) => fr.id === variables.featureRequestId ? { ...fr, comment_count: (fr.comment_count || 0) + 1 } : fr)
+          ),
+        };
+      });
     },
     onError: () => {
       toast.error('Failed to post comment');
@@ -91,7 +101,17 @@ export function useDeleteComment() {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['feature-request-comments', variables.featureRequestId] });
-      queryClient.invalidateQueries({ queryKey: ['feature-requests'] });
+      // Optimistically decrement comment count without refetching the list
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      queryClient.setQueriesData({ queryKey: ['feature-requests'] }, (old: any) => {
+        if (!old?.pages) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page: any[]) =>
+            page.map((fr) => fr.id === variables.featureRequestId ? { ...fr, comment_count: Math.max(0, (fr.comment_count || 0) - 1) } : fr)
+          ),
+        };
+      });
       toast.success('Comment deleted');
     },
     onError: () => {

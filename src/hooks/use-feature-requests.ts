@@ -326,7 +326,7 @@ export function useVoteFeatureRequest() {
       toast.error('Vote failed. Please try again.');
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['feature-requests'] });
+      // Only refresh votes, not the full list — avoids reordering cards mid-session
       queryClient.invalidateQueries({ queryKey: ['feature-request-votes'] });
     },
   });
