@@ -190,6 +190,8 @@ export function RecentTransactions() {
           : t('commandCentre.txTipReceived', { name: counterpartyName, amount }),
         counterpartyAddress: counterpartyAddr,
         counterpartyUsername: usernameMap[counterpartyAddr],
+        txHash: tip.tx_hash,
+        chainId: tip.chain_id,
       });
     });
 
