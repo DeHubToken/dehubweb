@@ -381,8 +381,8 @@ interface ExpandableDescriptionProps {
 }
 
 function ExpandableDescription({ description: rawDescription, isImmersive }: ExpandableDescriptionProps) {
-  // Normalize consecutive newlines so double-breaks become single-breaks
-  const description = rawDescription.replace(/\n{2,}/g, '\n');
+  // Normalize line breaks: unify \r\n → \n, then collapse 2+ consecutive newlines (with optional whitespace between) to single
+  const description = rawDescription.replace(/\r\n/g, '\n').replace(/\n\s*\n/g, '\n').trim();
   const [isExpanded, setIsExpanded] = useState(false);
   const [needsExpansion, setNeedsExpansion] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
