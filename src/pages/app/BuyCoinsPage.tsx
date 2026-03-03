@@ -451,27 +451,30 @@ export default function BuyCoinsPage() {
         </div>
 
         {/* Buy Button */}
-        <Button
-          onClick={handlePurchase}
-          disabled={
-            effectiveAmount < 5 ||
-            isPending ||
-            (paymentMethod === 'card' && estimatedTokens <= 0) ||
-            (paymentMethod === 'card' &&
-              availableSupply !== undefined &&
-              availableSupply !== Infinity &&
-              Math.floor(estimatedTokens) > availableSupply)
-          }
-          variant="glass"
-          className="w-full py-6 text-lg font-semibold rounded-xl disabled:opacity-50"
-        >
-          {isPending ? (
-            <Loader2 className="w-5 h-5 animate-spin mr-2" />
-          ) : (
-            <Wallet className="w-5 h-5 mr-2" />
-          )}
-          {isPending ? t('buyCoins.processing') : t('buyCoins.buy', { symbol: selectedToken?.symbol || 'DHB' })}
-        </Button>
+        <div className="relative group">
+          <Button
+            onClick={handlePurchase}
+            disabled={
+              effectiveAmount < 5 ||
+              isPending ||
+              (paymentMethod === 'card' && estimatedTokens <= 0) ||
+              (paymentMethod === 'card' &&
+                availableSupply !== undefined &&
+                availableSupply !== Infinity &&
+                Math.floor(estimatedTokens) > availableSupply)
+            }
+            variant="glass"
+            className="w-full py-6 text-lg font-semibold rounded-xl disabled:opacity-50 overflow-hidden"
+          >
+            {isPending ? (
+              <Loader2 className="w-5 h-5 animate-spin mr-2" />
+            ) : (
+              <Wallet className="w-5 h-5 mr-2" />
+            )}
+            {isPending ? t('buyCoins.processing') : t('buyCoins.buy', { symbol: selectedToken?.symbol || 'DHB' })}
+            <ShimmerHoverEffect />
+          </Button>
+        </div>
 
         {/* Purchase Status Overlay */}
         {purchaseStatus !== 'idle' && (
