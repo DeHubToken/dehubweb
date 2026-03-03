@@ -252,6 +252,23 @@ export async function getTokenAvailableSupply(tokenSymbol: string): Promise<numb
     if (typeof bySymbol === 'number') return bySymbol;
     if (typeof bySymbol?.available === 'number') return bySymbol.available;
 
+    // Nested chain structure: { balance: { "8453": { "DHB": 12345 }, "56": { "DHB": 500 } } }
+    if (typeof balance === 'object' && balance !== null) {
+      let totalSupply = 0;
+      let found = false;
+      for (const chainValues of Object.values(balance)) {
+        if (typeof chainValues === 'object' && chainValues !== null) {
+          const sym = (chainValues as Record<string, number>)[tokenSymbol] 
+            ?? (chainValues as Record<string, number>)[tokenSymbol.toUpperCase()];
+          if (typeof sym === 'number') {
+            totalSupply += sym;
+            found = true;
+          }
+        }
+      }
+      if (found) return totalSupply;
+    }
+
     return Infinity;
   } catch {
     return Infinity; // On network error, don't block — let the checkout API decide
