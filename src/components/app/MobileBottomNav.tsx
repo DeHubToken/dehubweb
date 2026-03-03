@@ -128,12 +128,23 @@ export function MobileBottomNav() {
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
         <nav
           className={cn(
-            "bg-zinc-900/10 backdrop-blur-2xl border rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl overflow-hidden transition-all duration-1000",
+            "relative bg-zinc-900/10 backdrop-blur-2xl border rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl overflow-hidden transition-all duration-1000",
             showScrollHint
-              ? "border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.15),0_0_40px_rgba(255,255,255,0.05)]"
+              ? "border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.08)]"
               : "border-white/10"
           )}
         >
+          {/* Right edge glow during scroll hint */}
+          <div
+            className={cn(
+              "pointer-events-none absolute top-0 right-0 w-8 h-full rounded-r-2xl transition-opacity duration-1000 z-10",
+              showScrollHint ? "opacity-100" : "opacity-0"
+            )}
+            style={{
+              background: 'linear-gradient(to left, rgba(255,255,255,0.25), transparent)',
+              boxShadow: showScrollHint ? '4px 0 16px 2px rgba(255,255,255,0.15), 2px 0 8px rgba(255,255,255,0.1)' : 'none',
+            }}
+          />
           {/* Nav items container */}
           <div 
             ref={scrollRef}
