@@ -34,6 +34,8 @@ interface UnifiedTransaction {
   description: string;
   counterpartyAddress?: string;
   counterpartyUsername?: string;
+  txHash?: string;
+  chainId?: number;
 }
 
 function formatDPayTx(tx: DPayTransaction, t: (key: string, opts?: any) => string): UnifiedTransaction {
@@ -42,7 +44,7 @@ function formatDPayTx(tx: DPayTransaction, t: (key: string, opts?: any) => strin
   let isCredit = false;
   switch (tx.type) {
     case 'buy':
-      description = `Purchased $${amount} of Coins`;
+      description = `Coin Purchase: $${amount}`;
       isCredit = true;
       break;
     case 'sell':
@@ -54,7 +56,7 @@ function formatDPayTx(tx: DPayTransaction, t: (key: string, opts?: any) => strin
     default:
       description = `${tx.type} — ${amount} DHB`;
   }
-  return { id: tx.id, type: tx.type, amount: tx.amount, createdAt: tx.createdAt, isCredit, description };
+  return { id: tx.id, type: tx.type, amount: tx.amount, createdAt: tx.createdAt, isCredit, description, txHash: tx.txHash, chainId: tx.chainId };
 }
 
 export function RecentTransactions() {
@@ -161,6 +163,8 @@ export function RecentTransactions() {
         createdAt: p.created_at,
         isCredit: !isBuyer,
         description: isBuyer ? t('commandCentre.txPpvUnlock', { amount }) : t('commandCentre.txPpvSale', { amount }),
+        txHash: p.tx_hash,
+        chainId: p.chain_id,
       });
     });
 
@@ -186,6 +190,8 @@ export function RecentTransactions() {
           : t('commandCentre.txTipReceived', { name: counterpartyName, amount }),
         counterpartyAddress: counterpartyAddr,
         counterpartyUsername: usernameMap[counterpartyAddr],
+        txHash: tip.tx_hash,
+        chainId: tip.chain_id,
       });
     });
 
@@ -235,6 +241,7 @@ export function RecentTransactions() {
         createdAt: new Date(transfer.timestamp * 1000).toISOString(),
         isCredit: transfer.isIncoming,
         description,
+        txHash: transfer.txHash,
       });
     });
 
@@ -278,8 +285,15 @@ export function RecentTransactions() {
         <div className="space-y-0 divide-y divide-zinc-800">
           {recent.map((tx) => {
             const dateStr = format(new Date(tx.createdAt), 'dd MMM');
+            const explorerUrl = tx.txHash
+              ? (tx.chainId === 56 ? `https://bscscan.com/tx/${tx.txHash}` : `https://basescan.org/tx/${tx.txHash}`)
+              : null;
             return (
-              <div key={tx.id} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
+              <div
+                key={tx.id}
+                className={`flex items-center justify-between py-3 first:pt-0 last:pb-0 ${explorerUrl ? 'cursor-pointer hover:bg-zinc-800/50 -mx-2 px-2 rounded-xl transition-colors' : ''}`}
+                onClick={() => explorerUrl && window.open(explorerUrl, '_blank')}
+              >
                 <div className="flex items-center gap-2 min-w-0">
                   <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${tx.isCredit ? 'bg-emerald-400' : 'bg-red-400'}`} />
                   <TranslatableText text={tx.description} className="text-sm text-zinc-400 truncate" as="p" hideControls />
