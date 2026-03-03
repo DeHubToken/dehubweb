@@ -7,6 +7,7 @@ import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { SwapDrawer } from './SwapDrawer';
 
 export function FundActions() {
   const { walletAddress } = useAuth();
@@ -17,6 +18,7 @@ export function FundActions() {
   const [withdrawOpen, setWithdrawOpen] = useState(false);
   const [transferOpen, setTransferOpen] = useState(false);
   const [withdrawTarget, setWithdrawTarget] = useState('');
+  const [swapOpen, setSwapOpen] = useState(false);
 
   const handleBuy = () => {
     setAddFundsOpen(false);
