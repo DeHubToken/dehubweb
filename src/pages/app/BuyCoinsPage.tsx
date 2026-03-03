@@ -607,9 +607,9 @@ export default function BuyCoinsPage() {
             return filtered.length === 0 ? (
               <p className="text-zinc-500 text-sm text-center py-4">No transactions found for that address.</p>
             ) : (
-              <div
-                ref={purchaseListRef}
-                className="space-y-0 divide-y divide-zinc-800 max-h-[400px] overflow-y-auto"
+                <div
+                  ref={purchaseListRef}
+                  className="space-y-0 divide-y divide-zinc-800 max-h-[400px] overflow-y-auto px-1"
                 onScroll={(e) => {
                   const el = e.currentTarget;
                   if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100 && hasNextPage && !isFetchingNextPage) {
