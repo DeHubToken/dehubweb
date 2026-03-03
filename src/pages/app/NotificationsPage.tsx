@@ -52,7 +52,9 @@ interface BundledNotification {
   bundleType: 'single' | 'same-actor' | 'multi-actor';
 }
 
-const BUNDLE_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
+// No time window limit for same-actor bundling — all interactions from the same
+// actor of the same type are collapsed into a single bundle regardless of when
+// they occurred (e.g. "trustwallet1 liked 5 of your posts").
 
 /**
  * Bundle notifications client-side:
@@ -82,7 +84,7 @@ function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars
         if (consumed.has(m.id)) continue;
         if (m.type !== n.type) continue;
         if (m.actorAddress?.toLowerCase() !== n.actorAddress?.toLowerCase()) continue;
-        if (Math.abs(nTime - new Date(m.createdAt).getTime()) > BUNDLE_WINDOW_MS) continue;
+        // No time window — bundle all same-actor same-type notifications together
         group.push(m);
       }
       if (group.length > 1) {
