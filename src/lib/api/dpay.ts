@@ -357,7 +357,7 @@ export async function getDPayTransactions(): Promise<DPayTransaction[]> {
     }
 
     const data = await response.json();
-    const transactions = data?.result || data?.transactions || data || [];
+    const transactions = data?.tnxs || data?.result || data?.transactions || data || [];
     
     if (Array.isArray(transactions)) {
       return transactions.map((tx: any) => ({
@@ -398,20 +398,25 @@ export async function getAllDPayTransactions(): Promise<DPayTransaction[]> {
     }
 
     const data = await response.json();
-    const transactions = data?.result || data?.transactions || data || [];
+    const transactions = data?.tnxs || data?.result || data?.transactions || data || [];
     
     if (Array.isArray(transactions)) {
-      return transactions.map((tx: any) => ({
-        id: tx._id || tx.id,
-        type: tx.type || 'buy',
-        amount: tx.amount,
-        tokenSymbol: tx.tokenSymbol || tx.symbol || 'DHB',
-        status: tx.status || 'completed',
-        createdAt: tx.createdAt || tx.created_at,
-        txHash: tx.txHash || tx.hash,
-        chainId: tx.chainId || tx.chain_id,
-        from: tx.from || tx.sender,
-      }));
+      return transactions
+        .filter((tx: any) => {
+          const status = tx.status_stripe || tx.status || '';
+          return status === 'complete' || status === 'completed';
+        })
+        .map((tx: any) => ({
+          id: tx._id || tx.id,
+          type: tx.type || 'buy',
+          amount: tx.tokenReceived ? parseFloat(tx.tokenReceived) : tx.amount,
+          tokenSymbol: tx.tokenSymbol || tx.symbol || 'DHB',
+          status: 'completed',
+          createdAt: tx.createdAt || tx.created_at,
+          txHash: tx.tokenSendTxnHash || tx.txHash || tx.hash,
+          chainId: tx.chainId || tx.chain_id,
+          from: tx.from || tx.sender,
+        }));
     }
 
     return [];
