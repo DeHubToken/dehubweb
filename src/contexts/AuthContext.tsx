@@ -850,7 +850,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
 
-    toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!', { id: 'auth-redirect' });
+    toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: 'auth-redirect' });
       console.log('[Auth] ✓ DeHub authentication complete (Redirect Flow)');
       authLogger.info('Login success', { method: 'redirect', address: authAddressForApi, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
     } catch (err: any) {
