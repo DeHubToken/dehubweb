@@ -16,7 +16,8 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [pendingFiles, setPendingFiles] = useState<FileList | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const suppressedRef = useRef(false);
+  const [isSuppressed, setIsSuppressed] = useState(false);
+  const suppressCountRef = useRef(0);
 
   const openPostModal = useCallback(() => {
     setIsPostModalOpen(true);
@@ -31,19 +32,29 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const suppressGlobalDrop = useCallback(() => {
-    suppressedRef.current = true;
+    suppressCountRef.current += 1;
+    setIsSuppressed(true);
   }, []);
 
   const unsuppressGlobalDrop = useCallback(() => {
-    suppressedRef.current = false;
+    suppressCountRef.current -= 1;
+    if (suppressCountRef.current <= 0) {
+      suppressCountRef.current = 0;
+      setIsSuppressed(false);
+    }
   }, []);
 
-  // Global drag and drop handlers
+  // Global drag and drop handlers - only attach when NOT suppressed
   useEffect(() => {
+    if (isSuppressed) {
+      // Don't attach any global drag/drop listeners when suppressed
+      setIsDragging(false);
+      return;
+    }
+
     let dragCounter = 0;
 
     const handleDragEnter = (e: DragEvent) => {
-      if (suppressedRef.current) return;
       e.preventDefault();
       e.stopPropagation();
       dragCounter++;
@@ -54,7 +65,6 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
     };
 
     const handleDragLeave = (e: DragEvent) => {
-      if (suppressedRef.current) return;
       e.preventDefault();
       e.stopPropagation();
       dragCounter--;
@@ -65,17 +75,11 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
     };
 
     const handleDragOver = (e: DragEvent) => {
-      if (suppressedRef.current) return;
       e.preventDefault();
       e.stopPropagation();
     };
 
     const handleDrop = (e: DragEvent) => {
-      if (suppressedRef.current) {
-        dragCounter = 0;
-        setIsDragging(false);
-        return;
-      }
       e.preventDefault();
       e.stopPropagation();
       dragCounter = 0;
@@ -83,7 +87,6 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
 
       const files = e.dataTransfer?.files;
       if (files && files.length > 0) {
-        // Check if any file is an image, video, or audio
         const hasMedia = Array.from(files).some(file => 
           file.type.startsWith('image/') || 
           file.type.startsWith('video/') || 
@@ -108,7 +111,7 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
       document.removeEventListener('dragover', handleDragOver);
       document.removeEventListener('drop', handleDrop);
     };
-  }, []);
+  }, [isSuppressed]);
 
   return (
     <GlobalDropZoneContext.Provider value={{ 
@@ -123,7 +126,7 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
       {children}
       
       {/* Global drop overlay */}
-      {isDragging && !suppressedRef.current && (
+      {isDragging && !isSuppressed && (
         <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center pointer-events-none">
           <div className="border-2 border-dashed border-primary rounded-3xl p-12 flex flex-col items-center gap-4">
             <div className="w-16 h-16 rounded-xl bg-primary/20 flex items-center justify-center">
