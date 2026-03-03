@@ -116,6 +116,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   arz: 'Egyptian Arabic',
   ajp: 'Arabic, South Levantine Spoken',
   ayn: 'Arabic, Sanaani Spoken',
+  apd: 'Arabic, Sudanese Spoken',
   ary: 'Moroccan Arabic',
   fa: 'Persian',
   pbt: 'Pashto, Southern',
