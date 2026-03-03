@@ -1210,27 +1210,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const disconnect = async () => {
+    // ALWAYS clear local state first so the user is logged out immediately,
+    // regardless of whether provider disconnect succeeds.
+    clearAuthSession();
+    localStorage.removeItem('dehub_user');
+    localStorage.removeItem('dehub_wallet');
+    localStorage.removeItem('dehub_connection_source');
+    clearWagmiStorage();
+
+    setWalletAddress(null);
+    setUser(null);
+
+    disconnectDmSocket();
+    queryClient.clear();
+
+    const source = connectionSource;
+    setConnectionSource(null);
+
+    // Now attempt provider-level cleanup (best-effort, won't block logout)
     try {
-      if (connectionSource === 'web3auth') {
+      if (source === 'web3auth') {
         await disconnectWeb3Auth();
-      } else {
-        wagmiDisconnect();
       }
-      
-      clearAuthSession();
-      localStorage.removeItem('dehub_user');
-      localStorage.removeItem('dehub_wallet');
-      localStorage.removeItem('dehub_connection_source');
-      clearWagmiStorage();
-
-      setWalletAddress(null);
-      setUser(null);
-      setConnectionSource(null);
-
-      disconnectDmSocket();
-      queryClient.clear();
-    } catch (error) {
-      console.error('Disconnect error:', error);
+    } catch (e) {
+      console.warn('[Auth] Web3Auth disconnect failed (user already logged out):', e);
+    }
+    try {
+      wagmiDisconnect();
+    } catch (e) {
+      console.warn('[Auth] Wagmi disconnect failed (user already logged out):', e);
     }
   };
 
