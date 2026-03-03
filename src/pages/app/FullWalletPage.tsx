@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart, User, Lock, Minus } from 'lucide-react';
+import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart, User, Lock, Minus, CreditCard } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -14,7 +14,6 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
-import { createOnrampSession } from '@/lib/api/dpay';
 import { showWeb3AuthCheckout, isWeb3AuthConnected } from '@/lib/web3auth';
 import { getDexBuyLink } from '@/lib/wallet/buy-links';
 import { getERC20Metadata, saveCustomToken, formatBalance, type WalletToken } from '@/lib/wallet/tokens';
@@ -66,6 +65,7 @@ export default function FullWalletPage() {
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
   const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [buyDrawerOpen, setBuyDrawerOpen] = useState(false);
   const [importChainId, setImportChainId] = useState<ChainId>(BASE_CHAIN_ID);
   const [selectedToken, setSelectedToken] = useState<WalletToken | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -217,24 +217,7 @@ export default function FullWalletPage() {
           <Send className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap">{t('wallet.send')}</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={async () => {
-          try {
-            const res = await createOnrampSession({
-              walletAddress: walletAddress || '',
-              currency: 'USD',
-              amount: 50,
-              tokenSymbol: 'DHB',
-            });
-            const url = (res as any)?.url || (res as any)?.redirectUrl;
-            if (url) {
-              window.open(url, '_blank');
-            } else {
-              toast.error(t('wallet.unableOpenGateway'));
-            }
-          } catch {
-            toast.error(t('wallet.failedPurchaseSession'));
-          }
-        }}>
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => setBuyDrawerOpen(true)}>
           <ShoppingCart className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap">{t('wallet.buy')}</span>
         </Button>
@@ -384,6 +367,38 @@ export default function FullWalletPage() {
         chainId={importChainId}
         onImported={() => { setImportDialogOpen(false); }}
       />
+
+      {/* Buy Options Drawer */}
+      <Drawer open={buyDrawerOpen} onOpenChange={setBuyDrawerOpen}>
+        <DrawerContent glass hideHandle={false}>
+          <div className="p-5 pb-8 space-y-2">
+            <h3 className="text-white font-semibold text-base mb-4">{t('wallet.buy')}</h3>
+            <button
+              onClick={() => { setBuyDrawerOpen(false); navigate('/app/buy'); }}
+              className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
+            >
+              <CreditCard className="w-5 h-5 text-white/70" />
+              <div className="text-left">
+                <span className="text-sm font-medium text-white">Buy with Card</span>
+                <p className="text-xs text-white/40">Purchase tokens using card or bank transfer</p>
+              </div>
+            </button>
+            <button
+              onClick={() => {
+                setBuyDrawerOpen(false);
+                window.open('https://app.uniswap.org/swap?chain=base', '_blank');
+              }}
+              className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
+            >
+              <ShoppingCart className="w-5 h-5 text-white/70" />
+              <div className="text-left">
+                <span className="text-sm font-medium text-white">Buy with Crypto</span>
+                <p className="text-xs text-white/40">Swap tokens on Uniswap DEX</p>
+              </div>
+            </button>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }
@@ -436,6 +451,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, w
   walletAddress?: string;
 }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   if (!grouped) return null;
   const icon = TOKEN_ICONS[grouped.symbol] || grouped.logo;
   const hasBalance = grouped.totalBalance > BigInt(0);
@@ -480,56 +496,17 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, w
           <Button
             variant="glass"
             className="flex-col h-auto py-4 gap-2 rounded-xl"
-            onClick={async () => {
+            onClick={() => {
               onOpenChange(false);
-
-              // DHB → existing DHub fiat gateway
               if (grouped.symbol === 'DHB') {
-                try {
-                  const res = await createOnrampSession({
-                    walletAddress: walletAddress || '',
-                    currency: 'USD',
-                    amount: 50,
-                    tokenSymbol: 'DHB',
-                  });
-                  const url = (res as any)?.url || (res as any)?.redirectUrl;
-                  if (url) {
-                    window.open(url, '_blank');
-                  } else {
-                    toast.error(t('wallet.unableOpenGateway'));
-                  }
-                } catch {
-                  toast.error(t('wallet.failedPurchaseSession'));
-                }
-                return;
-              }
-
-              // Non-DHB + Web3Auth session → built-in checkout aggregator
-              if (isWeb3AuthConnected()) {
-                try {
-                  toast.info(t('wallet.openingCheckout', { symbol: grouped.symbol }));
-                  await showWeb3AuthCheckout();
-                } catch (err) {
-                  console.error('[Buy] Web3Auth checkout failed:', err);
-                  // Fallback to DEX
-                  const dexUrl = getDexBuyLink(grouped.symbol);
-                  if (dexUrl) {
-                    toast.info(t('wallet.openingDex', { symbol: grouped.symbol }));
-                    window.open(dexUrl, '_blank');
-                  } else {
-                    toast.error(t('wallet.checkoutUnavailable'));
-                  }
-                }
-                return;
-              }
-
-              // Non-DHB + External wallet → DEX deeplink
-              const dexUrl = getDexBuyLink(grouped.symbol);
-              if (dexUrl) {
-                toast.info(t('wallet.openingDex', { symbol: grouped.symbol }));
-                window.open(dexUrl, '_blank');
+                navigate('/app/buy');
               } else {
-                toast.error(t('wallet.noBuyOption'));
+                const dexUrl = getDexBuyLink(grouped.symbol);
+                if (dexUrl) {
+                  window.open(dexUrl, '_blank');
+                } else {
+                  window.open('https://app.uniswap.org/swap?chain=base', '_blank');
+                }
               }
             }}
           >
