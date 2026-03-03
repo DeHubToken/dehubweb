@@ -127,27 +127,22 @@ export function MobileBottomNav() {
     <>
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
         <nav
-          className="relative bg-zinc-900/10 backdrop-blur-2xl rounded-2xl mx-auto max-w-[72%] md:max-w-md transition-all duration-1000"
-          style={{
-            border: '1px solid rgba(255,255,255,0.15)',
-            boxShadow: '0 0 8px 1px rgba(255,255,255,0.12), 0 0 20px 4px rgba(255,255,255,0.06), inset 0 0 8px rgba(255,255,255,0.04)',
-          }}
+          className="relative bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl transition-all duration-1000"
         >
-          {/* Right edge border glow during scroll hint */}
+          {/* Right-to-center border glow during scroll hint */}
           <div
             className={cn(
-              "pointer-events-none absolute -top-[1px] -right-[1px] w-12 rounded-r-2xl transition-opacity duration-1000 z-20",
+              "pointer-events-none absolute inset-0 rounded-2xl transition-opacity duration-700 z-20",
               showScrollHint ? "opacity-100" : "opacity-0"
             )}
             style={{
-              height: 'calc(100% + 2px)',
-              background: 'linear-gradient(to left, rgba(255,255,255,0.35), rgba(255,255,255,0.08) 60%, transparent)',
-              boxShadow: showScrollHint
-                ? '0 0 12px 3px rgba(255,255,255,0.2), 0 0 24px 6px rgba(255,255,255,0.1), inset -2px 0 8px rgba(255,255,255,0.15)'
-                : 'none',
-              borderRight: '1px solid rgba(255,255,255,0.4)',
-              borderTop: '1px solid rgba(255,255,255,0.15)',
-              borderBottom: '1px solid rgba(255,255,255,0.15)',
+              background: 'linear-gradient(to left, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 30%, transparent 60%)',
+              boxShadow: '0 0 16px 4px rgba(255,255,255,0.25), 0 0 32px 8px rgba(255,255,255,0.1)',
+              mask: 'linear-gradient(to left, black 0%, black 30%, transparent 60%)',
+              WebkitMask: 'linear-gradient(to left, black 0%, black 30%, transparent 60%)',
+              border: '1px solid transparent',
+              borderImage: 'linear-gradient(to left, rgba(255,255,255,0.6), rgba(255,255,255,0.2) 40%, transparent 60%) 1',
+              borderRadius: 'inherit',
             }}
           />
           {/* Nav items container */}
