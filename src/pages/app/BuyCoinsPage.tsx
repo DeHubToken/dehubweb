@@ -626,8 +626,8 @@ export default function BuyCoinsPage() {
                     ? `https://basescan.org/tx/${tx.txHash}`
                     : null;
                   return (
-                    <div key={tx.id} className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0">
-                      <div className="min-w-0">
+                    <div key={tx.id} className="flex items-center py-2.5 first:pt-0 last:pb-0">
+                      <div className="min-w-0 flex-1">
                         <span className="text-sm text-zinc-300 truncate block">
                           Purchased ${tx.amount} of Coins
                         </span>
@@ -637,12 +637,14 @@ export default function BuyCoinsPage() {
                       </div>
                       <div className="flex items-center gap-2 ml-3 flex-shrink-0">
                         <span className="text-zinc-500 text-xs whitespace-nowrap">{dateStr}</span>
-                        {explorerUrl && (
+                        {explorerUrl ? (
                           <a href={explorerUrl} target="_blank" rel="noopener noreferrer">
-                            <LiquidGlassBubble className="cursor-pointer px-2 py-0.5">
+                            <LiquidGlassBubble className="cursor-pointer !px-0 !py-0">
                               <span className="text-xs text-white whitespace-nowrap">View Tx</span>
                             </LiquidGlassBubble>
                           </a>
+                        ) : (
+                          <div className="w-[72px]" />
                         )}
                       </div>
                     </div>
