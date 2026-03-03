@@ -1,40 +1,26 @@
 import { useState } from 'react';
 import { Copy, CreditCard, Send, ArrowDownToLine, ArrowUpFromLine, Check, Wallet } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
-import { createOnrampSession } from '@/lib/api/dpay';
 import { toast } from 'sonner';
 
 export function FundActions() {
   const { walletAddress } = useAuth();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [addFundsOpen, setAddFundsOpen] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
   const [transferOpen, setTransferOpen] = useState(false);
   const [withdrawTarget, setWithdrawTarget] = useState('');
 
-  const handleBuy = async () => {
+  const handleBuy = () => {
     setAddFundsOpen(false);
-    try {
-      const res = await createOnrampSession({
-        walletAddress: walletAddress || '',
-        currency: 'USD',
-        amount: 50,
-        tokenSymbol: 'DHB',
-      });
-      const url = (res as any)?.url || (res as any)?.redirectUrl;
-      if (url) {
-        window.open(url, '_blank');
-      } else {
-        toast.error(t('wallet.unableOpenGateway'));
-      }
-    } catch {
-      toast.error(t('wallet.failedPurchaseSession'));
-    }
+    navigate('/app/buy');
   };
 
   const handleCopyAddress = () => {

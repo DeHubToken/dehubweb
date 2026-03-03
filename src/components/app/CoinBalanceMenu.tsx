@@ -508,6 +508,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 // Export standalone wallet menu content for use in other drawers
 export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) {
   const { walletAddress } = useAuth();
+  const navigate = useNavigate();
   const [menuView, setMenuView] = useState<MenuView>('main');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState<typeof MOCK_USERS[0] | null>(null);
@@ -532,13 +533,13 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
   };
 
   const handleBuyWithCard = () => {
-    toast.info('Card payments coming soon!');
     onClose?.();
+    navigate('/app/buy');
   };
 
   const handleBuyWithCrypto = () => {
-    toast.info('Crypto payments coming soon!');
     onClose?.();
+    navigate('/app/buy');
   };
 
   const handleSendCoins = () => {
