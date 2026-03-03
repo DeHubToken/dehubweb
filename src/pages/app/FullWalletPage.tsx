@@ -225,30 +225,30 @@ export default function FullWalletPage() {
       <div className="flex gap-2 mb-4 pb-1">
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => setReceiveDialogOpen(true)}>
           <ArrowDownToLine className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap">{t('wallet.receive')}</span>
+          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.receive')}</span>
         </Button>
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => {
           if (allWithBalance.length > 0) handleSend(allWithBalance[0]);
           else toast.info(t('wallet.noTokensToSend'));
         }}>
           <Send className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap">{t('wallet.send')}</span>
+          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.send')}</span>
         </Button>
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => setBuyDrawerOpen(true)}>
           <ShoppingCart className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap">{t('wallet.buy')}</span>
+          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.buy')}</span>
         </Button>
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => toast.info(t('wallet.stakeComingSoon'))}>
           <Lock className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap">{t('wallet.stake')}</span>
+          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.stake')}</span>
         </Button>
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => setImportDialogOpen(true)}>
           <Plus className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap">{t('wallet.import')}</span>
+          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.import')}</span>
         </Button>
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => toast.info(t('wallet.cashOutComingSoon'))}>
           <Minus className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap">{t('wallet.cashOut')}</span>
+          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.cashOut')}</span>
         </Button>
       </div>
 
