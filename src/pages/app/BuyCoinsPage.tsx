@@ -628,10 +628,13 @@ export default function BuyCoinsPage() {
                   return (
                     <div key={tx.id} className="flex items-center py-2.5 first:pt-0 last:pb-0">
                        <div className="min-w-0 flex-1">
-                         <span className="text-sm text-zinc-300 truncate block">
-                           {tx.status === 'completed' ? '✅' : tx.status === 'failed' ? '❌' : '⏳'}{' '}
-                           ${tx.amount} — {tx.approxTokensToReceive ? `~${Number(tx.approxTokensToReceive).toLocaleString()} DHB` : `${tx.tokenSymbol}`}
-                         </span>
+                          <span className="text-sm text-zinc-300 truncate block">
+                            {tx.status === 'completed' ? '✅' : tx.status === 'failed' ? '❌' : '⏳'}{' '}
+                            ${tx.amount} — {tx.approxTokensToReceive ? `~${Number(tx.approxTokensToReceive).toLocaleString()} DHB` : `${tx.tokenSymbol}`}
+                            {tx.status === 'failed' && (tx as any).failureReason && (
+                              <span className="text-xs text-red-400/70 ml-1 capitalize">({(tx as any).failureReason})</span>
+                            )}
+                          </span>
                          {shortAddr && (
                            <span className="text-xs text-zinc-500 font-mono">{shortAddr}</span>
                          )}
