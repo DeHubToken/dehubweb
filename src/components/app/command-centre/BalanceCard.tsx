@@ -4,7 +4,7 @@ import { FundActions } from './FundActions';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
 import dehubCoin from '@/assets/dehub-coin.png';
-import bnbLogo from '@/assets/bnb-logo.png';
+import btcLogo from '@/assets/btc-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
 import ethLogo from '@/assets/eth-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
@@ -12,9 +12,9 @@ import { Button } from '@/components/ui/button';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 
-const OTHER_SYMBOLS = ['ETH', 'BNB', 'USDT'] as const;
-const LOGOS: Record<string, string> = { ETH: ethLogo, BNB: bnbLogo, USDT: usdtLogo };
-const NAMES: Record<string, string> = { ETH: 'Ethereum', BNB: 'BNB', USDT: 'Tether' };
+const OTHER_SYMBOLS = ['ETH', 'BTC', 'USDT'] as const;
+const LOGOS: Record<string, string> = { ETH: ethLogo, BTC: btcLogo, USDT: usdtLogo };
+const NAMES: Record<string, string> = { ETH: 'Ethereum', BTC: 'Bitcoin', USDT: 'Tether' };
 
 export function BalanceCard() {
   const { walletAddress, isAuthenticated } = useAuth();
