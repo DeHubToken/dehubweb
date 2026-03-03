@@ -124,6 +124,7 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   ctg: () => import('./locales/ctg.json'),
   hne: () => import('./locales/hne.json'),
   ja: () => import('./locales/ja.json'),
+  jv: () => import('./locales/jv.json'),
   ko: () => import('./locales/ko.json'),
   ru: () => import('./locales/ru.json'),
   sr: () => import('./locales/sr.json'),
