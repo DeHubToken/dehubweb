@@ -412,6 +412,24 @@ export default function BuyCoinsPage() {
             )}
           </div>
 
+          {/* Available Supply */}
+          {availableSupply !== undefined && availableSupply !== Infinity && availableSupply > 0 && (
+            <div className="border-t border-zinc-800 pt-3">
+              <div className="flex items-center justify-between">
+                <span className="text-zinc-400 flex items-center gap-1.5">
+                  <Package className="w-4 h-4" />
+                  Available to buy now
+                </span>
+                <div className="flex items-center gap-2">
+                  <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+                  <span className="text-white font-semibold">
+                    {Math.floor(availableSupply).toLocaleString()} DHB
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Gas token info */}
           {gasTokens && gasTokens.length > 0 && (
             <div className="border-t border-zinc-800 pt-3">
