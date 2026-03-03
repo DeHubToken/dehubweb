@@ -198,6 +198,7 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   ne: () => import('./locales/ne.json'),
   om: () => import('./locales/om.json'),
   si: () => import('./locales/si.json'),
+  so: () => import('./locales/so.json'),
   sk: () => import('./locales/sk.json'),
   skr: () => import('./locales/skr.json'),
   sv: () => import('./locales/sv.json'),
