@@ -127,12 +127,11 @@ export function MobileBottomNav() {
     <>
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
         <nav
-          className={cn(
-            "relative bg-zinc-900/10 backdrop-blur-2xl border rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl transition-all duration-1000",
-            showScrollHint
-              ? "border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.08)]"
-              : "border-white/10"
-          )}
+          className="relative bg-zinc-900/10 backdrop-blur-2xl rounded-2xl mx-auto max-w-[72%] md:max-w-md transition-all duration-1000"
+          style={{
+            border: '1px solid rgba(255,255,255,0.15)',
+            boxShadow: '0 0 8px 1px rgba(255,255,255,0.12), 0 0 20px 4px rgba(255,255,255,0.06), inset 0 0 8px rgba(255,255,255,0.04)',
+          }}
         >
           {/* Right edge border glow during scroll hint */}
           <div
