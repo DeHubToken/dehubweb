@@ -22,7 +22,6 @@ export function installSupabaseInterceptor(): void {
     const [input, init] = args;
     const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : (input as Request).url;
     
-    // Only intercept Supabase calls
     if (!url.includes(supabaseUrl)) {
       return originalFetch.apply(this, args);
     }
