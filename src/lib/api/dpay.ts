@@ -30,12 +30,14 @@ export interface DPayTransaction {
   type: 'buy' | 'sell' | 'transfer';
   amount: number;
   tokenReceived?: number;
+  approxTokensToReceive?: string;
   tokenSymbol: string;
   status: 'pending' | 'completed' | 'failed';
   createdAt: string;
   txHash?: string;
   chainId?: number;
   receiverAddress?: string;
+  currency?: string;
 }
 
 /** Post-purchase polling: status by session ID (GET /dpay/tnxs?sid=...) */
@@ -432,24 +434,28 @@ export async function getAllDPayTransactions(params: { page?: number; limit?: nu
     
     if (Array.isArray(raw)) {
       const transactions = raw
-        .filter((tx: any) => {
-          const status = tx.status_stripe || tx.status || '';
-          return status === 'complete' || status === 'completed';
-        })
-        .map((tx: any) => ({
-          id: tx._id || tx.id,
-          type: (tx.type === 'buy_token' || tx.type === 'buy') ? 'buy' : (tx.type || 'buy'),
-          amount: tx.amount,
-          tokenReceived: tx.tokenReceived ? parseFloat(tx.tokenReceived) : undefined,
-          tokenSymbol: tx.tokenSymbol || tx.symbol || 'DHB',
-          status: 'completed' as const,
-          createdAt: tx.createdAt || tx.created_at,
-          txHash: tx.tokenSendTxnHash || tx.txHash || tx.hash,
-          chainId: tx.chainId || tx.chain_id,
-          from: tx.from || tx.sender,
-          receiverAddress: tx.receiverAddress || tx.receiver_address,
-        }));
-      return { transactions, hasMore: raw.length >= limit, page };
+        .map((tx: any) => {
+          const stripeStatus = tx.status_stripe || tx.status || '';
+          const isComplete = stripeStatus === 'complete' || stripeStatus === 'completed';
+          const isFailed = stripeStatus === 'failed' || stripeStatus === 'expired';
+          return {
+            id: tx._id || tx.id,
+            type: (tx.type === 'buy_token' || tx.type === 'buy') ? 'buy' : (tx.type || 'buy'),
+            amount: tx.amount,
+            tokenReceived: tx.tokenReceived ? parseFloat(tx.tokenReceived) : undefined,
+            approxTokensToReceive: tx.approxTokensToReceive ? String(tx.approxTokensToReceive) : undefined,
+            tokenSymbol: tx.tokenSymbol || tx.symbol || 'DHB',
+            status: isComplete ? 'completed' as const : isFailed ? 'failed' as const : 'pending' as const,
+            createdAt: tx.createdAt || tx.created_at,
+            txHash: tx.tokenSendTxnHash || tx.txHash || tx.hash,
+            chainId: tx.chainId || tx.chain_id,
+            from: tx.from || tx.sender,
+            receiverAddress: tx.receiverAddress || tx.receiver_address,
+            currency: tx.currency || 'usd',
+          };
+        });
+      const total = data?.total ?? raw.length;
+      return { transactions, hasMore: page * limit < total, page };
     }
 
     return { transactions: [], hasMore: false, page };
