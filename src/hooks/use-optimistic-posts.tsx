@@ -30,7 +30,6 @@ function loadFromStorage(): OptimisticPost[] {
     const now = Date.now();
     return parsed
       .map(p => ({ ...p, createdAt: new Date(p.createdAt) }))
-      .filter(p => now - p.createdAt.getTime() < MAX_AGE_MS)
       .map(p => ({ ...p, mediaExpired: true })); // blob URLs don't survive refresh
   } catch {
     return [];
