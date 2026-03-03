@@ -6,6 +6,8 @@ import { PostModal } from './PostModal';
 import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
 
+const SCROLL_HINT_KEY = 'dehub_nav_scroll_hint_seen';
+
 // Left side: Home, Messages
 const LEFT_NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/app' },
@@ -39,9 +41,9 @@ export function MobileBottomNav() {
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [showScrollHint, setShowScrollHint] = useState(false);
 
   const handleNavClick = (e: React.MouseEvent, path: string) => {
-    // If clicking Home while already on Home, trigger refresh
     if (path === '/app' && location.pathname === '/app') {
       e.preventDefault();
       window.dispatchEvent(new CustomEvent('home-refresh'));
@@ -66,6 +68,37 @@ export function MobileBottomNav() {
     setIsPostModalOpen(true);
   };
 
+  // Scroll hint animation for first-time mobile visitors
+  useEffect(() => {
+    const alreadySeen = localStorage.getItem(SCROLL_HINT_KEY);
+    if (alreadySeen) return;
+
+    // Show hint after a short delay so the nav is visible
+    const showTimer = setTimeout(() => {
+      setShowScrollHint(true);
+
+      const container = scrollRef.current;
+      if (!container) return;
+
+      // Animate: scroll right then back
+      const scrollDistance = 60;
+      container.scrollTo({ left: scrollDistance, behavior: 'smooth' });
+
+      const backTimer = setTimeout(() => {
+        container.scrollTo({ left: 0, behavior: 'smooth' });
+        setTimeout(() => {
+          setShowScrollHint(false);
+          localStorage.setItem(SCROLL_HINT_KEY, 'true');
+        }, 500);
+      }, 800);
+
+      return () => clearTimeout(backTimer);
+    }, 2000);
+
+    return () => clearTimeout(showTimer);
+  }, []);
+
+  // Dismiss hint on any manual scroll
   useEffect(() => {
     const container = scrollRef.current;
     if (!container) return;
@@ -74,11 +107,17 @@ export function MobileBottomNav() {
       const maxScroll = container.scrollWidth - container.clientWidth;
       const progress = maxScroll > 0 ? Math.min(container.scrollLeft / maxScroll, 1) : 0;
       setScrollProgress(progress);
+
+      // If user scrolls manually, mark hint as seen
+      if (showScrollHint) {
+        setShowScrollHint(false);
+        localStorage.setItem(SCROLL_HINT_KEY, 'true');
+      }
     };
 
     container.addEventListener('scroll', handleScroll);
     return () => container.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [showScrollHint]);
 
   // Calculate opacity: fades quickly on scroll (reaches 0 at ~10% scroll)
   const buttonOpacity = Math.max(0, 1 - scrollProgress * 10);
