@@ -42,7 +42,7 @@ function formatDPayTx(tx: DPayTransaction, t: (key: string, opts?: any) => strin
   let isCredit = false;
   switch (tx.type) {
     case 'buy':
-      description = `Purchased $${amount} of Coins`;
+      description = `Coin Purchase: $${amount}`;
       isCredit = true;
       break;
     case 'sell':
