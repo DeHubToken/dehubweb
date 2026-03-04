@@ -725,7 +725,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
             transition={{ duration: 0.25, ease: 'easeOut' }}
             className="overflow-y-clip overflow-x-visible"
           >
-            <div data-no-swipe className="relative px-2 sm:px-3 pb-2 space-y-4">
+            <div data-no-swipe className="relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3 space-y-4">
               <SortFilterSection selected={selectedSort} onSelect={handleSortSelect} />
               <CategoryFilterSection 
                 categories={categories} 
