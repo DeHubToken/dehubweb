@@ -378,10 +378,10 @@ export default function PostInfoPage() {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
   
-  // Optimistic post - still being minted
-  const isOptimisticPost = postId?.startsWith('optimistic-');
+  // Show processing state for posts that the API returns with signed/pending status
+  const isProcessing = nftInfo?.status === 'signed' || nftInfo?.status === 'pending';
   
-  if (isOptimisticPost) {
+  if (isProcessing) {
     return (
       <div className="min-h-screen bg-black">
         <div className="sticky top-0 z-50 bg-black border-b border-white/10">
@@ -407,11 +407,11 @@ export default function PostInfoPage() {
           </div>
           
           <h2 className="text-xl font-semibold text-white mb-3">
-            Processing...
+            Upload Processing
           </h2>
           
           <p className="text-white/60 text-sm leading-relaxed mb-4">
-            Your post is being minted on public decentralized databases and our system is validating everything before it goes live on user feeds.
+            Your post is being processed on decentralized databases. Video encoding and thumbnail generation may take a moment.
           </p>
           
           <p className="text-white/40 text-xs leading-relaxed">
