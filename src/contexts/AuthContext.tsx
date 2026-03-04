@@ -795,16 +795,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const aaProvider = (w3a as any).aaProvider || (w3a as any).accountAbstractionProvider;
           if (aaProvider) {
             const aaSign = await signWithProvider(aaProvider, displayedDate, 'REDIRECT-SA');
-            if (aaSign.address.toLowerCase() === smartAccountAddress.toLowerCase() && aaSign.signature.length < 200) {
+            if (aaSign.address.toLowerCase() === smartAccountAddress.toLowerCase()) {
               saResult = aaSign;
-              console.log('[Auth] [REDIRECT] Using AA provider (short sig) for Smart Account');
+              console.log('[Auth] [REDIRECT] Using AA provider sig for Smart Account, length:', aaSign.signature.length);
             }
           }
         } catch (e) {
           console.warn('[Auth] [REDIRECT] AA provider sign failed:', e);
-        }
-        if (!saResult) {
-          saResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate, smartAccountAddress);
         }
         if (saResult) {
           console.log('[Auth] [REDIRECT] Trying Smart Account address:', smartAccountAddress);
@@ -882,8 +879,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.warn('[Auth] [POPUP] Could not get Smart Account address:', e);
         }
 
-        // Step 1: Try Smart Account — AA provider first (old flow, works for deployed accounts).
-        // If AA returns long sig (ERC-6492), use EOA direct sign for new/non-deployed accounts.
+        // Smart Account only — use AA provider directly regardless of signature format.
+        // ERC-6492 sigs (undeployed Safe) are sent as-is; backend handles verification.
         if (smartAccountAddress) {
           let saResult: { address: string; signature: string } | null = null;
           try {
@@ -892,19 +889,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (aaProvider) {
               const aaSign = await signWithProvider(aaProvider, displayedDate, 'POPUP-SA');
               if (aaSign.address.toLowerCase() === smartAccountAddress.toLowerCase()) {
-                if (aaSign.signature.length < 200) {
-                  saResult = aaSign;
-                  console.log('[Auth] [POPUP] Using AA provider (short sig) for Smart Account');
-                } else {
-                  console.log('[Auth] [POPUP] AA returned long sig, trying EOA direct for new account');
-                }
+                saResult = aaSign;
+                console.log('[Auth] [POPUP] Using AA provider sig for Smart Account, length:', aaSign.signature.length);
               }
             }
           } catch (e) {
             console.warn('[Auth] [POPUP] AA provider sign failed:', e);
-          }
-          if (!saResult) {
-            saResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate, smartAccountAddress);
           }
           if (saResult) {
             console.log('[Auth] [POPUP] Trying Smart Account address:', smartAccountAddress);
