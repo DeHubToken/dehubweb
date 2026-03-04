@@ -372,7 +372,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   });
 
   const { walletAddress, isAuthenticated } = useAuth();
-  const { optimisticPosts, clearOptimisticPosts } = useOptimisticPosts();
+  const { optimisticPosts, clearOptimisticPosts, removeOptimisticPost } = useOptimisticPosts();
 
   // Fetch story users from API
   const { storyUsers } = useDeHubStoryUsers(10);
@@ -729,6 +729,17 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const rawItems = useInterleavedFeed ? interleavedItems : singleFeedItems;
   
   const items = rawItems;
+
+  // Auto-remove optimistic posts once their real counterpart appears in the feed
+  useEffect(() => {
+    if (optimisticPosts.length === 0 || items.length === 0) return;
+    const feedIds = new Set(items.map(item => String((item.data as any)?.id)));
+    optimisticPosts.forEach(op => {
+      if (feedIds.has(op.id)) {
+        removeOptimisticPost(op.id);
+      }
+    });
+  }, [items, optimisticPosts, removeOptimisticPost]);
 
   // ============================================================================
   // INFINITE SCROLL

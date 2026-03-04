@@ -258,22 +258,8 @@ function HomeTabPanel({
   
   const filteredOptimisticPosts = isViewingOwnProfile 
     ? optimisticPosts.filter((op) => {
-        return !ALL_CONTENT.some((apiItem) => {
-          const apiStatus = (apiItem.data as { status?: string }).status;
-          if (apiStatus !== 'minted') return false;
-          if (op.type === 'post' && apiItem.type === 'post') {
-            return (op.data as TextPost).content === (apiItem.data as TextPost).content;
-          }
-          if (op.type === 'image' && apiItem.type === 'image') {
-            const opData = op.data as ImagePost;
-            const apiData = apiItem.data as ImagePost;
-            return opData.title === apiData.title || opData.caption === apiData.caption;
-          }
-          if (op.type === 'video' && apiItem.type === 'video') {
-            return (op.data as VideoItem).title === (apiItem.data as VideoItem).title;
-          }
-          return false;
-        });
+        // With real token IDs, just check if any feed item has the same ID
+        return !ALL_CONTENT.some((apiItem) => apiItem.data.id === op.id);
       })
     : [];
   

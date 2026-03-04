@@ -958,8 +958,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       toast.dismiss('mint-progress');
       toast.success('Posted successfully');
       
-      // Create optimistic post to show immediately in feed
-      const optimisticId = `optimistic-${Date.now()}`;
+      // Create optimistic post using the real token ID so it matches the API feed item
+      const optimisticId = String(mintResponse.createdTokenId);
       const username = user?.username || user?.displayName || 'You';
       // Use proper avatar resolution - extract path from all possible fields and build CDN URL
       // This matches the exact pattern used in ProfilePage and other components
