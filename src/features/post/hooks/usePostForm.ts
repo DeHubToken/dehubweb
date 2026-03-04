@@ -892,7 +892,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           thumbnail,
           minterAddress,
         },
-        (percent) => setUploadProgress(percent)
+        
       );
 
       console.log('[Mint] API response:', JSON.stringify(mintResponse, null, 2));
