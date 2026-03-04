@@ -31,6 +31,7 @@ interface PostActionBarProps {
   canPost: boolean;
   isEnhancing: boolean;
   isPosting?: boolean;
+  uploadProgress?: number;
   
   hasText: boolean;
   hasImage?: boolean;
@@ -58,6 +59,7 @@ export function PostActionBar({
   canPost,
   isEnhancing,
   isPosting,
+  uploadProgress,
   
   hasText,
   hasImage,
@@ -181,6 +183,8 @@ export function PostActionBar({
     onCloseModal?.();
   };
 
+  const showUploadBar = isPosting && (uploadProgress ?? 0) > 0;
+
   return (
     <>
       <GoLiveModal
@@ -191,6 +195,24 @@ export function PostActionBar({
         isOpen={audioSpacesModalOpen}
         onClose={handleAudioSpacesModalClose}
       />
+
+      {/* Upload progress bar — stage-based: upload 0-60%, on-chain 65-90%, done 100% */}
+      {showUploadBar && (
+        <div className="px-4 pt-2 pb-1">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs text-zinc-400">
+              {(uploadProgress ?? 0) < 60 ? 'Uploading...' : (uploadProgress ?? 0) < 100 ? 'Publishing...' : 'Done!'}
+            </span>
+            <span className="text-xs text-zinc-400 tabular-nums">{uploadProgress ?? 0}%</span>
+          </div>
+          <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-white rounded-full transition-all duration-500 ease-out"
+              style={{ width: `${uploadProgress ?? 0}%` }}
+            />
+          </div>
+        </div>
+      )}
 
     <div className="px-4 py-2 border-t border-white/10 flex items-center justify-between">
       <div className="flex items-center gap-0.5">

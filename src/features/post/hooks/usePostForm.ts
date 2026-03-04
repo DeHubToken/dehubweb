@@ -111,6 +111,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [liveMode, setLiveMode] = useState<LiveMode>(null);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
   const [drafts, setDrafts] = useState<Draft[]>(loadDrafts);
@@ -864,6 +865,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // Dismiss any existing toast to avoid overlap
       toast.dismiss('mint-progress');
       toast.loading('Uploading content', { id: 'mint-progress', duration: Infinity });
+      setUploadProgress(5);
       
       // Determine title and description based on post type
       let postTitle = '';
@@ -892,7 +894,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           thumbnail,
           minterAddress,
         },
-        
+        (percent) => setUploadProgress(Math.round(percent * 0.6)) // XHR bytes map to 0-60%
       );
 
       console.log('[Mint] API response:', JSON.stringify(mintResponse, null, 2));
@@ -917,12 +919,14 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }
 
       // Step 2: Execute on-chain minting
+      setUploadProgress(65);
       toast.loading('Publishing to decentralized database', { id: 'mint-progress', duration: Infinity });
       
       let txHash: string;
       
       if (hasBounty) {
         // Use StreamController for bounty minting
+        setUploadProgress(70);
         toast.loading('Approving tokens', { id: 'mint-progress', duration: Infinity });
         
         txHash = await mintWithBounty({
@@ -950,6 +954,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
       console.log('[Mint] Transaction hash:', txHash);
 
+      setUploadProgress(100);
       toast.dismiss('mint-progress');
       toast.success('Posted successfully');
       
@@ -1067,7 +1072,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       toast.error(`Post failed: ${errorMsg}`);
     } finally {
       setIsPosting(false);
-      
+      setUploadProgress(0);
     }
   }, [
     text, description, media, isSubscribersOnly, isPPV, ppvAmount,
@@ -1097,6 +1102,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       liveMode,
       isEnhancing,
       isPosting,
+      uploadProgress,
       
       scheduledDate,
       drafts,

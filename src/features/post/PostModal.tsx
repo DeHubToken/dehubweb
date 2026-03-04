@@ -122,6 +122,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         canPost={computed.canPost}
         isEnhancing={state.isEnhancing}
         isPosting={state.isPosting}
+        uploadProgress={state.uploadProgress}
         
         hasText={!!state.text.trim()}
         hasImage={computed.hasImage}

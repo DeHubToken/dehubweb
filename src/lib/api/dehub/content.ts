@@ -43,6 +43,7 @@ export interface MintResponse {
 
 export async function mintPost(
   params: MintPostParams,
+  onProgress?: (percent: number) => void
 ): Promise<MintResponse> {
   const token = getAuthToken();
   if (!token) {
@@ -82,6 +83,14 @@ export async function mintPost(
 
   return new Promise<MintResponse>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
+
+    // Track upload progress (bytes sent to server)
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable && onProgress) {
+        const percent = Math.round((event.loaded / event.total) * 100);
+        onProgress(percent);
+      }
+    };
 
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
