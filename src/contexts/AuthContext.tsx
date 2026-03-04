@@ -289,15 +289,21 @@ async function signWithEoaDirectly(
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    // Call personal_sign on the EOA provider (NOT the AA provider)
-    // This produces a standard ECDSA signature the backend can verify
-    const signature = await eoaProvider.request({
-      method: 'personal_sign',
-      params: [
-        `0x${Buffer.from(message, 'utf8').toString('hex')}`,
-        eoaAddress,
-      ],
-    }) as string;
+    // Call personal_sign on the EOA provider — use same format as signWithProvider
+    // (raw string [message, address]) so backend EIP-1271 verification matches.
+    let signature: string;
+    try {
+      signature = await eoaProvider.request({
+        method: 'personal_sign',
+        params: [message, eoaAddress],
+      }) as string;
+    } catch (e) {
+      // Fallback: some providers expect hex-encoded message
+      signature = await eoaProvider.request({
+        method: 'personal_sign',
+        params: [`0x${Buffer.from(message, 'utf8').toString('hex')}`, eoaAddress],
+      }) as string;
+    }
 
     console.log('[Auth] EOA direct sign: signature produced, length:', signature.length);
 
@@ -786,7 +792,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (smartAccountAddress) {
-        const saResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate, smartAccountAddress);
+        let saResult: { address: string; signature: string } | null = null;
+        try {
+          const w3a = await getOrInitWeb3Auth();
+          const aaProvider = (w3a as any).aaProvider || (w3a as any).accountAbstractionProvider;
+          if (aaProvider) {
+            const aaSign = await signWithProvider(aaProvider, displayedDate, 'REDIRECT-SA');
+            if (aaSign.address.toLowerCase() === smartAccountAddress.toLowerCase()) {
+              saResult = aaSign;
+              console.log('[Auth] [REDIRECT] Using AA provider signature for Smart Account');
+            }
+          }
+        } catch (e) {
+          console.warn('[Auth] [REDIRECT] AA provider sign failed, trying EOA direct:', e);
+        }
+        if (!saResult) {
+          saResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate, smartAccountAddress);
+        }
         if (saResult) {
           try {
             console.log('[Auth] [REDIRECT] Trying Smart Account address:', smartAccountAddress);
@@ -907,9 +929,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.warn('[Auth] [POPUP] Could not get Smart Account address:', e);
         }
 
-        // Step 1: Try Smart Account address with EOA signature (matches mobile account)
+        // Step 1: Try Smart Account — first use AA provider's personal_sign (old v10 flow, backend EIP-1271)
         if (smartAccountAddress) {
-          const saResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate, smartAccountAddress);
+          let saResult: { address: string; signature: string } | null = null;
+          try {
+            const w3a = await getOrInitWeb3Auth();
+            const aaProvider = (w3a as any).aaProvider || (w3a as any).accountAbstractionProvider;
+            if (aaProvider) {
+              const aaSign = await signWithProvider(aaProvider, displayedDate, 'POPUP-SA');
+              if (aaSign.address.toLowerCase() === smartAccountAddress.toLowerCase()) {
+                saResult = aaSign;
+                console.log('[Auth] [POPUP] Using AA provider signature for Smart Account');
+              }
+            }
+          } catch (e) {
+            console.warn('[Auth] [POPUP] AA provider sign failed, trying EOA direct:', e);
+          }
+          if (!saResult) {
+            saResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate, smartAccountAddress);
+          }
           if (saResult) {
             try {
               console.log('[Auth] [POPUP] Trying Smart Account address:', smartAccountAddress);
