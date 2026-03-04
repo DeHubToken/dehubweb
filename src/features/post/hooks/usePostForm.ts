@@ -926,6 +926,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       
       if (hasBounty) {
         // Use StreamController for bounty minting
+        setUploadProgress(70);
         toast.loading('Approving tokens', { id: 'mint-progress', duration: Infinity });
         
         txHash = await mintWithBounty({
