@@ -773,12 +773,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const signingProvider = provider;
 
     try {
-      let authAddressForApi: string;
-      let signature: string;
-
       const BASE_CHAIN_ID = 8453;
 
-      // Try Smart Account address first (matches mobile app), fall back to EOA
+      // Smart Account only (no EOA fallback)
       let smartAccountAddress: string | null = null;
       try {
         const w3a = await getOrInitWeb3Auth();
@@ -810,71 +807,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           saResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate, smartAccountAddress);
         }
         if (saResult) {
-          try {
-            console.log('[Auth] [REDIRECT] Trying Smart Account address:', smartAccountAddress);
-            const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID);
-            const normalizedUser = normalizeUser(saAuthResponse.user, saResult.address);
-            localStorage.setItem('dehub_wallet', saResult.address);
-            localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
-            setWalletAddress(saResult.address);
-            setUser(normalizedUser);
-            if (saAuthResponse.result?.isNewAccount) setRequiresUsername(true);
-            queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-            queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
-            queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-            toast.success(saAuthResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: toastId });
-            console.log('[Auth] ✓ DeHub authentication complete via Smart Account (Redirect Flow)');
-            authLogger.info('Login success', { method: 'redirect-sa', address: saResult.address, username: normalizedUser.username, isNewAccount: !!saAuthResponse.result?.isNewAccount });
-            return;
-          } catch (saErr: any) {
-            console.warn('[Auth] [REDIRECT] Smart Account auth failed, falling back to EOA:', saErr?.message || saErr);
-          }
+          console.log('[Auth] [REDIRECT] Trying Smart Account address:', smartAccountAddress);
+          const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID);
+          const normalizedUser = normalizeUser(saAuthResponse.user, saResult.address);
+          localStorage.setItem('dehub_wallet', saResult.address);
+          localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
+          setWalletAddress(saResult.address);
+          setUser(normalizedUser);
+          if (saAuthResponse.result?.isNewAccount) setRequiresUsername(true);
+          queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+          queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+          queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+          toast.success(saAuthResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: toastId });
+          console.log('[Auth] ✓ DeHub authentication complete via Smart Account (Redirect Flow)');
+          authLogger.info('Login success', { method: 'redirect-sa', address: saResult.address, username: normalizedUser.username, isNewAccount: !!saAuthResponse.result?.isNewAccount });
+          return;
         }
       }
-
-      // Fall back to EOA address
-      const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
-      if (eoaResult) {
-        authAddressForApi = eoaResult.address;
-        signature = eoaResult.signature;
-        console.log('[Auth] [REDIRECT] Using EOA direct signature for', authAddressForApi);
-      } else {
-        console.warn('[Auth] [REDIRECT] EOA direct sign unavailable, falling back to provider signing');
-        toast.loading('Please sign the message in your wallet...', { id: toastId });
-        const fallback = await signWithProvider(signingProvider, displayedDate, 'REDIRECT');
-        authAddressForApi = fallback.address;
-        signature = fallback.signature;
+      if (smartAccountAddress) {
+        throw new Error('Smart Account authentication failed. No EOA fallback.');
       }
-
-      console.log('[Auth] [REDIRECT] Signature received, authenticating with backend...');
-      toast.loading('Verifying with DeHub...', { id: toastId });
-
-      const authResponse = await authenticateWallet(
-        authAddressForApi,
-        signature,
-        timestamp,
-        BASE_CHAIN_ID
-      );
-
-      const normalizedUser = normalizeUser(authResponse.user, authAddressForApi);
-
-      localStorage.setItem('dehub_wallet', authAddressForApi);
-      localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
-
-      setWalletAddress(authAddressForApi);
-      setUser(normalizedUser);
-
-    if (authResponse.result?.isNewAccount) {
-      setRequiresUsername(true);
-    }
-
-    queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-    queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
-    queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-
-    toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: 'auth-redirect' });
-      console.log('[Auth] ✓ DeHub authentication complete (Redirect Flow)');
-      authLogger.info('Login success', { method: 'redirect', address: authAddressForApi, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
+      throw new Error('No Smart Account address available.');
     } catch (err: any) {
       console.error('[Auth] [REDIRECT] Sequence failed:', err);
       toast.error(err.message || 'Authentication failed', { id: 'auth-redirect' });
@@ -914,7 +867,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const BASE_CHAIN_ID = 8453;
 
-      // For social logins: try Smart Account address first (matches mobile app), fall back to EOA.
+      // For social logins: Smart Account only (no EOA fallback).
       if (isSocial) {
         // Get Smart Account (AA) address — this is what the mobile app uses
         let smartAccountAddress: string | null = null;
@@ -949,41 +902,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             saResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate, smartAccountAddress);
           }
           if (saResult) {
-            try {
-              console.log('[Auth] [POPUP] Trying Smart Account address:', smartAccountAddress);
-              toast.loading('Signing in...', { id: toastId });
-              const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID);
-              const normalizedUser = normalizeUser(saAuthResponse.user, saResult.address);
-              localStorage.setItem('dehub_wallet', saResult.address);
-              localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
-              setWalletAddress(saResult.address);
-              setUser(normalizedUser);
-              if (saAuthResponse.result?.isNewAccount) setRequiresUsername(true);
-              queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-              queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
-              queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-              toast.success(saAuthResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: toastId });
-              console.log('[Auth] ✓ DeHub authentication complete via Smart Account (Popup Flow)');
-              authLogger.info('Login success', { method: 'popup-sa', address: saResult.address, username: normalizedUser.username, isNewAccount: !!saAuthResponse.result?.isNewAccount });
-              return;
-            } catch (saErr: any) {
-              console.warn('[Auth] [POPUP] Smart Account auth failed, falling back to EOA:', saErr?.message || saErr);
-            }
+            console.log('[Auth] [POPUP] Trying Smart Account address:', smartAccountAddress);
+            toast.loading('Signing in...', { id: toastId });
+            const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID);
+            const normalizedUser = normalizeUser(saAuthResponse.user, saResult.address);
+            localStorage.setItem('dehub_wallet', saResult.address);
+            localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
+            setWalletAddress(saResult.address);
+            setUser(normalizedUser);
+            if (saAuthResponse.result?.isNewAccount) setRequiresUsername(true);
+            queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+            queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+            queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+            toast.success(saAuthResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: toastId });
+            console.log('[Auth] ✓ DeHub authentication complete via Smart Account (Popup Flow)');
+            authLogger.info('Login success', { method: 'popup-sa', address: saResult.address, username: normalizedUser.username, isNewAccount: !!saAuthResponse.result?.isNewAccount });
+            return;
           }
         }
-
-        // Step 2: Fall back to EOA address
-        const eoaResult = await signWithEoaDirectly(signingProvider, timestamp, displayedDate);
-        if (eoaResult) {
-          authAddressForApi = eoaResult.address;
-          signature = eoaResult.signature;
-          console.log('[Auth] [POPUP] Using EOA address for auth:', authAddressForApi);
-        } else {
-          console.warn('[Auth] [POPUP] EOA direct sign unavailable, falling back to provider signing');
-          const fallback = await signWithProvider(signingProvider, displayedDate, 'POPUP');
-          authAddressForApi = fallback.address;
-          signature = fallback.signature;
+        if (smartAccountAddress) {
+          throw new Error('Smart Account authentication failed. No EOA fallback.');
         }
+        throw new Error('No Smart Account address available.');
       } else {
         // External wallet — standard provider signing
         const result = await signWithProvider(signingProvider, displayedDate, 'POPUP');
