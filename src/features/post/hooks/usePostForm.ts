@@ -864,7 +864,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // Dismiss any existing toast to avoid overlap
       toast.dismiss('mint-progress');
       toast.loading('Uploading content', { id: 'mint-progress', duration: Infinity });
-      setUploadProgress(0);
       
       // Determine title and description based on post type
       let postTitle = '';
