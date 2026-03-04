@@ -58,7 +58,7 @@ export function PostActionBar({
   canPost,
   isEnhancing,
   isPosting,
-  uploadProgress,
+  
   hasText,
   hasImage,
   hasVideo,
