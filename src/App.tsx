@@ -23,6 +23,7 @@ const ProfilePage = React.lazy(() => import("./pages/app/ProfilePage"));
 const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
 const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));
 const GovernanceProposalPage = React.lazy(() => import("./pages/app/GovernanceProposalPage"));
+const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 
 const PageLoader = () => (
   <div className="min-h-screen bg-black" />
