@@ -31,7 +31,7 @@ interface PostActionBarProps {
   canPost: boolean;
   isEnhancing: boolean;
   isPosting?: boolean;
-  uploadProgress?: number;
+  
   hasText: boolean;
   hasImage?: boolean;
   hasVideo?: boolean;
