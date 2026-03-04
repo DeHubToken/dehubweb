@@ -61,6 +61,7 @@ export interface PostFormState {
   liveMode: LiveMode;
   isEnhancing: boolean;
   isPosting: boolean;
+  uploadProgress: number; // 0–100 stage-based progress
   
 }
 
