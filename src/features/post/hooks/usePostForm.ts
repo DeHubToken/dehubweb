@@ -894,7 +894,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           thumbnail,
           minterAddress,
         },
-        
+        (percent) => setUploadProgress(Math.round(percent * 0.6)) // XHR bytes map to 0-60%
       );
 
       console.log('[Mint] API response:', JSON.stringify(mintResponse, null, 2));
