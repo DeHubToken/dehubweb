@@ -111,6 +111,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [liveMode, setLiveMode] = useState<LiveMode>(null);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
   const [drafts, setDrafts] = useState<Draft[]>(loadDrafts);
