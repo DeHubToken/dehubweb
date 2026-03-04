@@ -43,7 +43,6 @@ export interface MintResponse {
 
 export async function mintPost(
   params: MintPostParams,
-  onProgress?: (percent: number) => void
 ): Promise<MintResponse> {
   const token = getAuthToken();
   if (!token) {
