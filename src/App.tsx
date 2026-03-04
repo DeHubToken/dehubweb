@@ -92,6 +92,7 @@ function AppContent() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/mobile-preview" element={<MobilePreview />} />
             <Route path="/docs" element={<DocsPage />} />
             <Route path="/docs/*" element={<DocsPage />} />
             
