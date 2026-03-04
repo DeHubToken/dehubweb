@@ -372,7 +372,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   });
 
   const { walletAddress, isAuthenticated } = useAuth();
-  const { optimisticPosts, clearOptimisticPosts } = useOptimisticPosts();
+  const { optimisticPosts, clearOptimisticPosts, removeOptimisticPost } = useOptimisticPosts();
 
   // Fetch story users from API
   const { storyUsers } = useDeHubStoryUsers(10);
