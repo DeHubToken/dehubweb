@@ -954,6 +954,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
       console.log('[Mint] Transaction hash:', txHash);
 
+      setUploadProgress(100);
       toast.dismiss('mint-progress');
       toast.success('Posted successfully');
       
