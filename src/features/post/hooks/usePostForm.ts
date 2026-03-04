@@ -919,6 +919,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }
 
       // Step 2: Execute on-chain minting
+      setUploadProgress(65);
       toast.loading('Publishing to decentralized database', { id: 'mint-progress', duration: Infinity });
       
       let txHash: string;
