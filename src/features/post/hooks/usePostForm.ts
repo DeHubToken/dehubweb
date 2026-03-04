@@ -1097,7 +1097,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       liveMode,
       isEnhancing,
       isPosting,
-      uploadProgress,
+      
       scheduledDate,
       drafts,
       isRecording,

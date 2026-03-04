@@ -61,7 +61,7 @@ export interface PostFormState {
   liveMode: LiveMode;
   isEnhancing: boolean;
   isPosting: boolean;
-  uploadProgress: number; // 0–100 during video/image upload
+  
 }
 
 export interface PostFormActions {

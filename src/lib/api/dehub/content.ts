@@ -83,19 +83,10 @@ export async function mintPost(
   return new Promise<MintResponse>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
 
-    // Track upload progress (bytes sent to server)
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable && onProgress) {
-        const percent = Math.round((event.loaded / event.total) * 95); // cap at 95 until response
-        onProgress(percent);
-      }
-    };
-
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
         try {
           const data = JSON.parse(xhr.responseText);
-          onProgress?.(100);
           resolve(data.result ?? data);
         } catch {
           reject(new Error('Invalid response from server'));
