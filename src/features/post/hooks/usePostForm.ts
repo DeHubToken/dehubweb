@@ -1067,7 +1067,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       toast.error(`Post failed: ${errorMsg}`);
     } finally {
       setIsPosting(false);
-      setUploadProgress(0);
+      
     }
   }, [
     text, description, media, isSubscribersOnly, isPPV, ppvAmount,
