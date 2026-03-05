@@ -1071,7 +1071,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }
       // Log mint failure to backend for debugging
       mintLogger.error(errorMsg, {
-        postType: hasVideo ? 'video' : hasImage ? 'feed-images' : 'feed-simple',
+        postType: hasVideo ? 'video' : hasAudio ? 'audio' : hasImage ? 'feed-images' : 'feed-simple',
         chainId,
         hadBounty: !!(isWatch2Earn && w2eTotal && w2eViews),
       }, error instanceof Error ? error : undefined);
