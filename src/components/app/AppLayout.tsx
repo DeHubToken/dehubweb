@@ -212,18 +212,20 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
             </div>
           )}
           
-          {/* Desktop profile — renders inline */}
+          {/* Profile route — inline on desktop, drawer on mobile */}
           {isDynamicRoute && isProfileRoute && (
-            <div className="hidden lg:block animate-fade-in">
-              {children || <Outlet />}
-            </div>
-          )}
-          
-          {/* Mobile profile — renders in drawer */}
-          {isProfileRoute && (
-            <MobileProfileDrawer isOpen={isProfileRoute}>
-              {children || <Outlet />}
-            </MobileProfileDrawer>
+            <>
+              {/* Desktop: inline */}
+              <div className="hidden lg:block animate-fade-in">
+                {children || <Outlet />}
+              </div>
+              {/* Mobile: drawer */}
+              <div className="lg:hidden">
+                <MobileProfileDrawer isOpen>
+                  {children || <Outlet />}
+                </MobileProfileDrawer>
+              </div>
+            </>
           )}
         </main>
         
