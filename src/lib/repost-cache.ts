@@ -42,3 +42,9 @@ export function isPostReposted(postId: string): boolean {
   const store = getStore();
   return postId in store;
 }
+
+export function unmarkReposted(postId: string): void {
+  const store = getStore();
+  delete store[postId];
+  saveStore(store);
+}

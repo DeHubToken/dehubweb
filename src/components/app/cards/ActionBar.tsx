@@ -279,6 +279,17 @@ export function ActionBar({
     setSheetOpen(false);
   };
 
+  const handleUndoRepost = () => {
+    if (onRepost) {
+      setRepostDelta(prev => prev - 1);
+      setIsReposted(false);
+      if (postId) unmarkReposted(postId);
+      onRepost(); // Same API call toggles the repost off
+      toast.success('Repost removed');
+    }
+    setSheetOpen(false);
+  };
+
   const handleQuote = () => {
     if (onQuote) {
       onQuote();
