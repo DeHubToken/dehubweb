@@ -126,6 +126,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'tg', name: 'Tajik', nativeName: 'Тоҷикӣ' },
   { code: 'tk', name: 'Turkmen', nativeName: 'Türkmen' },
   { code: 'hy', name: 'Armenian', nativeName: 'Հայերեն' },
+  { code: 'ky', name: 'Kyrgyz', nativeName: 'Кыргызча' },
 ];
 
 // Dynamic import map for lazy loading locale files
