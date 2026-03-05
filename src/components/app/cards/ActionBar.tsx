@@ -261,10 +261,12 @@ export function ActionBar({
     setSheetOpen(false);
   };
 
+  const [isReposted, setIsReposted] = useState(false);
+
   const handleRepost = () => {
     if (onRepost) {
-      // Optimistically increment repost count immediately
       setRepostDelta(prev => prev + 1);
+      setIsReposted(true);
       onRepost();
     } else {
       toast.info('Repost not available for this post');
