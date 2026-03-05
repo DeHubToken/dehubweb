@@ -80,14 +80,11 @@ export function getSocket(): Socket {
   return socket;
 }
 
-/** Join a livechat room and start receiving its events. */
+/** Join the global livechat room. */
 export function joinRoom(roomId: string) {
   const s = getSocket();
   console.log('[Socket] Joining room:', roomId);
-  // Try multiple join event names the server may use
   s.emit('joinRoom', { roomId });
-  s.emit('join', { roomId, room: roomId });
-  s.emit('subscribe', { room: roomId, roomId });
 }
 
 /** Leave a livechat room. */
@@ -95,8 +92,6 @@ export function leaveRoom(roomId: string) {
   if (!socket) return;
   console.log('[Socket] Leaving room:', roomId);
   socket.emit('leaveRoom', { roomId });
-  socket.emit('leave', { roomId, room: roomId });
-  socket.emit('unsubscribe', { room: roomId, roomId });
 }
 
 /** Send a livechat message via socket. */
@@ -107,9 +102,9 @@ export function emitSendMessage(payload: {
   imageUrl?: string;
 }) {
   const s = getSocket();
+  console.log('[Socket] Sending message:', payload);
+  // Primary event name for the DeHub livechat gateway
   s.emit('sendMessage', payload);
-  s.emit('chatMessage', payload);
-  s.emit('message', payload);
 }
 
 /** Request message history via socket. Returns promise with messages. */
