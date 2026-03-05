@@ -27,6 +27,8 @@ interface AudioVisualizerProps {
   showStylePicker?: boolean;
   /** When true the audio output is muted (visualizer still animates). */
   muted?: boolean;
+  /** Seed for the static waveform style (e.g. post id). */
+  seed?: string;
 }
 
 const STYLES: { value: VisualizerStyle; label: string }[] = [
