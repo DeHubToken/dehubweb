@@ -4,7 +4,7 @@
  * Displays timestamp, view count, and optional translate control below post content.
  */
 
-import { Eye, RotateCcw, Loader2, Languages } from 'lucide-react';
+import { Eye, Headphones, RotateCcw, Loader2, Languages } from 'lucide-react';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { cn } from '@/lib/utils';
 
