@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -124,7 +124,6 @@ interface CommentItemProps {
   onDislike: (id: string) => void;
   onReply: (id: string) => void;
   onShare: (id: string) => void;
-  onBookmark: (id: string) => void;
   onEdit: (id: string, newContent: string) => void;
   onDelete: (id: string) => void;
   onUserPress: (username: string) => void;
@@ -176,18 +175,11 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
-function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onBookmark, onEdit, onDelete, onUserPress, isReply, isOwnComment }: CommentItemProps) {
-  const [isBookmarked, setIsBookmarked] = useState(false);
+function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onEdit, onDelete, onUserPress, isReply, isOwnComment }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
-  const translation = useTranslation(comment.text || '');
-  // Avatar URL is already resolved via buildAvatarUrl in mapApiComment
   const avatarUrl = comment.avatar;
-
-  const handleBookmark = () => {
-    setIsBookmarked(!isBookmarked);
-    onBookmark(comment.id);
-  };
+  const translation = useTranslation(comment.text || '');
 
   return (
     <motion.div
@@ -372,16 +364,6 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
               </Tooltip>
             )}
           </div>
-          <button
-            onClick={handleBookmark}
-            className={cn(
-              "transition-colors",
-              isBookmarked ? "text-yellow-500" : "text-white hover:text-zinc-400"
-            )}
-            aria-label="Bookmark"
-          >
-            <Bookmark className={cn("w-4 h-4", isBookmarked && "fill-current")} />
-          </button>
         </div>
       </div>
     </motion.div>
@@ -908,7 +890,6 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                         onDislike={handleDislike} 
                         onReply={handleReply} 
                         onShare={() => {}} 
-                        onBookmark={() => {}}
                         onEdit={handleEditComment}
                         onDelete={handleDeleteComment}
                         onUserPress={handleUserPress}
@@ -923,7 +904,6 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                           onDislike={handleDislike} 
                           onReply={handleReply} 
                           onShare={() => {}} 
-                          onBookmark={() => {}}
                           onEdit={handleEditComment}
                           onDelete={handleDeleteComment}
                           onUserPress={handleUserPress}
@@ -1069,7 +1049,6 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                         onDislike={handleDislike} 
                         onReply={handleReply} 
                         onShare={() => {}} 
-                        onBookmark={() => {}}
                         onEdit={handleEditComment}
                         onDelete={handleDeleteComment}
                         onUserPress={handleUserPress}
@@ -1084,7 +1063,6 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                           onDislike={handleDislike} 
                           onReply={handleReply} 
                           onShare={() => {}} 
-                          onBookmark={() => {}}
                           onEdit={handleEditComment}
                           onDelete={handleDeleteComment}
                           onUserPress={handleUserPress}
