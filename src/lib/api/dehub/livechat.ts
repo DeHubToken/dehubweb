@@ -149,7 +149,7 @@ export async function getLiveChatMessages(
   
   for (const ep of endpoints) {
     try {
-      const queryParams: Record<string, unknown> = {
+      const queryParams: Record<string, string | number | undefined> = {
         page: params?.page,
         limit: params?.limit ?? 200,
         before: params?.before,
