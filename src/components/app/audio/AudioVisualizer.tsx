@@ -60,7 +60,7 @@ export function AudioVisualizer({
   const animationRef = useRef<number | null>(null);
   const isConnectedRef = useRef(false);
   
-  const [style, setStyle] = useState<VisualizerStyle>('bars');
+  const [style, setStyle] = useState<VisualizerStyle>('static');
   const [hue, setHue] = useState(0); // Default to left side (red)
   const [isInitialized, setIsInitialized] = useState(false);
 
