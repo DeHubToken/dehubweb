@@ -125,6 +125,7 @@ function MobileCreatorInfo({
   const [showBountyDrawer, setShowBountyDrawer] = useState(false);
   const [showPPVDrawer, setShowPPVDrawer] = useState(false);
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   // Format numbers with abbreviations (1K, 1M, etc.) - matches thumbnail format
   const formatCompact = (num: number): string => {
