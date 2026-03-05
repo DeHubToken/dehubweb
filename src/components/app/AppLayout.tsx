@@ -238,14 +238,14 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           )}
           
           {/* Dynamic routes (post pages, username profiles, etc.) use Outlet */}
-          {isDynamicRoute && !isProfileRoute && (
+          {isDynamicRoute && !useProfileDrawer && (
             <div className="animate-fade-in">
               {children || <Outlet />}
             </div>
           )}
           
-          {/* Profile route — inline on desktop, drawer on mobile */}
-          {isDynamicRoute && isProfileRoute && (
+          {/* Mobile profile drawer — only when navigated from feed */}
+          {useProfileDrawer && (
             <MobileProfileDrawer isOpen>
               {children || <Outlet />}
             </MobileProfileDrawer>
