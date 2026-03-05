@@ -121,6 +121,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'ml', name: 'Malayalam', nativeName: 'മലയാളം' },
   { code: 'or', name: 'Odia', nativeName: 'ଓଡ଼ିଆ' },
   { code: 'sd', name: 'Sindhi', nativeName: 'سنڌي' },
+  { code: 'sq', name: 'Albanian', nativeName: 'Shqip' },
 ];
 
 // Dynamic import map for lazy loading locale files
@@ -228,6 +229,7 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   ml: () => import('./locales/ml.json'),
   or: () => import('./locales/or.json'),
   sd: () => import('./locales/sd.json'),
+  sq: () => import('./locales/sq.json'),
 };
 
 /**
