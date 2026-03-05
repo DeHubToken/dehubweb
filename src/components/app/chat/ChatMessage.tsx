@@ -63,7 +63,7 @@ function StakingBadgeInline({ address: _address }: { address: string }) {
   return null;
 }
 
-export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnban }: ChatMessageProps) {
+export function ChatMessage({ message, showActions, moderators, onPin, onUnpin, onBan, onUnban }: ChatMessageProps) {
   const navigate = useNavigate();
   const {
     isTranslated,
