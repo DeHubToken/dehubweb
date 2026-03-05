@@ -3,8 +3,8 @@
  * ============
  * Provides Web3Auth authentication integrated with DeHub API.
  * Uses Web3Auth Modal SDK v10 with Pimlico AA for social/email/SMS login.
- * AA is used for on-chain transactions; auth signing uses standard ECDSA.
- * Wagmi handles external wallet connections.
+ * Social logins sign via Smart Account (EIP-1271) and send the SA address to backend.
+ * External wallets (Wagmi) sign with standard ECDSA and send EOA address to backend.
  *
  * CUSTOM UI MODE: Uses connectTo() for direct provider connections
  * without showing the default Web3Auth modal.
