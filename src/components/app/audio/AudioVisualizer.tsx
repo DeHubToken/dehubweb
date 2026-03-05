@@ -29,7 +29,6 @@ interface AudioVisualizerProps {
 }
 
 const STYLES: { value: VisualizerStyle; label: string }[] = [
-  { value: 'static', label: 'Default' },
   { value: 'bars', label: 'Bars' },
   { value: 'waveform', label: 'Wave' },
   { value: 'circular', label: 'Radial' },
