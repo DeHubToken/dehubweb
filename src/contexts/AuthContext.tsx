@@ -119,6 +119,40 @@ function normalizeUser(userData: Partial<DeHubUser> | null | undefined, fallback
   };
 }
 
+// Map custom provider names to Web3Auth AUTH_CONNECTION
+function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[keyof typeof AUTH_CONNECTION] {
+  switch (provider) {
+    case 'google': return AUTH_CONNECTION.GOOGLE;
+    case 'twitter': return AUTH_CONNECTION.TWITTER;
+    case 'apple': return AUTH_CONNECTION.APPLE;
+    case 'discord': return AUTH_CONNECTION.DISCORD;
+    case 'telegram': return AUTH_CONNECTION.TELEGRAM;
+    case 'github': return AUTH_CONNECTION.GITHUB;
+    default: return AUTH_CONNECTION.GOOGLE;
+  }
+}
+
+/**
+ * Build web3AuthMeta from Web3Auth userInfo for the auth request.
+ */
+async function getWeb3AuthMeta(): Promise<Web3AuthMeta | undefined> {
+  try {
+    const w3a = await getOrInitWeb3Auth();
+    const info = await w3a.getUserInfo();
+    if (!info) return undefined;
+    return {
+      typeOfLogin: info.typeOfLogin,
+      verifier: info.verifier,
+      verifierId: info.verifierId,
+      email: info.email,
+      name: info.name,
+      profileImage: info.profileImage,
+    };
+  } catch (e) {
+    console.warn('[Auth] Could not get Web3Auth user info for meta:', e);
+    return undefined;
+  }
+}
 
 
 /**
