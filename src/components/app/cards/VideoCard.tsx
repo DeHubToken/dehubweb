@@ -1068,8 +1068,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         tabIndex={0}
         data-no-navigate
         className={`relative bg-zinc-800 cursor-pointer group/thumb outline-none rounded-md overflow-hidden transition-all duration-300 ${isFullscreen ? 'w-full h-full flex items-center justify-center' : (isImmersive && showComments ? 'aspect-[2/1]' : 'aspect-video')}`}
-        onClick={isTouchDevice ? undefined : handleVideoAreaClick}
-        onTouchEnd={isTouchDevice ? handleTouchEnd : undefined}
+        onClick={isTouchDevice ? undefined : (video.isAudio ? undefined : handleVideoAreaClick)}
+        onTouchEnd={isTouchDevice ? (video.isAudio ? undefined : handleTouchEnd) : undefined}
         onMouseEnter={() => {
           isHoveringRef.current = true;
           setShowControls(true);
@@ -1459,6 +1459,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             timestamp={video.uploadedAgo} 
             viewCount={video.views?.replace(' views', '') || '0'}
             isAd={video.isAd}
+            isAudio={video.isAudio}
             translateControl={{
               isTranslated: isVideoTranslated,
               isLoading: isTranslateLoading,
