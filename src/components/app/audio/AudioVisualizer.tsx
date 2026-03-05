@@ -48,7 +48,6 @@ export function AudioVisualizer({
   className = '',
   showStylePicker = true,
   muted = false,
-  seed = 'default',
 }: AudioVisualizerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
