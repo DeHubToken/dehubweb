@@ -1,4 +1,4 @@
-export type VisualizerStyle = 'bars' | 'waveform' | 'circular' | 'spectrum' | 'mirror' | 'rings' | 'pulse' | 'terrain';
+export type VisualizerStyle = 'static' | 'bars' | 'waveform' | 'circular' | 'spectrum' | 'mirror' | 'rings' | 'pulse' | 'terrain';
 
 // Helper to get colors from hue
 function getColors(hue: number) {
@@ -585,3 +585,148 @@ export function resetTerrain() {
   terrainOffset = 0;
 }
 
+// Static waveform - full-track amplitude display with L-R playback progress.
+// Pre-decodes the audio file to extract amplitude peaks for the entire duration,
+// then renders all bars at once. Bars behind the playhead are brighter/colored;
+// bars ahead are dim. The playhead sweeps left→right as the audio plays.
+
+/** Cached decoded waveform data per URL */
+const waveformCache = new Map<string, number[]>();
+let activeDecodeUrl: string | null = null;
+
+/**
+ * Decode an audio URL and cache its per-bar amplitude peaks.
+ * Returns immediately if already cached.  Calls `onReady` when done.
+ */
+export async function decodeAudioWaveform(
+  audioUrl: string,
+  barCount: number,
+  onReady: (peaks: number[]) => void
+) {
+  // Already cached
+  const cached = waveformCache.get(audioUrl);
+  if (cached && cached.length === barCount) {
+    onReady(cached);
+    return;
+  }
+
+  // Avoid duplicate decodes
+  if (activeDecodeUrl === audioUrl) return;
+  activeDecodeUrl = audioUrl;
+
+  try {
+    const response = await fetch(audioUrl);
+    const arrayBuffer = await response.arrayBuffer();
+    const offlineCtx = new (window.OfflineAudioContext || (window as any).webkitOfflineAudioContext)(1, 1, 44100);
+    const audioBuffer = await offlineCtx.decodeAudioData(arrayBuffer);
+
+    const rawData = audioBuffer.getChannelData(0);
+    const samplesPerBar = Math.floor(rawData.length / barCount);
+    const peaks: number[] = [];
+
+    for (let i = 0; i < barCount; i++) {
+      let sum = 0;
+      const start = i * samplesPerBar;
+      for (let j = start; j < start + samplesPerBar && j < rawData.length; j++) {
+        sum += Math.abs(rawData[j]);
+      }
+      peaks.push(sum / samplesPerBar);
+    }
+
+    // Normalize to 0–1
+    const max = Math.max(...peaks, 0.001);
+    const normalized = peaks.map(p => p / max);
+
+    waveformCache.set(audioUrl, normalized);
+    activeDecodeUrl = null;
+    onReady(normalized);
+  } catch (err) {
+    console.error('Failed to decode audio waveform:', err);
+    activeDecodeUrl = null;
+    // Fallback: generate a seeded pattern
+    const fallback = generateFallbackPattern(audioUrl, barCount);
+    waveformCache.set(audioUrl, fallback);
+    onReady(fallback);
+  }
+}
+
+/** Simple seeded PRNG (mulberry32) for fallback */
+function seedRandom(str: string) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = Math.imul(31, h) + str.charCodeAt(i) | 0;
+  }
+  return () => {
+    h |= 0;
+    h = h + 0x6d2b79f5 | 0;
+    let t = Math.imul(h ^ h >>> 15, 1 | h);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function generateFallbackPattern(seed: string, count: number): number[] {
+  const rand = seedRandom(seed);
+  const bars: number[] = [];
+  for (let i = 0; i < count; i++) {
+    const t = i / (count - 1);
+    const envelope = 0.3 + 0.7 * Math.sin(t * Math.PI);
+    bars.push(envelope * (0.4 + 0.6 * rand()));
+  }
+  return bars;
+}
+
+/**
+ * Draw the full-track waveform. `progress` is 0–1 representing playback position.
+ */
+export function drawStatic(
+  ctx: CanvasRenderingContext2D,
+  _frequencyData: Uint8Array,
+  width: number,
+  height: number,
+  hue: number = 0,
+  _seed: string = 'default',
+  progress: number = 0,
+  peaks: number[] | null = null
+) {
+  ctx.clearRect(0, 0, width, height);
+
+  if (!peaks || peaks.length === 0) return;
+
+  const barCount = peaks.length;
+  const gap = 2;
+  const barWidth = Math.max(1, (width - gap * (barCount - 1)) / barCount);
+  const centerY = height / 2;
+  const maxBarH = height * 0.8;
+  const playedIndex = Math.floor(progress * barCount);
+
+  for (let i = 0; i < barCount; i++) {
+    const barH = Math.max(2, peaks[i] * maxBarH);
+    const x = i * (barWidth + gap);
+    const y = centerY - barH / 2;
+
+    if (i <= playedIndex) {
+      // Played portion — bright white (or colored if hue > 0)
+      if (hue === 0) {
+        ctx.fillStyle = `hsla(0, 0%, 100%, 0.85)`;
+      } else {
+        const gradient = ctx.createLinearGradient(x, y, x, y + barH);
+        gradient.addColorStop(0, `hsla(${hue}, 80%, 75%, 0.9)`);
+        gradient.addColorStop(0.5, `hsla(${hue}, 85%, 60%, 0.95)`);
+        gradient.addColorStop(1, `hsla(${hue}, 80%, 75%, 0.9)`);
+        ctx.fillStyle = gradient;
+      }
+    } else {
+      // Unplayed portion — dim white
+      ctx.fillStyle = `hsla(0, 0%, 100%, 0.2)`;
+    }
+
+    ctx.beginPath();
+    ctx.roundRect(x, y, barWidth, barH, 1);
+    ctx.fill();
+  }
+}
+
+export function resetStatic() {
+  // No per-frame state to reset
+}
