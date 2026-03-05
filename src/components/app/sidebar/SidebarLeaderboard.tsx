@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, forwardRef, useImperativeHandle, memo } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo, forwardRef, useImperativeHandle, memo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
