@@ -186,8 +186,7 @@ export function AudioVisualizer({
   // Animation loop
   useEffect(() => {
     if (isPlaying) {
-      // For static style, we can animate even without analyser (just progress)
-      if (style === 'static' || analyserRef.current) {
+      if (analyserRef.current) {
         draw();
       }
     } else if (animationRef.current) {
