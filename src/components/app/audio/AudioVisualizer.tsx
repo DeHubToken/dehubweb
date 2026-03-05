@@ -57,10 +57,9 @@ export function AudioVisualizer({
   const animationRef = useRef<number | null>(null);
   const isConnectedRef = useRef(false);
   
-  const [style, setStyle] = useState<VisualizerStyle>('static');
+  const [style, setStyle] = useState<VisualizerStyle>('bars');
   const [hue, setHue] = useState(0);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [waveformPeaks, setWaveformPeaks] = useState<number[] | null>(null);
 
   // Store onPlayPause in a ref to avoid dependency issues
   const onPlayPauseRef = useRef(onPlayPause);
