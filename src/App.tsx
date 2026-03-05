@@ -113,49 +113,45 @@ function AppContent() {
             
             <Route path="/delete-account" element={<DeleteAccount />} />
             <Route path="/creators" element={<CreatorsPage />} />
-            <Route path="/jobs" element={<AppLayout />}>
-              <Route index element={null} />
-            </Route>
             <Route path="/skill.md" element={<SkillPage />} />
-            <Route path="/features" element={<AppLayout />}>
-              <Route index element={null} />
-            </Route>
-            <Route path="/governance" element={<AppLayout />}>
-              <Route index element={null} />
-            </Route>
-            <Route path="/stake" element={<AppLayout />}>
-              <Route index element={null} />
-            </Route>
 
-            {/* App routes with shared layout */}
-            {/* Cached pages render null here — PersistentPageCache manages them */}
-            <Route path="/app" element={<AppLayout />}>
-              <Route index element={null} />
-              <Route path="explore" element={null} />
-              <Route path="profile" element={null} />
-              <Route path="notifications" element={null} />
-              <Route path="messages" element={null} />
-              <Route path="assistant" element={null} />
-              <Route path="leaderboard" element={null} />
-              <Route path="bookmarks" element={null} />
-              <Route path="settings" element={null} />
-              <Route path="command-centre" element={null} />
-              <Route path="wallet" element={null} />
-              <Route path="music" element={null} />
-              <Route path="buy" element={null} />
-              <Route path="agents" element={null} />
-              <Route path="tv" element={null} />
-              <Route path="features" element={null} />
-              <Route path="governance" element={null} />
-              <Route path="governance/:proposalId" element={<GovernanceProposalPage />} />
-              <Route path="stake" element={null} />
-              <Route path="jobs" element={null} />
-              <Route path="post/:postId" element={<SinglePostPage />} />
-              <Route path="video/:tokenId" element={<SinglePostPage />} />
-              <Route path="post/:postId/info" element={<PostInfoPage />} />
-            </Route>
+            {/* Single shared AppLayout — header/sidebar mount ONCE and persist across all app routes */}
+            <Route element={<AppLayout />}>
+              <Route path="/jobs" element={null} />
+              <Route path="/features" element={null} />
+              <Route path="/governance" element={null} />
+              <Route path="/stake" element={null} />
 
-            <Route path="/:username" element={<ProfilePage />} />
+              {/* App routes — cached pages render null, PersistentPageCache manages them */}
+              <Route path="/app">
+                <Route index element={null} />
+                <Route path="explore" element={null} />
+                <Route path="profile" element={null} />
+                <Route path="notifications" element={null} />
+                <Route path="messages" element={null} />
+                <Route path="assistant" element={null} />
+                <Route path="leaderboard" element={null} />
+                <Route path="bookmarks" element={null} />
+                <Route path="settings" element={null} />
+                <Route path="command-centre" element={null} />
+                <Route path="wallet" element={null} />
+                <Route path="music" element={null} />
+                <Route path="buy" element={null} />
+                <Route path="agents" element={null} />
+                <Route path="tv" element={null} />
+                <Route path="features" element={null} />
+                <Route path="governance" element={null} />
+                <Route path="governance/:proposalId" element={<GovernanceProposalPage />} />
+                <Route path="stake" element={null} />
+                <Route path="jobs" element={null} />
+                <Route path="post/:postId" element={<SinglePostPage />} />
+                <Route path="video/:tokenId" element={<SinglePostPage />} />
+                <Route path="post/:postId/info" element={<PostInfoPage />} />
+              </Route>
+
+              {/* Username profiles — inside shared layout so header never remounts */}
+              <Route path="/:username" element={<ProfilePage />} />
+            </Route>
 
 
             <Route path="*" element={<NotFound />} />

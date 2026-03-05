@@ -295,13 +295,10 @@ export function useProfilePage() {
     containerRef: profileContainerRef,
   });
 
-  const needsLayoutWrapper = !!routeUsername;
-
   return {
     // Route info
     routeUsername,
     userId,
-    needsLayoutWrapper,
     // Auth
     isAuthenticated,
     isAuthLoading,

@@ -8,7 +8,7 @@ import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { AppLayout } from '@/components/app/AppLayout';
+
 import { LoginModal } from '@/components/app/LoginModal';
 import { AuthGate } from '@/components/app/AuthGate';
 import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
@@ -142,26 +142,16 @@ export default function ProfilePage() {
 
   // Loading state
   if (data.isAuthLoading || data.isLoadingProfile) {
-    const loadingContent = (
+    return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-10 h-10 text-white animate-spin" />
       </div>
     );
-    if (data.needsLayoutWrapper) {
-      return <AppLayout>{loadingContent}</AppLayout>;
-    }
-    return loadingContent;
   }
 
   // Auth gate for own profile
   if (data.isOwnProfile && !data.isAuthenticated) {
-    const authGateContent = (
-      <AuthGate description={t('profile.loginDescription')} />
-    );
-    if (data.needsLayoutWrapper) {
-      return <AppLayout>{authGateContent}</AppLayout>;
-    }
-    return authGateContent;
+    return <AuthGate description={t('profile.loginDescription')} />;
   }
 
   // No profile found
@@ -206,9 +196,6 @@ export default function ProfilePage() {
       </div>
     );
     
-    if (data.needsLayoutWrapper) {
-      return <AppLayout>{notFoundContent}</AppLayout>;
-    }
     return notFoundContent;
   }
 
@@ -455,10 +442,6 @@ export default function ProfilePage() {
       />
     </div>
   );
-
-  if (data.needsLayoutWrapper) {
-    return <AppLayout>{profileContent}</AppLayout>;
-  }
 
   return profileContent;
 }
