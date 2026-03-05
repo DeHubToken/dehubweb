@@ -179,6 +179,7 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
   const avatarUrl = comment.avatar;
+  const translation = useTranslation(comment.text || '');
 
   return (
     <motion.div
