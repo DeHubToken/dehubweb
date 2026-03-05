@@ -57,7 +57,7 @@ export interface UnifiedFeedItem {
   videoUrl?: string;
   minter: string;
   owner?: string;
-  postType: 'video' | 'feed-images' | 'feed-simple' | 'live';
+  postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio';
   status?: string;
   category?: string[];
   views: number;

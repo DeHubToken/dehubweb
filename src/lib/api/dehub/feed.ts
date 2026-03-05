@@ -204,6 +204,12 @@ export async function recordView(tokenId: string): Promise<void> {
   });
 }
 
+export async function recordListen(tokenId: string): Promise<void> {
+  return apiCall<void>(`/api/record-listen/${tokenId}`, {
+    method: "GET",
+  });
+}
+
 export interface SavePostResponse {
   status: string;
   message: string;
