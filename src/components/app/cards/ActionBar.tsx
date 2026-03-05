@@ -262,12 +262,13 @@ export function ActionBar({
     setSheetOpen(false);
   };
 
-  const [isReposted, setIsReposted] = useState(false);
+  const [isReposted, setIsReposted] = useState(() => postId ? isPostReposted(postId) : false);
 
   const handleRepost = () => {
     if (onRepost) {
       setRepostDelta(prev => prev + 1);
       setIsReposted(true);
+      if (postId) markReposted(postId);
       onRepost();
     } else {
       toast.info('Repost not available for this post');
