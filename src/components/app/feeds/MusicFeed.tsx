@@ -10,6 +10,7 @@ import { useState, useMemo, useRef, useCallback, useEffect, useId } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Play, Music, Mic2, Radio, Disc3, ChevronRight, Pause, Volume2, VolumeX, Loader2, Headphones } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { AudioVisualizer } from '@/components/app/audio/AudioVisualizer';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
@@ -410,6 +411,91 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
   );
 }
 
+function AudioUploadCard({ item, onNavigate }: { item: VideoItem; onNavigate: (id: string) => void }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const audioUrl = (item as any).audioUrl as string | undefined;
+
+  return (
+    <div
+      className="flex-shrink-0 w-[200px] cursor-pointer group"
+      onClick={() => {
+        if (!isPlaying) onNavigate(item.id);
+      }}
+    >
+      {/* Visualizer thumbnail */}
+      <div className="aspect-square rounded-xl overflow-hidden bg-black/60 backdrop-blur-[24px] border border-white/[0.1] mb-2 relative">
+        {audioUrl ? (
+          <AudioVisualizer
+            audioUrl={audioUrl}
+            isPlaying={isPlaying}
+            onPlayPause={() => setIsPlaying(p => !p)}
+            className="w-full h-full"
+            showStylePicker={false}
+            muted={false}
+            seed={item.id}
+          />
+        ) : (
+          <>
+            {item.thumbnail ? (
+              <img src={item.thumbnail} alt="" className="w-full h-full object-cover opacity-60" />
+            ) : null}
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
+              <Headphones className="w-8 h-8 text-white/70" />
+            </div>
+          </>
+        )}
+
+        {/* Play/pause overlay */}
+        <button
+          className="absolute inset-0 flex items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (audioUrl) setIsPlaying(p => !p);
+            else onNavigate(item.id);
+          }}
+        >
+          <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center">
+            {isPlaying ? (
+              <Pause className="w-5 h-5 text-white" />
+            ) : (
+              <Play className="w-5 h-5 text-white ml-0.5" />
+            )}
+          </div>
+        </button>
+
+        {/* Duration badge */}
+        {item.duration && (
+          <div className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 rounded text-[10px] text-white z-10">
+            {item.duration}
+          </div>
+        )}
+
+        {/* Listen count */}
+        {item.views && (
+          <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 bg-black/50 rounded text-[10px] text-white/70 z-10">
+            <Headphones className="w-3 h-3" />
+            {item.views.replace(' views', '')}
+          </div>
+        )}
+      </div>
+
+      {/* User info row */}
+      <div className="flex items-center gap-2">
+        {item.channelAvatar ? (
+          <img src={item.channelAvatar} alt="" className="w-6 h-6 rounded-full object-cover flex-shrink-0" />
+        ) : (
+          <div className="w-6 h-6 rounded-full bg-white/10 flex-shrink-0" />
+        )}
+        <div className="min-w-0 flex-1">
+          <p className="text-white text-sm font-medium truncate">{item.title || item.channel}</p>
+          <p className="text-zinc-500 text-xs truncate">{item.channel}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem[]; isLoading: boolean }) {
   const [visibleCount, setVisibleCount] = useState(CAROUSEL_INITIAL_VISIBLE);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -450,38 +536,7 @@ function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem
             className="flex gap-3 overflow-x-auto scrollbar-hide pr-8"
           >
             {visibleItems.map((item) => (
-              <div
-                key={item.id}
-                className="flex-shrink-0 w-[200px] cursor-pointer group"
-                onClick={() => navigate(`/app/post/${item.id}`)}
-              >
-                {/* Square thumbnail with liquid glass look */}
-                <div className="aspect-square rounded-xl overflow-hidden bg-black/60 backdrop-blur-[24px] border border-white/[0.1] mb-2 relative">
-                  {item.thumbnail ? (
-                    <img src={item.thumbnail} alt="" className="w-full h-full object-cover opacity-60" />
-                  ) : null}
-                  {/* Centered headphone icon with listen count */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
-                    <Headphones className="w-8 h-8 text-white/70" />
-                    {item.views && (
-                      <span className="text-white/60 text-xs font-medium">{item.views.replace(' views', '')}</span>
-                    )}
-                  </div>
-                  {/* Hover play overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="w-12 h-12 rounded-full bg-white/[0.08] border border-white/20 flex items-center justify-center">
-                      <Play className="w-5 h-5 text-white ml-0.5" />
-                    </div>
-                  </div>
-                  {item.duration && (
-                    <div className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 rounded text-[10px] text-white">
-                      {item.duration}
-                    </div>
-                  )}
-                </div>
-                <p className="text-white text-sm font-medium truncate">{item.title}</p>
-                <p className="text-zinc-500 text-xs truncate">{item.channel}</p>
-              </div>
+              <AudioUploadCard key={item.id} item={item} onNavigate={(id) => navigate(`/app/post/${id}`)} />
             ))}
             {visibleCount < audioItems.length && (
               <div className="flex-shrink-0 w-[200px] aspect-square rounded-xl bg-zinc-800 flex items-center justify-center">
