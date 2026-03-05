@@ -45,7 +45,7 @@ export function getSocket(): Socket {
     handshakeAuth.clientType = 'web';
     handshakeAuth.platform = 'web';
 
-    socket = io(`${DEHUB_API_BASE}/livechat`, {
+    socket = io(DEHUB_API_BASE, {
       auth: Object.keys(handshakeAuth).length ? handshakeAuth : undefined,
       query: handshakeAuth,
       path: '/socket.io',
