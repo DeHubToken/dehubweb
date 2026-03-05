@@ -102,9 +102,11 @@ export function emitSendMessage(payload: {
   imageUrl?: string;
 }) {
   const s = getSocket();
-  console.log('[Socket] Sending message:', payload);
+  console.log('[Socket] Sending message (connected:', s.connected, '):', payload);
   // Primary event name for the DeHub livechat gateway
-  s.emit('sendMessage', payload);
+  s.emit('sendMessage', payload, (ack: unknown) => {
+    console.log('[Socket] sendMessage ack:', ack);
+  });
 }
 
 /** Request message history via socket. Returns promise with messages. */
