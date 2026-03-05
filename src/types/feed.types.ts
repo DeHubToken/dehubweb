@@ -121,6 +121,8 @@ export interface VideoItem extends BaseFeedItem {
   bountyCurrency?: string;
   /** Number of reposts + quotes */
   repostCount?: number;
+  /** Whether the current user has reposted this item */
+  isReposted?: boolean;
   /** Whether this is an ad/sponsored post */
   isAd?: boolean;
   /** Whether the current viewer is the content owner */
