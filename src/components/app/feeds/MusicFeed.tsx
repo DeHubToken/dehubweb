@@ -254,7 +254,7 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
     // Navigate to user profile using the actual username from API
     const username = video.creatorUsername?.replace('@', '') || video.channel?.replace('@', '') || '';
     if (username && username !== 'Anonymous') {
-      navigate(`/${username}`);
+      navigate(`/app/${username}`);
     }
   };
 

@@ -472,7 +472,7 @@ function DesktopCreatorInfo({
   const handleProfileClick = () => {
     if (creatorUsername) {
       const cleanUsername = creatorUsername.replace('@', '');
-      navigate(`/${cleanUsername}`);
+      navigate(`/app/${cleanUsername}`);
     } else if (creatorId) {
       navigate(`/app/profile?id=${creatorId}`);
     }

@@ -85,7 +85,7 @@ export function CardHeader({
     // Prefer username-based navigation, fallback to ID
     if (creatorUsername) {
       const cleanUsername = creatorUsername.replace('@', '');
-      navigate(`/${cleanUsername}`);
+      navigate(`/app/${cleanUsername}`);
     } else if (creatorId) {
       navigate(`/app/profile?id=${creatorId}`);
     }

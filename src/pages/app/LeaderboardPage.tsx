@@ -271,7 +271,7 @@ export default function LeaderboardPage() {
 
   const handleUserClick = (entry: LeaderboardEntry) => {
     if (entry.username) {
-      navigate(`/${entry.username}`);
+      navigate(`/app/${entry.username}`);
     }
   };
 

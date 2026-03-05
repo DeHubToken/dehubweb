@@ -63,15 +63,17 @@ export function useProfilePage() {
       const cleanHandle = apiProfile.handle.replace('@', '');
       if (!cleanHandle) return;
 
+      const isInsideApp = window.location.pathname.startsWith('/app/');
+      const prefix = isInsideApp ? '/app' : '';
       // Route like /0xABC... → /username
       if (routeUsername && /^0x[a-fA-F0-9]{40}$/i.test(routeUsername)) {
         if (cleanHandle.toLowerCase() !== routeUsername.toLowerCase()) {
-          navigate(`/${cleanHandle}`, { replace: true });
+          navigate(`${prefix}/${cleanHandle}`, { replace: true });
         }
       }
-      // Route like /app/profile?id=0xABC... → /username
+      // Route like /app/profile?id=0xABC... → /app/username
       else if (userId && !routeUsername) {
-        navigate(`/${cleanHandle}`, { replace: true });
+        navigate(`${prefix}/${cleanHandle}`, { replace: true });
       }
     }
   }, [routeUsername, userId, apiProfile?.handle, navigate]);

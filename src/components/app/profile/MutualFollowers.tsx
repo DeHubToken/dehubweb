@@ -25,7 +25,7 @@ export function MutualFollowers({ profileAddress }: MutualFollowersProps) {
 
   const handleNavigate = (item: typeof mutuals[0]) => {
     if (item.username) {
-      navigate(`/${item.username}`);
+      navigate(`/app/${item.username}`);
     } else {
       navigate(`/app/profile?id=${item.address}`);
     }
