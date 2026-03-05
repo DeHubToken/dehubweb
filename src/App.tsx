@@ -25,6 +25,21 @@ const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));
 const GovernanceProposalPage = React.lazy(() => import("./pages/app/GovernanceProposalPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 
+// Preload critical dynamic-route chunks after initial render so first navigation is instant
+const preloadCriticalChunks = () => {
+  // Use requestIdleCallback (or setTimeout fallback) to avoid blocking initial render
+  const schedule = typeof requestIdleCallback === 'function' ? requestIdleCallback : (cb: () => void) => setTimeout(cb, 2000);
+  schedule(() => {
+    import("./pages/app/SinglePostPage");
+    import("./pages/app/ProfilePage");
+    import("./pages/app/PostInfoPage");
+  });
+};
+// Fire once on module load — chunks will be cached by the bundler
+if (typeof window !== 'undefined') {
+  preloadCriticalChunks();
+}
+
 const PageLoader = () => (
   <div className="min-h-screen bg-black" />
 );
