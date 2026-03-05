@@ -42,6 +42,7 @@ import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 import { AudioVisualizer } from '../audio';
+import { StaticWaveform } from '../audio/StaticWaveform';
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { repostPost } from '@/lib/api/dehub';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
@@ -1192,20 +1193,25 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         ) : (
           <>
             {video.isAudio && video.audioUrl ? (
-              /* Audio post: show thumbnail background with AudioVisualizer overlay */
-              <div className="relative w-full h-full">
-                <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center">
-                  <div className="w-full h-full">
-                    <AudioVisualizer
-                      audioUrl={video.audioUrl}
-                      isPlaying={isPlaying}
-                      onPlayPause={handlePlayClick}
-                      className="w-full h-full"
-                      showStylePicker={true}
-                      muted={isMuted}
-                    />
-                  </div>
+              /* Audio post: liquid glass container with static waveform backdrop */
+              <div className="relative w-full h-full bg-black/60 backdrop-blur-[24px] border border-white/10 overflow-hidden">
+                {/* Static waveform background */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <StaticWaveform
+                    seed={video.id}
+                    className="w-full h-2/5 opacity-60"
+                  />
+                </div>
+                {/* Live AudioVisualizer overlay */}
+                <div className="absolute inset-0">
+                  <AudioVisualizer
+                    audioUrl={video.audioUrl}
+                    isPlaying={isPlaying}
+                    onPlayPause={handlePlayClick}
+                    className="w-full h-full"
+                    showStylePicker={true}
+                    muted={isMuted}
+                  />
                 </div>
               </div>
             ) : video.videoUrl && !hasError ? (
