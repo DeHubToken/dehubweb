@@ -175,18 +175,9 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
-function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onBookmark, onEdit, onDelete, onUserPress, isReply, isOwnComment }: CommentItemProps) {
-  const [isBookmarked, setIsBookmarked] = useState(false);
+function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onEdit, onDelete, onUserPress, isReply, isOwnComment }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
-  const translation = useTranslation(comment.text || '');
-  // Avatar URL is already resolved via buildAvatarUrl in mapApiComment
-  const avatarUrl = comment.avatar;
-
-  const handleBookmark = () => {
-    setIsBookmarked(!isBookmarked);
-    onBookmark(comment.id);
-  };
 
   return (
     <motion.div
