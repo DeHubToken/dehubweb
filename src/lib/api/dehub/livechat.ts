@@ -139,19 +139,30 @@ export async function getLiveChatMessages(
   roomId: string,
   params?: { page?: number; limit?: number; before?: string }
 ): Promise<LiveChatMessage[]> {
-  const endpointBases = [`/api/chat/rooms`, `/api/livechat/rooms`, `/api/chatrooms`];
+  // Primary endpoint: flat /api/livechat/messages with roomId as query param
+  const endpoints = [
+    { url: `/api/livechat/messages`, queryRoomId: true },
+    { url: `/api/chat/rooms/${roomId}/messages`, queryRoomId: false },
+    { url: `/api/livechat/rooms/${roomId}/messages`, queryRoomId: false },
+    { url: `/api/chatrooms/${roomId}/messages`, queryRoomId: false },
+  ];
   
-  for (const base of endpointBases) {
+  for (const ep of endpoints) {
     try {
+      const queryParams: Record<string, string | number | undefined> = {
+        page: params?.page,
+        limit: params?.limit ?? 200,
+        before: params?.before,
+      };
+      if (ep.queryRoomId) {
+        queryParams.roomId = roomId;
+      }
+
       let response = await apiCall<Record<string, unknown>>(
-        `${base}/${roomId}/messages`,
+        ep.url,
         {
-          params: {
-            page: params?.page,
-            limit: params?.limit,
-            before: params?.before,
-          },
-          requiresAuth: false,
+          params: queryParams,
+          requiresAuth: true,
         }
       );
 
@@ -166,9 +177,10 @@ export async function getLiveChatMessages(
         if ('data' in response && Array.isArray(response.data)) return response.data as LiveChatMessage[];
       }
       if (Array.isArray(response)) return response as unknown as LiveChatMessage[];
-      console.warn(`[LiveChat API] ${base}/${roomId}/messages: unexpected response format`);
+      console.warn(`[LiveChat API] ${ep.url}: unexpected response format`, response);
     } catch (error: any) {
       if (error?.message?.includes('404') || error?.message?.includes('Cannot GET')) {
+        console.warn(`[LiveChat API] ${ep.url} not found, trying next...`);
         continue;
       }
       console.error('[LiveChat API] getLiveChatMessages failed:', error);
