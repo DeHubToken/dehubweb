@@ -67,9 +67,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   return (
     <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 h-11 flex items-center justify-between">
       <div className="flex items-center gap-3 ml-[-8px]">
-        <button onClick={handleLogoClick} className="block cursor-pointer">
-          <img src={dehubLogo} alt="dehub" className="h-7 md:h-7 w-auto" />
-        </button>
+        <HeaderLogo onClick={handleLogoClick} />
       </div>
       
       <div className="flex items-center gap-3">
