@@ -151,13 +151,7 @@ export default function ProfilePage() {
 
   // Auth gate for own profile
   if (data.isOwnProfile && !data.isAuthenticated) {
-    const authGateContent = (
-      <AuthGate description={t('profile.loginDescription')} />
-    );
-    if (data.needsLayoutWrapper) {
-      return <AppLayout>{authGateContent}</AppLayout>;
-    }
-    return authGateContent;
+    return <AuthGate description={t('profile.loginDescription')} />;
   }
 
   // No profile found
