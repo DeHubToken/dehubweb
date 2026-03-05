@@ -225,10 +225,10 @@ export function useLiveChatMessages(roomId: string | null) {
         const socket = getSocket();
         if (socket.connected) {
           emitSendMessage({ roomId, content, messageType: type, imageUrl });
-          setTimeout(() => fetchFromApi(false), 2000);
+          setTimeout(() => fetchMessages(false), 2000);
         } else {
           await sendLiveChatMessage(roomId, content, type, imageUrl);
-          await fetchFromApi(false);
+          await fetchMessages(false);
         }
       } catch (err) {
         setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
@@ -238,10 +238,10 @@ export function useLiveChatMessages(roomId: string | null) {
         setIsSending(false);
       }
     },
-    [roomId, isAuthenticated, walletAddress, user, fetchFromApi]
+    [roomId, isAuthenticated, walletAddress, user, fetchMessages]
   );
 
-  return { messages, isLoading, isSending, isConnected, send, refetch: () => fetchFromApi(false) };
+  return { messages, isLoading, isSending, isConnected, send, refetch: () => fetchMessages(false) };
 }
 
 /**
