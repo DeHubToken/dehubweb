@@ -126,8 +126,26 @@ export function PersistentPageCache() {
   // Track which pages have been visited (mount on first visit, keep forever)
   const [mountedPages, setMountedPages] = useState<Set<string>>(() => new Set());
 
+  // Detect if we're on a mobile profile route (drawer overlays feed)
+  const profileMatch = useMatch('/app/:username');
+  const postMatch = useMatch('/app/post/:postId');
+  const videoMatch = useMatch('/app/video/:tokenId');
+  const postInfoMatch = useMatch('/app/post/:postId/info');
+  const govMatch = useMatch('/app/governance/:proposalId');
+  const isMobileProfileOverlay = !!profileMatch && !postMatch && !videoMatch && !postInfoMatch && !govMatch && !isCachedPageRoute(pathname);
+  
+  // Track the last cached page so we can keep it visible under the drawer
+  const lastCachedPageRef = useRef<string>('/app');
+  
   // Find which cached page matches current path
   const activeCachedPage = CACHED_PAGES.find(p => matchesPath(p, pathname));
+  
+  // Update last cached page ref when on a cached route
+  useEffect(() => {
+    if (activeCachedPage) {
+      lastCachedPageRef.current = pathname;
+    }
+  }, [activeCachedPage, pathname]);
 
   // Mount the active page if not yet mounted
   useEffect(() => {
@@ -142,13 +160,20 @@ export function PersistentPageCache() {
   return (
     <>
       {/* Render all mounted cached pages — active one visible, others hidden */}
-      {CACHED_PAGES.filter(p => mountedPages.has(p.key)).map(config => (
-        <CachedPage
-          key={config.key}
-          config={config}
-          isActive={matchesPath(config, pathname)}
-        />
-      ))}
+      {CACHED_PAGES.filter(p => mountedPages.has(p.key)).map(config => {
+        // On mobile profile overlay, keep the last cached page visible underneath
+        const isDirectlyActive = matchesPath(config, pathname);
+        const isActiveUnderDrawer = isMobileProfileOverlay && matchesPath(config, lastCachedPageRef.current);
+        const isActive = isDirectlyActive || isActiveUnderDrawer;
+        
+        return (
+          <CachedPage
+            key={config.key}
+            config={config}
+            isActive={isActive}
+          />
+        );
+      })}
 
       {/* If current route is NOT a cached page, it's a dynamic route — render via flag */}
       {!isCachedRoute && (
