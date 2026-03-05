@@ -628,7 +628,8 @@ export default function SinglePostPage() {
   
   // Determine content type
   const contentType = post ? getContentType(post) : null;
-  const isVideoPost = contentType === 'video';
+  const isAudioPost = post ? ((post as any).postType === 'audio' || (post as any).postType === 'feed-audio') : false;
+  const isVideoPost = contentType === 'video' && !isAudioPost;
   const isImagePost = contentType === 'image';
   const isTextPost = contentType === 'post' || contentType === null;
   // Hide mobile header for video posts by adding a class to the body
