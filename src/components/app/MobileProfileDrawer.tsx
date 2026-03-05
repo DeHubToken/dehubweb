@@ -66,7 +66,7 @@ export function MobileProfileDrawer({ isOpen, children }: MobileProfileDrawerPro
     >
       <VaulDrawer.Portal>
         <VaulDrawer.Overlay
-          className="fixed inset-0 z-[90] bg-black/60"
+          className="fixed inset-0 z-[90] bg-black/40 backdrop-blur-sm"
           onClick={handleClose}
         />
         <VaulDrawer.Content
