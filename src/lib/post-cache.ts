@@ -154,6 +154,7 @@ function textPostToNFT(post: TextPost): Partial<DeHubNFT> {
     },
     commentCount: post.stats.comments || 0,
     totalReposts: post.stats.reposts || 0,
+    isReposted: post.isReposted ?? false,
     // Preserve the original timestamp
     createdAt: post.createdAt,
   };
