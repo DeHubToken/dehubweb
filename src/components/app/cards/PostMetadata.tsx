@@ -13,6 +13,8 @@ interface PostMetadataProps {
   viewCount?: string | number;
   /** Whether this is an ad/sponsored post */
   isAd?: boolean;
+  /** Whether this is an audio post (shows "listens" instead of "views") */
+  isAudio?: boolean;
   /** On-demand translation control */
   translateControl?: {
     isTranslated: boolean;
