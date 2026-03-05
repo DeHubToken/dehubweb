@@ -117,32 +117,32 @@ export function emitSendMessage(payload: {
 }) {
   const s = getSocket();
   const address = typeof window !== 'undefined' ? localStorage.getItem('dehub_wallet') : null;
-  // Send with all possible field name variations the server might expect
   const fullPayload = {
     roomId: payload.roomId,
     content: payload.content,
     message: payload.content,
-    text: payload.content,
     messageType: payload.messageType || 'text',
     type: payload.messageType || 'text',
     ...(payload.imageUrl ? { imageUrl: payload.imageUrl } : {}),
-    ...(address ? { address: address.toLowerCase(), senderAddress: address.toLowerCase() } : {}),
+    ...(address ? { address: address.toLowerCase() } : {}),
   };
   console.log('[Socket] Sending message (connected:', s.connected, '):', fullPayload);
   
-  // Try primary event name with ack
-  s.emit('sendMessage', fullPayload, (ack: unknown) => {
-    console.log('[Socket] sendMessage ack:', ack);
-    // Import toast dynamically to avoid circular deps
+  // Try both camelCase and kebab-case event names (server uses kebab-case for other events like update-online-users)
+  s.emit('send-message', fullPayload, (ack: unknown) => {
+    console.log('[Socket] send-message ack:', ack);
     import('sonner').then(({ toast }) => {
-      toast.info(`Server ack: ${JSON.stringify(ack)?.substring(0, 200) || 'no ack'}`);
+      toast.info(`send-message ack: ${JSON.stringify(ack)?.substring(0, 200) || 'no ack'}`);
     });
   });
-  
-  // Also try alternate event names in case server uses a different one
-  s.emit('chatMessage', fullPayload);
-  s.emit('chat', fullPayload);
-  s.emit('message', fullPayload);
+  s.emit('sendMessage', fullPayload, (ack: unknown) => {
+    console.log('[Socket] sendMessage ack:', ack);
+    import('sonner').then(({ toast }) => {
+      toast.info(`sendMessage ack: ${JSON.stringify(ack)?.substring(0, 200) || 'no ack'}`);
+    });
+  });
+  s.emit('chat-message', fullPayload);
+  s.emit('new-message', fullPayload);
 }
 
 /** Request message history via socket. Returns promise with messages. */
