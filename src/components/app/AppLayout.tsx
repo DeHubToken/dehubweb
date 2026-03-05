@@ -52,6 +52,38 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const isPostRoute = !!(postMatch || videoMatch);
   const isProfileRoute = !!profileMatch && !postMatch && !videoMatch && !postInfoMatch && !govMatch && !isCachedPageRoute(location.pathname);
   
+  // Track if profile was opened from within the app (feed) vs direct load
+  const [profileFromFeed, setProfileFromFeed] = useState(false);
+  const prevProfilePathRef = useRef<string | null>(null);
+  
+  useEffect(() => {
+    const prev = prevProfilePathRef.current;
+    prevProfilePathRef.current = location.pathname;
+    
+    if (isProfileRoute) {
+      // If previous path was a cached page (feed, explore, etc.), it's from feed
+      if (prev && isCachedPageRoute(prev)) {
+        setProfileFromFeed(true);
+      } else if (!prev) {
+        // Direct load (no previous path in this session)
+        setProfileFromFeed(false);
+      }
+    } else {
+      setProfileFromFeed(false);
+    }
+  }, [location.pathname, isProfileRoute]);
+  
+  // On mobile, use drawer only when coming from feed
+  const [isMobileView, setIsMobileView] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobileView(window.innerWidth < 1024);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+  
+  const useProfileDrawer = isProfileRoute && profileFromFeed && isMobileView;
+  
   // Track if we came from home page (for overlay behavior)
   const [cameFromHome, setCameFromHome] = useState(() => {
     return sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY) === 'home';
