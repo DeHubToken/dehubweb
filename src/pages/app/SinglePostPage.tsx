@@ -628,7 +628,8 @@ export default function SinglePostPage() {
   
   // Determine content type
   const contentType = post ? getContentType(post) : null;
-  const isVideoPost = contentType === 'video';
+  const isAudioPost = post ? ((post as any).postType === 'audio' || (post as any).postType === 'feed-audio') : false;
+  const isVideoPost = contentType === 'video' && !isAudioPost;
   const isImagePost = contentType === 'image';
   const isTextPost = contentType === 'post' || contentType === null;
   // Hide mobile header for video posts by adding a class to the body
@@ -654,7 +655,7 @@ export default function SinglePostPage() {
 
     switch (contentType) {
       case 'video':
-        return <VideoCard video={toVideoItem(post)} isImmersive />;
+        return <VideoCard video={toVideoItem(post)} isImmersive={!isAudioPost} />;
       case 'image':
         return <ImageCard post={toImagePost(post)} />;
       case 'live': {
@@ -808,9 +809,10 @@ export default function SinglePostPage() {
       <div className="px-3 sm:px-4 pb-8 pt-2">
         <div className="max-w-2xl mx-auto">
           {renderContent()}
-          {/* Related Images Feed - below image posts */}
+          {/* Related content feeds */}
           {isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
-          {!isImagePost && !isVideoPost && id && <RelatedPostsFeed currentPostId={id} />}
+          {isAudioPost && id && <RelatedVideosFeed currentVideoId={id} />}
+          {!isImagePost && !isVideoPost && !isAudioPost && id && <RelatedPostsFeed currentPostId={id} />}
         </div>
       </div>
     </div>
