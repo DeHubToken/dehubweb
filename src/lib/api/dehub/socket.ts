@@ -304,9 +304,14 @@ export function disconnectSocket() {
   if (socket) {
     socket.disconnect();
     socket = null;
-    currentToken = null;
     console.log('[Socket] Disconnected and cleared');
   }
+  if (chatSocket) {
+    chatSocket.disconnect();
+    chatSocket = null;
+    console.log('[ChatSocket] Disconnected and cleared');
+  }
+  currentToken = null;
 }
 
 /** Possible server-side event names for incoming messages. */
