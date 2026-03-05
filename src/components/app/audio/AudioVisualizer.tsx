@@ -23,6 +23,8 @@ interface AudioVisualizerProps {
   onPlayPause: () => void;
   className?: string;
   showStylePicker?: boolean;
+  /** When true the audio output is muted (visualizer still animates). */
+  muted?: boolean;
 }
 
 const STYLES: { value: VisualizerStyle; label: string }[] = [
