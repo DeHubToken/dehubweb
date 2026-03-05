@@ -551,19 +551,29 @@ Deno.serve(async (req) => {
     if (mode === "light") {
       console.log("Starting LIGHT leaderboard cache refresh (snapshot-based)...");
 
-      // Guard: don't recompute if today's snapshot is missing — avoids bad deltas
+      // Check if today's snapshot exists
       const todayStr = new Date().toISOString().split("T")[0];
       const { count: todaySnapCount } = await supabase
         .from("leaderboard_snapshots")
         .select("id", { count: "exact", head: true })
         .eq("snapshot_date", todayStr);
 
-      if (!todaySnapCount || todaySnapCount === 0) {
+      const hasTodaySnapshot = todaySnapCount && todaySnapCount > 0;
+
+      // For holdings with RPC config, on-chain mode doesn't need snapshots
+      // Only block non-RPC sorts when no today snapshot
+      const holdingsOnlyWithRpc = filterSorts?.length === 1 && filterSorts[0] === "holdings" && rpcConfig;
+
+      if (!hasTodaySnapshot && !holdingsOnlyWithRpc) {
         console.warn("[light] No snapshot for today yet — skipping to avoid bad deltas");
         return new Response(
           JSON.stringify({ success: true, mode: "light", message: "Skipped: no today snapshot yet" }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
         );
+      }
+
+      if (!hasTodaySnapshot && holdingsOnlyWithRpc) {
+        console.log("[light] No today snapshot, but proceeding with pure on-chain RPC for holdings");
       }
 
       const { data: holdingsCache } = await supabase
