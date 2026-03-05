@@ -52,6 +52,8 @@ export interface TextPost extends BaseFeedItem {
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
   isDisliked?: boolean;
+  /** Whether the current user has reposted this item */
+  isReposted?: boolean;
   /** Whether this is a quote post */
   isQuotePost?: boolean;
   /** The quoted post data (for rendering embedded quote) */
@@ -121,6 +123,8 @@ export interface VideoItem extends BaseFeedItem {
   bountyCurrency?: string;
   /** Number of reposts + quotes */
   repostCount?: number;
+  /** Whether the current user has reposted this item */
+  isReposted?: boolean;
   /** Whether this is an ad/sponsored post */
   isAd?: boolean;
   /** Whether the current viewer is the content owner */
@@ -198,6 +202,8 @@ export interface ImagePost extends BaseFeedItem {
   bountyCurrency?: string;
   /** Number of reposts + quotes */
   repostCount?: number;
+  /** Whether the current user has reposted this item */
+  isReposted?: boolean;
   /** Whether the current viewer is the content owner */
   isOwner?: boolean;
   /** Whether the content has been unlocked for the current viewer (purchased/earned) */

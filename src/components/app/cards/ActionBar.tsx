@@ -64,6 +64,8 @@ interface ActionBarProps {
   shareCount?: number;
   /** Repost count to display */
   repostCount?: number;
+  /** Whether the current user has already reposted this post */
+  isReposted?: boolean;
   /** Whether this is an optimistic (processing) post */
   isOptimistic?: boolean;
   /** Handler for like action (overrides default voteOnPost) */
@@ -100,6 +102,7 @@ export function ActionBar({
   commentCount: rawCommentCount,
   shareCount,
   repostCount,
+  isReposted: initialIsReposted = false,
   isOptimistic = false,
   voteWeight = 1,
 }: ActionBarProps) {
@@ -262,7 +265,7 @@ export function ActionBar({
     setSheetOpen(false);
   };
 
-  const [isReposted, setIsReposted] = useState(() => postId ? isPostReposted(postId) : false);
+  const [isReposted, setIsReposted] = useState(() => initialIsReposted || (postId ? isPostReposted(postId) : false));
 
   const handleRepost = () => {
     if (onRepost) {

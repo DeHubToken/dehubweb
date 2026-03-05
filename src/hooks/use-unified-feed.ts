@@ -100,6 +100,7 @@ export interface UnifiedFeedItem {
   isSaved?: boolean;
   isOwner?: boolean;
   isUnlocked?: boolean;
+  isReposted?: boolean;
   minterUser?: {
     address?: string;
     username?: string;
@@ -244,6 +245,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     isOwner: item.isOwner ?? false,
     isUnlocked: item.isUnlocked ?? false,
     repostCount: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
+    isReposted: item.isReposted ?? false,
   };
 }
 
@@ -298,6 +300,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     isOwner: item.isOwner ?? false,
     isUnlocked: item.isUnlocked ?? false,
     repostCount: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
+    isReposted: item.isReposted ?? false,
   };
 }
 
@@ -334,6 +337,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     },
     isLiked: item.isLiked ?? false,
     isDisliked: item.isDisliked ?? false,
+    isReposted: item.isReposted ?? false,
     isQuotePost: !!(item as any).isQuotePost,
     quotedPost: (item as any).quotedPost || null,
   };

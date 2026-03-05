@@ -727,6 +727,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           likeCount={post.likes}
           commentCount={post.comments}
           repostCount={post.repostCount}
+          isReposted={post.isReposted}
           isOptimistic={post.isOptimistic}
         />
         
