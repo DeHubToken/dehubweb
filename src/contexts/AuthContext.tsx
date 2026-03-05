@@ -18,7 +18,7 @@ import { useAccount, useSignMessage, useDisconnect, useConnect } from 'wagmi';
 import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import { clearWagmiStorage } from '@/lib/wagmi';
-import { getAddress, recoverMessageAddress } from 'viem';
+
 
 import {
   authenticateWallet,
