@@ -119,14 +119,6 @@ export function AudioVisualizer({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    if (style === 'static') {
-      // For static style, we just need progress — no analyser needed
-      const audio = audioRef.current;
-      const progress = audio && audio.duration ? audio.currentTime / audio.duration : 0;
-      drawStatic(ctx, new Uint8Array(0), canvas.width, canvas.height, hue, seed, progress, peaksRef.current);
-      animationRef.current = requestAnimationFrame(draw);
-      return;
-    }
 
     // All other styles need the analyser
     if (!analyserRef.current) return;
