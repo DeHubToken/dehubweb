@@ -496,6 +496,8 @@ function AllSection({
   musicVideos,
   totalVideoCount,
   isLoadingVideos,
+  audioUploads,
+  isLoadingAudio,
   onGoToRadio,
   onGoToVideos,
   onOpenStages,
@@ -504,17 +506,20 @@ function AllSection({
   musicVideos: VideoItem[];
   totalVideoCount: number;
   isLoadingVideos: boolean;
+  audioUploads: VideoItem[];
+  isLoadingAudio: boolean;
   onGoToRadio: () => void;
   onGoToVideos: () => void;
   onOpenStages: () => void;
 }) {
   // Show full skeleton on initial load (no videos loaded yet and still fetching)
-  if (isLoadingVideos && musicVideos.length === 0) {
+  if (isLoadingVideos && musicVideos.length === 0 && isLoadingAudio) {
     return <MusicFeedSkeleton />;
   }
 
   return (
     <div className="space-y-4 pb-32">
+      <AudioUploadsCarousel audioItems={audioUploads} isLoading={isLoadingAudio} />
       <MusicVideosCarousel videos={musicVideos} totalCount={totalVideoCount} isLoading={isLoadingVideos} onSeeAll={onGoToVideos} />
       <RadioCarousel stations={radioStations} onSeeAll={onGoToRadio} />
       <StagesCarousel onOpenStages={onOpenStages} />
