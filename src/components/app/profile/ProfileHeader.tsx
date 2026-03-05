@@ -1,5 +1,5 @@
 import { 
-  UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check, Ban
+  UserPlus, Pencil, Star, Play, Clock, Plus, Image, Loader2, Check, Ban
 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
