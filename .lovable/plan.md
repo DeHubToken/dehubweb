@@ -1,35 +1,44 @@
 
 
-## Fix: Auto-reload on chunk load failures
+## Why Audio Posts Don't Play
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+The @chaos post (tokenId 3191) returns from the API with `postType: "feed-audio"` and `audioUrl: "feed-audio/3191-audio.m4a"`, but the app has three cascading bugs:
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+1. **Wrong postType check**: Code checks for `postType === 'audio'` but API sends `"feed-audio"`
+2. **Missing audioUrl field**: Neither `UnifiedFeedItem` nor `DeHubNFT` types include `audioUrl` or `audioDuration`, so the actual audio URL is silently dropped
+3. **Wrong URL construction**: Even the "audio" branch builds a `.mp4` CDN URL (`videos/3191.mp4`) instead of using the real audio URL (`feed-audio/3191-audio.m4a`), causing the `MEDIA_ELEMENT_ERROR: Format error` in console
+4. **No audio rendering path**: VideoCard has no code path to render an `<audio>` element with waveform/visualizer for audio posts
 
-### Changes
+---
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+### Plan
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+**1. Fix postType detection across all mappers**
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+- In `use-dehub-feed.ts`: `getContentType()` — add `"feed-audio"` as an audio type
+- In `use-dehub-feed.ts`: `mapNFTToVideoItem()` — check `postType === 'feed-audio'` alongside `'audio'`
+- In `use-unified-feed.ts`: Add `'feed-audio'` to the `UnifiedFeedItem.postType` union
+- In `use-dehub-profile.ts`: Same fix for profile feed mapper
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+**2. Add audioUrl/audioDuration to types**
+
+- `UnifiedFeedItem`: add `audioUrl?: string` and `audioDuration?: number`
+- `DeHubNFT` type (in `src/lib/api/dehub/types.ts`): add `audioUrl?: string` and `audioDuration?: number`
+- `VideoItem` type (in `src/types/feed.types.ts`): add `audioUrl?: string` and `audioDuration?: number` and `isAudio?: boolean`
+
+**3. Fix URL construction in mappers**
+
+- For audio posts, resolve the CDN URL from `nft.audioUrl` field: `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${audioUrl}`
+- Pass this as `audioUrl` on the mapped `VideoItem` instead of trying to use `videoUrl`
+- Use `audioDuration` for duration formatting on audio posts
+
+**4. Add audio playback in VideoCard**
+
+- When `item.isAudio` is true, render an audio player with the `AudioVisualizer` component (already exists in the codebase) instead of a `<video>` element
+- Show the thumbnail/cover art as background, with waveform overlay and play/pause control
+- Use `recordListen(tokenId)` API call when audio plays (already wired in `feed.ts`)
+
+**5. Fix unified feed filtering**
+
+- Ensure `feed-audio` posts are not accidentally filtered out (currently the feed query doesn't filter by postType for the home feed, so they come through — but the mapper drops them into the video path which fails)
 
