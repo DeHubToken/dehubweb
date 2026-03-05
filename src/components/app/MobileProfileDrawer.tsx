@@ -35,7 +35,7 @@ export function MobileProfileDrawer({ isOpen, children }: MobileProfileDrawerPro
   // Reset snap when opening
   useEffect(() => {
     if (isOpen) {
-      setSnap(SNAP_POINTS[0]);
+      setSnap(SNAP_POINTS[1]); // Open at 62%
       isClosingRef.current = false;
     }
   }, [isOpen]);
