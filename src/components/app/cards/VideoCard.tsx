@@ -524,7 +524,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     description: video.description || '',
     imageUrl: video.thumbnail || '',
     videoUrl: video.videoUrl || '',
-    postType: 'video' as const,
+    postType: (video.isAudio ? 'feed-audio' : 'video') as any,
     minter: video.creatorId || '',
     minterUsername: video.creatorUsername || '',
     minterDisplayName: video.channel,
