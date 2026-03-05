@@ -90,7 +90,10 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
     })
     .slice(0, 50);
 
-  // Badge balances are already embedded in leaderboard cache entries (entry.badgeBalance)
+  // Live avatar enrichment
+  const visibleAccounts = useMemo(() => entries.map(e => e.account), [entries]);
+  useLeaderboardAvatars(visibleAccounts);
+  const getAvatarOverride = useAvatarOverrides();
 
   if (!isLoading && entries.length === 0) {
     return (
@@ -103,8 +106,10 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
   const displayEntries = entries;
 
   const getAvatarUrl = (entry: LeaderboardEntry) => {
-    if (entry.avatarUrl && entry.account) {
-      return buildAvatarUrl(entry.account, entry.avatarUrl);
+    const override = getAvatarOverride(entry.account);
+    const avatarPath = override?.avatarUrl ?? entry.avatarUrl;
+    if (avatarPath && entry.account) {
+      return buildAvatarUrl(entry.account, avatarPath);
     }
     return null;
   };
