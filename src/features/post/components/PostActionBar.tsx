@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/comp
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { GoLiveModal } from '@/components/app/modals';
 import { AudioSpacesModal } from '@/components/app/spaces';
@@ -196,37 +197,37 @@ export function PostActionBar({
         onClose={handleAudioSpacesModalClose}
       />
 
-      {/* Upload progress bar — liquid glass style */}
+      {/* Upload progress bar — liquid glass bubble style */}
       {showUploadBar && (
         <div className="px-4 pt-2 pb-1">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-xs text-zinc-400">
-              {(uploadProgress ?? 0) < 60 ? 'Uploading...' : (uploadProgress ?? 0) < 100 ? 'Publishing...' : 'Done!'}
-            </span>
-            <span className="text-xs text-zinc-400 tabular-nums">{uploadProgress ?? 0}%</span>
-          </div>
-          <div className="w-full h-2 rounded-full overflow-hidden bg-white/[0.06] backdrop-blur-sm border border-white/[0.08] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
-            <div
-              className="h-full rounded-full transition-all duration-500 ease-out relative overflow-hidden"
-              style={{
-                width: `${uploadProgress ?? 0}%`,
-                background: 'linear-gradient(90deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.28) 50%, rgba(255,255,255,0.12) 100%)',
-                backdropFilter: 'blur(8px)',
-                boxShadow: '0 0 12px rgba(255,255,255,0.12), inset 0 1px 0 rgba(255,255,255,0.18)',
-                borderTop: '1px solid rgba(255,255,255,0.15)',
-              }}
-            >
-              {/* Shimmer sweep */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%)',
-                  backgroundSize: '200% 100%',
-                  animation: 'shimmer 2s infinite linear',
-                }}
-              />
+          <LiquidGlassBubble shimmer={false} noBorder={false} className="w-full">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-xs text-white/60">
+                {(uploadProgress ?? 0) < 60 ? 'Uploading...' : (uploadProgress ?? 0) < 100 ? 'Publishing...' : 'Done!'}
+              </span>
+              <span className="text-xs text-white/60 tabular-nums">{uploadProgress ?? 0}%</span>
             </div>
-          </div>
+            <div className="w-full h-2 rounded-full overflow-hidden bg-white/[0.06] border border-white/[0.08] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+              <div
+                className="h-full rounded-full transition-all duration-500 ease-out relative overflow-hidden"
+                style={{
+                  width: `${uploadProgress ?? 0}%`,
+                  background: 'linear-gradient(90deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.28) 50%, rgba(255,255,255,0.12) 100%)',
+                  boxShadow: '0 0 12px rgba(255,255,255,0.12), inset 0 1px 0 rgba(255,255,255,0.18)',
+                  borderTop: '1px solid rgba(255,255,255,0.15)',
+                }}
+              >
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%)',
+                    backgroundSize: '200% 100%',
+                    animation: 'shimmer 2s infinite linear',
+                  }}
+                />
+              </div>
+            </div>
+          </LiquidGlassBubble>
         </div>
       )}
 
