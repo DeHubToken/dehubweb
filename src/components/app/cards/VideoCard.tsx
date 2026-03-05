@@ -1203,6 +1203,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                       onPlayPause={handlePlayClick}
                       className="w-full h-full"
                       showStylePicker={true}
+                      muted={isMuted}
                     />
                   </div>
                 </div>

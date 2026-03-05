@@ -23,6 +23,8 @@ interface AudioVisualizerProps {
   onPlayPause: () => void;
   className?: string;
   showStylePicker?: boolean;
+  /** When true the audio output is muted (visualizer still animates). */
+  muted?: boolean;
 }
 
 const STYLES: { value: VisualizerStyle; label: string }[] = [
@@ -42,6 +44,7 @@ export function AudioVisualizer({
   onPlayPause,
   className = '',
   showStylePicker = true,
+  muted = false,
 }: AudioVisualizerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -159,6 +162,13 @@ export function AudioVisualizer({
       audioRef.current.pause();
     }
   }, [isPlaying]);
+
+  // Sync muted state to the internal audio element
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.muted = muted;
+    }
+  }, [muted]);
 
   // Separate effect for animation
   useEffect(() => {
