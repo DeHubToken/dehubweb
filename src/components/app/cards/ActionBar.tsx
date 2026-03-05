@@ -24,7 +24,7 @@ import { voteOnPost } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
-import { isPostReposted, markReposted } from '@/lib/repost-cache';
+import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
 import { getCommentCountDelta } from '@/lib/comment-count-cache';
 import {
   Drawer,
@@ -279,6 +279,17 @@ export function ActionBar({
     setSheetOpen(false);
   };
 
+  const handleUndoRepost = () => {
+    if (onRepost) {
+      setRepostDelta(prev => prev - 1);
+      setIsReposted(false);
+      if (postId) unmarkReposted(postId);
+      onRepost(); // Same API call toggles the repost off
+      toast.success('Repost removed');
+    }
+    setSheetOpen(false);
+  };
+
   const handleQuote = () => {
     if (onQuote) {
       onQuote();
@@ -290,13 +301,23 @@ export function ActionBar({
 
   const ShareOptions = () => (
     <>
-      <button
-        onClick={handleRepost}
-        className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
-      >
-        <Repeat2 className="w-5 h-5" />
-        <span className="font-medium">Repost</span>
-      </button>
+      {isReposted ? (
+        <button
+          onClick={handleUndoRepost}
+          className="flex items-center gap-3 w-full p-4 text-red-400 hover:text-red-300 hover:bg-white/10 rounded-xl transition-all duration-200"
+        >
+          <Repeat2 className="w-5 h-5" />
+          <span className="font-medium">Undo Repost</span>
+        </button>
+      ) : (
+        <button
+          onClick={handleRepost}
+          className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+        >
+          <Repeat2 className="w-5 h-5" />
+          <span className="font-medium">Repost</span>
+        </button>
+      )}
       <button
         onClick={handleQuote}
         className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
