@@ -94,6 +94,10 @@ export function AudioVisualizer({
     drawStatic(ctx, new Uint8Array(0), canvas.width, canvas.height, hue, seed, 0, waveformPeaks);
   }, [waveformPeaks, style, hue, seed]);
 
+  // Store muted prop in ref for use during setup
+  const mutedRef = useRef(muted);
+  mutedRef.current = muted;
+
   const setupAudio = useCallback(() => {
     if (isConnectedRef.current) return;
 
@@ -101,6 +105,8 @@ export function AudioVisualizer({
       if (!audioRef.current) {
         audioRef.current = new Audio(audioUrl);
         audioRef.current.crossOrigin = 'anonymous';
+        // Set initial muted state from prop
+        audioRef.current.muted = mutedRef.current;
         
         audioRef.current.addEventListener('ended', () => {
           onPlayPauseRef.current();
