@@ -75,7 +75,8 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   
   // Detect audio posts
   const postType = (nft as any).postType as string | undefined;
-  const isAudioPost = postType === 'audio' || postType === 'feed-audio';
+  const rawAudioUrl = (nft as any).audioUrl as string | undefined;
+  const isAudioPost = postType === 'audio' || postType === 'feed-audio' || !!rawAudioUrl;
   
   const durationSeconds = isAudioPost 
     ? ((nft as any).audioDuration || nft.videoDuration || nft.duration || 0)
