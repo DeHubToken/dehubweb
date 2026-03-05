@@ -49,7 +49,7 @@ function deriveTrendingCategories(queryClient: ReturnType<typeof useQueryClient>
     .slice(0, MAX_CATEGORIES);
 }
 
-export function WhatsHappening() {
+export const WhatsHappening = memo(function WhatsHappening() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
@@ -66,5 +66,5 @@ export function WhatsHappening() {
       </div>
     </div>
   );
-}
+});
 
