@@ -90,7 +90,7 @@ export function PostMetadata({ timestamp, viewCount, isAd, isAudio, translateCon
       {viewCount && (
         <span className="flex items-center gap-1">
           {isAudio ? <Headphones className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-          {viewCount} {isAudio ? 'listens' : ''}
+          {viewCount}
         </span>
       )}
       {hasMetadata && translateControl && <span>•</span>}
