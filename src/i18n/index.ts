@@ -69,6 +69,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'mag', name: 'Magahi', nativeName: 'मगही' },
   { code: 'mr', name: 'Marathi', nativeName: 'मराठी' },
   { code: 'mn', name: 'Mongolian', nativeName: 'Монгол' },
+  { code: 'mg', name: 'Malagasy', nativeName: 'Malagasy' },
   { code: 'yue', name: 'Cantonese', nativeName: '廣東話' },
   { code: 'wuu', name: 'Wu Chinese', nativeName: '吴语' },
   { code: 'ms', name: 'Malay', nativeName: 'Bahasa Melayu' },
