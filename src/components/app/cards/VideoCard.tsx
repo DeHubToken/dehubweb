@@ -501,7 +501,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     if (isNaN(numericId)) return;
     try {
       await repostPost(numericId);
-      toast.success('Reposted!');
       queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
       queryClient.invalidateQueries({ queryKey: ['user-reposts'] });
     } catch {

@@ -109,7 +109,6 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
     if (isNaN(numericId)) return;
     try {
       await repostPost(numericId);
-      toast.success('Reposted!');
       queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
       queryClient.invalidateQueries({ queryKey: ['user-reposts'] });
     } catch {
