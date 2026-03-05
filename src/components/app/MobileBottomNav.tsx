@@ -255,7 +255,7 @@ export function MobileBottomNav() {
                 <NavLink
                   key={item.path}
                   to={item.path}
-                  onClick={(e) => handleProtectedNavClick(e, item.path, item.requiresAuth)}
+                  onClick={(e) => handleProtectedNavClick(e, item.path, (item as any).requiresAuth)}
                   className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-all duration-200 text-white"
                   style={{ width: 'calc((50% - 24px) / 2)' }}
                 >
