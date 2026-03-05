@@ -12,6 +12,7 @@ import {
   drawPulse,
   drawTerrain,
   drawStatic,
+  decodeAudioWaveform,
   resetSpectrum,
   resetRings,
   resetPulse,
@@ -43,6 +44,8 @@ const STYLES: { value: VisualizerStyle; label: string }[] = [
   { value: 'terrain', label: 'Terrain' },
 ];
 
+const STATIC_BAR_COUNT = 100;
+
 export function AudioVisualizer({
   audioUrl,
   isPlaying,
@@ -61,14 +64,35 @@ export function AudioVisualizer({
   const isConnectedRef = useRef(false);
   
   const [style, setStyle] = useState<VisualizerStyle>('static');
-  const [hue, setHue] = useState(0); // Default to left side (red)
+  const [hue, setHue] = useState(0);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [waveformPeaks, setWaveformPeaks] = useState<number[] | null>(null);
 
   // Store onPlayPause in a ref to avoid dependency issues
   const onPlayPauseRef = useRef(onPlayPause);
   useEffect(() => {
     onPlayPauseRef.current = onPlayPause;
   }, [onPlayPause]);
+
+  // Decode the audio file to get full-track waveform peaks on mount
+  useEffect(() => {
+    decodeAudioWaveform(audioUrl, STATIC_BAR_COUNT, (peaks) => {
+      setWaveformPeaks(peaks);
+    });
+  }, [audioUrl]);
+
+  // Draw the idle waveform once peaks are available (before any playback)
+  const peaksRef = useRef<number[] | null>(null);
+  peaksRef.current = waveformPeaks;
+
+  useEffect(() => {
+    if (!waveformPeaks || !canvasRef.current || style !== 'static') return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    // Draw idle state at progress 0
+    drawStatic(ctx, new Uint8Array(0), canvas.width, canvas.height, hue, seed, 0, waveformPeaks);
+  }, [waveformPeaks, style, hue, seed]);
 
   const setupAudio = useCallback(() => {
     if (isConnectedRef.current) return;
@@ -78,7 +102,6 @@ export function AudioVisualizer({
         audioRef.current = new Audio(audioUrl);
         audioRef.current.crossOrigin = 'anonymous';
         
-        // Attach ended listener immediately when creating audio
         audioRef.current.addEventListener('ended', () => {
           onPlayPauseRef.current();
         });
@@ -110,11 +133,23 @@ export function AudioVisualizer({
   }, [audioUrl]);
 
   const draw = useCallback(() => {
-    if (!canvasRef.current || !analyserRef.current) return;
+    if (!canvasRef.current) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    if (style === 'static') {
+      // For static style, we just need progress — no analyser needed
+      const audio = audioRef.current;
+      const progress = audio && audio.duration ? audio.currentTime / audio.duration : 0;
+      drawStatic(ctx, new Uint8Array(0), canvas.width, canvas.height, hue, seed, progress, peaksRef.current);
+      animationRef.current = requestAnimationFrame(draw);
+      return;
+    }
+
+    // All other styles need the analyser
+    if (!analyserRef.current) return;
 
     const frequencyData = new Uint8Array(analyserRef.current.frequencyBinCount);
     const timeData = new Uint8Array(analyserRef.current.frequencyBinCount);
@@ -123,9 +158,6 @@ export function AudioVisualizer({
     analyserRef.current.getByteTimeDomainData(timeData);
 
     switch (style) {
-      case 'static':
-        drawStatic(ctx, frequencyData, canvas.width, canvas.height, hue, seed);
-        break;
       case 'bars':
         drawBars(ctx, frequencyData, canvas.width, canvas.height, hue);
         break;
@@ -161,7 +193,7 @@ export function AudioVisualizer({
     }
   }, [isPlaying, isInitialized, setupAudio]);
 
-  // Separate effect for playback control - no dependency on draw
+  // Separate effect for playback control
   useEffect(() => {
     if (!audioRef.current) return;
 
@@ -172,24 +204,26 @@ export function AudioVisualizer({
     }
   }, [isPlaying]);
 
-  // Sync muted state to the internal audio element
+  // Sync muted state
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.muted = muted;
     }
   }, [muted]);
 
-  // Separate effect for animation
+  // Animation loop
   useEffect(() => {
-    if (isPlaying && analyserRef.current) {
-      draw();
+    if (isPlaying) {
+      // For static style, we can animate even without analyser (just progress)
+      if (style === 'static' || analyserRef.current) {
+        draw();
+      }
     } else if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
     }
   }, [isPlaying, draw]);
 
   useEffect(() => {
-    // Reset visualizer state when switching styles
     resetSpectrum();
     resetRings();
     resetPulse();
@@ -206,7 +240,6 @@ export function AudioVisualizer({
         audioRef.current.pause();
         audioRef.current = null;
       }
-      // Don't close AudioContext as it may be reused
       isConnectedRef.current = false;
       resetSpectrum();
       resetRings();
@@ -215,8 +248,6 @@ export function AudioVisualizer({
       resetStatic();
     };
   }, []);
-
-  // ended listener is now attached in setupAudio
 
   return (
     <div className={`relative ${className}`}>
@@ -276,7 +307,7 @@ export function AudioVisualizer({
         </div>
       )}
 
-      {/* Play/Pause button overlay - always visible in center */}
+      {/* Play/Pause button overlay */}
       <div 
         className="absolute inset-0 flex items-center justify-center cursor-pointer pointer-events-none"
         style={{ pointerEvents: 'none' }}
