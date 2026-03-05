@@ -585,11 +585,72 @@ export function resetTerrain() {
   terrainOffset = 0;
 }
 
-// Static waveform - seeded bar pattern that reacts to audio data
-// Uses a deterministic bar shape (seeded PRNG) so each post looks unique,
-// but the bar heights are modulated by live frequency data.
+// Static waveform - full-track amplitude display with L-R playback progress.
+// Pre-decodes the audio file to extract amplitude peaks for the entire duration,
+// then renders all bars at once. Bars behind the playhead are brighter/colored;
+// bars ahead are dim. The playhead sweeps left→right as the audio plays.
 
-/** Simple seeded PRNG (mulberry32) */
+/** Cached decoded waveform data per URL */
+const waveformCache = new Map<string, number[]>();
+let activeDecodeUrl: string | null = null;
+
+/**
+ * Decode an audio URL and cache its per-bar amplitude peaks.
+ * Returns immediately if already cached.  Calls `onReady` when done.
+ */
+export async function decodeAudioWaveform(
+  audioUrl: string,
+  barCount: number,
+  onReady: (peaks: number[]) => void
+) {
+  // Already cached
+  const cached = waveformCache.get(audioUrl);
+  if (cached && cached.length === barCount) {
+    onReady(cached);
+    return;
+  }
+
+  // Avoid duplicate decodes
+  if (activeDecodeUrl === audioUrl) return;
+  activeDecodeUrl = audioUrl;
+
+  try {
+    const response = await fetch(audioUrl);
+    const arrayBuffer = await response.arrayBuffer();
+    const offlineCtx = new (window.OfflineAudioContext || (window as any).webkitOfflineAudioContext)(1, 1, 44100);
+    const audioBuffer = await offlineCtx.decodeAudioData(arrayBuffer);
+
+    const rawData = audioBuffer.getChannelData(0);
+    const samplesPerBar = Math.floor(rawData.length / barCount);
+    const peaks: number[] = [];
+
+    for (let i = 0; i < barCount; i++) {
+      let sum = 0;
+      const start = i * samplesPerBar;
+      for (let j = start; j < start + samplesPerBar && j < rawData.length; j++) {
+        sum += Math.abs(rawData[j]);
+      }
+      peaks.push(sum / samplesPerBar);
+    }
+
+    // Normalize to 0–1
+    const max = Math.max(...peaks, 0.001);
+    const normalized = peaks.map(p => p / max);
+
+    waveformCache.set(audioUrl, normalized);
+    activeDecodeUrl = null;
+    onReady(normalized);
+  } catch (err) {
+    console.error('Failed to decode audio waveform:', err);
+    activeDecodeUrl = null;
+    // Fallback: generate a seeded pattern
+    const fallback = generateFallbackPattern(audioUrl, barCount);
+    waveformCache.set(audioUrl, fallback);
+    onReady(fallback);
+  }
+}
+
+/** Simple seeded PRNG (mulberry32) for fallback */
 function seedRandom(str: string) {
   let h = 0;
   for (let i = 0; i < str.length; i++) {
@@ -604,82 +665,64 @@ function seedRandom(str: string) {
   };
 }
 
-let staticBarPattern: number[] | null = null;
-let staticBarSeed: string = '';
-
-function getStaticPattern(seed: string, count: number): number[] {
-  if (staticBarSeed === seed && staticBarPattern && staticBarPattern.length === count) {
-    return staticBarPattern;
-  }
+function generateFallbackPattern(seed: string, count: number): number[] {
   const rand = seedRandom(seed);
   const bars: number[] = [];
   for (let i = 0; i < count; i++) {
     const t = i / (count - 1);
     const envelope = 0.3 + 0.7 * Math.sin(t * Math.PI);
-    const noise = 0.4 + 0.6 * rand();
-    bars.push(envelope * noise);
+    bars.push(envelope * (0.4 + 0.6 * rand()));
   }
-  staticBarSeed = seed;
-  staticBarPattern = bars;
   return bars;
 }
 
+/**
+ * Draw the full-track waveform. `progress` is 0–1 representing playback position.
+ */
 export function drawStatic(
   ctx: CanvasRenderingContext2D,
-  frequencyData: Uint8Array,
+  _frequencyData: Uint8Array,
   width: number,
   height: number,
   hue: number = 0,
-  seed: string = 'default'
+  _seed: string = 'default',
+  progress: number = 0,
+  peaks: number[] | null = null
 ) {
-  const barCount = 90;
-  const gap = 2;
-  const barWidth = (width - gap * (barCount - 1)) / barCount;
-
   ctx.clearRect(0, 0, width, height);
 
-  const pattern = getStaticPattern(seed, barCount);
+  if (!peaks || peaks.length === 0) return;
 
-  // Compute overall energy to scale the reactiveness
-  let avgLevel = 0;
-  for (let i = 0; i < frequencyData.length; i++) {
-    avgLevel += frequencyData[i];
-  }
-  avgLevel = avgLevel / frequencyData.length / 255;
+  const barCount = peaks.length;
+  const gap = 2;
+  const barWidth = Math.max(1, (width - gap * (barCount - 1)) / barCount);
+  const centerY = height / 2;
+  const maxBarH = height * 0.8;
+  const playedIndex = Math.floor(progress * barCount);
 
   for (let i = 0; i < barCount; i++) {
-    // Map each bar to a frequency bin
-    const freqIndex = Math.floor((i / barCount) * (frequencyData.length * 0.7));
-    const freqValue = frequencyData[freqIndex] / 255;
-
-    // Base height from seed pattern, boosted by live frequency data
-    const baseH = pattern[i];
-    // Blend: idle shows the seed shape at ~30% height, live audio pushes it up
-    const liveBlend = baseH * 0.3 + freqValue * 0.7;
-    const barHeight = Math.max(liveBlend, baseH * 0.15) * height * 0.85;
-
+    const barH = Math.max(2, peaks[i] * maxBarH);
     const x = i * (barWidth + gap);
-    const y = (height - barHeight) / 2; // center vertically
+    const y = centerY - barH / 2;
 
-    // Opacity reacts to level
-    const opacity = 0.15 + liveBlend * 0.55;
-
-    ctx.fillStyle = `hsla(0, 0%, 100%, ${opacity})`;
-    ctx.beginPath();
-    ctx.roundRect(x, y, barWidth, barHeight, 1);
-    ctx.fill();
-
-    // Subtle colored glow on loud bars
-    if (freqValue > 0.6 && avgLevel > 0.3) {
-      ctx.fillStyle = `hsla(${hue}, 70%, 70%, ${(freqValue - 0.6) * 0.5})`;
-      ctx.beginPath();
-      ctx.roundRect(x, y, barWidth, barHeight, 1);
-      ctx.fill();
+    if (i <= playedIndex) {
+      // Played portion — colored / bright
+      const gradient = ctx.createLinearGradient(x, y, x, y + barH);
+      gradient.addColorStop(0, `hsla(${hue}, 80%, 75%, 0.9)`);
+      gradient.addColorStop(0.5, `hsla(${hue}, 85%, 60%, 0.95)`);
+      gradient.addColorStop(1, `hsla(${hue}, 80%, 75%, 0.9)`);
+      ctx.fillStyle = gradient;
+    } else {
+      // Unplayed portion — dim white
+      ctx.fillStyle = `hsla(0, 0%, 100%, 0.2)`;
     }
+
+    ctx.beginPath();
+    ctx.roundRect(x, y, barWidth, barH, 1);
+    ctx.fill();
   }
 }
 
 export function resetStatic() {
-  staticBarPattern = null;
-  staticBarSeed = '';
+  // No per-frame state to reset
 }
