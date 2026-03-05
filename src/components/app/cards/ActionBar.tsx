@@ -326,7 +326,7 @@ export function ActionBar({
         <span className="font-medium">Quote</span>
       </button>
       <button
-        onClick={handleCopyLink}
+        onClick={(e) => { e.stopPropagation(); handleCopyLink(); }}
         className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
       >
         <Link className="w-5 h-5" />
