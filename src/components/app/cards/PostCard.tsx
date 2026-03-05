@@ -94,6 +94,9 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
     const target = e.target as HTMLElement;
     const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
     if (isInteractive) return;
+    // Allow text selection without navigating
+    const selection = window.getSelection();
+    if (selection && selection.toString().length > 0) return;
     
     // Cache the post data before navigation for instant display
     cacheTextPostForNavigation(queryClient, post);
