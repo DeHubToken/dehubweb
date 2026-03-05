@@ -443,9 +443,5 @@ export default function ProfilePage() {
     </div>
   );
 
-  if (data.needsLayoutWrapper) {
-    return <AppLayout>{profileContent}</AppLayout>;
-  }
-
   return profileContent;
 }
