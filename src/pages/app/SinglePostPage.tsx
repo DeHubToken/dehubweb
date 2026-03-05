@@ -52,6 +52,8 @@ import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.ty
 function getContentType(post: DeHubNFT): 'video' | 'image' | 'post' | 'live' {
   const postType = (post as any).postType as string | undefined;
   if (postType === 'live' || (post as any).isLive !== undefined) return 'live';
+  // Audio posts render through VideoCard (which has AudioVisualizer support)
+  if (postType === 'audio' || postType === 'feed-audio') return 'video';
   if (postType === 'video' || post.videoUrl) return 'video';
   if (
     postType === 'image' ||
@@ -71,7 +73,13 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   const description = nft.description && nft.description !== title ? nft.description : undefined;
   const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   
-  const durationSeconds = nft.videoDuration || nft.duration || 0;
+  // Detect audio posts
+  const postType = (nft as any).postType as string | undefined;
+  const isAudioPost = postType === 'audio' || postType === 'feed-audio';
+  
+  const durationSeconds = isAudioPost 
+    ? ((nft as any).audioDuration || nft.videoDuration || nft.duration || 0)
+    : (nft.videoDuration || nft.duration || 0);
   
   const streamInfo = nft.streamInfo;
   const isW2E = nft.is_w2e || streamInfo?.isAddBounty || false;
@@ -87,11 +95,20 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   const resolvedAddress = nft.minter || creatorObj?.id || creatorObj?.address;
   const avatar = rawAvatarPath && resolvedAddress ? buildAvatarUrl(resolvedAddress, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
   
+  // Build audio URL for audio posts (same logic as feed normalizer)
+  const rawAudioUrl = (nft as any).audioUrl as string | undefined;
+  const audioUrl = isAudioPost && rawAudioUrl
+    ? (rawAudioUrl.startsWith('http') ? rawAudioUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawAudioUrl}`)
+    : undefined;
+  
   return {
     id: String(nft.tokenId),
     type: 'video',
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
-    videoUrl: nft.tokenId ? buildVideoUrl(nft.tokenId) : undefined,
+    videoUrl: isAudioPost ? undefined : (nft.tokenId ? buildVideoUrl(nft.tokenId) : undefined),
+    audioUrl,
+    audioDuration: isAudioPost ? (typeof durationSeconds === 'number' ? durationSeconds : 0) : undefined,
+    isAudio: isAudioPost,
     duration: formatDuration(durationSeconds),
     durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : 0,
     title,

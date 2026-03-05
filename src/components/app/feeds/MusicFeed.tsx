@@ -84,8 +84,20 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
 
   const tokenId = nft.tokenId || nft.id || nft.token_id || index;
   
+  // Detect audio posts
+  const postType = (nft as any).postType as string | undefined;
+  const isAudioPost = postType === 'audio' || postType === 'feed-audio';
+  
   // Get duration from various possible fields
-  const duration = nft.videoDuration || nft.duration;
+  const duration = isAudioPost 
+    ? ((nft as any).audioDuration || nft.videoDuration || nft.duration)
+    : (nft.videoDuration || nft.duration);
+  
+  // Build audio URL for audio posts
+  const rawAudioUrl = (nft as any).audioUrl as string | undefined;
+  const audioUrl = isAudioPost && rawAudioUrl
+    ? (rawAudioUrl.startsWith('http') ? rawAudioUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawAudioUrl}`)
+    : undefined;
   
   return {
     id: String(tokenId),
@@ -98,7 +110,10 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     views: formatViews(nft.views || nft.view_count || 0),
     uploadedAgo: formatTimeAgo(nft.createdAt || nft.created_at),
     duration: formatDuration(duration),
-    videoUrl: buildVideoUrl(tokenId),
+    videoUrl: isAudioPost ? undefined : buildVideoUrl(tokenId),
+    audioUrl,
+    audioDuration: isAudioPost ? (typeof duration === 'number' ? duration : 0) : undefined,
+    isAudio: isAudioPost,
     isPPV: nft.is_ppv,
     ppvPrice: nft.ppv_price,
     ppvCurrency: nft.ppv_currency,
@@ -701,16 +716,24 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     staleTime: 5 * 60 * 1000,
   });
 
-  // Fetch audio uploads for carousel
+  // Fetch audio uploads for carousel (try both postType values)
   const { data: audioUploadsData, isLoading: isLoadingAudio } = useQuery({
     queryKey: ['music-audio-uploads', walletAddress],
     queryFn: async () => {
-      const response = await searchNFTs({
-        postType: 'audio',
-        unit: 50,
-        sortMode: 'new',
-      });
-      return (response.data || []).filter((nft: DeHubNFT) => !isBlockedCreator(nft, blockedAddresses));
+      const [audioRes, feedAudioRes] = await Promise.all([
+        searchNFTs({ postType: 'audio', unit: 50, sortMode: 'new' }).catch(() => ({ data: [] })),
+        searchNFTs({ postType: 'feed-audio', unit: 50, sortMode: 'new' }).catch(() => ({ data: [] })),
+      ]);
+      // Merge and dedupe by tokenId
+      const seen = new Set<string | number>();
+      const merged: DeHubNFT[] = [];
+      for (const nft of [...(audioRes.data || []), ...(feedAudioRes.data || [])]) {
+        const tid = nft.tokenId || nft.id || nft.token_id;
+        if (seen.has(tid)) continue;
+        seen.add(tid);
+        if (!isBlockedCreator(nft, blockedAddresses)) merged.push(nft);
+      }
+      return merged;
     },
     staleTime: 5 * 60 * 1000,
   });
