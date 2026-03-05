@@ -118,6 +118,7 @@ function imagePostToNFT(post: ImagePost): Partial<DeHubNFT> {
     isOwner: post.isOwner,
     isUnlocked: post.isUnlocked,
     totalReposts: post.repostCount || 0,
+    isReposted: post.isReposted ?? false,
     streamInfo: {
       ...(post.bountyAmount != null && { addBountyAmount: post.bountyAmount }),
       ...(post.bountyViews != null && { addBountyFirstXViewers: post.bountyViews }),
