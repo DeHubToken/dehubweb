@@ -120,7 +120,7 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
     const target = request.username || request.address;
     if (target) {
       onOpenChange(false);
-      navigate(`/${target}`);
+      navigate(`/app/${target}`);
     }
   };
 

@@ -227,7 +227,7 @@ const UserResultCard = ({
   const handleClick = () => {
     const cleanHandle = user.handle.replace('@', '');
     onProfileClick?.(cleanHandle);
-    navigate(`/${cleanHandle}`);
+    navigate(`/app/${cleanHandle}`);
   };
 
   const handleFollow = async (e: React.MouseEvent) => {

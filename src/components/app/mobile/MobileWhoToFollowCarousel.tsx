@@ -101,7 +101,7 @@ export function MobileWhoToFollowCarousel() {
   const handleUserClick = (user: SuggestedAccount) => {
     const target = user.username || user.address;
     if (target) {
-      navigate(`/${target}`);
+      navigate(`/app/${target}`);
     }
   };
 
