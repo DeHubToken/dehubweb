@@ -9,7 +9,7 @@ import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
 import dehubLogo from '@/assets/dehub-logo-white.png';
-import { useCallback, memo } from 'react';
+import { useCallback, useRef, memo } from 'react';
 
 const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.MouseEvent) => void }) {
   return (
@@ -17,11 +17,12 @@ const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.Mo
       <img
         src={dehubLogo}
         alt="dehub"
-        className="h-7 md:h-7 w-auto"
+        className="h-7 md:h-7"
         loading="eager"
         decoding="async"
         width={93}
         height={28}
+        style={{ aspectRatio: '93/28' }}
       />
     </button>
   );
@@ -45,17 +46,18 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   // Coin balance
   const coinBalance = 0; // TODO: Get from user wallet
 
-  const handleLogoClick = (e: React.MouseEvent) => {
+  // Use ref for pathname so handleLogoClick is stable across renders
+  const pathnameRef = useRef(location.pathname);
+  pathnameRef.current = location.pathname;
+
+  const handleLogoClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    
-    if (location.pathname === '/app') {
-      // Already on home - just scroll to top, don't trigger full refresh
+    if (pathnameRef.current === '/app') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      // Coming from another app page - navigate without refresh
       navigate('/app');
     }
-  };
+  }, [navigate]);
 
   const isNotificationsActive = location.pathname === '/app/notifications';
   const handleMenuClick = useCallback(() => {
