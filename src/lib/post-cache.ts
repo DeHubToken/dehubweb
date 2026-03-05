@@ -66,6 +66,7 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
     isOwner: video.isOwner,
     isUnlocked: video.isUnlocked,
     totalReposts: video.repostCount || 0,
+    isReposted: video.isReposted ?? false,
     // Preserve the original timestamp - uploadedAgo is already formatted, so we need to pass createdAt
     createdAt: video.createdAt,
     // Include bounty data in streamInfo for proper reconstruction
