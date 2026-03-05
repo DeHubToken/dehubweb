@@ -15,13 +15,13 @@ const LEFT_NAV_ITEMS = [
   { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
 ];
 
-// Right side: Explore, AI link
+// Right side: AI link, Profile
 const RIGHT_NAV_ITEMS = [
-  { icon: Search, label: 'Explore', path: '/app/explore' },
+  { icon: Sparkles, label: 'AI', path: '/app/assistant' },
 ];
 
 const SCROLL_NAV_ITEMS = [
-  { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
+  { icon: Search, label: 'Explore', path: '/app/explore' },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Wallet, label: 'Wallet', path: '/app/wallet' },
@@ -122,7 +122,7 @@ export function MobileBottomNav() {
 
   // Calculate opacity: fades quickly on scroll (reaches 0 at ~10% scroll)
   const buttonOpacity = Math.max(0, 1 - scrollProgress * 10);
-  const isAIActive = location.pathname === '/app/assistant';
+  
 
   return (
     <>
@@ -191,7 +191,7 @@ export function MobileBottomNav() {
                 </div>
             </button>
 
-            {/* Right side items - Explore + AI link */}
+            {/* Right side items - AI + Profile */}
             <div className="flex items-center justify-end flex-shrink-0 pr-1" style={{ width: 'calc(50% - 24px)' }}>
               {RIGHT_NAV_ITEMS.map((item) => {
                 const isActive = location.pathname.startsWith(item.path);
@@ -208,7 +208,6 @@ export function MobileBottomNav() {
                         isActive 
                           ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
                           : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
-                        item.label === 'Explore' && 'lg:ml-0 -scale-x-100',
                         'ml-[6px] lg:ml-0'
                       )} 
                     />
@@ -216,15 +215,16 @@ export function MobileBottomNav() {
                 );
               })}
               
-              {/* AI Link - navigates to dedicated page */}
+              {/* Profile Link */}
               <NavLink
-                to="/app/assistant"
+                to="/app/profile"
+                onClick={(e) => handleProtectedNavClick(e, '/app/profile', true)}
                 className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white rounded-r-2xl"
               >
-                <Sparkles 
+                <User 
                   className={cn(
                     'w-5 h-5 md:w-6 md:h-6 transition-all duration-200 ml-[4px] lg:ml-0',
-                    isAIActive 
+                    location.pathname.startsWith('/app/profile')
                       ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
                       : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
                   )} 
@@ -255,7 +255,7 @@ export function MobileBottomNav() {
                 <NavLink
                   key={item.path}
                   to={item.path}
-                  onClick={(e) => handleProtectedNavClick(e, item.path, item.requiresAuth)}
+                  onClick={(e) => handleProtectedNavClick(e, item.path, (item as any).requiresAuth)}
                   className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-all duration-200 text-white"
                   style={{ width: 'calc((50% - 24px) / 2)' }}
                 >
