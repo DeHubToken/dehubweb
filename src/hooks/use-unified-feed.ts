@@ -122,6 +122,8 @@ export interface UnifiedFeedItem {
   };
   createdAt: string;
   updatedAt?: string;
+  audioUrl?: string;
+  audioDuration?: number;
   totalReposts?: number;
   reposts?: number;
   quotes?: number;
