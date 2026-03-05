@@ -15,13 +15,13 @@ const LEFT_NAV_ITEMS = [
   { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
 ];
 
-// Right side: Explore, AI link
+// Right side: AI link, Profile
 const RIGHT_NAV_ITEMS = [
-  { icon: Search, label: 'Explore', path: '/app/explore' },
+  { icon: Sparkles, label: 'AI', path: '/app/assistant' },
 ];
 
 const SCROLL_NAV_ITEMS = [
-  { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
+  { icon: Search, label: 'Explore', path: '/app/explore' },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Wallet, label: 'Wallet', path: '/app/wallet' },
