@@ -3,13 +3,10 @@
  * ========================================
  * Fetches fresh avatar URLs from the DeHub API for visible leaderboard entries,
  * so avatars stay up-to-date even when stats are cached.
- * 
- * Uses a shared, long-lived query cache keyed by wallet address.
- * Batch-fetches in parallel with concurrency limits.
  */
 
-import { useEffect, useRef } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useEffect, useRef, useMemo } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiCall } from '@/lib/api/dehub/core';
 
 interface AvatarCacheEntry {
@@ -25,21 +22,34 @@ const AVATAR_TTL_MS = 10 * 60 * 1000;
 /** Max concurrent fetches */
 const CONCURRENCY = 5;
 
-const CACHE_KEY = 'leaderboard-avatars';
+const CACHE_KEY = ['leaderboard-live-avatars'] as const;
 
 /**
  * Hook: given a list of wallet addresses, ensures fresh avatar data
- * is in the query cache. Components read from the cache via getAvatarOverride.
+ * is in the query cache. Returns a lookup function for overrides.
  */
 export function useLeaderboardAvatars(accounts: string[]) {
   const queryClient = useQueryClient();
   const fetchingRef = useRef(new Set<string>());
 
+  // Subscribe to the avatar cache so component re-renders when data arrives
+  const { data: avatarCache } = useQuery<Record<string, AvatarCacheEntry>>({
+    queryKey: CACHE_KEY,
+    queryFn: () => ({}),
+    staleTime: Infinity,
+    gcTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
+  // Stable key for the effect dependency
+  const accountsKey = useMemo(() => accounts.join(','), [accounts]);
+
   useEffect(() => {
     if (accounts.length === 0) return;
 
     const cache: Record<string, AvatarCacheEntry> =
-      queryClient.getQueryData([CACHE_KEY]) || {};
+      queryClient.getQueryData(CACHE_KEY) || {};
 
     const now = Date.now();
     const stale = accounts.filter((addr) => {
@@ -50,7 +60,6 @@ export function useLeaderboardAvatars(accounts: string[]) {
 
     if (stale.length === 0) return;
 
-    // Batch fetch with concurrency limit
     let i = 0;
     const fetchNext = async () => {
       while (i < stale.length) {
@@ -60,9 +69,7 @@ export function useLeaderboardAvatars(accounts: string[]) {
         try {
           const res = await apiCall<any>(`/api/account_info/${addr}`);
           const user = res?.result || res;
-          const prev: Record<string, AvatarCacheEntry> =
-            queryClient.getQueryData([CACHE_KEY]) || {};
-          queryClient.setQueryData([CACHE_KEY], {
+          queryClient.setQueryData<Record<string, AvatarCacheEntry>>(CACHE_KEY, (prev) => ({
             ...prev,
             [key]: {
               avatarUrl: user?.avatarImageUrl || user?.avatarUrl || undefined,
@@ -70,7 +77,7 @@ export function useLeaderboardAvatars(accounts: string[]) {
               userDisplayName: user?.displayName,
               fetchedAt: Date.now(),
             },
-          });
+          }));
         } catch {
           // Silently skip failed fetches
         } finally {
@@ -79,21 +86,27 @@ export function useLeaderboardAvatars(accounts: string[]) {
       }
     };
 
-    // Launch concurrent workers
     const workers = Array.from({ length: Math.min(CONCURRENCY, stale.length) }, fetchNext);
     Promise.all(workers);
-  }, [accounts.join(',')]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [accountsKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return avatarCache;
 }
 
 /**
- * Read fresh avatar data for a single address from the shared cache.
- * Returns undefined if no fresh data is available yet.
+ * Returns a function to look up fresh avatar data for a given address.
  */
-export function useAvatarOverrides(): (address: string) => AvatarCacheEntry | undefined {
-  const queryClient = useQueryClient();
-  return (address: string) => {
-    const cache: Record<string, AvatarCacheEntry> | undefined =
-      queryClient.getQueryData([CACHE_KEY]);
-    return cache?.[address.toLowerCase()];
+export function useAvatarOverrides() {
+  const { data: avatarCache } = useQuery<Record<string, AvatarCacheEntry>>({
+    queryKey: CACHE_KEY,
+    queryFn: () => ({}),
+    staleTime: Infinity,
+    gcTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
+  return (address: string): AvatarCacheEntry | undefined => {
+    return avatarCache?.[address.toLowerCase()];
   };
 }
