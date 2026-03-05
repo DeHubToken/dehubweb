@@ -49,6 +49,9 @@ export function LiveCard({ stream }: LiveCardProps) {
     const target = e.target as HTMLElement;
     const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
     if (isInteractive) return;
+    // Allow text selection without navigating
+    const selection = window.getSelection();
+    if (selection && selection.toString().length > 0) return;
     navigate(`/app/post/${stream.id}`);
   }, [navigate, stream.id]);
 
