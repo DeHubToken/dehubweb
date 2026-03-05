@@ -19,6 +19,7 @@ import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
 
 let socket: Socket | null = null;
+let chatSocket: Socket | null = null;
 let currentToken: string | null = null;
 
 function getWalletAddress(): string | null {
@@ -94,18 +95,81 @@ export function getSocket(): Socket {
   return socket;
 }
 
+/** Get or create a /chat namespace socket for livechat messaging. */
+function getChatSocket(): Socket {
+  const token = getAuthToken();
+  if (chatSocket && currentToken !== token) {
+    chatSocket.disconnect();
+    chatSocket = null;
+  }
+  if (!chatSocket) {
+    const address = getWalletAddress();
+    const handshakeAuth: Record<string, string> = {};
+    if (token) handshakeAuth.token = `Bearer ${token}`;
+    if (address) handshakeAuth.address = address.toLowerCase();
+    handshakeAuth.clientType = 'web';
+    handshakeAuth.platform = 'web';
+
+    chatSocket = io(`${DEHUB_API_BASE}/chat`, {
+      auth: Object.keys(handshakeAuth).length ? handshakeAuth : undefined,
+      query: handshakeAuth,
+      path: '/socket.io',
+      transports: ['polling'],
+      upgrade: false,
+      forceNew: true,
+      autoConnect: true,
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 20,
+      timeout: 20000,
+      extraHeaders: { 'X-Client-Type': 'web', 'X-Platform': 'web' },
+    });
+
+    chatSocket.on('connect', () => {
+      console.log('[ChatSocket /chat] Connected', chatSocket?.id);
+      import('sonner').then(({ toast }) => toast.success(`Chat namespace connected: ${chatSocket?.id}`));
+    });
+    chatSocket.on('disconnect', (reason) => console.log('[ChatSocket /chat] Disconnected:', reason));
+    chatSocket.on('connect_error', (err) => {
+      console.warn('[ChatSocket /chat] Connection error:', err.message);
+      import('sonner').then(({ toast }) => toast.error(`/chat namespace error: ${err.message}`));
+    });
+    chatSocket.onAny((eventName: string, ...args: unknown[]) => {
+      console.log(`[ChatSocket /chat DEBUG] Event: "${eventName}"`, args.length > 0 ? args[0] : '');
+    });
+  }
+  return chatSocket;
+}
+
 /** Join the global livechat room. */
 export function joinRoom(roomId: string) {
+  // Join on both root and /chat namespace
   const s = getSocket();
   console.log('[Socket] Joining room:', roomId);
   s.emit('joinRoom', { roomId });
+  s.emit('join-room', { roomId });
+  
+  // Also join on /chat namespace
+  try {
+    const cs = getChatSocket();
+    cs.emit('joinRoom', { roomId });
+    cs.emit('join-room', { roomId });
+  } catch (e) {
+    console.warn('[ChatSocket] Failed to join room:', e);
+  }
 }
 
 /** Leave a livechat room. */
 export function leaveRoom(roomId: string) {
-  if (!socket) return;
-  console.log('[Socket] Leaving room:', roomId);
-  socket.emit('leaveRoom', { roomId });
+  if (socket) {
+    socket.emit('leaveRoom', { roomId });
+    socket.emit('leave-room', { roomId });
+  }
+  if (chatSocket) {
+    chatSocket.emit('leaveRoom', { roomId });
+    chatSocket.emit('leave-room', { roomId });
+  }
 }
 
 /** Send a livechat message via socket. */
@@ -115,7 +179,6 @@ export function emitSendMessage(payload: {
   messageType?: 'text' | 'image' | 'gif' | 'voice';
   imageUrl?: string;
 }) {
-  const s = getSocket();
   const address = typeof window !== 'undefined' ? localStorage.getItem('dehub_wallet') : null;
   const fullPayload = {
     roomId: payload.roomId,
@@ -126,23 +189,29 @@ export function emitSendMessage(payload: {
     ...(payload.imageUrl ? { imageUrl: payload.imageUrl } : {}),
     ...(address ? { address: address.toLowerCase() } : {}),
   };
-  console.log('[Socket] Sending message (connected:', s.connected, '):', fullPayload);
   
-  // Try both camelCase and kebab-case event names (server uses kebab-case for other events like update-online-users)
-  s.emit('send-message', fullPayload, (ack: unknown) => {
-    console.log('[Socket] send-message ack:', ack);
-    import('sonner').then(({ toast }) => {
-      toast.info(`send-message ack: ${JSON.stringify(ack)?.substring(0, 200) || 'no ack'}`);
+  // Send on root namespace
+  const s = getSocket();
+  console.log('[Socket /] Sending (connected:', s.connected, ')');
+  s.emit('sendMessage', fullPayload);
+  s.emit('send-message', fullPayload);
+  
+  // Send on /chat namespace
+  try {
+    const cs = getChatSocket();
+    console.log('[Socket /chat] Sending (connected:', cs.connected, ')');
+    cs.emit('sendMessage', fullPayload, (ack: unknown) => {
+      console.log('[ChatSocket] sendMessage ack:', ack);
+      import('sonner').then(({ toast }) => toast.info(`/chat ack: ${JSON.stringify(ack)?.substring(0, 150) || 'none'}`));
     });
-  });
-  s.emit('sendMessage', fullPayload, (ack: unknown) => {
-    console.log('[Socket] sendMessage ack:', ack);
-    import('sonner').then(({ toast }) => {
-      toast.info(`sendMessage ack: ${JSON.stringify(ack)?.substring(0, 200) || 'no ack'}`);
-    });
-  });
-  s.emit('chat-message', fullPayload);
-  s.emit('new-message', fullPayload);
+    cs.emit('send-message', fullPayload);
+    cs.emit('chatMessage', fullPayload);
+    cs.emit('chat-message', fullPayload);
+    cs.emit('message', fullPayload);
+    cs.emit('new-message', fullPayload);
+  } catch (e) {
+    console.warn('[ChatSocket] Send failed:', e);
+  }
 }
 
 /** Request message history via socket. Returns promise with messages. */
@@ -196,9 +265,22 @@ export function onLiveChatMessage(cb: (msg: unknown) => void): () => void {
   for (const evt of MSG_EVENTS) {
     s.on(evt, handler);
   }
+  // Also listen on /chat namespace
+  let cs: Socket | null = null;
+  try {
+    cs = getChatSocket();
+    for (const evt of MSG_EVENTS) {
+      cs.on(evt, handler);
+    }
+  } catch {}
   return () => {
     for (const evt of MSG_EVENTS) {
       s.off(evt, handler);
+    }
+    if (cs) {
+      for (const evt of MSG_EVENTS) {
+        cs.off(evt, handler);
+      }
     }
   };
 }
@@ -222,9 +304,14 @@ export function disconnectSocket() {
   if (socket) {
     socket.disconnect();
     socket = null;
-    currentToken = null;
     console.log('[Socket] Disconnected and cleared');
   }
+  if (chatSocket) {
+    chatSocket.disconnect();
+    chatSocket = null;
+    console.log('[ChatSocket] Disconnected and cleared');
+  }
+  currentToken = null;
 }
 
 /** Possible server-side event names for incoming messages. */
