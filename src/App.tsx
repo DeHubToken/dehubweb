@@ -138,7 +138,6 @@ function AppContent() {
               <Route path="post/:postId" element={<SinglePostPage />} />
               <Route path="video/:tokenId" element={<SinglePostPage />} />
               <Route path="post/:postId/info" element={<PostInfoPage />} />
-              <Route path=":username" element={<ProfilePage />} />
             </Route>
 
             <Route path="/:username" element={<ProfilePage />} />

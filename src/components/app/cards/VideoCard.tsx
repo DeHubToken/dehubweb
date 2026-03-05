@@ -141,7 +141,7 @@ function MobileCreatorInfo({
   const handleProfileClick = () => {
     if (creatorUsername) {
       const cleanUsername = creatorUsername.replace('@', '');
-      navigate(`/app/${cleanUsername}`);
+      navigate(`/${cleanUsername}`);
     } else if (creatorId) {
       navigate(`/app/profile?id=${creatorId}`);
     }

@@ -619,7 +619,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
   const handleUserPress = useCallback((username: string) => {
     onClose();
-    navigate(`/app/${username}`);
+    navigate(`/${username}`);
   }, [navigate, onClose]);
 
   const handleLike = async (commentId: string) => {
@@ -979,7 +979,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                       key={user.address}
                       onClick={() => {
                         if (user.username) {
-                          navigate(`/app/${user.username.replace('@', '')}`);
+                          navigate(`/${user.username.replace('@', '')}`);
                         } else if (user.address) {
                           navigate(`/app/profile?id=${user.address}`);
                         }

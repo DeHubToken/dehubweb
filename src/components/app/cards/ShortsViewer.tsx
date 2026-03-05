@@ -149,7 +149,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const username = currentShort?.creatorUsername || currentShort?.username;
     if (username) {
       onClose();
-      navigate(`/app/${username}`);
+      navigate(`/${username}`);
     }
   }, [currentShort?.creatorUsername, currentShort?.username, navigate, onClose]);
   

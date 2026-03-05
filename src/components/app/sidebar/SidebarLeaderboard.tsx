@@ -119,7 +119,7 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
 
   const handleUserClick = (entry: LeaderboardEntry) => {
     if (entry.username) {
-      navigate(`/app/${entry.username}`);
+      navigate(`/${entry.username}`);
     }
   };
 

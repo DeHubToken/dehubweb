@@ -83,7 +83,7 @@ export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnb
 
   const handleProfileClick = () => {
     if (message.userHandle) {
-      navigate(`/app/${message.userHandle}`);
+      navigate(`/${message.userHandle}`);
     }
   };
 

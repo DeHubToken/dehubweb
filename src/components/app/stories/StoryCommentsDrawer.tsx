@@ -128,7 +128,7 @@ export function StoryCommentsDrawer({ isOpen, onClose, storyId }: StoryCommentsD
 
   const handleUserPress = useCallback((username: string) => {
     onClose();
-    navigate(`/app/${username}`);
+    navigate(`/${username}`);
   }, [navigate, onClose]);
 
   return (

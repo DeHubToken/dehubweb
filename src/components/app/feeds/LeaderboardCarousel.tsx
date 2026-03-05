@@ -133,7 +133,7 @@ export const LeaderboardCarousel = memo(function LeaderboardCarousel() {
               key={entry.account}
               entry={entry}
               rank={i + 1}
-              onClick={() => entry.username && navigate(`/app/${entry.username}`)}
+              onClick={() => entry.username && navigate(`/${entry.username}`)}
             />
           ))}
         </SwipeableCarousel>

@@ -32,14 +32,11 @@ export function useProfilePage() {
   const profileContainerRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
 
-  // Reset scroll position on mount — skip on mobile when profile opens as drawer overlay
+  // Reset scroll position on mount
   useEffect(() => {
-    const isMobileDrawer = window.innerWidth < 1024;
-    if (!isMobileDrawer) {
-      window.scrollTo(0, 0);
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    }
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
     setTranslatedBio(null);
   }, [routeUsername, userId]);
 
@@ -66,17 +63,15 @@ export function useProfilePage() {
       const cleanHandle = apiProfile.handle.replace('@', '');
       if (!cleanHandle) return;
 
-      const isInsideApp = window.location.pathname.startsWith('/app/');
-      const prefix = isInsideApp ? '/app' : '';
       // Route like /0xABC... → /username
       if (routeUsername && /^0x[a-fA-F0-9]{40}$/i.test(routeUsername)) {
         if (cleanHandle.toLowerCase() !== routeUsername.toLowerCase()) {
-          navigate(`${prefix}/${cleanHandle}`, { replace: true });
+          navigate(`/${cleanHandle}`, { replace: true });
         }
       }
-      // Route like /app/profile?id=0xABC... → /app/username
+      // Route like /app/profile?id=0xABC... → /username
       else if (userId && !routeUsername) {
-        navigate(`${prefix}/${cleanHandle}`, { replace: true });
+        navigate(`/${cleanHandle}`, { replace: true });
       }
     }
   }, [routeUsername, userId, apiProfile?.handle, navigate]);
@@ -300,9 +295,7 @@ export function useProfilePage() {
     containerRef: profileContainerRef,
   });
 
-  // Only wrap in AppLayout when rendered at root /:username (not inside /app/:username)
-  const isInsideAppLayout = typeof window !== 'undefined' && window.location.pathname.startsWith('/app/');
-  const needsLayoutWrapper = !!routeUsername && !isInsideAppLayout;
+  const needsLayoutWrapper = !!routeUsername;
 
   return {
     // Route info

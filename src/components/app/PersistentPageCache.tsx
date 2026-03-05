@@ -10,7 +10,7 @@
  */
 
 import React, { Suspense, useState, useEffect, useRef, memo } from 'react';
-import { useLocation, useParams, useMatch } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
@@ -126,35 +126,8 @@ export function PersistentPageCache() {
   // Track which pages have been visited (mount on first visit, keep forever)
   const [mountedPages, setMountedPages] = useState<Set<string>>(() => new Set());
 
-  // Detect if we're on a mobile profile route (drawer overlays feed)
-  const profileMatch = useMatch('/app/:username');
-  const postMatch = useMatch('/app/post/:postId');
-  const videoMatch = useMatch('/app/video/:tokenId');
-  const postInfoMatch = useMatch('/app/post/:postId/info');
-  const govMatch = useMatch('/app/governance/:proposalId');
-  const isProfileOverlayRoute = !!profileMatch && !postMatch && !videoMatch && !postInfoMatch && !govMatch && !isCachedPageRoute(pathname);
-  
-  // Only keep feed visible under drawer on mobile
-  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 1024);
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 1024);
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-  const isMobileProfileOverlay = isProfileOverlayRoute && isMobile;
-  
-  // Track the last cached page so we can keep it visible under the drawer
-  const lastCachedPageRef = useRef<string>('/app');
-  
   // Find which cached page matches current path
   const activeCachedPage = CACHED_PAGES.find(p => matchesPath(p, pathname));
-  
-  // Update last cached page ref when on a cached route
-  useEffect(() => {
-    if (activeCachedPage) {
-      lastCachedPageRef.current = pathname;
-    }
-  }, [activeCachedPage, pathname]);
 
   // Mount the active page if not yet mounted
   useEffect(() => {
@@ -169,20 +142,13 @@ export function PersistentPageCache() {
   return (
     <>
       {/* Render all mounted cached pages — active one visible, others hidden */}
-      {CACHED_PAGES.filter(p => mountedPages.has(p.key)).map(config => {
-        // On mobile profile overlay, keep the last cached page visible underneath
-        const isDirectlyActive = matchesPath(config, pathname);
-        const isActiveUnderDrawer = isMobileProfileOverlay && matchesPath(config, lastCachedPageRef.current);
-        const isActive = isDirectlyActive || isActiveUnderDrawer;
-        
-        return (
-          <CachedPage
-            key={config.key}
-            config={config}
-            isActive={isActive}
-          />
-        );
-      })}
+      {CACHED_PAGES.filter(p => mountedPages.has(p.key)).map(config => (
+        <CachedPage
+          key={config.key}
+          config={config}
+          isActive={matchesPath(config, pathname)}
+        />
+      ))}
 
       {/* If current route is NOT a cached page, it's a dynamic route — render via flag */}
       {!isCachedRoute && (

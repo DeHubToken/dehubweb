@@ -169,7 +169,7 @@ export function SidebarChat() {
               const avatarUrl = buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url);
               const name = msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || 'Anon';
               const handle = msg.sender_username;
-              const goToProfile = handle ? () => navigate(`/app/${handle}`) : undefined;
+              const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
               return (
                 <div key={msg.id} className="flex items-start gap-2" style={{ paddingLeft: '10px' }}>
                   <button onClick={goToProfile} disabled={!handle} className={`flex-shrink-0 ${handle ? 'cursor-pointer' : 'cursor-default'}`}>

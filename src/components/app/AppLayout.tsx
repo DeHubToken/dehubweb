@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useLayoutEffect, type ReactNode, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect, type ReactNode } from 'react';
 import { Outlet, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { AppSidebar } from './AppSidebar';
 import { RightSidebar } from './RightSidebar';
@@ -19,7 +19,6 @@ import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { cn } from '@/lib/utils';
 import SinglePostPage from '@/pages/app/SinglePostPage';
-import { MobileProfileDrawer } from './MobileProfileDrawer';
 
 interface AppLayoutContentProps {
   children?: ReactNode;
@@ -46,35 +45,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   // Track if we're on a post overlay route
   const postMatch = useMatch('/app/post/:postId');
   const videoMatch = useMatch('/app/video/:tokenId');
-  const postInfoMatch = useMatch('/app/post/:postId/info');
-  const govMatch = useMatch('/app/governance/:proposalId');
-  const profileMatch = useMatch('/app/:username');
   const isPostRoute = !!(postMatch || videoMatch);
-  const isProfileRoute = !!profileMatch && !postMatch && !videoMatch && !postInfoMatch && !govMatch && !isCachedPageRoute(location.pathname);
-  
-  // Track if profile was opened from within the app (feed) vs direct load
-  // Computed synchronously during render to avoid flash of inline content
-  const prevProfilePathRef = useRef<string>(location.pathname);
-  const profileFromFeedRef = useRef(false);
-  
-  if (location.pathname !== prevProfilePathRef.current) {
-    if (isProfileRoute && isCachedPageRoute(prevProfilePathRef.current)) {
-      profileFromFeedRef.current = true;
-    } else if (!isProfileRoute) {
-      profileFromFeedRef.current = false;
-    }
-    prevProfilePathRef.current = location.pathname;
-  }
-  
-  // On mobile, use drawer only when coming from feed
-  const [isMobileView, setIsMobileView] = useState(() => typeof window !== 'undefined' && window.innerWidth < 1024);
-  useEffect(() => {
-    const check = () => setIsMobileView(window.innerWidth < 1024);
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-  
-  const useProfileDrawer = isProfileRoute && profileFromFeedRef.current && isMobileView;
   
   // Track if we came from home page (for overlay behavior)
   const [cameFromHome, setCameFromHome] = useState(() => {
@@ -230,17 +201,8 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           )}
           
           {/* Dynamic routes (post pages, username profiles, etc.) use Outlet */}
-          {isDynamicRoute && !useProfileDrawer && (
-            <div className="animate-fade-in">
-              {children || <Outlet />}
-            </div>
-          )}
-          
-          {/* Mobile profile drawer — only when navigated from feed */}
-          {useProfileDrawer && (
-            <MobileProfileDrawer isOpen>
-              {children || <Outlet />}
-            </MobileProfileDrawer>
+          {isDynamicRoute && (
+            children || <Outlet />
           )}
         </main>
         

@@ -257,9 +257,9 @@ export function FollowersListDrawer({
   const handleUserClick = (user: UserListItem) => {
     onOpenChange(false);
     if (user.username) {
-      navigate(`/app/${user.username}`);
+      navigate(`/${user.username}`);
     } else {
-      navigate(`/app/profile?id=${user.address}`);
+      navigate(`/profile?id=${user.address}`);
     }
   };
 

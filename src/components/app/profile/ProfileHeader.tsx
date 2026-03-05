@@ -1,5 +1,5 @@
 import { 
-  UserPlus, Pencil, Star, Play, Clock, Plus, Image, Loader2, Check, Ban
+  UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check, Ban
 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -379,6 +379,24 @@ export function ProfileHeader({
             </div>
           </div>
           
+          {profile.walletAddress && (() => {
+            const displayAddr = DISPLAY_WALLET_OVERRIDES[profile.walletAddress!.toLowerCase()] || profile.walletAddress!;
+            return (
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(displayAddr);
+                  toast.success('Address copied to clipboard');
+                }}
+                className="flex items-center gap-1.5 mt-1 text-zinc-500 text-sm hover:text-zinc-300 transition-colors group"
+              >
+                <Wallet className="w-3.5 h-3.5" />
+                <span className="font-mono">
+                  {displayAddr.slice(0, 6)}...{displayAddr.slice(-4)}
+                </span>
+                <Copy className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </button>
+            );
+          })()}
           
           {profile.bio && (
             <TranslatableText text={translatedBio || profile.bio} className="mt-3 text-white/90 text-sm sm:text-base block" as="p" />
