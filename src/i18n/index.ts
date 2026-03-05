@@ -111,6 +111,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'no', name: 'Norwegian', nativeName: 'Norsk' },
   { code: 'fi', name: 'Finnish', nativeName: 'Suomi' },
   { code: 'zu', name: 'Zulu', nativeName: 'isiZulu' },
+  { code: 'ti', name: 'Tigrinya', nativeName: 'ትግርኛ' },
 ];
 
 // Dynamic import map for lazy loading locale files

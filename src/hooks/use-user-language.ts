@@ -134,4 +134,5 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   zu: 'Zulu',
   yue: 'Cantonese',
   wuu: 'Wu Chinese',
+  ti: 'Tigrinya',
 };
