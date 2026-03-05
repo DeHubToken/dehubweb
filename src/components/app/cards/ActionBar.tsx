@@ -273,6 +273,7 @@ export function ActionBar({
       setIsReposted(true);
       if (postId) markReposted(postId);
       onRepost();
+      toast.success('Reposted!');
     } else {
       toast.info('Repost not available for this post');
     }
