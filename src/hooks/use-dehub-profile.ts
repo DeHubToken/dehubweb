@@ -275,6 +275,9 @@ export function separateUserContent(items: UnifiedFeedItem[]): {
     
     if (item.postType === 'video') {
       contentType = 'video';
+    } else if (item.postType === 'audio') {
+      // Audio posts render as video cards with playback
+      contentType = 'video';
     } else if (item.postType === 'feed-images') {
       contentType = 'image';
     } else if (item.postType === 'feed-simple') {
