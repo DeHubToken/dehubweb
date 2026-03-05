@@ -16,7 +16,7 @@ interface MobileProfileDrawerProps {
   children: React.ReactNode;
 }
 
-const SNAP_POINTS = [0.35, 1] as const;
+const SNAP_POINTS = [0.5, 1] as const;
 
 export function MobileProfileDrawer({ isOpen, children }: MobileProfileDrawerProps) {
   const navigate = useNavigate();
