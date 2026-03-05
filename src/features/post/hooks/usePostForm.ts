@@ -926,34 +926,48 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setUploadProgress(65);
       toast.loading('Publishing to decentralized database', { id: 'mint-progress', duration: Infinity });
       
+      // Slowly creep progress from 65→99% while waiting for chain confirmation
+      let simulatedProgress = 65;
+      const progressInterval = setInterval(() => {
+        simulatedProgress += Math.random() * 2 + 0.5; // ~0.5-2.5% per tick
+        if (simulatedProgress >= 99) {
+          simulatedProgress = 99;
+          clearInterval(progressInterval);
+        }
+        setUploadProgress(Math.round(simulatedProgress));
+      }, 1500);
+
       let txHash: string;
       
-      if (hasBounty) {
-        // Use StreamController for bounty minting
-        setUploadProgress(70);
-        toast.loading('Approving tokens', { id: 'mint-progress', duration: Infinity });
-        
-        txHash = await mintWithBounty({
-          tokenId: mintResponse.createdTokenId,
-          timestamp: mintResponse.timestamp,
-          v: mintResponse.v,
-          r: mintResponse.r,
-          s: mintResponse.s,
-          bountyAmount: parseFloat(w2eTotal),
-          countOfViewers: w2eViews.trim() !== '' ? parseInt(w2eViews) : 10,
-          countOfCommentors: w2eComments.trim() !== '' ? parseInt(w2eComments) : 0,
-          chainId,
-        });
-      } else {
-        // Use StreamCollection for standard minting
-        txHash = await mintOnChain({
-          tokenId: mintResponse.createdTokenId,
-          timestamp: mintResponse.timestamp,
-          v: mintResponse.v,
-          r: mintResponse.r,
-          s: mintResponse.s,
-          chainId,
-        });
+      try {
+        if (hasBounty) {
+          // Use StreamController for bounty minting
+          toast.loading('Approving tokens', { id: 'mint-progress', duration: Infinity });
+          
+          txHash = await mintWithBounty({
+            tokenId: mintResponse.createdTokenId,
+            timestamp: mintResponse.timestamp,
+            v: mintResponse.v,
+            r: mintResponse.r,
+            s: mintResponse.s,
+            bountyAmount: parseFloat(w2eTotal),
+            countOfViewers: w2eViews.trim() !== '' ? parseInt(w2eViews) : 10,
+            countOfCommentors: w2eComments.trim() !== '' ? parseInt(w2eComments) : 0,
+            chainId,
+          });
+        } else {
+          // Use StreamCollection for standard minting
+          txHash = await mintOnChain({
+            tokenId: mintResponse.createdTokenId,
+            timestamp: mintResponse.timestamp,
+            v: mintResponse.v,
+            r: mintResponse.r,
+            s: mintResponse.s,
+            chainId,
+          });
+        }
+      } finally {
+        clearInterval(progressInterval);
       }
 
       console.log('[Mint] Transaction hash:', txHash);
