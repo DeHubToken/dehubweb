@@ -24,6 +24,7 @@ import { voteOnPost } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
+import { isPostReposted, markReposted } from '@/lib/repost-cache';
 import { getCommentCountDelta } from '@/lib/comment-count-cache';
 import {
   Drawer,
@@ -261,12 +262,13 @@ export function ActionBar({
     setSheetOpen(false);
   };
 
-  const [isReposted, setIsReposted] = useState(false);
+  const [isReposted, setIsReposted] = useState(() => postId ? isPostReposted(postId) : false);
 
   const handleRepost = () => {
     if (onRepost) {
       setRepostDelta(prev => prev + 1);
       setIsReposted(true);
+      if (postId) markReposted(postId);
       onRepost();
     } else {
       toast.info('Repost not available for this post');
