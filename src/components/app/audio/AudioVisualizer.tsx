@@ -215,7 +215,6 @@ export function AudioVisualizer({
       resetRings();
       resetPulse();
       resetTerrain();
-      resetStatic();
     };
   }, []);
 
