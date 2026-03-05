@@ -53,36 +53,28 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const isProfileRoute = !!profileMatch && !postMatch && !videoMatch && !postInfoMatch && !govMatch && !isCachedPageRoute(location.pathname);
   
   // Track if profile was opened from within the app (feed) vs direct load
-  const [profileFromFeed, setProfileFromFeed] = useState(false);
-  const prevProfilePathRef = useRef<string | null>(null);
+  // Computed synchronously during render to avoid flash of inline content
+  const prevProfilePathRef = useRef<string>(location.pathname);
+  const profileFromFeedRef = useRef(false);
   
-  useEffect(() => {
-    const prev = prevProfilePathRef.current;
-    prevProfilePathRef.current = location.pathname;
-    
-    if (isProfileRoute) {
-      // If previous path was a cached page (feed, explore, etc.), it's from feed
-      if (prev && isCachedPageRoute(prev)) {
-        setProfileFromFeed(true);
-      } else if (!prev) {
-        // Direct load (no previous path in this session)
-        setProfileFromFeed(false);
-      }
-    } else {
-      setProfileFromFeed(false);
+  if (location.pathname !== prevProfilePathRef.current) {
+    if (isProfileRoute && isCachedPageRoute(prevProfilePathRef.current)) {
+      profileFromFeedRef.current = true;
+    } else if (!isProfileRoute) {
+      profileFromFeedRef.current = false;
     }
-  }, [location.pathname, isProfileRoute]);
+    prevProfilePathRef.current = location.pathname;
+  }
   
   // On mobile, use drawer only when coming from feed
-  const [isMobileView, setIsMobileView] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(() => typeof window !== 'undefined' && window.innerWidth < 1024);
   useEffect(() => {
     const check = () => setIsMobileView(window.innerWidth < 1024);
-    check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
   
-  const useProfileDrawer = isProfileRoute && profileFromFeed && isMobileView;
+  const useProfileDrawer = isProfileRoute && profileFromFeedRef.current && isMobileView;
   
   // Track if we came from home page (for overlay behavior)
   const [cameFromHome, setCameFromHome] = useState(() => {

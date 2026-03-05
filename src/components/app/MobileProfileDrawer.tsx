@@ -16,7 +16,7 @@ interface MobileProfileDrawerProps {
   children: React.ReactNode;
 }
 
-const SNAP_POINTS = [0.62, 1] as const;
+const SNAP_POINTS = [0.25, 0.62, 1] as const;
 
 export function MobileProfileDrawer({ isOpen, children }: MobileProfileDrawerProps) {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ export function MobileProfileDrawer({ isOpen, children }: MobileProfileDrawerPro
   // Reset snap when opening
   useEffect(() => {
     if (isOpen) {
-      setSnap(SNAP_POINTS[0]);
+      setSnap(SNAP_POINTS[1]); // Open at 62%
       isClosingRef.current = false;
     }
   }, [isOpen]);
