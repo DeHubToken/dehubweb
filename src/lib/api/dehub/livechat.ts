@@ -271,16 +271,27 @@ export async function sendLiveChatMessage(
   const body: Record<string, unknown> = { content, messageType: type };
   if (imageUrl) body.imageUrl = imageUrl;
 
-  const response = await apiCall<{ result: LiveChatMessage } | LiveChatMessage>(
-    `/api/livechat/rooms/${roomId}/messages`,
-    {
-      method: 'POST',
-      body,
-      requiresAuth: true,
+  const endpoints = [`/api/chat/rooms/${roomId}/messages`, `/api/livechat/rooms/${roomId}/messages`, `/api/chatrooms/${roomId}/messages`];
+  
+  for (const endpoint of endpoints) {
+    try {
+      const response = await apiCall<{ result: LiveChatMessage } | LiveChatMessage>(
+        endpoint,
+        {
+          method: 'POST',
+          body,
+          requiresAuth: true,
+        }
+      );
+      if (response && typeof response === 'object' && 'result' in response && !Array.isArray((response as any).result)) {
+        return (response as { result: LiveChatMessage }).result;
+      }
+      return response as LiveChatMessage;
+    } catch (error: any) {
+      if (error?.message?.includes('404') || error?.message?.includes('Cannot POST')) continue;
+      throw error;
     }
-  );
-  if (response && typeof response === 'object' && 'result' in response && !Array.isArray((response as any).result)) {
-    return (response as { result: LiveChatMessage }).result;
   }
-  return response as LiveChatMessage;
+
+  throw new Error('All livechat message endpoints returned 404');
 }
