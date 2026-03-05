@@ -855,7 +855,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }
 
       console.log('[Mint] Minting post:', {
-        name: text.trim().slice(0, 100) || 'Untitled',
+        name: text.trim().slice(0, 100) || '',
         description: description.trim(),
         postType,
         streamInfo,
