@@ -8,7 +8,7 @@
 
 import { useState, useMemo, useRef, useCallback, useEffect, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Play, Music, Mic2, Radio, Disc3, ChevronRight, Pause, Volume2, VolumeX, Loader2 } from 'lucide-react';
+import { Play, Music, Mic2, Radio, Disc3, ChevronRight, Pause, Volume2, VolumeX, Loader2, Headphones } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
