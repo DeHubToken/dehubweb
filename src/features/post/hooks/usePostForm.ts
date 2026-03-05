@@ -789,15 +789,18 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // Get media files
       const files = media.map(m => m.file);
       
-      // Get thumbnail for video posts - use stored blob if available
+      // Get thumbnail for video and audio posts - use stored blob if available
       let thumbnail: Blob | undefined;
-      if (hasVideo && media[0]) {
-        if (media[0].thumbnailBlob && media[0].thumbnailBlob.size > 0) {
-          thumbnail = media[0].thumbnailBlob;
-        } else if (media[0].thumbnail) {
+      const needsThumbnail = hasVideo || (postType === 'audio');
+      const thumbnailSource = hasVideo ? media[0] : media.find(m => m.type === 'audio');
+      
+      if (needsThumbnail && thumbnailSource) {
+        if (thumbnailSource.thumbnailBlob && thumbnailSource.thumbnailBlob.size > 0) {
+          thumbnail = thumbnailSource.thumbnailBlob;
+        } else if (thumbnailSource.thumbnail) {
           // Fallback: convert thumbnail URL to blob
           try {
-            const thumbResponse = await fetch(media[0].thumbnail);
+            const thumbResponse = await fetch(thumbnailSource.thumbnail);
             const fetchedBlob = await thumbResponse.blob();
             if (fetchedBlob.size > 0) thumbnail = fetchedBlob;
           } catch (err) {
@@ -805,17 +808,16 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           }
         }
 
-        // Last-resort: generate thumbnail on-the-fly if still missing
-        if (!thumbnail && media[0].file) {
+        // Last-resort: generate thumbnail on-the-fly if still missing (video only)
+        if (!thumbnail && hasVideo && thumbnailSource.file) {
           console.warn('[Mint] No thumbnail available, attempting last-resort generation');
           try {
             const video = document.createElement('video');
             video.preload = 'auto';
             video.muted = true;
             video.playsInline = true;
-            // No crossOrigin on blob URL — would taint canvas on some mobile browsers
-            video.src = media[0].preview;
-            video.load(); // required on some mobile browsers to start loading
+            video.src = thumbnailSource.preview;
+            video.load();
             await new Promise<void>((resolve, reject) => {
               const timeout = setTimeout(() => reject(new Error('Video load timeout')), 12000);
               video.onloadeddata = () => { clearTimeout(timeout); resolve(); };
@@ -824,7 +826,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
             const seekTime = Math.min(1, (video.duration || 0) * 0.1);
             video.currentTime = seekTime;
             await new Promise<void>((resolve) => {
-              const timeout = setTimeout(resolve, 4000); // resolve anyway — some mobile browsers skip onseeked
+              const timeout = setTimeout(resolve, 4000);
               video.onseeked = () => { clearTimeout(timeout); resolve(); };
             });
             const canvas = document.createElement('canvas');
@@ -846,10 +848,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           }
         }
 
-        if (!thumbnail) {
+        // Video posts MUST have a thumbnail; audio posts can optionally have one
+        if (!thumbnail && hasVideo) {
           toast.error('Could not generate thumbnail. Please add a custom thumbnail and try again.');
           setIsPosting(false);
           return;
+        }
         }
       }
 
