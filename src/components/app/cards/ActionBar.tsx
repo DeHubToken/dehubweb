@@ -376,7 +376,7 @@ export function ActionBar({
             className="flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors"
             aria-label="Repost"
           >
-            <Repeat2 className={isReposted ? "w-[1.378rem] h-[1.378rem]" : "w-5 h-5"} strokeWidth={isReposted ? 2.65 : 2} />
+            <Repeat2 className={isReposted ? "w-[1.516rem] h-[1.516rem]" : "w-5 h-5"} strokeWidth={isReposted ? 2.915 : 2} />
             <span className="text-xs text-zinc-400">{formatCount(displayRepostCount)}</span>
           </button>
 
