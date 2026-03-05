@@ -1,4 +1,5 @@
 import { MobileStatusBar } from '../MobileStatusBar';
+import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { Play, SkipBack, SkipForward, Shuffle, Repeat, Heart, ListMusic, Radio } from 'lucide-react';
 
@@ -14,13 +15,10 @@ export function MusicScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-
-      <div className="px-4 pt-2 pb-3">
-        <h1 className="text-white text-xl font-bold">Music</h1>
-      </div>
+      <MobileTopBar title="Music" />
 
       {/* Category pills */}
-      <div className="flex gap-2 px-4 pb-4 overflow-x-auto scrollbar-hide">
+      <div className="flex gap-2 px-4 py-3 overflow-x-auto scrollbar-hide">
         {['All', 'Music Videos', 'Radio', 'Tracks', 'Podcasts', 'Playlists'].map((cat, i) => (
           <button
             key={cat}

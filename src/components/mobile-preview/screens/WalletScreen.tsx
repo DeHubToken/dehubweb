@@ -1,6 +1,8 @@
 import { MobileStatusBar } from '../MobileStatusBar';
+import { MobileTopBar } from '../MobileTopBar';
+import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { ChevronLeft, Send, ArrowUpRight, ArrowDownLeft, Copy, QrCode, MoreHorizontal } from 'lucide-react';
+import { Send, ArrowUpRight, ArrowDownLeft, Copy, QrCode } from 'lucide-react';
 
 const MOCK_TRANSACTIONS = [
   { id: '1', type: 'received', user: 'bob_dev', amount: '+50 DHB', time: '2h ago' },
@@ -14,19 +16,14 @@ export function WalletScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-
-      <div className="flex items-center gap-3 px-4 pt-1 pb-3">
-        <ChevronLeft className="w-5 h-5 text-white" />
-        <h1 className="text-white text-lg font-bold">Wallet</h1>
-      </div>
+      <MobileTopBar title="Wallet" showAvatar={false} />
 
       {/* Balance card */}
-      <div className="mx-4 mb-4 p-5 rounded-2xl border border-white/[0.1] bg-white/[0.03] backdrop-blur-xl">
+      <div className="mx-4 my-3 p-5 rounded-2xl border border-white/[0.1] bg-white/[0.03] backdrop-blur-xl">
         <p className="text-zinc-500 text-xs mb-1">Total Balance</p>
         <h2 className="text-white text-3xl font-bold">4,250.00 <span className="text-lg text-zinc-400">DHB</span></h2>
         <p className="text-zinc-500 text-sm mt-0.5">≈ $1,275.00 USD</p>
 
-        {/* Action buttons */}
         <div className="flex gap-3 mt-5">
           {[
             { icon: Send, label: 'Send' },
@@ -95,6 +92,8 @@ export function WalletScreen() {
           ))}
         </div>
       </div>
+
+      <MobileBottomBar />
     </div>
   );
 }

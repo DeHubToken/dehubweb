@@ -1,7 +1,7 @@
 import { MobileStatusBar } from '../MobileStatusBar';
+import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
-import { MockAvatar } from '../MockAvatar';
-import { Vote, ThumbsUp, ThumbsDown, MessageSquare, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageSquare, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const MOCK_PROPOSALS = [
@@ -21,14 +21,10 @@ export function GovernanceScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-
-      <div className="flex items-center gap-2 px-4 pt-2 pb-3">
-        <Vote className="w-5 h-5 text-white" />
-        <h1 className="text-white text-xl font-bold">Governance</h1>
-      </div>
+      <MobileTopBar title="Governance" />
 
       {/* Filter */}
-      <div className="flex gap-1.5 px-4 pb-3">
+      <div className="flex gap-1.5 px-4 py-3">
         {['All', 'Active', 'Passed', 'Rejected'].map((tab, i) => (
           <button
             key={tab}

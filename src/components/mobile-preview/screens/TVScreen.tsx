@@ -1,6 +1,7 @@
 import { MobileStatusBar } from '../MobileStatusBar';
+import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
-import { Play, Tv, Globe, Search, ChevronRight } from 'lucide-react';
+import { Play, Tv, Search, ChevronRight } from 'lucide-react';
 
 const MOCK_CHANNELS = [
   { name: 'CryptoTV Live', category: 'Crypto', country: '🇺🇸', viewers: '12.4K' },
@@ -17,17 +18,10 @@ export function TVScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-
-      <div className="flex items-center justify-between px-4 pt-2 pb-3">
-        <div className="flex items-center gap-2">
-          <Tv className="w-5 h-5 text-white" />
-          <h1 className="text-white text-xl font-bold">TV</h1>
-        </div>
-        <Search className="w-5 h-5 text-zinc-400" />
-      </div>
+      <MobileTopBar title="TV" />
 
       {/* Categories */}
-      <div className="flex gap-2 px-4 pb-4 overflow-x-auto scrollbar-hide">
+      <div className="flex gap-2 px-4 py-3 overflow-x-auto scrollbar-hide">
         {CATEGORIES.map((cat, i) => (
           <button
             key={cat}

@@ -1,7 +1,8 @@
 import { MobileStatusBar } from '../MobileStatusBar';
+import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Bookmark, MoreHorizontal, Heart, MessageSquare } from 'lucide-react';
+import { Bookmark, MoreHorizontal, Heart } from 'lucide-react';
 
 const MOCK_BOOKMARKS = [
   { id: '1', user: 'defi_whale', content: 'Complete guide to staking $DHB: APY breakdown, lock periods, and reward multipliers explained.', likes: 342, time: '2d' },
@@ -14,11 +15,7 @@ export function BookmarksScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-
-      <div className="flex items-center justify-between px-4 pt-2 pb-3">
-        <h1 className="text-white text-xl font-bold">Bookmarks</h1>
-        <span className="text-zinc-500 text-xs">{MOCK_BOOKMARKS.length} saved</span>
-      </div>
+      <MobileTopBar title="Bookmarks" />
 
       <div className="flex-1 divide-y divide-white/[0.06]">
         {MOCK_BOOKMARKS.map((post) => (

@@ -1,7 +1,8 @@
 import { MobileStatusBar } from '../MobileStatusBar';
+import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Settings, ChevronLeft, Grid3X3, Video, Heart, Users, UserPlus, Link as LinkIcon } from 'lucide-react';
+import { Grid3X3, Video, Heart, UserPlus, Link as LinkIcon } from 'lucide-react';
 
 const MOCK_POSTS_GRID = Array.from({ length: 9 }, (_, i) => ({
   id: String(i),
@@ -12,16 +13,10 @@ export function ProfileScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-1 pb-3">
-        <ChevronLeft className="w-5 h-5 text-white" />
-        <span className="text-white text-base font-semibold">@alice.eth</span>
-        <Settings className="w-5 h-5 text-white" />
-      </div>
+      <MobileTopBar title="@alice.eth" showAvatar={false} />
 
       {/* Profile info */}
-      <div className="px-4 pb-4">
+      <div className="px-4 py-3">
         <div className="flex items-start gap-4">
           <MockAvatar name="alice" size="xl" />
           <div className="flex-1 pt-1">

@@ -1,4 +1,5 @@
 import { MobileStatusBar } from '../MobileStatusBar';
+import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
 import { Edit, Search } from 'lucide-react';
@@ -17,15 +18,10 @@ export function MessagesScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-      
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-2 pb-3">
-        <h1 className="text-white text-xl font-bold">Messages</h1>
-        <Edit className="w-5 h-5 text-white" />
-      </div>
+      <MobileTopBar title="Messages" />
 
       {/* Search */}
-      <div className="px-4 pb-3">
+      <div className="px-4 py-3">
         <div className="flex items-center gap-2 h-9 px-3 rounded-xl bg-white/[0.06] border border-white/10">
           <Search className="w-4 h-4 text-zinc-500" />
           <span className="text-zinc-500 text-sm">Search messages</span>
