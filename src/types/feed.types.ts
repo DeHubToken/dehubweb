@@ -202,6 +202,8 @@ export interface ImagePost extends BaseFeedItem {
   bountyCurrency?: string;
   /** Number of reposts + quotes */
   repostCount?: number;
+  /** Whether the current user has reposted this item */
+  isReposted?: boolean;
   /** Whether the current viewer is the content owner */
   isOwner?: boolean;
   /** Whether the content has been unlocked for the current viewer (purchased/earned) */
