@@ -95,6 +95,53 @@ export function getSocket(): Socket {
   return socket;
 }
 
+/** Get or create a /chat namespace socket for livechat messaging. */
+function getChatSocket(): Socket {
+  const token = getAuthToken();
+  if (chatSocket && currentToken !== token) {
+    chatSocket.disconnect();
+    chatSocket = null;
+  }
+  if (!chatSocket) {
+    const address = getWalletAddress();
+    const handshakeAuth: Record<string, string> = {};
+    if (token) handshakeAuth.token = `Bearer ${token}`;
+    if (address) handshakeAuth.address = address.toLowerCase();
+    handshakeAuth.clientType = 'web';
+    handshakeAuth.platform = 'web';
+
+    chatSocket = io(`${DEHUB_API_BASE}/chat`, {
+      auth: Object.keys(handshakeAuth).length ? handshakeAuth : undefined,
+      query: handshakeAuth,
+      path: '/socket.io',
+      transports: ['polling'],
+      upgrade: false,
+      forceNew: true,
+      autoConnect: true,
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 20,
+      timeout: 20000,
+      extraHeaders: { 'X-Client-Type': 'web', 'X-Platform': 'web' },
+    });
+
+    chatSocket.on('connect', () => {
+      console.log('[ChatSocket /chat] Connected', chatSocket?.id);
+      import('sonner').then(({ toast }) => toast.success(`Chat namespace connected: ${chatSocket?.id}`));
+    });
+    chatSocket.on('disconnect', (reason) => console.log('[ChatSocket /chat] Disconnected:', reason));
+    chatSocket.on('connect_error', (err) => {
+      console.warn('[ChatSocket /chat] Connection error:', err.message);
+      import('sonner').then(({ toast }) => toast.error(`/chat namespace error: ${err.message}`));
+    });
+    chatSocket.onAny((eventName: string, ...args: unknown[]) => {
+      console.log(`[ChatSocket /chat DEBUG] Event: "${eventName}"`, args.length > 0 ? args[0] : '');
+    });
+  }
+  return chatSocket;
+}
+
 /** Join the global livechat room. */
 export function joinRoom(roomId: string) {
   const s = getSocket();
