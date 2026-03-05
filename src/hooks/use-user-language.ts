@@ -144,4 +144,5 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   ml: 'Malayalam',
   or: 'Odia',
   sd: 'Sindhi',
+  sq: 'Albanian',
 };
