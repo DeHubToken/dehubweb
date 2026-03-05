@@ -141,16 +141,16 @@ function AppContent() {
                 <Route path="tv" element={null} />
                 <Route path="features" element={null} />
                 <Route path="governance" element={null} />
-                <Route path="governance/:proposalId" element={<GovernanceProposalPage />} />
+                <Route path="governance/:proposalId" element={<Suspense fallback={<PageLoader />}><GovernanceProposalPage /></Suspense>} />
                 <Route path="stake" element={null} />
                 <Route path="jobs" element={null} />
-                <Route path="post/:postId" element={<SinglePostPage />} />
-                <Route path="video/:tokenId" element={<SinglePostPage />} />
-                <Route path="post/:postId/info" element={<PostInfoPage />} />
+                <Route path="post/:postId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
+                <Route path="video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
+                <Route path="post/:postId/info" element={<Suspense fallback={<PageLoader />}><PostInfoPage /></Suspense>} />
               </Route>
 
               {/* Username profiles — inside shared layout so header never remounts */}
-              <Route path="/:username" element={<ProfilePage />} />
+              <Route path="/:username" element={<Suspense fallback={<PageLoader />}><ProfilePage /></Suspense>} />
             </Route>
 
 
