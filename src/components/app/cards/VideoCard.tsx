@@ -620,6 +620,18 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
 
 
   const handlePlayClick = useCallback(() => {
+    // Audio posts use AudioVisualizer which handles its own playback
+    if (video.isAudio) {
+      if (isContentGated) return;
+      setIsPlaying(prev => !prev);
+      isPlayingRef.current = !isPlayingRef.current;
+      // Record listen on first play
+      if (!isPlayingRef.current === false) {
+        import('@/lib/api/dehub/feed').then(m => m.recordListen(video.id)).catch(() => {});
+      }
+      return;
+    }
+    
     if (!video.videoUrl || isContentGated) return;
     
     if (isPlaying) {
@@ -651,7 +663,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         videoPlaybackManager.stop(instanceId);
       });
     }
-  }, [isPlaying, video.videoUrl, instanceId, showControlsBriefly, isContentGated]);
+  }, [isPlaying, video.videoUrl, video.isAudio, video.id, instanceId, showControlsBriefly, isContentGated]);
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
