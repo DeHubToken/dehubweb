@@ -1198,7 +1198,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                 {/* Static waveform background */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <StaticWaveform
-                    seed={video.tokenId || video.id}
+                    seed={video.id}
                     className="w-full h-2/5 opacity-60"
                   />
                 </div>
