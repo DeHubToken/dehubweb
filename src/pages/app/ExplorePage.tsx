@@ -512,8 +512,16 @@ export default function ExplorePage() {
     
     // For brand queries, ensure the real @d (from brandUser lookup) is in the map
     if (isBrandQueryLocal && brandUser && brandUser.id) {
-      // Override with brandUser data if present (force add even if duplicate)
       const handleLower = brandUser.handle.toLowerCase();
+      // Remove any existing entry with the same handle but different ID
+      if (seenHandles.has(handleLower) && !userMap.has(brandUser.id)) {
+        for (const [id, u] of userMap) {
+          if (u.handle.toLowerCase() === handleLower) {
+            userMap.delete(id);
+            break;
+          }
+        }
+      }
       userMap.set(brandUser.id, brandUser);
       seenHandles.add(handleLower);
     }
