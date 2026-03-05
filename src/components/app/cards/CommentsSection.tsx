@@ -178,6 +178,7 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
 function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onEdit, onDelete, onUserPress, isReply, isOwnComment }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
+  const avatarUrl = comment.avatar;
 
   return (
     <motion.div
