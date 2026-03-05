@@ -132,7 +132,16 @@ export function PersistentPageCache() {
   const videoMatch = useMatch('/app/video/:tokenId');
   const postInfoMatch = useMatch('/app/post/:postId/info');
   const govMatch = useMatch('/app/governance/:proposalId');
-  const isMobileProfileOverlay = !!profileMatch && !postMatch && !videoMatch && !postInfoMatch && !govMatch && !isCachedPageRoute(pathname);
+  const isProfileOverlayRoute = !!profileMatch && !postMatch && !videoMatch && !postInfoMatch && !govMatch && !isCachedPageRoute(pathname);
+  
+  // Only keep feed visible under drawer on mobile
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 1024);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+  const isMobileProfileOverlay = isProfileOverlayRoute && isMobile;
   
   // Track the last cached page so we can keep it visible under the drawer
   const lastCachedPageRef = useRef<string>('/app');
