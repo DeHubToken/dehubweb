@@ -5,6 +5,7 @@ import {
   getLiveChatMessages as fetchApiMessages,
   sendLiveChatMessage,
   getLiveChatUserProfile,
+  getLiveChatOnlineCount,
   type LiveChatRoom,
   type LiveChatMessage,
   type LiveChatUserProfile,
