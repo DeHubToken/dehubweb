@@ -362,7 +362,6 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
               </Tooltip>
             )}
           </div>
-          </div>
         </div>
       </div>
     </motion.div>
