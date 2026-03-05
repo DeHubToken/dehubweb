@@ -25,7 +25,7 @@ interface PostMetadataProps {
   };
 }
 
-export function PostMetadata({ timestamp, viewCount, isAd, translateControl }: PostMetadataProps) {
+export function PostMetadata({ timestamp, viewCount, isAd, isAudio, translateControl }: PostMetadataProps) {
   // Format timestamp - if it's an ISO string, convert to relative time
   const formattedTimestamp = timestamp ? (
     timestamp.includes('T') || timestamp.includes('-') 
