@@ -1,11 +1,4 @@
-/**
- * WhatsHappening / Talk of the Town Sidebar Widget
- * ==================================================
- * Shows trending categories derived from the home feed data.
- * 
- * @module components/app/WhatsHappening
- */
-
+import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -56,7 +49,7 @@ function deriveTrendingCategories(queryClient: ReturnType<typeof useQueryClient>
     .slice(0, MAX_CATEGORIES);
 }
 
-export function WhatsHappening() {
+export const WhatsHappening = memo(function WhatsHappening() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
@@ -73,5 +66,5 @@ export function WhatsHappening() {
       </div>
     </div>
   );
-}
+});
 
