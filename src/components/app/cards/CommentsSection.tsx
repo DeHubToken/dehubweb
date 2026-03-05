@@ -124,7 +124,6 @@ interface CommentItemProps {
   onDislike: (id: string) => void;
   onReply: (id: string) => void;
   onShare: (id: string) => void;
-  onBookmark: (id: string) => void;
   onEdit: (id: string, newContent: string) => void;
   onDelete: (id: string) => void;
   onUserPress: (username: string) => void;
