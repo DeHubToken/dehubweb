@@ -395,6 +395,83 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
   );
 }
 
+function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem[]; isLoading: boolean }) {
+  const [visibleCount, setVisibleCount] = useState(CAROUSEL_INITIAL_VISIBLE);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const scrollRight = el.scrollWidth - el.scrollLeft - el.clientWidth;
+    if (scrollRight < 100 && visibleCount < audioItems.length) {
+      setVisibleCount(prev => Math.min(prev + CAROUSEL_LOAD_MORE, audioItems.length));
+    }
+  }, [visibleCount, audioItems.length]);
+
+  const visibleItems = audioItems.slice(0, visibleCount);
+
+  return (
+    <div>
+      <SectionHeader icon={Disc3} title="Audio Uploads" count={audioItems.length} />
+      {isLoading ? (
+        <div className="flex gap-3 overflow-hidden pr-8">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="w-[200px] flex-shrink-0">
+              <div className="aspect-square rounded-xl bg-zinc-800 animate-pulse" />
+              <div className="mt-2 h-3 bg-zinc-800 rounded w-3/4 animate-pulse" />
+              <div className="mt-1 h-2.5 bg-zinc-800 rounded w-1/2 animate-pulse" />
+            </div>
+          ))}
+        </div>
+      ) : audioItems.length === 0 ? (
+        <p className="text-zinc-500 text-sm">No audio uploads yet</p>
+      ) : (
+        <div className="relative">
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black to-transparent pointer-events-none z-10" />
+          <SwipeableCarousel
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className="flex gap-3 overflow-x-auto scrollbar-hide pr-8"
+          >
+            {visibleItems.map((item) => (
+              <div
+                key={item.id}
+                className="flex-shrink-0 w-[200px] cursor-pointer group"
+                onClick={() => navigate(`/app/post/${item.id}`)}
+              >
+                {/* Square thumbnail with liquid glass look */}
+                <div className="aspect-square rounded-xl overflow-hidden bg-black/60 backdrop-blur-[24px] border border-white/[0.1] mb-2 relative flex items-center justify-center">
+                  {item.thumbnail ? (
+                    <img src={item.thumbnail} alt="" className="w-full h-full object-cover opacity-60" />
+                  ) : null}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-white/[0.08] border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Play className="w-5 h-5 text-white ml-0.5" />
+                    </div>
+                  </div>
+                  {item.duration && (
+                    <div className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 rounded text-[10px] text-white">
+                      {item.duration}
+                    </div>
+                  )}
+                </div>
+                <p className="text-white text-sm font-medium truncate">{item.title}</p>
+                <p className="text-zinc-500 text-xs truncate">{item.channel}</p>
+              </div>
+            ))}
+            {visibleCount < audioItems.length && (
+              <div className="flex-shrink-0 w-[200px] aspect-square rounded-xl bg-zinc-800 flex items-center justify-center">
+                <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
+              </div>
+            )}
+          </SwipeableCarousel>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function TracksCarousel() {
   return (
     <div>
@@ -419,6 +496,8 @@ function AllSection({
   musicVideos,
   totalVideoCount,
   isLoadingVideos,
+  audioUploads,
+  isLoadingAudio,
   onGoToRadio,
   onGoToVideos,
   onOpenStages,
@@ -427,17 +506,20 @@ function AllSection({
   musicVideos: VideoItem[];
   totalVideoCount: number;
   isLoadingVideos: boolean;
+  audioUploads: VideoItem[];
+  isLoadingAudio: boolean;
   onGoToRadio: () => void;
   onGoToVideos: () => void;
   onOpenStages: () => void;
 }) {
   // Show full skeleton on initial load (no videos loaded yet and still fetching)
-  if (isLoadingVideos && musicVideos.length === 0) {
+  if (isLoadingVideos && musicVideos.length === 0 && isLoadingAudio) {
     return <MusicFeedSkeleton />;
   }
 
   return (
     <div className="space-y-4 pb-32">
+      <AudioUploadsCarousel audioItems={audioUploads} isLoading={isLoadingAudio} />
       <MusicVideosCarousel videos={musicVideos} totalCount={totalVideoCount} isLoading={isLoadingVideos} onSeeAll={onGoToVideos} />
       <RadioCarousel stations={radioStations} onSeeAll={onGoToRadio} />
       <StagesCarousel onOpenStages={onOpenStages} />
@@ -611,6 +693,28 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     staleTime: 5 * 60 * 1000,
   });
 
+  // Fetch audio uploads for carousel
+  const { data: audioUploadsData, isLoading: isLoadingAudio } = useQuery({
+    queryKey: ['music-audio-uploads', walletAddress],
+    queryFn: async () => {
+      const response = await searchNFTs({
+        postType: 'audio',
+        unit: 50,
+        sortMode: 'new',
+      });
+      return (response.data || []).filter((nft: DeHubNFT) => !isBlockedCreator(nft, blockedAddresses));
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const audioUploads = useMemo(() => {
+    if (!audioUploadsData) return [];
+    return audioUploadsData.map((nft, index) => {
+      const item = mapNFTToVideoItem(nft, index);
+      return { ...item, isAudio: true };
+    });
+  }, [audioUploadsData]);
+
   // Shuffle and map to VideoItem for carousel - randomized on each mount
   const carouselVideos = useMemo(() => {
     if (!carouselVideosData) return [];
@@ -649,6 +753,8 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
             musicVideos={carouselVideos}
             totalVideoCount={carouselVideosData?.length || 0}
             isLoadingVideos={isLoadingCarouselVideos}
+            audioUploads={audioUploads}
+            isLoadingAudio={isLoadingAudio}
             onGoToRadio={() => setActiveSubTab('radio')}
             onGoToVideos={() => setActiveSubTab('videos')}
             onOpenStages={() => setShowStagesModal(true)}
