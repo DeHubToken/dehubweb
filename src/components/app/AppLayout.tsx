@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useLayoutEffect, type ReactNode } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect, type ReactNode, lazy, Suspense } from 'react';
 import { Outlet, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { AppSidebar } from './AppSidebar';
 import { RightSidebar } from './RightSidebar';
@@ -19,6 +19,7 @@ import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { cn } from '@/lib/utils';
 import SinglePostPage from '@/pages/app/SinglePostPage';
+import { MobileProfileDrawer } from './MobileProfileDrawer';
 
 interface AppLayoutContentProps {
   children?: ReactNode;
@@ -45,9 +46,11 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   // Track if we're on a post overlay route
   const postMatch = useMatch('/app/post/:postId');
   const videoMatch = useMatch('/app/video/:tokenId');
+  const postInfoMatch = useMatch('/app/post/:postId/info');
+  const govMatch = useMatch('/app/governance/:proposalId');
   const profileMatch = useMatch('/app/:username');
   const isPostRoute = !!(postMatch || videoMatch);
-  const isProfileRoute = !!profileMatch && !postMatch && !videoMatch && !isCachedPageRoute(location.pathname);
+  const isProfileRoute = !!profileMatch && !postMatch && !videoMatch && !postInfoMatch && !govMatch && !isCachedPageRoute(location.pathname);
   
   // Track if we came from home page (for overlay behavior)
   const [cameFromHome, setCameFromHome] = useState(() => {
@@ -203,10 +206,17 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           )}
           
           {/* Dynamic routes (post pages, username profiles, etc.) use Outlet */}
-          {isDynamicRoute && (
-            <div className={isProfileRoute ? 'lg:animate-fade-in animate-slide-up-mobile' : 'animate-fade-in'}>
+          {isDynamicRoute && !isProfileRoute && (
+            <div className="animate-fade-in">
               {children || <Outlet />}
             </div>
+          )}
+          
+          {/* Profile route — inline on desktop, drawer on mobile */}
+          {isDynamicRoute && isProfileRoute && (
+            <MobileProfileDrawer isOpen>
+              {children || <Outlet />}
+            </MobileProfileDrawer>
           )}
         </main>
         
