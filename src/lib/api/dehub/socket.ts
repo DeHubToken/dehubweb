@@ -265,9 +265,22 @@ export function onLiveChatMessage(cb: (msg: unknown) => void): () => void {
   for (const evt of MSG_EVENTS) {
     s.on(evt, handler);
   }
+  // Also listen on /chat namespace
+  let cs: Socket | null = null;
+  try {
+    cs = getChatSocket();
+    for (const evt of MSG_EVENTS) {
+      cs.on(evt, handler);
+    }
+  } catch {}
   return () => {
     for (const evt of MSG_EVENTS) {
       s.off(evt, handler);
+    }
+    if (cs) {
+      for (const evt of MSG_EVENTS) {
+        cs.off(evt, handler);
+      }
     }
   };
 }
