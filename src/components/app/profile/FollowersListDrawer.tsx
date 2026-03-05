@@ -259,7 +259,7 @@ export function FollowersListDrawer({
     if (user.username) {
       navigate(`/app/${user.username}`);
     } else {
-      navigate(`/profile?id=${user.address}`);
+      navigate(`/app/profile?id=${user.address}`);
     }
   };
 
