@@ -31,6 +31,7 @@ import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
+import { useLeaderboardAvatars, useAvatarOverrides } from '@/hooks/useLeaderboardAvatars';
 
 type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
 
@@ -267,7 +268,10 @@ export default function LeaderboardPage() {
   const visibleEntries = useMemo(() => entries.slice(0, visibleCount), [entries, visibleCount]);
   const hasMore = visibleCount < entries.length;
 
-  // Badge balances are already embedded in leaderboard cache entries (entry.badgeBalance)
+  // Live avatar enrichment: fetch fresh avatars for visible entries
+  const visibleAccounts = useMemo(() => visibleEntries.map(e => e.account), [visibleEntries]);
+  useLeaderboardAvatars(visibleAccounts);
+  const getAvatarOverride = useAvatarOverrides();
 
   const handleUserClick = (entry: LeaderboardEntry) => {
     if (entry.username) {
@@ -276,8 +280,11 @@ export default function LeaderboardPage() {
   };
 
   const getAvatarUrl = (entry: LeaderboardEntry) => {
-    if (entry.avatarUrl && entry.account) {
-      return buildAvatarUrl(entry.account, entry.avatarUrl);
+    // Prefer fresh avatar from live enrichment, fall back to cached
+    const override = getAvatarOverride(entry.account);
+    const avatarPath = override?.avatarUrl ?? entry.avatarUrl;
+    if (avatarPath && entry.account) {
+      return buildAvatarUrl(entry.account, avatarPath);
     }
     return null;
   };

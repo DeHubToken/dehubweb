@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, forwardRef, useImperativeHandle, memo } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo, forwardRef, useImperativeHandle, memo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { getLeaderboard, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
+import { useLeaderboardAvatars, useAvatarOverrides } from '@/hooks/useLeaderboardAvatars';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
@@ -89,7 +90,10 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
     })
     .slice(0, 50);
 
-  // Badge balances are already embedded in leaderboard cache entries (entry.badgeBalance)
+  // Live avatar enrichment
+  const visibleAccounts = useMemo(() => entries.map(e => e.account), [entries]);
+  useLeaderboardAvatars(visibleAccounts);
+  const getAvatarOverride = useAvatarOverrides();
 
   if (!isLoading && entries.length === 0) {
     return (
@@ -102,8 +106,10 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
   const displayEntries = entries;
 
   const getAvatarUrl = (entry: LeaderboardEntry) => {
-    if (entry.avatarUrl && entry.account) {
-      return buildAvatarUrl(entry.account, entry.avatarUrl);
+    const override = getAvatarOverride(entry.account);
+    const avatarPath = override?.avatarUrl ?? entry.avatarUrl;
+    if (avatarPath && entry.account) {
+      return buildAvatarUrl(entry.account, avatarPath);
     }
     return null;
   };
