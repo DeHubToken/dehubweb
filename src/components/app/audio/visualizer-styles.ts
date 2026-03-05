@@ -584,3 +584,102 @@ export function drawTerrain(
 export function resetTerrain() {
   terrainOffset = 0;
 }
+
+// Static waveform - seeded bar pattern that reacts to audio data
+// Uses a deterministic bar shape (seeded PRNG) so each post looks unique,
+// but the bar heights are modulated by live frequency data.
+
+/** Simple seeded PRNG (mulberry32) */
+function seedRandom(str: string) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = Math.imul(31, h) + str.charCodeAt(i) | 0;
+  }
+  return () => {
+    h |= 0;
+    h = h + 0x6d2b79f5 | 0;
+    let t = Math.imul(h ^ h >>> 15, 1 | h);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+let staticBarPattern: number[] | null = null;
+let staticBarSeed: string = '';
+
+function getStaticPattern(seed: string, count: number): number[] {
+  if (staticBarSeed === seed && staticBarPattern && staticBarPattern.length === count) {
+    return staticBarPattern;
+  }
+  const rand = seedRandom(seed);
+  const bars: number[] = [];
+  for (let i = 0; i < count; i++) {
+    const t = i / (count - 1);
+    const envelope = 0.3 + 0.7 * Math.sin(t * Math.PI);
+    const noise = 0.4 + 0.6 * rand();
+    bars.push(envelope * noise);
+  }
+  staticBarSeed = seed;
+  staticBarPattern = bars;
+  return bars;
+}
+
+export function drawStatic(
+  ctx: CanvasRenderingContext2D,
+  frequencyData: Uint8Array,
+  width: number,
+  height: number,
+  hue: number = 0,
+  seed: string = 'default'
+) {
+  const barCount = 90;
+  const gap = 2;
+  const barWidth = (width - gap * (barCount - 1)) / barCount;
+
+  ctx.clearRect(0, 0, width, height);
+
+  const pattern = getStaticPattern(seed, barCount);
+
+  // Compute overall energy to scale the reactiveness
+  let avgLevel = 0;
+  for (let i = 0; i < frequencyData.length; i++) {
+    avgLevel += frequencyData[i];
+  }
+  avgLevel = avgLevel / frequencyData.length / 255;
+
+  for (let i = 0; i < barCount; i++) {
+    // Map each bar to a frequency bin
+    const freqIndex = Math.floor((i / barCount) * (frequencyData.length * 0.7));
+    const freqValue = frequencyData[freqIndex] / 255;
+
+    // Base height from seed pattern, boosted by live frequency data
+    const baseH = pattern[i];
+    // Blend: idle shows the seed shape at ~30% height, live audio pushes it up
+    const liveBlend = baseH * 0.3 + freqValue * 0.7;
+    const barHeight = Math.max(liveBlend, baseH * 0.15) * height * 0.85;
+
+    const x = i * (barWidth + gap);
+    const y = (height - barHeight) / 2; // center vertically
+
+    // Opacity reacts to level
+    const opacity = 0.15 + liveBlend * 0.55;
+
+    ctx.fillStyle = `hsla(0, 0%, 100%, ${opacity})`;
+    ctx.beginPath();
+    ctx.roundRect(x, y, barWidth, barHeight, 1);
+    ctx.fill();
+
+    // Subtle colored glow on loud bars
+    if (freqValue > 0.6 && avgLevel > 0.3) {
+      ctx.fillStyle = `hsla(${hue}, 70%, 70%, ${(freqValue - 0.6) * 0.5})`;
+      ctx.beginPath();
+      ctx.roundRect(x, y, barWidth, barHeight, 1);
+      ctx.fill();
+    }
+  }
+}
+
+export function resetStatic() {
+  staticBarPattern = null;
+  staticBarSeed = '';
+}
