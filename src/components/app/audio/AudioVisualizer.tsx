@@ -199,7 +199,6 @@ export function AudioVisualizer({
     resetRings();
     resetPulse();
     resetTerrain();
-    resetStatic();
   }, [style]);
 
   useEffect(() => {
