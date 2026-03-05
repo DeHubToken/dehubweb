@@ -10,7 +10,7 @@
  */
 
 import React, { Suspense, useState, useEffect, useRef, memo } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, useMatch } from 'react-router-dom';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
