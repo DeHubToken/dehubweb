@@ -97,11 +97,14 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
 
   // Live posts can't be played natively — skip videoUrl so VideoCard shows thumbnail
   // and the user clicks through to single post page (which uses HLS via LiveStreamCard).
-  // For regular videos, use API-provided URL if available, otherwise build CDN URL.
+  // Audio posts use the audio CDN URL. Regular videos use video CDN URL.
   const isLivePost = (nft.postType as string) === 'live';
+  const isAudioPost = (nft.postType as string) === 'audio';
   const videoUrl = isLivePost
     ? undefined
-    : (tokenId ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4` : undefined);
+    : isAudioPost
+      ? (tokenId ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4` : undefined)
+      : (tokenId ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4` : undefined);
 
   // Get duration from various fields
   const duration = nft.videoDuration || nft.duration;

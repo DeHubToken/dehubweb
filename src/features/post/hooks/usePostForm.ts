@@ -381,21 +381,19 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
   const addThumbnailToMedia = useCallback(async (index: number, thumbnailUrl: string) => {
     // Fetch the blob from URL for upload and create a NEW blob URL
-    // This prevents issues where the original blob URL might be revoked elsewhere
     let thumbnailBlob: Blob | undefined;
     let newThumbnailUrl = thumbnailUrl;
     
     try {
       const response = await fetch(thumbnailUrl);
       thumbnailBlob = await response.blob();
-      // Create a new blob URL that we own and control
       newThumbnailUrl = URL.createObjectURL(thumbnailBlob);
     } catch (err) {
       console.warn('[Thumbnail] Failed to fetch blob:', err);
     }
     
     setMedia(prev => prev.map((m, i) => {
-      if (i === index && m.type === 'video') {
+      if (i === index && (m.type === 'video' || m.type === 'audio')) {
         // Only revoke if we have a previous thumbnail that we created
         if (m.thumbnail && m.thumbnailBlob) {
           URL.revokeObjectURL(m.thumbnail);
@@ -404,7 +402,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           ...m, 
           thumbnail: newThumbnailUrl, 
           thumbnailBlob,
-          isAutoThumbnail: false, // Custom upload, not auto-generated
+          isAutoThumbnail: false,
         };
       }
       return m;
@@ -705,11 +703,14 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     
     try {
       // Determine post type based on media
-      let postType: 'video' | 'feed-images' | 'feed-simple' | 'live' = 'feed-simple';
+      let postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' = 'feed-simple';
       if (liveMode) {
         postType = 'live';
       } else if (hasVideo) {
         postType = 'video';
+      } else if (hasAudio && !hasImage) {
+        // Standalone audio post (no images attached)
+        postType = 'audio';
       } else if (hasImage) {
         postType = 'feed-images';
       }
@@ -786,15 +787,18 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // Get media files
       const files = media.map(m => m.file);
       
-      // Get thumbnail for video posts - use stored blob if available
+      // Get thumbnail for video and audio posts - use stored blob if available
       let thumbnail: Blob | undefined;
-      if (hasVideo && media[0]) {
-        if (media[0].thumbnailBlob && media[0].thumbnailBlob.size > 0) {
-          thumbnail = media[0].thumbnailBlob;
-        } else if (media[0].thumbnail) {
+      const needsThumbnail = hasVideo || (postType === 'audio');
+      const thumbnailSource = hasVideo ? media[0] : media.find(m => m.type === 'audio');
+      
+      if (needsThumbnail && thumbnailSource) {
+        if (thumbnailSource.thumbnailBlob && thumbnailSource.thumbnailBlob.size > 0) {
+          thumbnail = thumbnailSource.thumbnailBlob;
+        } else if (thumbnailSource.thumbnail) {
           // Fallback: convert thumbnail URL to blob
           try {
-            const thumbResponse = await fetch(media[0].thumbnail);
+            const thumbResponse = await fetch(thumbnailSource.thumbnail);
             const fetchedBlob = await thumbResponse.blob();
             if (fetchedBlob.size > 0) thumbnail = fetchedBlob;
           } catch (err) {
@@ -802,17 +806,16 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           }
         }
 
-        // Last-resort: generate thumbnail on-the-fly if still missing
-        if (!thumbnail && media[0].file) {
+        // Last-resort: generate thumbnail on-the-fly if still missing (video only)
+        if (!thumbnail && hasVideo && thumbnailSource.file) {
           console.warn('[Mint] No thumbnail available, attempting last-resort generation');
           try {
             const video = document.createElement('video');
             video.preload = 'auto';
             video.muted = true;
             video.playsInline = true;
-            // No crossOrigin on blob URL — would taint canvas on some mobile browsers
-            video.src = media[0].preview;
-            video.load(); // required on some mobile browsers to start loading
+            video.src = thumbnailSource.preview;
+            video.load();
             await new Promise<void>((resolve, reject) => {
               const timeout = setTimeout(() => reject(new Error('Video load timeout')), 12000);
               video.onloadeddata = () => { clearTimeout(timeout); resolve(); };
@@ -821,7 +824,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
             const seekTime = Math.min(1, (video.duration || 0) * 0.1);
             video.currentTime = seekTime;
             await new Promise<void>((resolve) => {
-              const timeout = setTimeout(resolve, 4000); // resolve anyway — some mobile browsers skip onseeked
+              const timeout = setTimeout(resolve, 4000);
               video.onseeked = () => { clearTimeout(timeout); resolve(); };
             });
             const canvas = document.createElement('canvas');
@@ -843,7 +846,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           }
         }
 
-        if (!thumbnail) {
+        // Video posts MUST have a thumbnail; audio posts can optionally have one
+        if (!thumbnail && hasVideo) {
           toast.error('Could not generate thumbnail. Please add a custom thumbnail and try again.');
           setIsPosting(false);
           return;
@@ -871,8 +875,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       let postTitle = '';
       let postDescription = '';
 
-      if (postType === 'video') {
-        // Video: first line = title, rest = description
+      if (postType === 'video' || postType === 'audio') {
+        // Video/Audio: first line = title, rest = description
         const lines = text.trim().split('\n');
         postTitle = (lines[0] || '').trim().slice(0, 100) || 'Untitled';
         postDescription = lines.slice(1).join('\n').trim();
@@ -1065,7 +1069,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }
       // Log mint failure to backend for debugging
       mintLogger.error(errorMsg, {
-        postType: hasVideo ? 'video' : hasImage ? 'feed-images' : 'feed-simple',
+        postType: hasVideo ? 'video' : hasAudio ? 'audio' : hasImage ? 'feed-images' : 'feed-simple',
         chainId,
         hadBounty: !!(isWatch2Earn && w2eTotal && w2eViews),
       }, error instanceof Error ? error : undefined);
@@ -1078,7 +1082,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     text, description, media, isSubscribersOnly, isPPV, ppvAmount,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
     isTokenGated, tokenAmount, liveMode, scheduledDate,
-    hasVideo, hasImage, isPosting, resetForm, onClose, navigate, addOptimisticPost, user
+    hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user
   ]);
 
   return {

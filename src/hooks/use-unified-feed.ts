@@ -27,7 +27,7 @@ export interface UnifiedFeedParams {
   limit?: number;
   sortBy?: 'views' | 'likes' | 'createdAt' | 'tips' | 'comments' | 'random';
   sortOrder?: 'asc' | 'desc';
-  postType?: 'all' | 'video' | 'feed-images' | 'feed-simple' | 'live';
+  postType?: 'all' | 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio';
   status?: 'minted' | 'signed' | 'all' | 'pending' | 'failed';
   search?: string;
   owner?: string;
@@ -57,7 +57,7 @@ export interface UnifiedFeedItem {
   videoUrl?: string;
   minter: string;
   owner?: string;
-  postType: 'video' | 'feed-images' | 'feed-simple' | 'live';
+  postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio';
   status?: string;
   category?: string[];
   views: number;
