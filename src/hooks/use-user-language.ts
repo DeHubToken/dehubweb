@@ -147,4 +147,5 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   sq: 'Albanian',
   ug: 'Uyghur',
   tg: 'Tajik',
+  tk: 'Turkmen',
 };
