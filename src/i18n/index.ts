@@ -180,6 +180,7 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   tl: () => import('./locales/tl.json'),
   mr: () => import('./locales/mr.json'),
   mn: () => import('./locales/mn.json'),
+  mg: () => import('./locales/mg.json'),
   yue: () => import('./locales/yue.json'),
   wuu: () => import('./locales/wuu.json'),
   ms: () => import('./locales/ms.json'),
