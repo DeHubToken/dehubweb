@@ -878,7 +878,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       if (postType === 'video' || postType === 'audio') {
         // Video/Audio: first line = title, rest = description
         const lines = text.trim().split('\n');
-        postTitle = (lines[0] || '').trim().slice(0, 100) || 'Untitled';
+        postTitle = (lines[0] || '').trim().slice(0, 100);
         postDescription = lines.slice(1).join('\n').trim();
       } else {
         // Image/Text posts: title blank, everything goes to description
