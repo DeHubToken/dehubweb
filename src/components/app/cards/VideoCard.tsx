@@ -125,6 +125,7 @@ function MobileCreatorInfo({
   const [showBountyDrawer, setShowBountyDrawer] = useState(false);
   const [showPPVDrawer, setShowPPVDrawer] = useState(false);
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   // Format numbers with abbreviations (1K, 1M, etc.) - matches thumbnail format
   const formatCompact = (num: number): string => {
@@ -160,23 +161,18 @@ function MobileCreatorInfo({
           disabled={!isClickable}
           className={`flex items-center gap-2 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
         >
-          {channelAvatar && channelAvatar.startsWith('http') ? (
+          {channelAvatar && channelAvatar.startsWith('http') && !avatarError ? (
             <img 
               src={channelAvatar} 
               alt={channel}
               className="w-9 h-9 rounded-md object-cover shrink-0"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-                const fallback = (e.target as HTMLImageElement).nextElementSibling;
-                if (fallback) fallback.classList.remove('hidden');
-              }}
+              onError={() => setAvatarError(true)}
             />
-          ) : null}
-          <div className={`w-9 h-9 rounded-md bg-zinc-700 flex items-center justify-center shrink-0 text-white text-sm font-semibold ${
-            channelAvatar && channelAvatar.startsWith('http') ? 'hidden' : ''
-          }`}>
-            {(channel || '?').charAt(0).toUpperCase()}
-          </div>
+          ) : (
+            <div className="w-9 h-9 rounded-md bg-zinc-700 flex items-center justify-center shrink-0 text-white text-sm font-semibold">
+              {(channel || '?').charAt(0).toUpperCase()}
+            </div>
+          )}
           <div className="flex flex-col items-start min-w-0">
             <div className="flex items-center gap-1.5">
               <span className="font-semibold text-white text-sm leading-tight truncate">{channel}</span>
