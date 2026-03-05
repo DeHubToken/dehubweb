@@ -122,18 +122,39 @@ export function useLiveChatMessages(roomId: string | null) {
   const [isConnected, setIsConnected] = useState(false);
   const { isAuthenticated, user, walletAddress } = useAuth();
 
-  const fetchFromApi = useCallback(async (showLoading = false) => {
+  // Try REST first, then fall back to socket history
+  const fetchMessages = useCallback(async (showLoading = false) => {
     if (!roomId) return;
     if (showLoading) setIsLoading(true);
     try {
+      // Try REST API first
       const apiMessages = await fetchApiMessages(roomId, { limit: 200 });
-      const mapped = apiMessages.map((m) => apiMsgToLocal(m, roomId));
-      setMessages((prev) => {
-        const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
-        return deduplicateMessages([...mapped, ...optimistic]);
-      });
+      if (apiMessages.length > 0) {
+        const mapped = apiMessages.map((m) => apiMsgToLocal(m, roomId));
+        setMessages((prev) => {
+          const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
+          return deduplicateMessages([...mapped, ...optimistic]);
+        });
+        setIsLoading(false);
+        return;
+      }
+    } catch {
+      // REST failed, try socket history
+    }
+    
+    try {
+      const socketMsgs = await requestMessageHistory(roomId, 200);
+      if (socketMsgs.length > 0) {
+        const mapped = socketMsgs
+          .map((m) => socketMsgToLocal(m, roomId))
+          .filter(Boolean) as SupabaseLiveChatMessage[];
+        setMessages((prev) => {
+          const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
+          return deduplicateMessages([...mapped, ...optimistic]);
+        });
+      }
     } catch (err) {
-      console.error('[LiveChat] Failed to fetch messages from API:', err);
+      console.error('[LiveChat] Socket history also failed:', err);
     } finally {
       setIsLoading(false);
     }
@@ -146,8 +167,11 @@ export function useLiveChatMessages(roomId: string | null) {
       return;
     }
 
-    // 1. Initial load (REST for history)
-    fetchFromApi(true);
+    // Enable debug logging to discover correct events
+    const unsubDebug = debugSocketEvents();
+
+    // 1. Initial load
+    fetchMessages(true);
 
     // 2. Join room via socket
     joinRoom(roomId);
@@ -167,9 +191,10 @@ export function useLiveChatMessages(roomId: string | null) {
     return () => {
       leaveRoom(roomId);
       unsub();
+      unsubDebug();
       setIsConnected(false);
     };
-  }, [roomId, fetchFromApi]);
+  }, [roomId, fetchMessages]);
 
   const send = useCallback(
     async (
