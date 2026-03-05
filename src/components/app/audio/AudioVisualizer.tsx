@@ -67,25 +67,6 @@ export function AudioVisualizer({
     onPlayPauseRef.current = onPlayPause;
   }, [onPlayPause]);
 
-  // Decode the audio file to get full-track waveform peaks on mount
-  useEffect(() => {
-    decodeAudioWaveform(audioUrl, STATIC_BAR_COUNT, (peaks) => {
-      setWaveformPeaks(peaks);
-    });
-  }, [audioUrl]);
-
-  // Draw the idle waveform once peaks are available (before any playback)
-  const peaksRef = useRef<number[] | null>(null);
-  peaksRef.current = waveformPeaks;
-
-  useEffect(() => {
-    if (!waveformPeaks || !canvasRef.current || style !== 'static') return;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    // Draw idle state at progress 0
-    drawStatic(ctx, new Uint8Array(0), canvas.width, canvas.height, hue, seed, 0, waveformPeaks);
-  }, [waveformPeaks, style, hue, seed]);
 
   // Store muted prop in ref for use during setup
   const mutedRef = useRef(muted);
