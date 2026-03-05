@@ -85,7 +85,7 @@ export async function getLeaderboard(
     }
 
     try {
-      const { supabase } = await import('@/integrations/supabase/client');
+      // supabase already imported at top level
 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), CACHE_TIMEOUT_MS);
