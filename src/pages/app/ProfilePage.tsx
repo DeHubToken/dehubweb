@@ -196,9 +196,6 @@ export default function ProfilePage() {
       </div>
     );
     
-    if (data.needsLayoutWrapper) {
-      return <AppLayout>{notFoundContent}</AppLayout>;
-    }
     return notFoundContent;
   }
 
