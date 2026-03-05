@@ -1213,7 +1213,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               />
             ) : (
               <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
-            ))}
+            )}
           </>
         )}
         
