@@ -295,7 +295,9 @@ export function useProfilePage() {
     containerRef: profileContainerRef,
   });
 
-  const needsLayoutWrapper = !!routeUsername;
+  // Only wrap in AppLayout when rendered at root /:username (not inside /app/:username)
+  const isInsideAppLayout = typeof window !== 'undefined' && window.location.pathname.startsWith('/app/');
+  const needsLayoutWrapper = !!routeUsername && !isInsideAppLayout;
 
   return {
     // Route info
