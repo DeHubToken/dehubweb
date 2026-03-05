@@ -64,6 +64,8 @@ interface ActionBarProps {
   shareCount?: number;
   /** Repost count to display */
   repostCount?: number;
+  /** Whether the current user has already reposted this post */
+  isReposted?: boolean;
   /** Whether this is an optimistic (processing) post */
   isOptimistic?: boolean;
   /** Handler for like action (overrides default voteOnPost) */
