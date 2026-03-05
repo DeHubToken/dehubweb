@@ -126,6 +126,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'tg', name: 'Tajik', nativeName: 'Тоҷикӣ' },
   { code: 'tk', name: 'Turkmen', nativeName: 'Türkmen' },
   { code: 'hy', name: 'Armenian', nativeName: 'Հայերեն' },
+  { code: 'ky', name: 'Kyrgyz', nativeName: 'Кыргызча' },
 ];
 
 // Dynamic import map for lazy loading locale files
@@ -238,6 +239,7 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   tg: () => import('./locales/tg.json'),
   tk: () => import('./locales/tk.json'),
   hy: () => import('./locales/hy.json'),
+  ky: () => import('./locales/ky.json'),
 };
 
 /**
