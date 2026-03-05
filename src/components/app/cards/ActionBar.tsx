@@ -404,7 +404,7 @@ export function ActionBar({
 
           
           <Drawer open={sheetOpen} onOpenChange={setSheetOpen}>
-            <DrawerContent glass className="px-4 pb-6">
+            <DrawerContent glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()} onPointerDown={(e: React.PointerEvent) => e.stopPropagation()}>
               <DrawerHeader className="relative">
                 <DrawerTitle className="text-white/90 font-semibold">Share</DrawerTitle>
               </DrawerHeader>
