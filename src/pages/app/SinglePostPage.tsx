@@ -52,6 +52,8 @@ import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.ty
 function getContentType(post: DeHubNFT): 'video' | 'image' | 'post' | 'live' {
   const postType = (post as any).postType as string | undefined;
   if (postType === 'live' || (post as any).isLive !== undefined) return 'live';
+  // Audio posts render through VideoCard (which has AudioVisualizer support)
+  if (postType === 'audio' || postType === 'feed-audio') return 'video';
   if (postType === 'video' || post.videoUrl) return 'video';
   if (
     postType === 'image' ||
