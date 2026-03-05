@@ -698,15 +698,36 @@ export function drawStatic(
   const barWidth = Math.max(1, (width - gap * (barCount - 1)) / barCount);
   const centerY = height / 2;
   const maxBarH = height * 0.8;
-  const playedIndex = Math.floor(progress * barCount);
+  // Use fractional progress for smooth sweep instead of snapping bar-by-bar
+  const progressX = progress * (barCount * (barWidth + gap));
 
   for (let i = 0; i < barCount; i++) {
     const barH = Math.max(2, peaks[i] * maxBarH);
     const x = i * (barWidth + gap);
     const y = centerY - barH / 2;
+    const barEnd = x + barWidth;
 
-    if (i <= playedIndex) {
-      // Played portion — bright white (or colored if hue > 0)
+    // Determine how "played" this bar is (0 = unplayed, 1 = fully played, 0-1 = partial)
+    let playedRatio = 0;
+    if (progressX >= barEnd) {
+      playedRatio = 1;
+    } else if (progressX > x) {
+      playedRatio = (progressX - x) / barWidth;
+    }
+
+    // Draw unplayed portion (full bar, dim)
+    ctx.fillStyle = `hsla(0, 0%, 100%, 0.2)`;
+    ctx.beginPath();
+    ctx.roundRect(x, y, barWidth, barH, 1);
+    ctx.fill();
+
+    // Draw played portion on top
+    if (playedRatio > 0) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x, y, barWidth * playedRatio, barH);
+      ctx.clip();
+
       if (hue === 0) {
         ctx.fillStyle = `hsla(0, 0%, 100%, 0.85)`;
       } else {
@@ -716,14 +737,12 @@ export function drawStatic(
         gradient.addColorStop(1, `hsla(${hue}, 80%, 75%, 0.9)`);
         ctx.fillStyle = gradient;
       }
-    } else {
-      // Unplayed portion — dim white
-      ctx.fillStyle = `hsla(0, 0%, 100%, 0.2)`;
-    }
 
-    ctx.beginPath();
-    ctx.roundRect(x, y, barWidth, barH, 1);
-    ctx.fill();
+      ctx.beginPath();
+      ctx.roundRect(x, y, barWidth, barH, 1);
+      ctx.fill();
+      ctx.restore();
+    }
   }
 }
 
