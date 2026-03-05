@@ -150,7 +150,7 @@ function AppContent() {
               </Route>
 
               {/* Username profiles — inside shared layout so header never remounts */}
-              <Route path="/:username" element={<ProfilePage />} />
+              <Route path="/:username" element={<Suspense fallback={<PageLoader />}><ProfilePage /></Suspense>} />
             </Route>
 
 
