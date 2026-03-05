@@ -223,6 +223,7 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   lv: () => import('./locales/lv.json'),
   mi: () => import('./locales/mi.json'),
   gu: () => import('./locales/gu.json'),
+  ml: () => import('./locales/ml.json'),
 };
 
 /**
