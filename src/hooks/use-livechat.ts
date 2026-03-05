@@ -176,9 +176,13 @@ export function useLiveChatMessages(roomId: string | null) {
 
     // 2. Join room via socket
     joinRoom(roomId);
-    setIsConnected(true);
-
-    // 3. Listen for new messages via socket
+    const socket = getSocket();
+    setIsConnected(socket.connected);
+    socket.on('connect', () => setIsConnected(true));
+    socket.on('disconnect', () => setIsConnected(false));
+    socket.on('connect_error', (err) => {
+      toast.error(`Chat socket error: ${err.message}`);
+    });
     const unsub = onLiveChatMessage((msg) => {
       const m = msg as Record<string, unknown>;
       const msgRoomId = (m.roomId ?? m.room_id ?? '') as string;
