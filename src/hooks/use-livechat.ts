@@ -225,6 +225,7 @@ export function useLiveChatMessages(roomId: string | null) {
       try {
         const socket = getSocket();
         if (!socket.connected) {
+          toast.info(`Socket not connected, waiting... (transport: ${(socket as any).io?.engine?.transport?.name || 'unknown'})`);
           // Wait briefly for connection
           await new Promise<void>((resolve, reject) => {
             const timeout = setTimeout(() => reject(new Error('Socket connection timeout')), 5000);
@@ -232,11 +233,13 @@ export function useLiveChatMessages(roomId: string | null) {
             if (socket.connected) { clearTimeout(timeout); resolve(); }
           });
         }
+        toast.info(`Sending via socket (connected: ${socket.connected}, id: ${socket.id})`);
         emitSendMessage({ roomId, content, messageType: type, imageUrl });
         // Refresh messages after a delay to pick up the server-confirmed message
         setTimeout(() => fetchMessages(false), 2000);
-      } catch (err) {
+      } catch (err: any) {
         setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
+        toast.error(`LiveChat send failed: ${err?.message || 'Unknown error'}`);
         console.error('[LiveChat] Failed to send message:', err);
         throw err;
       } finally {
