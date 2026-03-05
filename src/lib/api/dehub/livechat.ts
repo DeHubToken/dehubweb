@@ -116,13 +116,23 @@ export async function getLiveChatRooms(): Promise<LiveChatRoom[]> {
 }
 
 export async function getLiveChatRoom(roomId: string): Promise<LiveChatRoom> {
-  const response = await apiCall<{ result: LiveChatRoom } | LiveChatRoom>(`/api/livechat/rooms/${roomId}`, {
-    requiresAuth: false,
-  });
-  if (response && typeof response === 'object' && 'result' in response && !Array.isArray(response.result)) {
-    return normalizeRoom(response.result);
+  const endpoints = [`/api/chat/rooms/${roomId}`, `/api/livechat/rooms/${roomId}`, `/api/chatrooms/${roomId}`];
+  for (const endpoint of endpoints) {
+    try {
+      const response = await apiCall<{ result: LiveChatRoom } | LiveChatRoom>(endpoint, {
+        requiresAuth: false,
+      });
+      if (response && typeof response === 'object' && 'result' in response && !Array.isArray(response.result)) {
+        return normalizeRoom(response.result);
+      }
+      return normalizeRoom(response);
+    } catch (error: any) {
+      if (error?.message?.includes('404') || error?.message?.includes('Cannot GET')) continue;
+      throw error;
+    }
   }
-  return normalizeRoom(response);
+  // Fallback
+  return { id: roomId, name: 'Chat Room' };
 }
 
 export async function getLiveChatMessages(
