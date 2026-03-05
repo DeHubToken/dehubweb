@@ -619,7 +619,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
   const handleUserPress = useCallback((username: string) => {
     onClose();
-    navigate(`/${username}`);
+    navigate(`/app/${username}`);
   }, [navigate, onClose]);
 
   const handleLike = async (commentId: string) => {
