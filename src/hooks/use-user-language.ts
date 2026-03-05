@@ -137,4 +137,5 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   ti: 'Tigrinya',
   ca: 'Catalan',
   lt: 'Lithuanian',
+  et: 'Estonian',
 };
