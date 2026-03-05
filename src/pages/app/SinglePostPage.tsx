@@ -655,7 +655,7 @@ export default function SinglePostPage() {
 
     switch (contentType) {
       case 'video':
-        return <VideoCard video={toVideoItem(post)} isImmersive />;
+        return <VideoCard video={toVideoItem(post)} isImmersive={!isAudioPost} />;
       case 'image':
         return <ImageCard post={toImagePost(post)} />;
       case 'live': {
