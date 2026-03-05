@@ -468,7 +468,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   const { walletAddress, openLoginModal } = useAuth();
   const { autoplayEnabled } = useAutoplay();
   const isOwnPost = walletAddress && video.creatorId?.toLowerCase() === walletAddress.toLowerCase();
-  const [isMuted, setIsMuted] = useState(() => videoPlaybackManager.globalMuted);
+  const [isMuted, setIsMuted] = useState(() => video.isAudio ? false : videoPlaybackManager.globalMuted);
   const [showControls, setShowControls] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
