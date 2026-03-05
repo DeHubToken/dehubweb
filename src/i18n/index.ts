@@ -115,6 +115,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'ca', name: 'Catalan', nativeName: 'Català' },
   { code: 'lt', name: 'Lithuanian', nativeName: 'Lietuvių' },
   { code: 'et', name: 'Estonian', nativeName: 'Eesti' },
+  { code: 'lv', name: 'Latvian', nativeName: 'Latviešu' },
 ];
 
 // Dynamic import map for lazy loading locale files
