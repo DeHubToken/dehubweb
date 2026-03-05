@@ -136,4 +136,5 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   wuu: 'Wu Chinese',
   ti: 'Tigrinya',
   ca: 'Catalan',
+  lt: 'Lithuanian',
 };
