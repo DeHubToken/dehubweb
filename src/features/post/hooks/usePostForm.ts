@@ -705,11 +705,14 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     
     try {
       // Determine post type based on media
-      let postType: 'video' | 'feed-images' | 'feed-simple' | 'live' = 'feed-simple';
+      let postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' = 'feed-simple';
       if (liveMode) {
         postType = 'live';
       } else if (hasVideo) {
         postType = 'video';
+      } else if (hasAudio && !hasImage) {
+        // Standalone audio post (no images attached)
+        postType = 'audio';
       } else if (hasImage) {
         postType = 'feed-images';
       }
