@@ -140,4 +140,5 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   et: 'Estonian',
   lv: 'Latvian',
   mi: 'Maori',
+  gu: 'Gujarati',
 };

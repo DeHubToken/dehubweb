@@ -117,6 +117,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'et', name: 'Estonian', nativeName: 'Eesti' },
   { code: 'lv', name: 'Latvian', nativeName: 'Latviešu' },
   { code: 'mi', name: 'Maori', nativeName: 'Māori' },
+  { code: 'gu', name: 'Gujarati', nativeName: 'ગુજરાતી' },
 ];
 
 // Dynamic import map for lazy loading locale files
@@ -220,6 +221,7 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   et: () => import('./locales/et.json'),
   lv: () => import('./locales/lv.json'),
   mi: () => import('./locales/mi.json'),
+  gu: () => import('./locales/gu.json'),
 };
 
 /**
