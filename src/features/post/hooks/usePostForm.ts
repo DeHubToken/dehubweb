@@ -1082,7 +1082,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     text, description, media, isSubscribersOnly, isPPV, ppvAmount,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
     isTokenGated, tokenAmount, liveMode, scheduledDate,
-    hasVideo, hasImage, isPosting, resetForm, onClose, navigate, addOptimisticPost, user
+    hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user
   ]);
 
   return {
