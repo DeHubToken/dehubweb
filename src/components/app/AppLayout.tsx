@@ -204,7 +204,9 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           
           {/* Dynamic routes (post pages, username profiles, etc.) use Outlet */}
           {isDynamicRoute && (
-            children || <Outlet />
+            <div className={isProfileRoute ? 'lg:animate-fade-in animate-slide-up-mobile' : 'animate-fade-in'}>
+              {children || <Outlet />}
+            </div>
           )}
         </main>
         
