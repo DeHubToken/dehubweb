@@ -300,6 +300,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     isOwner: item.isOwner ?? false,
     isUnlocked: item.isUnlocked ?? false,
     repostCount: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
+    isReposted: item.isReposted ?? false,
   };
 }
 
