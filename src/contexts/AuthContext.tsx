@@ -26,7 +26,8 @@ import {
   getAuthToken,
   clearAuthSession,
   isTokenExpired,
-  type DeHubUser
+  type DeHubUser,
+  type Web3AuthMeta,
 } from '@/lib/api/dehub';
 import { disconnectDmSocket, reconnectDmSocket } from '@/lib/api/dehub/dm-socket';
 import {
