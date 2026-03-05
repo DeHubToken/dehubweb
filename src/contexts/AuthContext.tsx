@@ -666,7 +666,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Complete DeHub authentication after Web3Auth connects.
-   * EOA mode: eth_accounts returns EOA address, personal_sign returns ECDSA.
+   * Social logins: Smart Account address + EIP-1271 signature.
+   * External wallets (non-social): EOA address + standard ECDSA.
    */
   const completeDeHubAuth = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -677,15 +678,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log('[Auth] [POPUP] Connection type:', isSocial ? 'SOCIAL' : 'EXTERNAL');
     toast.loading('Setting up your account...', { id: toastId });
 
-    if (isSocial) {
-      try {
-        const w3a = await getOrInitWeb3Auth();
-        const userInfo = await w3a.getUserInfo();
-        console.log('[Auth] [POPUP] User:', userInfo.email || userInfo.name || 'Found');
-      } catch (e) {
-        console.warn('[Auth] [POPUP] getUserInfo failed:', e);
-      }
-    }
+    // Gather web3AuthMeta for social logins
+    const web3AuthMeta = isSocial ? await getWeb3AuthMeta() : undefined;
 
     const signingProvider = provider;
 
