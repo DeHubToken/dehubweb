@@ -119,6 +119,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'mi', name: 'Maori', nativeName: 'Māori' },
   { code: 'gu', name: 'Gujarati', nativeName: 'ગુજરાતી' },
   { code: 'ml', name: 'Malayalam', nativeName: 'മലയാളം' },
+  { code: 'or', name: 'Odia', nativeName: 'ଓଡ଼ିଆ' },
 ];
 
 // Dynamic import map for lazy loading locale files
