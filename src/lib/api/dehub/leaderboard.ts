@@ -30,6 +30,39 @@ const CACHE_TIMEOUT_MS = 2500;
 const CACHE_CIRCUIT_BREAKER_MS = 60_000;
 let skipCacheUntil = 0;
 
+// ── Background RPC refresh logic ────────────────────────────────────
+const STALE_THRESHOLD_MS = 4 * 60 * 60_000; // 4 hours
+let refreshInFlight = new Set<string>();
+
+async function triggerBackgroundRefresh(sort: LeaderboardSortMode, period: LeaderboardPeriod) {
+  const key = `${sort}/${period}`;
+  if (refreshInFlight.has(key)) return;
+  refreshInFlight.add(key);
+
+  try {
+    console.log(`[Leaderboard] Triggering background RPC refresh for ${key}...`);
+    const { data: { publicUrl } } = supabase.storage.from('stories').getPublicUrl('');
+    const baseUrl = publicUrl.replace('/storage/v1/object/public/stories/', '');
+    const fnUrl = `${baseUrl}/functions/v1/refresh-leaderboard-cache`;
+
+    await fetch(fnUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        mode: 'light',
+        sorts: [sort],
+        periods: [period],
+      }),
+    });
+    console.log(`[Leaderboard] Background RPC refresh completed for ${key}`);
+  } catch (err) {
+    console.warn(`[Leaderboard] Background refresh failed for ${key}:`, err);
+  } finally {
+    // Allow re-trigger after 5 minutes
+    setTimeout(() => refreshInFlight.delete(key), 5 * 60_000);
+  }
+}
+
 const isNetworkFailure = (message: string): boolean => {
   const normalized = message.toLowerCase();
   return (
