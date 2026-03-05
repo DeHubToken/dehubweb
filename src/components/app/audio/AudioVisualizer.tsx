@@ -11,10 +11,12 @@ import {
   drawRings,
   drawPulse,
   drawTerrain,
+  drawStatic,
   resetSpectrum,
   resetRings,
   resetPulse,
   resetTerrain,
+  resetStatic,
 } from './visualizer-styles';
 
 interface AudioVisualizerProps {
