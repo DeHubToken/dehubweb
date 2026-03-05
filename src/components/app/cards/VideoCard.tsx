@@ -1179,7 +1179,23 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           </>
         ) : (
           <>
-            {video.videoUrl && !hasError ? (
+            {video.isAudio && video.audioUrl ? (
+              /* Audio post: show thumbnail background with AudioVisualizer overlay */
+              <div className="relative w-full h-full">
+                <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center">
+                  <div className="w-full h-full">
+                    <AudioVisualizer
+                      audioUrl={video.audioUrl}
+                      isPlaying={isPlaying}
+                      onPlayPause={handlePlayClick}
+                      className="w-full h-full"
+                      showStylePicker={true}
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : video.videoUrl && !hasError ? (
               <video
                 ref={videoRef}
                 src={video.videoUrl}
@@ -1197,7 +1213,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               />
             ) : (
               <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
-            )}
+            ))}
           </>
         )}
         
