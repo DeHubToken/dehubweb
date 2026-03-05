@@ -153,7 +153,7 @@ export function AudioVisualizer({
     }
 
     animationRef.current = requestAnimationFrame(draw);
-  }, [style, hue]);
+  }, [style, hue, seed]);
 
   useEffect(() => {
     if (isPlaying && !isInitialized) {
