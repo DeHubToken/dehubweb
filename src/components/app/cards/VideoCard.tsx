@@ -1211,6 +1211,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                     className="w-full h-full"
                     showStylePicker={true}
                     muted={isMuted}
+                    seed={video.id}
                   />
                 </div>
               </div>
