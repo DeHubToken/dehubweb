@@ -52,6 +52,8 @@ export interface TextPost extends BaseFeedItem {
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
   isDisliked?: boolean;
+  /** Whether the current user has reposted this item */
+  isReposted?: boolean;
   /** Whether this is a quote post */
   isQuotePost?: boolean;
   /** The quoted post data (for rendering embedded quote) */
