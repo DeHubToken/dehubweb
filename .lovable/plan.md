@@ -1,34 +1,35 @@
 
 
-## Analysis
+## Fix: Auto-reload on chunk load failures
 
-After reviewing the auth codebase, here is what is correct and what needs to change based on the API docs you shared:
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-### What is already correct
-- **Social login flow** (`completeDeHubAuth`/`completeDeHubAuthAfterRedirect`): Already gets the Smart Account address from the AA provider and signs with the AA provider (EIP-1271). Sends SA address to backend.
-- **External wallet flow** (`completeDeHubAuthWagmi`): Already uses EOA address from wagmi and signs with `signMessageAsync`. Sends EOA address to backend.
-- **`isNewAccount` handling**: Already checks `authResponse.result?.isNewAccount` to trigger username setup.
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-### What needs to change
+### Changes
 
-**1. Add `web3AuthMeta` to auth request (required by API)**
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-The API docs show a `web3AuthMeta` field with `typeOfLogin`, `verifier`, `verifierId`, `email`, `name`, `profileImage`. Currently `authenticateWallet()` does not send this. We need to:
-- Update `authenticateWallet()` in `src/lib/api/dehub/auth.ts` to accept an optional `web3AuthMeta` parameter and include it in the request body.
-- In `completeDeHubAuth` and `completeDeHubAuthAfterRedirect`, call `web3auth.getUserInfo()` and pass the result as `web3AuthMeta`.
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
 
-**2. Remove dead `signWithEoaDirectly` function**
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
 
-This ~100-line function tries to extract the EOA private key to bypass AA signing. Per your clarification, social logins should use the smart account signature directly (which the code already does). This function and the `extractEoaSignatureFromErc6492` helper are dead code that should be removed along with misleading comments like "AA is used for on-chain transactions; auth signing uses standard ECDSA".
-
-**3. Clean up misleading comments**
-
-Multiple files have comments stating "EOA mode" or "auth signing uses standard ECDSA" which contradict the actual architecture. These should be updated to reflect that social logins use smart account signatures (EIP-1271) and external wallets use standard ECDSA.
-
-### Files to modify
-
-| File | Change |
-|------|--------|
-| `src/lib/api/dehub/auth.ts` | Add optional `web3AuthMeta` param to `authenticateWallet()`, include in request body |
-| `src/contexts/AuthContext.tsx` | Gather `getUserInfo()` and pass as `web3AuthMeta` in social login flows; remove `signWithEoaDirectly`, `extractEoaSignatureFromErc6492`, `normalizeSignatureV` dead code; fix comments |
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 

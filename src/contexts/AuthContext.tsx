@@ -3,8 +3,8 @@
  * ============
  * Provides Web3Auth authentication integrated with DeHub API.
  * Uses Web3Auth Modal SDK v10 with Pimlico AA for social/email/SMS login.
- * AA is used for on-chain transactions; auth signing uses standard ECDSA.
- * Wagmi handles external wallet connections.
+ * Social logins sign via Smart Account (EIP-1271) and send the SA address to backend.
+ * External wallets (Wagmi) sign with standard ECDSA and send EOA address to backend.
  *
  * CUSTOM UI MODE: Uses connectTo() for direct provider connections
  * without showing the default Web3Auth modal.
@@ -18,7 +18,7 @@ import { useAccount, useSignMessage, useDisconnect, useConnect } from 'wagmi';
 import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import { clearWagmiStorage } from '@/lib/wagmi';
-import { getAddress, recoverMessageAddress } from 'viem';
+
 
 import {
   authenticateWallet,
@@ -26,7 +26,8 @@ import {
   getAuthToken,
   clearAuthSession,
   isTokenExpired,
-  type DeHubUser
+  type DeHubUser,
+  type Web3AuthMeta,
 } from '@/lib/api/dehub';
 import { disconnectDmSocket, reconnectDmSocket } from '@/lib/api/dehub/dm-socket';
 import {
@@ -118,85 +119,6 @@ function normalizeUser(userData: Partial<DeHubUser> | null | undefined, fallback
   };
 }
 
-/**
- * Normalize signature v value for viem's recoverMessageAddress.
- * Viem accepts only v=0,1,27,28. Web3Auth/Safe may return v=31,32 (Safe) or
- * EIP-155 v (chainId*2+35+recoveryId). Converts to 27 or 28.
- */
-function normalizeSignatureV(sig: string): string {
-  const hex = sig.startsWith('0x') ? sig.slice(2) : sig;
-  if (hex.length !== 130) return sig;
-  const r = hex.slice(0, 64);
-  const s = hex.slice(64, 128);
-  const vRaw = parseInt(hex.slice(128, 130), 16);
-  let v = vRaw;
-  // viem accepts: 0, 1, 27, 28
-  if (v === 0 || v === 1 || v === 27 || v === 28) return sig;
-  // Safe uses v+4: 31→27, 32→28
-  if (v === 31 || v === 32) v = v - 4;
-  // EIP-155: v = chainId*2 + 35 + recoveryId → recoveryId = (v - 35) % 2
-  else if (v >= 35) v = 27 + ((v - 35) % 2);
-  else {
-    console.warn('[Auth] Unknown signature v value:', vRaw, '- trying recoveryId extraction');
-    v = 27 + (vRaw % 2); // fallback: use parity
-  }
-  return '0x' + r + s + v.toString(16).padStart(2, '0');
-}
-
-/**
- * Extract the raw ECDSA signature from an ERC-6492 wrapped signature.
- *
- * ERC-6492 format: abi.encode(factory, factoryCalldata, innerSig) + magicBytes
- * The innerSig for Safe single-owner is 65 bytes: r(32) + s(32) + v(1)
- * Safe uses v+4 for eth_sign type signatures (v=31→27, v=32→28).
- *
- * Returns the standard 65-byte ECDSA signature (0x + r + s + v) or null if
- * the signature is not ERC-6492 or cannot be parsed.
- */
-function extractEoaSignatureFromErc6492(sig: string): string | null {
-  const MAGIC = '6492649264926492649264926492649264926492649264926492649264926492';
-
-  const hex = sig.startsWith('0x') ? sig.slice(2) : sig;
-  if (!hex.toLowerCase().endsWith(MAGIC.toLowerCase())) {
-    return null; // Not an ERC-6492 signature
-  }
-
-  try {
-    // Remove magic bytes (last 64 hex chars = 32 bytes)
-    const withoutMagic = hex.slice(0, -64);
-
-    // ABI decode: (address factory, bytes factoryCalldata, bytes innerSig)
-    // Slot 2 (bytes 128-192): offset to innerSig data
-    const sigOffset = parseInt(withoutMagic.slice(128, 192), 16) * 2; // convert byte offset to hex char offset
-
-    // At offset: 32-byte length prefix, then actual signature bytes
-    const sigLength = parseInt(withoutMagic.slice(sigOffset, sigOffset + 64), 16);
-    const sigData = withoutMagic.slice(sigOffset + 64, sigOffset + 64 + sigLength * 2);
-
-    if (sigLength !== 65) {
-      console.warn('[Auth] ERC-6492 inner sig is not 65 bytes, length:', sigLength);
-      return null;
-    }
-
-    // r(32 bytes) + s(32 bytes) + v(1 byte)
-    const r = sigData.slice(0, 64);
-    const s = sigData.slice(64, 128);
-    const v = parseInt(sigData.slice(128, 130), 16);
-
-    // Safe uses v+4 for eth_sign type signatures. Normalize to standard v.
-    let normalizedV = v;
-    if (v > 30) {
-      normalizedV = v - 4; // 31→27, 32→28
-    }
-
-    console.log('[Auth] ERC-6492 inner sig extracted: v_raw=', v, 'v_normalized=', normalizedV);
-    return '0x' + r + s + normalizedV.toString(16).padStart(2, '0');
-  } catch (e) {
-    console.warn('[Auth] Failed to parse ERC-6492 signature:', e);
-    return null;
-  }
-}
-
 // Map custom provider names to Web3Auth AUTH_CONNECTION
 function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[keyof typeof AUTH_CONNECTION] {
   switch (provider) {
@@ -211,112 +133,28 @@ function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[key
 }
 
 /**
- * Sign an auth message using the EOA private key directly.
- * Web3Auth with AA wraps personal_sign in ERC-6492 (Safe smart account),
- * which the backend cannot verify via ecrecover. This bypasses the AA
- * wrapper by extracting the raw private key and signing with viem.
- *
- * Returns { address, signature } for the EOA, or null if private key
- * is not available (fallback to the AA-wrapped flow).
+ * Build web3AuthMeta from Web3Auth userInfo for the auth request.
  */
-async function signWithEoaDirectly(
-  provider: any,
-  timestamp: number,
-  displayedDate: Date,
-  targetAddress?: string, // If provided, the auth message will use this address (e.g. Smart Account)
-): Promise<{ address: string; signature: string } | null> {
+async function getWeb3AuthMeta(): Promise<Web3AuthMeta | undefined> {
   try {
-    // Web3Auth v10 with AA does NOT expose eth_private_key on any provider.
-    // Instead, we find the underlying EOA provider and call personal_sign on it.
-    // The EOA provider produces a standard ECDSA signature (132 chars),
-    // unlike the AA provider which wraps it in ERC-6492 (2242 chars).
-
-    let eoaProvider: any = null;
-
-    // 1. Try AA provider's state.eoaProvider (primary path)
-    try {
-      const w3a = await getOrInitWeb3Auth();
-      const aaProvider = (w3a as any).aaProvider || (w3a as any).accountAbstractionProvider;
-      if (aaProvider?.state?.eoaProvider) {
-        eoaProvider = aaProvider.state.eoaProvider;
-        console.log('[Auth] EOA direct sign: found eoaProvider via Web3Auth AA provider state');
-      }
-      // 2. Try commonJRPCProvider (the EOA provider before AA wrapping)
-      if (!eoaProvider) {
-        const commonProvider = (w3a as any).commonJRPCProvider;
-        if (commonProvider) {
-          eoaProvider = commonProvider;
-          console.log('[Auth] EOA direct sign: found commonJRPCProvider on Web3Auth instance');
-        }
-      }
-    } catch (e) {
-      console.warn('[Auth] EOA direct sign: could not access Web3Auth internals:', e);
-    }
-
-    // 3. Try the passed provider's own state.eoaProvider
-    if (!eoaProvider && provider?.state?.eoaProvider) {
-      eoaProvider = provider.state.eoaProvider;
-      console.log('[Auth] EOA direct sign: found eoaProvider in passed provider state');
-    }
-
-    if (!eoaProvider) {
-      console.warn('[Auth] EOA direct sign: no EOA provider found, cannot produce standard ECDSA signature');
-      return null;
-    }
-
-    // Get the EOA address from the EOA provider
-    let accounts: string[];
-    try {
-      accounts = await eoaProvider.request({ method: 'eth_accounts' }) as string[];
-    } catch {
-      try {
-        accounts = await eoaProvider.request({ method: 'eth_requestAccounts' }) as string[];
-      } catch (e2) {
-        console.warn('[Auth] EOA direct sign: could not get accounts from EOA provider:', e2);
-        return null;
-      }
-    }
-
-    if (!accounts || accounts.length === 0) {
-      console.warn('[Auth] EOA direct sign: EOA provider returned no accounts');
-      return null;
-    }
-
-    const eoaAddress = accounts[0].toLowerCase();
-    // Use targetAddress in the message if provided (e.g. Smart Account address for mobile parity)
-    const authAddress = targetAddress ? targetAddress.toLowerCase() : eoaAddress;
-    console.log('[Auth] EOA direct sign: EOA address:', eoaAddress, targetAddress ? `| target (SA): ${authAddress}` : '');
-
-    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-
-    // Call personal_sign on the EOA provider — use same format as signWithProvider
-    // (raw string [message, address]) so backend EIP-1271 verification matches.
-    let signature: string;
-    try {
-      signature = await eoaProvider.request({
-        method: 'personal_sign',
-        params: [message, eoaAddress],
-      }) as string;
-    } catch (e) {
-      // Fallback: some providers expect hex-encoded message
-      signature = await eoaProvider.request({
-        method: 'personal_sign',
-        params: [`0x${Buffer.from(message, 'utf8').toString('hex')}`, eoaAddress],
-      }) as string;
-    }
-
-    console.log('[Auth] EOA direct sign: signature produced, length:', signature.length);
-
-    if (signature.length > 200) {
-      console.warn('[Auth] EOA direct sign: signature is suspiciously long (' + signature.length + ' chars), may still be ERC-6492 wrapped');
-    }
-
-    return { address: authAddress, signature };
+    const w3a = await getOrInitWeb3Auth();
+    const info: any = await w3a.getUserInfo();
+    if (!info) return undefined;
+    return {
+      typeOfLogin: info.typeOfLogin,
+      verifier: info.verifier,
+      verifierId: info.verifierId,
+      email: info.email,
+      name: info.name,
+      profileImage: info.profileImage,
+    };
   } catch (e) {
-    console.warn('[Auth] EOA direct sign failed, falling back to provider signing:', e);
-    return null;
+    console.warn('[Auth] Could not get Web3Auth user info for meta:', e);
+    return undefined;
   }
 }
+
+
 /**
  * Sign auth message using the provider's personal_sign (original flow).
  * Used for external wallets and as fallback when EOA direct sign is unavailable.
@@ -751,8 +589,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 
   /**
-   * Complete DeHub auth specifically after redirect flow.
-   * EOA mode: eth_accounts returns EOA address, personal_sign returns ECDSA.
+   * Complete DeHub auth specifically after redirect flow (mobile email/SMS).
+   * Uses Smart Account address + EIP-1271 signature for social logins.
    */
   const completeDeHubAuthAfterRedirect = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -762,15 +600,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log('[Auth] [REDIRECT] Starting DeHub authentication sequence...');
     toast.loading('Getting your account...', { id: toastId });
 
-    try {
-      const w3a = await getOrInitWeb3Auth();
-      const userInfo = await w3a.getUserInfo();
-      console.log('[Auth] [REDIRECT] User Info:', userInfo.email || userInfo.name || 'Found');
-    } catch (e) {
-      console.warn('[Auth] [REDIRECT] getUserInfo failed (ignoring):', e);
-    }
-
-    const signingProvider = provider;
+    // Gather web3AuthMeta for the auth request
+    const web3AuthMeta = await getWeb3AuthMeta();
 
     try {
       const BASE_CHAIN_ID = 8453;
@@ -805,7 +636,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         if (saResult) {
           console.log('[Auth] [REDIRECT] Trying Smart Account address:', smartAccountAddress);
-          const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID);
+          const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID, web3AuthMeta);
           const normalizedUser = normalizeUser(saAuthResponse.user, saResult.address);
           localStorage.setItem('dehub_wallet', saResult.address);
           localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
@@ -835,7 +666,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Complete DeHub authentication after Web3Auth connects.
-   * EOA mode: eth_accounts returns EOA address, personal_sign returns ECDSA.
+   * Social logins: Smart Account address + EIP-1271 signature.
+   * External wallets (non-social): EOA address + standard ECDSA.
    */
   const completeDeHubAuth = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -846,15 +678,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log('[Auth] [POPUP] Connection type:', isSocial ? 'SOCIAL' : 'EXTERNAL');
     toast.loading('Setting up your account...', { id: toastId });
 
-    if (isSocial) {
-      try {
-        const w3a = await getOrInitWeb3Auth();
-        const userInfo = await w3a.getUserInfo();
-        console.log('[Auth] [POPUP] User:', userInfo.email || userInfo.name || 'Found');
-      } catch (e) {
-        console.warn('[Auth] [POPUP] getUserInfo failed:', e);
-      }
-    }
+    // Gather web3AuthMeta for social logins
+    const web3AuthMeta = isSocial ? await getWeb3AuthMeta() : undefined;
 
     const signingProvider = provider;
 
@@ -899,7 +724,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (saResult) {
             console.log('[Auth] [POPUP] Trying Smart Account address:', smartAccountAddress);
             toast.loading('Signing in...', { id: toastId });
-            const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID);
+            const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID, web3AuthMeta);
             const normalizedUser = normalizeUser(saAuthResponse.user, saResult.address);
             localStorage.setItem('dehub_wallet', saResult.address);
             localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));

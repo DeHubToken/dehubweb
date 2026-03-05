@@ -10,6 +10,15 @@ export interface UsernameCheckResponse {
   error?: boolean;
 }
 
+export interface Web3AuthMeta {
+  typeOfLogin?: string;
+  verifier?: string;
+  verifierId?: string;
+  email?: string;
+  name?: string;
+  profileImage?: string;
+}
+
 export async function checkUsernameAvailability(username: string): Promise<UsernameCheckResponse> {
   const { apiCall } = await import('./core');
   return apiCall<UsernameCheckResponse>("/api/username/check", {
@@ -32,13 +41,19 @@ export async function authenticateWallet(
   signature: string,
   timestamp: number,
   chainId: number = 8453,
+  web3AuthMeta?: Web3AuthMeta,
 ): Promise<AuthResponse> {
-  const body = JSON.stringify({
+  const body: Record<string, any> = {
     address: address.toLowerCase(),
     sig: signature,
     timestamp,
     chainId,
-  });
+  };
+
+  if (web3AuthMeta) {
+    body.web3AuthMeta = web3AuthMeta;
+  }
+
   const headers = {
     "Content-Type": "application/json",
     "Accept": "application/json",
@@ -48,7 +63,7 @@ export async function authenticateWallet(
   const response = await fetch(`${DEHUB_API_BASE}/api/web/auth`, {
     method: "POST",
     headers,
-    body,
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) {
