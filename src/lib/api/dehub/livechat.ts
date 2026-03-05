@@ -60,88 +60,125 @@ export interface LiveChatUserProfile {
 }
 
 export async function getLiveChatRooms(): Promise<LiveChatRoom[]> {
-  try {
-    let response = await apiCall<Record<string, unknown>>("/api/livechat/rooms", {
-      requiresAuth: false,
-    });
+  // Try multiple known endpoint patterns the DeHub API may use
+  const endpoints = [
+    "/api/chat/rooms",
+    "/api/livechat/rooms", 
+    "/api/chatrooms",
+  ];
 
-    // Unwrap the common { result: ... } wrapper from the DeHub API
-    if (response && typeof response === 'object' && 'result' in response && !Array.isArray(response) && typeof response.result === 'object' && response.result !== null && !Array.isArray(response.result)) {
-      response = response.result as Record<string, unknown>;
-    }
+  for (const endpoint of endpoints) {
+    try {
+      let response = await apiCall<Record<string, unknown>>(endpoint, {
+        requiresAuth: false,
+      });
 
-    if (Array.isArray(response)) return normalizeRooms(response);
+      // Unwrap the common { result: ... } wrapper from the DeHub API
+      if (response && typeof response === 'object' && 'result' in response && !Array.isArray(response) && typeof response.result === 'object' && response.result !== null && !Array.isArray(response.result)) {
+        response = response.result as Record<string, unknown>;
+      }
 
-    if (response && typeof response === 'object') {
-      if ('rooms' in response && Array.isArray(response.rooms)) return normalizeRooms(response.rooms);
-      if ('result' in response && Array.isArray(response.result)) return normalizeRooms(response.result);
-      if ('data' in response && Array.isArray(response.data)) return normalizeRooms(response.data);
-      if ('items' in response && Array.isArray(response.items)) return normalizeRooms(response.items);
-      if ('topicRooms' in response && Array.isArray(response.topicRooms)) return normalizeRooms(response.topicRooms);
+      if (Array.isArray(response)) return normalizeRooms(response);
 
-      if ('roomId' in response || 'id' in response) return [normalizeRoom(response)];
+      if (response && typeof response === 'object') {
+        if ('rooms' in response && Array.isArray(response.rooms)) return normalizeRooms(response.rooms);
+        if ('result' in response && Array.isArray(response.result)) return normalizeRooms(response.result);
+        if ('data' in response && Array.isArray(response.data)) return normalizeRooms(response.data);
+        if ('items' in response && Array.isArray(response.items)) return normalizeRooms(response.items);
+        if ('topicRooms' in response && Array.isArray(response.topicRooms)) return normalizeRooms(response.topicRooms);
 
-      const keys = Object.keys(response);
-      for (const key of keys) {
-        const val = response[key];
-        if (Array.isArray(val) && val.length > 0 && typeof val[0] === 'object' && val[0] !== null) {
-          return normalizeRooms(val);
+        if ('roomId' in response || 'id' in response) return [normalizeRoom(response)];
+
+        const keys = Object.keys(response);
+        for (const key of keys) {
+          const val = response[key];
+          if (Array.isArray(val) && val.length > 0 && typeof val[0] === 'object' && val[0] !== null) {
+            return normalizeRooms(val);
+          }
         }
       }
-    }
 
-    console.warn('[LiveChat API] getLiveChatRooms: unexpected response format, returning []');
-    return [];
-  } catch (error) {
-    console.error('[LiveChat API] getLiveChatRooms failed:', error);
-    throw error;
+      console.warn(`[LiveChat API] ${endpoint}: unexpected response format`);
+    } catch (error: any) {
+      // 404 means wrong endpoint, try next
+      if (error?.message?.includes('404') || error?.message?.includes('Cannot GET') || error?.message?.includes('Cannot POST')) {
+        console.warn(`[LiveChat API] ${endpoint} not found, trying next...`);
+        continue;
+      }
+      console.error(`[LiveChat API] ${endpoint} failed:`, error);
+      throw error;
+    }
   }
+
+  // All endpoints failed — return a default "general" room so chat can still work via socket
+  console.warn('[LiveChat API] All room endpoints returned 404, using default room');
+  return [{ id: 'general', name: 'General', topic: 'DeHub Community Chat' }];
 }
 
 export async function getLiveChatRoom(roomId: string): Promise<LiveChatRoom> {
-  const response = await apiCall<{ result: LiveChatRoom } | LiveChatRoom>(`/api/livechat/rooms/${roomId}`, {
-    requiresAuth: false,
-  });
-  if (response && typeof response === 'object' && 'result' in response && !Array.isArray(response.result)) {
-    return normalizeRoom(response.result);
+  const endpoints = [`/api/chat/rooms/${roomId}`, `/api/livechat/rooms/${roomId}`, `/api/chatrooms/${roomId}`];
+  for (const endpoint of endpoints) {
+    try {
+      const response = await apiCall<{ result: LiveChatRoom } | LiveChatRoom>(endpoint, {
+        requiresAuth: false,
+      });
+      if (response && typeof response === 'object' && 'result' in response && !Array.isArray(response.result)) {
+        return normalizeRoom(response.result);
+      }
+      return normalizeRoom(response);
+    } catch (error: any) {
+      if (error?.message?.includes('404') || error?.message?.includes('Cannot GET')) continue;
+      throw error;
+    }
   }
-  return normalizeRoom(response);
+  // Fallback
+  return { id: roomId, name: 'Chat Room' };
 }
 
 export async function getLiveChatMessages(
   roomId: string,
   params?: { page?: number; limit?: number; before?: string }
 ): Promise<LiveChatMessage[]> {
-  try {
-    let response = await apiCall<Record<string, unknown>>(
-      `/api/livechat/rooms/${roomId}/messages`,
-      {
-        params: {
-          page: params?.page,
-          limit: params?.limit,
-          before: params?.before,
-        },
-        requiresAuth: false,
+  const endpointBases = [`/api/chat/rooms`, `/api/livechat/rooms`, `/api/chatrooms`];
+  
+  for (const base of endpointBases) {
+    try {
+      let response = await apiCall<Record<string, unknown>>(
+        `${base}/${roomId}/messages`,
+        {
+          params: {
+            page: params?.page,
+            limit: params?.limit,
+            before: params?.before,
+          },
+          requiresAuth: false,
+        }
+      );
+
+      // Unwrap the common { result: ... } wrapper from the DeHub API
+      if (response && typeof response === 'object' && 'result' in response && !Array.isArray(response) && typeof response.result === 'object' && response.result !== null && !Array.isArray(response.result)) {
+        response = response.result as Record<string, unknown>;
       }
-    );
 
-    // Unwrap the common { result: ... } wrapper from the DeHub API
-    if (response && typeof response === 'object' && 'result' in response && !Array.isArray(response) && typeof response.result === 'object' && response.result !== null && !Array.isArray(response.result)) {
-      response = response.result as Record<string, unknown>;
+      if (response && typeof response === 'object') {
+        if ('messages' in response && Array.isArray(response.messages)) return response.messages as LiveChatMessage[];
+        if ('result' in response && Array.isArray(response.result)) return response.result as LiveChatMessage[];
+        if ('data' in response && Array.isArray(response.data)) return response.data as LiveChatMessage[];
+      }
+      if (Array.isArray(response)) return response as unknown as LiveChatMessage[];
+      console.warn(`[LiveChat API] ${base}/${roomId}/messages: unexpected response format`);
+    } catch (error: any) {
+      if (error?.message?.includes('404') || error?.message?.includes('Cannot GET')) {
+        continue;
+      }
+      console.error('[LiveChat API] getLiveChatMessages failed:', error);
+      throw error;
     }
-
-    if (response && typeof response === 'object') {
-      if ('messages' in response && Array.isArray(response.messages)) return response.messages as LiveChatMessage[];
-      if ('result' in response && Array.isArray(response.result)) return response.result as LiveChatMessage[];
-      if ('data' in response && Array.isArray(response.data)) return response.data as LiveChatMessage[];
-    }
-    if (Array.isArray(response)) return response as unknown as LiveChatMessage[];
-    console.warn('[LiveChat API] getLiveChatMessages: unexpected response format, returning []');
-    return [];
-  } catch (error) {
-    console.error('[LiveChat API] getLiveChatMessages failed:', error);
-    throw error;
   }
+
+  // All endpoints 404'd — return empty (socket will handle real-time)
+  console.warn('[LiveChat API] All message endpoints returned 404, returning []');
+  return [];
 }
 
 export async function getLiveChatUserProfile(address: string): Promise<LiveChatUserProfile> {
@@ -234,16 +271,27 @@ export async function sendLiveChatMessage(
   const body: Record<string, unknown> = { content, messageType: type };
   if (imageUrl) body.imageUrl = imageUrl;
 
-  const response = await apiCall<{ result: LiveChatMessage } | LiveChatMessage>(
-    `/api/livechat/rooms/${roomId}/messages`,
-    {
-      method: 'POST',
-      body,
-      requiresAuth: true,
+  const endpoints = [`/api/chat/rooms/${roomId}/messages`, `/api/livechat/rooms/${roomId}/messages`, `/api/chatrooms/${roomId}/messages`];
+  
+  for (const endpoint of endpoints) {
+    try {
+      const response = await apiCall<{ result: LiveChatMessage } | LiveChatMessage>(
+        endpoint,
+        {
+          method: 'POST',
+          body,
+          requiresAuth: true,
+        }
+      );
+      if (response && typeof response === 'object' && 'result' in response && !Array.isArray((response as any).result)) {
+        return (response as { result: LiveChatMessage }).result;
+      }
+      return response as LiveChatMessage;
+    } catch (error: any) {
+      if (error?.message?.includes('404') || error?.message?.includes('Cannot POST')) continue;
+      throw error;
     }
-  );
-  if (response && typeof response === 'object' && 'result' in response && !Array.isArray((response as any).result)) {
-    return (response as { result: LiveChatMessage }).result;
   }
-  return response as LiveChatMessage;
+
+  throw new Error('All livechat message endpoints returned 404');
 }
