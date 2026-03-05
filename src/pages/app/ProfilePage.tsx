@@ -142,15 +142,11 @@ export default function ProfilePage() {
 
   // Loading state
   if (data.isAuthLoading || data.isLoadingProfile) {
-    const loadingContent = (
+    return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-10 h-10 text-white animate-spin" />
       </div>
     );
-    if (data.needsLayoutWrapper) {
-      return <AppLayout>{loadingContent}</AppLayout>;
-    }
-    return loadingContent;
   }
 
   // Auth gate for own profile
