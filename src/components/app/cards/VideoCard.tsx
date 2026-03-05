@@ -1195,14 +1195,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             {video.isAudio && video.audioUrl ? (
               /* Audio post: liquid glass container with static waveform backdrop */
               <div className="relative w-full h-full bg-black/60 backdrop-blur-[24px] border border-white/10 overflow-hidden">
-                {/* Static waveform background */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <StaticWaveform
-                    seed={video.id}
-                    className="w-full h-2/5 opacity-60"
-                  />
-                </div>
-                {/* Live AudioVisualizer overlay */}
+                {/* Live AudioVisualizer */}
                 <div className="absolute inset-0">
                   <AudioVisualizer
                     audioUrl={video.audioUrl}
