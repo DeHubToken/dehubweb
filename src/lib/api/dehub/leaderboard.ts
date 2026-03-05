@@ -105,7 +105,18 @@ export async function getLeaderboard(
       }
 
       if (!cached.error && cached.data?.data) {
-        console.log(`[Leaderboard] Using cached data from ${cached.data.updated_at}`);
+        const updatedAt = cached.data.updated_at;
+        console.log(`[Leaderboard] Using cached data from ${updatedAt}`);
+
+        // Check if cache is stale and trigger background RPC refresh for holdings periods
+        if (sort === 'holdings' && period !== 'all' && updatedAt) {
+          const age = Date.now() - new Date(updatedAt).getTime();
+          if (age > STALE_THRESHOLD_MS) {
+            console.log(`[Leaderboard] Cache for ${sort}/${period} is ${Math.round(age / 60_000)}min old — triggering background RPC refresh`);
+            triggerBackgroundRefresh(sort, period);
+          }
+        }
+
         return cached.data.data as unknown as LeaderboardResponse;
       }
 
