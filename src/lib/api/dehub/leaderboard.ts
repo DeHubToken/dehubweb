@@ -1,4 +1,5 @@
 import { apiCall } from './core';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface LeaderboardEntry {
   account: string;
