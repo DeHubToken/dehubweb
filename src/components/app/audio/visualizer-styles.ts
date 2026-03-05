@@ -706,12 +706,16 @@ export function drawStatic(
     const y = centerY - barH / 2;
 
     if (i <= playedIndex) {
-      // Played portion — colored / bright
-      const gradient = ctx.createLinearGradient(x, y, x, y + barH);
-      gradient.addColorStop(0, `hsla(${hue}, 80%, 75%, 0.9)`);
-      gradient.addColorStop(0.5, `hsla(${hue}, 85%, 60%, 0.95)`);
-      gradient.addColorStop(1, `hsla(${hue}, 80%, 75%, 0.9)`);
-      ctx.fillStyle = gradient;
+      // Played portion — bright white (or colored if hue > 0)
+      if (hue === 0) {
+        ctx.fillStyle = `hsla(0, 0%, 100%, 0.85)`;
+      } else {
+        const gradient = ctx.createLinearGradient(x, y, x, y + barH);
+        gradient.addColorStop(0, `hsla(${hue}, 80%, 75%, 0.9)`);
+        gradient.addColorStop(0.5, `hsla(${hue}, 85%, 60%, 0.95)`);
+        gradient.addColorStop(1, `hsla(${hue}, 80%, 75%, 0.9)`);
+        ctx.fillStyle = gradient;
+      }
     } else {
       // Unplayed portion — dim white
       ctx.fillStyle = `hsla(0, 0%, 100%, 0.2)`;

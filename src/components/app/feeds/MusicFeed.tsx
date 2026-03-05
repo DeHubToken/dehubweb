@@ -441,12 +441,20 @@ function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem
                 onClick={() => navigate(`/app/post/${item.id}`)}
               >
                 {/* Square thumbnail with liquid glass look */}
-                <div className="aspect-square rounded-xl overflow-hidden bg-black/60 backdrop-blur-[24px] border border-white/[0.1] mb-2 relative flex items-center justify-center">
+                <div className="aspect-square rounded-xl overflow-hidden bg-black/60 backdrop-blur-[24px] border border-white/[0.1] mb-2 relative">
                   {item.thumbnail ? (
                     <img src={item.thumbnail} alt="" className="w-full h-full object-cover opacity-60" />
                   ) : null}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-12 h-12 rounded-full bg-white/[0.08] border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  {/* Centered headphone icon with listen count */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
+                    <Headphones className="w-8 h-8 text-white/70" />
+                    {item.views && (
+                      <span className="text-white/60 text-xs font-medium">{item.views.replace(' views', '')}</span>
+                    )}
+                  </div>
+                  {/* Hover play overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="w-12 h-12 rounded-full bg-white/[0.08] border border-white/20 flex items-center justify-center">
                       <Play className="w-5 h-5 text-white ml-0.5" />
                     </div>
                   </div>
