@@ -716,16 +716,24 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     staleTime: 5 * 60 * 1000,
   });
 
-  // Fetch audio uploads for carousel
+  // Fetch audio uploads for carousel (try both postType values)
   const { data: audioUploadsData, isLoading: isLoadingAudio } = useQuery({
     queryKey: ['music-audio-uploads', walletAddress],
     queryFn: async () => {
-      const response = await searchNFTs({
-        postType: 'audio',
-        unit: 50,
-        sortMode: 'new',
-      });
-      return (response.data || []).filter((nft: DeHubNFT) => !isBlockedCreator(nft, blockedAddresses));
+      const [audioRes, feedAudioRes] = await Promise.all([
+        searchNFTs({ postType: 'audio', unit: 50, sortMode: 'new' }).catch(() => ({ data: [] })),
+        searchNFTs({ postType: 'feed-audio', unit: 50, sortMode: 'new' }).catch(() => ({ data: [] })),
+      ]);
+      // Merge and dedupe by tokenId
+      const seen = new Set<string | number>();
+      const merged: DeHubNFT[] = [];
+      for (const nft of [...(audioRes.data || []), ...(feedAudioRes.data || [])]) {
+        const tid = nft.tokenId || nft.id || nft.token_id;
+        if (seen.has(tid)) continue;
+        seen.add(tid);
+        if (!isBlockedCreator(nft, blockedAddresses)) merged.push(nft);
+      }
+      return merged;
     },
     staleTime: 5 * 60 * 1000,
   });
