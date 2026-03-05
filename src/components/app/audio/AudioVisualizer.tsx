@@ -39,7 +39,7 @@ const STYLES: { value: VisualizerStyle; label: string }[] = [
   { value: 'terrain', label: 'Terrain' },
 ];
 
-const STATIC_BAR_COUNT = 100;
+
 
 export function AudioVisualizer({
   audioUrl,
