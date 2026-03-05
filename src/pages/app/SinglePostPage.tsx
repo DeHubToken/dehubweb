@@ -53,7 +53,7 @@ function getContentType(post: DeHubNFT): 'video' | 'image' | 'post' | 'live' {
   const postType = (post as any).postType as string | undefined;
   if (postType === 'live' || (post as any).isLive !== undefined) return 'live';
   // Audio posts render through VideoCard (which has AudioVisualizer support)
-  if (postType === 'audio' || postType === 'feed-audio') return 'video';
+  if (postType === 'audio' || postType === 'feed-audio' || (post as any).audioUrl) return 'video';
   if (postType === 'video' || post.videoUrl) return 'video';
   if (
     postType === 'image' ||
@@ -75,7 +75,8 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   
   // Detect audio posts
   const postType = (nft as any).postType as string | undefined;
-  const isAudioPost = postType === 'audio' || postType === 'feed-audio';
+  const rawAudioUrl = (nft as any).audioUrl as string | undefined;
+  const isAudioPost = postType === 'audio' || postType === 'feed-audio' || !!rawAudioUrl;
   
   const durationSeconds = isAudioPost 
     ? ((nft as any).audioDuration || nft.videoDuration || nft.duration || 0)
@@ -96,7 +97,6 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   const avatar = rawAvatarPath && resolvedAddress ? buildAvatarUrl(resolvedAddress, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
   
   // Build audio URL for audio posts (same logic as feed normalizer)
-  const rawAudioUrl = (nft as any).audioUrl as string | undefined;
   const audioUrl = isAudioPost && rawAudioUrl
     ? (rawAudioUrl.startsWith('http') ? rawAudioUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawAudioUrl}`)
     : undefined;
