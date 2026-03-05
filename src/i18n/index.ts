@@ -124,6 +124,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'sq', name: 'Albanian', nativeName: 'Shqip' },
   { code: 'ug', name: 'Uyghur', nativeName: 'ئۇيغۇرچە' },
   { code: 'tg', name: 'Tajik', nativeName: 'Тоҷикӣ' },
+  { code: 'tk', name: 'Turkmen', nativeName: 'Türkmen' },
 ];
 
 // Dynamic import map for lazy loading locale files
