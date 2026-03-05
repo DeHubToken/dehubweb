@@ -560,7 +560,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           if (!entry.isIntersecting && isPlayingRef.current) {
             pauseVideo();
             videoPlaybackManager.stop(instanceId);
-          } else if (entry.isIntersecting && autoplayEnabledRef.current && !isPlayingRef.current && !(video.isPPV || video.isLocked) && video.videoUrl && !hasErrorRef.current) {
+          } else if (entry.isIntersecting && autoplayEnabledRef.current && !isPlayingRef.current && !(video.isPPV || video.isLocked) && !video.isAudio && video.videoUrl && !hasErrorRef.current) {
             const vid = videoRef.current;
             if (vid) {
               // Ask manager if this video should own audio
