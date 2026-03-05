@@ -3,7 +3,6 @@ import {
   getLiveChatRooms,
   getLiveChatRoom,
   getLiveChatMessages as fetchApiMessages,
-  sendLiveChatMessage,
   getLiveChatUserProfile,
   getLiveChatOnlineCount,
   type LiveChatRoom,
@@ -224,13 +223,17 @@ export function useLiveChatMessages(roomId: string | null) {
 
       try {
         const socket = getSocket();
-        if (socket.connected) {
-          emitSendMessage({ roomId, content, messageType: type, imageUrl });
-          setTimeout(() => fetchMessages(false), 2000);
-        } else {
-          await sendLiveChatMessage(roomId, content, type, imageUrl);
-          await fetchMessages(false);
+        if (!socket.connected) {
+          // Wait briefly for connection
+          await new Promise<void>((resolve, reject) => {
+            const timeout = setTimeout(() => reject(new Error('Socket connection timeout')), 5000);
+            socket.once('connect', () => { clearTimeout(timeout); resolve(); });
+            if (socket.connected) { clearTimeout(timeout); resolve(); }
+          });
         }
+        emitSendMessage({ roomId, content, messageType: type, imageUrl });
+        // Refresh messages after a delay to pick up the server-confirmed message
+        setTimeout(() => fetchMessages(false), 2000);
       } catch (err) {
         setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
         console.error('[LiveChat] Failed to send message:', err);

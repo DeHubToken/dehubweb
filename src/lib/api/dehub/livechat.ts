@@ -201,41 +201,34 @@ export async function getLiveChatStatus(): Promise<Record<string, unknown>> {
 }
 
 /**
- * Send a livechat message — try REST POST, fallback to socket
+ * Send a livechat message — socket-only (no REST POST endpoint exists).
+ * This is a convenience wrapper; prefer using emitSendMessage from socket.ts directly.
  */
 export async function sendLiveChatMessage(
-  _roomId: string,
+  roomId: string,
   content: string,
   type: 'text' | 'image' | 'gif' | 'voice' = 'text',
   imageUrl?: string
 ): Promise<LiveChatMessage> {
-  const body: Record<string, unknown> = { content, messageType: type };
-  if (imageUrl) body.imageUrl = imageUrl;
-
-  // Try the global livechat message endpoint
-  const endpoints = [
-    '/api/livechat/messages',
-    '/api/livechat/send',
-  ];
-
-  for (const endpoint of endpoints) {
-    try {
-      const response = await apiCall<Record<string, unknown>>(endpoint, {
-        method: 'POST',
-        body,
-        requiresAuth: true,
-      });
-      if (response && typeof response === 'object' && 'result' in response && !Array.isArray((response as any).result)) {
-        return (response as { result: LiveChatMessage }).result;
-      }
-      return response as unknown as LiveChatMessage;
-    } catch (error: any) {
-      if (error?.message?.includes('404') || error?.message?.includes('Cannot POST')) continue;
-      throw error;
-    }
+  const { emitSendMessage, getSocket } = await import('./socket');
+  const socket = getSocket();
+  if (!socket.connected) {
+    await new Promise<void>((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error('Socket not connected')), 5000);
+      socket.once('connect', () => { clearTimeout(timeout); resolve(); });
+      if (socket.connected) { clearTimeout(timeout); resolve(); }
+    });
   }
-
-  throw new Error('All livechat send endpoints returned 404');
+  emitSendMessage({ roomId, content, messageType: type, imageUrl });
+  // Return optimistic message since socket is fire-and-forget
+  return {
+    id: `temp-${Date.now()}`,
+    roomId,
+    content,
+    messageType: type,
+    sender: { address: '' },
+    createdAt: new Date().toISOString(),
+  };
 }
 
 // Keep these for potential future use but they target global endpoints now
