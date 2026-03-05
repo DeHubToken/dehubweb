@@ -145,4 +145,5 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   or: 'Odia',
   sd: 'Sindhi',
   sq: 'Albanian',
+  ug: 'Uyghur',
 };
