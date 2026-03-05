@@ -57,7 +57,7 @@ export interface UnifiedFeedItem {
   videoUrl?: string;
   minter: string;
   owner?: string;
-  postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio';
+  postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' | 'feed-audio';
   status?: string;
   category?: string[];
   views: number;
@@ -122,6 +122,8 @@ export interface UnifiedFeedItem {
   };
   createdAt: string;
   updatedAt?: string;
+  audioUrl?: string;
+  audioDuration?: number;
   totalReposts?: number;
   reposts?: number;
   quotes?: number;
@@ -180,9 +182,17 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
   
   const thumbnail = buildImageUrl(item.tokenId, item.imageUrl);
 
+  const isAudioPost = item.postType === 'audio' || item.postType === 'feed-audio';
   const videoUrl = item.postType === 'live'
     ? undefined
-    : (item.videoUrl?.startsWith('http') ? item.videoUrl : buildVideoUrl(item.tokenId));
+    : isAudioPost
+      ? undefined
+      : (item.videoUrl?.startsWith('http') ? item.videoUrl : buildVideoUrl(item.tokenId));
+  
+  // Build audio URL from API audioUrl field
+  const audioUrl = isAudioPost && item.audioUrl
+    ? (item.audioUrl.startsWith('http') ? item.audioUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.audioUrl}`)
+    : undefined;
   const rawAvatarPath = extractAvatarPath(item);
   const channelAvatar = rawAvatarPath 
     ? buildAvatarUrl(item.minter, rawAvatarPath) || 'user'
@@ -197,8 +207,11 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     type: 'video',
     thumbnail,
     videoUrl,
-    duration: formatDuration(item.videoDuration),
-    durationSeconds: item.videoDuration || 0,
+    audioUrl,
+    audioDuration: isAudioPost ? item.audioDuration : undefined,
+    isAudio: isAudioPost,
+    duration: formatDuration(isAudioPost ? item.audioDuration : item.videoDuration),
+    durationSeconds: (isAudioPost ? item.audioDuration : item.videoDuration) || 0,
     title: item.name || 'Untitled',
     description: item.description,
     channel: item.minterDisplayName || item.minterUsername || item.mintername || 'Unknown Creator',

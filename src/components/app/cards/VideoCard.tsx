@@ -41,7 +41,7 @@ import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAutoplay } from '@/contexts/AutoplayContext';
-
+import { AudioVisualizer } from '../audio';
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { repostPost } from '@/lib/api/dehub';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
@@ -524,7 +524,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     description: video.description || '',
     imageUrl: video.thumbnail || '',
     videoUrl: video.videoUrl || '',
-    postType: 'video' as const,
+    postType: (video.isAudio ? 'feed-audio' : 'video') as any,
     minter: video.creatorId || '',
     minterUsername: video.creatorUsername || '',
     minterDisplayName: video.channel,
@@ -560,7 +560,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           if (!entry.isIntersecting && isPlayingRef.current) {
             pauseVideo();
             videoPlaybackManager.stop(instanceId);
-          } else if (entry.isIntersecting && autoplayEnabledRef.current && !isPlayingRef.current && !(video.isPPV || video.isLocked) && video.videoUrl && !hasErrorRef.current) {
+          } else if (entry.isIntersecting && autoplayEnabledRef.current && !isPlayingRef.current && !(video.isPPV || video.isLocked) && !video.isAudio && video.videoUrl && !hasErrorRef.current) {
             const vid = videoRef.current;
             if (vid) {
               // Ask manager if this video should own audio
@@ -620,6 +620,18 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
 
 
   const handlePlayClick = useCallback(() => {
+    // Audio posts use AudioVisualizer which handles its own playback
+    if (video.isAudio) {
+      if (isContentGated) return;
+      setIsPlaying(prev => !prev);
+      isPlayingRef.current = !isPlayingRef.current;
+      // Record listen on first play
+      if (!isPlayingRef.current === false) {
+        import('@/lib/api/dehub/feed').then(m => m.recordListen(video.id)).catch(() => {});
+      }
+      return;
+    }
+    
     if (!video.videoUrl || isContentGated) return;
     
     if (isPlaying) {
@@ -651,7 +663,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         videoPlaybackManager.stop(instanceId);
       });
     }
-  }, [isPlaying, video.videoUrl, instanceId, showControlsBriefly, isContentGated]);
+  }, [isPlaying, video.videoUrl, video.isAudio, video.id, instanceId, showControlsBriefly, isContentGated]);
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -1179,7 +1191,23 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           </>
         ) : (
           <>
-            {video.videoUrl && !hasError ? (
+            {video.isAudio && video.audioUrl ? (
+              /* Audio post: show thumbnail background with AudioVisualizer overlay */
+              <div className="relative w-full h-full">
+                <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center">
+                  <div className="w-full h-full">
+                    <AudioVisualizer
+                      audioUrl={video.audioUrl}
+                      isPlaying={isPlaying}
+                      onPlayPause={handlePlayClick}
+                      className="w-full h-full"
+                      showStylePicker={true}
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : video.videoUrl && !hasError ? (
               <video
                 ref={videoRef}
                 src={video.videoUrl}

@@ -157,6 +157,8 @@ export interface DeHubNFT {
   chainId?: number;
   mintTxHash?: string;
   status?: string;
+  audioUrl?: string;
+  audioDuration?: number;
 
   // Quote post / repost fields
   isQuotePost?: boolean;

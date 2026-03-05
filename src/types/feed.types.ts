@@ -129,6 +129,12 @@ export interface VideoItem extends BaseFeedItem {
   isUnlocked?: boolean;
   /** Chain ID the content was minted on (e.g., 8453 for Base, 56 for BNB) */
   chainId?: number;
+  /** Audio URL for audio posts */
+  audioUrl?: string;
+  /** Audio duration in seconds */
+  audioDuration?: number;
+  /** Whether this is an audio post */
+  isAudio?: boolean;
 }
 
 /**

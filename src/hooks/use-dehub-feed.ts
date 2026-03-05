@@ -67,9 +67,9 @@ function isBlockedPost(nft: DeHubNFT): boolean {
  */
 export function getContentType(nft: DeHubNFT): 'video' | 'image' | 'audio' {
   // Check postType first (primary field from API)
-  if (nft.postType === 'image' || nft.postType === 'video' || nft.postType === 'audio') {
-    return nft.postType;
-  }
+  const pt = nft.postType as string;
+  if (pt === 'image' || pt === 'video') return pt;
+  if (pt === 'audio' || pt === 'feed-audio') return 'audio';
   // Fallback to media_type if present
   if (nft.media_type === 'image' || nft.media_type === 'video' || nft.media_type === 'audio') {
     return nft.media_type;
@@ -99,15 +99,20 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   // and the user clicks through to single post page (which uses HLS via LiveStreamCard).
   // Audio posts use the audio CDN URL. Regular videos use video CDN URL.
   const isLivePost = (nft.postType as string) === 'live';
-  const isAudioPost = (nft.postType as string) === 'audio';
+  const isAudioPost = (nft.postType as string) === 'audio' || (nft.postType as string) === 'feed-audio';
   const videoUrl = isLivePost
     ? undefined
     : isAudioPost
-      ? (tokenId ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4` : undefined)
+      ? undefined
       : (tokenId ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4` : undefined);
 
+  // Build audio URL from API audioUrl field
+  const audioUrl = isAudioPost && (nft as any).audioUrl
+    ? ((nft as any).audioUrl.startsWith('http') ? (nft as any).audioUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${(nft as any).audioUrl}`)
+    : undefined;
+
   // Get duration from various fields
-  const duration = nft.videoDuration || nft.duration;
+  const duration = isAudioPost ? ((nft as any).audioDuration || nft.videoDuration || nft.duration) : (nft.videoDuration || nft.duration);
 
   // Get creator info from various possible fields
   const channel = nft.minterDisplayName ||
@@ -154,6 +159,9 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     type: 'video',
     thumbnail,
     videoUrl,
+    audioUrl,
+    audioDuration: isAudioPost ? (typeof duration === 'number' ? duration : 0) : undefined,
+    isAudio: isAudioPost,
     duration: formatDuration(duration),
     durationSeconds: typeof duration === 'number' ? duration : 0,
     title: nft.name || nft.title || 'Untitled',
