@@ -100,6 +100,7 @@ export interface UnifiedFeedItem {
   isSaved?: boolean;
   isOwner?: boolean;
   isUnlocked?: boolean;
+  isReposted?: boolean;
   minterUser?: {
     address?: string;
     username?: string;
