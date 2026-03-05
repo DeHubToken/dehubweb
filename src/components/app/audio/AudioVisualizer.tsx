@@ -268,7 +268,7 @@ export function AudioVisualizer({
 
       {/* Controls overlay */}
       {showStylePicker && (
-        <div className="absolute bottom-2 left-2 right-2 flex items-end gap-2 pointer-events-auto z-20">
+        <div data-no-swipe className="absolute bottom-2 left-2 right-2 flex items-end gap-2 pointer-events-auto z-20" style={{ touchAction: 'pan-x' }}>
           {/* Color slider */}
           <div
             className="flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1.5 border border-white/10 shrink-0"
