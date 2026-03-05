@@ -3,7 +3,6 @@ import {
   getLiveChatRooms,
   getLiveChatRoom,
   getLiveChatMessages as fetchApiMessages,
-  sendLiveChatMessage,
   getLiveChatUserProfile,
   getLiveChatOnlineCount,
   type LiveChatRoom,
