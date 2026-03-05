@@ -1063,7 +1063,6 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                           onDislike={handleDislike} 
                           onReply={handleReply} 
                           onShare={() => {}} 
-                          onBookmark={() => {}}
                           onEdit={handleEditComment}
                           onDelete={handleDeleteComment}
                           onUserPress={handleUserPress}
