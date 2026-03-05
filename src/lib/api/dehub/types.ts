@@ -167,6 +167,7 @@ export interface DeHubNFT {
   reposts?: number;
   totalReposts?: number;
   quotes?: number;
+  isReposted?: boolean;
 
   // Moderation / visibility
   isHidden?: boolean;
