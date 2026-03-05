@@ -113,6 +113,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'zu', name: 'Zulu', nativeName: 'isiZulu' },
   { code: 'ti', name: 'Tigrinya', nativeName: 'ትግርኛ' },
   { code: 'ca', name: 'Catalan', nativeName: 'Català' },
+  { code: 'lt', name: 'Lithuanian', nativeName: 'Lietuvių' },
 ];
 
 // Dynamic import map for lazy loading locale files
@@ -212,6 +213,7 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   zu: () => import('./locales/zu.json'),
   ti: () => import('./locales/ti.json'),
   ca: () => import('./locales/ca.json'),
+  lt: () => import('./locales/lt.json'),
 };
 
 /**
