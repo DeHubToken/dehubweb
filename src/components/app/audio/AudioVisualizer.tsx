@@ -157,7 +157,7 @@ export function AudioVisualizer({
     }
 
     animationRef.current = requestAnimationFrame(draw);
-  }, [style, hue, seed]);
+  }, [style, hue]);
 
   useEffect(() => {
     if (isPlaying && !isInitialized) {
