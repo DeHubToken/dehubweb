@@ -138,7 +138,7 @@ function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[key
 async function getWeb3AuthMeta(): Promise<Web3AuthMeta | undefined> {
   try {
     const w3a = await getOrInitWeb3Auth();
-    const info = await w3a.getUserInfo();
+    const info: any = await w3a.getUserInfo();
     if (!info) return undefined;
     return {
       typeOfLogin: info.typeOfLogin,
