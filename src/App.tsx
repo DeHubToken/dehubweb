@@ -141,7 +141,7 @@ function AppContent() {
                 <Route path="tv" element={null} />
                 <Route path="features" element={null} />
                 <Route path="governance" element={null} />
-                <Route path="governance/:proposalId" element={<GovernanceProposalPage />} />
+                <Route path="governance/:proposalId" element={<Suspense fallback={<PageLoader />}><GovernanceProposalPage /></Suspense>} />
                 <Route path="stake" element={null} />
                 <Route path="jobs" element={null} />
                 <Route path="post/:postId" element={<SinglePostPage />} />
