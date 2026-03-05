@@ -173,45 +173,47 @@ export function leaveRoom(roomId: string) {
 }
 
 /** Send a livechat message via socket. */
-export function emitSendMessage(payload: {
+export async function emitSendMessage(payload: {
   roomId: string;
   content: string;
   messageType?: 'text' | 'image' | 'gif' | 'voice';
   imageUrl?: string;
 }) {
   const address = typeof window !== 'undefined' ? localStorage.getItem('dehub_wallet') : null;
+  const token = getAuthToken();
   const fullPayload = {
     roomId: payload.roomId,
     content: payload.content,
     message: payload.content,
+    text: payload.content,
     messageType: payload.messageType || 'text',
     type: payload.messageType || 'text',
     ...(payload.imageUrl ? { imageUrl: payload.imageUrl } : {}),
-    ...(address ? { address: address.toLowerCase() } : {}),
+    ...(address ? { address: address.toLowerCase(), sender: address.toLowerCase(), senderAddress: address.toLowerCase() } : {}),
+    ...(token ? { token: `Bearer ${token}` } : {}),
   };
   
-  // Send on root namespace
   const s = getSocket();
-  console.log('[Socket /] Sending (connected:', s.connected, ')');
-  s.emit('sendMessage', fullPayload);
-  s.emit('send-message', fullPayload);
+  const { toast } = await import('sonner');
   
-  // Send on /chat namespace
-  try {
-    const cs = getChatSocket();
-    console.log('[Socket /chat] Sending (connected:', cs.connected, ')');
-    cs.emit('sendMessage', fullPayload, (ack: unknown) => {
-      console.log('[ChatSocket] sendMessage ack:', ack);
-      import('sonner').then(({ toast }) => toast.info(`/chat ack: ${JSON.stringify(ack)?.substring(0, 150) || 'none'}`));
-    });
-    cs.emit('send-message', fullPayload);
-    cs.emit('chatMessage', fullPayload);
-    cs.emit('chat-message', fullPayload);
-    cs.emit('message', fullPayload);
-    cs.emit('new-message', fullPayload);
-  } catch (e) {
-    console.warn('[ChatSocket] Send failed:', e);
+  // Try emitWithAck on sendMessage to get server response
+  const eventNames = ['sendMessage', 'send-message', 'chatMessage', 'chat-message', 'message', 'new-message'];
+  
+  for (const evt of eventNames) {
+    try {
+      // Use timeout version of emitWithAck
+      const response = await s.timeout(3000).emitWithAck(evt, fullPayload);
+      toast.info(`"${evt}" response: ${JSON.stringify(response)?.substring(0, 200)}`);
+      console.log(`[Socket] "${evt}" response:`, response);
+      // If we got a response, this is likely the right event
+      return;
+    } catch (err: any) {
+      // timeout means no ack handler on server for this event - that's expected
+      console.log(`[Socket] "${evt}" - no ack (${err?.message || 'timeout'})`);
+    }
   }
+  
+  toast.warning('No event got a server ack. Check console for details.');
 }
 
 /** Request message history via socket. Returns promise with messages. */
