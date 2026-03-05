@@ -102,6 +102,7 @@ export function ActionBar({
   commentCount: rawCommentCount,
   shareCount,
   repostCount,
+  isReposted: initialIsReposted = false,
   isOptimistic = false,
   voteWeight = 1,
 }: ActionBarProps) {
