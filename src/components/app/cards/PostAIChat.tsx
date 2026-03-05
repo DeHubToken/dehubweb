@@ -137,7 +137,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
       case 'image':
         return `It's an image post by @${ctx.author || 'unknown'}${ctx.caption ? `. Caption: "${ctx.caption}"` : ''}`;
       case 'video':
-        return `It's a video titled "${ctx.title || 'Untitled'}" by ${ctx.author || 'unknown'}`;
+        return `It's a video titled "${ctx.title || 'a video'}" by ${ctx.author || 'unknown'}`;
       case 'live':
         return `It's a live stream by ${ctx.author || 'unknown'}${ctx.title ? ` titled "${ctx.title}"` : ''}${ctx.game ? ` playing ${ctx.game}` : ''}${ctx.viewers ? ` with ${ctx.viewers} viewers` : ''}`;
       case 'post':

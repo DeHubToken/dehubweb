@@ -601,7 +601,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         thumbnail,
         videoUrl,
         duration: formatDuration(pinnedPost.videoDuration || pinnedPost.duration || 0),
-        title: pinnedPost.name || 'Untitled',
+        title: pinnedPost.name || pinnedPost.description?.split('\n')[0] || '',
         channel: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown Creator',
         channelAvatar,
         verified: false,

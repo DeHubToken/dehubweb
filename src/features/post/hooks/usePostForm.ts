@@ -978,7 +978,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           thumbnail: media[0].thumbnail || media[0].preview,
           videoUrl: media[0].preview,
           duration: media[0].duration ? `${Math.floor(media[0].duration / 60)}:${String(Math.floor(media[0].duration % 60)).padStart(2, '0')}` : '0:00',
-          title: text.trim().split('\n')[0] || 'Untitled',
+          title: text.trim().split('\n')[0] || '',
           channel: username,
           channelAvatar: avatar || '', // Must be string for VideoItem type
           verified: false,

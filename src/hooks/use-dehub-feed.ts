@@ -164,7 +164,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     isAudio: isAudioPost,
     duration: formatDuration(duration),
     durationSeconds: typeof duration === 'number' ? duration : 0,
-    title: nft.name || nft.title || 'Untitled',
+    title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
     channel,
     channelAvatar,
     verified,

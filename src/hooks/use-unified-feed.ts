@@ -212,7 +212,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     isAudio: isAudioPost,
     duration: formatDuration(isAudioPost ? item.audioDuration : item.videoDuration),
     durationSeconds: (isAudioPost ? item.audioDuration : item.videoDuration) || 0,
-    title: item.name || 'Untitled',
+    title: item.name || item.description?.split('\n')[0] || '',
     description: item.description,
     channel: item.minterDisplayName || item.minterUsername || item.mintername || 'Unknown Creator',
     channelAvatar,
