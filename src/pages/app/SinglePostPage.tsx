@@ -809,9 +809,10 @@ export default function SinglePostPage() {
       <div className="px-3 sm:px-4 pb-8 pt-2">
         <div className="max-w-2xl mx-auto">
           {renderContent()}
-          {/* Related Images Feed - below image posts */}
+          {/* Related content feeds */}
           {isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
-          {!isImagePost && !isVideoPost && id && <RelatedPostsFeed currentPostId={id} />}
+          {isAudioPost && id && <RelatedVideosFeed currentVideoId={id} />}
+          {!isImagePost && !isVideoPost && !isAudioPost && id && <RelatedPostsFeed currentPostId={id} />}
         </div>
       </div>
     </div>
