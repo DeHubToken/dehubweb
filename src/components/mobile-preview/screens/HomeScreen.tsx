@@ -1,7 +1,8 @@
 import { MobileStatusBar } from '../MobileStatusBar';
+import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Heart, MessageSquare, Repeat2, Share, MoreHorizontal, Image, Video } from 'lucide-react';
+import { Heart, MessageSquare, Repeat2, Share, MoreHorizontal, Image } from 'lucide-react';
 
 const MOCK_POSTS = [
   { id: '1', user: 'alice.eth', content: 'Just minted my first NFT collection on Base 🎨 The creative freedom in web3 is unmatched.', likes: 42, comments: 8, reposts: 3, time: '2m' },
@@ -16,11 +17,7 @@ export function HomeScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-      
-      {/* Header */}
-      <div className="px-4 pt-2 pb-1">
-        <h1 className="text-white text-xl font-bold">Home</h1>
-      </div>
+      <MobileTopBar title="DeHub" />
 
       {/* Stories row */}
       <div className="flex gap-3 px-4 py-3 overflow-x-auto scrollbar-hide">

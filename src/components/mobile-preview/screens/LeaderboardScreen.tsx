@@ -1,7 +1,7 @@
 import { MobileStatusBar } from '../MobileStatusBar';
+import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Trophy, Medal, TrendingUp, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const MOCK_LEADERBOARD = [
@@ -23,10 +23,7 @@ export function LeaderboardScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-
-      <div className="px-4 pt-2 pb-1">
-        <h1 className="text-white text-xl font-bold">Leaderboard</h1>
-      </div>
+      <MobileTopBar title="Leaderboard" />
 
       {/* Period tabs */}
       <div className="flex gap-1.5 px-4 py-3">

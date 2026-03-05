@@ -1,6 +1,8 @@
 import { MobileStatusBar } from '../MobileStatusBar';
+import { MobileTopBar } from '../MobileTopBar';
+import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { ChevronLeft, ChevronRight, User, Bell, Shield, Globe, Moon, Palette, HelpCircle, LogOut, Smartphone } from 'lucide-react';
+import { ChevronRight, User, Bell, Shield, Globe, Moon, Palette, HelpCircle, LogOut, Smartphone } from 'lucide-react';
 
 const SETTINGS_SECTIONS = [
   {
@@ -32,15 +34,10 @@ export function SettingsScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-
-      {/* Header */}
-      <div className="flex items-center gap-3 px-4 pt-1 pb-3">
-        <ChevronLeft className="w-5 h-5 text-white" />
-        <h1 className="text-white text-lg font-bold">Settings</h1>
-      </div>
+      <MobileTopBar title="Settings" showAvatar={false} />
 
       {/* Profile card */}
-      <div className="mx-4 mb-4 p-3 rounded-xl border border-white/[0.08] bg-white/[0.02] flex items-center gap-3">
+      <div className="mx-4 my-3 p-3 rounded-xl border border-white/[0.08] bg-white/[0.02] flex items-center gap-3">
         <MockAvatar name="alice" size="lg" />
         <div className="flex-1">
           <span className="text-white text-sm font-semibold block">Alice Johnson</span>
@@ -80,11 +77,13 @@ export function SettingsScreen() {
         ))}
 
         {/* Logout */}
-        <button className="w-full flex items-center justify-center gap-2 h-11 rounded-xl border border-white/10 text-zinc-400 text-sm mb-8">
+        <button className="w-full flex items-center justify-center gap-2 h-11 rounded-xl border border-white/10 text-zinc-400 text-sm mb-4">
           <LogOut className="w-4 h-4" />
           Sign Out
         </button>
       </div>
+
+      <MobileBottomBar />
     </div>
   );
 }

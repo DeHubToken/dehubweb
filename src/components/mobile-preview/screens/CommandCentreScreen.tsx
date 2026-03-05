@@ -1,18 +1,16 @@
 import { MobileStatusBar } from '../MobileStatusBar';
-import { ChevronLeft, TrendingUp, TrendingDown, DollarSign, Activity, ArrowUpRight } from 'lucide-react';
+import { MobileTopBar } from '../MobileTopBar';
+import { MobileBottomBar } from '../MobileBottomBar';
+import { TrendingUp, DollarSign, Activity, ArrowUpRight } from 'lucide-react';
 
 export function CommandCentreScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-
-      <div className="flex items-center gap-3 px-4 pt-1 pb-3">
-        <ChevronLeft className="w-5 h-5 text-white" />
-        <h1 className="text-white text-lg font-bold">Command Centre</h1>
-      </div>
+      <MobileTopBar title="Command Centre" showAvatar={false} />
 
       {/* Balance */}
-      <div className="mx-4 mb-4 p-4 rounded-2xl border border-white/[0.1] bg-white/[0.03]">
+      <div className="mx-4 my-3 p-4 rounded-2xl border border-white/[0.1] bg-white/[0.03]">
         <p className="text-zinc-500 text-xs mb-1">Portfolio Value</p>
         <h2 className="text-white text-2xl font-bold">$3,445.00</h2>
         <div className="flex items-center gap-1 mt-1">
@@ -85,6 +83,8 @@ export function CommandCentreScreen() {
           ))}
         </div>
       </div>
+
+      <MobileBottomBar />
     </div>
   );
 }

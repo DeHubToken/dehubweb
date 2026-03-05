@@ -1,6 +1,7 @@
 import { MobileStatusBar } from '../MobileStatusBar';
-import { MockAvatar } from '../MockAvatar';
-import { Sparkles, ChevronLeft, Send, Plus, Trash2 } from 'lucide-react';
+import { MobileTopBar } from '../MobileTopBar';
+import { MobileBottomBar } from '../MobileBottomBar';
+import { Sparkles, Send, Plus } from 'lucide-react';
 
 const MOCK_MESSAGES = [
   { id: '1', role: 'user', content: 'What\'s the current staking APY for DHB?' },
@@ -13,17 +14,7 @@ export function AssistantScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-
-      {/* Header */}
-      <div className="flex items-center gap-3 px-4 pt-1 pb-3 border-b border-white/[0.06]">
-        <ChevronLeft className="w-5 h-5 text-white" />
-        <Sparkles className="w-5 h-5 text-white" />
-        <div className="flex-1">
-          <span className="text-white text-sm font-semibold">AI Assistant</span>
-          <p className="text-zinc-500 text-[10px]">Powered by DeHub AI</p>
-        </div>
-        <Plus className="w-5 h-5 text-zinc-400" />
-      </div>
+      <MobileTopBar title="AI Assistant" showAvatar={false} showNotification={false} />
 
       {/* Messages */}
       <div className="flex-1 px-4 py-3 space-y-4 overflow-y-auto">
@@ -48,7 +39,7 @@ export function AssistantScreen() {
       </div>
 
       {/* Input */}
-      <div className="px-4 pb-8 pt-2 border-t border-white/[0.06]">
+      <div className="px-4 pb-2 pt-2 border-t border-white/[0.06]">
         <div className="flex items-center gap-2">
           <div className="flex-1 h-10 rounded-xl bg-white/[0.06] border border-white/10 px-4 flex items-center">
             <span className="text-zinc-600 text-sm">Ask anything...</span>
@@ -58,6 +49,8 @@ export function AssistantScreen() {
           </div>
         </div>
       </div>
+
+      <MobileBottomBar active="ai" />
     </div>
   );
 }

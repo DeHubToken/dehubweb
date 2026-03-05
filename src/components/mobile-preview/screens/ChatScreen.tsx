@@ -1,4 +1,6 @@
 import { MobileStatusBar } from '../MobileStatusBar';
+import { MobileTopBar } from '../MobileTopBar';
+import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
 import { ChevronLeft, Send, Paperclip, Smile, Phone, MoreVertical } from 'lucide-react';
 
@@ -17,7 +19,7 @@ export function ChatScreen() {
       <MobileStatusBar />
 
       {/* Chat header */}
-      <div className="flex items-center gap-3 px-3 pt-1 pb-3 border-b border-white/[0.06]">
+      <div className="flex items-center gap-3 px-3 py-2 border-b border-white/[0.06] bg-black/80 backdrop-blur-xl">
         <ChevronLeft className="w-5 h-5 text-white flex-shrink-0" />
         <MockAvatar name="bob_dev" size="sm" />
         <div className="flex-1 min-w-0">
@@ -47,7 +49,7 @@ export function ChatScreen() {
       </div>
 
       {/* Input */}
-      <div className="px-3 pb-8 pt-2 border-t border-white/[0.06]">
+      <div className="px-3 pb-2 pt-2 border-t border-white/[0.06]">
         <div className="flex items-center gap-2">
           <Paperclip className="w-5 h-5 text-zinc-500 flex-shrink-0" />
           <div className="flex-1 h-9 rounded-full bg-white/[0.06] border border-white/10 px-4 flex items-center">
@@ -59,6 +61,8 @@ export function ChatScreen() {
           </div>
         </div>
       </div>
+
+      <MobileBottomBar active="messages" />
     </div>
   );
 }

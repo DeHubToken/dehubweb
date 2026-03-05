@@ -1,4 +1,5 @@
 import { MobileStatusBar } from '../MobileStatusBar';
+import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
 import { Search, TrendingUp, Image } from 'lucide-react';
@@ -20,9 +21,10 @@ export function ExploreScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
+      <MobileTopBar title="Explore" />
 
       {/* Search bar */}
-      <div className="px-4 pt-2 pb-3">
+      <div className="px-4 py-3">
         <div className="flex items-center gap-2 h-10 px-4 rounded-xl bg-white/[0.06] border border-white/10">
           <Search className="w-4 h-4 text-zinc-500" />
           <span className="text-zinc-500 text-sm">Search posts, users, tags...</span>

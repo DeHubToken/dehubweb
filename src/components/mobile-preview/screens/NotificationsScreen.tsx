@@ -1,7 +1,8 @@
 import { MobileStatusBar } from '../MobileStatusBar';
+import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Heart, MessageSquare, Repeat2, UserPlus, Coins, AtSign, Settings2 } from 'lucide-react';
+import { Heart, MessageSquare, Repeat2, UserPlus, Coins, AtSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const MOCK_NOTIFICATIONS = [
@@ -21,15 +22,10 @@ export function NotificationsScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-2 pb-3">
-        <h1 className="text-white text-xl font-bold">Notifications</h1>
-        <Settings2 className="w-5 h-5 text-zinc-400" />
-      </div>
+      <MobileTopBar title="Notifications" />
 
       {/* Filter tabs */}
-      <div className="flex gap-1.5 px-4 pb-3">
+      <div className="flex gap-1.5 px-4 py-3">
         {FILTER_TABS.map((tab, i) => (
           <button
             key={tab}

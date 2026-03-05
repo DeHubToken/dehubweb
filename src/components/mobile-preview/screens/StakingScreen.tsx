@@ -1,5 +1,7 @@
 import { MobileStatusBar } from '../MobileStatusBar';
-import { ChevronLeft, Lock, Unlock, TrendingUp, Clock, Coins } from 'lucide-react';
+import { MobileTopBar } from '../MobileTopBar';
+import { MobileBottomBar } from '../MobileBottomBar';
+import { Lock, TrendingUp, Clock, Coins } from 'lucide-react';
 
 const STAKING_OPTIONS = [
   { period: '7 Days', apy: '8.2%', minStake: '100 DHB', locked: '2.4M DHB' },
@@ -11,14 +13,10 @@ export function StakingScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-
-      <div className="flex items-center gap-3 px-4 pt-1 pb-3">
-        <ChevronLeft className="w-5 h-5 text-white" />
-        <h1 className="text-white text-lg font-bold">Staking</h1>
-      </div>
+      <MobileTopBar title="Staking" showAvatar={false} />
 
       {/* Stats overview */}
-      <div className="grid grid-cols-2 gap-2 mx-4 mb-4">
+      <div className="grid grid-cols-2 gap-2 mx-4 my-3">
         {[
           { icon: Coins, label: 'Total Staked', value: '25.8M DHB' },
           { icon: TrendingUp, label: 'Avg APY', value: '12.4%' },
@@ -37,22 +35,17 @@ export function StakingScreen() {
       <div className="mx-4 mb-4 p-4 rounded-2xl border border-white/[0.1] bg-white/[0.03]">
         <h3 className="text-white text-sm font-semibold mb-3">Your Position</h3>
         <div className="space-y-2">
-          <div className="flex justify-between">
-            <span className="text-zinc-500 text-sm">Staked Amount</span>
-            <span className="text-white text-sm font-medium">10,000 DHB</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-zinc-500 text-sm">Lock Period</span>
-            <span className="text-white text-sm font-medium">90 Days</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-zinc-500 text-sm">Earned Rewards</span>
-            <span className="text-white text-sm font-medium">+461 DHB</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-zinc-500 text-sm">Current APY</span>
-            <span className="text-white text-sm font-medium">18.7%</span>
-          </div>
+          {[
+            ['Staked Amount', '10,000 DHB'],
+            ['Lock Period', '90 Days'],
+            ['Earned Rewards', '+461 DHB'],
+            ['Current APY', '18.7%'],
+          ].map(([label, value]) => (
+            <div key={label} className="flex justify-between">
+              <span className="text-zinc-500 text-sm">{label}</span>
+              <span className="text-white text-sm font-medium">{value}</span>
+            </div>
+          ))}
         </div>
         <button className="w-full mt-4 h-10 rounded-xl bg-white/10 border border-white/20 text-white text-sm font-medium">
           Claim Rewards
@@ -80,6 +73,8 @@ export function StakingScreen() {
           ))}
         </div>
       </div>
+
+      <MobileBottomBar />
     </div>
   );
 }
