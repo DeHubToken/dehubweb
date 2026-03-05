@@ -265,7 +265,7 @@ export function ActionBar({
     setSheetOpen(false);
   };
 
-  const [isReposted, setIsReposted] = useState(() => postId ? isPostReposted(postId) : false);
+  const [isReposted, setIsReposted] = useState(() => initialIsReposted || (postId ? isPostReposted(postId) : false));
 
   const handleRepost = () => {
     if (onRepost) {
