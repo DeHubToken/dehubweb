@@ -206,10 +206,24 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           )}
           
           {/* Dynamic routes (post pages, username profiles, etc.) use Outlet */}
-          {isDynamicRoute && (
-            <div className={isProfileRoute ? 'lg:animate-fade-in animate-slide-up-mobile' : 'animate-fade-in'}>
+          {isDynamicRoute && !isProfileRoute && (
+            <div className="animate-fade-in">
               {children || <Outlet />}
             </div>
+          )}
+          
+          {/* Desktop profile — renders inline */}
+          {isDynamicRoute && isProfileRoute && (
+            <div className="hidden lg:block animate-fade-in">
+              {children || <Outlet />}
+            </div>
+          )}
+          
+          {/* Mobile profile — renders in drawer */}
+          {isProfileRoute && (
+            <MobileProfileDrawer isOpen={isProfileRoute}>
+              {children || <Outlet />}
+            </MobileProfileDrawer>
           )}
         </main>
         
