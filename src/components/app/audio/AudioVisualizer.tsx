@@ -163,6 +163,13 @@ export function AudioVisualizer({
     }
   }, [isPlaying]);
 
+  // Sync muted state to the internal audio element
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.muted = muted;
+    }
+  }, [muted]);
+
   // Separate effect for animation
   useEffect(() => {
     if (isPlaying && analyserRef.current) {
