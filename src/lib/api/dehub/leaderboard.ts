@@ -1,5 +1,4 @@
 import { apiCall } from './core';
-import { supabase } from '@/integrations/supabase/client';
 
 export interface LeaderboardEntry {
   account: string;
@@ -30,39 +29,6 @@ const CACHE_TIMEOUT_MS = 2500;
 const CACHE_CIRCUIT_BREAKER_MS = 60_000;
 let skipCacheUntil = 0;
 
-// ── Background RPC refresh logic ────────────────────────────────────
-const STALE_THRESHOLD_MS = 4 * 60 * 60_000; // 4 hours
-let refreshInFlight = new Set<string>();
-
-async function triggerBackgroundRefresh(sort: LeaderboardSortMode, period: LeaderboardPeriod) {
-  const key = `${sort}/${period}`;
-  if (refreshInFlight.has(key)) return;
-  refreshInFlight.add(key);
-
-  try {
-    console.log(`[Leaderboard] Triggering background RPC refresh for ${key}...`);
-    const { data: { publicUrl } } = supabase.storage.from('stories').getPublicUrl('');
-    const baseUrl = publicUrl.replace('/storage/v1/object/public/stories/', '');
-    const fnUrl = `${baseUrl}/functions/v1/refresh-leaderboard-cache`;
-
-    await fetch(fnUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        mode: 'light',
-        sorts: [sort],
-        periods: [period],
-      }),
-    });
-    console.log(`[Leaderboard] Background RPC refresh completed for ${key}`);
-  } catch (err) {
-    console.warn(`[Leaderboard] Background refresh failed for ${key}:`, err);
-  } finally {
-    // Allow re-trigger after 5 minutes
-    setTimeout(() => refreshInFlight.delete(key), 5 * 60_000);
-  }
-}
-
 const isNetworkFailure = (message: string): boolean => {
   const normalized = message.toLowerCase();
   return (
@@ -85,7 +51,7 @@ export async function getLeaderboard(
     }
 
     try {
-      // supabase already imported at top level
+      const { supabase } = await import('@/integrations/supabase/client');
 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), CACHE_TIMEOUT_MS);
@@ -105,18 +71,7 @@ export async function getLeaderboard(
       }
 
       if (!cached.error && cached.data?.data) {
-        const updatedAt = cached.data.updated_at;
-        console.log(`[Leaderboard] Using cached data from ${updatedAt}`);
-
-        // Check if cache is stale and trigger background RPC refresh for holdings periods
-        if (sort === 'holdings' && period !== 'all' && updatedAt) {
-          const age = Date.now() - new Date(updatedAt).getTime();
-          if (age > STALE_THRESHOLD_MS) {
-            console.log(`[Leaderboard] Cache for ${sort}/${period} is ${Math.round(age / 60_000)}min old — triggering background RPC refresh`);
-            triggerBackgroundRefresh(sort, period);
-          }
-        }
-
+        console.log(`[Leaderboard] Using cached data from ${cached.data.updated_at}`);
         return cached.data.data as unknown as LeaderboardResponse;
       }
 
