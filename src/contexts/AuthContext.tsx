@@ -121,46 +121,6 @@ function normalizeUser(userData: Partial<DeHubUser> | null | undefined, fallback
 
 
 
-    if (!accounts || accounts.length === 0) {
-      console.warn('[Auth] EOA direct sign: EOA provider returned no accounts');
-      return null;
-    }
-
-    const eoaAddress = accounts[0].toLowerCase();
-    // Use targetAddress in the message if provided (e.g. Smart Account address for mobile parity)
-    const authAddress = targetAddress ? targetAddress.toLowerCase() : eoaAddress;
-    console.log('[Auth] EOA direct sign: EOA address:', eoaAddress, targetAddress ? `| target (SA): ${authAddress}` : '');
-
-    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-
-    // Call personal_sign on the EOA provider — use same format as signWithProvider
-    // (raw string [message, address]) so backend EIP-1271 verification matches.
-    let signature: string;
-    try {
-      signature = await eoaProvider.request({
-        method: 'personal_sign',
-        params: [message, eoaAddress],
-      }) as string;
-    } catch (e) {
-      // Fallback: some providers expect hex-encoded message
-      signature = await eoaProvider.request({
-        method: 'personal_sign',
-        params: [`0x${Buffer.from(message, 'utf8').toString('hex')}`, eoaAddress],
-      }) as string;
-    }
-
-    console.log('[Auth] EOA direct sign: signature produced, length:', signature.length);
-
-    if (signature.length > 200) {
-      console.warn('[Auth] EOA direct sign: signature is suspiciously long (' + signature.length + ' chars), may still be ERC-6492 wrapped');
-    }
-
-    return { address: authAddress, signature };
-  } catch (e) {
-    console.warn('[Auth] EOA direct sign failed, falling back to provider signing:', e);
-    return null;
-  }
-}
 /**
  * Sign auth message using the provider's personal_sign (original flow).
  * Used for external wallets and as fallback when EOA direct sign is unavailable.
