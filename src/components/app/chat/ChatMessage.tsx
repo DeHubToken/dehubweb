@@ -121,7 +121,7 @@ export function ChatMessage({ message, showActions, moderators, onPin, onUnpin, 
             </button>
             <StakingBadgeInline address={message.userId} />
           </span>
-          <ModeratorBadge address={message.userId} />
+          <ModeratorBadge address={message.userId} moderators={moderators} />
           {message.isPinned && (
             <span className="flex items-center gap-1 text-yellow-500/70 text-xs">
               <Pin className="w-3 h-3" />
