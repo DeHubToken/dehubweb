@@ -854,7 +854,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           setIsPosting(false);
           return;
         }
-        }
       }
 
       console.log('[Mint] Minting post:', {
