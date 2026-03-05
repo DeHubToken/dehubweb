@@ -119,6 +119,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'mi', name: 'Maori', nativeName: 'Māori' },
   { code: 'gu', name: 'Gujarati', nativeName: 'ગુજરાતી' },
   { code: 'ml', name: 'Malayalam', nativeName: 'മലയാളം' },
+  { code: 'or', name: 'Odia', nativeName: 'ଓଡ଼ିଆ' },
 ];
 
 // Dynamic import map for lazy loading locale files
@@ -224,6 +225,7 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
   mi: () => import('./locales/mi.json'),
   gu: () => import('./locales/gu.json'),
   ml: () => import('./locales/ml.json'),
+  or: () => import('./locales/or.json'),
 };
 
 /**
