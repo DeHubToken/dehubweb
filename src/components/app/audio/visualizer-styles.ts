@@ -1,4 +1,4 @@
-export type VisualizerStyle = 'static' | 'bars' | 'waveform' | 'circular' | 'spectrum' | 'mirror' | 'rings' | 'pulse' | 'terrain';
+export type VisualizerStyle = 'bars' | 'waveform' | 'circular' | 'spectrum' | 'mirror' | 'rings' | 'pulse' | 'terrain';
 
 // Helper to get colors from hue
 function getColors(hue: number) {
