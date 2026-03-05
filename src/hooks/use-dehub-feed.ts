@@ -99,15 +99,20 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   // and the user clicks through to single post page (which uses HLS via LiveStreamCard).
   // Audio posts use the audio CDN URL. Regular videos use video CDN URL.
   const isLivePost = (nft.postType as string) === 'live';
-  const isAudioPost = (nft.postType as string) === 'audio';
+  const isAudioPost = (nft.postType as string) === 'audio' || (nft.postType as string) === 'feed-audio';
   const videoUrl = isLivePost
     ? undefined
     : isAudioPost
-      ? (tokenId ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4` : undefined)
+      ? undefined
       : (tokenId ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4` : undefined);
 
+  // Build audio URL from API audioUrl field
+  const audioUrl = isAudioPost && (nft as any).audioUrl
+    ? ((nft as any).audioUrl.startsWith('http') ? (nft as any).audioUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${(nft as any).audioUrl}`)
+    : undefined;
+
   // Get duration from various fields
-  const duration = nft.videoDuration || nft.duration;
+  const duration = isAudioPost ? ((nft as any).audioDuration || nft.videoDuration || nft.duration) : (nft.videoDuration || nft.duration);
 
   // Get creator info from various possible fields
   const channel = nft.minterDisplayName ||
