@@ -144,16 +144,32 @@ function getChatSocket(): Socket {
 
 /** Join the global livechat room. */
 export function joinRoom(roomId: string) {
+  // Join on both root and /chat namespace
   const s = getSocket();
   console.log('[Socket] Joining room:', roomId);
   s.emit('joinRoom', { roomId });
+  s.emit('join-room', { roomId });
+  
+  // Also join on /chat namespace
+  try {
+    const cs = getChatSocket();
+    cs.emit('joinRoom', { roomId });
+    cs.emit('join-room', { roomId });
+  } catch (e) {
+    console.warn('[ChatSocket] Failed to join room:', e);
+  }
 }
 
 /** Leave a livechat room. */
 export function leaveRoom(roomId: string) {
-  if (!socket) return;
-  console.log('[Socket] Leaving room:', roomId);
-  socket.emit('leaveRoom', { roomId });
+  if (socket) {
+    socket.emit('leaveRoom', { roomId });
+    socket.emit('leave-room', { roomId });
+  }
+  if (chatSocket) {
+    chatSocket.emit('leaveRoom', { roomId });
+    chatSocket.emit('leave-room', { roomId });
+  }
 }
 
 /** Send a livechat message via socket. */
@@ -163,7 +179,6 @@ export function emitSendMessage(payload: {
   messageType?: 'text' | 'image' | 'gif' | 'voice';
   imageUrl?: string;
 }) {
-  const s = getSocket();
   const address = typeof window !== 'undefined' ? localStorage.getItem('dehub_wallet') : null;
   const fullPayload = {
     roomId: payload.roomId,
@@ -174,23 +189,29 @@ export function emitSendMessage(payload: {
     ...(payload.imageUrl ? { imageUrl: payload.imageUrl } : {}),
     ...(address ? { address: address.toLowerCase() } : {}),
   };
-  console.log('[Socket] Sending message (connected:', s.connected, '):', fullPayload);
   
-  // Try both camelCase and kebab-case event names (server uses kebab-case for other events like update-online-users)
-  s.emit('send-message', fullPayload, (ack: unknown) => {
-    console.log('[Socket] send-message ack:', ack);
-    import('sonner').then(({ toast }) => {
-      toast.info(`send-message ack: ${JSON.stringify(ack)?.substring(0, 200) || 'no ack'}`);
+  // Send on root namespace
+  const s = getSocket();
+  console.log('[Socket /] Sending (connected:', s.connected, ')');
+  s.emit('sendMessage', fullPayload);
+  s.emit('send-message', fullPayload);
+  
+  // Send on /chat namespace
+  try {
+    const cs = getChatSocket();
+    console.log('[Socket /chat] Sending (connected:', cs.connected, ')');
+    cs.emit('sendMessage', fullPayload, (ack: unknown) => {
+      console.log('[ChatSocket] sendMessage ack:', ack);
+      import('sonner').then(({ toast }) => toast.info(`/chat ack: ${JSON.stringify(ack)?.substring(0, 150) || 'none'}`));
     });
-  });
-  s.emit('sendMessage', fullPayload, (ack: unknown) => {
-    console.log('[Socket] sendMessage ack:', ack);
-    import('sonner').then(({ toast }) => {
-      toast.info(`sendMessage ack: ${JSON.stringify(ack)?.substring(0, 200) || 'no ack'}`);
-    });
-  });
-  s.emit('chat-message', fullPayload);
-  s.emit('new-message', fullPayload);
+    cs.emit('send-message', fullPayload);
+    cs.emit('chatMessage', fullPayload);
+    cs.emit('chat-message', fullPayload);
+    cs.emit('message', fullPayload);
+    cs.emit('new-message', fullPayload);
+  } catch (e) {
+    console.warn('[ChatSocket] Send failed:', e);
+  }
 }
 
 /** Request message history via socket. Returns promise with messages. */
