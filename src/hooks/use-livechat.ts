@@ -9,7 +9,7 @@ import {
   type LiveChatMessage,
   type LiveChatUserProfile,
 } from '@/lib/api/dehub';
-import { getSocket, joinRoom, leaveRoom, emitSendMessage, onLiveChatMessage } from '@/lib/api/dehub/socket';
+import { getSocket, joinRoom, leaveRoom, emitSendMessage, onLiveChatMessage, requestMessageHistory, debugSocketEvents } from '@/lib/api/dehub/socket';
 import { useAuth } from '@/contexts/AuthContext';
 
 /** Shape of a livechat message used internally in the UI */
