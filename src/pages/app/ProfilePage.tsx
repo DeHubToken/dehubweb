@@ -257,9 +257,9 @@ export default function ProfilePage() {
       )}
       
       <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
-        {/* Back button */}
+        {/* Back button — hidden on mobile when profile opens as drawer */}
         {location.key !== 'default' && (
-          <div className="flex items-center gap-2 mb-2">
+          <div className="hidden lg:flex items-center gap-2 mb-2">
             <Button
               variant="ghost"
               size="sm"
