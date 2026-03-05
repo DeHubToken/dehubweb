@@ -267,9 +267,13 @@ export function AudioVisualizer({
 
       {/* Controls overlay */}
       {showStylePicker && (
-        <div className="absolute bottom-2 left-2 right-2 flex items-end gap-2">
+        <div className="absolute bottom-2 left-2 right-2 flex items-end gap-2 pointer-events-auto z-20">
           {/* Color slider */}
-          <div className="flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1.5 border border-white/10 shrink-0">
+          <div
+            className="flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1.5 border border-white/10 shrink-0"
+            onClick={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
+          >
             <Palette className="w-3.5 h-3.5 text-white/60" />
             <div 
               className="w-16 h-2 rounded-full relative overflow-hidden"
@@ -296,8 +300,11 @@ export function AudioVisualizer({
                   key={s.value}
                   onClick={(e) => {
                     e.stopPropagation();
+                    e.preventDefault();
                     setStyle(s.value);
                   }}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
                   className={`px-2 py-1 text-[10px] font-medium rounded-full transition-all whitespace-nowrap
                     ${
                       style === s.value
