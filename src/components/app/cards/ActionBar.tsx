@@ -303,7 +303,7 @@ export function ActionBar({
     <>
       {isReposted ? (
         <button
-          onClick={handleUndoRepost}
+          onClick={(e) => { e.stopPropagation(); handleUndoRepost(); }}
           className="flex items-center gap-3 w-full p-4 text-red-400 hover:text-red-300 hover:bg-white/10 rounded-xl transition-all duration-200"
         >
           <Repeat2 className="w-5 h-5" />
