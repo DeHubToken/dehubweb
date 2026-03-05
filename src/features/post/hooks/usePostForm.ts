@@ -855,7 +855,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }
 
       console.log('[Mint] Minting post:', {
-        name: text.trim().slice(0, 100) || 'Untitled',
+        name: text.trim().slice(0, 100) || '',
         description: description.trim(),
         postType,
         streamInfo,
@@ -878,7 +878,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       if (postType === 'video' || postType === 'audio') {
         // Video/Audio: first line = title, rest = description
         const lines = text.trim().split('\n');
-        postTitle = (lines[0] || '').trim().slice(0, 100) || 'Untitled';
+        postTitle = (lines[0] || '').trim().slice(0, 100);
         postDescription = lines.slice(1).join('\n').trim();
       } else {
         // Image/Text posts: title blank, everything goes to description
@@ -978,7 +978,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           thumbnail: media[0].thumbnail || media[0].preview,
           videoUrl: media[0].preview,
           duration: media[0].duration ? `${Math.floor(media[0].duration / 60)}:${String(Math.floor(media[0].duration % 60)).padStart(2, '0')}` : '0:00',
-          title: text.trim().split('\n')[0] || 'Untitled',
+          title: text.trim().split('\n')[0] || '',
           channel: username,
           channelAvatar: avatar || '', // Must be string for VideoItem type
           verified: false,

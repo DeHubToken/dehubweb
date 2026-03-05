@@ -103,7 +103,7 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     id: String(tokenId),
     type: 'video',
     thumbnail: buildImageUrl(tokenId, nft.imageUrl) || buildImageUrl(tokenId, nft.thumbnail_url) || '',
-    title: nft.name || nft.title || nft.description || 'Untitled',
+    title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
     channel: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'Anonymous',
     verified: nft.creator?.is_verified || false,
     channelAvatar: avatarUrl || undefined,
