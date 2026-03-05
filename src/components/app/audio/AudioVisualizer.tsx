@@ -11,10 +11,12 @@ import {
   drawRings,
   drawPulse,
   drawTerrain,
+  drawStatic,
   resetSpectrum,
   resetRings,
   resetPulse,
   resetTerrain,
+  resetStatic,
 } from './visualizer-styles';
 
 interface AudioVisualizerProps {
@@ -25,9 +27,12 @@ interface AudioVisualizerProps {
   showStylePicker?: boolean;
   /** When true the audio output is muted (visualizer still animates). */
   muted?: boolean;
+  /** Seed for the static waveform style (e.g. post id). */
+  seed?: string;
 }
 
 const STYLES: { value: VisualizerStyle; label: string }[] = [
+  { value: 'static', label: 'Default' },
   { value: 'bars', label: 'Bars' },
   { value: 'waveform', label: 'Wave' },
   { value: 'circular', label: 'Radial' },
@@ -45,6 +50,7 @@ export function AudioVisualizer({
   className = '',
   showStylePicker = true,
   muted = false,
+  seed = 'default',
 }: AudioVisualizerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -54,7 +60,7 @@ export function AudioVisualizer({
   const animationRef = useRef<number | null>(null);
   const isConnectedRef = useRef(false);
   
-  const [style, setStyle] = useState<VisualizerStyle>('bars');
+  const [style, setStyle] = useState<VisualizerStyle>('static');
   const [hue, setHue] = useState(0); // Default to left side (red)
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -117,6 +123,9 @@ export function AudioVisualizer({
     analyserRef.current.getByteTimeDomainData(timeData);
 
     switch (style) {
+      case 'static':
+        drawStatic(ctx, frequencyData, canvas.width, canvas.height, hue, seed);
+        break;
       case 'bars':
         drawBars(ctx, frequencyData, canvas.width, canvas.height, hue);
         break;
@@ -144,7 +153,7 @@ export function AudioVisualizer({
     }
 
     animationRef.current = requestAnimationFrame(draw);
-  }, [style, hue]);
+  }, [style, hue, seed]);
 
   useEffect(() => {
     if (isPlaying && !isInitialized) {
@@ -185,6 +194,7 @@ export function AudioVisualizer({
     resetRings();
     resetPulse();
     resetTerrain();
+    resetStatic();
   }, [style]);
 
   useEffect(() => {
@@ -202,6 +212,7 @@ export function AudioVisualizer({
       resetRings();
       resetPulse();
       resetTerrain();
+      resetStatic();
     };
   }, []);
 
