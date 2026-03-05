@@ -8,7 +8,7 @@ import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { AppLayout } from '@/components/app/AppLayout';
+
 import { LoginModal } from '@/components/app/LoginModal';
 import { AuthGate } from '@/components/app/AuthGate';
 import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
