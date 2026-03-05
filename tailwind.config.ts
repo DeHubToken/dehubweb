@@ -134,6 +134,10 @@ export default {
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" },
         },
+        "slide-up-mobile": {
+          "0%": { transform: "translateY(100%)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -141,6 +145,7 @@ export default {
         "close-button-glitch": "close-button-glitch 0.4s ease-in-out",
         "story-shimmer": "story-shimmer-rotate 4s linear infinite",
         "lava-flow": "lava-flow 4s ease infinite",
+        "slide-up-mobile": "slide-up-mobile 0.3s cubic-bezier(0.32, 0.72, 0, 1)",
       },
     },
   },
