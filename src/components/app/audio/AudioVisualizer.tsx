@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { Play, Pause, Palette } from 'lucide-react';
+import { Play, Pause } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Slider } from '@/components/ui/slider';
 import {
@@ -269,13 +269,12 @@ export function AudioVisualizer({
       {/* Controls overlay */}
       {showStylePicker && (
         <div data-no-swipe className="absolute bottom-2 left-2 right-2 flex items-end gap-2 pointer-events-auto z-20" style={{ touchAction: 'pan-x' }}>
-          {/* Color slider */}
+          {/* Color slider - liquid glass bubble style */}
           <div
-            className="flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1.5 border border-white/10 shrink-0"
+            className="relative px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-white/25 via-white/15 to-white/8 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] shrink-0"
             onClick={(e) => e.stopPropagation()}
             onPointerDown={(e) => e.stopPropagation()}
           >
-            <Palette className="w-3.5 h-3.5 text-white/60" />
             <div 
               className="w-16 h-2 rounded-full relative overflow-hidden"
               style={{
