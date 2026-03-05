@@ -123,6 +123,9 @@ export function AudioVisualizer({
     analyserRef.current.getByteTimeDomainData(timeData);
 
     switch (style) {
+      case 'static':
+        drawStatic(ctx, frequencyData, canvas.width, canvas.height, hue, seed);
+        break;
       case 'bars':
         drawBars(ctx, frequencyData, canvas.width, canvas.height, hue);
         break;
