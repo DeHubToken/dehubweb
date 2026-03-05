@@ -636,7 +636,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         if (saResult) {
           console.log('[Auth] [REDIRECT] Trying Smart Account address:', smartAccountAddress);
-          const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID);
+          const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID, web3AuthMeta);
           const normalizedUser = normalizeUser(saAuthResponse.user, saResult.address);
           localStorage.setItem('dehub_wallet', saResult.address);
           localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
