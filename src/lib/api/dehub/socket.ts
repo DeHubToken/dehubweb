@@ -45,12 +45,12 @@ export function getSocket(): Socket {
     handshakeAuth.clientType = 'web';
     handshakeAuth.platform = 'web';
 
-    socket = io(DEHUB_API_BASE, {
+    socket = io(`${DEHUB_API_BASE}/livechat`, {
       auth: Object.keys(handshakeAuth).length ? handshakeAuth : undefined,
       query: handshakeAuth,
       path: '/socket.io',
-      transports: ['polling', 'websocket'],
-      upgrade: true,
+      transports: ['polling'],
+      upgrade: false,
       forceNew: true,
       autoConnect: true,
       reconnection: true,
@@ -116,9 +116,13 @@ export function emitSendMessage(payload: {
   imageUrl?: string;
 }) {
   const s = getSocket();
-  console.log('[Socket] Sending message (connected:', s.connected, '):', payload);
-  // Primary event name for the DeHub livechat gateway
-  s.emit('sendMessage', payload, (ack: unknown) => {
+  const address = typeof window !== 'undefined' ? localStorage.getItem('dehub_wallet') : null;
+  const fullPayload = {
+    ...payload,
+    ...(address ? { address: address.toLowerCase() } : {}),
+  };
+  console.log('[Socket] Sending message (connected:', s.connected, '):', fullPayload);
+  s.emit('sendMessage', fullPayload, (ack: unknown) => {
     console.log('[Socket] sendMessage ack:', ack);
   });
 }
