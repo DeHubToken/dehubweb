@@ -693,6 +693,28 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     staleTime: 5 * 60 * 1000,
   });
 
+  // Fetch audio uploads for carousel
+  const { data: audioUploadsData, isLoading: isLoadingAudio } = useQuery({
+    queryKey: ['music-audio-uploads', walletAddress],
+    queryFn: async () => {
+      const response = await searchNFTs({
+        postType: 'audio',
+        unit: 50,
+        sortMode: 'new',
+      });
+      return (response.data || []).filter((nft: DeHubNFT) => !isBlockedCreator(nft, blockedAddresses));
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const audioUploads = useMemo(() => {
+    if (!audioUploadsData) return [];
+    return audioUploadsData.map((nft, index) => {
+      const item = mapNFTToVideoItem(nft, index);
+      return { ...item, isAudio: true };
+    });
+  }, [audioUploadsData]);
+
   // Shuffle and map to VideoItem for carousel - randomized on each mount
   const carouselVideos = useMemo(() => {
     if (!carouselVideosData) return [];
@@ -731,6 +753,8 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
             musicVideos={carouselVideos}
             totalVideoCount={carouselVideosData?.length || 0}
             isLoadingVideos={isLoadingCarouselVideos}
+            audioUploads={audioUploads}
+            isLoadingAudio={isLoadingAudio}
             onGoToRadio={() => setActiveSubTab('radio')}
             onGoToVideos={() => setActiveSubTab('videos')}
             onOpenStages={() => setShowStagesModal(true)}
