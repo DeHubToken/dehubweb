@@ -19,6 +19,7 @@ import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
 
 let socket: Socket | null = null;
+let chatSocket: Socket | null = null;
 let currentToken: string | null = null;
 
 function getWalletAddress(): string | null {
