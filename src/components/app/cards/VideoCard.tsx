@@ -1459,6 +1459,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             timestamp={video.uploadedAgo} 
             viewCount={video.views?.replace(' views', '') || '0'}
             isAd={video.isAd}
+            isAudio={video.isAudio}
             translateControl={{
               isTranslated: isVideoTranslated,
               isLoading: isTranslateLoading,
