@@ -385,7 +385,8 @@ export function ActionBar({
           
           {/* Repost - opens share sheet with repost/quote options */}
           <button 
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               if (isOptimistic) {
                 toast('Post processing, click ⓘ for more info', {
                   icon: <Info className="w-4 h-4" />,
