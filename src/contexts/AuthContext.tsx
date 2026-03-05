@@ -589,8 +589,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 
   /**
-   * Complete DeHub auth specifically after redirect flow.
-   * EOA mode: eth_accounts returns EOA address, personal_sign returns ECDSA.
+   * Complete DeHub auth specifically after redirect flow (mobile email/SMS).
+   * Uses Smart Account address + EIP-1271 signature for social logins.
    */
   const completeDeHubAuthAfterRedirect = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
@@ -600,15 +600,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log('[Auth] [REDIRECT] Starting DeHub authentication sequence...');
     toast.loading('Getting your account...', { id: toastId });
 
-    try {
-      const w3a = await getOrInitWeb3Auth();
-      const userInfo = await w3a.getUserInfo();
-      console.log('[Auth] [REDIRECT] User Info:', userInfo.email || userInfo.name || 'Found');
-    } catch (e) {
-      console.warn('[Auth] [REDIRECT] getUserInfo failed (ignoring):', e);
-    }
-
-    const signingProvider = provider;
+    // Gather web3AuthMeta for the auth request
+    const web3AuthMeta = await getWeb3AuthMeta();
 
     try {
       const BASE_CHAIN_ID = 8453;
