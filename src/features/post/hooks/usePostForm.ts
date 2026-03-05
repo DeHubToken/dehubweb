@@ -877,8 +877,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       let postTitle = '';
       let postDescription = '';
 
-      if (postType === 'video') {
-        // Video: first line = title, rest = description
+      if (postType === 'video' || postType === 'audio') {
+        // Video/Audio: first line = title, rest = description
         const lines = text.trim().split('\n');
         postTitle = (lines[0] || '').trim().slice(0, 100) || 'Untitled';
         postDescription = lines.slice(1).join('\n').trim();
