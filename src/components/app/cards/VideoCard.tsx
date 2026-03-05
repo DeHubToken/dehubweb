@@ -1479,6 +1479,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           dislikeCount={video.dislikeCount}
           commentCount={video.commentCount}
           repostCount={video.repostCount}
+          isReposted={video.isReposted}
           isOptimistic={video.isOptimistic}
         />
 
