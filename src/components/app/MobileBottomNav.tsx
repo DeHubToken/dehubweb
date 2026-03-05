@@ -122,7 +122,7 @@ export function MobileBottomNav() {
 
   // Calculate opacity: fades quickly on scroll (reaches 0 at ~10% scroll)
   const buttonOpacity = Math.max(0, 1 - scrollProgress * 10);
-  const isAIActive = location.pathname === '/app/assistant';
+  
 
   return (
     <>
