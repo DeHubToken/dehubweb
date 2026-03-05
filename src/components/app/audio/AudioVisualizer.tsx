@@ -305,11 +305,11 @@ export function AudioVisualizer({
                   }}
                   onPointerDown={(e) => e.stopPropagation()}
                   onTouchStart={(e) => e.stopPropagation()}
-                  className={`px-2 py-1 text-[10px] font-medium rounded-full transition-all whitespace-nowrap
+                  className={`px-2.5 py-1 text-[10px] font-medium rounded-lg transition-all whitespace-nowrap backdrop-blur-xl
                     ${
                       style === s.value
-                        ? 'bg-white/30 text-white border border-white/40'
-                        : 'bg-black/40 text-white/60 hover:bg-black/60 hover:text-white/80 border border-white/10'
+                        ? 'bg-gradient-to-br from-white/25 via-white/15 to-white/8 text-white border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]'
+                        : 'bg-gradient-to-br from-white/10 via-white/5 to-white/[0.02] text-white/60 hover:text-white/80 border border-white/10 hover:border-white/20 shadow-[0_4px_12px_rgba(0,0,0,0.15)]'
                     }`}
                 >
                   {s.label}
