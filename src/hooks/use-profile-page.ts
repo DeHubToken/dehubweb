@@ -32,11 +32,14 @@ export function useProfilePage() {
   const profileContainerRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
 
-  // Reset scroll position on mount
+  // Reset scroll position on mount — skip on mobile when profile opens as drawer overlay
   useEffect(() => {
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
+    const isMobileDrawer = window.innerWidth < 1024;
+    if (!isMobileDrawer) {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
     setTranslatedBio(null);
   }, [routeUsername, userId]);
 
