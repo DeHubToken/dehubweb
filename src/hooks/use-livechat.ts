@@ -5,6 +5,7 @@ import {
   getLiveChatMessages as fetchApiMessages,
   sendLiveChatMessage,
   getLiveChatUserProfile,
+  getLiveChatOnlineCount,
   type LiveChatRoom,
   type LiveChatMessage,
   type LiveChatUserProfile,
@@ -245,13 +246,23 @@ export function useLiveChatMessages(roomId: string | null) {
 }
 
 /**
- * Placeholder presence hook — returns empty list.
- * Real presence would require socket or a dedicated API endpoint.
+ * Presence hook — fetches online count from /api/livechat/online
  */
 export function useLiveChatPresence(_roomId: string | null) {
+  const [onlineCount, setOnlineCount] = useState(0);
+
+  useEffect(() => {
+    if (!_roomId) return;
+    getLiveChatOnlineCount().then(setOnlineCount).catch(() => {});
+    const interval = setInterval(() => {
+      getLiveChatOnlineCount().then(setOnlineCount).catch(() => {});
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [_roomId]);
+
   return {
     onlineUsers: [] as Array<{ address: string; username?: string; avatar?: string }>,
-    onlineCount: 0,
+    onlineCount,
   };
 }
 
