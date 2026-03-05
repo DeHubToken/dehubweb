@@ -30,6 +30,7 @@ export interface Message {
 interface ChatMessageProps {
   message: Message;
   showActions?: boolean;
+  moderators?: string[];
   onPin?: (messageId: string) => void;
   onUnpin?: (messageId: string) => void;
   onBan?: (userId: string, userName: string) => void;
@@ -37,14 +38,18 @@ interface ChatMessageProps {
 }
 
 /** Inline moderator badge shown next to the username */
-function ModeratorBadge({ address }: { address: string }) {
-  const { profile } = useLiveChatUser(address);
-  if (!profile?.isModerator) return null;
+function ModeratorBadge({ address, moderators }: { address: string; moderators?: string[] }) {
+  // Check against room's moderators list (source of truth from API)
+  const isMod = moderators?.some(
+    (mod) => mod.toLowerCase() === address.toLowerCase()
+  );
+  if (!isMod) return null;
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <span className="inline-flex items-center text-emerald-400">
+        <span className="inline-flex items-center gap-0.5 text-emerald-400 text-[10px] font-semibold bg-emerald-400/10 rounded px-1 py-0.5">
           <ShieldCheck className="w-3 h-3" />
+          MOD
         </span>
       </TooltipTrigger>
       <TooltipContent>Moderator</TooltipContent>
