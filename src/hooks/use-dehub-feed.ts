@@ -67,9 +67,9 @@ function isBlockedPost(nft: DeHubNFT): boolean {
  */
 export function getContentType(nft: DeHubNFT): 'video' | 'image' | 'audio' {
   // Check postType first (primary field from API)
-  if (nft.postType === 'image' || nft.postType === 'video' || nft.postType === 'audio') {
-    return nft.postType;
-  }
+  const pt = nft.postType as string;
+  if (pt === 'image' || pt === 'video') return pt;
+  if (pt === 'audio' || pt === 'feed-audio') return 'audio';
   // Fallback to media_type if present
   if (nft.media_type === 'image' || nft.media_type === 'video' || nft.media_type === 'audio') {
     return nft.media_type;
