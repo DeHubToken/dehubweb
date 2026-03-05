@@ -362,16 +362,7 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
               </Tooltip>
             )}
           </div>
-          <button
-            onClick={handleBookmark}
-            className={cn(
-              "transition-colors",
-              isBookmarked ? "text-yellow-500" : "text-white hover:text-zinc-400"
-            )}
-            aria-label="Bookmark"
-          >
-            <Bookmark className={cn("w-4 h-4", isBookmarked && "fill-current")} />
-          </button>
+          </div>
         </div>
       </div>
     </motion.div>
