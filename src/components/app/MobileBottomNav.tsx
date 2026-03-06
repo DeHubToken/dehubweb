@@ -21,7 +21,7 @@ const RIGHT_NAV_ITEMS = [
 ];
 
 const SCROLL_NAV_ITEMS = [
-  { icon: Search, label: 'Explore', path: '/app/explore' },
+  { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Wallet, label: 'Wallet', path: '/app/wallet' },
