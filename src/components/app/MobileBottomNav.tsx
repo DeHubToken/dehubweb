@@ -74,26 +74,39 @@ export function MobileBottomNav() {
     const alreadySeen = localStorage.getItem(SCROLL_HINT_KEY);
     if (alreadySeen) return;
 
-    // Fire hint immediately — scroll all the way right then snap back
+    // Fire hint immediately — carousel-style scroll that decelerates into place
     const showTimer = setTimeout(() => {
       setShowScrollHint(true);
 
       const container = scrollRef.current;
       if (!container) return;
 
-      // Scroll to the very end
-      container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
+      // Start scrolled to the end, then ease into position 0
+      container.scrollLeft = container.scrollWidth;
 
-      const backTimer = setTimeout(() => {
-        // Snap back to start
-        container.scrollTo({ left: 0, behavior: 'smooth' });
-        setTimeout(() => {
-          setShowScrollHint(false);
-          localStorage.setItem(SCROLL_HINT_KEY, 'true');
-        }, 400);
-      }, 500);
+      const totalDuration = 800; // ms
+      const start = performance.now();
+      const startScroll = container.scrollLeft;
 
-      return () => clearTimeout(backTimer);
+      const animate = (now: number) => {
+        const elapsed = now - start;
+        const t = Math.min(elapsed / totalDuration, 1);
+        // Ease-out cubic: fast start, gentle landing
+        const ease = 1 - Math.pow(1 - t, 3);
+        container.scrollLeft = startScroll * (1 - ease);
+
+        if (t < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          container.scrollLeft = 0;
+          setTimeout(() => {
+            setShowScrollHint(false);
+            localStorage.setItem(SCROLL_HINT_KEY, 'true');
+          }, 200);
+        }
+      };
+
+      requestAnimationFrame(animate);
     }, 300);
 
     return () => clearTimeout(showTimer);
