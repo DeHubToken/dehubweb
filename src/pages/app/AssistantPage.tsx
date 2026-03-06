@@ -1518,7 +1518,7 @@ export default function AssistantPage() {
                             <MarkdownText content={message.content} className="text-sm" />
                           </div>
                         )}
-                        {/* Image container with watermark + button overlay */}
+                        {/* Image container with button overlay */}
                         <div className="relative">
                           <img 
                             src={message.imageUrl} 
