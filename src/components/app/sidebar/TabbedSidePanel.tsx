@@ -64,18 +64,21 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
       <div className="h-[400px] overflow-hidden">
         <div
           className="flex h-full transition-transform duration-300 ease-out"
-          style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+          style={{
+            width: `${tabs.length * 100}%`,
+            transform: `translateX(-${activeIndex * (100 / tabs.length)}%)`,
+          }}
         >
           {/* Leaderboard panel */}
-          <div className="w-full flex-shrink-0 h-full overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+          <div className="h-full overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent" style={{ width: `${100 / tabs.length}%` }}>
             <SidebarLeaderboard ref={leaderboardRef} />
           </div>
           {/* Follow panel */}
-          <div className="w-full flex-shrink-0 h-full flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+          <div className="h-full flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent" style={{ width: `${100 / tabs.length}%` }}>
             <WhoToFollow />
           </div>
           {/* Chat panel */}
-          <div className="w-full flex-shrink-0 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+          <div className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent" style={{ width: `${100 / tabs.length}%` }}>
               <SidebarChat />
           </div>
         </div>
