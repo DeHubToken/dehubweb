@@ -816,6 +816,16 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
       <div className="flex justify-between items-center gap-1 mb-3">
+        {/* Mobile close button */}
+        {isMobile && (
+          <button
+            onClick={onClose}
+            className="absolute top-3 right-3 z-50 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 text-white/70 hover:text-white hover:bg-white/20 transition-colors"
+            aria-label="Close comments"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
         {/* Left side - Tab buttons */}
         <div ref={commentsTabLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <GlassIndicator rect={commentsTabRect} />
