@@ -847,8 +847,9 @@ IMPORTANT FORMATTING RULES:
     let postAnalysisInfo = '';
     if (requiresPostAnalysis(userQuery) && userContext?.walletAddress) {
       const postCount = extractPostCount(userQuery);
-      console.log(`[PostAnalysis] User requested analysis of ${postCount} posts`);
-      const userPosts = await fetchUserPosts(userContext.walletAddress, postCount);
+      const fetchId = userContext.username || userContext.walletAddress;
+      console.log(`[PostAnalysis] User requested analysis of ${postCount} posts for ${fetchId}`);
+      const userPosts = await fetchUserPosts(fetchId, postCount);
       if (userPosts.length > 0) {
         const formattedPosts = formatPostsForContext(userPosts);
         postAnalysisInfo = `\n\n## User's Recent Posts (${userPosts.length} posts)\nThe user has asked you to study/analyze their posts. Here is their content data:\n${formattedPosts}\n\nProvide a thorough analysis including:\n- Content patterns and themes\n- Engagement metrics (which posts perform best/worst and why)\n- Content type distribution (videos vs images vs text)\n- Posting frequency and timing patterns\n- Specific, actionable suggestions to improve engagement\n- What they're doing well and should continue\n- What they could experiment with`;
