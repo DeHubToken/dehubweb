@@ -446,7 +446,8 @@ export default function AssistantPage() {
           })),
           style: selectedStyle,
           model: selectedChatModel,
-          userLanguage
+          userLanguage,
+          userContext
         }
       });
 
