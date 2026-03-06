@@ -46,6 +46,7 @@ const FeaturesPage = lazyWithRetry(() => import('@/pages/app/FeaturesPage'));
 const GovernancePage = lazyWithRetry(() => import('@/pages/app/GovernancePage'));
 const FullWalletPage = lazyWithRetry(() => import('@/pages/app/FullWalletPage'));
 const CareersPage = lazyWithRetry(() => import('@/pages/app/CareersPage'));
+const GlossaryPage = lazyWithRetry(() => import('@/pages/app/GlossaryPage'));
 const StakingPage = lazyWithRetry(() => import('@/pages/app/StakingPage'));
 
 // Pages that get cached (mount-once, hide with CSS)
@@ -74,6 +75,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'features', path: ['/app/features', '/features'], component: FeaturesPage, skeleton: FeaturesSkeleton },
   { key: 'governance', path: ['/app/governance', '/governance'], component: GovernancePage, skeleton: FeaturesSkeleton },
   { key: 'careers', path: ['/app/jobs', '/jobs'], component: CareersPage, skeleton: GenericPageSkeleton },
+  { key: 'glossary', path: ['/app/glossary', '/glossary'], component: GlossaryPage, skeleton: GenericPageSkeleton },
   { key: 'stake', path: ['/app/stake', '/stake'], component: StakingPage, skeleton: GenericPageSkeleton },
   { key: 'profile', path: '/app/profile', component: ProfilePage, skeleton: ProfileSkeleton },
 ];
