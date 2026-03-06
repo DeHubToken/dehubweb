@@ -582,7 +582,7 @@ export default function PostInfoPage() {
                 </div>
                 <div>
                   <p className="text-white font-medium">
-                    {(nftInfo as any).isLive ? 'Currently Live' : 'Stream Offline'}
+                    {(nftInfo as any).isLive ? t('postInfo.currentlyLive') : t('postInfo.streamOffline')}
                   </p>
                   <p className="text-xs text-white/60">
                     {(nftInfo as any).totalViews ?? nftInfo.views ?? 0} total views
