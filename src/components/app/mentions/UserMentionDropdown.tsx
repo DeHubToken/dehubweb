@@ -11,7 +11,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
-import { searchUsers as apiSearchUsers } from '@/lib/api/dehub/users';
+import { apiCall } from '@/lib/api/dehub/core';
 import { getMediaUrl } from '@/lib/api/dehub/core';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
