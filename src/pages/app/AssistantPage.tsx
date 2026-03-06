@@ -783,13 +783,11 @@ export default function AssistantPage() {
         return;
       }
 
-      const watermarkedImageUrl = await addWatermarkClient(data.imageUrl);
-
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: '',
-        imageUrl: watermarkedImageUrl
+        imageUrl: data.imageUrl
       };
 
       setMessages(prev => [...prev, assistantMessage]);
