@@ -216,7 +216,7 @@ export function RecentTransactions() {
     onchainTransfers.forEach(transfer => {
       const txHashLower = transfer.txHash?.toLowerCase();
       // Skip if already captured by DPay API (exact hash match)
-      if (txHashLower && dpayHashes.has(txHashLower)) return;
+      if (txHashLower && (dpayHashes.has(txHashLower) || tipHashes.has(txHashLower))) return;
 
       // Skip if this is a purchase duplicate (gateway wallet, matching buy hash, or amount+time match)
       const isPurchaseDuplicate = transfer.isFiatPurchase 
