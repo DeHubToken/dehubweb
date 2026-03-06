@@ -11,7 +11,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
-import { searchUsers as apiSearchUsers } from '@/lib/api/dehub/users';
+import { apiCall } from '@/lib/api/dehub/core';
 import { getMediaUrl } from '@/lib/api/dehub/core';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -73,16 +73,21 @@ export function UserMentionDropdown({
 
     debounceRef.current = setTimeout(async () => {
       try {
-        const response = await apiSearchUsers({ q: query, limit: 8 });
+        // Use /api/search?type=people for accurate username matching
+        const response = await apiCall<any>('/api/search', {
+          params: { q: query, type: 'people', limit: 8 },
+        });
+
         // Only apply results if query hasn't changed
         if (latestQueryRef.current !== query) return;
 
-        const mapped: MentionUser[] = (response.data || []).slice(0, 5).map((u) => ({
-          id: (u as any)._id || u.id || u.address || '',
+        const items = response?.accounts?.items || [];
+        const mapped: MentionUser[] = items.slice(0, 5).map((u: any) => ({
+          id: u._id || u.id || u.address || '',
           username: u.username || '',
-          displayName: u.displayName || (u as any).display_name || null,
+          displayName: u.displayName || u.display_name || null,
           avatarUrl: getMediaUrl(u.avatarImageUrl || u.avatarUrl || undefined) || null,
-          isVerified: u.isVerified || (u as any).is_verified || false,
+          isVerified: u.isVerified || u.is_verified || false,
         }));
 
         setUsers(mapped);
