@@ -959,7 +959,7 @@ export default function AssistantPage() {
 
         // Show fallback toast if Grok was requested but not available
         if (data.fallbackUsed) {
-          toast.info('Using DeHub AI - Grok API key not configured');
+          toast.info(t('assistant.fallbackGrokNotConfigured'));
         }
 
         // Check if this is a transaction simulation response
