@@ -61,7 +61,7 @@ export function TipModal({
 
   const parsedAmount = parseFloat(amount);
   const isValidAmount =
-    !Number.isNaN(parsedAmount) && parsedAmount >= MIN_TIP_DHB && parsedAmount <= MAX_TIP_DHB;
+    !Number.isNaN(parsedAmount) && parsedAmount >= MIN_TIP_DHB;
 
   const handleSendTip = () => {
     if (!isValidAmount) return;
