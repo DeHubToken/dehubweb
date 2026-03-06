@@ -87,17 +87,8 @@ export function SidebarChat() {
   }, [isAuthenticated, walletAddress, send]);
 
   const handleSend = async () => {
-    if (!isAuthenticated) {
-      toast.error('Sign in to chat');
-      return;
-    }
-    const text = newMessage.trim();
-    setNewMessage('');
-    try {
-      await send(text, 'text');
-    } catch {
-      toast.error('Failed to send');
-    }
+    toast.error('Live chat only available in-app currently, download now on Google Play');
+    return;
   };
 
   const handleEmojiSelect = (emoji: string) => {
