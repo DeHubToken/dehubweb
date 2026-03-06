@@ -4,7 +4,7 @@ import { UserPlus, Loader2, RefreshCw, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { getSuggestedAccounts, followUser, type SuggestedAccount } from '@/lib/api/dehub';
+import { getSuggestedAccounts, getCachedSuggestedProfiles, followUser, type SuggestedAccount } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
@@ -22,6 +22,8 @@ export function WhoToFollow() {
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // For unauthenticated users, use cached profiles from the database
+  // For authenticated users, use the personalized suggestions API
   const {
     data,
     isLoading,
@@ -32,14 +34,17 @@ export function WhoToFollow() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['suggested-accounts', walletAddress],
-    queryFn: ({ pageParam = 1 }) => getSuggestedAccounts(BATCH_SIZE, pageParam),
+    queryKey: isAuthenticated ? ['suggested-accounts', walletAddress] : ['cached-suggested-profiles'],
+    queryFn: ({ pageParam = 1 }) => {
+      if (!isAuthenticated) {
+        const offset = (pageParam - 1) * BATCH_SIZE;
+        return getCachedSuggestedProfiles(BATCH_SIZE, offset);
+      }
+      return getSuggestedAccounts(BATCH_SIZE, pageParam);
+    },
     getNextPageParam: (lastPage, allPages) => {
-      // Stop if API says no more
       if (!lastPage.hasMore) return undefined;
-      // Stop if we've hit max pages
       if (allPages.length >= MAX_PAGES) return undefined;
-      // Stop if the last page returned all duplicates (API is recycling)
       const allPreviousAddresses = new Set(
         allPages.slice(0, -1).flatMap(p => p.items.map(i => i.address))
       );
@@ -48,7 +53,7 @@ export function WhoToFollow() {
       return allPages.length + 1;
     },
     initialPageParam: 1,
-    staleTime: 5 * 60 * 1000,
+    staleTime: isAuthenticated ? 5 * 60 * 1000 : 30 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
     retry: 2,
   });

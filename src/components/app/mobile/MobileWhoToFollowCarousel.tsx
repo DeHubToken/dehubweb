@@ -4,7 +4,7 @@ import { UserPlus, Loader2, ChevronRight, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { getSuggestedAccounts, followUser, type SuggestedAccount } from '@/lib/api/dehub';
+import { getSuggestedAccounts, getCachedSuggestedProfiles, followUser, type SuggestedAccount } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
@@ -31,8 +31,14 @@ export function MobileWhoToFollowCarousel() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['suggested-accounts', walletAddress],
-    queryFn: ({ pageParam = 1 }) => getSuggestedAccounts(BATCH_SIZE, pageParam),
+    queryKey: isAuthenticated ? ['suggested-accounts', walletAddress] : ['cached-suggested-profiles'],
+    queryFn: ({ pageParam = 1 }) => {
+      if (!isAuthenticated) {
+        const offset = (pageParam - 1) * BATCH_SIZE;
+        return getCachedSuggestedProfiles(BATCH_SIZE, offset);
+      }
+      return getSuggestedAccounts(BATCH_SIZE, pageParam);
+    },
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage.hasMore) return undefined;
       if (allPages.length >= MAX_PAGES) return undefined;
@@ -44,8 +50,7 @@ export function MobileWhoToFollowCarousel() {
       return allPages.length + 1;
     },
     initialPageParam: 1,
-    enabled: isAuthenticated,
-    staleTime: 5 * 60 * 1000,
+    staleTime: isAuthenticated ? 5 * 60 * 1000 : 30 * 60 * 1000,
   });
 
   const allSuggestions = useMemo(() => {
