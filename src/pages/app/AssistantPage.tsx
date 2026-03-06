@@ -1192,7 +1192,6 @@ export default function AssistantPage() {
                 id: 'initial',
                 role: 'assistant',
                 content: t('assistant.greeting'),
-                timestamp: new Date(),
               }]);
               setInput('');
               setAttachedImage(null);
