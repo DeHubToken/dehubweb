@@ -214,12 +214,21 @@ export function WhoToFollow() {
             onClick={() => handleUserClick(user)}
             className="flex items-center gap-3 py-2 px-4 hover:bg-zinc-800/50 transition-colors cursor-pointer"
           >
-            <Avatar className="w-10 h-10">
-              {getAvatarUrl(user) && <AvatarImage src={getAvatarUrl(user)} />}
-              <AvatarFallback className="bg-zinc-700 text-white font-medium">
-                {getDisplayName(user).charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+            <div className="relative flex-shrink-0">
+              <Avatar className="w-10 h-10">
+                {getAvatarUrl(user) && <AvatarImage src={getAvatarUrl(user)} />}
+                <AvatarFallback className="bg-zinc-700 text-white font-medium">
+                  {getDisplayName(user).charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              {getBadgeUrl(user.badgeBalance, user.username) && (
+                <img
+                  src={getBadgeUrl(user.badgeBalance, user.username)!}
+                  alt="badge"
+                  className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full"
+                />
+              )}
+            </div>
             <div className="flex-1 min-w-0">
               <span className="font-semibold text-white text-sm truncate block">{getDisplayName(user)}</span>
             </div>
