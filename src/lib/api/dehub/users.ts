@@ -228,3 +228,33 @@ export async function getSuggestedAccounts(limit: number = 10, page: number = 1)
   console.warn('[Suggestions] Unexpected response shape:', JSON.stringify(response).slice(0, 200));
   return { items: [], hasMore: false };
 }
+
+/**
+ * Fetch cached suggested profiles for unauthenticated users.
+ * These are pre-cached top active users from the leaderboard.
+ */
+export async function getCachedSuggestedProfiles(limit: number = 10, offset: number = 0): Promise<{ items: SuggestedAccount[]; hasMore: boolean }> {
+  const { supabase } = await import('@/integrations/supabase/client');
+  
+  const { data, error } = await supabase
+    .from('suggested_profiles_cache')
+    .select('address, username, display_name, avatar_url, followers, badge_balance')
+    .order('badge_balance', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (error) {
+    console.warn('[CachedSuggestions] Error:', error);
+    return { items: [], hasMore: false };
+  }
+
+  const items: SuggestedAccount[] = (data || []).map((row: any) => ({
+    address: row.address,
+    username: row.username || undefined,
+    displayName: row.display_name || row.username || undefined,
+    avatarUrl: row.avatar_url || undefined,
+    followers: row.followers || 0,
+    isFollowing: false,
+  }));
+
+  return { items, hasMore: items.length === limit };
+}
