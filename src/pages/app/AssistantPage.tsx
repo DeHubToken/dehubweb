@@ -67,6 +67,7 @@ interface Message {
   simulationType?: 'transfer' | 'purchase';
   simulationData?: SimulationData;
   simulationStatus?: 'pending' | 'approved' | 'rejected';
+  isError?: boolean;
 }
 
 // Keywords that indicate image generation/editing request
@@ -862,21 +863,43 @@ export default function AssistantPage() {
         setMessages(prev => [...prev, assistantMessage]);
         queueMessage(assistantMessage);
       } else {
-        // Regular chat - use general-ai-chat endpoint
-        const { data, error } = await supabase.functions.invoke('general-ai-chat', {
-          body: {
-            messages: [...messages, userMessage].map(m => ({
-              role: m.role,
-              content: m.content
-            })),
-            style: selectedStyle,
-            model: selectedChatModel,
-            isAuthenticated, // Pass auth status for transaction simulation
-            userLanguage
-          }
-        });
+        // Regular chat - use general-ai-chat endpoint with retry
+        const chatBody = {
+          messages: [...messages, userMessage].map(m => ({
+            role: m.role,
+            content: m.content
+          })),
+          style: selectedStyle,
+          model: selectedChatModel,
+          isAuthenticated,
+          userLanguage
+        };
 
-        if (error) throw error;
+        let data: any = null;
+        let lastError: any = null;
+        const maxRetries = 2;
+
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+          try {
+            const result = await supabase.functions.invoke('general-ai-chat', { body: chatBody });
+            if (result.error) throw result.error;
+            // Check for error in response body (e.g. 429, 504 forwarded as JSON)
+            if (result.data?.error && !result.data?.response) {
+              throw new Error(result.data.error);
+            }
+            data = result.data;
+            lastError = null;
+            break;
+          } catch (err: any) {
+            lastError = err;
+            console.warn(`[Assistant] Attempt ${attempt + 1}/${maxRetries + 1} failed:`, err?.message || err);
+            if (attempt < maxRetries) {
+              await new Promise(r => setTimeout(r, 1000 * (attempt + 1))); // 1s, 2s backoff
+            }
+          }
+        }
+
+        if (lastError || !data) throw lastError || new Error('No response from AI');
 
         // Show fallback toast if Grok was requested but not available
         if (data.fallbackUsed) {
@@ -913,12 +936,30 @@ export default function AssistantPage() {
           }
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('AI chat error:', error);
+      // Log error details to backend for diagnostics
+      try {
+        await supabase.from('client_error_logs').insert({
+          level: 'error',
+          message: `Assistant error: ${error?.message || 'Unknown error'}`,
+          component: 'AssistantPage',
+          metadata: {
+            userMessage: currentInput?.substring(0, 50),
+            model: selectedChatModel,
+            errorName: error?.name,
+          },
+          user_address: null,
+        });
+      } catch (logErr) {
+        console.warn('[Assistant] Failed to log error:', logErr);
+      }
+      const errorId = (Date.now() + 1).toString();
       setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(),
+        id: errorId,
         role: 'assistant',
-        content: t('assistant.errorGeneric')
+        content: t('assistant.errorGeneric'),
+        isError: true,
       }]);
     } finally {
       setIsLoading(false);
@@ -1578,6 +1619,21 @@ export default function AssistantPage() {
                           /* Assistant message - no bubble */
                           <div className="text-white">
                             <MarkdownText content={message.content} className="text-sm" />
+                            {message.isError && (
+                              <button
+                                onClick={() => {
+                                  const idx = messages.indexOf(message);
+                                  const lastUserMsg = messages.slice(0, idx).reverse().find(m => m.role === 'user');
+                                  if (lastUserMsg) {
+                                    setMessages(prev => prev.filter(m => m.id !== message.id));
+                                    handleSend(lastUserMsg.content);
+                                  }
+                                }}
+                                className="mt-2 text-xs text-white/60 hover:text-white/90 underline transition-colors"
+                              >
+                                {t('assistant.retry', 'Retry')}
+                              </button>
+                            )}
                           </div>
                         )}
                       </div>
