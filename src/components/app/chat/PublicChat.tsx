@@ -136,11 +136,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
       return;
     }
     const type = args.type === 'media' ? 'image' : args.type === 'msg' ? 'text' : args.type as 'text' | 'image' | 'gif';
-    try {
-      await send(args.content, type);
-    } catch {
-      toast.error('Failed to send message');
-    }
+    await send(args.content, type);
   };
 
   const handlePinMessage = useCallback(async (messageId: string) => {

@@ -22,9 +22,10 @@ export function getSocket(): Socket {
   }
 
   if (!socket) {
-    socket = io(`${DEHUB_API_BASE}/livechat`, {
+    socket = io(DEHUB_API_BASE, {
       auth: { token: token || undefined },
-      transports: ['websocket'],
+      transports: ['polling'],
+      upgrade: false,
       forceNew: true,
       autoConnect: true,
       reconnection: true,
