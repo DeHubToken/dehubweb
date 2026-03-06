@@ -120,9 +120,8 @@ export function TipModal({
               <Input
                 type="number"
                 min={MIN_TIP_DHB}
-                max={MAX_TIP_DHB}
                 step={0.1}
-                placeholder={`${MIN_TIP_DHB} - ${MAX_TIP_DHB} DHB`}
+                placeholder="Enter DHB amount"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 className="pl-11 bg-white/5 border-white/10 text-white placeholder:text-white/40 h-12"
