@@ -96,15 +96,8 @@ export function SidebarChat() {
   };
 
   const handleGifSelect = async (gifUrl: string) => {
-    if (!isAuthenticated) {
-      toast.error('Sign in to chat');
-      return;
-    }
-    try {
-      await send(gifUrl, 'gif');
-    } catch {
-      toast.error('Failed to send GIF');
-    }
+    toast.error('Live chat only available in-app currently, download now on Google Play');
+    return;
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
