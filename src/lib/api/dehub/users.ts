@@ -184,6 +184,7 @@ export interface SuggestedAccount {
   avatarImageUrl?: string;
   followers?: number;
   isFollowing?: boolean;
+  badgeBalance?: number;
 }
 
 export async function getSuggestedAccounts(limit: number = 10, page: number = 1): Promise<{ items: SuggestedAccount[]; hasMore: boolean }> {
