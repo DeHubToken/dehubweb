@@ -66,6 +66,19 @@ const LIVE_SEARCH_KEYWORDS = [
   'search for', 'look up', 'find me', 'google', 'search the web'
 ];
 
+// Keywords that indicate a personal/self-referencing question (use user context, NOT web search)
+const PERSONAL_KEYWORDS = [
+  'my followers', 'my following', 'my balance', 'my tips', 'my rank',
+  'my likes', 'my posts', 'my staked', 'my badge', 'my subscribers',
+  'did i gain', 'did i get', 'did i lose', 'did i earn', 'did i receive', 'did i send',
+  'do i have', 'have i gained', 'have i got', 'have i lost', 'have i earned',
+  'i gained', 'i lost', 'i earned', 'i received', 'i sent',
+  'how many followers', 'how many likes', 'how many tips', 'how many posts',
+  'how many subscribers', 'my leaderboard', 'my position', 'my wallet',
+  'my profile', 'my stats', 'my earnings', 'my activity',
+  'followers did i', 'likes did i', 'tips did i',
+];
+
 // Keywords about DeHub - FREE tier (already trained on docs)
 const DEHUB_KEYWORDS = [
   'dehub', 'dhb', '$dhb', 'token', 'delabs', 'futurov', 'ftv',
