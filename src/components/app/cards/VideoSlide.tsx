@@ -114,33 +114,67 @@ export const VideoSlide = memo(function VideoSlide({
     setProgress(ratio);
   }, []);
 
-  const handleProgressPointerDown = useCallback((e: React.PointerEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-    setIsSeeking(true);
-    onSeekStart?.();
-    seekToPosition(e.clientX);
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-  }, [seekToPosition, onSeekStart]);
+  // Use a ref to track seeking so native listeners always see latest value
+  const isSeekingRef = useRef(false);
 
-  const handleProgressPointerMove = useCallback((e: React.PointerEvent) => {
-    if (!isSeeking) return;
-    e.stopPropagation();
-    e.preventDefault();
-    seekToPosition(e.clientX);
-  }, [isSeeking, seekToPosition]);
+  // Native DOM listeners on the progress bar to fully block framer-motion drag
+  useEffect(() => {
+    const bar = progressBarRef.current;
+    if (!bar) return;
 
-  const handleProgressPointerUp = useCallback((e: React.PointerEvent) => {
-    if (!isSeeking) return;
-    e.stopPropagation();
-    e.preventDefault();
-    setIsSeeking(false);
-    onSeekEnd?.();
-    const el = e.currentTarget as HTMLElement;
-    if (el.hasPointerCapture(e.pointerId)) {
-      el.releasePointerCapture(e.pointerId);
-    }
-  }, [isSeeking, onSeekEnd]);
+    const stopAll = (e: Event) => {
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      e.preventDefault();
+    };
+
+    const onDown = (e: PointerEvent) => {
+      stopAll(e);
+      isSeekingRef.current = true;
+      setIsSeeking(true);
+      onSeekStart?.();
+      seekToPosition(e.clientX);
+      bar.setPointerCapture(e.pointerId);
+    };
+
+    const onMove = (e: PointerEvent) => {
+      if (!isSeekingRef.current) return;
+      stopAll(e);
+      seekToPosition(e.clientX);
+    };
+
+    const onUp = (e: PointerEvent) => {
+      if (!isSeekingRef.current) return;
+      stopAll(e);
+      isSeekingRef.current = false;
+      setIsSeeking(false);
+      onSeekEnd?.();
+      if (bar.hasPointerCapture(e.pointerId)) {
+        bar.releasePointerCapture(e.pointerId);
+      }
+    };
+
+    // Block mouse/touch from reaching framer-motion
+    const blockMouse = (e: Event) => { e.stopPropagation(); e.stopImmediatePropagation(); };
+
+    bar.addEventListener('pointerdown', onDown, { capture: true });
+    bar.addEventListener('pointermove', onMove, { capture: true });
+    bar.addEventListener('pointerup', onUp, { capture: true });
+    bar.addEventListener('pointercancel', onUp, { capture: true });
+    bar.addEventListener('mousedown', blockMouse, { capture: true });
+    bar.addEventListener('touchstart', blockMouse, { capture: true });
+    bar.addEventListener('click', blockMouse, { capture: true });
+
+    return () => {
+      bar.removeEventListener('pointerdown', onDown, { capture: true });
+      bar.removeEventListener('pointermove', onMove, { capture: true });
+      bar.removeEventListener('pointerup', onUp, { capture: true });
+      bar.removeEventListener('pointercancel', onUp, { capture: true });
+      bar.removeEventListener('mousedown', blockMouse, { capture: true });
+      bar.removeEventListener('touchstart', blockMouse, { capture: true });
+      bar.removeEventListener('click', blockMouse, { capture: true });
+    };
+  }, [seekToPosition, onSeekStart, onSeekEnd]);
 
   return (
     <div className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
