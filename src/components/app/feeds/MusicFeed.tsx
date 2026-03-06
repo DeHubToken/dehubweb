@@ -332,11 +332,7 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
           onPointerDown={(e) => e.stopPropagation()}
           className="flex-shrink-0 cursor-pointer"
         >
-          <img 
-            src={video.channelAvatar} 
-            alt={video.channel}
-            className="w-8 h-8 rounded-xl object-cover hover:opacity-80 transition-opacity pointer-events-none"
-          />
+          <MusicCardAvatar avatar={video.channelAvatar} name={video.channel} />
         </button>
         <div className="min-w-0 flex-1">
           <p className="text-white text-sm font-medium truncate">{video.title}</p>
