@@ -957,16 +957,43 @@ export default function AssistantPage() {
       }
     } catch (error: any) {
       console.error('AI chat error:', error);
+      const errorCode = error?.errorCode || 'UNKNOWN';
+      const statusCode = error?.statusCode;
+      
+      // Build user-facing error message based on error type
+      let userErrorMessage: string;
+      switch (errorCode) {
+        case 'RATE_LIMIT':
+          userErrorMessage = '⏳ Rate limit reached. Please wait a moment and try again.';
+          break;
+        case 'CREDITS_EXHAUSTED':
+          userErrorMessage = '💳 AI credits exhausted. Please try again later.';
+          break;
+        case 'TIMEOUT':
+          userErrorMessage = '⏱️ Request timed out. The AI service may be busy — please try again.';
+          break;
+        case 'UPSTREAM_ERROR':
+          userErrorMessage = `🔧 AI service error (${statusCode || 'unknown'}). The AI provider is having issues. Please try again in a moment.`;
+          break;
+        default:
+          userErrorMessage = `❌ Something went wrong: ${error?.message || 'Unknown error'}. Please try again.`;
+          break;
+      }
+      
       // Log error details to backend for diagnostics
       try {
+        const { walletAddress } = useAuth as any;
         await supabase.from('client_error_logs').insert({
           level: 'error',
-          message: `Assistant error: ${error?.message || 'Unknown error'}`,
+          message: `Assistant error [${errorCode}]: ${error?.message || 'Unknown error'}`,
           component: 'AssistantPage',
           metadata: {
-            userMessage: currentInput?.substring(0, 50),
+            userMessage: currentInput?.substring(0, 100),
             model: selectedChatModel,
+            errorCode,
+            statusCode,
             errorName: error?.name,
+            errorStack: error?.stack?.substring(0, 500),
           },
           user_address: null,
         });
@@ -977,7 +1004,7 @@ export default function AssistantPage() {
       setMessages(prev => [...prev, {
         id: errorId,
         role: 'assistant',
-        content: t('assistant.errorGeneric'),
+        content: userErrorMessage,
         isError: true,
       }]);
     } finally {
