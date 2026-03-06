@@ -48,7 +48,6 @@ export function WhoToFollow() {
       return allPages.length + 1;
     },
     initialPageParam: 1,
-    enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
     retry: 2,
