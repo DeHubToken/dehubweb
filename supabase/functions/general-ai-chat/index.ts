@@ -207,6 +207,7 @@ function isDeHubRelated(message: string): boolean {
   return DEHUB_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
+function requiresComplexReasoning(message: string): boolean {
   const lowerMessage = message.toLowerCase();
   return COMPLEX_REASONING_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
