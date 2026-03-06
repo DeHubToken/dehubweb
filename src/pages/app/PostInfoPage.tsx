@@ -629,7 +629,7 @@ export default function PostInfoPage() {
           {/* Visibility Settings - Only shown to owner */}
           {isOwner && (
             <section className="bg-white/5 rounded-xl p-4 border border-white/10">
-              <h2 className="text-sm font-medium text-white/60 mb-3">Visibility</h2>
+              <h2 className="text-sm font-medium text-white/60 mb-3">{t('postInfo.visibility')}</h2>
               <Select 
                 value={currentVisibility} 
                 onValueChange={(value: TokenVisibility) => handleVisibilityChange(value)}
