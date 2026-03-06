@@ -484,8 +484,8 @@ export default function AssistantPage() {
     } catch (error: any) {
       console.error('AI chat error (voice):', error);
       const errorCode = error?.errorCode || 'UNKNOWN';
-      let msg = errorCode === 'RATE_LIMIT' ? '⏳ Rate limit reached. Try again shortly.'
-        : errorCode === 'TIMEOUT' ? '⏱️ Request timed out. Please try again.'
+      let msg = errorCode === 'RATE_LIMIT' ? t('assistant.errorRateLimit')
+        : errorCode === 'TIMEOUT' ? t('assistant.errorTimeout')
         : `❌ ${error?.message || t('assistant.errorGeneric')}`;
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
