@@ -469,12 +469,17 @@ export default function AssistantPage() {
           speak(responseText);
         }, 300);
       }
-    } catch (error) {
-      console.error('AI chat error:', error);
+    } catch (error: any) {
+      console.error('AI chat error (voice):', error);
+      const errorCode = error?.errorCode || 'UNKNOWN';
+      let msg = errorCode === 'RATE_LIMIT' ? '⏳ Rate limit reached. Try again shortly.'
+        : errorCode === 'TIMEOUT' ? '⏱️ Request timed out. Please try again.'
+        : `❌ ${error?.message || t('assistant.errorGeneric')}`;
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: t('assistant.errorGeneric')
+        content: msg,
+        isError: true,
       }]);
     } finally {
       setIsLoading(false);
