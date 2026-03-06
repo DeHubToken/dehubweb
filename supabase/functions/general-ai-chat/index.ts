@@ -844,6 +844,31 @@ IMPORTANT FORMATTING RULES:
       }
     }
 
+    // Fetch another user's profile and posts if asking about someone else
+    let otherUserInfo = '';
+    if (requiresOtherUserLookup(userQuery)) {
+      const targetUsername = extractTargetUsername(userQuery);
+      if (targetUsername) {
+        console.log(`[UserLookup] Looking up user: ${targetUsername}`);
+        const profile = await fetchUserProfile(targetUsername);
+        if (profile) {
+          const profileText = formatProfileForContext(profile);
+          const walletAddr = profile.address || profile.walletAddress;
+          let postsText = '';
+          if (walletAddr) {
+            const postCount = extractPostCount(userQuery) || 20;
+            const posts = await fetchUserPosts(walletAddr, postCount);
+            if (posts.length > 0) {
+              postsText = `\n\n### Their Recent Posts (${posts.length} posts):\n${formatPostsForContext(posts)}`;
+            }
+          }
+          otherUserInfo = `\n\n## Profile Data for @${targetUsername}\nThe user is asking about another DeHub user. Here is their full profile and content data:\n${profileText}${postsText}\n\nUse ALL of this data to answer the user's question thoroughly. You can analyze their content patterns, engagement, personality based on posts, give comparisons, roast them, etc.`;
+        } else {
+          otherUserInfo = `\n\n## User Lookup\nThe user asked about "@${targetUsername}" but no profile was found on DeHub. Let them know this user doesn't exist or may have a different username.`;
+        }
+      }
+    }
+
     // Build post context info if provided
     let postContextInfo = '';
     if (postContext) {
@@ -862,8 +887,8 @@ IMPORTANT FORMATTING RULES:
     }
     
     const systemPrompt = personalityModifier
-      ? `${basePrompt}${userContextInfo}${postAnalysisInfo}${postContextInfo}\n\nIMPORTANT STYLE: ${personalityModifier}`
-      : `${basePrompt}${userContextInfo}${postAnalysisInfo}${postContextInfo}`;
+      ? `${basePrompt}${userContextInfo}${postAnalysisInfo}${otherUserInfo}${postContextInfo}\n\nIMPORTANT STYLE: ${personalityModifier}`
+      : `${basePrompt}${userContextInfo}${postAnalysisInfo}${otherUserInfo}${postContextInfo}`;
 
     // Build messages array - include image in user message if available
     const apiMessages: any[] = [{ role: 'system', content: systemPrompt }];
