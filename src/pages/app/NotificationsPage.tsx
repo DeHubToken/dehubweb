@@ -123,7 +123,7 @@ const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.Eleme
   { labelKey: 'notifications.all', value: 'all', icon: Bell },
   { labelKey: 'notifications.likes', value: 'likes', icon: ThumbsUp },
   { labelKey: 'notifications.follows', value: 'follows', icon: UserPlus },
-  { labelKey: 'notifications.comments', value: 'comments', icon: MessageCircle },
+  { labelKey: 'notifications.comments', value: 'comments', icon: MessageSquareText },
   { labelKey: 'notifications.reposts', value: 'reposts', icon: Repeat2 },
   { labelKey: 'notifications.subs', value: 'subscriptions', icon: Users },
   { labelKey: 'notifications.tips', value: 'tips', icon: DollarSign },
