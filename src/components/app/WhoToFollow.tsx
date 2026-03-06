@@ -162,9 +162,6 @@ export function WhoToFollow() {
     }
   };
 
-  if (!isAuthenticated) {
-    return null;
-  }
 
   if (isLoading) {
     return (
