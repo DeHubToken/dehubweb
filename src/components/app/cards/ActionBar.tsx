@@ -28,17 +28,6 @@ import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache
 import { getCommentCountDelta } from '@/lib/comment-count-cache';
 import dehubCoin from '@/assets/dehub-coin.png';
 import {
-import { useNavigate } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
-import { motion } from 'framer-motion';
-import { voteOnPost } from '@/lib/api/dehub';
-import { useAuth } from '@/contexts/AuthContext';
-import { useBookmarkPost } from '@/hooks/use-bookmarks';
-import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
-import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
-import { getCommentCountDelta } from '@/lib/comment-count-cache';
-import {
   Drawer,
   DrawerContent,
   DrawerHeader,
