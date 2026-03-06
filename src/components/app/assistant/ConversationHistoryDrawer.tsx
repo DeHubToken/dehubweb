@@ -39,6 +39,7 @@ export function ConversationHistoryDrawer({
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [isClearingAll, setIsClearingAll] = useState(false);
   const { walletAddress, isAuthenticated } = useAuth();
 
   // Fetch conversations when drawer opens
@@ -128,14 +129,52 @@ export function ConversationHistoryDrawer({
     }
   };
 
+  const handleClearAll = async () => {
+    if (!walletAddress || conversations.length === 0) return;
+    setIsClearingAll(true);
+    try {
+      const { error } = await withWalletHeader(
+        supabase
+          .from('ai_conversations')
+          .delete()
+          .eq('wallet_address', walletAddress.toLowerCase()),
+        walletAddress
+      );
+      if (error) throw error;
+      setConversations([]);
+      toast.success('All conversations cleared');
+    } catch (error) {
+      console.error('Error clearing conversations:', error);
+      toast.error('Failed to clear conversations');
+    } finally {
+      setIsClearingAll(false);
+    }
+  };
+
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent glass className="border-t border-white/10">
         <DrawerHeader className="border-b border-white/10">
-          <DrawerTitle className="text-white flex items-center gap-2">
-            <History className="w-5 h-5 text-white" />
-            Conversation History
-          </DrawerTitle>
+          <div className="flex items-center justify-between">
+            <DrawerTitle className="text-white flex items-center gap-2">
+              <History className="w-5 h-5 text-white" />
+              Conversation History
+            </DrawerTitle>
+            {conversations.length > 0 && (
+              <button
+                onClick={handleClearAll}
+                disabled={isClearingAll}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-400 hover:bg-red-400/10 transition-colors disabled:opacity-50"
+              >
+                {isClearingAll ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Trash2 className="w-3.5 h-3.5" />
+                )}
+                Clear All
+              </button>
+            )}
+          </div>
         </DrawerHeader>
         
         <ScrollArea className="h-[70vh]">
@@ -187,7 +226,7 @@ export function ConversationHistoryDrawer({
                       <button
                         onClick={(e) => handleDeleteConversation(e, conversation.id)}
                         disabled={deletingId === conversation.id}
-                        className="p-2 rounded-lg text-white/40 hover:text-red-400 hover:bg-white/10 transition-colors opacity-0 group-hover:opacity-100"
+                        className="p-2 rounded-lg text-white/40 hover:text-red-400 hover:bg-white/10 transition-colors sm:opacity-0 sm:group-hover:opacity-100"
                       >
                         {deletingId === conversation.id ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
