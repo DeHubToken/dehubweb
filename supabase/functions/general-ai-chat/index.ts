@@ -866,7 +866,7 @@ IMPORTANT FORMATTING RULES:
       const targetUsername = extractTargetUsername(userQuery);
       if (targetUsername) {
         console.log(`[UserLookup] Looking up user: ${targetUsername}`);
-        const profile = await fetchUserProfile(targetUsername);
+        const profile = await fetchUserProfile(targetUsername, dehubToken);
         if (profile) {
           const profileText = formatProfileForContext(profile);
           const userId = profile.username || profile.userId || targetUsername;
