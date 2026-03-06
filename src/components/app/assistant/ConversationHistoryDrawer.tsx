@@ -39,6 +39,7 @@ export function ConversationHistoryDrawer({
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [isClearingAll, setIsClearingAll] = useState(false);
   const { walletAddress, isAuthenticated } = useAuth();
 
   // Fetch conversations when drawer opens
