@@ -1712,8 +1712,8 @@ export default function AssistantPage() {
                 ))}
               </AnimatePresence>
               
-              {/* Quick action buttons - show only on initial state */}
-              {messages.length === 1 && messages[0].id === 'initial' && !isLoading && (
+              {/* Quick action buttons - show when not loading */}
+              {!isLoading && !isImageLoading && !isVideoLoading && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
