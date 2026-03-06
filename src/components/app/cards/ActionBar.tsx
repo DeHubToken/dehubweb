@@ -410,6 +410,16 @@ export function ActionBar({
             <span className="text-xs text-zinc-400">{formatCount(displayRepostCount)}</span>
           </button>
 
+          {/* Tip counter */}
+          <button
+            onClick={(e) => { e.stopPropagation(); onTip?.(); }}
+            className="flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors"
+            aria-label="Tips"
+          >
+            <img src={dehubCoin} alt="DHB" className="w-5 h-5 brightness-0 invert opacity-80" />
+            <span className="text-xs text-zinc-400">{formatCount(tipCount)}</span>
+          </button>
+
           
           <Drawer open={sheetOpen} onOpenChange={setSheetOpen}>
             <DrawerContent glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()} onPointerDown={(e: React.PointerEvent) => e.stopPropagation()}>
