@@ -199,7 +199,11 @@ function requiresWebSearch(message: string): boolean {
   return LIVE_SEARCH_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
-function requiresComplexReasoning(message: string): boolean {
+function isDeHubRelated(message: string): boolean {
+  const lowerMessage = message.toLowerCase();
+  return DEHUB_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
+}
+
   const lowerMessage = message.toLowerCase();
   return COMPLEX_REASONING_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
