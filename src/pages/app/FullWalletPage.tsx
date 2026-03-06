@@ -421,10 +421,25 @@ export default function FullWalletPage() {
 }
 
 /* ─── Grouped Token Row ─── */
-function GroupedTokenRow({ grouped, onClick }: { grouped: GroupedToken; onClick: () => void }) {
+function GroupedTokenRow({ grouped, onClick, price }: { grouped: GroupedToken; onClick: () => void; price?: number }) {
   const { t } = useTranslation();
   const icon = TOKEN_ICONS[grouped.symbol] || grouped.logo;
   const hasBalance = grouped.totalBalance > BigInt(0);
+
+  const fmtPrice = (p?: number) => {
+    if (!p || p === 0) return '';
+    if (p >= 1000) return `$${p.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    if (p >= 1) return `$${p.toFixed(2)}`;
+    if (p >= 0.01) return `$${p.toFixed(4)}`;
+    return `$${p.toFixed(6)}`;
+  };
+
+  const usdValue = price && price > 0 ? parseFloat(grouped.totalFormattedBalance) * price : 0;
+  const fmtUsd = (v: number) => {
+    if (!v || isNaN(v) || v === 0) return '';
+    if (v < 0.01) return '<$0.01';
+    return `$${v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
 
   return (
     <motion.div
@@ -448,11 +463,14 @@ function GroupedTokenRow({ grouped, onClick }: { grouped: GroupedToken; onClick:
             <span className="text-sm font-medium text-white">{grouped.symbol}</span>
             {grouped.isCustom && <span className="text-[10px] bg-violet-500/20 text-violet-400 px-1.5 py-0.5 rounded">{t('wallet.custom')}</span>}
           </div>
-          <span className="text-xs text-zinc-500 truncate block">{grouped.name}</span>
+          <span className="text-xs text-zinc-500 truncate block">{fmtPrice(price) || grouped.name}</span>
         </div>
       </div>
       <div className="text-right">
         <span className={`text-sm font-medium ${hasBalance ? 'text-white' : 'text-zinc-600'}`}>{fmtBal(grouped.totalFormattedBalance)}</span>
+        {usdValue > 0 && (
+          <span className="text-xs text-zinc-500 block">{fmtUsd(usdValue)}</span>
+        )}
       </div>
     </motion.div>
   );
