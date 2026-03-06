@@ -68,6 +68,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const { data: tipCount = 0 } = usePostTipCount(post.id);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
