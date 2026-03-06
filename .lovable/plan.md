@@ -1,53 +1,35 @@
 
 
-# Stop Redundant Avatar API Calls Across the Entire App
+## Fix: Auto-reload on chunk load failures
 
-## Problem
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-`useProfileAvatar` (in `use-profile-avatar-cache.ts`) calls `getAccountInfo` for **every wallet address** it receives. This hook is used in:
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-1. **CardHeader.tsx** — every single feed card (posts, videos, images, live streams, shorts)
-2. **QuotedPostEmbed.tsx** — embedded quoted posts
-3. **GovernancePage.tsx** / **GovernanceProposalPage.tsx** — proposal authors
-4. **FeaturesPage.tsx** — feature request authors
+### Changes
 
-The feed API already provides avatar URLs in its response. The governance/features tables also store `author_avatar`. These redundant re-fetches cause 429 errors from the DeHub API, breaking **all** avatars site-wide.
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-## Fix
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
 
-### 1. CardHeader.tsx — Use the feed-provided avatar directly
-- Remove `useProfileAvatar` import and call
-- Use `avatarSeed` directly (it's already a resolved URL from the feed mapper)
-- Keep `getAgentAvatarFallback` as the fallback for AI agent accounts
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
 
-### 2. QuotedPostEmbed.tsx — Same pattern
-- Remove `useProfileAvatar`, use the already-resolved `avatarUrl` from `getMediaUrl`
-
-### 3. GovernancePage.tsx & GovernanceProposalPage.tsx
-- Remove `useProfileAvatar`, use `storedAvatarUrl` from `buildAvatarUrl(address, proposal.author_avatar)` directly
-
-### 4. FeaturesPage.tsx
-- Remove `useProfileAvatar`, use `storedAvatarUrl` from `buildAvatarUrl(address, feature.author_avatar)` directly
-
-### 5. Leaderboard (already discussed)
-- Remove `useLeaderboardAvatars` hook usage, use cached `entry.avatarUrl`
-
-### 6. Keep `useProfileAvatar` for legitimate uses only
-- Profile page (`use-dehub-profile.ts`) — fetching a single user's profile is fine
-- Settings page — fetching own profile is fine
-- Don't delete the hook, just stop using it in bulk/list contexts
-
-## Impact
-- Eliminates 50-100+ redundant API calls per page load
-- Fixes all avatar display across feed, leaderboard, governance, and features
-- No visual changes — same avatars, just sourced from already-available data
-
-## Files Changed
-- `src/components/app/cards/CardHeader.tsx`
-- `src/components/app/cards/QuotedPostEmbed.tsx`
-- `src/pages/app/GovernancePage.tsx`
-- `src/pages/app/GovernanceProposalPage.tsx`
-- `src/pages/app/FeaturesPage.tsx`
-- `src/pages/app/LeaderboardPage.tsx`
-- `src/components/app/sidebar/SidebarLeaderboard.tsx`
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 

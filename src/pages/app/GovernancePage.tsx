@@ -25,7 +25,6 @@ import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { getBadgeName, getBadgeUrl } from '@/lib/staking-badges';
 import { useMention } from '@/hooks/use-mention';
@@ -106,11 +105,9 @@ function GovernanceCard({
   };
 
   const resolvedAddress = KNOWN_AVATAR_ADDRESSES[proposal.author_wallet_address.toLowerCase()] || proposal.author_wallet_address;
-  const storedAvatarUrl = proposal.author_avatar
+  const avatarUrl = proposal.author_avatar
     ? buildAvatarUrl(resolvedAddress, proposal.author_avatar)
     : null;
-  const dynamicAvatarUrl = useProfileAvatar(resolvedAddress, storedAvatarUrl || undefined);
-  const avatarUrl = dynamicAvatarUrl || storedAvatarUrl;
 
   const username_raw = proposal.author_username || '';
   const displayName = KNOWN_DISPLAY_NAMES[username_raw.toLowerCase()] || username_raw || proposal.author_wallet_address.slice(0, 6);

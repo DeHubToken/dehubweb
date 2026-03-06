@@ -24,7 +24,6 @@ import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useMention } from '@/hooks/use-mention';
 import { UserMentionDropdown } from '@/components/app/mentions';
 
@@ -80,9 +79,7 @@ export default function GovernanceProposalPage() {
   // Resolve avatar — must be before any early return
   const authorAddress = proposal?.author_wallet_address ?? '';
   const resolvedAddress = KNOWN_AVATAR_ADDRESSES[authorAddress.toLowerCase()] || authorAddress;
-  const storedAvatarUrl = proposal?.author_avatar ? buildAvatarUrl(resolvedAddress, proposal.author_avatar) : null;
-  const dynamicAvatarUrl = useProfileAvatar(resolvedAddress, storedAvatarUrl || undefined);
-  const avatarUrl = dynamicAvatarUrl || storedAvatarUrl;
+  const avatarUrl = proposal?.author_avatar ? buildAvatarUrl(resolvedAddress, proposal.author_avatar) : null;
 
   const handleVote = useCallback(
     (voteType: 1 | -1) => {

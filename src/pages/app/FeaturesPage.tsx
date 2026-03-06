@@ -23,7 +23,6 @@ import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -117,11 +116,9 @@ function FeatureCard({
   };
 
   const resolvedAddress = KNOWN_AVATAR_ADDRESSES[feature.author_wallet_address.toLowerCase()] || feature.author_wallet_address;
-  const storedAvatarUrl = feature.author_avatar
+  const avatarUrl = feature.author_avatar
     ? buildAvatarUrl(resolvedAddress, feature.author_avatar)
     : null;
-  const dynamicAvatarUrl = useProfileAvatar(resolvedAddress, storedAvatarUrl || undefined);
-  const avatarUrl = dynamicAvatarUrl || storedAvatarUrl;
 
   const displayName = feature.author_username || feature.author_wallet_address.slice(0, 6);
   const handle = feature.author_username ? `@${feature.author_username}` : `${feature.author_wallet_address.slice(0, 6)}...${feature.author_wallet_address.slice(-4)}`;

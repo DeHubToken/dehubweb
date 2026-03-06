@@ -11,7 +11,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CheckCircle, Play, Images } from 'lucide-react';
 import { getMediaUrl } from '@/lib/api/dehub/core';
 import { buildFeedImageUrls, buildImageUrl } from '@/lib/media-url';
-import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import type { DeHubNFT } from '@/lib/api/dehub/types';
 
 interface QuotedPostEmbedProps {
@@ -23,8 +22,7 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
   const navigate = useNavigate();
 
   const avatarPath = quotedPost.minterAvatarUrl || quotedPost.minterUser?.avatarImageUrl || quotedPost.creator?.avatarImageUrl;
-  const avatarUrl = getMediaUrl(avatarPath);
-  const resolvedAvatar = useProfileAvatar(quotedPost.minter, avatarUrl);
+  const resolvedAvatar = getMediaUrl(avatarPath);
 
   const displayName = quotedPost.minterDisplayName || quotedPost.minterUsername || quotedPost.mintername || 'Unknown';
   const handle = quotedPost.minterUsername || quotedPost.mintername || quotedPost.minter?.slice(0, 8);
