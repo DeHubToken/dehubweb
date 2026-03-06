@@ -87,7 +87,12 @@ export function SidebarChat() {
   }, [isAuthenticated, walletAddress, send]);
 
   const handleSend = async () => {
-    toast.error('Live chat only available in-app currently, download now on Google Play');
+    toast.error('Live chat only available in-app currently, download now on Google Play', {
+      action: {
+        label: 'Download',
+        onClick: () => window.open('https://play.google.com/store/apps/details?id=io.dehub.mobile&hl', '_blank'),
+      },
+    });
     return;
   };
 
