@@ -195,8 +195,9 @@ export function RecentTransactions() {
       });
     });
 
-    // Add on-chain DHB transfers (deduplicate against DPay txs by txHash)
+    // Add on-chain DHB transfers (deduplicate against DPay txs and tip_records by txHash)
     const dpayHashes = new Set(dpayTxs.map(tx => tx.txHash?.toLowerCase()).filter(Boolean));
+    const tipHashes = new Set(tipRecords.map((t: any) => t.tx_hash?.toLowerCase()).filter(Boolean));
     // Collect DPay buy txHashes so we can label matching on-chain transfers as purchases
     const dpayBuyHashes = new Set(
       dpayTxs.filter(tx => tx.type === 'buy').map(tx => tx.txHash?.toLowerCase()).filter(Boolean)
