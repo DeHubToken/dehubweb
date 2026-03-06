@@ -69,16 +69,15 @@ export function CardHeader({
   const [imageError, setImageError] = useState(false);
   const badge = CONTENT_BADGES[contentType];
 
-  // Use live avatar from cache, falling back to feed-provided avatar
-  const liveAvatarUrl = useProfileAvatar(creatorId, avatarSeed);
+  // Use feed-provided avatar directly — no extra API call needed
   const agentFallback = getAgentAvatarFallback(creatorId);
   
   // Use badge balance from API data directly — with username override support
   const badgeUrl = getBadgeUrl(badgeBalance, handle || username);
   
   // Only use avatarSeed as image source if it's a real URL and hasn't errored
-  const hasRealAvatar = liveAvatarUrl && liveAvatarUrl.startsWith('http') && !imageError;
-  const avatarSrc = hasRealAvatar ? liveAvatarUrl : agentFallback;
+  const hasRealAvatar = avatarSeed && avatarSeed.startsWith('http') && !imageError;
+  const avatarSrc = hasRealAvatar ? avatarSeed : agentFallback;
 
   const handleProfileClick = () => {
     // Prefer username-based navigation, fallback to ID

@@ -22,8 +22,7 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
   const navigate = useNavigate();
 
   const avatarPath = quotedPost.minterAvatarUrl || quotedPost.minterUser?.avatarImageUrl || quotedPost.creator?.avatarImageUrl;
-  const avatarUrl = getMediaUrl(avatarPath);
-  const resolvedAvatar = useProfileAvatar(quotedPost.minter, avatarUrl);
+  const resolvedAvatar = getMediaUrl(avatarPath);
 
   const displayName = quotedPost.minterDisplayName || quotedPost.minterUsername || quotedPost.mintername || 'Unknown';
   const handle = quotedPost.minterUsername || quotedPost.mintername || quotedPost.minter?.slice(0, 8);

@@ -79,9 +79,7 @@ export default function GovernanceProposalPage() {
   // Resolve avatar — must be before any early return
   const authorAddress = proposal?.author_wallet_address ?? '';
   const resolvedAddress = KNOWN_AVATAR_ADDRESSES[authorAddress.toLowerCase()] || authorAddress;
-  const storedAvatarUrl = proposal?.author_avatar ? buildAvatarUrl(resolvedAddress, proposal.author_avatar) : null;
-  const dynamicAvatarUrl = useProfileAvatar(resolvedAddress, storedAvatarUrl || undefined);
-  const avatarUrl = dynamicAvatarUrl || storedAvatarUrl;
+  const avatarUrl = proposal?.author_avatar ? buildAvatarUrl(resolvedAddress, proposal.author_avatar) : null;
 
   const handleVote = useCallback(
     (voteType: 1 | -1) => {

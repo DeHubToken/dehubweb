@@ -102,10 +102,8 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
   const displayEntries = entries;
 
   const getAvatarUrl = (entry: LeaderboardEntry) => {
-    const override = getAvatarOverride(entry.account);
-    const avatarPath = override?.avatarUrl ?? entry.avatarUrl;
-    if (avatarPath && entry.account) {
-      return buildAvatarUrl(entry.account, avatarPath);
+    if (entry.avatarUrl && entry.account) {
+      return buildAvatarUrl(entry.account, entry.avatarUrl);
     }
     return null;
   };

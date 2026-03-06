@@ -276,11 +276,8 @@ export default function LeaderboardPage() {
   };
 
   const getAvatarUrl = (entry: LeaderboardEntry) => {
-    // Prefer fresh avatar from live enrichment, fall back to cached
-    const override = getAvatarOverride(entry.account);
-    const avatarPath = override?.avatarUrl ?? entry.avatarUrl;
-    if (avatarPath && entry.account) {
-      return buildAvatarUrl(entry.account, avatarPath);
+    if (entry.avatarUrl && entry.account) {
+      return buildAvatarUrl(entry.account, entry.avatarUrl);
     }
     return null;
   };

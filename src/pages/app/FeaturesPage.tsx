@@ -116,11 +116,9 @@ function FeatureCard({
   };
 
   const resolvedAddress = KNOWN_AVATAR_ADDRESSES[feature.author_wallet_address.toLowerCase()] || feature.author_wallet_address;
-  const storedAvatarUrl = feature.author_avatar
+  const avatarUrl = feature.author_avatar
     ? buildAvatarUrl(resolvedAddress, feature.author_avatar)
     : null;
-  const dynamicAvatarUrl = useProfileAvatar(resolvedAddress, storedAvatarUrl || undefined);
-  const avatarUrl = dynamicAvatarUrl || storedAvatarUrl;
 
   const displayName = feature.author_username || feature.author_wallet_address.slice(0, 6);
   const handle = feature.author_username ? `@${feature.author_username}` : `${feature.author_wallet_address.slice(0, 6)}...${feature.author_wallet_address.slice(-4)}`;
