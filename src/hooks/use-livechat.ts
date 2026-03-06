@@ -32,6 +32,7 @@ export function useLiveChatRooms() {
   const [rooms, setRooms] = useState<LiveChatRoom[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { isAuthenticated } = useAuth();
 
   const fetchRooms = useCallback(() => {
     setIsLoading(true);
@@ -52,7 +53,7 @@ export function useLiveChatRooms() {
 
   useEffect(() => {
     fetchRooms();
-  }, [fetchRooms]);
+  }, [fetchRooms, isAuthenticated]);
 
   return { rooms, isLoading, error, refetch: fetchRooms };
 }
@@ -146,7 +147,7 @@ export function useLiveChatMessages(roomId: string | null) {
     }
   }, [roomId]);
 
-  // Load messages via REST immediately on mount
+  // Load messages via REST immediately on mount and when auth state changes
   useEffect(() => {
     if (!roomId) {
       setMessages([]);
@@ -154,7 +155,7 @@ export function useLiveChatMessages(roomId: string | null) {
       return;
     }
     fetchMessages(true);
-  }, [roomId, fetchMessages]);
+  }, [roomId, fetchMessages, isAuthenticated]);
 
   // Socket connection for real-time updates (supplementary)
   useEffect(() => {
