@@ -667,28 +667,31 @@ IMPORTANT FORMATTING RULES:
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('AI API error:', response.status, errorText);
+      console.error(`AI API error: status=${response.status} model=${modelName} body=${errorText.substring(0, 500)}`);
       
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: 'Rate limit exceeded. Please try again in a moment.' }),
+          JSON.stringify({ error: 'Rate limit exceeded. Please wait a moment and try again.', errorCode: 'RATE_LIMIT', statusCode: 429 }),
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       if (response.status === 402) {
         return new Response(
-          JSON.stringify({ error: 'AI credits exhausted. Please try again later.' }),
+          JSON.stringify({ error: 'AI credits exhausted. Please try again later or contact support.', errorCode: 'CREDITS_EXHAUSTED', statusCode: 402 }),
           { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       if (response.status >= 500) {
         return new Response(
-          JSON.stringify({ error: 'AI service temporarily unavailable. Please try again.' }),
+          JSON.stringify({ error: `AI service error (${response.status}). The upstream AI provider returned an error. Please try again.`, errorCode: 'UPSTREAM_ERROR', statusCode: response.status }),
           { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       
-      throw new Error(`AI API error: ${response.status}`);
+      return new Response(
+        JSON.stringify({ error: `AI request failed with status ${response.status}. Details: ${errorText.substring(0, 200)}`, errorCode: 'API_ERROR', statusCode: response.status }),
+        { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     const data = await response.json();
