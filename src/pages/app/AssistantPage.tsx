@@ -1619,6 +1619,27 @@ export default function AssistantPage() {
                           /* Assistant message - no bubble */
                           <div className="text-white">
                             <MarkdownText content={message.content} className="text-sm" />
+                            {message.isError && (
+                              <button
+                                onClick={() => {
+                                  // Find the last user message before this error
+                                  const idx = messages.indexOf(message);
+                                  const lastUserMsg = messages.slice(0, idx).reverse().find(m => m.role === 'user');
+                                  if (lastUserMsg) {
+                                    // Remove the error message and resend
+                                    setMessages(prev => prev.filter(m => m.id !== message.id));
+                                    setInput(lastUserMsg.content);
+                                    setTimeout(() => {
+                                      const sendBtn = document.querySelector('[data-send-btn]') as HTMLButtonElement;
+                                      sendBtn?.click();
+                                    }, 100);
+                                  }
+                                }}
+                                className="mt-2 text-xs text-white/60 hover:text-white/90 underline transition-colors"
+                              >
+                                {t('assistant.retry', 'Retry')}
+                              </button>
+                            )}
                           </div>
                         )}
                       </div>
