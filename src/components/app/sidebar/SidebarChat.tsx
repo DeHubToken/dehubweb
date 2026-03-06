@@ -45,14 +45,17 @@ export function SidebarChat() {
   const { onlineCount } = useLiveChatPresence(roomId);
 
 
-  // Auto-scroll on new messages
+  // Auto-scroll on new messages — only when chat panel is actually visible
+  // Using scrollTop instead of scrollIntoView to prevent the parent flex strip
+  // from being scrolled horizontally when the chat tab isn't active
   useEffect(() => {
-    if (messages.length > 0) {
-      requestAnimationFrame(() => {
+    if (messages.length > 0 && bottomRef.current) {
+      const scrollContainer = bottomRef.current.closest('.overflow-y-auto');
+      if (scrollContainer) {
         requestAnimationFrame(() => {
-          bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          scrollContainer.scrollTop = scrollContainer.scrollHeight;
         });
-      });
+      }
     }
   }, [messages.length]);
 
