@@ -1054,6 +1054,7 @@ export type Database = {
           id: string
           receiver_address: string
           sender_address: string
+          token_id: string | null
           tx_hash: string
         }
         Insert: {
@@ -1063,6 +1064,7 @@ export type Database = {
           id?: string
           receiver_address: string
           sender_address: string
+          token_id?: string | null
           tx_hash: string
         }
         Update: {
@@ -1072,6 +1074,7 @@ export type Database = {
           id?: string
           receiver_address?: string
           sender_address?: string
+          token_id?: string | null
           tx_hash?: string
         }
         Relationships: []

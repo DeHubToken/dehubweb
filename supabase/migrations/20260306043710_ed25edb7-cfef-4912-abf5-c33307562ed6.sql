@@ -1,0 +1,1 @@
+ALTER TABLE public.tip_records ADD COLUMN token_id text;
