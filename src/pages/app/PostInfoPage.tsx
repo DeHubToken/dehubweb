@@ -462,7 +462,7 @@ export default function PostInfoPage() {
             onClick={() => navigate(-1)}
             className="text-primary hover:underline"
           >
-            Go back
+            {t('postInfo.goBack')}
           </button>
         </div>
       </div>
