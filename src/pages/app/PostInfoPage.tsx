@@ -424,7 +424,7 @@ export default function PostInfoPage() {
             onClick={() => navigate(-1)}
             className="mt-8 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl text-sm font-medium transition-colors"
           >
-            Go Back
+            {t('postInfo.goBack')}
           </button>
         </div>
       </div>
