@@ -755,5 +755,6 @@
     "inactive": "Hojii irra miti",
     "delete": "Haqi"
   },
-  "sidebar": { "talkOfTheTown": "Dubbii Magaalaa", "nothingTrending": "Ammatti wanti trending hin jiru" }
+  "sidebar": { "talkOfTheTown": "Dubbii Magaalaa", "nothingTrending": "Ammatti wanti trending hin jiru", "post": "Maxxansi", "logOut": "Ba'i", "logIn": "Seeni" }
+  ,"postInfo": { "title": "Odeeffannoo maxxansaa", "tokenId": "Token ID", "mintedOn": "Uumame", "creator": "Uumaa", "visibility": "Mul'ata", "total": "Waliigala {{count}}", "loading": "Fe'aa jira...", "engagement": "Hirmaannaa", "likes": "Jaalatan", "dislikes": "Hin jaalatan", "views": "Ilaalcha", "comments": "Yaada", "price": "Gatii", "content": "Qabiyyee", "goBack": "Deebi'i", "public": "Uummataa", "publicDesc": "Namni kamiyyuu ilaaluu danda'a", "private": "Dhuunfaa", "privateDesc": "Ati qofatu ilaaluu danda'a" }
 }

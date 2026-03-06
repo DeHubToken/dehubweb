@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "Kōrero o te tāone",
-    "nothingTrending": "Kāore anō he mea rongonui"
-  }
+    "nothingTrending": "Kāore anō he mea rongonui",
+    "post": "Tuku", "logOut": "Takiputa", "logIn": "Takiuru"
+  },
+  "postInfo": { "title": "Mōhiohio pou", "tokenId": "Token ID", "mintedOn": "I hangaia", "creator": "Kaihanga", "visibility": "Kitea", "total": "Katoa {{count}}", "loading": "E uta ana...", "engagement": "Whai wāhi", "likes": "Pai", "dislikes": "Kāore i pai", "views": "Tirohanga", "comments": "Kōrero", "price": "Utu", "content": "Ihirangi", "goBack": "Hoki", "public": "Tūmatanui", "publicDesc": "Ka taea e te katoa te kite", "private": "Tūmataiti", "privateDesc": "Ko koe anake ka kite" }
 }

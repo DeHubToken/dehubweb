@@ -1040,5 +1040,6 @@
     "daysAgo": "{{count}} كۈن بۇرۇن",
     "monthsAgo": "{{count}} ئاي بۇرۇن"
   },
-  "sidebar": { "talkOfTheTown": "كۆپ سۆزلەنگەن", "nothingTrending": "تېخى ھېچنېمە داڭلىق ئەمەس" }
+  "sidebar": { "talkOfTheTown": "كۆپ سۆزلەنگەن", "nothingTrending": "تېخى ھېچنېمە داڭلىق ئەمەس", "post": "يوللاش", "logOut": "چىقىش", "logIn": "كىرىش" }
+  ,"postInfo": { "title": "يوللىما ئۇچۇرى", "tokenId": "توكېن ID", "mintedOn": "قۇرۇلغان", "creator": "قۇرغۇچى", "visibility": "كۆرۈنۈش", "total": "جەمئىي {{count}}", "loading": "يۈكلىنىۋاتىدۇ...", "engagement": "قاتنىشىش", "likes": "ياقتۇردى", "dislikes": "ياقتۇرمىدى", "views": "كۆرۈش", "comments": "ئىنكاس", "price": "باھا", "content": "مەزمۇن", "goBack": "قايتىش", "public": "ئوممىۋى", "publicDesc": "ھەممە ئادەم كۆرەلەيدۇ", "private": "شەخسىي", "privateDesc": "پەقەت سىز كۆرەلەيسىز" }
 }

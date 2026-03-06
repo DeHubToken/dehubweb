@@ -529,5 +529,6 @@
     "inactive": "អសកម្ម",
     "delete": "លុប"
   },
-  "sidebar": { "talkOfTheTown": "ការនិយាយរបស់ទីក្រុង", "nothingTrending": "គ្មានអ្វីពេញនិយមឥឡូវនេះ" }
+  "sidebar": { "talkOfTheTown": "ការនិយាយរបស់ទីក្រុង", "nothingTrending": "គ្មានអ្វីពេញនិយមឥឡូវនេះ", "post": "បង្ហោះ", "logOut": "ចាកចេញ", "logIn": "ចូល" }
+  ,"postInfo": { "title": "ព័ត៌មានប្រកាស", "tokenId": "Token ID", "mintedOn": "បានបង្កើត", "creator": "អ្នកបង្កើត", "visibility": "ការមើលឃើញ", "total": "សរុប {{count}}", "loading": "កំពុងផ្ទុក...", "engagement": "ការចូលរួម", "likes": "ចូលចិត្ត", "dislikes": "មិនចូលចិត្ត", "views": "ការមើល", "comments": "មតិ", "price": "តម្លៃ", "content": "មាតិកា", "goBack": "ត្រឡប់", "public": "សាធារណៈ", "publicDesc": "នរណាក៏អាចមើលបាន", "private": "ឯកជន", "privateDesc": "អ្នកតែម្នាក់អាចមើលបាន" }
 }

@@ -977,5 +977,6 @@
     "sharePost": "Postni ulashish",
     "relatedPosts": "Bogʻliq postlar"
   },
-  "sidebar": { "talkOfTheTown": "Shahar gapi", "nothingTrending": "Hozir hech narsa trendda emas" }
+  "sidebar": { "talkOfTheTown": "Shahar gapi", "nothingTrending": "Hozir hech narsa trendda emas", "post": "Joylash", "logOut": "Chiqish", "logIn": "Kirish" }
+  ,"postInfo": { "title": "Post ma'lumoti", "tokenId": "Token ID", "mintedOn": "Yaratilgan", "creator": "Yaratuvchi", "visibility": "Ko'rinish", "total": "Jami {{count}}", "loading": "Yuklanmoqda...", "engagement": "Ishtirok", "likes": "Yoqdi", "dislikes": "Yoqmadi", "views": "Ko'rishlar", "comments": "Izohlar", "price": "Narx", "content": "Kontent", "goBack": "Orqaga", "public": "Ommaviy", "publicDesc": "Har kim ko'ra oladi", "private": "Shaxsiy", "privateDesc": "Faqat siz ko'ra olasiz" }
 }

@@ -1058,6 +1058,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "ເລື່ອງທີ່ຄົນເວົ້າ",
-    "nothingTrending": "ຍັງບໍ່ມີເທຣນ"
-  }
+    "nothingTrending": "ຍັງບໍ່ມີເທຣນ",
+    "post": "ໂພສ", "logOut": "ອອກຈາກລະບົບ", "logIn": "ເຂົ້າສູ່ລະບົບ"
+  },
+  "postInfo": { "title": "ຂໍ້ມູນໂພສ", "tokenId": "Token ID", "mintedOn": "ສ້າງເມື່ອ", "transactionHash": "Hash ທຸລະກຳ", "viewOnExplorer": "ເບິ່ງໃນ {{explorer}}", "creator": "ຜູ້ສ້າງ", "visibility": "ການເບິ່ງເຫັນ", "total": "ທັງໝົດ {{count}}", "loading": "ກຳລັງໂຫລດ...", "engagement": "ການມີສ່ວນຮ່ວມ", "likes": "ມັກ", "dislikes": "ບໍ່ມັກ", "views": "ເບິ່ງ", "comments": "ຄຳເຫັນ", "price": "ລາຄາ", "content": "ເນື້ອຫາ", "goBack": "ກັບຄືນ", "public": "ສາທາລະນະ", "publicDesc": "ໃຜກໍ່ເບິ່ງໄດ້", "private": "ສ່ວນຕົວ", "privateDesc": "ເຈົ້າເທົ່ານັ້ນທີ່ເບິ່ງໄດ້" }
 }

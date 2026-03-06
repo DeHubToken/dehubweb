@@ -1058,6 +1058,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "Talk of Di Town",
-    "nothingTrending": "Nothing dey trend yet"
-  }
+    "nothingTrending": "Nothing dey trend yet",
+    "post": "Post", "logOut": "Log Out", "logIn": "Log In"
+  },
+  "postInfo": { "title": "Post Info", "tokenId": "Token ID", "mintedOn": "Dem create am", "creator": "Creator", "visibility": "Who fit see", "total": "Total {{count}}", "loading": "E dey load...", "engagement": "Engagement", "likes": "Like", "dislikes": "No like", "views": "Views", "comments": "Comments", "price": "Price", "content": "Content", "goBack": "Go back", "public": "Public", "publicDesc": "Anybody fit see dis post", "private": "Private", "privateDesc": "Only you fit see dis post" }
 }

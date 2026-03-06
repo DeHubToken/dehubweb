@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "നഗരത്തിന്റെ ചർച്ച",
-    "nothingTrending": "ഇതുവരെ ട്രെൻഡിംഗ് ഒന്നുമില്ല"
-  }
+    "nothingTrending": "ഇതുവരെ ട്രെൻഡിംഗ് ഒന്നുമില്ല",
+    "post": "പോസ്റ്റ്", "logOut": "ലോഗ് ഔട്ട്", "logIn": "ലോഗ് ഇൻ"
+  },
+  "postInfo": { "title": "പോസ്റ്റ് വിവരങ്ങൾ", "tokenId": "ടോക്കൺ ID", "mintedOn": "സൃഷ്ടിച്ചത്", "transactionHash": "ഇടപാട് ഹാഷ്", "viewOnExplorer": "{{explorer}} ൽ കാണുക", "creator": "സ്രഷ്ടാവ്", "visibility": "ദൃശ്യപരത", "total": "ആകെ {{count}}", "loading": "ലോഡ് ചെയ്യുന്നു...", "engagement": "ഇടപെടൽ", "likes": "ഇഷ്ടങ്ങൾ", "dislikes": "ഇഷ്ടപ്പെട്ടില്ല", "views": "കാഴ്ചകൾ", "comments": "അഭിപ്രായങ്ങൾ", "price": "വില", "content": "ഉള്ളടക്കം", "goBack": "മടങ്ങുക", "public": "പൊതു", "publicDesc": "ആർക്കും കാണാം", "private": "സ്വകാര്യം", "privateDesc": "നിങ്ങൾ മാത്രമേ കാണാൻ കഴിയൂ" }
 }

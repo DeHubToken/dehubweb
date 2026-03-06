@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "شهر جي ڳالهه",
-    "nothingTrending": "اڃا ڪجهه رجحاني ناهي"
-  }
+    "nothingTrending": "اڃا ڪجهه رجحاني ناهي",
+    "post": "پوسٽ", "logOut": "لاڳ آئوٽ", "logIn": "لاڳ ان"
+  },
+  "postInfo": { "title": "پوسٽ معلومات", "tokenId": "ٽوڪن ID", "mintedOn": "ٺاهيل", "creator": "ٺاهيندڙ", "visibility": "نظر", "total": "ڪل {{count}}", "loading": "لوڊ ٿي رهيو آهي...", "engagement": "شموليت", "likes": "پسند", "dislikes": "ناپسند", "views": "ڏسڻ", "comments": "تبصرا", "price": "قيمت", "content": "مواد", "goBack": "واپس", "public": "عوامي", "publicDesc": "ڪو به ڏسي سگهي ٿو", "private": "خانگي", "privateDesc": "رڳو توهان ڏسي سگهو ٿا" }
 }

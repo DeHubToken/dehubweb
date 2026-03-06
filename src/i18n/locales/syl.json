@@ -313,4 +313,6 @@
   ,"agents": { "title": "AI এজেন্ট", "create": "এজেন্ট বানাও", "manage": "ম্যানেজ", "active": "সক্রিয়", "inactive": "নিষ্ক্রিয়", "apiKey": "API কী", "description": "বর্ণনা" }
   ,"hero": { "title": "ভবিষ্যতর সোশ্যাল নেটওয়ার্ক", "subtitle": "বিকেন্দ্রীকৃত, নিরাপদ, তোমার হাতে", "getStarted": "শুরু করো", "learnMore": "আরো জানো" }
   ,"creators": { "title": "ক্রিয়েটর", "apply": "আবেদন করো", "benefits": "সুবিধা", "requirements": "যোগ্যতা", "earnings": "আয়" }
+  ,"sidebar": { "talkOfTheTown": "শহরর কথা", "nothingTrending": "এখনো কিছু ট্রেন্ডিং নাই", "post": "পোস্ট", "logOut": "লগ আউট", "logIn": "লগ ইন" }
+  ,"postInfo": { "title": "পোস্ট তথ্য", "tokenId": "টোকেন ID", "mintedOn": "তৈরি অইছে", "creator": "সৃষ্টিকর্তা", "visibility": "দেখা", "total": "মোট {{count}}", "loading": "লোড অইতাছে...", "engagement": "যোগদান", "likes": "ভালা লাগছে", "dislikes": "ভালা লাগে নাই", "views": "দেখছে", "comments": "মন্তব্য", "price": "দাম", "content": "বিষয়বস্তু", "goBack": "ফিরে যাও", "public": "পাবলিক", "publicDesc": "যে কেউ দেখতে পারব", "private": "প্রাইভেট", "privateDesc": "শুধু তুমি দেখতে পারবা" }
 }

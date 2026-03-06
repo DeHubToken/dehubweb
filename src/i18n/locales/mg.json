@@ -1043,6 +1043,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "Resak'olona",
-    "nothingTrending": "Tsy mbola misy malaza"
-  }
+    "nothingTrending": "Tsy mbola misy malaza",
+    "post": "Alefa", "logOut": "Hiala", "logIn": "Hiditra"
+  },
+  "postInfo": { "title": "Fampahalalana momba ny lahatsoratra", "tokenId": "Token ID", "mintedOn": "Noforonina", "creator": "Mpamorona", "visibility": "Fahitana", "total": "Totaly {{count}}", "loading": "Mamorona...", "engagement": "Fandraisan'anjara", "likes": "Tia", "dislikes": "Tsy tia", "views": "Jerena", "comments": "Fanehoankevitra", "price": "Vidin", "content": "Atiny", "goBack": "Miverina", "public": "Ho an'ny rehetra", "publicDesc": "Na iza na iza afaka mahita", "private": "Manokana", "privateDesc": "Ianao ihany no mahita" }
 }
