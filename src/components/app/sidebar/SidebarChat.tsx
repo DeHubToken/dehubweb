@@ -113,6 +113,10 @@ export function SidebarChat() {
   };
 
   const handleGifSelect = async (gifUrl: string) => {
+    if (!isAuthenticated) {
+      openLoginModal();
+      return;
+    }
     toast('Live chat only available in-app currently, download now on Google Play. Coming soon to iOS.', {
       description: (
         <button
