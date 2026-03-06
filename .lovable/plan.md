@@ -1,35 +1,27 @@
 
 
-## Fix: Auto-reload on chunk load failures
+# Fresh On-Chain RPC Scan for Daily & Weekly Holdings
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+## What This Does
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+The existing `refresh-leaderboard-cache` edge function already has full support for this. No code changes needed -- just an invocation.
 
-### Changes
+I will call the edge function with:
+```json
+{ "mode": "light", "sorts": ["holdings"], "periods": ["day", "week"] }
+```
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+This triggers:
+1. Reads the existing `holdings/all` cache for the full list of wallet addresses
+2. Gets current block numbers on Base and BNB chains via Alchemy RPC
+3. Estimates historical block heights (1 day ago / 7 days ago)
+4. Fetches on-chain balances at both current and historical blocks for all addresses (batches of 10)
+5. Computes deltas (gains and losses) for each wallet
+6. Caches results into `leaderboard_cache` table for `holdings/day` and `holdings/week`
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+Monthly, yearly, and all-time data remain untouched.
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+The UI already reads from `leaderboard_cache` with these sort/period keys, so 1D and 1W tabs will populate automatically after the scan completes.
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+**Note:** This function can take 30-60+ seconds depending on how many wallets are in the leaderboard. Edge functions have a timeout limit, so if it times out we may need to reduce the batch or split the call.
 
