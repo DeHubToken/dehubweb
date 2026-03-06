@@ -1482,6 +1482,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           repostCount={video.repostCount}
           isReposted={video.isReposted}
           isOptimistic={video.isOptimistic}
+          tipCount={tipCount}
+          onTip={() => setShowTipModal(true)}
         />
 
         {/* Comments */}
