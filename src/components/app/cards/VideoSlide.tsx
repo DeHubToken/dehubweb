@@ -253,12 +253,6 @@ export const VideoSlide = memo(function VideoSlide({
         data-no-swipe
         className="absolute bottom-0 left-0 right-0 z-20 cursor-pointer touch-none select-none"
         style={{ height: '15%' }}
-        onPointerDown={handleProgressPointerDown}
-        onPointerMove={handleProgressPointerMove}
-        onPointerUp={handleProgressPointerUp}
-        onPointerCancel={handleProgressPointerUp}
-        onMouseDown={e => e.stopPropagation()}
-        onTouchStart={e => e.stopPropagation()}
       >
         {/* Visual progress bar pinned to very bottom */}
         <div className={cn(
