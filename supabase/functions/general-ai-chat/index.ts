@@ -633,7 +633,7 @@ IMPORTANT FORMATTING RULES:
 
     // Add timeout to prevent hanging requests
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 25000); // 25s timeout
+    const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s timeout
 
     let response: Response;
     try {
