@@ -184,7 +184,13 @@ export function UserMentionDropdown({
             {users.map((user, index) => (
               <button
                 key={user.id || user.username}
-                onClick={() => onSelect(user)}
+                onMouseDown={(e) => {
+                  // CRITICAL: Prevent this click from bubbling to Dialog overlay
+                  // which would close the parent modal
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onSelect(user);
+                }}
                 onMouseEnter={() => onSelectedIndexChange(index)}
                 className={cn(
                   "w-full flex items-center gap-3 px-2.5 py-2 rounded-xl text-left transition-colors duration-100",

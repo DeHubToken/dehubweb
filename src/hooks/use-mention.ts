@@ -76,7 +76,7 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
     if (!input) return;
     
     const dropdownWidth = 280;
-    const dropdownHeight = 260; // Approximate max height for 5 users + header
+    const dropdownHeight = 300; // Approximate max height for 5 users + header + padding
     
     // For contentEditable, get precise caret position
     if (input instanceof HTMLDivElement) {
