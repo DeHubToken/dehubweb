@@ -33,6 +33,7 @@ import { DeletePostModal } from '../modals/DeletePostModal';
 import { QuotePostModal } from '../modals/QuotePostModal';
 import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
+import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
 import { ImageTranslationSheet } from './ImageTranslationSheet';
