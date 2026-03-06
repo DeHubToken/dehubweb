@@ -27,6 +27,7 @@ import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { QuotePostModal } from '../modals/QuotePostModal';
+import { TipModal } from '../modals/TipModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { useAuth } from '@/contexts/AuthContext';
