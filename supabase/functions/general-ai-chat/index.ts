@@ -209,6 +209,11 @@ function isPersonalQuestion(message: string): boolean {
   return PERSONAL_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
+function isDeHubRelated(message: string): boolean {
+  const lowerMessage = message.toLowerCase();
+  return DEHUB_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
+}
+
 function requiresPostAnalysis(message: string): boolean {
   const lowerMessage = message.toLowerCase();
   return POST_ANALYSIS_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
