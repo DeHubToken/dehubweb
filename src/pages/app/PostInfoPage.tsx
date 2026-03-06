@@ -873,7 +873,7 @@ export default function PostInfoPage() {
                       <p className="text-lg font-bold text-white">
                         {((ppvPurchaseCount ?? 0) * Number(ppvPrice)).toLocaleString()} {ppvCurrency}
                       </p>
-                      <p className="text-xs text-white/60">Total Revenue</p>
+                      <p className="text-xs text-white/60">{t('postInfo.totalRevenue')}</p>
                     </div>
                   </div>
                 )}
