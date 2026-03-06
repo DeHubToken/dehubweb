@@ -1016,6 +1016,42 @@ export type Database = {
         }
         Relationships: []
       }
+      suggested_profiles_cache: {
+        Row: {
+          address: string
+          avatar_url: string | null
+          badge_balance: number | null
+          display_name: string | null
+          followers: number | null
+          id: string
+          likes: number | null
+          updated_at: string | null
+          username: string | null
+        }
+        Insert: {
+          address: string
+          avatar_url?: string | null
+          badge_balance?: number | null
+          display_name?: string | null
+          followers?: number | null
+          id?: string
+          likes?: number | null
+          updated_at?: string | null
+          username?: string | null
+        }
+        Update: {
+          address?: string
+          avatar_url?: string | null
+          badge_balance?: number | null
+          display_name?: string | null
+          followers?: number | null
+          id?: string
+          likes?: number | null
+          updated_at?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
       tip_leaderboard_cache: {
         Row: {
           chain_id: number
