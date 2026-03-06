@@ -883,7 +883,7 @@ export default function PostInfoPage() {
 
           {(nftInfo.name || nftInfo.description) && (
             <section className="bg-white/5 rounded-xl p-4 border border-white/10">
-              <h2 className="text-sm font-medium text-white/60 mb-3">Content</h2>
+              <h2 className="text-sm font-medium text-white/60 mb-3">{t('postInfo.content')}</h2>
               {nftInfo.name && (
                 <p className="text-white font-medium mb-2">{nftInfo.name}</p>
               )}
