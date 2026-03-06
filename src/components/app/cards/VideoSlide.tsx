@@ -223,6 +223,8 @@ export const VideoSlide = memo(function VideoSlide({
         onPointerMove={handleProgressPointerMove}
         onPointerUp={handleProgressPointerUp}
         onPointerCancel={handleProgressPointerUp}
+        onMouseDown={e => e.stopPropagation()}
+        onTouchStart={e => e.stopPropagation()}
       >
         {/* Visual progress bar pinned to very bottom */}
         <div className={cn(
