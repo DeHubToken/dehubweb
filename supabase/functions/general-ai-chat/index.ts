@@ -55,18 +55,21 @@ const PERSONALITY_STYLES: Record<string, string> = {
 };
 
 // Keywords that indicate user wants live/current information (requires premium Perplexity)
+// ONLY explicit news/search intent — NOT generic time words like "this week"
 const LIVE_SEARCH_KEYWORDS = [
-  'news', 'today', 'latest', 'current', 'now', 'recent', 'breaking',
-  'happening', 'update', 'live', 'real-time', 'realtime', 'right now',
-  'this week', 'this month', 'yesterday', 'tonight', 'morning',
-  'price', 'stock', 'market', 'weather', 'score', 'game',
+  'news', 'breaking news', 'latest news', 'headlines',
+  'happening in the world', 'current events',
+  'search for', 'look up', 'find me', 'google', 'search the web', 'search online',
   'trending', 'viral', 'new release', 'just announced', 'just released',
-  'election', 'vote', 'poll', 'results', '2025', '2026',
-  'what happened', 'whats happening', "what's happening", 'did you hear',
-  'search for', 'look up', 'find me', 'google', 'search the web'
+  'election results', 'poll results',
+  'stock price', 'market price', 'crypto price', 'bitcoin price', 'eth price',
+  'weather forecast', 'weather in', 'weather today',
+  'sports score', 'game score', 'match score',
+  'who won the', 'did you hear about',
+  'whats happening in', "what's happening in",
 ];
 
-// Keywords that indicate a personal/self-referencing question (use user context, NOT web search)
+// Personal/self-referencing questions — ALWAYS use user context, never web search
 const PERSONAL_KEYWORDS = [
   'my followers', 'my following', 'my balance', 'my tips', 'my rank',
   'my likes', 'my posts', 'my staked', 'my badge', 'my subscribers',
