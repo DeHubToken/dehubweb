@@ -75,6 +75,10 @@ interface ActionBarProps {
   onDislike?: () => void;
   /** Vote weight multiplier for optimistic count updates (default: 1) */
   voteWeight?: number;
+  /** Tip count to display next to repost */
+  tipCount?: number;
+  /** Handler for tip action */
+  onTip?: () => void;
 }
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
