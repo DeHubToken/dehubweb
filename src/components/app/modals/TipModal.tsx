@@ -28,7 +28,9 @@ interface TipModalProps {
   onOpenChange: (open: boolean) => void;
   creatorAddress?: string;
   creatorName?: string;
-  /** Optional context: post tokenId for analytics, or 'profile' */
+  /** Post tokenId for per-post tip tracking */
+  tokenId?: string;
+  /** @deprecated Use tokenId instead */
   context?: string;
 }
 
