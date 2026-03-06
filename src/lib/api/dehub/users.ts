@@ -117,9 +117,23 @@ export interface SearchUsersParams {
 }
 
 export async function searchUsers(params: SearchUsersParams): Promise<PaginatedResponse<DeHubUser>> {
-  return apiCall<PaginatedResponse<DeHubUser>>("/api/users_search", {
+  const response = await apiCall<{ result: DeHubUser[] } | PaginatedResponse<DeHubUser>>("/api/users_search", {
     params: { q: params.q, page: params.page, limit: params.limit },
   });
+  
+  // API returns { result: [...] } but we need { data: [...] }
+  if (response && typeof response === 'object' && 'result' in response && Array.isArray((response as any).result)) {
+    const items = (response as any).result as DeHubUser[];
+    return {
+      data: items,
+      total: items.length,
+      page: params.page || 1,
+      limit: params.limit || 10,
+      has_more: items.length === (params.limit || 10),
+    };
+  }
+  
+  return response as PaginatedResponse<DeHubUser>;
 }
 
 export interface UserCommentsResponse {
