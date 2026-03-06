@@ -59,7 +59,7 @@ export interface LiveChatUserProfile {
 export async function getLiveChatRooms(): Promise<LiveChatRoom[]> {
   try {
     const response = await apiCall<Record<string, unknown>>('/api/livechat/room', {
-      requiresAuth: true,
+      requiresAuth: false,
     });
 
     // Normalize into a room object
