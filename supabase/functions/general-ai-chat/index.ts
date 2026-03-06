@@ -82,6 +82,20 @@ const PERSONAL_KEYWORDS = [
   'followers did i', 'likes did i', 'tips did i',
 ];
 
+// Post analysis keywords — triggers fetching user's posts from DeHub API
+const POST_ANALYSIS_KEYWORDS = [
+  'study my posts', 'analyze my posts', 'analyse my posts', 'review my posts',
+  'look at my posts', 'check my posts', 'evaluate my posts', 'rate my posts',
+  'my content', 'study my content', 'analyze my content', 'analyse my content',
+  'review my content', 'my recent posts', 'my last posts', 'my latest posts',
+  'how can i improve', 'improve my content', 'content advice', 'posting advice',
+  'what do i post', 'my posting style', 'my post history', 'my uploads',
+  'study my videos', 'analyze my videos', 'review my videos',
+  'study my images', 'analyze my images', 'review my images',
+  'tell me about my posts', 'tell me about my content', 'what kind of content',
+  'my best posts', 'my top posts', 'my worst posts', 'my most liked',
+];
+
 // Keywords about DeHub - FREE tier (already trained on docs)
 const DEHUB_KEYWORDS = [
   'dehub', 'dhb', '$dhb', 'token', 'delabs', 'futurov', 'ftv',
