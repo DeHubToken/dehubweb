@@ -986,6 +986,12 @@ IMPORTANT FORMATTING RULES:
 - Format links as [text](url) - the URL should be the full https:// link — this is the ONLY markdown allowed
 - Write naturally like you're texting a friend, not writing a document`;
 
+    // Fetch platform-wide data and user memories in parallel
+    const [platformContext, userMemories] = await Promise.all([
+      fetchPlatformContext(),
+      userContext?.walletAddress ? loadUserMemories(userContext.walletAddress) : Promise.resolve(''),
+    ]);
+
     // Build user context info if provided
     let userContextInfo = '';
     if (userContext && userContext.walletAddress) {
