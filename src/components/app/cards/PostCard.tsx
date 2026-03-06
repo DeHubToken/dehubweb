@@ -271,6 +271,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             isReposted={post.isReposted}
             isOptimistic={post.isOptimistic}
             tipCount={tipCount}
+            onTip={() => setShowTipModal(true)}
           />
         </div>
 
