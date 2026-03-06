@@ -60,27 +60,19 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
         })}
       </div>
 
-      {/* Tab Content — sliding strip */}
-      <div className="h-[400px] overflow-hidden">
-        <div
-          className="flex h-full transition-transform duration-300 ease-out"
-          style={{
-            width: `${tabs.length * 100}%`,
-            transform: `translateX(-${activeIndex * (100 / tabs.length)}%)`,
-          }}
-        >
-          {/* Leaderboard panel */}
-          <div className="h-full overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent" style={{ width: `${100 / tabs.length}%` }}>
-            <SidebarLeaderboard ref={leaderboardRef} />
-          </div>
-          {/* Follow panel */}
-          <div className="h-full flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent" style={{ width: `${100 / tabs.length}%` }}>
-            <WhoToFollow />
-          </div>
-          {/* Chat panel */}
-          <div className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent" style={{ width: `${100 / tabs.length}%` }}>
-              <SidebarChat />
-          </div>
+      {/* Tab Content — show/hide for maximum browser compatibility */}
+      <div className="h-[400px]">
+        {/* Leaderboard panel */}
+        <div className={`h-full overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${activeTab === 'leaderboard' ? '' : 'hidden'}`}>
+          <SidebarLeaderboard ref={leaderboardRef} />
+        </div>
+        {/* Follow panel */}
+        <div className={`h-full flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${activeTab === 'follow' ? '' : 'hidden'}`}>
+          <WhoToFollow />
+        </div>
+        {/* Chat panel */}
+        <div className={`h-full overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${activeTab === 'chat' ? '' : 'hidden'}`}>
+          <SidebarChat />
         </div>
       </div>
     </div>
