@@ -8,7 +8,30 @@ export interface ImageModel {
   description: string;
   emoji: string;
   tier: 'premium' | 'standard' | 'fast';
+  /** Base cost in USD (before markup) */
+  baseCostUsd: number;
 }
+
+/**
+ * Markup percentage for image generation (100% = 2x cost)
+ */
+export const IMAGE_GENERATION_MARKUP = 1.0; // 100% markup
+
+/**
+ * Calculate the final cost in USD with markup
+ */
+export const getImageCostUsd = (model: ImageModel): number => {
+  return model.baseCostUsd * (1 + IMAGE_GENERATION_MARKUP);
+};
+
+/**
+ * Calculate the cost in DHB tokens
+ */
+export const getImageCostDhb = (model: ImageModel, dhbPriceUsd: number): number => {
+  if (dhbPriceUsd <= 0) return 0;
+  const costUsd = getImageCostUsd(model);
+  return costUsd / dhbPriceUsd;
+};
 
 export const IMAGE_MODELS: Record<string, ImageModel> = {
   'gemini-2.5-flash': {
@@ -17,6 +40,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     description: 'Fast, balanced quality',
     emoji: '⚡',
     tier: 'fast',
+    baseCostUsd: 0.02,
   },
   'gemini-3-pro-image': {
     id: 'gemini-3-pro-image',
@@ -24,6 +48,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     description: 'Latest, highest quality',
     emoji: '✨',
     tier: 'premium',
+    baseCostUsd: 0.08,
   },
   'gpt-5': {
     id: 'gpt-5',
@@ -31,6 +56,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     description: 'OpenAI creative aesthetic',
     emoji: '🎨',
     tier: 'premium',
+    baseCostUsd: 0.08,
   },
   'grok-2-image': {
     id: 'grok-2-image',
@@ -38,6 +64,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     description: 'xAI image generation',
     emoji: '🔮',
     tier: 'premium',
+    baseCostUsd: 0.06,
   },
 };
 

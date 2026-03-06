@@ -37,6 +37,7 @@ import { VOICE_PREFERENCES, VOICE_PREFERENCE_OPTIONS, type VoicePreferenceKey } 
 import { CHAT_MODEL_OPTIONS, DEFAULT_CHAT_MODEL, type ChatModelKey } from '@/constants/chat-models.constants';
 import { PostModal } from '@/features/post';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
+import { ImagePaywallModal } from '@/components/app/image/ImagePaywallModal';
 import { OverviewTab } from '@/components/app/command-centre';
 import { AuthPrompt } from '@/components/app/AuthPrompt';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -334,6 +335,12 @@ export default function AssistantPage() {
   const [pendingVideoRequest, setPendingVideoRequest] = useState<{
     prompt: string;
     model: VideoModelKey;
+    sourceImage?: string;
+  } | null>(null);
+  const [imagePaywallOpen, setImagePaywallOpen] = useState(false);
+  const [pendingImageRequest, setPendingImageRequest] = useState<{
+    prompt: string;
+    model: ImageModelKey;
     sourceImage?: string;
   } | null>(null);
   const [voiceAutoReply, setVoiceAutoReply] = useState(true); // Auto-speak AI replies when using voice
@@ -719,6 +726,84 @@ export default function AssistantPage() {
     setPendingVideoRequest(null);
   };
 
+  // Handle image generation after payment confirmation
+  const handleImageGenerationConfirm = async () => {
+    if (!pendingImageRequest) return;
+
+    const { prompt, model, sourceImage } = pendingImageRequest;
+    const imageModel = IMAGE_MODELS[model];
+
+    // Add user message
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: prompt,
+      attachedImage: sourceImage
+    };
+    setMessages(prev => [...prev, userMessage]);
+
+    setImagePaywallOpen(false);
+    setIsImageLoading(true);
+    setImageLoadStartTime(Date.now());
+
+    try {
+      const conversationHistory = messages
+        .filter(m => m.id !== 'initial')
+        .map(m => ({ role: m.role, content: m.content }));
+
+      const { data, error } = await supabase.functions.invoke('generate-image', {
+        body: {
+          prompt,
+          sourceImage: sourceImage || undefined,
+          conversationHistory,
+          model
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.error) {
+        const errorMessage = data.safetyBlocked
+          ? t('assistant.safetyBlocked')
+          : data.error;
+
+        if (data.clearHistory) {
+          setMessages([
+            { id: 'initial', role: 'assistant', content: t('assistant.welcomeAlt') },
+            { id: (Date.now() + 1).toString(), role: 'assistant', content: errorMessage }
+          ]);
+        } else {
+          setMessages(prev => [...prev, {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: errorMessage
+          }]);
+        }
+        setPendingImageRequest(null);
+        return;
+      }
+
+      const watermarkedImageUrl = await addWatermarkClient(data.imageUrl);
+
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: '',
+        imageUrl: watermarkedImageUrl
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+      queueMessage(assistantMessage);
+      toast.success('Image generated!');
+    } catch (err) {
+      console.error('Image generation error:', err);
+      toast.error('Failed to generate image');
+    } finally {
+      setIsImageLoading(false);
+      setPendingImageRequest(null);
+    }
+  };
+
   // Cleanup polling on unmount
   useEffect(() => {
     return () => {
@@ -805,73 +890,15 @@ export default function AssistantPage() {
         setIsLoading(false);
         
       } else if (isImageRequest) {
-        // Set image-specific loading state
-        setIsImageLoading(true);
-        setImageLoadStartTime(Date.now());
-        
-        // Build conversation history for context
-        const conversationHistory = messages
-          .filter(m => m.id !== 'initial') // Exclude welcome message
-          .map(m => ({
-            role: m.role,
-            content: m.content
-          }));
-        
-        // Use generate-image endpoint with conversation context
-        const { data, error } = await supabase.functions.invoke('generate-image', {
-          body: {
-            prompt: currentInput,
-            sourceImage: effectiveSourceImage || undefined,
-            conversationHistory,
-            model: selectedImageModel
-          }
+        // Show image paywall instead of generating directly
+        setPendingImageRequest({
+          prompt: currentInput,
+          model: selectedImageModel,
+          sourceImage: effectiveSourceImage || currentAttachedImage || undefined,
         });
-
-        if (error) throw error;
-        
-        // Check for error in response (like safety blocks or content refusals)
-        if (data.error) {
-          const errorMessage = data.safetyBlocked 
-            ? t('assistant.safetyBlocked')
-            : data.error;
-          
-          // If clearHistory flag is set, reset to just the welcome message
-          // This prevents previous inappropriate requests from affecting future normal requests
-          if (data.clearHistory) {
-            setMessages([
-              {
-                id: 'initial',
-                role: 'assistant',
-                content: t('assistant.welcomeAlt')
-              },
-              {
-                id: (Date.now() + 1).toString(),
-                role: 'assistant',
-                content: errorMessage
-              }
-            ]);
-          } else {
-            setMessages(prev => [...prev, {
-              id: (Date.now() + 1).toString(),
-              role: 'assistant',
-              content: errorMessage
-            }]);
-          }
-          return;
-        }
-
-        // Apply client-side watermark
-        const watermarkedImageUrl = await addWatermarkClient(data.imageUrl);
-        
-        const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: '', // No text for image responses
-          imageUrl: watermarkedImageUrl
-        };
-
-        setMessages(prev => [...prev, assistantMessage]);
-        queueMessage(assistantMessage);
+        setImagePaywallOpen(true);
+        setIsLoading(false);
+        return;
       } else {
         // Regular chat - use general-ai-chat endpoint with retry
         const chatBody = {
@@ -2027,6 +2054,24 @@ export default function AssistantPage() {
           }}
           onConfirm={handleVideoGenerationConfirm}
           isGenerating={isVideoLoading}
+        />
+      )}
+
+      {/* Image Paywall Modal */}
+      {pendingImageRequest && (
+        <ImagePaywallModal
+          open={imagePaywallOpen}
+          onOpenChange={(open) => {
+            setImagePaywallOpen(open);
+            if (!open) setPendingImageRequest(null);
+          }}
+          model={IMAGE_MODELS[pendingImageRequest.model]}
+          selectedModelKey={pendingImageRequest.model}
+          onModelChange={(modelKey) => {
+            setPendingImageRequest(prev => prev ? { ...prev, model: modelKey as ImageModelKey } : null);
+          }}
+          onConfirm={handleImageGenerationConfirm}
+          isGenerating={isImageLoading}
         />
       )}
 
