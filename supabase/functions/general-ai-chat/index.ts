@@ -868,11 +868,11 @@ IMPORTANT FORMATTING RULES:
         const profile = await fetchUserProfile(targetUsername, dehubToken);
         if (profile) {
           const profileText = formatProfileForContext(profile);
-          const userId = profile.username || profile.userId || targetUsername;
+          const profileWallet = profile.walletAddress || profile.address || profile.wallet_address;
           let postsText = '';
-          if (userId) {
+          if (profileWallet) {
             const postCount = extractPostCount(userQuery) || 20;
-            const posts = await fetchUserPosts(userId, postCount, dehubToken);
+            const posts = await fetchUserPosts(profileWallet, postCount, dehubToken);
             if (posts.length > 0) {
               postsText = `\n\n### Their Recent Posts (${posts.length} posts):\n${formatPostsForContext(posts)}`;
             }
