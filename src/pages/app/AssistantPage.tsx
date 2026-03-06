@@ -882,17 +882,36 @@ export default function AssistantPage() {
         for (let attempt = 0; attempt <= maxRetries; attempt++) {
           try {
             const result = await supabase.functions.invoke('general-ai-chat', { body: chatBody });
-            if (result.error) throw result.error;
+            if (result.error) {
+              // supabase.functions.invoke wraps non-2xx as FunctionsHttpError
+              // Check if the response body has details
+              const errBody = result.data;
+              if (errBody?.errorCode) {
+                const enrichedError = new Error(errBody.error || result.error.message);
+                (enrichedError as any).errorCode = errBody.errorCode;
+                (enrichedError as any).statusCode = errBody.statusCode;
+                throw enrichedError;
+              }
+              throw result.error;
+            }
             // Check for error in response body (e.g. 429, 504 forwarded as JSON)
             if (result.data?.error && !result.data?.response) {
-              throw new Error(result.data.error);
+              const bodyError = new Error(result.data.error);
+              (bodyError as any).errorCode = result.data.errorCode;
+              (bodyError as any).statusCode = result.data.statusCode;
+              throw bodyError;
             }
             data = result.data;
             lastError = null;
             break;
           } catch (err: any) {
             lastError = err;
-            console.warn(`[Assistant] Attempt ${attempt + 1}/${maxRetries + 1} failed:`, err?.message || err);
+            const errorCode = err?.errorCode || 'UNKNOWN';
+            console.warn(`[Assistant] Attempt ${attempt + 1}/${maxRetries + 1} failed [${errorCode}]:`, err?.message || err);
+            // Don't retry rate limits or credit issues
+            if (errorCode === 'RATE_LIMIT' || errorCode === 'CREDITS_EXHAUSTED') {
+              break;
+            }
             if (attempt < maxRetries) {
               await new Promise(r => setTimeout(r, 1000 * (attempt + 1))); // 1s, 2s backoff
             }
