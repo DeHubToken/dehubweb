@@ -280,13 +280,26 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage } = await req.json() as { 
+    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext } = await req.json() as { 
       messages: Message[]; 
       style?: string;
       postContext?: PostContext;
       model?: string;
       isAuthenticated?: boolean;
       userLanguage?: string;
+      userContext?: {
+        username?: string;
+        displayName?: string;
+        walletAddress?: string;
+        followers?: number;
+        following?: number;
+        postsCount?: number;
+        likesReceived?: number;
+        badgeBalance?: number;
+        tipsReceived?: number;
+        tipsSent?: number;
+        staked?: number;
+      };
     };
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
