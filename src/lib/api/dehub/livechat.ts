@@ -125,7 +125,7 @@ export async function getLiveChatMessages(
 
     const response = await apiCall<Record<string, unknown>>('/api/livechat/messages', {
       params: queryParams,
-      requiresAuth: true,
+      requiresAuth: false,
     });
 
     // Response shape: { messages: [...], hasMore: boolean }
