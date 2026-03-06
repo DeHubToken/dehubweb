@@ -534,7 +534,7 @@ export default function PostInfoPage() {
             </div>
             
             <div className="border-t border-white/10 pt-4">
-              <h2 className="text-sm font-medium text-white/60 mb-2">Minted On</h2>
+              <h2 className="text-sm font-medium text-white/60 mb-2">{t('postInfo.mintedOn')}</h2>
               <div className="space-y-1">
                 <p className="text-white font-medium">{formatDate(nftInfo.createdAt)}</p>
                 <p className="text-sm text-white/60">{formatTime(nftInfo.createdAt)}</p>
