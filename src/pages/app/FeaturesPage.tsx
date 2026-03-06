@@ -23,7 +23,6 @@ import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { supabase } from '@/integrations/supabase/client';
 import {
