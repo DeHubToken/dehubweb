@@ -1001,19 +1001,19 @@ export default function AssistantPage() {
       let userErrorMessage: string;
       switch (errorCode) {
         case 'RATE_LIMIT':
-          userErrorMessage = '⏳ Rate limit reached. Please wait a moment and try again.';
+          userErrorMessage = t('assistant.errorRateLimit');
           break;
         case 'CREDITS_EXHAUSTED':
-          userErrorMessage = '💳 AI credits exhausted. Please try again later.';
+          userErrorMessage = t('assistant.errorCreditsExhausted');
           break;
         case 'TIMEOUT':
-          userErrorMessage = '⏱️ Request timed out. The AI service may be busy — please try again.';
+          userErrorMessage = t('assistant.errorTimeout');
           break;
         case 'UPSTREAM_ERROR':
-          userErrorMessage = `🔧 AI service error (${statusCode || 'unknown'}). The AI provider is having issues. Please try again in a moment.`;
+          userErrorMessage = t('assistant.errorUpstream', { status: statusCode || 'unknown' });
           break;
         default:
-          userErrorMessage = `❌ Something went wrong: ${error?.message || 'Unknown error'}. Please try again.`;
+          userErrorMessage = t('assistant.errorUnknown', { message: error?.message || 'Unknown error' });
           break;
       }
       
