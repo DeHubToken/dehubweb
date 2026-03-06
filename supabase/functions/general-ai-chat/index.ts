@@ -211,9 +211,19 @@ function isDeHubRelated(message: string): boolean {
 // Smart model selection based on query complexity
 // Returns: { model: string, tier: 'free' | 'standard' | 'premium', reason: string }
 function selectOptimalModel(message: string, hasPerplexityKey: boolean): { model: string; tier: string; reason: string } {
+  const isPersonal = isPersonalQuestion(message);
   const needsSearch = requiresWebSearch(message);
   const isDeHub = isDeHubRelated(message);
   const isComplex = requiresComplexReasoning(message);
+  
+  // Personal questions about user's own data = use Gemini with user context, never web search
+  if (isPersonal) {
+    return { 
+      model: 'gemini-2.5-flash', 
+      tier: 'free', 
+      reason: 'Personal user data query' 
+    };
+  }
   
   // DeHub questions = FREE tier (Gemini Flash) - we're trained on this
   if (isDeHub && !needsSearch) {
