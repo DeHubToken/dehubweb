@@ -811,11 +811,21 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="flex flex-col min-h-[400px] max-h-[600px] p-4 mt-3"
+      className="flex flex-col min-h-[400px] max-h-[600px] p-4 mt-3 relative"
     >
 
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
       <div className="flex justify-between items-center gap-1 mb-3">
+        {/* Mobile close button */}
+        {isMobile && (
+          <button
+            onClick={onClose}
+            className="absolute top-3 right-3 z-50 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 text-white/70 hover:text-white hover:bg-white/20 transition-colors"
+            aria-label="Close comments"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
         {/* Left side - Tab buttons */}
         <div ref={commentsTabLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <GlassIndicator rect={commentsTabRect} />
@@ -1168,12 +1178,15 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
               </div>
             ) : (
               <>
-                <div className={cn(
+                <div 
+                  data-vaul-no-drag
+                  className={cn(
                   "flex-1 flex items-start bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl px-3",
                   isMobile ? "min-h-[80px] relative" : "min-h-[40px]"
                 )}>
                   <textarea
                     ref={inputRef}
+                    data-vaul-no-drag
                     placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Add a reply...'}
                     value={newComment}
                     onChange={(e) => {
