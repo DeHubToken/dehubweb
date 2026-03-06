@@ -195,6 +195,25 @@ function RadioCarousel({ stations, onSeeAll }: { stations: RadioStation[]; onSee
     </div>
   );
 }
+/** Avatar with error fallback for music cards */
+function MusicCardAvatar({ avatar, name }: { avatar?: string; name?: string }) {
+  const [failed, setFailed] = useState(false);
+  if (avatar && !failed) {
+    return (
+      <img
+        src={avatar}
+        alt={name || ''}
+        className="w-8 h-8 rounded-xl object-cover hover:opacity-80 transition-opacity pointer-events-none"
+        onError={() => setFailed(true)}
+      />
+    );
+  }
+  return (
+    <div className="w-8 h-8 rounded-xl bg-zinc-700 flex items-center justify-center pointer-events-none">
+      <span className="text-white text-xs font-medium">{name?.[0]?.toUpperCase() || '?'}</span>
+    </div>
+  );
+}
 
 // Inline playable video thumbnail card for carousel
 function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () => void }) {
@@ -332,11 +351,7 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
           onPointerDown={(e) => e.stopPropagation()}
           className="flex-shrink-0 cursor-pointer"
         >
-          <img 
-            src={video.channelAvatar} 
-            alt={video.channel}
-            className="w-8 h-8 rounded-xl object-cover hover:opacity-80 transition-opacity pointer-events-none"
-          />
+          <MusicCardAvatar avatar={video.channelAvatar} name={video.channel} />
         </button>
         <div className="min-w-0 flex-1">
           <p className="text-white text-sm font-medium truncate">{video.title}</p>
