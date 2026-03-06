@@ -873,7 +873,7 @@ IMPORTANT FORMATTING RULES:
           let postsText = '';
           if (userId) {
             const postCount = extractPostCount(userQuery) || 20;
-            const posts = await fetchUserPosts(userId, postCount);
+            const posts = await fetchUserPosts(userId, postCount, dehubToken);
             if (posts.length > 0) {
               postsText = `\n\n### Their Recent Posts (${posts.length} posts):\n${formatPostsForContext(posts)}`;
             }
