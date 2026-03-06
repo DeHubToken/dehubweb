@@ -799,11 +799,14 @@ ${requiresWebSearch(userQuery) && !perplexityKey ? `NOTE: The user is asking abo
 
 IMPORTANT FORMATTING RULES:
 - Always keep your responses under 1400 words to ensure they never get cut off
-- Use **bold** for emphasis (with double asterisks)
-- Use bullet points with - for lists
-- Format links as [text](url) - the URL should be the full https:// link
-- NEVER use asterisks or underscores for any other purpose than markdown formatting
-- Keep formatting clean and consistent`;
+- NEVER use markdown headers (no #, ##, ###, etc.)
+- NEVER use bold (**text**) or italic (*text*) formatting
+- NEVER use bullet points with - or * symbols
+- NEVER use numbered lists like 1. 2. 3.
+- Write in plain conversational paragraphs ONLY
+- Separate ideas with line breaks between paragraphs
+- Format links as [text](url) - the URL should be the full https:// link — this is the ONLY markdown allowed
+- Write naturally like you're texting a friend, not writing a document`;
 
     // Build user context info if provided
     let userContextInfo = '';
