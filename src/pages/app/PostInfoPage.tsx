@@ -519,7 +519,7 @@ export default function PostInfoPage() {
           <section className="bg-white/5 rounded-xl p-4 border border-white/10 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-sm font-medium text-white/60 mb-2">Token ID</h2>
+                <h2 className="text-sm font-medium text-white/60 mb-2">{t('postInfo.tokenId')}</h2>
                 <p className="text-xl font-bold text-white">#{nftInfo.tokenId}</p>
               </div>
               {nftInfo.status && (
