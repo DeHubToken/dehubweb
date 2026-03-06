@@ -280,7 +280,7 @@ export default function FullWalletPage() {
               </div>
             )}
             {zeroBalance.map(grouped => (
-              <GroupedTokenRow key={grouped.symbol} grouped={grouped} onClick={() => handleGroupedTokenClick(grouped)} />
+              <GroupedTokenRow key={grouped.symbol} grouped={grouped} onClick={() => handleGroupedTokenClick(grouped)} price={prices[grouped.symbol]} />
             ))}
           </>
         )}
