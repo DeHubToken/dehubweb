@@ -8,6 +8,7 @@ import { getDPayTransactions, type DPayTransaction } from '@/lib/api/dpay';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { getAccountInfo } from '@/lib/api/dehub/users';
+import { getNotifications } from '@/lib/api/dehub/notifications';
 import { format, subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import { useState, useMemo } from 'react';
 import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
@@ -111,6 +112,19 @@ export function RecentTransactions() {
     staleTime: 30_000,
   });
 
+  // Fetch tip notifications from DeHub API (catches tips not recorded in tip_records)
+  const { data: tipNotifications = [], isLoading: tipNotisLoading } = useQuery({
+    queryKey: ['tip-notifications-for-cc'],
+    queryFn: async () => {
+      try {
+        const result = await getNotifications(1, 50, 'monetization');
+        return result.items.filter(n => n.type === 'tip');
+      } catch { return []; }
+    },
+    enabled: isAuthenticated,
+    staleTime: 30_000,
+  });
+
   // Resolve usernames for counterparty addresses in tips
   const counterpartyAddresses = useMemo(() => {
     if (!walletAddress || tipRecords.length === 0) return [];
@@ -128,7 +142,6 @@ export function RecentTransactions() {
     queryKey: ['tip-usernames', counterpartyAddresses],
     queryFn: async () => {
       const map: Record<string, string> = {};
-      // Resolve up to 10 addresses to avoid too many API calls
       const toResolve = counterpartyAddresses.slice(0, 10);
       const results = await Promise.allSettled(
         toResolve.map(async (addr) => {
@@ -145,7 +158,7 @@ export function RecentTransactions() {
     staleTime: 5 * 60_000,
   });
 
-  const isLoading = dpayLoading || ppvLoading || tipsLoading || onchainLoading;
+  const isLoading = dpayLoading || ppvLoading || tipsLoading || onchainLoading || tipNotisLoading;
 
   const recent = useMemo(() => {
     const unified: UnifiedTransaction[] = [];
@@ -246,6 +259,37 @@ export function RecentTransactions() {
       });
     });
 
+    // Add tip notifications from DeHub API (deduplicate by amount+actor against tip_records & on-chain)
+    const existingTipKeys = new Set(unified.filter(u => u.type === 'tip' || u.type === 'transfer').map(u => `${Math.round(u.amount)}`));
+    tipNotifications.forEach(noti => {
+      const amount = noti.amount || 0;
+      const actorName = noti.actorUsername || noti.actor?.username || 
+        (noti.actorAddress ? `${noti.actorAddress.slice(0, 6)}...${noti.actorAddress.slice(-4)}` : 'Someone');
+      const amountStr = amount > 0 ? amount.toLocaleString(undefined, { maximumFractionDigits: 0 }) : '';
+      
+      // Deduplicate: skip if we already have a tip_record or on-chain entry with same amount at ~same time
+      const notiTime = new Date(noti.createdAt).getTime();
+      const isDuplicate = unified.some(u => {
+        if (u.type !== 'tip' && u.type !== 'transfer') return false;
+        const timeDiff = Math.abs(new Date(u.createdAt).getTime() - notiTime);
+        return Math.abs(u.amount - amount) < 1 && timeDiff < 300_000; // within 5 min & 1 DHB
+      });
+      if (isDuplicate) return;
+
+      unified.push({
+        id: `noti-tip-${noti._id}`,
+        type: 'tip',
+        amount,
+        createdAt: noti.createdAt,
+        isCredit: true,
+        description: amountStr
+          ? `@${actorName} tipped you ${amountStr} ${noti.currency || 'DHB'}`
+          : `@${actorName} tipped you`,
+        counterpartyAddress: noti.actorAddress,
+        counterpartyUsername: actorName,
+      });
+    });
+
     // Filter by time window
     const startDate = getFilterStartDate(activeFilter);
     const filtered = startDate
@@ -254,7 +298,7 @@ export function RecentTransactions() {
 
     filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     return filtered.slice(0, 15);
-  }, [dpayTxs, ppvPurchases, tipRecords, onchainTransfers, walletAddress, activeFilter, usernameMap, t]);
+  }, [dpayTxs, ppvPurchases, tipRecords, onchainTransfers, tipNotifications, walletAddress, activeFilter, usernameMap, t]);
 
   return (
     <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
