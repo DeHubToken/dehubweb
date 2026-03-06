@@ -187,14 +187,16 @@ function generateMockTxHash(): string {
   return hash;
 }
 
-function requiresWebSearch(message: string): boolean {
+function isPersonalQuestion(message: string): boolean {
   const lowerMessage = message.toLowerCase();
-  return LIVE_SEARCH_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
+  return PERSONAL_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
-function isDeHubRelated(message: string): boolean {
+function requiresWebSearch(message: string): boolean {
   const lowerMessage = message.toLowerCase();
-  return DEHUB_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
+  // Personal questions should NOT trigger web search even if they contain time keywords
+  if (isPersonalQuestion(message)) return false;
+  return LIVE_SEARCH_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
 function requiresComplexReasoning(message: string): boolean {
