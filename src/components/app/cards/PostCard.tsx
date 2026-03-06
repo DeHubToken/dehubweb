@@ -330,6 +330,15 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         onOpenChange={setShowQuoteModal}
         quotedPost={postAsNFT}
       />
+
+      {/* Tip Modal */}
+      <TipModal
+        open={showTipModal}
+        onOpenChange={setShowTipModal}
+        creatorAddress={post.author.id}
+        creatorName={post.author.name}
+        tokenId={post.id}
+      />
     </div>
   );
 });
