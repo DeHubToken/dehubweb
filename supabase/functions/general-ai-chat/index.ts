@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -507,6 +508,181 @@ async function searchWithPerplexity(query: string, perplexityKey: string): Promi
   return formattedResponse;
 }
 
+// ============================================================
+// Platform Awareness & Memory System
+// ============================================================
+
+function getSupabaseAdmin() {
+  const url = Deno.env.get('SUPABASE_URL')!;
+  const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+  return createClient(url, key);
+}
+
+// Fetch live platform data for AI context
+async function fetchPlatformContext(): Promise<string> {
+  try {
+    const sb = getSupabaseAdmin();
+    const parts: string[] = [];
+
+    // Top leaderboard users (from cache)
+    const { data: lbCache } = await sb
+      .from('leaderboard_cache')
+      .select('data')
+      .eq('sort_mode', 'holdings')
+      .eq('period', 'all')
+      .single();
+    
+    if (lbCache?.data) {
+      const parsed = lbCache.data as any;
+      const entries = parsed?.result?.byWalletBalance || [];
+      if (entries.length > 0) {
+        const top10 = entries.slice(0, 10).map((e: any, i: number) => 
+          `${i + 1}. ${e.username || e.account?.slice(0, 8)} — ${Math.round(e.total || 0).toLocaleString()} DHB`
+        ).join('\n');
+        parts.push(`### Top 10 Leaderboard (by DHB holdings)\n${top10}`);
+      }
+    }
+
+    // Active governance proposals
+    const { data: proposals } = await sb
+      .from('governance_proposals')
+      .select('title, status, vote_count, like_count, dislike_count, comment_count, author_username, created_at')
+      .eq('status', 'open')
+      .order('created_at', { ascending: false })
+      .limit(5);
+    
+    if (proposals && proposals.length > 0) {
+      const formatted = proposals.map((p: any) => 
+        `"${p.title}" by @${p.author_username || 'anon'} — ${p.like_count} likes, ${p.dislike_count} dislikes, ${p.comment_count} comments`
+      ).join('\n');
+      parts.push(`### Active Governance Proposals\n${formatted}`);
+    }
+
+    // Top feature requests
+    const { data: features } = await sb
+      .from('feature_requests')
+      .select('title, status, vote_count, like_count, comment_count, author_username, category')
+      .eq('status', 'open')
+      .order('like_count', { ascending: false })
+      .limit(5);
+    
+    if (features && features.length > 0) {
+      const formatted = features.map((f: any) => 
+        `"${f.title}" [${f.category}] by @${f.author_username || 'anon'} — ${f.like_count} likes, ${f.comment_count} comments`
+      ).join('\n');
+      parts.push(`### Top Feature Requests\n${formatted}`);
+    }
+
+    if (parts.length === 0) return '';
+    return `\n\n## Live Platform Data\nYou have access to real-time platform data. Use it to answer questions about leaderboard rankings, governance, community activity, etc.\n${parts.join('\n\n')}`;
+  } catch (error) {
+    console.error('[PlatformContext] Failed to fetch:', error);
+    return '';
+  }
+}
+
+// Load user's persistent memories
+async function loadUserMemories(walletAddress: string): Promise<string> {
+  try {
+    const sb = getSupabaseAdmin();
+    const { data: memories } = await sb
+      .from('ai_user_memories')
+      .select('content, memory_type, importance, updated_at')
+      .eq('wallet_address', walletAddress.toLowerCase())
+      .order('importance', { ascending: false })
+      .limit(30);
+    
+    if (!memories || memories.length === 0) return '';
+    
+    const formatted = memories.map((m: any) => `- [${m.memory_type}] ${m.content}`).join('\n');
+    return `\n\n## Your Memory of This User\nYou remember these things about this user from previous conversations. Use them naturally — don't list them, just incorporate them when relevant:\n${formatted}`;
+  } catch (error) {
+    console.error('[Memory] Failed to load:', error);
+    return '';
+  }
+}
+
+// Extract and save new memories from the conversation
+async function extractAndSaveMemories(walletAddress: string, userMessages: string[], aiResponse: string): Promise<void> {
+  try {
+    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+    if (!lovableApiKey) return;
+
+    // Only extract from meaningful conversations (at least 2 user messages)
+    if (userMessages.length < 2) return;
+
+    const recentMessages = userMessages.slice(-4).join('\n');
+    
+    const extractionPrompt = `Analyze this conversation and extract 0-3 KEY FACTS worth remembering about the user for future conversations. Only extract genuinely useful, personal facts — NOT generic observations.
+
+Good examples: "User is interested in DeFi trading", "User's favorite creator is @bailey", "User prefers Turkish language", "User is building a crypto project", "User has a dog named Max"
+Bad examples: "User asked a question", "User said hello", "User wants to know about DHB"
+
+Recent user messages:
+${recentMessages}
+
+AI response:
+${aiResponse.substring(0, 500)}
+
+Return ONLY a JSON array of objects with "content" (the fact) and "type" (one of: preference, interest, fact, goal). Return [] if nothing worth remembering.
+Example: [{"content": "Interested in DeFi yield farming", "type": "interest"}]`;
+
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${lovableApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash-lite',
+        messages: [{ role: 'user', content: extractionPrompt }],
+        max_completion_tokens: 300,
+      }),
+    });
+
+    if (!response.ok) {
+      await response.text();
+      return;
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content || '';
+    
+    // Parse JSON from response
+    const jsonMatch = content.match(/\[[\s\S]*?\]/);
+    if (!jsonMatch) return;
+    
+    let memories: Array<{ content: string; type: string }>;
+    try {
+      memories = JSON.parse(jsonMatch[0]);
+    } catch {
+      return;
+    }
+
+    if (!Array.isArray(memories) || memories.length === 0) return;
+
+    const sb = getSupabaseAdmin();
+    for (const mem of memories.slice(0, 3)) {
+      if (!mem.content || mem.content.length < 5) continue;
+      
+      // Upsert to avoid duplicates
+      await sb
+        .from('ai_user_memories')
+        .upsert({
+          wallet_address: walletAddress.toLowerCase(),
+          content: mem.content.substring(0, 500),
+          memory_type: mem.type || 'fact',
+          importance: 5,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'wallet_address,content' });
+    }
+    
+    console.log(`[Memory] Saved ${memories.length} memories for ${walletAddress.substring(0, 8)}`);
+  } catch (error) {
+    console.error('[Memory] Extraction failed:', error);
+  }
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -810,6 +986,12 @@ IMPORTANT FORMATTING RULES:
 - Format links as [text](url) - the URL should be the full https:// link — this is the ONLY markdown allowed
 - Write naturally like you're texting a friend, not writing a document`;
 
+    // Fetch platform-wide data and user memories in parallel
+    const [platformContext, userMemories] = await Promise.all([
+      fetchPlatformContext(),
+      userContext?.walletAddress ? loadUserMemories(userContext.walletAddress) : Promise.resolve(''),
+    ]);
+
     // Build user context info if provided
     let userContextInfo = '';
     if (userContext && userContext.walletAddress) {
@@ -902,8 +1084,8 @@ IMPORTANT FORMATTING RULES:
     }
     
     const systemPrompt = personalityModifier
-      ? `${basePrompt}${userContextInfo}${postAnalysisInfo}${otherUserInfo}${postContextInfo}\n\nIMPORTANT STYLE: ${personalityModifier}`
-      : `${basePrompt}${userContextInfo}${postAnalysisInfo}${otherUserInfo}${postContextInfo}`;
+      ? `${basePrompt}${platformContext}${userMemories}${userContextInfo}${postAnalysisInfo}${otherUserInfo}${postContextInfo}\n\nIMPORTANT STYLE: ${personalityModifier}`
+      : `${basePrompt}${platformContext}${userMemories}${userContextInfo}${postAnalysisInfo}${otherUserInfo}${postContextInfo}`;
 
     // Build messages array - include image in user message if available
     const apiMessages: any[] = [{ role: 'system', content: systemPrompt }];
@@ -1031,6 +1213,16 @@ IMPORTANT FORMATTING RULES:
 
     const data = await response.json();
     const aiResponse = data.choices?.[0]?.message?.content || 'I apologize, I couldn\'t generate a response.';
+
+    // Fire-and-forget: extract memories from this conversation
+    if (userContext?.walletAddress && messages.length >= 3) {
+      const userMsgs = messages
+        .filter(m => m.role === 'user')
+        .map(m => typeof m.content === 'string' ? m.content : m.content?.find(c => c.type === 'text')?.text || '');
+      extractAndSaveMemories(userContext.walletAddress, userMsgs, aiResponse).catch(e => 
+        console.error('[Memory] Background extraction error:', e)
+      );
+    }
 
     return new Response(
       JSON.stringify({ 

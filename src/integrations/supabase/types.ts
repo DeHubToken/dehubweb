@@ -150,6 +150,36 @@ export type Database = {
           },
         ]
       }
+      ai_user_memories: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          importance: number
+          memory_type: string
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          importance?: number
+          memory_type?: string
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          importance?: number
+          memory_type?: string
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       audio_spaces: {
         Row: {
           channel_name: string
