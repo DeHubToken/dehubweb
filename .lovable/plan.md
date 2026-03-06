@@ -1,35 +1,35 @@
 
 
-## Fix: Auto-reload on chunk load failures
+## Why Some Users Are Seeing "An error occurred" in the Assistant
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+### Root Cause Analysis
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+The screenshot shows a Turkish-language user getting "Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin." (the `assistant.errorGeneric` translation) on every message. This comes from the catch block in `AssistantPage.tsx` (line 916-922).
 
-### Changes
+The edge function logs show **no errors** — requests are processing successfully. This means the error is happening **client-side** before or after the edge function call. Possible causes:
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+1. **Edge function timeout on the published site** — the published app may be hitting a different deployment or the AI gateway may be intermittently slow/failing for some users (e.g., rate limits, regional latency).
+2. **The catch block swallows all error details** — when any exception occurs (network timeout, JSON parse error, etc.), the user only sees the generic error with no diagnostic info logged to the backend.
+3. **No retry mechanism** — a single transient failure shows the error immediately with no recovery option.
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+### Plan
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+#### 1. Add better error handling and logging in the catch block
+- Log the actual error to `client_error_logs` via the existing logger so we can see what's failing on the published site.
+- Include the user's message content (first 50 chars), the selected model, and the error message/status.
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+#### 2. Add automatic retry with exponential backoff
+- Retry the `general-ai-chat` call up to 2 times on transient failures (network errors, 429, 500, 502, 503).
+- Only show the error message after all retries are exhausted.
+
+#### 3. Add a "Retry" button on error messages
+- When the generic error is shown, include a small "Retry" button so users can tap to resend their last message without retyping.
+
+#### 4. Improve edge function error responses
+- In `general-ai-chat/index.ts`, add a timeout wrapper around the AI gateway fetch (e.g., 25s `AbortController`) so we get a clear timeout error instead of hanging.
+- Return more specific error messages (timeout vs rate limit vs API failure) so the client can show better feedback.
+
+### Files to modify
+- `src/pages/app/AssistantPage.tsx` — retry logic, error logging, retry button
+- `supabase/functions/general-ai-chat/index.ts` — fetch timeout, better error messages
 
