@@ -299,6 +299,17 @@ serve(async (req) => {
         tipsReceived?: number;
         tipsSent?: number;
         staked?: number;
+        leaderboardRank?: number;
+        leaderboardBalance?: number;
+        snapshots?: Array<{
+          balance: number;
+          followers: number | null;
+          likes: number | null;
+          subscribers: number | null;
+          sent_tips: number;
+          received_tips: number;
+          snapshot_date: string;
+        }>;
       };
     };
 
@@ -577,7 +588,24 @@ IMPORTANT FORMATTING RULES:
       if (userContext.tipsReceived !== undefined) parts.push(`Tips Received: ${userContext.tipsReceived.toLocaleString()} DHB`);
       if (userContext.tipsSent !== undefined) parts.push(`Tips Sent: ${userContext.tipsSent.toLocaleString()} DHB`);
       if (userContext.staked !== undefined) parts.push(`Staked: ${userContext.staked.toLocaleString()} DHB`);
-      userContextInfo = `\n\n## Current User Profile\nYou are chatting with the following user. Use this data to answer personal questions like "how many followers do I have?" or "what's my balance?".\n${parts.join('\n')}`;
+      if (userContext.leaderboardRank !== undefined) parts.push(`Leaderboard Rank: #${userContext.leaderboardRank}`);
+      if (userContext.leaderboardBalance !== undefined) parts.push(`Total DHB Balance (on-chain): ${userContext.leaderboardBalance.toLocaleString()} DHB`);
+
+      // Add historical snapshot data for delta questions
+      if (userContext.snapshots && userContext.snapshots.length > 0) {
+        parts.push(`\n### Historical Snapshots (most recent first)`);
+        parts.push(`Use this data to answer questions like "how many followers did I gain this week?" by comparing snapshot dates.`);
+        for (const snap of userContext.snapshots.slice(0, 14)) {
+          const snapParts = [`Date: ${snap.snapshot_date}, Balance: ${snap.balance}`];
+          if (snap.followers !== null) snapParts.push(`Followers: ${snap.followers}`);
+          if (snap.likes !== null) snapParts.push(`Likes: ${snap.likes}`);
+          if (snap.subscribers !== null) snapParts.push(`Subscribers: ${snap.subscribers}`);
+          snapParts.push(`Tips Sent: ${snap.sent_tips}, Tips Received: ${snap.received_tips}`);
+          parts.push(`- ${snapParts.join(' | ')}`);
+        }
+      }
+
+      userContextInfo = `\n\n## Current User Profile\nYou are chatting with the following user. Use this data to answer personal questions like "how many followers do I have?", "what's my balance?", "how many followers did I gain this week?", or "what's my leaderboard rank?".\n${parts.join('\n')}`;
     }
 
     // Build post context info if provided
