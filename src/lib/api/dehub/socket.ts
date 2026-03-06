@@ -1,8 +1,9 @@
 /**
  * DeHub LiveChat Socket.IO client
  * 
- * Connects to /livechat namespace with JWT auth.
- * Events prefixed with "livechat:" per API spec.
+ * Connects to root namespace with polling transport.
+ * Uses non-prefixed event names (sendMessage, joinRoom, etc.)
+ * with redundant payload fields for API compatibility.
  */
 
 import { io, Socket } from 'socket.io-client';
@@ -24,6 +25,7 @@ export function getSocket(): Socket {
   if (!socket) {
     socket = io(DEHUB_API_BASE, {
       auth: { token: token || undefined },
+      query: { token: token || undefined },
       transports: ['polling'],
       upgrade: false,
       forceNew: true,
@@ -39,6 +41,8 @@ export function getSocket(): Socket {
 
     socket.on('connect', () => {
       console.log('[LiveChat Socket] Connected:', socket?.id);
+      // Auto-join on connect
+      socket?.emit('joinRoom');
     });
 
     socket.on('disconnect', (reason) => {
@@ -49,18 +53,22 @@ export function getSocket(): Socket {
       console.warn('[LiveChat Socket] Connection error:', err.message);
     });
 
-    // Handle initial pong with connection info
-    socket.on('livechat:pong', (data: any) => {
+    // Handle pong (both prefixed and non-prefixed)
+    const pongHandler = (data: any) => {
       console.log('[LiveChat Socket] Pong:', data);
       if (data?.connected) {
-        // Auto-join room on connection
-        socket?.emit('livechat:joinRoom');
+        socket?.emit('joinRoom');
       }
-    });
+    };
+    socket.on('pong', pongHandler);
+    socket.on('livechat:pong', pongHandler);
 
-    socket.on('livechat:error', (data: any) => {
+    // Handle errors (both prefixed and non-prefixed)
+    const errorHandler = (data: any) => {
       console.error('[LiveChat Socket] Error:', data);
-    });
+    };
+    socket.on('error', errorHandler);
+    socket.on('livechat:error', errorHandler);
   }
 
   return socket;
@@ -70,13 +78,13 @@ export function getSocket(): Socket {
 export function joinRoom(_roomId?: string) {
   const s = getSocket();
   console.log('[LiveChat Socket] Joining room');
-  s.emit('livechat:joinRoom');
+  s.emit('joinRoom');
 }
 
 /** Leave the livechat room */
 export function leaveRoom(_roomId?: string) {
   if (socket) {
-    socket.emit('livechat:leaveRoom');
+    socket.emit('leaveRoom');
   }
 }
 
@@ -91,9 +99,13 @@ export function emitSendMessage(payload: {
 }) {
   const s = getSocket();
 
+  // Redundant fields for API compatibility
   const sendPayload: Record<string, unknown> = {
     content: payload.content,
+    message: payload.content,
+    text: payload.content,
     messageType: payload.messageType || 'text',
+    type: payload.messageType || 'text',
   };
 
   if (payload.replyTo) sendPayload.replyTo = payload.replyTo;
@@ -106,15 +118,18 @@ export function emitSendMessage(payload: {
   }
 
   console.log('[LiveChat Socket] Sending message:', sendPayload);
-  s.emit('livechat:sendMessage', sendPayload);
+  s.emit('sendMessage', sendPayload);
 }
 
 /** Subscribe to new messages. Returns unsubscribe fn. */
 export function onLiveChatMessage(cb: (msg: unknown) => void): () => void {
   const s = getSocket();
   const handler = (data: unknown) => cb(data);
+  // Listen on both prefixed and non-prefixed
+  s.on('newMessage', handler);
   s.on('livechat:newMessage', handler);
   return () => {
+    s.off('newMessage', handler);
     s.off('livechat:newMessage', handler);
   };
 }
@@ -128,58 +143,79 @@ export function onRoomJoined(cb: (data: {
   canSendMessages: boolean;
 }) => void): () => void {
   const s = getSocket();
+  // Listen on both prefixed and non-prefixed
+  s.on('roomJoined', cb);
   s.on('livechat:roomJoined', cb);
-  return () => { s.off('livechat:roomJoined', cb); };
+  return () => {
+    s.off('roomJoined', cb);
+    s.off('livechat:roomJoined', cb);
+  };
 }
 
 /** Subscribe to message deleted events */
 export function onMessageDeleted(cb: (data: { messageId: string }) => void): () => void {
   const s = getSocket();
+  s.on('messageDeleted', cb);
   s.on('livechat:messageDeleted', cb);
-  return () => { s.off('livechat:messageDeleted', cb); };
+  return () => {
+    s.off('messageDeleted', cb);
+    s.off('livechat:messageDeleted', cb);
+  };
 }
 
 /** Subscribe to reaction updates */
 export function onReactionUpdated(cb: (data: unknown) => void): () => void {
   const s = getSocket();
+  s.on('reactionUpdated', cb);
   s.on('livechat:reactionUpdated', cb);
-  return () => { s.off('livechat:reactionUpdated', cb); };
+  return () => {
+    s.off('reactionUpdated', cb);
+    s.off('livechat:reactionUpdated', cb);
+  };
 }
 
 /** Subscribe to ban/unban events */
 export function onUserBanned(cb: (data: { message: string }) => void): () => void {
   const s = getSocket();
+  s.on('userBanned', cb);
   s.on('livechat:userBanned', cb);
-  return () => { s.off('livechat:userBanned', cb); };
+  return () => {
+    s.off('userBanned', cb);
+    s.off('livechat:userBanned', cb);
+  };
 }
 
 export function onUserUnbanned(cb: (data: { message: string }) => void): () => void {
   const s = getSocket();
+  s.on('userUnbanned', cb);
   s.on('livechat:userUnbanned', cb);
-  return () => { s.off('livechat:userUnbanned', cb); };
+  return () => {
+    s.off('userUnbanned', cb);
+    s.off('livechat:userUnbanned', cb);
+  };
 }
 
 /** Add/remove reactions */
 export function emitAddReaction(messageId: string, emoji: string) {
   const s = getSocket();
-  s.emit('livechat:addReaction', { messageId, emoji });
+  s.emit('addReaction', { messageId, emoji });
 }
 
 export function emitRemoveReaction(messageId: string, emoji: string) {
   const s = getSocket();
-  s.emit('livechat:removeReaction', { messageId, emoji });
+  s.emit('removeReaction', { messageId, emoji });
 }
 
 /** Typing indicator */
 export function emitTyping(isTyping: boolean) {
   const s = getSocket();
-  s.emit('livechat:typing', { isTyping });
+  s.emit('typing', { isTyping });
 }
 
 /** Ping keep-alive */
 export function emitPing() {
   const s = getSocket();
-  s.emit('livechat:ping');
+  s.emit('ping');
 }
 
 /** Subscribe to all socket events for debugging. Returns unsubscribe fn. */
@@ -208,5 +244,5 @@ export function requestMessageHistory(_roomId: string, _limit?: number): Promise
 }
 
 // Legacy exports for compatibility
-export const MSG_EVENTS = ['livechat:newMessage'] as const;
-export const PRESENCE_EVENTS = ['livechat:userJoined', 'livechat:userLeft'] as const;
+export const MSG_EVENTS = ['newMessage', 'livechat:newMessage'] as const;
+export const PRESENCE_EVENTS = ['userJoined', 'userLeft', 'livechat:userJoined', 'livechat:userLeft'] as const;
