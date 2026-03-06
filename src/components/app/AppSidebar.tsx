@@ -39,7 +39,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
           <LiquidGlassBubble shimmer noBorder className="w-full cursor-pointer" onClick={() => setIsPostModalOpen(true)}>
             <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
               <LogIn className="w-5 h-5" />
-              Log in
+              {t('sidebar.logIn')}
             </div>
           </LiquidGlassBubble>
         </div>
