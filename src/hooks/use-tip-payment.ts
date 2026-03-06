@@ -37,6 +37,7 @@ interface UseTipPaymentOptions {
 export function useTipPayment({
   creatorAddress,
   chainId = BASE_CHAIN_ID,
+  tokenId,
   onSuccess,
 }: UseTipPaymentOptions) {
   const [isTipping, setIsTipping] = useState(false);
