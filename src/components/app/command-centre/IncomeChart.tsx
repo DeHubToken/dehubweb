@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
+import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 const COLORS = ['#22c55e', '#3b82f6', '#eab308', '#ef4444', '#a855f7', '#ec4899', '#14b8a6', '#f97316'];
