@@ -675,8 +675,8 @@ export default function PostInfoPage() {
           {/* Fraction Ownership */}
           <section className="bg-white/5 rounded-xl p-4 border border-white/10">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-medium text-white/60">Fraction Ownership</h2>
-              <span className="text-xs font-mono text-white/40">{TOTAL_FRACTIONS} total</span>
+              <h2 className="text-sm font-medium text-white/60">{t('postInfo.fractionOwnership')}</h2>
+              <span className="text-xs font-mono text-white/40">{t('postInfo.total', { count: TOTAL_FRACTIONS })}</span>
             </div>
             
             {/* Distribution Progress */}
