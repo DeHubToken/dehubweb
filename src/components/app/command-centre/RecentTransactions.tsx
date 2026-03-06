@@ -8,6 +8,7 @@ import { getDPayTransactions, type DPayTransaction } from '@/lib/api/dpay';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { getAccountInfo } from '@/lib/api/dehub/users';
+import { getNotifications } from '@/lib/api/dehub/notifications';
 import { format, subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import { useState, useMemo } from 'react';
 import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
