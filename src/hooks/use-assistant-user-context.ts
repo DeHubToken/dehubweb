@@ -83,6 +83,55 @@ export function useAssistantUserContext(): AssistantUserContext | null {
     refetchOnWindowFocus: false,
   });
 
+  // Fetch leaderboard rank + balance from cache
+  const { data: leaderboardData } = useQuery({
+    queryKey: ['assistant-leaderboard-context', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return null;
+      try {
+        const { data } = await supabase
+          .from('leaderboard_cache')
+          .select('data')
+          .eq('sort_mode', 'holdings')
+          .eq('period', 'all')
+          .single();
+        if (!data?.data) return null;
+        const parsed = data.data as any;
+        const entries = parsed?.result?.byWalletBalance || [];
+        const idx = entries.findIndex((e: any) => e.account?.toLowerCase() === walletAddress.toLowerCase());
+        if (idx === -1) return null;
+        return { rank: idx + 1, balance: entries[idx].total ?? 0 };
+      } catch {
+        return null;
+      }
+    },
+    enabled: !!walletAddress && isAuthenticated,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
+  // Fetch recent leaderboard snapshots for historical deltas
+  const { data: snapshots } = useQuery({
+    queryKey: ['assistant-snapshots-context', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return null;
+      try {
+        const { data } = await supabase
+          .from('leaderboard_snapshots')
+          .select('balance, followers, likes, subscribers, sent_tips, received_tips, snapshot_date')
+          .eq('account', walletAddress.toLowerCase())
+          .order('snapshot_date', { ascending: false })
+          .limit(30);
+        return data || [];
+      } catch {
+        return [];
+      }
+    },
+    enabled: !!walletAddress && isAuthenticated,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
   return useMemo(() => {
     if (!walletAddress || !isAuthenticated) return null;
 
