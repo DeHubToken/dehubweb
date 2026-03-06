@@ -94,6 +94,11 @@ const POST_ANALYSIS_KEYWORDS = [
   'study my images', 'analyze my images', 'review my images',
   'tell me about my posts', 'tell me about my content', 'what kind of content',
   'my best posts', 'my top posts', 'my worst posts', 'my most liked',
+  'based on my posts', 'read my posts', 'read my last', 'read my recent',
+  'from my posts', 'looking at my posts', 'my post data', 'my posting',
+  'tell me about myself', 'tell me about me', 'what kind of person',
+  'who am i', 'describe me', 'what am i like', 'personality from',
+  'judge me', 'roast me', 'roast my', 'critique my',
 ];
 
 // Keywords about DeHub - FREE tier (already trained on docs)
