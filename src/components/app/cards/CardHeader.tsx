@@ -11,7 +11,6 @@ import { useState } from 'react';
 import { CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { getAgentAvatarFallback } from '@/constants/agent-avatars.constants';
 import { getBadgeUrl } from '@/lib/staking-badges';
 
