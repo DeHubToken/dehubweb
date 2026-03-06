@@ -287,12 +287,14 @@ function requiresOtherUserLookup(message: string): boolean {
 }
 
 // Fetch another user's profile from DeHub API
-async function fetchUserProfile(username: string): Promise<any | null> {
+async function fetchUserProfile(username: string, authToken?: string): Promise<any | null> {
   try {
     const cleanUsername = username.replace('@', '');
     const url = `https://api.dehub.io/api/account_info/${encodeURIComponent(cleanUsername)}`;
     console.log(`[UserLookup] Fetching profile: ${url}`);
-    const response = await fetch(url, { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+    const response = await fetch(url, { method: 'GET', headers });
     if (!response.ok) {
       console.error(`[UserLookup] Profile API error: ${response.status}`);
       return null;
@@ -306,14 +308,13 @@ async function fetchUserProfile(username: string): Promise<any | null> {
 }
 
 // Fetch user posts from DeHub API — uses userId (username), NOT wallet address
-async function fetchUserPosts(userId: string, limit: number = 10): Promise<any[]> {
+async function fetchUserPosts(userId: string, limit: number = 10, authToken?: string): Promise<any[]> {
   try {
     const url = `https://api.dehub.io/api/user/${encodeURIComponent(userId)}/nfts?page=1&limit=${limit}`;
     console.log(`[PostAnalysis] Fetching posts: ${url}`);
-    const response = await fetch(url, { 
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    });
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+    const response = await fetch(url, { method: 'GET', headers });
     if (!response.ok) {
       console.error(`[PostAnalysis] DeHub API error: ${response.status}`);
       const text = await response.text();
@@ -512,7 +513,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext } = await req.json() as { 
+    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext, dehubToken } = await req.json() as { 
       messages: Message[]; 
       style?: string;
       postContext?: PostContext;
@@ -543,6 +544,7 @@ serve(async (req) => {
           snapshot_date: string;
         }>;
       };
+      dehubToken?: string;
     };
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
@@ -849,7 +851,7 @@ IMPORTANT FORMATTING RULES:
       const postCount = extractPostCount(userQuery);
       const fetchId = userContext.username || userContext.walletAddress;
       console.log(`[PostAnalysis] User requested analysis of ${postCount} posts for ${fetchId}`);
-      const userPosts = await fetchUserPosts(fetchId, postCount);
+      const userPosts = await fetchUserPosts(fetchId, postCount, dehubToken);
       if (userPosts.length > 0) {
         const formattedPosts = formatPostsForContext(userPosts);
         postAnalysisInfo = `\n\n## User's Recent Posts (${userPosts.length} posts)\nThe user has asked you to study/analyze their posts. Here is their content data:\n${formattedPosts}\n\nProvide a thorough analysis including:\n- Content patterns and themes\n- Engagement metrics (which posts perform best/worst and why)\n- Content type distribution (videos vs images vs text)\n- Posting frequency and timing patterns\n- Specific, actionable suggestions to improve engagement\n- What they're doing well and should continue\n- What they could experiment with`;
@@ -864,14 +866,14 @@ IMPORTANT FORMATTING RULES:
       const targetUsername = extractTargetUsername(userQuery);
       if (targetUsername) {
         console.log(`[UserLookup] Looking up user: ${targetUsername}`);
-        const profile = await fetchUserProfile(targetUsername);
+        const profile = await fetchUserProfile(targetUsername, dehubToken);
         if (profile) {
           const profileText = formatProfileForContext(profile);
           const userId = profile.username || profile.userId || targetUsername;
           let postsText = '';
           if (userId) {
             const postCount = extractPostCount(userQuery) || 20;
-            const posts = await fetchUserPosts(userId, postCount);
+            const posts = await fetchUserPosts(userId, postCount, dehubToken);
             if (posts.length > 0) {
               postsText = `\n\n### Their Recent Posts (${posts.length} posts):\n${formatPostsForContext(posts)}`;
             }
