@@ -28,6 +28,7 @@ import { EditPostModal } from '../modals/EditPostModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { QuotePostModal } from '../modals/QuotePostModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
+import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { useAuth } from '@/contexts/AuthContext';
 import { updateTokenVisibility, repostPost, type TokenVisibility } from '@/lib/api/dehub';
 import { cacheTextPostForNavigation } from '@/lib/post-cache';
@@ -67,6 +68,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const { data: tipCount = 0 } = usePostTipCount(post.id);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
@@ -266,6 +268,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             repostCount={post.stats.reposts}
             isReposted={post.isReposted}
             isOptimistic={post.isOptimistic}
+            tipCount={tipCount}
           />
         </div>
 

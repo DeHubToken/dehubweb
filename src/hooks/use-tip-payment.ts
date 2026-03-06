@@ -30,12 +30,14 @@ export const MAX_TIP_DHB = 1000000;
 interface UseTipPaymentOptions {
   creatorAddress?: string;
   chainId?: ChainId;
+  tokenId?: string;
   onSuccess?: () => void;
 }
 
 export function useTipPayment({
   creatorAddress,
   chainId = BASE_CHAIN_ID,
+  tokenId,
   onSuccess,
 }: UseTipPaymentOptions) {
   const [isTipping, setIsTipping] = useState(false);
@@ -99,7 +101,8 @@ export function useTipPayment({
             amount,
             chain_id: chainId,
             tx_hash: result.hash,
-          });
+            token_id: tokenId || null,
+          } as any);
         } catch (dbErr) {
           console.warn('[Tip] Failed to record tip in DB:', dbErr);
         }
@@ -114,7 +117,7 @@ export function useTipPayment({
         setIsTipping(false);
       }
     },
-    [walletAddress, creatorAddress, chainId, openLoginModal, onSuccess]
+    [walletAddress, creatorAddress, chainId, tokenId, openLoginModal, onSuccess]
   );
 
   return { tip, isTipping };

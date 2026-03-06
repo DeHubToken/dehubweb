@@ -38,6 +38,7 @@ import { TipModal } from '../modals/TipModal';
 import { CommentsWrapper } from './CommentsWrapper';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
+import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAutoplay } from '@/contexts/AutoplayContext';
@@ -455,6 +456,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const { data: tipCount = 0 } = usePostTipCount(video.id);
   const [isPlaying, setIsPlaying] = useState(false);
   const isPlayingRef = useRef(false);
   const isTabletOrMobile = useIsTabletOrMobile();
@@ -1480,6 +1482,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           repostCount={video.repostCount}
           isReposted={video.isReposted}
           isOptimistic={video.isOptimistic}
+          tipCount={tipCount}
+          onTip={() => setShowTipModal(true)}
         />
 
         {/* Comments */}

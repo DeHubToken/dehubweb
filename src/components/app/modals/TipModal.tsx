@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
 import { Gift, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,7 +28,9 @@ interface TipModalProps {
   onOpenChange: (open: boolean) => void;
   creatorAddress?: string;
   creatorName?: string;
-  /** Optional context: post tokenId for analytics, or 'profile' */
+  /** Post tokenId for per-post tip tracking */
+  tokenId?: string;
+  /** @deprecated Use tokenId instead */
   context?: string;
 }
 
@@ -36,15 +39,23 @@ export function TipModal({
   onOpenChange,
   creatorAddress,
   creatorName,
+  tokenId,
   context,
 }: TipModalProps) {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [amount, setAmount] = useState('');
+  const resolvedTokenId = tokenId || context;
   const { tip, isTipping } = useTipPayment({
     creatorAddress,
+    tokenId: resolvedTokenId,
     onSuccess: () => {
       setAmount('');
       onOpenChange(false);
+      // Invalidate per-post tip count
+      if (resolvedTokenId) {
+        queryClient.invalidateQueries({ queryKey: ['post-tip-count', resolvedTokenId] });
+      }
     },
   });
 

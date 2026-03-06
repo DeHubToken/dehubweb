@@ -33,6 +33,7 @@ import { DeletePostModal } from '../modals/DeletePostModal';
 import { QuotePostModal } from '../modals/QuotePostModal';
 import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
+import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
 import { ImageTranslationSheet } from './ImageTranslationSheet';
@@ -316,6 +317,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const { data: tipCount = 0 } = usePostTipCount(post.id);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -729,6 +731,8 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           repostCount={post.repostCount}
           isReposted={post.isReposted}
           isOptimistic={post.isOptimistic}
+          tipCount={tipCount}
+          onTip={() => setShowTipModal(true)}
         />
         
 
