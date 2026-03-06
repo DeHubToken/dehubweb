@@ -252,9 +252,34 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
         input.setSelectionRange(newCursorPos, newCursorPos);
       } else if (input instanceof HTMLDivElement) {
         input.focus();
-        // For contentEditable, the parent component handles cursor positioning
+        // For contentEditable, place cursor at end of inserted mention
+        const textContent = input.textContent || '';
+        const targetPos = startIndex + mention.length;
+        
+        // Walk text nodes to find the right position
+        const walker = document.createTreeWalker(input, NodeFilter.SHOW_TEXT, null);
+        let charCount = 0;
+        let node: Node | null = null;
+        
+        while (walker.nextNode()) {
+          node = walker.currentNode;
+          const nodeLen = (node.textContent || '').length;
+          if (charCount + nodeLen >= targetPos) {
+            const offset = targetPos - charCount;
+            const sel = window.getSelection();
+            if (sel) {
+              const range = document.createRange();
+              range.setStart(node, Math.min(offset, nodeLen));
+              range.collapse(true);
+              sel.removeAllRanges();
+              sel.addRange(range);
+            }
+            break;
+          }
+          charCount += nodeLen;
+        }
       }
-    }, 0);
+    }, 10);
   }, [inputRef, onMentionInsert]);
 
   // Handle close
