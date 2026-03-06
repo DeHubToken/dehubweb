@@ -469,12 +469,17 @@ export default function AssistantPage() {
           speak(responseText);
         }, 300);
       }
-    } catch (error) {
-      console.error('AI chat error:', error);
+    } catch (error: any) {
+      console.error('AI chat error (voice):', error);
+      const errorCode = error?.errorCode || 'UNKNOWN';
+      let msg = errorCode === 'RATE_LIMIT' ? '⏳ Rate limit reached. Try again shortly.'
+        : errorCode === 'TIMEOUT' ? '⏱️ Request timed out. Please try again.'
+        : `❌ ${error?.message || t('assistant.errorGeneric')}`;
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: t('assistant.errorGeneric')
+        content: msg,
+        isError: true,
       }]);
     } finally {
       setIsLoading(false);
@@ -882,17 +887,36 @@ export default function AssistantPage() {
         for (let attempt = 0; attempt <= maxRetries; attempt++) {
           try {
             const result = await supabase.functions.invoke('general-ai-chat', { body: chatBody });
-            if (result.error) throw result.error;
+            if (result.error) {
+              // supabase.functions.invoke wraps non-2xx as FunctionsHttpError
+              // Check if the response body has details
+              const errBody = result.data;
+              if (errBody?.errorCode) {
+                const enrichedError = new Error(errBody.error || result.error.message);
+                (enrichedError as any).errorCode = errBody.errorCode;
+                (enrichedError as any).statusCode = errBody.statusCode;
+                throw enrichedError;
+              }
+              throw result.error;
+            }
             // Check for error in response body (e.g. 429, 504 forwarded as JSON)
             if (result.data?.error && !result.data?.response) {
-              throw new Error(result.data.error);
+              const bodyError = new Error(result.data.error);
+              (bodyError as any).errorCode = result.data.errorCode;
+              (bodyError as any).statusCode = result.data.statusCode;
+              throw bodyError;
             }
             data = result.data;
             lastError = null;
             break;
           } catch (err: any) {
             lastError = err;
-            console.warn(`[Assistant] Attempt ${attempt + 1}/${maxRetries + 1} failed:`, err?.message || err);
+            const errorCode = err?.errorCode || 'UNKNOWN';
+            console.warn(`[Assistant] Attempt ${attempt + 1}/${maxRetries + 1} failed [${errorCode}]:`, err?.message || err);
+            // Don't retry rate limits or credit issues
+            if (errorCode === 'RATE_LIMIT' || errorCode === 'CREDITS_EXHAUSTED') {
+              break;
+            }
             if (attempt < maxRetries) {
               await new Promise(r => setTimeout(r, 1000 * (attempt + 1))); // 1s, 2s backoff
             }
@@ -938,16 +962,42 @@ export default function AssistantPage() {
       }
     } catch (error: any) {
       console.error('AI chat error:', error);
+      const errorCode = error?.errorCode || 'UNKNOWN';
+      const statusCode = error?.statusCode;
+      
+      // Build user-facing error message based on error type
+      let userErrorMessage: string;
+      switch (errorCode) {
+        case 'RATE_LIMIT':
+          userErrorMessage = '⏳ Rate limit reached. Please wait a moment and try again.';
+          break;
+        case 'CREDITS_EXHAUSTED':
+          userErrorMessage = '💳 AI credits exhausted. Please try again later.';
+          break;
+        case 'TIMEOUT':
+          userErrorMessage = '⏱️ Request timed out. The AI service may be busy — please try again.';
+          break;
+        case 'UPSTREAM_ERROR':
+          userErrorMessage = `🔧 AI service error (${statusCode || 'unknown'}). The AI provider is having issues. Please try again in a moment.`;
+          break;
+        default:
+          userErrorMessage = `❌ Something went wrong: ${error?.message || 'Unknown error'}. Please try again.`;
+          break;
+      }
+      
       // Log error details to backend for diagnostics
       try {
         await supabase.from('client_error_logs').insert({
           level: 'error',
-          message: `Assistant error: ${error?.message || 'Unknown error'}`,
+          message: `Assistant error [${errorCode}]: ${error?.message || 'Unknown error'}`,
           component: 'AssistantPage',
           metadata: {
-            userMessage: currentInput?.substring(0, 50),
+            userMessage: currentInput?.substring(0, 100),
             model: selectedChatModel,
+            errorCode,
+            statusCode,
             errorName: error?.name,
+            errorStack: error?.stack?.substring(0, 500),
           },
           user_address: null,
         });
@@ -958,7 +1008,7 @@ export default function AssistantPage() {
       setMessages(prev => [...prev, {
         id: errorId,
         role: 'assistant',
-        content: t('assistant.errorGeneric'),
+        content: userErrorMessage,
         isError: true,
       }]);
     } finally {
