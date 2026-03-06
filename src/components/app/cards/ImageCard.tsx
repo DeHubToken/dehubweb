@@ -731,6 +731,8 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           repostCount={post.repostCount}
           isReposted={post.isReposted}
           isOptimistic={post.isOptimistic}
+          tipCount={tipCount}
+          onTip={() => setShowTipModal(true)}
         />
         
 
