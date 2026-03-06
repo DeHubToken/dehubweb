@@ -32,6 +32,7 @@ export function useLiveChatRooms() {
   const [rooms, setRooms] = useState<LiveChatRoom[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { isAuthenticated } = useAuth();
 
   const fetchRooms = useCallback(() => {
     setIsLoading(true);
@@ -52,7 +53,7 @@ export function useLiveChatRooms() {
 
   useEffect(() => {
     fetchRooms();
-  }, [fetchRooms]);
+  }, [fetchRooms, isAuthenticated]);
 
   return { rooms, isLoading, error, refetch: fetchRooms };
 }
