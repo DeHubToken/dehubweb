@@ -131,7 +131,7 @@ export function WhoToFollow() {
     e.stopPropagation();
 
     if (!isAuthenticated) {
-      toast.error('Please log in to follow users');
+      openLoginModal();
       return;
     }
 
