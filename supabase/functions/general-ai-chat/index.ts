@@ -305,10 +305,10 @@ async function fetchUserProfile(username: string): Promise<any | null> {
   }
 }
 
-// Fetch user posts from DeHub API
-async function fetchUserPosts(walletAddress: string, limit: number = 10): Promise<any[]> {
+// Fetch user posts from DeHub API — uses userId (username), NOT wallet address
+async function fetchUserPosts(userId: string, limit: number = 10): Promise<any[]> {
   try {
-    const url = `https://api.dehub.io/api/user/${walletAddress.toLowerCase()}/nfts?page=1&limit=${limit}`;
+    const url = `https://api.dehub.io/api/user/${encodeURIComponent(userId)}/nfts?page=1&limit=${limit}`;
     console.log(`[PostAnalysis] Fetching posts: ${url}`);
     const response = await fetch(url, { 
       method: 'GET',
@@ -321,8 +321,8 @@ async function fetchUserPosts(walletAddress: string, limit: number = 10): Promis
       return [];
     }
     const data = await response.json();
-    const posts = data?.result || data || [];
-    console.log(`[PostAnalysis] Fetched ${posts.length} posts`);
+    const posts = data?.result || data?.data || data || [];
+    console.log(`[PostAnalysis] Fetched ${Array.isArray(posts) ? posts.length : 0} posts`);
     return Array.isArray(posts) ? posts : [];
   } catch (error) {
     console.error('[PostAnalysis] Failed to fetch posts:', error);
