@@ -644,11 +644,11 @@ export default function AssistantPage() {
         // Update message with error
         setMessages(prev => prev.map(m => 
           m.id === messageId 
-            ? { ...m, content: `Video generation failed: ${data.error || 'Unknown error'}`, isVideoGenerating: false }
+            ? { ...m, content: t('assistant.videoGenFailedDetail', { error: data.error || 'Unknown error' }), isVideoGenerating: false }
             : m
         ));
         setIsVideoLoading(false);
-        toast.error('Video generation failed');
+        toast.error(t('assistant.errorVideoGenFailed'));
       }
       // If still processing, keep polling
     } catch (err) {
