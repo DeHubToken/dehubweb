@@ -112,6 +112,19 @@ export function RecentTransactions() {
     staleTime: 30_000,
   });
 
+  // Fetch tip notifications from DeHub API (catches tips not recorded in tip_records)
+  const { data: tipNotifications = [], isLoading: tipNotisLoading } = useQuery({
+    queryKey: ['tip-notifications-for-cc'],
+    queryFn: async () => {
+      try {
+        const result = await getNotifications(1, 50, 'monetization');
+        return result.items.filter(n => n.type === 'tip');
+      } catch { return []; }
+    },
+    enabled: isAuthenticated,
+    staleTime: 30_000,
+  });
+
   // Resolve usernames for counterparty addresses in tips
   const counterpartyAddresses = useMemo(() => {
     if (!walletAddress || tipRecords.length === 0) return [];
@@ -129,7 +142,6 @@ export function RecentTransactions() {
     queryKey: ['tip-usernames', counterpartyAddresses],
     queryFn: async () => {
       const map: Record<string, string> = {};
-      // Resolve up to 10 addresses to avoid too many API calls
       const toResolve = counterpartyAddresses.slice(0, 10);
       const results = await Promise.allSettled(
         toResolve.map(async (addr) => {
@@ -146,7 +158,7 @@ export function RecentTransactions() {
     staleTime: 5 * 60_000,
   });
 
-  const isLoading = dpayLoading || ppvLoading || tipsLoading || onchainLoading;
+  const isLoading = dpayLoading || ppvLoading || tipsLoading || onchainLoading || tipNotisLoading;
 
   const recent = useMemo(() => {
     const unified: UnifiedTransaction[] = [];
