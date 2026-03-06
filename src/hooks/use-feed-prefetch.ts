@@ -20,8 +20,8 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 
-// No delay - start prefetching immediately when home feed loads
-const PREFETCH_DELAY_MS = 0;
+// Delay prefetch to avoid overlapping with nebula prefetch and feed component loads
+const PREFETCH_DELAY_MS = 3000;
 
 // Session storage key to track if prefetch was already done this session
 const PREFETCH_DONE_KEY = 'feeds-prefetched';
