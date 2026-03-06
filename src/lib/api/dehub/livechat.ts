@@ -59,7 +59,7 @@ export interface LiveChatUserProfile {
 export async function getLiveChatRooms(): Promise<LiveChatRoom[]> {
   try {
     const response = await apiCall<Record<string, unknown>>('/api/livechat/room', {
-      requiresAuth: true,
+      requiresAuth: false,
     });
 
     // Normalize into a room object
@@ -90,7 +90,7 @@ export async function getLiveChatRooms(): Promise<LiveChatRoom[]> {
 export async function getLiveChatRoom(roomId: string): Promise<LiveChatRoom> {
   try {
     const response = await apiCall<Record<string, unknown>>('/api/livechat/room', {
-      requiresAuth: true,
+      requiresAuth: false,
     });
     const raw = (response && typeof response === 'object' && 'result' in response)
       ? response.result
@@ -125,7 +125,7 @@ export async function getLiveChatMessages(
 
     const response = await apiCall<Record<string, unknown>>('/api/livechat/messages', {
       params: queryParams,
-      requiresAuth: true,
+      requiresAuth: false,
     });
 
     // Response shape: { messages: [...], hasMore: boolean }

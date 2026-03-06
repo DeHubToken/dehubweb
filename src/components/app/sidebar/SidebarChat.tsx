@@ -31,7 +31,7 @@ export function SidebarChat() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
 
   const mention = useMention({
     inputRef: textareaRef,
@@ -61,7 +61,7 @@ export function SidebarChat() {
 
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) {
-      toast.error('Sign in to send voice notes');
+      openLoginModal();
       return;
     }
     const toastId = 'sidebarchat-voice-upload';
@@ -90,6 +90,10 @@ export function SidebarChat() {
   }, [isAuthenticated, walletAddress, send]);
 
   const handleSend = async () => {
+    if (!isAuthenticated) {
+      openLoginModal();
+      return;
+    }
     toast('Live chat only available in-app currently, download now on Google Play. Coming soon to iOS.', {
       description: (
         <button
@@ -109,6 +113,10 @@ export function SidebarChat() {
   };
 
   const handleGifSelect = async (gifUrl: string) => {
+    if (!isAuthenticated) {
+      openLoginModal();
+      return;
+    }
     toast('Live chat only available in-app currently, download now on Google Play. Coming soon to iOS.', {
       description: (
         <button

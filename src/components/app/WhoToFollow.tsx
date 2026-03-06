@@ -16,7 +16,7 @@ const MAX_PAGES = 10;
 
 export function WhoToFollow() {
   const navigate = useNavigate();
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { handleApiError } = useReauthHandler();
   const { followedUsers, markFollowed } = useFollowedSuggestions();
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
@@ -48,7 +48,6 @@ export function WhoToFollow() {
       return allPages.length + 1;
     },
     initialPageParam: 1,
-    enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
     retry: 2,
@@ -132,7 +131,7 @@ export function WhoToFollow() {
     e.stopPropagation();
 
     if (!isAuthenticated) {
-      toast.error('Please log in to follow users');
+      openLoginModal();
       return;
     }
 
@@ -163,9 +162,6 @@ export function WhoToFollow() {
     }
   };
 
-  if (!isAuthenticated) {
-    return null;
-  }
 
   if (isLoading) {
     return (
