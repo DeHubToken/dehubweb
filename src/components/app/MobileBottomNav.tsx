@@ -82,11 +82,18 @@ export function MobileBottomNav() {
       if (!container) return;
 
       // Start scrolled to the end, then ease into position 0
-      container.scrollLeft = container.scrollWidth;
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      if (maxScroll <= 0) {
+        // Nothing to scroll — mark as seen and bail
+        localStorage.setItem(SCROLL_HINT_KEY, 'true');
+        setShowScrollHint(false);
+        return;
+      }
+      container.scrollLeft = maxScroll;
 
       const totalDuration = 800; // ms
       const start = performance.now();
-      const startScroll = container.scrollLeft;
+      const startScroll = maxScroll;
 
       const animate = (now: number) => {
         const elapsed = now - start;
