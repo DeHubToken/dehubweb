@@ -862,21 +862,43 @@ export default function AssistantPage() {
         setMessages(prev => [...prev, assistantMessage]);
         queueMessage(assistantMessage);
       } else {
-        // Regular chat - use general-ai-chat endpoint
-        const { data, error } = await supabase.functions.invoke('general-ai-chat', {
-          body: {
-            messages: [...messages, userMessage].map(m => ({
-              role: m.role,
-              content: m.content
-            })),
-            style: selectedStyle,
-            model: selectedChatModel,
-            isAuthenticated, // Pass auth status for transaction simulation
-            userLanguage
-          }
-        });
+        // Regular chat - use general-ai-chat endpoint with retry
+        const chatBody = {
+          messages: [...messages, userMessage].map(m => ({
+            role: m.role,
+            content: m.content
+          })),
+          style: selectedStyle,
+          model: selectedChatModel,
+          isAuthenticated,
+          userLanguage
+        };
 
-        if (error) throw error;
+        let data: any = null;
+        let lastError: any = null;
+        const maxRetries = 2;
+
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+          try {
+            const result = await supabase.functions.invoke('general-ai-chat', { body: chatBody });
+            if (result.error) throw result.error;
+            // Check for error in response body (e.g. 429, 504 forwarded as JSON)
+            if (result.data?.error && !result.data?.response) {
+              throw new Error(result.data.error);
+            }
+            data = result.data;
+            lastError = null;
+            break;
+          } catch (err: any) {
+            lastError = err;
+            console.warn(`[Assistant] Attempt ${attempt + 1}/${maxRetries + 1} failed:`, err?.message || err);
+            if (attempt < maxRetries) {
+              await new Promise(r => setTimeout(r, 1000 * (attempt + 1))); // 1s, 2s backoff
+            }
+          }
+        }
+
+        if (lastError || !data) throw lastError || new Error('No response from AI');
 
         // Show fallback toast if Grok was requested but not available
         if (data.fallbackUsed) {
