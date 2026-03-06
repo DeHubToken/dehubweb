@@ -594,7 +594,7 @@ export default function PostInfoPage() {
 
           {/* Creator Info */}
           <section className="bg-white/5 rounded-xl p-4 border border-white/10">
-            <h2 className="text-sm font-medium text-white/60 mb-3">Creator</h2>
+            <h2 className="text-sm font-medium text-white/60 mb-3">{t('postInfo.creator')}</h2>
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center overflow-hidden shrink-0">
                 {creatorAvatar && creatorAvatar !== '/placeholder.svg' ? (
