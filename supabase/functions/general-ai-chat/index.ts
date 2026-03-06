@@ -66,6 +66,19 @@ const LIVE_SEARCH_KEYWORDS = [
   'search for', 'look up', 'find me', 'google', 'search the web'
 ];
 
+// Keywords that indicate a personal/self-referencing question (use user context, NOT web search)
+const PERSONAL_KEYWORDS = [
+  'my followers', 'my following', 'my balance', 'my tips', 'my rank',
+  'my likes', 'my posts', 'my staked', 'my badge', 'my subscribers',
+  'did i gain', 'did i get', 'did i lose', 'did i earn', 'did i receive', 'did i send',
+  'do i have', 'have i gained', 'have i got', 'have i lost', 'have i earned',
+  'i gained', 'i lost', 'i earned', 'i received', 'i sent',
+  'how many followers', 'how many likes', 'how many tips', 'how many posts',
+  'how many subscribers', 'my leaderboard', 'my position', 'my wallet',
+  'my profile', 'my stats', 'my earnings', 'my activity',
+  'followers did i', 'likes did i', 'tips did i',
+];
+
 // Keywords about DeHub - FREE tier (already trained on docs)
 const DEHUB_KEYWORDS = [
   'dehub', 'dhb', '$dhb', 'token', 'delabs', 'futurov', 'ftv',
@@ -174,8 +187,15 @@ function generateMockTxHash(): string {
   return hash;
 }
 
+function isPersonalQuestion(message: string): boolean {
+  const lowerMessage = message.toLowerCase();
+  return PERSONAL_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
+}
+
 function requiresWebSearch(message: string): boolean {
   const lowerMessage = message.toLowerCase();
+  // Personal questions should NOT trigger web search even if they contain time keywords
+  if (isPersonalQuestion(message)) return false;
   return LIVE_SEARCH_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
@@ -184,7 +204,6 @@ function isDeHubRelated(message: string): boolean {
   return DEHUB_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
-function requiresComplexReasoning(message: string): boolean {
   const lowerMessage = message.toLowerCase();
   return COMPLEX_REASONING_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
@@ -192,9 +211,19 @@ function requiresComplexReasoning(message: string): boolean {
 // Smart model selection based on query complexity
 // Returns: { model: string, tier: 'free' | 'standard' | 'premium', reason: string }
 function selectOptimalModel(message: string, hasPerplexityKey: boolean): { model: string; tier: string; reason: string } {
+  const isPersonal = isPersonalQuestion(message);
   const needsSearch = requiresWebSearch(message);
   const isDeHub = isDeHubRelated(message);
   const isComplex = requiresComplexReasoning(message);
+  
+  // Personal questions about user's own data = use Gemini with user context, never web search
+  if (isPersonal) {
+    return { 
+      model: 'gemini-2.5-flash', 
+      tier: 'free', 
+      reason: 'Personal user data query' 
+    };
+  }
   
   // DeHub questions = FREE tier (Gemini Flash) - we're trained on this
   if (isDeHub && !needsSearch) {
