@@ -543,7 +543,7 @@ export default function PostInfoPage() {
             
             {nftInfo.mintTxHash && (
               <div className="border-t border-white/10 pt-4">
-                <h2 className="text-sm font-medium text-white/60 mb-2">Transaction Hash</h2>
+                <h2 className="text-sm font-medium text-white/60 mb-2">{t('postInfo.transactionHash')}</h2>
                 <div className="flex items-center gap-2">
                   <code className="flex-1 text-sm text-white bg-white/5 p-3 rounded-lg font-mono break-all">
                     {nftInfo.mintTxHash}
