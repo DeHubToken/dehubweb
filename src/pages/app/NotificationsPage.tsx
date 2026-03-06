@@ -326,9 +326,8 @@ function NotificationItem({
   const freshAvatarPath = enriched?.avatarUrl;
   const staleAvatarPath = extractAvatarPath(notification) || notification.actorAvatar;
   
-  // If enrichment ran and returned no avatar, don't fall back to stale snapshot
-  const hasEnriched = enriched !== undefined;
-  const effectiveAvatarPath = hasEnriched ? freshAvatarPath : (freshAvatarPath || staleAvatarPath);
+  // Use fresh if available, otherwise fall back to stale (don't discard stale just because enrichment ran with null)
+  const effectiveAvatarPath = freshAvatarPath || staleAvatarPath;
   
   // If enriched avatar is already a full URL, use it directly with cache-busting
   const cacheBust = Math.floor(Date.now() / 300000);
