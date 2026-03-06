@@ -131,7 +131,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
   }, [messages.length]);
 
   const handleSendMessage = async (args: { content: string; type: string }) => {
-    toast('Live chat only available in-app currently, download now on Google Play', {
+    toast('Live chat only available in-app currently, download now on Google Play. Coming soon to iOS.', {
       description: (
         <button
           onClick={() => window.open('https://play.google.com/store/apps/details?id=io.dehub.mobile&hl', '_blank')}
