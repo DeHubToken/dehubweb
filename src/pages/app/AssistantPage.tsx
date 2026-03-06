@@ -337,6 +337,12 @@ export default function AssistantPage() {
     model: VideoModelKey;
     sourceImage?: string;
   } | null>(null);
+  const [imagePaywallOpen, setImagePaywallOpen] = useState(false);
+  const [pendingImageRequest, setPendingImageRequest] = useState<{
+    prompt: string;
+    model: ImageModelKey;
+    sourceImage?: string;
+  } | null>(null);
   const [voiceAutoReply, setVoiceAutoReply] = useState(true); // Auto-speak AI replies when using voice
   const [alwaysSpeakReplies, setAlwaysSpeakReplies] = useState(false); // Speak ALL AI replies, not just voice responses
   const [inputGlow, setInputGlow] = useState(false); // Glow effect for input focus hint
