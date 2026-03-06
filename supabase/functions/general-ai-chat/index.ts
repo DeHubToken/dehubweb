@@ -209,16 +209,71 @@ function isPersonalQuestion(message: string): boolean {
   return PERSONAL_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
-function requiresWebSearch(message: string): boolean {
+function requiresPostAnalysis(message: string): boolean {
   const lowerMessage = message.toLowerCase();
-  // Personal questions should NOT trigger web search even if they contain time keywords
-  if (isPersonalQuestion(message)) return false;
-  return LIVE_SEARCH_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
+  return POST_ANALYSIS_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
-function isDeHubRelated(message: string): boolean {
-  const lowerMessage = message.toLowerCase();
-  return DEHUB_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
+// Extract how many posts user wants analyzed (default 10, max 50)
+function extractPostCount(message: string): number {
+  const match = message.match(/(?:last|recent|latest|top|past)\s+(\d+)\s*(?:posts?|videos?|images?|uploads?|content)/i);
+  if (match) return Math.min(parseInt(match[1], 10), 50);
+  const match2 = message.match(/(\d+)\s*(?:posts?|videos?|images?|uploads?|content)/i);
+  if (match2) return Math.min(parseInt(match2[1], 10), 50);
+  return 10;
+}
+
+// Fetch user posts from DeHub API
+async function fetchUserPosts(walletAddress: string, limit: number = 10): Promise<any[]> {
+  try {
+    const url = `https://api.dehub.io/api/user/${walletAddress.toLowerCase()}/nfts?page=1&limit=${limit}`;
+    console.log(`[PostAnalysis] Fetching posts: ${url}`);
+    const response = await fetch(url, { 
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) {
+      console.error(`[PostAnalysis] DeHub API error: ${response.status}`);
+      const text = await response.text();
+      console.error(`[PostAnalysis] Response: ${text.substring(0, 200)}`);
+      return [];
+    }
+    const data = await response.json();
+    const posts = data?.result || data || [];
+    console.log(`[PostAnalysis] Fetched ${posts.length} posts`);
+    return Array.isArray(posts) ? posts : [];
+  } catch (error) {
+    console.error('[PostAnalysis] Failed to fetch posts:', error);
+    return [];
+  }
+}
+
+// Format posts into a readable context for the AI
+function formatPostsForContext(posts: any[]): string {
+  if (!posts.length) return '';
+  
+  const formatted = posts.map((post: any, i: number) => {
+    const parts: string[] = [`Post ${i + 1}:`];
+    const type = post.postType || post.media_type || 'unknown';
+    parts.push(`Type: ${type}`);
+    if (post.name && post.name !== 'Untitled') parts.push(`Title: ${post.name}`);
+    if (post.title && post.title !== 'Untitled') parts.push(`Title: ${post.title}`);
+    if (post.description) parts.push(`Description: ${post.description.substring(0, 300)}`);
+    if (post.views !== undefined || post.view_count !== undefined) parts.push(`Views: ${post.views ?? post.view_count ?? 0}`);
+    if (post.likes !== undefined || post.like_count !== undefined) parts.push(`Likes: ${post.likes ?? post.like_count ?? 0}`);
+    if (post.dislikes !== undefined || post.dislike_count !== undefined) parts.push(`Dislikes: ${post.dislikes ?? post.dislike_count ?? 0}`);
+    if (post.commentCount !== undefined || post.comment_count !== undefined) parts.push(`Comments: ${post.commentCount ?? post.comment_count ?? 0}`);
+    if (post.totalVotes?.for !== undefined) parts.push(`Upvotes: ${post.totalVotes.for}`);
+    if (post.category) parts.push(`Category: ${Array.isArray(post.category) ? post.category.join(', ') : post.category}`);
+    if (post.tags?.length) parts.push(`Tags: ${post.tags.join(', ')}`);
+    if (post.createdAt || post.created_at) parts.push(`Posted: ${post.createdAt || post.created_at}`);
+    if (post.videoDuration || post.duration) parts.push(`Duration: ${post.videoDuration || post.duration}s`);
+    if (post.is_ppv) parts.push(`PPV: Yes (${post.ppv_price} ${post.ppv_currency || 'DHB'})`);
+    if (post.is_w2e) parts.push(`Watch2Earn: Yes`);
+    return parts.join(' | ');
+  });
+  
+  return formatted.join('\n');
 }
 
 function requiresComplexReasoning(message: string): boolean {
