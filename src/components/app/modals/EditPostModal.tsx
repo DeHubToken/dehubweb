@@ -122,6 +122,7 @@ export function EditPostModal({
         <div
           className="flex-1 px-4 pb-6 overflow-y-auto overscroll-contain space-y-4"
           style={{ maxHeight: 'calc(90vh - 160px)', WebkitOverflowScrolling: 'touch' }}
+          data-vaul-no-drag
         >
           {/* Title */}
           <div className="space-y-2">
