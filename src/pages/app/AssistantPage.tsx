@@ -43,6 +43,7 @@ import { AuthGate } from '@/components/app/AuthGate';
 import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
 import { ConversationHistoryDrawer } from '@/components/app/assistant/ConversationHistoryDrawer';
 import { useAIConversation } from '@/hooks/use-ai-conversation';
+import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 
 // Simulation data for token transactions
