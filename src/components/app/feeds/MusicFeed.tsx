@@ -195,6 +195,25 @@ function RadioCarousel({ stations, onSeeAll }: { stations: RadioStation[]; onSee
     </div>
   );
 }
+/** Avatar with error fallback for music cards */
+function MusicCardAvatar({ avatar, name }: { avatar?: string; name?: string }) {
+  const [failed, setFailed] = useState(false);
+  if (avatar && !failed) {
+    return (
+      <img
+        src={avatar}
+        alt={name || ''}
+        className="w-8 h-8 rounded-xl object-cover hover:opacity-80 transition-opacity pointer-events-none"
+        onError={() => setFailed(true)}
+      />
+    );
+  }
+  return (
+    <div className="w-8 h-8 rounded-xl bg-zinc-700 flex items-center justify-center pointer-events-none">
+      <span className="text-white text-xs font-medium">{name?.[0]?.toUpperCase() || '?'}</span>
+    </div>
+  );
+}
 
 // Inline playable video thumbnail card for carousel
 function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () => void }) {
