@@ -417,7 +417,7 @@ export default function PostInfoPage() {
           </p>
           
           <p className="text-white/40 text-xs leading-relaxed">
-            Your post metadata is permanently stored on-chain but you can hide content from feeds at any time should you need to.
+            {t('postInfo.processingNote')}
           </p>
           
           <button
