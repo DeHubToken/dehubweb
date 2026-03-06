@@ -156,6 +156,10 @@ export function UserMentionDropdown({
           backdropFilter: 'blur(24px)',
           WebkitBackdropFilter: 'blur(24px)',
         }}
+        // Prevent ALL pointer events from reaching the Dialog overlay
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="px-3.5 pt-2.5 pb-1.5">
