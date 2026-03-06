@@ -101,7 +101,8 @@ export function useTipPayment({
             amount,
             chain_id: chainId,
             tx_hash: result.hash,
-          });
+            token_id: tokenId || null,
+          } as any);
         } catch (dbErr) {
           console.warn('[Tip] Failed to record tip in DB:', dbErr);
         }
