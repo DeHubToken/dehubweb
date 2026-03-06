@@ -848,7 +848,7 @@ export default function PostInfoPage() {
           {/* PPV Sales Info - shown for PPV content */}
           {isPPV && (
             <section className="bg-white/5 rounded-xl p-4 border border-white/10">
-              <h2 className="text-sm font-medium text-white/60 mb-3">Pay-Per-View</h2>
+              <h2 className="text-sm font-medium text-white/60 mb-3">{t('postInfo.payPerView')}</h2>
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-white/5 rounded-lg p-3 flex items-center gap-3">
                   <Ticket className="w-5 h-5 text-white" />
