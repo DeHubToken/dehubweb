@@ -287,12 +287,14 @@ function requiresOtherUserLookup(message: string): boolean {
 }
 
 // Fetch another user's profile from DeHub API
-async function fetchUserProfile(username: string): Promise<any | null> {
+async function fetchUserProfile(username: string, authToken?: string): Promise<any | null> {
   try {
     const cleanUsername = username.replace('@', '');
     const url = `https://api.dehub.io/api/account_info/${encodeURIComponent(cleanUsername)}`;
     console.log(`[UserLookup] Fetching profile: ${url}`);
-    const response = await fetch(url, { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+    const response = await fetch(url, { method: 'GET', headers });
     if (!response.ok) {
       console.error(`[UserLookup] Profile API error: ${response.status}`);
       return null;
@@ -306,14 +308,13 @@ async function fetchUserProfile(username: string): Promise<any | null> {
 }
 
 // Fetch user posts from DeHub API — uses userId (username), NOT wallet address
-async function fetchUserPosts(userId: string, limit: number = 10): Promise<any[]> {
+async function fetchUserPosts(userId: string, limit: number = 10, authToken?: string): Promise<any[]> {
   try {
     const url = `https://api.dehub.io/api/user/${encodeURIComponent(userId)}/nfts?page=1&limit=${limit}`;
     console.log(`[PostAnalysis] Fetching posts: ${url}`);
-    const response = await fetch(url, { 
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    });
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+    const response = await fetch(url, { method: 'GET', headers });
     if (!response.ok) {
       console.error(`[PostAnalysis] DeHub API error: ${response.status}`);
       const text = await response.text();
