@@ -296,6 +296,15 @@ function selectOptimalModel(message: string, hasPerplexityKey: boolean): { model
   const isDeHub = isDeHubRelated(message);
   const isComplex = requiresComplexReasoning(message);
   
+  // Post analysis = use Pro for deeper analysis
+  if (requiresPostAnalysis(message)) {
+    return { 
+      model: 'gemini-2.5-pro', 
+      tier: 'standard', 
+      reason: 'Post content analysis' 
+    };
+  }
+  
   // Personal questions about user's own data = use Gemini with user context, never web search
   if (isPersonal) {
     return { 
