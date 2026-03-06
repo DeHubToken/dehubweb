@@ -712,8 +712,10 @@ IMPORTANT FORMATTING RULES:
   } catch (error) {
     console.error('Error in general-ai-chat:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error('Full error details:', { message: errorMessage, stack: errorStack });
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: `Internal error: ${errorMessage}`, errorCode: 'INTERNAL_ERROR' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
