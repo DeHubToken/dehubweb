@@ -31,8 +31,14 @@ export function MobileWhoToFollowCarousel() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['suggested-accounts', walletAddress],
-    queryFn: ({ pageParam = 1 }) => getSuggestedAccounts(BATCH_SIZE, pageParam),
+    queryKey: isAuthenticated ? ['suggested-accounts', walletAddress] : ['cached-suggested-profiles'],
+    queryFn: ({ pageParam = 1 }) => {
+      if (!isAuthenticated) {
+        const offset = (pageParam - 1) * BATCH_SIZE;
+        return getCachedSuggestedProfiles(BATCH_SIZE, offset);
+      }
+      return getSuggestedAccounts(BATCH_SIZE, pageParam);
+    },
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage.hasMore) return undefined;
       if (allPages.length >= MAX_PAGES) return undefined;
@@ -44,8 +50,7 @@ export function MobileWhoToFollowCarousel() {
       return allPages.length + 1;
     },
     initialPageParam: 1,
-    enabled: isAuthenticated,
-    staleTime: 5 * 60 * 1000,
+    staleTime: isAuthenticated ? 5 * 60 * 1000 : 30 * 60 * 1000,
   });
 
   const allSuggestions = useMemo(() => {
