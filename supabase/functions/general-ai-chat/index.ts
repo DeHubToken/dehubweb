@@ -726,6 +726,20 @@ IMPORTANT FORMATTING RULES:
       userContextInfo = `\n\n## Current User Profile\nYou are chatting with the following user. Use this data to answer personal questions like "how many followers do I have?", "what's my balance?", "how many followers did I gain this week?", or "what's my leaderboard rank?".\n${parts.join('\n')}`;
     }
 
+    // Fetch and inject user posts if post analysis is requested
+    let postAnalysisInfo = '';
+    if (requiresPostAnalysis(userQuery) && userContext?.walletAddress) {
+      const postCount = extractPostCount(userQuery);
+      console.log(`[PostAnalysis] User requested analysis of ${postCount} posts`);
+      const userPosts = await fetchUserPosts(userContext.walletAddress, postCount);
+      if (userPosts.length > 0) {
+        const formattedPosts = formatPostsForContext(userPosts);
+        postAnalysisInfo = `\n\n## User's Recent Posts (${userPosts.length} posts)\nThe user has asked you to study/analyze their posts. Here is their content data:\n${formattedPosts}\n\nProvide a thorough analysis including:\n- Content patterns and themes\n- Engagement metrics (which posts perform best/worst and why)\n- Content type distribution (videos vs images vs text)\n- Posting frequency and timing patterns\n- Specific, actionable suggestions to improve engagement\n- What they're doing well and should continue\n- What they could experiment with`;
+      } else {
+        postAnalysisInfo = `\n\n## Post Analysis\nThe user asked to analyze their posts but no posts were found. Let them know you couldn't find any published content on their account, and suggest they start posting to build their profile.`;
+      }
+    }
+
     // Build post context info if provided
     let postContextInfo = '';
     if (postContext) {
