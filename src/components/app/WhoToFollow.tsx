@@ -16,7 +16,7 @@ const MAX_PAGES = 10;
 
 export function WhoToFollow() {
   const navigate = useNavigate();
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { handleApiError } = useReauthHandler();
   const { followedUsers, markFollowed } = useFollowedSuggestions();
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
