@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "ಊರಿನ ಮಾತು",
-    "nothingTrending": "ಇನ್ನೂ ಏನೂ ಟ್ರೆಂಡಿಂಗ್ ಆಗಿಲ್ಲ"
-  }
+    "nothingTrending": "ಇನ್ನೂ ಏನೂ ಟ್ರೆಂಡಿಂಗ್ ಆಗಿಲ್ಲ",
+    "post": "ಪೋಸ್ಟ್", "logOut": "ಲಾಗ್ ಔಟ್", "logIn": "ಲಾಗ್ ಇನ್"
+  },
+  "postInfo": { "title": "ಪೋಸ್ಟ್ ಮಾಹಿತಿ", "tokenId": "ಟೋಕನ್ ID", "mintedOn": "ರಚಿಸಲಾಗಿದೆ", "transactionHash": "ವಹಿವಾಟು ಹ್ಯಾಶ್", "viewOnExplorer": "{{explorer}} ನಲ್ಲಿ ನೋಡಿ", "creator": "ಸೃಷ್ಟಿಕರ್ತ", "visibility": "ಗೋಚರತೆ", "total": "ಒಟ್ಟು {{count}}", "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ...", "engagement": "ತೊಡಗಿಸಿಕೊಳ್ಳುವಿಕೆ", "likes": "ಇಷ್ಟಗಳು", "dislikes": "ಇಷ್ಟವಿಲ್ಲ", "views": "ವೀಕ್ಷಣೆಗಳು", "comments": "ಕಾಮೆಂಟ್‌ಗಳು", "price": "ಬೆಲೆ", "content": "ವಿಷಯ", "goBack": "ಹಿಂತಿರುಗಿ", "public": "ಸಾರ್ವಜನಿಕ", "publicDesc": "ಯಾರಾದರೂ ನೋಡಬಹುದು", "private": "ಖಾಸಗಿ", "privateDesc": "ನೀವು ಮಾತ್ರ ನೋಡಬಹುದು" }
 }

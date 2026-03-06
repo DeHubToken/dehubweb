@@ -1051,8 +1051,10 @@
   },
   "sidebar": {
     "talkOfTheTown": "热门话题",
-    "nothingTrending": "暂无热门"
+    "nothingTrending": "暂无热门",
+    "post": "发布", "logOut": "退出", "logIn": "登录"
   },
+  "postInfo": { "title": "帖子信息", "tokenId": "代币ID", "mintedOn": "铸造于", "transactionHash": "交易哈希", "viewOnExplorer": "在{{explorer}}查看", "creator": "创作者", "visibility": "可见性", "total": "共{{count}}个", "loading": "加载中...", "engagement": "互动", "likes": "点赞", "dislikes": "踩", "views": "浏览", "comments": "评论", "price": "价格", "content": "内容", "goBack": "返回", "public": "公开", "publicDesc": "任何人都可以看到", "private": "私密", "privateDesc": "仅您可以看到" },
   "post": {
     "like": "赞",
     "comment": "评论",
