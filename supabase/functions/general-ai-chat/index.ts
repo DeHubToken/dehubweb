@@ -82,6 +82,20 @@ const PERSONAL_KEYWORDS = [
   'followers did i', 'likes did i', 'tips did i',
 ];
 
+// Post analysis keywords — triggers fetching user's posts from DeHub API
+const POST_ANALYSIS_KEYWORDS = [
+  'study my posts', 'analyze my posts', 'analyse my posts', 'review my posts',
+  'look at my posts', 'check my posts', 'evaluate my posts', 'rate my posts',
+  'my content', 'study my content', 'analyze my content', 'analyse my content',
+  'review my content', 'my recent posts', 'my last posts', 'my latest posts',
+  'how can i improve', 'improve my content', 'content advice', 'posting advice',
+  'what do i post', 'my posting style', 'my post history', 'my uploads',
+  'study my videos', 'analyze my videos', 'review my videos',
+  'study my images', 'analyze my images', 'review my images',
+  'tell me about my posts', 'tell me about my content', 'what kind of content',
+  'my best posts', 'my top posts', 'my worst posts', 'my most liked',
+];
+
 // Keywords about DeHub - FREE tier (already trained on docs)
 const DEHUB_KEYWORDS = [
   'dehub', 'dhb', '$dhb', 'token', 'delabs', 'futurov', 'ftv',
@@ -195,16 +209,78 @@ function isPersonalQuestion(message: string): boolean {
   return PERSONAL_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
-function requiresWebSearch(message: string): boolean {
+function requiresPostAnalysis(message: string): boolean {
   const lowerMessage = message.toLowerCase();
-  // Personal questions should NOT trigger web search even if they contain time keywords
-  if (isPersonalQuestion(message)) return false;
-  return LIVE_SEARCH_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
+  return POST_ANALYSIS_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
-function isDeHubRelated(message: string): boolean {
+// Extract how many posts user wants analyzed (default 10, max 50)
+function extractPostCount(message: string): number {
+  const match = message.match(/(?:last|recent|latest|top|past)\s+(\d+)\s*(?:posts?|videos?|images?|uploads?|content)/i);
+  if (match) return Math.min(parseInt(match[1], 10), 50);
+  const match2 = message.match(/(\d+)\s*(?:posts?|videos?|images?|uploads?|content)/i);
+  if (match2) return Math.min(parseInt(match2[1], 10), 50);
+  return 10;
+}
+
+// Fetch user posts from DeHub API
+async function fetchUserPosts(walletAddress: string, limit: number = 10): Promise<any[]> {
+  try {
+    const url = `https://api.dehub.io/api/user/${walletAddress.toLowerCase()}/nfts?page=1&limit=${limit}`;
+    console.log(`[PostAnalysis] Fetching posts: ${url}`);
+    const response = await fetch(url, { 
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) {
+      console.error(`[PostAnalysis] DeHub API error: ${response.status}`);
+      const text = await response.text();
+      console.error(`[PostAnalysis] Response: ${text.substring(0, 200)}`);
+      return [];
+    }
+    const data = await response.json();
+    const posts = data?.result || data || [];
+    console.log(`[PostAnalysis] Fetched ${posts.length} posts`);
+    return Array.isArray(posts) ? posts : [];
+  } catch (error) {
+    console.error('[PostAnalysis] Failed to fetch posts:', error);
+    return [];
+  }
+}
+
+// Format posts into a readable context for the AI
+function formatPostsForContext(posts: any[]): string {
+  if (!posts.length) return '';
+  
+  const formatted = posts.map((post: any, i: number) => {
+    const parts: string[] = [`Post ${i + 1}:`];
+    const type = post.postType || post.media_type || 'unknown';
+    parts.push(`Type: ${type}`);
+    if (post.name && post.name !== 'Untitled') parts.push(`Title: ${post.name}`);
+    if (post.title && post.title !== 'Untitled') parts.push(`Title: ${post.title}`);
+    if (post.description) parts.push(`Description: ${post.description.substring(0, 300)}`);
+    if (post.views !== undefined || post.view_count !== undefined) parts.push(`Views: ${post.views ?? post.view_count ?? 0}`);
+    if (post.likes !== undefined || post.like_count !== undefined) parts.push(`Likes: ${post.likes ?? post.like_count ?? 0}`);
+    if (post.dislikes !== undefined || post.dislike_count !== undefined) parts.push(`Dislikes: ${post.dislikes ?? post.dislike_count ?? 0}`);
+    if (post.commentCount !== undefined || post.comment_count !== undefined) parts.push(`Comments: ${post.commentCount ?? post.comment_count ?? 0}`);
+    if (post.totalVotes?.for !== undefined) parts.push(`Upvotes: ${post.totalVotes.for}`);
+    if (post.category) parts.push(`Category: ${Array.isArray(post.category) ? post.category.join(', ') : post.category}`);
+    if (post.tags?.length) parts.push(`Tags: ${post.tags.join(', ')}`);
+    if (post.createdAt || post.created_at) parts.push(`Posted: ${post.createdAt || post.created_at}`);
+    if (post.videoDuration || post.duration) parts.push(`Duration: ${post.videoDuration || post.duration}s`);
+    if (post.is_ppv) parts.push(`PPV: Yes (${post.ppv_price} ${post.ppv_currency || 'DHB'})`);
+    if (post.is_w2e) parts.push(`Watch2Earn: Yes`);
+    return parts.join(' | ');
+  });
+  
+  return formatted.join('\n');
+}
+
+function requiresWebSearch(message: string): boolean {
   const lowerMessage = message.toLowerCase();
-  return DEHUB_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
+  if (isPersonalQuestion(message)) return false;
+  if (requiresPostAnalysis(message)) return false;
+  return LIVE_SEARCH_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
 function requiresComplexReasoning(message: string): boolean {
@@ -219,6 +295,15 @@ function selectOptimalModel(message: string, hasPerplexityKey: boolean): { model
   const needsSearch = requiresWebSearch(message);
   const isDeHub = isDeHubRelated(message);
   const isComplex = requiresComplexReasoning(message);
+  
+  // Post analysis = use Pro for deeper analysis
+  if (requiresPostAnalysis(message)) {
+    return { 
+      model: 'gemini-2.5-pro', 
+      tier: 'standard', 
+      reason: 'Post content analysis' 
+    };
+  }
   
   // Personal questions about user's own data = use Gemini with user context, never web search
   if (isPersonal) {
@@ -641,6 +726,20 @@ IMPORTANT FORMATTING RULES:
       userContextInfo = `\n\n## Current User Profile\nYou are chatting with the following user. Use this data to answer personal questions like "how many followers do I have?", "what's my balance?", "how many followers did I gain this week?", or "what's my leaderboard rank?".\n${parts.join('\n')}`;
     }
 
+    // Fetch and inject user posts if post analysis is requested
+    let postAnalysisInfo = '';
+    if (requiresPostAnalysis(userQuery) && userContext?.walletAddress) {
+      const postCount = extractPostCount(userQuery);
+      console.log(`[PostAnalysis] User requested analysis of ${postCount} posts`);
+      const userPosts = await fetchUserPosts(userContext.walletAddress, postCount);
+      if (userPosts.length > 0) {
+        const formattedPosts = formatPostsForContext(userPosts);
+        postAnalysisInfo = `\n\n## User's Recent Posts (${userPosts.length} posts)\nThe user has asked you to study/analyze their posts. Here is their content data:\n${formattedPosts}\n\nProvide a thorough analysis including:\n- Content patterns and themes\n- Engagement metrics (which posts perform best/worst and why)\n- Content type distribution (videos vs images vs text)\n- Posting frequency and timing patterns\n- Specific, actionable suggestions to improve engagement\n- What they're doing well and should continue\n- What they could experiment with`;
+      } else {
+        postAnalysisInfo = `\n\n## Post Analysis\nThe user asked to analyze their posts but no posts were found. Let them know you couldn't find any published content on their account, and suggest they start posting to build their profile.`;
+      }
+    }
+
     // Build post context info if provided
     let postContextInfo = '';
     if (postContext) {
@@ -659,8 +758,8 @@ IMPORTANT FORMATTING RULES:
     }
     
     const systemPrompt = personalityModifier
-      ? `${basePrompt}${userContextInfo}${postContextInfo}\n\nIMPORTANT STYLE: ${personalityModifier}`
-      : `${basePrompt}${userContextInfo}${postContextInfo}`;
+      ? `${basePrompt}${userContextInfo}${postAnalysisInfo}${postContextInfo}\n\nIMPORTANT STYLE: ${personalityModifier}`
+      : `${basePrompt}${userContextInfo}${postAnalysisInfo}${postContextInfo}`;
 
     // Build messages array - include image in user message if available
     const apiMessages: any[] = [{ role: 'system', content: systemPrompt }];
@@ -739,7 +838,7 @@ IMPORTANT FORMATTING RULES:
         body: JSON.stringify({
           model: modelName,
           messages: apiMessages,
-          max_completion_tokens: 1500,
+          max_completion_tokens: requiresPostAnalysis(userQuery) ? 3000 : 1500,
         }),
         signal: controller.signal,
       });
