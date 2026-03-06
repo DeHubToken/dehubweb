@@ -409,6 +409,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
                 key={message.id} 
                 message={message}
                 showActions={isModerator}
+                moderators={roomDetails?.moderators}
                 onPin={handlePinMessage}
                 onUnpin={handleUnpinMessage}
                 onBan={handleBanUser}
