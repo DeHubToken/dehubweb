@@ -945,11 +945,10 @@ export default function AssistantPage() {
           component: 'AssistantPage',
           metadata: {
             userMessage: currentInput?.substring(0, 50),
-            model: activeTab === 'image' ? selectedImageModel : selectedChatModel,
-            tab: activeTab,
+            model: selectedChatModel,
             errorName: error?.name,
           },
-          user_address: walletAddress || null,
+          user_address: null,
         });
       } catch (logErr) {
         console.warn('[Assistant] Failed to log error:', logErr);
