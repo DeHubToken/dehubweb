@@ -291,6 +291,7 @@ export default function PostInfoPage() {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
   const { walletAddress } = useAuth();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   
   // Fetch NFT info with React Query
