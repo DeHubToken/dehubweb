@@ -43,6 +43,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Lightbulb, label: 'Feature Requests', path: '/features' },
   { icon: ShieldCheck, label: 'Governance', path: '/governance' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
+  { icon: BookOpen, label: 'Glossary', path: '/app/glossary' },
   { icon: Home, label: 'Home', path: '/app' },
 ];
 
