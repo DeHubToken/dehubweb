@@ -862,7 +862,7 @@ export default function PostInfoPage() {
                     <Lock className="w-5 h-5 text-white" />
                     <div>
                       <p className="text-lg font-bold text-white">{ppvPrice} {ppvCurrency}</p>
-                      <p className="text-xs text-white/60">Price</p>
+                      <p className="text-xs text-white/60">{t('postInfo.price')}</p>
                     </div>
                   </div>
                 )}
