@@ -37,6 +37,7 @@ import { VOICE_PREFERENCES, VOICE_PREFERENCE_OPTIONS, type VoicePreferenceKey } 
 import { CHAT_MODEL_OPTIONS, DEFAULT_CHAT_MODEL, type ChatModelKey } from '@/constants/chat-models.constants';
 import { PostModal } from '@/features/post';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
+import { ImagePaywallModal } from '@/components/app/image/ImagePaywallModal';
 import { OverviewTab } from '@/components/app/command-centre';
 import { AuthPrompt } from '@/components/app/AuthPrompt';
 import { AuthGate } from '@/components/app/AuthGate';
