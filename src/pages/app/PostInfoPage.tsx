@@ -803,7 +803,7 @@ export default function PostInfoPage() {
                 <ThumbsUp className="w-5 h-5 text-white" />
                 <div>
                   <p className="text-lg font-bold text-white">{likes.toLocaleString()}</p>
-                  <p className="text-xs text-white/60">Likes</p>
+                  <p className="text-xs text-white/60">{t('postInfo.likes')}</p>
                 </div>
               </div>
               
