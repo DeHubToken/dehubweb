@@ -726,6 +726,84 @@ export default function AssistantPage() {
     setPendingVideoRequest(null);
   };
 
+  // Handle image generation after payment confirmation
+  const handleImageGenerationConfirm = async () => {
+    if (!pendingImageRequest) return;
+
+    const { prompt, model, sourceImage } = pendingImageRequest;
+    const imageModel = IMAGE_MODELS[model];
+
+    // Add user message
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: prompt,
+      attachedImage: sourceImage
+    };
+    setMessages(prev => [...prev, userMessage]);
+
+    setImagePaywallOpen(false);
+    setIsImageLoading(true);
+    setImageLoadStartTime(Date.now());
+
+    try {
+      const conversationHistory = messages
+        .filter(m => m.id !== 'initial')
+        .map(m => ({ role: m.role, content: m.content }));
+
+      const { data, error } = await supabase.functions.invoke('generate-image', {
+        body: {
+          prompt,
+          sourceImage: sourceImage || undefined,
+          conversationHistory,
+          model
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.error) {
+        const errorMessage = data.safetyBlocked
+          ? t('assistant.safetyBlocked')
+          : data.error;
+
+        if (data.clearHistory) {
+          setMessages([
+            { id: 'initial', role: 'assistant', content: t('assistant.welcomeAlt') },
+            { id: (Date.now() + 1).toString(), role: 'assistant', content: errorMessage }
+          ]);
+        } else {
+          setMessages(prev => [...prev, {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: errorMessage
+          }]);
+        }
+        setPendingImageRequest(null);
+        return;
+      }
+
+      const watermarkedImageUrl = await addWatermarkClient(data.imageUrl);
+
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: '',
+        imageUrl: watermarkedImageUrl
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+      queueMessage(assistantMessage);
+      toast.success('Image generated!');
+    } catch (err) {
+      console.error('Image generation error:', err);
+      toast.error('Failed to generate image');
+    } finally {
+      setIsImageLoading(false);
+      setPendingImageRequest(null);
+    }
+  };
+
   // Cleanup polling on unmount
   useEffect(() => {
     return () => {
