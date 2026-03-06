@@ -268,10 +268,6 @@ export default function LeaderboardPage() {
   const visibleEntries = useMemo(() => entries.slice(0, visibleCount), [entries, visibleCount]);
   const hasMore = visibleCount < entries.length;
 
-  // Live avatar enrichment: fetch fresh avatars for visible entries
-  const visibleAccounts = useMemo(() => visibleEntries.map(e => e.account), [visibleEntries]);
-  useLeaderboardAvatars(visibleAccounts);
-  const getAvatarOverride = useAvatarOverrides();
 
   const handleUserClick = (entry: LeaderboardEntry) => {
     if (entry.username) {
