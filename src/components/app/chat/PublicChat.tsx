@@ -131,12 +131,8 @@ export function PublicChat({ onBack }: PublicChatProps) {
   }, [messages.length]);
 
   const handleSendMessage = async (args: { content: string; type: string }) => {
-    if (!isAuthenticated) {
-      toast.error('Sign in to send messages');
-      return;
-    }
-    const type = args.type === 'media' ? 'image' : args.type === 'msg' ? 'text' : args.type as 'text' | 'image' | 'gif';
-    await send(args.content, type);
+    toast.error('Live chat only available in-app currently, download now on Google Play');
+    return;
   };
 
   const handlePinMessage = useCallback(async (messageId: string) => {
