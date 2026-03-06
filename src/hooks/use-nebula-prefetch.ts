@@ -39,12 +39,11 @@ async function prefetchHomeFeed(queryClient: ReturnType<typeof useQueryClient>) 
       return res.json();
     };
 
-    // Fire all 3 home feed queries + scroll carousel + unified home feed in parallel
-    const [videosRes, imagesRes, textsRes, scrollRes, unifiedHomeRes] = await Promise.allSettled([
+    // Fire 3 home feed queries + unified home feed in parallel (removed duplicate scroll carousel fetch)
+    const [videosRes, imagesRes, textsRes, unifiedHomeRes] = await Promise.allSettled([
       fetchFeed('video'),
       fetchFeed('feed-images'),
       fetchFeed('feed-simple'),
-      fetchFeed('video'), // scroll carousel uses same endpoint
       (async () => {
         // Unified home feed (no postType filter) - matches "Latest" sort in HomeFeed
         const url = new URL('/api/feed', DEHUB_API_BASE);
