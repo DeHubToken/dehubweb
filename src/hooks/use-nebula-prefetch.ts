@@ -87,8 +87,8 @@ async function prefetchHomeFeed(queryClient: ReturnType<typeof useQueryClient>) 
     cacheResult(imagesRes, 'feed-images');
     cacheResult(textsRes, 'feed-simple');
     
-    // Scroll carousel uses limit=10
-    if (scrollRes.status === 'fulfilled' && scrollRes.value) {
+    // Scroll carousel: reuse the video data (same endpoint, just sliced)
+    if (videosRes.status === 'fulfilled' && videosRes.value) {
       const scrollParams = {
         postType: 'video',
         sortBy: 'createdAt' as const,
@@ -98,7 +98,7 @@ async function prefetchHomeFeed(queryClient: ReturnType<typeof useQueryClient>) 
       queryClient.setQueryData(
         ['unified-feed', scrollParams, 10],
         {
-          pages: [{ items: (scrollRes.value.result || []).slice(0, 10), pagination: scrollRes.value.pagination, page: 1 }],
+          pages: [{ items: (videosRes.value.result || []).slice(0, 10), pagination: videosRes.value.pagination, page: 1 }],
           pageParams: [1],
         }
       );
