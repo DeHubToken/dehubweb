@@ -758,8 +758,8 @@ IMPORTANT FORMATTING RULES:
     }
     
     const systemPrompt = personalityModifier
-      ? `${basePrompt}${userContextInfo}${postContextInfo}\n\nIMPORTANT STYLE: ${personalityModifier}`
-      : `${basePrompt}${userContextInfo}${postContextInfo}`;
+      ? `${basePrompt}${userContextInfo}${postAnalysisInfo}${postContextInfo}\n\nIMPORTANT STYLE: ${personalityModifier}`
+      : `${basePrompt}${userContextInfo}${postAnalysisInfo}${postContextInfo}`;
 
     // Build messages array - include image in user message if available
     const apiMessages: any[] = [{ role: 'system', content: systemPrompt }];
