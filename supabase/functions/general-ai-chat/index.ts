@@ -245,6 +245,66 @@ function extractPostCount(message: string): number {
   return 10;
 }
 
+// Detect if user is asking about another user and extract the username
+function extractTargetUsername(message: string): string | null {
+  const lowerMessage = message.toLowerCase();
+  
+  // Direct @mention: "tell me about @bailey", "analyze @malik"
+  const atMatch = message.match(/@(\w[\w.-]{0,29})/);
+  if (atMatch) return atMatch[1];
+  
+  // Patterns like "tell me about bailey", "who is malik", "study user1's posts"
+  const patterns = [
+    /(?:tell me about|who is|what does|describe|analyze|analyse|study|review|check|look at|roast)\s+(?:user\s+)?([a-zA-Z][\w.-]{1,29})(?:'s)?(?:\s+(?:posts?|content|profile|videos?|images?|uploads?))?/i,
+    /(?:posts?|content|profile|videos?|images?)\s+(?:from|by|of)\s+(?:@?([a-zA-Z][\w.-]{1,29}))/i,
+    /(?:what kind of person is)\s+(?:@?([a-zA-Z][\w.-]{1,29}))/i,
+  ];
+  
+  for (const pattern of patterns) {
+    const match = message.match(pattern);
+    if (match && match[1]) {
+      const name = match[1].toLowerCase();
+      // Filter out common words that aren't usernames
+      const stopWords = ['me', 'my', 'myself', 'i', 'the', 'this', 'that', 'it', 'a', 'an',
+        'dehub', 'dhb', 'token', 'platform', 'app', 'bitcoin', 'crypto', 'nft', 'web3',
+        'how', 'what', 'why', 'when', 'where', 'your', 'you', 'their', 'them', 'someone',
+        'content', 'posts', 'videos', 'images', 'profile', 'last', 'recent', 'latest'];
+      if (!stopWords.includes(name)) return match[1];
+    }
+  }
+  
+  return null;
+}
+
+function requiresOtherUserLookup(message: string): boolean {
+  const target = extractTargetUsername(message);
+  // Must have a target and NOT be a self-referencing query
+  if (!target) return false;
+  const lowerMessage = message.toLowerCase();
+  // If it's clearly about "my" content, it's not about another user
+  if (lowerMessage.includes('my post') || lowerMessage.includes('my content') || lowerMessage.includes('about myself') || lowerMessage.includes('about me')) return false;
+  return true;
+}
+
+// Fetch another user's profile from DeHub API
+async function fetchUserProfile(username: string): Promise<any | null> {
+  try {
+    const cleanUsername = username.replace('@', '');
+    const url = `https://api.dehub.io/api/account_info/${encodeURIComponent(cleanUsername)}`;
+    console.log(`[UserLookup] Fetching profile: ${url}`);
+    const response = await fetch(url, { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+    if (!response.ok) {
+      console.error(`[UserLookup] Profile API error: ${response.status}`);
+      return null;
+    }
+    const data = await response.json();
+    return data?.result || data || null;
+  } catch (error) {
+    console.error('[UserLookup] Failed to fetch profile:', error);
+    return null;
+  }
+}
+
 // Fetch user posts from DeHub API
 async function fetchUserPosts(walletAddress: string, limit: number = 10): Promise<any[]> {
   try {
@@ -270,6 +330,28 @@ async function fetchUserPosts(walletAddress: string, limit: number = 10): Promis
   }
 }
 
+// Format a user profile into readable context
+function formatProfileForContext(profile: any): string {
+  const parts: string[] = [];
+  if (profile.username) parts.push(`Username: @${profile.username}`);
+  if (profile.displayName) parts.push(`Display Name: ${profile.displayName}`);
+  if (profile.aboutMe) parts.push(`Bio: ${profile.aboutMe}`);
+  if (profile.address) parts.push(`Wallet: ${profile.address}`);
+  if (profile.followers !== undefined) parts.push(`Followers: ${profile.followers}`);
+  if (profile.following !== undefined) parts.push(`Following: ${profile.following}`);
+  if (profile.subscribers !== undefined) parts.push(`Subscribers: ${profile.subscribers}`);
+  if (profile.likesReceived !== undefined) parts.push(`Likes Received: ${profile.likesReceived}`);
+  if (profile.postsCount !== undefined || profile.nftsCount !== undefined) parts.push(`Posts: ${profile.postsCount ?? profile.nftsCount ?? 0}`);
+  if (profile.totalTipsReceived !== undefined) parts.push(`Tips Received: ${profile.totalTipsReceived} DHB`);
+  if (profile.totalTipsSent !== undefined) parts.push(`Tips Sent: ${profile.totalTipsSent} DHB`);
+  if (profile.isVerified) parts.push(`Verified: Yes`);
+  if (profile.badges?.length) parts.push(`Badges: ${profile.badges.map((b: any) => b.name || b).join(', ')}`);
+  if (profile.twitterLink) parts.push(`Twitter: ${profile.twitterLink}`);
+  if (profile.instagramLink) parts.push(`Instagram: ${profile.instagramLink}`);
+  if (profile.telegramLink) parts.push(`Telegram: ${profile.telegramLink}`);
+  if (profile.createdAt) parts.push(`Joined: ${profile.createdAt}`);
+  return parts.join('\n');
+}
 // Format posts into a readable context for the AI
 function formatPostsForContext(posts: any[]): string {
   if (!posts.length) return '';
