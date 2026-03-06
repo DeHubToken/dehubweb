@@ -216,16 +216,15 @@ export function MobileBottomNav() {
                 );
               })}
               
-              {/* Profile Link */}
+              {/* Search Link */}
               <NavLink
-                to="/app/profile"
-                onClick={(e) => handleProtectedNavClick(e, '/app/profile', true)}
+                to="/app/explore"
                 className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white rounded-r-2xl"
               >
-                <User 
+                <Search 
                   className={cn(
                     'w-5 h-5 md:w-6 md:h-6 transition-all duration-200 ml-[4px] lg:ml-0',
-                    location.pathname.startsWith('/app/profile')
+                    location.pathname.startsWith('/app/explore')
                       ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
                       : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
                   )} 
