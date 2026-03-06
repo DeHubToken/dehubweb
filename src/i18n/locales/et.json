@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "Linna jutt",
-    "nothingTrending": "Midagi pole veel populaarne"
-  }
+    "nothingTrending": "Midagi pole veel populaarne",
+    "post": "Postita", "logOut": "Logi välja", "logIn": "Logi sisse"
+  },
+  "postInfo": { "title": "Postituse info", "tokenId": "Tokeni ID", "mintedOn": "Loodud", "transactionHash": "Tehingu räsi", "viewOnExplorer": "Vaata {{explorer}}-s", "creator": "Looja", "visibility": "Nähtavus", "fractionOwnership": "Osaomand", "total": "Kokku {{count}}", "distribution": "Jaotus", "loading": "Laadimine...", "owner": "{{count}} omanik", "owner_other": "{{count}} omanikku", "engagement": "Kaasatus", "likeRatio": "Meeldimiste suhe", "likes": "Meeldimised", "dislikes": "Ei meeldi", "views": "Vaatamised", "comments": "Kommentaarid", "totalTipsCreator": "Jootraha kokku (Looja)", "payPerView": "Makse vaatamise eest", "ppvSales": "PPV müügid", "price": "Hind", "totalRevenue": "Kogutulu", "content": "Sisu", "uploadProcessing": "Üleslaadimise töötlemine", "processingDesc": "Postitust töödeldakse detsentraliseeritud andmebaasis.", "processingNote": "Postituse metaandmed salvestatakse püsivalt plokiahelasse.", "goBack": "Tagasi", "streamInfo": "Ülekande info", "currentlyLive": "Otse-eetris", "streamOffline": "Ülekanne pole saadaval", "totalViews": "{{count}} vaatamist kokku", "public": "Avalik", "publicDesc": "Igaüks saab seda postitust näha", "unlisted": "Loendamata", "unlistedDesc": "Ainult lingiga inimesed saavad näha", "private": "Privaatne", "privateDesc": "Ainult sina saad seda postitust näha" }
 }
