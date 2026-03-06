@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "ସହରର ଚର୍ଚ୍ଚା",
-    "nothingTrending": "ଏପର୍ଯ୍ୟନ୍ତ କିଛି ଟ୍ରେଣ୍ଡିଂ ନାହିଁ"
-  }
+    "nothingTrending": "ଏପର୍ଯ୍ୟନ୍ତ କିଛି ଟ୍ରେଣ୍ଡିଂ ନାହିଁ",
+    "post": "ପୋଷ୍ଟ", "logOut": "ଲଗ ଆଉଟ", "logIn": "ଲଗ ଇନ"
+  },
+  "postInfo": { "title": "ପୋଷ୍ଟ ସୂଚନା", "tokenId": "ଟୋକେନ ID", "mintedOn": "ସୃଷ୍ଟି ହୋଇଛି", "transactionHash": "ଟ୍ରାନ୍ସାକ୍ସନ ହ୍ୟାସ", "viewOnExplorer": "{{explorer}} ରେ ଦେଖନ୍ତୁ", "creator": "ସୃଷ୍ଟିକର୍ତ୍ତା", "visibility": "ଦୃଶ୍ୟତା", "total": "ମୋଟ {{count}}", "loading": "ଲୋଡ ହେଉଛି...", "engagement": "ସଂଶ୍ଲିଷ୍ଟତା", "likes": "ଲାଇକ", "dislikes": "ଡିସଲାଇକ", "views": "ଦେଖିବା", "comments": "ମନ୍ତବ୍ୟ", "price": "ମୂଲ୍ୟ", "content": "ବିଷୟବସ୍ତୁ", "goBack": "ଫେରନ୍ତୁ", "public": "ସାର୍ବଜନୀନ", "publicDesc": "ସମସ୍ତେ ଦେଖିପାରିବେ", "private": "ବ୍ୟକ୍ତିଗତ", "privateDesc": "କେବଳ ଆପଣ ଦେଖିପାରିବେ" }
 }

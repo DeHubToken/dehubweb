@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "Gotina Bajêr",
-    "nothingTrending": "Hîn tiştek ne trend e"
-  }
+    "nothingTrending": "Hîn tiştek ne trend e",
+    "post": "Weşîne", "logOut": "Derkeve", "logIn": "Têkeve"
+  },
+  "postInfo": { "title": "Agahiya postê", "tokenId": "Token ID", "mintedOn": "Hatiye çêkirin", "transactionHash": "Hash ya danûstendinê", "viewOnExplorer": "Li {{explorer}} binêre", "creator": "Afirîner", "visibility": "Dîtbarî", "total": "Bi tevahî {{count}}", "loading": "Tê barkirin...", "engagement": "Tevlêbûn", "likes": "Hez kirin", "dislikes": "Hez nekirin", "views": "Dîtin", "comments": "Şîrove", "price": "Biha", "content": "Naverok", "goBack": "Vegere", "public": "Giştî", "publicDesc": "Her kes dikare bibîne", "private": "Taybet", "privateDesc": "Tenê tu dikarî bibînî" }
 }

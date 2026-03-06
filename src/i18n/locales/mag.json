@@ -654,5 +654,6 @@
     "justNow": "अभी", "minutesAgo": "{{count}} मिनट पहिले", "hoursAgo": "{{count}} घंटा पहिले",
     "daysAgo": "{{count}} दिन पहिले", "monthsAgo": "{{count}} महीना पहिले"
   },
-  "sidebar": { "talkOfTheTown": "शहर के चर्चा", "nothingTrending": "अभी कुछ ट्रेंडिंग नइ बा" }
+  "sidebar": { "talkOfTheTown": "शहर के चर्चा", "nothingTrending": "अभी कुछ ट्रेंडिंग नइ बा", "post": "पोस्ट", "logOut": "लॉग आउट", "logIn": "लॉग इन" }
+  ,"postInfo": { "title": "पोस्ट जानकारी", "tokenId": "टोकन ID", "mintedOn": "बनाइल", "transactionHash": "ट्रांजैक्शन हैश", "viewOnExplorer": "{{explorer}} पर देखो", "creator": "बनावे वाला", "visibility": "दिखाई", "total": "कुल {{count}}", "loading": "लोड हो रहल बा...", "engagement": "सहभागिता", "likes": "लाइक", "dislikes": "डिसलाइक", "views": "देखल", "comments": "टिप्पणी", "price": "दाम", "content": "सामग्री", "goBack": "वापस", "public": "सार्वजनिक", "publicDesc": "कोई भी ई पोस्ट देख सकत बा", "private": "निजी", "privateDesc": "सिर्फ तोहरा ई पोस्ट देख सकत बा" }
 }

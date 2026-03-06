@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "حديث المدينة",
-    "nothingTrending": "ما في شي رائج بعد"
-  }
+    "nothingTrending": "ما في شي رائج بعد",
+    "post": "انشر", "logOut": "تسجيل خروج", "logIn": "تسجيل دخول"
+  },
+  "postInfo": { "title": "معلومات المنشور", "tokenId": "رقم التوكن", "mintedOn": "انسك بتاريخ", "transactionHash": "هاش المعاملة", "viewOnExplorer": "شوف على {{explorer}}", "creator": "المنشئ", "visibility": "الظهور", "fractionOwnership": "ملكية جزئية", "total": "الإجمالي {{count}}", "distribution": "التوزيع", "loading": "جاري التحميل...", "owner": "{{count}} مالك", "owner_other": "{{count}} ملاك", "engagement": "التفاعل", "likeRatio": "نسبة اللايكات", "likes": "لايكات", "dislikes": "دسلايكات", "views": "مشاهدات", "comments": "تعليقات", "totalTipsCreator": "إجمالي البقشيش (المنشئ)", "payPerView": "ادفع لكل مشاهدة", "ppvSales": "مبيعات PPV", "price": "السعر", "totalRevenue": "إجمالي الإيرادات", "content": "المحتوى", "uploadProcessing": "معالجة الرفع", "processingDesc": "المنشور بيتعالج بقاعدة البيانات اللامركزية.", "processingNote": "بيانات المنشور بتتخزن بشكل دائم على البلوكتشين.", "goBack": "رجوع", "streamInfo": "معلومات البث", "currentlyLive": "بث مباشر", "streamOffline": "البث مش شغال", "totalViews": "{{count}} مشاهدة إجمالي", "public": "عام", "publicDesc": "أي حد بيقدر يشوف المنشور", "unlisted": "مش مدرج", "unlistedDesc": "بس اللي عندهم الرابط بيقدروا يشوفوا", "private": "خاص", "privateDesc": "بس انت بتقدر تشوف المنشور" }
 }

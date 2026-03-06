@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "શહેરની ચર્ચા",
-    "nothingTrending": "હજુ કંઈ ટ્રેન્ડિંગ નથી"
-  }
+    "nothingTrending": "હજુ કંઈ ટ્રેન્ડિંગ નથી",
+    "post": "પોસ્ટ", "logOut": "લૉગ આઉટ", "logIn": "લૉગ ઇન"
+  },
+  "postInfo": { "title": "પોસ્ટ માહિતી", "tokenId": "ટોકન ID", "mintedOn": "બનાવેલ", "transactionHash": "ટ્રાન્ઝેક્શન હેશ", "viewOnExplorer": "{{explorer}} પર જુઓ", "creator": "સર્જક", "visibility": "દૃશ્યતા", "fractionOwnership": "અંશ માલિકી", "total": "કુલ {{count}}", "distribution": "વિતરણ", "loading": "લોડ થઈ રહ્યું છે...", "owner": "{{count}} માલિક", "owner_other": "{{count}} માલિકો", "engagement": "સંલગ્નતા", "likeRatio": "લાઈક ગુણોત્તર", "likes": "લાઈક્સ", "dislikes": "ડિસલાઈક્સ", "views": "જોવાયા", "comments": "ટિપ્પણીઓ", "totalTipsCreator": "કુલ ટિપ્સ (સર્જક)", "payPerView": "જોવા માટે ચૂકવણી", "ppvSales": "PPV વેચાણ", "price": "કિંમત", "totalRevenue": "કુલ આવક", "content": "સામગ્રી", "uploadProcessing": "અપલોડ પ્રક્રિયા", "processingDesc": "પોસ્ટ વિકેન્દ્રિત ડેટાબેઝમાં પ્રક્રિયા થઈ રહી છે.", "processingNote": "પોસ્ટ મેટાડેટા બ્લોકચેઈન પર કાયમી સંગ્રહિત છે.", "goBack": "પાછા", "streamInfo": "સ્ટ્રીમ માહિતી", "currentlyLive": "હાલ લાઈવ", "streamOffline": "સ્ટ્રીમ ઑફલાઈન", "totalViews": "{{count}} કુલ જોવાયા", "public": "જાહેર", "publicDesc": "કોઈપણ આ પોસ્ટ જોઈ શકે", "unlisted": "અસૂચિબદ્ધ", "unlistedDesc": "ફક્ત લિંક ધરાવનારા જોઈ શકે", "private": "ખાનગી", "privateDesc": "ફક્ત તમે આ પોસ્ટ જોઈ શકો" }
 }
