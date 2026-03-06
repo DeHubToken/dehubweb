@@ -219,7 +219,8 @@ export async function sendLiveChatMessage(
       if (socket.connected) { clearTimeout(timeout); resolve(); }
     });
   }
-  emitSendMessage({ roomId, content, messageType: type, imageUrl });
+  const apiType = type === 'image' || type === 'voice' ? 'media' as const : type;
+  emitSendMessage({ roomId, content, messageType: apiType, imageUrl });
   // Return optimistic message since socket is fire-and-forget
   return {
     id: `temp-${Date.now()}`,
