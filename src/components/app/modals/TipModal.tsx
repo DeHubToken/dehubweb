@@ -102,7 +102,7 @@ export function TipModal({
                       : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
                   }`}
                 >
-                  {val} DHB
+                  {val.toLocaleString()} DHB
                 </button>
               ))}
             </div>
