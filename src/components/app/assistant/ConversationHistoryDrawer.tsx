@@ -226,7 +226,7 @@ export function ConversationHistoryDrawer({
                       <button
                         onClick={(e) => handleDeleteConversation(e, conversation.id)}
                         disabled={deletingId === conversation.id}
-                        className="p-2 rounded-lg text-white/40 hover:text-red-400 hover:bg-white/10 transition-colors opacity-0 group-hover:opacity-100"
+                        className="p-2 rounded-lg text-white/40 hover:text-red-400 hover:bg-white/10 transition-colors sm:opacity-0 sm:group-hover:opacity-100"
                       >
                         {deletingId === conversation.id ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
