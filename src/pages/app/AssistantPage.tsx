@@ -982,7 +982,6 @@ export default function AssistantPage() {
       
       // Log error details to backend for diagnostics
       try {
-        const { walletAddress } = useAuth as any;
         await supabase.from('client_error_logs').insert({
           level: 'error',
           message: `Assistant error [${errorCode}]: ${error?.message || 'Unknown error'}`,
