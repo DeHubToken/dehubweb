@@ -812,73 +812,15 @@ export default function AssistantPage() {
         setIsLoading(false);
         
       } else if (isImageRequest) {
-        // Set image-specific loading state
-        setIsImageLoading(true);
-        setImageLoadStartTime(Date.now());
-        
-        // Build conversation history for context
-        const conversationHistory = messages
-          .filter(m => m.id !== 'initial') // Exclude welcome message
-          .map(m => ({
-            role: m.role,
-            content: m.content
-          }));
-        
-        // Use generate-image endpoint with conversation context
-        const { data, error } = await supabase.functions.invoke('generate-image', {
-          body: {
-            prompt: currentInput,
-            sourceImage: effectiveSourceImage || undefined,
-            conversationHistory,
-            model: selectedImageModel
-          }
+        // Show image paywall instead of generating directly
+        setPendingImageRequest({
+          prompt: currentInput,
+          model: selectedImageModel,
+          sourceImage: effectiveSourceImage || currentAttachedImage || undefined,
         });
-
-        if (error) throw error;
-        
-        // Check for error in response (like safety blocks or content refusals)
-        if (data.error) {
-          const errorMessage = data.safetyBlocked 
-            ? t('assistant.safetyBlocked')
-            : data.error;
-          
-          // If clearHistory flag is set, reset to just the welcome message
-          // This prevents previous inappropriate requests from affecting future normal requests
-          if (data.clearHistory) {
-            setMessages([
-              {
-                id: 'initial',
-                role: 'assistant',
-                content: t('assistant.welcomeAlt')
-              },
-              {
-                id: (Date.now() + 1).toString(),
-                role: 'assistant',
-                content: errorMessage
-              }
-            ]);
-          } else {
-            setMessages(prev => [...prev, {
-              id: (Date.now() + 1).toString(),
-              role: 'assistant',
-              content: errorMessage
-            }]);
-          }
-          return;
-        }
-
-        // Apply client-side watermark
-        const watermarkedImageUrl = await addWatermarkClient(data.imageUrl);
-        
-        const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: '', // No text for image responses
-          imageUrl: watermarkedImageUrl
-        };
-
-        setMessages(prev => [...prev, assistantMessage]);
-        queueMessage(assistantMessage);
+        setImagePaywallOpen(true);
+        setIsLoading(false);
+        return;
       } else {
         // Regular chat - use general-ai-chat endpoint with retry
         const chatBody = {
