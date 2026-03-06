@@ -1525,12 +1525,6 @@ export default function AssistantPage() {
                             alt="Generated" 
                             className="max-w-full rounded-lg"
                           />
-                          {/* DeHub watermark */}
-                          <img 
-                            src={dehubLogo} 
-                            alt="" 
-                            className="absolute bottom-3 left-3 h-5 opacity-60 pointer-events-none"
-                          />
                           {/* Action buttons row */}
                           <div className="absolute bottom-3 right-3 flex items-center gap-2">
                             {/* Attach to edit button */}
