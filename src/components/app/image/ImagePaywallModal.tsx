@@ -45,8 +45,9 @@ export function ImagePaywallModal({
     try {
       const { data, error: fetchError } = await supabase.functions.invoke('get-dhb-price');
       if (fetchError) throw fetchError;
-      if (data?.price) {
-        setDhbPrice(data.price);
+      const price = data?.prices?.DHB;
+      if (price) {
+        setDhbPrice(price);
       } else {
         throw new Error('Failed to get DHB price');
       }
