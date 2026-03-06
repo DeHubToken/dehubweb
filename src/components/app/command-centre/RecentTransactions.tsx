@@ -195,8 +195,9 @@ export function RecentTransactions() {
       });
     });
 
-    // Add on-chain DHB transfers (deduplicate against DPay txs by txHash)
+    // Add on-chain DHB transfers (deduplicate against DPay txs and tip_records by txHash)
     const dpayHashes = new Set(dpayTxs.map(tx => tx.txHash?.toLowerCase()).filter(Boolean));
+    const tipHashes = new Set(tipRecords.map((t: any) => t.tx_hash?.toLowerCase()).filter(Boolean));
     // Collect DPay buy txHashes so we can label matching on-chain transfers as purchases
     const dpayBuyHashes = new Set(
       dpayTxs.filter(tx => tx.type === 'buy').map(tx => tx.txHash?.toLowerCase()).filter(Boolean)
@@ -215,7 +216,7 @@ export function RecentTransactions() {
     onchainTransfers.forEach(transfer => {
       const txHashLower = transfer.txHash?.toLowerCase();
       // Skip if already captured by DPay API (exact hash match)
-      if (txHashLower && dpayHashes.has(txHashLower)) return;
+      if (txHashLower && (dpayHashes.has(txHashLower) || tipHashes.has(txHashLower))) return;
 
       // Skip if this is a purchase duplicate (gateway wallet, matching buy hash, or amount+time match)
       const isPurchaseDuplicate = transfer.isFiatPurchase 

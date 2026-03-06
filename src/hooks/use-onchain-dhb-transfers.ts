@@ -45,9 +45,9 @@ async function fetchRecentDHBTransfers(walletAddress: string): Promise<OnchainDH
 
   const addr = walletAddress.toLowerCase() as Address;
 
-  // Fetch last ~5000 blocks (~2.5 hours on Base with 2s blocks)
+  // Fetch last ~43200 blocks (~24 hours on Base with 2s blocks)
   const currentBlock = await client.getBlockNumber();
-  const fromBlock = currentBlock - BigInt(5000);
+  const fromBlock = currentBlock - BigInt(43200);
 
   // Fetch incoming and outgoing transfers in parallel
   const [incomingLogs, outgoingLogs] = await Promise.all([
