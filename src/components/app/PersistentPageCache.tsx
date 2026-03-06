@@ -46,6 +46,7 @@ const FeaturesPage = lazyWithRetry(() => import('@/pages/app/FeaturesPage'));
 const GovernancePage = lazyWithRetry(() => import('@/pages/app/GovernancePage'));
 const FullWalletPage = lazyWithRetry(() => import('@/pages/app/FullWalletPage'));
 const CareersPage = lazyWithRetry(() => import('@/pages/app/CareersPage'));
+const GlossaryPage = lazyWithRetry(() => import('@/pages/app/GlossaryPage'));
 const StakingPage = lazyWithRetry(() => import('@/pages/app/StakingPage'));
 
 // Pages that get cached (mount-once, hide with CSS)
