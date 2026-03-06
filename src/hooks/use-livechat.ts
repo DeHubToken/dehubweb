@@ -147,7 +147,7 @@ export function useLiveChatMessages(roomId: string | null) {
     }
   }, [roomId]);
 
-  // Load messages via REST immediately on mount
+  // Load messages via REST immediately on mount and when auth state changes
   useEffect(() => {
     if (!roomId) {
       setMessages([]);
@@ -155,7 +155,7 @@ export function useLiveChatMessages(roomId: string | null) {
       return;
     }
     fetchMessages(true);
-  }, [roomId, fetchMessages]);
+  }, [roomId, fetchMessages, isAuthenticated]);
 
   // Socket connection for real-time updates (supplementary)
   useEffect(() => {
