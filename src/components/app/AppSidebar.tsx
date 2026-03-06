@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PenSquare, LogIn, LogOut } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { MobileHeader } from './navigation/MobileHeader';
@@ -19,6 +20,7 @@ interface AppSidebarProps {
 export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   const location = useLocation();
   const { isAuthenticated, disconnect } = useAuth();
+  const { t } = useTranslation();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [selectedChainId, setSelectedChainId] = useState<ChainId>(() => {
     const stored = localStorage.getItem('preferred-chain-id');
@@ -37,7 +39,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
           <LiquidGlassBubble shimmer noBorder className="w-full cursor-pointer" onClick={() => setIsPostModalOpen(true)}>
             <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
               <LogIn className="w-5 h-5" />
-              Log in
+              {t('sidebar.logIn')}
             </div>
           </LiquidGlassBubble>
         </div>
@@ -71,7 +73,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
           <LiquidGlassBubble shimmer className="w-full cursor-pointer" onClick={() => setIsPostModalOpen(true)}>
             <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
               <PenSquare className="w-5 h-5" />
-              Post
+              {t('sidebar.post')}
             </div>
           </LiquidGlassBubble>
           <div className="flex items-center justify-center gap-3">
@@ -85,7 +87,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors py-2"
             >
               <LogOut className="w-4 h-4" />
-              Log out
+              {t('sidebar.logOut')}
             </button>
           </div>
         </div>

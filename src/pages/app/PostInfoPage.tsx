@@ -12,6 +12,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio, Ticket, Coins } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getNFTInfo, DeHubNFT, updateTokenVisibility, TokenVisibility } from '@/lib/api/dehub';
@@ -290,6 +291,7 @@ export default function PostInfoPage() {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
   const { walletAddress } = useAuth();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   
   // Fetch NFT info with React Query
@@ -355,7 +357,7 @@ export default function PostInfoPage() {
   
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString(undefined, {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -365,7 +367,7 @@ export default function PostInfoPage() {
   
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', {
+    return date.toLocaleTimeString(undefined, {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
@@ -393,7 +395,7 @@ export default function PostInfoPage() {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-lg font-semibold text-white">Post Info</h1>
+            <h1 className="text-lg font-semibold text-white">{t('postInfo.title')}</h1>
           </div>
         </div>
         
@@ -407,22 +409,22 @@ export default function PostInfoPage() {
           </div>
           
           <h2 className="text-xl font-semibold text-white mb-3">
-            Upload Processing
+            {t('postInfo.uploadProcessing')}
           </h2>
           
           <p className="text-white/60 text-sm leading-relaxed mb-4">
-            Your post is being processed on decentralized databases. Video encoding and thumbnail generation may take a moment.
+            {t('postInfo.processingDesc')}
           </p>
           
           <p className="text-white/40 text-xs leading-relaxed">
-            Your post metadata is permanently stored on-chain but you can hide content from feeds at any time should you need to.
+            {t('postInfo.processingNote')}
           </p>
           
           <button
             onClick={() => navigate(-1)}
             className="mt-8 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl text-sm font-medium transition-colors"
           >
-            Go Back
+            {t('postInfo.goBack')}
           </button>
         </div>
       </div>
@@ -451,7 +453,7 @@ export default function PostInfoPage() {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-lg font-semibold text-white">Post Info</h1>
+            <h1 className="text-lg font-semibold text-white">{t('postInfo.title')}</h1>
           </div>
         </div>
         <div className="flex flex-col items-center justify-center p-8 text-center">
@@ -460,7 +462,7 @@ export default function PostInfoPage() {
             onClick={() => navigate(-1)}
             className="text-primary hover:underline"
           >
-            Go back
+            {t('postInfo.goBack')}
           </button>
         </div>
       </div>
@@ -495,7 +497,7 @@ export default function PostInfoPage() {
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-lg font-semibold text-white">Post Info</h1>
+          <h1 className="text-lg font-semibold text-white">{t('postInfo.title')}</h1>
           {isOwner && (
             <button
               onClick={() => setShowEditModal(true)}
@@ -517,7 +519,7 @@ export default function PostInfoPage() {
           <section className="bg-white/5 rounded-xl p-4 border border-white/10 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-sm font-medium text-white/60 mb-2">Token ID</h2>
+                <h2 className="text-sm font-medium text-white/60 mb-2">{t('postInfo.tokenId')}</h2>
                 <p className="text-xl font-bold text-white">#{nftInfo.tokenId}</p>
               </div>
               {nftInfo.status && (
@@ -532,7 +534,7 @@ export default function PostInfoPage() {
             </div>
             
             <div className="border-t border-white/10 pt-4">
-              <h2 className="text-sm font-medium text-white/60 mb-2">Minted On</h2>
+              <h2 className="text-sm font-medium text-white/60 mb-2">{t('postInfo.mintedOn')}</h2>
               <div className="space-y-1">
                 <p className="text-white font-medium">{formatDate(nftInfo.createdAt)}</p>
                 <p className="text-sm text-white/60">{formatTime(nftInfo.createdAt)}</p>
@@ -541,7 +543,7 @@ export default function PostInfoPage() {
             
             {nftInfo.mintTxHash && (
               <div className="border-t border-white/10 pt-4">
-                <h2 className="text-sm font-medium text-white/60 mb-2">Transaction Hash</h2>
+                <h2 className="text-sm font-medium text-white/60 mb-2">{t('postInfo.transactionHash')}</h2>
                 <div className="flex items-center gap-2">
                   <code className="flex-1 text-sm text-white bg-white/5 p-3 rounded-lg font-mono break-all">
                     {nftInfo.mintTxHash}
@@ -564,7 +566,7 @@ export default function PostInfoPage() {
                   </a>
                 </div>
                 <p className="text-xs text-white/40 mt-2">
-                  View on {chainInfo.explorerName}
+                  {t('postInfo.viewOnExplorer', { explorer: chainInfo.explorerName })}
                 </p>
               </div>
             )}
@@ -573,17 +575,17 @@ export default function PostInfoPage() {
           {/* Live Stream Info - shown for live content */}
           {((nftInfo as any).postType === 'live' || (nftInfo as any).isLive !== undefined) && (
             <section className="bg-white/5 rounded-xl p-4 border border-white/10">
-              <h2 className="text-sm font-medium text-white/60 mb-3">Stream Info</h2>
+              <h2 className="text-sm font-medium text-white/60 mb-3">{t('postInfo.streamInfo')}</h2>
               <div className="flex items-center gap-3 mb-3">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${(nftInfo as any).isLive ? 'bg-red-500/20' : 'bg-white/5'}`}>
                   <Radio className={`w-5 h-5 ${(nftInfo as any).isLive ? 'text-red-400' : 'text-zinc-500'}`} />
                 </div>
                 <div>
                   <p className="text-white font-medium">
-                    {(nftInfo as any).isLive ? 'Currently Live' : 'Stream Offline'}
+                    {(nftInfo as any).isLive ? t('postInfo.currentlyLive') : t('postInfo.streamOffline')}
                   </p>
                   <p className="text-xs text-white/60">
-                    {(nftInfo as any).totalViews ?? nftInfo.views ?? 0} total views
+                    {t('postInfo.totalViews', { count: (nftInfo as any).totalViews ?? nftInfo.views ?? 0 })}
                   </p>
                 </div>
               </div>
@@ -592,7 +594,7 @@ export default function PostInfoPage() {
 
           {/* Creator Info */}
           <section className="bg-white/5 rounded-xl p-4 border border-white/10">
-            <h2 className="text-sm font-medium text-white/60 mb-3">Creator</h2>
+            <h2 className="text-sm font-medium text-white/60 mb-3">{t('postInfo.creator')}</h2>
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center overflow-hidden shrink-0">
                 {creatorAvatar && creatorAvatar !== '/placeholder.svg' ? (
@@ -627,7 +629,7 @@ export default function PostInfoPage() {
           {/* Visibility Settings - Only shown to owner */}
           {isOwner && (
             <section className="bg-white/5 rounded-xl p-4 border border-white/10">
-              <h2 className="text-sm font-medium text-white/60 mb-3">Visibility</h2>
+              <h2 className="text-sm font-medium text-white/60 mb-3">{t('postInfo.visibility')}</h2>
               <Select 
                 value={currentVisibility} 
                 onValueChange={(value: TokenVisibility) => handleVisibilityChange(value)}
@@ -673,20 +675,20 @@ export default function PostInfoPage() {
           {/* Fraction Ownership */}
           <section className="bg-white/5 rounded-xl p-4 border border-white/10">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-medium text-white/60">Fraction Ownership</h2>
-              <span className="text-xs font-mono text-white/40">{TOTAL_FRACTIONS} total</span>
+              <h2 className="text-sm font-medium text-white/60">{t('postInfo.fractionOwnership')}</h2>
+              <span className="text-xs font-mono text-white/40">{t('postInfo.total', { count: TOTAL_FRACTIONS })}</span>
             </div>
             
             {/* Distribution Progress */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-xs text-white/60">Distribution</span>
+                <span className="text-xs text-white/60">{t('postInfo.distribution')}</span>
                 <span className="text-xs font-medium text-white">
                   {isLoadingHolders 
-                    ? 'Loading...'
+                    ? t('postInfo.loading')
                     : holders.length > 0 
-                      ? `${holders.length} owner${holders.length > 1 ? 's' : ''}`
-                      : '1 owner'
+                      ? t('postInfo.owner', { count: holders.length })
+                      : t('postInfo.owner', { count: 1 })
                   }
                 </span>
               </div>
@@ -780,12 +782,12 @@ export default function PostInfoPage() {
 
           {/* Engagement Stats */}
           <section className="bg-white/5 rounded-xl p-4 border border-white/10">
-            <h2 className="text-sm font-medium text-white/60 mb-3">Engagement</h2>
+            <h2 className="text-sm font-medium text-white/60 mb-3">{t('postInfo.engagement')}</h2>
             <div className="grid grid-cols-2 gap-3">
               {/* Like/Dislike Ratio */}
               <div className="col-span-2 bg-white/5 rounded-lg p-3">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-white/60">Like Ratio</span>
+                  <span className="text-sm text-white/60">{t('postInfo.likeRatio')}</span>
                   <span className="text-lg font-bold text-white">{likeRatio}%</span>
                 </div>
                 <div className="h-2 bg-white/10 rounded-full overflow-hidden">
@@ -801,7 +803,7 @@ export default function PostInfoPage() {
                 <ThumbsUp className="w-5 h-5 text-white" />
                 <div>
                   <p className="text-lg font-bold text-white">{likes.toLocaleString()}</p>
-                  <p className="text-xs text-white/60">Likes</p>
+                  <p className="text-xs text-white/60">{t('postInfo.likes')}</p>
                 </div>
               </div>
               
@@ -810,7 +812,7 @@ export default function PostInfoPage() {
                 <ThumbsDown className="w-5 h-5 text-white" />
                 <div>
                   <p className="text-lg font-bold text-white">{dislikes.toLocaleString()}</p>
-                  <p className="text-xs text-white/60">Dislikes</p>
+                  <p className="text-xs text-white/60">{t('postInfo.dislikes')}</p>
                 </div>
               </div>
               
@@ -819,7 +821,7 @@ export default function PostInfoPage() {
                 <Eye className="w-5 h-5 text-white" />
                 <div>
                   <p className="text-lg font-bold text-white">{views.toLocaleString()}</p>
-                  <p className="text-xs text-white/60">Views</p>
+                  <p className="text-xs text-white/60">{t('postInfo.views')}</p>
                 </div>
               </div>
               
@@ -828,7 +830,7 @@ export default function PostInfoPage() {
                 <MessageCircle className="w-5 h-5 text-white" />
                 <div>
                   <p className="text-lg font-bold text-white">{comments.toLocaleString()}</p>
-                  <p className="text-xs text-white/60">Comments</p>
+                  <p className="text-xs text-white/60">{t('postInfo.comments')}</p>
                 </div>
               </div>
 
@@ -837,7 +839,7 @@ export default function PostInfoPage() {
                 <Coins className="w-5 h-5 text-white" />
                 <div>
                   <p className="text-lg font-bold text-white">{totalTips.toLocaleString()} DHB</p>
-                  <p className="text-xs text-white/60">Total Tips Received (Creator)</p>
+                  <p className="text-xs text-white/60">{t('postInfo.totalTipsCreator')}</p>
                 </div>
               </div>
             </div>
@@ -846,13 +848,13 @@ export default function PostInfoPage() {
           {/* PPV Sales Info - shown for PPV content */}
           {isPPV && (
             <section className="bg-white/5 rounded-xl p-4 border border-white/10">
-              <h2 className="text-sm font-medium text-white/60 mb-3">Pay-Per-View</h2>
+              <h2 className="text-sm font-medium text-white/60 mb-3">{t('postInfo.payPerView')}</h2>
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-white/5 rounded-lg p-3 flex items-center gap-3">
                   <Ticket className="w-5 h-5 text-white" />
                   <div>
                     <p className="text-lg font-bold text-white">{ppvPurchaseCount ?? 0}</p>
-                    <p className="text-xs text-white/60">PPV Sales</p>
+                    <p className="text-xs text-white/60">{t('postInfo.ppvSales')}</p>
                   </div>
                 </div>
                 {ppvPrice && (
@@ -860,7 +862,7 @@ export default function PostInfoPage() {
                     <Lock className="w-5 h-5 text-white" />
                     <div>
                       <p className="text-lg font-bold text-white">{ppvPrice} {ppvCurrency}</p>
-                      <p className="text-xs text-white/60">Price</p>
+                      <p className="text-xs text-white/60">{t('postInfo.price')}</p>
                     </div>
                   </div>
                 )}
@@ -871,7 +873,7 @@ export default function PostInfoPage() {
                       <p className="text-lg font-bold text-white">
                         {((ppvPurchaseCount ?? 0) * Number(ppvPrice)).toLocaleString()} {ppvCurrency}
                       </p>
-                      <p className="text-xs text-white/60">Total Revenue</p>
+                      <p className="text-xs text-white/60">{t('postInfo.totalRevenue')}</p>
                     </div>
                   </div>
                 )}
@@ -881,7 +883,7 @@ export default function PostInfoPage() {
 
           {(nftInfo.name || nftInfo.description) && (
             <section className="bg-white/5 rounded-xl p-4 border border-white/10">
-              <h2 className="text-sm font-medium text-white/60 mb-3">Content</h2>
+              <h2 className="text-sm font-medium text-white/60 mb-3">{t('postInfo.content')}</h2>
               {nftInfo.name && (
                 <p className="text-white font-medium mb-2">{nftInfo.name}</p>
               )}
