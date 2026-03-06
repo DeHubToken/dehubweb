@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "Miesto kalba",
-    "nothingTrending": "Dar nėra nieko populiaraus"
-  }
+    "nothingTrending": "Dar nėra nieko populiaraus",
+    "post": "Skelbti", "logOut": "Atsijungti", "logIn": "Prisijungti"
+  },
+  "postInfo": { "title": "Įrašo informacija", "tokenId": "Žetono ID", "mintedOn": "Sukurta", "transactionHash": "Sandorio maiša", "viewOnExplorer": "Žiūrėti {{explorer}}", "creator": "Kūrėjas", "visibility": "Matomumas", "fractionOwnership": "Dalinė nuosavybė", "total": "Iš viso {{count}}", "distribution": "Paskirstymas", "loading": "Kraunama...", "owner": "{{count}} savininkas", "owner_other": "{{count}} savininkų", "engagement": "Įsitraukimas", "likeRatio": "Patikimų santykis", "likes": "Patinka", "dislikes": "Nepatinka", "views": "Peržiūros", "comments": "Komentarai", "totalTipsCreator": "Iš viso arbatpinigių (Kūrėjas)", "payPerView": "Mokėjimas už peržiūrą", "ppvSales": "PPV pardavimai", "price": "Kaina", "totalRevenue": "Bendros pajamos", "content": "Turinys", "uploadProcessing": "Įkėlimo apdorojimas", "processingDesc": "Įrašas apdorojamas decentralizuotoje duomenų bazėje.", "processingNote": "Įrašo metaduomenys saugomi nuolat blokų grandinėje.", "goBack": "Atgal", "streamInfo": "Transliacijos info", "currentlyLive": "Gyvai", "streamOffline": "Transliacija nepasiekiama", "totalViews": "{{count}} peržiūrų iš viso", "public": "Viešas", "publicDesc": "Bet kas gali matyti šį įrašą", "unlisted": "Neįtrauktas", "unlistedDesc": "Tik asmenys su nuoroda gali matyti", "private": "Privatus", "privateDesc": "Tik jūs galite matyti šį įrašą" }
 }

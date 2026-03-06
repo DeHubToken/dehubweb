@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "El tema del moment",
-    "nothingTrending": "Encara no hi ha res en tendència"
-  }
+    "nothingTrending": "Encara no hi ha res en tendència",
+    "post": "Publica", "logOut": "Tanca sessió", "logIn": "Inicia sessió"
+  },
+  "postInfo": { "title": "Informació de la publicació", "tokenId": "ID del token", "mintedOn": "Creat el", "transactionHash": "Hash de transacció", "viewOnExplorer": "Veure a {{explorer}}", "creator": "Creador", "visibility": "Visibilitat", "fractionOwnership": "Propietat fraccionada", "total": "Total {{count}}", "distribution": "Distribució", "loading": "Carregant...", "owner": "{{count}} propietari", "owner_other": "{{count}} propietaris", "engagement": "Interacció", "likeRatio": "Proporció de m'agrada", "likes": "M'agrada", "dislikes": "No m'agrada", "views": "Visualitzacions", "comments": "Comentaris", "totalTipsCreator": "Total propines (Creador)", "payPerView": "Pagament per visualització", "ppvSales": "Vendes PPV", "price": "Preu", "totalRevenue": "Ingressos totals", "content": "Contingut", "uploadProcessing": "Processant pujada", "processingDesc": "La publicació s'està processant a la base de dades descentralitzada.", "processingNote": "Les metadades es guarden permanentment a la blockchain.", "goBack": "Enrere", "streamInfo": "Info de la transmissió", "currentlyLive": "En directe", "streamOffline": "Transmissió fora de línia", "totalViews": "{{count}} visualitzacions totals", "public": "Públic", "publicDesc": "Qualsevol pot veure aquesta publicació", "unlisted": "No llistat", "unlistedDesc": "Només persones amb l'enllaç poden veure", "private": "Privat", "privateDesc": "Només tu pots veure aquesta publicació" }
 }

@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "Pilsētas saruna",
-    "nothingTrending": "Nekas vēl nav populārs"
-  }
+    "nothingTrending": "Nekas vēl nav populārs",
+    "post": "Publicēt", "logOut": "Iziet", "logIn": "Ieiet"
+  },
+  "postInfo": { "title": "Ieraksta informācija", "tokenId": "Žetona ID", "mintedOn": "Izveidots", "transactionHash": "Darījuma jaucējkods", "viewOnExplorer": "Skatīt {{explorer}}", "creator": "Autors", "visibility": "Redzamība", "fractionOwnership": "Daļējs īpašums", "total": "Kopā {{count}}", "distribution": "Sadalījums", "loading": "Ielādē...", "owner": "{{count}} īpašnieks", "owner_other": "{{count}} īpašnieki", "engagement": "Iesaiste", "likeRatio": "Patīk attiecība", "likes": "Patīk", "dislikes": "Nepatīk", "views": "Skatījumi", "comments": "Komentāri", "totalTipsCreator": "Kopā dzeramnaudas (Autors)", "payPerView": "Maksājums par skatījumu", "ppvSales": "PPV pārdošana", "price": "Cena", "totalRevenue": "Kopējie ieņēmumi", "content": "Saturs", "uploadProcessing": "Augšupielādes apstrāde", "processingDesc": "Ieraksts tiek apstrādāts decentralizētajā datubāzē.", "processingNote": "Ieraksta metadati tiek pastāvīgi saglabāti blokķēdē.", "goBack": "Atpakaļ", "streamInfo": "Pārraides info", "currentlyLive": "Tiešraidē", "streamOffline": "Pārraide bezsaistē", "totalViews": "{{count}} skatījumi kopā", "public": "Publisks", "publicDesc": "Ikviens var redzēt šo ierakstu", "unlisted": "Nav sarakstā", "unlistedDesc": "Tikai personas ar saiti var redzēt", "private": "Privāts", "privateDesc": "Tikai jūs varat redzēt šo ierakstu" }
 }

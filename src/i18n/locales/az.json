@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "Şəhərin Söhbəti",
-    "nothingTrending": "Hələ trend olan heç nə yoxdur"
-  }
+    "nothingTrending": "Hələ trend olan heç nə yoxdur",
+    "post": "Paylaş", "logOut": "Çıxış", "logIn": "Giriş"
+  },
+  "postInfo": { "title": "Paylaşım məlumatı", "tokenId": "Token ID", "mintedOn": "Yaradılıb", "transactionHash": "Əməliyyat hash", "viewOnExplorer": "{{explorer}}-da bax", "creator": "Yaradıcı", "visibility": "Görünürlük", "fractionOwnership": "Hissəli mülkiyyət", "total": "Cəmi {{count}}", "distribution": "Paylanma", "loading": "Yüklənir...", "owner": "{{count}} sahib", "owner_other": "{{count}} sahib", "engagement": "İştirak", "likeRatio": "Bəyənmə nisbəti", "likes": "Bəyənmələr", "dislikes": "Bəyənməmələr", "views": "Baxışlar", "comments": "Şərhlər", "totalTipsCreator": "Ümumi bahşişlər (Yaradıcı)", "payPerView": "Baxış başına ödəniş", "ppvSales": "PPV satışlar", "price": "Qiymət", "totalRevenue": "Ümumi gəlir", "content": "Məzmun", "uploadProcessing": "Yükləmə emalı", "processingDesc": "Paylaşım mərkəzsizləşdirilmiş verilənlər bazasında emal olunur.", "processingNote": "Paylaşım metadata blokçeyndə daimi saxlanılır.", "goBack": "Geri", "streamInfo": "Yayım məlumatı", "currentlyLive": "Canlı yayımda", "streamOffline": "Yayım oflayn", "totalViews": "{{count}} ümumi baxış", "public": "İctimai", "publicDesc": "Hər kəs bu paylaşımı görə bilər", "unlisted": "Siyahıda yox", "unlistedDesc": "Yalnız linkə sahib olanlar görə bilər", "private": "Şəxsi", "privateDesc": "Yalnız siz bu paylaşımı görə bilərsiniz" }
 }

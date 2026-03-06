@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "Biseda e Qytetit",
-    "nothingTrending": "Asgjë në trend akoma"
-  }
+    "nothingTrending": "Asgjë në trend akoma",
+    "post": "Publiko", "logOut": "Dil", "logIn": "Hyr"
+  },
+  "postInfo": { "title": "Informacione për postimin", "tokenId": "ID e tokenit", "mintedOn": "Krijuar më", "transactionHash": "Hash i transaksionit", "viewOnExplorer": "Shiko në {{explorer}}", "creator": "Krijuesi", "visibility": "Dukshmëria", "fractionOwnership": "Pronësi fraksionale", "total": "Gjithsej {{count}}", "distribution": "Shpërndarja", "loading": "Duke ngarkuar...", "owner": "{{count}} pronar", "owner_other": "{{count}} pronarë", "engagement": "Angazhimi", "likeRatio": "Raporti i pëlqimeve", "likes": "Pëlqime", "dislikes": "Mospëlqime", "views": "Shikime", "comments": "Komente", "totalTipsCreator": "Bakshishe gjithsej (Krijuesi)", "payPerView": "Pagesë për shikim", "ppvSales": "Shitje PPV", "price": "Çmimi", "totalRevenue": "Të ardhura totale", "content": "Përmbajtja", "uploadProcessing": "Përpunimi i ngarkimit", "processingDesc": "Postimi po përpunohet në bazën e decentralizuar të të dhënave.", "processingNote": "Metadatat ruhen përgjithmonë në blockchain.", "goBack": "Kthehu", "streamInfo": "Info e transmetimit", "currentlyLive": "Live tani", "streamOffline": "Transmetimi offline", "totalViews": "{{count}} shikime gjithsej", "public": "Publik", "publicDesc": "Kushdo mund ta shohë këtë postim", "unlisted": "I palistuar", "unlistedDesc": "Vetëm personat me lidhjen mund ta shohin", "private": "Privat", "privateDesc": "Vetëm ju mund ta shihni këtë postim" }
 }
