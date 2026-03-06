@@ -24,8 +24,8 @@ const erc20TransferInterface = new Interface([
   'function transfer(address to, uint256 amount) returns (bool)',
 ]);
 
-export const MIN_TIP_DHB = 500;
-export const MAX_TIP_DHB = 1000000;
+export const MIN_TIP_DHB = 1;
+export const MAX_TIP_DHB = Infinity;
 
 interface UseTipPaymentOptions {
   creatorAddress?: string;
