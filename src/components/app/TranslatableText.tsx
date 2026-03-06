@@ -54,46 +54,73 @@ interface TranslatableTextProps {
 }
 
 /**
- * Renders text with URLs replaced by clickable link emojis
+ * Renders text with URLs replaced by clickable link emojis and @mentions as profile links
  */
 export function renderTextWithLinks(text: string): ReactNode[] {
   const parts: ReactNode[] = [];
   let lastIndex = 0;
+  
+  // Combined regex: match URLs or @mentions
+  const combinedRegex = new RegExp(
+    `(${URL_REGEX.source})|(@[a-zA-Z0-9_][a-zA-Z0-9_.-]*)`,
+    'gi'
+  );
+  
   let match: RegExpExecArray | null;
   
-  const regex = new RegExp(URL_REGEX.source, 'gi');
-  
-  while ((match = regex.exec(text)) !== null) {
-    // Add text before the URL
+  while ((match = combinedRegex.exec(text)) !== null) {
+    // Add text before the match
     if (match.index > lastIndex) {
       parts.push(text.slice(lastIndex, match.index));
     }
     
-    // Add clickable link emoji
-    const url = match[0];
-    // Ensure URL has protocol for the href
-    const href = url.match(/^https?:\/\//i) ? url : `https://${url}`;
-    parts.push(
-      <Tooltip key={`${url}-${match.index}`}>
-        <TooltipTrigger asChild>
-          <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center hover:scale-110 transition-transform"
-            onClick={(e) => e.stopPropagation()}
-          >
-            🔗
-          </a>
-        </TooltipTrigger>
-        <TooltipContent>{url}</TooltipContent>
-      </Tooltip>
-    );
+    const fullMatch = match[0];
     
-    lastIndex = regex.lastIndex;
+    if (fullMatch.startsWith('@')) {
+      // @mention — render as a clickable profile link
+      const username = fullMatch.slice(1); // Remove @
+      parts.push(
+        <a
+          key={`mention-${username}-${match.index}`}
+          href={`/${username}`}
+          className="text-blue-400 hover:text-blue-300 hover:underline transition-colors font-medium"
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            // Use window.location for reliable cross-page navigation
+            window.location.href = `/${username}`;
+          }}
+          data-no-navigate="true"
+        >
+          @{username}
+        </a>
+      );
+    } else {
+      // URL — render as link emoji
+      const url = fullMatch;
+      const href = url.match(/^https?:\/\//i) ? url : `https://${url}`;
+      parts.push(
+        <Tooltip key={`${url}-${match.index}`}>
+          <TooltipTrigger asChild>
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center hover:scale-110 transition-transform"
+              onClick={(e) => e.stopPropagation()}
+            >
+              🔗
+            </a>
+          </TooltipTrigger>
+          <TooltipContent>{url}</TooltipContent>
+        </Tooltip>
+      );
+    }
+    
+    lastIndex = combinedRegex.lastIndex;
   }
   
-  // Add remaining text after last URL
+  // Add remaining text after last match
   if (lastIndex < text.length) {
     parts.push(text.slice(lastIndex));
   }
