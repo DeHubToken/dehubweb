@@ -839,7 +839,7 @@ export default function PostInfoPage() {
                 <Coins className="w-5 h-5 text-white" />
                 <div>
                   <p className="text-lg font-bold text-white">{totalTips.toLocaleString()} DHB</p>
-                  <p className="text-xs text-white/60">Total Tips Received (Creator)</p>
+                  <p className="text-xs text-white/60">{t('postInfo.totalTipsCreator')}</p>
                 </div>
               </div>
             </div>
