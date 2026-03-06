@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useTranslation } from 'react-i18next';
-import { Settings, ThumbsUp, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star } from 'lucide-react';
+import { Settings, ThumbsUp, MessageSquareText, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -123,7 +123,7 @@ const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.Eleme
   { labelKey: 'notifications.all', value: 'all', icon: Bell },
   { labelKey: 'notifications.likes', value: 'likes', icon: ThumbsUp },
   { labelKey: 'notifications.follows', value: 'follows', icon: UserPlus },
-  { labelKey: 'notifications.comments', value: 'comments', icon: MessageCircle },
+  { labelKey: 'notifications.comments', value: 'comments', icon: MessageSquareText },
   { labelKey: 'notifications.reposts', value: 'reposts', icon: Repeat2 },
   { labelKey: 'notifications.subs', value: 'subscriptions', icon: Users },
   { labelKey: 'notifications.tips', value: 'tips', icon: DollarSign },
@@ -145,35 +145,32 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
 function getNotificationIcon(type: string) {
   switch (type) {
     case 'like':
-      return <ThumbsUp className="w-4 h-4 text-pink-500" />;
+    case 'comment_like':
+    case 'feature_request_like':
+      return <ThumbsUp className="w-4 h-4 text-white/70" />;
     case 'comment':
     case 'comment_reply':
-      return <MessageCircle className="w-4 h-4 text-blue-400" />;
     case 'mention':
-      return <MessageCircle className="w-4 h-4 text-violet-400" />;
-    case 'comment_like':
-      return <ThumbsUp className="w-4 h-4 text-pink-400" />;
-    case 'tip':
-      return <DollarSign className="w-4 h-4 text-yellow-500" />;
-    case 'subscription':
-    case 'ppv_purchase':
-      return <Users className="w-4 h-4 text-purple-500" />;
-    case 'following':
-      return <UserPlus className="w-4 h-4 text-cyan-500" />;
-    case 'video_milestone':
-      return <Trophy className="w-4 h-4 text-orange-500" />;
-    case 'livestream_start':
-      return <Zap className="w-4 h-4 text-red-500" />;
-    case 'video_removal':
-      return <AlertTriangle className="w-4 h-4 text-red-500" />;
-    case 'feature_request_like':
-    case 'governance_vote':
-      return <Star className="w-4 h-4 text-yellow-500" />;
     case 'feature_request_comment':
     case 'governance_comment':
-      return <MessageCircle className="w-4 h-4 text-blue-400" />;
+      return <MessageSquareText className="w-4 h-4 text-white/70" />;
+    case 'tip':
+      return <DollarSign className="w-4 h-4 text-white/70" />;
+    case 'subscription':
+    case 'ppv_purchase':
+      return <Users className="w-4 h-4 text-white/70" />;
+    case 'following':
+      return <UserPlus className="w-4 h-4 text-white/70" />;
+    case 'video_milestone':
+      return <Trophy className="w-4 h-4 text-white/70" />;
+    case 'livestream_start':
+      return <Zap className="w-4 h-4 text-white/70" />;
+    case 'video_removal':
+      return <AlertTriangle className="w-4 h-4 text-white/70" />;
+    case 'governance_vote':
+      return <Star className="w-4 h-4 text-white/70" />;
     default:
-      return <Bell className="w-4 h-4 text-zinc-500" />;
+      return <Bell className="w-4 h-4 text-white/70" />;
   }
 }
 
@@ -329,9 +326,8 @@ function NotificationItem({
   const freshAvatarPath = enriched?.avatarUrl;
   const staleAvatarPath = extractAvatarPath(notification) || notification.actorAvatar;
   
-  // If enrichment ran and returned no avatar, don't fall back to stale snapshot
-  const hasEnriched = enriched !== undefined;
-  const effectiveAvatarPath = hasEnriched ? freshAvatarPath : (freshAvatarPath || staleAvatarPath);
+  // Use fresh if available, otherwise fall back to stale (don't discard stale just because enrichment ran with null)
+  const effectiveAvatarPath = freshAvatarPath || staleAvatarPath;
   
   // If enriched avatar is already a full URL, use it directly with cache-busting
   const cacheBust = Math.floor(Date.now() / 300000);
@@ -714,7 +710,7 @@ export default function NotificationsPage() {
                       <div className="flex items-center justify-between p-4 rounded-xl bg-white/10">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                            <MessageCircle className="w-5 h-5 text-white" />
+                            <MessageSquareText className="w-5 h-5 text-white" />
                           </div>
                           <div>
                             <p className="text-white font-medium">{t('notifications.comments')}</p>
