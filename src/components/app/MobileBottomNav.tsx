@@ -74,46 +74,26 @@ export function MobileBottomNav() {
     const alreadySeen = localStorage.getItem(SCROLL_HINT_KEY);
     if (alreadySeen) return;
 
-    // Fire hint immediately — carousel-style scroll that decelerates into place
+    // Fire hint immediately — scroll all the way right then snap back
     const showTimer = setTimeout(() => {
       setShowScrollHint(true);
 
       const container = scrollRef.current;
       if (!container) return;
 
-      // Start scrolled to the end, then ease into position 0
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      if (maxScroll <= 0) {
-        // Nothing to scroll — mark as seen and bail
-        localStorage.setItem(SCROLL_HINT_KEY, 'true');
-        setShowScrollHint(false);
-        return;
-      }
-      container.scrollLeft = maxScroll;
+      // Scroll to the very end
+      container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
 
-      const totalDuration = 800; // ms
-      const start = performance.now();
-      const startScroll = maxScroll;
+      const backTimer = setTimeout(() => {
+        // Snap back to start
+        container.scrollTo({ left: 0, behavior: 'smooth' });
+        setTimeout(() => {
+          setShowScrollHint(false);
+          localStorage.setItem(SCROLL_HINT_KEY, 'true');
+        }, 400);
+      }, 500);
 
-      const animate = (now: number) => {
-        const elapsed = now - start;
-        const t = Math.min(elapsed / totalDuration, 1);
-        // Ease-out cubic: fast start, gentle landing
-        const ease = 1 - Math.pow(1 - t, 3);
-        container.scrollLeft = startScroll * (1 - ease);
-
-        if (t < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          container.scrollLeft = 0;
-          setTimeout(() => {
-            setShowScrollHint(false);
-            localStorage.setItem(SCROLL_HINT_KEY, 'true');
-          }, 200);
-        }
-      };
-
-      requestAnimationFrame(animate);
+      return () => clearTimeout(backTimer);
     }, 300);
 
     return () => clearTimeout(showTimer);
