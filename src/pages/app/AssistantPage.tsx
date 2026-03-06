@@ -1184,9 +1184,25 @@ export default function AssistantPage() {
       </AnimatePresence>
       {/* Header */}
       <div className="flex items-center justify-between p-4">
-        <div className="flex items-center gap-3">
-          <img src={aiSparkleIcon} alt="Assistant" className="w-10 h-10 object-contain" />
+        <button
+          onClick={() => {
+            if (messages.length > 1) {
+              startNewConversation();
+              setMessages([{
+                id: 'initial',
+                role: 'assistant',
+                content: t('assistant.greeting'),
+                timestamp: new Date(),
+              }]);
+              setInput('');
+              setAttachedImage(null);
+            }
+          }}
+          className="flex items-center gap-3 group"
+        >
+          <img src={aiSparkleIcon} alt="Assistant" className="w-10 h-10 object-contain group-hover:scale-110 transition-transform" />
           <h1 className="text-lg font-semibold text-white leading-none mt-0.5">{t('assistant.title')}</h1>
+        </button>
         </div>
 
         <div className="flex items-center gap-4">
