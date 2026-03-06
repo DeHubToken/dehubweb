@@ -883,7 +883,8 @@ export default function AssistantPage() {
           model: selectedChatModel,
           isAuthenticated,
           userLanguage,
-          userContext
+          userContext,
+          dehubToken: localStorage.getItem('dehub_token') || undefined,
         };
 
         let data: any = null;
