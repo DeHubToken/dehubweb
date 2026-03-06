@@ -30,6 +30,7 @@ export const MAX_TIP_DHB = 1000000;
 interface UseTipPaymentOptions {
   creatorAddress?: string;
   chainId?: ChainId;
+  tokenId?: string;
   onSuccess?: () => void;
 }
 
