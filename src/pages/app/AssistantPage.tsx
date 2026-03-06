@@ -935,12 +935,31 @@ export default function AssistantPage() {
           }
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('AI chat error:', error);
+      // Log error details to backend for diagnostics
+      try {
+        await supabase.from('client_error_logs').insert({
+          level: 'error',
+          message: `Assistant error: ${error?.message || 'Unknown error'}`,
+          component: 'AssistantPage',
+          metadata: {
+            userMessage: currentInput?.substring(0, 50),
+            model: activeTab === 'image' ? selectedImageModel : selectedChatModel,
+            tab: activeTab,
+            errorName: error?.name,
+          },
+          user_address: walletAddress || null,
+        });
+      } catch (logErr) {
+        console.warn('[Assistant] Failed to log error:', logErr);
+      }
+      const errorId = (Date.now() + 1).toString();
       setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(),
+        id: errorId,
         role: 'assistant',
-        content: t('assistant.errorGeneric')
+        content: t('assistant.errorGeneric'),
+        isError: true,
       }]);
     } finally {
       setIsLoading(false);

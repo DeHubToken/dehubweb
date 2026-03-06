@@ -631,18 +631,37 @@ IMPORTANT FORMATTING RULES:
       console.log('Using Lovable AI Gateway with model:', modelName, '| Tier:', modelTier, '| Reason:', modelReason);
     }
 
-    const response = await fetch(apiEndpoint, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: modelName,
-        messages: apiMessages,
-        max_completion_tokens: 1500,
-      }),
-    });
+    // Add timeout to prevent hanging requests
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 25000); // 25s timeout
+
+    let response: Response;
+    try {
+      response = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: modelName,
+          messages: apiMessages,
+          max_completion_tokens: 1500,
+        }),
+        signal: controller.signal,
+      });
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      if (fetchError instanceof DOMException && fetchError.name === 'AbortError') {
+        console.error('AI API request timed out after 25s');
+        return new Response(
+          JSON.stringify({ error: 'Request timed out. Please try again.' }),
+          { status: 504, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      throw fetchError;
+    }
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -658,6 +677,12 @@ IMPORTANT FORMATTING RULES:
         return new Response(
           JSON.stringify({ error: 'AI credits exhausted. Please try again later.' }),
           { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      if (response.status >= 500) {
+        return new Response(
+          JSON.stringify({ error: 'AI service temporarily unavailable. Please try again.' }),
+          { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       
