@@ -566,7 +566,7 @@ export default function PostInfoPage() {
                   </a>
                 </div>
                 <p className="text-xs text-white/40 mt-2">
-                  View on {chainInfo.explorerName}
+                  {t('postInfo.viewOnExplorer', { explorer: chainInfo.explorerName })}
                 </p>
               </div>
             )}
