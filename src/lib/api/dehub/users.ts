@@ -255,6 +255,7 @@ export async function getCachedSuggestedProfiles(limit: number = 10, offset: num
     avatarUrl: row.avatar_url || undefined,
     followers: row.followers || 0,
     isFollowing: false,
+    badgeBalance: row.badge_balance || 0,
   }));
 
   return { items, hasMore: items.length === limit };
