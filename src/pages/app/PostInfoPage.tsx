@@ -854,7 +854,7 @@ export default function PostInfoPage() {
                   <Ticket className="w-5 h-5 text-white" />
                   <div>
                     <p className="text-lg font-bold text-white">{ppvPurchaseCount ?? 0}</p>
-                    <p className="text-xs text-white/60">PPV Sales</p>
+                    <p className="text-xs text-white/60">{t('postInfo.ppvSales')}</p>
                   </div>
                 </div>
                 {ppvPrice && (
