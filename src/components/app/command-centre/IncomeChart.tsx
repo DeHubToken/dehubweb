@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
+import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 const COLORS = ['#22c55e', '#3b82f6', '#eab308', '#ef4444', '#a855f7', '#ec4899', '#14b8a6', '#f97316'];
@@ -31,8 +32,8 @@ export function IncomeChart() {
   const { isAuthenticated, walletAddress } = useAuth();
   const { t } = useTranslation();
 
-  // Fetch tips received by this wallet from tip_records
-  const { data: tipRecords = [], isLoading } = useQuery({
+  // Fetch tips received by this wallet from tip_records (Supabase)
+  const { data: tipRecords = [], isLoading: tipsLoading } = useQuery({
     queryKey: ['tip-records-received', walletAddress],
     queryFn: async () => {
       if (!walletAddress) return [];
@@ -51,11 +52,48 @@ export function IncomeChart() {
     staleTime: 30_000,
   });
 
+  // Also fetch on-chain DHB transfers to capture tips not recorded in Supabase
+  const { data: onchainTransfers = [], isLoading: onchainLoading } = useOnchainDHBTransfers(walletAddress);
+
+  const isLoading = tipsLoading || onchainLoading;
+
+  // Merge Supabase tip_records with on-chain incoming transfers
+  const mergedTips = useMemo(() => {
+    const tips: Array<{ sender_address: string; amount: number; created_at: string }> = [];
+
+    // Add Supabase tip records
+    tipRecords.forEach((tip: any) => {
+      tips.push({
+        sender_address: tip.sender_address?.toLowerCase() || '',
+        amount: Number(tip.amount),
+        created_at: tip.created_at,
+      });
+    });
+
+    // Add on-chain incoming transfers (deduplicate by matching tx_hash if possible)
+    const supabaseTxHashes = new Set(tipRecords.map((t: any) => t.tx_hash?.toLowerCase()).filter(Boolean));
+    
+    onchainTransfers.forEach(transfer => {
+      // Only incoming, non-fiat-purchase transfers (tips/rewards from other users)
+      if (!transfer.isIncoming || transfer.isFiatPurchase) return;
+      // Skip if already in Supabase records
+      if (transfer.txHash && supabaseTxHashes.has(transfer.txHash.toLowerCase())) return;
+
+      tips.push({
+        sender_address: transfer.from.toLowerCase(),
+        amount: transfer.amount,
+        created_at: new Date(transfer.timestamp * 1000).toISOString(),
+      });
+    });
+
+    return tips;
+  }, [tipRecords, onchainTransfers]);
+
   const filteredTips = useMemo(() => {
     const startDate = getFilterStartDate(activeFilter);
-    if (!startDate) return tipRecords;
-    return tipRecords.filter((tip) => new Date(tip.created_at) >= startDate);
-  }, [tipRecords, activeFilter]);
+    if (!startDate) return mergedTips;
+    return mergedTips.filter((tip) => new Date(tip.created_at) >= startDate);
+  }, [mergedTips, activeFilter]);
 
   const { chartData, totalEarned } = useMemo(() => {
     if (filteredTips.length === 0) return { chartData: [], totalEarned: 0 };
