@@ -73,7 +73,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
           <LiquidGlassBubble shimmer className="w-full cursor-pointer" onClick={() => setIsPostModalOpen(true)}>
             <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
               <PenSquare className="w-5 h-5" />
-              Post
+              {t('sidebar.post')}
             </div>
           </LiquidGlassBubble>
           <div className="flex items-center justify-center gap-3">
