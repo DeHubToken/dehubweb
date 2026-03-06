@@ -2057,6 +2057,24 @@ export default function AssistantPage() {
         />
       )}
 
+      {/* Image Paywall Modal */}
+      {pendingImageRequest && (
+        <ImagePaywallModal
+          open={imagePaywallOpen}
+          onOpenChange={(open) => {
+            setImagePaywallOpen(open);
+            if (!open) setPendingImageRequest(null);
+          }}
+          model={IMAGE_MODELS[pendingImageRequest.model]}
+          selectedModelKey={pendingImageRequest.model}
+          onModelChange={(modelKey) => {
+            setPendingImageRequest(prev => prev ? { ...prev, model: modelKey as ImageModelKey } : null);
+          }}
+          onConfirm={handleImageGenerationConfirm}
+          isGenerating={isImageLoading}
+        />
+      )}
+
       {/* Conversation History Drawer */}
       <ConversationHistoryDrawer
         open={historyDrawerOpen}
