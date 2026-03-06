@@ -184,6 +184,7 @@ export interface SuggestedAccount {
   avatarImageUrl?: string;
   followers?: number;
   isFollowing?: boolean;
+  badgeBalance?: number;
 }
 
 export async function getSuggestedAccounts(limit: number = 10, page: number = 1): Promise<{ items: SuggestedAccount[]; hasMore: boolean }> {
@@ -222,7 +223,7 @@ export async function getSuggestedAccounts(limit: number = 10, page: number = 1)
       hasMore = true;
     }
     console.log(`[Suggestions] Got ${items.length} suggested accounts (page ${page}, hasMore: ${hasMore})`);
-    return { items: items as SuggestedAccount[], hasMore };
+    return { items: (items as any[]).map((i: any) => ({ ...i, badgeBalance: i.badgeBalance ?? 0 })) as SuggestedAccount[], hasMore };
   }
   
   console.warn('[Suggestions] Unexpected response shape:', JSON.stringify(response).slice(0, 200));
@@ -254,6 +255,7 @@ export async function getCachedSuggestedProfiles(limit: number = 10, offset: num
     avatarUrl: row.avatar_url || undefined,
     followers: row.followers || 0,
     isFollowing: false,
+    badgeBalance: row.badge_balance || 0,
   }));
 
   return { items, hasMore: items.length === limit };
