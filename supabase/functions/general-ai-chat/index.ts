@@ -101,6 +101,18 @@ const POST_ANALYSIS_KEYWORDS = [
   'judge me', 'roast me', 'roast my', 'critique my',
 ];
 
+// Keywords that indicate the user is asking about ANOTHER user on the platform
+const OTHER_USER_KEYWORDS = [
+  'tell me about @', 'who is @', 'what does @', 'show me @',
+  'analyze @', 'analyse @', 'study @', 'review @', 'check @',
+  'look at @', 'posts from @', 'content from @', 'posts by @', 'content by @',
+  'tell me about', 'who is', 'what does', 'show me',
+  'analyze', 'analyse', 'study', 'review', 'check',
+  'look at', 'posts from', 'content from', 'posts by', 'content by',
+  'roast @', "what kind of person is", "describe @",
+  "what do they post", "their posts", "their content", "their profile",
+];
+
 // Keywords about DeHub - FREE tier (already trained on docs)
 const DEHUB_KEYWORDS = [
   'dehub', 'dhb', '$dhb', 'token', 'delabs', 'futurov', 'ftv',
