@@ -409,7 +409,7 @@ export default function PostInfoPage() {
           </div>
           
           <h2 className="text-xl font-semibold text-white mb-3">
-            Upload Processing
+            {t('postInfo.uploadProcessing')}
           </h2>
           
           <p className="text-white/60 text-sm leading-relaxed mb-4">
