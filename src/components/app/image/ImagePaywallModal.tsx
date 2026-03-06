@@ -231,7 +231,7 @@ export function ImagePaywallModal({
                 Generating...
               </>
             ) : (
-              'Pay & Generate'
+              'Generate'
             )}
           </Button>
         </div>
