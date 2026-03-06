@@ -215,7 +215,7 @@ export function SidebarChat() {
       </SharedTranslationContext.Provider>
 
       {/* Input */}
-      <div className="p-3">
+      <div className="pl-3 pr-[14px] py-3">
         <div className="relative">
           <Textarea
             ref={textareaRef}
