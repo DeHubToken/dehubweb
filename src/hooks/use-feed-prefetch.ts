@@ -303,9 +303,11 @@ export function useFeedPrefetch(isHomeFeedLoaded: boolean) {
     // Skip if already prefetched this session
     if (hasPrefetchedRef.current) return;
     
+    // Skip if nebula prefetch already ran (it caches the same data)
+    const nebulaPrefetchDone = sessionStorage.getItem('nebula-prefetch-triggered');
     // Check session storage to avoid re-prefetching on navigation
     const alreadyPrefetched = sessionStorage.getItem(PREFETCH_DONE_KEY);
-    if (alreadyPrefetched) {
+    if (nebulaPrefetchDone || alreadyPrefetched) {
       hasPrefetchedRef.current = true;
       return;
     }

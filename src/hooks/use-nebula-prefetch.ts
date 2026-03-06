@@ -152,9 +152,8 @@ export function useNebulaPrefetch() {
       console.log('[Nebula Prefetch] User interaction detected, starting prefetch...');
       sessionStorage.setItem(PREFETCH_TRIGGERED_KEY, 'true');
 
-      // Fire home feed FIRST for priority, then other tabs after a short delay
+      // Fire home feed prefetch only — no longer calling prefetchAllFeeds to avoid 429s
       prefetchHomeFeed(queryClient);
-      setTimeout(() => prefetchAllFeeds(queryClient, null), 1500);
     };
 
     const events = ['mousemove', 'touchstart', 'scroll', 'wheel'] as const;
