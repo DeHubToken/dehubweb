@@ -867,11 +867,11 @@ IMPORTANT FORMATTING RULES:
         const profile = await fetchUserProfile(targetUsername);
         if (profile) {
           const profileText = formatProfileForContext(profile);
-          const walletAddr = profile.address || profile.walletAddress;
+          const userId = profile.username || profile.userId || targetUsername;
           let postsText = '';
-          if (walletAddr) {
+          if (userId) {
             const postCount = extractPostCount(userQuery) || 20;
-            const posts = await fetchUserPosts(walletAddr, postCount);
+            const posts = await fetchUserPosts(userId, postCount);
             if (posts.length > 0) {
               postsText = `\n\n### Their Recent Posts (${posts.length} posts):\n${formatPostsForContext(posts)}`;
             }
