@@ -276,6 +276,13 @@ function formatPostsForContext(posts: any[]): string {
   return formatted.join('\n');
 }
 
+function requiresWebSearch(message: string): boolean {
+  const lowerMessage = message.toLowerCase();
+  if (isPersonalQuestion(message)) return false;
+  if (requiresPostAnalysis(message)) return false;
+  return LIVE_SEARCH_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
+}
+
 function requiresComplexReasoning(message: string): boolean {
   const lowerMessage = message.toLowerCase();
   return COMPLEX_REASONING_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
