@@ -20,8 +20,8 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 
-// No delay - start prefetching immediately when home feed loads
-const PREFETCH_DELAY_MS = 0;
+// Delay prefetch to avoid overlapping with nebula prefetch and feed component loads
+const PREFETCH_DELAY_MS = 3000;
 
 // Session storage key to track if prefetch was already done this session
 const PREFETCH_DONE_KEY = 'feeds-prefetched';
@@ -303,9 +303,11 @@ export function useFeedPrefetch(isHomeFeedLoaded: boolean) {
     // Skip if already prefetched this session
     if (hasPrefetchedRef.current) return;
     
+    // Skip if nebula prefetch already ran (it caches the same data)
+    const nebulaPrefetchDone = sessionStorage.getItem('nebula-prefetch-triggered');
     // Check session storage to avoid re-prefetching on navigation
     const alreadyPrefetched = sessionStorage.getItem(PREFETCH_DONE_KEY);
-    if (alreadyPrefetched) {
+    if (nebulaPrefetchDone || alreadyPrefetched) {
       hasPrefetchedRef.current = true;
       return;
     }

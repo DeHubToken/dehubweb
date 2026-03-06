@@ -10,7 +10,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { prefetchAllFeeds } from '@/hooks/use-feed-prefetch';
+// prefetchAllFeeds removed — nebula only caches home feed queries to avoid 429s
 import { getAuthToken } from '@/lib/api/dehub';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
@@ -39,12 +39,11 @@ async function prefetchHomeFeed(queryClient: ReturnType<typeof useQueryClient>) 
       return res.json();
     };
 
-    // Fire all 3 home feed queries + scroll carousel + unified home feed in parallel
-    const [videosRes, imagesRes, textsRes, scrollRes, unifiedHomeRes] = await Promise.allSettled([
+    // Fire 3 home feed queries + unified home feed in parallel (removed duplicate scroll carousel fetch)
+    const [videosRes, imagesRes, textsRes, unifiedHomeRes] = await Promise.allSettled([
       fetchFeed('video'),
       fetchFeed('feed-images'),
       fetchFeed('feed-simple'),
-      fetchFeed('video'), // scroll carousel uses same endpoint
       (async () => {
         // Unified home feed (no postType filter) - matches "Latest" sort in HomeFeed
         const url = new URL('/api/feed', DEHUB_API_BASE);
@@ -88,8 +87,8 @@ async function prefetchHomeFeed(queryClient: ReturnType<typeof useQueryClient>) 
     cacheResult(imagesRes, 'feed-images');
     cacheResult(textsRes, 'feed-simple');
     
-    // Scroll carousel uses limit=10
-    if (scrollRes.status === 'fulfilled' && scrollRes.value) {
+    // Scroll carousel: reuse the video data (same endpoint, just sliced)
+    if (videosRes.status === 'fulfilled' && videosRes.value) {
       const scrollParams = {
         postType: 'video',
         sortBy: 'createdAt' as const,
@@ -99,7 +98,7 @@ async function prefetchHomeFeed(queryClient: ReturnType<typeof useQueryClient>) 
       queryClient.setQueryData(
         ['unified-feed', scrollParams, 10],
         {
-          pages: [{ items: (scrollRes.value.result || []).slice(0, 10), pagination: scrollRes.value.pagination, page: 1 }],
+          pages: [{ items: (videosRes.value.result || []).slice(0, 10), pagination: videosRes.value.pagination, page: 1 }],
           pageParams: [1],
         }
       );
@@ -153,9 +152,8 @@ export function useNebulaPrefetch() {
       console.log('[Nebula Prefetch] User interaction detected, starting prefetch...');
       sessionStorage.setItem(PREFETCH_TRIGGERED_KEY, 'true');
 
-      // Fire home feed FIRST for priority, then other tabs after a short delay
+      // Fire home feed prefetch only — no longer calling prefetchAllFeeds to avoid 429s
       prefetchHomeFeed(queryClient);
-      setTimeout(() => prefetchAllFeeds(queryClient, null), 1500);
     };
 
     const events = ['mousemove', 'touchstart', 'scroll', 'wheel'] as const;
