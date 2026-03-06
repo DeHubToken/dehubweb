@@ -456,6 +456,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const { data: tipCount = 0 } = usePostTipCount(video.id);
   const [isPlaying, setIsPlaying] = useState(false);
   const isPlayingRef = useRef(false);
   const isTabletOrMobile = useIsTabletOrMobile();
