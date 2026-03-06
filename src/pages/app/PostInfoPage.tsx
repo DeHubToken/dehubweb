@@ -682,13 +682,13 @@ export default function PostInfoPage() {
             {/* Distribution Progress */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-xs text-white/60">Distribution</span>
+                <span className="text-xs text-white/60">{t('postInfo.distribution')}</span>
                 <span className="text-xs font-medium text-white">
                   {isLoadingHolders 
-                    ? 'Loading...'
+                    ? t('postInfo.loading')
                     : holders.length > 0 
-                      ? `${holders.length} owner${holders.length > 1 ? 's' : ''}`
-                      : '1 owner'
+                      ? t('postInfo.owner', { count: holders.length })
+                      : t('postInfo.owner', { count: 1 })
                   }
                 </span>
               </div>
