@@ -821,7 +821,7 @@ export default function PostInfoPage() {
                 <Eye className="w-5 h-5 text-white" />
                 <div>
                   <p className="text-lg font-bold text-white">{views.toLocaleString()}</p>
-                  <p className="text-xs text-white/60">Views</p>
+                  <p className="text-xs text-white/60">{t('postInfo.views')}</p>
                 </div>
               </div>
               
