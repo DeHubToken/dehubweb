@@ -882,7 +882,8 @@ export default function AssistantPage() {
           style: selectedStyle,
           model: selectedChatModel,
           isAuthenticated,
-          userLanguage
+          userLanguage,
+          userContext
         };
 
         let data: any = null;
