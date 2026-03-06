@@ -716,10 +716,10 @@ export default function AssistantPage() {
         pollVideoStatus(data.predictionId, messageId);
       }, 5000);
 
-      toast.success('Payment successful! Generating your video...');
+      toast.success(t('assistant.paymentSuccessGenerating'));
     } catch (err) {
       console.error('Video generation error:', err);
-      toast.error('Failed to start video generation');
+      toast.error(t('assistant.errorVideoGenStart'));
       setIsVideoLoading(false);
     }
 
