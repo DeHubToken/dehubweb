@@ -366,6 +366,9 @@ export default function AssistantPage() {
     startNewConversation, 
     loadConversation 
   } = useAIConversation();
+  
+  // User context for AI assistant personalization
+  const userContext = useAssistantUserContext();
 
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
