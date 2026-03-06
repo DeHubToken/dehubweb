@@ -74,7 +74,7 @@ export function MobileBottomNav() {
     const alreadySeen = localStorage.getItem(SCROLL_HINT_KEY);
     if (alreadySeen) return;
 
-    // Show hint after a short delay so the nav is visible
+    // Fire hint immediately so it's the first thing users see
     const showTimer = setTimeout(() => {
       setShowScrollHint(true);
 
