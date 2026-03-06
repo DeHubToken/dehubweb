@@ -254,7 +254,7 @@ export function VideoPaywallModal({
                 Generating...
               </>
             ) : (
-              'Pay & Generate'
+              'Generate'
             )}
           </Button>
         </div>
