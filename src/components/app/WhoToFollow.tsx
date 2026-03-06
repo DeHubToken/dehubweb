@@ -4,7 +4,7 @@ import { UserPlus, Loader2, RefreshCw, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { getSuggestedAccounts, followUser, type SuggestedAccount } from '@/lib/api/dehub';
+import { getSuggestedAccounts, getCachedSuggestedProfiles, followUser, type SuggestedAccount } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
