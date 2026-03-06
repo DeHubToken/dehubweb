@@ -67,6 +67,7 @@ interface Message {
   simulationType?: 'transfer' | 'purchase';
   simulationData?: SimulationData;
   simulationStatus?: 'pending' | 'approved' | 'rejected';
+  isError?: boolean;
 }
 
 // Keywords that indicate image generation/editing request
