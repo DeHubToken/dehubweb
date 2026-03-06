@@ -12,6 +12,16 @@ import { getAccountInfo } from '@/lib/api/dehub/users';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 
+export interface LeaderboardSnapshot {
+  balance: number;
+  followers: number | null;
+  likes: number | null;
+  subscribers: number | null;
+  sent_tips: number;
+  received_tips: number;
+  snapshot_date: string;
+}
+
 export interface AssistantUserContext {
   username?: string;
   displayName?: string;
@@ -24,6 +34,9 @@ export interface AssistantUserContext {
   tipsReceived?: number;
   tipsSent?: number;
   staked?: number;
+  leaderboardRank?: number;
+  leaderboardBalance?: number;
+  snapshots?: LeaderboardSnapshot[];
 }
 
 export function useAssistantUserContext(): AssistantUserContext | null {
