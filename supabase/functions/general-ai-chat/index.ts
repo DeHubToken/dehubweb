@@ -280,13 +280,26 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage } = await req.json() as { 
+    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext } = await req.json() as { 
       messages: Message[]; 
       style?: string;
       postContext?: PostContext;
       model?: string;
       isAuthenticated?: boolean;
       userLanguage?: string;
+      userContext?: {
+        username?: string;
+        displayName?: string;
+        walletAddress?: string;
+        followers?: number;
+        following?: number;
+        postsCount?: number;
+        likesReceived?: number;
+        badgeBalance?: number;
+        tipsReceived?: number;
+        tipsSent?: number;
+        staked?: number;
+      };
     };
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
@@ -549,6 +562,24 @@ IMPORTANT FORMATTING RULES:
 - NEVER use asterisks or underscores for any other purpose than markdown formatting
 - Keep formatting clean and consistent`;
 
+    // Build user context info if provided
+    let userContextInfo = '';
+    if (userContext && userContext.walletAddress) {
+      const parts: string[] = [];
+      if (userContext.username) parts.push(`Username: @${userContext.username}`);
+      if (userContext.displayName) parts.push(`Display Name: ${userContext.displayName}`);
+      parts.push(`Wallet: ${userContext.walletAddress.substring(0, 6)}...${userContext.walletAddress.substring(userContext.walletAddress.length - 4)}`);
+      if (userContext.followers !== undefined) parts.push(`Followers: ${userContext.followers.toLocaleString()}`);
+      if (userContext.following !== undefined) parts.push(`Following: ${userContext.following.toLocaleString()}`);
+      if (userContext.postsCount !== undefined) parts.push(`Posts: ${userContext.postsCount.toLocaleString()}`);
+      if (userContext.likesReceived !== undefined) parts.push(`Likes Received: ${userContext.likesReceived.toLocaleString()}`);
+      if (userContext.badgeBalance !== undefined) parts.push(`Badge Balance: ${userContext.badgeBalance.toLocaleString()} DHB`);
+      if (userContext.tipsReceived !== undefined) parts.push(`Tips Received: ${userContext.tipsReceived.toLocaleString()} DHB`);
+      if (userContext.tipsSent !== undefined) parts.push(`Tips Sent: ${userContext.tipsSent.toLocaleString()} DHB`);
+      if (userContext.staked !== undefined) parts.push(`Staked: ${userContext.staked.toLocaleString()} DHB`);
+      userContextInfo = `\n\n## Current User Profile\nYou are chatting with the following user. Use this data to answer personal questions like "how many followers do I have?" or "what's my balance?".\n${parts.join('\n')}`;
+    }
+
     // Build post context info if provided
     let postContextInfo = '';
     if (postContext) {
@@ -567,8 +598,8 @@ IMPORTANT FORMATTING RULES:
     }
     
     const systemPrompt = personalityModifier
-      ? `${basePrompt}${postContextInfo}\n\nIMPORTANT STYLE: ${personalityModifier}`
-      : `${basePrompt}${postContextInfo}`;
+      ? `${basePrompt}${userContextInfo}${postContextInfo}\n\nIMPORTANT STYLE: ${personalityModifier}`
+      : `${basePrompt}${userContextInfo}${postContextInfo}`;
 
     // Build messages array - include image in user message if available
     const apiMessages: any[] = [{ role: 'system', content: systemPrompt }];

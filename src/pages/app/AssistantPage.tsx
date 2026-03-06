@@ -43,6 +43,7 @@ import { AuthGate } from '@/components/app/AuthGate';
 import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
 import { ConversationHistoryDrawer } from '@/components/app/assistant/ConversationHistoryDrawer';
 import { useAIConversation } from '@/hooks/use-ai-conversation';
+import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 
 // Simulation data for token transactions
@@ -365,6 +366,9 @@ export default function AssistantPage() {
     startNewConversation, 
     loadConversation 
   } = useAIConversation();
+  
+  // User context for AI assistant personalization
+  const userContext = useAssistantUserContext();
 
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
@@ -442,7 +446,8 @@ export default function AssistantPage() {
           })),
           style: selectedStyle,
           model: selectedChatModel,
-          userLanguage
+          userLanguage,
+          userContext
         }
       });
 
@@ -877,7 +882,8 @@ export default function AssistantPage() {
           style: selectedStyle,
           model: selectedChatModel,
           isAuthenticated,
-          userLanguage
+          userLanguage,
+          userContext
         };
 
         let data: any = null;
