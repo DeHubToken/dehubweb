@@ -145,35 +145,32 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
 function getNotificationIcon(type: string) {
   switch (type) {
     case 'like':
-      return <ThumbsUp className="w-4 h-4 text-pink-500" />;
+    case 'comment_like':
+    case 'feature_request_like':
+      return <ThumbsUp className="w-4 h-4 text-white/70" />;
     case 'comment':
     case 'comment_reply':
-      return <MessageCircle className="w-4 h-4 text-blue-400" />;
     case 'mention':
-      return <MessageCircle className="w-4 h-4 text-violet-400" />;
-    case 'comment_like':
-      return <ThumbsUp className="w-4 h-4 text-pink-400" />;
-    case 'tip':
-      return <DollarSign className="w-4 h-4 text-yellow-500" />;
-    case 'subscription':
-    case 'ppv_purchase':
-      return <Users className="w-4 h-4 text-purple-500" />;
-    case 'following':
-      return <UserPlus className="w-4 h-4 text-cyan-500" />;
-    case 'video_milestone':
-      return <Trophy className="w-4 h-4 text-orange-500" />;
-    case 'livestream_start':
-      return <Zap className="w-4 h-4 text-red-500" />;
-    case 'video_removal':
-      return <AlertTriangle className="w-4 h-4 text-red-500" />;
-    case 'feature_request_like':
-    case 'governance_vote':
-      return <Star className="w-4 h-4 text-yellow-500" />;
     case 'feature_request_comment':
     case 'governance_comment':
-      return <MessageCircle className="w-4 h-4 text-blue-400" />;
+      return <MessageSquareText className="w-4 h-4 text-white/70" />;
+    case 'tip':
+      return <DollarSign className="w-4 h-4 text-white/70" />;
+    case 'subscription':
+    case 'ppv_purchase':
+      return <Users className="w-4 h-4 text-white/70" />;
+    case 'following':
+      return <UserPlus className="w-4 h-4 text-white/70" />;
+    case 'video_milestone':
+      return <Trophy className="w-4 h-4 text-white/70" />;
+    case 'livestream_start':
+      return <Zap className="w-4 h-4 text-white/70" />;
+    case 'video_removal':
+      return <AlertTriangle className="w-4 h-4 text-white/70" />;
+    case 'governance_vote':
+      return <Star className="w-4 h-4 text-white/70" />;
     default:
-      return <Bell className="w-4 h-4 text-zinc-500" />;
+      return <Bell className="w-4 h-4 text-white/70" />;
   }
 }
 
