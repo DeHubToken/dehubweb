@@ -268,6 +268,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             repostCount={post.stats.reposts}
             isReposted={post.isReposted}
             isOptimistic={post.isOptimistic}
+            tipCount={tipCount}
           />
         </div>
 
