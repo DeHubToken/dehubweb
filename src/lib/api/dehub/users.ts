@@ -223,7 +223,7 @@ export async function getSuggestedAccounts(limit: number = 10, page: number = 1)
       hasMore = true;
     }
     console.log(`[Suggestions] Got ${items.length} suggested accounts (page ${page}, hasMore: ${hasMore})`);
-    return { items: items as SuggestedAccount[], hasMore };
+    return { items: (items as any[]).map((i: any) => ({ ...i, badgeBalance: i.badgeBalance ?? 0 })) as SuggestedAccount[], hasMore };
   }
   
   console.warn('[Suggestions] Unexpected response shape:', JSON.stringify(response).slice(0, 200));
