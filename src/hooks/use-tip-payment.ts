@@ -117,7 +117,7 @@ export function useTipPayment({
         setIsTipping(false);
       }
     },
-    [walletAddress, creatorAddress, chainId, openLoginModal, onSuccess]
+    [walletAddress, creatorAddress, chainId, tokenId, openLoginModal, onSuccess]
   );
 
   return { tip, isTipping };
