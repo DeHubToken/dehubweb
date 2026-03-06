@@ -782,7 +782,7 @@ export default function PostInfoPage() {
 
           {/* Engagement Stats */}
           <section className="bg-white/5 rounded-xl p-4 border border-white/10">
-            <h2 className="text-sm font-medium text-white/60 mb-3">Engagement</h2>
+            <h2 className="text-sm font-medium text-white/60 mb-3">{t('postInfo.engagement')}</h2>
             <div className="grid grid-cols-2 gap-3">
               {/* Like/Dislike Ratio */}
               <div className="col-span-2 bg-white/5 rounded-lg p-3">
