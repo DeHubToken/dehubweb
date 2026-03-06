@@ -787,7 +787,7 @@ export default function PostInfoPage() {
               {/* Like/Dislike Ratio */}
               <div className="col-span-2 bg-white/5 rounded-lg p-3">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-white/60">Like Ratio</span>
+                  <span className="text-sm text-white/60">{t('postInfo.likeRatio')}</span>
                   <span className="text-lg font-bold text-white">{likeRatio}%</span>
                 </div>
                 <div className="h-2 bg-white/10 rounded-full overflow-hidden">
