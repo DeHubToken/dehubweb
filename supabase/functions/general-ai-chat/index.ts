@@ -307,10 +307,10 @@ async function fetchUserProfile(username: string, authToken?: string): Promise<a
   }
 }
 
-// Fetch user posts from DeHub API — uses userId (username), NOT wallet address
-async function fetchUserPosts(userId: string, limit: number = 10, authToken?: string): Promise<any[]> {
+// Fetch user posts from DeHub API — uses /api/feed?minter={walletAddress}
+async function fetchUserPosts(walletAddress: string, limit: number = 10, authToken?: string): Promise<any[]> {
   try {
-    const url = `https://api.dehub.io/api/user/${encodeURIComponent(userId)}/nfts?page=1&limit=${limit}`;
+    const url = `https://api.dehub.io/api/feed?minter=${encodeURIComponent(walletAddress)}&page=1&limit=${limit}&sortBy=createdAt&sortOrder=desc&status=all`;
     console.log(`[PostAnalysis] Fetching posts: ${url}`);
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
