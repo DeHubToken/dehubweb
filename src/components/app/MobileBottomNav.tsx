@@ -94,7 +94,7 @@ export function MobileBottomNav() {
       }, 800);
 
       return () => clearTimeout(backTimer);
-    }, 2000);
+    }, 300);
 
     return () => clearTimeout(showTimer);
   }, []);
