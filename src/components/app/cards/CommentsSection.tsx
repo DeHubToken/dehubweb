@@ -1168,12 +1168,15 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
               </div>
             ) : (
               <>
-                <div className={cn(
+                <div 
+                  data-vaul-no-drag
+                  className={cn(
                   "flex-1 flex items-start bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl px-3",
                   isMobile ? "min-h-[80px] relative" : "min-h-[40px]"
                 )}>
                   <textarea
                     ref={inputRef}
+                    data-vaul-no-drag
                     placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Add a reply...'}
                     value={newComment}
                     onChange={(e) => {
