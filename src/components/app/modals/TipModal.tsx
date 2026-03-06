@@ -39,15 +39,23 @@ export function TipModal({
   onOpenChange,
   creatorAddress,
   creatorName,
+  tokenId,
   context,
 }: TipModalProps) {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [amount, setAmount] = useState('');
+  const resolvedTokenId = tokenId || context;
   const { tip, isTipping } = useTipPayment({
     creatorAddress,
+    tokenId: resolvedTokenId,
     onSuccess: () => {
       setAmount('');
       onOpenChange(false);
+      // Invalidate per-post tip count
+      if (resolvedTokenId) {
+        queryClient.invalidateQueries({ queryKey: ['post-tip-count', resolvedTokenId] });
+      }
     },
   });
 
