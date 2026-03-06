@@ -305,10 +305,10 @@ async function fetchUserProfile(username: string): Promise<any | null> {
   }
 }
 
-// Fetch user posts from DeHub API
-async function fetchUserPosts(walletAddress: string, limit: number = 10): Promise<any[]> {
+// Fetch user posts from DeHub API — uses userId (username), NOT wallet address
+async function fetchUserPosts(userId: string, limit: number = 10): Promise<any[]> {
   try {
-    const url = `https://api.dehub.io/api/user/${walletAddress.toLowerCase()}/nfts?page=1&limit=${limit}`;
+    const url = `https://api.dehub.io/api/user/${encodeURIComponent(userId)}/nfts?page=1&limit=${limit}`;
     console.log(`[PostAnalysis] Fetching posts: ${url}`);
     const response = await fetch(url, { 
       method: 'GET',
@@ -321,8 +321,8 @@ async function fetchUserPosts(walletAddress: string, limit: number = 10): Promis
       return [];
     }
     const data = await response.json();
-    const posts = data?.result || data || [];
-    console.log(`[PostAnalysis] Fetched ${posts.length} posts`);
+    const posts = data?.result || data?.data || data || [];
+    console.log(`[PostAnalysis] Fetched ${Array.isArray(posts) ? posts.length : 0} posts`);
     return Array.isArray(posts) ? posts : [];
   } catch (error) {
     console.error('[PostAnalysis] Failed to fetch posts:', error);
@@ -847,8 +847,9 @@ IMPORTANT FORMATTING RULES:
     let postAnalysisInfo = '';
     if (requiresPostAnalysis(userQuery) && userContext?.walletAddress) {
       const postCount = extractPostCount(userQuery);
-      console.log(`[PostAnalysis] User requested analysis of ${postCount} posts`);
-      const userPosts = await fetchUserPosts(userContext.walletAddress, postCount);
+      const fetchId = userContext.username || userContext.walletAddress;
+      console.log(`[PostAnalysis] User requested analysis of ${postCount} posts for ${fetchId}`);
+      const userPosts = await fetchUserPosts(fetchId, postCount);
       if (userPosts.length > 0) {
         const formattedPosts = formatPostsForContext(userPosts);
         postAnalysisInfo = `\n\n## User's Recent Posts (${userPosts.length} posts)\nThe user has asked you to study/analyze their posts. Here is their content data:\n${formattedPosts}\n\nProvide a thorough analysis including:\n- Content patterns and themes\n- Engagement metrics (which posts perform best/worst and why)\n- Content type distribution (videos vs images vs text)\n- Posting frequency and timing patterns\n- Specific, actionable suggestions to improve engagement\n- What they're doing well and should continue\n- What they could experiment with`;
@@ -866,11 +867,11 @@ IMPORTANT FORMATTING RULES:
         const profile = await fetchUserProfile(targetUsername);
         if (profile) {
           const profileText = formatProfileForContext(profile);
-          const walletAddr = profile.address || profile.walletAddress;
+          const userId = profile.username || profile.userId || targetUsername;
           let postsText = '';
-          if (walletAddr) {
+          if (userId) {
             const postCount = extractPostCount(userQuery) || 20;
-            const posts = await fetchUserPosts(walletAddr, postCount);
+            const posts = await fetchUserPosts(userId, postCount);
             if (posts.length > 0) {
               postsText = `\n\n### Their Recent Posts (${posts.length} posts):\n${formatPostsForContext(posts)}`;
             }
