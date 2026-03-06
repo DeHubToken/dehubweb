@@ -29,7 +29,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { supabase } from '@/integrations/supabase/client';
 import { MarkdownText } from '@/lib/markdown';
-import { addWatermarkClient } from '@/lib/watermark';
+
 import { AI_ASSISTANT_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { VIDEO_MODELS, VIDEO_MODEL_OPTIONS, type VideoModelKey, type VideoModel } from '@/constants/video-models.constants';
 import { IMAGE_MODELS, IMAGE_MODEL_OPTIONS, type ImageModelKey } from '@/constants/image-models.constants';
@@ -783,13 +783,11 @@ export default function AssistantPage() {
         return;
       }
 
-      const watermarkedImageUrl = await addWatermarkClient(data.imageUrl);
-
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: '',
-        imageUrl: watermarkedImageUrl
+        imageUrl: data.imageUrl
       };
 
       setMessages(prev => [...prev, assistantMessage]);
@@ -1450,12 +1448,6 @@ export default function AssistantPage() {
                             playsInline
                             className="max-w-full rounded-lg"
                           />
-                          {/* DeHub watermark */}
-                          <img 
-                            src={dehubLogo} 
-                            alt="" 
-                            className="absolute bottom-12 left-3 h-5 opacity-60 pointer-events-none"
-                          />
                           {/* Action buttons */}
                           <div className="absolute bottom-12 right-3 flex items-center gap-2">
                             {/* Download button */}
@@ -1526,18 +1518,12 @@ export default function AssistantPage() {
                             <MarkdownText content={message.content} className="text-sm" />
                           </div>
                         )}
-                        {/* Image container with watermark + button overlay */}
+                        {/* Image container with button overlay */}
                         <div className="relative">
                           <img 
                             src={message.imageUrl} 
                             alt="Generated" 
                             className="max-w-full rounded-lg"
-                          />
-                          {/* DeHub watermark */}
-                          <img 
-                            src={dehubLogo} 
-                            alt="" 
-                            className="absolute bottom-3 left-3 h-5 opacity-60 pointer-events-none"
                           />
                           {/* Action buttons row */}
                           <div className="absolute bottom-3 right-3 flex items-center gap-2">
