@@ -131,11 +131,15 @@ export function PublicChat({ onBack }: PublicChatProps) {
   }, [messages.length]);
 
   const handleSendMessage = async (args: { content: string; type: string }) => {
-    toast.error('Live chat only available in-app currently, download now on Google Play', {
-      action: {
-        label: 'Download',
-        onClick: () => window.open('https://play.google.com/store/apps/details?id=io.dehub.mobile&hl', '_blank'),
-      },
+    toast('Live chat only available in-app currently, download now on Google Play', {
+      description: (
+        <button
+          onClick={() => window.open('https://play.google.com/store/apps/details?id=io.dehub.mobile&hl', '_blank')}
+          className="mt-2 w-full py-2 rounded-lg bg-white/20 hover:bg-white/30 text-white text-sm font-medium transition-colors"
+        >
+          Download on Google Play
+        </button>
+      ),
     });
     return;
   };
