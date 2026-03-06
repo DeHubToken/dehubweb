@@ -384,6 +384,7 @@ function requiresWebSearch(message: string): boolean {
   const lowerMessage = message.toLowerCase();
   if (isPersonalQuestion(message)) return false;
   if (requiresPostAnalysis(message)) return false;
+  if (requiresOtherUserLookup(message)) return false;
   return LIVE_SEARCH_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
