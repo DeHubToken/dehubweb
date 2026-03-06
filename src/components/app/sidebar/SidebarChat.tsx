@@ -87,7 +87,7 @@ export function SidebarChat() {
   }, [isAuthenticated, walletAddress, send]);
 
   const handleSend = async () => {
-    toast('Live chat only available in-app currently, download now on Google Play', {
+    toast('Live chat only available in-app currently, download now on Google Play. Coming soon to iOS.', {
       description: (
         <button
           onClick={() => window.open('https://play.google.com/store/apps/details?id=io.dehub.mobile&hl', '_blank')}
@@ -106,7 +106,7 @@ export function SidebarChat() {
   };
 
   const handleGifSelect = async (gifUrl: string) => {
-    toast('Live chat only available in-app currently, download now on Google Play', {
+    toast('Live chat only available in-app currently, download now on Google Play. Coming soon to iOS.', {
       description: (
         <button
           onClick={() => window.open('https://play.google.com/store/apps/details?id=io.dehub.mobile&hl', '_blank')}
