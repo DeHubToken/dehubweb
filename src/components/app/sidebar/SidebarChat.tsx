@@ -61,7 +61,7 @@ export function SidebarChat() {
 
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) {
-      toast.error('Sign in to send voice notes');
+      openLoginModal();
       return;
     }
     const toastId = 'sidebarchat-voice-upload';
