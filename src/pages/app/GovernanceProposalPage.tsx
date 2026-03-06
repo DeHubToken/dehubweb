@@ -24,7 +24,6 @@ import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useMention } from '@/hooks/use-mention';
 import { UserMentionDropdown } from '@/components/app/mentions';
 
