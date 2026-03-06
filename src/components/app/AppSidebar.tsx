@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PenSquare, LogIn, LogOut } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { MobileHeader } from './navigation/MobileHeader';
