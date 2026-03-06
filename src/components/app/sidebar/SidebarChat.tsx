@@ -90,6 +90,10 @@ export function SidebarChat() {
   }, [isAuthenticated, walletAddress, send]);
 
   const handleSend = async () => {
+    if (!isAuthenticated) {
+      openLoginModal();
+      return;
+    }
     toast('Live chat only available in-app currently, download now on Google Play. Coming soon to iOS.', {
       description: (
         <button
