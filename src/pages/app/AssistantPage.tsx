@@ -1448,12 +1448,6 @@ export default function AssistantPage() {
                             playsInline
                             className="max-w-full rounded-lg"
                           />
-                          {/* DeHub watermark */}
-                          <img 
-                            src={dehubLogo} 
-                            alt="" 
-                            className="absolute bottom-12 left-3 h-5 opacity-60 pointer-events-none"
-                          />
                           {/* Action buttons */}
                           <div className="absolute bottom-12 right-3 flex items-center gap-2">
                             {/* Download button */}
