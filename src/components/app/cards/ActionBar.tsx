@@ -416,7 +416,7 @@ export function ActionBar({
             className="flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors"
             aria-label="Tips"
           >
-            <img src={dehubCoin} alt="DHB" className="w-5 h-5 brightness-0 invert opacity-80" />
+            <img src={tipIcon} alt="Tip" className="w-5 h-5 brightness-0 invert opacity-80" />
             <span className="text-xs text-zinc-400">{formatCount(tipCount)}</span>
           </button>
 
