@@ -11,7 +11,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CheckCircle, Play, Images } from 'lucide-react';
 import { getMediaUrl } from '@/lib/api/dehub/core';
 import { buildFeedImageUrls, buildImageUrl } from '@/lib/media-url';
-import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import type { DeHubNFT } from '@/lib/api/dehub/types';
 
 interface QuotedPostEmbedProps {
