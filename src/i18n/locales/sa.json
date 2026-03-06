@@ -1041,5 +1041,6 @@
     "daysAgo": "{{count}} दिनपूर्वम्",
     "monthsAgo": "{{count}} मासपूर्वम्"
   },
-  "sidebar": { "talkOfTheTown": "नगरस्य चर्चा", "nothingTrending": "अधुना किमपि प्रचलितं नास्ति" }
+  "sidebar": { "talkOfTheTown": "नगरस्य चर्चा", "nothingTrending": "अधुना किमपि प्रचलितं नास्ति", "post": "प्रकाशय", "logOut": "निर्गमनम्", "logIn": "प्रवेशः" }
+  ,"postInfo": { "title": "प्रकाशनस्य सूचना", "tokenId": "टोकन ID", "mintedOn": "निर्मितम्", "creator": "निर्माता", "visibility": "दृश्यता", "total": "सर्वम् {{count}}", "loading": "आह्वयते...", "engagement": "सहभागिता", "likes": "रोचते", "dislikes": "न रोचते", "views": "दर्शनानि", "comments": "टिप्पण्यः", "price": "मूल्यम्", "content": "विषयः", "goBack": "प्रत्यागच्छ", "public": "सार्वजनिकम्", "publicDesc": "कोऽपि द्रष्टुं शक्नोति", "private": "व्यक्तिगतम्", "privateDesc": "भवान् एव द्रष्टुं शक्नोति" }
 }

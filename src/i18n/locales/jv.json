@@ -1058,6 +1058,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "Omongan Kutha",
-    "nothingTrending": "Durung ana sing trending"
-  }
+    "nothingTrending": "Durung ana sing trending",
+    "post": "Kirim", "logOut": "Metu", "logIn": "Mlebu"
+  },
+  "postInfo": { "title": "Info Postingan", "tokenId": "Token ID", "mintedOn": "Digawe", "transactionHash": "Hash Transaksi", "viewOnExplorer": "Deleng ing {{explorer}}", "creator": "Pangripta", "visibility": "Ketok", "total": "Total {{count}}", "loading": "Ngemot...", "engagement": "Interaksi", "likes": "Seneng", "dislikes": "Ora seneng", "views": "Ditonton", "comments": "Komentar", "price": "Rega", "content": "Konten", "goBack": "Bali", "public": "Umum", "publicDesc": "Sapa wae bisa ndeleng", "private": "Pribadi", "privateDesc": "Mung sampeyan sing bisa ndeleng" }
 }

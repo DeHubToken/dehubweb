@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "ናይ ከተማ ዕላል",
-    "nothingTrending": "ገና ዝዘወር ነገር የለን"
-  }
+    "nothingTrending": "ገና ዝዘወር ነገር የለን",
+    "post": "ለኣኽ", "logOut": "ውጻእ", "logIn": "እቶ"
+  },
+  "postInfo": { "title": "ሓበሬታ ጽሑፍ", "tokenId": "ቶከን ID", "mintedOn": "ተፈጢሩ", "creator": "ፈጣሪ", "visibility": "ምርኣይ", "total": "ጠቕላላ {{count}}", "loading": "ይጽዓን ኣሎ...", "engagement": "ተሳትፎ", "likes": "ፈትየ", "dislikes": "ኣይፈትየን", "views": "ርእየት", "comments": "ርእይቶ", "price": "ዋጋ", "content": "ትሕዝቶ", "goBack": "ተመለስ", "public": "ህዝባዊ", "publicDesc": "ዝኾነ ሰብ ክርእዮ ይኽእል", "private": "ብሕቲ", "privateDesc": "ንስኻ ጥራይ ክትርእዮ ትኽእል" }
 }

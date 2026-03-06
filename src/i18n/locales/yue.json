@@ -1058,6 +1058,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "城中熱話",
-    "nothingTrending": "暫時冇熱門嘢"
-  }
+    "nothingTrending": "暫時冇熱門嘢",
+    "post": "發佈", "logOut": "登出", "logIn": "登入"
+  },
+  "postInfo": { "title": "帖子資訊", "tokenId": "代幣ID", "mintedOn": "鑄造於", "creator": "創作者", "visibility": "可見度", "total": "共{{count}}個", "loading": "載入中...", "engagement": "互動", "likes": "讚好", "dislikes": "唔鍾意", "views": "瀏覽", "comments": "評論", "price": "價錢", "content": "內容", "goBack": "返回", "public": "公開", "publicDesc": "任何人都睇到", "private": "私密", "privateDesc": "淨係你睇到" }
 }

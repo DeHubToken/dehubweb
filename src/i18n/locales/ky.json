@@ -1040,5 +1040,6 @@
     "daysAgo": "{{count}}к мурда",
     "monthsAgo": "{{count}}ай мурда"
   },
-  "sidebar": { "talkOfTheTown": "Шаардын сөзү", "nothingTrending": "Азырынча эч нерсе популярдуу эмес" }
+  "sidebar": { "talkOfTheTown": "Шаардын сөзү", "nothingTrending": "Азырынча эч нерсе популярдуу эмес", "post": "Жарыялоо", "logOut": "Чыгуу", "logIn": "Кирүү" }
+  ,"postInfo": { "title": "Пост маалыматы", "tokenId": "Токен ID", "mintedOn": "Түзүлгөн", "creator": "Жаратуучу", "visibility": "Көрүнүш", "total": "Жалпы {{count}}", "loading": "Жүктөлүүдө...", "engagement": "Катышуу", "likes": "Жакты", "dislikes": "Жаккан жок", "views": "Көрүүлөр", "comments": "Комменттер", "price": "Баа", "content": "Мазмун", "goBack": "Артка", "public": "Ачык", "publicDesc": "Баары көрө алат", "private": "Жеке", "privateDesc": "Сиз гана көрө аласыз" }
 }

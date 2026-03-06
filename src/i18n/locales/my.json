@@ -529,5 +529,6 @@
     "inactive": "မတက်ကြွ",
     "delete": "ဖျက်ရန်"
   },
-  "sidebar": { "talkOfTheTown": "မြို့တွင်းစကားပြော", "nothingTrending": "ယခု ခေတ်ရေစီးကြောင်းမရှိပါ" }
+  "sidebar": { "talkOfTheTown": "မြို့တွင်းစကားပြော", "nothingTrending": "ယခု ခေတ်ရေစီးကြောင်းမရှိပါ", "post": "ပို့စ်", "logOut": "ထွက်ရန်", "logIn": "ဝင်ရန်" }
+  ,"postInfo": { "title": "ပို့စ်အချက်အလက်", "tokenId": "တိုကင် ID", "mintedOn": "ဖန်တီးခဲ့သည်", "creator": "ဖန်တီးသူ", "visibility": "မြင်နိုင်မှု", "total": "စုစုပေါင်း {{count}}", "loading": "ဖွင့်နေသည်...", "engagement": "ပါဝင်မှု", "likes": "ကြိုက်", "dislikes": "မကြိုက်", "views": "ကြည့်ရှု", "comments": "မှတ်ချက်", "price": "စျေးနှုန်း", "content": "အကြောင်းအရာ", "goBack": "ပြန်သွား", "public": "အများသူငှာ", "publicDesc": "မည်သူမဆို ကြည့်နိုင်", "private": "ကိုယ်ပိုင်", "privateDesc": "သင်သာ ကြည့်နိုင်" }
 }

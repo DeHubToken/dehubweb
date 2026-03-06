@@ -1058,6 +1058,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "Хотын яриа",
-    "nothingTrending": "Одоогоор тренд байхгүй"
-  }
+    "nothingTrending": "Одоогоор тренд байхгүй",
+    "post": "Нийтлэх", "logOut": "Гарах", "logIn": "Нэвтрэх"
+  },
+  "postInfo": { "title": "Нийтлэлийн мэдээлэл", "tokenId": "Токен ID", "mintedOn": "Үүсгэсэн", "transactionHash": "Гүйлгээний хэш", "viewOnExplorer": "{{explorer}}-д үзэх", "creator": "Зохиогч", "visibility": "Харагдах байдал", "total": "Нийт {{count}}", "loading": "Ачаалж байна...", "engagement": "Оролцоо", "likes": "Таалагдсан", "dislikes": "Таалагдаагүй", "views": "Үзсэн", "comments": "Сэтгэгдэл", "price": "Үнэ", "content": "Агуулга", "goBack": "Буцах", "public": "Нийтийн", "publicDesc": "Хэн ч үзэх боломжтой", "private": "Хувийн", "privateDesc": "Зөвхөн та үзэх боломжтой" }
 }

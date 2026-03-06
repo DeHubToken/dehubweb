@@ -1058,6 +1058,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "د ښار خبرې",
-    "nothingTrending": "تر اوسه هیڅ ټرنډ نه دی"
-  }
+    "nothingTrending": "تر اوسه هیڅ ټرنډ نه دی",
+    "post": "خپره کړئ", "logOut": "وتل", "logIn": "ننوتل"
+  },
+  "postInfo": { "title": "د پوسټ معلومات", "tokenId": "توکن ID", "mintedOn": "جوړ شوی", "creator": "جوړونکی", "visibility": "لیدنه", "total": "ټول {{count}}", "loading": "لوډ کیږي...", "engagement": "برخه اخیستنه", "likes": "خوښ", "dislikes": "نا خوښ", "views": "لیدنې", "comments": "نظرونه", "price": "بیه", "content": "منځپانګه", "goBack": "بېرته", "public": "عامه", "publicDesc": "هر څوک لیدلی شي", "private": "شخصي", "privateDesc": "یوازې تاسو لیدلی شئ" }
 }

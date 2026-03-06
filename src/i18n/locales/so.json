@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "Sheekada Magaalada",
-    "nothingTrending": "Wali waxba trend ma aha"
-  }
+    "nothingTrending": "Wali waxba trend ma aha",
+    "post": "Dhaji", "logOut": "Ka bax", "logIn": "Gal"
+  },
+  "postInfo": { "title": "Macluumaadka qoraalka", "tokenId": "Token ID", "mintedOn": "La sameeyey", "creator": "Abuuraha", "visibility": "Muuqaalka", "total": "Wadarta {{count}}", "loading": "Soo dejinaya...", "engagement": "Ka qaybgalka", "likes": "Jeclaan", "dislikes": "Diidmo", "views": "Daawashada", "comments": "Faallooyinka", "price": "Qiimaha", "content": "Nuxurka", "goBack": "Dib u noqo", "public": "Dadweyne", "publicDesc": "Qof kasta wuu arki karaa", "private": "Gaar ah", "privateDesc": "Adiga kaliya ayaad arki kartaa" }
 }

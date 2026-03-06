@@ -977,5 +977,6 @@
     "sharePost": "Жазбаны бөлісу",
     "relatedPosts": "Байланысты жазбалар"
   },
-  "sidebar": { "talkOfTheTown": "Қаланың әңгімесі", "nothingTrending": "Қазір ештеңе трендте емес" }
+  "sidebar": { "talkOfTheTown": "Қаланың әңгімесі", "nothingTrending": "Қазір ештеңе трендте емес", "post": "Жариялау", "logOut": "Шығу", "logIn": "Кіру" }
+  ,"postInfo": { "title": "Жазба ақпараты", "tokenId": "Токен ID", "mintedOn": "Жасалды", "creator": "Жасаушы", "visibility": "Көріну", "total": "Барлығы {{count}}", "loading": "Жүктелуде...", "engagement": "Қатысу", "likes": "Ұнады", "dislikes": "Ұнамады", "views": "Қарау", "comments": "Пікірлер", "price": "Баға", "content": "Мазмұн", "goBack": "Артқа", "public": "Жалпыға", "publicDesc": "Кез келген адам көре алады", "private": "Жеке", "privateDesc": "Тек сіз көре аласыз" }
 }

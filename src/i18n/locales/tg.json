@@ -1040,5 +1040,6 @@
     "daysAgo": "{{count}} р пеш",
     "monthsAgo": "{{count}} м пеш"
   },
-  "sidebar": { "talkOfTheTown": "Маъмултарин", "nothingTrending": "Ҳанӯз чизи маъмуле нест" }
+  "sidebar": { "talkOfTheTown": "Маъмултарин", "nothingTrending": "Ҳанӯз чизи маъмуле нест", "post": "Нашр", "logOut": "Баромадан", "logIn": "Даромадан" }
+  ,"postInfo": { "title": "Маълумоти пост", "tokenId": "Token ID", "mintedOn": "Сохта шуд", "creator": "Эҷодкор", "visibility": "Намоиш", "total": "Ҳамагӣ {{count}}", "loading": "Бор мешавад...", "engagement": "Иштирок", "likes": "Маъқул", "dislikes": "Номаъқул", "views": "Дидан", "comments": "Шарҳҳо", "price": "Нарх", "content": "Мундариҷа", "goBack": "Бозгашт", "public": "Оммавӣ", "publicDesc": "Ҳар кас дида метавонад", "private": "Хусусӣ", "privateDesc": "Танҳо шумо дида метавонед" }
 }

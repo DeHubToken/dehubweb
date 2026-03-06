@@ -1040,5 +1040,6 @@
     "daysAgo": "{{count}} gün öň",
     "monthsAgo": "{{count}} aý öň"
   },
-  "sidebar": { "talkOfTheTown": "Iň köp gürrüňi edilýän", "nothingTrending": "Entek meşhur zat ýok" }
+  "sidebar": { "talkOfTheTown": "Iň köp gürrüňi edilýän", "nothingTrending": "Entek meşhur zat ýok", "post": "Ýerleşdir", "logOut": "Çyk", "logIn": "Gir" }
+  ,"postInfo": { "title": "Ýazgy maglumaty", "tokenId": "Token ID", "mintedOn": "Döredilen", "creator": "Dörediji", "visibility": "Görünmek", "total": "Jemi {{count}}", "loading": "Ýüklenýär...", "engagement": "Gatnaşyk", "likes": "Haladym", "dislikes": "Halamadym", "views": "Görmeler", "comments": "Teswirler", "price": "Baha", "content": "Mazmun", "goBack": "Yza", "public": "Köpçülik", "publicDesc": "Islendik adam görüp biler", "private": "Hususy", "privateDesc": "Diňe siz görüp bilersiňiz" }
 }

@@ -555,5 +555,6 @@
     "inactive": "අක්‍රීය",
     "delete": "මකන්න"
   },
-  "sidebar": { "talkOfTheTown": "නගරයේ කතාව", "nothingTrending": "දැනට කිසිවක් ට්‍රෙන්ඩ් නැත" }
+  "sidebar": { "talkOfTheTown": "නගරයේ කතාව", "nothingTrending": "දැනට කිසිවක් ට්‍රෙන්ඩ් නැත", "post": "පළ කරන්න", "logOut": "ඉවත් වන්න", "logIn": "පිවිසෙන්න" }
+  ,"postInfo": { "title": "පළ කිරීමේ තොරතුරු", "tokenId": "ටෝකන් ID", "mintedOn": "නිර්මාණය කළ", "creator": "නිර්මාතෘ", "visibility": "දෘශ්‍යතාව", "total": "මුළු {{count}}", "loading": "පූරණය වෙමින්...", "engagement": "සහභාගිත්වය", "likes": "කැමති", "dislikes": "අකමැති", "views": "නැරඹුම්", "comments": "අදහස්", "price": "මිල", "content": "අන්තර්ගතය", "goBack": "ආපසු", "public": "පොදු", "publicDesc": "ඕනෑම කෙනෙකුට බැලිය හැක", "private": "පුද්ගලික", "privateDesc": "ඔබට පමණක් බැලිය හැක" }
 }

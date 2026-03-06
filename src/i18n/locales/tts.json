@@ -1058,6 +1058,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "เรื่องฮ็อต",
-    "nothingTrending": "ยังบ่มีเทรนด์"
-  }
+    "nothingTrending": "ยังบ่มีเทรนด์",
+    "post": "โพสต์", "logOut": "ออกจากระบบ", "logIn": "เข้าสู่ระบบ"
+  },
+  "postInfo": { "title": "ข้อมูลโพสต์", "tokenId": "Token ID", "mintedOn": "สร้างเมื่อ", "creator": "ผู้สร้าง", "visibility": "การมองเห็น", "total": "ทั้งหมด {{count}}", "loading": "กำลังโหลด...", "engagement": "การมีส่วนร่วม", "likes": "ชอบ", "dislikes": "ไม่ชอบ", "views": "การดู", "comments": "ความคิดเห็น", "price": "ราคา", "content": "เนื้อหา", "goBack": "ย้อนกลับ", "public": "สาธารณะ", "publicDesc": "ใครก็ดูได้", "private": "ส่วนตัว", "privateDesc": "เฉพาะเจ้าเท่านั้นดูได้" }
 }

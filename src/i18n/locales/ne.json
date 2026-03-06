@@ -555,5 +555,6 @@
     "inactive": "निष्क्रिय",
     "delete": "मेट्नुहोस्"
   },
-  "sidebar": { "talkOfTheTown": "शहरको चर्चा", "nothingTrending": "अहिले केही ट्रेन्डिङ छैन" }
+  "sidebar": { "talkOfTheTown": "शहरको चर्चा", "nothingTrending": "अहिले केही ट्रेन्डिङ छैन", "post": "पोस्ट", "logOut": "लग आउट", "logIn": "लग इन" }
+  ,"postInfo": { "title": "पोस्ट जानकारी", "tokenId": "टोकन ID", "mintedOn": "सिर्जना गरिएको", "creator": "सिर्जनाकर्ता", "visibility": "दृश्यता", "total": "जम्मा {{count}}", "loading": "लोड हुँदैछ...", "engagement": "सहभागिता", "likes": "मनपर्‍यो", "dislikes": "मनपरेन", "views": "हेरिएको", "comments": "टिप्पणीहरू", "price": "मूल्य", "content": "सामग्री", "goBack": "फिर्ता", "public": "सार्वजनिक", "publicDesc": "जो कोहीले हेर्न सक्छ", "private": "निजी", "privateDesc": "तपाईं मात्र हेर्न सक्नुहुन्छ" }
 }
