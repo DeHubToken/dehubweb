@@ -830,7 +830,7 @@ export default function PostInfoPage() {
                 <MessageCircle className="w-5 h-5 text-white" />
                 <div>
                   <p className="text-lg font-bold text-white">{comments.toLocaleString()}</p>
-                  <p className="text-xs text-white/60">Comments</p>
+                  <p className="text-xs text-white/60">{t('postInfo.comments')}</p>
                 </div>
               </div>
 
