@@ -74,24 +74,24 @@ export function MobileBottomNav() {
     const alreadySeen = localStorage.getItem(SCROLL_HINT_KEY);
     if (alreadySeen) return;
 
-    // Fire hint immediately so it's the first thing users see
+    // Fire hint immediately — scroll all the way right then snap back
     const showTimer = setTimeout(() => {
       setShowScrollHint(true);
 
       const container = scrollRef.current;
       if (!container) return;
 
-      // Animate: scroll right then back
-      const scrollDistance = 60;
-      container.scrollTo({ left: scrollDistance, behavior: 'smooth' });
+      // Scroll to the very end
+      container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
 
       const backTimer = setTimeout(() => {
+        // Snap back to start
         container.scrollTo({ left: 0, behavior: 'smooth' });
         setTimeout(() => {
           setShowScrollHint(false);
           localStorage.setItem(SCROLL_HINT_KEY, 'true');
-        }, 500);
-      }, 800);
+        }, 400);
+      }, 500);
 
       return () => clearTimeout(backTimer);
     }, 300);
