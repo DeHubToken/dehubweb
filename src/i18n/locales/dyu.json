@@ -1051,6 +1051,8 @@
   },
   "sidebar": {
     "talkOfTheTown": "Kɔrɔbɔ",
-    "nothingTrending": "Kɔrɔbɔ bɔ"
-  }
+    "nothingTrending": "Kɔrɔbɔ bɔ",
+    "post": "Post", "logOut": "Bɔ", "logIn": "Don"
+  },
+  "postInfo": { "title": "Post kunnafoni", "tokenId": "Token ID", "mintedOn": "Dabɔ", "transactionHash": "Transaction hash", "viewOnExplorer": "Lajɛ {{explorer}} kan", "creator": "Dabɔla", "visibility": "Yefulen", "fractionOwnership": "Yɛrɛ tigi", "total": "Bɛɛ {{count}}", "distribution": "Tila", "loading": "Ka don...", "owner": "{{count}} tigi", "owner_other": "{{count}} tigi", "engagement": "Engagement", "likeRatio": "Like ratio", "likes": "Likes", "dislikes": "Dislikes", "views": "Views", "comments": "Comments", "totalTipsCreator": "Tips bɛɛ (Dabɔla)", "payPerView": "Sara ka lajɛ", "ppvSales": "PPV sales", "price": "Sɔngɔ", "totalRevenue": "Revenue bɛɛ", "content": "Kɔnɔ", "uploadProcessing": "Upload processing", "processingDesc": "Post bɛ se ka kɛ.", "processingNote": "Post metadata bɛ mara blockchain kan.", "goBack": "Kɔsegi", "streamInfo": "Stream info", "currentlyLive": "Live", "streamOffline": "Stream tɛ", "totalViews": "{{count}} views bɛɛ", "public": "Bɛɛ", "publicDesc": "Mɔgɔ bɛɛ bɛ se ka post nin ye", "unlisted": "Unlisted", "unlistedDesc": "Link tigiw dɔrɔn", "private": "Gundo", "privateDesc": "I dɔrɔn bɛ se ka post nin ye" }
 }
