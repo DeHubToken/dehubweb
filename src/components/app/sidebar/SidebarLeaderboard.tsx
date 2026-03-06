@@ -90,10 +90,6 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
     })
     .slice(0, 50);
 
-  // Live avatar enrichment
-  const visibleAccounts = useMemo(() => entries.map(e => e.account), [entries]);
-  useLeaderboardAvatars(visibleAccounts);
-  const getAvatarOverride = useAvatarOverrides();
 
   if (!isLoading && entries.length === 0) {
     return (
