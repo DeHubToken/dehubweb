@@ -10,7 +10,7 @@ import {
   type LiveChatMessage,
   type LiveChatUserProfile,
 } from '@/lib/api/dehub';
-import { getSocket, joinRoom, leaveRoom, emitSendMessage, onLiveChatMessage, requestMessageHistory, debugSocketEvents } from '@/lib/api/dehub/socket';
+import { getSocket, joinRoom, leaveRoom, emitSendMessage, onLiveChatMessage, onRoomJoined, onMessageDeleted, onUserBanned, onUserUnbanned, debugSocketEvents } from '@/lib/api/dehub/socket';
 import { useAuth } from '@/contexts/AuthContext';
 
 /** Shape of a livechat message used internally in the UI */
@@ -85,7 +85,7 @@ function deduplicateMessages(msgs: SupabaseLiveChatMessage[]): SupabaseLiveChatM
   );
 }
 
-/** Normalize socket message to our format (handles various server shapes) */
+/** Normalize socket message to our format */
 function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChatMessage | null {
   const m = msg as Record<string, unknown>;
   if (!m || typeof m !== 'object') return null;
@@ -108,27 +108,29 @@ function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChatMessage
 }
 
 /**
- * Livechat messages via Socket.IO (like mobile app).
+ * Livechat messages hook.
  *
  * Flow:
- * 1. Initial load: REST GET for history (one-time)
- * 2. Real-time: socket joinRoom + onLiveChatMessage (no polling)
- * 3. Send: socket emitSendMessage
- * 4. Fallback: REST send if socket not connected
+ * 1. Connect to /livechat namespace socket
+ * 2. On livechat:roomJoined → receive initial messages
+ * 3. On livechat:newMessage → append new messages
+ * 4. Fallback: REST GET for history
+ * 5. Send: socket livechat:sendMessage
  */
 export function useLiveChatMessages(roomId: string | null) {
   const [messages, setMessages] = useState<SupabaseLiveChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [isBanned, setIsBanned] = useState(false);
   const { isAuthenticated, user, walletAddress } = useAuth();
+  const initialLoadDone = useRef(false);
 
-  // Try REST first, then fall back to socket history
+  // Fetch messages via REST API as fallback/initial load
   const fetchMessages = useCallback(async (showLoading = false) => {
     if (!roomId) return;
     if (showLoading) setIsLoading(true);
     try {
-      // Try REST API first
       const apiMessages = await fetchApiMessages(roomId, { limit: 200 });
       if (apiMessages.length > 0) {
         const mapped = apiMessages.map((m) => apiMsgToLocal(m, roomId));
@@ -136,26 +138,9 @@ export function useLiveChatMessages(roomId: string | null) {
           const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
           return deduplicateMessages([...mapped, ...optimistic]);
         });
-        setIsLoading(false);
-        return;
-      }
-    } catch {
-      // REST failed, try socket history
-    }
-    
-    try {
-      const socketMsgs = await requestMessageHistory(roomId, 200);
-      if (socketMsgs.length > 0) {
-        const mapped = socketMsgs
-          .map((m) => socketMsgToLocal(m, roomId))
-          .filter(Boolean) as SupabaseLiveChatMessage[];
-        setMessages((prev) => {
-          const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
-          return deduplicateMessages([...mapped, ...optimistic]);
-        });
       }
     } catch (err) {
-      console.error('[LiveChat] Socket history also failed:', err);
+      console.error('[LiveChat] REST messages fetch failed:', err);
     } finally {
       setIsLoading(false);
     }
@@ -168,39 +153,90 @@ export function useLiveChatMessages(roomId: string | null) {
       return;
     }
 
-    // Enable debug logging to discover correct events
+    initialLoadDone.current = false;
+
+    // Enable debug logging
     const unsubDebug = debugSocketEvents();
 
-    // 1. Initial load
-    fetchMessages(true);
-
-    // 2. Join room via socket
-    joinRoom(roomId);
+    // Connect and join
     const socket = getSocket();
     setIsConnected(socket.connected);
-    socket.on('connect', () => setIsConnected(true));
-    socket.on('disconnect', () => setIsConnected(false));
-    socket.on('connect_error', (err) => {
-      toast.error(`Chat socket error: ${err.message}`);
+
+    const onConnect = () => {
+      setIsConnected(true);
+      // joinRoom is auto-called via pong handler in socket.ts,
+      // but also call explicitly in case we missed the pong
+      joinRoom(roomId);
+    };
+    const onDisconnect = () => setIsConnected(false);
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+
+    // If already connected, join immediately
+    if (socket.connected) {
+      joinRoom(roomId);
+    }
+
+    // Handle roomJoined — server sends initial messages
+    const unsubJoined = onRoomJoined((data) => {
+      console.log('[LiveChat] Room joined, messages:', data.messages?.length, 'banned:', data.isBanned);
+      setIsBanned(data.isBanned || false);
+      
+      if (data.messages && Array.isArray(data.messages)) {
+        const mapped = data.messages
+          .map((m: unknown) => socketMsgToLocal(m, roomId))
+          .filter(Boolean) as SupabaseLiveChatMessage[];
+        if (mapped.length > 0) {
+          setMessages(mapped);
+          initialLoadDone.current = true;
+        }
+      }
+      setIsLoading(false);
     });
-    // 3. Listen for new messages via socket
-    const unsub = onLiveChatMessage((msg) => {
-      const m = msg as Record<string, unknown>;
-      const msgRoomId = (m.roomId ?? m.room_id ?? '') as string;
-      if (msgRoomId && msgRoomId !== roomId) return;
+
+    // Listen for new messages
+    const unsubMsg = onLiveChatMessage((msg) => {
       const local = socketMsgToLocal(msg, roomId);
       if (local) {
         setMessages((prev) => deduplicateMessages([...prev.filter((x) => x.id !== local.id), local]));
       }
     });
 
+    // Listen for deleted messages
+    const unsubDeleted = onMessageDeleted((data) => {
+      setMessages((prev) => prev.filter((m) => m.id !== data.messageId));
+    });
+
+    // Listen for ban/unban
+    const unsubBanned = onUserBanned((data) => {
+      setIsBanned(true);
+      toast.error(data.message || 'You have been banned from chat');
+    });
+    const unsubUnbanned = onUserUnbanned((data) => {
+      setIsBanned(false);
+      toast.success(data.message || 'You have been unbanned');
+    });
+
+    // Fallback: if roomJoined doesn't fire within 3s, try REST
+    const fallbackTimer = setTimeout(() => {
+      if (!initialLoadDone.current) {
+        console.log('[LiveChat] roomJoined timeout, falling back to REST');
+        fetchMessages(true);
+      }
+    }, 3000);
+
     return () => {
+      clearTimeout(fallbackTimer);
       leaveRoom(roomId);
-      unsub();
+      unsubJoined();
+      unsubMsg();
+      unsubDeleted();
+      unsubBanned();
+      unsubUnbanned();
       unsubDebug();
-      socket.off('connect');
-      socket.off('disconnect');
-      socket.off('connect_error');
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
       setIsConnected(false);
     };
   }, [roomId, fetchMessages]);
@@ -212,6 +248,10 @@ export function useLiveChatMessages(roomId: string | null) {
       imageUrl?: string
     ) => {
       if (!roomId || !isAuthenticated || !walletAddress) return;
+      if (isBanned) {
+        toast.error('You are banned from chat');
+        return;
+      }
       setIsSending(true);
 
       const optimisticId = `temp-${Date.now()}`;
@@ -233,7 +273,6 @@ export function useLiveChatMessages(roomId: string | null) {
       try {
         const socket = getSocket();
         if (!socket.connected) {
-          toast.info(`Socket not connected, waiting... (transport: ${(socket as any).io?.engine?.transport?.name || 'unknown'})`);
           // Wait briefly for connection
           await new Promise<void>((resolve, reject) => {
             const timeout = setTimeout(() => reject(new Error('Socket connection timeout')), 5000);
@@ -241,23 +280,23 @@ export function useLiveChatMessages(roomId: string | null) {
             if (socket.connected) { clearTimeout(timeout); resolve(); }
           });
         }
-        toast.info(`Sending via socket (connected: ${socket.connected}, id: ${socket.id})`);
-        emitSendMessage({ roomId, content, messageType: type, imageUrl });
-        // Refresh messages after a delay to pick up the server-confirmed message
-        setTimeout(() => fetchMessages(false), 2000);
+
+        // Map 'image'/'voice' to the API-supported 'media' type
+        const apiType = type === 'image' || type === 'voice' ? 'media' : type;
+        emitSendMessage({ roomId, content, messageType: apiType, imageUrl });
       } catch (err: any) {
         setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
-        toast.error(`LiveChat send failed: ${err?.message || 'Unknown error'}`);
+        toast.error(`Failed to send: ${err?.message || 'Unknown error'}`);
         console.error('[LiveChat] Failed to send message:', err);
         throw err;
       } finally {
         setIsSending(false);
       }
     },
-    [roomId, isAuthenticated, walletAddress, user, fetchMessages]
+    [roomId, isAuthenticated, walletAddress, user, isBanned]
   );
 
-  return { messages, isLoading, isSending, isConnected, send, refetch: () => fetchMessages(false) };
+  return { messages, isLoading, isSending, isConnected, isBanned, send, refetch: () => fetchMessages(false) };
 }
 
 /**

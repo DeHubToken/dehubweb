@@ -70,7 +70,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [rooms, selectedRoomId]);
 
-  const { messages: apiMessages, isLoading: messagesLoading, isSending, send, refetch } = useLiveChatMessages(selectedRoomId);
+  const { messages: apiMessages, isLoading: messagesLoading, isSending, isBanned, send, refetch } = useLiveChatMessages(selectedRoomId);
 
   // Fetch full room details (description, moderators, messageCount) for the selected room
   const { room: roomDetails } = useLiveChatRoomDetails(selectedRoomId);

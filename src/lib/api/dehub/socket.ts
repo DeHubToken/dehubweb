@@ -1,18 +1,8 @@
 /**
- * Shared DeHub Socket.io singleton.
- *
- * - One persistent connection per session (lazy-created on first use)
- * - Auth via JWT Bearer token; re-connects automatically when token changes
- * - Rooms joined/left explicitly by callers
- *
- * Server events we listen for (livechat):
- *   "message" | "newMessage" | "chatMessage"  — new message in a room
- *   "roomUsers" | "onlineUsers" | "presence"  — online user list update
- *
- * Client events we emit:
- *   "joinRoom"    { roomId }
- *   "leaveRoom"   { roomId }
- *   "sendMessage" { roomId, content, messageType, ... }
+ * DeHub LiveChat Socket.IO client
+ * 
+ * Connects to /livechat namespace with JWT auth.
+ * Events prefixed with "livechat:" per API spec.
  */
 
 import { io, Socket } from 'socket.io-client';
@@ -21,12 +11,7 @@ import { DEHUB_API_BASE, getAuthToken } from './core';
 let socket: Socket | null = null;
 let currentToken: string | null = null;
 
-function getWalletAddress(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem('dehub_wallet');
-}
-
-/** Lazily create (or reuse) the socket connection. */
+/** Get or create the livechat socket connection */
 export function getSocket(): Socket {
   const token = getAuthToken();
 
@@ -37,19 +22,9 @@ export function getSocket(): Socket {
   }
 
   if (!socket) {
-    const address = getWalletAddress();
-    const handshakeAuth: Record<string, string> = {};
-    if (token) handshakeAuth.token = `Bearer ${token}`;
-    if (address) handshakeAuth.address = address.toLowerCase();
-    handshakeAuth.clientType = 'web';
-    handshakeAuth.platform = 'web';
-
-    socket = io(DEHUB_API_BASE, {
-      auth: Object.keys(handshakeAuth).length ? handshakeAuth : undefined,
-      query: handshakeAuth,
-      path: '/socket.io',
-      transports: ['polling'],
-      upgrade: false,
+    socket = io(`${DEHUB_API_BASE}/livechat`, {
+      auth: { token: token || undefined },
+      transports: ['websocket'],
       forceNew: true,
       autoConnect: true,
       reconnection: true,
@@ -57,173 +32,180 @@ export function getSocket(): Socket {
       reconnectionDelayMax: 5000,
       reconnectionAttempts: 20,
       timeout: 20000,
-      extraHeaders: { 'X-Client-Type': 'web', 'X-Platform': 'web' },
     });
 
     currentToken = token;
 
     socket.on('connect', () => {
-      console.log('[Socket] Connected:', socket?.id);
+      console.log('[LiveChat Socket] Connected:', socket?.id);
     });
 
     socket.on('disconnect', (reason) => {
-      console.log('[Socket] Disconnected:', reason);
+      console.log('[LiveChat Socket] Disconnected:', reason);
     });
 
     socket.on('connect_error', (err) => {
-      console.warn('[Socket] Connection error:', err.message);
+      console.warn('[LiveChat Socket] Connection error:', err.message);
     });
 
-    socket.on('sendMessageResponse', (data: unknown) => {
-      console.log('[Socket] sendMessageResponse:', data);
+    // Handle initial pong with connection info
+    socket.on('livechat:pong', (data: any) => {
+      console.log('[LiveChat Socket] Pong:', data);
+      if (data?.connected) {
+        // Auto-join room on connection
+        socket?.emit('livechat:joinRoom');
+      }
     });
 
-    socket.on('error', (data: unknown) => {
-      console.error('[Socket] Server error event:', data);
-    });
-
-    socket.on('sendMessageError', (err: unknown) => {
-      console.error('[Socket] sendMessageError event:', err);
+    socket.on('livechat:error', (data: any) => {
+      console.error('[LiveChat Socket] Error:', data);
     });
   }
 
   return socket;
 }
 
-/** Join the global livechat room. */
-export function joinRoom(roomId: string) {
+/** Join the global livechat room */
+export function joinRoom(_roomId?: string) {
   const s = getSocket();
-  console.log('[Socket] Joining room:', roomId);
-  s.emit('joinRoom', { roomId });
-  s.emit('join-room', { roomId });
+  console.log('[LiveChat Socket] Joining room');
+  s.emit('livechat:joinRoom');
 }
 
-/** Leave a livechat room. */
-export function leaveRoom(roomId: string) {
+/** Leave the livechat room */
+export function leaveRoom(_roomId?: string) {
   if (socket) {
-    socket.emit('leaveRoom', { roomId });
-    socket.emit('leave-room', { roomId });
+    socket.emit('livechat:leaveRoom');
   }
 }
 
-/** Send a livechat message via socket. */
-export async function emitSendMessage(payload: {
-  roomId: string;
+/** Send a livechat message */
+export function emitSendMessage(payload: {
+  roomId?: string;
   content: string;
-  messageType?: 'text' | 'image' | 'gif' | 'voice';
+  messageType?: 'text' | 'media' | 'gif';
   imageUrl?: string;
+  replyTo?: string;
+  mentions?: Array<{ address: string; username?: string }>;
 }) {
-  const address = typeof window !== 'undefined' ? localStorage.getItem('dehub_wallet') : null;
-  const token = getAuthToken();
-  const fullPayload = {
-    roomId: payload.roomId,
+  const s = getSocket();
+
+  const sendPayload: Record<string, unknown> = {
     content: payload.content,
-    message: payload.content,
-    text: payload.content,
     messageType: payload.messageType || 'text',
-    type: payload.messageType || 'text',
-    ...(payload.imageUrl ? { imageUrl: payload.imageUrl } : {}),
-    ...(address ? { address: address.toLowerCase(), sender: address.toLowerCase(), senderAddress: address.toLowerCase() } : {}),
-    ...(token ? { token: `Bearer ${token}` } : {}),
   };
-  
-  const s = getSocket();
-  
-  // Try emitWithAck on sendMessage to get server response
-  const eventNames = ['sendMessage', 'send-message', 'chatMessage', 'chat-message', 'message', 'new-message'];
-  
-  for (const evt of eventNames) {
-    try {
-      const response = await s.timeout(3000).emitWithAck(evt, fullPayload);
-      console.log(`[Socket] "${evt}" response:`, response);
-      return;
-    } catch (err: any) {
-      console.log(`[Socket] "${evt}" - no ack (${err?.message || 'timeout'})`);
-    }
+
+  if (payload.replyTo) sendPayload.replyTo = payload.replyTo;
+  if (payload.mentions?.length) sendPayload.mentions = payload.mentions;
+  if (payload.imageUrl) {
+    sendPayload.media = [{
+      url: payload.imageUrl,
+      type: 'image',
+    }];
   }
-  
-  console.warn('[Socket] No event got a server ack.');
+
+  console.log('[LiveChat Socket] Sending message:', sendPayload);
+  s.emit('livechat:sendMessage', sendPayload);
 }
 
-/** Request message history via socket. Returns promise with messages. */
-export function requestMessageHistory(roomId: string, limit = 200): Promise<unknown[]> {
-  const s = getSocket();
-  return new Promise((resolve) => {
-    let resolved = false;
-    const timeout = setTimeout(() => {
-      if (!resolved) {
-        resolved = true;
-        console.warn('[Socket] Message history request timed out');
-        resolve([]);
-      }
-    }, 5000);
-
-    const historyEvents = ['messageHistory', 'chatHistory', 'messages', 'roomMessages', 'history', 'previousMessages'];
-    const cleanup = () => {
-      for (const evt of historyEvents) {
-        s.off(evt, handler);
-      }
-    };
-    const handler = (data: unknown) => {
-      if (resolved) return;
-      resolved = true;
-      clearTimeout(timeout);
-      cleanup();
-      const msgs = Array.isArray(data) ? data : 
-        (data && typeof data === 'object' && 'messages' in (data as any)) ? (data as any).messages :
-        (data && typeof data === 'object' && 'result' in (data as any)) ? (data as any).result :
-        (data && typeof data === 'object' && 'data' in (data as any)) ? (data as any).data :
-        [];
-      resolve(Array.isArray(msgs) ? msgs : []);
-    };
-    for (const evt of historyEvents) {
-      s.on(evt, handler);
-    }
-
-    s.emit('getMessages', { roomId, limit });
-    s.emit('getChatHistory', { roomId, limit });
-    s.emit('messageHistory', { roomId, limit });
-    s.emit('fetchMessages', { roomId, limit });
-  });
-}
-
-/** Subscribe to incoming livechat messages. Returns unsubscribe fn. */
+/** Subscribe to new messages. Returns unsubscribe fn. */
 export function onLiveChatMessage(cb: (msg: unknown) => void): () => void {
   const s = getSocket();
   const handler = (data: unknown) => cb(data);
-  for (const evt of MSG_EVENTS) {
-    s.on(evt, handler);
-  }
+  s.on('livechat:newMessage', handler);
   return () => {
-    for (const evt of MSG_EVENTS) {
-      s.off(evt, handler);
-    }
+    s.off('livechat:newMessage', handler);
   };
+}
+
+/** Subscribe to room joined event (initial data). Returns unsubscribe fn. */
+export function onRoomJoined(cb: (data: {
+  room: unknown;
+  messages: unknown[];
+  yourUser: unknown;
+  isBanned: boolean;
+  canSendMessages: boolean;
+}) => void): () => void {
+  const s = getSocket();
+  s.on('livechat:roomJoined', cb);
+  return () => { s.off('livechat:roomJoined', cb); };
+}
+
+/** Subscribe to message deleted events */
+export function onMessageDeleted(cb: (data: { messageId: string }) => void): () => void {
+  const s = getSocket();
+  s.on('livechat:messageDeleted', cb);
+  return () => { s.off('livechat:messageDeleted', cb); };
+}
+
+/** Subscribe to reaction updates */
+export function onReactionUpdated(cb: (data: unknown) => void): () => void {
+  const s = getSocket();
+  s.on('livechat:reactionUpdated', cb);
+  return () => { s.off('livechat:reactionUpdated', cb); };
+}
+
+/** Subscribe to ban/unban events */
+export function onUserBanned(cb: (data: { message: string }) => void): () => void {
+  const s = getSocket();
+  s.on('livechat:userBanned', cb);
+  return () => { s.off('livechat:userBanned', cb); };
+}
+
+export function onUserUnbanned(cb: (data: { message: string }) => void): () => void {
+  const s = getSocket();
+  s.on('livechat:userUnbanned', cb);
+  return () => { s.off('livechat:userUnbanned', cb); };
+}
+
+/** Add/remove reactions */
+export function emitAddReaction(messageId: string, emoji: string) {
+  const s = getSocket();
+  s.emit('livechat:addReaction', { messageId, emoji });
+}
+
+export function emitRemoveReaction(messageId: string, emoji: string) {
+  const s = getSocket();
+  s.emit('livechat:removeReaction', { messageId, emoji });
+}
+
+/** Typing indicator */
+export function emitTyping(isTyping: boolean) {
+  const s = getSocket();
+  s.emit('livechat:typing', { isTyping });
+}
+
+/** Ping keep-alive */
+export function emitPing() {
+  const s = getSocket();
+  s.emit('livechat:ping');
 }
 
 /** Subscribe to all socket events for debugging. Returns unsubscribe fn. */
 export function debugSocketEvents(): () => void {
   const s = getSocket();
   s.onAny((eventName: string, ...args: unknown[]) => {
-    console.log(`[Socket DEBUG] Event: "${eventName}"`, args.length > 0 ? args[0] : '');
+    console.log(`[LiveChat DEBUG] Event: "${eventName}"`, args.length > 0 ? args[0] : '');
   });
-  return () => {
-    s.offAny();
-  };
+  return () => { s.offAny(); };
 }
 
-/** Disconnect and clear the singleton (e.g. on logout). */
+/** Disconnect and clear the singleton */
 export function disconnectSocket() {
   if (socket) {
     socket.disconnect();
     socket = null;
-    console.log('[Socket] Disconnected and cleared');
+    console.log('[LiveChat Socket] Disconnected and cleared');
   }
   currentToken = null;
 }
 
-/** Possible server-side event names for incoming messages. */
-export const MSG_EVENTS = ['message', 'newMessage', 'chatMessage', 'roomMessage', 'chat', 'msg'] as const;
+/** Request message history via REST (socket doesn't have a history event) */
+export function requestMessageHistory(_roomId: string, _limit?: number): Promise<unknown[]> {
+  // History is fetched via REST API, not socket
+  return Promise.resolve([]);
+}
 
-/** Possible server-side event names for presence/online-users updates. */
-export const PRESENCE_EVENTS = ['roomUsers', 'onlineUsers', 'presence', 'userList'] as const;
+// Legacy exports for compatibility
+export const MSG_EVENTS = ['livechat:newMessage'] as const;
+export const PRESENCE_EVENTS = ['livechat:userJoined', 'livechat:userLeft'] as const;
