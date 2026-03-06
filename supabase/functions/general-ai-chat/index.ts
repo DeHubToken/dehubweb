@@ -637,6 +637,7 @@ IMPORTANT FORMATTING RULES:
 
     let response: Response;
     try {
+      console.log(`[AI Request] model=${modelName} endpoint=${apiEndpoint} msgCount=${apiMessages.length}`);
       response = await fetch(apiEndpoint, {
         method: 'POST',
         headers: {
@@ -653,12 +654,13 @@ IMPORTANT FORMATTING RULES:
     } catch (fetchError) {
       clearTimeout(timeoutId);
       if (fetchError instanceof DOMException && fetchError.name === 'AbortError') {
-        console.error('AI API request timed out after 25s');
+        console.error('AI API request timed out after 45s');
         return new Response(
-          JSON.stringify({ error: 'Request timed out. Please try again.' }),
+          JSON.stringify({ error: 'Request timed out after 45s. The AI service may be overloaded. Please try again.', errorCode: 'TIMEOUT' }),
           { status: 504, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
+      console.error('AI fetch error:', fetchError);
       throw fetchError;
     }
     clearTimeout(timeoutId);
