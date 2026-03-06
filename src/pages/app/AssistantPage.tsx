@@ -462,7 +462,7 @@ export default function AssistantPage() {
 
       // Show fallback toast if Grok was requested but not available
       if (data.fallbackUsed) {
-        toast.info('Using DeHub AI - Grok API key not configured');
+        toast.info(t('assistant.fallbackGrokNotConfigured'));
       }
 
       const responseText = data.response || t('assistant.noResponse');
@@ -484,8 +484,8 @@ export default function AssistantPage() {
     } catch (error: any) {
       console.error('AI chat error (voice):', error);
       const errorCode = error?.errorCode || 'UNKNOWN';
-      let msg = errorCode === 'RATE_LIMIT' ? '⏳ Rate limit reached. Try again shortly.'
-        : errorCode === 'TIMEOUT' ? '⏱️ Request timed out. Please try again.'
+      let msg = errorCode === 'RATE_LIMIT' ? t('assistant.errorRateLimit')
+        : errorCode === 'TIMEOUT' ? t('assistant.errorTimeout')
         : `❌ ${error?.message || t('assistant.errorGeneric')}`;
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
@@ -644,11 +644,11 @@ export default function AssistantPage() {
         // Update message with error
         setMessages(prev => prev.map(m => 
           m.id === messageId 
-            ? { ...m, content: `Video generation failed: ${data.error || 'Unknown error'}`, isVideoGenerating: false }
+            ? { ...m, content: t('assistant.videoGenFailedDetail', { error: data.error || 'Unknown error' }), isVideoGenerating: false }
             : m
         ));
         setIsVideoLoading(false);
-        toast.error('Video generation failed');
+        toast.error(t('assistant.errorVideoGenFailed'));
       }
       // If still processing, keep polling
     } catch (err) {
@@ -716,10 +716,10 @@ export default function AssistantPage() {
         pollVideoStatus(data.predictionId, messageId);
       }, 5000);
 
-      toast.success('Payment successful! Generating your video...');
+      toast.success(t('assistant.paymentSuccessGenerating'));
     } catch (err) {
       console.error('Video generation error:', err);
-      toast.error('Failed to start video generation');
+      toast.error(t('assistant.errorVideoGenStart'));
       setIsVideoLoading(false);
     }
 
@@ -792,10 +792,10 @@ export default function AssistantPage() {
 
       setMessages(prev => [...prev, assistantMessage]);
       queueMessage(assistantMessage);
-      toast.success('Image generated!');
+      toast.success(t('assistant.imageGenerated'));
     } catch (err) {
       console.error('Image generation error:', err);
-      toast.error('Failed to generate image');
+      toast.error(t('assistant.errorImageGenFailed'));
     } finally {
       setIsImageLoading(false);
       setPendingImageRequest(null);
@@ -959,7 +959,7 @@ export default function AssistantPage() {
 
         // Show fallback toast if Grok was requested but not available
         if (data.fallbackUsed) {
-          toast.info('Using DeHub AI - Grok API key not configured');
+          toast.info(t('assistant.fallbackGrokNotConfigured'));
         }
 
         // Check if this is a transaction simulation response
@@ -1001,19 +1001,19 @@ export default function AssistantPage() {
       let userErrorMessage: string;
       switch (errorCode) {
         case 'RATE_LIMIT':
-          userErrorMessage = '⏳ Rate limit reached. Please wait a moment and try again.';
+          userErrorMessage = t('assistant.errorRateLimit');
           break;
         case 'CREDITS_EXHAUSTED':
-          userErrorMessage = '💳 AI credits exhausted. Please try again later.';
+          userErrorMessage = t('assistant.errorCreditsExhausted');
           break;
         case 'TIMEOUT':
-          userErrorMessage = '⏱️ Request timed out. The AI service may be busy — please try again.';
+          userErrorMessage = t('assistant.errorTimeout');
           break;
         case 'UPSTREAM_ERROR':
-          userErrorMessage = `🔧 AI service error (${statusCode || 'unknown'}). The AI provider is having issues. Please try again in a moment.`;
+          userErrorMessage = t('assistant.errorUpstream', { status: statusCode || 'unknown' });
           break;
         default:
-          userErrorMessage = `❌ Something went wrong: ${error?.message || 'Unknown error'}. Please try again.`;
+          userErrorMessage = t('assistant.errorUnknown', { message: error?.message || 'Unknown error' });
           break;
       }
       
