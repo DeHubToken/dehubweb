@@ -977,7 +977,7 @@ IMPORTANT FORMATTING RULES:
         body: JSON.stringify({
           model: modelName,
           messages: apiMessages,
-          max_completion_tokens: requiresPostAnalysis(userQuery) ? 3000 : 1500,
+          max_completion_tokens: (requiresPostAnalysis(userQuery) || requiresOtherUserLookup(userQuery)) ? 3000 : 1500,
         }),
         signal: controller.signal,
       });
