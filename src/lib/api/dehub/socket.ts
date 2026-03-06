@@ -19,7 +19,6 @@ import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
 
 let socket: Socket | null = null;
-let chatSocket: Socket | null = null;
 let currentToken: string | null = null;
 
 function getWalletAddress(): string | null {
@@ -38,7 +37,6 @@ export function getSocket(): Socket {
   }
 
   if (!socket) {
-    currentToken = token;
     const address = getWalletAddress();
     const handshakeAuth: Record<string, string> = {};
     if (token) handshakeAuth.token = `Bearer ${token}`;
@@ -59,14 +57,13 @@ export function getSocket(): Socket {
       reconnectionDelayMax: 5000,
       reconnectionAttempts: 20,
       timeout: 20000,
-      extraHeaders: {
-        'X-Client-Type': 'web',
-        'X-Platform': 'web',
-      },
+      extraHeaders: { 'X-Client-Type': 'web', 'X-Platform': 'web' },
     });
 
+    currentToken = token;
+
     socket.on('connect', () => {
-      console.log('[Socket] Connected to DeHub', socket?.id);
+      console.log('[Socket] Connected:', socket?.id);
     });
 
     socket.on('disconnect', (reason) => {
@@ -77,16 +74,14 @@ export function getSocket(): Socket {
       console.warn('[Socket] Connection error:', err.message);
     });
 
-    // Log any error events from the server
-    socket.on('error', (err: unknown) => {
-      console.error('[Socket] Server error event:', err);
+    socket.on('sendMessageResponse', (data: unknown) => {
+      console.log('[Socket] sendMessageResponse:', data);
     });
-    socket.on('exception', (err: unknown) => {
-      console.error('[Socket] Server exception event:', err);
+
+    socket.on('error', (data: unknown) => {
+      console.error('[Socket] Server error event:', data);
     });
-    socket.on('messageError', (err: unknown) => {
-      console.error('[Socket] messageError event:', err);
-    });
+
     socket.on('sendMessageError', (err: unknown) => {
       console.error('[Socket] sendMessageError event:', err);
     });
@@ -95,69 +90,12 @@ export function getSocket(): Socket {
   return socket;
 }
 
-/** Get or create a /chat namespace socket for livechat messaging. */
-function getChatSocket(): Socket {
-  const token = getAuthToken();
-  if (chatSocket && currentToken !== token) {
-    chatSocket.disconnect();
-    chatSocket = null;
-  }
-  if (!chatSocket) {
-    const address = getWalletAddress();
-    const handshakeAuth: Record<string, string> = {};
-    if (token) handshakeAuth.token = `Bearer ${token}`;
-    if (address) handshakeAuth.address = address.toLowerCase();
-    handshakeAuth.clientType = 'web';
-    handshakeAuth.platform = 'web';
-
-    chatSocket = io(`${DEHUB_API_BASE}/chat`, {
-      auth: Object.keys(handshakeAuth).length ? handshakeAuth : undefined,
-      query: handshakeAuth,
-      path: '/socket.io',
-      transports: ['polling'],
-      upgrade: false,
-      forceNew: true,
-      autoConnect: true,
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      reconnectionAttempts: 20,
-      timeout: 20000,
-      extraHeaders: { 'X-Client-Type': 'web', 'X-Platform': 'web' },
-    });
-
-    chatSocket.on('connect', () => {
-      console.log('[ChatSocket /chat] Connected', chatSocket?.id);
-      import('sonner').then(({ toast }) => toast.success(`Chat namespace connected: ${chatSocket?.id}`));
-    });
-    chatSocket.on('disconnect', (reason) => console.log('[ChatSocket /chat] Disconnected:', reason));
-    chatSocket.on('connect_error', (err) => {
-      console.warn('[ChatSocket /chat] Connection error:', err.message);
-      import('sonner').then(({ toast }) => toast.error(`/chat namespace error: ${err.message}`));
-    });
-    chatSocket.onAny((eventName: string, ...args: unknown[]) => {
-      console.log(`[ChatSocket /chat DEBUG] Event: "${eventName}"`, args.length > 0 ? args[0] : '');
-    });
-  }
-  return chatSocket;
-}
-
 /** Join the global livechat room. */
 export function joinRoom(roomId: string) {
-  // Join on both root and /chat namespace
   const s = getSocket();
   console.log('[Socket] Joining room:', roomId);
   s.emit('joinRoom', { roomId });
   s.emit('join-room', { roomId });
-  
-  // Also join on /chat namespace
-  try {
-    const cs = getChatSocket();
-    cs.emit('joinRoom', { roomId });
-    cs.emit('join-room', { roomId });
-  } catch (e) {
-    console.warn('[ChatSocket] Failed to join room:', e);
-  }
 }
 
 /** Leave a livechat room. */
@@ -165,10 +103,6 @@ export function leaveRoom(roomId: string) {
   if (socket) {
     socket.emit('leaveRoom', { roomId });
     socket.emit('leave-room', { roomId });
-  }
-  if (chatSocket) {
-    chatSocket.emit('leaveRoom', { roomId });
-    chatSocket.emit('leave-room', { roomId });
   }
 }
 
@@ -194,26 +128,21 @@ export async function emitSendMessage(payload: {
   };
   
   const s = getSocket();
-  const { toast } = await import('sonner');
   
   // Try emitWithAck on sendMessage to get server response
   const eventNames = ['sendMessage', 'send-message', 'chatMessage', 'chat-message', 'message', 'new-message'];
   
   for (const evt of eventNames) {
     try {
-      // Use timeout version of emitWithAck
       const response = await s.timeout(3000).emitWithAck(evt, fullPayload);
-      toast.info(`"${evt}" response: ${JSON.stringify(response)?.substring(0, 200)}`);
       console.log(`[Socket] "${evt}" response:`, response);
-      // If we got a response, this is likely the right event
       return;
     } catch (err: any) {
-      // timeout means no ack handler on server for this event - that's expected
       console.log(`[Socket] "${evt}" - no ack (${err?.message || 'timeout'})`);
     }
   }
   
-  toast.warning('No event got a server ack. Check console for details.');
+  console.warn('[Socket] No event got a server ack.');
 }
 
 /** Request message history via socket. Returns promise with messages. */
@@ -229,7 +158,6 @@ export function requestMessageHistory(roomId: string, limit = 200): Promise<unkn
       }
     }, 5000);
 
-    // Listen for history response on multiple possible event names
     const historyEvents = ['messageHistory', 'chatHistory', 'messages', 'roomMessages', 'history', 'previousMessages'];
     const cleanup = () => {
       for (const evt of historyEvents) {
@@ -252,7 +180,6 @@ export function requestMessageHistory(roomId: string, limit = 200): Promise<unkn
       s.on(evt, handler);
     }
 
-    // Emit history request on multiple possible event names
     s.emit('getMessages', { roomId, limit });
     s.emit('getChatHistory', { roomId, limit });
     s.emit('messageHistory', { roomId, limit });
@@ -267,22 +194,9 @@ export function onLiveChatMessage(cb: (msg: unknown) => void): () => void {
   for (const evt of MSG_EVENTS) {
     s.on(evt, handler);
   }
-  // Also listen on /chat namespace
-  let cs: Socket | null = null;
-  try {
-    cs = getChatSocket();
-    for (const evt of MSG_EVENTS) {
-      cs.on(evt, handler);
-    }
-  } catch {}
   return () => {
     for (const evt of MSG_EVENTS) {
       s.off(evt, handler);
-    }
-    if (cs) {
-      for (const evt of MSG_EVENTS) {
-        cs.off(evt, handler);
-      }
     }
   };
 }
@@ -290,9 +204,6 @@ export function onLiveChatMessage(cb: (msg: unknown) => void): () => void {
 /** Subscribe to all socket events for debugging. Returns unsubscribe fn. */
 export function debugSocketEvents(): () => void {
   const s = getSocket();
-  const handler = (...args: unknown[]) => {
-    // onAny handler
-  };
   s.onAny((eventName: string, ...args: unknown[]) => {
     console.log(`[Socket DEBUG] Event: "${eventName}"`, args.length > 0 ? args[0] : '');
   });
@@ -307,11 +218,6 @@ export function disconnectSocket() {
     socket.disconnect();
     socket = null;
     console.log('[Socket] Disconnected and cleared');
-  }
-  if (chatSocket) {
-    chatSocket.disconnect();
-    chatSocket = null;
-    console.log('[ChatSocket] Disconnected and cleared');
   }
   currentToken = null;
 }
