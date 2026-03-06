@@ -83,7 +83,7 @@ export function renderTextWithLinks(text: string): ReactNode[] {
         <a
           key={`mention-${username}-${match.index}`}
           href={`/${username}`}
-          className="text-blue-400 hover:text-blue-300 hover:underline transition-colors font-medium"
+          className="text-foreground font-bold hover:underline transition-colors"
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
