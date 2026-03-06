@@ -575,7 +575,7 @@ export default function PostInfoPage() {
           {/* Live Stream Info - shown for live content */}
           {((nftInfo as any).postType === 'live' || (nftInfo as any).isLive !== undefined) && (
             <section className="bg-white/5 rounded-xl p-4 border border-white/10">
-              <h2 className="text-sm font-medium text-white/60 mb-3">Stream Info</h2>
+              <h2 className="text-sm font-medium text-white/60 mb-3">{t('postInfo.streamInfo')}</h2>
               <div className="flex items-center gap-3 mb-3">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${(nftInfo as any).isLive ? 'bg-red-500/20' : 'bg-white/5'}`}>
                   <Radio className={`w-5 h-5 ${(nftInfo as any).isLive ? 'text-red-400' : 'text-zinc-500'}`} />
