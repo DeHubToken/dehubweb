@@ -175,7 +175,7 @@ export function SidebarChat() {
               const handle = msg.sender_username;
               const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
               return (
-                <div key={msg.id} className="flex items-start gap-2" style={{ paddingLeft: '10px' }}>
+                <div key={msg.id} className="flex items-start gap-2" style={{ paddingLeft: '10px', paddingRight: '10px' }}>
                   <button onClick={goToProfile} disabled={!handle} className={`flex-shrink-0 ${handle ? 'cursor-pointer' : 'cursor-default'}`}>
                     <Avatar className="w-6 h-6">
                       {avatarUrl && <AvatarImage src={avatarUrl} />}
