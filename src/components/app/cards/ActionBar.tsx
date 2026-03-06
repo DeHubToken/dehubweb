@@ -26,6 +26,7 @@ import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
 import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
 import { getCommentCountDelta } from '@/lib/comment-count-cache';
+import dehubCoin from '@/assets/dehub-coin.png';
 import {
   Drawer,
   DrawerContent,
@@ -74,6 +75,10 @@ interface ActionBarProps {
   onDislike?: () => void;
   /** Vote weight multiplier for optimistic count updates (default: 1) */
   voteWeight?: number;
+  /** Tip count to display next to repost */
+  tipCount?: number;
+  /** Handler for tip action */
+  onTip?: () => void;
 }
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
@@ -105,6 +110,8 @@ export function ActionBar({
   isReposted: initialIsReposted = false,
   isOptimistic = false,
   voteWeight = 1,
+  tipCount,
+  onTip,
 }: ActionBarProps) {
   // Add localStorage delta to comment count for instant feedback
   const commentCountDelta = postId ? getCommentCountDelta(postId) : 0;
@@ -401,6 +408,16 @@ export function ActionBar({
           >
             <Repeat2 className={isReposted ? "w-[1.634rem] h-[1.634rem]" : "w-6 h-6"} strokeWidth={isReposted ? 2.915 : 2} />
             <span className="text-xs text-zinc-400">{formatCount(displayRepostCount)}</span>
+          </button>
+
+          {/* Tip counter */}
+          <button
+            onClick={(e) => { e.stopPropagation(); onTip?.(); }}
+            className="flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors"
+            aria-label="Tips"
+          >
+            <img src={dehubCoin} alt="DHB" className="w-5 h-5 brightness-0 invert opacity-80" />
+            <span className="text-xs text-zinc-400">{formatCount(tipCount)}</span>
           </button>
 
           
