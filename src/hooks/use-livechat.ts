@@ -146,26 +146,28 @@ export function useLiveChatMessages(roomId: string | null) {
     }
   }, [roomId]);
 
+  // Load messages via REST immediately on mount
   useEffect(() => {
     if (!roomId) {
       setMessages([]);
       setIsLoading(false);
       return;
     }
+    fetchMessages(true);
+  }, [roomId, fetchMessages]);
+
+  // Socket connection for real-time updates (supplementary)
+  useEffect(() => {
+    if (!roomId) return;
 
     initialLoadDone.current = false;
 
-    // Enable debug logging
     const unsubDebug = debugSocketEvents();
-
-    // Connect and join
     const socket = getSocket();
     setIsConnected(socket.connected);
 
     const onConnect = () => {
       setIsConnected(true);
-      // joinRoom is auto-called via pong handler in socket.ts,
-      // but also call explicitly in case we missed the pong
       joinRoom(roomId);
     };
     const onDisconnect = () => setIsConnected(false);
@@ -173,15 +175,15 @@ export function useLiveChatMessages(roomId: string | null) {
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
 
-    // If already connected, join immediately
     if (socket.connected) {
       joinRoom(roomId);
     }
 
-    // Handle roomJoined — server sends initial messages
+    // Handle roomJoined — server sends initial messages (may or may not fire)
     const unsubJoined = onRoomJoined((data) => {
       console.log('[LiveChat] Room joined, messages:', data.messages?.length, 'banned:', data.isBanned);
       setIsBanned(data.isBanned || false);
+      initialLoadDone.current = true;
       
       if (data.messages && Array.isArray(data.messages)) {
         const mapped = data.messages
@@ -189,10 +191,8 @@ export function useLiveChatMessages(roomId: string | null) {
           .filter(Boolean) as SupabaseLiveChatMessage[];
         if (mapped.length > 0) {
           setMessages(mapped);
-          initialLoadDone.current = true;
         }
       }
-      setIsLoading(false);
     });
 
     // Listen for new messages
@@ -203,12 +203,10 @@ export function useLiveChatMessages(roomId: string | null) {
       }
     });
 
-    // Listen for deleted messages
     const unsubDeleted = onMessageDeleted((data) => {
       setMessages((prev) => prev.filter((m) => m.id !== data.messageId));
     });
 
-    // Listen for ban/unban
     const unsubBanned = onUserBanned((data) => {
       setIsBanned(true);
       toast.error(data.message || 'You have been banned from chat');
@@ -218,16 +216,7 @@ export function useLiveChatMessages(roomId: string | null) {
       toast.success(data.message || 'You have been unbanned');
     });
 
-    // Fallback: if roomJoined doesn't fire within 3s, try REST
-    const fallbackTimer = setTimeout(() => {
-      if (!initialLoadDone.current) {
-        console.log('[LiveChat] roomJoined timeout, falling back to REST');
-        fetchMessages(true);
-      }
-    }, 3000);
-
     return () => {
-      clearTimeout(fallbackTimer);
       leaveRoom(roomId);
       unsubJoined();
       unsubMsg();
@@ -239,7 +228,7 @@ export function useLiveChatMessages(roomId: string | null) {
       socket.off('disconnect', onDisconnect);
       setIsConnected(false);
     };
-  }, [roomId, fetchMessages]);
+  }, [roomId]);
 
   const send = useCallback(
     async (
