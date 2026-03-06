@@ -20,7 +20,7 @@ import {
 import { useTipPayment, MIN_TIP_DHB, MAX_TIP_DHB } from '@/hooks/use-tip-payment';
 import dehubCoin from '@/assets/dehub-coin.png';
 
-const QUICK_AMOUNTS = [5, 10, 25, 50, 100, 250];
+const QUICK_AMOUNTS = [500, 1000, 5000, 10000, 25000, 50000, 100000, 1000000];
 
 interface TipModalProps {
   open: boolean;
