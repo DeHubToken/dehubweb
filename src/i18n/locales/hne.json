@@ -1058,8 +1058,10 @@
   },
   "sidebar": {
     "talkOfTheTown": "शहर के चरचा",
-    "nothingTrending": "अभी कुछू ट्रेंडिंग नइ हे"
+    "nothingTrending": "अभी कुछू ट्रेंडिंग नइ हे",
+    "post": "पोस्ट", "logOut": "लॉग आउट", "logIn": "लॉग इन"
   },
+  "postInfo": { "title": "पोस्ट जानकारी", "tokenId": "टोकन ID", "mintedOn": "बनाय गे", "transactionHash": "ट्रांजैक्शन हैश", "viewOnExplorer": "{{explorer}} म देखव", "creator": "बनाय वाला", "visibility": "दिखाई", "fractionOwnership": "अंश मालिकी", "total": "कुल {{count}}", "distribution": "वितरण", "loading": "लोड हो रहे हे...", "owner": "{{count}} मालिक", "owner_other": "{{count}} मालिक", "engagement": "सहभागिता", "likeRatio": "लाइक अनुपात", "likes": "लाइक", "dislikes": "डिसलाइक", "views": "देखे गे", "comments": "टिप्पणी", "totalTipsCreator": "कुल टिप (बनाय वाला)", "payPerView": "देखे बर पइसा", "ppvSales": "PPV बिक्री", "price": "दाम", "totalRevenue": "कुल आय", "content": "सामग्री", "uploadProcessing": "अपलोड प्रोसेसिंग", "processingDesc": "पोस्ट विकेंद्रीकृत डेटाबेस म प्रोसेस हो रहे हे।", "processingNote": "पोस्ट मेटाडेटा ब्लॉकचेन म स्थायी रूप ले संग्रहित हे।", "goBack": "वापस", "streamInfo": "स्ट्रीम जानकारी", "currentlyLive": "अभी लाइव", "streamOffline": "स्ट्रीम ऑफलाइन", "totalViews": "{{count}} कुल देखे गे", "public": "सार्वजनिक", "publicDesc": "कोनो भी ये पोस्ट देख सकत हे", "unlisted": "सूचीबद्ध नइ हे", "unlistedDesc": "सिरिफ लिंक वाला देख सकत हे", "private": "निजी", "privateDesc": "सिरिफ तुमन ये पोस्ट देख सकत हव" },
   "post": {
     "like": "पसंद",
     "comment": "टिप्पणी",

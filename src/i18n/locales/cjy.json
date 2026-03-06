@@ -1058,8 +1058,10 @@
   },
   "sidebar": {
     "talkOfTheTown": "热门话题",
-    "nothingTrending": "暂无热门"
+    "nothingTrending": "暂无热门",
+    "post": "发布", "logOut": "退出", "logIn": "登录"
   },
+  "postInfo": { "title": "帖子信息", "tokenId": "代币ID", "mintedOn": "铸造于", "transactionHash": "交易哈希", "viewOnExplorer": "在{{explorer}}查看", "creator": "创作者", "visibility": "可见性", "fractionOwnership": "碎片所有权", "total": "共{{count}}个", "distribution": "分配", "loading": "加载中...", "owner": "{{count}}位所有者", "owner_other": "{{count}}位所有者", "engagement": "互动", "likeRatio": "点赞比例", "likes": "点赞", "dislikes": "踩", "views": "浏览", "comments": "评论", "totalTipsCreator": "总打赏（创作者）", "payPerView": "按次付费", "ppvSales": "PPV销售", "price": "价格", "totalRevenue": "总收入", "content": "内容", "uploadProcessing": "上传处理中", "processingDesc": "帖子正在去中心化数据库中处理。", "processingNote": "帖子元数据永久存储在区块链上。", "goBack": "返回", "streamInfo": "直播信息", "currentlyLive": "正在直播", "streamOffline": "直播离线", "totalViews": "共{{count}}次浏览", "public": "公开", "publicDesc": "任何人都可以看到此帖子", "unlisted": "未列出", "unlistedDesc": "仅有链接的人可以查看", "private": "私密", "privateDesc": "仅您可以看到此帖子" },
   "post": {
     "like": "喜欢",
     "comment": "评论",
