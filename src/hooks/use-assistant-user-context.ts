@@ -163,6 +163,9 @@ export function useAssistantUserContext(): AssistantUserContext | null {
       tipsReceived: tipData?.received_total ? Number(tipData.received_total) : undefined,
       tipsSent: tipData?.sent_total ? Number(tipData.sent_total) : undefined,
       staked: profile?.staked ?? undefined,
+      leaderboardRank: leaderboardData?.rank ?? undefined,
+      leaderboardBalance: leaderboardData?.balance ?? undefined,
+      snapshots: snapshots && snapshots.length > 0 ? snapshots as LeaderboardSnapshot[] : undefined,
     };
-  }, [walletAddress, isAuthenticated, profile, tipData]);
+  }, [walletAddress, isAuthenticated, profile, tipData, leaderboardData, snapshots]);
 }

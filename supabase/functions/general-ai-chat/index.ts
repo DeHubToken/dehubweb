@@ -299,6 +299,17 @@ serve(async (req) => {
         tipsReceived?: number;
         tipsSent?: number;
         staked?: number;
+        leaderboardRank?: number;
+        leaderboardBalance?: number;
+        snapshots?: Array<{
+          balance: number;
+          followers: number | null;
+          likes: number | null;
+          subscribers: number | null;
+          sent_tips: number;
+          received_tips: number;
+          snapshot_date: string;
+        }>;
       };
     };
 
