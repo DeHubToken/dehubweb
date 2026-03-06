@@ -83,7 +83,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
           >
             <Bell className="w-[26px] h-[26px]" />
             {totalNotifUnread > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-[5px] bg-red-500 text-white text-[11px] font-bold rounded-full flex items-center justify-center" style={{ lineHeight: 1, letterSpacing: '-0.02em' }}>
+              <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-[5px] bg-red-500 text-white text-[11px] font-bold rounded-full grid place-content-center pb-px">
                 {totalNotifUnread > 99 ? '99+' : totalNotifUnread}
               </span>
             )}
