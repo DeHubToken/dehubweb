@@ -307,10 +307,10 @@ async function fetchUserProfile(username: string, authToken?: string): Promise<a
   }
 }
 
-// Fetch user posts from DeHub API — uses userId (username), NOT wallet address
-async function fetchUserPosts(userId: string, limit: number = 10, authToken?: string): Promise<any[]> {
+// Fetch user posts from DeHub API — uses /api/feed?minter={walletAddress}
+async function fetchUserPosts(walletAddress: string, limit: number = 10, authToken?: string): Promise<any[]> {
   try {
-    const url = `https://api.dehub.io/api/user/${encodeURIComponent(userId)}/nfts?page=1&limit=${limit}`;
+    const url = `https://api.dehub.io/api/feed?minter=${encodeURIComponent(walletAddress)}&page=1&limit=${limit}&sortBy=createdAt&sortOrder=desc&status=all`;
     console.log(`[PostAnalysis] Fetching posts: ${url}`);
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
@@ -849,9 +849,8 @@ IMPORTANT FORMATTING RULES:
     let postAnalysisInfo = '';
     if (requiresPostAnalysis(userQuery) && userContext?.walletAddress) {
       const postCount = extractPostCount(userQuery);
-      const fetchId = userContext.username || userContext.walletAddress;
-      console.log(`[PostAnalysis] User requested analysis of ${postCount} posts for ${fetchId}`);
-      const userPosts = await fetchUserPosts(fetchId, postCount, dehubToken);
+      console.log(`[PostAnalysis] User requested analysis of ${postCount} posts for wallet ${userContext.walletAddress}`);
+      const userPosts = await fetchUserPosts(userContext.walletAddress, postCount, dehubToken);
       if (userPosts.length > 0) {
         const formattedPosts = formatPostsForContext(userPosts);
         postAnalysisInfo = `\n\n## User's Recent Posts (${userPosts.length} posts)\nThe user has asked you to study/analyze their posts. Here is their content data:\n${formattedPosts}\n\nProvide a thorough analysis including:\n- Content patterns and themes\n- Engagement metrics (which posts perform best/worst and why)\n- Content type distribution (videos vs images vs text)\n- Posting frequency and timing patterns\n- Specific, actionable suggestions to improve engagement\n- What they're doing well and should continue\n- What they could experiment with`;
@@ -869,11 +868,11 @@ IMPORTANT FORMATTING RULES:
         const profile = await fetchUserProfile(targetUsername, dehubToken);
         if (profile) {
           const profileText = formatProfileForContext(profile);
-          const userId = profile.username || profile.userId || targetUsername;
+          const profileWallet = profile.walletAddress || profile.address || profile.wallet_address;
           let postsText = '';
-          if (userId) {
+          if (profileWallet) {
             const postCount = extractPostCount(userQuery) || 20;
-            const posts = await fetchUserPosts(userId, postCount, dehubToken);
+            const posts = await fetchUserPosts(profileWallet, postCount, dehubToken);
             if (posts.length > 0) {
               postsText = `\n\n### Their Recent Posts (${posts.length} posts):\n${formatPostsForContext(posts)}`;
             }
