@@ -5,7 +5,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TranslatableText, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useTextTranslation } from '../TranslatableText';
 import { useNavigate } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 
 import {
   DropdownMenu,
