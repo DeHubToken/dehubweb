@@ -156,6 +156,10 @@ export function UserMentionDropdown({
           backdropFilter: 'blur(24px)',
           WebkitBackdropFilter: 'blur(24px)',
         }}
+        // Prevent ALL pointer events from reaching the Dialog overlay
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="px-3.5 pt-2.5 pb-1.5">
@@ -184,7 +188,13 @@ export function UserMentionDropdown({
             {users.map((user, index) => (
               <button
                 key={user.id || user.username}
-                onClick={() => onSelect(user)}
+                onMouseDown={(e) => {
+                  // CRITICAL: Prevent this click from bubbling to Dialog overlay
+                  // which would close the parent modal
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onSelect(user);
+                }}
                 onMouseEnter={() => onSelectedIndexChange(index)}
                 className={cn(
                   "w-full flex items-center gap-3 px-2.5 py-2 rounded-xl text-left transition-colors duration-100",
