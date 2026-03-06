@@ -416,7 +416,7 @@ export function ActionBar({
             className="flex items-center gap-0 text-white hover:text-zinc-400 transition-colors"
             aria-label="Tips"
           >
-            <img src={tipIcon} alt="Tip" className="w-[26px] h-[26px] invert opacity-90" style={{ marginLeft: '-2.95px' }} />
+            <img src={tipIcon} alt="Tip" className="w-[26px] h-[26px] invert opacity-90" style={{ marginLeft: '-4.45px' }} />
             <span className="text-xs text-zinc-400 -ml-1 relative z-10">{formatCount(tipCount)}</span>
           </button>
 
