@@ -792,10 +792,10 @@ export default function AssistantPage() {
 
       setMessages(prev => [...prev, assistantMessage]);
       queueMessage(assistantMessage);
-      toast.success('Image generated!');
+      toast.success(t('assistant.imageGenerated'));
     } catch (err) {
       console.error('Image generation error:', err);
-      toast.error('Failed to generate image');
+      toast.error(t('assistant.errorImageGenFailed'));
     } finally {
       setIsImageLoading(false);
       setPendingImageRequest(null);
