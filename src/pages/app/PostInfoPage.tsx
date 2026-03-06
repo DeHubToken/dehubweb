@@ -413,7 +413,7 @@ export default function PostInfoPage() {
           </h2>
           
           <p className="text-white/60 text-sm leading-relaxed mb-4">
-            Your post is being processed on decentralized databases. Video encoding and thumbnail generation may take a moment.
+            {t('postInfo.processingDesc')}
           </p>
           
           <p className="text-white/40 text-xs leading-relaxed">
