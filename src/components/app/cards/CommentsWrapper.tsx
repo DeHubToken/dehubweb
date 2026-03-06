@@ -39,15 +39,10 @@ export function CommentsWrapper({ open, onOpenChange, tokenId }: CommentsWrapper
       <Drawer 
         open={open} 
         onOpenChange={onOpenChange} 
-        modal={false}
+        modal={true}
         dismissible={true}
-        handleOnly={true}
       >
-        <DrawerContent glass hideHandle noOverlay className="max-h-[75vh] flex flex-col overflow-hidden !bg-black/60 !backdrop-blur-[24px] border border-white/[0.08]">
-          {/* Visible drag handle for closing */}
-          <div className="flex justify-center py-2 cursor-grab active:cursor-grabbing">
-            <div className="w-10 h-1 rounded-full bg-white/40" />
-          </div>
+        <DrawerContent glass className="max-h-[75vh] flex flex-col overflow-hidden !bg-black/60 !backdrop-blur-[24px] border border-white/[0.08]">
           <div className="flex-1 min-h-0 px-4 pb-4" data-vaul-no-drag>
             <CommentsSection
               tokenId={tokenId}
