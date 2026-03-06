@@ -87,7 +87,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors py-2"
             >
               <LogOut className="w-4 h-4" />
-              Log out
+              {t('sidebar.logOut')}
             </button>
           </div>
         </div>
