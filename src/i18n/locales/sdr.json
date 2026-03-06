@@ -1110,8 +1110,10 @@
   },
   "sidebar": {
     "talkOfTheTown": "شہر کی چرچا",
-    "nothingTrending": "ابھی کچھ ٹرینڈنگ نہیں"
+    "nothingTrending": "ابھی کچھ ٹرینڈنگ نہیں",
+    "post": "پوسٹ", "logOut": "لاگ آؤٹ", "logIn": "لاگ ان"
   },
+  "postInfo": { "title": "پوسٹ کی معلومات", "tokenId": "ٹوکن ID", "mintedOn": "بنایا گیا", "creator": "بناوݨ والا", "visibility": "نظر آنا", "total": "کل {{count}}", "loading": "لوڈ ہو رہا ہے...", "engagement": "شمولیت", "likes": "پسند", "dislikes": "ناپسند", "views": "دیکھے گئے", "comments": "تبصرے", "price": "قیمت", "content": "مواد", "goBack": "واپس", "public": "عوامی", "publicDesc": "کوئی بھی دیکھ سکدا ہے", "private": "نجی", "privateDesc": "صرف تسیں دیکھ سکدے او" },
   "stories": {
     "title": "کہانیاں",
     "addStory": "کہانی ڈالو",
