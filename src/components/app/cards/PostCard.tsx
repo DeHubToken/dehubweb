@@ -27,6 +27,7 @@ import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { QuotePostModal } from '../modals/QuotePostModal';
+import { TipModal } from '../modals/TipModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { useAuth } from '@/contexts/AuthContext';
@@ -68,6 +69,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const [showTipModal, setShowTipModal] = useState(false);
   const { data: tipCount = 0 } = usePostTipCount(post.id);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
   const isTabletOrMobile = useIsTabletOrMobile();
@@ -269,6 +271,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             isReposted={post.isReposted}
             isOptimistic={post.isOptimistic}
             tipCount={tipCount}
+            onTip={() => setShowTipModal(true)}
           />
         </div>
 
@@ -326,6 +329,15 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         open={showQuoteModal}
         onOpenChange={setShowQuoteModal}
         quotedPost={postAsNFT}
+      />
+
+      {/* Tip Modal */}
+      <TipModal
+        open={showTipModal}
+        onOpenChange={setShowTipModal}
+        creatorAddress={post.author.id}
+        creatorName={post.author.name}
+        tokenId={post.id}
       />
     </div>
   );
