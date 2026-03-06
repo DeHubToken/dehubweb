@@ -50,14 +50,6 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     tier: 'premium',
     baseCostUsd: 0.08,
   },
-  'gpt-5': {
-    id: 'gpt-5',
-    name: 'GPT-5',
-    description: 'OpenAI creative aesthetic',
-    emoji: '🎨',
-    tier: 'premium',
-    baseCostUsd: 0.08,
-  },
   'grok-2-image': {
     id: 'grok-2-image',
     name: 'Grok Aurora',
