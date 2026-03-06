@@ -1214,6 +1214,16 @@ IMPORTANT FORMATTING RULES:
     const data = await response.json();
     const aiResponse = data.choices?.[0]?.message?.content || 'I apologize, I couldn\'t generate a response.';
 
+    // Fire-and-forget: extract memories from this conversation
+    if (userContext?.walletAddress && messages.length >= 3) {
+      const userMsgs = messages
+        .filter(m => m.role === 'user')
+        .map(m => typeof m.content === 'string' ? m.content : m.content?.find(c => c.type === 'text')?.text || '');
+      extractAndSaveMemories(userContext.walletAddress, userMsgs, aiResponse).catch(e => 
+        console.error('[Memory] Background extraction error:', e)
+      );
+    }
+
     return new Response(
       JSON.stringify({ 
         response: aiResponse, 
