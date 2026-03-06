@@ -1,27 +1,53 @@
 
 
-# Fresh On-Chain RPC Scan for Daily & Weekly Holdings
+# Stop Redundant Avatar API Calls Across the Entire App
 
-## What This Does
+## Problem
 
-The existing `refresh-leaderboard-cache` edge function already has full support for this. No code changes needed -- just an invocation.
+`useProfileAvatar` (in `use-profile-avatar-cache.ts`) calls `getAccountInfo` for **every wallet address** it receives. This hook is used in:
 
-I will call the edge function with:
-```json
-{ "mode": "light", "sorts": ["holdings"], "periods": ["day", "week"] }
-```
+1. **CardHeader.tsx** — every single feed card (posts, videos, images, live streams, shorts)
+2. **QuotedPostEmbed.tsx** — embedded quoted posts
+3. **GovernancePage.tsx** / **GovernanceProposalPage.tsx** — proposal authors
+4. **FeaturesPage.tsx** — feature request authors
 
-This triggers:
-1. Reads the existing `holdings/all` cache for the full list of wallet addresses
-2. Gets current block numbers on Base and BNB chains via Alchemy RPC
-3. Estimates historical block heights (1 day ago / 7 days ago)
-4. Fetches on-chain balances at both current and historical blocks for all addresses (batches of 10)
-5. Computes deltas (gains and losses) for each wallet
-6. Caches results into `leaderboard_cache` table for `holdings/day` and `holdings/week`
+The feed API already provides avatar URLs in its response. The governance/features tables also store `author_avatar`. These redundant re-fetches cause 429 errors from the DeHub API, breaking **all** avatars site-wide.
 
-Monthly, yearly, and all-time data remain untouched.
+## Fix
 
-The UI already reads from `leaderboard_cache` with these sort/period keys, so 1D and 1W tabs will populate automatically after the scan completes.
+### 1. CardHeader.tsx — Use the feed-provided avatar directly
+- Remove `useProfileAvatar` import and call
+- Use `avatarSeed` directly (it's already a resolved URL from the feed mapper)
+- Keep `getAgentAvatarFallback` as the fallback for AI agent accounts
 
-**Note:** This function can take 30-60+ seconds depending on how many wallets are in the leaderboard. Edge functions have a timeout limit, so if it times out we may need to reduce the batch or split the call.
+### 2. QuotedPostEmbed.tsx — Same pattern
+- Remove `useProfileAvatar`, use the already-resolved `avatarUrl` from `getMediaUrl`
+
+### 3. GovernancePage.tsx & GovernanceProposalPage.tsx
+- Remove `useProfileAvatar`, use `storedAvatarUrl` from `buildAvatarUrl(address, proposal.author_avatar)` directly
+
+### 4. FeaturesPage.tsx
+- Remove `useProfileAvatar`, use `storedAvatarUrl` from `buildAvatarUrl(address, feature.author_avatar)` directly
+
+### 5. Leaderboard (already discussed)
+- Remove `useLeaderboardAvatars` hook usage, use cached `entry.avatarUrl`
+
+### 6. Keep `useProfileAvatar` for legitimate uses only
+- Profile page (`use-dehub-profile.ts`) — fetching a single user's profile is fine
+- Settings page — fetching own profile is fine
+- Don't delete the hook, just stop using it in bulk/list contexts
+
+## Impact
+- Eliminates 50-100+ redundant API calls per page load
+- Fixes all avatar display across feed, leaderboard, governance, and features
+- No visual changes — same avatars, just sourced from already-available data
+
+## Files Changed
+- `src/components/app/cards/CardHeader.tsx`
+- `src/components/app/cards/QuotedPostEmbed.tsx`
+- `src/pages/app/GovernancePage.tsx`
+- `src/pages/app/GovernanceProposalPage.tsx`
+- `src/pages/app/FeaturesPage.tsx`
+- `src/pages/app/LeaderboardPage.tsx`
+- `src/components/app/sidebar/SidebarLeaderboard.tsx`
 
