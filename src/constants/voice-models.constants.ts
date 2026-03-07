@@ -10,7 +10,6 @@ export interface VoicePreference {
   emoji: string;
   /** Voice names to search for in priority order */
   preferredVoiceNames: string[];
-  /** Whether to prefer female voices when searching */
   preferFemale: boolean;
 }
 
