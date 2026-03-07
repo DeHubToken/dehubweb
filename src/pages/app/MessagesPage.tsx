@@ -174,12 +174,18 @@ export default function MessagesPage() {
 
     if (dmDisabled) return;
 
-    if (perMessageFee && perMessageFee > 0) {
-      // Has a fee — open the NewConversationModal directly on the fee step
-      setPendingFeeUser(user);
-      setShowNewConversation(true);
-      return;
-    }
+    // Fee user — create conversation and open it; fee gate shows inline in chat
+    const userAddress = user.address || (user as any)._id;
+    if (!userAddress) return;
+
+    createConversation.mutateAsync({
+      recipientAddress: userAddress,
+      recipientUser: user,
+    }).then(conv => {
+      setSelectedConversation(conv);
+      setSearchQuery('');
+    }).catch(() => {});
+    return;
 
     // No fee — create conversation directly
     const userAddress = user.address || (user as any)._id;
