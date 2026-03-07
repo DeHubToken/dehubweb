@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Repeat2 } from 'lucide-react';
 import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight, Image, Play, Pencil, Trash2 } from 'lucide-react';
 import { useInfiniteQuery, useQueries, useQueryClient } from '@tanstack/react-query';
@@ -105,6 +105,25 @@ export function ProfileTabContent({
 
   const allComments = commentsData?.pages.flatMap(p => p.data) ?? [];
 
+  // Track which tabs have been visited so we only mount them once accessed
+  const visitedTabs = useRef(new Set<TabValue>([activeTab]));
+  visitedTabs.current.add(activeTab);
+
+  // Lazy tab panel: only mounts content once the tab has been visited
+  const TabPanel = useCallback(({ tab, children }: { tab: TabValue; children: React.ReactNode }) => {
+    const isActive = activeTab === tab;
+    const hasBeenVisited = visitedTabs.current.has(tab);
+    if (!isActive && !hasBeenVisited) return null;
+    return (
+      <div
+        style={isActive ? undefined : { visibility: 'hidden', height: 0, overflow: 'hidden', position: 'absolute', width: '100%' }}
+        aria-hidden={!isActive}
+      >
+        {children}
+      </div>
+    );
+  }, [activeTab]);
+
   // Private account gate - shown instead of all tabs
   if (isTargetPrivate && !isFollowing && !isViewingOwnProfile) {
     return (
@@ -122,20 +141,6 @@ export function ProfileTabContent({
   
   const hasData = userContentData && (userContentData as any).pages && (userContentData as any).pages.length > 0;
   const showLoading = isLoadingContent && !hasData;
-
-  // Hidden tabs use visibility:hidden + height:0 instead of display:none
-  // so the browser still loads/caches images inside inactive panels.
-  const TabPanel = ({ tab, children }: { tab: TabValue; children: React.ReactNode }) => {
-    const isActive = activeTab === tab;
-    return (
-      <div
-        style={isActive ? undefined : { visibility: 'hidden', height: 0, overflow: 'hidden', position: 'absolute', width: '100%' }}
-        aria-hidden={!isActive}
-      >
-        {children}
-      </div>
-    );
-  };
 
   return (
     <div style={{ position: 'relative' }}>
