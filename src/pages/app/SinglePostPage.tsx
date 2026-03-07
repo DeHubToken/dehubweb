@@ -14,7 +14,7 @@
 import { useParams, useNavigationType, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef } from 'react';
-import { AlertCircle, Clock, ArrowLeft, Sparkles, MoreVertical, ListPlus, Flag, Download, Link2 } from 'lucide-react';
+import { AlertCircle, Clock, ArrowLeft, Sparkles, MoreVertical, ListPlus, Flag, Download, Link2, Diamond } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
