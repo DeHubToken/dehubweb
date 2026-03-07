@@ -1790,7 +1790,7 @@ function MessagesSettings() {
             </div>
             <SettingDrawerSelect
               value={whoCanMessage}
-              onValueChange={(value) => updateWhoCanMessage(value as 'everyone' | 'followers' | 'none')}
+              onValueChange={(value) => updateWhoCanMessage(value as 'everyone' | 'none')}
               disabled={isDmUpdating}
               title={t('settings.allowDirectMessages', 'Allow direct messages')}
               options={[
