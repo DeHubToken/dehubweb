@@ -175,8 +175,8 @@ export default function MessagesPage() {
     if (dmDisabled) return;
 
     if (perMessageFee && perMessageFee > 0) {
-      // Has a fee — open the NewConversationModal which handles the fee flow
-      // Pre-populate by opening the modal (the user will need to search again, but this is the safest approach)
+      // Has a fee — open the NewConversationModal directly on the fee step
+      setPendingFeeUser(user);
       setShowNewConversation(true);
       return;
     }
