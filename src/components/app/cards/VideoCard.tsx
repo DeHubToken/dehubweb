@@ -12,7 +12,7 @@
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Pencil, Trash2 } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Pencil, Trash2, Diamond } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -1004,7 +1004,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                       onClick={() => { setShowOptionsDrawer(false); setShowTipModal(true); }}
                       className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                     >
-                      <Gift className="w-5 h-5" /> {t('postOptions.sendTip')}
+                      <Diamond className="w-5 h-5" /> {t('postOptions.sendTip')}
                     </button>
                   )}
                   <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
@@ -1526,7 +1526,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                 onClick={() => { setShowOptionsDrawer(false); setShowTipModal(true); }}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
               >
-                <Gift className="w-5 h-5" /> {t('postOptions.sendTip')}
+                <Diamond className="w-5 h-5" /> {t('postOptions.sendTip')}
               </button>
             )}
             <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">

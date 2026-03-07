@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react';
-import { Gift, Loader2 } from 'lucide-react';
+import { Diamond, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
@@ -216,7 +216,7 @@ export function DmTipDialog({
                 </>
               ) : (
                 <>
-                  <Gift className="w-4 h-4 mr-2" />
+                  <Diamond className="w-4 h-4 mr-2" />
                   Send {isValidAmount ? parsedAmount.toLocaleString() : '—'} DHB
                 </>
               )}

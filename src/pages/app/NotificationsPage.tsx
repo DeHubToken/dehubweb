@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useTranslation } from 'react-i18next';
-import { Settings, ThumbsUp, MessageSquareText, Gift, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star } from 'lucide-react';
+import { Settings, ThumbsUp, MessageSquareText, Diamond, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -126,7 +126,7 @@ const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.Eleme
   { labelKey: 'notifications.comments', value: 'comments', icon: MessageSquareText },
   { labelKey: 'notifications.reposts', value: 'reposts', icon: Repeat2 },
   { labelKey: 'notifications.subs', value: 'subscriptions', icon: Users },
-  { labelKey: 'notifications.tips', value: 'tips', icon: Gift },
+  { labelKey: 'notifications.tips', value: 'tips', icon: Diamond },
   { labelKey: 'notifications.live', value: 'livestreams', icon: Zap },
 ];
 
@@ -155,7 +155,7 @@ function getNotificationIcon(type: string) {
     case 'governance_comment':
       return <MessageSquareText className="w-4 h-4 text-white/70" />;
     case 'tip':
-      return <Gift className="w-4 h-4 text-white/70" />;
+      return <Diamond className="w-4 h-4 text-white/70" />;
     case 'subscription':
     case 'ppv_purchase':
       return <Users className="w-4 h-4 text-white/70" />;
@@ -742,7 +742,7 @@ export default function NotificationsPage() {
                       <div className="flex items-center justify-between p-4 rounded-xl bg-white/10">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                            <Gift className="w-5 h-5 text-white" />
+                            <Diamond className="w-5 h-5 text-white" />
                           </div>
                           <div>
                             <p className="text-white font-medium">{t('notifications.tips')}</p>

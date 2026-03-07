@@ -12,7 +12,7 @@
 import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Pencil, Trash2, Ticket, Gift, Lock, MessageCircle } from 'lucide-react';
+import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Pencil, Trash2, Ticket, Gift, Lock, MessageCircle, Diamond } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -476,7 +476,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                     onClick={() => { setShowOptionsDrawer(false); setShowTipModal(true); }}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                   >
-                    <Gift className="w-5 h-5" /> {t('postOptions.sendTip')}
+                    <Diamond className="w-5 h-5" /> {t('postOptions.sendTip')}
                   </button>
                 )}
                 <button
