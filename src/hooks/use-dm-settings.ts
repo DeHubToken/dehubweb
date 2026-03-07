@@ -1,23 +1,19 @@
-import { useState, useEffect } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
-import { useDeHubProfile } from '@/hooks/use-dehub-profile';
-import { updateProfile } from '@/lib/api/dehub';
+import { apiCall } from '@/lib/api/dehub/core';
 import { toast } from 'sonner';
 
 export type WhoCanMessage = 'everyone' | 'followers' | 'none';
 
-interface DmSettingsState {
-  whoCanMessage: WhoCanMessage;
-  messageFee: number; // minTipDhb in DHB
-  doNotDisturb: boolean;
+interface DmStatusResponse {
+  disables?: string[];
+  perMessageFee?: number;
+  freeAccessUsers?: string[];
 }
 
 /**
- * Derives the WhoCanMessage value from the API's dmSettings.disables array.
- * - disables includes 'all' → 'none'
- * - disables includes 'non-followers' → 'followers'
- * - empty/undefined → 'everyone'
+ * Derives the WhoCanMessage value from the API's disables array.
  */
 function deriveWhoCanMessage(disables?: string[]): WhoCanMessage {
   if (!disables || disables.length === 0) return 'everyone';
@@ -27,70 +23,67 @@ function deriveWhoCanMessage(disables?: string[]): WhoCanMessage {
 }
 
 /**
- * Converts UI WhoCanMessage value back to the API disables array.
+ * Maps WhoCanMessage back to disables + action for the API.
  */
-function toDisables(value: WhoCanMessage): string[] {
+function toStatusPayload(value: WhoCanMessage): { status: string; action: string } {
   switch (value) {
-    case 'none': return ['all'];
-    case 'followers': return ['non-followers'];
+    case 'none':
+      return { status: 'NEW_DM', action: 'disable' };
+    case 'followers':
+      return { status: 'NON_FOLLOWER_DM', action: 'disable' };
     case 'everyone':
-    default: return [];
+    default:
+      return { status: 'NEW_DM', action: 'enable' };
   }
 }
 
 export function useDmSettings() {
-  const { user, walletAddress, isAuthenticated } = useAuth();
+  const { walletAddress, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data: profile, isLoading } = useDeHubProfile({
-    userId: walletAddress || undefined,
+  // Fetch current DM status from the dedicated endpoint
+  const { data: dmStatus, isLoading } = useQuery({
+    queryKey: ['dm-user-status', walletAddress],
+    queryFn: async (): Promise<DmStatusResponse> => {
+      if (!walletAddress) return {};
+      try {
+        const response = await apiCall<any>(`/api/dm/user-status/${walletAddress.toLowerCase()}`, {
+          method: 'GET',
+          requiresAuth: true,
+        });
+        return response?.result || response || {};
+      } catch (error) {
+        console.error('[useDmSettings] Failed to fetch DM status:', error);
+        return {};
+      }
+    },
     enabled: !!walletAddress && isAuthenticated,
+    staleTime: 30_000,
   });
 
-  const dmSettings = profile?.dmSettings;
+  const whoCanMessage = deriveWhoCanMessage(dmStatus?.disables);
+  const messageFee = dmStatus?.perMessageFee ?? 0;
+  // Do Not Disturb is a local concept we can keep in localStorage
+  const [doNotDisturb, setDoNotDisturbLocal] = useState(() => {
+    try { return localStorage.getItem('dehub_dnd') === 'true'; } catch { return false; }
+  });
 
-  const whoCanMessage = deriveWhoCanMessage(dmSettings?.disables);
-  const messageFee = dmSettings?.minTipDhb ?? 0;
-  // Do Not Disturb is stored in customs
-  const doNotDisturb = profile?.customs?.doNotDisturb === true || profile?.customs?.doNotDisturb === 'true';
-
+  // Update DM settings via POST /api/dm/user-status/{address}
   const updateMutation = useMutation({
-    mutationFn: async (updates: Partial<DmSettingsState>) => {
+    mutationFn: async (payload: { status: string; action: string; perMessageFee?: number }) => {
       if (!walletAddress) throw new Error('Not authenticated');
-
-      const currentDisables = dmSettings?.disables || [];
-      const currentMinTip = dmSettings?.minTipDhb ?? 0;
-
-      const newDmSettings: { disables: string[]; minTipDhb: number } = {
-        disables: updates.whoCanMessage !== undefined
-          ? toDisables(updates.whoCanMessage)
-          : currentDisables,
-        minTipDhb: updates.messageFee !== undefined
-          ? updates.messageFee
-          : currentMinTip,
-      };
-
-      const profileUpdate: Record<string, any> = {
-        dmSettings: newDmSettings,
-      };
-
-      // Handle Do Not Disturb via customs
-      if (updates.doNotDisturb !== undefined) {
-        const existingCustoms = (profile?.customs ?? {}) as Record<string, string>;
-        profileUpdate.customs = {
-          ...existingCustoms,
-          doNotDisturb: String(updates.doNotDisturb),
-        };
-      }
-
-      await updateProfile(profileUpdate);
+      await apiCall<any>(`/api/dm/user-status/${walletAddress.toLowerCase()}`, {
+        method: 'POST',
+        body: payload,
+        requiresAuth: true,
+      });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
+      queryClient.invalidateQueries({ queryKey: ['dm-user-status', walletAddress] });
       toast.success('DM settings updated');
     },
     onError: (error) => {
-      console.error('Failed to update DM settings:', error);
+      console.error('[useDmSettings] Failed to update DM settings:', error);
       toast.error('Failed to update DM settings');
     },
   });
@@ -101,8 +94,19 @@ export function useDmSettings() {
     doNotDisturb,
     isLoading,
     isUpdating: updateMutation.isPending,
-    updateWhoCanMessage: (value: WhoCanMessage) => updateMutation.mutate({ whoCanMessage: value }),
-    updateMessageFee: (fee: number) => updateMutation.mutate({ messageFee: fee }),
-    updateDoNotDisturb: (enabled: boolean) => updateMutation.mutate({ doNotDisturb: enabled }),
+    updateWhoCanMessage: (value: WhoCanMessage) => {
+      const payload = toStatusPayload(value);
+      updateMutation.mutate(payload);
+    },
+    updateMessageFee: (fee: number) => {
+      // Send current status + new fee
+      const currentPayload = toStatusPayload(whoCanMessage);
+      updateMutation.mutate({ ...currentPayload, perMessageFee: fee });
+    },
+    updateDoNotDisturb: (enabled: boolean) => {
+      setDoNotDisturbLocal(enabled);
+      try { localStorage.setItem('dehub_dnd', String(enabled)); } catch {}
+      toast.success('DM settings updated');
+    },
   };
 }
