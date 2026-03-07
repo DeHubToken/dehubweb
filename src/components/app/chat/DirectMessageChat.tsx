@@ -709,6 +709,15 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         onOpenChange={setShowSharedVideos}
       />
 
+      {/* DM Tip Dialog */}
+      <DmTipDialog
+        open={showTipDialog}
+        onOpenChange={setShowTipDialog}
+        recipientAddress={otherUser?.address || ''}
+        recipientName={displayName}
+        conversationId={resolvedConversationId}
+      />
+
       {/* DM Gated Banner */}
       {dmGateChecked && dmGated && (
         <div className="absolute inset-0 bg-zinc-900/95 backdrop-blur-sm flex items-center justify-center z-20 rounded-2xl">
