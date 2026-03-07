@@ -14,7 +14,7 @@ interface ImagePaywallModalProps {
   model: ImageModel;
   selectedModelKey: ImageModelKey;
   onModelChange: (modelKey: ImageModelKey) => void;
-  onConfirm: (costDhb: number) => void;
+  onConfirm: () => void;
   isGenerating?: boolean;
 }
 
@@ -231,7 +231,7 @@ export function ImagePaywallModal({
           <Button
             variant="glass"
             className="flex-1 font-medium"
-            onClick={() => onConfirm(costDhb)}
+            onClick={onConfirm}
             disabled={loading || isBalanceLoading || !hasEnoughBalance || isGenerating}
           >
             {isGenerating ? (
