@@ -227,6 +227,23 @@ export function ChatInput({ onSendMessage, onTipClick }: ChatInputProps) {
 
         {/* Action buttons */}
         <div className="absolute bottom-0 right-0 flex items-center gap-0.5">
+          {onTipClick && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-amber-400 hover:text-amber-300 hover:bg-zinc-700"
+                  onClick={onTipClick}
+                >
+                  <DollarSign className="w-5 h-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Send a tip</TooltipContent>
+            </Tooltip>
+          )}
+
           <EmojiGifPicker
             onEmojiSelect={handleEmojiSelect}
             onGifSelect={handleGifSelect}
