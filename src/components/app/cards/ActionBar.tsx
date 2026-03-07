@@ -417,7 +417,7 @@ export function ActionBar({
             aria-label="Tips"
           >
              <Gem className="w-[18px] h-[18px] text-white" />
-            <span className="text-xs text-zinc-400 relative z-10" style={{ marginLeft: '0.5px' }}>{formatCount(tipCount)}</span>
+            <span className="text-xs text-zinc-400 relative z-10" style={{ marginLeft: '1.5px' }}>{formatCount(tipCount)}</span>
           </button>
 
           
