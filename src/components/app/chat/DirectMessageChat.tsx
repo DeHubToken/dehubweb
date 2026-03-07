@@ -601,7 +601,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
             ? 'bg-green-500/10 text-green-400 border-b border-green-500/20'
             : 'bg-amber-500/10 text-amber-400 border-b border-amber-500/20'
         }`}>
-          <img src={dehubCoin} alt="DHB" className="w-3 h-3 flex-shrink-0" />
+          <img src={dehubCoin} alt="DHB" className="w-3 h-3 flex-shrink-0 brightness-0 invert" />
           {dmFee.hasFreeAccess
             ? 'You have free access to message this user'
             : `Messaging fee: ${dmFee.fee} DHB per message`}

@@ -238,7 +238,7 @@ export function ChatInput({ onSendMessage, onTipClick }: ChatInputProps) {
                   className="h-8 w-8 text-amber-400 hover:text-amber-300 hover:bg-zinc-700"
                   onClick={onTipClick}
                 >
-                  <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+                  <img src={dehubCoin} alt="DHB" className="w-5 h-5 brightness-0 invert" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Send a tip</TooltipContent>
