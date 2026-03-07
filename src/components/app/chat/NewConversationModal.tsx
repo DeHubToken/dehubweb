@@ -387,7 +387,7 @@ export function NewConversationModal({
   const { data: searchResults, isLoading: isSearching } = useUserSearchForDM(searchQuery);
   const createConversation = useCreateConversation();
 
-  const startConversation = async (user: DeHubUser) => {
+  const startConversation = async (user: DeHubUser, firstMessage?: string) => {
     const userAddress = user.address || user._id;
     if (!userAddress) {
       toast.error('Unable to start conversation with this user');
@@ -401,7 +401,16 @@ export function NewConversationModal({
         recipientAddress: userAddress,
         recipientUser: user,
       });
-      // Toast handled by fee gate if applicable
+
+      // Send the first message if provided (from fee payment step)
+      if (firstMessage && conversation.id) {
+        emitSendMessage({
+          dmId: conversation.id,
+          content: firstMessage,
+          type: 'msg',
+        });
+      }
+
       onConversationCreated(conversation);
       onOpenChange(false);
       setSearchQuery('');
