@@ -121,6 +121,7 @@ export default function MessagesPage() {
   const [showNewConversation, setShowNewConversation] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [readConvIds, setReadConvIds] = useState<Set<string>>(new Set());
   const { isAuthenticated, walletAddress } = useAuth();
   
   // Subscribe to DM realtime updates only when on messages page
@@ -307,8 +308,11 @@ export default function MessagesPage() {
             {!isLoading && !isError && conversations.map((conv) => (
               <ConversationItem
                 key={conv.id}
-                conversation={conv}
-                onClick={() => setSelectedConversation(conv)}
+                conversation={readConvIds.has(conv.id) ? { ...conv, unreadCount: 0 } : conv}
+                onClick={() => {
+                  setReadConvIds(prev => new Set(prev).add(conv.id));
+                  setSelectedConversation({ ...conv, unreadCount: 0 });
+                }}
                 isSelected={selectedConversation?.id === conv.id}
               />
             ))}
