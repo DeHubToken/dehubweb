@@ -19,8 +19,18 @@ import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings,
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
 import { DmTipDialog } from './DmTipDialog';
-import { DmFeeGate } from './DmFeeGate';
+import { DmFeeInfoBanner } from './DmFeeInfoBanner';
 import { formatDistanceToNow } from 'date-fns';
+import { Interface } from 'ethers';
+import {
+  writeContractAA,
+  getWalletAddress,
+  getERC20Balance,
+  switchChain,
+  parseTxError,
+} from '@/lib/contracts/aa-utils';
+import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import {
   DropdownMenu,
   DropdownMenuContent,
