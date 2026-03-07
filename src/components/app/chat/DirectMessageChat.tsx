@@ -111,9 +111,11 @@ function VoiceMessagePlayer({
 function MessageBubble({
   message,
   isOwnMessage,
+  highlightText,
 }: {
   message: DmMessage;
   isOwnMessage: boolean;
+  highlightText?: string;
 }) {
   const avatarUrl = getMediaUrl(message.sender?.avatarImageUrl);
   const displayName = message.sender?.displayName || message.sender?.username ||
