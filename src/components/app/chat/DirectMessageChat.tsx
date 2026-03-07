@@ -19,6 +19,7 @@ import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings,
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
 import { DmTipDialog } from './DmTipDialog';
+import { DmFeeGate } from './DmFeeGate';
 import { formatDistanceToNow } from 'date-fns';
 import {
   DropdownMenu,
