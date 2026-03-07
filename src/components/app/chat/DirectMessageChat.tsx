@@ -311,6 +311,38 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const isInitialMount = useRef(true);
   const hasInitialized = useRef(false);
 
+  // Fee-related state
+  const [customTipAmount, setCustomTipAmount] = useState('');
+  const [feeBalance, setFeeBalance] = useState<number | null>(null);
+  const [feeBalanceLoading, setFeeBalanceLoading] = useState(false);
+  const [isSendingFee, setIsSendingFee] = useState(false);
+
+  const erc20TransferInterface = useRef(new Interface([
+    'function transfer(address to, uint256 amount) returns (bool)',
+  ]));
+
+  // Determine if fee is required
+  const feeRequired = dmFee?.required && !dmFee.hasFreeAccess;
+  const activeFee = feeRequired ? (customTipAmount ? parseFloat(customTipAmount) || dmFee!.fee : dmFee!.fee) : 0;
+  const feeSendDisabled = feeRequired && (feeBalance === null || feeBalance < activeFee);
+
+  // Check balance when fee is required
+  useEffect(() => {
+    if (!feeRequired) return;
+    setFeeBalanceLoading(true);
+    const chainConfig = getChainConfig(BASE_CHAIN_ID);
+    getWalletAddress()
+      .then(addr => getERC20Balance(chainConfig.dhbToken, addr))
+      .then(bal => {
+        setFeeBalance(Number(bal) / 1e18);
+        setFeeBalanceLoading(false);
+      })
+      .catch(() => {
+        setFeeBalance(null);
+        setFeeBalanceLoading(false);
+      });
+  }, [feeRequired]);
+
   // When parent upgrades conversation to one with real dmId (e.g. after getContacts returns DeHub data), use it
   useEffect(() => {
     const convId = conversation.id;
