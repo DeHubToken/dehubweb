@@ -798,7 +798,9 @@ export default function NotificationsPage() {
             <div ref={notifTabLayerRef} className="relative overflow-visible">
               <GlassIndicator rect={notifTabRect} />
               <div 
-                className="relative z-20 flex w-full"
+                className="relative z-20 flex gap-1 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap px-1 py-1"
+                style={{ touchAction: 'pan-x' }}
+                onScroll={onNotifTabScroll}
               >
                 {tabs.map((tab) => {
                   const count = getTabCount(tab.value);
@@ -807,7 +809,7 @@ export default function NotificationsPage() {
                       key={tab.value}
                       ref={setNotifTabRef(tab.value)}
                       onClick={() => setActiveTab(tab.value)}
-                      className={`relative z-40 flex-1 flex items-center justify-center px-2 py-[10.4px] rounded-xl transition-colors duration-200 ${
+                      className={`relative z-40 flex-shrink-0 flex items-center justify-center px-3 py-[10.4px] rounded-xl transition-colors duration-200 ${
                         activeTab === tab.value
                           ? 'text-white'
                           : 'text-zinc-400 hover:text-white'
