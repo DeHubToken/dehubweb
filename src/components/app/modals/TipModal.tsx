@@ -149,10 +149,7 @@ export function TipModal({
                 </>
               ) : (
                 <>
-                  <Gem className="w-4 h-4 mr-2" />
-                  {t('tip.sendAmount', 'Send {{amount}} DHB', {
-                    amount: isValidAmount ? parsedAmount : '—',
-                  })}
+                  {t('tip.send', 'Send')}
                 </>
               )}
             </Button>
