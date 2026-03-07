@@ -519,7 +519,16 @@ export async function deleteConversation(
   dmId: string,
   address?: string
 ): Promise<{ success: boolean }> {
-  const myAddress = address?.toLowerCase() || '';
+  const myAddress = address?.toLowerCase() || (() => {
+    try {
+      const token = getAuthToken();
+      if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.address?.toLowerCase() || '';
+      }
+    } catch {}
+    return '';
+  })();
 
   // For virtual/wallet-based conversations, delete from Supabase
   if (dmId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(dmId)) {
@@ -543,7 +552,7 @@ export async function deleteConversation(
   try {
     await apiCall<any>('/api/dm/delete-messages', {
       method: 'POST',
-      body: { conversationId: dmId },
+      body: { address: myAddress, dmId },
       requiresAuth: true,
     });
   } catch (err) {
