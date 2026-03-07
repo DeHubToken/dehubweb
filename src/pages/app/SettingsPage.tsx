@@ -1039,12 +1039,11 @@ function PrivacySettings() {
             </div>
             <SettingDrawerSelect
               value={whoCanMessage}
-              onValueChange={(value) => updateWhoCanMessage(value as 'everyone' | 'followers' | 'none')}
+              onValueChange={(value) => updateWhoCanMessage(value as 'everyone' | 'none')}
               disabled={isDmUpdating}
               title={t('settings.whoCanMessage', 'Who can message you')}
               options={[
                 { value: 'everyone', label: t('settings.everyone', 'Everyone'), description: t('settings.everyoneDesc', 'Anyone on the platform can message you') },
-                { value: 'followers', label: t('settings.followers', 'Followers'), description: t('settings.followersOnlyDesc', 'Only people who follow you can message you') },
                 { value: 'none', label: t('settings.noOne', 'No one'), description: t('settings.noOneDesc', 'Disable all incoming messages') },
               ]}
             />
