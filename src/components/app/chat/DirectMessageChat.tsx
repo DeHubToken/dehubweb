@@ -287,6 +287,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
   const [dmFee, setDmFee] = useState<DmFee | null>(conversation.dmFee || null);
+  const [isFreeAccessGranted, setIsFreeAccessGranted] = useState(false);
+  const [isFreeAccessProcessing, setIsFreeAccessProcessing] = useState(false);
   const [resolvedConversationId, setResolvedConversationId] = useState(conversation.id);
   const isInitialMount = useRef(true);
   const hasInitialized = useRef(false);
