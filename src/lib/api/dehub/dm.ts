@@ -390,6 +390,31 @@ export async function getContacts(
     }
   }
 
+  // Enrich DeHub conversations with profile data (displayName, badgeBalance) when missing
+  await Promise.all(
+    dehubItems.map(async (conv) => {
+      const other = conv.otherUser;
+      if (!other?.address) return;
+      const needsEnrich = !other.displayName || other.badgeBalance == null;
+      if (!needsEnrich) return;
+      try {
+        const profile = await getAccountInfo(other.address);
+        if (profile) {
+          if (!other.displayName) {
+            other.displayName = profile.displayName || profile.display_name || '';
+            other.display_name = other.displayName;
+          }
+          if (other.badgeBalance == null) {
+            other.badgeBalance = profile.badgeBalance;
+          }
+          if (!other.avatarImageUrl) {
+            other.avatarImageUrl = profile.avatarImageUrl || profile.avatarUrl || '';
+          }
+        }
+      } catch { /* keep existing data */ }
+    })
+  );
+
   // Sort by last activity (newest first)
   dehubItems.sort((a, b) => {
     const ta = new Date(a.updatedAt || a.lastMessage?.createdAt || 0).getTime();
