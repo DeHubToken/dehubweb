@@ -479,12 +479,9 @@ export async function getMessages(
 
   const myAddress = (localStorage.getItem('dehub_wallet') || '').toLowerCase();
 
-  // Virtual conversation: fetch from Supabase (dm-send saves there)
-  if (isVirtualConversation(conversationId)) {
-    const otherAddress = conversationId.startsWith('new_')
-      ? conversationId.replace('new_', '')
-      : conversationId;
-    return getMessagesFromSupabase(myAddress, otherAddress, page, limit);
+  // Virtual conversations no longer supported (legacy Supabase DMs removed)
+  if (conversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(conversationId)) {
+    return { items: [], totalCount: 0, hasMore: false };
   }
 
   try {
