@@ -446,79 +446,62 @@ export function NewConversationModal({
     setFeeUser(null);
   };
 
-  const feeAmount = feeUser ? (getDmSettings(feeUser)?.perMessageFee || 0) : 0;
-
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent hideCloseButton={!!feeUser} className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
+      <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-white">
-            {feeUser ? 'Tip to Message' : 'New Message'}
-          </DialogTitle>
+          <DialogTitle className="text-white">New Message</DialogTitle>
         </DialogHeader>
 
-        {feeUser ? (
-          /* Fee payment step */
-          <FeePaymentStep
-            user={feeUser}
-            fee={feeAmount}
-            onPaid={(firstMessage) => startConversation(feeUser, firstMessage)}
-            onBack={() => setFeeUser(null)}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+          <Input
+            placeholder="Search by username..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
+            autoFocus
           />
-        ) : (
-          /* Search step */
-          <>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-              <Input
-                placeholder="Search by username..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
-                autoFocus
-              />
-              {searchQuery && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-zinc-400 hover:text-white"
-                  onClick={() => setSearchQuery('')}
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              )}
-            </div>
+          {searchQuery && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-zinc-400 hover:text-white"
+              onClick={() => setSearchQuery('')}
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
 
-            <div className="max-h-80 overflow-y-auto -mx-2">
-              {searchQuery.length < 2 ? (
-                <div className="text-center py-8 text-zinc-500">
-                  <Search className="w-10 h-10 mx-auto mb-3 opacity-50" />
-                  <p>Enter at least 2 characters to search</p>
-                </div>
-              ) : isSearching ? (
-                <div className="flex justify-center py-8">
-                  <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
-                </div>
-              ) : searchResults?.items?.length === 0 ? (
-                <div className="text-center py-8 text-zinc-500">
-                  <p>No users found</p>
-                  <p className="text-sm mt-1">Try a different search term</p>
-                </div>
-              ) : (
-                <div className="space-y-1 px-2">
-                  {searchResults?.items?.map((user) => (
-                    <UserSearchResult
-                      key={user._id || user.address}
-                      user={user}
-                      onSelect={() => handleSelectUser(user)}
-                      isLoading={selectedUserId === (user.address || user._id)}
-                    />
-                  ))}
-                </div>
-              )}
+        <div className="max-h-80 overflow-y-auto -mx-2">
+          {searchQuery.length < 2 ? (
+            <div className="text-center py-8 text-zinc-500">
+              <Search className="w-10 h-10 mx-auto mb-3 opacity-50" />
+              <p>Enter at least 2 characters to search</p>
             </div>
-          </>
-        )}
+          ) : isSearching ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
+            </div>
+          ) : searchResults?.items?.length === 0 ? (
+            <div className="text-center py-8 text-zinc-500">
+              <p>No users found</p>
+              <p className="text-sm mt-1">Try a different search term</p>
+            </div>
+          ) : (
+            <div className="space-y-1 px-2">
+              {searchResults?.items?.map((user) => (
+                <UserSearchResult
+                  key={user._id || user.address}
+                  user={user}
+                  onSelect={() => handleSelectUser(user)}
+                  isLoading={selectedUserId === (user.address || user._id)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );
