@@ -383,10 +383,18 @@ export function NewConversationModal({
   open, 
   onOpenChange, 
   onConversationCreated,
+  initialFeeUser,
 }: NewConversationModalProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [feeUser, setFeeUser] = useState<DeHubUser | null>(null);
+
+  // When modal opens with an initialFeeUser, jump straight to fee step
+  useEffect(() => {
+    if (open && initialFeeUser) {
+      setFeeUser(initialFeeUser);
+    }
+  }, [open, initialFeeUser]);
   
   const { data: searchResults, isLoading: isSearching } = useUserSearchForDM(searchQuery);
   const createConversation = useCreateConversation();
