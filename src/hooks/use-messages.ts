@@ -446,7 +446,24 @@ export function useDeleteConversation() {
   return useMutation({
     mutationFn: (conversationId: string) =>
       deleteConversation(conversationId, walletAddress || undefined),
+    onMutate: async (conversationId: string) => {
+      // Optimistically remove from all conversation caches
+      await queryClient.cancelQueries({ queryKey: messagesKeys.conversations() });
+      queryClient.setQueriesData(
+        { queryKey: messagesKeys.conversations() },
+        (old: any) => {
+          if (Array.isArray(old)) {
+            return old.filter((c: any) => c.id !== conversationId);
+          }
+          return old;
+        }
+      );
+    },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+    },
+    onError: () => {
+      // Refetch on error to restore
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
     },
   });
