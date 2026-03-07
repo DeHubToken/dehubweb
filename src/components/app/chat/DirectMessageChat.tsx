@@ -6,7 +6,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw, Play, Pause, Gift } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -111,9 +111,11 @@ function VoiceMessagePlayer({
 function MessageBubble({
   message,
   isOwnMessage,
+  highlightText,
 }: {
   message: DmMessage;
   isOwnMessage: boolean;
+  highlightText?: string;
 }) {
   const avatarUrl = getMediaUrl(message.sender?.avatarImageUrl);
   const displayName = message.sender?.displayName || message.sender?.username ||
@@ -286,6 +288,9 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [showGroupSettings, setShowGroupSettings] = useState(false);
   const [showSharedVideos, setShowSharedVideos] = useState(false);
   const [showTipDialog, setShowTipDialog] = useState(false);
+  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
   const [dmFee, setDmFee] = useState<DmFee | null>(conversation.dmFee || null);
@@ -575,6 +580,23 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           </Link>
         </div>
 
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-zinc-400 hover:text-white hover:bg-zinc-800"
+            onClick={() => {
+              setShowSearchBar(prev => !prev);
+              if (!showSearchBar) {
+                setTimeout(() => searchInputRef.current?.focus(), 100);
+              } else {
+                setSearchQuery('');
+              }
+            }}
+          >
+            <Search className="w-5 h-5" />
+          </Button>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-zinc-800">
@@ -621,7 +643,28 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        </div>
       </div>
+
+      {/* Search Bar */}
+      {showSearchBar && (
+        <div className="flex items-center gap-2 px-4 py-2 bg-zinc-800/80 border-b border-zinc-700/50">
+          <Search className="w-4 h-4 text-zinc-500 flex-shrink-0" />
+          <input
+            ref={searchInputRef}
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search messages..."
+            className="flex-1 bg-transparent text-sm text-white placeholder:text-zinc-500 outline-none"
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery('')} className="text-zinc-500 hover:text-white">
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+      )}
 
       {/* DM Fee banner */}
       {dmFee?.required && (
@@ -668,17 +711,34 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
             </div>
           )}
 
-          {messages.map((message) => (
-            <MessageBubble
-              key={message._id}
-              message={message}
-              isOwnMessage={
-                message.author === 'me' ||
-                (message.sender?.address?.toLowerCase() || message.sender?._id) ===
-                  (walletAddress?.toLowerCase() || user?._id)
-              }
-            />
-          ))}
+          {(() => {
+            const searchLower = searchQuery.toLowerCase().trim();
+            const filtered = searchLower
+              ? messages.filter(m => (m.content || '').toLowerCase().includes(searchLower))
+              : messages;
+
+            if (filtered.length === 0 && searchLower) {
+              return (
+                <div className="flex flex-col items-center justify-center h-full text-center text-zinc-500">
+                  <Search className="w-8 h-8 mb-2 text-zinc-600" />
+                  <p className="text-sm">No messages match "{searchQuery}"</p>
+                </div>
+              );
+            }
+
+            return filtered.map((message) => (
+              <MessageBubble
+                key={message._id}
+                message={message}
+                isOwnMessage={
+                  message.author === 'me' ||
+                  (message.sender?.address?.toLowerCase() || message.sender?._id) ===
+                    (walletAddress?.toLowerCase() || user?._id)
+                }
+                highlightText={searchLower}
+              />
+            ));
+          })()}
 
           <div ref={bottomRef} />
         </div>
