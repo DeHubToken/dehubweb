@@ -308,7 +308,7 @@ export default function MessagesPage() {
               <ConversationItem
                 key={conv.id}
                 conversation={conv}
-                onClick={() => setSelectedConversation(conv)}
+                onClick={() => setSelectedConversation({ ...conv, unreadCount: 0 })}
                 isSelected={selectedConversation?.id === conv.id}
               />
             ))}
