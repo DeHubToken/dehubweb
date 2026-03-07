@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { Gem, Loader2 } from 'lucide-react';
+import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
@@ -102,7 +103,7 @@ export function TipModal({
                       : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
                   }`}
                 >
-                  {val.toLocaleString()} DHB
+                  {val.toLocaleString()} <img src={dehubCoin} alt="DHB" className="inline w-4 h-4 ml-0.5" />
                 </button>
               ))}
             </div>
@@ -117,7 +118,7 @@ export function TipModal({
                 type="number"
                 min={MIN_TIP_DHB}
                 step={0.1}
-                placeholder="Enter DHB amount"
+                placeholder="Enter amount"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 className="pl-11 bg-white/5 border-white/10 text-white placeholder:text-white/40 h-12"
