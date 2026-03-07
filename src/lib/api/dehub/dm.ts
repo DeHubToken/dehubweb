@@ -446,21 +446,8 @@ export async function deleteConversation(
     return '';
   })();
 
-  // For virtual/wallet-based conversations, delete from Supabase
+  // For virtual/wallet-based conversations, just return success (no more Supabase DMs)
   if (dmId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(dmId)) {
-    const peerAddress = dmId.replace('new_', '').toLowerCase();
-    if (myAddress && peerAddress) {
-      const { error } = await supabase
-        .from('direct_messages')
-        .delete()
-        .or(
-          `and(sender_address.eq.${myAddress},receiver_address.eq.${peerAddress}),and(sender_address.eq.${peerAddress},receiver_address.eq.${myAddress})`
-        );
-      if (error) {
-        console.error('[DM API] deleteConversation Supabase error:', error);
-        throw new Error(`Failed to delete conversation: ${error.message}`);
-      }
-    }
     return { success: true };
   }
 
