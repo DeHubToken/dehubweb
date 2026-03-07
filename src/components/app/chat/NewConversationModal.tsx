@@ -297,6 +297,19 @@ function FeePaymentStep({
         </p>
       ) : null}
 
+      {/* Message input */}
+      <div>
+        <p className="text-white/60 text-xs mb-1.5">Your message</p>
+        <Input
+          type="text"
+          placeholder="Type your first message..."
+          value={messageText}
+          onChange={(e) => setMessageText(e.target.value)}
+          disabled={isSending}
+          className="bg-white/5 border-white/10 text-white placeholder:text-white/30 h-11 text-sm"
+        />
+      </div>
+
       {/* Pay minimum */}
       <Button
         variant="glass"
