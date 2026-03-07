@@ -20,6 +20,7 @@ interface ChatInputSendArgs {
 
 interface ChatInputProps {
   onSendMessage: (args: ChatInputSendArgs) => void;
+  onTipClick?: () => void;
 }
 
 export function ChatInput({ onSendMessage }: ChatInputProps) {
