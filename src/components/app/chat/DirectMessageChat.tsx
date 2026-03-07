@@ -838,7 +838,19 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
             </div>
           )}
 
-          {messages.length === 0 && (
+          {/* Fee info banner shown where messages would be */}
+          {feeRequired && (
+            <DmFeeInfoBanner
+              fee={dmFee!.fee}
+              recipientName={displayName}
+              customTipAmount={customTipAmount}
+              onCustomTipChange={setCustomTipAmount}
+              balance={feeBalance}
+              balanceLoading={feeBalanceLoading}
+            />
+          )}
+
+          {messages.length === 0 && !feeRequired && (
             <div className="flex flex-col items-center justify-center h-full text-center text-zinc-500">
               <p className="text-lg mb-2">No messages yet</p>
               <p className="text-sm">Say hello to start the conversation!</p>
