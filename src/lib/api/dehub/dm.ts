@@ -1009,3 +1009,64 @@ export async function getDMVideos(
     return { items: [], hasMore: false };
   }
 }
+
+// ─── Free DM Access ───────────────────────────────────────────────────────────
+
+export interface FreeAccessUser {
+  address: string;
+  username?: string;
+  displayName?: string;
+  avatarImageUrl?: string;
+  grantedAt?: string;
+}
+
+/**
+ * Grant free DM access to a specific user (they can message you without paying the fee).
+ */
+export async function grantFreeDmAccess(targetAddress: string): Promise<{ success: boolean }> {
+  try {
+    const response = await apiCall<any>('/api/dm/grant-free-access', {
+      method: 'POST',
+      body: { address: targetAddress },
+      requiresAuth: true,
+    });
+    return { success: response?.success !== false };
+  } catch (error) {
+    console.error('[DM API] grantFreeDmAccess failed:', error);
+    throw error;
+  }
+}
+
+/**
+ * Revoke free DM access from a specific user.
+ */
+export async function revokeFreeDmAccess(targetAddress: string): Promise<{ success: boolean }> {
+  try {
+    const response = await apiCall<any>('/api/dm/revoke-free-access', {
+      method: 'POST',
+      body: { address: targetAddress },
+      requiresAuth: true,
+    });
+    return { success: response?.success !== false };
+  } catch (error) {
+    console.error('[DM API] revokeFreeDmAccess failed:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get list of users who have been granted free DM access.
+ */
+export async function getFreeDmAccessList(): Promise<FreeAccessUser[]> {
+  try {
+    const response = await apiCall<any>('/api/dm/free-access-list', {
+      method: 'GET',
+      requiresAuth: true,
+    });
+    const items = response?.result?.items || response?.result || response?.items || [];
+    return Array.isArray(items) ? items : [];
+  } catch (error) {
+    console.error('[DM API] getFreeDmAccessList failed:', error);
+    return [];
+  }
+}

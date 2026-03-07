@@ -6,7 +6,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw, Play, Pause } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw, Play, Pause, Gift } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -14,7 +14,7 @@ import { ChatInput } from './ChatInput';
 import { TranslatableText } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
-import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
+import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
 import { DmTipDialog } from './DmTipDialog';
@@ -287,6 +287,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
   const [dmFee, setDmFee] = useState<DmFee | null>(conversation.dmFee || null);
+  const [isFreeAccessGranted, setIsFreeAccessGranted] = useState(false);
+  const [isFreeAccessProcessing, setIsFreeAccessProcessing] = useState(false);
   const [resolvedConversationId, setResolvedConversationId] = useState(conversation.id);
   const isInitialMount = useRef(true);
   const hasInitialized = useRef(false);
@@ -517,6 +519,27 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       setIsBlockProcessing(false);
     }
   };
+  const handleToggleFreeAccess = async () => {
+    const targetAddress = otherUser?.address;
+    if (!targetAddress) return;
+    setIsFreeAccessProcessing(true);
+    try {
+      if (isFreeAccessGranted) {
+        await revokeFreeDmAccess(targetAddress);
+        setIsFreeAccessGranted(false);
+        toast.success('Free DM access revoked');
+      } else {
+        await grantFreeDmAccess(targetAddress);
+        setIsFreeAccessGranted(true);
+        toast.success('Free DM access granted');
+      }
+    } catch (err) {
+      console.error('Free access toggle error:', err);
+      toast.error('Failed to update free access');
+    } finally {
+      setIsFreeAccessProcessing(false);
+    }
+  };
 
   return (
     <div className="h-full flex flex-col bg-zinc-900 rounded-2xl overflow-hidden relative">
@@ -575,6 +598,14 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
               ) : (
                 <><ShieldBan className="w-4 h-4 mr-2" />Block User</>
               )}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
+              onClick={handleToggleFreeAccess}
+              disabled={isFreeAccessProcessing}
+            >
+              <Gift className="w-4 h-4 mr-2" />
+              {isFreeAccessGranted ? 'Revoke Free Access' : 'Grant Free Access'}
             </DropdownMenuItem>
             <DropdownMenuItem
               className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"

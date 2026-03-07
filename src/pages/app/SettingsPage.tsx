@@ -1097,6 +1097,9 @@ function PrivacySettings() {
         </div>
       </div>
 
+      {/* Free DM Access List */}
+      <FreeAccessListSection />
+
       {/* Account Security */}
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.accountSecurity')}</h3>
@@ -1482,7 +1485,95 @@ function ContentSettings() {
   );
 }
 
-function SettingToggle({ 
+function FreeAccessListSection() {
+  const { t } = useTranslation();
+  const { isAuthenticated } = useAuthContext();
+  const [freeAccessUsers, setFreeAccessUsers] = useState<Array<{ address: string; username?: string; displayName?: string; avatarImageUrl?: string }>>([]);
+  const [isLoadingList, setIsLoadingList] = useState(false);
+  const [revokingAddress, setRevokingAddress] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    setIsLoadingList(true);
+    import('@/lib/api/dehub').then(({ getFreeDmAccessList }) => {
+      getFreeDmAccessList()
+        .then(setFreeAccessUsers)
+        .finally(() => setIsLoadingList(false));
+    });
+  }, [isAuthenticated]);
+
+  const handleRevoke = async (address: string) => {
+    setRevokingAddress(address);
+    try {
+      const { revokeFreeDmAccess } = await import('@/lib/api/dehub');
+      await revokeFreeDmAccess(address);
+      setFreeAccessUsers(prev => prev.filter(u => u.address !== address));
+      toast.success('Free access revoked');
+    } catch {
+      toast.error('Failed to revoke access');
+    } finally {
+      setRevokingAddress(null);
+    }
+  };
+
+  return (
+    <div>
+      <h3 className="font-medium text-zinc-400 text-sm mb-4">
+        <Gift className="w-4 h-4 inline mr-2" />
+        {t('settings.freeAccessList', 'Free DM Access')}
+      </h3>
+      <p className="text-zinc-500 text-xs mb-3">{t('settings.freeAccessListDesc', 'Users who can message you for free, bypassing your message fee.')}</p>
+      
+      {isLoadingList ? (
+        <div className="flex items-center justify-center py-6">
+          <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
+        </div>
+      ) : freeAccessUsers.length === 0 ? (
+        <div className="text-center py-6 text-zinc-500 text-sm">
+          {t('settings.noFreeAccess', 'No users have free access. Grant access from a DM conversation.')}
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {freeAccessUsers.map((u) => {
+            const name = u.displayName || u.username || `${u.address.slice(0, 6)}...${u.address.slice(-4)}`;
+            const avatarUrl = u.avatarImageUrl
+              ? (u.avatarImageUrl.startsWith('http') ? u.avatarImageUrl : `https://cdn.dehub.io/${u.avatarImageUrl}`)
+              : undefined;
+            return (
+              <div key={u.address} className="flex items-center justify-between p-3 rounded-xl bg-zinc-800/50">
+                <div className="flex items-center gap-3">
+                  <Avatar className="w-9 h-9">
+                    {avatarUrl && <AvatarImage src={avatarUrl} />}
+                    <AvatarFallback className="bg-zinc-700 text-white text-sm">{name.charAt(0).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-white text-sm font-medium">{name}</p>
+                    {u.username && <p className="text-zinc-500 text-xs">@{u.username}</p>}
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                  onClick={() => handleRevoke(u.address)}
+                  disabled={revokingAddress === u.address}
+                >
+                  {revokingAddress === u.address ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>{t('settings.revoke', 'Revoke')}</>
+                  )}
+                </Button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SettingToggle({
   icon: Icon, 
   title, 
   description, 
