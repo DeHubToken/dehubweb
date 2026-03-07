@@ -234,7 +234,7 @@ export function ChatInput({ onSendMessage, onTipClick }: ChatInputProps) {
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-amber-400 hover:text-amber-300 hover:bg-zinc-700"
+                  className="h-8 w-8 text-white/70 hover:text-white hover:bg-zinc-700"
                   onClick={onTipClick}
                 >
                   <Gift className="w-5 h-5" />
