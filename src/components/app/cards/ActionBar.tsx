@@ -416,7 +416,7 @@ export function ActionBar({
             className="flex items-center gap-0 text-white hover:text-zinc-400 transition-colors"
             aria-label="Tips"
           >
-             <Gem className="w-[18px] h-[18px] text-white" />
+             <Gem className="w-[17px] h-[17px] text-white" />
             <span className="text-xs text-zinc-400 relative z-10" style={{ marginLeft: '1.5px' }}>{formatCount(tipCount)}</span>
           </button>
 
