@@ -304,10 +304,24 @@ export function useSendMessage(conversationId: string) {
         });
       }
 
-      // Virtual conversations (legacy Supabase DMs) no longer supported
+      // Virtual conversations need createAndStart first to get real ID
       const isVirtual = conversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(conversationId);
+      let resolvedId = conversationId;
       if (isVirtual) {
-        throw new Error('Virtual conversations are no longer supported');
+        const recipientAddress = conversationId.startsWith('new_')
+          ? conversationId.replace('new_', '')
+          : conversationId;
+        try {
+          const dmConversation = await emitCreateAndStart(recipientAddress);
+          if (dmConversation?._id) {
+            resolvedId = dmConversation._id;
+          } else {
+            throw new Error('Failed to create conversation');
+          }
+        } catch (err) {
+          console.error('[useSendMessage] createAndStart failed:', err);
+          throw new Error('Could not establish conversation. Please try again.');
+        }
       }
 
       // Real conversation: emit via socket (fire and forget)
