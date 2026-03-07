@@ -77,7 +77,7 @@ export function TipModal({
       <DrawerContent glass className="px-4 pb-6">
         <DrawerHeader className="pb-3">
           <DrawerTitle className="text-white text-lg flex items-center gap-2">
-            <Gift className="w-5 h-5 text-amber-400" />
+            <Gem className="w-5 h-5 text-amber-400" />
             {t('tip.title', 'Send Tip')}
           </DrawerTitle>
           {creatorName && (
