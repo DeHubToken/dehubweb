@@ -19,6 +19,7 @@ import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings,
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
 import { DmTipDialog } from './DmTipDialog';
+import { DmFeeGate } from './DmFeeGate';
 import { formatDistanceToNow } from 'date-fns';
 import {
   DropdownMenu,
@@ -706,8 +707,20 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         </div>
       )}
 
-      {/* Input */}
-      <ChatInput onSendMessage={handleSendMessage} onTipClick={() => setShowTipDialog(true)} />
+      {/* Input or Fee Gate */}
+      {dmFee?.required && !dmFee.hasFreeAccess ? (
+        <DmFeeGate
+          fee={dmFee.fee}
+          recipientAddress={otherUser?.address || ''}
+          recipientName={displayName}
+          conversationId={resolvedConversationId}
+          onUnlocked={() => {
+            setDmFee(prev => prev ? { ...prev, hasFreeAccess: true } : null);
+          }}
+        />
+      ) : (
+        <ChatInput onSendMessage={handleSendMessage} onTipClick={() => setShowTipDialog(true)} />
+      )}
 
       {/* Delete confirmation dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
