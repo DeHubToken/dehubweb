@@ -806,17 +806,11 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         </div>
       )}
 
-      {/* DM Fee banner */}
-      {dmFee?.required && (
-        <div className={`px-4 py-2 text-xs flex items-center gap-2 ${
-          dmFee.hasFreeAccess
-            ? 'bg-green-500/10 text-green-400 border-b border-green-500/20'
-            : 'bg-amber-500/10 text-amber-400 border-b border-amber-500/20'
-        }`}>
+      {/* DM Fee banner - simple for free access */}
+      {dmFee?.required && dmFee.hasFreeAccess && (
+        <div className="px-4 py-2 text-xs flex items-center gap-2 bg-green-500/10 text-green-400 border-b border-green-500/20">
           <Gem className="w-3 h-3 flex-shrink-0 text-current" />
-          {dmFee.hasFreeAccess
-            ? 'You have free access to message this user'
-            : `Messaging fee: ${dmFee.fee} DHB per message`}
+          You have free access to message this user
         </div>
       )}
 
