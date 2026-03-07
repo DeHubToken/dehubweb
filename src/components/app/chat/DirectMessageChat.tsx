@@ -709,17 +709,34 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
             </div>
           )}
 
-          {messages.map((message) => (
-            <MessageBubble
-              key={message._id}
-              message={message}
-              isOwnMessage={
-                message.author === 'me' ||
-                (message.sender?.address?.toLowerCase() || message.sender?._id) ===
-                  (walletAddress?.toLowerCase() || user?._id)
-              }
-            />
-          ))}
+          {(() => {
+            const searchLower = searchQuery.toLowerCase().trim();
+            const filtered = searchLower
+              ? messages.filter(m => (m.content || '').toLowerCase().includes(searchLower))
+              : messages;
+
+            if (filtered.length === 0 && searchLower) {
+              return (
+                <div className="flex flex-col items-center justify-center h-full text-center text-zinc-500">
+                  <Search className="w-8 h-8 mb-2 text-zinc-600" />
+                  <p className="text-sm">No messages match "{searchQuery}"</p>
+                </div>
+              );
+            }
+
+            return filtered.map((message) => (
+              <MessageBubble
+                key={message._id}
+                message={message}
+                isOwnMessage={
+                  message.author === 'me' ||
+                  (message.sender?.address?.toLowerCase() || message.sender?._id) ===
+                    (walletAddress?.toLowerCase() || user?._id)
+                }
+                highlightText={searchLower}
+              />
+            ));
+          })()}
 
           <div ref={bottomRef} />
         </div>
