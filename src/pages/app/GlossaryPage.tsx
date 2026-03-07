@@ -15,7 +15,7 @@ import {
   Sparkles, Trophy, Wallet, ShieldCheck, Lightbulb, Radio,
   Video, Image, Coins, Users, Star, Lock, Unlock,
   ArrowUpDown, Zap, BookOpen, Search, Settings, Home,
-  Play, Mic, Volume2, Crown, Diamond, TrendingUp,
+  Play, Mic, Volume2, Crown, Gem, TrendingUp,
   Clock, CheckCircle2,
   Copy, ExternalLink, RotateCcw, Pencil, Trash2,
   ChevronUp, ChevronDown, Pin, AtSign, Hash,
