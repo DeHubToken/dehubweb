@@ -842,6 +842,15 @@ export default function PostInfoPage() {
                   <p className="text-xs text-white/60">{t('postInfo.totalTipsCreator')}</p>
                 </div>
               </div>
+
+              {/* Tips on this Post */}
+              <div className="col-span-2 bg-white/5 rounded-lg p-3 flex items-center gap-3">
+                <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+                <div>
+                  <p className="text-lg font-bold text-white">— DHB</p>
+                  <p className="text-xs text-white/60">{t('postInfo.tipsOnPost', 'Tips on this Post')}</p>
+                </div>
+              </div>
             </div>
           </section>
 
