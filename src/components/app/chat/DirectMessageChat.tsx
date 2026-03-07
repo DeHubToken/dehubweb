@@ -519,8 +519,28 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       setIsBlockProcessing(false);
     }
   };
+  const handleToggleFreeAccess = async () => {
+    const targetAddress = otherUser?.address;
+    if (!targetAddress) return;
+    setIsFreeAccessProcessing(true);
+    try {
+      if (isFreeAccessGranted) {
+        await revokeFreeDmAccess(targetAddress);
+        setIsFreeAccessGranted(false);
+        toast.success('Free DM access revoked');
+      } else {
+        await grantFreeDmAccess(targetAddress);
+        setIsFreeAccessGranted(true);
+        toast.success('Free DM access granted');
+      }
+    } catch (err) {
+      console.error('Free access toggle error:', err);
+      toast.error('Failed to update free access');
+    } finally {
+      setIsFreeAccessProcessing(false);
+    }
+  };
 
-  return (
     <div className="h-full flex flex-col bg-zinc-900 rounded-2xl overflow-hidden relative">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-zinc-900/95 backdrop-blur-sm">
