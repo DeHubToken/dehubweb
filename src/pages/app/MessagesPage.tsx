@@ -22,7 +22,7 @@ import dehubLogo from '@/assets/dehub-logo.png';
 function ConversationBadge({ badgeBalance }: { badgeBalance?: number }) {
   const badgeUrl = getBadgeUrl(badgeBalance);
   if (!badgeUrl) return null;
-  return <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0" />;
+  return <img src={badgeUrl} alt="Badge" className="w-[14px] h-[14px] shrink-0" />;
 }
 
 function ConversationsSkeleton() {
@@ -52,7 +52,9 @@ function ConversationItem({
 }) {
   const otherUser = conversation.otherUser || conversation.participants?.[0];
   const avatarUrl = getMediaUrl(otherUser?.avatarImageUrl || otherUser?.avatarUrl);
-  const displayName = otherUser?.displayName || otherUser?.display_name || otherUser?.username ||
+  const displayName = otherUser?.displayName || otherUser?.display_name || '';
+  const username = otherUser?.username || '';
+  const fallbackName = displayName || username ||
     (otherUser?.address ? `${otherUser.address.slice(0, 6)}...${otherUser.address.slice(-4)}` : 'User');
   const lastMessagePreview = conversation.lastMessage?.content || 'No messages yet';
   const lastMessageTime = conversation.lastMessage?.createdAt 
@@ -75,20 +77,38 @@ function ConversationItem({
         <Avatar className="w-12 h-12">
           {avatarUrl && <AvatarImage src={avatarUrl} />}
           <AvatarFallback className="bg-zinc-700 text-white font-medium">
-            {(displayName.startsWith('0x') ? displayName.charAt(2) : displayName.charAt(0)).toUpperCase()}
+            {(fallbackName.startsWith('0x') ? fallbackName.charAt(2) : fallbackName.charAt(0)).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         {/* Online indicator */}
         {isOnline && (
           <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-zinc-900" />
         )}
+        {/* Unread indicator on top-right of avatar */}
+        {conversation.unreadCount > 0 && (
+          <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center border-2 border-zinc-900">
+            <span className="text-white text-[10px] font-bold leading-none">
+              {conversation.unreadCount > 9 ? '9+' : conversation.unreadCount}
+            </span>
+          </div>
+        )}
       </div>
       
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="relative inline-flex items-baseline pr-3">
-            <span className="font-semibold text-white truncate">{displayName}</span>
-            <ConversationBadge badgeBalance={otherUser?.badgeBalance} />
+        <div className="flex items-center gap-1.5">
+          <span className="inline-flex items-center gap-1 min-w-0">
+            {displayName ? (
+              <>
+                <span className="font-semibold text-white truncate">{displayName}</span>
+                <ConversationBadge badgeBalance={otherUser?.badgeBalance} />
+                {username && <span className="text-zinc-500 text-sm truncate">@{username}</span>}
+              </>
+            ) : (
+              <>
+                <span className="font-semibold text-white truncate">{fallbackName}</span>
+                <ConversationBadge badgeBalance={otherUser?.badgeBalance} />
+              </>
+            )}
           </span>
           {lastMessageTime && (
             <span className="text-zinc-500 text-sm ml-auto flex-shrink-0">{lastMessageTime}</span>
@@ -100,14 +120,6 @@ function ConversationItem({
            lastMessagePreview}
         </p>
       </div>
-      
-      {conversation.unreadCount > 0 && (
-        <div className="w-5 h-5 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span className="text-primary-foreground text-xs font-bold">
-            {conversation.unreadCount > 9 ? '9+' : conversation.unreadCount}
-          </span>
-        </div>
-      )}
     </button>
   );
 }
