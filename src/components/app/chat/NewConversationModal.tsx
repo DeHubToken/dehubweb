@@ -31,6 +31,7 @@ import {
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
+import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 
 const erc20TransferInterface = new Interface([
   'function transfer(address to, uint256 amount) returns (bool)',
