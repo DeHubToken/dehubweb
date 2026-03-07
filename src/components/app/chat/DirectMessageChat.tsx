@@ -284,6 +284,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [showSharedVideos, setShowSharedVideos] = useState(false);
   const [showTipDialog, setShowTipDialog] = useState(false);
   const [dmGateChecked, setDmGateChecked] = useState(false);
+  const [dmGated, setDmGated] = useState(false);
   const [dmFee, setDmFee] = useState<DmFee | null>(conversation.dmFee || null);
   const [resolvedConversationId, setResolvedConversationId] = useState(conversation.id);
   const isInitialMount = useRef(true);
