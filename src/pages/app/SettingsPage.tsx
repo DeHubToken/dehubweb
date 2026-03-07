@@ -1767,7 +1767,8 @@ function AssetsSettings() {
 
 function MessagesSettings() {
   const { t } = useTranslation();
-  const [dmAccess, setDmAccess] = useState('everyone');
+  const { whoCanMessage, messageFee, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateMessageFee, updateDoNotDisturb } = useDmSettings();
+  const [feeInput, setFeeInput] = useState('');
   
   return (
     <div className="space-y-6">
@@ -1784,28 +1785,78 @@ function MessagesSettings() {
             <div className="flex items-center gap-3">
               <MessageCircle className="w-5 h-5 text-zinc-500" />
               <div>
-                <p className="text-white font-medium">{t('settings.allowDirectMessages')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.controlDMs')}</p>
+                <p className="text-white font-medium">{t('settings.allowDirectMessages', 'Allow direct messages')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.controlDMs', 'Control who can send you DMs')}</p>
               </div>
             </div>
             <SettingDrawerSelect
-              value={dmAccess}
-              onValueChange={() => toast.info(t('settings.comingSoon', 'Coming soon'))}
-              title={t('settings.allowDirectMessages')}
+              value={whoCanMessage}
+              onValueChange={(value) => updateWhoCanMessage(value as 'everyone' | 'followers' | 'none')}
+              disabled={isDmUpdating}
+              title={t('settings.allowDirectMessages', 'Allow direct messages')}
               options={[
-                { value: 'everyone', label: t('settings.everyone'), description: t('settings.dmEveryoneHelp') },
-                { value: 'following', label: t('settings.peopleIFollow'), description: t('settings.peopleIFollowDesc') },
-                { value: 'none', label: t('settings.noOneClosed'), description: t('settings.noOneClosedDesc') },
+                { value: 'everyone', label: t('settings.everyone', 'Everyone'), description: t('settings.dmEveryoneHelp', 'Anyone on the platform can message you') },
+                { value: 'followers', label: t('settings.peopleIFollow', 'Followers'), description: t('settings.peopleIFollowDesc', 'Only your followers can message you') },
+                { value: 'none', label: t('settings.noOneClosed', 'No one'), description: t('settings.noOneClosedDesc', 'Disable all incoming messages') },
               ]}
             />
           </div>
+
+          {/* Message Fee */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Coins className="w-5 h-5 text-zinc-500" />
+              <div>
+                <p className="text-white font-medium">{t('settings.messageFee', 'Message fee')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.messageFeeDesc', 'Require a minimum DHB tip to message you')}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Input
+                type="number"
+                min={0}
+                placeholder="0"
+                value={feeInput || (messageFee > 0 ? String(messageFee) : '')}
+                onChange={(e) => setFeeInput(e.target.value)}
+                onBlur={() => {
+                  const val = parseFloat(feeInput);
+                  if (!isNaN(val) && val >= 0 && val !== messageFee) {
+                    updateMessageFee(val);
+                  }
+                  setFeeInput('');
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    (e.target as HTMLInputElement).blur();
+                  }
+                }}
+                className="w-24 h-9 bg-zinc-800 border-zinc-700 text-white text-right"
+                disabled={isDmUpdating}
+              />
+              <span className="text-zinc-400 text-sm">DHB</span>
+            </div>
+          </div>
+
+          {/* Do Not Disturb */}
+          <SettingToggle
+            icon={Ban}
+            title={t('settings.doNotDisturb', 'Do not disturb')}
+            description={t('settings.doNotDisturbDesc', 'Mute all message notifications')}
+            defaultChecked={doNotDisturb}
+            onCheckedChange={(checked) => updateDoNotDisturb(checked)}
+            disabled={isDmUpdating}
+          />
+
           <div className="bg-zinc-800/50 rounded-xl p-4 text-sm text-zinc-400">
-            <p className="mb-2"><strong className="text-white">{t('settings.everyone')}:</strong> {t('settings.dmEveryoneHelp')}</p>
-            <p className="mb-2"><strong className="text-white">{t('settings.peopleIFollow')}:</strong> {t('settings.dmFollowingHelp')}</p>
-            <p><strong className="text-white">{t('settings.noOneClosed')}:</strong> {t('settings.dmClosedHelp')}</p>
+            <p className="mb-2"><strong className="text-white">{t('settings.everyone', 'Everyone')}:</strong> {t('settings.dmEveryoneHelp', 'Anyone on the platform can message you')}</p>
+            <p className="mb-2"><strong className="text-white">{t('settings.peopleIFollow', 'Followers')}:</strong> {t('settings.dmFollowingHelp', 'Only your followers can send you messages')}</p>
+            <p><strong className="text-white">{t('settings.noOneClosed', 'No one')}:</strong> {t('settings.dmClosedHelp', 'All incoming messages are disabled')}</p>
           </div>
         </div>
       </div>
+
+      {/* Free DM Access List */}
+      <FreeAccessListSection />
 
       {/* Message Preferences */}
       <div>
