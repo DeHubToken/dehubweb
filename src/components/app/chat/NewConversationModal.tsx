@@ -458,7 +458,7 @@ export function NewConversationModal({
           <FeePaymentStep
             user={feeUser}
             fee={feeAmount}
-            onPaid={() => startConversation(feeUser)}
+            onPaid={(firstMessage) => startConversation(feeUser, firstMessage)}
             onBack={() => setFeeUser(null)}
           />
         ) : (
