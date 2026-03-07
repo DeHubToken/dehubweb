@@ -357,7 +357,7 @@ function FeePaymentStep({
           variant="glass"
           className="bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/30 h-11 px-4"
           onClick={() => handlePay(tipAmount)}
-          disabled={isSending || !isValidAmount || (balanceInfo.checked && !balanceInfo.sufficient)}
+          disabled={isSending || !isValidAmount || !messageText.trim() || (balanceInfo.checked && !balanceInfo.sufficient)}
         >
           {isSending && customAmount ? (
             <Loader2 className="w-4 h-4 animate-spin" />
