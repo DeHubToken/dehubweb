@@ -342,48 +342,6 @@ export type Database = {
         }
         Relationships: []
       }
-      direct_messages: {
-        Row: {
-          content: string
-          conversation_id: string | null
-          created_at: string
-          id: string
-          media_url: string | null
-          message_type: string
-          receiver_address: string
-          sender_address: string
-          sender_avatar_url: string | null
-          sender_display_name: string | null
-          sender_username: string | null
-        }
-        Insert: {
-          content?: string
-          conversation_id?: string | null
-          created_at?: string
-          id?: string
-          media_url?: string | null
-          message_type?: string
-          receiver_address: string
-          sender_address: string
-          sender_avatar_url?: string | null
-          sender_display_name?: string | null
-          sender_username?: string | null
-        }
-        Update: {
-          content?: string
-          conversation_id?: string | null
-          created_at?: string
-          id?: string
-          media_url?: string | null
-          message_type?: string
-          receiver_address?: string
-          sender_address?: string
-          sender_avatar_url?: string | null
-          sender_display_name?: string | null
-          sender_username?: string | null
-        }
-        Relationships: []
-      }
       feature_request_comments: {
         Row: {
           avatar: string | null

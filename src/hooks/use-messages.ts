@@ -13,7 +13,7 @@ import {
   getConversations,
   getMessages,
   uploadAndSendMedia,
-  sendMessageViaRest,
+  
   createConversation,
   markConversationAsRead,
   deleteConversation,
@@ -304,10 +304,10 @@ export function useSendMessage(conversationId: string) {
         });
       }
 
-      // Virtual conversation (new_0x... or 0x...): use REST API — socket expects real dmId
+      // Virtual conversations (legacy Supabase DMs) no longer supported
       const isVirtual = conversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(conversationId);
       if (isVirtual) {
-        return sendMessageViaRest(conversationId, content, msgType, { gifUrl, replyTo });
+        throw new Error('Virtual conversations are no longer supported');
       }
 
       // Real conversation: emit via socket (fire and forget)
