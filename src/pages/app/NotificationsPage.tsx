@@ -155,7 +155,7 @@ function getNotificationIcon(type: string) {
     case 'governance_comment':
       return <MessageSquareText className="w-4 h-4 text-white/70" />;
     case 'tip':
-      return <Gift className="w-4 h-4 text-white/70" />;
+      return <Diamond className="w-4 h-4 text-white/70" />;
     case 'subscription':
     case 'ppv_purchase':
       return <Users className="w-4 h-4 text-white/70" />;
