@@ -75,7 +75,7 @@ export default function GlossaryPage() {
         { icon: <MessageSquare size={iconSize} />, title: t('glossary.comment', 'Comment'), description: t('glossary.commentDesc', 'Opens the comment section where you can reply to a post, join discussions, and interact with other users.') },
         { icon: <Share2 size={iconSize} />, title: t('glossary.share', 'Share'), description: t('glossary.shareDesc', 'Share a post externally via a link, or copy the post URL to your clipboard to send to others.') },
         { icon: <Bookmark size={iconSize} />, title: t('glossary.bookmark', 'Bookmark'), description: t('glossary.bookmarkDesc', 'Save a post to your bookmarks for later. Access all saved posts from the Bookmarks page in the sidebar.') },
-        { icon: <Diamond size={iconSize} />, title: t('glossary.tip', 'Tip'), description: t('glossary.tipDesc', 'Send DHB tokens directly to a content creator as a reward for their content. Tips are recorded on-chain.') },
+        { icon: <Gem size={iconSize} />, title: t('glossary.tip', 'Tip'), description: t('glossary.tipDesc', 'Send DHB tokens directly to a content creator as a reward for their content. Tips are recorded on-chain.') },
         { icon: <Flag size={iconSize} />, title: t('glossary.report', 'Report'), description: t('glossary.reportDesc', 'Flag inappropriate or harmful content for review. Reports help keep the community safe.') },
         { icon: <MoreHorizontal size={iconSize} />, title: t('glossary.moreOptions', 'More Options (⋯)'), description: t('glossary.moreOptionsDesc', 'Opens additional actions like editing, deleting, or reporting a post.') },
       ],
