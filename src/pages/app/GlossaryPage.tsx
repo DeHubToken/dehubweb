@@ -90,7 +90,7 @@ export default function GlossaryPage() {
         { icon: <Image size={iconSize} />, title: t('glossary.imagePost', 'Image Post'), description: t('glossary.imagePostDesc', 'A post containing one or more images. Images are stored on-chain as NFTs with a unique Token ID.') },
         { icon: <Video size={iconSize} />, title: t('glossary.videoPost', 'Video Post'), description: t('glossary.videoPostDesc', 'A post containing a video. Videos can be set to public, private, or pay-per-view (PPV).') },
         { icon: <Radio size={iconSize} />, title: t('glossary.liveStream', 'Live Stream'), description: t('glossary.liveStreamDesc', 'A real-time broadcast. Viewers can watch, comment, and tip the streamer. Streams use low-latency HLS technology.') },
-        { icon: <Circle size={iconSize} />, title: t('glossary.story', 'Story'), description: t('glossary.storyDesc', 'Short video content that expires after 24 hours. Tap a user\'s avatar ring on the home feed to view their story.') },
+        { icon: <Clock size={iconSize} />, title: t('glossary.story', 'Story'), description: t('glossary.storyDesc', 'Short video content that expires after 24 hours. Tap a user\'s avatar ring on the home feed to view their story.') },
         { icon: <Play size={iconSize} />, title: t('glossary.audio', 'Audio'), description: t('glossary.audioDesc', 'An audio post with a visual waveform player. Creators can upload music, podcasts, or voice recordings.') },
         { icon: <Mic size={iconSize} />, title: t('glossary.audioSpace', 'Audio Space'), description: t('glossary.audioSpaceDesc', 'A live audio room where users can speak, listen, and raise their hand to join the conversation.') },
       ],
