@@ -93,7 +93,6 @@ export function useTipPayment({
 
         await result.wait(1);
 
-        // Post tips: backend indexes blockchain (no API). DM tips use POST /api/dm/tip-notify (chat-system.md).
         // Record tip in database for leaderboard tracking
         try {
           await supabase.from('tip_records').insert({
@@ -106,6 +105,31 @@ export function useTipPayment({
           } as any);
         } catch (dbErr) {
           console.warn('[Tip] Failed to record tip in DB:', dbErr);
+        }
+
+        // Notify recipient via DeHub API tip-notify endpoint
+        try {
+          const { getAuthToken } = await import('@/lib/api/dehub/core');
+          const { DEHUB_API_BASE } = await import('@/lib/api/dehub/core');
+          const token = getAuthToken();
+          if (token) {
+            await fetch(`${DEHUB_API_BASE}/api/dm/tip-notify`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                txHash: result.hash,
+                receiverAddress: creatorAddress.toLowerCase(),
+                amount,
+                chainId,
+                tokenId: tokenId || undefined,
+              }),
+            });
+          }
+        } catch (notifyErr) {
+          console.warn('[Tip] tip-notify API call failed:', notifyErr);
         }
 
         toast.success(`Tip of ${amount} DHB sent! 🎉`, { id: 'tip-payment' });
