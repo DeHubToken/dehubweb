@@ -14,7 +14,7 @@ import { ChatInput } from './ChatInput';
 import { TranslatableText } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
-import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
+import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
 import { DmTipDialog } from './DmTipDialog';
