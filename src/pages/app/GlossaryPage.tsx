@@ -14,7 +14,7 @@ import {
   Video, Image, Coins, Users, Star, Lock, Unlock,
   ArrowUpDown, Zap, BookOpen, Search, Settings, Home,
   Play, Mic, Volume2, Crown, Gift, TrendingUp,
-  Clock, CheckCircle2, XCircle, AlertTriangle, Info,
+  Clock,
   Copy, ExternalLink, RotateCcw, Pencil, Trash2,
   ChevronUp, ChevronDown, Pin, AtSign, Hash,
 } from 'lucide-react';
