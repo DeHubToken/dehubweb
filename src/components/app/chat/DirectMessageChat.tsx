@@ -578,6 +578,23 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           </Link>
         </div>
 
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-zinc-400 hover:text-white hover:bg-zinc-800"
+            onClick={() => {
+              setShowSearchBar(prev => !prev);
+              if (!showSearchBar) {
+                setTimeout(() => searchInputRef.current?.focus(), 100);
+              } else {
+                setSearchQuery('');
+              }
+            }}
+          >
+            <Search className="w-5 h-5" />
+          </Button>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-zinc-800">
