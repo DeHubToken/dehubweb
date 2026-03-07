@@ -9,6 +9,7 @@ import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import { Interface } from 'ethers';
 import { supabase } from '@/integrations/supabase/client';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import {
   writeContractAA,
   getWalletAddress,
@@ -95,14 +96,17 @@ export function useTipPayment({
 
         // Record tip in database for leaderboard tracking
         try {
-          await supabase.from('tip_records').insert({
-            sender_address: signerAddress.toLowerCase(),
-            receiver_address: creatorAddress.toLowerCase(),
-            amount,
-            chain_id: chainId,
-            tx_hash: result.hash,
-            token_id: tokenId || null,
-          } as any);
+          await withWalletHeader(
+            supabase.from('tip_records').insert({
+              sender_address: signerAddress.toLowerCase(),
+              receiver_address: creatorAddress.toLowerCase(),
+              amount,
+              chain_id: chainId,
+              tx_hash: result.hash,
+              token_id: tokenId || null,
+            } as any),
+            signerAddress
+          );
         } catch (dbErr) {
           console.warn('[Tip] Failed to record tip in DB:', dbErr);
         }
