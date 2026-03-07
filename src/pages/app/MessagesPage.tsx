@@ -150,6 +150,48 @@ export default function MessagesPage() {
   } = useConversations(searchQuery);
 
   const createConversation = useCreateConversation();
+  const { data: userSearchResults, isLoading: isSearchingUsers } = useUserSearchForDM(searchQuery);
+
+  // Get existing conversation addresses to filter search results
+  const existingAddresses = new Set(
+    (conversations || []).map(c => c.otherUser?.address?.toLowerCase()).filter(Boolean)
+  );
+
+  // Filter user search results to exclude users we already have conversations with
+  const newUserResults = (userSearchResults?.items || []).filter(
+    (user: DeHubUser) => !existingAddresses.has(user.address?.toLowerCase())
+  );
+
+  /** Handle clicking a user search result */
+  const handleSelectSearchUser = (user: DeHubUser) => {
+    const dmSettingsObj = (() => {
+      const raw = (user as any).dmSettings || (user as any).dmSetting;
+      return Array.isArray(raw) ? raw[0] : raw;
+    })();
+    const perMessageFee = dmSettingsObj?.perMessageFee;
+    const dmDisabled = dmSettingsObj?.disables?.includes('NEW_DM') || dmSettingsObj?.disables?.includes('all');
+
+    if (dmDisabled) return;
+
+    if (perMessageFee && perMessageFee > 0) {
+      // Has a fee — open the NewConversationModal which handles the fee flow
+      // Pre-populate by opening the modal (the user will need to search again, but this is the safest approach)
+      setShowNewConversation(true);
+      return;
+    }
+
+    // No fee — create conversation directly
+    const userAddress = user.address || (user as any)._id;
+    if (!userAddress) return;
+
+    createConversation.mutateAsync({
+      recipientAddress: userAddress,
+      recipientUser: user,
+    }).then(conv => {
+      setSelectedConversation(conv);
+      setSearchQuery('');
+    }).catch(() => {});
+  };
 
   // Capture navigation state into a ref immediately (before it can be cleared)
   const pendingDmRef = useRef<{ address: string; username?: string } | null>(null);
