@@ -47,6 +47,11 @@ export interface ProfileData {
   customs?: Record<string, unknown>;
   /** On-chain badge balance from API */
   badgeBalance?: number;
+  /** DM settings from API */
+  dmSettings?: {
+    disables?: string[];
+    minTipDhb?: number;
+  };
 }
 
 /**
@@ -118,6 +123,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     followingsList,
     customs: Object.keys(mergedCustoms).length > 0 ? mergedCustoms : undefined,
     badgeBalance: user.badgeBalance || (user.balanceData?.reduce((sum, b) => sum + (b.walletBalance || 0) + (b.staked || 0), 0)) || 0,
+    dmSettings: user.dmSettings,
   };
 }
 

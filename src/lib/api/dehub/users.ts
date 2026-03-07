@@ -42,6 +42,7 @@ export interface UpdateProfileData {
   youtubeLink?: string;
   facebookLink?: string;
   customs?: Record<string, string>;
+  dmSettings?: { disables?: string[]; minTipDhb?: number };
   avatarImg?: File;
   coverImg?: File;
 }
@@ -71,6 +72,9 @@ export async function updateProfile(data: UpdateProfileData): Promise<{ result: 
   
   if (data.customs !== undefined) {
     formData.append("customs", JSON.stringify(data.customs));
+  }
+  if (data.dmSettings !== undefined) {
+    formData.append("dmSettings", JSON.stringify(data.dmSettings));
   }
 
   if (data.avatarImg) formData.append("avatarImg", data.avatarImg);

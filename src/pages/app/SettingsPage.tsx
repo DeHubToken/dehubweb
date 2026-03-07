@@ -73,6 +73,7 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
+import { useDmSettings } from '@/hooks/use-dm-settings';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 import { useAnimations } from '@/contexts/AnimationsContext';
@@ -865,7 +866,8 @@ function NotificationSettings() {
 function PrivacySettings() {
   const { t } = useTranslation();
   const { showFollowersFollowing, hideFollowerCounts, isPrivate, defaultPostVisibility, updateSettings, isUpdating, isLoading } = usePrivacySettings();
-  const [whoCanMessage, setWhoCanMessage] = useState('everyone');
+  const { whoCanMessage, messageFee, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateMessageFee, updateDoNotDisturb } = useDmSettings();
+  const [feeInput, setFeeInput] = useState('');
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
   const { user } = useAuthContext();
   const [followRequestsOpen, setFollowRequestsOpen] = useState(false);
@@ -1024,24 +1026,73 @@ function PrivacySettings() {
 
       {/* Messaging */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.messages')}</h3>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <MessageCircle className="w-5 h-5 text-zinc-500" />
-            <div>
-              <p className="text-white font-medium">{t('settings.whoCanMessage')}</p>
-              <p className="text-zinc-500 text-sm">{t('settings.whoCanMessageDesc')}</p>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.messages', 'Messages')}</h3>
+        <div className="space-y-4">
+          {/* Who Can Message */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <MessageCircle className="w-5 h-5 text-zinc-500" />
+              <div>
+                <p className="text-white font-medium">{t('settings.whoCanMessage', 'Who can message you')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.whoCanMessageDesc', 'Control who can send you direct messages')}</p>
+              </div>
+            </div>
+            <SettingDrawerSelect
+              value={whoCanMessage}
+              onValueChange={(value) => updateWhoCanMessage(value as 'everyone' | 'followers' | 'none')}
+              disabled={isDmUpdating}
+              title={t('settings.whoCanMessage', 'Who can message you')}
+              options={[
+                { value: 'everyone', label: t('settings.everyone', 'Everyone'), description: t('settings.everyoneDesc', 'Anyone on the platform can message you') },
+                { value: 'followers', label: t('settings.followers', 'Followers'), description: t('settings.followersOnlyDesc', 'Only people who follow you can message you') },
+                { value: 'none', label: t('settings.noOne', 'No one'), description: t('settings.noOneDesc', 'Disable all incoming messages') },
+              ]}
+            />
+          </div>
+
+          {/* Message Fee */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Coins className="w-5 h-5 text-zinc-500" />
+              <div>
+                <p className="text-white font-medium">{t('settings.messageFee', 'Message fee')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.messageFeeDesc', 'Require a minimum DHB tip to message you')}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Input
+                type="number"
+                min={0}
+                placeholder="0"
+                value={feeInput || (messageFee > 0 ? String(messageFee) : '')}
+                onChange={(e) => setFeeInput(e.target.value)}
+                onBlur={() => {
+                  const val = parseFloat(feeInput);
+                  if (!isNaN(val) && val >= 0 && val !== messageFee) {
+                    updateMessageFee(val);
+                  }
+                  setFeeInput('');
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    (e.target as HTMLInputElement).blur();
+                  }
+                }}
+                className="w-24 h-9 bg-zinc-800 border-zinc-700 text-white text-right"
+                disabled={isDmUpdating}
+              />
+              <span className="text-zinc-400 text-sm">DHB</span>
             </div>
           </div>
-          <SettingDrawerSelect
-            value={whoCanMessage}
-            onValueChange={() => toast.info(t('settings.comingSoon', 'Coming soon'))}
-            title={t('settings.whoCanMessage')}
-            options={[
-              { value: 'everyone', label: t('settings.everyone'), description: t('settings.everyoneDesc') },
-              { value: 'followers', label: t('settings.followers'), description: t('settings.followersOnlyDesc') },
-              { value: 'none', label: t('settings.noOne'), description: t('settings.noOneDesc') },
-            ]}
+
+          {/* Do Not Disturb */}
+          <SettingToggle
+            icon={Ban}
+            title={t('settings.doNotDisturb', 'Do not disturb')}
+            description={t('settings.doNotDisturbDesc', 'Mute all message notifications')}
+            defaultChecked={doNotDisturb}
+            onCheckedChange={(checked) => updateDoNotDisturb(checked)}
+            disabled={isDmUpdating}
           />
         </div>
       </div>
