@@ -21,9 +21,15 @@ interface ChatInputSendArgs {
 interface ChatInputProps {
   onSendMessage: (args: ChatInputSendArgs) => void;
   onTipClick?: () => void;
+  /** Externally disable the send button (e.g. insufficient fee balance) */
+  sendDisabled?: boolean;
+  /** Label shown on disabled send tooltip */
+  sendDisabledReason?: string;
+  /** If true, shows a processing spinner on the send button */
+  isSendingFee?: boolean;
 }
 
-export function ChatInput({ onSendMessage, onTipClick }: ChatInputProps) {
+export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee }: ChatInputProps) {
   const [message, setMessage] = useState('');
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
