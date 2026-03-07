@@ -6,6 +6,7 @@
  */
 
 import { useTranslation } from 'react-i18next';
+import glossaryIcon from '@/assets/glossary-icon.png';
 import dhbCoinIcon from '@/assets/dehub-coin.png';
 import { BADGE_LEVELS, getBadgeUrl } from '@/lib/staking-badges';
 import {
