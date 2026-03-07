@@ -416,6 +416,7 @@ export async function createConversation(
     displayName: recipientUser.displayName || recipientUser.display_name,
     avatarImageUrl: recipientUser.avatarImageUrl || recipientUser.avatarUrl,
     isVerified: recipientUser.isVerified || recipientUser.is_verified,
+    dmSettings: (recipientUser as any).dmSettings,
   } : {
     _id: recipientAddress,
     address: recipientAddress,
