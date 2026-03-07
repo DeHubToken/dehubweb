@@ -212,10 +212,7 @@ export function DmTipDialog({
                   Sending...
                 </>
               ) : (
-                <>
-                  <Gem className="w-4 h-4 mr-2" />
-                  Send {isValidAmount ? parsedAmount.toLocaleString() : '—'} DHB
-                </>
+                <>Send</>
               )}
             </Button>
           </div>
