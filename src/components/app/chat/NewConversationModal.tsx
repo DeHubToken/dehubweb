@@ -122,9 +122,10 @@ function FeePaymentStep({
 }: {
   user: DeHubUser;
   fee: number;
-  onPaid: () => void;
+  onPaid: (firstMessage?: string) => void;
   onBack: () => void;
 }) {
+  const [messageText, setMessageText] = useState('');
   const [customAmount, setCustomAmount] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [balanceInfo, setBalanceInfo] = useState<{ checked: boolean; balance: number; sufficient: boolean }>({
