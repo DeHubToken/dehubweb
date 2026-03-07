@@ -442,18 +442,12 @@ export default function MessagesPage() {
         onSelectGroup={() => setShowCreateGroup(true)}
       />
 
-      {/* New DM Conversation Modal */}
       <NewConversationModal
         open={showNewConversation}
-        onOpenChange={(open) => {
-          setShowNewConversation(open);
-          if (!open) setPendingFeeUser(null);
-        }}
+        onOpenChange={setShowNewConversation}
         onConversationCreated={(conversation) => {
           setSelectedConversation(conversation);
-          setPendingFeeUser(null);
         }}
-        initialFeeUser={pendingFeeUser}
       />
 
       {/* Create Group Modal */}
