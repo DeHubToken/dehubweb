@@ -866,7 +866,8 @@ function NotificationSettings() {
 function PrivacySettings() {
   const { t } = useTranslation();
   const { showFollowersFollowing, hideFollowerCounts, isPrivate, defaultPostVisibility, updateSettings, isUpdating, isLoading } = usePrivacySettings();
-  const [whoCanMessage, setWhoCanMessage] = useState('everyone');
+  const { whoCanMessage, messageFee, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateMessageFee, updateDoNotDisturb } = useDmSettings();
+  const [feeInput, setFeeInput] = useState('');
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
   const { user } = useAuthContext();
   const [followRequestsOpen, setFollowRequestsOpen] = useState(false);
