@@ -926,16 +926,22 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setUploadProgress(65);
       toast.loading('Publishing to decentralized database', { id: 'mint-progress', duration: Infinity });
       
-      // Slowly creep progress from 65→99% while waiting for chain confirmation
-      let simulatedProgress = 65;
+      // Slowly creep progress from 69→99% while waiting for chain confirmation
+      // Faster initially, then decelerates as it approaches 99%
+      let simulatedProgress = 69;
       const progressInterval = setInterval(() => {
-        simulatedProgress += Math.random() * 2 + 0.5; // ~0.5-2.5% per tick
+        const remaining = 99 - simulatedProgress;
+        // Exponential deceleration: move a fraction of remaining distance
+        const step = remaining > 4
+          ? Math.random() * 3 + 1.5   // 1.5-4.5% per tick when far from 99
+          : Math.random() * 0.3 + 0.1; // 0.1-0.4% per tick near 95-99%
+        simulatedProgress += step;
         if (simulatedProgress >= 99) {
           simulatedProgress = 99;
           clearInterval(progressInterval);
         }
         setUploadProgress(Math.round(simulatedProgress));
-      }, 1500);
+      }, 1200);
 
       let txHash: string;
       
