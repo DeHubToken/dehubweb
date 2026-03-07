@@ -303,7 +303,7 @@ export default function ProfilePage() {
 
             <div
               className="relative z-20 flex overflow-x-auto scrollbar-hide"
-              style={{ touchAction: 'pan-x' }}
+              style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch', willChange: 'scroll-position' } as React.CSSProperties}
               onScroll={handleTabsScroll}
             >
               {data.PROFILE_TABS.map((tab) => {
