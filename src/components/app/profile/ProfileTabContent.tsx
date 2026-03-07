@@ -105,6 +105,25 @@ export function ProfileTabContent({
 
   const allComments = commentsData?.pages.flatMap(p => p.data) ?? [];
 
+  // Track which tabs have been visited so we only mount them once accessed
+  const visitedTabs = useRef(new Set<TabValue>([activeTab]));
+  visitedTabs.current.add(activeTab);
+
+  // Lazy tab panel: only mounts content once the tab has been visited
+  const TabPanel = useCallback(({ tab, children }: { tab: TabValue; children: React.ReactNode }) => {
+    const isActive = activeTab === tab;
+    const hasBeenVisited = visitedTabs.current.has(tab);
+    if (!isActive && !hasBeenVisited) return null;
+    return (
+      <div
+        style={isActive ? undefined : { visibility: 'hidden', height: 0, overflow: 'hidden', position: 'absolute', width: '100%' }}
+        aria-hidden={!isActive}
+      >
+        {children}
+      </div>
+    );
+  }, [activeTab]);
+
   // Private account gate - shown instead of all tabs
   if (isTargetPrivate && !isFollowing && !isViewingOwnProfile) {
     return (
@@ -122,26 +141,6 @@ export function ProfileTabContent({
   
   const hasData = userContentData && (userContentData as any).pages && (userContentData as any).pages.length > 0;
   const showLoading = isLoadingContent && !hasData;
-
-  // Track which tabs have been visited so we only mount them once accessed
-  const visitedTabs = useRef(new Set<TabValue>([activeTab]));
-  visitedTabs.current.add(activeTab);
-
-  // Hidden tabs use visibility:hidden + height:0 instead of display:none
-  // but only if they've been visited before (lazy mount)
-  const TabPanel = useCallback(({ tab, children }: { tab: TabValue; children: React.ReactNode }) => {
-    const isActive = activeTab === tab;
-    const hasBeenVisited = visitedTabs.current.has(tab);
-    if (!isActive && !hasBeenVisited) return null; // Never mounted yet
-    return (
-      <div
-        style={isActive ? undefined : { visibility: 'hidden', height: 0, overflow: 'hidden', position: 'absolute', width: '100%' }}
-        aria-hidden={!isActive}
-      >
-        {children}
-      </div>
-    );
-  }, [activeTab]);
 
   return (
     <div style={{ position: 'relative' }}>
