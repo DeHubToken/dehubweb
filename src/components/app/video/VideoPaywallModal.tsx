@@ -5,6 +5,17 @@ import { Loader2, Video, AlertCircle, ChevronDown, Volume2 } from 'lucide-react'
 import { VideoModel, VideoModelKey, VIDEO_MODELS, VIDEO_MODEL_OPTIONS, getVideoCostUsd, getVideoCostDhb } from '@/constants/video-models.constants';
 import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
+import { useAuth } from '@/contexts/AuthContext';
+import { useDeHubProfile } from '@/hooks/use-dehub-profile';
+import { toast } from 'sonner';
+import { Interface } from 'ethers';
+import { writeContractAA, getWalletAddress, getERC20Balance, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
+import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+
+const DEHUB_AI_TREASURY = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
+const erc20TransferInterface = new Interface([
+  'function transfer(address to, uint256 amount) returns (bool)',
+]);
 
 interface VideoPaywallModalProps {
   open: boolean;
@@ -29,9 +40,11 @@ export function VideoPaywallModal({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
 
-  // Mock user balance (in a real app, this would come from the database)
-  const [userBalance] = useState(50000); // 50,000 DHB mock balance
+  const { walletAddress } = useAuth();
+  const { data: profile, isLoading: profileLoading } = useDeHubProfile({ userId: walletAddress || undefined, enabled: !!walletAddress });
+  const userBalance = profile?.badgeBalance ?? 0;
 
   useEffect(() => {
     if (open) {
@@ -64,6 +77,7 @@ export function VideoPaywallModal({
 
   const costUsd = getVideoCostUsd(model);
   const costDhb = dhbPrice ? getVideoCostDhb(model, dhbPrice) : 0;
+  const isBalanceLoading = profileLoading;
   const hasEnoughBalance = userBalance >= costDhb;
 
   const formatDhb = (amount: number) => {
@@ -74,6 +88,43 @@ export function VideoPaywallModal({
       return `${(amount / 1000).toFixed(1)}K`;
     }
     return amount.toFixed(0);
+  };
+
+  const handlePayAndGenerate = async () => {
+    if (costDhb <= 0) return;
+    setIsPaying(true);
+    try {
+      const chainConfig = getChainConfig(BASE_CHAIN_ID);
+      await switchChain(BASE_CHAIN_ID);
+      const signerAddress = await getWalletAddress();
+      const amountWei = toWei(costDhb, DHB_TOKEN.decimals);
+      const dhbBalance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+
+      if (dhbBalance < amountWei) {
+        toast.error(`Insufficient DHB. Need ${formatDhb(costDhb)} DHB to generate video.`);
+        setIsPaying(false);
+        return;
+      }
+
+      toast.loading('Processing DHB payment...', { id: 'video-gen-payment' });
+      const result = await writeContractAA(
+        chainConfig.dhbToken,
+        erc20TransferInterface,
+        'transfer',
+        [DEHUB_AI_TREASURY, amountWei],
+        { context: 'AI video generation payment', chainId: BASE_CHAIN_ID }
+      );
+      await result.wait(1);
+      toast.success('Payment confirmed! Generating video...', { id: 'video-gen-payment' });
+      onConfirm();
+    } catch (err: unknown) {
+      console.error('[VideoPaywall] Payment failed:', err);
+      const msg = parseTxError(err);
+      toast.dismiss('video-gen-payment');
+      toast.error(msg || 'Payment failed.');
+    } finally {
+      setIsPaying(false);
+    }
   };
 
   return (
@@ -218,13 +269,17 @@ export function VideoPaywallModal({
             <span className="text-zinc-400">Your Balance</span>
             <div className="flex items-center gap-2">
               <img src={dhbCoinImage} alt="DHB" className="w-4 h-4" />
-              <span className={hasEnoughBalance ? 'text-green-400' : 'text-red-400'}>
-                {formatDhb(userBalance)} DHB
-              </span>
+              {isBalanceLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
+              ) : (
+                <span className={hasEnoughBalance ? 'text-green-400' : 'text-red-400'}>
+                  {formatDhb(userBalance)} DHB
+                </span>
+              )}
             </div>
           </div>
 
-          {!hasEnoughBalance && !loading && (
+          {!hasEnoughBalance && !loading && !isBalanceLoading && (
             <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-3">
               <p className="text-red-400 text-sm text-center">
                 Insufficient DHB balance. You need {formatDhb(costDhb - userBalance)} more DHB.
@@ -246,10 +301,15 @@ export function VideoPaywallModal({
           <Button
             variant="glass"
             className="flex-1 font-medium"
-            onClick={onConfirm}
-            disabled={loading || !hasEnoughBalance || isGenerating}
+            onClick={handlePayAndGenerate}
+            disabled={loading || isBalanceLoading || !hasEnoughBalance || isGenerating || isPaying}
           >
-            {isGenerating ? (
+            {isPaying ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Paying...
+              </>
+            ) : isGenerating ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Generating...

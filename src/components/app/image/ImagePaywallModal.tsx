@@ -7,6 +7,15 @@ import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
+import { toast } from 'sonner';
+import { Interface } from 'ethers';
+import { writeContractAA, getWalletAddress, getERC20Balance, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
+import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+
+const DEHUB_AI_TREASURY = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
+const erc20TransferInterface = new Interface([
+  'function transfer(address to, uint256 amount) returns (bool)',
+]);
 
 interface ImagePaywallModalProps {
   open: boolean;
@@ -31,6 +40,7 @@ export function ImagePaywallModal({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
 
   const { walletAddress } = useAuth();
   const { data: profile, isLoading: profileLoading } = useDeHubProfile({ userId: walletAddress || undefined, enabled: !!walletAddress });
@@ -72,6 +82,43 @@ export function ImagePaywallModal({
     if (amount >= 1000000) return `${(amount / 1000000).toFixed(2)}M`;
     if (amount >= 1000) return `${(amount / 1000).toFixed(1)}K`;
     return amount.toFixed(0);
+  };
+
+  const handlePayAndGenerate = async () => {
+    if (costDhb <= 0) return;
+    setIsPaying(true);
+    try {
+      const chainConfig = getChainConfig(BASE_CHAIN_ID);
+      await switchChain(BASE_CHAIN_ID);
+      const signerAddress = await getWalletAddress();
+      const amountWei = toWei(costDhb, DHB_TOKEN.decimals);
+      const dhbBalance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+
+      if (dhbBalance < amountWei) {
+        toast.error(`Insufficient DHB. Need ${formatDhb(costDhb)} DHB to generate image.`);
+        setIsPaying(false);
+        return;
+      }
+
+      toast.loading('Processing DHB payment...', { id: 'image-gen-payment' });
+      const result = await writeContractAA(
+        chainConfig.dhbToken,
+        erc20TransferInterface,
+        'transfer',
+        [DEHUB_AI_TREASURY, amountWei],
+        { context: 'AI image generation payment', chainId: BASE_CHAIN_ID }
+      );
+      await result.wait(1);
+      toast.success('Payment confirmed! Generating image...', { id: 'image-gen-payment' });
+      onConfirm();
+    } catch (err: unknown) {
+      console.error('[ImagePaywall] Payment failed:', err);
+      const msg = parseTxError(err);
+      toast.dismiss('image-gen-payment');
+      toast.error(msg || 'Payment failed.');
+    } finally {
+      setIsPaying(false);
+    }
   };
 
   return (
@@ -231,10 +278,15 @@ export function ImagePaywallModal({
           <Button
             variant="glass"
             className="flex-1 font-medium"
-            onClick={onConfirm}
-            disabled={loading || isBalanceLoading || !hasEnoughBalance || isGenerating}
+            onClick={handlePayAndGenerate}
+            disabled={loading || isBalanceLoading || !hasEnoughBalance || isGenerating || isPaying}
           >
-            {isGenerating ? (
+            {isPaying ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Paying...
+              </>
+            ) : isGenerating ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Generating...
