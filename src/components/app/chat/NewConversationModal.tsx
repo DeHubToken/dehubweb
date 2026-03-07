@@ -42,6 +42,8 @@ interface NewConversationModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConversationCreated: (conversation: DeHubConversation) => void;
+  /** Pre-select a fee user so the modal opens directly to the payment step */
+  initialFeeUser?: DeHubUser | null;
 }
 
 /** Extract dmSettings from either array or object shape */
