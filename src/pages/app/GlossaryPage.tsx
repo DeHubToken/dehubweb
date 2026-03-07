@@ -107,7 +107,7 @@ export default function GlossaryPage() {
     {
       title: t('glossary.sections.wallet', 'Wallet & Tokens'),
       entries: [
-        { icon: <Coins size={iconSize} />, title: t('glossary.dhbToken', 'DHB Token'), description: t('glossary.dhbTokenDesc', 'The native utility token of DeHub. Used for tipping, pay-per-view content, governance voting, and staking.') },
+        { icon: <img src={dhbCoinIcon} alt="DHB" className="w-6 h-6" />, title: t('glossary.dhbToken', 'DHB Token'), description: t('glossary.dhbTokenDesc', 'The native utility token of DeHub. Used for tipping, pay-per-view content, governance voting, and staking.') },
         { icon: <Wallet size={iconSize} />, title: t('glossary.wallet', 'Wallet'), description: t('glossary.walletDesc', 'Your on-chain wallet that holds your DHB tokens and other crypto assets. Connected via Web3Auth for easy access.') },
         { icon: <ArrowUpDown size={iconSize} />, title: t('glossary.swap', 'Swap'), description: t('glossary.swapDesc', 'Exchange one token for another directly within the app. Swaps happen on-chain using decentralized exchanges.') },
         { icon: <TrendingUp size={iconSize} />, title: t('glossary.staking', 'Staking'), description: t('glossary.stakingDesc', 'Lock your DHB tokens to earn rewards over time. Staked tokens also give you increased voting power in governance.') },
