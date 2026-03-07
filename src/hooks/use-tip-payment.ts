@@ -96,14 +96,17 @@ export function useTipPayment({
 
         // Record tip in database for leaderboard tracking
         try {
-          await supabase.from('tip_records').insert({
-            sender_address: signerAddress.toLowerCase(),
-            receiver_address: creatorAddress.toLowerCase(),
-            amount,
-            chain_id: chainId,
-            tx_hash: result.hash,
-            token_id: tokenId || null,
-          } as any);
+          await withWalletHeader(
+            supabase.from('tip_records').insert({
+              sender_address: signerAddress.toLowerCase(),
+              receiver_address: creatorAddress.toLowerCase(),
+              amount,
+              chain_id: chainId,
+              tx_hash: result.hash,
+              token_id: tokenId || null,
+            } as any),
+            signerAddress
+          );
         } catch (dbErr) {
           console.warn('[Tip] Failed to record tip in DB:', dbErr);
         }
