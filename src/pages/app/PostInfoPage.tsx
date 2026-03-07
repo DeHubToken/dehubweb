@@ -11,7 +11,7 @@
 
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio, Ticket, Coins } from 'lucide-react';
+import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageSquare, User, Loader2, Users, Tag, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio, Ticket, Coins } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -827,7 +827,7 @@ export default function PostInfoPage() {
               
               {/* Comments */}
               <div className="bg-white/5 rounded-lg p-3 flex items-center gap-3">
-                <MessageCircle className="w-5 h-5 text-white" />
+                <MessageSquare className="w-5 h-5 text-white" />
                 <div>
                   <p className="text-lg font-bold text-white">{comments.toLocaleString()}</p>
                   <p className="text-xs text-white/60">{t('postInfo.comments')}</p>
