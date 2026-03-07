@@ -5,6 +5,8 @@ import { Loader2, Video, AlertCircle, ChevronDown, Volume2 } from 'lucide-react'
 import { VideoModel, VideoModelKey, VIDEO_MODELS, VIDEO_MODEL_OPTIONS, getVideoCostUsd, getVideoCostDhb } from '@/constants/video-models.constants';
 import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
+import { useAuth } from '@/contexts/AuthContext';
+import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 
 interface VideoPaywallModalProps {
   open: boolean;
@@ -12,26 +14,27 @@ interface VideoPaywallModalProps {
   model: VideoModel;
   selectedModelKey: VideoModelKey;
   onModelChange: (modelKey: VideoModelKey) => void;
-  onConfirm: () => void;
+  onConfirm: (costDhb: number) => void;
   isGenerating?: boolean;
 }
 
-export function VideoPaywallModal({ 
-  open, 
-  onOpenChange, 
-  model, 
+export function VideoPaywallModal({
+  open,
+  onOpenChange,
+  model,
   selectedModelKey,
   onModelChange,
   onConfirm,
-  isGenerating = false 
+  isGenerating = false
 }: VideoPaywallModalProps) {
   const [dhbPrice, setDhbPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
 
-  // Mock user balance (in a real app, this would come from the database)
-  const [userBalance] = useState(50000); // 50,000 DHB mock balance
+  const { walletAddress } = useAuth();
+  const { data: profile, isLoading: profileLoading } = useDeHubProfile({ userId: walletAddress || undefined, enabled: !!walletAddress });
+  const userBalance = profile?.badgeBalance ?? 0;
 
   useEffect(() => {
     if (open) {
@@ -64,6 +67,7 @@ export function VideoPaywallModal({
 
   const costUsd = getVideoCostUsd(model);
   const costDhb = dhbPrice ? getVideoCostDhb(model, dhbPrice) : 0;
+  const isBalanceLoading = profileLoading;
   const hasEnoughBalance = userBalance >= costDhb;
 
   const formatDhb = (amount: number) => {
@@ -218,13 +222,17 @@ export function VideoPaywallModal({
             <span className="text-zinc-400">Your Balance</span>
             <div className="flex items-center gap-2">
               <img src={dhbCoinImage} alt="DHB" className="w-4 h-4" />
-              <span className={hasEnoughBalance ? 'text-green-400' : 'text-red-400'}>
-                {formatDhb(userBalance)} DHB
-              </span>
+              {isBalanceLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
+              ) : (
+                <span className={hasEnoughBalance ? 'text-green-400' : 'text-red-400'}>
+                  {formatDhb(userBalance)} DHB
+                </span>
+              )}
             </div>
           </div>
 
-          {!hasEnoughBalance && !loading && (
+          {!hasEnoughBalance && !loading && !isBalanceLoading && (
             <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-3">
               <p className="text-red-400 text-sm text-center">
                 Insufficient DHB balance. You need {formatDhb(costDhb - userBalance)} more DHB.
@@ -246,8 +254,8 @@ export function VideoPaywallModal({
           <Button
             variant="glass"
             className="flex-1 font-medium"
-            onClick={onConfirm}
-            disabled={loading || !hasEnoughBalance || isGenerating}
+            onClick={() => onConfirm(costDhb)}
+            disabled={loading || isBalanceLoading || !hasEnoughBalance || isGenerating}
           >
             {isGenerating ? (
               <>

@@ -38,6 +38,9 @@ import { CHAT_MODEL_OPTIONS, DEFAULT_CHAT_MODEL, type ChatModelKey } from '@/con
 import { PostModal } from '@/features/post';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
 import { ImagePaywallModal } from '@/components/app/image/ImagePaywallModal';
+import { Interface } from 'ethers';
+import { writeContractAA, getWalletAddress, getERC20Balance, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
+import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { OverviewTab } from '@/components/app/command-centre';
 import { AuthPrompt } from '@/components/app/AuthPrompt';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -46,6 +49,13 @@ import { ConversationHistoryDrawer } from '@/components/app/assistant/Conversati
 import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+
+// DeHub platform treasury — receives DHB payments for AI generation
+const DEHUB_AI_TREASURY = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
+
+const erc20TransferInterface = new Interface([
+  'function transfer(address to, uint256 amount) returns (bool)',
+]);
 
 // Simulation data for token transactions
 interface SimulationData {
@@ -657,11 +667,42 @@ export default function AssistantPage() {
   }, []);
 
   // Handle video generation after payment confirmation
-  const handleVideoGenerationConfirm = async () => {
+  const handleVideoGenerationConfirm = async (costDhb: number) => {
     if (!pendingVideoRequest) return;
 
     const { prompt, model, sourceImage } = pendingVideoRequest;
     const videoModel = VIDEO_MODELS[model];
+
+    // ── On-chain DHB payment ─────────────────────────────────
+    try {
+      const chainConfig = getChainConfig(BASE_CHAIN_ID);
+      await switchChain(BASE_CHAIN_ID);
+      const signerAddress = await getWalletAddress();
+      const amountWei = toWei(costDhb, DHB_TOKEN.decimals);
+      const dhbBalance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+
+      if (dhbBalance < amountWei) {
+        toast.error(`Insufficient DHB. Need ${costDhb.toFixed(0)} DHB to generate video.`);
+        return;
+      }
+
+      toast.loading('Processing DHB payment...', { id: 'video-gen-payment' });
+      const result = await writeContractAA(
+        chainConfig.dhbToken,
+        erc20TransferInterface,
+        'transfer',
+        [DEHUB_AI_TREASURY, amountWei],
+        { context: 'AI video generation payment', chainId: BASE_CHAIN_ID }
+      );
+      await result.wait(1);
+      toast.success('Payment confirmed! Generating video...', { id: 'video-gen-payment' });
+    } catch (payErr: unknown) {
+      console.error('[VideoGen] Payment failed:', payErr);
+      const msg = parseTxError(payErr);
+      toast.dismiss('video-gen-payment');
+      toast.error(msg || 'Payment failed. Video not generated.');
+      return;
+    }
 
     // Add user message if not already added
     const userMessage: Message = {
@@ -727,11 +768,42 @@ export default function AssistantPage() {
   };
 
   // Handle image generation after payment confirmation
-  const handleImageGenerationConfirm = async () => {
+  const handleImageGenerationConfirm = async (costDhb: number) => {
     if (!pendingImageRequest) return;
 
     const { prompt, model, sourceImage } = pendingImageRequest;
     const imageModel = IMAGE_MODELS[model];
+
+    // ── On-chain DHB payment ─────────────────────────────────
+    try {
+      const chainConfig = getChainConfig(BASE_CHAIN_ID);
+      await switchChain(BASE_CHAIN_ID);
+      const signerAddress = await getWalletAddress();
+      const amountWei = toWei(costDhb, DHB_TOKEN.decimals);
+      const dhbBalance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+
+      if (dhbBalance < amountWei) {
+        toast.error(`Insufficient DHB. Need ${costDhb.toFixed(0)} DHB to generate image.`);
+        return;
+      }
+
+      toast.loading('Processing DHB payment...', { id: 'image-gen-payment' });
+      const result = await writeContractAA(
+        chainConfig.dhbToken,
+        erc20TransferInterface,
+        'transfer',
+        [DEHUB_AI_TREASURY, amountWei],
+        { context: 'AI image generation payment', chainId: BASE_CHAIN_ID }
+      );
+      await result.wait(1);
+      toast.success('Payment confirmed! Generating image...', { id: 'image-gen-payment' });
+    } catch (payErr: unknown) {
+      console.error('[ImageGen] Payment failed:', payErr);
+      const msg = parseTxError(payErr);
+      toast.dismiss('image-gen-payment');
+      toast.error(msg || 'Payment failed. Image not generated.');
+      return;
+    }
 
     // Add user message
     const userMessage: Message = {
