@@ -144,8 +144,8 @@ export function DmFeeGate({
     <div className="border-t border-white/10 bg-zinc-900/95 backdrop-blur-sm px-4 py-5">
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-full bg-amber-500/15 flex items-center justify-center flex-shrink-0">
-          <Lock className="w-5 h-5 text-amber-400" />
+        <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
+          <img src={padlockImg} alt="Lock" className="w-8 h-8 object-contain" />
         </div>
         <div>
           <h3 className="text-white font-semibold text-sm">Tip to Message</h3>
