@@ -1078,7 +1078,7 @@ function PrivacySettings() {
                     (e.target as HTMLInputElement).blur();
                   }
                 }}
-                className="w-24 h-9 bg-zinc-800 border-zinc-700 text-white text-right"
+                className="w-24 h-9 rounded-xl bg-zinc-800 border-zinc-700 text-white text-right"
                 disabled={isDmUpdating}
               />
               <span className="text-zinc-400 text-sm">DHB</span>
@@ -1830,7 +1830,7 @@ function MessagesSettings() {
                     (e.target as HTMLInputElement).blur();
                   }
                 }}
-                className="w-24 h-9 bg-zinc-800 border-zinc-700 text-white text-right"
+                className="w-24 h-9 rounded-xl bg-zinc-800 border-zinc-700 text-white text-right"
                 disabled={isDmUpdating}
               />
               <span className="text-zinc-400 text-sm">DHB</span>
