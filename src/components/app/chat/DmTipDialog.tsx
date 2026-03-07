@@ -176,11 +176,7 @@ export function DmTipDialog({
           <div>
             <p className="text-white/60 text-xs mb-2">Or enter amount</p>
             <div className="relative">
-              <img
-                src={dehubCoin}
-                alt="DHB"
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5"
-              />
+              <Gem className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white" />
               <Input
                 type="number"
                 min={1}
