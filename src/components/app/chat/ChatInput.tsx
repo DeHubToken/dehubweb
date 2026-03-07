@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Image, Send, Sparkles, Loader2, X, Diamond } from 'lucide-react';
+import { Image, Send, Sparkles, Loader2, X, Gem } from 'lucide-react';
 import { EmojiGifPicker } from './EmojiGifPicker';
 import { VoiceRecorder } from './VoiceRecorder';
 import { UserMentionDropdown } from '@/components/app/mentions';
@@ -237,7 +237,7 @@ export function ChatInput({ onSendMessage, onTipClick }: ChatInputProps) {
                   className="h-8 w-8 text-white/70 hover:text-white hover:bg-zinc-700"
                   onClick={onTipClick}
                 >
-                  <Diamond className="w-5 h-5" />
+                  <Gem className="w-5 h-5" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Send a tip</TooltipContent>
