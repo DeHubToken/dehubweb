@@ -79,19 +79,26 @@ export function UserMentionDropdown({
 
     debounceRef.current = setTimeout(async () => {
       try {
-        const response = await apiCall<any>('/api/search', {
-          params: { q: searchQuery, type: 'people', limit: 10 },
+        const response = await apiCall<{ result?: Array<{
+          username: string;
+          displayName?: string;
+          avatarImageUrl?: string;
+          address?: string;
+          isFollowing?: boolean;
+          isVerified?: boolean;
+        }> }>('/api/users/mention_search', {
+          params: { q: searchQuery },
         });
 
         if (latestQueryRef.current !== searchQuery) return;
 
-        const items = response?.accounts?.items || [];
-        const mapped: MentionUser[] = items.slice(0, 8).map((u: any) => ({
-          id: u._id || u.id || u.address || '',
+        const items = response?.result || [];
+        const mapped: MentionUser[] = items.slice(0, 10).map((u) => ({
+          id: u.address || u.username || '',
           username: u.username || '',
-          displayName: u.displayName || u.display_name || null,
-          avatarUrl: getMediaUrl(u.avatarImageUrl || u.avatarUrl || undefined) || null,
-          isVerified: u.isVerified || u.is_verified || false,
+          displayName: u.displayName ?? null,
+          avatarUrl: getMediaUrl(u.avatarImageUrl) || null,
+          isVerified: u.isVerified ?? false,
         }));
 
         setUsers(mapped);
