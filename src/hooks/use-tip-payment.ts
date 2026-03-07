@@ -18,6 +18,7 @@ import {
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiCall } from '@/lib/api/dehub/core';
 import type { ChainId } from '@/components/app/ChainSelector';
 
 const erc20TransferInterface = new Interface([
@@ -92,6 +93,25 @@ export function useTipPayment({
         );
 
         await result.wait(1);
+
+        // Notify DeHub backend so recipient gets in-app + push notification (chat-system.md)
+        try {
+          await apiCall('/api/tip-notify', {
+            method: 'POST',
+            body: {
+              txHash: result.hash,
+              receiverAddress: creatorAddress.toLowerCase(),
+              senderAddress: signerAddress.toLowerCase(),
+              amount,
+              chainId,
+              tokenId: tokenId || undefined,
+            },
+            requiresAuth: true,
+          });
+        } catch (notifyErr) {
+          // Don't fail the tip — backend may index from blockchain; 404 = endpoint may not exist for post tips
+          console.warn('[Tip] Backend notify failed (tip still sent):', notifyErr);
+        }
 
         // Record tip in database for leaderboard tracking
         try {
