@@ -9,7 +9,7 @@
  *   4. Only then create the conversation
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Search, Loader2, MessageCircle, X, Lock, ArrowLeft, AlertCircle } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import padlockImg from '@/assets/padlock.png';
@@ -42,6 +42,8 @@ interface NewConversationModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConversationCreated: (conversation: DeHubConversation) => void;
+  /** Pre-select a fee user so the modal opens directly to the payment step */
+  initialFeeUser?: DeHubUser | null;
 }
 
 /** Extract dmSettings from either array or object shape */
@@ -381,10 +383,18 @@ export function NewConversationModal({
   open, 
   onOpenChange, 
   onConversationCreated,
+  initialFeeUser,
 }: NewConversationModalProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [feeUser, setFeeUser] = useState<DeHubUser | null>(null);
+
+  // When modal opens with an initialFeeUser, jump straight to fee step
+  useEffect(() => {
+    if (open && initialFeeUser) {
+      setFeeUser(initialFeeUser);
+    }
+  }, [open, initialFeeUser]);
   
   const { data: searchResults, isLoading: isSearching } = useUserSearchForDM(searchQuery);
   const createConversation = useCreateConversation();

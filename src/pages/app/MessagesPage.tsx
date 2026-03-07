@@ -134,6 +134,7 @@ export default function MessagesPage() {
   const [showMessageSelector, setShowMessageSelector] = useState(false);
   const [showNewConversation, setShowNewConversation] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
+  const [pendingFeeUser, setPendingFeeUser] = useState<DeHubUser | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [readConvIds, setReadConvIds] = useState<Set<string>>(new Set());
   const { isAuthenticated, walletAddress } = useAuth();
@@ -174,8 +175,8 @@ export default function MessagesPage() {
     if (dmDisabled) return;
 
     if (perMessageFee && perMessageFee > 0) {
-      // Has a fee — open the NewConversationModal which handles the fee flow
-      // Pre-populate by opening the modal (the user will need to search again, but this is the safest approach)
+      // Has a fee — open the NewConversationModal directly on the fee step
+      setPendingFeeUser(user);
       setShowNewConversation(true);
       return;
     }
@@ -454,10 +455,15 @@ export default function MessagesPage() {
       {/* New DM Conversation Modal */}
       <NewConversationModal
         open={showNewConversation}
-        onOpenChange={setShowNewConversation}
+        onOpenChange={(open) => {
+          setShowNewConversation(open);
+          if (!open) setPendingFeeUser(null);
+        }}
         onConversationCreated={(conversation) => {
           setSelectedConversation(conversation);
+          setPendingFeeUser(null);
         }}
+        initialFeeUser={pendingFeeUser}
       />
 
       {/* Create Group Modal */}
