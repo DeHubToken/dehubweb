@@ -326,7 +326,7 @@ export function useSendMessage(conversationId: string) {
 
       // Real conversation: emit via socket (fire and forget)
       const payload: SendMessagePayload = {
-        dmId: conversationId,
+        dmId: resolvedId,
         content,
         type: msgType,
         gif: gifUrl,
@@ -336,10 +336,10 @@ export function useSendMessage(conversationId: string) {
       };
       emitSendMessage(payload);
 
-      // Return an optimistic message (server echo arrives via socket listener)
+      // Return an optimistic message with the resolved conversation ID
       const tempMessage: DmMessage = {
         _id: `temp-${Date.now()}`,
-        conversation: conversationId,
+        conversation: resolvedId,
         sender: {
           _id: user?._id || walletAddress || '',
           username: user?.username || '',
