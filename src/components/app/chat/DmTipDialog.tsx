@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react';
-import { Diamond, Loader2 } from 'lucide-react';
+import { Gem, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
@@ -28,7 +28,7 @@ import {
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 import { getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
-import dehubCoin from '@/assets/dehub-coin.png';
+
 
 const erc20TransferInterface = new Interface([
   'function transfer(address to, uint256 amount) returns (bool)',
@@ -141,7 +141,7 @@ export function DmTipDialog({
       <DrawerContent glass className="px-4 pb-6">
         <DrawerHeader className="pb-3">
           <DrawerTitle className="text-white text-lg flex items-center gap-2">
-            <img src={dehubCoin} alt="DHB" className="w-5 h-5 brightness-0 invert" />
+            <Gem className="w-5 h-5 text-amber-400" />
             Send Tip
           </DrawerTitle>
           {recipientName && (
@@ -176,11 +176,7 @@ export function DmTipDialog({
           <div>
             <p className="text-white/60 text-xs mb-2">Or enter amount</p>
             <div className="relative">
-              <img
-                src={dehubCoin}
-                alt="DHB"
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5"
-              />
+              <Gem className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white" />
               <Input
                 type="number"
                 min={1}
@@ -216,7 +212,7 @@ export function DmTipDialog({
                 </>
               ) : (
                 <>
-                  <Diamond className="w-4 h-4 mr-2" />
+                  <Gem className="w-4 h-4 mr-2" />
                   Send {isValidAmount ? parsedAmount.toLocaleString() : '—'} DHB
                 </>
               )}

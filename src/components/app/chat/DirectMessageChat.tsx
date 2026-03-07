@@ -6,7 +6,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -148,7 +148,7 @@ function MessageBubble({
         {/* Tip message — system-style bubble */}
         {message.msgType === 'tip' && (
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-sm">
-            <img src={dehubCoin} alt="DHB" className="w-4 h-4 brightness-0 invert" />
+            <Gem className="w-4 h-4 text-white" />
             <span>
               Tip: {message.tipAmount} {message.tipSymbol || 'DHB'}
             </span>
@@ -221,7 +221,7 @@ function MessageBubble({
             {/* Tip badge on regular messages */}
             {message.tipAmount != null && (message.msgType as string) !== 'tip' && (
               <div className="inline-flex items-center gap-1 mt-1 text-xs text-amber-300">
-                <img src={dehubCoin} alt="DHB" className="w-3 h-3 brightness-0 invert" />
+                <Gem className="w-3 h-3 text-amber-300" />
                 {message.tipAmount} {message.tipSymbol || 'DHB'}
               </div>
             )}
@@ -673,7 +673,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
             ? 'bg-green-500/10 text-green-400 border-b border-green-500/20'
             : 'bg-amber-500/10 text-amber-400 border-b border-amber-500/20'
         }`}>
-          <img src={dehubCoin} alt="DHB" className="w-3 h-3 flex-shrink-0 brightness-0 invert" />
+          <Gem className="w-3 h-3 flex-shrink-0 text-current" />
           {dmFee.hasFreeAccess
             ? 'You have free access to message this user'
             : `Messaging fee: ${dmFee.fee} DHB per message`}

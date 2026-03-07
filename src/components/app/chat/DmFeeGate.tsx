@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react';
-import { Lock, Loader2 } from 'lucide-react';
+import { Lock, Loader2, Gem } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
@@ -21,7 +21,7 @@ import {
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 import { getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
-import dehubCoin from '@/assets/dehub-coin.png';
+
 
 const erc20TransferInterface = new Interface([
   'function transfer(address to, uint256 amount) returns (bool)',
@@ -155,7 +155,7 @@ export function DmFeeGate({
             </>
           ) : (
             <>
-              <img src={dehubCoin} alt="DHB" className="w-4 h-4 mr-2" />
+              <Gem className="w-4 h-4 mr-2 text-white" />
               Pay {fee.toLocaleString()} DHB Minimum
             </>
           )}
@@ -171,11 +171,7 @@ export function DmFeeGate({
         {/* Custom higher tip */}
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <img
-              src={dehubCoin}
-              alt="DHB"
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 z-10"
-            />
+            <Gem className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white z-10" />
             <Input
               type="number"
               min={fee}

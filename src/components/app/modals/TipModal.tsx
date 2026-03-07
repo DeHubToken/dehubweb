@@ -8,7 +8,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
-import { Gift, Loader2 } from 'lucide-react';
+import { Gem, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
@@ -19,7 +19,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { useTipPayment, MIN_TIP_DHB, MAX_TIP_DHB } from '@/hooks/use-tip-payment';
-import dehubCoin from '@/assets/dehub-coin.png';
+
 
 const QUICK_AMOUNTS = [500, 1000, 5000, 10000, 25000, 50000, 100000, 1000000];
 
@@ -77,7 +77,7 @@ export function TipModal({
       <DrawerContent glass className="px-4 pb-6">
         <DrawerHeader className="pb-3">
           <DrawerTitle className="text-white text-lg flex items-center gap-2">
-            <Gift className="w-5 h-5 text-amber-400" />
+            <Gem className="w-5 h-5 text-amber-400" />
             {t('tip.title', 'Send Tip')}
           </DrawerTitle>
           {creatorName && (
@@ -112,11 +112,7 @@ export function TipModal({
           <div>
             <p className="text-white/60 text-xs mb-2">{t('tip.customAmount', 'Or enter amount')}</p>
             <div className="relative">
-              <img
-                src={dehubCoin}
-                alt="DHB"
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5"
-              />
+              <Gem className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white" />
               <Input
                 type="number"
                 min={MIN_TIP_DHB}
@@ -152,7 +148,7 @@ export function TipModal({
                 </>
               ) : (
                 <>
-                  <Gift className="w-4 h-4 mr-2" />
+                  <Gem className="w-4 h-4 mr-2" />
                   {t('tip.sendAmount', 'Send {{amount}} DHB', {
                     amount: isValidAmount ? parsedAmount : '—',
                   })}
