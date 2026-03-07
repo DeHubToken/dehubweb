@@ -7,6 +7,7 @@
 
 import { useTranslation } from 'react-i18next';
 import dhbCoinIcon from '@/assets/dehub-coin.png';
+import { BADGE_LEVELS, getBadgeUrl } from '@/lib/staking-badges';
 import {
   ThumbsUp, ThumbsDown, Languages, Eye, MessageSquare, Share2, Ticket,
   Bookmark, Bell, Send, Heart, Flag, MoreHorizontal,
