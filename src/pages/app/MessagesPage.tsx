@@ -9,8 +9,9 @@ import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector
 
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
-import { useConversations, useUserOnlineStatus, useCreateConversation } from '@/hooks/use-messages';
-import { getMediaUrl, type DeHubConversation } from '@/lib/api/dehub';
+import { useConversations, useUserOnlineStatus, useCreateConversation, useUserSearchForDM } from '@/hooks/use-messages';
+import { getMediaUrl, type DeHubConversation, type DeHubUser } from '@/lib/api/dehub';
+import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getBadgeUrl } from '@/lib/staking-badges';
