@@ -346,6 +346,17 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       },
       onError: (err) => {
         console.warn('[DM] createAndStart failed (non-critical):', err);
+        // Fallback: use dmSettings from the search result / otherUser data
+        const otherUserData = otherUser as any;
+        const perMessageFee = otherUserData?.dmSettings?.perMessageFee;
+        if (perMessageFee && perMessageFee > 0 && !dmFee) {
+          console.log('[DM] Using fallback dmFee from search result:', perMessageFee);
+          setDmFee({
+            required: true,
+            fee: perMessageFee,
+            hasFreeAccess: false,
+          });
+        }
       },
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
