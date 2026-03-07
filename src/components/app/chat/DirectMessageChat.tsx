@@ -342,6 +342,14 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         if (data.dmFee) {
           console.log('[DM] dmFee detected:', data.dmFee);
           setDmFee(data.dmFee);
+        } else {
+          // Fallback: use dmSettings from search result when server doesn't return dmFee
+          const otherUserData = otherUser as any;
+          const perMessageFee = otherUserData?.dmSettings?.perMessageFee;
+          if (perMessageFee && perMessageFee > 0) {
+            console.log('[DM] Using fallback dmFee from otherUser.dmSettings:', perMessageFee);
+            setDmFee({ required: true, fee: perMessageFee, hasFreeAccess: false });
+          }
         }
       },
       onError: (err) => {
