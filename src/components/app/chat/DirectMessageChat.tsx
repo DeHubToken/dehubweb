@@ -641,7 +641,28 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        </div>
       </div>
+
+      {/* Search Bar */}
+      {showSearchBar && (
+        <div className="flex items-center gap-2 px-4 py-2 bg-zinc-800/80 border-b border-zinc-700/50">
+          <Search className="w-4 h-4 text-zinc-500 flex-shrink-0" />
+          <input
+            ref={searchInputRef}
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search messages..."
+            className="flex-1 bg-transparent text-sm text-white placeholder:text-zinc-500 outline-none"
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery('')} className="text-zinc-500 hover:text-white">
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+      )}
 
       {/* DM Fee banner */}
       {dmFee?.required && (
