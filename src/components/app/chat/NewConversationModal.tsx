@@ -316,7 +316,7 @@ function FeePaymentStep({
         variant="glass"
         className="w-full bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/30 h-11"
         onClick={() => handlePay(fee)}
-        disabled={isSending || (balanceInfo.checked && !balanceInfo.sufficient)}
+        disabled={isSending || !messageText.trim() || (balanceInfo.checked && !balanceInfo.sufficient)}
       >
         {isSending && !customAmount ? (
           <>
