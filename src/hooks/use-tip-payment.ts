@@ -9,6 +9,7 @@ import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import { Interface } from 'ethers';
 import { supabase } from '@/integrations/supabase/client';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import {
   writeContractAA,
   getWalletAddress,
