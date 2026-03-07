@@ -415,6 +415,16 @@ export async function getContacts(
     })
   );
 
+  // Filter out permanently deleted conversations
+  const deletedIds = getDeletedConversationIds();
+  if (deletedIds.size > 0) {
+    dehubItems = dehubItems.filter(c => {
+      const id = c.id || '';
+      const peerAddr = (c.otherUser?.address || '').toLowerCase();
+      return !deletedIds.has(id) && !deletedIds.has(peerAddr) && !deletedIds.has(`new_${peerAddr}`);
+    });
+  }
+
   // Sort by last activity (newest first)
   dehubItems.sort((a, b) => {
     const ta = new Date(a.updatedAt || a.lastMessage?.createdAt || 0).getTime();
