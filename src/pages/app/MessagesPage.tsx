@@ -163,31 +163,15 @@ export default function MessagesPage() {
     (user: DeHubUser) => !existingAddresses.has(user.address?.toLowerCase())
   );
 
-  /** Handle clicking a user search result */
+  /** Handle clicking a user search result — always create conversation and open chat */
   const handleSelectSearchUser = (user: DeHubUser) => {
     const dmSettingsObj = (() => {
       const raw = (user as any).dmSettings || (user as any).dmSetting;
       return Array.isArray(raw) ? raw[0] : raw;
     })();
-    const perMessageFee = dmSettingsObj?.perMessageFee;
     const dmDisabled = dmSettingsObj?.disables?.includes('NEW_DM') || dmSettingsObj?.disables?.includes('all');
-
     if (dmDisabled) return;
 
-    // Fee user — create conversation and open it; fee gate shows inline in chat
-    const userAddress = user.address || (user as any)._id;
-    if (!userAddress) return;
-
-    createConversation.mutateAsync({
-      recipientAddress: userAddress,
-      recipientUser: user,
-    }).then(conv => {
-      setSelectedConversation(conv);
-      setSearchQuery('');
-    }).catch(() => {});
-    return;
-
-    // No fee — create conversation directly
     const userAddress = user.address || (user as any)._id;
     if (!userAddress) return;
 
