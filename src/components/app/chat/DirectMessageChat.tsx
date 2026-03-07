@@ -14,6 +14,7 @@ import { ChatInput } from './ChatInput';
 import { TranslatableText } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDmSettings } from '@/hooks/use-dm-settings';
 import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
