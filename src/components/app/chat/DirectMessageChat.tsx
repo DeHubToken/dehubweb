@@ -670,7 +670,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       )}
 
       {/* Input */}
-      <ChatInput onSendMessage={handleSendMessage} />
+      <ChatInput onSendMessage={handleSendMessage} onTipClick={() => setShowTipDialog(true)} />
 
       {/* Delete confirmation dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
