@@ -140,8 +140,8 @@ export function DmTipDialog({
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent glass className="px-4 pb-6">
         <DrawerHeader className="pb-3">
-          <DrawerTitle className="text-white text-lg flex items-center gap-2">
-            <Gem className="w-5 h-5 text-amber-400" />
+          <DrawerTitle className="text-white text-lg flex items-center justify-center gap-2">
+            <Gem className="w-5 h-5 text-white" />
             Send Tip
           </DrawerTitle>
           {recipientName && (
