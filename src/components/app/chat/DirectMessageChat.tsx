@@ -601,14 +601,16 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
                 <><ShieldBan className="w-4 h-4 mr-2" />Block User</>
               )}
             </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
-              onClick={handleToggleFreeAccess}
-              disabled={isFreeAccessProcessing}
-            >
-              <Gift className="w-4 h-4 mr-2" />
-              {isFreeAccessGranted ? 'Revoke Free Access' : 'Grant Free Access'}
-            </DropdownMenuItem>
+            {myMessageFee > 0 && (
+              <DropdownMenuItem
+                className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
+                onClick={handleToggleFreeAccess}
+                disabled={isFreeAccessProcessing}
+              >
+                <Gift className="w-4 h-4 mr-2" />
+                {isFreeAccessGranted ? 'Revoke Free Access' : 'Grant Free Access'}
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem
               className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
               onClick={() => setShowSharedVideos(true)}
