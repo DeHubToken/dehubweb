@@ -1,8 +1,7 @@
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Image, Send, Sparkles, Loader2, X } from 'lucide-react';
-import dehubCoin from '@/assets/dehub-coin.png';
+import { Image, Send, Sparkles, Loader2, X, Gift } from 'lucide-react';
 import { EmojiGifPicker } from './EmojiGifPicker';
 import { VoiceRecorder } from './VoiceRecorder';
 import { UserMentionDropdown } from '@/components/app/mentions';
@@ -238,7 +237,7 @@ export function ChatInput({ onSendMessage, onTipClick }: ChatInputProps) {
                   className="h-8 w-8 text-amber-400 hover:text-amber-300 hover:bg-zinc-700"
                   onClick={onTipClick}
                 >
-                  <img src={dehubCoin} alt="DHB" className="w-5 h-5 brightness-0 invert" />
+                  <Gift className="w-5 h-5" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Send a tip</TooltipContent>
