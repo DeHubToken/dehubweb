@@ -16,6 +16,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
+import { DmTipDialog } from './DmTipDialog';
 import { formatDistanceToNow } from 'date-fns';
 import {
   DropdownMenu,
@@ -281,6 +282,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [isBlockProcessing, setIsBlockProcessing] = useState(false);
   const [showGroupSettings, setShowGroupSettings] = useState(false);
   const [showSharedVideos, setShowSharedVideos] = useState(false);
+  const [showTipDialog, setShowTipDialog] = useState(false);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
   const [dmFee, setDmFee] = useState<DmFee | null>(conversation.dmFee || null);
@@ -669,7 +671,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       )}
 
       {/* Input */}
-      <ChatInput onSendMessage={handleSendMessage} />
+      <ChatInput onSendMessage={handleSendMessage} onTipClick={() => setShowTipDialog(true)} />
 
       {/* Delete confirmation dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
@@ -706,6 +708,15 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       <SharedVideosDrawer
         open={showSharedVideos}
         onOpenChange={setShowSharedVideos}
+      />
+
+      {/* DM Tip Dialog */}
+      <DmTipDialog
+        open={showTipDialog}
+        onOpenChange={setShowTipDialog}
+        recipientAddress={otherUser?.address || ''}
+        recipientName={displayName}
+        conversationId={resolvedConversationId}
       />
 
       {/* DM Gated Banner */}

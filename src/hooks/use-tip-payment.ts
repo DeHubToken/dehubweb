@@ -111,30 +111,7 @@ export function useTipPayment({
           console.warn('[Tip] Failed to record tip in DB:', dbErr);
         }
 
-        // Notify recipient via DeHub API tip-notify endpoint
-        try {
-          const { getAuthToken } = await import('@/lib/api/dehub/core');
-          const { DEHUB_API_BASE } = await import('@/lib/api/dehub/core');
-          const token = getAuthToken();
-          if (token) {
-            await fetch(`${DEHUB_API_BASE}/api/dm/tip-notify`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({
-                txHash: result.hash,
-                receiverAddress: creatorAddress.toLowerCase(),
-                amount,
-                chainId,
-                tokenId: tokenId || undefined,
-              }),
-            });
-          }
-        } catch (notifyErr) {
-          console.warn('[Tip] tip-notify API call failed:', notifyErr);
-        }
+        // tip-notify is handled by DmTipDialog for DM tips only
 
         toast.success(`Tip of ${amount} DHB sent! 🎉`, { id: 'tip-payment' });
         onSuccess?.();

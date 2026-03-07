@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Image, Send, Sparkles, Loader2, X } from 'lucide-react';
+import { Image, Send, Sparkles, Loader2, X, DollarSign } from 'lucide-react';
 import { EmojiGifPicker } from './EmojiGifPicker';
 import { VoiceRecorder } from './VoiceRecorder';
 import { UserMentionDropdown } from '@/components/app/mentions';
@@ -20,9 +20,10 @@ interface ChatInputSendArgs {
 
 interface ChatInputProps {
   onSendMessage: (args: ChatInputSendArgs) => void;
+  onTipClick?: () => void;
 }
 
-export function ChatInput({ onSendMessage }: ChatInputProps) {
+export function ChatInput({ onSendMessage, onTipClick }: ChatInputProps) {
   const [message, setMessage] = useState('');
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -226,6 +227,23 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
 
         {/* Action buttons */}
         <div className="absolute bottom-0 right-0 flex items-center gap-0.5">
+          {onTipClick && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-amber-400 hover:text-amber-300 hover:bg-zinc-700"
+                  onClick={onTipClick}
+                >
+                  <DollarSign className="w-5 h-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Send a tip</TooltipContent>
+            </Tooltip>
+          )}
+
           <EmojiGifPicker
             onEmojiSelect={handleEmojiSelect}
             onGifSelect={handleGifSelect}
