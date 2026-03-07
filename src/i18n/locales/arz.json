@@ -3,7 +3,7 @@
     "home": "الرئيسية", "explore": "استكشاف", "notifications": "الإشعارات", "messages": "الرسايل", "assistant": "المساعد",
     "leaderboard": "لوحة المتصدرين", "bookmarks": "المحفوظات", "settings": "الإعدادات", "profile": "البروفايل",
     "blog": "المدونة", "command": "الأمر", "commandCentre": "مركز الأوامر", "wallet": "المحفظة", "docs": "المستندات",
-    "roadmap": "خريطة الطريق", "featureRequests": "طلبات", "governance": "الحوكمة", "careers": "وظايف",
+    "roadmap": "خريطة الطريق", "featureRequests": "طلبات", "governance": "الحوكمة", "careers": "وظايف", "glossary": "المسرد",
     "create": "إنشاء", "login": "تسجيل دخول", "connecting": "بيتوصل...", "signMessage": "وقّع الرسالة"
   },
   "feed": { "home": "الرئيسية", "videos": "فيديوهات", "images": "صور", "shorts": "شورتس", "music": "موسيقى", "live": "لايف" },

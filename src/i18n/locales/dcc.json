@@ -3,7 +3,7 @@
     "home": "گھر", "explore": "ڈھونڈو", "notifications": "اطلاع", "messages": "پیغام", "assistant": "مددگار",
     "leaderboard": "لیڈر بورڈ", "bookmarks": "بُک مارک", "settings": "سیٹنگز", "profile": "پروفائل",
     "blog": "بلاگ", "command": "کمانڈ", "commandCentre": "کمانڈ سینٹر", "wallet": "والیٹ", "docs": "ڈاکس",
-    "roadmap": "روڈ میپ", "featureRequests": "درخواستاں", "governance": "گورننس", "careers": "نوکری",
+    "roadmap": "روڈ میپ", "featureRequests": "درخواستاں", "governance": "گورننس", "careers": "نوکری", "glossary": "لغت",
     "create": "بناؤ", "login": "لاگ ان", "connecting": "کنیکٹ ہو رئی ہے...", "signMessage": "پیغام سائن کرو"
   },
   "feed": { "home": "گھر", "videos": "ویڈیو", "images": "تصویر", "shorts": "شارٹس", "music": "گانا", "live": "لائیو" },
