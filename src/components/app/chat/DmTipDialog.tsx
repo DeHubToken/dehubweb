@@ -167,7 +167,7 @@ export function DmTipDialog({
                       : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
                   }`}
                 >
-                  {val.toLocaleString()} DHB
+                  {val.toLocaleString()} <img src={dehubCoin} alt="DHB" className="inline w-4 h-4 ml-0.5" />
                 </button>
               ))}
             </div>
