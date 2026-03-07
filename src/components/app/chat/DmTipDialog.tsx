@@ -141,7 +141,7 @@ export function DmTipDialog({
       <DrawerContent glass className="px-4 pb-6">
         <DrawerHeader className="pb-3">
           <DrawerTitle className="text-white text-lg flex items-center gap-2">
-            <img src={dehubCoin} alt="DHB" className="w-5 h-5 brightness-0 invert" />
+            <Gem className="w-5 h-5 text-amber-400" />
             Send Tip
           </DrawerTitle>
           {recipientName && (
