@@ -613,13 +613,6 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
               </DropdownMenuItem>
             )}
             <DropdownMenuItem
-              className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
-              onClick={() => setShowSharedVideos(true)}
-            >
-              <Video className="w-4 h-4 mr-2" />
-              Shared Videos
-            </DropdownMenuItem>
-            <DropdownMenuItem
               className="text-red-400 focus:text-red-400 focus:bg-zinc-700 cursor-pointer"
               onClick={() => setShowDeleteDialog(true)}
             >
