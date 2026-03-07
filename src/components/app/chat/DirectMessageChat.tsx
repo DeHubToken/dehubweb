@@ -764,12 +764,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       )}
 
       {/* Input or Fee Gate */}
-      {!feeCheckComplete ? (
-        <div className="flex items-center justify-center py-4 px-4">
-          <Loader2 className="w-4 h-4 animate-spin text-zinc-500 mr-2" />
-          <span className="text-xs text-zinc-500">Checking messaging requirements...</span>
-        </div>
-      ) : dmFee?.required && !dmFee.hasFreeAccess ? (
+      {dmFee?.required && !dmFee.hasFreeAccess ? (
         <DmFeeGate
           fee={dmFee.fee}
           recipientAddress={otherUser?.address || ''}
