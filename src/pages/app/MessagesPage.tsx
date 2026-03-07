@@ -102,7 +102,7 @@ function ConversationItem({
       </div>
       
       {conversation.unreadCount > 0 && (
-        <div className="w-5 h-5 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+        <div className="w-5 h-5 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
           <span className="text-primary-foreground text-xs font-bold">
             {conversation.unreadCount > 9 ? '9+' : conversation.unreadCount}
           </span>
