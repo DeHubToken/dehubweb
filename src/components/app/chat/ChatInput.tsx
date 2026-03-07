@@ -44,6 +44,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
   });
 
   const handleSend = () => {
+    if (sendDisabled || isSendingFee) return;
     if (audioPreview) {
       onSendMessage({
         content: '',
