@@ -435,16 +435,8 @@ export function NewConversationModal({
   };
 
   const handleSelectUser = (user: DeHubUser) => {
-    const dmSettingsObj = getDmSettings(user);
-    const perMessageFee = dmSettingsObj?.perMessageFee;
-
-    if (perMessageFee && perMessageFee > 0) {
-      // Show fee payment step
-      setFeeUser(user);
-    } else {
-      // No fee — go straight to conversation
-      startConversation(user);
-    }
+    // Always create conversation directly — fee gate is handled inline in the chat view
+    startConversation(user);
   };
 
   const handleClose = () => {
