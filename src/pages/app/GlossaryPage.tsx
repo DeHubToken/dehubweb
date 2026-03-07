@@ -14,7 +14,7 @@ import {
   Video, Image, Coins, Users, Star, Lock, Unlock,
   ArrowUpDown, Zap, BookOpen, Search, Settings, Home,
   Play, Mic, Volume2, Crown, Gift, TrendingUp,
-  Clock, CheckCircle2, XCircle, AlertTriangle, Info,
+  Clock, CheckCircle2,
   Copy, ExternalLink, RotateCcw, Pencil, Trash2,
   ChevronUp, ChevronDown, Pin, AtSign, Hash,
 } from 'lucide-react';
@@ -158,16 +158,6 @@ export default function GlossaryPage() {
         { icon: <Trash2 size={iconSize} />, title: t('glossary.delete', 'Delete Post'), description: t('glossary.deleteDesc', 'Permanently remove a post from the feed. The on-chain record remains but the content is no longer displayed.') },
         { icon: <Pin size={iconSize} />, title: t('glossary.pin', 'Pin Post'), description: t('glossary.pinDesc', 'Pin a post to the top of your profile so visitors see it first.') },
         { icon: <ExternalLink size={iconSize} />, title: t('glossary.viewOnExplorer', 'View on Explorer'), description: t('glossary.viewOnExplorerDesc', 'Opens the blockchain explorer (BaseScan) to view the on-chain transaction details for a post or transfer.') },
-      ],
-    },
-    {
-      title: t('glossary.sections.status', 'Status Indicators'),
-      entries: [
-        { icon: <CheckCircle2 size={iconSize} className="text-emerald-400" />, title: t('glossary.success', 'Success (Green)'), description: t('glossary.successDesc', 'Action completed successfully. For example, a tip was sent or a post was created.') },
-        { icon: <XCircle size={iconSize} className="text-red-400" />, title: t('glossary.error', 'Error (Red)'), description: t('glossary.errorDesc', 'Something went wrong. Check your connection, wallet balance, or try again.') },
-        { icon: <AlertTriangle size={iconSize} className="text-yellow-400" />, title: t('glossary.warning', 'Warning (Yellow)'), description: t('glossary.warningDesc', 'A cautionary alert. For example, low balance warnings or rate limit notifications.') },
-        { icon: <Info size={iconSize} className="text-blue-400" />, title: t('glossary.info', 'Info (Blue)'), description: t('glossary.infoDesc', 'Informational message. For example, translation status or processing updates.') },
-        { icon: <Clock size={iconSize} />, title: t('glossary.pending', 'Pending / Processing'), description: t('glossary.pendingDesc', 'The action is in progress. Blockchain transactions may take a few seconds to confirm.') },
       ],
     },
   ];
