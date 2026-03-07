@@ -151,7 +151,7 @@ export default function GlossaryPage() {
         ...BADGE_LEVELS.map((b, i) => {
           const fee = i === BADGE_LEVELS.length - 1 ? 1 : parseFloat((10 - i * 0.69).toFixed(2));
           return {
-            icon: <img src={getBadgeUrl(b.min) || ''} alt={b.name} className="w-6 h-6 invert brightness-200" />,
+            icon: <img src={getBadgeUrl(b.min) || ''} alt={b.name} icon: <img src={getBadgeUrl(b.min) || ''} alt={b.name} className="w-6 h-6 brightness-0 invert" />, />,
             title: b.name,
             description: `Requires ${b.min.toLocaleString()} DHB · ${fee}% platform fee`,
           };
