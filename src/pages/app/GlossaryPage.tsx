@@ -80,7 +80,7 @@ export default function GlossaryPage() {
     {
       title: t('glossary.sections.translation', 'Translation'),
       entries: [
-        { icon: <Globe size={iconSize} />, title: t('glossary.translateButton', 'Translate Button (🌐)'), description: t('glossary.translateButtonDesc', 'Translates post text, bios, and comments into your preferred language. The app auto-detects your browser language or you can set one manually in Settings.') },
+        { icon: <Languages size={iconSize} />, title: t('glossary.translateButton', 'Translate Button'), description: t('glossary.translateButtonDesc', 'Translates post text, bios, and comments into your preferred language. The app auto-detects your browser language or you can set one manually in Settings.') },
         { icon: <RotateCcw size={iconSize} />, title: t('glossary.showOriginal', 'Show Original'), description: t('glossary.showOriginalDesc', 'After translating, tap this to revert back to the original language of the content.') },
       ],
     },
