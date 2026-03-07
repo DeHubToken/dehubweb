@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { apiCall } from '@/lib/api/dehub/core';
 import { toast } from 'sonner';
 
-export type WhoCanMessage = 'everyone' | 'followers' | 'none';
+export type WhoCanMessage = 'everyone' | 'none';
 
 interface DmStatusResponse {
   disables?: string[];
@@ -17,20 +17,17 @@ interface DmStatusResponse {
  */
 function deriveWhoCanMessage(disables?: string[]): WhoCanMessage {
   if (!disables || disables.length === 0) return 'everyone';
-  if (disables.includes('all')) return 'none';
-  if (disables.includes('non-followers')) return 'followers';
-  return 'everyone';
+  // Any disable entry means DMs are closed
+  return 'none';
 }
 
 /**
- * Maps WhoCanMessage back to disables + action for the API.
+ * Maps WhoCanMessage back to API payload.
  */
 function toStatusPayload(value: WhoCanMessage): { status: string; action: string } {
   switch (value) {
     case 'none':
       return { status: 'NEW_DM', action: 'disable' };
-    case 'followers':
-      return { status: 'NON_FOLLOWER_DM', action: 'disable' };
     case 'everyone':
     default:
       return { status: 'NEW_DM', action: 'enable' };
@@ -99,7 +96,6 @@ export function useDmSettings() {
       updateMutation.mutate(payload);
     },
     updateMessageFee: (fee: number) => {
-      // Send current status + new fee
       const currentPayload = toStatusPayload(whoCanMessage);
       updateMutation.mutate({ ...currentPayload, perMessageFee: fee });
     },
