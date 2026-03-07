@@ -155,7 +155,7 @@ export function DmFeeGate({
             </>
           ) : (
             <>
-              <img src={dehubCoin} alt="DHB" className="w-4 h-4 mr-2" />
+              <Gem className="w-4 h-4 mr-2 text-white" />
               Pay {fee.toLocaleString()} DHB Minimum
             </>
           )}
