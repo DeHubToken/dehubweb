@@ -306,7 +306,7 @@ function FeePaymentStep({
           </>
         ) : (
           <>
-            <Gem className="w-4 h-4 mr-2 text-white" />
+            <img src={dehubCoin} alt="DHB" className="w-4 h-4 mr-2" />
             Pay {fee.toLocaleString()} DHB & Start Chat
           </>
         )}
