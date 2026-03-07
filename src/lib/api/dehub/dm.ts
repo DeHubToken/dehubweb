@@ -129,6 +129,7 @@ function normalizeDmSender(raw: any): DeHubUser {
     avatarUrl: raw?.avatarUrl || raw?.avatarImageUrl,
     isVerified: raw?.isVerified || raw?.is_verified,
     is_verified: raw?.is_verified || raw?.isVerified,
+    badgeBalance: raw?.badgeBalance,
   };
 }
 
@@ -182,6 +183,20 @@ function mapApiConversationToDeHub(item: any, myAddress: string): DeHubConversat
       (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
     lastMessage = mapDmMessageToLegacy(sorted[0]);
+  }
+
+  // Enrich otherUser from message sender data when participant data is incomplete
+  // The API contacts endpoint often has limited participant fields but richer sender data in messages
+  if (otherUser && Array.isArray(item.messages)) {
+    const otherAddr = otherUser.address?.toLowerCase();
+    const senderMsg = item.messages.find((m: any) => m.sender?.address?.toLowerCase() === otherAddr);
+    if (senderMsg?.sender) {
+      const enriched = normalizeDmSender(senderMsg.sender);
+      if (!otherUser.displayName && enriched.displayName) otherUser.displayName = enriched.displayName;
+      if (!otherUser.display_name && enriched.display_name) otherUser.display_name = enriched.display_name;
+      if (!otherUser.avatarImageUrl && enriched.avatarImageUrl) otherUser.avatarImageUrl = enriched.avatarImageUrl;
+      if (otherUser.badgeBalance == null && enriched.badgeBalance != null) otherUser.badgeBalance = enriched.badgeBalance;
+    }
   }
 
   return {
@@ -374,6 +389,31 @@ export async function getContacts(
       }
     }
   }
+
+  // Enrich DeHub conversations with profile data (displayName, badgeBalance) when missing
+  await Promise.all(
+    dehubItems.map(async (conv) => {
+      const other = conv.otherUser;
+      if (!other?.address) return;
+      const needsEnrich = !other.displayName || other.badgeBalance == null;
+      if (!needsEnrich) return;
+      try {
+        const profile = await getAccountInfo(other.address);
+        if (profile) {
+          if (!other.displayName) {
+            other.displayName = profile.displayName || profile.display_name || '';
+            other.display_name = other.displayName;
+          }
+          if (other.badgeBalance == null) {
+            other.badgeBalance = profile.badgeBalance;
+          }
+          if (!other.avatarImageUrl) {
+            other.avatarImageUrl = profile.avatarImageUrl || profile.avatarUrl || '';
+          }
+        }
+      } catch { /* keep existing data */ }
+    })
+  );
 
   // Sort by last activity (newest first)
   dehubItems.sort((a, b) => {
