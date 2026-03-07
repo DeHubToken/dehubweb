@@ -290,46 +290,6 @@ export async function getContacts(
     console.warn('[DM API] getContacts DeHub failed (will use Supabase):', err);
   }
 
-  // Merge Supabase conversations (wallet-based DMs)
-  const supabaseConvs = await getContactsFromSupabase(myAddress);
-  const existingIds = new Set(dehubItems.map(c => (c.otherUser?.address || c.id || '').toLowerCase()));
-
-  // Enrich with DeHub profile (displayName, username) when missing — fetch in parallel
-  const enriched = await Promise.all(
-    supabaseConvs.map(async (conv) => {
-      const peer = (conv.otherUser?.address || conv.id?.replace('new_', '') || '').toLowerCase();
-      if (!peer || existingIds.has(peer)) return null;
-      const hasProfile = !!(conv.otherUser?.displayName || conv.otherUser?.username);
-      if (!hasProfile) {
-        try {
-          const profile = await getAccountInfo(peer);
-          if (profile) {
-            conv.otherUser = {
-              ...conv.otherUser,
-              address: peer,
-              _id: peer,
-              username: profile.username || conv.otherUser?.username || '',
-              displayName: profile.displayName || profile.display_name || conv.otherUser?.displayName || '',
-              avatarImageUrl: profile.avatarImageUrl || profile.avatarUrl || conv.otherUser?.avatarImageUrl || '',
-            } as DeHubUser;
-          }
-        } catch {
-          // Keep address fallback if API fails
-        }
-      }
-      return conv;
-    })
-  );
-
-  for (const conv of enriched) {
-    if (conv) {
-      const peer = (conv.otherUser?.address || conv.id?.replace('new_', '') || '').toLowerCase();
-      if (peer) {
-        dehubItems.push(conv);
-        existingIds.add(peer);
-      }
-    }
-  }
 
   // Enrich DeHub conversations with profile data (displayName, badgeBalance) when missing
   await Promise.all(
