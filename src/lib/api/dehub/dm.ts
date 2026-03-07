@@ -501,9 +501,8 @@ export async function deleteConversation(
 
   // For real DeHub conversations, call the API AND clean up Supabase
   try {
-    await apiCall<any>('/api/dm/delete-messages', {
+    await apiCall<any>(`/api/dm/delete-messages/${dmId}`, {
       method: 'POST',
-      body: { conversationId: dmId },
       requiresAuth: true,
     });
   } catch (err) {
