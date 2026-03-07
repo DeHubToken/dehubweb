@@ -229,7 +229,7 @@ function FeePaymentStep({
       }
 
       toast.success(`Paid ${amount.toLocaleString()} DHB — opening chat! 🎉`, { id: 'dm-fee-gate' });
-      onPaid();
+      onPaid(messageText.trim());
     } catch (error: unknown) {
       console.error('[NewConversationModal] Payment failed:', error);
       const message = parseTxError(error as Error);
