@@ -104,7 +104,7 @@ export function DmFeeGate({
       emitSendMessage({
         dmId: conversationId,
         content: messageText.trim(),
-        type: 'text',
+        type: 'msg',
       });
 
       try {
