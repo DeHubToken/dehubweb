@@ -148,7 +148,7 @@ function MessageBubble({
         {/* Tip message — system-style bubble */}
         {message.msgType === 'tip' && (
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-sm">
-            <img src={dehubCoin} alt="DHB" className="w-4 h-4 brightness-0 invert" />
+            <Gem className="w-4 h-4 text-white" />
             <span>
               Tip: {message.tipAmount} {message.tipSymbol || 'DHB'}
             </span>
