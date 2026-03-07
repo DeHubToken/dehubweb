@@ -1097,6 +1097,9 @@ function PrivacySettings() {
         </div>
       </div>
 
+      {/* Free DM Access List */}
+      <FreeAccessListSection />
+
       {/* Account Security */}
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.accountSecurity')}</h3>
