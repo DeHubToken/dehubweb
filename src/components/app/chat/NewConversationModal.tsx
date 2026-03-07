@@ -5,7 +5,7 @@
  */
 
 import { useState } from 'react';
-import { Search, Loader2, MessageCircle, X } from 'lucide-react';
+import { Search, Loader2, MessageCircle, X, Gem } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -36,8 +36,10 @@ function UserSearchResult({
   const displayName = user.displayName || user.display_name || user.username || 'User';
   const isVerified = user.isVerified || user.is_verified;
   
-  // Check DM settings
-  const dmDisabled = user.dmSettings?.disables?.includes('all');
+  // Check DM settings — handle both object and array shapes
+  const dmSettingsObj = Array.isArray(user.dmSettings) ? user.dmSettings[0] : user.dmSettings;
+  const dmDisabled = dmSettingsObj?.disables?.includes('NEW_DM') || dmSettingsObj?.disables?.includes('all');
+  const perMessageFee = dmSettingsObj?.perMessageFee;
   
   return (
     <button
@@ -66,6 +68,12 @@ function UserSearchResult({
         )}
         {dmDisabled && (
           <p className="text-xs text-red-400 mt-1">DMs disabled</p>
+        )}
+        {!dmDisabled && perMessageFee && perMessageFee > 0 && (
+          <p className="text-xs text-amber-400 mt-1 flex items-center gap-1">
+            <Gem className="w-3 h-3" />
+            {perMessageFee.toLocaleString()} DHB per message
+          </p>
         )}
       </div>
       

@@ -416,6 +416,7 @@ export async function createConversation(
     displayName: recipientUser.displayName || recipientUser.display_name,
     avatarImageUrl: recipientUser.avatarImageUrl || recipientUser.avatarUrl,
     isVerified: recipientUser.isVerified || recipientUser.is_verified,
+    dmSettings: (recipientUser as any).dmSettings,
   } : {
     _id: recipientAddress,
     address: recipientAddress,
@@ -646,20 +647,25 @@ export async function searchUsersForDM(
     else if (response?.result && Array.isArray(response.result)) accounts = response.result;
     else if (Array.isArray(response)) accounts = response;
 
-    const items: DeHubUser[] = accounts.map((acc: any) => ({
-      _id: acc._id || acc.id,
-      id: acc.id || acc._id,
-      address: acc.address,
-      username: acc.username,
-      displayName: acc.displayName || acc.display_name,
-      display_name: acc.display_name || acc.displayName,
-      avatarImageUrl: acc.avatarImageUrl || acc.avatarUrl,
-      avatarUrl: acc.avatarUrl || acc.avatarImageUrl,
-      isVerified: acc.isVerified || acc.verified,
-      is_verified: acc.is_verified || acc.verified,
-      bio: acc.bio,
-      dmSettings: acc.dmSettings || acc.dmSetting,
-    }));
+    const items: DeHubUser[] = accounts.map((acc: any) => {
+      // dmSetting from search API comes as an array — extract first element
+      const rawDmSetting = acc.dmSettings || acc.dmSetting;
+      const dmSettings = Array.isArray(rawDmSetting) ? rawDmSetting[0] : rawDmSetting;
+      return {
+        _id: acc._id || acc.id,
+        id: acc.id || acc._id,
+        address: acc.address,
+        username: acc.username,
+        displayName: acc.displayName || acc.display_name,
+        display_name: acc.display_name || acc.displayName,
+        avatarImageUrl: acc.avatarImageUrl || acc.avatarUrl,
+        avatarUrl: acc.avatarUrl || acc.avatarImageUrl,
+        isVerified: acc.isVerified || acc.verified,
+        is_verified: acc.is_verified || acc.verified,
+        bio: acc.bio,
+        dmSettings: dmSettings || undefined,
+      };
+    });
 
     return { items, hasMore: items.length >= limit };
   } catch (error) {
