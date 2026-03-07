@@ -138,7 +138,7 @@ export function TipModal({
             </LiquidGlassBubble>
             <Button
               variant="glass"
-              className="flex-1 bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/30"
+              className="flex-1 bg-yellow-500/25 hover:bg-yellow-500/35 border-yellow-500/40 text-yellow-300"
               onClick={handleSendTip}
               disabled={isTipping || !isValidAmount}
             >
