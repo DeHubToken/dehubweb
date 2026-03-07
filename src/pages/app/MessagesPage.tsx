@@ -134,7 +134,7 @@ export default function MessagesPage() {
   const [showMessageSelector, setShowMessageSelector] = useState(false);
   const [showNewConversation, setShowNewConversation] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
-  const [pendingFeeUser, setPendingFeeUser] = useState<DeHubUser | null>(null);
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [readConvIds, setReadConvIds] = useState<Set<string>>(new Set());
   const { isAuthenticated, walletAddress } = useAuth();
