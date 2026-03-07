@@ -18,7 +18,7 @@ export const VOICE_PREFERENCES: Record<string, VoicePreference> = {
   female: {
     id: 'female',
     name: 'Female',
-    description: 'Samantha, Zira',
+    description: 'Samantha, Zira',  
     emoji: '👩',
     preferredVoiceNames: [
       'Samantha',
