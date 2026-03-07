@@ -118,7 +118,7 @@ export function TipModal({
                 type="number"
                 min={MIN_TIP_DHB}
                 step={0.1}
-                placeholder="Enter DHB amount"
+                placeholder="Enter amount"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 className="pl-11 bg-white/5 border-white/10 text-white placeholder:text-white/40 h-12"
