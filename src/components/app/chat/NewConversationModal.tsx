@@ -12,6 +12,7 @@
 import { useState, useCallback } from 'react';
 import { Search, Loader2, MessageCircle, X, Lock, ArrowLeft, AlertCircle } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
+import padlockImg from '@/assets/padlock.png';
 import { Interface } from 'ethers';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -267,8 +268,8 @@ function FeePaymentStep({
 
       {/* Fee info */}
       <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
-        <div className="w-10 h-10 rounded-full bg-amber-500/15 flex items-center justify-center flex-shrink-0">
-          <Lock className="w-5 h-5 text-amber-400" />
+        <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
+          <img src={padlockImg} alt="Lock" className="w-8 h-8 object-contain" />
         </div>
         <div>
           <h3 className="text-white font-semibold text-sm">Tip to Message</h3>
