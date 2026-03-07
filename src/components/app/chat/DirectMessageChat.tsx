@@ -282,7 +282,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [isBlockProcessing, setIsBlockProcessing] = useState(false);
   const [showGroupSettings, setShowGroupSettings] = useState(false);
   const [showSharedVideos, setShowSharedVideos] = useState(false);
-  const [dmGateChecked, setDmGateChecked] = useState(false);
+  const [showTipDialog, setShowTipDialog] = useState(false);
   const [dmGated, setDmGated] = useState(false);
   const [dmFee, setDmFee] = useState<DmFee | null>(conversation.dmFee || null);
   const [resolvedConversationId, setResolvedConversationId] = useState(conversation.id);
