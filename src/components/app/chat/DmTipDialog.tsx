@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { Gem, Loader2 } from 'lucide-react';
+import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
