@@ -372,6 +372,73 @@ export default function MessagesPage() {
                 isSelected={selectedConversation?.id === conv.id}
               />
             ))}
+
+            {/* User search results (people not in existing conversations) */}
+            {searchQuery.trim().length >= 2 && newUserResults.length > 0 && (
+              <>
+                <div className="px-4 py-2 mt-2">
+                  <p className="text-zinc-500 text-xs uppercase tracking-wider font-medium">Start new conversation</p>
+                </div>
+                {newUserResults.map((user: DeHubUser) => {
+                  const avatarPath = extractAvatarPath(user);
+                  const avatarUrl = user.address ? buildAvatarUrl(user.address, avatarPath) : undefined;
+                  const displayName = user.displayName || (user as any).display_name || user.username || 'User';
+                  const isVerified = user.isVerified || (user as any).is_verified;
+                  const dmSettingsObj = (() => {
+                    const raw = (user as any).dmSettings || (user as any).dmSetting;
+                    return Array.isArray(raw) ? raw[0] : raw;
+                  })();
+                  const dmDisabled = dmSettingsObj?.disables?.includes('NEW_DM') || dmSettingsObj?.disables?.includes('all');
+                  const perMessageFee = dmSettingsObj?.perMessageFee;
+
+                  return (
+                    <button
+                      key={user._id || user.address}
+                      onClick={() => handleSelectSearchUser(user)}
+                      disabled={dmDisabled}
+                      className={`w-full flex items-center gap-3 p-4 transition-colors text-left ${
+                        dmDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-zinc-800/50'
+                      }`}
+                    >
+                      <Avatar className="w-12 h-12">
+                        {avatarUrl && <AvatarImage src={avatarUrl} />}
+                        <AvatarFallback className="bg-zinc-700 text-white font-medium">
+                          {displayName.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-semibold text-white truncate">{displayName}</span>
+                          {isVerified && <VerifiedBadge className="w-3.5 h-3.5" />}
+                        </div>
+                        {user.username && (
+                          <p className="text-sm text-zinc-500 truncate">@{user.username}</p>
+                        )}
+                        {dmDisabled && (
+                          <p className="text-xs text-red-400 mt-0.5">DMs disabled</p>
+                        )}
+                        {!dmDisabled && perMessageFee && perMessageFee > 0 && (
+                          <p className="text-xs text-amber-400 mt-0.5">
+                            {perMessageFee.toLocaleString()} DHB to message
+                          </p>
+                        )}
+                      </div>
+                      {!dmDisabled && (
+                        <MessageCircle className="w-5 h-5 text-zinc-400 flex-shrink-0" />
+                      )}
+                    </button>
+                  );
+                })}
+              </>
+            )}
+
+            {/* Searching indicator */}
+            {searchQuery.trim().length >= 2 && isSearchingUsers && (
+              <div className="flex items-center justify-center gap-2 py-4 text-zinc-500 text-sm">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Searching users...
+              </div>
+            )}
           </div>
         </div>
       </div>
