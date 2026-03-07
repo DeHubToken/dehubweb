@@ -126,7 +126,7 @@ const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.Eleme
   { labelKey: 'notifications.comments', value: 'comments', icon: MessageSquareText },
   { labelKey: 'notifications.reposts', value: 'reposts', icon: Repeat2 },
   { labelKey: 'notifications.subs', value: 'subscriptions', icon: Users },
-  { labelKey: 'notifications.tips', value: 'tips', icon: DollarSign },
+  { labelKey: 'notifications.tips', value: 'tips', icon: Gift },
   { labelKey: 'notifications.live', value: 'livestreams', icon: Zap },
 ];
 
