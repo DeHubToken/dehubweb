@@ -19,8 +19,18 @@ import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings,
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
 import { DmTipDialog } from './DmTipDialog';
-import { DmFeeGate } from './DmFeeGate';
+import { DmFeeInfoBanner } from './DmFeeInfoBanner';
 import { formatDistanceToNow } from 'date-fns';
+import { Interface } from 'ethers';
+import {
+  writeContractAA,
+  getWalletAddress,
+  getERC20Balance,
+  switchChain,
+  parseTxError,
+} from '@/lib/contracts/aa-utils';
+import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -301,6 +311,38 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const isInitialMount = useRef(true);
   const hasInitialized = useRef(false);
 
+  // Fee-related state
+  const [customTipAmount, setCustomTipAmount] = useState('');
+  const [feeBalance, setFeeBalance] = useState<number | null>(null);
+  const [feeBalanceLoading, setFeeBalanceLoading] = useState(false);
+  const [isSendingFee, setIsSendingFee] = useState(false);
+
+  const erc20TransferInterface = useRef(new Interface([
+    'function transfer(address to, uint256 amount) returns (bool)',
+  ]));
+
+  // Determine if fee is required
+  const feeRequired = dmFee?.required && !dmFee.hasFreeAccess;
+  const activeFee = feeRequired ? (customTipAmount ? parseFloat(customTipAmount) || dmFee!.fee : dmFee!.fee) : 0;
+  const feeSendDisabled = feeRequired && (feeBalance === null || feeBalance < activeFee);
+
+  // Check balance when fee is required
+  useEffect(() => {
+    if (!feeRequired) return;
+    setFeeBalanceLoading(true);
+    const chainConfig = getChainConfig(BASE_CHAIN_ID);
+    getWalletAddress()
+      .then(addr => getERC20Balance(chainConfig.dhbToken, addr))
+      .then(bal => {
+        setFeeBalance(Number(bal) / 1e18);
+        setFeeBalanceLoading(false);
+      })
+      .catch(() => {
+        setFeeBalance(null);
+        setFeeBalanceLoading(false);
+      });
+  }, [feeRequired]);
+
   // When parent upgrades conversation to one with real dmId (e.g. after getContacts returns DeHub data), use it
   useEffect(() => {
     const convId = conversation.id;
@@ -494,6 +536,83 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     gifUrl?: string;
     duration?: number;
   }) => {
+    // If fee is required, process on-chain payment first
+    if (feeRequired) {
+      setIsSendingFee(true);
+      try {
+        const chainId = BASE_CHAIN_ID;
+        const chainConfig = getChainConfig(chainId);
+        await switchChain(chainId);
+        const signerAddress = await getWalletAddress();
+        const amountWei = toWei(activeFee, DHB_TOKEN.decimals);
+        const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+
+        if (balance < amountWei) {
+          const balanceHuman = Number(balance) / 1e18;
+          toast.error(`Insufficient DHB. Need ${activeFee.toLocaleString()} but have ${balanceHuman.toFixed(2)}`);
+          setIsSendingFee(false);
+          return;
+        }
+
+        toast.loading('Processing tip & sending message...', { id: 'dm-fee-send' });
+
+        const result = await writeContractAA(
+          chainConfig.dhbToken,
+          erc20TransferInterface.current,
+          'transfer',
+          [otherUser?.address || '', amountWei],
+          { context: 'DM fee message', chainId }
+        );
+
+        await result.wait(1);
+
+        // Send tip message via socket
+        const { emitSendMessage } = await import('@/lib/api/dehub/dm-socket');
+        emitSendMessage({
+          dmId: resolvedConversationId,
+          content: `Tipped ${activeFee.toLocaleString()} DHB`,
+          type: 'tip',
+          tipTxHash: result.hash,
+        });
+
+        // Notify API
+        try {
+          const token = getAuthToken();
+          if (token) {
+            await fetch(`${DEHUB_API_BASE}/api/dm/tip-notify`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                txHash: result.hash,
+                receiverAddress: (otherUser?.address || '').toLowerCase(),
+                amount: activeFee,
+                chainId,
+              }),
+            });
+          }
+        } catch (notifyErr) {
+          console.warn('[DM] tip-notify failed:', notifyErr);
+        }
+
+        toast.success(`Sent ${activeFee.toLocaleString()} DHB + message! 🎉`, { id: 'dm-fee-send' });
+
+        // Update balance after payment
+        setFeeBalance(prev => prev !== null ? prev - activeFee : null);
+      } catch (error: unknown) {
+        console.error('[DM] Fee payment failed:', error);
+        const message = parseTxError(error as Error);
+        toast.error(message || 'Payment failed', { id: 'dm-fee-send' });
+        setIsSendingFee(false);
+        return;
+      } finally {
+        setIsSendingFee(false);
+      }
+    }
+
+    // Now send the actual message
     sendMessageMutation.mutate(
       {
         content,
@@ -504,7 +623,6 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       },
       {
         onSuccess: (data) => {
-          // If conversation was virtual, resolve to real ID from server message
           if (resolvedConversationId.startsWith('new_') && data.conversation) {
             setResolvedConversationId(data.conversation);
           }
@@ -688,17 +806,11 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         </div>
       )}
 
-      {/* DM Fee banner */}
-      {dmFee?.required && (
-        <div className={`px-4 py-2 text-xs flex items-center gap-2 ${
-          dmFee.hasFreeAccess
-            ? 'bg-green-500/10 text-green-400 border-b border-green-500/20'
-            : 'bg-amber-500/10 text-amber-400 border-b border-amber-500/20'
-        }`}>
+      {/* DM Fee banner - simple for free access */}
+      {dmFee?.required && dmFee.hasFreeAccess && (
+        <div className="px-4 py-2 text-xs flex items-center gap-2 bg-green-500/10 text-green-400 border-b border-green-500/20">
           <Gem className="w-3 h-3 flex-shrink-0 text-current" />
-          {dmFee.hasFreeAccess
-            ? 'You have free access to message this user'
-            : `Messaging fee: ${dmFee.fee} DHB per message`}
+          You have free access to message this user
         </div>
       )}
 
@@ -726,7 +838,19 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
             </div>
           )}
 
-          {messages.length === 0 && (
+          {/* Fee info banner shown where messages would be */}
+          {feeRequired && (
+            <DmFeeInfoBanner
+              fee={dmFee!.fee}
+              recipientName={displayName}
+              customTipAmount={customTipAmount}
+              onCustomTipChange={setCustomTipAmount}
+              balance={feeBalance}
+              balanceLoading={feeBalanceLoading}
+            />
+          )}
+
+          {messages.length === 0 && !feeRequired && (
             <div className="flex flex-col items-center justify-center h-full text-center text-zinc-500">
               <p className="text-lg mb-2">No messages yet</p>
               <p className="text-sm">Say hello to start the conversation!</p>
@@ -782,20 +906,14 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         </div>
       )}
 
-      {/* Input or Fee Gate */}
-      {dmFee?.required && !dmFee.hasFreeAccess ? (
-        <DmFeeGate
-          fee={dmFee.fee}
-          recipientAddress={otherUser?.address || ''}
-          recipientName={displayName}
-          conversationId={resolvedConversationId}
-          onUnlocked={() => {
-            setDmFee(prev => prev ? { ...prev, hasFreeAccess: true } : null);
-          }}
-        />
-      ) : (
-        <ChatInput onSendMessage={handleSendMessage} onTipClick={() => setShowTipDialog(true)} />
-      )}
+      {/* Chat Input — always shown, disabled send when insufficient balance */}
+      <ChatInput
+        onSendMessage={handleSendMessage}
+        onTipClick={feeRequired ? undefined : () => setShowTipDialog(true)}
+        sendDisabled={!!feeSendDisabled}
+        sendDisabledReason={feeSendDisabled ? `Insufficient DHB (need ${activeFee.toLocaleString()})` : undefined}
+        isSendingFee={isSendingFee}
+      />
 
       {/* Delete confirmation dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>

@@ -134,7 +134,7 @@ export default function MessagesPage() {
   const [showMessageSelector, setShowMessageSelector] = useState(false);
   const [showNewConversation, setShowNewConversation] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
-  const [pendingFeeUser, setPendingFeeUser] = useState<DeHubUser | null>(null);
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [readConvIds, setReadConvIds] = useState<Set<string>>(new Set());
   const { isAuthenticated, walletAddress } = useAuth();
@@ -163,25 +163,15 @@ export default function MessagesPage() {
     (user: DeHubUser) => !existingAddresses.has(user.address?.toLowerCase())
   );
 
-  /** Handle clicking a user search result */
+  /** Handle clicking a user search result — always create conversation and open chat */
   const handleSelectSearchUser = (user: DeHubUser) => {
     const dmSettingsObj = (() => {
       const raw = (user as any).dmSettings || (user as any).dmSetting;
       return Array.isArray(raw) ? raw[0] : raw;
     })();
-    const perMessageFee = dmSettingsObj?.perMessageFee;
     const dmDisabled = dmSettingsObj?.disables?.includes('NEW_DM') || dmSettingsObj?.disables?.includes('all');
-
     if (dmDisabled) return;
 
-    if (perMessageFee && perMessageFee > 0) {
-      // Has a fee — open the NewConversationModal directly on the fee step
-      setPendingFeeUser(user);
-      setShowNewConversation(true);
-      return;
-    }
-
-    // No fee — create conversation directly
     const userAddress = user.address || (user as any)._id;
     if (!userAddress) return;
 
@@ -452,18 +442,12 @@ export default function MessagesPage() {
         onSelectGroup={() => setShowCreateGroup(true)}
       />
 
-      {/* New DM Conversation Modal */}
       <NewConversationModal
         open={showNewConversation}
-        onOpenChange={(open) => {
-          setShowNewConversation(open);
-          if (!open) setPendingFeeUser(null);
-        }}
+        onOpenChange={setShowNewConversation}
         onConversationCreated={(conversation) => {
           setSelectedConversation(conversation);
-          setPendingFeeUser(null);
         }}
-        initialFeeUser={pendingFeeUser}
       />
 
       {/* Create Group Modal */}
