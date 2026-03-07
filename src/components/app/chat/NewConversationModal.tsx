@@ -172,6 +172,10 @@ function FeePaymentStep({
       toast.error(`Minimum tip is ${fee.toLocaleString()} DHB`);
       return;
     }
+    if (!messageText.trim()) {
+      toast.error('Please enter a message');
+      return;
+    }
 
     setIsSending(true);
     try {
