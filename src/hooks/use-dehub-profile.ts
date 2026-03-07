@@ -47,6 +47,11 @@ export interface ProfileData {
   customs?: Record<string, unknown>;
   /** On-chain badge balance from API */
   badgeBalance?: number;
+  /** DM settings from API */
+  dmSettings?: {
+    disables?: string[];
+    minTipDhb?: number;
+  };
 }
 
 /**
