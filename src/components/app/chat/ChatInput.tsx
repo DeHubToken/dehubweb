@@ -302,11 +302,12 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             type="button"
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
+            className={`h-8 w-8 ${sendDisabled ? 'text-zinc-600 cursor-not-allowed' : 'text-zinc-400 hover:text-white hover:bg-zinc-700'}`}
             onClick={handleSend}
-            disabled={!message.trim() && !imageFile && !audioPreview}
+            disabled={sendDisabled || isSendingFee || (!message.trim() && !imageFile && !audioPreview)}
+            title={sendDisabled ? sendDisabledReason : undefined}
           >
-            <Send className="w-5 h-5" />
+            {isSendingFee ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
           </Button>
         </div>
       </div>
