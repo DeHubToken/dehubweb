@@ -419,7 +419,7 @@ export function NewConversationModal({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
+      <DialogContent hideCloseButton={!!feeUser} className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
         <DialogHeader>
           <DialogTitle className="text-white">
             {feeUser ? 'Tip to Message' : 'New Message'}
