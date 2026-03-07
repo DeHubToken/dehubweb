@@ -906,20 +906,14 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         </div>
       )}
 
-      {/* Input or Fee Gate */}
-      {dmFee?.required && !dmFee.hasFreeAccess ? (
-        <DmFeeGate
-          fee={dmFee.fee}
-          recipientAddress={otherUser?.address || ''}
-          recipientName={displayName}
-          conversationId={resolvedConversationId}
-          onUnlocked={() => {
-            setDmFee(prev => prev ? { ...prev, hasFreeAccess: true } : null);
-          }}
-        />
-      ) : (
-        <ChatInput onSendMessage={handleSendMessage} onTipClick={() => setShowTipDialog(true)} />
-      )}
+      {/* Chat Input — always shown, disabled send when insufficient balance */}
+      <ChatInput
+        onSendMessage={handleSendMessage}
+        onTipClick={feeRequired ? undefined : () => setShowTipDialog(true)}
+        sendDisabled={!!feeSendDisabled}
+        sendDisabledReason={feeSendDisabled ? `Insufficient DHB (need ${activeFee.toLocaleString()})` : undefined}
+        isSendingFee={isSendingFee}
+      />
 
       {/* Delete confirmation dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
