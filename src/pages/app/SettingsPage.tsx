@@ -1796,7 +1796,6 @@ function MessagesSettings() {
               title={t('settings.allowDirectMessages', 'Allow direct messages')}
               options={[
                 { value: 'everyone', label: t('settings.everyone', 'Everyone'), description: t('settings.dmEveryoneHelp', 'Anyone on the platform can message you') },
-                { value: 'followers', label: t('settings.peopleIFollow', 'Followers'), description: t('settings.peopleIFollowDesc', 'Only your followers can message you') },
                 { value: 'none', label: t('settings.noOneClosed', 'No one'), description: t('settings.noOneClosedDesc', 'Disable all incoming messages') },
               ]}
             />
