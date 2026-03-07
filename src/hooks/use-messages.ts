@@ -439,6 +439,29 @@ export function useCreateConversation() {
 
 // ─── Delete Conversation ──────────────────────────────────────────────────────
 
+// ─── Deleted conversations persistence ────────────────────────────────────────
+
+const DELETED_CONVOS_KEY = 'dehub-deleted-conversations';
+
+export function getDeletedConversationIds(): Set<string> {
+  try {
+    const raw = localStorage.getItem(DELETED_CONVOS_KEY);
+    return raw ? new Set(JSON.parse(raw)) : new Set();
+  } catch {
+    return new Set();
+  }
+}
+
+function persistDeletedConversation(conversationId: string) {
+  const ids = getDeletedConversationIds();
+  ids.add(conversationId);
+  // Also persist the peer address variant so both "new_0x..." and the raw dmId are covered
+  if (conversationId.startsWith('new_')) {
+    ids.add(conversationId.replace('new_', ''));
+  }
+  localStorage.setItem(DELETED_CONVOS_KEY, JSON.stringify([...ids]));
+}
+
 export function useDeleteConversation() {
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
@@ -447,8 +470,12 @@ export function useDeleteConversation() {
     mutationFn: (conversationId: string) =>
       deleteConversation(conversationId, walletAddress || undefined),
     onMutate: async (conversationId: string) => {
-      // Optimistically remove from all conversation caches
+      // Persist deletion so it survives refetches and page reloads
+      persistDeletedConversation(conversationId);
+
+      // Optimistically remove from ALL conversation query caches
       await queryClient.cancelQueries({ queryKey: messagesKeys.conversations() });
+      const snapshot = queryClient.getQueriesData({ queryKey: messagesKeys.conversations() });
       queryClient.setQueriesData(
         { queryKey: messagesKeys.conversations() },
         (old: any) => {
@@ -458,12 +485,20 @@ export function useDeleteConversation() {
           return old;
         }
       );
+      // Also remove cached messages for this conversation
+      queryClient.removeQueries({ queryKey: messagesKeys.messages(conversationId) });
+      return { snapshot };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+      // Don't invalidate — the deleted ID is persisted and will be filtered on next fetch
     },
-    onError: () => {
-      // Refetch on error to restore
+    onError: (_err, conversationId, context) => {
+      // Rollback: remove from persisted deletions
+      const ids = getDeletedConversationIds();
+      ids.delete(conversationId);
+      if (conversationId.startsWith('new_')) ids.delete(conversationId.replace('new_', ''));
+      localStorage.setItem(DELETED_CONVOS_KEY, JSON.stringify([...ids]));
+      // Restore cache
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
     },
   });
