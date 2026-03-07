@@ -303,6 +303,7 @@ export default function ProfilePage() {
 
             <div
               className="relative z-20 flex overflow-x-auto scrollbar-hide"
+              style={{ touchAction: 'pan-x' }}
               onScroll={handleTabsScroll}
             >
               {data.PROFILE_TABS.map((tab) => {

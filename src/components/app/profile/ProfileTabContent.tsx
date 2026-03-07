@@ -123,10 +123,16 @@ export function ProfileTabContent({
   const hasData = userContentData && (userContentData as any).pages && (userContentData as any).pages.length > 0;
   const showLoading = isLoadingContent && !hasData;
 
+  // Track which tabs have been visited so we only mount them once accessed
+  const visitedTabs = useRef(new Set<TabValue>([activeTab]));
+  visitedTabs.current.add(activeTab);
+
   // Hidden tabs use visibility:hidden + height:0 instead of display:none
-  // so the browser still loads/caches images inside inactive panels.
-  const TabPanel = ({ tab, children }: { tab: TabValue; children: React.ReactNode }) => {
+  // but only if they've been visited before (lazy mount)
+  const TabPanel = useCallback(({ tab, children }: { tab: TabValue; children: React.ReactNode }) => {
     const isActive = activeTab === tab;
+    const hasBeenVisited = visitedTabs.current.has(tab);
+    if (!isActive && !hasBeenVisited) return null; // Never mounted yet
     return (
       <div
         style={isActive ? undefined : { visibility: 'hidden', height: 0, overflow: 'hidden', position: 'absolute', width: '100%' }}
@@ -135,7 +141,7 @@ export function ProfileTabContent({
         {children}
       </div>
     );
-  };
+  }, [activeTab]);
 
   return (
     <div style={{ position: 'relative' }}>
