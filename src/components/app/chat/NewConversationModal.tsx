@@ -383,7 +383,7 @@ export function NewConversationModal({
         recipientAddress: userAddress,
         recipientUser: user,
       });
-      toast.success('Conversation started!');
+      // Toast handled by fee gate if applicable
       onConversationCreated(conversation);
       onOpenChange(false);
       setSearchQuery('');
