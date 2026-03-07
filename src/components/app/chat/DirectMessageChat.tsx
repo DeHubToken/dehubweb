@@ -746,11 +746,6 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         />
       )}
 
-      {/* Shared Videos Drawer */}
-      <SharedVideosDrawer
-        open={showSharedVideos}
-        onOpenChange={setShowSharedVideos}
-      />
 
       {/* DM Tip Dialog */}
       <DmTipDialog
