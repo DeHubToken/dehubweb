@@ -13,7 +13,7 @@ import {
   getConversations,
   getMessages,
   uploadAndSendMedia,
-  sendMessageViaRest,
+  
   createConversation,
   markConversationAsRead,
   deleteConversation,
