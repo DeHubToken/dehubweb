@@ -7,7 +7,7 @@
 
 import { useTranslation } from 'react-i18next';
 import {
-  ThumbsUp, ThumbsDown, Globe, Eye, MessageSquare, Share2,
+  ThumbsUp, ThumbsDown, Languages, Eye, MessageSquare, Share2,
   Bookmark, Bell, Send, Heart, Flag, MoreHorizontal,
   Sparkles, Trophy, Wallet, ShieldCheck, Lightbulb, Radio,
   Video, Image, Coins, Users, Star, Lock, Unlock,
