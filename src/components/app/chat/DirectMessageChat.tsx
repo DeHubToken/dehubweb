@@ -326,7 +326,6 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
 
   // createAndStart — get/create conversation + dmFee
   const createAndStart = useCreateAndStart();
-  const [feeCheckComplete, setFeeCheckComplete] = useState(false);
 
   useEffect(() => {
     if (hasInitialized.current) return;
@@ -334,36 +333,21 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
 
     // Prefer wallet address — server's createAndStart handler looks up users by address
     const userId = otherUser?.address || otherUser?._id;
-    if (!userId) {
-      setFeeCheckComplete(true);
-      return;
-    }
+    if (!userId) return;
 
-    const attemptCreateAndStart = (attempt: number) => {
-      createAndStart.mutate(userId, {
-        onSuccess: (data) => {
-          console.log('[DM] createAndStart success:', data);
-          if (data._id) setResolvedConversationId(data._id);
-          if (data.dmFee) {
-            console.log('[DM] dmFee detected:', data.dmFee);
-            setDmFee(data.dmFee);
-          }
-          setFeeCheckComplete(true);
-        },
-        onError: (err) => {
-          console.warn(`[DM] createAndStart attempt ${attempt} failed:`, err);
-          if (attempt < 3) {
-            // Retry after a short delay
-            setTimeout(() => attemptCreateAndStart(attempt + 1), 2000 * attempt);
-          } else {
-            console.error('[DM] createAndStart failed after 3 attempts — fee gate may not work');
-            setFeeCheckComplete(true);
-          }
-        },
-      });
-    };
-
-    attemptCreateAndStart(1);
+    createAndStart.mutate(userId, {
+      onSuccess: (data) => {
+        console.log('[DM] createAndStart success:', data);
+        if (data._id) setResolvedConversationId(data._id);
+        if (data.dmFee) {
+          console.log('[DM] dmFee detected:', data.dmFee);
+          setDmFee(data.dmFee);
+        }
+      },
+      onError: (err) => {
+        console.warn('[DM] createAndStart failed (non-critical):', err);
+      },
+    });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
