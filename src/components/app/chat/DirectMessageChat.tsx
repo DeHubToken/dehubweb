@@ -286,6 +286,9 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [showGroupSettings, setShowGroupSettings] = useState(false);
   const [showSharedVideos, setShowSharedVideos] = useState(false);
   const [showTipDialog, setShowTipDialog] = useState(false);
+  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
   const [dmFee, setDmFee] = useState<DmFee | null>(conversation.dmFee || null);
