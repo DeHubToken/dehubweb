@@ -42,6 +42,7 @@ export interface UpdateProfileData {
   youtubeLink?: string;
   facebookLink?: string;
   customs?: Record<string, string>;
+  dmSettings?: { disables?: string[]; minTipDhb?: number };
   avatarImg?: File;
   coverImg?: File;
 }
