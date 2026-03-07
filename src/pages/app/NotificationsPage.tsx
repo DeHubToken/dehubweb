@@ -742,7 +742,7 @@ export default function NotificationsPage() {
                       <div className="flex items-center justify-between p-4 rounded-xl bg-white/10">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                            <DollarSign className="w-5 h-5 text-white" />
+                            <Gift className="w-5 h-5 text-white" />
                           </div>
                           <div>
                             <p className="text-white font-medium">{t('notifications.tips')}</p>
