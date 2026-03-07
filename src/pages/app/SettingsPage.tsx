@@ -1835,6 +1835,9 @@ function MessagesSettings() {
             </div>
           </div>
 
+          {/* Free DM Access List */}
+          <FreeAccessListSection />
+
           {/* Do Not Disturb */}
           <SettingToggle
             icon={Ban}
@@ -1852,9 +1855,6 @@ function MessagesSettings() {
           </div>
         </div>
       </div>
-
-      {/* Free DM Access List */}
-      <FreeAccessListSection />
 
       {/* Message Preferences */}
       <div>
