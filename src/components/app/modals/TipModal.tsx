@@ -103,7 +103,7 @@ export function TipModal({
                       : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
                   }`}
                 >
-                  {val.toLocaleString()} <img src={dehubCoin} alt="DHB" className="inline w-4 h-4 ml-0.5" />
+                  <span className="inline-flex items-center gap-1">{val.toLocaleString()} <img src={dehubCoin} alt="DHB" className="w-4 h-4" /></span>
                 </button>
               ))}
             </div>
