@@ -212,7 +212,7 @@ export function DmTipDialog({
                 </>
               ) : (
                 <>
-                  <Diamond className="w-4 h-4 mr-2" />
+                  <Gem className="w-4 h-4 mr-2" />
                   Send {isValidAmount ? parsedAmount.toLocaleString() : '—'} DHB
                 </>
               )}
