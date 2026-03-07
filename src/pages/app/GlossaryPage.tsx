@@ -160,16 +160,6 @@ export default function GlossaryPage() {
         { icon: <ExternalLink size={iconSize} />, title: t('glossary.viewOnExplorer', 'View on Explorer'), description: t('glossary.viewOnExplorerDesc', 'Opens the blockchain explorer (BaseScan) to view the on-chain transaction details for a post or transfer.') },
       ],
     },
-    {
-      title: t('glossary.sections.status', 'Status Indicators'),
-      entries: [
-        { icon: <CheckCircle2 size={iconSize} className="text-emerald-400" />, title: t('glossary.success', 'Success (Green)'), description: t('glossary.successDesc', 'Action completed successfully. For example, a tip was sent or a post was created.') },
-        { icon: <XCircle size={iconSize} className="text-red-400" />, title: t('glossary.error', 'Error (Red)'), description: t('glossary.errorDesc', 'Something went wrong. Check your connection, wallet balance, or try again.') },
-        { icon: <AlertTriangle size={iconSize} className="text-yellow-400" />, title: t('glossary.warning', 'Warning (Yellow)'), description: t('glossary.warningDesc', 'A cautionary alert. For example, low balance warnings or rate limit notifications.') },
-        { icon: <Info size={iconSize} className="text-blue-400" />, title: t('glossary.info', 'Info (Blue)'), description: t('glossary.infoDesc', 'Informational message. For example, translation status or processing updates.') },
-        { icon: <Clock size={iconSize} />, title: t('glossary.pending', 'Pending / Processing'), description: t('glossary.pendingDesc', 'The action is in progress. Blockchain transactions may take a few seconds to confirm.') },
-      ],
-    },
   ];
 
   return (
