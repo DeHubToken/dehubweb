@@ -129,6 +129,7 @@ function normalizeDmSender(raw: any): DeHubUser {
     avatarUrl: raw?.avatarUrl || raw?.avatarImageUrl,
     isVerified: raw?.isVerified || raw?.is_verified,
     is_verified: raw?.is_verified || raw?.isVerified,
+    badgeBalance: raw?.badgeBalance,
   };
 }
 
