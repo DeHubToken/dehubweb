@@ -93,7 +93,6 @@ export function useTipPayment({
 
         await result.wait(1);
 
-        // Post tips: backend indexes blockchain (no API). DM tips use POST /api/dm/tip-notify (chat-system.md).
         // Record tip in database for leaderboard tracking
         try {
           await supabase.from('tip_records').insert({
