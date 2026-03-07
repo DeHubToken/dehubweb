@@ -26,7 +26,7 @@ import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
 import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
 import { getCommentCountDelta } from '@/lib/comment-count-cache';
-import tipIcon from '@/assets/tip-icon.png';
+import { Gem } from 'lucide-react';
 import {
   Drawer,
   DrawerContent,
