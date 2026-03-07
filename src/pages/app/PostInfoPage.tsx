@@ -836,7 +836,7 @@ export default function PostInfoPage() {
 
               {/* Total Tips */}
               <div className="col-span-2 bg-white/5 rounded-lg p-3 flex items-center gap-3">
-                <Coins className="w-5 h-5 text-white" />
+                <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
                 <div>
                   <p className="text-lg font-bold text-white">{totalTips.toLocaleString()} DHB</p>
                   <p className="text-xs text-white/60">{t('postInfo.totalTipsCreator')}</p>
