@@ -416,7 +416,12 @@ export async function getContacts(
   );
 
   // Filter out permanently deleted conversations
-  const deletedIds = getDeletedConversationIds();
+  const deletedIds = (() => {
+    try {
+      const raw = localStorage.getItem('dehub-deleted-conversations');
+      return raw ? new Set<string>(JSON.parse(raw)) : new Set<string>();
+    } catch { return new Set<string>(); }
+  })();
   if (deletedIds.size > 0) {
     dehubItems = dehubItems.filter(c => {
       const id = c.id || '';
