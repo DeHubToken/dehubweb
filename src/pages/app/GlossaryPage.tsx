@@ -7,6 +7,7 @@
 
 import { useTranslation } from 'react-i18next';
 import dhbCoinIcon from '@/assets/dehub-coin.png';
+import { BADGE_LEVELS, getBadgeUrl } from '@/lib/staking-badges';
 import {
   ThumbsUp, ThumbsDown, Languages, Eye, MessageSquare, Share2, Ticket,
   Bookmark, Bell, Send, Heart, Flag, MoreHorizontal,
@@ -144,9 +145,16 @@ export default function GlossaryPage() {
       ],
     },
     {
-      title: t('glossary.sections.badges', 'Badges & Status'),
+      title: t('glossary.sections.badges', 'Badges & Ranking'),
       entries: [
-        { icon: <Star size={iconSize} />, title: t('glossary.stakingBadge', 'Staking Badge'), description: t('glossary.stakingBadgeDesc', 'A colored badge shown next to your username indicating your DHB staking tier. Higher tiers unlock different colors and more governance voting power.') },
+        { icon: <Star size={iconSize} />, title: t('glossary.stakingBadge', 'Staking Badges'), description: t('glossary.stakingBadgeDesc', 'Badges displayed next to your username based on your total DHB holdings (wallet + staked). There are 13 tiers — the more DHB you hold, the higher your badge rank. Higher tiers also grant more governance voting power.') },
+        ...BADGE_LEVELS.map(b => ({
+          icon: <img src={getBadgeUrl(b.min) || ''} alt={b.name} className="w-6 h-6" />,
+          title: b.name,
+          description: `Requires ${b.min.toLocaleString()} DHB or more.`,
+        })),
+        { icon: <Trophy size={iconSize} />, title: t('glossary.leaderboardRanking', 'Leaderboard Ranking'), description: t('glossary.leaderboardRankingDesc', 'Users are ranked by total DHB balance (wallet + staked across all chains). Rankings update periodically and track 1-day and 1-week changes. You can also sort by tips sent, tips received, followers, likes, or subscribers.') },
+        { icon: <TrendingUp size={iconSize} />, title: t('glossary.delta', 'Ranking Delta (▲▼)'), description: t('glossary.deltaDesc', 'The green or red arrow next to a leaderboard entry shows how much a user\'s balance changed over the selected time period (1 day, 1 week, etc.).') },
         { icon: <CheckCircle2 size={iconSize} />, title: t('glossary.verified', 'Verified'), description: t('glossary.verifiedDesc', 'A verification indicator showing the account is authentic. Verified users have a checkmark next to their name.') },
         { icon: <Zap size={iconSize} />, title: t('glossary.tokenId', 'Token ID'), description: t('glossary.tokenIdDesc', 'A unique on-chain identifier assigned to each post when it\'s minted as an NFT on the blockchain.') },
       ],
