@@ -96,7 +96,7 @@ function UserSearchResult({
         )}
         {!dmDisabled && perMessageFee && perMessageFee > 0 && (
           <p className="text-xs text-amber-400 mt-1 flex items-center gap-1">
-            <Gem className="w-3 h-3" />
+            <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
             {perMessageFee.toLocaleString()} DHB to message
           </p>
         )}
