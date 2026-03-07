@@ -257,65 +257,6 @@ function parseDmMessage(raw: any, myAddress: string): DmMessage {
 
 // ─── Contacts & Conversations ─────────────────────────────────────────────────
 
-/**
- * Fetch conversations from Supabase direct_messages (wallet-based DMs).
- * Returns DeHubConversation[] for peers the user has chatted with via dm-send.
- */
-async function getContactsFromSupabase(myAddress: string): Promise<DeHubConversation[]> {
-  const my = myAddress.toLowerCase();
-  const { data: rows, error } = await supabase
-    .from('direct_messages')
-    .select('id, sender_address, receiver_address, content, message_type, created_at, sender_username, sender_display_name, sender_avatar_url')
-    .or(`sender_address.eq.${my},receiver_address.eq.${my}`)
-    .order('created_at', { ascending: false })
-    .limit(200);
-
-  if (error) {
-    console.warn('[DM API] getContactsFromSupabase failed:', error);
-    return [];
-  }
-
-  // Group by peer address, keep latest message per peer
-  const byPeer = new Map<string, { row: Record<string, unknown>; isFromOther: boolean }>();
-  for (const row of rows || []) {
-    const sender = (row.sender_address || '').toLowerCase();
-    const receiver = (row.receiver_address || '').toLowerCase();
-    const peer = sender === my ? receiver : sender;
-    if (!peer || peer === my) continue;
-    if (byPeer.has(peer)) continue; // already have latest (we ordered desc)
-    byPeer.set(peer, { row, isFromOther: sender !== my });
-  }
-
-  const conversations: DeHubConversation[] = Array.from(byPeer.entries()).map(([peerAddress, { row, isFromOther }]) => {
-    const r = row as Record<string, unknown>;
-    const lastMsgType = (r.message_type as string) || 'text';
-    const lastMsgContent = (r.content as string) || '';
-    return {
-      id: `new_${peerAddress}`,
-      participants: [{ address: peerAddress, _id: peerAddress } as DeHubUser],
-      otherUser: {
-        address: peerAddress,
-        _id: peerAddress,
-        username: isFromOther ? ((r.sender_username as string) || '') : '',
-        displayName: isFromOther ? ((r.sender_display_name as string) || '') : '',
-        avatarImageUrl: isFromOther ? ((r.sender_avatar_url as string) || '') : '',
-      } as DeHubUser,
-      lastMessage: {
-        id: (r.id as string) || '',
-        conversationId: `new_${peerAddress}`,
-        sender: { address: r.sender_address as string } as DeHubUser,
-        content: lastMsgContent,
-        type: (lastMsgType === 'image' || lastMsgType === 'media' ? 'image' : lastMsgType === 'gif' ? 'gif' : 'text') as DMMessageType,
-        createdAt: (r.created_at as string) || new Date().toISOString(),
-      } as DeHubDMMessage,
-      unreadCount: 0,
-      createdAt: (r.created_at as string) || new Date().toISOString(),
-      updatedAt: (r.created_at as string) || new Date().toISOString(),
-    };
-  });
-
-  return conversations;
-}
 
 /**
  * Fetch DM contacts list for the given wallet address.
