@@ -3,10 +3,12 @@
  * ====================
  * Paywall shown when recipient requires a minimum tip per message.
  * Pay the minimum to unlock, or tip higher to rank higher in their DM list.
+ * Includes a message input so the user can pay + send their first message in one step.
  */
 
 import { useState } from 'react';
-import { Lock, Loader2, Gem } from 'lucide-react';
+import { Lock, Loader2 } from 'lucide-react';
+import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
@@ -43,6 +45,7 @@ export function DmFeeGate({
   onUnlocked,
 }: DmFeeGateProps) {
   const [customAmount, setCustomAmount] = useState('');
+  const [messageText, setMessageText] = useState('');
   const [isSending, setIsSending] = useState(false);
 
   const tipAmount = customAmount ? parseFloat(customAmount) : fee;
@@ -51,6 +54,11 @@ export function DmFeeGate({
   const handlePay = async (amount: number) => {
     if (Number.isNaN(amount) || amount < fee) {
       toast.error(`Minimum tip is ${fee.toLocaleString()} DHB`);
+      return;
+    }
+
+    if (!messageText.trim()) {
+      toast.error('Please enter a message');
       return;
     }
 
@@ -72,7 +80,7 @@ export function DmFeeGate({
         return;
       }
 
-      toast.loading('Sending tip to unlock DMs...', { id: 'dm-fee-gate' });
+      toast.loading('Sending tip & message...', { id: 'dm-fee-gate' });
 
       const result = await writeContractAA(
         chainConfig.dhbToken,
@@ -84,11 +92,19 @@ export function DmFeeGate({
 
       await result.wait(1);
 
+      // Send tip message via socket
       emitSendMessage({
         dmId: conversationId,
         content: `Tipped ${amount.toLocaleString()} DHB`,
         type: 'tip',
         tipTxHash: result.hash,
+      });
+
+      // Send the actual user message
+      emitSendMessage({
+        dmId: conversationId,
+        content: messageText.trim(),
+        type: 'msg',
       });
 
       try {
@@ -112,7 +128,7 @@ export function DmFeeGate({
         console.warn('[DmFeeGate] tip-notify failed:', notifyErr);
       }
 
-      toast.success(`Unlocked! Sent ${amount.toLocaleString()} DHB 🎉`, { id: 'dm-fee-gate' });
+      toast.success(`Sent ${amount.toLocaleString()} DHB + message to ${recipientName}! 🎉`, { id: 'dm-fee-gate' });
       onUnlocked();
     } catch (error: unknown) {
       console.error('[DmFeeGate] Payment failed:', error);
@@ -141,12 +157,25 @@ export function DmFeeGate({
       </div>
 
       <div className="space-y-3">
+        {/* Message input */}
+        <div>
+          <p className="text-white/60 text-xs mb-1.5">Your message</p>
+          <Input
+            type="text"
+            placeholder="Type your message..."
+            value={messageText}
+            onChange={(e) => setMessageText(e.target.value)}
+            disabled={isSending}
+            className="bg-white/5 border-white/10 text-white placeholder:text-white/30 h-11 text-sm"
+          />
+        </div>
+
         {/* Pay minimum button */}
         <Button
           variant="glass"
           className="w-full bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/30 h-11"
           onClick={() => handlePay(fee)}
-          disabled={isSending}
+          disabled={isSending || !messageText.trim()}
         >
           {isSending && !customAmount ? (
             <>
@@ -155,8 +184,8 @@ export function DmFeeGate({
             </>
           ) : (
             <>
-              <Gem className="w-4 h-4 mr-2 text-white" />
-              Pay {fee.toLocaleString()} DHB Minimum
+              <img src={dehubCoin} alt="DHB" className="w-4 h-4 mr-2" />
+              Pay {fee.toLocaleString()} DHB & Send
             </>
           )}
         </Button>
@@ -171,7 +200,7 @@ export function DmFeeGate({
         {/* Custom higher tip */}
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <Gem className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white z-10" />
+            <img src={dehubCoin} alt="DHB" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 z-10" />
             <Input
               type="number"
               min={fee}
@@ -187,7 +216,7 @@ export function DmFeeGate({
             variant="glass"
             className="bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/30 h-11 px-4"
             onClick={() => handlePay(tipAmount)}
-            disabled={isSending || !customAmount || tipAmount < fee}
+            disabled={isSending || !customAmount || tipAmount < fee || !messageText.trim()}
           >
             {isSending && customAmount ? (
               <Loader2 className="w-4 h-4 animate-spin" />

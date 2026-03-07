@@ -10,7 +10,8 @@
  */
 
 import { useState, useCallback } from 'react';
-import { Search, Loader2, MessageCircle, X, Gem, Lock, ArrowLeft, AlertCircle } from 'lucide-react';
+import { Search, Loader2, MessageCircle, X, Lock, ArrowLeft, AlertCircle } from 'lucide-react';
+import dehubCoin from '@/assets/dehub-coin.png';
 import { Interface } from 'ethers';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -30,6 +31,7 @@ import {
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
+import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 
 const erc20TransferInterface = new Interface([
   'function transfer(address to, uint256 amount) returns (bool)',
@@ -95,7 +97,7 @@ function UserSearchResult({
         )}
         {!dmDisabled && perMessageFee && perMessageFee > 0 && (
           <p className="text-xs text-amber-400 mt-1 flex items-center gap-1">
-            <Gem className="w-3 h-3" />
+            <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
             {perMessageFee.toLocaleString()} DHB to message
           </p>
         )}
@@ -121,9 +123,10 @@ function FeePaymentStep({
 }: {
   user: DeHubUser;
   fee: number;
-  onPaid: () => void;
+  onPaid: (firstMessage?: string) => void;
   onBack: () => void;
 }) {
+  const [messageText, setMessageText] = useState('');
   const [customAmount, setCustomAmount] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [balanceInfo, setBalanceInfo] = useState<{ checked: boolean; balance: number; sufficient: boolean }>({
@@ -168,6 +171,10 @@ function FeePaymentStep({
   const handlePay = async (amount: number) => {
     if (Number.isNaN(amount) || amount < fee) {
       toast.error(`Minimum tip is ${fee.toLocaleString()} DHB`);
+      return;
+    }
+    if (!messageText.trim()) {
+      toast.error('Please enter a message');
       return;
     }
 
@@ -223,7 +230,7 @@ function FeePaymentStep({
       }
 
       toast.success(`Paid ${amount.toLocaleString()} DHB — opening chat! 🎉`, { id: 'dm-fee-gate' });
-      onPaid();
+      onPaid(messageText.trim());
     } catch (error: unknown) {
       console.error('[NewConversationModal] Payment failed:', error);
       const message = parseTxError(error as Error);
@@ -291,12 +298,25 @@ function FeePaymentStep({
         </p>
       ) : null}
 
+      {/* Message input */}
+      <div>
+        <p className="text-white/60 text-xs mb-1.5">Your message</p>
+        <Input
+          type="text"
+          placeholder="Type your first message..."
+          value={messageText}
+          onChange={(e) => setMessageText(e.target.value)}
+          disabled={isSending}
+          className="bg-white/5 border-white/10 text-white placeholder:text-white/30 h-11 text-sm"
+        />
+      </div>
+
       {/* Pay minimum */}
       <Button
         variant="glass"
         className="w-full bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/30 h-11"
         onClick={() => handlePay(fee)}
-        disabled={isSending || (balanceInfo.checked && !balanceInfo.sufficient)}
+        disabled={isSending || !messageText.trim() || (balanceInfo.checked && !balanceInfo.sufficient)}
       >
         {isSending && !customAmount ? (
           <>
@@ -305,7 +325,7 @@ function FeePaymentStep({
           </>
         ) : (
           <>
-            <Gem className="w-4 h-4 mr-2 text-white" />
+            <img src={dehubCoin} alt="DHB" className="w-4 h-4 mr-2" />
             Pay {fee.toLocaleString()} DHB & Start Chat
           </>
         )}
@@ -321,7 +341,7 @@ function FeePaymentStep({
       {/* Custom higher tip */}
       <div className="flex gap-2">
         <div className="relative flex-1">
-          <Gem className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white z-10" />
+          <img src={dehubCoin} alt="DHB" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 z-10" />
           <Input
             type="number"
             min={fee}
@@ -337,7 +357,7 @@ function FeePaymentStep({
           variant="glass"
           className="bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/30 h-11 px-4"
           onClick={() => handlePay(tipAmount)}
-          disabled={isSending || !isValidAmount || (balanceInfo.checked && !balanceInfo.sufficient)}
+          disabled={isSending || !isValidAmount || !messageText.trim() || (balanceInfo.checked && !balanceInfo.sufficient)}
         >
           {isSending && customAmount ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -368,7 +388,7 @@ export function NewConversationModal({
   const { data: searchResults, isLoading: isSearching } = useUserSearchForDM(searchQuery);
   const createConversation = useCreateConversation();
 
-  const startConversation = async (user: DeHubUser) => {
+  const startConversation = async (user: DeHubUser, firstMessage?: string) => {
     const userAddress = user.address || user._id;
     if (!userAddress) {
       toast.error('Unable to start conversation with this user');
@@ -382,7 +402,16 @@ export function NewConversationModal({
         recipientAddress: userAddress,
         recipientUser: user,
       });
-      toast.success('Conversation started!');
+
+      // Send the first message if provided (from fee payment step)
+      if (firstMessage && conversation.id) {
+        emitSendMessage({
+          dmId: conversation.id,
+          content: firstMessage,
+          type: 'msg',
+        });
+      }
+
       onConversationCreated(conversation);
       onOpenChange(false);
       setSearchQuery('');
@@ -418,7 +447,7 @@ export function NewConversationModal({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
+      <DialogContent hideCloseButton={!!feeUser} className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
         <DialogHeader>
           <DialogTitle className="text-white">
             {feeUser ? 'Tip to Message' : 'New Message'}
@@ -430,7 +459,7 @@ export function NewConversationModal({
           <FeePaymentStep
             user={feeUser}
             fee={feeAmount}
-            onPaid={() => startConversation(feeUser)}
+            onPaid={(firstMessage) => startConversation(feeUser, firstMessage)}
             onBack={() => setFeeUser(null)}
           />
         ) : (
