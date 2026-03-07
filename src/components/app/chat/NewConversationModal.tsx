@@ -12,6 +12,7 @@
 import { useState, useCallback } from 'react';
 import { Search, Loader2, MessageCircle, X, Lock, ArrowLeft, AlertCircle } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
+import padlockImg from '@/assets/padlock.png';
 import { Interface } from 'ethers';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';

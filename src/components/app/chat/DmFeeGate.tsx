@@ -7,8 +7,9 @@
  */
 
 import { useState } from 'react';
-import { Lock, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
+import padlockImg from '@/assets/padlock.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
