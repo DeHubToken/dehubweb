@@ -698,7 +698,7 @@ export default function GovernancePage() {
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <img src={governanceShieldIcon} alt="Governance" className="w-12 h-12 object-contain" />
+            <img src={governanceShieldIcon} alt="Governance" className="w-12 h-12 object-contain brightness-75" />
             <div>
               <h1 className="text-xl font-bold text-white">{t('governance.title')}</h1>
               <p className="text-zinc-500 text-sm">{t('governance.proposalCount', { count: totalCount })}</p>
