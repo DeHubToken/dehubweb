@@ -7,7 +7,7 @@
 
 import { useTranslation } from 'react-i18next';
 import {
-  ThumbsUp, ThumbsDown, Languages, Eye, MessageSquare, Share2,
+  ThumbsUp, ThumbsDown, Languages, Eye, MessageSquare, Share2, Ticket,
   Bookmark, Bell, Send, Heart, Flag, MoreHorizontal,
   Sparkles, Trophy, Wallet, ShieldCheck, Lightbulb, Radio,
   Video, Image, Coins, Users, Star, Lock, Unlock,
@@ -100,7 +100,7 @@ export default function GlossaryPage() {
       entries: [
         { icon: <Unlock size={iconSize} />, title: t('glossary.public', 'Public'), description: t('glossary.publicDesc', 'Content visible to everyone. Anyone can view, like, and comment on public posts.') },
         { icon: <Lock size={iconSize} />, title: t('glossary.private', 'Private'), description: t('glossary.privateDesc', 'Content only visible to you. Private posts are hidden from other users and the public feed.') },
-        { icon: <Eye size={iconSize} />, title: t('glossary.ppv', 'Pay-Per-View (PPV)'), description: t('glossary.ppvDesc', 'Premium content that requires a DHB token payment to unlock. Creators set the price and earn revenue from each view.') },
+        { icon: <Ticket size={iconSize} />, title: t('glossary.ppv', 'Pay-Per-View (PPV)'), description: t('glossary.ppvDesc', 'Premium content that requires a DHB token payment to unlock. Creators set the price and earn revenue from each view.') },
         { icon: <Crown size={iconSize} />, title: t('glossary.subscriberOnly', 'Subscriber Only'), description: t('glossary.subscriberOnlyDesc', 'Content restricted to users who have subscribed to the creator\'s channel.') },
       ],
     },
