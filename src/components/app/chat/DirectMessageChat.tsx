@@ -217,7 +217,7 @@ function MessageBubble({
             {/* Tip badge on regular messages */}
             {message.tipAmount != null && (message.msgType as string) !== 'tip' && (
               <div className="inline-flex items-center gap-1 mt-1 text-xs text-amber-300">
-                <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
+                <img src={dehubCoin} alt="DHB" className="w-3 h-3 brightness-0 invert" />
                 {message.tipAmount} {message.tipSymbol || 'DHB'}
               </div>
             )}
