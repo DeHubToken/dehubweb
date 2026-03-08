@@ -331,3 +331,55 @@ export function useVoteFeatureRequest() {
     },
   });
 }
+
+export function useEditFeatureRequest() {
+  const queryClient = useQueryClient();
+  const { walletAddress } = useAuth();
+
+  return useMutation({
+    mutationFn: async ({ id, title, description, category }: { id: string; title: string; description: string; category: FeatureCategory }) => {
+      if (!walletAddress) throw new Error('Not authenticated');
+      const { data, error } = await supabase
+        .from('feature_requests')
+        .update({ title: title.trim(), description: description.trim(), category })
+        .eq('id', id)
+        .select()
+        .single()
+        .setHeader('x-wallet-address', walletAddress.toLowerCase());
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['feature-requests'] });
+      toast.success('Feature request updated!');
+    },
+    onError: () => {
+      toast.error('Failed to update feature request');
+    },
+  });
+}
+
+export function useDeleteFeatureRequest() {
+  const queryClient = useQueryClient();
+  const { walletAddress } = useAuth();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      if (!walletAddress) throw new Error('Not authenticated');
+      const { error } = await supabase
+        .from('feature_requests')
+        .delete()
+        .eq('id', id)
+        .setHeader('x-wallet-address', walletAddress.toLowerCase());
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['feature-requests'] });
+      queryClient.invalidateQueries({ queryKey: ['feature-requests-total-count'] });
+      toast.success('Feature request deleted');
+    },
+    onError: () => {
+      toast.error('Failed to delete feature request');
+    },
+  });
+}
