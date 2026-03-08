@@ -87,12 +87,29 @@ export function renderTextWithLinks(text: string): ReactNode[] {
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
-            // Use window.location for reliable cross-page navigation
             window.location.href = `/${username}`;
           }}
           data-no-navigate="true"
         >
           @{username}
+        </a>
+      );
+    } else if (fullMatch.startsWith('$')) {
+      // $cashtag — render as clickable bold white, searches on click
+      const tag = fullMatch; // e.g. $DHB
+      parts.push(
+        <a
+          key={`cashtag-${tag}-${match.index}`}
+          href={`/app/explore?q=${encodeURIComponent(tag)}`}
+          className="text-white font-bold hover:underline transition-colors"
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            window.location.href = `/app/explore?q=${encodeURIComponent(tag)}`;
+          }}
+          data-no-navigate="true"
+        >
+          {tag}
         </a>
       );
     } else {
