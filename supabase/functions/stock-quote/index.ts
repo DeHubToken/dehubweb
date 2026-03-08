@@ -18,36 +18,39 @@ Deno.serve(async (req) => {
 
     const clean = symbol.replace(/^\$/, '').toUpperCase().slice(0, 10);
 
-    // Fetch 1-day chart with 5m intervals (includes quote meta)
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(clean)}?range=1d&interval=5m&includePrePost=false`;
+    // Fetch chart + quote in parallel
+    const chartUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(clean)}?range=1d&interval=5m&includePrePost=false`;
+    const quoteUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(clean)}`;
 
-    const res = await fetch(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0' },
-    });
+    const [chartRes, quoteRes] = await Promise.all([
+      fetch(chartUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }),
+      fetch(quoteUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }),
+    ]);
 
-    if (!res.ok) {
-      const text = await res.text();
-      console.error('Yahoo Finance error:', res.status, text);
+    if (!chartRes.ok) {
+      const text = await chartRes.text();
+      console.error('Yahoo Finance chart error:', chartRes.status, text);
+      if (!quoteRes.ok) await quoteRes.text();
       return new Response(JSON.stringify({ found: false }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    const data = await res.json();
+    const data = await chartRes.json();
     const result = data?.chart?.result?.[0];
     if (!result) {
+      if (!quoteRes.ok) await quoteRes.text();
       return new Response(JSON.stringify({ found: false }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     const meta = result.meta;
-    const exchange = meta.exchangeName || meta.fullExchangeName || '';
     const instrumentType = meta.instrumentType || '';
 
-    // Only accept equity/stock/ETF types from recognized exchanges
     const validTypes = ['EQUITY', 'ETF', 'MUTUALFUND', 'INDEX'];
     if (!validTypes.includes(instrumentType.toUpperCase())) {
+      if (!quoteRes.ok) await quoteRes.text();
       return new Response(JSON.stringify({ found: false }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -66,38 +69,24 @@ Deno.serve(async (req) => {
       price: closes[i] ?? null,
     })).filter((p: { time: number; price: number | null }) => p.price !== null);
 
-    // Try to get market cap and volume from quote endpoint
-    let marketCap: number | null = null;
-    let volume24h: number | null = null;
-    let dayHigh: number | null = null;
-    let dayLow: number | null = null;
-    let longName: string | null = null;
-
+    // Extract rich quote data
+    let q: Record<string, unknown> | null = null;
     try {
-      const quoteUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(clean)}`;
-      const quoteRes = await fetch(quoteUrl, {
-        headers: { 'User-Agent': 'Mozilla/5.0' },
-      });
       if (quoteRes.ok) {
         const quoteData = await quoteRes.json();
-        const q = quoteData?.quoteResponse?.result?.[0];
-        if (q) {
-          marketCap = q.marketCap ?? null;
-          volume24h = q.regularMarketVolume ?? null;
-          dayHigh = q.regularMarketDayHigh ?? null;
-          dayLow = q.regularMarketDayLow ?? null;
-          longName = q.longName ?? q.shortName ?? null;
-        }
+        q = quoteData?.quoteResponse?.result?.[0] ?? null;
       } else {
-        await quoteRes.text(); // consume body
+        await quoteRes.text();
       }
     } catch (e) {
       console.error('Quote fetch error:', e);
     }
 
+    const exchange = meta.exchangeName || meta.fullExchangeName || '';
+
     const payload = {
       found: true,
-      name: longName || meta.shortName || meta.symbol || clean,
+      name: (q?.longName as string) || (q?.shortName as string) || meta.shortName || meta.symbol || clean,
       symbol: meta.symbol || clean,
       exchange: meta.fullExchangeName || exchange,
       exchangeShort: exchange,
@@ -107,11 +96,77 @@ Deno.serve(async (req) => {
       change24h,
       percentChange24h,
       previousClose,
-      dayHigh,
-      dayLow,
-      marketCap,
-      volume24h,
+      dayHigh: (q?.regularMarketDayHigh as number) ?? null,
+      dayLow: (q?.regularMarketDayLow as number) ?? null,
+      marketCap: (q?.marketCap as number) ?? null,
+      volume24h: (q?.regularMarketVolume as number) ?? null,
       chartData,
+
+      // 52-week
+      fiftyTwoWeekHigh: (q?.fiftyTwoWeekHigh as number) ?? null,
+      fiftyTwoWeekLow: (q?.fiftyTwoWeekLow as number) ?? null,
+      fiftyTwoWeekChangePercent: (q?.['52WeekChange'] as number) ?? null,
+
+      // Moving averages
+      fiftyDayAverage: (q?.fiftyDayAverage as number) ?? null,
+      twoHundredDayAverage: (q?.twoHundredDayAverage as number) ?? null,
+      fiftyDayAverageChangePercent: (q?.fiftyDayAverageChangePercent as number) ?? null,
+      twoHundredDayAverageChangePercent: (q?.twoHundredDayAverageChangePercent as number) ?? null,
+
+      // Valuation
+      trailingPE: (q?.trailingPE as number) ?? null,
+      forwardPE: (q?.forwardPE as number) ?? null,
+      epsTrailingTwelveMonths: (q?.epsTrailingTwelveMonths as number) ?? null,
+      epsForward: (q?.epsForward as number) ?? null,
+      epsCurrentYear: (q?.epsCurrentYear as number) ?? null,
+      priceToBook: (q?.priceToBook as number) ?? null,
+      bookValue: (q?.bookValue as number) ?? null,
+
+      // Dividends
+      dividendRate: (q?.trailingAnnualDividendRate as number) ?? (q?.dividendRate as number) ?? null,
+      dividendYield: (q?.trailingAnnualDividendYield as number) ?? (q?.dividendYield as number) ?? null,
+      exDividendDate: (q?.exDividendDate as number) ?? null,
+
+      // Shares & float
+      sharesOutstanding: (q?.sharesOutstanding as number) ?? null,
+      floatShares: (q?.floatShares as number) ?? null,
+      shortRatio: (q?.shortRatio as number) ?? null,
+      shortPercentOfFloat: (q?.shortPercentOfFloat as number) ?? null,
+
+      // Trading
+      bid: (q?.bid as number) ?? null,
+      ask: (q?.ask as number) ?? null,
+      bidSize: (q?.bidSize as number) ?? null,
+      askSize: (q?.askSize as number) ?? null,
+      averageDailyVolume3Month: (q?.averageDailyVolume3Month as number) ?? null,
+      averageDailyVolume10Day: (q?.averageDailyVolume10Day as number) ?? null,
+
+      // Earnings & analyst
+      earningsTimestamp: (q?.earningsTimestamp as number) ?? null,
+      targetMeanPrice: (q?.targetMeanPrice as number) ?? null,
+      targetHighPrice: (q?.targetHighPrice as number) ?? null,
+      targetLowPrice: (q?.targetLowPrice as number) ?? null,
+      recommendationKey: (q?.recommendationKey as string) ?? null,
+      recommendationMean: (q?.recommendationMean as number) ?? null,
+      numberOfAnalystOpinions: (q?.numberOfAnalystOpinions as number) ?? null,
+
+      // Company info
+      sector: (q?.sector as string) ?? null,
+      industry: (q?.industry as string) ?? null,
+
+      // Revenue & margins
+      revenue: (q?.revenue as number) ?? null,
+      revenuePerShare: (q?.revenuePerShare as number) ?? null,
+      profitMargins: (q?.profitMargins as number) ?? null,
+      enterpriseValue: (q?.enterpriseValue as number) ?? null,
+
+      // Pre/post market
+      preMarketPrice: (q?.preMarketPrice as number) ?? null,
+      preMarketChange: (q?.preMarketChange as number) ?? null,
+      preMarketChangePercent: (q?.preMarketChangePercent as number) ?? null,
+      postMarketPrice: (q?.postMarketPrice as number) ?? null,
+      postMarketChange: (q?.postMarketChange as number) ?? null,
+      postMarketChangePercent: (q?.postMarketChangePercent as number) ?? null,
     };
 
     return new Response(JSON.stringify(payload), {
