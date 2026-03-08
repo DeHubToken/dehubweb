@@ -30,6 +30,29 @@ export function getExtension(path: string): string {
 }
 
 /**
+ * Get the cache-bust value for a given address.
+ * After a profile image upload, we store an address-specific timestamp in localStorage.
+ * This ensures the browser fetches the updated image immediately after upload
+ * rather than serving the old cached version.
+ * Falls back to a 5-minute window bucket for addresses with no stored version.
+ */
+function getProfileImageVersion(address: string): string {
+  if (typeof localStorage === 'undefined') return String(Math.floor(Date.now() / 300000));
+  const stored = localStorage.getItem(`profile_img_v_${address.toLowerCase()}`);
+  return stored || String(Math.floor(Date.now() / 300000));
+}
+
+/**
+ * Call this after a successful profile image upload to force a fresh CDN fetch
+ * on the next render (even within the same 5-minute cache window).
+ */
+export function bumpProfileImageVersion(address: string): void {
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem(`profile_img_v_${address.toLowerCase()}`, String(Date.now()));
+  }
+}
+
+/**
  * Build canonical avatar URL: cdn/avatars/{address}.{ext}
  * API may return paths like "avatars/xxx.jpg" or "statics/avatars/xxx.octet-stream"
  * We normalize to: https://dehubcdn.../avatars/{address}.{ext}
@@ -37,20 +60,19 @@ export function getExtension(path: string): string {
 export function buildAvatarUrl(address: string, apiAvatarPath: string | undefined | null): string | undefined {
   if (!apiAvatarPath) return undefined;
   if (!address) return undefined;
-  
+
   // Blob or data URLs (optimistic previews) - return as-is
   if (apiAvatarPath.startsWith('blob:') || apiAvatarPath.startsWith('data:')) {
     return apiAvatarPath;
   }
-  
-  // Cache-bust param: 5-minute windows so browsers fetch latest avatars
-  const cacheBust = Math.floor(Date.now() / 300000);
-  
+
+  const cacheBust = getProfileImageVersion(address);
+
   // If it's already a dehubcdn URL, append cache-bust and return
   if (apiAvatarPath.startsWith('https://dehubcdn')) {
     return `${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
   }
-  
+
   // If it's any api.dehub.io URL, extract the path portion and rebuild with CDN
   if (apiAvatarPath.includes('api.dehub.io')) {
     // Extract relative path after the domain (e.g. "avatars/0x9e19...jpg")
@@ -59,16 +81,16 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
       return `${DEHUB_CDN_BASE}${match[1]}${match[1].includes('?') ? '&' : '?'}v=${cacheBust}`;
     }
   }
-  
+
   // Other full URLs (dicebear, external CDNs, etc.) - return as-is
   if (apiAvatarPath.startsWith('http')) return apiAvatarPath;
-  
+
   // Strip known folder prefixes (statics/, nfts/) that don't exist on CDN
   let cleanPath = apiAvatarPath;
   if (cleanPath.startsWith('statics/')) {
     cleanPath = cleanPath.replace(/^statics\//, '');
   }
-  
+
   // Relative path - use cleaned path with CDN base
   return `${DEHUB_CDN_BASE}${cleanPath}${cleanPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
 }
@@ -83,7 +105,8 @@ export function buildCoverUrl(address: string, apiCoverPath: string | undefined 
   if (apiCoverPath.startsWith('blob:') || apiCoverPath.startsWith('data:')) return apiCoverPath;
   if (apiCoverPath.startsWith('http')) return apiCoverPath;
   const ext = getExtension(apiCoverPath);
-  return `${DEHUB_CDN_BASE}covers/${address}.${ext}`;
+  const cacheBust = getProfileImageVersion(address);
+  return `${DEHUB_CDN_BASE}covers/${address}.${ext}?v=${cacheBust}`;
 }
 
 /**

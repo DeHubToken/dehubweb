@@ -68,7 +68,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser } from '@/lib/api/dehub';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { getBlockListPaginated, unblockUser as apiUnblockUser, type BlockedUser, checkUsernameAvailability } from '@/lib/api/dehub';
-import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
+import { buildAvatarUrl, buildCoverUrl, bumpProfileImageVersion } from '@/lib/media-url';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
@@ -375,6 +375,11 @@ function ProfileSettings() {
       console.log('[Settings] Had avatarImg:', !!variables.avatarImg, 'Had coverImg:', !!variables.coverImg);
       toast.success(t('settings.profileUpdated'));
       
+      // Bump CDN cache-bust for this address so future renders force a fresh fetch
+      if ((variables.avatarImg || variables.coverImg) && authUser?.address) {
+        bumpProfileImageVersion(authUser.address);
+      }
+
       // Optimistically update profile cache with local previews so avatar/cover
       // appear instantly everywhere, instead of waiting for CDN propagation.
       if (variables.avatarImg || variables.coverImg) {
@@ -389,7 +394,8 @@ function ProfileSettings() {
             };
           }
         );
-        // Also update user in AuthContext immediately
+        // Invalidate all profile caches so the new ?v= cache-bust is picked up
+        queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
         if (variables.avatarImg && avatarPreview) {
           queryClient.invalidateQueries({ queryKey: ['profile-avatar'] });
         }
