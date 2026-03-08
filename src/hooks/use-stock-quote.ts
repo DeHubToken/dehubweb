@@ -19,11 +19,76 @@ export interface StockQuote {
   marketCap: number | null;
   volume24h: number | null;
   chartData: PricePoint[];
+
+  // 52-week
+  fiftyTwoWeekHigh: number | null;
+  fiftyTwoWeekLow: number | null;
+  fiftyTwoWeekChangePercent: number | null;
+
+  // Moving averages
+  fiftyDayAverage: number | null;
+  twoHundredDayAverage: number | null;
+  fiftyDayAverageChangePercent: number | null;
+  twoHundredDayAverageChangePercent: number | null;
+
+  // Valuation
+  trailingPE: number | null;
+  forwardPE: number | null;
+  epsTrailingTwelveMonths: number | null;
+  epsForward: number | null;
+  epsCurrentYear: number | null;
+  priceToBook: number | null;
+  bookValue: number | null;
+
+  // Dividends
+  dividendRate: number | null;
+  dividendYield: number | null;
+  exDividendDate: number | null;
+
+  // Shares & float
+  sharesOutstanding: number | null;
+  floatShares: number | null;
+  shortRatio: number | null;
+  shortPercentOfFloat: number | null;
+
+  // Trading
+  bid: number | null;
+  ask: number | null;
+  bidSize: number | null;
+  askSize: number | null;
+  averageDailyVolume3Month: number | null;
+  averageDailyVolume10Day: number | null;
+
+  // Earnings & analyst
+  earningsTimestamp: number | null;
+  targetMeanPrice: number | null;
+  targetHighPrice: number | null;
+  targetLowPrice: number | null;
+  recommendationKey: string | null;
+  recommendationMean: number | null;
+  numberOfAnalystOpinions: number | null;
+
+  // Company
+  sector: string | null;
+  industry: string | null;
+
+  // Revenue
+  revenue: number | null;
+  revenuePerShare: number | null;
+  profitMargins: number | null;
+  enterpriseValue: number | null;
+
+  // Pre/post market
+  preMarketPrice: number | null;
+  preMarketChange: number | null;
+  preMarketChangePercent: number | null;
+  postMarketPrice: number | null;
+  postMarketChange: number | null;
+  postMarketChangePercent: number | null;
 }
 
 export function useStockQuote(query: string, enabled: boolean) {
   const symbol = query.trim().replace(/^\$/, '').toUpperCase();
-  // Stock tickers are 1-5 chars, only letters (maybe with dots like BRK.B)
   const isValidTicker = /^[A-Z]{1,5}(\.[A-Z])?$/.test(symbol);
 
   return useQuery<StockQuote | null>({
