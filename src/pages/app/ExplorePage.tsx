@@ -462,6 +462,9 @@ export default function ExplorePage() {
 
   // DexScreener cashtag price lookup
   const { data: dexPair, isLoading: isDexLoading } = useDexScreenerSearch(effectiveQuery, isSearching);
+  
+  // CoinMarketCap market cap (overrides DexScreener when available)
+  const { data: cmcData } = useCmcMarketCap(effectiveQuery, isSearching);
 
   // Always fetch @d specifically for brand queries (d, de, deh, dehu, dehub)
   const {
