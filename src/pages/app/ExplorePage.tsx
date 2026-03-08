@@ -36,6 +36,7 @@ import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { VideoCard, ImageCard, PostCard } from '@/components/app/cards';
 import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
 import { useDexScreenerSearch } from '@/hooks/use-dexscreener';
+import { useCmcMarketCap } from '@/hooks/use-cmc-market-cap';
 import { CashtagPriceCard } from '@/components/app/CashtagPriceCard';
 import type { VideoItem, ImagePost } from '@/types/feed.types';
 
@@ -461,6 +462,9 @@ export default function ExplorePage() {
 
   // DexScreener cashtag price lookup
   const { data: dexPair, isLoading: isDexLoading } = useDexScreenerSearch(effectiveQuery, isSearching);
+  
+  // CoinMarketCap market cap (overrides DexScreener when available)
+  const { data: cmcData } = useCmcMarketCap(effectiveQuery, isSearching);
 
   // Always fetch @d specifically for brand queries (d, de, deh, dehu, dehub)
   const {
@@ -766,7 +770,7 @@ export default function ExplorePage() {
 
                 {/* DexScreener Cashtag Price Card */}
                 {dexPair && (
-                  <CashtagPriceCard pair={dexPair} symbol={effectiveQuery.trim()} />
+                  <CashtagPriceCard pair={dexPair} symbol={effectiveQuery.trim()} cmcData={cmcData} />
                 )}
 
                 {/* Loading State */}
