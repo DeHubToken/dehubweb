@@ -31,6 +31,7 @@ function formatCompact(n: number | null | undefined): string {
 
 export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProps) {
   const [copied, setCopied] = useState(false);
+  const { data: chartData, isLoading: isChartLoading } = useTokenChart(symbol, true);
   
   // Use CMC data when available, fallback to DexScreener
   const change24h = cmcData?.percentChange24h ?? pair.priceChange?.h24;
@@ -40,7 +41,6 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
   const displayPrice = cmcData?.price ? formatPrice(cmcData.price) : formatPrice(pair.priceUsd);
   
   const dexScreenerUrl = pair.url || `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}`;
-  const chartEmbedUrl = `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}?embed=1&theme=dark&trades=0&info=0`;
   const contractAddress = pair.baseToken.address;
 
   const handleCopyCA = (e: React.MouseEvent) => {
