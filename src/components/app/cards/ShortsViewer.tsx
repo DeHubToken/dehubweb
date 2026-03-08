@@ -375,6 +375,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable) return;
       if (e.key === 'ArrowDown' || e.key === 'j') goToNext();
       else if (e.key === 'ArrowUp' || e.key === 'k') goToPrev();
       else if (e.key === 'Escape') onClose();
