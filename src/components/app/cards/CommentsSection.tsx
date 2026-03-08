@@ -845,10 +845,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                 ref={setCommentsTabRef(tab)}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className="relative z-40 px-4 py-2 flex items-center justify-center transition-all rounded-xl text-zinc-400 hover:text-zinc-200"
+                className="relative z-40 px-3 py-1.5 flex items-center justify-center transition-all rounded-xl text-zinc-400 hover:text-zinc-200"
               >
                 <span className={cn("relative z-10", activeTab === tab && "text-white")}>
-                  {tab === 'replies' ? <MessageSquare className="w-5 h-5" /> : tab === 'quotes' ? <Quote className="w-5 h-5" /> : tab === 'reposts' ? <Repeat2 className="w-5 h-5" /> : <Search className="w-5 h-5" />}
+                  {tab === 'replies' ? <MessageSquare className="w-[17px] h-[17px]" /> : tab === 'quotes' ? <Quote className="w-[17px] h-[17px]" /> : tab === 'reposts' ? <Repeat2 className="w-[17px] h-[17px]" /> : <Search className="w-[17px] h-[17px]" />}
                 </span>
               </button>
             ))}
