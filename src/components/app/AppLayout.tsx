@@ -240,6 +240,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 <GlobalDropZoneProvider>
                   <AppLayoutContent>{children}</AppLayoutContent>
                   <FloatingPiPOverlay />
+                  <UserFeedbackSurvey />
                 </GlobalDropZoneProvider>
               </CoinPlacementProvider>
             </RadioPlayerProvider>
