@@ -815,6 +815,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
             video.preload = 'auto';
             video.muted = true;
             video.playsInline = true;
+            video.setAttribute('webkit-playsinline', '');
             video.src = thumbnailSource.preview;
             video.load();
             await new Promise<void>((resolve, reject) => {

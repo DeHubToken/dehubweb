@@ -15,6 +15,7 @@ const extractVideoFrame = (videoUrl: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     const video = document.createElement('video');
     video.crossOrigin = 'anonymous';
+    video.setAttribute('webkit-playsinline', '');
     video.preload = 'metadata';
     video.src = videoUrl;
     video.currentTime = 0.1;

@@ -285,6 +285,7 @@ export function PostMediaPreview({
     try {
       const video = document.createElement('video');
       video.src = videoUrl;
+      video.setAttribute('webkit-playsinline', '');
       // Only set crossOrigin for non-blob URLs (external resources)
       // Blob URLs are same-origin and don't need CORS handling
       if (!videoUrl.startsWith('blob:')) {

@@ -58,6 +58,7 @@ export function VideoTrimmer({
     const video = document.createElement('video');
     video.src = videoUrl;
     video.crossOrigin = 'anonymous';
+    video.setAttribute('webkit-playsinline', '');
     
     const thumbCount = 10;
     const thumbs: string[] = [];

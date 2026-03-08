@@ -56,6 +56,7 @@ async function extractFirstFrame(videoBlob: Blob): Promise<Blob | null> {
 
     video.muted = true;
     video.playsInline = true;
+    video.setAttribute('webkit-playsinline', '');
     video.preload = 'metadata';
 
     video.onloadeddata = () => {
