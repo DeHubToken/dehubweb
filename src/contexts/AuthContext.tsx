@@ -303,6 +303,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           try {
             console.log('Restoring session, fetching account info...');
             const userData = await getAccountInfo(savedWallet);
+            
+            // Validate token server-side by making an authenticated API call.
+            // getAccountInfo is a public endpoint that succeeds even with invalid tokens.
+            // This call will throw AuthenticationError (401) if the token is actually invalid.
+            try {
+              await apiCall('/api/notification/unread-count', { requiresAuth: true });
+            } catch (tokenValidationError: any) {
+              // If the token is rejected server-side, clear the zombie session
+              if (tokenValidationError?.name === 'AuthenticationError' || 
+                  tokenValidationError?.message?.includes('Session expired') ||
+                  tokenValidationError?.message?.includes('Authentication required')) {
+                console.warn('[Auth] Token invalid server-side, clearing zombie session');
+                clearAuthSession();
+                localStorage.removeItem('dehub_user');
+                setIsLoading(false);
+                return;
+              }
+              // Non-auth errors (network etc.) — proceed with session anyway
+              console.warn('[Auth] Token validation call failed (non-auth), proceeding:', tokenValidationError?.message);
+            }
+            
             const normalizedUser = normalizeUser(userData, savedWallet);
             
             setUser(normalizedUser);
