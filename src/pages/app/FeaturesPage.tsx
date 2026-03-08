@@ -158,7 +158,7 @@ function FeatureCard({
       <CardHeader
         username={displayName}
         handle={handle}
-        avatarSeed={avatarUrl || feature.author_wallet_address}
+        avatarSeed={avatarUrl || ''}
         verified={false}
         contentType="post"
         creatorId={feature.author_wallet_address}
