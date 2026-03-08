@@ -166,25 +166,175 @@ function FeatureCard({
     );
   };
 
+  const handleEdit = () => {
+    setEditTitle(feature.title);
+    setEditDescription(feature.description);
+    setEditCategory(feature.category);
+    setIsEditing(true);
+    setShowMenu(false);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editTitle.trim() || !editDescription.trim()) return;
+    editMutation.mutate(
+      { id: feature.id, title: editTitle, description: editDescription, category: editCategory },
+      { onSuccess: () => setIsEditing(false) }
+    );
+  };
+
+  const handleDelete = () => {
+    setShowMenu(false);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = () => {
+    deleteMutation.mutate(feature.id, {
+      onSuccess: () => setShowDeleteConfirm(false),
+    });
+  };
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!showMenu) return;
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setShowMenu(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showMenu]);
+
   return (
     <div className="overflow-visible relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3">
-      {/* Header - PostCard style */}
-      <CardHeader
-        username={displayName}
-        handle={handle}
-        avatarSeed={avatarUrl || ''}
-        verified={false}
-        contentType="post"
-        creatorId={feature.author_wallet_address}
-        creatorUsername={feature.author_username || undefined}
-        timestamp={formatTimeAgo(feature.created_at)}
-      />
+      {/* Header with three-dot menu */}
+      <div className="flex items-start">
+        <CardHeader
+          username={displayName}
+          handle={handle}
+          avatarSeed={avatarUrl || ''}
+          verified={false}
+          contentType="post"
+          creatorId={feature.author_wallet_address}
+          creatorUsername={feature.author_username || undefined}
+          timestamp={formatTimeAgo(feature.created_at)}
+        />
+        {isAuthor && (
+          <div className="relative shrink-0" ref={menuRef}>
+            <button
+              type="button"
+              onClick={() => setShowMenu(prev => !prev)}
+              className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-500 hover:text-white hover:bg-white/10 transition-colors"
+            >
+              <MoreVertical className="w-4 h-4" />
+            </button>
+            {showMenu && (
+              <div className="absolute right-0 top-9 z-50 w-36 rounded-xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-xl overflow-hidden">
+                <button
+                  type="button"
+                  onClick={handleEdit}
+                  className="flex items-center gap-2 w-full px-3 py-2.5 text-sm text-zinc-300 hover:bg-white/10 hover:text-white transition-colors"
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="flex items-center gap-2 w-full px-3 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
+      {/* Delete confirmation */}
+      {showDeleteConfirm && (
+        <div className="mb-3 p-3 rounded-lg border border-red-500/20 bg-red-500/5">
+          <p className="text-sm text-zinc-300 mb-2">Are you sure you want to delete this feature request?</p>
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={deleteMutation.isPending}
+              className="rounded-lg text-xs"
+            >
+              {deleteMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Delete'}
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setShowDeleteConfirm(false)}
+              className="rounded-lg text-xs text-zinc-400"
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
 
-      {/* Content */}
+      {/* Content — editable or read-only */}
       <div className="pt-1 space-y-2">
-        <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
-        <TranslatableText text={feature.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />
+        {isEditing ? (
+          <div className="space-y-3">
+            <div>
+              <label className="text-zinc-500 text-xs mb-1 block">Title</label>
+              <Input
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                maxLength={100}
+                className="bg-zinc-800/50 border-white/10 text-white rounded-lg text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-zinc-500 text-xs mb-1 block">Description</label>
+              <textarea
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+                maxLength={1000}
+                rows={3}
+                className="w-full bg-zinc-800/50 border border-white/10 text-white rounded-lg text-sm p-2.5 resize-none focus:outline-none focus:ring-1 focus:ring-white/20"
+              />
+            </div>
+            <div>
+              <label className="text-zinc-500 text-xs mb-1 block">Category</label>
+              <select
+                value={editCategory}
+                onChange={(e) => setEditCategory(e.target.value as FeatureCategory)}
+                className="w-full bg-zinc-800/50 border border-white/10 text-white rounded-lg text-sm p-2 focus:outline-none focus:ring-1 focus:ring-white/20"
+              >
+                {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+                  <option key={key} value={key}>{label}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="glass"
+                onClick={handleSaveEdit}
+                disabled={editMutation.isPending || !editTitle.trim() || !editDescription.trim()}
+                className="rounded-lg text-xs"
+              >
+                {editMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Save'}
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setIsEditing(false)}
+                className="rounded-lg text-xs text-zinc-400"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
+            <TranslatableText text={feature.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />
 
         {/* Category badge - liquid glass style */}
         <div className="flex items-center gap-2">
