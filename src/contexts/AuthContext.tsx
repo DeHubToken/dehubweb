@@ -272,11 +272,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const init = async () => {
       // Don't pre-warm Web3Auth on mount for mobile to avoid triggering Chrome's 'Abusive Ads' blocker
       // which often flags background iframes. We'll init it when the user opens the login modal.
+      // Exception: returning Web3Auth users on mobile need it for session refresh.
+      const savedConnectionSource = localStorage.getItem('dehub_connection_source');
+      const hasValidSession = getAuthToken() && !isTokenExpired();
       if (!isMobileDevice()) {
         console.log('[Auth] Pre-warming Web3Auth (Desktop)...');
         initWeb3Auth()
           .then((instance) => setWeb3auth(instance))
           .catch((err) => console.warn('Web3Auth pre-init failed:', err));
+      } else if (savedConnectionSource === 'web3auth' && hasValidSession) {
+        console.log('[Auth] Pre-warming Web3Auth (Mobile - returning social login user)...');
+        initWeb3Auth()
+          .then((instance) => setWeb3auth(instance))
+          .catch((err) => console.warn('Web3Auth mobile pre-init failed:', err));
       }
 
       // Check if this is a redirect return from Web3Auth (mobile email/SMS login)
