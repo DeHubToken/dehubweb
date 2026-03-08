@@ -26,6 +26,7 @@ import {
   getAuthToken,
   clearAuthSession,
   isTokenExpired,
+  apiCall,
   type DeHubUser,
   type Web3AuthMeta,
 } from '@/lib/api/dehub';
@@ -272,11 +273,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const init = async () => {
       // Don't pre-warm Web3Auth on mount for mobile to avoid triggering Chrome's 'Abusive Ads' blocker
       // which often flags background iframes. We'll init it when the user opens the login modal.
+      // Exception: returning Web3Auth users on mobile need it for session refresh.
+      const savedConnectionSource = localStorage.getItem('dehub_connection_source');
+      const hasValidSession = getAuthToken() && !isTokenExpired();
       if (!isMobileDevice()) {
         console.log('[Auth] Pre-warming Web3Auth (Desktop)...');
         initWeb3Auth()
           .then((instance) => setWeb3auth(instance))
           .catch((err) => console.warn('Web3Auth pre-init failed:', err));
+      } else if (savedConnectionSource === 'web3auth' && hasValidSession) {
+        console.log('[Auth] Pre-warming Web3Auth (Mobile - returning social login user)...');
+        initWeb3Auth()
+          .then((instance) => setWeb3auth(instance))
+          .catch((err) => console.warn('Web3Auth mobile pre-init failed:', err));
       }
 
       // Check if this is a redirect return from Web3Auth (mobile email/SMS login)
@@ -295,6 +304,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           try {
             console.log('Restoring session, fetching account info...');
             const userData = await getAccountInfo(savedWallet);
+            
+            // Validate token server-side by making an authenticated API call.
+            // getAccountInfo is a public endpoint that succeeds even with invalid tokens.
+            // This call will throw AuthenticationError (401) if the token is actually invalid.
+            try {
+              await apiCall('/api/notification/unread-count', { requiresAuth: true });
+            } catch (tokenValidationError: any) {
+              // If the token is rejected server-side, clear the zombie session
+              if (tokenValidationError?.name === 'AuthenticationError' || 
+                  tokenValidationError?.message?.includes('Session expired') ||
+                  tokenValidationError?.message?.includes('Authentication required')) {
+                console.warn('[Auth] Token invalid server-side, clearing zombie session');
+                clearAuthSession();
+                localStorage.removeItem('dehub_user');
+                setIsLoading(false);
+                return;
+              }
+              // Non-auth errors (network etc.) — proceed with session anyway
+              console.warn('[Auth] Token validation call failed (non-auth), proceeding:', tokenValidationError?.message);
+            }
+            
             const normalizedUser = normalizeUser(userData, savedWallet);
             
             setUser(normalizedUser);
