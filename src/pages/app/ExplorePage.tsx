@@ -774,12 +774,15 @@ export default function ExplorePage() {
                   </button>
                 </div>
 
-                {/* Stock Price Card (priority) or Crypto Cashtag Price Card (fallback) */}
-                {stockData?.found ? (
-                  <StockPriceCard data={stockData} />
-                ) : dexPair ? (
-                  <CashtagPriceCard pair={dexPair} symbol={effectiveQuery.trim()} cmcData={cmcData} />
-                ) : null}
+                {/* Stock / Crypto Cashtag Result Switcher */}
+                {(stockData?.found || dexPair) && (
+                  <CashtagResultSwitcher
+                    stockData={stockData ?? null}
+                    dexPair={dexPair ?? null}
+                    cmcData={cmcData}
+                    symbol={effectiveQuery.trim()}
+                  />
+                )}
 
                 {/* Loading State */}
                 {showLoading && (
