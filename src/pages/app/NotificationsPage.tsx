@@ -503,6 +503,13 @@ export default function NotificationsPage() {
   // Followers drawer state (opened inline from aggregated follow notifications)
   const [followDrawerOpen, setFollowDrawerOpen] = useState(false);
   
+  // Listen for open-followers-drawer events from notification items
+  useEffect(() => {
+    const handler = () => setFollowDrawerOpen(true);
+    window.addEventListener('open-followers-drawer', handler);
+    return () => window.removeEventListener('open-followers-drawer', handler);
+  }, []);
+  
   // Notification preference toggles (local state for now)
   const [notificationPrefs, setNotificationPrefs] = useState({
     likes: true,
