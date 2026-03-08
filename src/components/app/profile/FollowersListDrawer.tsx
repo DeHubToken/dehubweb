@@ -124,15 +124,25 @@ export function FollowersListDrawer({
 
         const processed = items.map(mapFollowListItem);
 
-        // Check isFollowing status for each user in parallel
         const isOwnFollowingList =
           title === 'Following' &&
           currentUserAddress &&
           profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
 
+        // Fetch current user's following list once to resolve isFollowing locally
+        if (!isOwnFollowingList && isAuthenticated && currentUserAddress && !followingSetRef.current) {
+          try {
+            const { items: myFollowing } = await getFollowList(currentUserAddress, 'following', { limit: FOLLOWING_CACHE_LIMIT });
+            followingSetRef.current = new Set(myFollowing.map(f => (f.address || '').toLowerCase()));
+          } catch {
+            followingSetRef.current = new Set();
+          }
+        }
+
+        const followingSet = followingSetRef.current;
         const finalUsers: UserListItem[] = isOwnFollowingList
           ? processed.map(u => ({ ...u, isFollowing: true }))
-          : processed.map(u => ({ ...u, isFollowing: u.isFollowing ?? false }));
+          : processed.map(u => ({ ...u, isFollowing: followingSet ? followingSet.has(u.address.toLowerCase()) : false }));
 
         setUsers(finalUsers);
         setCurrentPage(1);
