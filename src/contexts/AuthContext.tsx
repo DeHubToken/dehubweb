@@ -72,6 +72,7 @@ interface AuthContextType {
   connectWithWallet: (wallet: WalletProvider) => Promise<boolean>;
   disconnect: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  patchUser: (patch: Partial<DeHubUser>) => void;
   refreshSession: () => Promise<boolean>;
   setRequiresUsername: (value: boolean) => void;
   setWagmiAuthIntent: (value: boolean) => void;
@@ -1019,8 +1020,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const patchUser = (patch: Partial<DeHubUser>) => {
+    setUser(prev => {
+      if (!prev) return prev;
+      const patched = { ...prev, ...patch };
+      localStorage.setItem('dehub_user', JSON.stringify(patched));
+      return patched;
+    });
+  };
+
   const refreshSession = async (): Promise<boolean> => {
-    // If token is still valid, no refresh needed
     const token = getAuthToken();
     if (token && !isTokenExpired()) return true;
 
@@ -1087,6 +1096,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isLoginModalOpen,
     openLoginModal,
     closeLoginModal,
+    patchUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
