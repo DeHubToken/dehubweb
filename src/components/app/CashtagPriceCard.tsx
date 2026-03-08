@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { DexPair } from '@/hooks/use-dexscreener';
 import type { CmcMarketData } from '@/hooks/use-cmc-market-cap';
+import { useTokenChart } from '@/hooks/use-token-chart';
+import { TokenPriceChart } from '@/components/app/TokenPriceChart';
 import { TrendingUp, TrendingDown, ExternalLink, Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -29,6 +31,7 @@ function formatCompact(n: number | null | undefined): string {
 
 export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProps) {
   const [copied, setCopied] = useState(false);
+  const { data: chartData, isLoading: isChartLoading } = useTokenChart(symbol, true);
   
   // Use CMC data when available, fallback to DexScreener
   const change24h = cmcData?.percentChange24h ?? pair.priceChange?.h24;
@@ -38,7 +41,6 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
   const displayPrice = cmcData?.price ? formatPrice(cmcData.price) : formatPrice(pair.priceUsd);
   
   const dexScreenerUrl = pair.url || `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}`;
-  const chartEmbedUrl = `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}?embed=1&theme=dark&trades=0&info=0`;
   const contractAddress = pair.baseToken.address;
 
   const handleCopyCA = (e: React.MouseEvent) => {
@@ -106,15 +108,8 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
         )}
       </div>
 
-      {/* Chart embed */}
-      <div className="w-full h-[200px] bg-zinc-900">
-        <iframe
-          src={chartEmbedUrl}
-          className="w-full h-full border-0"
-          title={`${pair.baseToken.symbol} chart`}
-          loading="lazy"
-        />
-      </div>
+      {/* Price Chart */}
+      <TokenPriceChart data={chartData || []} isLoading={isChartLoading} />
 
       {/* Stats row */}
       <div className="px-4 py-3 flex items-center gap-4 text-xs border-t border-zinc-700/50">
