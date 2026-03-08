@@ -28,6 +28,7 @@ import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Switch } from '@/components/ui/switch';
+import { FollowersListDrawer } from '@/components/app/profile';
 
 // Batch avatar enrichment cache for fresh profile pictures
 interface EnrichedAvatar {
@@ -369,10 +370,11 @@ function NotificationItem({
       bundle.allIds.forEach(id => onMarkAsRead(id));
     }
     
-    // Aggregated follow notifications → open followers drawer on own profile
+    // Aggregated follow notifications → open followers drawer inline
     const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 1;
     if (isAggregatedFollow && walletAddress) {
-      navigate(`/${walletAddress}?followers=1`);
+      // Dispatch custom event to open followers drawer in NotificationsPage
+      window.dispatchEvent(new CustomEvent('open-followers-drawer'));
       return;
     }
     
@@ -496,7 +498,17 @@ export default function NotificationsPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<NotificationTypeFilter>('all');
   const { layerRef: notifTabLayerRef, setRef: setNotifTabRef, rect: notifTabRect, onScroll: onNotifTabScroll } = useTabIndicator(activeTab);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress: pageWalletAddress } = useAuth();
+  
+  // Followers drawer state (opened inline from aggregated follow notifications)
+  const [followDrawerOpen, setFollowDrawerOpen] = useState(false);
+  
+  // Listen for open-followers-drawer events from notification items
+  useEffect(() => {
+    const handler = () => setFollowDrawerOpen(true);
+    window.addEventListener('open-followers-drawer', handler);
+    return () => window.removeEventListener('open-followers-drawer', handler);
+  }, []);
   
   // Notification preference toggles (local state for now)
   const [notificationPrefs, setNotificationPrefs] = useState({
@@ -897,6 +909,15 @@ export default function NotificationsPage() {
           )}
         </div>
       </div>
+      {/* Followers drawer - opened inline from aggregated follow notifications */}
+      {pageWalletAddress && (
+        <FollowersListDrawer
+          open={followDrawerOpen}
+          onOpenChange={setFollowDrawerOpen}
+          profileAddress={pageWalletAddress}
+          title="Followers"
+        />
+      )}
     </div>
   );
 }
