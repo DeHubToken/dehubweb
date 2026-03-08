@@ -26,6 +26,7 @@ import {
   getAuthToken,
   clearAuthSession,
   isTokenExpired,
+  apiCall,
   type DeHubUser,
   type Web3AuthMeta,
 } from '@/lib/api/dehub';
