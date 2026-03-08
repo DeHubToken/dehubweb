@@ -80,6 +80,7 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
  */
 export function buildCoverUrl(address: string, apiCoverPath: string | undefined | null): string | undefined {
   if (!apiCoverPath) return undefined;
+  if (apiCoverPath.startsWith('blob:') || apiCoverPath.startsWith('data:')) return apiCoverPath;
   if (apiCoverPath.startsWith('http')) return apiCoverPath;
   const ext = getExtension(apiCoverPath);
   return `${DEHUB_CDN_BASE}covers/${address}.${ext}`;
