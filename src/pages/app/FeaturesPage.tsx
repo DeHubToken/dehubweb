@@ -33,6 +33,8 @@ import {
   useTotalFeatureCount,
   useSubmitFeatureRequest,
   useVoteFeatureRequest,
+  useEditFeatureRequest,
+  useDeleteFeatureRequest,
   CATEGORY_LABELS,
   type FeatureCategory,
   type FeatureSort,
