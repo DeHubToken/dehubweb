@@ -4,6 +4,7 @@ import type { CmcMarketData } from '@/hooks/use-cmc-market-cap';
 import { useTokenChart } from '@/hooks/use-token-chart';
 import { TokenPriceChart } from '@/components/app/TokenPriceChart';
 import { TrendingUp, TrendingDown, Copy, Check, ChevronDown, ExternalLink, Globe, Twitter, MessageCircle } from 'lucide-react';
+import { QuickBuyButton } from '@/components/app/QuickBuyButton';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -131,6 +132,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
           </div>
         </div>
         <div className="flex items-center gap-1">
+          <QuickBuyButton symbol={pair.baseToken.symbol} tokenType="crypto" />
           <button
             onClick={handleCopyCA}
             className="text-zinc-400 hover:text-white transition-colors p-1.5"

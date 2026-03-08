@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { StockQuote } from '@/hooks/use-stock-quote';
 import { TokenPriceChart } from '@/components/app/TokenPriceChart';
 import { TrendingUp, TrendingDown, ExternalLink, ChevronDown } from 'lucide-react';
+import { QuickBuyButton } from '@/components/app/QuickBuyButton';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -51,16 +52,19 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
             <span className="text-zinc-400 text-sm">{data.name}</span>
           </div>
         </div>
-        <button
-          onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
-          className={cn(
-            "text-zinc-400 hover:text-white transition-all p-1.5 rounded-lg",
-            expanded && "bg-zinc-700/50 text-white"
-          )}
-          title="More info"
-        >
-          <ChevronDown className={cn("w-4 h-4 transition-transform", expanded && "rotate-180")} />
-        </button>
+        <div className="flex items-center gap-1">
+          <QuickBuyButton symbol={data.symbol} tokenType="stock" />
+          <button
+            onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
+            className={cn(
+              "text-zinc-400 hover:text-white transition-all p-1.5 rounded-lg",
+              expanded && "bg-zinc-700/50 text-white"
+            )}
+            title="More info"
+          >
+            <ChevronDown className={cn("w-4 h-4 transition-transform", expanded && "rotate-180")} />
+          </button>
+        </div>
       </div>
 
       {/* Price + Change */}
