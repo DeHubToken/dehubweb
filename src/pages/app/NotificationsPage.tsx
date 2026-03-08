@@ -902,6 +902,15 @@ export default function NotificationsPage() {
           )}
         </div>
       </div>
+      {/* Followers drawer - opened inline from aggregated follow notifications */}
+      {pageWalletAddress && (
+        <FollowersListDrawer
+          open={followDrawerOpen}
+          onOpenChange={setFollowDrawerOpen}
+          profileAddress={pageWalletAddress}
+          title="Followers"
+        />
+      )}
     </div>
   );
 }
