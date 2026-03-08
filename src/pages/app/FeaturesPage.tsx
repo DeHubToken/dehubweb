@@ -11,7 +11,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2 } from 'lucide-react';
+import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2, MoreVertical, Pencil } from 'lucide-react';
 import featuresLightbulb from '@/assets/features-lightbulb.png';
 import { TranslatableText, SharedTranslationProvider, useSharedTranslationControl } from '@/components/app/TranslatableText';
 import { PostMetadata } from '@/components/app/cards/PostMetadata';
