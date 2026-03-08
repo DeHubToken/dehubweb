@@ -147,6 +147,7 @@ export function CashtagResultSwitcher({ stockData, dexPair, cmcData, symbol }: C
                     key={opt.id}
                     onClick={() => {
                       setSelectedId(opt.id);
+                      setUserPicked(true);
                       setShowDropdown(false);
                     }}
                     className={cn(
