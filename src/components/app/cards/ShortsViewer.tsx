@@ -911,7 +911,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             </div>
 
             {/* Desktop: Inline comments */}
-            <div className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0 overflow-y-auto">
+            <div
+              className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0 overflow-y-auto"
+              onWheelCapture={(e) => e.stopPropagation()}
+            >
               <CommentsSection
                 tokenId={currentShort.id}
                 onClose={() => {}}
