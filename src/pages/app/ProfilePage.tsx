@@ -94,6 +94,18 @@ export default function ProfilePage() {
   // All data fetching + derived state
   const data = useProfilePage();
 
+  // Auto-open followers drawer when navigated with ?followers=1 (e.g. from aggregated follow notifications)
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('followers') === '1') {
+      setFollowListType('followers');
+      setFollowListDrawerOpen(true);
+      params.delete('followers');
+      const newSearch = params.toString();
+      window.history.replaceState({}, '', `${location.pathname}${newSearch ? '?' + newSearch : ''}`);
+    }
+  }, [location.search]);
+
   const { layerRef: tabsIndicatorLayerRef, setRef: setTabRef, rect: tabIndicator, onScroll: handleTabsScroll } = useTabIndicator(activeTab);
 
 
