@@ -40,6 +40,7 @@ import { useCmcMarketCap } from '@/hooks/use-cmc-market-cap';
 import { CashtagPriceCard } from '@/components/app/CashtagPriceCard';
 import { useStockQuote } from '@/hooks/use-stock-quote';
 import { StockPriceCard } from '@/components/app/StockPriceCard';
+import { CashtagResultSwitcher } from '@/components/app/CashtagResultSwitcher';
 import type { VideoItem, ImagePost } from '@/types/feed.types';
 
 const DATE_OPTION_KEYS = ['anyTime', 'today', 'thisWeek', 'thisMonth', 'thisYear'] as const;
@@ -773,12 +774,15 @@ export default function ExplorePage() {
                   </button>
                 </div>
 
-                {/* Stock Price Card (priority) or Crypto Cashtag Price Card (fallback) */}
-                {stockData?.found ? (
-                  <StockPriceCard data={stockData} />
-                ) : dexPair ? (
-                  <CashtagPriceCard pair={dexPair} symbol={effectiveQuery.trim()} cmcData={cmcData} />
-                ) : null}
+                {/* Stock / Crypto Cashtag Result Switcher */}
+                {(stockData?.found || dexPair) && (
+                  <CashtagResultSwitcher
+                    stockData={stockData ?? null}
+                    dexPair={dexPair ?? null}
+                    cmcData={cmcData}
+                    symbol={effectiveQuery.trim()}
+                  />
+                )}
 
                 {/* Loading State */}
                 {showLoading && (
