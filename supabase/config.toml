@@ -72,5 +72,5 @@ verify_jwt = false
 [functions.mark-stream-live]
 verify_jwt = false
 
-[functions.end-stream-session]
+[functions.stock-quote]
 verify_jwt = false

@@ -38,6 +38,8 @@ import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/us
 import { useDexScreenerSearch } from '@/hooks/use-dexscreener';
 import { useCmcMarketCap } from '@/hooks/use-cmc-market-cap';
 import { CashtagPriceCard } from '@/components/app/CashtagPriceCard';
+import { useStockQuote } from '@/hooks/use-stock-quote';
+import { StockPriceCard } from '@/components/app/StockPriceCard';
 import type { VideoItem, ImagePost } from '@/types/feed.types';
 
 const DATE_OPTION_KEYS = ['anyTime', 'today', 'thisWeek', 'thisMonth', 'thisYear'] as const;
@@ -466,6 +468,9 @@ export default function ExplorePage() {
   // CoinMarketCap market cap (overrides DexScreener when available)
   const { data: cmcData } = useCmcMarketCap(effectiveQuery, isSearching);
 
+  // Stock quote lookup (stocks first priority)
+  const { data: stockData, isLoading: isStockLoading } = useStockQuote(effectiveQuery, isSearching);
+
   // Always fetch @d specifically for brand queries (d, de, deh, dehu, dehub)
   const {
     data: brandUser,
@@ -768,10 +773,12 @@ export default function ExplorePage() {
                   </button>
                 </div>
 
-                {/* DexScreener Cashtag Price Card */}
-                {dexPair && (
+                {/* Stock Price Card (priority) or Crypto Cashtag Price Card (fallback) */}
+                {stockData?.found ? (
+                  <StockPriceCard data={stockData} />
+                ) : dexPair ? (
                   <CashtagPriceCard pair={dexPair} symbol={effectiveQuery.trim()} cmcData={cmcData} />
-                )}
+                ) : null}
 
                 {/* Loading State */}
                 {showLoading && (
