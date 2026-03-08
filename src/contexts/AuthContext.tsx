@@ -978,22 +978,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         wagmiDisconnect();
       }
-      
-      clearAuthSession();
-      localStorage.removeItem('dehub_user');
-      localStorage.removeItem('dehub_wallet');
-      localStorage.removeItem('dehub_connection_source');
-      clearWagmiStorage();
-
-      setWalletAddress(null);
-      setUser(null);
-      setConnectionSource(null);
-
-      disconnectDmSocket();
-      queryClient.clear();
     } catch (error) {
-      console.error('Disconnect error:', error);
+      console.error('Disconnect provider error (non-blocking):', error);
     }
+
+    // Always clean up local state regardless of provider disconnect success
+    clearAuthSession();
+    localStorage.removeItem('dehub_user');
+    localStorage.removeItem('dehub_wallet');
+    localStorage.removeItem('dehub_connection_source');
+    clearWagmiStorage();
+
+    setWalletAddress(null);
+    setUser(null);
+    setConnectionSource(null);
+    setIsConnecting(false);
+    setIsLoading(false);
+    wagmiAuthInProgressRef.current = false;
+    setWagmiAuthIntent(false);
+
+    disconnectDmSocket();
+    queryClient.clear();
   };
 
   const refreshUser = async () => {
