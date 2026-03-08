@@ -15,7 +15,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
-import { voteOnPost, getNFTComments, postComment, followUser, type ApiCommentResponse } from '@/lib/api/dehub';
+import { voteOnPost, getNFTComments, postComment, followUser, isFollowing as checkIsFollowing, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { CommentsWrapper } from './CommentsWrapper';
 import { CommentsSection } from './CommentsSection';
