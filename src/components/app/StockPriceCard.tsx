@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import type { StockQuote } from '@/hooks/use-stock-quote';
 import { TokenPriceChart } from '@/components/app/TokenPriceChart';
-import { TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
+import { TrendingUp, TrendingDown, ExternalLink, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface StockPriceCardProps {
   data: StockQuote;
@@ -24,6 +26,7 @@ function formatCompact(n: number | null | undefined, currency = 'USD'): string {
 }
 
 export function StockPriceCard({ data }: StockPriceCardProps) {
+  const [expanded, setExpanded] = useState(false);
   const isPositive = data.percentChange24h != null && data.percentChange24h >= 0;
   const yahooUrl = `https://finance.yahoo.com/quote/${encodeURIComponent(data.symbol)}`;
 
@@ -48,15 +51,16 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
             <span className="text-zinc-400 text-sm">{data.name}</span>
           </div>
         </div>
-        <a
-          href={yahooUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-zinc-400 hover:text-white transition-colors p-1"
-          onClick={(e) => e.stopPropagation()}
+        <button
+          onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
+          className={cn(
+            "text-zinc-400 hover:text-white transition-all p-1.5 rounded-lg",
+            expanded && "bg-zinc-700/50 text-white"
+          )}
+          title="More info"
         >
-          <ExternalLink className="w-4 h-4" />
-        </a>
+          <ChevronDown className={cn("w-4 h-4 transition-transform", expanded && "rotate-180")} />
+        </button>
       </div>
 
       {/* Price + Change */}
@@ -106,6 +110,48 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
           <p className="text-white font-medium">{data.currency}</p>
         </div>
       </div>
+
+      {/* Expanded Detail Panel */}
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="border-t border-zinc-700/50 px-4 py-3">
+              <div className="flex justify-between items-center py-1.5">
+                <span className="text-zinc-500 text-xs">Previous Close</span>
+                <span className="text-white text-xs font-medium">{data.previousClose != null ? formatPrice(data.previousClose, data.currency) : '—'}</span>
+              </div>
+              {data.change24h != null && (
+                <div className="flex justify-between items-center py-1.5">
+                  <span className="text-zinc-500 text-xs">Change (Absolute)</span>
+                  <span className={cn("text-xs font-medium", data.change24h >= 0 ? "text-emerald-400" : "text-red-400")}>
+                    {data.change24h >= 0 ? '+' : ''}{formatPrice(data.change24h, data.currency)}
+                  </span>
+                </div>
+              )}
+              <div className="flex justify-between items-center py-1.5">
+                <span className="text-zinc-500 text-xs">Exchange</span>
+                <span className="text-white text-xs font-medium">{data.exchange}</span>
+              </div>
+              <div className="flex justify-between items-center py-1.5">
+                <span className="text-zinc-500 text-xs">Type</span>
+                <span className="text-white text-xs font-medium capitalize">{data.instrumentType}</span>
+              </div>
+              <div className="pt-2">
+                <a href={yahooUrl} target="_blank" rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-700/40 hover:bg-zinc-700/70 px-2.5 py-1.5 rounded-lg transition-colors w-fit">
+                  <ExternalLink className="w-3.5 h-3.5" /> Yahoo Finance
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
