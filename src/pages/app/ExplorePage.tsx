@@ -459,6 +459,9 @@ export default function ExplorePage() {
   // Check if this is a brand-related search term
   const isBrandQuery = BRAND_QUERIES.includes(effectiveQuery.trim().toLowerCase());
 
+  // DexScreener cashtag price lookup
+  const { data: dexPair, isLoading: isDexLoading } = useDexScreenerSearch(effectiveQuery, isSearching);
+
   // Always fetch @d specifically for brand queries (d, de, deh, dehu, dehub)
   const {
     data: brandUser,
