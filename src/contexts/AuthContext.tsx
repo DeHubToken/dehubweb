@@ -1097,6 +1097,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isLoginModalOpen,
     openLoginModal,
     closeLoginModal,
+    patchUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
