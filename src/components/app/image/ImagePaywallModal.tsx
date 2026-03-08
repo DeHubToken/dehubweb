@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { Interface } from 'ethers';
 import { writeContractAA, getWalletAddress, getERC20Balance, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import type { ChainId } from '@/components/app/ChainSelector';
 
 const DEHUB_AI_TREASURY = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
 const erc20TransferInterface = new Interface([
@@ -100,7 +101,7 @@ export function ImagePaywallModal({
       ]);
 
       // Prefer Base, fallback to BNB
-      let payChainId: number;
+      let payChainId: ChainId;
       if (baseBalance >= amountWei) {
         payChainId = BASE_CHAIN_ID;
       } else if (bnbBalance >= amountWei) {
