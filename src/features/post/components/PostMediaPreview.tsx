@@ -713,6 +713,8 @@ export function PostMediaPreview({
                           if (el) videoRefs.current.set(index, el);
                         }}
                         src={m.preview} 
+                        playsInline
+                        {...{"webkit-playsinline": ""}}
                         className="w-full h-full object-cover rounded-2xl pointer-events-none"
                         style={{ 
                           filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
