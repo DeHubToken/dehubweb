@@ -1,39 +1,35 @@
 
 
-## Problem Analysis
+## Fix: Auto-reload on chunk load failures
 
-The profile picture upload appears to complete (toast shows "Profile updated") but the avatar doesn't visually change. Two issues at play:
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-1. **Input not reset after save**: After `onSuccess`, `avatarFile` is set to `undefined` and `avatarPreview` is cleared, but the `<input type="file">` element retains its previous value. If the user picks the same file again, the browser's `onChange` won't fire (same file = no change event). This isn't the primary issue though.
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-2. **`avatarPreview` not cleared properly after save, then overwritten by `refreshUser`/`getAccountInfo`**: After the save succeeds:
-   - The optimistic update sets the blob URL into the `dehub-profile` query cache
-   - Then `refreshUser()` and `getAccountInfo()` are called, which fetch the **old** CDN avatar URL (CDN hasn't propagated yet)
-   - `queryClient.invalidateQueries({ queryKey: ['dehub-profile'] })` at line 425 triggers a refetch that **overwrites** the optimistic blob URL with the stale CDN URL
-   - The avatar visually reverts to the old image
+### Changes
 
-3. **`avatarPreview` is reset to `undefined`** at line 396 (`setAvatarFile(undefined)`) — but `avatarPreview` is never explicitly cleared. However, the `AvatarImage` at line 574 uses `avatarPreview` which still holds the blob URL. The real display issue is everywhere else in the app (navbar, profile page, etc.) where the stale CDN URL from the API response overwrites the optimistic update.
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-## Plan
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
 
-### 1. Reset file input after save
-In the `onSuccess` handler, reset the file input element value so re-selecting the same file triggers `onChange`:
-```typescript
-if (avatarInputRef.current) avatarInputRef.current.value = '';
-if (coverInputRef.current) coverInputRef.current.value = '';
-```
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
 
-### 2. Preserve optimistic avatar URL during post-save refresh
-The issue is that `queryClient.invalidateQueries({ queryKey: ['dehub-profile'] })` on line 425 fires a refetch that returns the old CDN URL before it propagates. Fix by:
-- Moving the optimistic cache update **after** the `refreshUser` + `getAccountInfo` calls
-- Or: setting the optimistic blob URL again after the refetch, by using `setQueriesData` after the `invalidateQueries` call
-- Simplest approach: delay the `invalidateQueries` for `dehub-profile` by a few seconds (e.g., 10s) to give CDN time to propagate, while keeping the blob preview in cache immediately
-
-### 3. Keep `avatarPreview` state alive after save
-Don't clear `avatarPreview` in `onSuccess` — let the blob URL persist as the displayed avatar until the next page load or cache refresh brings the real CDN URL. Currently `avatarPreview` is not explicitly cleared, but the `dehub-profile` cache invalidation overwrites it in components that read from the query cache.
-
-### Files to modify
-- **`src/pages/app/SettingsPage.tsx`**: 
-  - Reset input refs after save
-  - Re-apply optimistic blob URL after the refetch/invalidation, or delay invalidation for profile queries when avatar/cover changed
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 

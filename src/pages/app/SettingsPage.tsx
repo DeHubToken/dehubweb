@@ -393,8 +393,17 @@ function ProfileSettings() {
         }
       }
 
+      // Capture blob URLs before clearing file state
+      const savedAvatarPreview = variables.avatarImg ? avatarPreview : null;
+      const savedCoverPreview = variables.coverImg ? coverPreview : null;
+
       setAvatarFile(undefined);
       setCoverFile(undefined);
+
+      // Reset file inputs so re-selecting the same file triggers onChange
+      if (avatarInputRef.current) avatarInputRef.current.value = '';
+      if (coverInputRef.current) coverInputRef.current.value = '';
+
       await refreshUser();
       if (authUser?.address) {
         const userData = await getAccountInfo(authUser.address);
@@ -413,7 +422,6 @@ function ProfileSettings() {
           facebookLink: (refreshedRaw.facebookLink as string) || refreshedCustoms?.facebookLink || '',
         };
         setOriginalValues(newOriginals);
-        // Sync form state so links don't disappear after save
         setTwitterLink(newOriginals.twitterLink);
         setDiscordLink(newOriginals.discordLink);
         setInstagramLink(newOriginals.instagramLink);
@@ -422,8 +430,29 @@ function ProfileSettings() {
         setTelegramLink(newOriginals.telegramLink);
         setFacebookLink(newOriginals.facebookLink);
       }
-      queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
       queryClient.invalidateQueries({ queryKey: ['dehub-user-content'] });
+
+      // Re-apply optimistic blob URLs AFTER invalidation to prevent stale CDN overwrite.
+      // The CDN may take seconds to propagate the new image; the blob URL bridges the gap.
+      if (savedAvatarPreview || savedCoverPreview) {
+        queryClient.setQueriesData<ProfileData>(
+          { queryKey: ['dehub-profile'] },
+          (old) => {
+            if (!old) return old;
+            return {
+              ...old,
+              ...(savedAvatarPreview ? { avatarUrl: savedAvatarPreview } : {}),
+              ...(savedCoverPreview ? { coverUrl: savedCoverPreview } : {}),
+            };
+          }
+        );
+        // Delay the real profile refresh to give CDN time to propagate
+        setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
+        }, 15_000);
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
+      }
     },
     onError: (error: Error) => {
       toast.error(error.message || t('settings.failedUpdateProfile'));
