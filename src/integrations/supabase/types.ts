@@ -1109,6 +1109,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_feedback_surveys: {
+        Row: {
+          age_range: string | null
+          created_at: string
+          gender: string | null
+          id: string
+          referral_source: string | null
+          signup_experience: string | null
+          tipping_or_gifting: string | null
+          wallet_address: string
+        }
+        Insert: {
+          age_range?: string | null
+          created_at?: string
+          gender?: string | null
+          id?: string
+          referral_source?: string | null
+          signup_experience?: string | null
+          tipping_or_gifting?: string | null
+          wallet_address: string
+        }
+        Update: {
+          age_range?: string | null
+          created_at?: string
+          gender?: string | null
+          id?: string
+          referral_source?: string | null
+          signup_experience?: string | null
+          tipping_or_gifting?: string | null
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       user_privacy_settings: {
         Row: {
           created_at: string
