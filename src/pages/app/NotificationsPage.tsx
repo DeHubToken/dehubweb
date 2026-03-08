@@ -497,7 +497,10 @@ export default function NotificationsPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<NotificationTypeFilter>('all');
   const { layerRef: notifTabLayerRef, setRef: setNotifTabRef, rect: notifTabRect, onScroll: onNotifTabScroll } = useTabIndicator(activeTab);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress: pageWalletAddress } = useAuth();
+  
+  // Followers drawer state (opened inline from aggregated follow notifications)
+  const [followDrawerOpen, setFollowDrawerOpen] = useState(false);
   
   // Notification preference toggles (local state for now)
   const [notificationPrefs, setNotificationPrefs] = useState({
