@@ -255,6 +255,21 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setIsPaused(false);
   }, [currentIndex, currentShort?.id, currentShort?.likes, currentShort?.isLiked, currentShort?.isDisliked]);
   
+  // Check follow status from API when creator changes
+  useEffect(() => {
+    const creatorAddress = currentShort?.creatorId;
+    if (!creatorAddress || !isAuthenticated || followedCreators.has(creatorAddress)) return;
+    
+    let cancelled = false;
+    checkIsFollowing(creatorAddress).then(result => {
+      if (!cancelled && result) {
+        setFollowedCreators(prev => new Set(prev).add(creatorAddress));
+      }
+    }).catch(() => {});
+    
+    return () => { cancelled = true; };
+  }, [currentShort?.creatorId, isAuthenticated]);
+
   // Handle voting
   const handleVote = useCallback(async (vote: boolean) => {
     const tokenId = String(currentShort?.id);
