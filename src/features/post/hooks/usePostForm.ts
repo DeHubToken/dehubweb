@@ -881,14 +881,16 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         postTitle = (lines[0] || '').trim().slice(0, 100);
         postDescription = lines.slice(1).join('\n').trim();
       } else {
-        // Image/Text posts: title blank, everything goes to description
-        postTitle = '';
+        // Image/Text posts: no title, everything goes to description
+        postTitle = ' ';
         postDescription = text.trim();
       }
 
-      // Fallback: never send empty name to avoid API generating "Stream NFT #XXXX"
-      if (!postTitle) {
-        postTitle = postDescription.slice(0, 100) || ' ';
+      // Fallback for video/audio: never send empty name to avoid API generating "Stream NFT #XXXX"
+      if (postType === 'video' || postType === 'audio') {
+        if (!postTitle) {
+          postTitle = postDescription.slice(0, 100) || ' ';
+        }
       }
 
       const mintResponse = await mintPost(
