@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { StockQuote } from '@/hooks/use-stock-quote';
 import { TokenPriceChart } from '@/components/app/TokenPriceChart';
 import { TrendingUp, TrendingDown, ExternalLink, ChevronDown } from 'lucide-react';
+import { QuickBuyButton } from '@/components/app/QuickBuyButton';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 
