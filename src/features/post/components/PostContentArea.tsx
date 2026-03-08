@@ -697,26 +697,20 @@ export function PostContentArea({
 
           {/* Bottom row: destinations + character count */}
           <div className="mt-2 flex items-center justify-between gap-2">
-            <AnimatePresence>
-              {canPost && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="flex items-center gap-1.5 flex-wrap"
+            <div className={cn(
+              "flex items-center gap-1.5 flex-wrap transition-opacity duration-200",
+              canPost ? "opacity-100" : "opacity-0"
+            )}>
+              <span className="text-xs text-zinc-500">In:</span>
+              {destinations.map(dest => (
+                <span
+                  key={dest}
+                  className="text-xs px-1.5 py-0.5 rounded-lg bg-white/10 text-zinc-300"
                 >
-                  <span className="text-xs text-zinc-500">In:</span>
-                  {destinations.map(dest => (
-                    <span
-                      key={dest}
-                      className="text-xs px-1.5 py-0.5 rounded-lg bg-white/10 text-zinc-300"
-                    >
-                      {dest}
-                    </span>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  {dest}
+                </span>
+              ))}
+            </div>
             <span className={cn("text-xs ml-auto", charCount > 280 ? "text-amber-400" : "text-white/60")}>
               {charCount}/280
             </span>
