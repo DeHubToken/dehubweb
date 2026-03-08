@@ -1,15 +1,17 @@
 import type { DexPair } from '@/hooks/use-dexscreener';
+import type { CmcMarketData } from '@/hooks/use-cmc-market-cap';
 import { TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface CashtagPriceCardProps {
   pair: DexPair;
   symbol: string;
+  cmcData?: CmcMarketData | null;
 }
 
-function formatPrice(price: string | null): string {
+function formatPrice(price: string | number | null): string {
   if (!price) return '—';
-  const num = parseFloat(price);
+  const num = typeof price === 'string' ? parseFloat(price) : price;
   if (num >= 1) return `$${num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   if (num >= 0.01) return `$${num.toFixed(4)}`;
   if (num >= 0.0001) return `$${num.toFixed(6)}`;
@@ -24,12 +26,15 @@ function formatCompact(n: number | null | undefined): string {
   return `$${n.toFixed(0)}`;
 }
 
-export function CashtagPriceCard({ pair, symbol }: CashtagPriceCardProps) {
-  const change24h = pair.priceChange?.h24;
+export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProps) {
+  // Use CMC data when available, fallback to DexScreener
+  const change24h = cmcData?.percentChange24h ?? pair.priceChange?.h24;
   const isPositive = change24h != null && change24h >= 0;
+  const marketCap = cmcData?.marketCap || pair.marketCap || pair.fdv;
+  const volume24h = cmcData?.volume24h || pair.volume?.h24;
+  const displayPrice = cmcData?.price ? formatPrice(cmcData.price) : formatPrice(pair.priceUsd);
+  
   const dexScreenerUrl = pair.url || `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}`;
-
-  // Build DexScreener embed chart URL
   const chartEmbedUrl = `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}?embed=1&theme=dark&trades=0&info=0`;
 
   return (
@@ -48,8 +53,11 @@ export function CashtagPriceCard({ pair, symbol }: CashtagPriceCardProps) {
             <div className="flex items-center gap-2">
               <span className="text-white font-bold text-lg">${pair.baseToken.symbol}</span>
               <span className="text-zinc-500 text-xs uppercase">{pair.chainId}</span>
+              {cmcData?.cmcRank && (
+                <span className="text-zinc-400 text-xs bg-zinc-700/50 px-1.5 py-0.5 rounded">#{cmcData.cmcRank}</span>
+              )}
             </div>
-            <span className="text-zinc-400 text-sm">{pair.baseToken.name}</span>
+            <span className="text-zinc-400 text-sm">{cmcData?.name || pair.baseToken.name}</span>
           </div>
         </div>
         <a
@@ -65,7 +73,7 @@ export function CashtagPriceCard({ pair, symbol }: CashtagPriceCardProps) {
 
       {/* Price + Change */}
       <div className="px-4 pb-3 flex items-end gap-3">
-        <span className="text-white font-bold text-2xl">{formatPrice(pair.priceUsd)}</span>
+        <span className="text-white font-bold text-2xl">{displayPrice}</span>
         {change24h != null && (
           <span className={cn(
             "flex items-center gap-1 text-sm font-medium pb-0.5",
@@ -91,8 +99,8 @@ export function CashtagPriceCard({ pair, symbol }: CashtagPriceCardProps) {
       {/* Stats row */}
       <div className="px-4 py-3 flex items-center gap-4 text-xs border-t border-zinc-700/50">
         <div>
-          <span className="text-zinc-500">Market Cap</span>
-          <p className="text-white font-medium">{formatCompact(pair.marketCap || pair.fdv)}</p>
+          <span className="text-zinc-500">Market Cap{cmcData?.marketCap ? '' : ' (DEX)'}</span>
+          <p className="text-white font-medium">{formatCompact(marketCap)}</p>
         </div>
         <div>
           <span className="text-zinc-500">Liquidity</span>
@@ -100,7 +108,7 @@ export function CashtagPriceCard({ pair, symbol }: CashtagPriceCardProps) {
         </div>
         <div>
           <span className="text-zinc-500">24h Vol</span>
-          <p className="text-white font-medium">{formatCompact(pair.volume?.h24)}</p>
+          <p className="text-white font-medium">{formatCompact(volume24h)}</p>
         </div>
         {pair.dexId && (
           <div className="ml-auto">
