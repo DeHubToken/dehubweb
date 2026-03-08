@@ -1,35 +1,25 @@
 
 
-## Fix: Auto-reload on chunk load failures
+## Problem
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+The sidebar avatar reads `user.avatarImageUrl` from AuthContext and passes it through `buildAvatarUrl()`. When `patchUser` sets `avatarImageUrl` to a blob URL (e.g. `blob:https://...`), `buildAvatarUrl` doesn't recognize it — blob URLs start with `blob:`, not `http` — so it gets mangled into a CDN path, and the preview is lost.
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+## Fix
 
-### Changes
+**`src/lib/media-url.ts`** — In `buildAvatarUrl`, add an early return for blob URLs and data URLs before any path processing:
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+```typescript
+// Blob or data URLs (optimistic previews) - return as-is
+if (apiAvatarPath.startsWith('blob:') || apiAvatarPath.startsWith('data:')) {
+  return apiAvatarPath;
+}
+```
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+Add this right after the initial null/empty checks (after line 39), before any CDN/path logic runs.
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+Similarly in `buildCoverUrl`, add the same check before line 78's `startsWith('http')` check.
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+## Why This Works
+
+When `patchUser({ avatarImageUrl: blobUrl })` is called after a profile save, the sidebar's `buildAvatarUrl(user.address, user.avatarImageUrl)` will now pass the blob URL through unchanged, displaying the new image instantly. Once the CDN propagates and the next `refreshUser` runs, the real CDN path will replace it naturally.
 
