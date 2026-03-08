@@ -1029,8 +1029,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-
-    // If token is still valid, no refresh needed
+  const refreshSession = async (): Promise<boolean> => {
     const token = getAuthToken();
     if (token && !isTokenExpired()) return true;
 
