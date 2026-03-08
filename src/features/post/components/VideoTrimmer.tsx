@@ -58,6 +58,7 @@ export function VideoTrimmer({
     const video = document.createElement('video');
     video.src = videoUrl;
     video.crossOrigin = 'anonymous';
+    video.setAttribute('webkit-playsinline', '');
     
     const thumbCount = 10;
     const thumbs: string[] = [];
@@ -310,6 +311,8 @@ export function VideoTrimmer({
             <video
               ref={videoRef}
               src={videoUrl}
+              playsInline
+              {...{"webkit-playsinline": ""}}
               className="w-full h-full object-contain"
               onTimeUpdate={handleTimeUpdate}
               onEnded={() => setIsPlaying(false)}

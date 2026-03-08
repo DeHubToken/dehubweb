@@ -15,6 +15,7 @@ const extractVideoFrame = (videoUrl: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     const video = document.createElement('video');
     video.crossOrigin = 'anonymous';
+    video.setAttribute('webkit-playsinline', '');
     video.preload = 'metadata';
     video.src = videoUrl;
     video.currentTime = 0.1;
@@ -141,6 +142,7 @@ export function FilterEditor({
                   loop
                   muted
                   playsInline
+                  {...{"webkit-playsinline": ""}}
                   className="max-w-full max-h-[30vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
                   style={{ filter: filterCSS }}
                 />

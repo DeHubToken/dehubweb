@@ -292,6 +292,7 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
             className="w-full h-full object-cover"
             muted={isMuted}
             playsInline
+            {...{"webkit-playsinline": ""}}
             autoPlay
             loop
             onEnded={() => setIsPlaying(false)}

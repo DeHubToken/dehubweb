@@ -285,6 +285,7 @@ export function PostMediaPreview({
     try {
       const video = document.createElement('video');
       video.src = videoUrl;
+      video.setAttribute('webkit-playsinline', '');
       // Only set crossOrigin for non-blob URLs (external resources)
       // Blob URLs are same-origin and don't need CORS handling
       if (!videoUrl.startsWith('blob:')) {
@@ -713,6 +714,8 @@ export function PostMediaPreview({
                           if (el) videoRefs.current.set(index, el);
                         }}
                         src={m.preview} 
+                        playsInline
+                        {...{"webkit-playsinline": ""}}
                         className="w-full h-full object-cover rounded-2xl pointer-events-none"
                         style={{ 
                           filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
@@ -1085,6 +1088,8 @@ export function PostMediaPreview({
                 <video
                   ref={fullscreenVideoRef}
                   src={fullscreenPreview.src}
+                  playsInline
+                  {...{"webkit-playsinline": ""}}
                   className="max-w-full max-h-[90vh] object-contain rounded-lg"
                   style={{
                     filter: fullscreenPreview.filterSettings ? generateFilterCSS(fullscreenPreview.filterSettings) : undefined,

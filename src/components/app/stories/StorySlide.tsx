@@ -53,6 +53,7 @@ export const StorySlide = memo(function StorySlide({
         ref={videoRef}
         src={story.video_url}
         playsInline
+        {...{"webkit-playsinline": ""}}
         muted={isMuted}
         preload={isActive ? 'auto' : 'metadata'}
         className="w-full h-full object-cover pointer-events-none"

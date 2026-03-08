@@ -54,6 +54,7 @@ export const VideoThumbnail = memo(function VideoThumbnail({
     video.crossOrigin = 'anonymous';
     video.muted = true;
     video.playsInline = true;
+    video.setAttribute('webkit-playsinline', '');
     video.preload = 'metadata';
 
     const timeout = setTimeout(() => {

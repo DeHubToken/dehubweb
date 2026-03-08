@@ -89,6 +89,7 @@ export async function createThumbnailWithOverlays(
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const video = document.createElement('video');
+    video.setAttribute('webkit-playsinline', '');
     const url = URL.createObjectURL(videoBlob);
     
     video.onloadedmetadata = () => {

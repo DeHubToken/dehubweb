@@ -362,6 +362,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
           ref={videoRef}
           muted={isMuted}
           playsInline
+          {...{"webkit-playsinline": ""}}
           className={cn(
             'absolute inset-0 w-full h-full',
             isFullscreen ? 'object-contain' : 'object-cover',

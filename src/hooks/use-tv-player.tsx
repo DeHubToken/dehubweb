@@ -313,6 +313,7 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
         ref={videoRef}
         muted={state.isMuted}
         playsInline
+        {...{"webkit-playsinline": ""}}
         style={{ display: 'none' }}
       />
     </TVPlayerContext.Provider>
