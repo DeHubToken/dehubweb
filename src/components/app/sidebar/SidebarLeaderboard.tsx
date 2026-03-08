@@ -66,7 +66,7 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
   const badgeBalanceOverrides: Record<string, number> = {
     maldoteth: 273298163.18321,
   };
-  const blockedLeaderboardUsers: string[] = ['dehubdev1', 'uss'];
+  const blockedLeaderboardUsers: string[] = ['dehubdev1', 'uss', 'support'];
 
   const isTimeDelta = apiPeriod !== 'all';
 

@@ -178,7 +178,7 @@ export default function LeaderboardPage() {
   };
 
   // Usernames to exclude from leaderboard
-  const blockedLeaderboardUsers: string[] = ['dehubdev1', 'uss'];
+  const blockedLeaderboardUsers: string[] = ['dehubdev1', 'uss', 'support'];
 
   // Check if we're viewing a time-based period (shows delta)
   const isTimeDelta = timePeriod !== 'all';
