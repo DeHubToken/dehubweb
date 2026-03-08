@@ -1020,7 +1020,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const refreshSession = async (): Promise<boolean> => {
+  const patchUser = (patch: Partial<DeHubUser>) => {
+    setUser(prev => {
+      if (!prev) return prev;
+      const patched = { ...prev, ...patch };
+      localStorage.setItem('dehub_user', JSON.stringify(patched));
+      return patched;
+    });
+  };
+
+
     // If token is still valid, no refresh needed
     const token = getAuthToken();
     if (token && !isTokenExpired()) return true;
