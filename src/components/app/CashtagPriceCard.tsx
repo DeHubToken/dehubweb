@@ -108,15 +108,8 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
         )}
       </div>
 
-      {/* Chart embed */}
-      <div className="w-full h-[200px] bg-zinc-900">
-        <iframe
-          src={chartEmbedUrl}
-          className="w-full h-full border-0"
-          title={`${pair.baseToken.symbol} chart`}
-          loading="lazy"
-        />
-      </div>
+      {/* Price Chart */}
+      <TokenPriceChart data={chartData || []} isLoading={isChartLoading} />
 
       {/* Stats row */}
       <div className="px-4 py-3 flex items-center gap-4 text-xs border-t border-zinc-700/50">
