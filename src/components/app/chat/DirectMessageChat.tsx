@@ -307,6 +307,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [isFreeAccessGranted, setIsFreeAccessGranted] = useState(false);
   const [isFreeAccessProcessing, setIsFreeAccessProcessing] = useState(false);
   const [resolvedConversationId, setResolvedConversationId] = useState(conversation.id);
+  const [initError, setInitError] = useState(false);
   const { messageFee: myMessageFee } = useDmSettings();
   const isInitialMount = useRef(true);
   const hasInitialized = useRef(false);
@@ -349,6 +350,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     const isRealId = !convId.startsWith('new_') && !/^0x[0-9a-fA-F]{40}$/i.test(convId);
     if (isRealId && convId !== resolvedConversationId) {
       setResolvedConversationId(convId);
+      setInitError(false);
     }
   }, [conversation.id, resolvedConversationId]);
 
@@ -380,6 +382,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     createAndStart.mutate(userId, {
       onSuccess: (data) => {
         console.log('[DM] createAndStart success:', data);
+        setInitError(false);
         if (data._id) setResolvedConversationId(data._id);
         if (data.dmFee) {
           console.log('[DM] dmFee detected:', data.dmFee);
@@ -396,6 +399,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       },
       onError: (err) => {
         console.warn('[DM] createAndStart failed (non-critical):', err);
+        // Mark error only if still a virtual conversation
+        setInitError(true);
         // Fallback: use dmSettings from the search result / otherUser data
         const otherUserData = otherUser as any;
         const perMessageFee = otherUserData?.dmSettings?.perMessageFee;
@@ -480,6 +485,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     const unsub = onDmSendMessage((msg) => {
       if (msg.conversation && msg.sender?.address?.toLowerCase() === otherAddress) {
         setResolvedConversationId(msg.conversation);
+        setInitError(false);
       }
     });
     return unsub;
@@ -688,6 +694,22 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       setIsFreeAccessProcessing(false);
     }
   };
+
+  const handleRetryInit = () => {
+    const userId = otherUser?.address || otherUser?._id;
+    if (!userId) return;
+    setInitError(false);
+    createAndStart.mutate(userId, {
+      onSuccess: (data) => {
+        setInitError(false);
+        if (data._id) setResolvedConversationId(data._id);
+        if (data.dmFee) setDmFee(data.dmFee);
+      },
+      onError: () => setInitError(true),
+    });
+  };
+
+  const isVirtualConv = resolvedConversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(resolvedConversationId);
 
   return (
     <div className="h-full flex flex-col bg-zinc-900 rounded-2xl overflow-hidden relative">
@@ -906,12 +928,42 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         </div>
       )}
 
+      {/* Init error banner — shown when createAndStart timed out for a new conversation */}
+      {initError && isVirtualConv && (
+        <div className="px-4 py-2.5 bg-red-950/50 border-t border-red-500/20 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-red-400 text-xs min-w-0">
+            <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+            <span className="truncate">Could not connect — server didn't respond</span>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleRetryInit}
+            disabled={createAndStart.isPending}
+            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 shrink-0 h-7 px-2 text-xs"
+          >
+            {createAndStart.isPending ? (
+              <Loader2 className="w-3 h-3 animate-spin mr-1" />
+            ) : (
+              <RefreshCw className="w-3 h-3 mr-1" />
+            )}
+            Retry
+          </Button>
+        </div>
+      )}
+
       {/* Chat Input — always shown, disabled send when insufficient balance */}
       <ChatInput
         onSendMessage={handleSendMessage}
         onTipClick={feeRequired ? undefined : () => setShowTipDialog(true)}
-        sendDisabled={!!feeSendDisabled}
-        sendDisabledReason={feeSendDisabled ? `Insufficient DHB (need ${activeFee.toLocaleString()})` : undefined}
+        sendDisabled={!!feeSendDisabled || (initError && isVirtualConv)}
+        sendDisabledReason={
+          initError && isVirtualConv
+            ? 'Connection failed — tap Retry above'
+            : feeSendDisabled
+            ? `Insufficient DHB (need ${activeFee.toLocaleString()})`
+            : undefined
+        }
         isSendingFee={isSendingFee}
       />
 
