@@ -11,6 +11,7 @@ import { AutoplayProvider } from '@/contexts/AutoplayContext';
 import { AnimationsProvider } from '@/contexts/AnimationsContext';
 import { PiPProvider } from '@/contexts/PiPContext';
 import { FloatingPiPOverlay } from '@/components/app/tv/FloatingPiPOverlay';
+import { UserFeedbackSurvey } from '@/components/app/UserFeedbackSurvey';
 import { PostModal } from '@/features/post/PostModal';
 import { DevelopmentNoticeModal } from './modals';
 import { RadioMiniPlayer } from '@/components/app/radio';
