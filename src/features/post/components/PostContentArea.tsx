@@ -63,6 +63,9 @@ interface PostContentAreaProps {
 // URL regex pattern - create fresh each time to avoid state issues with global flag
 const createUrlRegex = () => /(https?:\/\/[^\s<]+)/g;
 
+// Cashtag regex - matches $SYMBOL (1-20 uppercase/lowercase letters after $)
+const createCashtagRegex = () => /\$[a-zA-Z]{1,20}/g;
+
 // Create a link chip element
 function createLinkChip(url: string): HTMLSpanElement {
   const chip = document.createElement('span');
@@ -77,6 +80,17 @@ function createLinkChip(url: string): HTMLSpanElement {
     e.stopPropagation();
     window.open(url, '_blank', 'noopener,noreferrer');
   };
+  return chip;
+}
+
+// Create a cashtag chip element (bold white text, inline)
+function createCashtagChip(tag: string): HTMLSpanElement {
+  const chip = document.createElement('span');
+  chip.setAttribute('data-cashtag-chip', 'true');
+  chip.setAttribute('data-cashtag', tag);
+  chip.contentEditable = 'false';
+  chip.className = 'font-bold text-white';
+  chip.textContent = tag;
   return chip;
 }
 
