@@ -261,12 +261,28 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const creatorAddress = currentShort?.creatorId;
     if (!creatorAddress || !isAuthenticated || followedCreators.has(creatorAddress)) return;
     
+    setFollowCheckingCreators(prev => new Set(prev).add(creatorAddress));
     let cancelled = false;
     checkIsFollowing(creatorAddress).then(result => {
-      if (!cancelled && result) {
-        setFollowedCreators(prev => new Set(prev).add(creatorAddress));
+      if (!cancelled) {
+        if (result) {
+          setFollowedCreators(prev => new Set(prev).add(creatorAddress));
+        }
+        setFollowCheckingCreators(prev => {
+          const next = new Set(prev);
+          next.delete(creatorAddress);
+          return next;
+        });
       }
-    }).catch(() => {});
+    }).catch(() => {
+      if (!cancelled) {
+        setFollowCheckingCreators(prev => {
+          const next = new Set(prev);
+          next.delete(creatorAddress);
+          return next;
+        });
+      }
+    });
     
     return () => { cancelled = true; };
   }, [currentShort?.creatorId, isAuthenticated]);
