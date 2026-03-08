@@ -60,9 +60,9 @@ export function renderTextWithLinks(text: string): ReactNode[] {
   const parts: ReactNode[] = [];
   let lastIndex = 0;
   
-  // Combined regex: match URLs or @mentions
+  // Combined regex: match URLs, @mentions, or $cashtags
   const combinedRegex = new RegExp(
-    `(${URL_REGEX.source})|(@[a-zA-Z0-9_][a-zA-Z0-9_.-]*)`,
+    `(${URL_REGEX.source})|(@[a-zA-Z0-9_][a-zA-Z0-9_.-]*)|(\\$[a-zA-Z]{1,20})`,
     'gi'
   );
   
