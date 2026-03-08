@@ -266,12 +266,14 @@ export function FollowersListDrawer({
     try {
       if (user.isFollowing) {
         await unfollowUser(user.address);
+        followingSetRef.current?.delete(user.address.toLowerCase());
         setUsers(prev => prev.map(u => 
           u.address === user.address ? { ...u, isFollowing: false } : u
         ));
         toast.success(`Unfollowed ${user.displayName || user.username || 'user'}`);
       } else {
         await followUser(user.address);
+        followingSetRef.current?.add(user.address.toLowerCase());
         setUsers(prev => prev.map(u => 
           u.address === user.address ? { ...u, isFollowing: true } : u
         ));
