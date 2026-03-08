@@ -663,14 +663,8 @@ export default function AssistantPage() {
     const { prompt, model, sourceImage } = pendingVideoRequest;
     const videoModel = VIDEO_MODELS[model];
 
-    // Add user message if not already added
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: prompt,
-      attachedImage: sourceImage
-    };
-    setMessages(prev => [...prev, userMessage]);
+    // User message was already added by handleSend before paywall opened
+    // Don't add it again
 
     setPaywallOpen(false);
     setIsVideoLoading(true);
