@@ -179,21 +179,9 @@ export function FollowersListDrawer({
         currentUserAddress &&
         profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
 
-      let finalItems: UserListItem[];
-      if (isOwnFollowingList) {
-        finalItems = processed.map(u => ({ ...u, isFollowing: true }));
-      } else if (isAuthenticated && currentUserAddress && processed.length > 0) {
-        const followStatuses = await Promise.all(
-          processed.map(u =>
-            u.isFollowing !== undefined
-              ? Promise.resolve(u.isFollowing)
-              : checkIsFollowing(u.address).catch(() => false)
-          )
-        );
-        finalItems = processed.map((u, i) => ({ ...u, isFollowing: followStatuses[i] }));
-      } else {
-        finalItems = processed;
-      }
+      const finalItems: UserListItem[] = isOwnFollowingList
+        ? processed.map(u => ({ ...u, isFollowing: true }))
+        : processed.map(u => ({ ...u, isFollowing: u.isFollowing ?? false }));
 
       setUsers(prev => [...prev, ...finalItems]);
       setCurrentPage(nextPage);
