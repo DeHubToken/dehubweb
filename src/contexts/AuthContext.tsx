@@ -72,6 +72,7 @@ interface AuthContextType {
   connectWithWallet: (wallet: WalletProvider) => Promise<boolean>;
   disconnect: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  patchUser: (patch: Partial<DeHubUser>) => void;
   refreshSession: () => Promise<boolean>;
   setRequiresUsername: (value: boolean) => void;
   setWagmiAuthIntent: (value: boolean) => void;
