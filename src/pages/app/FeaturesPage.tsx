@@ -117,9 +117,12 @@ function FeatureCard({
   };
 
   const resolvedAddress = KNOWN_AVATAR_ADDRESSES[feature.author_wallet_address.toLowerCase()] || feature.author_wallet_address;
+  const knownFallbackAvatar = KNOWN_AVATAR_ADDRESSES[feature.author_wallet_address.toLowerCase()]
+    ? buildAvatarUrl(KNOWN_AVATAR_ADDRESSES[feature.author_wallet_address.toLowerCase()], `avatars/${KNOWN_AVATAR_ADDRESSES[feature.author_wallet_address.toLowerCase()]}.jpg`)
+    : undefined;
   const dbAvatarUrl = feature.author_avatar
     ? buildAvatarUrl(resolvedAddress, feature.author_avatar)
-    : undefined;
+    : knownFallbackAvatar;
   const liveAvatarUrl = useProfileAvatar(resolvedAddress, dbAvatarUrl ?? undefined);
   const avatarUrl = liveAvatarUrl ?? dbAvatarUrl ?? null;
 
