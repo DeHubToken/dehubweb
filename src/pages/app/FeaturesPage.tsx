@@ -101,8 +101,20 @@ function FeatureCard({
   const { isTranslated, isLoading: isTranslateLoading, error: translateError, handleTranslate, handleShowOriginal } = useSharedTranslationControl();
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
+  const [showMenu, setShowMenu] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(feature.title);
+  const [editDescription, setEditDescription] = useState(feature.description);
+  const [editCategory, setEditCategory] = useState<FeatureCategory>(feature.category);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const commentInputRef = useRef<HTMLInputElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
+
+  const editMutation = useEditFeatureRequest();
+  const deleteMutation = useDeleteFeatureRequest();
+
+  const isAuthor = walletAddress && feature.author_wallet_address.toLowerCase() === walletAddress.toLowerCase();
 
   const mention = useMention({
     inputRef: commentInputRef,
