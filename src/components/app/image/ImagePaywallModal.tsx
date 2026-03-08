@@ -10,7 +10,7 @@ import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { toast } from 'sonner';
 import { Interface } from 'ethers';
 import { writeContractAA, getWalletAddress, getERC20Balance, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
-import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 
 const DEHUB_AI_TREASURY = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
 const erc20TransferInterface = new Interface([
@@ -88,35 +88,17 @@ export function ImagePaywallModal({
     if (costDhb <= 0) return;
     setIsPaying(true);
     try {
+      const chainConfig = getChainConfig(BASE_CHAIN_ID);
+      await switchChain(BASE_CHAIN_ID);
       const signerAddress = await getWalletAddress();
       const amountWei = toWei(costDhb, DHB_TOKEN.decimals);
+      const dhbBalance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
 
-      // Check balances on Base and BNB in parallel
-      const baseConfig = getChainConfig(BASE_CHAIN_ID);
-      const bnbConfig = getChainConfig(BNB_CHAIN_ID);
-      const [baseBalance, bnbBalance] = await Promise.all([
-        getERC20Balance(baseConfig.dhbToken, signerAddress, BASE_CHAIN_ID),
-        getERC20Balance(bnbConfig.dhbToken, signerAddress, BNB_CHAIN_ID),
-      ]);
-
-      // Prefer Base, fallback to BNB
-      let payChainId: number;
-      if (baseBalance >= amountWei) {
-        payChainId = BASE_CHAIN_ID;
-      } else if (bnbBalance >= amountWei) {
-        payChainId = BNB_CHAIN_ID;
-      } else {
-        const baseDhb = Number(baseBalance) / 1e18;
-        const bnbDhb = Number(bnbBalance) / 1e18;
-        toast.error(
-          `Insufficient DHB. Need ${formatDhb(costDhb)} DHB (Base: ${formatDhb(baseDhb)}, BNB: ${formatDhb(bnbDhb)})`
-        );
+      if (dhbBalance < amountWei) {
+        toast.error(`Insufficient DHB. Need ${formatDhb(costDhb)} DHB to generate image.`);
         setIsPaying(false);
         return;
       }
-
-      const chainConfig = getChainConfig(payChainId);
-      await switchChain(payChainId);
 
       toast.loading('Processing DHB payment...', { id: 'image-gen-payment' });
       const result = await writeContractAA(
@@ -124,7 +106,7 @@ export function ImagePaywallModal({
         erc20TransferInterface,
         'transfer',
         [DEHUB_AI_TREASURY, amountWei],
-        { context: 'AI image generation payment', chainId: payChainId }
+        { context: 'AI image generation payment', chainId: BASE_CHAIN_ID }
       );
       await result.wait(1);
       toast.success('Payment confirmed! Generating image...', { id: 'image-gen-payment' });
