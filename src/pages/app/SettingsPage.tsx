@@ -210,7 +210,7 @@ export default function SettingsPage() {
 
 function ProfileSettings() {
   const { t } = useTranslation();
-  const { user: authUser, refreshUser } = useAuthContext();
+  const { user: authUser, refreshUser, patchUser } = useAuthContext();
   const queryClient = useQueryClient();
   const { suppressGlobalDrop, unsuppressGlobalDrop } = useGlobalDropZone();
 
