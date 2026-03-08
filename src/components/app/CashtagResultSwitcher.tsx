@@ -109,12 +109,7 @@ export function CashtagResultSwitcher({ stockData, dexPair, cmcData, symbol }: C
                       opt.id === selectedId && "bg-zinc-700/30"
                     )}
                   >
-                    <span className={cn(
-                      "text-xs font-medium px-2 py-0.5 rounded",
-                      opt.type === 'stock'
-                        ? "bg-emerald-400/10 text-emerald-400"
-                        : "bg-blue-400/10 text-blue-400"
-                    )}>
+                    <span className="text-xs font-medium px-2 py-0.5 rounded bg-white/10 text-white">
                       {opt.type === 'stock' ? 'Stock' : 'Crypto'}
                     </span>
                     <div className="flex-1 min-w-0">
