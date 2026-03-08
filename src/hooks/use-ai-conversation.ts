@@ -87,7 +87,7 @@ export function useAIConversation() {
           .insert({
             conversation_id: currentConversationId,
             role: message.role,
-            content: message.content || '',
+            content: message.content || '(image)',
             image_url: message.imageUrl || null,
             video_url: message.videoUrl || null,
             attached_image: message.attachedImage || null,
