@@ -311,6 +311,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const { messageFee: myMessageFee } = useDmSettings();
   const isInitialMount = useRef(true);
   const hasInitialized = useRef(false);
+  /** Tracks which identifier we tried for createAndStart — on retry, try the other */
+  const lastTriedUserId = useRef<string | null>(null);
 
   // Fee-related state
   const [customTipAmount, setCustomTipAmount] = useState('');
@@ -375,10 +377,12 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     if (hasInitialized.current) return;
     hasInitialized.current = true;
 
-    // Prefer wallet address — server's createAndStart handler looks up users by address
-    const userId = otherUser?.address || otherUser?._id;
+    // Prefer MongoDB _id (ObjectId) — DeHub backend createAndStart expects user ObjectId
+    // Fallback to address if _id not available (e.g. from non-search entry)
+    const userId = otherUser?._id || otherUser?.address;
     if (!userId) return;
 
+    lastTriedUserId.current = userId;
     createAndStart.mutate(userId, {
       onSuccess: (data) => {
         console.log('[DM] createAndStart success:', data);
@@ -696,9 +700,14 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   };
 
   const handleRetryInit = () => {
-    const userId = otherUser?.address || otherUser?._id;
+    const tried = lastTriedUserId.current;
+    const useId = otherUser?._id;
+    const useAddr = otherUser?.address;
+    // On retry: try the other identifier (address if we tried _id, or vice versa)
+    const userId = tried === useId && useAddr ? useAddr : (useId || useAddr);
     if (!userId) return;
     setInitError(false);
+    lastTriedUserId.current = userId;
     createAndStart.mutate(userId, {
       onSuccess: (data) => {
         setInitError(false);
