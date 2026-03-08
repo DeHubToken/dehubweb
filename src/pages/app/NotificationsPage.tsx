@@ -370,10 +370,11 @@ function NotificationItem({
       bundle.allIds.forEach(id => onMarkAsRead(id));
     }
     
-    // Aggregated follow notifications → open followers drawer on own profile
+    // Aggregated follow notifications → open followers drawer inline
     const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 1;
     if (isAggregatedFollow && walletAddress) {
-      navigate(`/${walletAddress}?followers=1`);
+      // Dispatch custom event to open followers drawer in NotificationsPage
+      window.dispatchEvent(new CustomEvent('open-followers-drawer'));
       return;
     }
     
