@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import type { DexPair } from '@/hooks/use-dexscreener';
 import type { CmcMarketData } from '@/hooks/use-cmc-market-cap';
-import { TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
+import { TrendingUp, TrendingDown, ExternalLink, Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface CashtagPriceCardProps {
