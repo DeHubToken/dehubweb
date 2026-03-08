@@ -733,14 +733,8 @@ export default function AssistantPage() {
     const { prompt, model, sourceImage } = pendingImageRequest;
     const imageModel = IMAGE_MODELS[model];
 
-    // Add user message
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: prompt,
-      attachedImage: sourceImage
-    };
-    setMessages(prev => [...prev, userMessage]);
+    // User message was already added by handleSend before paywall opened
+    // Don't add it again
 
     setImagePaywallOpen(false);
     setIsImageLoading(true);
