@@ -15,7 +15,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
-import { voteOnPost, getNFTComments, postComment, followUser, type ApiCommentResponse } from '@/lib/api/dehub';
+import { voteOnPost, getNFTComments, postComment, followUser, isFollowing as checkIsFollowing, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { CommentsWrapper } from './CommentsWrapper';
 import { CommentsSection } from './CommentsSection';
@@ -255,6 +255,21 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setIsPaused(false);
   }, [currentIndex, currentShort?.id, currentShort?.likes, currentShort?.isLiked, currentShort?.isDisliked]);
   
+  // Check follow status from API when creator changes
+  useEffect(() => {
+    const creatorAddress = currentShort?.creatorId;
+    if (!creatorAddress || !isAuthenticated || followedCreators.has(creatorAddress)) return;
+    
+    let cancelled = false;
+    checkIsFollowing(creatorAddress).then(result => {
+      if (!cancelled && result) {
+        setFollowedCreators(prev => new Set(prev).add(creatorAddress));
+      }
+    }).catch(() => {});
+    
+    return () => { cancelled = true; };
+  }, [currentShort?.creatorId, isAuthenticated]);
+
   // Handle voting
   const handleVote = useCallback(async (vote: boolean) => {
     const tokenId = String(currentShort?.id);
