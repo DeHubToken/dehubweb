@@ -28,6 +28,8 @@ function formatCompact(n: number | null | undefined): string {
 }
 
 export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProps) {
+  const [copied, setCopied] = useState(false);
+  
   // Use CMC data when available, fallback to DexScreener
   const change24h = cmcData?.percentChange24h ?? pair.priceChange?.h24;
   const isPositive = change24h != null && change24h >= 0;
@@ -37,6 +39,14 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
   
   const dexScreenerUrl = pair.url || `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}`;
   const chartEmbedUrl = `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}?embed=1&theme=dark&trades=0&info=0`;
+  const contractAddress = pair.baseToken.address;
+
+  const handleCopyCA = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(contractAddress);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="bg-zinc-800/60 border border-zinc-700/50 rounded-2xl overflow-hidden mb-4">
@@ -61,15 +71,24 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
             <span className="text-zinc-400 text-sm">{cmcData?.name || pair.baseToken.name}</span>
           </div>
         </div>
-        <a
-          href={dexScreenerUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-zinc-400 hover:text-white transition-colors"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <ExternalLink className="w-4 h-4" />
-        </a>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleCopyCA}
+            className="text-zinc-400 hover:text-white transition-colors p-1"
+            title="Copy contract address"
+          >
+            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+          </button>
+          <a
+            href={dexScreenerUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-zinc-400 hover:text-white transition-colors p-1"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ExternalLink className="w-4 h-4" />
+          </a>
+        </div>
       </div>
 
       {/* Price + Change */}
