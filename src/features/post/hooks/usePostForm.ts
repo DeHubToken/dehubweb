@@ -886,6 +886,11 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         postDescription = text.trim();
       }
 
+      // Fallback: never send empty name to avoid API generating "Stream NFT #XXXX"
+      if (!postTitle) {
+        postTitle = postDescription.slice(0, 100) || ' ';
+      }
+
       const mintResponse = await mintPost(
         {
           name: postTitle,
