@@ -141,6 +141,7 @@ export function FilterEditor({
                   loop
                   muted
                   playsInline
+                  {...{"webkit-playsinline": ""}}
                   className="max-w-full max-h-[30vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
                   style={{ filter: filterCSS }}
                 />
