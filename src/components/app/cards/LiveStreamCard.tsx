@@ -437,6 +437,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               ref={videoRef}
               className="w-full h-full object-contain"
               playsInline
+              {...{"webkit-playsinline": ""}}
               muted={isMuted}
               poster={stream.thumbnail}
               onPlay={() => setIsPlaying(true)}

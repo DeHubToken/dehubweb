@@ -207,6 +207,7 @@ export const VideoSlide = memo(function VideoSlide({
             style={{ willChange: 'transform' }}
             loop
             playsInline
+            {...{"webkit-playsinline": ""}}
             muted={isMuted}
             poster={short.thumbnail}
             preload={isActive ? 'auto' : 'metadata'}

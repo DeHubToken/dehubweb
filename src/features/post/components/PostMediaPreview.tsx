@@ -1087,6 +1087,8 @@ export function PostMediaPreview({
                 <video
                   ref={fullscreenVideoRef}
                   src={fullscreenPreview.src}
+                  playsInline
+                  {...{"webkit-playsinline": ""}}
                   className="max-w-full max-h-[90vh] object-contain rounded-lg"
                   style={{
                     filter: fullscreenPreview.filterSettings ? generateFilterCSS(fullscreenPreview.filterSettings) : undefined,

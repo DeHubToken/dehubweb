@@ -289,6 +289,7 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCa
             ref={videoRef}
             autoPlay
             playsInline
+            {...{"webkit-playsinline": ""}}
             muted
             className={cn(
               'w-full h-full object-cover',
@@ -301,6 +302,7 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCa
             src={previewUrl}
             controls
             playsInline
+            {...{"webkit-playsinline": ""}}
             className="w-full h-full object-cover"
           />
         ) : null}

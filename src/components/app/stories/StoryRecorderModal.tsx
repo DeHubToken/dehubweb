@@ -301,6 +301,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded, onPhotoCa
             ref={videoRef}
             autoPlay
             playsInline
+            {...{"webkit-playsinline": ""}}
             muted
             className={cn(
               'w-full h-full object-cover',
@@ -314,6 +315,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded, onPhotoCa
               src={previewUrl}
               loop
               playsInline
+              {...{"webkit-playsinline": ""}}
               className="w-full h-full object-cover"
               onPlay={() => setIsPreviewPlaying(true)}
               onPause={() => setIsPreviewPlaying(false)}

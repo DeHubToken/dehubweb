@@ -310,6 +310,8 @@ export function VideoTrimmer({
             <video
               ref={videoRef}
               src={videoUrl}
+              playsInline
+              {...{"webkit-playsinline": ""}}
               className="w-full h-full object-contain"
               onTimeUpdate={handleTimeUpdate}
               onEnded={() => setIsPlaying(false)}

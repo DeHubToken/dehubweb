@@ -1460,6 +1460,7 @@ export default function AssistantPage() {
                             loop
                             muted
                             playsInline
+                            {...{"webkit-playsinline": ""}}
                             className="max-w-full rounded-lg"
                           />
                           {/* Action buttons */}

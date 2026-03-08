@@ -136,6 +136,7 @@ export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayer
         ref={videoRef}
         muted={isMuted}
         playsInline
+        {...{"webkit-playsinline": ""}}
         autoPlay
         className="w-full object-cover"
         style={{ height: PLAYER_HEIGHT }}
