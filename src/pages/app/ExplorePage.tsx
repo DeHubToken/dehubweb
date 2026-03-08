@@ -770,7 +770,7 @@ export default function ExplorePage() {
 
                 {/* DexScreener Cashtag Price Card */}
                 {dexPair && (
-                  <CashtagPriceCard pair={dexPair} symbol={effectiveQuery.trim()} />
+                  <CashtagPriceCard pair={dexPair} symbol={effectiveQuery.trim()} cmcData={cmcData} />
                 )}
 
                 {/* Loading State */}
