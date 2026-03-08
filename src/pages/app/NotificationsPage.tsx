@@ -28,6 +28,7 @@ import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Switch } from '@/components/ui/switch';
+import { FollowersListDrawer } from '@/components/app/profile';
 
 // Batch avatar enrichment cache for fresh profile pictures
 interface EnrichedAvatar {
