@@ -10,6 +10,7 @@
  */
 
 import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Pencil, Trash2, Ticket, Gift, Lock, MessageCircle, Diamond } from 'lucide-react';
