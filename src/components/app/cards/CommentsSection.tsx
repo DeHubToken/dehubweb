@@ -184,6 +184,8 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
   const [editText, setEditText] = useState(comment.text);
   const avatarUrl = comment.avatar;
   const translation = useTranslation(comment.text || '');
+  const badgeUrl = getBadgeUrl(comment.badgeBalance, comment.username);
+  const shownName = comment.displayName || comment.username;
 
   return (
     <motion.div
@@ -198,13 +200,25 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
         </Avatar>
       </button>
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-1">
+        <div className="flex items-center gap-1.5 mb-1">
           <button 
             onClick={() => onUserPress(comment.username)}
-            className="font-semibold text-white text-sm hover:underline"
+            className="inline-flex items-center gap-1 hover:underline"
           >
-            {comment.username}
+            <span className={`relative inline-flex items-baseline shrink min-w-0${badgeUrl ? ' pr-3' : ''}`}>
+              <span className="font-semibold text-white text-sm truncate max-w-[120px] leading-tight">{shownName}</span>
+              {badgeUrl && (
+                <img
+                  src={badgeUrl}
+                  alt="Badge"
+                  className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0"
+                />
+              )}
+            </span>
           </button>
+          {comment.displayName && (
+            <span className="text-zinc-500 text-xs truncate max-w-[100px]">@{comment.username}</span>
+          )}
           <span className="text-zinc-500 text-xs">{comment.timeAgo}</span>
         </div>
         {isEditing ? (
