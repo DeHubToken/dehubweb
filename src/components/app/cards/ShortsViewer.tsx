@@ -125,6 +125,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [isFollowing, setIsFollowing] = useState(false);
   const [isFollowLoading, setIsFollowLoading] = useState(false);
   const [followedCreators, setFollowedCreators] = useState<Set<string>>(new Set());
+  const [followCheckingCreators, setFollowCheckingCreators] = useState<Set<string>>(new Set());
   
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
