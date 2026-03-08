@@ -893,6 +893,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     if (!isFocused || !isPlaying) return;
     
     const handleKeyDown = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable) return;
       switch (e.key) {
         case ' ':
           e.preventDefault();
