@@ -773,10 +773,12 @@ export default function ExplorePage() {
                   </button>
                 </div>
 
-                {/* DexScreener Cashtag Price Card */}
-                {dexPair && (
+                {/* Stock Price Card (priority) or Crypto Cashtag Price Card (fallback) */}
+                {stockData?.found ? (
+                  <StockPriceCard data={stockData} />
+                ) : dexPair ? (
                   <CashtagPriceCard pair={dexPair} symbol={effectiveQuery.trim()} cmcData={cmcData} />
-                )}
+                ) : null}
 
                 {/* Loading State */}
                 {showLoading && (
