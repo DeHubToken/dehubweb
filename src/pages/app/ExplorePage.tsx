@@ -468,6 +468,9 @@ export default function ExplorePage() {
   // CoinMarketCap market cap (overrides DexScreener when available)
   const { data: cmcData } = useCmcMarketCap(effectiveQuery, isSearching);
 
+  // Stock quote lookup (stocks first priority)
+  const { data: stockData, isLoading: isStockLoading } = useStockQuote(effectiveQuery, isSearching);
+
   // Always fetch @d specifically for brand queries (d, de, deh, dehu, dehub)
   const {
     data: brandUser,
