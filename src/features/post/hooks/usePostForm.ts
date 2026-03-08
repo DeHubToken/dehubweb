@@ -231,6 +231,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     video.preload = 'auto';
     video.muted = true;
     video.playsInline = true;
+    video.setAttribute('webkit-playsinline', '');
     // NOTE: do NOT set crossOrigin on blob URLs — it taints the canvas on some mobile browsers
     video.src = preview;
 
