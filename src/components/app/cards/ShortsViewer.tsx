@@ -910,85 +910,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             </div>
 
             {/* Desktop: Inline comments */}
-            <div className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0">
-              <div className="flex items-center gap-2 text-white/60 text-xs mb-3 flex-shrink-0">
-                <MessageSquare className="w-4 h-4" />
-                <span>{inlineComments.length} Comments</span>
-              </div>
-              
-              {/* Comments list */}
-              <div className="flex-1 overflow-y-auto scrollbar-hide space-y-3 min-h-0">
-                {inlineComments.length > 0 && (
-                  inlineComments.slice(0, 10).map((comment) => (
-                    <div key={comment.id} className="flex gap-2">
-                      <Avatar className="w-6 h-6 flex-shrink-0 rounded-lg">
-                        {comment.avatar && <AvatarImage src={comment.avatar} className="rounded-lg" />}
-                        <AvatarFallback className="bg-zinc-700 text-white text-xs rounded-lg">
-                          {comment.username?.[0]?.toUpperCase() || '?'}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-white text-xs font-medium truncate">{comment.username}</span>
-                          <span className="text-white/40 text-[10px]">{comment.timeAgo}</span>
-                        </div>
-                        <p className="text-white/70 text-xs leading-relaxed line-clamp-2">{comment.text}</p>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-              
-              {/* Comment input */}
-              <div className="relative flex items-center gap-2 mt-3 flex-shrink-0">
-                <input
-                  ref={inlineCommentRef}
-                  type="text"
-                  value={inlineCommentText}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setInlineCommentText(val);
-                    mention.handleInput(val, e.target.selectionStart ?? val.length);
-                  }}
-                  onKeyDown={(e) => {
-                    if (mention.isOpen) {
-                      const handled = mention.handleKeyDown(e);
-                      if (handled) {
-                        if (e.key === 'Enter' || e.key === 'Tab') {
-                          e.preventDefault();
-                          const liveResults = (window as any).__mentionResults || [];
-                          if (liveResults[mention.selectedIndex]) {
-                            mention.handleSelect(liveResults[mention.selectedIndex]);
-                          }
-                        }
-                        return;
-                      }
-                    }
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handlePostInlineComment();
-                    }
-                  }}
-                  placeholder="Add a comment..."
-                  className="flex-1 bg-transparent text-white text-xs placeholder:text-white/40 outline-none"
-                />
-                <UserMentionDropdown
-                  query={mention.query}
-                  isOpen={mention.isOpen}
-                  position={mention.position}
-                  selectedIndex={mention.selectedIndex}
-                  onSelectedIndexChange={mention.setSelectedIndex}
-                  onSelect={mention.handleSelect}
-                  onClose={mention.handleClose}
-                />
-                <button
-                  onClick={handlePostInlineComment}
-                  disabled={!inlineCommentText.trim() || isPostingComment}
-                  className="text-white/60 hover:text-white disabled:opacity-40 transition-colors"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
-              </div>
+            <div className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0 overflow-y-auto">
+              <CommentsSection
+                tokenId={currentShort.id}
+                onClose={() => {}}
+              />
             </div>
           </div>
         )}
