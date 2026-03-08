@@ -26,34 +26,48 @@ export function CashtagResultSwitcher({ stockData, dexPair, cmcData, symbol }: C
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Build list of available results
+  // Score how much data each result has — prefer the richer one
+  const stockScore = stockData?.found
+    ? [stockData.price, stockData.marketCap, stockData.volume24h, stockData.dayHigh, stockData.percentChange24h, stockData.name]
+        .filter(Boolean).length
+    : 0;
+
+  const cryptoScore = dexPair
+    ? [
+        dexPair.priceUsd, dexPair.marketCap || dexPair.fdv, dexPair.volume?.h24,
+        dexPair.liquidity?.usd, dexPair.priceChange?.h24, dexPair.baseToken?.name,
+        dexPair.txns?.h24, dexPair.info?.imageUrl,
+        cmcData?.marketCap, cmcData?.circulatingSupply, cmcData?.description, cmcData?.logo,
+      ].filter(Boolean).length
+    : 0;
+
+  // Build list of available results — order by richest data first
   const options: ResultOption[] = [];
-  if (stockData?.found) {
-    options.push({
-      id: 'stock',
-      label: `$${stockData.symbol}`,
-      sublabel: stockData.exchangeShort || stockData.exchange || 'Stock',
-      type: 'stock',
-    });
-  }
-  if (dexPair) {
-    options.push({
-      id: 'crypto',
-      label: `$${dexPair.baseToken.symbol}`,
-      sublabel: dexPair.chainId?.toUpperCase() || 'Crypto',
-      type: 'crypto',
-    });
+  const stockOption: ResultOption | null = stockData?.found
+    ? { id: 'stock', label: `$${stockData.symbol}`, sublabel: stockData.exchangeShort || stockData.exchange || 'Stock', type: 'stock' }
+    : null;
+  const cryptoOption: ResultOption | null = dexPair
+    ? { id: 'crypto', label: `$${dexPair.baseToken.symbol}`, sublabel: dexPair.chainId?.toUpperCase() || 'Crypto', type: 'crypto' }
+    : null;
+
+  // Put the richer result first
+  if (cryptoScore >= stockScore) {
+    if (cryptoOption) options.push(cryptoOption);
+    if (stockOption) options.push(stockOption);
+  } else {
+    if (stockOption) options.push(stockOption);
+    if (cryptoOption) options.push(cryptoOption);
   }
 
-  // Default to stock-first, then crypto
-  const [selectedId, setSelectedId] = useState<string>(options[0]?.id || 'stock');
+  // Default to whichever has more info
+  const [selectedId, setSelectedId] = useState<string>(options[0]?.id || 'crypto');
 
   // Reset selection when options change
   useEffect(() => {
     if (options.length > 0 && !options.find(o => o.id === selectedId)) {
       setSelectedId(options[0].id);
     }
-  }, [stockData?.found, dexPair?.pairAddress]);
+  }, [stockData?.found, dexPair?.pairAddress, stockScore, cryptoScore]);
 
   // Close dropdown on outside click
   useEffect(() => {
