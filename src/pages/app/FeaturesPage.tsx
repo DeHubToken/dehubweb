@@ -369,6 +369,8 @@ function FeatureCard({
             commentCount={feature.comment_count}
           />
         </div>
+          </>
+        )}
 
         {/* Comments Section */}
         <AnimatePresence>
