@@ -427,6 +427,12 @@ async function computeSnapshotDelta(
         currentMap.set(snap.account.toLowerCase(), (snap as any)[currentSnapshotField] ?? 0);
       }
       console.log(`[delta] ${sortMode}/${period}: using today's snapshot (${currentSnaps.length} entries) for current values`);
+    } else if (useHybridOnChain && rpcConfig) {
+      // No today snapshot — fetch CURRENT on-chain balances for all addresses (like pure on-chain mode)
+      console.log(`[delta] ${sortMode}/${period}: no today snapshot found, fetching current on-chain balances for ${entries.length} addresses`);
+      const allAddresses = entries.map(e => e.account.toLowerCase());
+      currentMap = await batchOnChainBalancesAtBlock(allAddresses, rpcConfig.baseRpc, rpcConfig.bnbRpc, "latest", "latest");
+      console.log(`[delta] ${sortMode}/${period}: got ${currentMap.size} current on-chain balances`);
     } else {
       console.log(`[delta] ${sortMode}/${period}: no today snapshot found, falling back to API values`);
     }
