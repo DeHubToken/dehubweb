@@ -1,35 +1,28 @@
 
 
-## Fix: Auto-reload on chunk load failures
+## Why the Followers Drawer is Slow
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+The bottleneck is on **lines 134-142** of `FollowersListDrawer.tsx`. After fetching the follow list (1 API call), it fires **N parallel `checkIsFollowing` calls** — one per user — to determine follow status. For a page of 30 users, that's up to **30 additional API requests** hitting the DeHub API simultaneously. This is what causes:
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+1. Slow load time (waiting for 30 serial/parallel round-trips)
+2. Potential 429 rate-limit errors (already visible in network logs)
 
-### Changes
+### The Fix
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+The `getFollowList` API response already includes `isFollowing` on each item (visible in `mapFollowListItem` at line 65: `isFollowing: item.isFollowing`). The code just doesn't trust it — it falls through to individual `checkIsFollowing` calls when `isFollowing` could be undefined.
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+**Change in `FollowersListDrawer.tsx`:**
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+1. **Remove the bulk `checkIsFollowing` calls** (lines 134-145 for initial load, and lines 197-205 for load-more). Instead, trust the `isFollowing` field already returned by the API. If it's undefined, default to `false` rather than making an extra API call.
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+2. This turns the drawer from **1 + N API calls** down to **1 API call** per page load.
+
+3. Same change for the `loadMore` function (lines 189-208) — remove the parallel `checkIsFollowing` block there too.
+
+The mapped items from `mapFollowListItem` already extract `isFollowing` from the API response. The only code change is replacing the `Promise.all(checkIsFollowing(...))` blocks with a simple pass-through that defaults undefined values to `false`.
+
+### Result
+- Drawer opens in ~1 API call instead of ~31
+- No more 429 rate-limit risk from the drawer
+- Infinite scroll pages also load with 1 call each
 
