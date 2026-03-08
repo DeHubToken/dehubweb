@@ -371,6 +371,8 @@ function ProfileSettings() {
       return updateProfile(data);
     },
     onSuccess: async (_result, variables) => {
+      console.log('[Settings] updateProfile result:', JSON.stringify(_result));
+      console.log('[Settings] Had avatarImg:', !!variables.avatarImg, 'Had coverImg:', !!variables.coverImg);
       toast.success(t('settings.profileUpdated'));
       
       // Optimistically update profile cache with local previews so avatar/cover
