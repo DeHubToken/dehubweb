@@ -733,7 +733,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
             setWalletAddress(saResult.address);
             setUser(normalizedUser);
-            if (saAuthResponse.result?.isNewAccount) setRequiresUsername(true);
+            if (saAuthResponse.result?.isNewAccount) { setRequiresUsername(true); sessionStorage.setItem('dehub_is_new_account', 'true'); } else { sessionStorage.removeItem('dehub_is_new_account'); }
             queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
             queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
             queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
