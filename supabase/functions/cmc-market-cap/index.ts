@@ -27,29 +27,31 @@ serve(async (req) => {
       });
     }
 
-    // Clean symbol (remove $ prefix, uppercase)
     const cleanSymbol = symbol.replace(/^\$/, '').toUpperCase();
 
-    const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${encodeURIComponent(cleanSymbol)}&convert=USD`;
+    // Fetch quotes and metadata in parallel
+    const [quotesRes, metaRes] = await Promise.all([
+      fetch(
+        `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${encodeURIComponent(cleanSymbol)}&convert=USD`,
+        { headers: { 'X-CMC_PRO_API_KEY': CMC_API_KEY, 'Accept': 'application/json' } }
+      ),
+      fetch(
+        `https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?symbol=${encodeURIComponent(cleanSymbol)}`,
+        { headers: { 'X-CMC_PRO_API_KEY': CMC_API_KEY, 'Accept': 'application/json' } }
+      ).catch(() => null),
+    ]);
 
-    const response = await fetch(url, {
-      headers: {
-        'X-CMC_PRO_API_KEY': CMC_API_KEY,
-        'Accept': 'application/json',
-      },
-    });
+    const quotesData = await quotesRes.json();
 
-    const data = await response.json();
-
-    if (!response.ok || data.status?.error_code) {
-      console.error('CMC API error:', data.status?.error_message);
-      return new Response(JSON.stringify({ error: data.status?.error_message || 'CMC API error', marketCap: null }), {
-        status: 200, // Return 200 so frontend can gracefully fallback
+    if (!quotesRes.ok || quotesData.status?.error_code) {
+      console.error('CMC API error:', quotesData.status?.error_message);
+      return new Response(JSON.stringify({ error: quotesData.status?.error_message || 'CMC API error', marketCap: null }), {
+        status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    const tokenData = data.data?.[cleanSymbol];
+    const tokenData = quotesData.data?.[cleanSymbol];
     if (!tokenData) {
       return new Response(JSON.stringify({ marketCap: null, symbol: cleanSymbol }), {
         status: 200,
@@ -59,17 +61,54 @@ serve(async (req) => {
 
     const quote = tokenData.quote?.USD;
 
+    // Parse metadata (v2 returns array per symbol)
+    let meta: any = null;
+    if (metaRes && metaRes.ok) {
+      try {
+        const metaJson = await metaRes.json();
+        const metaArr = metaJson.data?.[cleanSymbol];
+        meta = Array.isArray(metaArr) ? metaArr[0] : metaArr;
+      } catch { /* ignore */ }
+    }
+
     return new Response(JSON.stringify({
       symbol: cleanSymbol,
       name: tokenData.name,
-      marketCap: quote?.market_cap || null,
-      fullyDilutedMarketCap: quote?.fully_diluted_market_cap || null,
-      price: quote?.price || null,
-      volume24h: quote?.volume_24h || null,
-      percentChange24h: quote?.percent_change_24h || null,
+      slug: tokenData.slug || null,
+      cmcRank: tokenData.cmc_rank || null,
+      dateAdded: tokenData.date_added || null,
+      tags: tokenData.tags || [],
+      maxSupply: tokenData.max_supply || null,
       circulatingSupply: tokenData.circulating_supply || null,
       totalSupply: tokenData.total_supply || null,
-      cmcRank: tokenData.cmc_rank || null,
+      platform: tokenData.platform ? {
+        name: tokenData.platform.name,
+        symbol: tokenData.platform.symbol,
+        tokenAddress: tokenData.platform.token_address,
+      } : null,
+      // Quote data
+      price: quote?.price || null,
+      marketCap: quote?.market_cap || null,
+      fullyDilutedMarketCap: quote?.fully_diluted_market_cap || null,
+      volume24h: quote?.volume_24h || null,
+      volumeChange24h: quote?.volume_change_24h || null,
+      percentChange1h: quote?.percent_change_1h || null,
+      percentChange24h: quote?.percent_change_24h || null,
+      percentChange7d: quote?.percent_change_7d || null,
+      percentChange30d: quote?.percent_change_30d || null,
+      percentChange60d: quote?.percent_change_60d || null,
+      percentChange90d: quote?.percent_change_90d || null,
+      marketCapDominance: quote?.market_cap_dominance || null,
+      // Metadata (from /info endpoint)
+      logo: meta?.logo || null,
+      description: meta?.description || null,
+      website: meta?.urls?.website?.[0] || null,
+      twitter: meta?.urls?.twitter?.[0] || null,
+      reddit: meta?.urls?.reddit?.[0] || null,
+      chat: meta?.urls?.chat || [],
+      explorer: meta?.urls?.explorer || [],
+      sourceCode: meta?.urls?.source_code?.[0] || null,
+      category: meta?.category || null,
     }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
