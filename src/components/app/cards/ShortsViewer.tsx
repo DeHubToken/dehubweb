@@ -18,6 +18,7 @@ import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { voteOnPost, getNFTComments, postComment, followUser, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { CommentsWrapper } from './CommentsWrapper';
+import { CommentsSection } from './CommentsSection';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Repeat2, Quote, Link } from 'lucide-react';
 import { cn } from '@/lib/utils';
