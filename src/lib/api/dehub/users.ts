@@ -77,8 +77,19 @@ export async function updateProfile(data: UpdateProfileData): Promise<{ result: 
     formData.append("dmSettings", JSON.stringify(data.dmSettings));
   }
 
-  if (data.avatarImg) formData.append("avatarImg", data.avatarImg);
-  if (data.coverImg) formData.append("coverImg", data.coverImg);
+  if (data.avatarImg) {
+    formData.append("avatarImg", data.avatarImg);
+    console.log('[updateProfile] Attaching avatarImg:', data.avatarImg.name, data.avatarImg.size, data.avatarImg.type);
+  }
+  if (data.coverImg) {
+    formData.append("coverImg", data.coverImg);
+    console.log('[updateProfile] Attaching coverImg:', data.coverImg.name, data.coverImg.size, data.coverImg.type);
+  }
+
+  // Log all FormData keys being sent
+  const keys: string[] = [];
+  formData.forEach((_, key) => keys.push(key));
+  console.log('[updateProfile] FormData keys:', keys);
 
   const response = await fetch(`${DEHUB_API_BASE}/api/update_profile`, {
     method: "POST",
@@ -90,10 +101,13 @@ export async function updateProfile(data: UpdateProfileData): Promise<{ result: 
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
+    console.error('[updateProfile] API error:', response.status, errorData);
     throw new Error(errorData.message || errorData.error || `API error: ${response.status}`);
   }
 
-  return response.json();
+  const result = await response.json();
+  console.log('[updateProfile] API response:', JSON.stringify(result));
+  return result;
 }
 
 export async function getUserNFTs(
