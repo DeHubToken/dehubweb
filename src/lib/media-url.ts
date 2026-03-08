@@ -38,6 +38,11 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
   if (!apiAvatarPath) return undefined;
   if (!address) return undefined;
   
+  // Blob or data URLs (optimistic previews) - return as-is
+  if (apiAvatarPath.startsWith('blob:') || apiAvatarPath.startsWith('data:')) {
+    return apiAvatarPath;
+  }
+  
   // Cache-bust param: 5-minute windows so browsers fetch latest avatars
   const cacheBust = Math.floor(Date.now() / 300000);
   
