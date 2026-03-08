@@ -96,6 +96,7 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
   return {
     id: String(apiComment.id),
     username: apiComment.writor?.username || 'Anonymous',
+    displayName: apiComment.writor?.displayName || undefined,
     avatar: resolvedAvatar,
     text: apiComment.content || (apiComment as any).text || (apiComment as any).body || '',
     likes: apiComment.likeCount ?? 0,
@@ -106,6 +107,7 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
     replyToId: apiComment.parentId ? String(apiComment.parentId) : undefined,
     address,
     voiceNote,
+    badgeBalance: apiComment.writor?.badgeBalance,
   };
 }
 
