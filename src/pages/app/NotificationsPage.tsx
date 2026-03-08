@@ -273,6 +273,10 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     return refId ? `/app/governance/${refId}` : '/governance';
   }
 
+  // Comment-type notifications should auto-open comments on the post
+  const isCommentType = ['comment', 'comment_reply', 'comment_like'].includes(notification.type);
+  const commentSuffix = isCommentType ? '?comments=1' : '';
+
   switch (notification.type) {
     case 'like':
     case 'comment':
@@ -281,7 +285,7 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     case 'mention':
     case 'tip':
     case 'video_milestone':
-      return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
+      return notification.tokenId ? `/app/post/${notification.tokenId}${commentSuffix}` : null;
     case 'following':
       return notification.actorAddress 
         ? `/${notification.actorAddress}` 

@@ -10,6 +10,7 @@
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
+import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Pencil, Trash2, Diamond } from 'lucide-react';
@@ -447,6 +448,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  useAutoOpenComments(setShowComments);
   const [showBountyDrawer, setShowBountyDrawer] = useState(false);
   const [showPPVDrawer, setShowPPVDrawer] = useState(false);
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
