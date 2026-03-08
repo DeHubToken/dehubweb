@@ -267,6 +267,7 @@ export default function MessagesPage() {
     return (
       <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
         <DirectMessageChat
+          key={selectedConversation.id}
           conversation={selectedConversation}
           onBack={() => setSelectedConversation(null)}
         />
