@@ -206,35 +206,38 @@ export function PostContentArea({
     }
   }, [editorRef]);
 
-  // Process links in the content
+  // Process links and cashtags in the content
   const processLinks = useCallback(() => {
     if (!editorRef.current || isProcessingLinks.current) return;
     
     const editor = editorRef.current;
     const html = editor.innerHTML;
     
-    // Check if there are unprocessed URLs (not already in link chips)
+    // Check if there are unprocessed URLs or cashtags (not already in chips)
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = html;
     
-    // Get text content without link chips
-    const linkChips = tempDiv.querySelectorAll('[data-link-chip]');
-    linkChips.forEach(chip => chip.remove());
+    // Get text content without chips
+    const chips = tempDiv.querySelectorAll('[data-link-chip], [data-cashtag-chip]');
+    chips.forEach(chip => chip.remove());
     const textWithoutChips = tempDiv.textContent || '';
     
-    if (!createUrlRegex().test(textWithoutChips)) return;
+    const hasUrls = createUrlRegex().test(textWithoutChips);
+    const hasCashtags = createCashtagRegex().test(textWithoutChips);
+    
+    if (!hasUrls && !hasCashtags) return;
     
     isProcessingLinks.current = true;
     const cursorPos = saveCursorPosition();
     
-    // Process text nodes only (not link chips)
+    // Process text nodes only (not inside existing chips)
     const walker = document.createTreeWalker(
       editor,
       NodeFilter.SHOW_TEXT,
       {
         acceptNode: (node) => {
-          // Skip text inside link chips
-          if ((node.parentElement as HTMLElement)?.closest('[data-link-chip]')) {
+          const parent = node.parentElement as HTMLElement;
+          if (parent?.closest('[data-link-chip]') || parent?.closest('[data-cashtag-chip]')) {
             return NodeFilter.FILTER_REJECT;
           }
           return NodeFilter.FILTER_ACCEPT;
@@ -242,41 +245,57 @@ export function PostContentArea({
       }
     );
 
-    const nodesToProcess: { node: Text; matches: RegExpMatchArray[] }[] = [];
+    const nodesToProcess: { node: Text; urlMatches: RegExpMatchArray[]; cashtagMatches: RegExpMatchArray[] }[] = [];
     
     while (walker.nextNode()) {
       const textNode = walker.currentNode as Text;
       const nodeText = textNode.textContent || '';
-      const matches = [...nodeText.matchAll(createUrlRegex())];
+      const urlMatches = [...nodeText.matchAll(createUrlRegex())];
+      const cashtagMatches = [...nodeText.matchAll(createCashtagRegex())];
       
-      if (matches.length > 0) {
-        nodesToProcess.push({ node: textNode, matches });
+      if (urlMatches.length > 0 || cashtagMatches.length > 0) {
+        nodesToProcess.push({ node: textNode, urlMatches, cashtagMatches });
       }
     }
 
     // Process nodes in reverse to maintain positions
     for (let i = nodesToProcess.length - 1; i >= 0; i--) {
-      const { node, matches } = nodesToProcess[i];
+      const { node, urlMatches, cashtagMatches } = nodesToProcess[i];
       const nodeText = node.textContent || '';
+      
+      // Merge all matches and sort by index
+      const allMatches: { index: number; length: number; type: 'url' | 'cashtag'; text: string }[] = [];
+      for (const m of urlMatches) {
+        allMatches.push({ index: m.index!, length: m[0].length, type: 'url', text: m[0] });
+      }
+      for (const m of cashtagMatches) {
+        // Skip cashtags that fall inside a URL match
+        const idx = m.index!;
+        const insideUrl = urlMatches.some(u => idx >= u.index! && idx < u.index! + u[0].length);
+        if (!insideUrl) {
+          allMatches.push({ index: idx, length: m[0].length, type: 'cashtag', text: m[0] });
+        }
+      }
+      allMatches.sort((a, b) => a.index - b.index);
+      
+      if (allMatches.length === 0) continue;
       
       const fragment = document.createDocumentFragment();
       let lastIndex = 0;
       
-      for (const match of matches) {
-        const url = match[0];
-        const index = match.index!;
-        
-        // Text before the URL
-        if (index > lastIndex) {
-          fragment.appendChild(document.createTextNode(nodeText.substring(lastIndex, index)));
+      for (const match of allMatches) {
+        if (match.index > lastIndex) {
+          fragment.appendChild(document.createTextNode(nodeText.substring(lastIndex, match.index)));
         }
         
-        // Create link chip using helper function
-        fragment.appendChild(createLinkChip(url));
-        lastIndex = index + url.length;
+        if (match.type === 'url') {
+          fragment.appendChild(createLinkChip(match.text));
+        } else {
+          fragment.appendChild(createCashtagChip(match.text));
+        }
+        lastIndex = match.index + match.length;
       }
       
-      // Text after the last URL
       if (lastIndex < nodeText.length) {
         fragment.appendChild(document.createTextNode(nodeText.substring(lastIndex)));
       }
