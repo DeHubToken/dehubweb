@@ -128,6 +128,7 @@ function FeatureCard({
   // Known avatar overrides for non-wallet identifiers (username-based accounts)
   const KNOWN_AVATAR_ADDRESSES: Record<string, string> = {
     maldoteth: '0x9324840523a5d17dd12a2f11a9472e5a199c1937',
+    '0xmal': '0x9324840523a5d17dd12a2f11a9472e5a199c1937',
   };
 
   const resolvedAddress = KNOWN_AVATAR_ADDRESSES[feature.author_wallet_address.toLowerCase()] || feature.author_wallet_address;
