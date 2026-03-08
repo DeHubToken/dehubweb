@@ -877,14 +877,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               {/* Textarea + buttons container */}
               <div className="relative">
                 <textarea
-                  ref={inlineCommentRef}
                   value={inlineCommentText}
-                  onChange={(e) => {
-                    setInlineCommentText(e.target.value);
-                    mention.handleChange(e);
-                  }}
+                  onChange={(e) => setInlineCommentText(e.target.value)}
                   onKeyDown={(e) => {
-                    if (mention.handleKeyDown(e)) return;
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
                       handlePostInlineComment();
@@ -894,13 +889,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   rows={2}
                   className="w-full bg-zinc-800/60 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/40 resize-none focus:outline-none focus:border-white/25 transition-colors pr-24"
                 />
-                {mention.showDropdown && (
-                  <UserMentionDropdown
-                    query={mention.query}
-                    onSelect={mention.selectUser}
-                    visible={mention.showDropdown}
-                  />
-                )}
                 {/* Action buttons - bottom right of textarea */}
                 <div className="absolute bottom-2 right-2 flex items-center gap-1">
                   <motion.button
