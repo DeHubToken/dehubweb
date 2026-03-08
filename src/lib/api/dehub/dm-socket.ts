@@ -134,10 +134,37 @@ function getDmSocket(): Socket {
 /** In-flight createAndStart promises keyed by userId — prevents duplicate socket.once registrations. */
 const inFlightCreateAndStart = new Map<string, Promise<DmConversation>>();
 
+const CREATE_AND_START_TIMEOUT_MS = 25000;
+const SOCKET_CONNECT_WAIT_MS = 12000;
+
+/** Wait for DM socket to be connected before emitting. Rejects if not connected within timeout. */
+function waitForSocketConnection(socket: Socket): Promise<void> {
+  if (socket.connected) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      socket.off('connect', onConnect);
+      socket.off('connect_error', onError);
+      reject(new Error('DM socket connection timeout'));
+    }, SOCKET_CONNECT_WAIT_MS);
+    const onConnect = () => {
+      clearTimeout(timeoutId);
+      socket.off('connect_error', onError);
+      resolve();
+    };
+    const onError = (err: Error) => {
+      clearTimeout(timeoutId);
+      socket.off('connect', onConnect);
+      reject(err);
+    };
+    socket.once('connect', onConnect);
+    socket.once('connect_error', onError);
+  });
+}
+
 /**
  * Emit createAndStart to get/create a DM conversation with a user.
  * Concurrent calls for the same userId share a single in-flight promise.
- * Returns a Promise that resolves with the DmConversation data including dmFee.
+ * Waits for socket connection before emitting. Returns a Promise that resolves with the DmConversation data including dmFee.
  */
 export function emitCreateAndStart(userId: string): Promise<DmConversation> {
   const existing = inFlightCreateAndStart.get(userId);
@@ -146,50 +173,59 @@ export function emitCreateAndStart(userId: string): Promise<DmConversation> {
     return existing;
   }
 
-  const promise = new Promise<DmConversation>((resolve, reject) => {
+  const promise = (async () => {
     const socket = getDmSocket();
-    let settled = false;
-
-    const settle = (conversation: DmConversation | null, error?: Error) => {
-      if (settled) return;
-      settled = true;
-      clearTimeout(timeoutId);
-      socket.off('createAndStart', onEvent);
-      socket.off('error', onErrorEvent);
+    try {
+      await waitForSocketConnection(socket);
+    } catch (err) {
       inFlightCreateAndStart.delete(userId);
-      if (error) reject(error);
-      else resolve(conversation!);
-    };
+      throw err;
+    }
 
-    const timeoutId = setTimeout(() => {
-      settle(null, new Error('createAndStart timeout'));
-    }, 15000);
+    return new Promise<DmConversation>((resolve, reject) => {
+      let settled = false;
 
-    const onEvent = (response: { data?: DmConversation } | DmConversation) => {
-      // Server responds with { msg, data: { ...dm, dmFee } }
-      const conversation: DmConversation = (response as { data?: DmConversation })?.data || (response as DmConversation);
-      settle(conversation);
-    };
+      const settle = (conversation: DmConversation | null, error?: Error) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timeoutId);
+        socket.off('createAndStart', onEvent);
+        socket.off('error', onErrorEvent);
+        inFlightCreateAndStart.delete(userId);
+        if (error) reject(error);
+        else resolve(conversation!);
+      };
 
-    const onErrorEvent = (err: DmSocketError) => {
-      settle(null, new Error(err.message || 'DM socket error'));
-    };
+      const timeoutId = setTimeout(() => {
+        settle(null, new Error('createAndStart timeout'));
+      }, CREATE_AND_START_TIMEOUT_MS);
 
-    socket.once('createAndStart', onEvent);
-    socket.once('error', onErrorEvent);
-    console.log('[DM Socket] → createAndStart emit', { _id: userId });
-    // Emit with ACK callback — some NestJS gateways return via ACK instead of a separate event
-    socket.emit('createAndStart', { _id: userId }, (ackResponse: { data?: DmConversation; error?: string; message?: string; status?: string } | DmConversation | null) => {
-      if (!ackResponse) return; // server doesn't use ACK for this event
-      const ack = ackResponse as { error?: string; message?: string; status?: string; data?: DmConversation };
-      if (ack?.error || ack?.status === 'error') {
-        settle(null, new Error(ack.error || ack.message || 'ACK error'));
-      } else {
-        const conversation: DmConversation = ack?.data || (ackResponse as DmConversation);
+      const onEvent = (response: { data?: DmConversation } | DmConversation) => {
+        // Server responds with { msg, data: { ...dm, dmFee } }
+        const conversation: DmConversation = (response as { data?: DmConversation })?.data || (response as DmConversation);
         settle(conversation);
-      }
+      };
+
+      const onErrorEvent = (err: DmSocketError) => {
+        settle(null, new Error(err.message || 'DM socket error'));
+      };
+
+      socket.once('createAndStart', onEvent);
+      socket.once('error', onErrorEvent);
+      console.log('[DM Socket] → createAndStart emit', { _id: userId });
+      // Emit with ACK callback — some NestJS gateways return via ACK instead of a separate event
+      socket.emit('createAndStart', { _id: userId }, (ackResponse: { data?: DmConversation; error?: string; message?: string; status?: string } | DmConversation | null) => {
+        if (!ackResponse) return; // server doesn't use ACK for this event
+        const ack = ackResponse as { error?: string; message?: string; status?: string; data?: DmConversation };
+        if (ack?.error || ack?.status === 'error') {
+          settle(null, new Error(ack.error || ack.message || 'ACK error'));
+        } else {
+          const conversation: DmConversation = ack?.data || (ackResponse as DmConversation);
+          settle(conversation);
+        }
+      });
     });
-  });
+  })();
 
   inFlightCreateAndStart.set(userId, promise);
   return promise;
