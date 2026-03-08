@@ -225,6 +225,7 @@ export function FollowersListDrawer({
       setSearchQuery('');
       setDebouncedSearch('');
       setSortOption('newest');
+      followingSetRef.current = null;
     }
   }, [open]);
 
