@@ -361,10 +361,19 @@ function NotificationItem({
       })
     : !notification.read;
 
+  const { walletAddress } = useAuth();
+
   const handleClick = () => {
     // Mark all notifications in bundle as read
     if (hasUnread) {
       bundle.allIds.forEach(id => onMarkAsRead(id));
+    }
+    
+    // Aggregated follow notifications → open followers drawer on own profile
+    const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 1;
+    if (isAggregatedFollow && walletAddress) {
+      navigate(`/${walletAddress}?followers=1`);
+      return;
     }
     
     // Navigate to appropriate destination
