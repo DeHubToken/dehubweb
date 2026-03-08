@@ -5,8 +5,8 @@
  * Uses wallet address for identification (Web3Auth).
  */
 
-import { useState, useEffect } from 'react';
-import { History, Trash2, Loader2, MessageCircle, ChevronRight } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { History, Trash2, Loader2, MessageCircle, ChevronRight, Image as ImageIcon, Play } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
@@ -23,6 +23,14 @@ interface Conversation {
   updated_at: string;
 }
 
+interface MediaItem {
+  id: string;
+  url: string;
+  type: 'image' | 'video';
+  conversation_id: string;
+  created_at: string;
+}
+
 interface ConversationHistoryDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -37,15 +45,19 @@ export function ConversationHistoryDrawer({
   currentConversationId,
 }: ConversationHistoryDrawerProps) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isClearingAll, setIsClearingAll] = useState(false);
+  const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
   const { walletAddress, isAuthenticated } = useAuth();
+  const mediaScrollRef = useRef<HTMLDivElement>(null);
 
-  // Fetch conversations when drawer opens
+  // Fetch conversations and media when drawer opens
   useEffect(() => {
     if (open && walletAddress && isAuthenticated) {
       fetchConversations();
+      fetchMedia();
     }
   }, [open, walletAddress, isAuthenticated]);
 
@@ -71,6 +83,53 @@ export function ConversationHistoryDrawer({
       toast.error('Failed to load conversation history');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchMedia = async () => {
+    if (!walletAddress) return;
+
+    try {
+      // Get all conversation IDs for this user
+      const { data: convos, error: convError } = await withWalletHeader(
+        supabase
+          .from('ai_conversations')
+          .select('id')
+          .eq('wallet_address', walletAddress.toLowerCase()),
+        walletAddress
+      );
+
+      if (convError || !convos?.length) return;
+
+      const convoIds = convos.map((c) => c.id);
+
+      // Fetch messages with media
+      const { data: messages, error: msgError } = await withWalletHeader(
+        supabase
+          .from('ai_messages')
+          .select('id, image_url, video_url, conversation_id, created_at')
+          .in('conversation_id', convoIds)
+          .or('image_url.neq.,video_url.neq.')
+          .order('created_at', { ascending: false })
+          .limit(100),
+        walletAddress
+      );
+
+      if (msgError) throw msgError;
+
+      const items: MediaItem[] = [];
+      (messages || []).forEach((msg) => {
+        if (msg.image_url) {
+          items.push({ id: msg.id + '-img', url: msg.image_url, type: 'image', conversation_id: msg.conversation_id, created_at: msg.created_at });
+        }
+        if (msg.video_url) {
+          items.push({ id: msg.id + '-vid', url: msg.video_url, type: 'video', conversation_id: msg.conversation_id, created_at: msg.created_at });
+        }
+      });
+
+      setMediaItems(items);
+    } catch (error) {
+      console.error('Error fetching media:', error);
     }
   };
 
@@ -120,6 +179,7 @@ export function ConversationHistoryDrawer({
       if (error) throw error;
 
       setConversations((prev) => prev.filter((c) => c.id !== conversationId));
+      setMediaItems((prev) => prev.filter((m) => m.conversation_id !== conversationId));
       toast.success('Conversation deleted');
     } catch (error) {
       console.error('Error deleting conversation:', error);
@@ -142,6 +202,7 @@ export function ConversationHistoryDrawer({
       );
       if (error) throw error;
       setConversations([]);
+      setMediaItems([]);
       toast.success('All conversations cleared');
     } catch (error) {
       console.error('Error clearing conversations:', error);
@@ -152,97 +213,184 @@ export function ConversationHistoryDrawer({
   };
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent glass className="border-t border-white/10">
-        <DrawerHeader className="border-b border-white/10">
-          <div className="flex items-center justify-between">
-            <DrawerTitle className="text-white flex items-center gap-2">
-              <History className="w-5 h-5 text-white" />
-              Conversation History
-            </DrawerTitle>
-            {conversations.length > 0 && (
-              <button
-                onClick={handleClearAll}
-                disabled={isClearingAll}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-400 hover:bg-red-400/10 transition-colors disabled:opacity-50"
-              >
-                {isClearingAll ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <Trash2 className="w-3.5 h-3.5" />
-                )}
-                Clear All
-              </button>
-            )}
-          </div>
-        </DrawerHeader>
-        
-        <ScrollArea className="h-[70vh]">
-          {!isAuthenticated ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center px-4">
-              <MessageCircle className="w-12 h-12 text-white/20 mb-3" />
-              <p className="text-white/60">Log in to see your conversation history</p>
+    <>
+      <Drawer open={open} onOpenChange={onOpenChange}>
+        <DrawerContent glass className="border-t border-white/10">
+          <DrawerHeader className="border-b border-white/10">
+            <div className="flex items-center justify-between">
+              <DrawerTitle className="text-white flex items-center gap-2">
+                <History className="w-5 h-5 text-white" />
+                Conversation History
+              </DrawerTitle>
+              {conversations.length > 0 && (
+                <button
+                  onClick={handleClearAll}
+                  disabled={isClearingAll}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-400 hover:bg-red-400/10 transition-colors disabled:opacity-50"
+                >
+                  {isClearingAll ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Trash2 className="w-3.5 h-3.5" />
+                  )}
+                  Clear All
+                </button>
+              )}
             </div>
-          ) : isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-6 h-6 animate-spin text-white/60" />
-            </div>
-          ) : conversations.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center px-4">
-              <MessageCircle className="w-12 h-12 text-white/20 mb-3" />
-              <p className="text-white/60">No conversations yet</p>
-              <p className="text-white/40 text-sm mt-1">Start chatting to save your conversations</p>
-            </div>
-          ) : (
-            <div className="p-2">
-              <AnimatePresence mode="popLayout">
-                {conversations.map((conversation) => (
-                  <motion.button
-                    key={conversation.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    onClick={() => handleLoadConversation(conversation.id)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-colors mb-1 group ${
-                      currentConversationId === conversation.id
-                        ? 'bg-white/15'
-                        : 'hover:bg-white/10'
-                    }`}
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-                      <MessageCircle className="w-5 h-5 text-white/60" />
-                    </div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <p className="text-white font-medium truncate">
-                        {conversation.title || 'Untitled conversation'}
-                      </p>
-                      <p className="text-white/50 text-xs">
-                        {formatDistanceToNow(new Date(conversation.updated_at), { addSuffix: true })}
-                      </p>
-                    </div>
+          </DrawerHeader>
 
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={(e) => handleDeleteConversation(e, conversation.id)}
-                        disabled={deletingId === conversation.id}
-                        className="p-2 rounded-lg text-white/40 hover:text-red-400 hover:bg-white/10 transition-colors sm:opacity-0 sm:group-hover:opacity-100"
-                      >
-                        {deletingId === conversation.id ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <Trash2 className="w-4 h-4" />
-                        )}
-                      </button>
-                      <ChevronRight className="w-4 h-4 text-white/30" />
+          <ScrollArea className="h-[70vh]">
+            {!isAuthenticated ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center px-4">
+                <MessageCircle className="w-12 h-12 text-white/20 mb-3" />
+                <p className="text-white/60">Log in to see your conversation history</p>
+              </div>
+            ) : isLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="w-6 h-6 animate-spin text-white/60" />
+              </div>
+            ) : conversations.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center px-4">
+                <MessageCircle className="w-12 h-12 text-white/20 mb-3" />
+                <p className="text-white/60">No conversations yet</p>
+                <p className="text-white/40 text-sm mt-1">Start chatting to save your conversations</p>
+              </div>
+            ) : (
+              <div>
+                {/* Media Carousel */}
+                {mediaItems.length > 0 && (
+                  <div className="px-3 pt-3 pb-1">
+                    <div className="flex items-center gap-1.5 mb-2 px-1">
+                      <ImageIcon className="w-3.5 h-3.5 text-white/50" />
+                      <span className="text-white/50 text-[10px] uppercase tracking-wider font-medium">Your Media</span>
+                      <span className="text-white/30 text-[10px]">({mediaItems.length})</span>
                     </div>
-                  </motion.button>
-                ))}
-              </AnimatePresence>
-            </div>
-          )}
-        </ScrollArea>
-      </DrawerContent>
-    </Drawer>
+                    <div
+                      ref={mediaScrollRef}
+                      data-vaul-no-drag
+                      className="flex gap-2 overflow-x-auto pb-2 scrollbar-none"
+                    >
+                      {mediaItems.map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => setSelectedMedia(item)}
+                          className="relative shrink-0 w-20 h-20 rounded-xl overflow-hidden border border-white/10 hover:border-white/30 transition-all group"
+                        >
+                          {item.type === 'image' ? (
+                            <img
+                              src={item.url}
+                              alt=""
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-white/5 flex items-center justify-center">
+                              <video
+                                src={item.url}
+                                className="w-full h-full object-cover"
+                                muted
+                                preload="metadata"
+                              />
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                                <Play className="w-5 h-5 text-white fill-white" />
+                              </div>
+                            </div>
+                          )}
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Conversation List */}
+                <div className="p-2">
+                  <AnimatePresence mode="popLayout">
+                    {conversations.map((conversation) => (
+                      <motion.button
+                        key={conversation.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        onClick={() => handleLoadConversation(conversation.id)}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-colors mb-1 group ${
+                          currentConversationId === conversation.id
+                            ? 'bg-white/15'
+                            : 'hover:bg-white/10'
+                        }`}
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                          <MessageCircle className="w-5 h-5 text-white/60" />
+                        </div>
+                        
+                        <div className="flex-1 min-w-0">
+                          <p className="text-white font-medium truncate">
+                            {conversation.title || 'Untitled conversation'}
+                          </p>
+                          <p className="text-white/50 text-xs">
+                            {formatDistanceToNow(new Date(conversation.updated_at), { addSuffix: true })}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={(e) => handleDeleteConversation(e, conversation.id)}
+                            disabled={deletingId === conversation.id}
+                            className="p-2 rounded-lg text-white/40 hover:text-red-400 hover:bg-white/10 transition-colors sm:opacity-0 sm:group-hover:opacity-100"
+                          >
+                            {deletingId === conversation.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Trash2 className="w-4 h-4" />
+                            )}
+                          </button>
+                          <ChevronRight className="w-4 h-4 text-white/30" />
+                        </div>
+                      </motion.button>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              </div>
+            )}
+          </ScrollArea>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Media Preview Modal */}
+      <AnimatePresence>
+        {selectedMedia && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] bg-black/90 backdrop-blur-md flex items-center justify-center p-4"
+            onClick={() => setSelectedMedia(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="max-w-lg w-full max-h-[80vh] rounded-2xl overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {selectedMedia.type === 'image' ? (
+                <img
+                  src={selectedMedia.url}
+                  alt=""
+                  className="w-full h-auto max-h-[80vh] object-contain rounded-2xl"
+                />
+              ) : (
+                <video
+                  src={selectedMedia.url}
+                  controls
+                  autoPlay
+                  className="w-full h-auto max-h-[80vh] rounded-2xl"
+                />
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
