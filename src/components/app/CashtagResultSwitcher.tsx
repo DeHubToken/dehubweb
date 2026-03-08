@@ -24,22 +24,48 @@ type ResultOption = {
 
 export function CashtagResultSwitcher({ stockData, dexPair, cmcData, symbol }: CashtagResultSwitcherProps) {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [userPicked, setUserPicked] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Score how much data each result has — prefer the richer one
+  // Score how much useful data each result has — weighted by quality signals
   const stockScore = stockData?.found
-    ? [stockData.price, stockData.marketCap, stockData.volume24h, stockData.dayHigh, stockData.percentChange24h, stockData.name]
-        .filter(Boolean).length
+    ? [
+        stockData.price,
+        stockData.marketCap && stockData.marketCap > 0 ? stockData.marketCap : null, // real market cap = strong signal
+        stockData.volume24h && stockData.volume24h > 0 ? stockData.volume24h : null,
+        stockData.dayHigh,
+        stockData.percentChange24h,
+        stockData.name,
+        stockData.trailingPE,
+        stockData.epsTrailingTwelveMonths,
+        stockData.fiftyTwoWeekHigh,
+        stockData.sharesOutstanding,
+        stockData.sector,
+        stockData.industry,
+        stockData.targetMeanPrice,
+        stockData.dividendRate,
+      ].filter(Boolean).length
     : 0;
 
   const cryptoScore = dexPair
     ? [
-        dexPair.priceUsd, dexPair.marketCap || dexPair.fdv, dexPair.volume?.h24,
-        dexPair.liquidity?.usd, dexPair.priceChange?.h24, dexPair.baseToken?.name,
-        dexPair.txns?.h24, dexPair.info?.imageUrl,
-        cmcData?.marketCap, cmcData?.circulatingSupply, cmcData?.description, cmcData?.logo,
+        dexPair.priceUsd,
+        dexPair.marketCap && dexPair.marketCap > 1000 ? dexPair.marketCap : null, // ignore dust market caps
+        dexPair.volume?.h24 && dexPair.volume.h24 > 100 ? dexPair.volume.h24 : null, // ignore near-zero volume
+        dexPair.liquidity?.usd && dexPair.liquidity.usd > 100 ? dexPair.liquidity.usd : null,
+        dexPair.priceChange?.h24,
+        dexPair.baseToken?.name,
+        dexPair.txns?.h24 && (dexPair.txns.h24.buys + dexPair.txns.h24.sells) > 10 ? true : null,
+        dexPair.info?.imageUrl,
+        cmcData?.marketCap && cmcData.marketCap > 1000 ? cmcData.marketCap : null,
+        cmcData?.circulatingSupply,
+        cmcData?.description,
+        cmcData?.logo,
       ].filter(Boolean).length
     : 0;
+
+  // Determine best default
+  const bestId = stockScore >= cryptoScore ? 'stock' : 'crypto';
 
   // Build list of available results — order by richest data first
   const options: ResultOption[] = [];
@@ -51,7 +77,7 @@ export function CashtagResultSwitcher({ stockData, dexPair, cmcData, symbol }: C
     : null;
 
   // Put the richer result first
-  if (cryptoScore >= stockScore) {
+  if (bestId === 'crypto') {
     if (cryptoOption) options.push(cryptoOption);
     if (stockOption) options.push(stockOption);
   } else {
@@ -59,15 +85,20 @@ export function CashtagResultSwitcher({ stockData, dexPair, cmcData, symbol }: C
     if (cryptoOption) options.push(cryptoOption);
   }
 
-  // Default to whichever has more info
-  const [selectedId, setSelectedId] = useState<string>(options[0]?.id || 'crypto');
+  const [selectedId, setSelectedId] = useState<string>(options[0]?.id || 'stock');
 
-  // Reset selection when options change
+  // Auto-select best option as data loads (unless user manually picked)
   useEffect(() => {
-    if (options.length > 0 && !options.find(o => o.id === selectedId)) {
+    if (userPicked) return;
+    if (options.length > 0) {
       setSelectedId(options[0].id);
     }
-  }, [stockData?.found, dexPair?.pairAddress, stockScore, cryptoScore]);
+  }, [stockScore, cryptoScore, stockData?.found, dexPair?.pairAddress, userPicked]);
+
+  // Reset userPicked when symbol changes
+  useEffect(() => {
+    setUserPicked(false);
+  }, [symbol]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -116,6 +147,7 @@ export function CashtagResultSwitcher({ stockData, dexPair, cmcData, symbol }: C
                     key={opt.id}
                     onClick={() => {
                       setSelectedId(opt.id);
+                      setUserPicked(true);
                       setShowDropdown(false);
                     }}
                     className={cn(
