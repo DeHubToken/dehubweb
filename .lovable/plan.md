@@ -1,24 +1,35 @@
 
 
-## Problem
+## Fix: Auto-reload on chunk load failures
 
-The `follow_list` API does **not** return an `isFollowing` field per user. The network response shows each item has only `followedAt` and a `user` object with profile data — no `isFollowing`. So after our optimization, `u.isFollowing ?? false` always resolves to `false`, making every button show "Follow".
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-The old code made N parallel `checkIsFollowing` calls to resolve this, which was slow but correct.
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-## Fix: Fetch current user's following list once, cross-reference locally
+### Changes
 
-Instead of N individual API calls, fetch the current user's following list **once** (a single API call) and build a `Set` of addresses. Then cross-reference each user in the drawer against that set.
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-**Changes in `FollowersListDrawer.tsx`:**
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
 
-1. **Initial load** (~line 123-133): After fetching the follow list, also fetch the current user's following list via `getFollowList(currentUserAddress, 'following', { limit: 300 })`. Build a `Set<string>` of lowercase addresses. Map `isFollowing` by checking set membership.
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
 
-2. **Cache the set** in a `useRef` so `loadMore` can reuse it without re-fetching.
-
-3. **loadMore** (~line 175-184): Use the cached following set to resolve `isFollowing` for new pages.
-
-4. Skip the extra fetch if not authenticated or if it's the user's own "Following" list (already handled with `isFollowing: true`).
-
-**Result**: 2 API calls on open (follow list + current user's following list) instead of 1 + N. The current user's following list is fetched once and reused for all pages.
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 

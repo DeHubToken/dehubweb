@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 
 const MAX_PAGES = 3;
 const PAGE_SIZE = 30;
+const FOLLOWING_CACHE_LIMIT = 300;
 
 type SortOption = 'newest' | 'earliest';
 const SORT_LABELS: Record<SortOption, string> = {
@@ -93,6 +94,7 @@ export function FollowersListDrawer({
 
   const sentinelRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const followingSetRef = useRef<Set<string> | null>(null);
 
   // Debounce search input
   useEffect(() => {
@@ -122,15 +124,25 @@ export function FollowersListDrawer({
 
         const processed = items.map(mapFollowListItem);
 
-        // Check isFollowing status for each user in parallel
         const isOwnFollowingList =
           title === 'Following' &&
           currentUserAddress &&
           profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
 
+        // Fetch current user's following list once to resolve isFollowing locally
+        if (!isOwnFollowingList && isAuthenticated && currentUserAddress && !followingSetRef.current) {
+          try {
+            const { items: myFollowing } = await getFollowList(currentUserAddress, 'following', { limit: FOLLOWING_CACHE_LIMIT });
+            followingSetRef.current = new Set(myFollowing.map(f => (f.address || '').toLowerCase()));
+          } catch {
+            followingSetRef.current = new Set();
+          }
+        }
+
+        const followingSet = followingSetRef.current;
         const finalUsers: UserListItem[] = isOwnFollowingList
           ? processed.map(u => ({ ...u, isFollowing: true }))
-          : processed.map(u => ({ ...u, isFollowing: u.isFollowing ?? false }));
+          : processed.map(u => ({ ...u, isFollowing: followingSet ? followingSet.has(u.address.toLowerCase()) : false }));
 
         setUsers(finalUsers);
         setCurrentPage(1);
@@ -179,9 +191,10 @@ export function FollowersListDrawer({
         currentUserAddress &&
         profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
 
+      const followingSet = followingSetRef.current;
       const finalItems: UserListItem[] = isOwnFollowingList
         ? processed.map(u => ({ ...u, isFollowing: true }))
-        : processed.map(u => ({ ...u, isFollowing: u.isFollowing ?? false }));
+        : processed.map(u => ({ ...u, isFollowing: followingSet ? followingSet.has(u.address.toLowerCase()) : false }));
 
       setUsers(prev => [...prev, ...finalItems]);
       setCurrentPage(nextPage);
@@ -223,6 +236,7 @@ export function FollowersListDrawer({
       setSearchQuery('');
       setDebouncedSearch('');
       setSortOption('newest');
+      followingSetRef.current = null;
     }
   }, [open]);
 
@@ -252,12 +266,14 @@ export function FollowersListDrawer({
     try {
       if (user.isFollowing) {
         await unfollowUser(user.address);
+        followingSetRef.current?.delete(user.address.toLowerCase());
         setUsers(prev => prev.map(u => 
           u.address === user.address ? { ...u, isFollowing: false } : u
         ));
         toast.success(`Unfollowed ${user.displayName || user.username || 'user'}`);
       } else {
         await followUser(user.address);
+        followingSetRef.current?.add(user.address.toLowerCase());
         setUsers(prev => prev.map(u => 
           u.address === user.address ? { ...u, isFollowing: true } : u
         ));
