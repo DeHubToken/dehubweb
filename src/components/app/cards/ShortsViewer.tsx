@@ -581,10 +581,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       {/* Desktop Layout with Side Panels */}
       <div className={`relative flex items-center justify-center h-full ${isMobile ? 'w-full' : 'gap-4 px-4'}`}>
         
-        {/* Left Side Panel - Desktop Only: Action buttons */}
+        {/* Left Side Panel - Desktop Only: Navigation + Mute */}
         {!isMobile && (
-          <div className="w-[80px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col items-center justify-center gap-6">
-            {/* Navigation */}
+          <div className="w-[56px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col items-center justify-center gap-4">
             <button
               onClick={goToPrev}
               disabled={currentIndex === 0}
@@ -593,61 +592,16 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               <ChevronUp className="w-5 h-5 text-white" />
             </button>
 
-            {/* Action buttons */}
-            <div className="flex flex-col items-center gap-4">
-              <ActionButton
-                icon={ThumbsUp}
-                count={localLikeCount}
-                onClick={() => handleVote(true)}
-                active={isLiked}
-                activeColor="text-white"
-                disabled={isVoting}
-                animate={justVoted === 'like'}
-              />
-              
-              <ActionButton
-                icon={ThumbsDown}
-                count={localDislikeCount}
-                onClick={() => handleVote(false)}
-                active={isDisliked}
-                activeColor="text-white"
-                disabled={isVoting}
-                animate={justVoted === 'dislike'}
-              />
-
-              {/* View count */}
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-12 h-12 bg-zinc-800/80 rounded-xl flex items-center justify-center">
-                  <Eye className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-white text-xs">{currentShort.views || '0'}</span>
-              </div>
-
-              <ActionButton
-                icon={Share2}
-                onClick={() => setShareSheetOpen(true)}
-              />
-              
-              <ActionButton
-                icon={Bookmark}
-                onClick={toggleBookmark}
-                active={isBookmarked}
-                activeColor="text-yellow-500"
-                disabled={isBookmarkLoading}
-                animate={isBookmarked}
-              />
-
-              <button
-                onClick={() => setIsMuted(prev => !prev)}
-                className="w-12 h-12 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center transition-colors"
-              >
-                {isMuted ? (
-                  <VolumeX className="w-6 h-6 text-white" />
-                ) : (
-                  <Volume2 className="w-6 h-6 text-white" />
-                )}
-              </button>
-            </div>
+            <button
+              onClick={() => setIsMuted(prev => !prev)}
+              className="w-10 h-10 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center transition-colors"
+            >
+              {isMuted ? (
+                <VolumeX className="w-5 h-5 text-white" />
+              ) : (
+                <Volume2 className="w-5 h-5 text-white" />
+              )}
+            </button>
 
             <button
               onClick={goToNext}
