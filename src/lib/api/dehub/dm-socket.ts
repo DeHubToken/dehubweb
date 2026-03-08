@@ -131,12 +131,22 @@ function getDmSocket(): Socket {
 
 // ─── Emitters ─────────────────────────────────────────────────────────────────
 
+/** In-flight createAndStart promises keyed by userId — prevents duplicate socket.once registrations. */
+const inFlightCreateAndStart = new Map<string, Promise<DmConversation>>();
+
 /**
  * Emit createAndStart to get/create a DM conversation with a user.
+ * Concurrent calls for the same userId share a single in-flight promise.
  * Returns a Promise that resolves with the DmConversation data including dmFee.
  */
 export function emitCreateAndStart(userId: string): Promise<DmConversation> {
-  return new Promise((resolve, reject) => {
+  const existing = inFlightCreateAndStart.get(userId);
+  if (existing) {
+    console.log('[DM Socket] createAndStart deduped for', userId);
+    return existing;
+  }
+
+  const promise = new Promise<DmConversation>((resolve, reject) => {
     const socket = getDmSocket();
     let settled = false;
 
@@ -146,6 +156,7 @@ export function emitCreateAndStart(userId: string): Promise<DmConversation> {
       clearTimeout(timeoutId);
       socket.off('createAndStart', onEvent);
       socket.off('error', onErrorEvent);
+      inFlightCreateAndStart.delete(userId);
       if (error) reject(error);
       else resolve(conversation!);
     };
@@ -179,6 +190,9 @@ export function emitCreateAndStart(userId: string): Promise<DmConversation> {
       }
     });
   });
+
+  inFlightCreateAndStart.set(userId, promise);
+  return promise;
 }
 
 export function emitSendMessage(payload: SendMessagePayload): void {
