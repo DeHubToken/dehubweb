@@ -764,6 +764,11 @@ export default function ExplorePage() {
                   </button>
                 </div>
 
+                {/* DexScreener Cashtag Price Card */}
+                {dexPair && (
+                  <CashtagPriceCard pair={dexPair} symbol={effectiveQuery.trim()} />
+                )}
+
                 {/* Loading State */}
                 {showLoading && (
                   <div className="flex items-center justify-center py-12">
