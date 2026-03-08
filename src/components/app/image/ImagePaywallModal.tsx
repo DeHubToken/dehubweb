@@ -100,7 +100,7 @@ export function ImagePaywallModal({
       ]);
 
       // Prefer Base, fallback to BNB
-      let payChainId: number;
+      let payChainId: ChainId;
       if (baseBalance >= amountWei) {
         payChainId = BASE_CHAIN_ID;
       } else if (bnbBalance >= amountWei) {
