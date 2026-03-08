@@ -282,16 +282,6 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
               <ThumbsUp className={cn("w-4 h-4", comment.isLiked && "fill-current")} />
               {comment.likes > 0 && <span className="text-xs">{comment.likes}</span>}
             </button>
-            <button
-              onClick={() => onDislike(comment.id)}
-              className={cn(
-                "transition-colors",
-                comment.isDisliked ? "text-zinc-400" : "text-white/70 hover:text-zinc-400"
-              )}
-              aria-label="Dislike"
-            >
-              <ThumbsDown className="w-4 h-4" />
-            </button>
             {!isReply && (
               <button
                 onClick={() => onReply(comment.id)}
