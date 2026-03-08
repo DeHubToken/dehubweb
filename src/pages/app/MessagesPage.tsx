@@ -186,13 +186,16 @@ export default function MessagesPage() {
 
   // Capture navigation state into a ref immediately (before it can be cleared)
   const pendingDmRef = useRef<{ address: string; username?: string } | null>(null);
+  const [pendingDmTrigger, setPendingDmTrigger] = useState(0);
+  
   useEffect(() => {
     const state = location.state as { openDmWith?: string; username?: string } | null;
     if (state?.openDmWith) {
       pendingDmRef.current = { address: state.openDmWith, username: state.username };
       window.history.replaceState({}, document.title);
+      setPendingDmTrigger(prev => prev + 1);
     }
-  }, []); // run once on mount to capture state before it disappears
+  }, [location.state]); // re-run when navigation state changes
 
   // Process the pending DM once conversations have finished loading
   useEffect(() => {
@@ -213,7 +216,7 @@ export default function MessagesPage() {
         recipientUser: { address, username } as any,
       }).then(conv => setSelectedConversation(conv)).catch(() => {});
     }
-  }, [isAuthenticated, conversations, isLoading]);
+  }, [isAuthenticated, conversations, isLoading, pendingDmTrigger]);
 
   // When conversations list gets a real dmId for the same peer (e.g. after getContacts returns DeHub data),
   // upgrade selectedConversation so we use socket/DeHub instead of Supabase
