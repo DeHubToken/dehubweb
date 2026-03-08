@@ -1171,7 +1171,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
             onChange={handleImageSelect}
           />
 
-          <div className={cn("pb-1 mt-2.5", isMobile ? "flex flex-col gap-2" : "flex items-center gap-2")}>
+          <div className="pb-1 mt-2.5 flex flex-col gap-2">
             {isRecording ? (
               /* Recording indicator */
               <div className="flex-1 flex items-center gap-2 bg-red-500/10 rounded-xl px-4 h-10">
@@ -1186,125 +1186,85 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                 </button>
               </div>
             ) : (
-              <>
-                <div 
-                  data-vaul-no-drag
-                  className={cn(
-                  "flex-1 flex items-start bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl px-3",
-                  isMobile ? "min-h-[80px] relative" : "min-h-[40px]"
-                )}>
-                  <textarea
-                    ref={inputRef}
-                    data-vaul-no-drag
-                    placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Add a reply...'}
-                    value={newComment}
-                    onChange={(e) => {
-                      setNewComment(e.target.value);
-                      mention.handleInput(e.target.value, e.target.selectionStart ?? undefined);
-                    }}
-                    className={cn(
-                      "flex-1 bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500",
-                      isMobile ? "py-2.5 min-h-[80px] max-h-[120px]" : "py-2.5 min-h-[40px] max-h-[120px]"
-                    )}
-                    rows={isMobile ? 3 : 1}
-                    onKeyDown={(e) => {
-                      if (mention.isOpen) {
-                        const handled = mention.handleKeyDown(e);
-                        if (handled) {
-                          if (e.key === 'Enter' || e.key === 'Tab') {
-                            e.preventDefault();
-                            const liveResults = (window as any).__mentionResults || [];
-                            if (liveResults[mention.selectedIndex]) {
-                              mention.handleSelect(liveResults[mention.selectedIndex]);
-                            }
-                          }
-                          return;
-                        }
-                      }
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        if (canPost) handlePostComment();
-                      } else if (e.key === 'Escape') {
-                        handleClearReply();
-                        (e.target as HTMLTextAreaElement).blur();
-                      }
-                    }}
-                    onInput={(e) => {
-                      const target = e.target as HTMLTextAreaElement;
-                      target.style.height = 'auto';
-                      target.style.height = Math.min(target.scrollHeight, 120) + 'px';
-                    }}
-                  />
-                  <UserMentionDropdown
-                    query={mention.query}
-                    isOpen={mention.isOpen}
-                    position={mention.position}
-                    selectedIndex={mention.selectedIndex}
-                    onSelectedIndexChange={mention.setSelectedIndex}
-                    onSelect={mention.handleSelect}
-                    onClose={mention.handleClose}
-                  />
-                  {/* Mobile: buttons inside the bento, bottom-right */}
-                  {isMobile && (
-                    <div className="absolute bottom-2 right-2 flex items-center gap-1.5">
-                      <button
-                        onClick={() => imageInputRef.current?.click()}
-                        className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors"
-                        aria-label="Attach image"
-                      >
-                        <ImagePlus className="w-4 h-4" />
-                      </button>
-                      {!voiceNote && (
-                        <button
-                          onClick={startRecording}
-                          className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-red-400 transition-colors"
-                          aria-label="Record voice note"
-                        >
-                          <Mic className="w-4 h-4" />
-                        </button>
-                      )}
-                      <button
-                        onClick={handlePostComment}
-                        disabled={!canPost}
-                        className="h-8 px-3 rounded-lg text-xs font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
-                      >
-                        {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Post'}
-                      </button>
-                    </div>
-                  )}
-                </div>
-                {/* Desktop: buttons outside the bento */}
-                {!isMobile && (
-                  <>
-                    <button
-                      onClick={() => imageInputRef.current?.click()}
-                      className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl text-zinc-400 hover:text-white transition-colors"
-                      aria-label="Attach image"
-                    >
-                      <ImagePlus className="w-5 h-5" />
-                    </button>
-                    {!voiceNote && (
-                      <button
-                        onClick={startRecording}
-                        className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl text-zinc-400 hover:text-red-400 transition-colors"
-                        aria-label="Record voice note"
-                      >
-                        <Mic className="w-5 h-5" />
-                      </button>
-                    )}
-                  </>
-                )}
-              </>
-            )}
-            {/* Desktop: Post button outside */}
-            {!isMobile && (
-              <button
-                onClick={handlePostComment}
-                disabled={!canPost}
-                className="h-10 px-4 rounded-xl text-sm font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
+              <div 
+                data-vaul-no-drag
+                className="flex-1 flex items-start bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl px-3 min-h-[80px] relative"
               >
-                {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Post'}
-              </button>
+                <textarea
+                  ref={inputRef}
+                  data-vaul-no-drag
+                  placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Add a reply...'}
+                  value={newComment}
+                  onChange={(e) => {
+                    setNewComment(e.target.value);
+                    mention.handleInput(e.target.value, e.target.selectionStart ?? undefined);
+                  }}
+                  className="flex-1 bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 py-2.5 min-h-[80px] max-h-[120px]"
+                  rows={3}
+                  onKeyDown={(e) => {
+                    if (mention.isOpen) {
+                      const handled = mention.handleKeyDown(e);
+                      if (handled) {
+                        if (e.key === 'Enter' || e.key === 'Tab') {
+                          e.preventDefault();
+                          const liveResults = (window as any).__mentionResults || [];
+                          if (liveResults[mention.selectedIndex]) {
+                            mention.handleSelect(liveResults[mention.selectedIndex]);
+                          }
+                        }
+                        return;
+                      }
+                    }
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      if (canPost) handlePostComment();
+                    } else if (e.key === 'Escape') {
+                      handleClearReply();
+                      (e.target as HTMLTextAreaElement).blur();
+                    }
+                  }}
+                  onInput={(e) => {
+                    const target = e.target as HTMLTextAreaElement;
+                    target.style.height = 'auto';
+                    target.style.height = Math.min(target.scrollHeight, 120) + 'px';
+                  }}
+                />
+                <UserMentionDropdown
+                  query={mention.query}
+                  isOpen={mention.isOpen}
+                  position={mention.position}
+                  selectedIndex={mention.selectedIndex}
+                  onSelectedIndexChange={mention.setSelectedIndex}
+                  onSelect={mention.handleSelect}
+                  onClose={mention.handleClose}
+                />
+                {/* Buttons inside textarea, bottom-right */}
+                <div className="absolute bottom-2 right-2 flex items-center gap-1.5">
+                  <button
+                    onClick={() => imageInputRef.current?.click()}
+                    className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors"
+                    aria-label="Attach image"
+                  >
+                    <ImagePlus className="w-4 h-4" />
+                  </button>
+                  {!voiceNote && (
+                    <button
+                      onClick={startRecording}
+                      className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-red-400 transition-colors"
+                      aria-label="Record voice note"
+                    >
+                      <Mic className="w-4 h-4" />
+                    </button>
+                  )}
+                  <button
+                    onClick={handlePostComment}
+                    disabled={!canPost}
+                    className="h-8 px-3 rounded-lg text-xs font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
+                  >
+                    {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Post'}
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>
