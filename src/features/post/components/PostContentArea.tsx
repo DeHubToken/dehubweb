@@ -335,6 +335,12 @@ export function PostContentArea({
           return;
         }
         
+        // Handle cashtag chips - extract the cashtag text
+        if (el.hasAttribute('data-cashtag-chip')) {
+          plainText += el.getAttribute('data-cashtag') || el.textContent || '';
+          return;
+        }
+        
         // BR elements become newlines
         if (tagName === 'BR') {
           plainText += '\n';
