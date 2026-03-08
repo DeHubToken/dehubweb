@@ -51,6 +51,7 @@ export interface VoiceNote {
 export interface Comment {
   id: string;
   username: string;
+  displayName?: string;
   avatar?: string;
   text: string;
   likes: number;
@@ -62,6 +63,7 @@ export interface Comment {
   voiceNote?: VoiceNote;
   replyToId?: string;
   address?: string;
+  badgeBalance?: number;
 }
 
 interface CommentsSectionProps {

@@ -16,7 +16,9 @@ export interface ApiCommentResponse {
   isLiked?: boolean;
   writor: {
     username: string;
+    displayName?: string;
     avatarUrl?: string;
+    badgeBalance?: number;
   };
 }
 
