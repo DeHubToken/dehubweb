@@ -405,6 +405,14 @@ function ProfileSettings() {
       if (coverInputRef.current) coverInputRef.current.value = '';
 
       await refreshUser();
+      // Re-apply optimistic avatar/cover to AuthContext user (sidebar, navbar, etc.)
+      // since refreshUser fetches stale CDN URL before propagation
+      if (savedAvatarPreview || savedCoverPreview) {
+        patchUser({
+          ...(savedAvatarPreview ? { avatarImageUrl: savedAvatarPreview } : {}),
+          ...(savedCoverPreview ? { coverImageUrl: savedCoverPreview } : {}),
+        });
+      }
       if (authUser?.address) {
         const userData = await getAccountInfo(authUser.address);
         const refreshedCustoms = userData.customs as Record<string, string> | undefined;
