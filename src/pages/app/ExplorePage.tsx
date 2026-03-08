@@ -35,6 +35,8 @@ import { getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { VideoCard, ImageCard, PostCard } from '@/components/app/cards';
 import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
+import { useDexScreenerSearch } from '@/hooks/use-dexscreener';
+import { CashtagPriceCard } from '@/components/app/CashtagPriceCard';
 import type { VideoItem, ImagePost } from '@/types/feed.types';
 
 const DATE_OPTION_KEYS = ['anyTime', 'today', 'thisWeek', 'thisMonth', 'thisYear'] as const;
