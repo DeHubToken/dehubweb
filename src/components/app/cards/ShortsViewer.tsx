@@ -125,6 +125,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [isFollowing, setIsFollowing] = useState(false);
   const [isFollowLoading, setIsFollowLoading] = useState(false);
   const [followedCreators, setFollowedCreators] = useState<Set<string>>(new Set());
+  const [followCheckingCreators, setFollowCheckingCreators] = useState<Set<string>>(new Set());
   
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
@@ -260,12 +261,28 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const creatorAddress = currentShort?.creatorId;
     if (!creatorAddress || !isAuthenticated || followedCreators.has(creatorAddress)) return;
     
+    setFollowCheckingCreators(prev => new Set(prev).add(creatorAddress));
     let cancelled = false;
     checkIsFollowing(creatorAddress).then(result => {
-      if (!cancelled && result) {
-        setFollowedCreators(prev => new Set(prev).add(creatorAddress));
+      if (!cancelled) {
+        if (result) {
+          setFollowedCreators(prev => new Set(prev).add(creatorAddress));
+        }
+        setFollowCheckingCreators(prev => {
+          const next = new Set(prev);
+          next.delete(creatorAddress);
+          return next;
+        });
       }
-    }).catch(() => {});
+    }).catch(() => {
+      if (!cancelled) {
+        setFollowCheckingCreators(prev => {
+          const next = new Set(prev);
+          next.delete(creatorAddress);
+          return next;
+        });
+      }
+    });
     
     return () => { cancelled = true; };
   }, [currentShort?.creatorId, isAuthenticated]);
@@ -916,13 +933,19 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               {currentShort.description && (
                 <p className="text-white/80 text-xs lg:text-sm mt-2 lg:mt-3 line-clamp-2">{currentShort.description}</p>
               )}
-              <button 
-                onClick={handleFollow}
-                disabled={isFollowLoading || (currentShort.creatorId ? followedCreators.has(currentShort.creatorId) : false)}
-                className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/20 hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isFollowLoading ? 'Following...' : (currentShort.creatorId && followedCreators.has(currentShort.creatorId)) ? 'Following' : 'Follow'}
-              </button>
+              {currentShort.creatorId && followCheckingCreators.has(currentShort.creatorId) ? (
+                <div className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white/40 text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/10 text-center animate-pulse">
+                  Loading…
+                </div>
+              ) : (
+                <button 
+                  onClick={handleFollow}
+                  disabled={isFollowLoading || (currentShort.creatorId ? followedCreators.has(currentShort.creatorId) : false)}
+                  className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/20 hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isFollowLoading ? 'Following...' : (currentShort.creatorId && followedCreators.has(currentShort.creatorId)) ? 'Following ✓' : 'Follow'}
+                </button>
+              )}
             </div>
 
             {/* Desktop: Inline comments */}
