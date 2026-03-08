@@ -5,6 +5,7 @@ export interface DexPair {
   dexId: string;
   url: string;
   pairAddress: string;
+  labels?: string[];
   baseToken: {
     address: string;
     name: string;
@@ -18,11 +19,17 @@ export interface DexPair {
   priceNative: string;
   priceUsd: string | null;
   priceChange?: {
+    m5?: number;
     h1?: number;
     h6?: number;
     h24?: number;
-    m5?: number;
   } | null;
+  txns?: {
+    m5?: { buys: number; sells: number };
+    h1?: { buys: number; sells: number };
+    h6?: { buys: number; sells: number };
+    h24?: { buys: number; sells: number };
+  };
   volume?: {
     h24?: number;
     h6?: number;
@@ -36,8 +43,13 @@ export interface DexPair {
   } | null;
   fdv?: number | null;
   marketCap?: number | null;
+  pairCreatedAt?: number | null;
   info?: {
     imageUrl?: string;
+    header?: string;
+    openGraph?: string;
+    websites?: { url: string; label: string }[];
+    socials?: { url: string; type: string }[];
   };
 }
 
@@ -46,7 +58,6 @@ interface DexSearchResponse {
 }
 
 async function searchDexScreener(query: string): Promise<DexPair | null> {
-  // Remove $ prefix for search
   const symbol = query.replace(/^\$/, '').toUpperCase();
   if (!symbol) return null;
 
@@ -56,14 +67,12 @@ async function searchDexScreener(query: string): Promise<DexPair | null> {
   const data: DexSearchResponse = await res.json();
   if (!data.pairs || data.pairs.length === 0) return null;
 
-  // Find best match: exact symbol match with highest liquidity
   const exactMatches = data.pairs.filter(
     (p) => p.baseToken.symbol.toUpperCase() === symbol
   );
 
   if (exactMatches.length === 0) return null;
 
-  // Sort by liquidity USD descending
   exactMatches.sort((a, b) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0));
   return exactMatches[0];
 }
@@ -75,7 +84,7 @@ export function useDexScreenerSearch(query: string, enabled: boolean) {
     queryKey: ['dexscreener', query.trim()],
     queryFn: () => searchDexScreener(query.trim()),
     enabled: enabled && isCashtag,
-    staleTime: 30_000, // 30s cache
+    staleTime: 30_000,
     retry: 1,
   });
 }
