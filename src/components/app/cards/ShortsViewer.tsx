@@ -832,7 +832,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           )}
         </div>
 
-        {/* Right Side Panel - Desktop Only: Creator info and comments */}
+        {/* Right Side Panel - Desktop Only: Creator info, comments, and engagement */}
         {!isMobile && (
           <div className="w-[268px] lg:w-[320px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col">
             {/* Creator Info - Top */}
@@ -864,12 +864,102 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               </button>
             </div>
 
-            {/* Desktop: Inline comments */}
-            <div className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0 overflow-y-auto">
+            {/* Comments list - scrollable */}
+            <div className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0 overflow-y-auto mb-3">
               <CommentsSection
                 tokenId={currentShort.id}
                 onClose={() => {}}
               />
+            </div>
+
+            {/* Bottom Engagement Bar - 2-line input + action buttons */}
+            <div className="bg-zinc-900/50 rounded-2xl p-3">
+              {/* Textarea + buttons container */}
+              <div className="relative">
+                <textarea
+                  ref={inlineCommentRef}
+                  value={inlineCommentText}
+                  onChange={(e) => {
+                    setInlineCommentText(e.target.value);
+                    mention.handleChange(e);
+                  }}
+                  onKeyDown={(e) => {
+                    if (mention.handleKeyDown(e)) return;
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handlePostInlineComment();
+                    }
+                  }}
+                  placeholder="Add a comment..."
+                  rows={2}
+                  className="w-full bg-zinc-800/60 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/40 resize-none focus:outline-none focus:border-white/25 transition-colors pr-24"
+                />
+                {mention.showDropdown && (
+                  <UserMentionDropdown
+                    query={mention.query}
+                    onSelect={mention.selectUser}
+                    visible={mention.showDropdown}
+                  />
+                )}
+                {/* Action buttons - bottom right of textarea */}
+                <div className="absolute bottom-2 right-2 flex items-center gap-1">
+                  <motion.button
+                    onClick={() => handleVote(true)}
+                    disabled={isVoting}
+                    className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                    animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
+                    transition={{ duration: 0.3 }}
+                    title="Like"
+                  >
+                    <ThumbsUp className={cn("w-4 h-4", isLiked ? "fill-white text-white" : "text-white/60")} />
+                  </motion.button>
+                  <motion.button
+                    onClick={() => handleVote(false)}
+                    disabled={isVoting}
+                    className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                    animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
+                    transition={{ duration: 0.3 }}
+                    title="Dislike"
+                  >
+                    <ThumbsDown className={cn("w-4 h-4", isDisliked ? "fill-white text-white" : "text-white/60")} />
+                  </motion.button>
+                  <motion.button
+                    onClick={toggleBookmark}
+                    disabled={isBookmarkLoading}
+                    className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                    title="Bookmark"
+                  >
+                    <Bookmark className={cn("w-4 h-4", isBookmarked ? "fill-yellow-500 text-yellow-500" : "text-white/60")} />
+                  </motion.button>
+                  <button
+                    onClick={() => setShareSheetOpen(true)}
+                    className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                    title="Share"
+                  >
+                    <Share2 className="w-4 h-4 text-white/60" />
+                  </button>
+                  <button
+                    onClick={handlePostInlineComment}
+                    disabled={!inlineCommentText.trim() || isPostingComment}
+                    className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors disabled:opacity-30"
+                    title="Send"
+                  >
+                    <Send className="w-4 h-4 text-white" />
+                  </button>
+                </div>
+              </div>
+              {/* Stats row */}
+              <div className="flex items-center gap-3 mt-2 px-1">
+                <span className="text-white/50 text-xs flex items-center gap-1">
+                  <ThumbsUp className="w-3 h-3" /> {formatCount(localLikeCount)}
+                </span>
+                <span className="text-white/50 text-xs flex items-center gap-1">
+                  <MessageSquare className="w-3 h-3" /> {formatCount(currentShort.comments || 0)}
+                </span>
+                <span className="text-white/50 text-xs flex items-center gap-1">
+                  <Eye className="w-3 h-3" /> {currentShort.views || '0'}
+                </span>
+              </div>
             </div>
           </div>
         )}
