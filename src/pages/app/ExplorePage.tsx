@@ -35,6 +35,8 @@ import { getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { VideoCard, ImageCard, PostCard } from '@/components/app/cards';
 import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
+import { useDexScreenerSearch } from '@/hooks/use-dexscreener';
+import { CashtagPriceCard } from '@/components/app/CashtagPriceCard';
 import type { VideoItem, ImagePost } from '@/types/feed.types';
 
 const DATE_OPTION_KEYS = ['anyTime', 'today', 'thisWeek', 'thisMonth', 'thisYear'] as const;
@@ -457,6 +459,9 @@ export default function ExplorePage() {
   // Check if this is a brand-related search term
   const isBrandQuery = BRAND_QUERIES.includes(effectiveQuery.trim().toLowerCase());
 
+  // DexScreener cashtag price lookup
+  const { data: dexPair, isLoading: isDexLoading } = useDexScreenerSearch(effectiveQuery, isSearching);
+
   // Always fetch @d specifically for brand queries (d, de, deh, dehu, dehub)
   const {
     data: brandUser,
@@ -758,6 +763,11 @@ export default function ExplorePage() {
                     <X className="w-5 h-5" />
                   </button>
                 </div>
+
+                {/* DexScreener Cashtag Price Card */}
+                {dexPair && (
+                  <CashtagPriceCard pair={dexPair} symbol={effectiveQuery.trim()} />
+                )}
 
                 {/* Loading State */}
                 {showLoading && (
