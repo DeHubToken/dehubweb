@@ -5,8 +5,6 @@ import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
 import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
-import { ShimmerHoverEffect } from '@/components/ui/shimmer-hover-effect';
-
 
 
 // Left side: Home, Messages
