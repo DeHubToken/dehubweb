@@ -7,6 +7,7 @@
  */
 
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import i18n from 'i18next';
 import { getAccountInfo, getAccountByUsername, getAuthToken, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
 import { mapToVideoItem, mapToImagePost, mapToTextPost, type UnifiedFeedItem } from './use-unified-feed';
@@ -62,7 +63,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
   // Handle timestamp from either field name — use browser locale for translated dates
   const createdAt = user.createdAt || user.created_at;
   const joinDate = createdAt 
-    ? new Date(createdAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })
+    ? new Date(createdAt).toLocaleDateString(i18n.language || undefined, { month: 'long', year: 'numeric' })
     : 'Unknown';
 
   // Calculate follower/following counts - handle both number and array types
