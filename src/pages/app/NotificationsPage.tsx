@@ -65,11 +65,26 @@ interface BundledNotification {
 function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars: Map<string, EnrichedAvatar>): BundledNotification[] {
   if (!notifications.length) return [];
 
+  // Deduplicate: when API sends both 'mention' and 'comment_reply' for the same commentId
+  // from the same actor, keep only the 'mention' (more specific) and discard the 'comment_reply'.
+  const deduped = notifications.filter((n, _idx, arr) => {
+    if (n.type !== 'comment_reply') return true;
+    const commentId = (n as any).commentId;
+    if (!commentId) return true;
+    // If there's a matching 'mention' notification with the same commentId from the same actor, drop this one
+    return !arr.some(other =>
+      other.id !== n.id &&
+      other.type === 'mention' &&
+      (other as any).commentId === commentId &&
+      other.actorAddress?.toLowerCase() === n.actorAddress?.toLowerCase()
+    );
+  });
+
   const bundles: BundledNotification[] = [];
   const consumed = new Set<string>();
 
-  for (let i = 0; i < notifications.length; i++) {
-    const n = notifications[i];
+  for (let i = 0; i < deduped.length; i++) {
+    const n = deduped[i];
     if (consumed.has(n.id)) continue;
 
     const nTime = new Date(n.createdAt).getTime();
@@ -80,8 +95,8 @@ function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars
     // Try same-actor bundling for likes/comments on different posts
     if (['like', 'comment', 'repost', 'quote'].includes(n.type) && n.actorAddress) {
       const group: DeHubNotification[] = [n];
-      for (let j = i + 1; j < notifications.length; j++) {
-        const m = notifications[j];
+      for (let j = i + 1; j < deduped.length; j++) {
+        const m = deduped[j];
         if (consumed.has(m.id)) continue;
         if (m.type !== n.type) continue;
         if (m.actorAddress?.toLowerCase() !== n.actorAddress?.toLowerCase()) continue;
@@ -424,12 +439,18 @@ function NotificationItem({
           {getNotificationContent(notification, bundle, t)}
         </p>
         
-        {/* Post preview snippet — show title/text for context */}
-        {notification.tokenTitle && bundle.bundleType !== 'same-actor' && (
-          <p className="text-xs text-zinc-500 mt-0.5 line-clamp-1 italic">
-            "{notification.tokenTitle}"
-          </p>
-        )}
+        {/* Post preview snippet — for replies/mentions show the comment text, otherwise the post title */}
+        {bundle.bundleType !== 'same-actor' && (() => {
+          const commentPreview = (notification as any).commentPreview;
+          const isReplyOrMention = notification.type === 'comment_reply' || notification.type === 'mention';
+          const previewText = isReplyOrMention && commentPreview ? commentPreview : notification.tokenTitle;
+          if (!previewText) return null;
+          return (
+            <p className="text-xs text-zinc-500 mt-0.5 line-clamp-1 italic">
+              "{previewText}"
+            </p>
+          );
+        })()}
         
         {/* Show individual actor names below backend-aggregated follows */}
         {notification.type === 'following' && (notification as any).latestActorNames?.length > 1 && (
