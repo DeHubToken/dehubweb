@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 
 const MAX_PAGES = 3;
 const PAGE_SIZE = 30;
-const FOLLOWING_CACHE_LIMIT = 300;
+const FOLLOWING_CACHE_PAGE_SIZE = 300;
 
 type SortOption = 'newest' | 'earliest';
 const SORT_LABELS: Record<SortOption, string> = {
