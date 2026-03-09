@@ -357,22 +357,36 @@ export default function ExplorePage() {
     }
   }, []); // Only run on mount
 
-  // Sync search query with URL
+  // Sync search query FROM URL only on mount / back-navigation
+  // (not on every searchParams change, which causes circular updates)
+  const initializedFromUrl = useRef(false);
   useEffect(() => {
+    if (!initializedFromUrl.current) {
+      initializedFromUrl.current = true;
+      return; // Already set in useState initializer
+    }
+    // Handle browser back/forward navigation
     const urlQuery = searchParams.get('q') || '';
-    if (urlQuery && urlQuery !== searchQuery) {
+    if (urlQuery !== searchQuery) {
       setSearchQuery(urlQuery);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
-  // Update URL when search query changes and log to history
+  // Update URL when search query changes (one-way: state → URL)
+  const prevUrlQuery = useRef(searchParams.get('q') || '');
   useEffect(() => {
-    if (searchQuery.trim().length >= 3) {
-      setSearchParams({ q: searchQuery.trim() }, { replace: true });
-    } else if (searchParams.has('q')) {
+    const trimmed = searchQuery.trim();
+    if (trimmed.length >= 3) {
+      if (prevUrlQuery.current !== trimmed) {
+        prevUrlQuery.current = trimmed;
+        setSearchParams({ q: trimmed }, { replace: true });
+      }
+    } else if (prevUrlQuery.current) {
+      prevUrlQuery.current = '';
       setSearchParams({}, { replace: true });
     }
-  }, [searchQuery, setSearchParams, searchParams]);
+  }, [searchQuery, setSearchParams]);
 
   // Add to history and log analytics only after 1.5 seconds of inactivity (complete words)
   const stableQuery = useDebouncedValue(searchQuery, 1500);
