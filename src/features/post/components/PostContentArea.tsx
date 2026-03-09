@@ -136,6 +136,9 @@ export function PostContentArea({
   onStopRecording,
   chainId,
   onChainChange,
+  showTitle,
+  titleText,
+  setTitleText,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
   const isProcessingLinks = useRef(false);
