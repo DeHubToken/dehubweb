@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 
 const MAX_PAGES = 3;
 const PAGE_SIZE = 30;
-const FOLLOWING_CACHE_LIMIT = 300;
+const FOLLOWING_CACHE_PAGE_SIZE = 300;
 
 type SortOption = 'newest' | 'earliest';
 const SORT_LABELS: Record<SortOption, string> = {
@@ -135,8 +135,18 @@ export function FollowersListDrawer({
         // Fetch current user's following list once to resolve isFollowing locally
         if (!isOwnFollowingList && isAuthenticated && currentUserAddress && !followingSetRef.current) {
           try {
-            const { items: myFollowing } = await getFollowList(currentUserAddress, 'following', { limit: FOLLOWING_CACHE_LIMIT });
-            followingSetRef.current = new Set(myFollowing.map(f => (f.address || '').toLowerCase()));
+            // Paginate to fetch ALL of the current user's following list
+            const allFollowing: string[] = [];
+            let page = 1;
+            let hasMore = true;
+            while (hasMore) {
+              const { items, pagination } = await getFollowList(currentUserAddress, 'following', { page, limit: FOLLOWING_CACHE_PAGE_SIZE });
+              allFollowing.push(...items.map(f => (f.address || '').toLowerCase()));
+              hasMore = pagination?.hasMore ?? false;
+              page++;
+              if (page > 10) break; // safety cap at 3000 followings
+            }
+            followingSetRef.current = new Set(allFollowing);
           } catch {
             followingSetRef.current = new Set();
           }
