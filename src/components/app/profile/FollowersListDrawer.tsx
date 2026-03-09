@@ -445,12 +445,14 @@ export function FollowersListDrawer({
                       size="sm"
                       variant="ghost"
                       onClick={(e) => handleFollowToggle(user, e)}
-                      disabled={loadingFollows.has(user.address)}
+                      disabled={loadingFollows.has(user.address) || user.isPending}
                       className={cn(
                         "shrink-0 rounded-lg",
                         user.isFollowing
                           ? "bg-zinc-800 text-white hover:bg-red-500/20 hover:text-red-400"
-                          : "bg-white/10 text-white hover:bg-white/20"
+                          : user.isPending
+                            ? "bg-zinc-800 text-zinc-400 cursor-default"
+                            : "bg-white/10 text-white hover:bg-white/20"
                       )}
                     >
                       {loadingFollows.has(user.address) ? (
@@ -459,6 +461,11 @@ export function FollowersListDrawer({
                         <>
                           <UserMinus className="w-4 h-4 mr-1" />
                           Following
+                        </>
+                      ) : user.isPending ? (
+                        <>
+                          <Clock className="w-4 h-4 mr-1" />
+                          Requested
                         </>
                       ) : (
                         <>
