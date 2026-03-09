@@ -1006,11 +1006,7 @@ export default function NotificationsPage() {
       {/* Notifications List */}
       <div className="px-2 sm:px-3 pt-2 pb-2">
         <div className="bg-zinc-900 rounded-2xl overflow-hidden">
-          {isLoading ? (
-            <div className="flex justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-zinc-500" />
-            </div>
-          ) : isLoading || (notifications.length > 0 && !enrichmentReady) ? (
+          {isLoading || (notifications.length > 0 && !enrichmentReady) ? (
             <div className="flex justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-zinc-500" />
             </div>
