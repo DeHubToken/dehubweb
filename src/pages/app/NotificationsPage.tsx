@@ -429,7 +429,7 @@ function NotificationItem({
         {(() => {
           const aggCount = (notification as any).aggregatedCount || 1;
           const aggNames = (notification as any).latestActorNames as string[] | undefined;
-          const hasMultipleActors = aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
+          const hasMultipleActors = aggCount > 3 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
           
           if (hasMultipleActors) {
             // When on a type-specific tab (likes/follows), show 4 avatars instead of 3+icon
