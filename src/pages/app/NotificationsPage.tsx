@@ -469,19 +469,19 @@ function NotificationItem({
             };
             
             return (
-              <div className="grid grid-cols-2 grid-rows-2 gap-0.5 w-12 h-12 flex-shrink-0">
+              <div className="grid grid-cols-2 grid-rows-2 gap-0.5 w-14 h-14 flex-shrink-0">
                 {/* Top-left: primary actor */}
-                {renderGridAvatar(avatarUrl, notification.actorUsername || fallbackLetter, profileLink, 'w-[23px] h-[23px]')}
+                {renderGridAvatar(avatarUrl, notification.actorUsername || fallbackLetter, profileLink, 'w-[27px] h-[27px]')}
                 {/* Top-right: 2nd actor */}
-                {renderGridAvatar(avatar2Url, actorName2, actorName2 ? `/${actorName2}` : null, 'w-[23px] h-[23px]')}
+                {renderGridAvatar(avatar2Url, actorName2, actorName2 ? `/${actorName2}` : null, 'w-[27px] h-[27px]')}
                 {/* Bottom-left: 3rd actor */}
                 {actorName3 ? (
-                  renderGridAvatar(avatar3Url, actorName3, `/${actorName3}`, 'w-[23px] h-[23px]')
+                  renderGridAvatar(avatar3Url, actorName3, `/${actorName3}`, 'w-[27px] h-[27px]')
                 ) : (
-                  renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
+                  renderGridAvatar(undefined, null, null, 'w-[27px] h-[27px]')
                 )}
                 {/* Bottom-right: notification type icon */}
-                <div className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                <div className="w-[27px] h-[27px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
                   {getNotificationIcon(notification.type)}
                 </div>
               </div>
