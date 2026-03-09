@@ -247,8 +247,9 @@ export function FollowersListDrawer({
         profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
 
       const followingSet = followingSetRef.current;
+      const followersSet = followersSetRef.current;
       const finalItems: UserListItem[] = isOwnFollowingList
-        ? processed.map(u => ({ ...u, isFollowing: true }))
+        ? processed.map(u => ({ ...u, isFollowing: true, followsYou: followersSet ? followersSet.has(u.address.toLowerCase()) : false }))
         : processed.map(u => ({
             ...u,
             isFollowing: followingSet ? followingSet.has(u.address.toLowerCase()) : false,
