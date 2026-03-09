@@ -447,7 +447,7 @@ export function FollowersListDrawer({
                       ) : (
                         <>
                           <UserPlus className="w-4 h-4 mr-1" />
-                          Follow
+                          {user.followsYou ? 'Follow Back' : 'Follow'}
                         </>
                       )}
                     </Button>
