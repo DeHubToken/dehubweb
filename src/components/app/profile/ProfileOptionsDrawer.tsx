@@ -203,6 +203,12 @@ export function ProfileOptionsContent({
           </button>
         </>
       )}
+      <ReportModal
+        open={reportModalOpen}
+        onOpenChange={setReportModalOpen}
+        reportType="user"
+        userId={profile.walletAddress}
+      />
     </div>
   );
 }
