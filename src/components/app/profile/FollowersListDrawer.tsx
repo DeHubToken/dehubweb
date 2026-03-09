@@ -293,6 +293,9 @@ export function FollowersListDrawer({
     } catch (error: any) {
       const msg = error?.message || error?.error || '';
       if (typeof msg === 'string' && msg.toLowerCase().includes('already pending')) {
+        setUsers(prev => prev.map(u => 
+          u.address === user.address ? { ...u, isPending: true } : u
+        ));
         toast.info('Follow request already pending. Waiting for approval.');
       } else {
         handleApiError(error, 'Failed to update follow status');
