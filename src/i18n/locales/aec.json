@@ -1100,4 +1100,5 @@
     "viewStory": "شوف القصة",
     "noStories": "مافيش قصص لسه"
   }
+  ,"profileOptions": { "copyProfileUrl": "نسخ رابط الملف الشخصي", "copyUsername": "نسخ اسم المستخدم", "copyAddress": "نسخ العنوان", "openWallet": "فتح المحفظة", "message": "رسالة", "sendTip": "إرسال إكرامية", "notify": "إشعار", "makeOffer": "تقديم عرض", "unfollow": "إلغاء المتابعة", "block": "حظر", "unblock": "إلغاء الحظر", "profileUrlCopied": "تم نسخ رابط الملف الشخصي", "usernameCopied": "تم نسخ اسم المستخدم", "addressCopied": "تم نسخ العنوان", "noWalletAddress": "لا يوجد عنوان محفظة", "notificationsEnabled": "تم تفعيل الإشعارات لهذا الملف الشخصي" }
 }

@@ -158,4 +158,5 @@
     "profile": "Profiel",
     "wallet": "Beursie"
   }
+  ,"profileOptions": { "copyProfileUrl": "Kopieer profiel-URL", "copyUsername": "Kopieer gebruikersnaam", "copyAddress": "Kopieer adres", "openWallet": "Maak beursie oop", "message": "Boodskap", "sendTip": "Stuur fooi", "notify": "Stel in kennis", "makeOffer": "Maak aanbod", "unfollow": "Ontvolg", "block": "Blokkeer", "unblock": "Deblokkeer", "profileUrlCopied": "Profiel-URL gekopieer", "usernameCopied": "Gebruikersnaam gekopieer", "addressCopied": "Adres gekopieer", "noWalletAddress": "Geen beursie-adres beskikbaar", "notificationsEnabled": "Kennisgewings geaktiveer vir hierdie profiel" }
 }
