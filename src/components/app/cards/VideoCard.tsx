@@ -1008,7 +1008,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                       onClick={() => { setShowOptionsDrawer(false); setShowTipModal(true); }}
                       className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                     >
-                      <Diamond className="w-5 h-5" /> {t('postOptions.sendTip')}
+                       <Gem className="w-5 h-5" /> {t('postOptions.sendTip')}
                     </button>
                   )}
                   <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
