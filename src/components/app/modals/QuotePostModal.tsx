@@ -51,7 +51,6 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
       });
 
       // Step 2: Execute on-chain mint transaction
-      setStatusText('Publishing to decentralized database...');
       toast.loading('Publishing to decentralized database...', { id: 'quote-mint', duration: Infinity });
 
       const txHash = await mintOnChain({
