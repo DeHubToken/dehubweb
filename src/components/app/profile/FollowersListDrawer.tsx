@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Users, UserPlus, UserMinus, Search, ArrowUpDown, X } from 'lucide-react';
+import { Loader2, Users, UserPlus, UserMinus, Search, ArrowUpDown, X, Clock } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -43,6 +43,8 @@ interface UserListItem {
   isVerified?: boolean;
   isFollowing?: boolean;
   followsYou?: boolean;
+  isPrivate?: boolean;
+  isPending?: boolean;
 }
 
 interface FollowersListDrawerProps {
@@ -56,7 +58,7 @@ interface FollowersListDrawerProps {
  * Map API follow list item to local UserListItem format.
  * The API now returns full user objects — no enrichment needed.
  */
-function mapFollowListItem(item: FollowListItem): UserListItem {
+function mapFollowListItem(item: FollowListItem & { isPrivate?: boolean }): UserListItem {
   return {
     address: item.address,
     username: item.username,
@@ -65,6 +67,7 @@ function mapFollowListItem(item: FollowListItem): UserListItem {
     isVerified: item.isVerified,
     isFollowing: item.isFollowing,
     followsYou: item.followsYou,
+    isPrivate: (item as any).isPrivate,
   };
 }
 
@@ -273,15 +276,26 @@ export function FollowersListDrawer({
         toast.success(`Unfollowed ${user.displayName || user.username || 'user'}`);
       } else {
         await followUser(user.address);
-        followingSetRef.current?.add(user.address.toLowerCase());
-        setUsers(prev => prev.map(u => 
-          u.address === user.address ? { ...u, isFollowing: true } : u
-        ));
-        toast.success(`Following ${user.displayName || user.username || 'user'}`);
+        if (user.isPrivate) {
+          // Private account: follow request sent, mark as pending
+          setUsers(prev => prev.map(u => 
+            u.address === user.address ? { ...u, isPending: true } : u
+          ));
+          toast.success(`Follow request sent to ${user.displayName || user.username || 'user'}`);
+        } else {
+          followingSetRef.current?.add(user.address.toLowerCase());
+          setUsers(prev => prev.map(u => 
+            u.address === user.address ? { ...u, isFollowing: true } : u
+          ));
+          toast.success(`Following ${user.displayName || user.username || 'user'}`);
+        }
       }
     } catch (error: any) {
       const msg = error?.message || error?.error || '';
       if (typeof msg === 'string' && msg.toLowerCase().includes('already pending')) {
+        setUsers(prev => prev.map(u => 
+          u.address === user.address ? { ...u, isPending: true } : u
+        ));
         toast.info('Follow request already pending. Waiting for approval.');
       } else {
         handleApiError(error, 'Failed to update follow status');
@@ -434,12 +448,14 @@ export function FollowersListDrawer({
                       size="sm"
                       variant="ghost"
                       onClick={(e) => handleFollowToggle(user, e)}
-                      disabled={loadingFollows.has(user.address)}
+                      disabled={loadingFollows.has(user.address) || user.isPending}
                       className={cn(
                         "shrink-0 rounded-lg",
                         user.isFollowing
                           ? "bg-zinc-800 text-white hover:bg-red-500/20 hover:text-red-400"
-                          : "bg-white/10 text-white hover:bg-white/20"
+                          : user.isPending
+                            ? "bg-zinc-800 text-zinc-400 cursor-default"
+                            : "bg-white/10 text-white hover:bg-white/20"
                       )}
                     >
                       {loadingFollows.has(user.address) ? (
@@ -448,6 +464,11 @@ export function FollowersListDrawer({
                         <>
                           <UserMinus className="w-4 h-4 mr-1" />
                           Following
+                        </>
+                      ) : user.isPending ? (
+                        <>
+                          <Clock className="w-4 h-4 mr-1" />
+                          Requested
                         </>
                       ) : (
                         <>
