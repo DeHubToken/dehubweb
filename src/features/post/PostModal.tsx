@@ -101,6 +101,9 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         setTokenAmount={actions.setTokenAmount}
         selectedCategory={state.selectedCategory}
         setSelectedCategory={actions.setSelectedCategory}
+        showTitle={state.showTitle}
+        setShowTitle={actions.setShowTitle}
+        hasVideoOrAudio={computed.hasVideo || computed.hasAudio}
       />
 
       <PostActionBar
