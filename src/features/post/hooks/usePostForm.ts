@@ -1145,6 +1145,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       chainId,
       isCameraModalOpen,
       selectedCategory,
+      showTitle,
+      titleText,
     },
     actions: {
       setText,
