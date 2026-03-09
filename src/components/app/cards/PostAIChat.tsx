@@ -5,7 +5,7 @@
  * Matches the UI of AssistantPage for consistency.
  */
 
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation as useI18n } from 'react-i18next';
 import { X, Send, Sparkles, Loader2, Paperclip, Mic, Square, VolumeX, Minus } from 'lucide-react';
@@ -69,6 +69,41 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const pendingVoiceRef = useRef(false);
+  
+  // Desktop resize state
+  const MIN_WIDTH = 300;
+  const MAX_WIDTH = 600;
+  const [chatWidth, setChatWidth] = useState(380);
+  const isResizingRef = useRef(false);
+  const startXRef = useRef(0);
+  const startWidthRef = useRef(380);
+
+  const handleResizeStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    isResizingRef.current = true;
+    startXRef.current = e.clientX;
+    startWidthRef.current = chatWidth;
+
+    const handleMouseMove = (ev: MouseEvent) => {
+      if (!isResizingRef.current) return;
+      const delta = startXRef.current - ev.clientX;
+      const newWidth = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, startWidthRef.current + delta));
+      setChatWidth(newWidth);
+    };
+
+    const handleMouseUp = () => {
+      isResizingRef.current = false;
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+
+    document.body.style.cursor = 'ew-resize';
+    document.body.style.userSelect = 'none';
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  }, [chatWidth]);
   
   // Global minimized chats manager
   const { addChat, removeChat, isMinimized } = useMinimizedChats();
@@ -466,9 +501,9 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   }
 
   // Desktop: Fixed bottom-right chat box (MSN-style), stacking side by side
-  const CHAT_WIDTH = 380;
+
   const CHAT_GAP = 12;
-  const rightOffset = 16 + (position >= 0 ? position : 0) * (CHAT_WIDTH + CHAT_GAP);
+  const rightOffset = 16 + (position >= 0 ? position : 0) * (chatWidth + CHAT_GAP);
 
   return createPortal(
     <AnimatePresence>
@@ -482,10 +517,23 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
           className="fixed bottom-4 z-50 flex flex-col bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl rounded-2xl overflow-hidden"
           style={{
             right: `${rightOffset}px`,
-            width: `${CHAT_WIDTH}px`,
+            width: `${chatWidth}px`,
             height: '520px',
           }}
         >
+          {/* Resize handle — top-left corner */}
+          <div
+            onMouseDown={handleResizeStart}
+            className="absolute top-0 left-0 w-4 h-4 cursor-nw-resize z-10 group"
+          >
+            <div className="absolute top-1 left-1 w-2 h-2 rounded-sm bg-white/0 group-hover:bg-white/30 transition-colors" />
+          </div>
+          {/* Left edge resize handle */}
+          <div
+            onMouseDown={handleResizeStart}
+            className="absolute top-0 left-0 w-1.5 h-full cursor-ew-resize z-10 hover:bg-white/10 transition-colors"
+          />
+
           {/* Header */}
           <div className="p-3 border-b border-white/10 shrink-0">
             <div className="flex items-center justify-between">
