@@ -714,15 +714,31 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   }, []);
 
   const toggleFullscreen = useCallback(() => {
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    } else {
-      const el = containerRef.current as any;
-      if (!el) return;
-      if (el.requestFullscreen) {
-        el.requestFullscreen();
-      } else if (el.webkitRequestFullscreen) {
-        el.webkitRequestFullscreen();
+    const videoEl = videoRef.current as any;
+    const containerEl = containerRef.current as any;
+
+    // Check if already in fullscreen (standard or iOS video)
+    if (document.fullscreenElement || (document as any).webkitFullscreenElement) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if ((document as any).webkitExitFullscreen) {
+        (document as any).webkitExitFullscreen();
+      }
+      return;
+    }
+
+    // iOS Safari: only supports webkitEnterFullscreen on <video> element
+    if (videoEl && typeof videoEl.webkitEnterFullscreen === 'function') {
+      videoEl.webkitEnterFullscreen();
+      return;
+    }
+
+    // Standard Fullscreen API on container
+    if (containerEl) {
+      if (containerEl.requestFullscreen) {
+        containerEl.requestFullscreen();
+      } else if (containerEl.webkitRequestFullscreen) {
+        containerEl.webkitRequestFullscreen();
       }
     }
   }, []);
