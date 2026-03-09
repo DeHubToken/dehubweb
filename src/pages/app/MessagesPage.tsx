@@ -227,7 +227,7 @@ export default function MessagesPage() {
     if (!isVirtual) return;
     const peerAddr = (selId.startsWith('new_') ? selId.replace('new_', '') : selId).toLowerCase();
     const realConv = conversations.find(
-      c => !c.id.startsWith('new_') && !/^0x[0-9a-fA-F]{40}$/i.test(c.id) &&
+      c => c.id !== selId &&
         c.otherUser?.address?.toLowerCase() === peerAddr
     );
     if (realConv) {
@@ -242,11 +242,12 @@ export default function MessagesPage() {
     if (!hasVirtualSelected) return;
     // Poll at 1.5s for first 30s, then 5s
     const fast = setInterval(() => refetch(), 1500);
+    let slowInterval: ReturnType<typeof setInterval>;
     const slow = setTimeout(() => {
       clearInterval(fast);
-      setInterval(() => refetch(), 5000);
+      slowInterval = setInterval(() => refetch(), 5000);
     }, 30000);
-    return () => { clearInterval(fast); clearTimeout(slow); };
+    return () => { clearInterval(fast); clearTimeout(slow); clearInterval(slowInterval); };
   }, [hasVirtualSelected, refetch]);
 
   // Block access for unauthenticated users
