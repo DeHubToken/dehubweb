@@ -435,6 +435,18 @@ function NotificationItem({
             const secondActorName = hasSecondName ? aggNames[1] : null;
             const secondActorLink = secondActorName ? `/${secondActorName}` : null;
             const othersCount = aggCount - 1;
+            
+            // Try to find second actor's avatar from enriched data by matching username
+            let secondAvatarUrl: string | undefined;
+            if (secondActorName) {
+              for (const [, enrichedEntry] of enrichedAvatars) {
+                if (enrichedEntry.username?.toLowerCase() === secondActorName.toLowerCase() && enrichedEntry.avatarUrl) {
+                  secondAvatarUrl = enrichedEntry.avatarUrl;
+                  break;
+                }
+              }
+            }
+            
             return (
               <div className="relative w-12 h-12">
                 {/* Primary avatar (front, top-left) */}
@@ -461,6 +473,7 @@ function NotificationItem({
                 {secondActorLink ? (
                   <Link to={secondActorLink} onClick={(e) => e.stopPropagation()} className="absolute bottom-0 right-0">
                     <Avatar className="w-8 h-8 ring-2 ring-zinc-900">
+                      {secondAvatarUrl && <AvatarImage src={secondAvatarUrl} />}
                       <AvatarFallback className="bg-zinc-600 text-white text-xs font-medium">
                         {secondActorName!.charAt(0).toUpperCase()}
                       </AvatarFallback>
@@ -656,35 +669,59 @@ export default function NotificationsPage() {
   useEffect(() => {
     if (!allNotifications.length) return;
     
+    // Collect actor addresses
     const newAddresses = allNotifications
       .map(n => n.actorAddress?.toLowerCase())
       .filter((addr): addr is string => Boolean(addr) && !enrichedRef.current.has(addr));
     
-    const uniqueNew = [...new Set(newAddresses)];
-    if (uniqueNew.length === 0) return;
+    // Also collect usernames from latestActorNames (for aggregated notification avatars)
+    const secondActorUsernames = allNotifications
+      .filter(n => (n as any).aggregatedCount > 1 && (n as any).latestActorNames?.length > 1)
+      .flatMap(n => ((n as any).latestActorNames as string[]).slice(1))
+      .filter(name => Boolean(name) && !enrichedRef.current.has(`username:${name.toLowerCase()}`));
+    
+    const uniqueNewAddresses = [...new Set(newAddresses)];
+    const uniqueNewUsernames = [...new Set(secondActorUsernames)];
+    
+    if (uniqueNewAddresses.length === 0 && uniqueNewUsernames.length === 0) return;
     
     // Mark as in-flight immediately to prevent duplicate calls
-    uniqueNew.forEach(addr => enrichedRef.current.add(addr));
+    uniqueNewAddresses.forEach(addr => enrichedRef.current.add(addr));
+    uniqueNewUsernames.forEach(name => enrichedRef.current.add(`username:${name.toLowerCase()}`));
     
-    Promise.allSettled(
-      uniqueNew.map(async (addr) => {
-        try {
-          const { getAccountInfo } = await import('@/lib/api/dehub');
-          const { extractAvatarPath, buildAvatarUrl } = await import('@/lib/media-url');
-          const user = await getAccountInfo(addr);
-          const rawPath = extractAvatarPath(user);
-          const avatarUrl = buildAvatarUrl(user.address || addr, rawPath);
-          return { addr, info: { address: addr, avatarUrl, username: user.username || null, displayName: user.displayName || null } };
-        } catch {
-          return { addr, info: { address: addr, avatarUrl: null, username: null, displayName: null } };
-        }
-      })
-    ).then((results) => {
+    const addressFetches = uniqueNewAddresses.map(async (addr) => {
+      try {
+        const { getAccountInfo } = await import('@/lib/api/dehub');
+        const { extractAvatarPath, buildAvatarUrl } = await import('@/lib/media-url');
+        const user = await getAccountInfo(addr);
+        const rawPath = extractAvatarPath(user);
+        const avatarUrl = buildAvatarUrl(user.address || addr, rawPath);
+        return { key: addr, info: { address: addr, avatarUrl, username: user.username || null, displayName: user.displayName || null } };
+      } catch {
+        return { key: addr, info: { address: addr, avatarUrl: null, username: null, displayName: null } };
+      }
+    });
+    
+    const usernameFetches = uniqueNewUsernames.map(async (username) => {
+      try {
+        const { getAccountInfo } = await import('@/lib/api/dehub');
+        const { extractAvatarPath, buildAvatarUrl } = await import('@/lib/media-url');
+        const user = await getAccountInfo(username);
+        const rawPath = extractAvatarPath(user);
+        const avatarUrl = user.address ? buildAvatarUrl(user.address, rawPath) : null;
+        const key = user.address?.toLowerCase() || `username:${username.toLowerCase()}`;
+        return { key, info: { address: user.address || username, avatarUrl, username: user.username || username, displayName: user.displayName || null } };
+      } catch {
+        return { key: `username:${username.toLowerCase()}`, info: { address: username, avatarUrl: null, username, displayName: null } };
+      }
+    });
+    
+    Promise.allSettled([...addressFetches, ...usernameFetches]).then((results) => {
       setEnrichedAvatars(prev => {
         const next = new Map(prev);
         for (const r of results) {
           if (r.status === 'fulfilled') {
-            next.set(r.value.addr, r.value.info as EnrichedAvatar);
+            next.set(r.value.key, r.value.info as EnrichedAvatar);
           }
         }
         return next;
