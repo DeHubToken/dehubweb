@@ -115,7 +115,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     walletAddress: user.address || user.wallet_address,
     isFollowing: user.isFollowing,
     followsYou: user.followsYou,
-    isPending: user.isPending,
+    isPending: user.isPending ?? user.isFollowRequestPending,
     isPrivate: user.isPrivate || customs?.isPrivate === 'true' || customs?.isPrivate === true,
     youBlocked: user.youBlocked ?? false,
     blockedYou: user.blockedYou ?? false,
