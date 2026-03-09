@@ -545,7 +545,7 @@ function NotificationItem({
         })()}
         
         {/* Show individual actor names below backend-aggregated follows */}
-        {notification.type === 'following' && (notification as any).latestActorNames?.length > 1 && (
+        {notification.type === 'following' && (notification as any).aggregatedCount > 2 && (notification as any).latestActorNames?.length > 1 && (
           <p className="text-xs text-zinc-500 mt-0.5">
             {(notification as any).latestActorNames.join(', ')}
           </p>
