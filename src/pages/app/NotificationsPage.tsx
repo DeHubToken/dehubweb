@@ -427,12 +427,14 @@ function NotificationItem({
         {(() => {
           const aggCount = (notification as any).aggregatedCount || 1;
           const aggNames = (notification as any).latestActorNames as string[] | undefined;
-          const hasMultipleActors = aggCount > 1 && aggNames && aggNames.length > 1;
+          const hasMultipleActors = aggCount > 1 && ['like', 'comment', 'repost'].includes(notification.type as string);
           
           if (hasMultipleActors) {
             // Stacked avatars for aggregated notifications (left-to-right, top-to-bottom)
-            const secondActorName = aggNames[1] || 'U';
-            const secondActorLink = `/${secondActorName}`;
+            const hasSecondName = aggNames && aggNames.length > 1;
+            const secondActorName = hasSecondName ? aggNames[1] : null;
+            const secondActorLink = secondActorName ? `/${secondActorName}` : null;
+            const othersCount = aggCount - 1;
             return (
               <div className="relative w-12 h-12">
                 {/* Primary avatar (front, top-left) */}
@@ -453,14 +455,22 @@ function NotificationItem({
                     </AvatarFallback>
                   </Avatar>
                 )}
-                {/* Second avatar (behind, bottom-right) */}
-                <Link to={secondActorLink} onClick={(e) => e.stopPropagation()}>
+                {/* Second avatar (behind, bottom-right) — named actor or +N fallback */}
+                {secondActorLink ? (
+                  <Link to={secondActorLink} onClick={(e) => e.stopPropagation()}>
+                    <Avatar className="w-8 h-8 absolute bottom-0 right-0 ring-2 ring-zinc-900">
+                      <AvatarFallback className="bg-zinc-600 text-white text-xs font-medium">
+                        {secondActorName!.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Link>
+                ) : (
                   <Avatar className="w-8 h-8 absolute bottom-0 right-0 ring-2 ring-zinc-900">
-                    <AvatarFallback className="bg-zinc-600 text-white text-xs font-medium">
-                      {secondActorName.charAt(0).toUpperCase()}
+                    <AvatarFallback className="bg-zinc-600 text-white text-[10px] font-bold">
+                      +{othersCount}
                     </AvatarFallback>
                   </Avatar>
-                </Link>
+                )}
                 {/* Type icon badge at bottom-left */}
                 <div className="absolute -bottom-1 -left-1 z-20 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
                   {getNotificationIcon(notification.type)}
