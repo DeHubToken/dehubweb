@@ -302,6 +302,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     isUnlocked: item.isUnlocked ?? false,
     repostCount: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
     isReposted: item.isReposted ?? false,
+    categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
   };
 }
 
