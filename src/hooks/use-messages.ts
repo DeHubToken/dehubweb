@@ -42,6 +42,7 @@ import {
   onEditMessage,
   onDmDeleteMessage,
   onReValidateMessage,
+  onFeeConfirmed,
   type SendMessagePayload,
 } from '@/lib/api/dehub/dm-socket';
 
@@ -205,6 +206,12 @@ export function useMessages(conversationId: string | null) {
       );
     });
 
+    const unsubFeeConfirmed = onFeeConfirmed(({ dmId }) => {
+      if (dmId === conversationId) {
+        queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
+      }
+    });
+
     const unsubRevalidate = onReValidateMessage(({ dmId, message }) => {
       if (dmId !== conversationId) return;
       queryClient.setQueryData(
@@ -226,6 +233,7 @@ export function useMessages(conversationId: string | null) {
       unsubSend();
       unsubEdit();
       unsubDelete();
+      unsubFeeConfirmed();
       unsubRevalidate();
     };
   }, [conversationId, isAuthenticated, queryClient]);

@@ -248,7 +248,10 @@ function MessageBubble({
         <div className={`text-xs text-zinc-500 mt-1 flex items-center gap-1 ${isOwnMessage ? 'justify-end' : ''}`}>
           <span>{formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}</span>
           {message.isEdited && <span className="text-zinc-600">· edited</span>}
-          {isOwnMessage && message.isRead && (
+          {isOwnMessage && message.paymentStatus === 'pending' && (
+            <span className="text-amber-500/70">· confirming payment...</span>
+          )}
+          {isOwnMessage && message.isRead && message.paymentStatus !== 'pending' && (
             <span className="text-primary">✓✓</span>
           )}
         </div>
@@ -602,18 +605,25 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           return;
         }
 
+        const recipientAddress = otherUser?.address || '';
+        console.log('[DM Fee] Paying', activeFee, 'DHB to recipient:', recipientAddress, '| chain:', chainConfig.name);
+        if (!recipientAddress) {
+          toast.error('Cannot process payment: recipient address unknown');
+          setIsSendingFee(false);
+          return;
+        }
+
         toast.loading('Processing payment...', { id: 'dm-fee-send' });
 
         const result = await writeContractAA(
           chainConfig.dhbToken,
           erc20TransferInterface.current,
           'transfer',
-          [otherUser?.address || '', amountWei],
+          [recipientAddress, amountWei],
           { context: 'DM fee message', chainId }
         );
 
-        // Wait for 1 block confirmation so server accepts the txHash
-        await result.wait(1);
+        // Send immediately — backend uses Alchemy webhook to confirm async (per chat-system.md)
         feeTxHash = result.hash;
 
         toast.success(`Paid ${activeFee.toLocaleString()} DHB`, { id: 'dm-fee-send', duration: 2000 });
