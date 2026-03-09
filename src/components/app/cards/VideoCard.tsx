@@ -703,13 +703,23 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   // Track fullscreen state changes
   useEffect(() => {
     const onFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      setIsFullscreen(!!(document.fullscreenElement || (document as any).webkitFullscreenElement));
     };
     document.addEventListener('fullscreenchange', onFullscreenChange);
     document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+
+    // iOS fires these events on the video element itself
+    const videoEl = videoRef.current;
+    const onIOSFullscreen = () => setIsFullscreen(true);
+    const onIOSExitFullscreen = () => setIsFullscreen(false);
+    videoEl?.addEventListener('webkitbeginfullscreen', onIOSFullscreen);
+    videoEl?.addEventListener('webkitendfullscreen', onIOSExitFullscreen);
+
     return () => {
       document.removeEventListener('fullscreenchange', onFullscreenChange);
       document.removeEventListener('webkitfullscreenchange', onFullscreenChange);
+      videoEl?.removeEventListener('webkitbeginfullscreen', onIOSFullscreen);
+      videoEl?.removeEventListener('webkitendfullscreen', onIOSExitFullscreen);
     };
   }, []);
 
