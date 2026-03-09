@@ -48,16 +48,16 @@ export interface CommentLikeResponse {
 
 export async function followUser(walletAddress: string): Promise<{ result: boolean }> {
   return apiCall<{ result: boolean }>("/api/request_follow", {
-    method: "GET",
-    params: { following: walletAddress },
+    method: "POST",
+    body: { following: walletAddress.toLowerCase() },
     requiresAuth: true,
   });
 }
 
 export async function unfollowUser(walletAddress: string): Promise<{ result: boolean }> {
   return apiCall<{ result: boolean }>("/api/request_follow", {
-    method: "GET",
-    params: { following: walletAddress, unFollowing: "true" },
+    method: "POST",
+    body: { following: walletAddress.toLowerCase(), unFollowing: true },
     requiresAuth: true,
   });
 }
