@@ -229,7 +229,7 @@ export function PostAccessToggles({
             </div>
             <Switch checked={showTitle} onCheckedChange={setShowTitle} className="data-[state=checked]:bg-white scale-75" />
           </div>
-        )
+        )}
 
         {/* Category */}
         <div className="space-y-1.5">
