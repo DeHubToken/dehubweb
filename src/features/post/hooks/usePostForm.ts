@@ -911,9 +911,15 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       let postDescription = '';
 
       if (postType === 'video' || postType === 'audio') {
-        // Video/Audio: use explicit title field, description from editor
-        postTitle = titleText.trim().slice(0, 100) || ' ';
-        postDescription = text.trim();
+        // Video/Audio: use explicit title field, fallback to description as title
+        if (titleText.trim()) {
+          postTitle = titleText.trim().slice(0, 100);
+          postDescription = text.trim();
+        } else {
+          // No title provided — use description text as title, leave description empty
+          postTitle = text.trim().slice(0, 100) || ' ';
+          postDescription = '';
+        }
       } else if (showTitle && titleText.trim()) {
         // Text/Image posts with explicit title
         postTitle = titleText.trim().slice(0, 100);
