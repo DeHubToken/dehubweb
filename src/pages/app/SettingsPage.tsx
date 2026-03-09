@@ -109,6 +109,10 @@ const tabs = [
 ];
 
 export default function SettingsPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [activeTab, setActiveTab] = useState('profile');
   const { layerRef: settingsTabLayerRef, setRef: setSettingsTabRef, rect: settingsTabRect } = useTabIndicator(activeTab);
   const [theme, setTheme] = useState('system');
