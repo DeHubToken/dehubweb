@@ -465,46 +465,60 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
     );
   }
 
-  // Desktop: Dialog - prevent accidental closes via escape/outside click
-  return (
-    <Dialog open={isOpen && !isThisMinimized}>
-      <DialogContent 
-        hideCloseButton 
-        className="max-w-lg h-[600px] p-0 bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl flex flex-col"
-        onInteractOutside={(e) => e.preventDefault()}
-        onEscapeKeyDown={(e) => e.preventDefault()}
-        onPointerDownOutside={(e) => e.preventDefault()}
-      >
-        <DialogHeader className="p-4 border-b border-white/10 shrink-0">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <img src={assistantAvatar} alt="" className="w-8 h-8 rounded-full" />
-              <DialogTitle className="text-white text-base">{t('aiChat.title')}</DialogTitle>
-            </div>
-            <div className="flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleMinimize}
-                className="text-white/60 hover:text-white hover:bg-white/10 h-8 w-8"
-              >
-                <Minus className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleClose}
-                className="text-white/60 hover:text-white hover:bg-white/10 h-8 w-8"
-              >
-                <X className="w-4 h-4" />
-              </Button>
+  // Desktop: Fixed bottom-right chat box (MSN-style), stacking side by side
+  const CHAT_WIDTH = 380;
+  const CHAT_GAP = 12;
+  const rightOffset = 16 + (position >= 0 ? position : 0) * (CHAT_WIDTH + CHAT_GAP);
+
+  return createPortal(
+    <AnimatePresence>
+      {isOpen && !isThisMinimized && (
+        <motion.div
+          key={chatId}
+          initial={{ opacity: 0, y: 40, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 40, scale: 0.95 }}
+          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+          className="fixed bottom-4 z-50 flex flex-col bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl rounded-2xl overflow-hidden"
+          style={{
+            right: `${rightOffset}px`,
+            width: `${CHAT_WIDTH}px`,
+            height: '520px',
+          }}
+        >
+          {/* Header */}
+          <div className="p-3 border-b border-white/10 shrink-0">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <img src={assistantAvatar} alt="" className="w-7 h-7 rounded-full" />
+                <span className="text-white text-sm font-medium truncate max-w-[200px]">{t('aiChat.title')}</span>
+              </div>
+              <div className="flex items-center gap-0.5">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleMinimize}
+                  className="text-white/60 hover:text-white hover:bg-white/10 h-7 w-7"
+                >
+                  <Minus className="w-3.5 h-3.5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleClose}
+                  className="text-white/60 hover:text-white hover:bg-white/10 h-7 w-7"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </Button>
+              </div>
             </div>
           </div>
-        </DialogHeader>
-        <div className="flex-1 overflow-hidden">
-          {chatContent}
-        </div>
-      </DialogContent>
-    </Dialog>
+          <div className="flex-1 overflow-hidden">
+            {chatContent}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>,
+    document.body
   );
 }
