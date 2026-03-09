@@ -242,7 +242,9 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         {post.title && (
           <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{post.title}</h3>
         )}
-        <TranslatableText text={isTranslated ? translatedText : post.content} className="text-white/90 text-sm sm:text-base" as="p" />
+        {(isTranslated ? translatedText : post.content)?.trim() && (
+          <TranslatableText text={isTranslated ? translatedText : post.content} className="text-white/90 text-sm sm:text-base" as="p" />
+        )}
 
         {/* Quoted post embed (Twitter-style) */}
         {post.isQuotePost && post.quotedPost && (

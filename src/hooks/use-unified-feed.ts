@@ -340,7 +340,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
       badgeBalance: item.minterUser?.badgeBalance,
     },
     title: hasMeaningfulTitle ? trimmedName : undefined,
-    content: trimmedDesc || trimmedName || '',
+    content: trimmedDesc || (hasMeaningfulTitle ? '' : trimmedName) || '',
     rawName,
     rawDescription,
     createdAt: item.createdAt,
