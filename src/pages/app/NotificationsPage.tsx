@@ -719,6 +719,7 @@ export default function NotificationsPage() {
         }
         return next;
       });
+      setEnrichmentReady(true);
     });
   }, [allNotifications]);
 
