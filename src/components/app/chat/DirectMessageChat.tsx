@@ -30,7 +30,6 @@ import {
   parseTxError,
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -583,6 +582,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     gifUrl?: string;
     duration?: number;
   }) => {
+    let feeTxHash: string | undefined;
+
     // If fee is required, process on-chain payment first
     if (feeRequired) {
       setIsSendingFee(true);
@@ -605,7 +606,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           return;
         }
 
-        toast.loading('Processing tip & sending message...', { id: 'dm-fee-send' });
+        toast.loading('Processing payment...', { id: 'dm-fee-send' });
 
         const result = await writeContractAA(
           chainConfig.dhbToken,
@@ -616,39 +617,9 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         );
 
         await result.wait(1);
+        feeTxHash = result.hash;
 
-        // Send tip message via socket
-        const { emitSendMessage } = await import('@/lib/api/dehub/dm-socket');
-        emitSendMessage({
-          dmId: resolvedConversationId,
-          content: `Tipped ${activeFee.toLocaleString()} DHB`,
-          type: 'tip',
-          tipTxHash: result.hash,
-        });
-
-        // Notify API
-        try {
-          const token = getAuthToken();
-          if (token) {
-            await fetch(`${DEHUB_API_BASE}/api/dm/tip-notify`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({
-                txHash: result.hash,
-                receiverAddress: (otherUser?.address || '').toLowerCase(),
-                amount: activeFee,
-                chainId,
-              }),
-            });
-          }
-        } catch (notifyErr) {
-          console.warn('[DM] tip-notify failed:', notifyErr);
-        }
-
-        toast.success(`Sent ${activeFee.toLocaleString()} DHB + message! 🎉`, { id: 'dm-fee-send' });
+        toast.success(`Paid ${activeFee.toLocaleString()} DHB`, { id: 'dm-fee-send', duration: 2000 });
 
         // Update balance after payment
         if (chainId === BASE_CHAIN_ID) {
@@ -667,7 +638,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       }
     }
 
-    // Now send the actual message
+    // Now send the actual message (with txHash so server unlocks it)
     sendMessageMutation.mutate(
       {
         content,
@@ -675,6 +646,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         mediaFile,
         gifUrl,
         voiceDuration: duration,
+        txHash: feeTxHash,
       },
       {
         onSuccess: (data) => {
