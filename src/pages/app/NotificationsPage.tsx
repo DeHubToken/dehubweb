@@ -460,12 +460,22 @@ function NotificationItem({
         {bundle.bundleType !== 'same-actor' && (() => {
           const commentPreview = (notification as any).commentPreview;
           const isReplyOrMention = notification.type === 'comment_reply' || notification.type === 'mention';
-          const previewText = isReplyOrMention && commentPreview ? commentPreview : notification.tokenTitle;
+          // Strip leading @mention from comment preview
+          const cleanedPreview = commentPreview ? commentPreview.replace(/^@\w+\s*/, '') : null;
+          const previewText = isReplyOrMention && cleanedPreview ? cleanedPreview : notification.tokenTitle;
           if (!previewText) return null;
           return (
-            <p className="text-xs text-zinc-500 mt-0.5 line-clamp-1 italic">
-              "{previewText}"
-            </p>
+            <>
+              <p className="text-xs text-zinc-500 mt-0.5 line-clamp-1 italic">
+                "{previewText}"
+              </p>
+              {/* Secondary post title context for reply/mention */}
+              {isReplyOrMention && notification.tokenTitle && (
+                <p className="text-xs text-zinc-600 mt-0.5 line-clamp-1">
+                  on: {notification.tokenTitle}
+                </p>
+              )}
+            </>
           );
         })()}
         
