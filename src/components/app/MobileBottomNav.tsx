@@ -129,7 +129,7 @@ export function MobileBottomNav() {
     <>
       {/* Bottom blur gradient overlay */}
       <div 
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 pointer-events-none h-[60px]"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 pointer-events-none h-[60px] backdrop-blur-md"
         style={{
           background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.05) 15%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0.85) 90%, rgba(0,0,0,0.95) 100%)',
         }}
