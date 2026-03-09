@@ -42,6 +42,7 @@ interface PostContentAreaProps {
   destinations: string[];
   hasVideo: boolean;
   hasImage: boolean;
+  hasAudio: boolean;
   onFileDrop: (files: FileList) => void;
   // Schedule/Drafts props
   scheduledDate: Date | null;
