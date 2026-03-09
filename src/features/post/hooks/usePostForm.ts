@@ -60,6 +60,8 @@ interface UsePostFormReturn {
     chainId: ChainId;
     isCameraModalOpen: boolean;
     selectedCategory: string;
+    showTitle: boolean;
+    titleText: string;
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
@@ -70,6 +72,8 @@ interface UsePostFormReturn {
     stopRecording: () => void;
     setChainId: (chainId: ChainId) => void;
     setSelectedCategory: (category: string) => void;
+    setShowTitle: (show: boolean) => void;
+    setTitleText: (text: string) => void;
     insertEmoji: (emoji: string) => void;
     insertGif: (gifUrl: string) => void;
     openCameraCapture: () => void;
@@ -123,6 +127,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       return localStorage.getItem('post_default_categories') || '';
     } catch { return ''; }
   });
+  const [showTitle, setShowTitle] = useState(false);
+  const [titleText, setTitleText] = useState('');
   const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false);
 
   // Refs
@@ -590,6 +596,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setLiveMode(null);
     setScheduledDate(null);
     setChainId(BASE_CHAIN_ID as ChainId);
+    setShowTitle(false);
+    setTitleText('');
   }, []);
 
   // Drafts actions
@@ -882,6 +890,10 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         const lines = text.trim().split('\n');
         postTitle = (lines[0] || '').trim().slice(0, 100) || ' ';
         postDescription = lines.slice(1).join('\n').trim();
+      } else if (showTitle && titleText.trim()) {
+        // Text/Image posts with explicit title
+        postTitle = titleText.trim().slice(0, 100);
+        postDescription = text.trim();
       } else {
         // Image/Text posts: no title, everything goes to description
         postTitle = ' ';
@@ -1104,7 +1116,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     text, description, media, isSubscribersOnly, isPPV, ppvAmount,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
     isTokenGated, tokenAmount, liveMode, scheduledDate,
-    hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user
+    hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
+    showTitle, titleText
   ]);
 
   return {
@@ -1137,6 +1150,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       chainId,
       isCameraModalOpen,
       selectedCategory,
+      showTitle,
+      titleText,
     },
     actions: {
       setText,
@@ -1183,6 +1198,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       stopRecording,
       setChainId,
       setSelectedCategory,
+      setShowTitle,
+      setTitleText,
       insertEmoji,
       insertGif,
       openCameraCapture,

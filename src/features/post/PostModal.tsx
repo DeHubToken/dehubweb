@@ -72,6 +72,9 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         onStopRecording={actions.stopRecording}
         chainId={state.chainId}
         onChainChange={actions.setChainId}
+        showTitle={state.showTitle}
+        titleText={state.titleText}
+        setTitleText={actions.setTitleText}
       />
 
       <PostAccessToggles
@@ -101,6 +104,9 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         setTokenAmount={actions.setTokenAmount}
         selectedCategory={state.selectedCategory}
         setSelectedCategory={actions.setSelectedCategory}
+        showTitle={state.showTitle}
+        setShowTitle={actions.setShowTitle}
+        hasVideoOrAudio={computed.hasVideo || computed.hasAudio}
       />
 
       <PostActionBar

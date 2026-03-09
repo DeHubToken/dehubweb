@@ -58,6 +58,10 @@ interface PostContentAreaProps {
   // Chain selector props
   chainId: ChainId;
   onChainChange: (chainId: ChainId) => void;
+  // Title props
+  showTitle: boolean;
+  titleText: string;
+  setTitleText: (text: string) => void;
 }
 
 // URL regex pattern - create fresh each time to avoid state issues with global flag
@@ -132,6 +136,9 @@ export function PostContentArea({
   onStopRecording,
   chainId,
   onChainChange,
+  showTitle,
+  titleText,
+  setTitleText,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
   const isProcessingLinks = useRef(false);
@@ -634,6 +641,26 @@ export function PostContentArea({
             </Avatar>
           </div>
           <div className="flex-1 min-w-0 mt-12 sm:mt-0">
+            {/* Title input - shown when title toggle is on */}
+            <AnimatePresence>
+              {showTitle && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <input
+                    type="text"
+                    value={titleText}
+                    onChange={(e) => setTitleText(e.target.value)}
+                    placeholder="Title"
+                    maxLength={100}
+                    className="w-full bg-transparent text-white text-lg sm:text-xl font-medium resize-none outline-none mb-1 placeholder:text-white/30"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
             <div
               ref={editorRef}
               contentEditable
