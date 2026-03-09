@@ -34,6 +34,8 @@ export function ProfileOptionsContent({
 }: ProfileOptionsDrawerProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+
   const handleCopyProfileUrl = () => {
     navigator.clipboard.writeText(`https://dehub.io/${profile.handle.replace('@', '')}`);
     toast.success(t('profileOptions.profileUrlCopied'));
