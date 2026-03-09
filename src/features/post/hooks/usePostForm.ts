@@ -1193,6 +1193,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       stopRecording,
       setChainId,
       setSelectedCategory,
+      setShowTitle,
+      setTitleText,
       insertEmoji,
       insertGif,
       openCameraCapture,
