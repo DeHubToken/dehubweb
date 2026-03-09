@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
@@ -645,9 +645,12 @@ export default function NotificationsPage() {
   const markCustomAsRead = useMarkCustomNotificationAsRead();
   const markAllCustomAsRead = useMarkAllCustomNotificationsAsRead();
   
-  // Merge DeHub + custom notifications, sorted by date
-  const allNotifications = [...dehubNotifications, ...customNotifications]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  // Merge DeHub + custom notifications, sorted by date (memoized to prevent re-triggering enrichment)
+  const allNotifications = useMemo(
+    () => [...dehubNotifications, ...customNotifications]
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    [dehubNotifications, customNotifications]
+  );
   
   // Batch-avatar enrichment for fresh profile pictures
   const [enrichedAvatars, setEnrichedAvatars] = useState<Map<string, EnrichedAvatar>>(new Map());
