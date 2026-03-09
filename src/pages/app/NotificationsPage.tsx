@@ -430,20 +430,15 @@ function NotificationItem({
           const hasMultipleActors = aggCount > 1 && aggNames && aggNames.length > 1;
           
           if (hasMultipleActors) {
-            // Stacked avatars for aggregated notifications
-            const extraCount = aggCount - 2;
+            // Stacked avatars for aggregated notifications (left-to-right, top-to-bottom)
+            const secondActorName = aggNames[1] || 'U';
+            const secondActorLink = `/${secondActorName}`;
             return (
               <div className="relative w-12 h-12">
-                {/* Second avatar (behind) */}
-                <Avatar className="w-8 h-8 absolute top-0 right-0 ring-2 ring-zinc-900">
-                  <AvatarFallback className="bg-zinc-600 text-white text-xs font-medium">
-                    {(aggNames[1] || 'U').charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                {/* Primary avatar (front) */}
+                {/* Primary avatar (front, top-left) */}
                 {profileLink ? (
                   <Link to={profileLink} onClick={(e) => e.stopPropagation()}>
-                    <Avatar className="w-9 h-9 absolute bottom-0 left-0 ring-2 ring-zinc-900 z-10">
+                    <Avatar className="w-9 h-9 absolute top-0 left-0 ring-2 ring-zinc-900 z-10">
                       <AvatarImage src={avatarUrl} />
                       <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
                         {fallbackLetter}
@@ -451,13 +446,21 @@ function NotificationItem({
                     </Avatar>
                   </Link>
                 ) : (
-                  <Avatar className="w-9 h-9 absolute bottom-0 left-0 ring-2 ring-zinc-900 z-10">
+                  <Avatar className="w-9 h-9 absolute top-0 left-0 ring-2 ring-zinc-900 z-10">
                     <AvatarImage src={avatarUrl} />
                     <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
                       {fallbackLetter}
                     </AvatarFallback>
                   </Avatar>
                 )}
+                {/* Second avatar (behind, bottom-right) */}
+                <Link to={secondActorLink} onClick={(e) => e.stopPropagation()}>
+                  <Avatar className="w-8 h-8 absolute bottom-0 right-0 ring-2 ring-zinc-900">
+                    <AvatarFallback className="bg-zinc-600 text-white text-xs font-medium">
+                      {secondActorName.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </Link>
                 {/* Type icon badge at bottom-left */}
                 <div className="absolute -bottom-1 -left-1 z-20 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
                   {getNotificationIcon(notification.type)}
