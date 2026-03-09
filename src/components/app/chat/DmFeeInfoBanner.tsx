@@ -15,7 +15,8 @@ interface DmFeeInfoBannerProps {
   recipientName: string;
   customTipAmount: string;
   onCustomTipChange: (amount: string) => void;
-  balance: number | null;
+  balanceBase: number | null;
+  balanceBnb: number | null;
   balanceLoading: boolean;
 }
 
@@ -24,13 +25,15 @@ export function DmFeeInfoBanner({
   recipientName,
   customTipAmount,
   onCustomTipChange,
-  balance,
+  balanceBase,
+  balanceBnb,
   balanceLoading,
 }: DmFeeInfoBannerProps) {
   const tipAmount = customTipAmount ? parseFloat(customTipAmount) : fee;
   const isAboveMinimum = !Number.isNaN(tipAmount) && tipAmount > fee;
-  const hasSufficientBalance = balance !== null && balance >= fee;
-  const hasCustomSufficient = balance !== null && !Number.isNaN(tipAmount) && balance >= tipAmount;
+  const bestBalance = Math.max(balanceBase ?? -1, balanceBnb ?? -1);
+  const hasSufficientBalance = bestBalance >= fee;
+  const hasCustomSufficient = !Number.isNaN(tipAmount) && bestBalance >= tipAmount;
 
   return (
     <div className="px-4 py-4 space-y-4">
@@ -51,20 +54,42 @@ export function DmFeeInfoBanner({
         </div>
 
         {/* Balance info */}
-        <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-900/60 border border-white/5">
-          <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-          <span className="text-xs text-zinc-400">Your balance:</span>
+        <div className="px-3 py-2 rounded-xl bg-zinc-900/60 border border-white/5 space-y-1.5">
           {balanceLoading ? (
-            <span className="text-xs text-zinc-500">Loading...</span>
-          ) : balance !== null ? (
-            <span className={`text-xs font-medium ${hasSufficientBalance ? 'text-green-400' : 'text-red-400'}`}>
-              {balance.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB
-            </span>
+            <div className="flex items-center gap-2">
+              <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+              <span className="text-xs text-zinc-500">Loading balances...</span>
+            </div>
           ) : (
-            <span className="text-xs text-zinc-500">Unavailable</span>
-          )}
-          {!hasSufficientBalance && balance !== null && (
-            <span className="text-xs text-red-400 ml-auto">Insufficient</span>
+            <>
+              {/* Base balance */}
+              <div className="flex items-center gap-2">
+                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                <span className="text-xs text-zinc-400">Base:</span>
+                {balanceBase !== null ? (
+                  <span className={`text-xs font-medium ${balanceBase >= fee ? 'text-green-400' : 'text-red-400'}`}>
+                    {balanceBase.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB
+                  </span>
+                ) : (
+                  <span className="text-xs text-zinc-500">Unavailable</span>
+                )}
+              </div>
+              {/* BNB balance */}
+              <div className="flex items-center gap-2">
+                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                <span className="text-xs text-zinc-400">BNB:</span>
+                {balanceBnb !== null ? (
+                  <span className={`text-xs font-medium ${balanceBnb >= fee ? 'text-green-400' : 'text-red-400'}`}>
+                    {balanceBnb.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB
+                  </span>
+                ) : (
+                  <span className="text-xs text-zinc-500">Unavailable</span>
+                )}
+              </div>
+              {!hasSufficientBalance && (
+                <span className="text-xs text-red-400">Insufficient on both chains</span>
+              )}
+            </>
           )}
         </div>
       </div>

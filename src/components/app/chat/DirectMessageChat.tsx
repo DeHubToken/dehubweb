@@ -29,7 +29,7 @@ import {
   switchChain,
   parseTxError,
 } from '@/lib/contracts/aa-utils';
-import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import {
   DropdownMenu,
@@ -317,7 +317,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
 
   // Fee-related state
   const [customTipAmount, setCustomTipAmount] = useState('');
-  const [feeBalance, setFeeBalance] = useState<number | null>(null);
+  const [feeBalanceBase, setFeeBalanceBase] = useState<number | null>(null);
+  const [feeBalanceBnb, setFeeBalanceBnb] = useState<number | null>(null);
   const [feeBalanceLoading, setFeeBalanceLoading] = useState(false);
   const [isSendingFee, setIsSendingFee] = useState(false);
 
@@ -328,24 +329,27 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   // Determine if fee is required
   const feeRequired = dmFee?.required && !dmFee.hasFreeAccess;
   const activeFee = feeRequired ? (customTipAmount ? parseFloat(customTipAmount) || dmFee!.fee : dmFee!.fee) : 0;
-  const feeSendDisabled = feeRequired && (feeBalance === null || feeBalance < activeFee);
+  // Best balance across both chains for send-disable check
+  const bestFeeBalance = Math.max(feeBalanceBase ?? -1, feeBalanceBnb ?? -1);
+  const feeSendDisabled = feeRequired && (bestFeeBalance < activeFee);
 
-  // Check balance when fee is required
+  // Check DHB balance on both Base and BNB when fee is required
   useEffect(() => {
     if (!feeRequired) return;
+    const addr = walletAddress;
+    if (!addr) return;
     setFeeBalanceLoading(true);
-    const chainConfig = getChainConfig(BASE_CHAIN_ID);
-    getWalletAddress()
-      .then(addr => getERC20Balance(chainConfig.dhbToken, addr))
-      .then(bal => {
-        setFeeBalance(Number(bal) / 1e18);
-        setFeeBalanceLoading(false);
-      })
-      .catch(() => {
-        setFeeBalance(null);
-        setFeeBalanceLoading(false);
-      });
-  }, [feeRequired]);
+    const baseConfig = getChainConfig(BASE_CHAIN_ID);
+    const bnbConfig = getChainConfig(BNB_CHAIN_ID);
+    Promise.all([
+      getERC20Balance(baseConfig.dhbToken, addr, BASE_CHAIN_ID).catch(() => null),
+      getERC20Balance(bnbConfig.dhbToken, addr, BNB_CHAIN_ID).catch(() => null),
+    ]).then(([baseBal, bnbBal]) => {
+      setFeeBalanceBase(baseBal !== null ? Number(baseBal) / 1e18 : null);
+      setFeeBalanceBnb(bnbBal !== null ? Number(bnbBal) / 1e18 : null);
+      setFeeBalanceLoading(false);
+    });
+  }, [feeRequired, walletAddress]);
 
   // When parent upgrades conversation to one with real dmId (e.g. after getContacts returns DeHub data), use it
   useEffect(() => {
@@ -583,16 +587,20 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     if (feeRequired) {
       setIsSendingFee(true);
       try {
-        const chainId = BASE_CHAIN_ID;
+        const amountWei = toWei(activeFee, DHB_TOKEN.decimals);
+
+        // Auto-select chain: prefer Base, fall back to BNB
+        const chainId = (feeBalanceBase !== null && feeBalanceBase >= activeFee)
+          ? BASE_CHAIN_ID
+          : BNB_CHAIN_ID;
         const chainConfig = getChainConfig(chainId);
         await switchChain(chainId);
         const signerAddress = await getWalletAddress();
-        const amountWei = toWei(activeFee, DHB_TOKEN.decimals);
-        const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+        const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress, chainId);
 
         if (balance < amountWei) {
           const balanceHuman = Number(balance) / 1e18;
-          toast.error(`Insufficient DHB. Need ${activeFee.toLocaleString()} but have ${balanceHuman.toFixed(2)}`);
+          toast.error(`Insufficient DHB on ${chainConfig.name}. Need ${activeFee.toLocaleString()} but have ${balanceHuman.toFixed(2)}`);
           setIsSendingFee(false);
           return;
         }
@@ -643,7 +651,11 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         toast.success(`Sent ${activeFee.toLocaleString()} DHB + message! 🎉`, { id: 'dm-fee-send' });
 
         // Update balance after payment
-        setFeeBalance(prev => prev !== null ? prev - activeFee : null);
+        if (chainId === BASE_CHAIN_ID) {
+          setFeeBalanceBase(prev => prev !== null ? prev - activeFee : null);
+        } else {
+          setFeeBalanceBnb(prev => prev !== null ? prev - activeFee : null);
+        }
       } catch (error: unknown) {
         console.error('[DM] Fee payment failed:', error);
         const message = parseTxError(error as Error);
@@ -909,7 +921,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
               recipientName={displayName}
               customTipAmount={customTipAmount}
               onCustomTipChange={setCustomTipAmount}
-              balance={feeBalance}
+              balanceBase={feeBalanceBase}
+              balanceBnb={feeBalanceBnb}
               balanceLoading={feeBalanceLoading}
             />
           )}

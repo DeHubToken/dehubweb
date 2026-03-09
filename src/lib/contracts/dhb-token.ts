@@ -27,7 +27,7 @@ export const CHAIN_CONFIGS: Record<ChainId, ChainConfig> = {
   [BASE_CHAIN_ID]: {
     chainId: BASE_CHAIN_ID,
     name: 'Base',
-    rpcUrl: 'https://mainnet.base.org',
+    rpcUrl: 'https://base-rpc.publicnode.com',
     explorerUrl: 'https://basescan.org',
     dhbToken: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c',
     streamCollection: '0x9f8012074d27F8596C0E5038477ACB52057BC934',
