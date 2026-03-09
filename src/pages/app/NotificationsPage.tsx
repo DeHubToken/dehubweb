@@ -426,25 +426,71 @@ function NotificationItem({
         (notification.read || isClosing) ? 'bg-zinc-900/50' : 'bg-zinc-800/80 hover:bg-zinc-800'
       }`}
     >
-      {/* Avatar with type icon overlay */}
+      {/* Avatar with type icon overlay — stacked for aggregated notifications */}
       <div className="relative flex-shrink-0">
-        {profileLink ? (
-          <Link to={profileLink} onClick={(e) => e.stopPropagation()}>
+        {(() => {
+          const aggCount = (notification as any).aggregatedCount || 1;
+          const aggNames = (notification as any).latestActorNames as string[] | undefined;
+          const hasMultipleActors = aggCount > 1 && aggNames && aggNames.length > 1;
+          
+          if (hasMultipleActors) {
+            // Stacked avatars for aggregated notifications
+            const extraCount = aggCount - 2;
+            return (
+              <div className="relative w-12 h-12">
+                {/* Second avatar (behind) */}
+                <Avatar className="w-8 h-8 absolute top-0 right-0 ring-2 ring-zinc-900">
+                  <AvatarFallback className="bg-zinc-600 text-white text-xs font-medium">
+                    {(aggNames[1] || 'U').charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                {/* Primary avatar (front) */}
+                {profileLink ? (
+                  <Link to={profileLink} onClick={(e) => e.stopPropagation()}>
+                    <Avatar className="w-9 h-9 absolute bottom-0 left-0 ring-2 ring-zinc-900 z-10">
+                      <AvatarImage src={avatarUrl} />
+                      <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
+                        {fallbackLetter}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Link>
+                ) : (
+                  <Avatar className="w-9 h-9 absolute bottom-0 left-0 ring-2 ring-zinc-900 z-10">
+                    <AvatarImage src={avatarUrl} />
+                    <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
+                      {fallbackLetter}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+                {/* +N badge if more than 2 */}
+                {extraCount > 0 && (
+                  <div className="absolute -bottom-1 -left-1 z-20 bg-zinc-700 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center ring-2 ring-zinc-900">
+                    +{extraCount > 99 ? '99' : extraCount}
+                  </div>
+                )}
+              </div>
+            );
+          }
+          
+          // Single avatar (default)
+          return profileLink ? (
+            <Link to={profileLink} onClick={(e) => e.stopPropagation()}>
+              <Avatar className="w-12 h-12">
+                <AvatarImage src={avatarUrl} />
+                <AvatarFallback className="bg-zinc-700 text-white font-medium">
+                  {fallbackLetter}
+                </AvatarFallback>
+              </Avatar>
+            </Link>
+          ) : (
             <Avatar className="w-12 h-12">
               <AvatarImage src={avatarUrl} />
               <AvatarFallback className="bg-zinc-700 text-white font-medium">
                 {fallbackLetter}
               </AvatarFallback>
             </Avatar>
-          </Link>
-        ) : (
-          <Avatar className="w-12 h-12">
-            <AvatarImage src={avatarUrl} />
-            <AvatarFallback className="bg-zinc-700 text-white font-medium">
-              {fallbackLetter}
-            </AvatarFallback>
-          </Avatar>
-        )}
+          );
+        })()}
         <div className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
           {getNotificationIcon(notification.type)}
         </div>
