@@ -458,12 +458,10 @@ function NotificationItem({
                     </AvatarFallback>
                   </Avatar>
                 )}
-                {/* +N badge if more than 2 */}
-                {extraCount > 0 && (
-                  <div className="absolute -bottom-1 -left-1 z-20 bg-zinc-700 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center ring-2 ring-zinc-900">
-                    +{extraCount > 99 ? '99' : extraCount}
-                  </div>
-                )}
+                {/* Type icon badge at bottom-left */}
+                <div className="absolute -bottom-1 -left-1 z-20 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
+                  {getNotificationIcon(notification.type)}
+                </div>
               </div>
             );
           }
@@ -487,9 +485,12 @@ function NotificationItem({
             </Avatar>
           );
         })()}
-        <div className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
-          {getNotificationIcon(notification.type)}
-        </div>
+        {/* Type icon badge — only for single-actor notifications (aggregated ones render it inside) */}
+        {!((notification as any).aggregatedCount > 1 && ((notification as any).latestActorNames as string[] | undefined)?.length! > 1) && (
+          <div className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
+            {getNotificationIcon(notification.type)}
+          </div>
+        )}
       </div>
 
       {/* Content */}
