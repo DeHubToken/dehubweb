@@ -439,12 +439,18 @@ function NotificationItem({
           {getNotificationContent(notification, bundle, t)}
         </p>
         
-        {/* Post preview snippet — show title/text for context */}
-        {notification.tokenTitle && bundle.bundleType !== 'same-actor' && (
-          <p className="text-xs text-zinc-500 mt-0.5 line-clamp-1 italic">
-            "{notification.tokenTitle}"
-          </p>
-        )}
+        {/* Post preview snippet — for replies/mentions show the comment text, otherwise the post title */}
+        {bundle.bundleType !== 'same-actor' && (() => {
+          const commentPreview = (notification as any).commentPreview;
+          const isReplyOrMention = notification.type === 'comment_reply' || notification.type === 'mention';
+          const previewText = isReplyOrMention && commentPreview ? commentPreview : notification.tokenTitle;
+          if (!previewText) return null;
+          return (
+            <p className="text-xs text-zinc-500 mt-0.5 line-clamp-1 italic">
+              "{previewText}"
+            </p>
+          );
+        })()}
         
         {/* Show individual actor names below backend-aggregated follows */}
         {notification.type === 'following' && (notification as any).latestActorNames?.length > 1 && (
