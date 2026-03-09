@@ -886,6 +886,10 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         const lines = text.trim().split('\n');
         postTitle = (lines[0] || '').trim().slice(0, 100) || ' ';
         postDescription = lines.slice(1).join('\n').trim();
+      } else if (showTitle && titleText.trim()) {
+        // Text/Image posts with explicit title
+        postTitle = titleText.trim().slice(0, 100);
+        postDescription = text.trim();
       } else {
         // Image/Text posts: no title, everything goes to description
         postTitle = ' ';
