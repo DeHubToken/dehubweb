@@ -377,6 +377,11 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     if (hasInitialized.current) return;
     hasInitialized.current = true;
 
+    // Skip createAndStart when we already have a real conversation ID — backend returns error for existing convos
+    const convId = conversation.id;
+    const hasRealConvId = !convId.startsWith('new_') && !/^0x[0-9a-fA-F]{40}$/i.test(convId);
+    if (hasRealConvId) return;
+
     const address = otherUser?.address;
     const knownId = otherUser?._id;
 
