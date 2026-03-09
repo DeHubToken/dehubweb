@@ -1134,4 +1134,5 @@
     "completed": "مکمل",
     "underReview": "جائزے میں"
   }
+,"profileOptions": { "copyProfileUrl": "پروفائل URL کاپی کرو", "copyUsername": "یوزرنیم کاپی کرو", "copyAddress": "پتہ کاپی کرو", "openWallet": "والٹ کھولو", "message": "پیغام", "sendTip": "ٹپ بھیجو", "notify": "خبردار کرو", "makeOffer": "آفر کرو", "unfollow": "ان فالو کرو", "block": "بلاک کرو", "unblock": "ان بلاک کرو", "profileUrlCopied": "پروفائل URL کاپی ہو گیا", "usernameCopied": "یوزرنیم کاپی ہو گیا", "addressCopied": "پتہ کاپی ہو گیا", "noWalletAddress": "والٹ پتہ دستیاب نہیں", "notificationsEnabled": "اس پروفائل کیلئے نوٹیفکیشن فعال ہو گئے" }
 }

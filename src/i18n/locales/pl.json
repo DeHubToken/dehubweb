@@ -23,4 +23,5 @@
       ]
     }
   }
+,"profileOptions": { "copyProfileUrl": "Kopiuj URL profilu", "copyUsername": "Kopiuj nazwę użytkownika", "copyAddress": "Kopiuj adres", "openWallet": "Otwórz portfel", "message": "Wiadomość", "sendTip": "Wyślij napiwek", "notify": "Powiadom", "makeOffer": "Złóż ofertę", "unfollow": "Przestań obserwować", "block": "Zablokuj", "unblock": "Odblokuj", "profileUrlCopied": "URL profilu skopiowany", "usernameCopied": "Nazwa użytkownika skopiowana", "addressCopied": "Adres skopiowany", "noWalletAddress": "Brak adresu portfela", "notificationsEnabled": "Powiadomienia włączone dla tego profilu" }
 }

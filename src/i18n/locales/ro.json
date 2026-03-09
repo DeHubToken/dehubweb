@@ -56,4 +56,5 @@
     "noWalletAddress": "Nu există adresă de portofel disponibilă",
     "notificationsEnabled": "Notificările au fost activate pentru acest profil"
   }
+,"profileOptions": { "copyProfileUrl": "Copiază URL-ul profilului", "copyUsername": "Copiază numele de utilizator", "copyAddress": "Copiază adresa", "openWallet": "Deschide portofelul", "message": "Mesaj", "sendTip": "Trimite bacșiș", "notify": "Notifică", "makeOffer": "Fă o ofertă", "unfollow": "Nu mai urmări", "block": "Blochează", "unblock": "Deblochează", "profileUrlCopied": "URL-ul profilului a fost copiat", "usernameCopied": "Numele de utilizator a fost copiat", "addressCopied": "Adresa a fost copiată", "noWalletAddress": "Nicio adresă de portofel disponibilă", "notificationsEnabled": "Notificările au fost activate pentru acest profil" }
 }

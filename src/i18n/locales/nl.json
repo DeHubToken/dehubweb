@@ -462,4 +462,5 @@
       }
     }
   }
+,"profileOptions": { "copyProfileUrl": "Profiel-URL kopiëren", "copyUsername": "Gebruikersnaam kopiëren", "copyAddress": "Adres kopiëren", "openWallet": "Portemonnee openen", "message": "Bericht", "sendTip": "Fooi sturen", "notify": "Melden", "makeOffer": "Bod doen", "unfollow": "Ontvolgen", "block": "Blokkeren", "unblock": "Deblokkeren", "profileUrlCopied": "Profiel-URL gekopieerd", "usernameCopied": "Gebruikersnaam gekopieerd", "addressCopied": "Adres gekopieerd", "noWalletAddress": "Geen portemonnee-adres beschikbaar", "notificationsEnabled": "Meldingen ingeschakeld voor dit profiel" }
 }
