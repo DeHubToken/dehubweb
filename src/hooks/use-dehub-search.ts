@@ -159,17 +159,19 @@ export function useDeHubSearch({
   limit = 15,
   minQueryLength = 3,
 }: UseDeHubSearchOptions) {
-  // Debounce the query to prevent excessive API calls
-  const debouncedQuery = useDebouncedValue(query, 300);
+  // Use the query directly — callers are responsible for debouncing
+  // (Previously debounced internally, but this caused race conditions when
+  // other hooks received the raw query at different timing)
+  const trimmedQuery = query.trim();
 
   // Only enable if query meets minimum length requirement
-  const shouldFetch = enabled && debouncedQuery.trim().length >= minQueryLength;
+  const shouldFetch = enabled && trimmedQuery.length >= minQueryLength;
 
   return useInfiniteQuery({
-    queryKey: ['dehub-search', debouncedQuery.trim(), type, postType],
+    queryKey: ['dehub-search', trimmedQuery, type, postType],
     queryFn: async ({ pageParam = 0 }): Promise<SearchPageResult> => {
       const result = await universalSearch({
-        q: debouncedQuery.trim(),
+        q: trimmedQuery,
         type,
         postType,
         page: pageParam,
