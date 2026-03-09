@@ -676,7 +676,10 @@ export default function NotificationsPage() {
     const uniqueNewAddresses = [...new Set(newAddresses)];
     const uniqueNewUsernames = [...new Set(secondActorUsernames)];
     
-    if (uniqueNewAddresses.length === 0 && uniqueNewUsernames.length === 0) return;
+    if (uniqueNewAddresses.length === 0 && uniqueNewUsernames.length === 0) {
+      setEnrichmentReady(true);
+      return;
+    }
     
     // Mark as in-flight immediately to prevent duplicate calls
     uniqueNewAddresses.forEach(addr => enrichedRef.current.add(addr));
