@@ -139,6 +139,11 @@ export function FollowersListDrawer({
           currentUserAddress &&
           profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
 
+        const isOwnFollowersList =
+          title === 'Followers' &&
+          currentUserAddress &&
+          profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
+
         // Fetch current user's following list once to resolve isFollowing locally
         if (!isOwnFollowingList && isAuthenticated && currentUserAddress && !followingSetRef.current) {
           try {
