@@ -120,9 +120,14 @@ function getDmSocket(): Socket {
       console.warn('[DM Socket] Connection error:', err.message);
     });
 
-    // Debug: log all incoming events from server
+    // Debug: log all incoming events from server (stringify error payload for visibility)
     dmSocket.onAny((event, ...args) => {
-      console.log('[DM Socket] ← server event:', event, args);
+      if (event === 'error') {
+        const err = args[0];
+        console.warn('[DM Socket] ← server error:', typeof err === 'object' ? JSON.stringify(err) : err);
+      } else {
+        console.log('[DM Socket] ← server event:', event, args);
+      }
     });
   }
 
