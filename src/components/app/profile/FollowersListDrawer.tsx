@@ -149,7 +149,6 @@ export function FollowersListDrawer({
         // Fetch current user's following list once to resolve isFollowing locally
         if (!isOwnFollowingList && isAuthenticated && currentUserAddress && !followingSetRef.current) {
           try {
-            // Paginate to fetch ALL of the current user's following list
             const allFollowing: string[] = [];
             let page = 1;
             let hasMore = true;
@@ -158,7 +157,7 @@ export function FollowersListDrawer({
               allFollowing.push(...items.map(f => (f.address || '').toLowerCase()));
               hasMore = pagination?.hasMore ?? false;
               page++;
-              if (page > 10) break; // safety cap at 3000 followings
+              if (page > 10) break;
             }
             followingSetRef.current = new Set(allFollowing);
           } catch {
@@ -166,9 +165,29 @@ export function FollowersListDrawer({
           }
         }
 
+        // Fetch current user's followers list once to resolve followsYou on the following list
+        if (isOwnFollowingList && isAuthenticated && currentUserAddress && !followersSetRef.current) {
+          try {
+            const allFollowers: string[] = [];
+            let page = 1;
+            let hasMore = true;
+            while (hasMore) {
+              const { items, pagination } = await getFollowList(currentUserAddress, 'followers', { page, limit: FOLLOWING_CACHE_PAGE_SIZE });
+              allFollowers.push(...items.map(f => (f.address || '').toLowerCase()));
+              hasMore = pagination?.hasMore ?? false;
+              page++;
+              if (page > 10) break;
+            }
+            followersSetRef.current = new Set(allFollowers);
+          } catch {
+            followersSetRef.current = new Set();
+          }
+        }
+
         const followingSet = followingSetRef.current;
+        const followersSet = followersSetRef.current;
         const finalUsers: UserListItem[] = isOwnFollowingList
-          ? processed.map(u => ({ ...u, isFollowing: true }))
+          ? processed.map(u => ({ ...u, isFollowing: true, followsYou: followersSet ? followersSet.has(u.address.toLowerCase()) : false }))
           : processed.map(u => ({
               ...u,
               isFollowing: followingSet ? followingSet.has(u.address.toLowerCase()) : false,
