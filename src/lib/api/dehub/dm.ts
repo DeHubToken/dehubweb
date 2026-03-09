@@ -185,17 +185,24 @@ function mapApiConversationToDeHub(item: any, myAddress: string): DeHubConversat
     lastMessage = mapDmMessageToLegacy(sorted[0]);
   }
 
-  // Enrich otherUser from message sender data when participant data is incomplete
-  // The API contacts endpoint often has limited participant fields but richer sender data in messages
-  if (otherUser && Array.isArray(item.messages)) {
-    const otherAddr = otherUser.address?.toLowerCase();
-    const senderMsg = item.messages.find((m: any) => m.sender?.address?.toLowerCase() === otherAddr);
-    if (senderMsg?.sender) {
-      const enriched = normalizeDmSender(senderMsg.sender);
-      if (!otherUser.displayName && enriched.displayName) otherUser.displayName = enriched.displayName;
-      if (!otherUser.display_name && enriched.display_name) otherUser.display_name = enriched.display_name;
-      if (!otherUser.avatarImageUrl && enriched.avatarImageUrl) otherUser.avatarImageUrl = enriched.avatarImageUrl;
-      if (otherUser.badgeBalance == null && enriched.badgeBalance != null) otherUser.badgeBalance = enriched.badgeBalance;
+  // Enrich/derive otherUser from message sender data when participant data is incomplete
+  // The API contacts endpoint sometimes returns only 1 participant (the current user),
+  // leaving otherUser undefined — recover it from message senders.
+  if (Array.isArray(item.messages) && item.messages.length > 0) {
+    // Find any message whose sender is NOT the current user
+    const otherSenderMsg = item.messages.find(
+      (m: any) => m.sender?.address?.toLowerCase() !== myAddress.toLowerCase()
+    );
+    if (otherSenderMsg?.sender) {
+      const enriched = normalizeDmSender(otherSenderMsg.sender);
+      if (!otherUser) {
+        otherUser = enriched;
+      } else {
+        if (!otherUser.displayName && enriched.displayName) otherUser.displayName = enriched.displayName;
+        if (!otherUser.display_name && enriched.display_name) otherUser.display_name = enriched.display_name;
+        if (!otherUser.avatarImageUrl && enriched.avatarImageUrl) otherUser.avatarImageUrl = enriched.avatarImageUrl;
+        if (otherUser.badgeBalance == null && enriched.badgeBalance != null) otherUser.badgeBalance = enriched.badgeBalance;
+      }
     }
   }
 
