@@ -1010,6 +1010,10 @@ export default function NotificationsPage() {
             <div className="flex justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-zinc-500" />
             </div>
+          ) : isLoading || (notifications.length > 0 && !enrichmentReady) ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-zinc-500" />
+            </div>
           ) : notifications.length === 0 ? (
             <div className="p-8 flex flex-col items-center justify-center text-center">
               <Bell className="w-12 h-12 text-zinc-600 mb-4" />
