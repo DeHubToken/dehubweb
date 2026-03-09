@@ -268,7 +268,7 @@ export function ProfileHeader({
                       ) : (
                         <UserPlus className="w-4 h-4" />
                       )}
-                      {isTargetPrivate ? 'Request' : 'Follow'}
+                      {isTargetPrivate ? 'Request' : apiProfile?.followsYou ? 'Follow Back' : 'Follow'}
                     </Button>
                   )}
                   {isFollowing && (
