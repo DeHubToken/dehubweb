@@ -27,9 +27,11 @@ async function getActiveProvider(chainId?: number): Promise<{ provider: any; isW
   const web3authProvider = getWeb3AuthProvider();
   if (web3authProvider) return { provider: web3authProvider, isWeb3Auth: true };
 
-  // Check wagmi (external wallet) -- use getAccount instead of getConnectorClient
+  // Check wagmi (external wallet).
+  // Accept 'connected' OR 'reconnecting' — wagmi is in 'reconnecting' on page load
+  // while auto-reconnect is in progress; address is already known in both states.
   const account = getAccount(wagmiConfig);
-  if (account.isConnected) {
+  if (account.address && (account.isConnected || account.status === 'reconnecting')) {
     return { provider: null, isWeb3Auth: false };
   }
 

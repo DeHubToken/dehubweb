@@ -17,8 +17,9 @@ interface DmStatusResponse {
  */
 function deriveWhoCanMessage(disables?: string[]): WhoCanMessage {
   if (!disables || disables.length === 0) return 'everyone';
-  // Any disable entry means DMs are closed
-  return 'none';
+  // ACTIVE_ALL means DMs are open; only treat as closed if a disable entry is present
+  const hasDisable = disables.some(d => !d.startsWith('ACTIVE'));
+  return hasDisable ? 'none' : 'everyone';
 }
 
 /**
@@ -48,7 +49,7 @@ export function useDmSettings() {
           method: 'GET',
           requiresAuth: true,
         });
-        return response?.result || response || {};
+        return response?.data || response?.result || response || {};
       } catch (error) {
         console.error('[useDmSettings] Failed to fetch DM status:', error);
         return {};

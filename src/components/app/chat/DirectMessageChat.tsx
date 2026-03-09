@@ -220,13 +220,6 @@ function MessageBubble({
               />
             )}
 
-            {/* Pending payment indicator */}
-            {message.paymentStatus === 'pending' && (
-              <div className="flex items-center gap-1 mt-1 text-xs text-amber-400">
-                <Loader2 className="w-3 h-3 animate-spin" />
-                <span>Payment pending</span>
-              </div>
-            )}
 
             {/* Tip badge on regular messages */}
             {message.tipAmount != null && (message.msgType as string) !== 'tip' && (
@@ -328,9 +321,12 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   // Determine if fee is required
   const feeRequired = dmFee?.required && !dmFee.hasFreeAccess;
   const activeFee = feeRequired ? (customTipAmount ? parseFloat(customTipAmount) || dmFee!.fee : dmFee!.fee) : 0;
-  // Best balance across both chains for send-disable check
+  // Best balance across both chains for send-disable check.
+  // Only disable when balances have loaded AND both are insufficient.
+  // While loading (both null), keep enabled so the payment attempt does its own live balance check.
   const bestFeeBalance = Math.max(feeBalanceBase ?? -1, feeBalanceBnb ?? -1);
-  const feeSendDisabled = feeRequired && (bestFeeBalance < activeFee);
+  const balancesLoaded = feeBalanceBase !== null || feeBalanceBnb !== null;
+  const feeSendDisabled = feeRequired && balancesLoaded && (bestFeeBalance < activeFee);
 
   // Check DHB balance on both Base and BNB when fee is required
   useEffect(() => {
