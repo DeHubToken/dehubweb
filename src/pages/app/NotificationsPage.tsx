@@ -213,7 +213,7 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
   }
 
   // Backend-aggregated follow
-  if (notification.type === 'following' && (notification as any).aggregatedCount > 2) {
+  if (notification.type === 'following' && (notification as any).aggregatedCount > 3) {
     const othersCount = (notification as any).aggregatedCount - 1;
     const othersText = othersCount === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: othersCount });
     return tr('notifications.andOthersFollowing', { name: actorName, others: othersText });
