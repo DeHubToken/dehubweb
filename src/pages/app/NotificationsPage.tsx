@@ -430,66 +430,58 @@ function NotificationItem({
           const hasMultipleActors = aggCount > 1 && ['like', 'comment', 'repost'].includes(notification.type as string);
           
           if (hasMultipleActors) {
-            // Stacked avatars for aggregated notifications (left-to-right, top-to-bottom)
-            const hasSecondName = aggNames && aggNames.length > 1;
-            const secondActorName = hasSecondName ? aggNames[1] : null;
-            const secondActorLink = secondActorName ? `/${secondActorName}` : null;
-            const othersCount = aggCount - 1;
+            // 2×2 grid: TL=avatar1, TR=avatar2, BL=avatar3, BR=type icon
+            const actorName2 = aggNames && aggNames.length > 1 ? aggNames[1] : null;
+            const actorName3 = aggNames && aggNames.length > 2 ? aggNames[2] : null;
             
-            // Try to find second actor's avatar from enriched data by matching username
-            let secondAvatarUrl: string | undefined;
-            if (secondActorName) {
-              for (const [, enrichedEntry] of enrichedAvatars) {
-                if (enrichedEntry.username?.toLowerCase() === secondActorName.toLowerCase() && enrichedEntry.avatarUrl) {
-                  secondAvatarUrl = enrichedEntry.avatarUrl;
-                  break;
+            // Find avatars for 2nd and 3rd actors from enriched data
+            const findAvatarByUsername = (username: string | null) => {
+              if (!username) return undefined;
+              for (const [, entry] of enrichedAvatars) {
+                if (entry.username?.toLowerCase() === username.toLowerCase() && entry.avatarUrl) {
+                  return entry.avatarUrl;
                 }
               }
-            }
+              return undefined;
+            };
+            const avatar2Url = findAvatarByUsername(actorName2);
+            const avatar3Url = findAvatarByUsername(actorName3);
+            
+            const renderGridAvatar = (
+              url: string | undefined,
+              name: string | null,
+              link: string | null,
+              size: string
+            ) => {
+              const avatarEl = (
+                <Avatar className={`${size} ring-1 ring-zinc-800`}>
+                  {url && <AvatarImage src={url} />}
+                  <AvatarFallback className="bg-zinc-700 text-white text-[10px] font-medium">
+                    {name ? name.charAt(0).toUpperCase() : '?'}
+                  </AvatarFallback>
+                </Avatar>
+              );
+              return link ? (
+                <Link to={link} onClick={(e) => e.stopPropagation()}>
+                  {avatarEl}
+                </Link>
+              ) : avatarEl;
+            };
             
             return (
-              <div className="relative w-12 h-12">
-                {/* Primary avatar (front, top-left) */}
-                {profileLink ? (
-                  <Link to={profileLink} onClick={(e) => e.stopPropagation()} className="absolute top-0 left-0 z-10">
-                    <Avatar className="w-9 h-9 ring-2 ring-zinc-900">
-                      <AvatarImage src={avatarUrl} />
-                      <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
-                        {fallbackLetter}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Link>
+              <div className="grid grid-cols-2 grid-rows-2 gap-0.5 w-12 h-12 flex-shrink-0">
+                {/* Top-left: primary actor */}
+                {renderGridAvatar(avatarUrl, notification.actorUsername || fallbackLetter, profileLink, 'w-[23px] h-[23px]')}
+                {/* Top-right: 2nd actor */}
+                {renderGridAvatar(avatar2Url, actorName2, actorName2 ? `/${actorName2}` : null, 'w-[23px] h-[23px]')}
+                {/* Bottom-left: 3rd actor */}
+                {actorName3 ? (
+                  renderGridAvatar(avatar3Url, actorName3, `/${actorName3}`, 'w-[23px] h-[23px]')
                 ) : (
-                  <div className="absolute top-0 left-0 z-10">
-                    <Avatar className="w-9 h-9 ring-2 ring-zinc-900">
-                      <AvatarImage src={avatarUrl} />
-                      <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
-                        {fallbackLetter}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
+                  renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
                 )}
-                {/* Second avatar (behind, bottom-right) — named actor or +N fallback */}
-                {secondActorLink ? (
-                  <Link to={secondActorLink} onClick={(e) => e.stopPropagation()} className="absolute bottom-0 right-0">
-                    <Avatar className="w-8 h-8 ring-2 ring-zinc-900">
-                      {secondAvatarUrl && <AvatarImage src={secondAvatarUrl} />}
-                      <AvatarFallback className="bg-zinc-600 text-white text-xs font-medium">
-                        {secondActorName!.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Link>
-                ) : (
-                  <div className="absolute bottom-0 right-0">
-                    <Avatar className="w-8 h-8 ring-2 ring-zinc-900">
-                      <AvatarFallback className="bg-zinc-600 text-white text-[10px] font-bold">
-                        +{othersCount}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-                )}
-                {/* Type icon badge at bottom-left */}
-                <div className="absolute -bottom-1 -left-1 z-20 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
+                {/* Bottom-right: notification type icon */}
+                <div className="w-[23px] h-[23px] rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center">
                   {getNotificationIcon(notification.type)}
                 </div>
               </div>
