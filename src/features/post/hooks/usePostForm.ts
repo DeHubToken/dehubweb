@@ -364,7 +364,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         toast.success('Audio uploaded');
       }
     };
-  }, [hasImage]);
+  }, [hasImage, text, titleText, editorRef]);
 
   const handleFileDrop = useCallback((files: FileList) => {
     const fileArray = Array.from(files);
