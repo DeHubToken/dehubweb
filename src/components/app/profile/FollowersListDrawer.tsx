@@ -43,6 +43,8 @@ interface UserListItem {
   isVerified?: boolean;
   isFollowing?: boolean;
   followsYou?: boolean;
+  isPrivate?: boolean;
+  isPending?: boolean;
 }
 
 interface FollowersListDrawerProps {
