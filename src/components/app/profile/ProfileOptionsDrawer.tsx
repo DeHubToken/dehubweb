@@ -30,33 +30,34 @@ export function ProfileOptionsContent({
   isBlockLoading = false,
   handleBlock,
 }: ProfileOptionsDrawerProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const handleCopyProfileUrl = () => {
     navigator.clipboard.writeText(`https://dehub.io/${profile.handle.replace('@', '')}`);
-    toast.success('Profile URL copied to clipboard');
+    toast.success(t('profileOptions.profileUrlCopied'));
     setShareSheetOpen(false);
   };
 
   const handleCopyUsername = () => {
     navigator.clipboard.writeText(profile.handle);
-    toast.success('Username copied to clipboard');
+    toast.success(t('profileOptions.usernameCopied'));
     setShareSheetOpen(false);
   };
 
   const handleCopyAddress = () => {
     if (!profile.walletAddress) {
-      toast.error('No wallet address available');
+      toast.error(t('profileOptions.noWalletAddress'));
       return;
     }
     const displayAddress = DISPLAY_WALLET_OVERRIDES[profile.walletAddress.toLowerCase()] || profile.walletAddress;
     navigator.clipboard.writeText(displayAddress);
-    toast.success('Address copied to clipboard');
+    toast.success(t('profileOptions.addressCopied'));
     setShareSheetOpen(false);
   };
 
 
   const handleToggleNotifications = () => {
-    toast.success('Notifications enabled for this profile');
+    toast.success(t('profileOptions.notificationsEnabled'));
     setShareSheetOpen(false);
   };
 
