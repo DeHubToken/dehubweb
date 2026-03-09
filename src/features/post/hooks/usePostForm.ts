@@ -337,6 +337,15 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
   const processAudioFile = useCallback((file: File) => {
     const url = URL.createObjectURL(file);
+
+    // Move existing text to title field when adding audio
+    if (text.trim() && !titleText.trim()) {
+      setTitleText(text.trim().slice(0, 100));
+      setText('');
+      if (editorRef.current) {
+        editorRef.current.innerText = '';
+      }
+    }
     
     // Create audio element to get duration
     const audioEl = new Audio(url);
