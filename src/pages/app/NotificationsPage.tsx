@@ -97,7 +97,6 @@ function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars
       const group: DeHubNotification[] = [n];
       for (let j = i + 1; j < deduped.length; j++) {
         const m = deduped[j];
-        const m = notifications[j];
         if (consumed.has(m.id)) continue;
         if (m.type !== n.type) continue;
         if (m.actorAddress?.toLowerCase() !== n.actorAddress?.toLowerCase()) continue;
