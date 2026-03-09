@@ -790,6 +790,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         tokenId={post.id}
         currentTitle={post.title}
         currentDescription={post.description}
+        currentCategories={post.categories}
         onSuccess={() => {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
           queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
