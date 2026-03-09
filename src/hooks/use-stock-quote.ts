@@ -88,7 +88,10 @@ export interface StockQuote {
 }
 
 export function useStockQuote(query: string, enabled: boolean) {
-  const symbol = query.trim().replace(/^\$/, '').toUpperCase();
+  const trimmed = query.trim();
+  // Only trigger stock search when query starts with $ (cashtag format)
+  const isCashtagQuery = trimmed.startsWith('$') && trimmed.length >= 2;
+  const symbol = trimmed.replace(/^\$/, '').toUpperCase();
   const isValidTicker = /^[A-Z]{1,5}(\.[A-Z])?$/.test(symbol);
 
   return useQuery<StockQuote | null>({
@@ -104,7 +107,7 @@ export function useStockQuote(query: string, enabled: boolean) {
       if (!data?.found) return null;
       return data as StockQuote;
     },
-    enabled: enabled && isValidTicker && symbol.length >= 1,
+    enabled: enabled && isCashtagQuery && isValidTicker,
     staleTime: 60_000,
     gcTime: 5 * 60_000,
     retry: false,

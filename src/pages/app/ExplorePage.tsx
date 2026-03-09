@@ -393,6 +393,8 @@ export default function ExplorePage() {
 
   // Debounced query for short searches (1 second wait for 1-2 chars)
   const debouncedShortQuery = useDebouncedValue(searchQuery, 1000);
+  // Debounced query for full searches (300ms) — single source of truth for all hooks
+  const debouncedFullQuery = useDebouncedValue(searchQuery, 300);
   
   // Determine search mode based on query length
   const trimmedQuery = searchQuery.trim();
@@ -402,7 +404,10 @@ export default function ExplorePage() {
   
   // For short queries (1-2 chars), only search people
   const effectiveSearchType = isShortSearch ? 'accounts' : getTypeForTab(activeTab);
-  const effectiveQuery = isShortSearch ? debouncedShortQuery : searchQuery;
+  // CRITICAL: Use debounced values for ALL hooks to prevent race conditions
+  // Previously, raw searchQuery was passed to some hooks while useDeHubSearch debounced internally,
+  // causing results from different hooks to be out of sync (flashing between old/new results)
+  const effectiveQuery = isShortSearch ? debouncedShortQuery : debouncedFullQuery;
 
   // Save scroll position only when there's an active search
   useEffect(() => {
