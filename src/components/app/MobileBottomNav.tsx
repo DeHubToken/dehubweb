@@ -75,6 +75,23 @@ export function MobileBottomNav() {
     const alreadySeen = localStorage.getItem(SCROLL_HINT_KEY);
     if (alreadySeen) return;
 
+    // Smooth custom scroll animation with ease-out deceleration
+    const smoothScrollTo = (el: HTMLElement, target: number, duration: number) => {
+      const start = el.scrollLeft;
+      const distance = target - start;
+      const startTime = performance.now();
+
+      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+      const step = (now: number) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        el.scrollLeft = start + distance * easeOutCubic(progress);
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
     // Fire hint immediately — scroll all the way right then snap back
     const showTimer = setTimeout(() => {
       setShowScrollHint(true);
@@ -82,17 +99,17 @@ export function MobileBottomNav() {
       const container = scrollRef.current;
       if (!container) return;
 
-      // Scroll to the very end
-      container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
+      // Scroll to the very end (650ms with smooth ease-out)
+      smoothScrollTo(container, container.scrollWidth, 650);
 
       const backTimer = setTimeout(() => {
-        // Snap back to start
-        container.scrollTo({ left: 0, behavior: 'smooth' });
+        // Scroll back to start (700ms with smooth ease-out deceleration)
+        smoothScrollTo(container, 0, 700);
         setTimeout(() => {
           setShowScrollHint(false);
           localStorage.setItem(SCROLL_HINT_KEY, 'true');
-        }, 400);
-      }, 500);
+        }, 750);
+      }, 700);
 
       return () => clearTimeout(backTimer);
     }, 300);
