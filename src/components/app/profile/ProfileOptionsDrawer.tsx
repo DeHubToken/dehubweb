@@ -154,7 +154,7 @@ export function ProfileOptionsContent({
                 <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
                   <Handshake className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-white font-medium">Make Offer</span>
+                <span className="text-white font-medium">{t('profileOptions.makeOffer')}</span>
               </button>
               {isFollowing && (
                 <button
