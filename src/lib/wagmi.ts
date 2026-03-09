@@ -8,7 +8,7 @@
 
 import { http, createConfig } from 'wagmi'
 import { injected } from 'wagmi/connectors'
-import { base } from 'wagmi/chains'
+import { base, bsc } from 'wagmi/chains'
 import { connectorsForWallets } from '@rainbow-me/rainbowkit'
 import {
   metaMaskWallet,
@@ -74,7 +74,7 @@ const rainbowKitConnectors = connectorsForWallets(
 )
 
 export const wagmiConfig = createConfig({
-  chains: [base],
+  chains: [base, bsc],
   connectors: [
     ...rainbowKitConnectors,
     // Hidden fallback for mobile in-app browsers (Trust, MetaMask, etc.)
@@ -84,6 +84,7 @@ export const wagmiConfig = createConfig({
   ],
   transports: {
     [base.id]: http('https://base-rpc.publicnode.com'),
+    [bsc.id]: http('https://bsc-dataseed.binance.org'),
   },
   // Default is 4000ms — way too aggressive. We don't watch blocks actively.
   pollingInterval: 30_000,
