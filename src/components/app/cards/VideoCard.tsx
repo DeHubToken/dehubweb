@@ -703,26 +703,52 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   // Track fullscreen state changes
   useEffect(() => {
     const onFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      setIsFullscreen(!!(document.fullscreenElement || (document as any).webkitFullscreenElement));
     };
     document.addEventListener('fullscreenchange', onFullscreenChange);
     document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+
+    // iOS fires these events on the video element itself
+    const videoEl = videoRef.current;
+    const onIOSFullscreen = () => setIsFullscreen(true);
+    const onIOSExitFullscreen = () => setIsFullscreen(false);
+    videoEl?.addEventListener('webkitbeginfullscreen', onIOSFullscreen);
+    videoEl?.addEventListener('webkitendfullscreen', onIOSExitFullscreen);
+
     return () => {
       document.removeEventListener('fullscreenchange', onFullscreenChange);
       document.removeEventListener('webkitfullscreenchange', onFullscreenChange);
+      videoEl?.removeEventListener('webkitbeginfullscreen', onIOSFullscreen);
+      videoEl?.removeEventListener('webkitendfullscreen', onIOSExitFullscreen);
     };
   }, []);
 
   const toggleFullscreen = useCallback(() => {
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    } else {
-      const el = containerRef.current as any;
-      if (!el) return;
-      if (el.requestFullscreen) {
-        el.requestFullscreen();
-      } else if (el.webkitRequestFullscreen) {
-        el.webkitRequestFullscreen();
+    const videoEl = videoRef.current as any;
+    const containerEl = containerRef.current as any;
+
+    // Check if already in fullscreen (standard or iOS video)
+    if (document.fullscreenElement || (document as any).webkitFullscreenElement) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if ((document as any).webkitExitFullscreen) {
+        (document as any).webkitExitFullscreen();
+      }
+      return;
+    }
+
+    // iOS Safari: only supports webkitEnterFullscreen on <video> element
+    if (videoEl && typeof videoEl.webkitEnterFullscreen === 'function') {
+      videoEl.webkitEnterFullscreen();
+      return;
+    }
+
+    // Standard Fullscreen API on container
+    if (containerEl) {
+      if (containerEl.requestFullscreen) {
+        containerEl.requestFullscreen();
+      } else if (containerEl.webkitRequestFullscreen) {
+        containerEl.webkitRequestFullscreen();
       }
     }
   }, []);
