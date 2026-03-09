@@ -481,7 +481,7 @@ function NotificationItem({
                   renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
                 )}
                 {/* Bottom-right: notification type icon */}
-                <div className="w-[23px] h-[23px] rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center">
+                <div className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
                   {getNotificationIcon(notification.type)}
                 </div>
               </div>
