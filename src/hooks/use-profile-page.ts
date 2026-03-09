@@ -227,7 +227,7 @@ export function useProfilePage() {
 
   // Follow status
   const isFollowing = apiProfile?.isFollowing ?? false;
-  const isPending = apiProfile?.isPending ?? false;
+  const isPending = apiProfile?.isPending ?? apiProfile?.isFollowRequestPending ?? false;
   const isTargetPrivate = apiProfile?.isPrivate ?? false;
 
   // Block status - use account_info data (youBlocked/blockedYou) as primary source

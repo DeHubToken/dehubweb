@@ -32,6 +32,7 @@ export interface DeHubUser {
   isFollowing?: boolean;
   followsYou?: boolean;
   isPending?: boolean;
+  isFollowRequestPending?: boolean;
   isPrivate?: boolean;
   youBlocked?: boolean;
   blockedYou?: boolean;
