@@ -37,5 +37,23 @@
       "white": "Alb",
       "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
     }
+  },
+  "profileOptions": {
+    "copyProfileUrl": "Copiază URL-ul profilului",
+    "copyUsername": "Copiază numele de utilizator",
+    "copyAddress": "Copiază adresa",
+    "openWallet": "Deschide Portofelul",
+    "message": "Mesaj",
+    "sendTip": "Trimite Bacșiș",
+    "notify": "Notifică",
+    "makeOffer": "Fă o Ofertă",
+    "unfollow": "Nu mai urmări",
+    "block": "Blochează",
+    "unblock": "Deblochează",
+    "profileUrlCopied": "URL-ul profilului a fost copiat",
+    "usernameCopied": "Numele de utilizator a fost copiat",
+    "addressCopied": "Adresa a fost copiată",
+    "noWalletAddress": "Nu există adresă de portofel disponibilă",
+    "notificationsEnabled": "Notificările au fost activate pentru acest profil"
   }
 }

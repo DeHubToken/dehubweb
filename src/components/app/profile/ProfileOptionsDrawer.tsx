@@ -1,6 +1,7 @@
 import { Copy, AtSign, Wallet, MessageCircle, Gift, Bell, Handshake, UserMinus, Ban, LayoutDashboard, Loader2, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { DISPLAY_WALLET_OVERRIDES } from './ProfileConstants';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 
@@ -29,33 +30,34 @@ export function ProfileOptionsContent({
   isBlockLoading = false,
   handleBlock,
 }: ProfileOptionsDrawerProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const handleCopyProfileUrl = () => {
     navigator.clipboard.writeText(`https://dehub.io/${profile.handle.replace('@', '')}`);
-    toast.success('Profile URL copied to clipboard');
+    toast.success(t('profileOptions.profileUrlCopied'));
     setShareSheetOpen(false);
   };
 
   const handleCopyUsername = () => {
     navigator.clipboard.writeText(profile.handle);
-    toast.success('Username copied to clipboard');
+    toast.success(t('profileOptions.usernameCopied'));
     setShareSheetOpen(false);
   };
 
   const handleCopyAddress = () => {
     if (!profile.walletAddress) {
-      toast.error('No wallet address available');
+      toast.error(t('profileOptions.noWalletAddress'));
       return;
     }
     const displayAddress = DISPLAY_WALLET_OVERRIDES[profile.walletAddress.toLowerCase()] || profile.walletAddress;
     navigator.clipboard.writeText(displayAddress);
-    toast.success('Address copied to clipboard');
+    toast.success(t('profileOptions.addressCopied'));
     setShareSheetOpen(false);
   };
 
 
   const handleToggleNotifications = () => {
-    toast.success('Notifications enabled for this profile');
+    toast.success(t('profileOptions.notificationsEnabled'));
     setShareSheetOpen(false);
   };
 
@@ -75,7 +77,7 @@ export function ProfileOptionsContent({
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Copy className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Copy profile URL</span>
+        <span className="text-white font-medium">{t('profileOptions.copyProfileUrl')}</span>
       </button>
       <button
         onClick={handleCopyUsername}
@@ -84,7 +86,7 @@ export function ProfileOptionsContent({
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <AtSign className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Copy username</span>
+        <span className="text-white font-medium">{t('profileOptions.copyUsername')}</span>
       </button>
       <button
         onClick={handleCopyAddress}
@@ -93,7 +95,7 @@ export function ProfileOptionsContent({
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Wallet className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Copy address</span>
+        <span className="text-white font-medium">{t('profileOptions.copyAddress')}</span>
       </button>
       {isViewingOwnProfile && (
         <button
@@ -106,7 +108,7 @@ export function ProfileOptionsContent({
           <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
             <Wallet className="w-4 h-4 text-white" />
           </div>
-          <span className="text-white font-medium">Open Wallet</span>
+          <span className="text-white font-medium">{t('profileOptions.openWallet')}</span>
         </button>
       )}
       {!isViewingOwnProfile && (
@@ -123,7 +125,7 @@ export function ProfileOptionsContent({
                 <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
                   <MessageCircle className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-white font-medium">Message</span>
+                <span className="text-white font-medium">{t('profileOptions.message')}</span>
               </button>
               {onTip && (
                 <button
@@ -133,7 +135,7 @@ export function ProfileOptionsContent({
                   <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
                     <Gift className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-white font-medium">Send Tip</span>
+                  <span className="text-white font-medium">{t('profileOptions.sendTip')}</span>
                 </button>
               )}
               <button
@@ -143,7 +145,7 @@ export function ProfileOptionsContent({
                 <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
                   <Bell className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-white font-medium">Notify</span>
+                <span className="text-white font-medium">{t('profileOptions.notify')}</span>
               </button>
               <button
                 onClick={onMakeOffer}
@@ -152,7 +154,7 @@ export function ProfileOptionsContent({
                 <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
                   <Handshake className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-white font-medium">Make Offer</span>
+                <span className="text-white font-medium">{t('profileOptions.makeOffer')}</span>
               </button>
               {isFollowing && (
                 <button
@@ -162,7 +164,7 @@ export function ProfileOptionsContent({
                   <div className="w-8 h-8 rounded-xl bg-red-500/20 backdrop-blur-sm flex items-center justify-center">
                     <UserMinus className="w-4 h-4 text-red-400" />
                   </div>
-                  <span className="text-red-400 font-medium">Unfollow</span>
+                  <span className="text-red-400 font-medium">{t('profileOptions.unfollow')}</span>
                 </button>
               )}
             </>
@@ -182,7 +184,7 @@ export function ProfileOptionsContent({
               )}
             </div>
             <span className="text-red-400 font-medium">
-              {isBlocked ? 'Unblock' : 'Block'}
+              {isBlocked ? t('profileOptions.unblock') : t('profileOptions.block')}
             </span>
           </button>
         </>

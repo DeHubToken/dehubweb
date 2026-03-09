@@ -1116,5 +1116,23 @@
     "unlistedDesc": "Only people with the link can see",
     "private": "Private",
     "privateDesc": "Only you can see this post"
+  },
+  "profileOptions": {
+    "copyProfileUrl": "Copy profile URL",
+    "copyUsername": "Copy username",
+    "copyAddress": "Copy address",
+    "openWallet": "Open Wallet",
+    "message": "Message",
+    "sendTip": "Send Tip",
+    "notify": "Notify",
+    "makeOffer": "Make Offer",
+    "unfollow": "Unfollow",
+    "block": "Block",
+    "unblock": "Unblock",
+    "profileUrlCopied": "Profile URL copied to clipboard",
+    "usernameCopied": "Username copied to clipboard",
+    "addressCopied": "Address copied to clipboard",
+    "noWalletAddress": "No wallet address available",
+    "notificationsEnabled": "Notifications enabled for this profile"
   }
 }
