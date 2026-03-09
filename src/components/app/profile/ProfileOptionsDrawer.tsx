@@ -1,4 +1,6 @@
-import { Copy, AtSign, Wallet, MessageCircle, Gift, Bell, Handshake, UserMinus, Ban, LayoutDashboard, Loader2, ShieldCheck } from 'lucide-react';
+import { useState } from 'react';
+import { Copy, AtSign, Wallet, MessageCircle, Gift, Bell, Handshake, UserMinus, Ban, LayoutDashboard, Loader2, ShieldCheck, Flag } from 'lucide-react';
+import { ReportModal } from '@/components/app/modals/ReportModal';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -32,6 +34,8 @@ export function ProfileOptionsContent({
 }: ProfileOptionsDrawerProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+
   const handleCopyProfileUrl = () => {
     navigator.clipboard.writeText(`https://dehub.io/${profile.handle.replace('@', '')}`);
     toast.success(t('profileOptions.profileUrlCopied'));
@@ -167,6 +171,16 @@ export function ProfileOptionsContent({
                   <span className="text-red-400 font-medium">{t('profileOptions.unfollow')}</span>
                 </button>
               )}
+              {/* Report User */}
+              <button
+                onClick={() => { setShareSheetOpen(false); setReportModalOpen(true); }}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-red-500/10 backdrop-blur-md border border-red-500/20 hover:bg-red-500/20 transition-colors text-left"
+              >
+                <div className="w-8 h-8 rounded-xl bg-red-500/20 backdrop-blur-sm flex items-center justify-center">
+                  <Flag className="w-4 h-4 text-red-400" />
+                </div>
+                <span className="text-red-400 font-medium">Report User</span>
+              </button>
             </>
           )}
           <button
@@ -189,6 +203,12 @@ export function ProfileOptionsContent({
           </button>
         </>
       )}
+      <ReportModal
+        open={reportModalOpen}
+        onOpenChange={setReportModalOpen}
+        reportType="user"
+        userId={profile.walletAddress}
+      />
     </div>
   );
 }
