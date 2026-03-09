@@ -313,8 +313,8 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         open={showEditModal}
         onOpenChange={setShowEditModal}
         tokenId={post.id}
-        currentTitle={post.content?.slice(0, 140)}
-        currentDescription=""
+        currentTitle={post.rawName || ''}
+        currentDescription={post.rawDescription || ''}
         onSuccess={() => {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
         }}
