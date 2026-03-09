@@ -246,6 +246,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     isUnlocked: item.isUnlocked ?? false,
     repostCount: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
     isReposted: item.isReposted ?? false,
+    categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
   };
 }
 
@@ -301,6 +302,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     isUnlocked: item.isUnlocked ?? false,
     repostCount: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
     isReposted: item.isReposted ?? false,
+    categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
   };
 }
 
@@ -315,6 +317,11 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     ? buildAvatarUrl(item.minter, rawAvatarPath) || item.minter
     : item.minter;
   
+  // Determine if the name is a meaningful title (not empty/whitespace/placeholder)
+  const rawName = item.name || '';
+  const rawDescription = item.description || '';
+  const hasMeaningfulTitle = rawName.trim().length > 0 && rawName.trim() !== rawDescription.trim();
+
   return {
     id,
     type: 'post',
@@ -326,7 +333,10 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
       verified: false,
       badgeBalance: item.minterUser?.badgeBalance,
     },
-    content: item.description || item.name || '',
+    title: hasMeaningfulTitle ? rawName.trim() : undefined,
+    content: rawDescription || rawName || '',
+    rawName,
+    rawDescription,
     createdAt: item.createdAt,
     views: formatViews(item.views).replace(' views', ''),
     status: item.status,
@@ -340,6 +350,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     isReposted: item.isReposted ?? false,
     isQuotePost: !!(item as any).isQuotePost,
     quotedPost: (item as any).quotedPost || null,
+    categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
   };
 }
 

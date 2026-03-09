@@ -1593,6 +1593,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         tokenId={video.id}
         currentTitle={video.title}
         currentDescription={video.description}
+        currentCategories={video.categories}
         onSuccess={() => {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
           queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });

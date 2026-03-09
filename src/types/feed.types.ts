@@ -38,7 +38,13 @@ export interface BaseFeedItem {
 export interface TextPost extends BaseFeedItem {
   type: 'post';
   author: User;
+  /** Post title (from API `name` field) — may be empty/whitespace for untitled posts */
+  title?: string;
   content: string;
+  /** Raw API name field for edit modal */
+  rawName?: string;
+  /** Raw API description field for edit modal */
+  rawDescription?: string;
   /** Formatted view count string (e.g., "1.2K") */
   views?: string;
   /** Mint status: 'minted' | 'signed' (pending) */
@@ -58,6 +64,8 @@ export interface TextPost extends BaseFeedItem {
   isQuotePost?: boolean;
   /** The quoted post data (for rendering embedded quote) */
   quotedPost?: import('@/lib/api/dehub/types').DeHubNFT | null;
+  /** Post categories */
+  categories?: string[];
 }
 
 /**
@@ -139,6 +147,8 @@ export interface VideoItem extends BaseFeedItem {
   audioDuration?: number;
   /** Whether this is an audio post */
   isAudio?: boolean;
+  /** Post categories */
+  categories?: string[];
 }
 
 /**
@@ -210,6 +220,8 @@ export interface ImagePost extends BaseFeedItem {
   isUnlocked?: boolean;
   /** Chain ID the content was minted on (e.g., 8453 for Base, 56 for BNB) */
   chainId?: number;
+  /** Post categories */
+  categories?: string[];
 }
 
 /**

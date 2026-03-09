@@ -238,6 +238,10 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
 
       {/* Content */}
       <div className="pt-3 space-y-2">
+        {/* Title */}
+        {post.title && (
+          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{post.title}</h3>
+        )}
         <TranslatableText text={isTranslated ? translatedText : post.content} className="text-white/90 text-sm sm:text-base" as="p" />
 
         {/* Quoted post embed (Twitter-style) */}
@@ -309,8 +313,9 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         open={showEditModal}
         onOpenChange={setShowEditModal}
         tokenId={post.id}
-        currentTitle={post.content?.slice(0, 140)}
-        currentDescription=""
+        currentTitle={post.rawName || ''}
+        currentDescription={post.rawDescription || ''}
+        currentCategories={post.categories}
         onSuccess={() => {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
         }}
