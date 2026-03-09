@@ -1205,7 +1205,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       stopRecording,
       setChainId,
       setSelectedCategory,
-      setShowTitle,
+      setShowTitle: handleSetShowTitle,
       setTitleText,
       insertEmoji,
       insertGif,
