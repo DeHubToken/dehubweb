@@ -72,6 +72,9 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         onStopRecording={actions.stopRecording}
         chainId={state.chainId}
         onChainChange={actions.setChainId}
+        showTitle={state.showTitle}
+        titleText={state.titleText}
+        setTitleText={actions.setTitleText}
       />
 
       <PostAccessToggles
