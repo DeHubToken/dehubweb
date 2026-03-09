@@ -15,7 +15,7 @@ import { TranslatableText } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
-import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
+import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
 import { DmTipDialog } from './DmTipDialog';
@@ -377,13 +377,24 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     if (hasInitialized.current) return;
     hasInitialized.current = true;
 
-    // Prefer MongoDB _id (ObjectId) — DeHub backend createAndStart expects user ObjectId
-    // Fallback to address if _id not available (e.g. from non-search entry)
-    const userId = otherUser?._id || otherUser?.address;
-    if (!userId) return;
+    const address = otherUser?.address;
+    const knownId = otherUser?._id;
 
-    lastTriedUserId.current = userId;
-    createAndStart.mutate(userId, {
+    const run = async () => {
+      // Backend createAndStart requires MongoDB ObjectId — fetch profile if we only have address
+      let userId = knownId;
+      if (!userId && address) {
+        try {
+          const profile = await getAccountInfo(address);
+          userId = profile._id || address;
+        } catch {
+          userId = address;
+        }
+      }
+      if (!userId) return;
+
+      lastTriedUserId.current = userId;
+      createAndStart.mutate(userId, {
       onSuccess: (data) => {
         console.log('[DM] createAndStart success:', data);
         setInitError(false);
@@ -417,7 +428,10 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           });
         }
       },
-    });
+      });
+    };
+
+    run();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
