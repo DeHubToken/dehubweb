@@ -60,6 +60,8 @@ interface UsePostFormReturn {
     chainId: ChainId;
     isCameraModalOpen: boolean;
     selectedCategory: string;
+    showTitle: boolean;
+    titleText: string;
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
