@@ -1106,5 +1106,6 @@
     "addStory": "कहानी जोड़व",
     "viewStory": "कहानी देखव",
     "noStories": "अभी तक कोनो कहानी नइ हे"
-  }
+  },
+  "profileOptions": { "copyProfileUrl": "प्रोफाइल URL कॉपी करव", "copyUsername": "यूजरनेम कॉपी करव", "copyAddress": "पता कॉपी करव", "openWallet": "वॉलेट खोलव", "message": "संदेश", "sendTip": "टिप भेजव", "notify": "सूचित करव", "makeOffer": "ऑफर करव", "unfollow": "अनफॉलो करव", "block": "ब्लॉक करव", "unblock": "अनब्लॉक करव", "profileUrlCopied": "प्रोफाइल URL कॉपी हो गे", "usernameCopied": "यूजरनेम कॉपी हो गे", "addressCopied": "पता कॉपी हो गे", "noWalletAddress": "कोनो वॉलेट पता उपलब्ध नइ हे", "notificationsEnabled": "ए प्रोफाइल बर सूचना चालू हो गे" }
 }
