@@ -323,7 +323,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     } finally {
       setIsGeneratingThumbnail(false);
     }
-  }, [hasImage, hasVideo]);
+  }, [hasImage, hasVideo, text, titleText, editorRef]);
 
   const removeMedia = useCallback((index: number) => {
     setMedia(prev => {
