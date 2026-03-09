@@ -2,6 +2,7 @@
  * Quote Post Modal
  * =================
  * Liquid glass drawer for quoting a post with your own commentary.
+ * Handles full 2-step flow: API signature + on-chain mint.
  */
 
 import { useState } from 'react';
@@ -9,6 +10,7 @@ import { X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 import { quotePost } from '@/lib/api/dehub';
+import { mintOnChain } from '@/lib/contracts/stream-collection';
 import { QuotedPostEmbed } from '../cards/QuotedPostEmbed';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
@@ -24,6 +26,7 @@ interface QuotePostModalProps {
 export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModalProps) {
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusText, setStatusText] = useState('');
   const queryClient = useQueryClient();
   const maxLength = 500;
 
@@ -35,19 +38,46 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
 
     setIsSubmitting(true);
     try {
-      await quotePost({
+      // Step 1: Call API to get mint signature
+      setStatusText('Preparing quote...');
+      const mintSig = await quotePost({
         quotedTokenId: quotedPost.tokenId,
         content: content.trim(),
       });
+
+      console.log('[QuotePost] Mint signature received:', {
+        createdTokenId: mintSig.createdTokenId,
+        v: mintSig.v,
+      });
+
+      // Step 2: Execute on-chain mint transaction
+      setStatusText('Minting on-chain...');
+      toast.loading('Publishing to blockchain...', { id: 'quote-mint', duration: Infinity });
+
+      const txHash = await mintOnChain({
+        tokenId: mintSig.createdTokenId,
+        timestamp: mintSig.timestamp,
+        v: mintSig.v,
+        r: mintSig.r,
+        s: mintSig.s,
+        chainId: 8453,
+      });
+
+      console.log('[QuotePost] Minted on-chain, tx:', txHash);
+
+      toast.dismiss('quote-mint');
       toast.success('Quote posted!');
       queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
       setContent('');
       onOpenChange(false);
     } catch (error) {
       console.error('Quote post failed:', error);
-      toast.error('Failed to post quote. Try again.');
+      toast.dismiss('quote-mint');
+      const message = error instanceof Error ? error.message : 'Failed to post quote';
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
+      setStatusText('');
     }
   };
 
@@ -62,7 +92,8 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
         <div className="flex items-center justify-between px-4 pt-2 pb-3 border-b border-white/10">
           <button
             onClick={() => onOpenChange(false)}
-            className="text-white/50 hover:text-white transition-colors"
+            disabled={isSubmitting}
+            className="text-white/50 hover:text-white transition-colors disabled:opacity-30"
           >
             <X className="w-5 h-5" />
           </button>
@@ -71,7 +102,7 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
             disabled={isSubmitting || !content.trim()}
             className="px-4 py-1.5 rounded-full bg-white text-black font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/90 transition-colors"
           >
-            {isSubmitting ? 'Posting...' : 'Post'}
+            {isSubmitting ? (statusText || 'Posting...') : 'Post'}
           </button>
         </div>
 
@@ -83,6 +114,7 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
             placeholder="Add a comment..."
             className="w-full bg-transparent text-white placeholder-white/30 text-base resize-none outline-none min-h-[80px]"
             autoFocus
+            disabled={isSubmitting}
             rows={3}
           />
 
