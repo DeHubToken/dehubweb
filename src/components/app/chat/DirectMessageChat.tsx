@@ -612,7 +612,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           { context: 'DM fee message', chainId }
         );
 
-        await result.wait(1);
+        // Use txHash immediately — no need to wait for block confirmation
         feeTxHash = result.hash;
 
         toast.success(`Paid ${activeFee.toLocaleString()} DHB`, { id: 'dm-fee-send', duration: 2000 });
