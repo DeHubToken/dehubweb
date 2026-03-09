@@ -401,7 +401,7 @@ function NotificationItem({
     }
     
     // Aggregated follow notifications → open followers drawer inline
-    const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 2;
+    const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 3;
     if (isAggregatedFollow && walletAddress) {
       // Dispatch custom event to open followers drawer in NotificationsPage
       window.dispatchEvent(new CustomEvent('open-followers-drawer'));
