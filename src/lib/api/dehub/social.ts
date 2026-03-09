@@ -281,13 +281,31 @@ export async function quotePost(params: {
   content: string;
   category?: string;
 }): Promise<{ result: any }> {
-  return apiCall<{ result: any }>("/api/quote", {
-    method: "POST",
-    body: {
-      quotedTokenId: params.quotedTokenId,
-      description: params.content,
-      category: params.category || 'general',
+  const { DEHUB_API_BASE, getAuthToken } = await import('./core');
+  const token = getAuthToken();
+  if (!token) throw new Error('Authentication required');
+
+  const formData = new FormData();
+  formData.append('quotedTokenId', String(params.quotedTokenId));
+  formData.append('description', params.content);
+  formData.append('postType', 'feed-simple');
+  formData.append('category', JSON.stringify([params.category || 'general']));
+  formData.append('chainId', '8453');
+  formData.append('streamInfo', JSON.stringify({}));
+
+  const response = await fetch(`${DEHUB_API_BASE}/api/quote_post`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
     },
-    requiresAuth: true,
+    body: formData,
   });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.message || err.error || `Quote post failed: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return { result: data.result ?? data };
 }
