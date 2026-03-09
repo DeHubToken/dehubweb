@@ -58,7 +58,7 @@ interface FollowersListDrawerProps {
  * Map API follow list item to local UserListItem format.
  * The API now returns full user objects — no enrichment needed.
  */
-function mapFollowListItem(item: FollowListItem): UserListItem {
+function mapFollowListItem(item: FollowListItem & { isPrivate?: boolean }): UserListItem {
   return {
     address: item.address,
     username: item.username,
@@ -67,6 +67,7 @@ function mapFollowListItem(item: FollowListItem): UserListItem {
     isVerified: item.isVerified,
     isFollowing: item.isFollowing,
     followsYou: item.followsYou,
+    isPrivate: (item as any).isPrivate,
   };
 }
 
