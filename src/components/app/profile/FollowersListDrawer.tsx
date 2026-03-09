@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Users, UserPlus, UserMinus, Search, ArrowUpDown, X } from 'lucide-react';
+import { Loader2, Users, UserPlus, UserMinus, Search, ArrowUpDown, X, Clock } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
