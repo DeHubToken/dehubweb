@@ -30,7 +30,7 @@ export const DEFAULT_TOKENS: Record<number, { address: string; symbol: string; n
     { address: '0x236aa50979D5f3De3Bd1Eeb40E81137F22ab794b', symbol: 'BTC', name: 'Bitcoin', decimals: 8, displaySymbol: 'BTC' },
   ],
   [BNB_CHAIN_ID]: [
-    { address: '0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7', symbol: 'DHB', name: 'DeHub', decimals: 18 },
+    { address: '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D', symbol: 'DHB', name: 'DeHub', decimals: 18 },
     { address: '0x55d398326f99059fF775485246999027B3197955', symbol: 'USDT', name: 'Tether', decimals: 18 },
     { address: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', symbol: 'BTC', name: 'Bitcoin', decimals: 18, displaySymbol: 'BTC' },
   ],

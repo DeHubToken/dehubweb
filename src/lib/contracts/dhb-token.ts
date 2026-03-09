@@ -38,7 +38,7 @@ export const CHAIN_CONFIGS: Record<ChainId, ChainConfig> = {
     name: 'BNB',
     rpcUrl: 'https://bsc-dataseed.binance.org',
     explorerUrl: 'https://bscscan.com',
-    dhbToken: '0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7', // DHB on BNB
+    dhbToken: '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D', // DHB on BNB
     streamCollection: '0x1065F5922a336C75623B55D22c4a0C760efCe947',
     streamController: '0x9f8012074d27F8596C0E5038477ACB52057BC934', // Uses same as collection on BNB
   },

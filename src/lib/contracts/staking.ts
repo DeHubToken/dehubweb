@@ -15,8 +15,7 @@ export const BNB_STAKING_CONTRACT = '0x26d2cd7763106fdce443fadd36163e2ad33a76e6'
 // Base staking address (just tracks DHB transfers to this address)
 export const BASE_STAKING_ADDRESS = '0x7b10dd033Ac41B8AF85eE1701e344B86e446250B';
 
-// The DHB token address held by the BNB staking contract (may differ from the main DHB token)
-const BNB_STAKING_DHB_TOKEN = '0x680d3113caf77b61b510f332d5ef4cf5b41a761d';
+const BNB_STAKING_DHB_TOKEN = CHAIN_CONFIGS[BNB_CHAIN_ID].dhbToken;
 
 const erc20Interface = new Interface([
   'function balanceOf(address owner) view returns (uint256)',
