@@ -1,38 +1,35 @@
 
 
-## Make Video Download Button Functional
+## Fix: Auto-reload on chunk load failures
 
-### Problem
-The download buttons in `VideoCard.tsx` (both desktop dropdown and mobile drawer) are inert — no `onClick` handler.
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-### Approach
-Add an `onClick` handler that fetches the video as a blob and triggers a browser download using a temporary anchor element. This avoids CORS issues that `<a download>` has with cross-origin URLs.
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-### Changes — `src/components/app/cards/VideoCard.tsx`
+### Changes
 
-**1. Add download handler function** (near other callbacks):
-```typescript
-const handleDownloadVideo = useCallback(async () => {
-  if (!video.videoUrl) return;
-  toast.loading('Preparing download...', { id: 'video-download' });
-  try {
-    const response = await fetch(video.videoUrl);
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${video.title || video.id || 'video'}.mp4`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    toast.success('Download started', { id: 'video-download' });
-  } catch {
-    toast.error('Download failed', { id: 'video-download' });
-  }
-}, [video.videoUrl, video.title, video.id]);
-```
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-**2. Wire both download buttons** (lines ~1027 and ~1553):
-Add `onClick={handleDownloadVideo}` to both `<button>` elements that currently have no handler.
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
+
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 

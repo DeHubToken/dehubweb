@@ -517,6 +517,26 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     setShowQuoteModal(true);
   }, [walletAddress, openLoginModal]);
 
+  const handleDownloadVideo = useCallback(async () => {
+    if (!video.videoUrl) return;
+    toast.loading('Preparing download...', { id: 'video-download' });
+    try {
+      const response = await fetch(video.videoUrl);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${video.title || video.id || 'video'}.mp4`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success('Download started', { id: 'video-download' });
+    } catch {
+      toast.error('Download failed', { id: 'video-download' });
+    }
+  }, [video.videoUrl, video.title, video.id]);
+
   const videoAsNFT = {
     tokenId: parseInt(video.id, 10) || 0,
     name: video.title || '',
@@ -1024,7 +1044,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                     <Flag className="w-5 h-5" /> {t('postOptions.report')}
                   </button>
                   {!isContentGated && !(video.isLocked && !canBypassGating) && (
-                    <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                    <button onClick={handleDownloadVideo} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                       <Download className="w-5 h-5" /> {t('postOptions.download')}
                     </button>
                   )}
@@ -1550,7 +1570,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               <Flag className="w-5 h-5" /> {t('postOptions.report')}
             </button>
             {!isContentGated && !(video.isLocked && !canBypassGating) && (
-              <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+              <button onClick={handleDownloadVideo} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                 <Download className="w-5 h-5" /> {t('postOptions.download')}
               </button>
             )}
