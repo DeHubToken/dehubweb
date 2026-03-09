@@ -164,7 +164,7 @@ export function ProfileOptionsContent({
                   <div className="w-8 h-8 rounded-xl bg-red-500/20 backdrop-blur-sm flex items-center justify-center">
                     <UserMinus className="w-4 h-4 text-red-400" />
                   </div>
-                  <span className="text-red-400 font-medium">Unfollow</span>
+                  <span className="text-red-400 font-medium">{t('profileOptions.unfollow')}</span>
                 </button>
               )}
             </>
