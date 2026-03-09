@@ -124,6 +124,7 @@ export function PostContentArea({
   destinations,
   hasVideo,
   hasImage,
+  hasAudio,
   onFileDrop,
   scheduledDate,
   onSchedule,

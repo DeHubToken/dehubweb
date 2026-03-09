@@ -59,6 +59,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         destinations={computed.destinations}
         hasVideo={computed.hasVideo}
         hasImage={computed.hasImage}
+        hasAudio={computed.hasAudio}
         onFileDrop={actions.handleFileDrop}
         scheduledDate={state.scheduledDate}
         onSchedule={actions.setScheduledDate}
