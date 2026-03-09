@@ -276,11 +276,19 @@ export function FollowersListDrawer({
         toast.success(`Unfollowed ${user.displayName || user.username || 'user'}`);
       } else {
         await followUser(user.address);
-        followingSetRef.current?.add(user.address.toLowerCase());
-        setUsers(prev => prev.map(u => 
-          u.address === user.address ? { ...u, isFollowing: true } : u
-        ));
-        toast.success(`Following ${user.displayName || user.username || 'user'}`);
+        if (user.isPrivate) {
+          // Private account: follow request sent, mark as pending
+          setUsers(prev => prev.map(u => 
+            u.address === user.address ? { ...u, isPending: true } : u
+          ));
+          toast.success(`Follow request sent to ${user.displayName || user.username || 'user'}`);
+        } else {
+          followingSetRef.current?.add(user.address.toLowerCase());
+          setUsers(prev => prev.map(u => 
+            u.address === user.address ? { ...u, isFollowing: true } : u
+          ));
+          toast.success(`Following ${user.displayName || user.username || 'user'}`);
+        }
       }
     } catch (error: any) {
       const msg = error?.message || error?.error || '';
