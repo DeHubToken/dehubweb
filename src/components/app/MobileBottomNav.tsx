@@ -69,54 +69,7 @@ export function MobileBottomNav() {
     setIsPostModalOpen(true);
   };
 
-  // Scroll hint animation for first-time mobile visitors
-  useEffect(() => {
-    const alreadySeen = localStorage.getItem(SCROLL_HINT_KEY);
-    if (alreadySeen) return;
-
-    // Smooth custom scroll animation with ease-out deceleration and onComplete callback
-    const smoothScrollTo = (el: HTMLElement, target: number, duration: number, onComplete?: () => void) => {
-      const start = el.scrollLeft;
-      const distance = target - start;
-      const startTime = performance.now();
-
-      const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
-
-      const step = (now: number) => {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        el.scrollLeft = start + distance * easeOutQuart(progress);
-        if (progress < 1) {
-          requestAnimationFrame(step);
-        } else {
-          onComplete?.();
-        }
-      };
-      requestAnimationFrame(step);
-    };
-
-    // Fire hint immediately — scroll all the way right then snap back
-    const showTimer = setTimeout(() => {
-      setShowScrollHint(true);
-
-      const container = scrollRef.current;
-      if (!container) return;
-
-      // Scroll to the very end (800ms), then immediately chain back
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      smoothScrollTo(container, maxScroll, 800, () => {
-        // Scroll back to start (900ms with smooth ease-out deceleration)
-        smoothScrollTo(container, 0, 900, () => {
-          setShowScrollHint(false);
-          localStorage.setItem(SCROLL_HINT_KEY, 'true');
-        });
-      });
-    }, 300);
-
-    return () => clearTimeout(showTimer);
-  }, []);
-
-  // Dismiss hint on any manual scroll
+  // Track scroll progress
   useEffect(() => {
     const container = scrollRef.current;
     if (!container) return;
@@ -125,17 +78,11 @@ export function MobileBottomNav() {
       const maxScroll = container.scrollWidth - container.clientWidth;
       const progress = maxScroll > 0 ? Math.min(container.scrollLeft / maxScroll, 1) : 0;
       setScrollProgress(progress);
-
-      // If user scrolls manually, mark hint as seen
-      if (showScrollHint) {
-        setShowScrollHint(false);
-        localStorage.setItem(SCROLL_HINT_KEY, 'true');
-      }
     };
 
     container.addEventListener('scroll', handleScroll);
     return () => container.removeEventListener('scroll', handleScroll);
-  }, [showScrollHint]);
+  }, []);
 
   // Calculate opacity: fades quickly on scroll (reaches 0 at ~10% scroll)
   const buttonOpacity = Math.max(0, 1 - scrollProgress * 10);
