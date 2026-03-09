@@ -1100,4 +1100,5 @@
     "viewStory": "看故事",
     "noStories": "还无故事"
   }
+,"profileOptions": { "copyProfileUrl": "复制资料链接", "copyUsername": "复制用户名", "copyAddress": "复制地址", "openWallet": "打开钱包", "message": "发消息", "sendTip": "打赏", "notify": "通知", "makeOffer": "出价", "unfollow": "取消关注", "block": "拉黑", "unblock": "取消拉黑", "profileUrlCopied": "资料链接已复制", "usernameCopied": "用户名已复制", "addressCopied": "地址已复制", "noWalletAddress": "没有可用的钱包地址", "notificationsEnabled": "已为此资料开启通知" }
 }
