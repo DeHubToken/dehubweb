@@ -1104,7 +1104,7 @@
     "content": "Content",
     "uploadProcessing": "Upload Processing",
     "processingDesc": "Your post is being processed on decentralized databases. Video encoding and thumbnail generation may take a moment.",
-    "processingNote": "Your post metadata is permanently stored on-chain but you can hide content from feeds at any time should you need to.",
+    "processingNote": "Your post metadata is permanently stored on the decentralized database but you can hide content from feeds at any time should you need to.",
     "goBack": "Go Back",
     "streamInfo": "Stream Info",
     "currentlyLive": "Currently Live",
