@@ -617,3 +617,35 @@ html.reduce-motion *::after {
 html.reduce-motion .hover-scale {
   transform: none !important;
 }
+
+/* Bottom nav carousel spin-in animation */
+@keyframes navCarouselSpin {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) rotateX(-90deg) scale(0.6);
+    filter: blur(4px);
+  }
+  30% {
+    opacity: 0.4;
+    transform: translateY(18px) rotateX(-40deg) scale(0.85);
+    filter: blur(2px);
+  }
+  60% {
+    opacity: 0.85;
+    transform: translateY(4px) rotateX(-8deg) scale(0.97);
+    filter: blur(0.5px);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(-2px) rotateX(2deg) scale(1.01);
+    filter: blur(0px);
+  }
+  90% {
+    transform: translateY(1px) rotateX(-1deg) scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) scale(1);
+    filter: blur(0px);
+  }
+}
