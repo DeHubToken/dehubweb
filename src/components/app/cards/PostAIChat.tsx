@@ -70,6 +70,41 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const pendingVoiceRef = useRef(false);
   
+  // Desktop resize state
+  const MIN_WIDTH = 300;
+  const MAX_WIDTH = 600;
+  const [chatWidth, setChatWidth] = useState(380);
+  const isResizingRef = useRef(false);
+  const startXRef = useRef(0);
+  const startWidthRef = useRef(380);
+
+  const handleResizeStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    isResizingRef.current = true;
+    startXRef.current = e.clientX;
+    startWidthRef.current = chatWidth;
+
+    const handleMouseMove = (ev: MouseEvent) => {
+      if (!isResizingRef.current) return;
+      const delta = startXRef.current - ev.clientX;
+      const newWidth = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, startWidthRef.current + delta));
+      setChatWidth(newWidth);
+    };
+
+    const handleMouseUp = () => {
+      isResizingRef.current = false;
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+
+    document.body.style.cursor = 'ew-resize';
+    document.body.style.userSelect = 'none';
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  }, [chatWidth]);
+  
   // Global minimized chats manager
   const { addChat, removeChat, isMinimized } = useMinimizedChats();
   const isThisMinimized = isMinimized(chatId);
