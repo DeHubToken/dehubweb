@@ -508,7 +508,7 @@ function NotificationItem({
           );
         })()}
         {/* Type icon badge — only for single-actor notifications (aggregated ones render it inside) */}
-        {!((notification as any).aggregatedCount > 1 && ['like', 'comme, 'following'nt', 'repost'].includes(notification.type as string)) && (
+        {!((notification as any).aggregatedCount > 1 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string)) && (
           <div className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
             {getNotificationIcon(notification.type)}
           </div>
