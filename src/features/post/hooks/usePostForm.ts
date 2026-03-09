@@ -127,8 +127,16 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       return localStorage.getItem('post_default_categories') || '';
     } catch { return ''; }
   });
-  const [showTitle, setShowTitle] = useState(false);
+  const [showTitle, setShowTitle] = useState(() => {
+    try { return localStorage.getItem('post_show_title') === 'true'; } catch { return false; }
+  });
   const [titleText, setTitleText] = useState('');
+
+  // Persist title toggle preference
+  const handleSetShowTitle = useCallback((value: boolean) => {
+    setShowTitle(value);
+    try { localStorage.setItem('post_show_title', String(value)); } catch {}
+  }, []);
   const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false);
 
   // Refs
@@ -596,7 +604,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setLiveMode(null);
     setScheduledDate(null);
     setChainId(BASE_CHAIN_ID as ChainId);
-    setShowTitle(false);
     setTitleText('');
   }, []);
 
@@ -1198,7 +1205,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       stopRecording,
       setChainId,
       setSelectedCategory,
-      setShowTitle,
+      setShowTitle: handleSetShowTitle,
       setTitleText,
       insertEmoji,
       insertGif,
