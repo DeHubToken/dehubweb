@@ -121,6 +121,9 @@ const CachedPage = memo(function CachedPage({
   );
 });
 
+// Pages that should always scroll to top when navigated to
+const SCROLL_TO_TOP_PAGES = new Set(['settings', 'leaderboard', 'bookmarks', 'command-centre', 'wallet']);
+
 export function PersistentPageCache() {
   const location = useLocation();
   const pathname = location.pathname;
@@ -135,6 +138,13 @@ export function PersistentPageCache() {
   useEffect(() => {
     if (activeCachedPage && !mountedPages.has(activeCachedPage.key)) {
       setMountedPages(prev => new Set(prev).add(activeCachedPage.key));
+    }
+  }, [activeCachedPage?.key]);
+
+  // Scroll to top for specific pages when they become active
+  useEffect(() => {
+    if (activeCachedPage && SCROLL_TO_TOP_PAGES.has(activeCachedPage.key)) {
+      window.scrollTo(0, 0);
     }
   }, [activeCachedPage?.key]);
 
