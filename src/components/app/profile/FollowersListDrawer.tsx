@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 
 const MAX_PAGES = 3;
 const PAGE_SIZE = 30;
-const FOLLOWING_CACHE_PAGE_SIZE = 300;
+const FOLLOWING_CACHE_PAGE_SIZE = 100; // API caps at 100 per page regardless of requested limit
 
 type SortOption = 'newest' | 'earliest';
 const SORT_LABELS: Record<SortOption, string> = {
