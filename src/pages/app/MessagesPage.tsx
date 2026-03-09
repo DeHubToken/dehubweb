@@ -11,7 +11,7 @@ import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { useConversations, useUserOnlineStatus, useCreateConversation, useUserSearchForDM } from '@/hooks/use-messages';
-import { getMediaUrl, type DeHubConversation, type DeHubUser } from '@/lib/api/dehub';
+import { getMediaUrl, getAccountInfo, type DeHubConversation, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -211,10 +211,29 @@ export default function MessagesPage() {
     if (existing) {
       setSelectedConversation(existing);
     } else {
-      createConversation.mutateAsync({
-        recipientAddress: address,
-        recipientUser: { address, username } as any,
-      }).then(conv => setSelectedConversation(conv)).catch(() => {});
+      // Fetch account_info to get MongoDB _id — createAndStart requires _id, not just address
+      getAccountInfo(address)
+        .then((user: DeHubUser) =>
+          createConversation.mutateAsync({
+            recipientAddress: address,
+            recipientUser: {
+              _id: user._id || address,
+              address,
+              username: username ?? user.username,
+              displayName: user.displayName ?? user.display_name,
+              avatarImageUrl: user.avatarImageUrl ?? user.avatarUrl,
+              dmSettings: (user as any).dmSettings,
+            },
+          })
+        )
+        .catch(() =>
+          createConversation.mutateAsync({
+            recipientAddress: address,
+            recipientUser: { address, username } as Partial<DeHubUser>,
+          })
+        )
+        .then((conv) => setSelectedConversation(conv))
+        .catch(() => {});
     }
   }, [isAuthenticated, conversations, isLoading, pendingDmTrigger]);
 
