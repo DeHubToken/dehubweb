@@ -1063,4 +1063,5 @@
     "post": "Post", "logOut": "Log Out", "logIn": "Log In"
   },
   "postInfo": { "title": "Post Info", "tokenId": "Token ID", "mintedOn": "Dem create am", "creator": "Creator", "visibility": "Who fit see", "total": "Total {{count}}", "loading": "E dey load...", "engagement": "Engagement", "likes": "Like", "dislikes": "No like", "views": "Views", "comments": "Comments", "price": "Price", "content": "Content", "goBack": "Go back", "public": "Public", "publicDesc": "Anybody fit see dis post", "private": "Private", "privateDesc": "Only you fit see dis post" }
+,"profileOptions": { "copyProfileUrl": "Copy profile URL", "copyUsername": "Copy username", "copyAddress": "Copy address", "openWallet": "Open wallet", "message": "Message", "sendTip": "Send tip", "notify": "Notify", "makeOffer": "Make offer", "unfollow": "Unfollow", "block": "Block", "unblock": "Unblock", "profileUrlCopied": "Profile URL don copy", "usernameCopied": "Username don copy", "addressCopied": "Address don copy", "noWalletAddress": "No wallet address dey", "notificationsEnabled": "Notifications don turn on for dis profile" }
 }

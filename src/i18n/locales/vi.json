@@ -46,4 +46,5 @@
       ]
     }
   }
+,"profileOptions": { "copyProfileUrl": "Sao chép URL hồ sơ", "copyUsername": "Sao chép tên người dùng", "copyAddress": "Sao chép địa chỉ", "openWallet": "Mở ví", "message": "Tin nhắn", "sendTip": "Gửi tiền tip", "notify": "Thông báo", "makeOffer": "Đề nghị", "unfollow": "Bỏ theo dõi", "block": "Chặn", "unblock": "Bỏ chặn", "profileUrlCopied": "Đã sao chép URL hồ sơ", "usernameCopied": "Đã sao chép tên người dùng", "addressCopied": "Đã sao chép địa chỉ", "noWalletAddress": "Không có địa chỉ ví", "notificationsEnabled": "Đã bật thông báo cho hồ sơ này" }
 }

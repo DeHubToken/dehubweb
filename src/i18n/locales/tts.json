@@ -1063,4 +1063,5 @@
     "post": "โพสต์", "logOut": "ออกจากระบบ", "logIn": "เข้าสู่ระบบ"
   },
   "postInfo": { "title": "ข้อมูลโพสต์", "tokenId": "Token ID", "mintedOn": "สร้างเมื่อ", "creator": "ผู้สร้าง", "visibility": "การมองเห็น", "total": "ทั้งหมด {{count}}", "loading": "กำลังโหลด...", "engagement": "การมีส่วนร่วม", "likes": "ชอบ", "dislikes": "ไม่ชอบ", "views": "การดู", "comments": "ความคิดเห็น", "price": "ราคา", "content": "เนื้อหา", "goBack": "ย้อนกลับ", "public": "สาธารณะ", "publicDesc": "ใครก็ดูได้", "private": "ส่วนตัว", "privateDesc": "เฉพาะเจ้าเท่านั้นดูได้" }
+,"profileOptions": { "copyProfileUrl": "คัดลอก URL โปรไฟล์", "copyUsername": "คัดลอกชื่อผู้ใช้", "copyAddress": "คัดลอกที่อยู่", "openWallet": "เปิดกระเป๋า", "message": "ข้อความ", "sendTip": "ส่งทิป", "notify": "แจ้ง", "makeOffer": "เสนอ", "unfollow": "เลิกติดตาม", "block": "บล็อก", "unblock": "ปลดบล็อก", "profileUrlCopied": "คัดลอก URL โปรไฟล์แล้ว", "usernameCopied": "คัดลอกชื่อผู้ใช้แล้ว", "addressCopied": "คัดลอกที่อยู่แล้ว", "noWalletAddress": "ไม่มีที่อยู่กระเป๋า", "notificationsEnabled": "เปิดแจ้งเตือนสำหรับโปรไฟล์นี้แล้ว" }
 }

@@ -1063,4 +1063,5 @@
     "post": "发布", "logOut": "退出", "logIn": "登录"
   },
   "postInfo": { "title": "帖子信息", "tokenId": "代币ID", "mintedOn": "铸造于", "creator": "创作者", "visibility": "可见性", "total": "共{{count}}个", "loading": "加载中...", "engagement": "互动", "likes": "点赞", "dislikes": "踩", "views": "浏览", "comments": "评论", "price": "价格", "content": "内容", "goBack": "返回", "public": "公开", "publicDesc": "随便啥人侪好看", "private": "私密", "privateDesc": "只有侬一家头好看" }
+,"profileOptions": { "copyProfileUrl": "复制资料链接", "copyUsername": "复制用户名", "copyAddress": "复制地址", "openWallet": "打开钱包", "message": "消息", "sendTip": "发打赏", "notify": "通知", "makeOffer": "出价", "unfollow": "取消关注", "block": "拉黑", "unblock": "取消拉黑", "profileUrlCopied": "资料链接已复制", "usernameCopied": "用户名已复制", "addressCopied": "地址已复制", "noWalletAddress": "呒没钱包地址", "notificationsEnabled": "已为此资料开启通知" }
 }

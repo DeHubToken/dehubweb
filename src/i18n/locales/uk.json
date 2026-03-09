@@ -773,4 +773,5 @@
       "badge": "Білий"
     }
   }
+,"profileOptions": { "copyProfileUrl": "Копіювати URL профілю", "copyUsername": "Копіювати ім'я користувача", "copyAddress": "Копіювати адресу", "openWallet": "Відкрити гаманець", "message": "Повідомлення", "sendTip": "Надіслати чайові", "notify": "Сповістити", "makeOffer": "Зробити пропозицію", "unfollow": "Відписатися", "block": "Заблокувати", "unblock": "Розблокувати", "profileUrlCopied": "URL профілю скопійовано", "usernameCopied": "Ім'я користувача скопійовано", "addressCopied": "Адресу скопійовано", "noWalletAddress": "Немає адреси гаманця", "notificationsEnabled": "Сповіщення увімкнено для цього профілю" }
 }

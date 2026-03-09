@@ -1063,4 +1063,5 @@
     "post": "發佈", "logOut": "登出", "logIn": "登入"
   },
   "postInfo": { "title": "帖子資訊", "tokenId": "代幣ID", "mintedOn": "鑄造於", "creator": "創作者", "visibility": "可見度", "total": "共{{count}}個", "loading": "載入中...", "engagement": "互動", "likes": "讚好", "dislikes": "唔鍾意", "views": "瀏覽", "comments": "評論", "price": "價錢", "content": "內容", "goBack": "返回", "public": "公開", "publicDesc": "任何人都睇到", "private": "私密", "privateDesc": "淨係你睇到" }
+,"profileOptions": { "copyProfileUrl": "複製個人資料連結", "copyUsername": "複製用戶名", "copyAddress": "複製地址", "openWallet": "打開銀包", "message": "訊息", "sendTip": "送貼士", "notify": "通知", "makeOffer": "出價", "unfollow": "取消追蹤", "block": "封鎖", "unblock": "解除封鎖", "profileUrlCopied": "已複製個人資料連結", "usernameCopied": "已複製用戶名", "addressCopied": "已複製地址", "noWalletAddress": "冇銀包地址", "notificationsEnabled": "已為呢個資料開啟通知" }
 }
