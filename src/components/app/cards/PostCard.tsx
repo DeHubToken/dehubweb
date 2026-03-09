@@ -315,6 +315,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         tokenId={post.id}
         currentTitle={post.rawName || ''}
         currentDescription={post.rawDescription || ''}
+        currentCategories={post.categories}
         onSuccess={() => {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
         }}
