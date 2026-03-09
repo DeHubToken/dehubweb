@@ -59,6 +59,8 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   }, [postContext.type, postContext.author, postContext.title, postContext.caption]);
 
   const isMobile = useIsMobile();
+  const isDesktopOpen = isOpen && !isMobile;
+  const { position } = useOpenChatsRegistry(chatId, isDesktopOpen);
   const { t } = useI18n();
   const { language: userLanguage } = useUserLanguage();
   const [messages, setMessages] = useState<Message[]>([]);
