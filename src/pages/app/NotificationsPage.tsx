@@ -213,7 +213,7 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
   }
 
   // Backend-aggregated follow
-  if (notification.type === 'following' && (notification as any).aggregatedCount > 3) {
+  if (notification.type === 'following' && (notification as any).aggregatedCount > 2) {
     const othersCount = (notification as any).aggregatedCount - 1;
     const othersText = othersCount === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: othersCount });
     return tr('notifications.andOthersFollowing', { name: actorName, others: othersText });
@@ -237,7 +237,7 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
   // Backend-aggregated like/comment/repost (aggregatedCount > 1 with latestActorNames)
   const aggCount = (notification as any).aggregatedCount || 1;
   const aggNames = (notification as any).latestActorNames as string[] | undefined;
-  if (aggCount > 3 && aggNames && aggNames.length > 0 && ['like', 'comment', 'repost'].includes(notification.type as string)) {
+  if (aggCount > 2 && aggNames && aggNames.length > 0 && ['like', 'comment', 'repost'].includes(notification.type as string)) {
     const first = aggNames[0];
     const rest = aggCount - 1;
     const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
@@ -343,14 +343,12 @@ function NotificationItem({
   onMarkAsRead,
   isMarkingAsRead,
   enrichedAvatars,
-  activeTab,
 }: { 
   notification: DeHubNotification;
   bundle: BundledNotification;
   onMarkAsRead: (id: string) => void;
   isMarkingAsRead: boolean;
   enrichedAvatars: Map<string, EnrichedAvatar>;
-  activeTab: string;
 }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -401,7 +399,7 @@ function NotificationItem({
     }
     
     // Aggregated follow notifications → open followers drawer inline
-    const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 3;
+    const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 2;
     if (isAggregatedFollow && walletAddress) {
       // Dispatch custom event to open followers drawer in NotificationsPage
       window.dispatchEvent(new CustomEvent('open-followers-drawer'));
@@ -429,17 +427,14 @@ function NotificationItem({
         {(() => {
           const aggCount = (notification as any).aggregatedCount || 1;
           const aggNames = (notification as any).latestActorNames as string[] | undefined;
-          const hasMultipleActors = aggCount > 3 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
+          const hasMultipleActors = aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
           
           if (hasMultipleActors) {
-            // When on a type-specific tab (likes/follows), show 4 avatars instead of 3+icon
-            const showFourAvatars = activeTab === 'likes' || activeTab === 'follows';
-            
+            // 2×2 grid: TL=avatar1, TR=avatar2, BL=avatar3, BR=type icon
             const actorName2 = aggNames && aggNames.length > 1 ? aggNames[1] : null;
             const actorName3 = aggNames && aggNames.length > 2 ? aggNames[2] : null;
-            const actorName4 = aggNames && aggNames.length > 3 ? aggNames[3] : null;
             
-            // Find avatars for actors from enriched data
+            // Find avatars for 2nd and 3rd actors from enriched data
             const findAvatarByUsername = (username: string | null) => {
               if (!username) return undefined;
               for (const [, entry] of enrichedAvatars) {
@@ -451,7 +446,6 @@ function NotificationItem({
             };
             const avatar2Url = findAvatarByUsername(actorName2);
             const avatar3Url = findAvatarByUsername(actorName3);
-            const avatar4Url = showFourAvatars ? findAvatarByUsername(actorName4) : undefined;
             
             const renderGridAvatar = (
               url: string | undefined,
@@ -486,18 +480,10 @@ function NotificationItem({
                 ) : (
                   renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
                 )}
-                {/* Bottom-right: 4th avatar on type-specific tabs, otherwise type icon */}
-                {showFourAvatars ? (
-                  actorName4 ? (
-                    renderGridAvatar(avatar4Url, actorName4, `/${actorName4}`, 'w-[23px] h-[23px]')
-                  ) : (
-                    renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
-                  )
-                ) : (
-                  <div className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                    {getNotificationIcon(notification.type)}
-                  </div>
-                )}
+                {/* Bottom-right: notification type icon */}
+                <div className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                  {getNotificationIcon(notification.type)}
+                </div>
               </div>
             );
           }
@@ -522,7 +508,7 @@ function NotificationItem({
           );
         })()}
         {/* Type icon badge — only for single-actor notifications (aggregated ones render it inside) */}
-        {!((notification as any).aggregatedCount > 3 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string)) && (
+        {!((notification as any).aggregatedCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string)) && (
           <div className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
             {getNotificationIcon(notification.type)}
           </div>
@@ -559,7 +545,7 @@ function NotificationItem({
         })()}
         
         {/* Show individual actor names below backend-aggregated follows */}
-        {notification.type === 'following' && (notification as any).aggregatedCount > 3 && (notification as any).latestActorNames?.length > 1 && (
+        {notification.type === 'following' && (notification as any).aggregatedCount > 2 && (notification as any).latestActorNames?.length > 1 && (
           <p className="text-xs text-zinc-500 mt-0.5">
             {(notification as any).latestActorNames.join(', ')}
           </p>
@@ -1041,7 +1027,6 @@ export default function NotificationsPage() {
                     onMarkAsRead={handleMarkAsRead}
                     isMarkingAsRead={bundle.allIds.includes(markingNotificationId || '')}
                     enrichedAvatars={enrichedAvatars}
-                    activeTab={activeTab}
                   />
                 ));
               })()}
