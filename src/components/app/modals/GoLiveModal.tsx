@@ -166,7 +166,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       }
 
       logger.info('Executing on-chain mint...', { tokenId });
-      toast.loading('Publishing to blockchain...', { id: 'golive-progress', duration: Infinity });
+      toast.loading('Publishing to decentralized database...', { id: 'golive-progress', duration: Infinity });
 
       const txHash = await mintOnChain({
         tokenId,
