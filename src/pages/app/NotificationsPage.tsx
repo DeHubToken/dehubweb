@@ -427,7 +427,7 @@ function NotificationItem({
         {(() => {
           const aggCount = (notification as any).aggregatedCount || 1;
           const aggNames = (notification as any).latestActorNames as string[] | undefined;
-          const hasMultipleActors = aggCount > 2 && ['like', 'comment', 'repost'].includes(notification.type as string);
+          const hasMultipleActors = aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
           
           if (hasMultipleActors) {
             // 2×2 grid: TL=avatar1, TR=avatar2, BL=avatar3, BR=type icon
