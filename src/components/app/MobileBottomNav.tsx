@@ -7,7 +7,7 @@ import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
 import { ShimmerHoverEffect } from '@/components/ui/shimmer-hover-effect';
 
-const SCROLL_HINT_KEY = 'dehub_nav_scroll_hint_seen';
+
 
 // Left side: Home, Messages
 const LEFT_NAV_ITEMS = [
