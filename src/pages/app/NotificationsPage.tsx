@@ -652,6 +652,7 @@ export default function NotificationsPage() {
   // Batch-avatar enrichment for fresh profile pictures
   const [enrichedAvatars, setEnrichedAvatars] = useState<Map<string, EnrichedAvatar>>(new Map());
   const enrichedRef = useRef<Set<string>>(new Set());
+  const [enrichmentReady, setEnrichmentReady] = useState(false);
 
   // Clear enrichment cache on mount so fresh avatars are always fetched
   useEffect(() => {
@@ -675,7 +676,10 @@ export default function NotificationsPage() {
     const uniqueNewAddresses = [...new Set(newAddresses)];
     const uniqueNewUsernames = [...new Set(secondActorUsernames)];
     
-    if (uniqueNewAddresses.length === 0 && uniqueNewUsernames.length === 0) return;
+    if (uniqueNewAddresses.length === 0 && uniqueNewUsernames.length === 0) {
+      setEnrichmentReady(true);
+      return;
+    }
     
     // Mark as in-flight immediately to prevent duplicate calls
     uniqueNewAddresses.forEach(addr => enrichedRef.current.add(addr));
@@ -718,6 +722,7 @@ export default function NotificationsPage() {
         }
         return next;
       });
+      setEnrichmentReady(true);
     });
   }, [allNotifications]);
 
@@ -1001,7 +1006,7 @@ export default function NotificationsPage() {
       {/* Notifications List */}
       <div className="px-2 sm:px-3 pt-2 pb-2">
         <div className="bg-zinc-900 rounded-2xl overflow-hidden">
-          {isLoading ? (
+          {isLoading || (notifications.length > 0 && !enrichmentReady) ? (
             <div className="flex justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-zinc-500" />
             </div>
