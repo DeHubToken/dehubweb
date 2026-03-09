@@ -170,12 +170,11 @@ export async function voteOnPost(params: {
   tokenId: number;
   voteType: 'for' | 'against';
 }): Promise<VoteResponse> {
-  // Backend expects query params (tokenId, type) - body format returns "Vote params is required"
   const response = await apiCall<{ result: VoteResponse; success?: boolean } | VoteResponse>("/api/request_vote", {
     method: "POST",
-    params: {
-      tokenId: params.tokenId,
-      type: params.voteType === 'for' ? 1 : 0,
+    body: {
+      streamTokenId: params.tokenId,
+      vote: params.voteType === 'for',
     },
     requiresAuth: true,
   });
