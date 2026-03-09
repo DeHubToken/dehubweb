@@ -1027,6 +1027,7 @@ export default function NotificationsPage() {
                     onMarkAsRead={handleMarkAsRead}
                     isMarkingAsRead={bundle.allIds.includes(markingNotificationId || '')}
                     enrichedAvatars={enrichedAvatars}
+                    activeTab={activeTab}
                   />
                 ));
               })()}
