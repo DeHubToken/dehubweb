@@ -218,6 +218,8 @@ export interface ImagePost extends BaseFeedItem {
   isUnlocked?: boolean;
   /** Chain ID the content was minted on (e.g., 8453 for Base, 56 for BNB) */
   chainId?: number;
+  /** Post categories */
+  categories?: string[];
 }
 
 /**
