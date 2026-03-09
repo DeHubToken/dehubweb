@@ -43,7 +43,6 @@ export function MobileBottomNav() {
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [showScrollHint, setShowScrollHint] = useState(false);
 
   const handleNavClick = (e: React.MouseEvent, path: string) => {
     if (path === '/app' && location.pathname === '/app') {
