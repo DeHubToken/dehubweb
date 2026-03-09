@@ -1056,4 +1056,5 @@
     "post": "ለኣኽ", "logOut": "ውጻእ", "logIn": "እቶ"
   },
   "postInfo": { "title": "ሓበሬታ ጽሑፍ", "tokenId": "ቶከን ID", "mintedOn": "ተፈጢሩ", "creator": "ፈጣሪ", "visibility": "ምርኣይ", "total": "ጠቕላላ {{count}}", "loading": "ይጽዓን ኣሎ...", "engagement": "ተሳትፎ", "likes": "ፈትየ", "dislikes": "ኣይፈትየን", "views": "ርእየት", "comments": "ርእይቶ", "price": "ዋጋ", "content": "ትሕዝቶ", "goBack": "ተመለስ", "public": "ህዝባዊ", "publicDesc": "ዝኾነ ሰብ ክርእዮ ይኽእል", "private": "ብሕቲ", "privateDesc": "ንስኻ ጥራይ ክትርእዮ ትኽእል" }
+,"profileOptions": { "copyProfileUrl": "ናይ ፕሮፋይል URL ቅዳሕ", "copyUsername": "ናይ ተጠቃሚ ስም ቅዳሕ", "copyAddress": "ኣድራሻ ቅዳሕ", "openWallet": "ዋሌት ክፈት", "message": "መልእኽቲ", "sendTip": "ጸጋ ስደድ", "notify": "ኣፍልጥ", "makeOffer": "ቅድመ-ምቕራብ ግበር", "unfollow": "ምስዓብ ኣቋርጽ", "block": "ዕጸው", "unblock": "ዕጸው ኣልግስ", "profileUrlCopied": "ናይ ፕሮፋይል URL ተቐዲሑ", "usernameCopied": "ናይ ተጠቃሚ ስም ተቐዲሑ", "addressCopied": "ኣድራሻ ተቐዲሑ", "noWalletAddress": "ናይ ዋሌት ኣድራሻ የለን", "notificationsEnabled": "ንዚ ፕሮፋይል ሓበሬታታት ተበጊሱ" }
 }

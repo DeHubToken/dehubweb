@@ -53,4 +53,5 @@
   "footer": {
     "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"
   }
+,"profileOptions": { "copyProfileUrl": "คัดลอก URL โปรไฟล์", "copyUsername": "คัดลอกชื่อผู้ใช้", "copyAddress": "คัดลอกที่อยู่", "openWallet": "เปิดกระเป๋าเงิน", "message": "ข้อความ", "sendTip": "ส่งทิป", "notify": "แจ้งเตือน", "makeOffer": "เสนอราคา", "unfollow": "เลิกติดตาม", "block": "บล็อก", "unblock": "ปลดบล็อก", "profileUrlCopied": "คัดลอก URL โปรไฟล์แล้ว", "usernameCopied": "คัดลอกชื่อผู้ใช้แล้ว", "addressCopied": "คัดลอกที่อยู่แล้ว", "noWalletAddress": "ไม่มีที่อยู่กระเป๋าเงิน", "notificationsEnabled": "เปิดการแจ้งเตือนสำหรับโปรไฟล์นี้แล้ว" }
 }

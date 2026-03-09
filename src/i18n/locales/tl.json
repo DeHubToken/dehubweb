@@ -195,4 +195,5 @@
     "noNotifications": "Walang mga abiso",
     "loadMore": "Mag-load ng higit pa"
   }
+,"profileOptions": { "copyProfileUrl": "Kopyahin ang URL ng profile", "copyUsername": "Kopyahin ang username", "copyAddress": "Kopyahin ang address", "openWallet": "Buksan ang pitaka", "message": "Mensahe", "sendTip": "Magpadala ng tip", "notify": "Abisuhan", "makeOffer": "Mag-alok", "unfollow": "I-unfollow", "block": "I-block", "unblock": "I-unblock", "profileUrlCopied": "Nakopya ang URL ng profile", "usernameCopied": "Nakopya ang username", "addressCopied": "Nakopya ang address", "noWalletAddress": "Walang address ng pitaka", "notificationsEnabled": "Na-enable ang mga abiso para sa profile na ito" }
 }
