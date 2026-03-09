@@ -350,6 +350,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     isReposted: item.isReposted ?? false,
     isQuotePost: !!(item as any).isQuotePost,
     quotedPost: (item as any).quotedPost || null,
+    categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
   };
 }
 

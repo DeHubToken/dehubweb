@@ -64,6 +64,8 @@ export interface TextPost extends BaseFeedItem {
   isQuotePost?: boolean;
   /** The quoted post data (for rendering embedded quote) */
   quotedPost?: import('@/lib/api/dehub/types').DeHubNFT | null;
+  /** Post categories */
+  categories?: string[];
 }
 
 /**
