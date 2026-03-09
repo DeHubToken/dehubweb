@@ -439,8 +439,8 @@ function NotificationItem({
               <div className="relative w-12 h-12">
                 {/* Primary avatar (front, top-left) */}
                 {profileLink ? (
-                  <Link to={profileLink} onClick={(e) => e.stopPropagation()}>
-                    <Avatar className="w-9 h-9 absolute top-0 left-0 ring-2 ring-zinc-900 z-10">
+                  <Link to={profileLink} onClick={(e) => e.stopPropagation()} className="absolute top-0 left-0 z-10">
+                    <Avatar className="w-9 h-9 ring-2 ring-zinc-900">
                       <AvatarImage src={avatarUrl} />
                       <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
                         {fallbackLetter}
@@ -448,28 +448,32 @@ function NotificationItem({
                     </Avatar>
                   </Link>
                 ) : (
-                  <Avatar className="w-9 h-9 absolute top-0 left-0 ring-2 ring-zinc-900 z-10">
-                    <AvatarImage src={avatarUrl} />
-                    <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
-                      {fallbackLetter}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="absolute top-0 left-0 z-10">
+                    <Avatar className="w-9 h-9 ring-2 ring-zinc-900">
+                      <AvatarImage src={avatarUrl} />
+                      <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
+                        {fallbackLetter}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
                 )}
                 {/* Second avatar (behind, bottom-right) — named actor or +N fallback */}
                 {secondActorLink ? (
-                  <Link to={secondActorLink} onClick={(e) => e.stopPropagation()}>
-                    <Avatar className="w-8 h-8 absolute bottom-0 right-0 ring-2 ring-zinc-900">
+                  <Link to={secondActorLink} onClick={(e) => e.stopPropagation()} className="absolute bottom-0 right-0">
+                    <Avatar className="w-8 h-8 ring-2 ring-zinc-900">
                       <AvatarFallback className="bg-zinc-600 text-white text-xs font-medium">
                         {secondActorName!.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                   </Link>
                 ) : (
-                  <Avatar className="w-8 h-8 absolute bottom-0 right-0 ring-2 ring-zinc-900">
-                    <AvatarFallback className="bg-zinc-600 text-white text-[10px] font-bold">
-                      +{othersCount}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="absolute bottom-0 right-0">
+                    <Avatar className="w-8 h-8 ring-2 ring-zinc-900">
+                      <AvatarFallback className="bg-zinc-600 text-white text-[10px] font-bold">
+                        +{othersCount}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
                 )}
                 {/* Type icon badge at bottom-left */}
                 <div className="absolute -bottom-1 -left-1 z-20 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
