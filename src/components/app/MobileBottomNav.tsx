@@ -101,15 +101,6 @@ export function MobileBottomNav() {
         <nav
           className="relative bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl transition-all duration-1000"
         >
-          {/* Shimmer effect during scroll hint */}
-          {showScrollHint && (
-            <ShimmerHoverEffect
-              intensity="strong"
-              duration={1200}
-              className="opacity-100 translate-x-full rounded-2xl z-20"
-              style={{ transitionProperty: 'opacity, transform', transitionDuration: '500ms, 1200ms' }}
-            />
-          )}
           {/* Nav items container */}
           <div 
             ref={scrollRef}
