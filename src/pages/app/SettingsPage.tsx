@@ -1108,24 +1108,33 @@ function PrivacySettings() {
                 type="number"
                 min={0}
                 placeholder="0"
-                value={feeInput || (messageFee > 0 ? String(messageFee) : '')}
+                value={feeInput !== '' ? feeInput : (messageFee > 0 ? String(messageFee) : '')}
                 onChange={(e) => setFeeInput(e.target.value)}
-                onBlur={() => {
-                  const val = parseFloat(feeInput);
-                  if (!isNaN(val) && val >= 0 && val !== messageFee) {
-                    updateMessageFee(val);
-                  }
-                  setFeeInput('');
-                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    (e.target as HTMLInputElement).blur();
+                    const val = parseFloat(feeInput);
+                    if (!isNaN(val) && val >= 0 && val !== messageFee) updateMessageFee(val);
+                    setFeeInput('');
                   }
                 }}
                 className="w-24 h-9 rounded-xl bg-zinc-800 border-zinc-700 text-white text-right"
                 disabled={isDmUpdating}
               />
               <span className="text-zinc-400 text-sm">DHB</span>
+              {feeInput !== '' && parseFloat(feeInput) !== messageFee && (
+                <Button
+                  size="sm"
+                  className="h-9 px-3 text-xs"
+                  disabled={isDmUpdating}
+                  onClick={() => {
+                    const val = parseFloat(feeInput);
+                    if (!isNaN(val) && val >= 0) updateMessageFee(val);
+                    setFeeInput('');
+                  }}
+                >
+                  {isDmUpdating ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Save'}
+                </Button>
+              )}
             </div>
           </div>
 
@@ -1859,24 +1868,33 @@ function MessagesSettings() {
                 type="number"
                 min={0}
                 placeholder="0"
-                value={feeInput || (messageFee > 0 ? String(messageFee) : '')}
+                value={feeInput !== '' ? feeInput : (messageFee > 0 ? String(messageFee) : '')}
                 onChange={(e) => setFeeInput(e.target.value)}
-                onBlur={() => {
-                  const val = parseFloat(feeInput);
-                  if (!isNaN(val) && val >= 0 && val !== messageFee) {
-                    updateMessageFee(val);
-                  }
-                  setFeeInput('');
-                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    (e.target as HTMLInputElement).blur();
+                    const val = parseFloat(feeInput);
+                    if (!isNaN(val) && val >= 0 && val !== messageFee) updateMessageFee(val);
+                    setFeeInput('');
                   }
                 }}
                 className="w-24 h-9 rounded-xl bg-zinc-800 border-zinc-700 text-white text-right"
                 disabled={isDmUpdating}
               />
               <span className="text-zinc-400 text-sm">DHB</span>
+              {feeInput !== '' && parseFloat(feeInput) !== messageFee && (
+                <Button
+                  size="sm"
+                  className="h-9 px-3 text-xs"
+                  disabled={isDmUpdating}
+                  onClick={() => {
+                    const val = parseFloat(feeInput);
+                    if (!isNaN(val) && val >= 0) updateMessageFee(val);
+                    setFeeInput('');
+                  }}
+                >
+                  {isDmUpdating ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Save'}
+                </Button>
+              )}
             </div>
           </div>
 

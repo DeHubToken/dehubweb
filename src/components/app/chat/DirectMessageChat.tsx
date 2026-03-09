@@ -52,6 +52,7 @@ import {
   emitReadReceipt,
   onConversationDeleted,
   onDmSendMessage,
+  onDmError,
 } from '@/lib/api/dehub/dm-socket';
 
 interface DirectMessageChatProps {
@@ -530,6 +531,16 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     });
     return unsub;
   }, [resolvedConversationId, onBack]);
+
+  // Handle DM_FEE_REQUIRED socket error — set fee state so the UI shows the payment banner
+  useEffect(() => {
+    const unsub = onDmError((err) => {
+      if (err.code === 'DM_FEE_REQUIRED' && err.fee != null && err.fee > 0) {
+        setDmFee(prev => prev ?? { required: true, fee: err.fee!, hasFreeAccess: false });
+      }
+    });
+    return unsub;
+  }, []);
 
   // Handle scroll
   const handleScroll = useCallback(() => {

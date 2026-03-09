@@ -62,8 +62,10 @@ export interface FeeConfirmedData {
 }
 
 export interface DmSocketError {
-  message: string;
+  message?: string;
+  msg?: string;
   code?: string;
+  fee?: number;
 }
 
 // ─── Singleton ────────────────────────────────────────────────────────────────
