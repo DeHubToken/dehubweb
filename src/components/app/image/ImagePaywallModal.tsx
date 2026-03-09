@@ -92,12 +92,12 @@ export function ImagePaywallModal({
       const signerAddress = await getWalletAddress();
       const amountWei = toWei(costDhb, DHB_TOKEN.decimals);
 
-      // Check balances on Base and BNB in parallel
+      // Check balances on Base and BNB in parallel — treat failures as 0
       const baseConfig = getChainConfig(BASE_CHAIN_ID);
       const bnbConfig = getChainConfig(BNB_CHAIN_ID);
       const [baseBalance, bnbBalance] = await Promise.all([
-        getERC20Balance(baseConfig.dhbToken, signerAddress, BASE_CHAIN_ID),
-        getERC20Balance(bnbConfig.dhbToken, signerAddress, BNB_CHAIN_ID),
+        getERC20Balance(baseConfig.dhbToken, signerAddress, BASE_CHAIN_ID).catch(() => BigInt(0)),
+        getERC20Balance(bnbConfig.dhbToken, signerAddress, BNB_CHAIN_ID).catch(() => BigInt(0)),
       ]);
 
       // Prefer Base, fallback to BNB
