@@ -85,7 +85,6 @@ function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars
 
   for (let i = 0; i < deduped.length; i++) {
     const n = deduped[i];
-    const n = notifications[i];
     if (consumed.has(n.id)) continue;
 
     const nTime = new Date(n.createdAt).getTime();
