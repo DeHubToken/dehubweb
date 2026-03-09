@@ -49,7 +49,7 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
     >
       {/* Media thumbnail (top, like Twitter) */}
       {thumbnailUrl && (hasImage || hasVideo) && (
-        <div className="relative w-full aspect-video bg-zinc-900">
+        <div className="relative w-full aspect-video max-h-[200px] sm:max-h-[240px] bg-zinc-900">
           <img
             src={thumbnailUrl}
             alt=""
