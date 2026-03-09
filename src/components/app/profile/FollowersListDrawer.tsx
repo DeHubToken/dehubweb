@@ -279,8 +279,13 @@ export function FollowersListDrawer({
         ));
         toast.success(`Following ${user.displayName || user.username || 'user'}`);
       }
-    } catch (error) {
-      handleApiError(error, 'Failed to update follow status');
+    } catch (error: any) {
+      const msg = error?.message || error?.error || '';
+      if (typeof msg === 'string' && msg.toLowerCase().includes('already pending')) {
+        toast.info('Follow request already pending. Waiting for approval.');
+      } else {
+        handleApiError(error, 'Failed to update follow status');
+      }
     } finally {
       setLoadingFollows(prev => {
         const next = new Set(prev);
