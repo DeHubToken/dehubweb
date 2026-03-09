@@ -1063,4 +1063,5 @@
     "post": "خپره کړئ", "logOut": "وتل", "logIn": "ننوتل"
   },
   "postInfo": { "title": "د پوسټ معلومات", "tokenId": "توکن ID", "mintedOn": "جوړ شوی", "creator": "جوړونکی", "visibility": "لیدنه", "total": "ټول {{count}}", "loading": "لوډ کیږي...", "engagement": "برخه اخیستنه", "likes": "خوښ", "dislikes": "نا خوښ", "views": "لیدنې", "comments": "نظرونه", "price": "بیه", "content": "منځپانګه", "goBack": "بېرته", "public": "عامه", "publicDesc": "هر څوک لیدلی شي", "private": "شخصي", "privateDesc": "یوازې تاسو لیدلی شئ" }
+,"profileOptions": { "copyProfileUrl": "د پروفایل URL کاپي کړئ", "copyUsername": "د کارونکي نوم کاپي کړئ", "copyAddress": "پته کاپي کړئ", "openWallet": "بټوه خلاصه کړئ", "message": "پیغام", "sendTip": "ټپ واستوئ", "notify": "خبرتیا ورکړئ", "makeOffer": "وړاندیز وکړئ", "unfollow": "تعقیب پریږدئ", "block": "بلاک کړئ", "unblock": "بلاک لرې کړئ", "profileUrlCopied": "د پروفایل URL کاپي شو", "usernameCopied": "د کارونکي نوم کاپي شو", "addressCopied": "پته کاپي شوه", "noWalletAddress": "د بټوې پته شتون نلري", "notificationsEnabled": "د دې پروفایل لپاره خبرتیاوې فعاله شوې" }
 }

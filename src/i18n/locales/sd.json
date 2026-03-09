@@ -1056,4 +1056,5 @@
     "post": "پوسٽ", "logOut": "لاڳ آئوٽ", "logIn": "لاڳ ان"
   },
   "postInfo": { "title": "پوسٽ معلومات", "tokenId": "ٽوڪن ID", "mintedOn": "ٺاهيل", "creator": "ٺاهيندڙ", "visibility": "نظر", "total": "ڪل {{count}}", "loading": "لوڊ ٿي رهيو آهي...", "engagement": "شموليت", "likes": "پسند", "dislikes": "ناپسند", "views": "ڏسڻ", "comments": "تبصرا", "price": "قيمت", "content": "مواد", "goBack": "واپس", "public": "عوامي", "publicDesc": "ڪو به ڏسي سگهي ٿو", "private": "خانگي", "privateDesc": "رڳو توهان ڏسي سگهو ٿا" }
+,"profileOptions": { "copyProfileUrl": "پروفائل URL ڪاپي ڪريو", "copyUsername": "يوزرنيم ڪاپي ڪريو", "copyAddress": "ايڊريس ڪاپي ڪريو", "openWallet": "والٽ کوليو", "message": "پيغام", "sendTip": "ٽپ موڪليو", "notify": "خبر ڏيو", "makeOffer": "آفر ڪريو", "unfollow": "اَن فالو ڪريو", "block": "بلاڪ ڪريو", "unblock": "اَن بلاڪ ڪريو", "profileUrlCopied": "پروفائل URL ڪاپي ٿي ويو", "usernameCopied": "يوزرنيم ڪاپي ٿي ويو", "addressCopied": "ايڊريس ڪاپي ٿي ويو", "noWalletAddress": "والٽ ايڊريس موجود ناهي", "notificationsEnabled": "هن پروفائل لاءِ نوٽيفڪيشن فعال ٿي ويا" }
 }

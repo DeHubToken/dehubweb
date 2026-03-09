@@ -279,4 +279,5 @@
     "userAccountSafeOut": "Akaun pengguna selamat keluar",
     "userAccountSafeOutFailed": "Tandakan akaun pengguna selamat keluar gagal"
   }
+,"profileOptions": { "copyProfileUrl": "Salin URL profil", "copyUsername": "Salin nama pengguna", "copyAddress": "Salin alamat", "openWallet": "Buka dompet", "message": "Mesej", "sendTip": "Hantar tip", "notify": "Maklumkan", "makeOffer": "Buat tawaran", "unfollow": "Nyahikut", "block": "Sekat", "unblock": "Nyahsekat", "profileUrlCopied": "URL profil disalin", "usernameCopied": "Nama pengguna disalin", "addressCopied": "Alamat disalin", "noWalletAddress": "Tiada alamat dompet", "notificationsEnabled": "Pemberitahuan diaktifkan untuk profil ini" }
 }
