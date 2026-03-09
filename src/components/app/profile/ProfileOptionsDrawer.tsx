@@ -171,6 +171,16 @@ export function ProfileOptionsContent({
                   <span className="text-red-400 font-medium">{t('profileOptions.unfollow')}</span>
                 </button>
               )}
+              {/* Report User */}
+              <button
+                onClick={() => { setShareSheetOpen(false); setReportModalOpen(true); }}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-red-500/10 backdrop-blur-md border border-red-500/20 hover:bg-red-500/20 transition-colors text-left"
+              >
+                <div className="w-8 h-8 rounded-xl bg-red-500/20 backdrop-blur-sm flex items-center justify-center">
+                  <Flag className="w-4 h-4 text-red-400" />
+                </div>
+                <span className="text-red-400 font-medium">Report User</span>
+              </button>
             </>
           )}
           <button
