@@ -96,7 +96,8 @@ function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars
     // Try same-actor bundling for likes/comments on different posts
     if (['like', 'comment', 'repost', 'quote'].includes(n.type) && n.actorAddress) {
       const group: DeHubNotification[] = [n];
-      for (let j = i + 1; j < notifications.length; j++) {
+      for (let j = i + 1; j < deduped.length; j++) {
+        const m = deduped[j];
         const m = notifications[j];
         if (consumed.has(m.id)) continue;
         if (m.type !== n.type) continue;
