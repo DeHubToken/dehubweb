@@ -641,9 +641,9 @@ export function PostContentArea({
             </Avatar>
           </div>
           <div className="flex-1 min-w-0 mt-12 sm:mt-0">
-            {/* Title input - shown when title toggle is on */}
+            {/* Title input - shown when title toggle is on OR video/audio */}
             <AnimatePresence>
-              {showTitle && (
+              {(showTitle || hasVideo || hasAudio) && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
@@ -677,7 +677,7 @@ export function PostContentArea({
                   }
                 }
               }}
-              data-placeholder={hasVideo ? "First line used as title..." : "What's happening?"}
+              data-placeholder={(showTitle || hasVideo || hasAudio) ? "Description" : "What's happening?"}
               className="w-full bg-transparent text-white text-base sm:text-lg resize-none outline-none min-h-[48px] sm:min-h-[60px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 sm:empty:before:text-white/70 empty:before:pointer-events-none"
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
             />
