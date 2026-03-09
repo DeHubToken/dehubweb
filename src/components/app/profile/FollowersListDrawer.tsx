@@ -110,6 +110,7 @@ export function FollowersListDrawer({
   useEffect(() => {
     if (open) {
       followingSetRef.current = null;
+      followersSetRef.current = null;
     }
   }, [open]);
 
