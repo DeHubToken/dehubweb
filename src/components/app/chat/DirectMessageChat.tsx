@@ -414,8 +414,11 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       },
       onError: (err) => {
         console.warn('[DM] createAndStart failed (non-critical):', err);
-        // Mark error only if still a virtual conversation
-        setInitError(true);
+        // Don't show error banner for timeout — server creates the conversation
+        // asynchronously and getContacts polling will pick it up within ~5s.
+        // Only show error for non-timeout failures (e.g. auth error).
+        const isTimeout = err?.message?.includes('timeout');
+        if (!isTimeout) setInitError(true);
         // Fallback: use dmSettings from the search result / otherUser data
         const otherUserData = otherUser as any;
         const perMessageFee = otherUserData?.dmSettings?.perMessageFee;

@@ -240,8 +240,13 @@ export default function MessagesPage() {
     (selectedConversation.id.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(selectedConversation.id));
   useEffect(() => {
     if (!hasVirtualSelected) return;
-    const t = setInterval(() => refetch(), 5000);
-    return () => clearInterval(t);
+    // Poll at 1.5s for first 30s, then 5s
+    const fast = setInterval(() => refetch(), 1500);
+    const slow = setTimeout(() => {
+      clearInterval(fast);
+      setInterval(() => refetch(), 5000);
+    }, 30000);
+    return () => { clearInterval(fast); clearTimeout(slow); };
   }, [hasVirtualSelected, refetch]);
 
   // Block access for unauthenticated users
