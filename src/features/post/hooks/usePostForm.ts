@@ -123,6 +123,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       return localStorage.getItem('post_default_categories') || '';
     } catch { return ''; }
   });
+  const [showTitle, setShowTitle] = useState(false);
+  const [titleText, setTitleText] = useState('');
   const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false);
 
   // Refs
