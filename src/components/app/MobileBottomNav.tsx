@@ -131,7 +131,7 @@ export function MobileBottomNav() {
       <div 
         className="lg:hidden fixed bottom-0 left-0 right-0 z-40 pointer-events-none h-24"
         style={{
-          background: 'linear-gradient(to bottom, transparent 0%, hsl(var(--background) / 0.6) 50%, hsl(var(--background) / 0.95) 100%)',
+          background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.95) 100%)',
         }}
       />
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
