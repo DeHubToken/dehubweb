@@ -167,7 +167,11 @@ export function FollowersListDrawer({
         const followingSet = followingSetRef.current;
         const finalUsers: UserListItem[] = isOwnFollowingList
           ? processed.map(u => ({ ...u, isFollowing: true }))
-          : processed.map(u => ({ ...u, isFollowing: followingSet ? followingSet.has(u.address.toLowerCase()) : false }));
+          : processed.map(u => ({
+              ...u,
+              isFollowing: followingSet ? followingSet.has(u.address.toLowerCase()) : false,
+              followsYou: isOwnFollowersList ? true : u.followsYou,
+            }));
 
         setUsers(finalUsers);
         setCurrentPage(1);
