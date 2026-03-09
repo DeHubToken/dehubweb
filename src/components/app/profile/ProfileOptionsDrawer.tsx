@@ -184,7 +184,7 @@ export function ProfileOptionsContent({
               )}
             </div>
             <span className="text-red-400 font-medium">
-              {isBlocked ? 'Unblock' : 'Block'}
+              {isBlocked ? t('profileOptions.unblock') : t('profileOptions.block')}
             </span>
           </button>
         </>
