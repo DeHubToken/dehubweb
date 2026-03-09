@@ -435,6 +435,18 @@ function NotificationItem({
             const secondActorName = hasSecondName ? aggNames[1] : null;
             const secondActorLink = secondActorName ? `/${secondActorName}` : null;
             const othersCount = aggCount - 1;
+            
+            // Try to find second actor's avatar from enriched data by matching username
+            let secondAvatarUrl: string | undefined;
+            if (secondActorName) {
+              for (const [, enrichedEntry] of enrichedAvatars) {
+                if (enrichedEntry.username?.toLowerCase() === secondActorName.toLowerCase() && enrichedEntry.avatarUrl) {
+                  secondAvatarUrl = enrichedEntry.avatarUrl;
+                  break;
+                }
+              }
+            }
+            
             return (
               <div className="relative w-12 h-12">
                 {/* Primary avatar (front, top-left) */}
@@ -461,6 +473,7 @@ function NotificationItem({
                 {secondActorLink ? (
                   <Link to={secondActorLink} onClick={(e) => e.stopPropagation()} className="absolute bottom-0 right-0">
                     <Avatar className="w-8 h-8 ring-2 ring-zinc-900">
+                      {secondAvatarUrl && <AvatarImage src={secondAvatarUrl} />}
                       <AvatarFallback className="bg-zinc-600 text-white text-xs font-medium">
                         {secondActorName!.charAt(0).toUpperCase()}
                       </AvatarFallback>
