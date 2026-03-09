@@ -320,7 +320,13 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
   // Determine if the name is a meaningful title (not empty/whitespace/placeholder)
   const rawName = item.name || '';
   const rawDescription = item.description || '';
-  const hasMeaningfulTitle = rawName.trim().length > 0 && rawName.trim() !== rawDescription.trim();
+  const trimmedName = rawName.trim();
+  const trimmedDesc = rawDescription.trim();
+  // Title is meaningful only if it exists, differs from description, and isn't just the
+  // start of the description (API often copies the first line of description into name).
+  const hasMeaningfulTitle = trimmedName.length > 0 
+    && trimmedName !== trimmedDesc 
+    && !trimmedDesc.startsWith(trimmedName);
 
   return {
     id,
@@ -333,8 +339,8 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
       verified: false,
       badgeBalance: item.minterUser?.badgeBalance,
     },
-    title: hasMeaningfulTitle ? rawName.trim() : undefined,
-    content: rawDescription || rawName || '',
+    title: hasMeaningfulTitle ? trimmedName : undefined,
+    content: trimmedDesc || trimmedName || '',
     rawName,
     rawDescription,
     createdAt: item.createdAt,
