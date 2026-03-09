@@ -880,19 +880,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       if (postType === 'video' || postType === 'audio') {
         // Video/Audio: first line = title, rest = description
         const lines = text.trim().split('\n');
-        postTitle = (lines[0] || '').trim().slice(0, 100);
+        postTitle = (lines[0] || '').trim().slice(0, 100) || ' ';
         postDescription = lines.slice(1).join('\n').trim();
       } else {
         // Image/Text posts: no title, everything goes to description
         postTitle = ' ';
         postDescription = text.trim();
-      }
-
-      // Fallback for video/audio: never send empty name to avoid API generating "Stream NFT #XXXX"
-      if (postType === 'video' || postType === 'audio') {
-        if (!postTitle) {
-          postTitle = postDescription.slice(0, 100) || ' ';
-        }
       }
 
       const mintResponse = await mintPost(
