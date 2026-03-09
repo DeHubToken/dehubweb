@@ -98,6 +98,7 @@ export function FollowersListDrawer({
   const sentinelRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const followingSetRef = useRef<Set<string> | null>(null);
+  const followersSetRef = useRef<Set<string> | null>(null);
 
   // Debounce search input
   useEffect(() => {
