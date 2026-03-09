@@ -1009,22 +1009,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const disconnect = async () => {
-    try {
-      if (connectionSource === 'web3auth') {
-        await disconnectWeb3Auth();
-      } else {
-        wagmiDisconnect();
-      }
-    } catch (error) {
-      console.error('Disconnect provider error (non-blocking):', error);
-    }
-
-    // Always clean up local state regardless of provider disconnect success
+    // Clean up local state FIRST for immediate UI feedback
     clearAuthSession();
     localStorage.removeItem('dehub_user');
     localStorage.removeItem('dehub_wallet');
     localStorage.removeItem('dehub_connection_source');
-    clearWagmiStorage();
 
     setWalletAddress(null);
     setUser(null);
@@ -1036,6 +1025,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     disconnectDmSocket();
     queryClient.clear();
+
+    // Provider-level disconnect AFTER local cleanup (non-blocking)
+    try {
+      if (connectionSource === 'web3auth') {
+        await disconnectWeb3Auth();
+        // Only nuke wagmi storage for web3auth sessions — wagmi wasn't the auth source
+        clearWagmiStorage();
+      } else {
+        // For wagmi-based sessions, use wagmi's own disconnect which properly
+        // resets connector state so MetaMask etc. can reconnect without a page refresh.
+        wagmiDisconnect();
+      }
+    } catch (error) {
+      console.error('Disconnect provider error (non-blocking):', error);
+    }
   };
 
   const refreshUser = async () => {
