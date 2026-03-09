@@ -652,6 +652,7 @@ export default function NotificationsPage() {
   // Batch-avatar enrichment for fresh profile pictures
   const [enrichedAvatars, setEnrichedAvatars] = useState<Map<string, EnrichedAvatar>>(new Map());
   const enrichedRef = useRef<Set<string>>(new Set());
+  const [enrichmentReady, setEnrichmentReady] = useState(false);
 
   // Clear enrichment cache on mount so fresh avatars are always fetched
   useEffect(() => {
