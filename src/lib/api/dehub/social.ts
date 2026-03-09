@@ -276,11 +276,21 @@ export async function repostPost(tokenId: number): Promise<{ result: boolean }> 
   });
 }
 
+export interface QuotePostMintResponse {
+  r: string;
+  s: string;
+  v: number;
+  createdTokenId: string;
+  timestamp: number;
+  quotedTokenId: number;
+  isQuotePost: boolean;
+}
+
 export async function quotePost(params: {
   quotedTokenId: number;
   content: string;
   category?: string;
-}): Promise<{ result: any }> {
+}): Promise<QuotePostMintResponse> {
   const { DEHUB_API_BASE, getAuthToken } = await import('./core');
   const token = getAuthToken();
   if (!token) throw new Error('Authentication required');
@@ -307,5 +317,12 @@ export async function quotePost(params: {
   }
 
   const data = await response.json();
-  return { result: data.result ?? data };
+  const result = data.result ?? data;
+  
+  // Validate mint signature
+  if (!result.r || !result.s || !result.v || !result.createdTokenId) {
+    throw new Error('Invalid mint signature from backend');
+  }
+  
+  return result as QuotePostMintResponse;
 }
