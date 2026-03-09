@@ -491,7 +491,7 @@ function NotificationItem({
           // Single avatar (default)
           return profileLink ? (
             <Link to={profileLink} onClick={(e) => e.stopPropagation()}>
-              <Avatar className="w-12 h-12">
+              <Avatar className="w-14 h-14">
                 <AvatarImage src={avatarUrl} />
                 <AvatarFallback className="bg-zinc-700 text-white font-medium">
                   {fallbackLetter}
