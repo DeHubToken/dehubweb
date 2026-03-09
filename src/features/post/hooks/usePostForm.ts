@@ -72,6 +72,8 @@ interface UsePostFormReturn {
     stopRecording: () => void;
     setChainId: (chainId: ChainId) => void;
     setSelectedCategory: (category: string) => void;
+    setShowTitle: (show: boolean) => void;
+    setTitleText: (text: string) => void;
     insertEmoji: (emoji: string) => void;
     insertGif: (gifUrl: string) => void;
     openCameraCapture: () => void;
