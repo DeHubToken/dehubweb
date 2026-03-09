@@ -73,6 +73,9 @@ export function PostAccessToggles({
   setTokenAmount,
   selectedCategory,
   setSelectedCategory,
+  showTitle,
+  setShowTitle,
+  hasVideoOrAudio,
 }: PostAccessTogglesProps) {
   const { t } = useI18n();
   // Mobile drawer states
