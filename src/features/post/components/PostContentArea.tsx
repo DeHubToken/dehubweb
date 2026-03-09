@@ -58,6 +58,10 @@ interface PostContentAreaProps {
   // Chain selector props
   chainId: ChainId;
   onChainChange: (chainId: ChainId) => void;
+  // Title props
+  showTitle: boolean;
+  titleText: string;
+  setTitleText: (text: string) => void;
 }
 
 // URL regex pattern - create fresh each time to avoid state issues with global flag
