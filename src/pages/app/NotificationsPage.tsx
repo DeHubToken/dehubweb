@@ -237,7 +237,7 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
   // Backend-aggregated like/comment/repost (aggregatedCount > 1 with latestActorNames)
   const aggCount = (notification as any).aggregatedCount || 1;
   const aggNames = (notification as any).latestActorNames as string[] | undefined;
-  if (aggCount > 2 && aggNames && aggNames.length > 0 && ['like', 'comment', 'repost'].includes(notification.type as string)) {
+  if (aggCount > 3 && aggNames && aggNames.length > 0 && ['like', 'comment', 'repost'].includes(notification.type as string)) {
     const first = aggNames[0];
     const rest = aggCount - 1;
     const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
