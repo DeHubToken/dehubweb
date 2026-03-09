@@ -104,7 +104,8 @@ export function MobileBottomNav() {
       if (!container) return;
 
       // Scroll to the very end (800ms), then immediately chain back
-      smoothScrollTo(container, container.scrollWidth, 800, () => {
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      smoothScrollTo(container, maxScroll, 800, () => {
         // Scroll back to start (900ms with smooth ease-out deceleration)
         smoothScrollTo(container, 0, 900, () => {
           setShowScrollHint(false);
