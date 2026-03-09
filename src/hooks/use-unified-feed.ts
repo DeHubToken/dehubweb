@@ -315,6 +315,11 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     ? buildAvatarUrl(item.minter, rawAvatarPath) || item.minter
     : item.minter;
   
+  // Determine if the name is a meaningful title (not empty/whitespace/placeholder)
+  const rawName = item.name || '';
+  const rawDescription = item.description || '';
+  const hasMeaningfulTitle = rawName.trim().length > 0 && rawName.trim() !== rawDescription.trim();
+
   return {
     id,
     type: 'post',
@@ -326,7 +331,10 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
       verified: false,
       badgeBalance: item.minterUser?.badgeBalance,
     },
-    content: item.description || item.name || '',
+    title: hasMeaningfulTitle ? rawName.trim() : undefined,
+    content: rawDescription || rawName || '',
+    rawName,
+    rawDescription,
     createdAt: item.createdAt,
     views: formatViews(item.views).replace(' views', ''),
     status: item.status,

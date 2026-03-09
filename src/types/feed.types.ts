@@ -38,7 +38,13 @@ export interface BaseFeedItem {
 export interface TextPost extends BaseFeedItem {
   type: 'post';
   author: User;
+  /** Post title (from API `name` field) — may be empty/whitespace for untitled posts */
+  title?: string;
   content: string;
+  /** Raw API name field for edit modal */
+  rawName?: string;
+  /** Raw API description field for edit modal */
+  rawDescription?: string;
   /** Formatted view count string (e.g., "1.2K") */
   views?: string;
   /** Mint status: 'minted' | 'signed' (pending) */
