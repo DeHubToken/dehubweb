@@ -343,12 +343,14 @@ function NotificationItem({
   onMarkAsRead,
   isMarkingAsRead,
   enrichedAvatars,
+  activeTab,
 }: { 
   notification: DeHubNotification;
   bundle: BundledNotification;
   onMarkAsRead: (id: string) => void;
   isMarkingAsRead: boolean;
   enrichedAvatars: Map<string, EnrichedAvatar>;
+  activeTab: string;
 }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -430,11 +432,14 @@ function NotificationItem({
           const hasMultipleActors = aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
           
           if (hasMultipleActors) {
-            // 2×2 grid: TL=avatar1, TR=avatar2, BL=avatar3, BR=type icon
+            // When on a type-specific tab (likes/follows), show 4 avatars instead of 3+icon
+            const showFourAvatars = activeTab === 'likes' || activeTab === 'follows';
+            
             const actorName2 = aggNames && aggNames.length > 1 ? aggNames[1] : null;
             const actorName3 = aggNames && aggNames.length > 2 ? aggNames[2] : null;
+            const actorName4 = aggNames && aggNames.length > 3 ? aggNames[3] : null;
             
-            // Find avatars for 2nd and 3rd actors from enriched data
+            // Find avatars for actors from enriched data
             const findAvatarByUsername = (username: string | null) => {
               if (!username) return undefined;
               for (const [, entry] of enrichedAvatars) {
@@ -446,6 +451,7 @@ function NotificationItem({
             };
             const avatar2Url = findAvatarByUsername(actorName2);
             const avatar3Url = findAvatarByUsername(actorName3);
+            const avatar4Url = showFourAvatars ? findAvatarByUsername(actorName4) : undefined;
             
             const renderGridAvatar = (
               url: string | undefined,
@@ -480,10 +486,18 @@ function NotificationItem({
                 ) : (
                   renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
                 )}
-                {/* Bottom-right: notification type icon */}
-                <div className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                  {getNotificationIcon(notification.type)}
-                </div>
+                {/* Bottom-right: 4th avatar on type-specific tabs, otherwise type icon */}
+                {showFourAvatars ? (
+                  actorName4 ? (
+                    renderGridAvatar(avatar4Url, actorName4, `/${actorName4}`, 'w-[23px] h-[23px]')
+                  ) : (
+                    renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
+                  )
+                ) : (
+                  <div className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                    {getNotificationIcon(notification.type)}
+                  </div>
+                )}
               </div>
             );
           }
@@ -1027,6 +1041,7 @@ export default function NotificationsPage() {
                     onMarkAsRead={handleMarkAsRead}
                     isMarkingAsRead={bundle.allIds.includes(markingNotificationId || '')}
                     enrichedAvatars={enrichedAvatars}
+                    activeTab={activeTab}
                   />
                 ));
               })()}
