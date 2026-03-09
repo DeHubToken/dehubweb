@@ -343,12 +343,14 @@ function NotificationItem({
   onMarkAsRead,
   isMarkingAsRead,
   enrichedAvatars,
+  activeTab,
 }: { 
   notification: DeHubNotification;
   bundle: BundledNotification;
   onMarkAsRead: (id: string) => void;
   isMarkingAsRead: boolean;
   enrichedAvatars: Map<string, EnrichedAvatar>;
+  activeTab: string;
 }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
