@@ -105,6 +105,13 @@ export function FollowersListDrawer({
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
+  // Reset the following cache when the drawer opens so it's always fresh
+  useEffect(() => {
+    if (open) {
+      followingSetRef.current = null;
+    }
+  }, [open]);
+
   // Fetch initial page when drawer opens or search/sort changes
   useEffect(() => {
     if (!open || !profileAddress) return;
