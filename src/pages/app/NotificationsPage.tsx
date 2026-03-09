@@ -65,10 +65,26 @@ interface BundledNotification {
 function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars: Map<string, EnrichedAvatar>): BundledNotification[] {
   if (!notifications.length) return [];
 
+  // Deduplicate: when API sends both 'mention' and 'comment_reply' for the same commentId
+  // from the same actor, keep only the 'mention' (more specific) and discard the 'comment_reply'.
+  const deduped = notifications.filter((n, _idx, arr) => {
+    if (n.type !== 'comment_reply') return true;
+    const commentId = (n as any).commentId;
+    if (!commentId) return true;
+    // If there's a matching 'mention' notification with the same commentId from the same actor, drop this one
+    return !arr.some(other =>
+      other.id !== n.id &&
+      other.type === 'mention' &&
+      (other as any).commentId === commentId &&
+      other.actorAddress?.toLowerCase() === n.actorAddress?.toLowerCase()
+    );
+  });
+
   const bundles: BundledNotification[] = [];
   const consumed = new Set<string>();
 
-  for (let i = 0; i < notifications.length; i++) {
+  for (let i = 0; i < deduped.length; i++) {
+    const n = deduped[i];
     const n = notifications[i];
     if (consumed.has(n.id)) continue;
 
