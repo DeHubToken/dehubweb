@@ -75,19 +75,23 @@ export function MobileBottomNav() {
     const alreadySeen = localStorage.getItem(SCROLL_HINT_KEY);
     if (alreadySeen) return;
 
-    // Smooth custom scroll animation with ease-out deceleration
-    const smoothScrollTo = (el: HTMLElement, target: number, duration: number) => {
+    // Smooth custom scroll animation with ease-out deceleration and onComplete callback
+    const smoothScrollTo = (el: HTMLElement, target: number, duration: number, onComplete?: () => void) => {
       const start = el.scrollLeft;
       const distance = target - start;
       const startTime = performance.now();
 
-      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+      const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
 
       const step = (now: number) => {
         const elapsed = now - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        el.scrollLeft = start + distance * easeOutCubic(progress);
-        if (progress < 1) requestAnimationFrame(step);
+        el.scrollLeft = start + distance * easeOutQuart(progress);
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          onComplete?.();
+        }
       };
       requestAnimationFrame(step);
     };
@@ -99,19 +103,14 @@ export function MobileBottomNav() {
       const container = scrollRef.current;
       if (!container) return;
 
-      // Scroll to the very end (650ms with smooth ease-out)
-      smoothScrollTo(container, container.scrollWidth, 650);
-
-      const backTimer = setTimeout(() => {
-        // Scroll back to start (700ms with smooth ease-out deceleration)
-        smoothScrollTo(container, 0, 700);
-        setTimeout(() => {
+      // Scroll to the very end (800ms), then immediately chain back
+      smoothScrollTo(container, container.scrollWidth, 800, () => {
+        // Scroll back to start (900ms with smooth ease-out deceleration)
+        smoothScrollTo(container, 0, 900, () => {
           setShowScrollHint(false);
           localStorage.setItem(SCROLL_HINT_KEY, 'true');
-        }, 750);
-      }, 700);
-
-      return () => clearTimeout(backTimer);
+        });
+      });
     }, 300);
 
     return () => clearTimeout(showTimer);
