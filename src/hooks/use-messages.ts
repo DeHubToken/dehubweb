@@ -123,8 +123,8 @@ export function useMessages(conversationId: string | null) {
     initialPageParam: 0,
     enabled: isAuthenticated && !!conversationId,
     staleTime: 10 * 1000,
-    // Poll for new messages when using Supabase (virtual conv) — no socket events
-    refetchInterval: isVirtual ? 5000 : false,
+    // Poll for new messages — backend doesn't reliably push socket events to recipient
+    refetchInterval: 5000,
   });
 
   // Flatten pages → single array, oldest first for chat display
