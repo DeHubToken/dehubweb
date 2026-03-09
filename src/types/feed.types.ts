@@ -145,6 +145,8 @@ export interface VideoItem extends BaseFeedItem {
   audioDuration?: number;
   /** Whether this is an audio post */
   isAudio?: boolean;
+  /** Post categories */
+  categories?: string[];
 }
 
 /**
