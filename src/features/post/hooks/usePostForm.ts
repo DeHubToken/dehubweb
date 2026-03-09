@@ -592,6 +592,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setLiveMode(null);
     setScheduledDate(null);
     setChainId(BASE_CHAIN_ID as ChainId);
+    setShowTitle(false);
+    setTitleText('');
   }, []);
 
   // Drafts actions
