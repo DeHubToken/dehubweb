@@ -213,7 +213,7 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
   }
 
   // Backend-aggregated follow
-  if (notification.type === 'following' && (notification as any).aggregatedCount > 2) {
+  if (notification.type === 'following' && (notification as any).aggregatedCount > 3) {
     const othersCount = (notification as any).aggregatedCount - 1;
     const othersText = othersCount === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: othersCount });
     return tr('notifications.andOthersFollowing', { name: actorName, others: othersText });
@@ -237,7 +237,7 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
   // Backend-aggregated like/comment/repost (aggregatedCount > 1 with latestActorNames)
   const aggCount = (notification as any).aggregatedCount || 1;
   const aggNames = (notification as any).latestActorNames as string[] | undefined;
-  if (aggCount > 2 && aggNames && aggNames.length > 0 && ['like', 'comment', 'repost'].includes(notification.type as string)) {
+  if (aggCount > 3 && aggNames && aggNames.length > 0 && ['like', 'comment', 'repost'].includes(notification.type as string)) {
     const first = aggNames[0];
     const rest = aggCount - 1;
     const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
@@ -401,7 +401,7 @@ function NotificationItem({
     }
     
     // Aggregated follow notifications → open followers drawer inline
-    const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 2;
+    const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 3;
     if (isAggregatedFollow && walletAddress) {
       // Dispatch custom event to open followers drawer in NotificationsPage
       window.dispatchEvent(new CustomEvent('open-followers-drawer'));
@@ -429,7 +429,7 @@ function NotificationItem({
         {(() => {
           const aggCount = (notification as any).aggregatedCount || 1;
           const aggNames = (notification as any).latestActorNames as string[] | undefined;
-          const hasMultipleActors = aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
+          const hasMultipleActors = aggCount > 3 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
           
           if (hasMultipleActors) {
             // When on a type-specific tab (likes/follows), show 4 avatars instead of 3+icon
@@ -522,7 +522,7 @@ function NotificationItem({
           );
         })()}
         {/* Type icon badge — only for single-actor notifications (aggregated ones render it inside) */}
-        {!((notification as any).aggregatedCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string)) && (
+        {!((notification as any).aggregatedCount > 3 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string)) && (
           <div className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
             {getNotificationIcon(notification.type)}
           </div>
@@ -559,7 +559,7 @@ function NotificationItem({
         })()}
         
         {/* Show individual actor names below backend-aggregated follows */}
-        {notification.type === 'following' && (notification as any).aggregatedCount > 2 && (notification as any).latestActorNames?.length > 1 && (
+        {notification.type === 'following' && (notification as any).aggregatedCount > 3 && (notification as any).latestActorNames?.length > 1 && (
           <p className="text-xs text-zinc-500 mt-0.5">
             {(notification as any).latestActorNames.join(', ')}
           </p>
