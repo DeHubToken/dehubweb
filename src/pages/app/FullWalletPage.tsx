@@ -431,6 +431,7 @@ export default function FullWalletPage() {
         </DrawerContent>
       </Drawer>
       <CrossChainDepositDrawer open={crossChainBuyOpen} onOpenChange={setCrossChainBuyOpen} destinationSymbol={crossChainDestSymbol} />
+      <SwapToDHBDrawer open={swapDHBOpen} onOpenChange={setSwapDHBOpen} />
     </div>
   );
 }
