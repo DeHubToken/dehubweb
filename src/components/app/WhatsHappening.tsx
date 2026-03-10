@@ -2,7 +2,8 @@ import { memo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { LayoutGrid, DollarSign, Search } from 'lucide-react';
+import { LayoutGrid, Search } from 'lucide-react';
+import { TickerLogo } from './TickerLogo';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { cn } from '@/lib/utils';
 import { getTopTickers } from '@/lib/ticker-search-tracker';
@@ -101,9 +102,9 @@ export const WhatsHappening = memo(function WhatsHappening() {
                 <div className="flex items-center gap-2.5 min-w-0">
                   <span className="text-xs text-zinc-500 font-mono w-4 shrink-0">{i + 1}</span>
                   <div className="flex items-center gap-1.5 min-w-0">
-                    <DollarSign className="w-3.5 h-3.5 text-amber-500/70 shrink-0" />
+                    <TickerLogo symbol={ticker.symbol} size={16} />
                     <span className="text-sm text-zinc-200 font-medium truncate group-hover:text-white transition-colors">
-                      ${ticker.symbol}
+                      {ticker.symbol}
                     </span>
                   </div>
                 </div>
