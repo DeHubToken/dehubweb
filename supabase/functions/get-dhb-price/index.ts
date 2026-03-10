@@ -15,6 +15,7 @@ const CORE_TOKENS: { address: string; symbol: string }[] = [
   { address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', symbol: 'BTC' },
   { address: '0x236aa50979D5f3De3Bd1Eeb40E81137F22ab794b', symbol: 'BTC' },
   { address: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', symbol: 'BTC' },
+  { address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', symbol: 'USDC' },
 ];
 
 const COINGECKO_IDS: Record<string, string> = {
@@ -22,6 +23,7 @@ const COINGECKO_IDS: Record<string, string> = {
   ETH: 'ethereum',
   BNB: 'binancecoin',
   USDT: 'tether',
+  USDC: 'usd-coin',
   BTC: 'bitcoin',
 };
 
@@ -98,7 +100,7 @@ serve(async (req) => {
     }
 
     // CoinGecko fallback for missing core symbols
-    const coreSymbols = ['DHB', 'ETH', 'BNB', 'USDT', 'BTC'];
+    const coreSymbols = ['DHB', 'ETH', 'BNB', 'USDT', 'USDC', 'BTC'];
     const missingSymbols = coreSymbols.filter(s => prices[s] === undefined || prices[s] === 0);
     if (missingSymbols.length > 0) {
       const geckoIds = missingSymbols.map(s => COINGECKO_IDS[s]).filter(Boolean);
@@ -121,6 +123,7 @@ serve(async (req) => {
     prices.WETH = prices.ETH ?? 0;
     prices.WBNB = prices.BNB ?? 0;
     if (!prices.USDT || prices.USDT === 0) prices.USDT = 1;
+    if (!prices.USDC || prices.USDC === 0) prices.USDC = 1;
 
     console.log('Token prices (DexScreener → CoinGecko fallback):', prices);
 
