@@ -109,6 +109,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         showTitle={state.showTitle}
         setShowTitle={actions.setShowTitle}
         hasVideoOrAudio={computed.hasVideo || computed.hasAudio}
+        categoryDrawerOpen={categoryDrawerOpen}
+        setCategoryDrawerOpen={setCategoryDrawerOpen}
       />
 
       <PostActionBar
