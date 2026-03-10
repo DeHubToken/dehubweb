@@ -89,7 +89,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             originAsset: selectedToken.assetId,
-            destinationAsset: DEFAULT_DESTINATION_ASSET_ID,
+            destinationAsset: dest.assetId,
             amount: amountInSmallest,
             recipient: `base:${walletAddress}`,
             amountType: 'in',
