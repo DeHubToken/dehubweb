@@ -3,6 +3,9 @@ import { X } from "lucide-react";
 import googlePlayBadge from "@/assets/google-play-badge.png";
 
 export function DevelopmentNoticeModal() {
+  // Modal disabled — no longer needed
+  return null;
+
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
