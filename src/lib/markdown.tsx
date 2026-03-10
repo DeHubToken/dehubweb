@@ -170,8 +170,24 @@ function parseLinksAndUrls(text: string): React.ReactNode {
   let keyIndex = 0;
 
   while (remaining.length > 0) {
+    // Email regex - matches email addresses before URL detection
+    const emailMatch = remaining.match(/^(.*?)([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(.*)$/s);
     // Plain URL regex - matches http(s) URLs
     const urlMatch = remaining.match(/^(.*?)(https?:\/\/[^\s<>\[\]()]+)(.*)$/s);
+
+    // Pick whichever match comes first
+    const emailFirst = emailMatch && (!urlMatch || emailMatch[1].length <= urlMatch[1].length);
+
+    if (emailFirst && emailMatch) {
+      if (emailMatch[1]) {
+        parts.push(<span key={keyIndex++}>{emailMatch[1]}</span>);
+      }
+      const email = emailMatch[2];
+      parts.push(<EmailCopyButton key={keyIndex++} email={email} />);
+      remaining = emailMatch[3];
+      continue;
+    }
+
     if (urlMatch) {
       if (urlMatch[1]) {
         parts.push(<span key={keyIndex++}>{urlMatch[1]}</span>);
