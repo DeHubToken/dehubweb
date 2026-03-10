@@ -13,6 +13,7 @@ import { useTrendingCategories } from '@/hooks/use-trending-categories';
 type Tab = 'posts' | 'tickers';
 
 const TICKER_PERIODS: { value: TickerPeriod; label: string }[] = [
+  { value: '1d', label: '1D' },
   { value: '1w', label: '1W' },
   { value: '1m', label: '1M' },
   { value: '1y', label: '1Y' },
