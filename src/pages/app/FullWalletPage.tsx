@@ -427,21 +427,6 @@ export default function FullWalletPage() {
                 <p className="text-xs text-white/40">Convert your tokens to DHB</p>
               </div>
             </button>
-            <button
-              onClick={() => {
-                if (!walletAddress) return;
-                const url = `https://pay.coinbase.com/buy/select-asset?appId=default&addresses=${encodeURIComponent(JSON.stringify({ [walletAddress]: ['base'] }))}&assets=${encodeURIComponent(JSON.stringify(['ETH', 'USDT']))}`;
-                window.open(url, '_blank');
-                setBuyDrawerOpen(false);
-              }}
-              className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
-            >
-              <Globe className="w-5 h-5 text-white/70" />
-              <div className="text-left">
-                <span className="text-sm font-medium text-white">Buy ETH or USDT</span>
-                <p className="text-xs text-white/40">Purchase with card via Coinbase</p>
-              </div>
-            </button>
           </div>
         </DrawerContent>
       </Drawer>
