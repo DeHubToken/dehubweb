@@ -22,6 +22,10 @@ const PRESETS = [
   { label: '5K', value: 5000 },
   { label: '10K', value: 10000 },
   { label: '50K', value: 50000 },
+  { label: '100K', value: 100000 },
+  { label: '500K', value: 500000 },
+  { label: '1M', value: 1000000 },
+  { label: '5M', value: 5000000 },
 ];
 
 interface SwapToDHBDrawerProps {
