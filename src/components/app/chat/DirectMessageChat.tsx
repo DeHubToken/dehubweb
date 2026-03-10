@@ -248,10 +248,16 @@ function MessageBubble({
         <div className={`text-xs text-zinc-500 mt-1 flex items-center gap-1 ${isOwnMessage ? 'justify-end' : ''}`}>
           <span>{formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}</span>
           {message.isEdited && <span className="text-zinc-600">· edited</span>}
-          {isOwnMessage && message.paymentStatus === 'pending' && (
+          {isOwnMessage && message.paymentStatus === 'pending' && 
+            !(message.paymentTxHash && confirmedTxHashes.current.has(message.paymentTxHash.toLowerCase())) &&
+            // Auto-clear after 90s — backend webhook is likely just slow
+            (Date.now() - new Date(message.createdAt).getTime() < 90_000) && (
             <span className="text-amber-500/70">· confirming payment...</span>
           )}
-          {isOwnMessage && message.isRead && message.paymentStatus !== 'pending' && (
+          {isOwnMessage && message.isRead && 
+            (message.paymentStatus !== 'pending' || 
+              (message.paymentTxHash && confirmedTxHashes.current.has(message.paymentTxHash.toLowerCase())) ||
+              (Date.now() - new Date(message.createdAt).getTime() >= 90_000)) && (
             <span className="text-primary">✓✓</span>
           )}
         </div>
