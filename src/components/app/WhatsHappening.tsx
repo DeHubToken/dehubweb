@@ -51,19 +51,27 @@ export const WhatsHappening = memo(function WhatsHappening() {
       </div>
 
       {/* Tab switcher */}
-      <div className="flex gap-1 bg-zinc-800/60 rounded-xl p-1 mb-3">
+      <div className="flex gap-1.5 mb-3">
         {(['posts', 'tickers'] as Tab[]).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={cn(
-              'flex-1 py-1.5 text-xs font-medium rounded-lg transition-all duration-200',
+              'relative flex-1 py-1.5 text-xs font-medium rounded-2xl transition-colors duration-200 overflow-hidden',
+              'backdrop-blur-xl border',
               activeTab === tab
-                ? 'bg-zinc-700 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-300'
+                ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 border-white/30 text-white shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
+                : 'bg-white/5 border-white/10 text-zinc-400 hover:text-zinc-300 hover:bg-white/10'
             )}
           >
-            {t(`sidebar.${tab}`)}
+            {activeTab === tab && (
+              <motion.div
+                layoutId="tott-tab-indicator"
+                className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none"
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              />
+            )}
+            <span className="relative z-10">{t(`sidebar.${tab}`)}</span>
           </button>
         ))}
       </div>
