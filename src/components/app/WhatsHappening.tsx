@@ -1,6 +1,6 @@
 import { memo, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { LayoutGrid, TrendingUp, DollarSign, Search } from 'lucide-react';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
