@@ -7,6 +7,28 @@ interface TickerLogoProps {
   className?: string;
 }
 
+/** Well-known crypto logos from CoinGecko CDN — instant, no API call needed. */
+const KNOWN_LOGOS: Record<string, string> = {
+  BTC: 'https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png',
+  ETH: 'https://coin-images.coingecko.com/coins/images/279/large/ethereum.png',
+  BNB: 'https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png',
+  SOL: 'https://coin-images.coingecko.com/coins/images/4128/large/solana.png',
+  XRP: 'https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png',
+  DOGE: 'https://coin-images.coingecko.com/coins/images/5/large/dogecoin.png',
+  ADA: 'https://coin-images.coingecko.com/coins/images/975/large/cardano.png',
+  AVAX: 'https://coin-images.coingecko.com/coins/images/12559/large/Avalanche_Circle_RedWhite_Trans.png',
+  DOT: 'https://coin-images.coingecko.com/coins/images/12171/large/polkadot.png',
+  MATIC: 'https://coin-images.coingecko.com/coins/images/4713/large/polygon.png',
+  LINK: 'https://coin-images.coingecko.com/coins/images/877/large/chainlink-new-logo.png',
+  UNI: 'https://coin-images.coingecko.com/coins/images/12504/large/uni.jpg',
+  SHIB: 'https://coin-images.coingecko.com/coins/images/11939/large/shiba.png',
+  PEPE: 'https://coin-images.coingecko.com/coins/images/29850/large/pepe-token.jpeg',
+  NEAR: 'https://coin-images.coingecko.com/coins/images/10365/large/near.jpg',
+  TRX: 'https://coin-images.coingecko.com/coins/images/1094/large/tron-logo.png',
+  USDT: 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png',
+  USDC: 'https://coin-images.coingecko.com/coins/images/6319/large/usdc.png',
+};
+
 /**
  * Fetches a token logo URL from DexScreener search API.
  */
@@ -51,36 +73,50 @@ async function fetchCoinGeckoLogo(symbol: string): Promise<string | null> {
 
 /**
  * Displays a token/stock logo with multiple fallback sources:
+ * 0. Known hardcoded logos (instant, no fetch)
  * 1. Synth Finance (stocks)
- * 2. DexScreener (crypto)
- * 3. CoinGecko (crypto)
+ * 2. CoinGecko (crypto) — fetched in parallel with Synth
+ * 3. DexScreener (crypto) — fetched if CoinGecko misses
  * 4. First-letter fallback
  */
 export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProps) {
   const [synthFailed, setSynthFailed] = useState(false);
+  const [cgImgFailed, setCgImgFailed] = useState(false);
   const [dexFailed, setDexFailed] = useState(false);
   const clean = symbol.replace(/^\$/, '').toUpperCase();
 
-  const { data: dexLogo, isFetched: dexFetched } = useQuery({
-    queryKey: ['ticker-logo-dex', clean],
-    queryFn: () => fetchDexLogo(clean),
-    enabled: synthFailed,
-    staleTime: 5 * 60_000,
-    retry: false,
-  });
+  // 0. Hardcoded known logos — instant render
+  const knownLogo = KNOWN_LOGOS[clean];
 
-  // Query CoinGecko if both synth and dex failed/returned nothing
-  const { data: cgLogo } = useQuery({
+  // 1. CoinGecko — always fetch (fast, reliable for crypto)
+  const { data: cgLogo, isFetched: cgFetched } = useQuery({
     queryKey: ['ticker-logo-cg', clean],
     queryFn: () => fetchCoinGeckoLogo(clean),
-    enabled: synthFailed && dexFetched && (!dexLogo || dexFailed),
+    enabled: !knownLogo, // skip if we already know this token
     staleTime: 5 * 60_000,
     retry: false,
   });
 
-  const synthUrl = `https://logo.synthfinance.com/ticker/${clean}`;
+  // 2. DexScreener — only if CoinGecko returned nothing
+  const { data: dexLogo } = useQuery({
+    queryKey: ['ticker-logo-dex', clean],
+    queryFn: () => fetchDexLogo(clean),
+    enabled: !knownLogo && cgFetched && !cgLogo && synthFailed,
+    staleTime: 5 * 60_000,
+    retry: false,
+  });
 
-  // Synth succeeded — show it
+  const imgClass = `shrink-0 rounded-full object-cover ${className}`;
+
+  // Known logo — instant
+  if (knownLogo) {
+    return (
+      <img src={knownLogo} alt={clean} width={size} height={size} className={imgClass} loading="lazy" />
+    );
+  }
+
+  // Synth Finance (stocks) — try first render
+  const synthUrl = `https://logo.synthfinance.com/ticker/${clean}`;
   if (!synthFailed) {
     return (
       <img
@@ -88,8 +124,23 @@ export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProp
         alt={clean}
         width={size}
         height={size}
-        className={`shrink-0 rounded-full object-cover ${className}`}
+        className={imgClass}
         onError={() => setSynthFailed(true)}
+        loading="lazy"
+      />
+    );
+  }
+
+  // CoinGecko logo
+  if (cgLogo && !cgImgFailed) {
+    return (
+      <img
+        src={cgLogo}
+        alt={clean}
+        width={size}
+        height={size}
+        className={imgClass}
+        onError={() => setCgImgFailed(true)}
         loading="lazy"
       />
     );
@@ -103,22 +154,8 @@ export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProp
         alt={clean}
         width={size}
         height={size}
-        className={`shrink-0 rounded-full object-cover ${className}`}
+        className={imgClass}
         onError={() => setDexFailed(true)}
-        loading="lazy"
-      />
-    );
-  }
-
-  // CoinGecko logo
-  if (cgLogo) {
-    return (
-      <img
-        src={cgLogo}
-        alt={clean}
-        width={size}
-        height={size}
-        className={`shrink-0 rounded-full object-cover ${className}`}
         loading="lazy"
       />
     );
