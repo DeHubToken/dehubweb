@@ -137,9 +137,9 @@ function generateMetaHTML(data: {
     const title = data.title.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const description = data.description.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const imageUrl = ensureAbsoluteUrl(data.image);
-    // og:image uses proxied URL so Facebook/OG scrapers get correct Content-Type
-    const ogImageUrl = data.functionBaseUrl ? buildProxiedImageUrl(data.functionBaseUrl, imageUrl) : imageUrl;
-    // twitter:image uses the direct CDN URL — Twitter's crawler often fails on Supabase proxy URLs
+    // Use direct CDN URL for both og:image and twitter:image.
+    // Proxied Supabase URLs lack image extensions → validators reject them, and CDN already serves correct Content-Type.
+    const ogImageUrl = imageUrl;
     const twitterImageUrl = imageUrl;
     const imgWidth = data.imageWidth;
     const imgHeight = data.imageHeight;
