@@ -1,35 +1,44 @@
 
 
-## Fix: Auto-reload on chunk load failures
+## Problem
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+After logout and re-login, clicking MetaMask throws `ConnectorAlreadyConnectedError`. The existing guard (line 994-1000) only checks `getAccount(wagmiConfig).isConnected`, which returns `false` after disconnect. But the **individual connector** (`metaMaskSDK`) still considers itself connected internally. So the guard is bypassed and `connectAsync` fails.
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+## Fix
 
-### Changes
+In `src/contexts/AuthContext.tsx`, in the `connectWithWallet` function (~line 991-1003):
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+1. **Disconnect the specific connector** before calling `connectAsync`, not just check the global account state. Use `wagmiDisconnect({ connector })` to target the specific connector that's stale.
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+2. **Catch `ConnectorAlreadyConnectedError` specifically** — if it occurs, disconnect that connector, wait briefly, then retry `connectAsync` once.
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+The updated logic:
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+```typescript
+// Before connectAsync, always disconnect the target connector
+// to clear any stale internal state from previous sessions
+try {
+  await connector.disconnect();
+} catch { /* ignore if not connected */ }
+await new Promise(r => setTimeout(r, 100));
+
+try {
+  await connectAsync({ connector });
+} catch (retryErr: any) {
+  if (retryErr?.name === 'ConnectorAlreadyConnectedError') {
+    // Force full disconnect and retry once
+    wagmiDisconnect();
+    clearWagmiStorage();
+    await new Promise(r => setTimeout(r, 200));
+    await connectAsync({ connector });
+  } else {
+    throw retryErr;
+  }
+}
+```
+
+This replaces the current `getAccount` check (lines 991-1003) with a more robust approach that handles the connector-level stale state.
+
+## File to modify
+- `src/contexts/AuthContext.tsx` (lines ~991-1003)
 
