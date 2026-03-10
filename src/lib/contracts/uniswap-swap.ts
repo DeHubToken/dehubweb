@@ -1,8 +1,8 @@
 /**
- * Uniswap V3 Auto-Swap Utility (Base Chain)
- * ==========================================
- * Swaps native ETH → DHB via Uniswap V3 SwapRouter on Base.
- * Used by PPV payment flow when user lacks DHB but has ETH.
+ * Uniswap V3 Swap Utility (Base Chain)
+ * ======================================
+ * Swaps any token → DHB via Uniswap V3 SwapRouter on Base.
+ * Supports native ETH and ERC20 tokens as input.
  */
 
 import { Interface } from 'ethers';
@@ -16,13 +16,13 @@ const UNISWAP_QUOTER_V2   = '0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a';
 const WETH_BASE            = '0x4200000000000000000000000000000000000006';
 const DHB_BASE             = CHAIN_CONFIGS[BASE_CHAIN_ID].dhbToken;
 
-// Pool fee tier — 1% (10000) is common for lower-liquidity pairs
-const POOL_FEE = 10000;
+// Pool fee tiers to try (Uniswap V3 supports multiple)
+const FEE_TIERS = [10000, 3000, 500] as const; // 1%, 0.3%, 0.05%
 
 // Swap deadline: 20 seconds (Base has ~2s block times)
 const SWAP_DEADLINE_SECONDS = 20;
 
-// Slippage buffer: 2% extra ETH to account for price movement
+// Slippage buffer: 2% extra to account for price movement
 const SLIPPAGE_BPS = 200; // 2% = 200 basis points
 
 // ── ABIs ───────────────────────────────────────────────────────
@@ -39,40 +39,86 @@ const multicallInterface = new Interface([
   'function multicall(uint256 deadline, bytes[] calldata data) external payable returns (bytes[] memory)',
 ]);
 
+const erc20Interface = new Interface([
+  'function approve(address spender, uint256 amount) external returns (bool)',
+  'function allowance(address owner, address spender) external view returns (uint256)',
+]);
+
 /**
- * Get a quote for swapping ETH → DHB on Uniswap V3.
- * Returns the estimated ETH (wei) needed to receive `amountOutDHB` (wei) of DHB.
- * Returns null if the quote fails (e.g. no liquidity).
+ * Resolve the on-chain token address for quoting/swapping.
+ * Native ETH (address '0x0') maps to WETH on Base.
  */
-export async function getSwapQuote(amountOutDHB: bigint): Promise<bigint | null> {
-  await initChainRpcUrls();
-  
-  try {
-    const result = await readContract<bigint>(
-      UNISWAP_QUOTER_V2,
-      quoterInterface,
-      'quoteExactOutputSingle',
-      [{
-        tokenIn: WETH_BASE,
-        tokenOut: DHB_BASE,
-        amount: amountOutDHB,
-        fee: POOL_FEE,
-        sqrtPriceLimitX96: BigInt(0),
-      }],
-      BASE_CHAIN_ID
-    );
-    
-    // result is amountIn (ETH needed in wei)
-    console.log('[Uniswap] Quote:', { amountOutDHB: amountOutDHB.toString(), ethNeeded: result.toString() });
-    return result;
-  } catch (error) {
-    console.error('[Uniswap] Quote failed:', error);
-    return null;
+function resolveTokenAddress(address: string): string {
+  if (address === '0x0' || address.toLowerCase() === '0x0000000000000000000000000000000000000000') {
+    return WETH_BASE;
   }
+  return address;
 }
 
 /**
- * Apply slippage buffer to an ETH amount.
+ * Check if a token address represents native ETH.
+ */
+function isNativeETH(address: string): boolean {
+  return address === '0x0' || address.toLowerCase() === '0x0000000000000000000000000000000000000000';
+}
+
+/**
+ * Get a quote for swapping tokenIn → DHB on Uniswap V3.
+ * Tries multiple fee tiers and returns the best (lowest input) quote.
+ * Returns the estimated tokenIn amount (in wei) needed to receive `amountOutDHB` (wei) of DHB.
+ * Returns null if no quote succeeds.
+ */
+export async function getSwapQuote(
+  amountOutDHB: bigint,
+  tokenInAddress: string = '0x0',
+): Promise<{ amountIn: bigint; feeTier: number } | null> {
+  await initChainRpcUrls();
+  const tokenIn = resolveTokenAddress(tokenInAddress);
+
+  // Try each fee tier, return best quote
+  const results: { amountIn: bigint; feeTier: number }[] = [];
+
+  for (const fee of FEE_TIERS) {
+    try {
+      const result = await readContract<bigint>(
+        UNISWAP_QUOTER_V2,
+        quoterInterface,
+        'quoteExactOutputSingle',
+        [{
+          tokenIn,
+          tokenOut: DHB_BASE,
+          amount: amountOutDHB,
+          fee,
+          sqrtPriceLimitX96: BigInt(0),
+        }],
+        BASE_CHAIN_ID
+      );
+      results.push({ amountIn: result, feeTier: fee });
+      console.log(`[Uniswap] Quote (fee=${fee}):`, { amountIn: result.toString() });
+    } catch {
+      // This fee tier has no pool or no liquidity — skip
+    }
+  }
+
+  if (results.length === 0) {
+    console.error('[Uniswap] All quote attempts failed');
+    return null;
+  }
+
+  // Return lowest amountIn (best rate)
+  results.sort((a, b) => (a.amountIn < b.amountIn ? -1 : 1));
+  const best = results[0];
+  console.log('[Uniswap] Best quote:', {
+    tokenIn,
+    amountOutDHB: amountOutDHB.toString(),
+    amountIn: best.amountIn.toString(),
+    feeTier: best.feeTier,
+  });
+  return best;
+}
+
+/**
+ * Apply slippage buffer to a token amount.
  * Adds 2% to cover price movement between quote and execution.
  */
 export function applySlippage(amountWei: bigint): bigint {
@@ -80,58 +126,122 @@ export function applySlippage(amountWei: bigint): bigint {
 }
 
 /**
- * Swap ETH → DHB via Uniswap V3 SwapRouter on Base.
- *
- * Uses `exactOutputSingle` wrapped in `multicall` with a deadline,
- * followed by `refundETH` to return any unused ETH.
- *
- * @param amountOutDHB  - exact DHB output desired (wei)
- * @param maxETH        - maximum ETH to spend (wei), should include slippage
- * @param recipient     - address to receive the DHB
- * @returns transaction receipt
+ * Ensure the SwapRouter has sufficient ERC20 allowance.
+ * If not, sends an approve transaction.
  */
-export async function swapETHForDHB(
-  amountOutDHB: bigint,
-  maxETH: bigint,
-  recipient: string,
-): Promise<{ hash: string }> {
-  const deadline = BigInt(Math.floor(Date.now() / 1000) + SWAP_DEADLINE_SECONDS);
+async function ensureAllowance(
+  tokenAddress: string,
+  owner: string,
+  amount: bigint,
+): Promise<void> {
+  const currentAllowance = await readContract<bigint>(
+    tokenAddress,
+    erc20Interface,
+    'allowance',
+    [owner, UNISWAP_SWAP_ROUTER],
+    BASE_CHAIN_ID
+  );
 
-  // Encode exactOutputSingle call
-  const swapCalldata = swapRouterInterface.encodeFunctionData('exactOutputSingle', [{
-    tokenIn: WETH_BASE,
-    tokenOut: DHB_BASE,
-    fee: POOL_FEE,
-    recipient,
-    amountOut: amountOutDHB,
-    amountInMaximum: maxETH,
-    sqrtPriceLimitX96: BigInt(0),
-  }]);
+  if (currentAllowance >= amount) return;
 
-  // Encode refundETH to return any unused ETH
-  const refundCalldata = swapRouterInterface.encodeFunctionData('refundETH', []);
-
-  // Wrap both in multicall with deadline
-  const result = await writeContractAA(
-    UNISWAP_SWAP_ROUTER,
-    multicallInterface,
-    'multicall',
-    [deadline, [swapCalldata, refundCalldata]],
+  console.log('[Uniswap] Approving token:', tokenAddress, 'amount:', amount.toString());
+  const approveTx = await writeContractAA(
+    tokenAddress,
+    erc20Interface,
+    'approve',
+    [UNISWAP_SWAP_ROUTER, amount],
     {
-      value: maxETH,
-      context: 'Uniswap ETH→DHB swap',
+      context: 'Token approval for swap',
       chainId: BASE_CHAIN_ID,
     }
   );
+  await approveTx.wait(1);
+  console.log('[Uniswap] Approval confirmed');
+}
+
+/**
+ * Swap any token → DHB via Uniswap V3 SwapRouter on Base.
+ *
+ * For native ETH: Uses multicall with exactOutputSingle + refundETH
+ * For ERC20: Approves token, then calls exactOutputSingle directly
+ *
+ * @param amountOutDHB    - exact DHB output desired (wei)
+ * @param maxAmountIn     - maximum input to spend (wei), should include slippage
+ * @param recipient       - address to receive the DHB
+ * @param tokenInAddress  - input token address ('0x0' for native ETH)
+ * @param feeTier         - Uniswap fee tier to use
+ * @returns transaction receipt
+ */
+export async function swapTokenForDHB(
+  amountOutDHB: bigint,
+  maxAmountIn: bigint,
+  recipient: string,
+  tokenInAddress: string = '0x0',
+  feeTier: number = 10000,
+): Promise<{ hash: string }> {
+  const deadline = BigInt(Math.floor(Date.now() / 1000) + SWAP_DEADLINE_SECONDS);
+  const tokenIn = resolveTokenAddress(tokenInAddress);
+  const isNative = isNativeETH(tokenInAddress);
+
+  // Encode exactOutputSingle call
+  const swapCalldata = swapRouterInterface.encodeFunctionData('exactOutputSingle', [{
+    tokenIn,
+    tokenOut: DHB_BASE,
+    fee: feeTier,
+    recipient,
+    amountOut: amountOutDHB,
+    amountInMaximum: maxAmountIn,
+    sqrtPriceLimitX96: BigInt(0),
+  }]);
+
+  let result;
+
+  if (isNative) {
+    // Native ETH: wrap in multicall with refundETH
+    const refundCalldata = swapRouterInterface.encodeFunctionData('refundETH', []);
+    result = await writeContractAA(
+      UNISWAP_SWAP_ROUTER,
+      multicallInterface,
+      'multicall',
+      [deadline, [swapCalldata, refundCalldata]],
+      {
+        value: maxAmountIn,
+        context: 'Swap ETH → DHB',
+        chainId: BASE_CHAIN_ID,
+      }
+    );
+  } else {
+    // ERC20: approve first, then swap (no ETH value needed)
+    await ensureAllowance(tokenInAddress, recipient, maxAmountIn);
+    result = await writeContractAA(
+      UNISWAP_SWAP_ROUTER,
+      multicallInterface,
+      'multicall',
+      [deadline, [swapCalldata]],
+      {
+        context: `Swap token → DHB`,
+        chainId: BASE_CHAIN_ID,
+      }
+    );
+  }
 
   const receipt = await result.wait(1);
   console.log('[Uniswap] Swap confirmed:', receipt.hash);
   return receipt;
 }
 
+// Legacy wrapper for backward compatibility
+export async function swapETHForDHB(
+  amountOutDHB: bigint,
+  maxETH: bigint,
+  recipient: string,
+): Promise<{ hash: string }> {
+  return swapTokenForDHB(amountOutDHB, maxETH, recipient, '0x0', 10000);
+}
+
 /**
  * Check if auto-swap is supported for the given chain.
- * Currently only Base has DHB/WETH liquidity on Uniswap V3.
+ * Currently only Base has DHB liquidity on Uniswap V3.
  */
 export function isAutoSwapSupported(chainId: ChainId): boolean {
   return chainId === BASE_CHAIN_ID;

@@ -55,7 +55,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
       try {
         const amountWei = parseUnits(dhbAmount, 18);
         const quote = await getSwapQuote(amountWei);
-        setQuoteEth(quote);
+        setQuoteEth(quote ? quote.amountIn : null);
       } catch {
         setQuoteEth(null);
       } finally {

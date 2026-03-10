@@ -1,22 +1,31 @@
 /**
- * Swap ETH → DHB Drawer
- * ======================
- * Lets users convert in-wallet ETH to DHB via Uniswap V3 on Base.
+ * Swap Any Token → DHB Drawer
+ * ============================
+ * Lets users convert any in-wallet token to DHB via Uniswap V3 on Base.
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, ArrowDown, CheckCircle2, AlertCircle, CreditCard, Wallet, Plus } from 'lucide-react';
+import { Loader2, ArrowDown, CheckCircle2, AlertCircle, CreditCard, Wallet, Plus, ChevronDown } from 'lucide-react';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
-import { getSwapQuote, applySlippage, swapETHForDHB, getNativeBalance } from '@/lib/contracts/uniswap-swap';
+import { getSwapQuote, applySlippage, swapTokenForDHB, getNativeBalance } from '@/lib/contracts/uniswap-swap';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
+import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
+import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import ethLogo from '@/assets/eth-logo.png';
+import bnbLogo from '@/assets/bnb-logo.png';
+import usdtLogo from '@/assets/usdt-logo.png';
+import btcLogo from '@/assets/btc-logo.png';
+
+const TOKEN_ICONS: Record<string, string> = {
+  ETH: ethLogo, BNB: bnbLogo, USDT: usdtLogo, BTC: btcLogo, WETH: ethLogo, DHB: dehubCoin,
+};
 
 const PRESETS = [
   { label: '1K', value: 1000 },
@@ -29,6 +38,16 @@ const PRESETS = [
   { label: '5M', value: 5000000 },
 ];
 
+interface PayToken {
+  symbol: string;
+  address: string; // '0x0' for native
+  decimals: number;
+  balance: bigint;
+  formattedBalance: string;
+  logo?: string;
+  chainId: number;
+}
+
 interface SwapToDHBDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -37,61 +56,103 @@ interface SwapToDHBDrawerProps {
 export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
   const { walletAddress } = useAuth();
   const { data: prices = {} } = useTokenPrices();
+  const { allTokens } = useAllChainsTokens();
 
   const [dhbAmount, setDhbAmount] = useState('');
-  const [ethBalance, setEthBalance] = useState<bigint | null>(null);
-  const [quoteWei, setQuoteWei] = useState<bigint | null>(null);
+  const [quoteResult, setQuoteResult] = useState<{ amountIn: bigint; feeTier: number } | null>(null);
   const [quoting, setQuoting] = useState(false);
   const [swapping, setSwapping] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
-  const [buyEthOpen, setBuyEthOpen] = useState(false);
-  const [crossChainEthOpen, setCrossChainEthOpen] = useState(false);
+  const [buyTokenOpen, setBuyTokenOpen] = useState(false);
+  const [crossChainOpen, setCrossChainOpen] = useState(false);
+  const [tokenPickerOpen, setTokenPickerOpen] = useState(false);
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState<string>('0x0'); // default ETH
 
   const debouncedAmount = useDebouncedValue(dhbAmount, 500);
 
-  // Fetch ETH balance on open
+  // Available pay tokens: Base chain tokens with balance (exclude DHB) + native ETH
+  const payTokens: PayToken[] = useMemo(() => {
+    const baseTokens = allTokens.filter(t => t.chainId === BASE_CHAIN_ID && t.symbol !== 'DHB');
+    // Dedupe by address
+    const seen = new Set<string>();
+    const result: PayToken[] = [];
+    for (const t of baseTokens) {
+      const key = t.address.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      result.push({
+        symbol: t.symbol,
+        address: t.address,
+        decimals: t.decimals,
+        balance: t.balance,
+        formattedBalance: t.formattedBalance,
+        logo: TOKEN_ICONS[t.symbol] || t.logo,
+        chainId: t.chainId,
+      });
+    }
+    // Sort: tokens with balance first, then alphabetically
+    result.sort((a, b) => {
+      if (a.balance > BigInt(0) && b.balance === BigInt(0)) return -1;
+      if (a.balance === BigInt(0) && b.balance > BigInt(0)) return 1;
+      return a.symbol.localeCompare(b.symbol);
+    });
+    return result;
+  }, [allTokens]);
+
+  // Selected pay token
+  const selectedToken = useMemo(() => {
+    return payTokens.find(t => t.address.toLowerCase() === selectedTokenAddress.toLowerCase())
+      || payTokens.find(t => t.address === '0x0')
+      || payTokens[0]
+      || { symbol: 'ETH', address: '0x0', decimals: 18, balance: BigInt(0), formattedBalance: '0', chainId: BASE_CHAIN_ID };
+  }, [payTokens, selectedTokenAddress]);
+
+  // Reset on open
   useEffect(() => {
-    if (!open || !walletAddress) return;
+    if (!open) return;
     setSuccess(false);
     setError('');
-    getNativeBalance(walletAddress).then(setEthBalance).catch(() => setEthBalance(null));
-  }, [open, walletAddress]);
+  }, [open]);
 
-  // Fetch quote when amount changes
+  // Fetch quote when amount or selected token changes
   useEffect(() => {
     const amt = parseFloat(debouncedAmount);
     if (!amt || amt <= 0) {
-      setQuoteWei(null);
+      setQuoteResult(null);
       return;
     }
     setQuoting(true);
     setError('');
     const amountWei = BigInt(Math.floor(amt)) * BigInt(10 ** 18);
-    getSwapQuote(amountWei)
+    getSwapQuote(amountWei, selectedToken.address)
       .then(q => {
-        setQuoteWei(q);
-        if (!q) setError('No liquidity available for this amount');
+        setQuoteResult(q);
+        if (!q) setError('No liquidity available for this pair/amount');
       })
       .catch(() => {
-        setQuoteWei(null);
+        setQuoteResult(null);
         setError('Failed to get quote');
       })
       .finally(() => setQuoting(false));
-  }, [debouncedAmount]);
+  }, [debouncedAmount, selectedToken.address]);
 
-  const ethNeeded = quoteWei ? applySlippage(quoteWei) : null;
-  const ethNeededFormatted = ethNeeded ? (Number(ethNeeded) / 1e18).toFixed(6) : null;
-  const ethBalanceFormatted = ethBalance !== null ? (Number(ethBalance) / 1e18).toFixed(6) : null;
-  const insufficientBalance = ethNeeded && ethBalance !== null && ethBalance < ethNeeded;
+  const amountInWithSlippage = quoteResult ? applySlippage(quoteResult.amountIn) : null;
+  const amountInFormatted = amountInWithSlippage
+    ? (Number(amountInWithSlippage) / 10 ** selectedToken.decimals).toFixed(selectedToken.decimals <= 8 ? selectedToken.decimals : 6)
+    : null;
+  const balanceFormatted = selectedToken.balance > BigInt(0)
+    ? (Number(selectedToken.balance) / 10 ** selectedToken.decimals).toFixed(selectedToken.decimals <= 8 ? selectedToken.decimals : 6)
+    : '0';
+  const insufficientBalance = amountInWithSlippage && selectedToken.balance < amountInWithSlippage;
 
-  const ethPrice = prices['ETH'] ?? 0;
+  const tokenPrice = prices[selectedToken.symbol] ?? 0;
   const dhbPrice = prices['DHB'] ?? 0;
   const dhbUsd = dhbPrice && dhbAmount ? (parseFloat(dhbAmount) * dhbPrice) : 0;
-  const ethUsd = ethPrice && ethNeededFormatted ? (parseFloat(ethNeededFormatted) * ethPrice) : 0;
+  const payUsd = tokenPrice && amountInFormatted ? (parseFloat(amountInFormatted) * tokenPrice) : 0;
 
   const handleSwap = useCallback(async () => {
-    if (!walletAddress || !quoteWei || !ethNeeded) return;
+    if (!walletAddress || !quoteResult || !amountInWithSlippage) return;
     const amt = parseFloat(dhbAmount);
     if (!amt || amt <= 0) return;
 
@@ -99,7 +160,13 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
     setError('');
     try {
       const amountOutWei = BigInt(Math.floor(amt)) * BigInt(10 ** 18);
-      const receipt = await swapETHForDHB(amountOutWei, ethNeeded, walletAddress);
+      const receipt = await swapTokenForDHB(
+        amountOutWei,
+        amountInWithSlippage,
+        walletAddress,
+        selectedToken.address,
+        quoteResult.feeTier,
+      );
       setSuccess(true);
       toast.success(`Swapped for ${Math.floor(amt).toLocaleString()} DHB`, {
         description: `TX: ${receipt.hash.slice(0, 10)}…`,
@@ -111,24 +178,26 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
     } finally {
       setSwapping(false);
     }
-  }, [walletAddress, quoteWei, ethNeeded, dhbAmount]);
+  }, [walletAddress, quoteResult, amountInWithSlippage, dhbAmount, selectedToken]);
 
   const handleClose = (v: boolean) => {
     if (!v) {
       setDhbAmount('');
-      setQuoteWei(null);
+      setQuoteResult(null);
       setSuccess(false);
       setError('');
     }
     onOpenChange(v);
   };
 
+  const tokenIcon = selectedToken.logo || TOKEN_ICONS[selectedToken.symbol];
+
   return (
     <>
     <Drawer open={open} onOpenChange={handleClose}>
       <DrawerContent glass hideHandle={false}>
         <DrawerHeader>
-          <DrawerTitle className="text-white">Swap ETH → DHB</DrawerTitle>
+          <DrawerTitle className="text-white">Swap {selectedToken.symbol} → DHB</DrawerTitle>
         </DrawerHeader>
         <div className="px-4 pb-8 space-y-4">
           {success ? (
@@ -182,40 +251,51 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
                 <ArrowDown className="w-5 h-5 text-zinc-500" />
               </div>
 
-              {/* ETH cost display */}
+              {/* Pay token display */}
               <div className="bg-white/[0.04] border border-white/10 rounded-xl p-4 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-zinc-400">You pay (incl. 2% slippage)</span>
-                  {ethUsd > 0 && <span className="text-xs text-zinc-500">≈ ${ethUsd.toFixed(2)}</span>}
+                  {payUsd > 0 && <span className="text-xs text-zinc-500">≈ ${payUsd.toFixed(2)}</span>}
                 </div>
                 <div className="flex items-center gap-3">
-                  <img src={ethLogo} alt="ETH" className="w-8 h-8 rounded-full" />
-                  <span className="text-white text-xl font-semibold">
+                  {/* Token selector button */}
+                  <button
+                    onClick={() => setTokenPickerOpen(true)}
+                    className="flex items-center gap-2 shrink-0 px-2 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 transition-colors"
+                  >
+                    {tokenIcon ? (
+                      <img src={tokenIcon} alt={selectedToken.symbol} className="w-6 h-6 rounded-full" />
+                    ) : (
+                      <div className="w-6 h-6 rounded-full bg-zinc-700 flex items-center justify-center">
+                        <span className="text-[9px] font-bold text-zinc-400">{selectedToken.symbol.slice(0, 2)}</span>
+                      </div>
+                    )}
+                    <span className="text-sm font-medium text-white">{selectedToken.symbol}</span>
+                    <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
+                  </button>
+                  <span className="text-white text-xl font-semibold flex-1 text-right">
                     {quoting ? (
-                      <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
-                    ) : ethNeededFormatted ? (
-                      ethNeededFormatted
+                      <Loader2 className="w-5 h-5 animate-spin text-zinc-400 ml-auto" />
+                    ) : amountInFormatted ? (
+                      amountInFormatted
                     ) : (
                       <span className="text-zinc-600">—</span>
                     )}
                   </span>
-                  <span className="text-sm text-zinc-400 font-medium shrink-0">ETH</span>
                 </div>
-                {ethBalanceFormatted && (
-                  <div className="flex items-center justify-between">
-                    <p className={`text-xs ${insufficientBalance ? 'text-red-400' : 'text-zinc-500'}`}>
-                      Balance: {ethBalanceFormatted} ETH
-                      {insufficientBalance && ' (insufficient)'}
-                    </p>
-                    <button
-                      onClick={() => setBuyEthOpen(true)}
-                      className="text-xs text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1"
-                    >
-                      <Plus className="w-3 h-3" />
-                      Buy ETH
-                    </button>
-                  </div>
-                )}
+                <div className="flex items-center justify-between">
+                  <p className={`text-xs ${insufficientBalance ? 'text-red-400' : 'text-zinc-500'}`}>
+                    Balance: {balanceFormatted} {selectedToken.symbol}
+                    {insufficientBalance && ' (insufficient)'}
+                  </p>
+                  <button
+                    onClick={() => setBuyTokenOpen(true)}
+                    className="text-xs text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1"
+                  >
+                    <Plus className="w-3 h-3" />
+                    Buy {selectedToken.symbol}
+                  </button>
+                </div>
               </div>
 
               {error && (
@@ -227,13 +307,13 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
 
               <Button
                 onClick={handleSwap}
-                disabled={!ethNeeded || !!insufficientBalance || swapping || quoting || !dhbAmount}
+                disabled={!amountInWithSlippage || !!insufficientBalance || swapping || quoting || !dhbAmount}
                 className="w-full rounded-xl h-12 text-sm font-semibold bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0"
               >
                 {swapping ? (
                   <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Swapping…</>
                 ) : insufficientBalance ? (
-                  'Insufficient ETH'
+                  `Insufficient ${selectedToken.symbol}`
                 ) : (
                   'Confirm Swap'
                 )}
@@ -244,11 +324,60 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
       </DrawerContent>
     </Drawer>
 
-    {/* Buy ETH sub-drawer */}
-    <Drawer open={buyEthOpen} onOpenChange={setBuyEthOpen}>
+    {/* Token Picker Drawer */}
+    <Drawer open={tokenPickerOpen} onOpenChange={setTokenPickerOpen}>
+      <DrawerContent glass hideHandle={false}>
+        <DrawerHeader>
+          <DrawerTitle className="text-white">Select Token to Pay With</DrawerTitle>
+        </DrawerHeader>
+        <div className="px-4 pb-6 space-y-1 max-h-[50vh] overflow-y-auto">
+          {payTokens.map(token => {
+            const icon = token.logo || TOKEN_ICONS[token.symbol];
+            const hasBalance = token.balance > BigInt(0);
+            const isSelected = token.address.toLowerCase() === selectedToken.address.toLowerCase();
+            return (
+              <button
+                key={`${token.address}-${token.chainId}`}
+                onClick={() => {
+                  setSelectedTokenAddress(token.address);
+                  setTokenPickerOpen(false);
+                  setQuoteResult(null); // reset quote for new token
+                }}
+                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors ${
+                  isSelected
+                    ? 'bg-white/[0.12] border border-white/20'
+                    : 'bg-white/[0.04] hover:bg-white/[0.08] border border-transparent'
+                }`}
+              >
+                {icon ? (
+                  <img src={icon} alt={token.symbol} className="w-8 h-8 rounded-full" />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center">
+                    <span className="text-[10px] font-bold text-zinc-400">{token.symbol.slice(0, 2)}</span>
+                  </div>
+                )}
+                <div className="text-left flex-1 min-w-0">
+                  <span className="text-sm font-medium text-white">{token.symbol}</span>
+                  {isSelected && <span className="text-[10px] text-emerald-400 ml-2">Selected</span>}
+                </div>
+                <span className={`text-sm ${hasBalance ? 'text-white' : 'text-zinc-600'}`}>
+                  {hasBalance ? parseFloat(token.formattedBalance).toLocaleString('en-US', { maximumFractionDigits: 4 }) : '0'}
+                </span>
+              </button>
+            );
+          })}
+          {payTokens.length === 0 && (
+            <p className="text-center text-zinc-500 text-sm py-8">No tokens found on Base</p>
+          )}
+        </div>
+      </DrawerContent>
+    </Drawer>
+
+    {/* Buy Token sub-drawer */}
+    <Drawer open={buyTokenOpen} onOpenChange={setBuyTokenOpen}>
       <DrawerContent glass hideHandle={false}>
         <div className="p-5 pb-8 space-y-2">
-          <h3 className="text-white font-semibold text-base mb-4">Buy ETH</h3>
+          <h3 className="text-white font-semibold text-base mb-4">Buy {selectedToken.symbol}</h3>
           <button
             disabled
             className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] border border-white/10 opacity-50 cursor-not-allowed"
@@ -262,23 +391,23 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
           </button>
           <button
             onClick={() => {
-              setBuyEthOpen(false);
-              setTimeout(() => setCrossChainEthOpen(true), 200);
+              setBuyTokenOpen(false);
+              setTimeout(() => setCrossChainOpen(true), 200);
             }}
             className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
           >
             <Wallet className="w-5 h-5 text-white/70" />
             <div className="text-left">
               <span className="text-sm font-medium text-white">Buy with Crypto</span>
-              <p className="text-xs text-white/40">BTC, SOL, USDC & more from any chain</p>
+              <p className="text-xs text-white/40">BTC, SOL, ETH, USDC & more from any chain</p>
             </div>
           </button>
         </div>
       </DrawerContent>
     </Drawer>
 
-    {/* Cross-chain deposit for ETH */}
-    <CrossChainDepositDrawer open={crossChainEthOpen} onOpenChange={setCrossChainEthOpen} destinationSymbol="ETH" />
+    {/* Cross-chain deposit */}
+    <CrossChainDepositDrawer open={crossChainOpen} onOpenChange={setCrossChainOpen} destinationSymbol={selectedToken.symbol} />
     </>
   );
 }
