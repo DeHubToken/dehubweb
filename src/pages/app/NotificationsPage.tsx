@@ -435,12 +435,8 @@ function NotificationItem({
           
           if (hasMultipleActors) {
             // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
-            // Use latestActorNames for ALL slots to avoid duplicating the primary actorAddress
-            const actorName1 = aggNames && aggNames.length > 0 ? aggNames[0] : (notification.actorUsername || null);
-            const actorName2 = aggNames && aggNames.length > 1 ? aggNames[1] : null;
-            const actorName3 = aggNames && aggNames.length > 2 ? aggNames[2] : null;
             
-            // Find avatars for actors from enriched data
+            // Find avatar URL by username from enriched data
             const findAvatarByUsername = (username: string | null) => {
               if (!username) return undefined;
               for (const [, entry] of enrichedAvatars) {
@@ -450,6 +446,34 @@ function NotificationItem({
               }
               return undefined;
             };
+            
+            // Find username for the primary actorAddress (to deduplicate)
+            const primaryActorUsername = enriched?.username?.toLowerCase() || notification.actorUsername?.toLowerCase();
+            
+            // Build deduplicated list of unique actor names for the grid
+            // Start with latestActorNames, filter out the primary actor if it's the same as actorAddress
+            const allNames = aggNames || [];
+            const uniqueGridNames: string[] = [];
+            const seenLower = new Set<string>();
+            
+            for (const name of allNames) {
+              const lower = name.toLowerCase();
+              if (!seenLower.has(lower)) {
+                seenLower.add(lower);
+                uniqueGridNames.push(name);
+              }
+            }
+            
+            // If actorAddress maps to a name already in the list, use that list as-is
+            // If not, prepend the primary actor
+            if (primaryActorUsername && !seenLower.has(primaryActorUsername)) {
+              uniqueGridNames.unshift(notification.actorUsername || primaryActorUsername);
+            }
+            
+            const actorName1 = uniqueGridNames[0] || notification.actorUsername || null;
+            const actorName2 = uniqueGridNames[1] || null;
+            const actorName3 = uniqueGridNames[2] || null;
+            
             const avatar1Url = findAvatarByUsername(actorName1) || avatarUrl;
             const avatar2Url = findAvatarByUsername(actorName2);
             const avatar3Url = findAvatarByUsername(actorName3);
