@@ -1010,6 +1010,24 @@ export type Database = {
         }
         Relationships: []
       }
+      ticker_searches: {
+        Row: {
+          last_searched_at: string
+          search_count: number
+          symbol: string
+        }
+        Insert: {
+          last_searched_at?: string
+          search_count?: number
+          symbol: string
+        }
+        Update: {
+          last_searched_at?: string
+          search_count?: number
+          symbol?: string
+        }
+        Relationships: []
+      }
       tip_leaderboard_cache: {
         Row: {
           chain_id: number
