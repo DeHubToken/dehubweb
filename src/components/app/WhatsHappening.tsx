@@ -28,7 +28,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
 
   const { data: topTickers = [] } = useQuery({
     queryKey: ['trending-tickers', tickerPeriod],
-    queryFn: () => getTopTickers(8, tickerPeriod),
+    queryFn: () => getTopTickers(10, tickerPeriod),
     staleTime: 60_000,
     refetchInterval: 120_000,
   });
