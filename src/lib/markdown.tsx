@@ -7,7 +7,35 @@
  * to ensure proper formatting (bold, italic, lists, links, etc.)
  */
 
-import React from 'react';
+import React, { useState } from 'react';
+import { Mail, Check } from 'lucide-react';
+
+/**
+ * Inline email copy button - shows mail icon, copies email on click.
+ */
+function EmailCopyButton({ email }: { email: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText(email).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      title={copied ? 'Copied!' : `Copy ${email}`}
+      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/20 transition-colors text-xs text-white/70 hover:text-white align-middle"
+    >
+      {copied ? <Check className="w-3 h-3 text-green-400" /> : <Mail className="w-3 h-3" />}
+      <span className="sr-only">{email}</span>
+    </button>
+  );
+}
 
 interface MarkdownTextProps {
   content: string;
@@ -170,8 +198,24 @@ function parseLinksAndUrls(text: string): React.ReactNode {
   let keyIndex = 0;
 
   while (remaining.length > 0) {
+    // Email regex - matches email addresses before URL detection
+    const emailMatch = remaining.match(/^(.*?)([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(.*)$/s);
     // Plain URL regex - matches http(s) URLs
     const urlMatch = remaining.match(/^(.*?)(https?:\/\/[^\s<>\[\]()]+)(.*)$/s);
+
+    // Pick whichever match comes first
+    const emailFirst = emailMatch && (!urlMatch || emailMatch[1].length <= urlMatch[1].length);
+
+    if (emailFirst && emailMatch) {
+      if (emailMatch[1]) {
+        parts.push(<span key={keyIndex++}>{emailMatch[1]}</span>);
+      }
+      const email = emailMatch[2];
+      parts.push(<EmailCopyButton key={keyIndex++} email={email} />);
+      remaining = emailMatch[3];
+      continue;
+    }
+
     if (urlMatch) {
       if (urlMatch[1]) {
         parts.push(<span key={keyIndex++}>{urlMatch[1]}</span>);
