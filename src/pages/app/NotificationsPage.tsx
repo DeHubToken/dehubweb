@@ -477,8 +477,8 @@ function NotificationItem({
             
             return (
               <div className="grid grid-cols-2 grid-rows-2 gap-0.5 w-12 h-12 flex-shrink-0">
-                {/* Top-left: primary actor */}
-                {renderGridAvatar(avatarUrl, notification.actorUsername || fallbackLetter, profileLink, 'w-[23px] h-[23px]')}
+                {/* Top-left: primary actor (from latestActorNames[0]) */}
+                {renderGridAvatar(avatar1Url, actorName1 || notification.actorUsername || fallbackLetter, actorName1 ? `/${actorName1}` : profileLink, 'w-[23px] h-[23px]')}
                 {/* Top-right: 2nd actor */}
                 {renderGridAvatar(avatar2Url, actorName2, actorName2 ? `/${actorName2}` : null, 'w-[23px] h-[23px]')}
                 {/* Bottom-left: 3rd actor */}
