@@ -2,12 +2,16 @@
 
 export const ONE_CLICK_API = 'https://1click.chaindefuser.com/v0';
 
-// DHB is not listed on 1Click — use WETH on Base as destination, then user can swap to DHB via Uniswap
-export const WETH_BASE_ASSET_ID = 'base:0x4200000000000000000000000000000000000006';
-export const USDC_BASE_ASSET_ID = 'base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913';
+// Destination assets on Base (tokens supported by 1Click)
+export const DESTINATION_ASSETS: Record<string, { assetId: string; decimals: number; label: string }> = {
+  ETH: { assetId: 'base:0x4200000000000000000000000000000000000006', decimals: 18, label: 'ETH on Base' },
+  USDT: { assetId: 'base:0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2', decimals: 6, label: 'USDT on Base' },
+  USDC: { assetId: 'base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', decimals: 6, label: 'USDC on Base' },
+  BTC: { assetId: 'base:0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf', decimals: 8, label: 'cbBTC on Base' },
+  BNB: { assetId: 'base:0x4200000000000000000000000000000000000006', decimals: 18, label: 'ETH on Base' }, // BNB not on Base, fallback to ETH
+};
 
-// Default destination: ETH on Base (native)
-export const DEFAULT_DESTINATION_ASSET_ID = WETH_BASE_ASSET_ID;
+export const DEFAULT_DESTINATION = DESTINATION_ASSETS.ETH;
 
 export interface ChainInfo {
   id: string;
