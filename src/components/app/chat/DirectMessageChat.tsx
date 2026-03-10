@@ -642,7 +642,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         try {
           await apiCall('/api/dm/verify-dm-fee', {
             method: 'POST',
-            body: { txHash: feeTxHash, conversationId: resolvedConversationId, senderAddress: walletAddress },
+            body: { txHash: feeTxHash, conversationId: resolvedConversationId, senderAddress: walletAddress, receiverAddress: otherUser?.address },
             requiresAuth: true,
           });
           console.log('[DM Fee] verify-dm-fee registered:', feeTxHash);
