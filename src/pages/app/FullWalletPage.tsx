@@ -76,6 +76,7 @@ export default function FullWalletPage() {
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [buyDrawerOpen, setBuyDrawerOpen] = useState(false);
   const [crossChainBuyOpen, setCrossChainBuyOpen] = useState(false);
+  const [crossChainDestSymbol, setCrossChainDestSymbol] = useState<string>('ETH');
   const [importChainId, setImportChainId] = useState<ChainId>(BASE_CHAIN_ID);
   const [selectedToken, setSelectedToken] = useState<WalletToken | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -307,6 +308,11 @@ export default function FullWalletPage() {
           if (g) handleSmartSend(g);
         }}
         onReceive={() => { setActionGrouped(null); setReceiveDialogOpen(true); }}
+        onBuyCrypto={(symbol) => {
+          setActionGrouped(null);
+          setCrossChainDestSymbol(symbol);
+          setTimeout(() => setCrossChainBuyOpen(true), 200);
+        }}
         walletAddress={walletAddress}
       />
 
@@ -412,13 +418,13 @@ export default function FullWalletPage() {
               <ShoppingCart className="w-5 h-5 text-white/70" />
               <div className="text-left">
                 <span className="text-sm font-medium text-white">Buy with Crypto</span>
-                <p className="text-xs text-white/40">Send from any chain → ETH on Base</p>
+                <p className="text-xs text-white/40">BTC, SOL, ETH, USDC & more from any chain</p>
               </div>
             </button>
           </div>
         </DrawerContent>
       </Drawer>
-      <CrossChainDepositDrawer open={crossChainBuyOpen} onOpenChange={setCrossChainBuyOpen} />
+      <CrossChainDepositDrawer open={crossChainBuyOpen} onOpenChange={setCrossChainBuyOpen} destinationSymbol={crossChainDestSymbol} />
     </div>
   );
 }
@@ -480,12 +486,13 @@ function GroupedTokenRow({ grouped, onClick, price }: { grouped: GroupedToken; o
 }
 
 /* ─── Grouped Action Drawer ─── */
-function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, walletAddress }: {
+function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, onBuyCrypto, walletAddress }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   grouped: GroupedToken | null;
   onSend: () => void;
   onReceive: () => void;
+  onBuyCrypto: (symbol: string) => void;
   walletAddress?: string;
 }) {
   const { t } = useTranslation();
@@ -538,13 +545,10 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, w
               onOpenChange(false);
               if (grouped.symbol === 'DHB') {
                 navigate('/app/buy');
+              } else if (['ETH', 'BTC', 'USDT', 'USDC', 'BNB'].includes(grouped.symbol)) {
+                onBuyCrypto(grouped.symbol);
               } else {
-                const dexUrl = getDexBuyLink(grouped.symbol);
-                if (dexUrl) {
-                  window.open(dexUrl, '_blank');
-                } else {
-                  window.open('https://app.uniswap.org/swap?chain=base', '_blank');
-                }
+                toast.info('Buy not available for this token yet');
               }
             }}
           >

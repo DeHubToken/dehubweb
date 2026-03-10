@@ -7,7 +7,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import {
   SUPPORTED_CHAINS,
-  DEFAULT_DESTINATION_ASSET_ID,
+  DESTINATION_ASSETS,
+  DEFAULT_DESTINATION,
   type ChainInfo,
   type TokenInfo,
   type QuoteResponse,
@@ -17,12 +18,16 @@ import {
 interface CrossChainDepositDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Target token symbol to receive (ETH, USDC, BTC, USDT). Defaults to ETH. */
+  destinationSymbol?: string;
 }
 
 type Step = 'chains' | 'amount' | 'deposit' | 'success' | 'error';
 
-export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDepositDrawerProps) {
+export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol }: CrossChainDepositDrawerProps) {
   const { walletAddress } = useAuth();
+  const dest = (destinationSymbol && DESTINATION_ASSETS[destinationSymbol]) || DEFAULT_DESTINATION;
+  const destLabel = dest.label;
 
   const [step, setStep] = useState<Step>('chains');
   const [selectedChain, setSelectedChain] = useState<ChainInfo | null>(null);
@@ -84,7 +89,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             originAsset: selectedToken.assetId,
-            destinationAsset: DEFAULT_DESTINATION_ASSET_ID,
+            destinationAsset: dest.assetId,
             amount: amountInSmallest,
             recipient: `base:${walletAddress}`,
             amountType: 'in',
@@ -134,7 +139,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
           if (pollRef.current) clearInterval(pollRef.current);
           setStatusPolling(false);
           setStep('success');
-          toast.success('Cross-chain deposit completed! ETH received on Base.');
+          toast.success(`Cross-chain deposit completed! ${destSymbol} received on Base.`);
         } else if (status.status === 'FAILED' || status.status === 'EXPIRED') {
           if (pollRef.current) clearInterval(pollRef.current);
           setStatusPolling(false);
@@ -156,8 +161,9 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
   };
 
   const estimatedOut = quote?.amount_out
-    ? (parseInt(quote.amount_out) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 6 })
+    ? (parseInt(quote.amount_out) / Math.pow(10, dest.decimals)).toLocaleString(undefined, { maximumFractionDigits: dest.decimals <= 8 ? dest.decimals : 6 })
     : null;
+  const destSymbol = destinationSymbol || 'ETH';
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
@@ -186,7 +192,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
                 {step === 'error' && 'Deposit Failed'}
               </h3>
               {step === 'chains' && (
-                <p className="text-xs text-white/40">Send crypto from any chain → receive ETH on Base</p>
+                <p className="text-xs text-white/40">Send crypto from any chain → receive {destLabel}</p>
               )}
             </div>
           </div>
@@ -220,7 +226,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
             <>
               <div className="flex items-center gap-2 text-xs text-white/50">
                 <span className="text-lg">{selectedToken.icon}</span>
-                <span>{selectedToken.symbol} on {selectedChain.name} → ETH on Base</span>
+                <span>{selectedToken.symbol} on {selectedChain.name} → {destLabel}</span>
               </div>
 
               <div className="space-y-1.5">
@@ -239,11 +245,11 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
               {/* Quote display */}
               <div className="rounded-xl bg-white/[0.04] border border-white/10 p-3 space-y-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/50">Estimated ETH received</span>
+                  <span className="text-white/50">Estimated {destSymbol} received</span>
                   {quoteLoading ? (
                     <Loader2 className="w-3.5 h-3.5 text-white/40 animate-spin" />
                   ) : estimatedOut ? (
-                    <span className="text-white font-mono">{estimatedOut} ETH</span>
+                    <span className="text-white font-mono">{estimatedOut} {destSymbol}</span>
                   ) : (
                     <span className="text-white/30">—</span>
                   )}
@@ -299,7 +305,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
                 </div>
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-white/50">You'll receive</span>
-                  <span className="text-white font-mono">{estimatedOut} ETH</span>
+                  <span className="text-white font-mono">{estimatedOut} {destSymbol}</span>
                 </div>
               </div>
 
@@ -315,9 +321,9 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
               <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
                 <Check className="w-6 h-6 text-emerald-400" />
               </div>
-              <p className="text-sm text-white font-medium">ETH Received!</p>
+              <p className="text-sm text-white font-medium">{destSymbol} Received!</p>
               <p className="text-xs text-white/40">
-                {estimatedOut} ETH deposited to your Base wallet
+                {estimatedOut} {destSymbol} deposited to your Base wallet
               </p>
               {depositStatus?.tx_hash && (
                 <button
