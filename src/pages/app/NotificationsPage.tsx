@@ -37,6 +37,10 @@ interface EnrichedAvatar {
   displayName: string | null;
 }
 
+// Module-level caches survive component unmount/remount (tab switching, navigation)
+let moduleAvatarCache = new Map<string, EnrichedAvatar>();
+const moduleEnrichedKeys = new Set<string>();
+
 // Bundled notification: wraps one or more raw notifications into a display group
 interface BundledNotification {
   /** The primary notification (most recent in the bundle) */
@@ -653,14 +657,9 @@ export default function NotificationsPage() {
   );
   
   // Batch-avatar enrichment for fresh profile pictures
-  const [enrichedAvatars, setEnrichedAvatars] = useState<Map<string, EnrichedAvatar>>(new Map());
-  const enrichedRef = useRef<Set<string>>(new Set());
-  const [enrichmentReady, setEnrichmentReady] = useState(false);
-
-  // Clear enrichment cache on mount so fresh avatars are always fetched
-  useEffect(() => {
-    enrichedRef.current.clear();
-  }, []);
+  // Module-level caches persist across navigations to prevent avatar flashing
+  const [enrichedAvatars, setEnrichedAvatars] = useState<Map<string, EnrichedAvatar>>(() => moduleAvatarCache);
+  const [enrichmentReady, setEnrichmentReady] = useState(() => moduleAvatarCache.size > 0);
 
   useEffect(() => {
     if (!allNotifications.length) return;
@@ -668,13 +667,13 @@ export default function NotificationsPage() {
     // Collect actor addresses
     const newAddresses = allNotifications
       .map(n => n.actorAddress?.toLowerCase())
-      .filter((addr): addr is string => Boolean(addr) && !enrichedRef.current.has(addr));
+      .filter((addr): addr is string => Boolean(addr) && !moduleEnrichedKeys.has(addr));
     
     // Also collect usernames from latestActorNames (for aggregated notification avatars)
     const secondActorUsernames = allNotifications
       .filter(n => (n as any).aggregatedCount > 1 && (n as any).latestActorNames?.length > 1)
       .flatMap(n => ((n as any).latestActorNames as string[]).slice(1))
-      .filter(name => Boolean(name) && !enrichedRef.current.has(`username:${name.toLowerCase()}`));
+      .filter(name => Boolean(name) && !moduleEnrichedKeys.has(`username:${name.toLowerCase()}`));
     
     const uniqueNewAddresses = [...new Set(newAddresses)];
     const uniqueNewUsernames = [...new Set(secondActorUsernames)];
@@ -685,8 +684,8 @@ export default function NotificationsPage() {
     }
     
     // Mark as in-flight immediately to prevent duplicate calls
-    uniqueNewAddresses.forEach(addr => enrichedRef.current.add(addr));
-    uniqueNewUsernames.forEach(name => enrichedRef.current.add(`username:${name.toLowerCase()}`));
+    uniqueNewAddresses.forEach(addr => moduleEnrichedKeys.add(addr));
+    uniqueNewUsernames.forEach(name => moduleEnrichedKeys.add(`username:${name.toLowerCase()}`));
     
     const addressFetches = uniqueNewAddresses.map(async (addr) => {
       try {
@@ -723,6 +722,8 @@ export default function NotificationsPage() {
             next.set(r.value.key, r.value.info as EnrichedAvatar);
           }
         }
+        // Sync to module-level cache so it persists across navigations
+        moduleAvatarCache = next;
         return next;
       });
       setEnrichmentReady(true);
