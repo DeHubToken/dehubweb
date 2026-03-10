@@ -1,22 +1,35 @@
 
 
-# Add Progress Bar to QuotePostModal
+## Fix: Auto-reload on chunk load failures
 
-## What
-Add the same LiquidGlassBubble progress bar with creep logic (69%→99%) to the QuotePostModal, matching the normal post system's publishing UX.
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-## Changes — single file: `src/components/app/modals/QuotePostModal.tsx`
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-1. **Add `uploadProgress` state** (starts at 0)
-2. **Update `handleSubmit`**:
-   - Set progress to 65% before on-chain mint
-   - Start the same creep interval (69→99%, exponential deceleration, 1200ms tick)
-   - Set to 100% on success, clear interval on success/error
-3. **Render progress bar** between the compose area and the character count, visible when `isSubmitting && uploadProgress > 0`:
-   - Same `LiquidGlassBubble` wrapper with label ("Publishing..." since quote posts have no upload phase) and percentage
-   - Same glass-styled `h-2` bar with shimmer animation
-   - Copied directly from `PostActionBar.tsx` lines 200-230
-4. **Import** `LiquidGlassBubble` from `@/components/ui/liquid-glass-bubble`
+### Changes
 
-No other files need changes.
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
+
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 
