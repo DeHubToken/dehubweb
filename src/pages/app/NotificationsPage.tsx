@@ -667,7 +667,7 @@ export default function NotificationsPage() {
     // Collect actor addresses
     const newAddresses = allNotifications
       .map(n => n.actorAddress?.toLowerCase())
-      .filter((addr): addr is string => Boolean(addr) && !enrichedRef.current.has(addr));
+      .filter((addr): addr is string => Boolean(addr) && !moduleEnrichedKeys.has(addr));
     
     // Also collect usernames from latestActorNames (for aggregated notification avatars)
     const secondActorUsernames = allNotifications
