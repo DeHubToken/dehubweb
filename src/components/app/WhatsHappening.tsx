@@ -67,7 +67,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
             {activeTab === tab && (
               <motion.div
                 layoutId="tott-tab-indicator"
-                className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none"
+                className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none"
                 transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 layoutScroll
               />
