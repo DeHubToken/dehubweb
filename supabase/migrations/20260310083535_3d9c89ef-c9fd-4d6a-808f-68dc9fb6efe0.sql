@@ -1,0 +1,1 @@
+UPDATE feature_requests SET status = 'shipped', updated_at = now() WHERE title = 'Mobile logo flashes between long and short icon on load';
