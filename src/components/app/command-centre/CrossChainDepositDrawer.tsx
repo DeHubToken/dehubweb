@@ -245,7 +245,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
               {/* Quote display */}
               <div className="rounded-xl bg-white/[0.04] border border-white/10 p-3 space-y-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/50">Estimated ETH received</span>
+                  <span className="text-white/50">Estimated {destSymbol} received</span>
                   {quoteLoading ? (
                     <Loader2 className="w-3.5 h-3.5 text-white/40 animate-spin" />
                   ) : estimatedOut ? (
