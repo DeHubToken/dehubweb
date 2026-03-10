@@ -122,10 +122,12 @@ function MessageBubble({
   message,
   isOwnMessage,
   highlightText,
+  confirmedTxHashes,
 }: {
   message: DmMessage;
   isOwnMessage: boolean;
   highlightText?: string;
+  confirmedTxHashes: React.MutableRefObject<Set<string>>;
 }) {
   const avatarUrl = getMediaUrl(message.sender?.avatarImageUrl);
   const displayName = message.sender?.displayName || message.sender?.username ||
@@ -248,10 +250,16 @@ function MessageBubble({
         <div className={`text-xs text-zinc-500 mt-1 flex items-center gap-1 ${isOwnMessage ? 'justify-end' : ''}`}>
           <span>{formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}</span>
           {message.isEdited && <span className="text-zinc-600">· edited</span>}
-          {isOwnMessage && message.paymentStatus === 'pending' && (
+          {isOwnMessage && message.paymentStatus === 'pending' && 
+            !(message.paymentTxHash && confirmedTxHashes.current.has(message.paymentTxHash.toLowerCase())) &&
+            // Auto-clear after 90s — backend webhook is likely just slow
+            (Date.now() - new Date(message.createdAt).getTime() < 90_000) && (
             <span className="text-amber-500/70">· confirming payment...</span>
           )}
-          {isOwnMessage && message.isRead && message.paymentStatus !== 'pending' && (
+          {isOwnMessage && message.isRead && 
+            (message.paymentStatus !== 'pending' || 
+              (message.paymentTxHash && confirmedTxHashes.current.has(message.paymentTxHash.toLowerCase())) ||
+              (Date.now() - new Date(message.createdAt).getTime() >= 90_000)) && (
             <span className="text-primary">✓✓</span>
           )}
         </div>
@@ -316,6 +324,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [feeBalanceBnb, setFeeBalanceBnb] = useState<number | null>(null);
   const [feeBalanceLoading, setFeeBalanceLoading] = useState(false);
   const [isSendingFee, setIsSendingFee] = useState(false);
+  // Track tx hashes we've confirmed on-chain so we can override 'pending' paymentStatus from API
+  const confirmedTxHashes = useRef<Set<string>>(new Set());
 
   const erc20TransferInterface = useRef(new Interface([
     'function transfer(address to, uint256 amount) returns (bool)',
@@ -625,6 +635,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
 
         // Send immediately — backend uses Alchemy webhook to confirm async (per chat-system.md)
         feeTxHash = result.hash;
+        // Track this tx as locally confirmed so we don't show "confirming payment..." forever
+        if (feeTxHash) confirmedTxHashes.current.add(feeTxHash.toLowerCase());
 
         toast.success(`Paid ${activeFee.toLocaleString()} DHB`, { id: 'dm-fee-send', duration: 2000 });
 
@@ -938,6 +950,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
                     (walletAddress?.toLowerCase() || user?._id)
                 }
                 highlightText={searchLower}
+                confirmedTxHashes={confirmedTxHashes}
               />
             ));
           })()}

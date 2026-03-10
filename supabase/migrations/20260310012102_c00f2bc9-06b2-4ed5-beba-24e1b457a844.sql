@@ -1,0 +1,1 @@
+UPDATE feature_requests SET status = 'shipped' WHERE id = '022fd8c1-ef3a-41f0-8019-eed4dbb478f9';
