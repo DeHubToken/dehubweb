@@ -604,7 +604,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
               </>
             ) : (
               <>
-                {(['ETH', 'USDT'].includes(grouped?.symbol || '')) && walletAddress ? (
+                {(['ETH', 'USDT', 'USDC'].includes(grouped?.symbol || '')) && walletAddress ? (
                   <button
                     onClick={() => {
                       const url = `https://pay.coinbase.com/buy/select-asset?appId=default&addresses=${encodeURIComponent(JSON.stringify({ [walletAddress]: ['base'] }))}&assets=${encodeURIComponent(JSON.stringify([grouped!.symbol]))}`;
