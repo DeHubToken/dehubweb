@@ -9,6 +9,7 @@
 
 import React, { useState } from 'react';
 import { Mail, Check } from 'lucide-react';
+import { toast } from 'sonner';
 
 /**
  * Inline email copy button - shows mail icon, copies email on click.
