@@ -2,8 +2,12 @@
 
 export const ONE_CLICK_API = 'https://1click.chaindefuser.com/v0';
 
-// DHB on Base - destination for all cross-chain deposits
-export const DHB_ASSET_ID = 'nep141:base-0xd20ab1015f6a2de4a6fddebab270113f689c2f7c.omft.near';
+// DHB is not listed on 1Click — use WETH on Base as destination, then user can swap to DHB via Uniswap
+export const WETH_BASE_ASSET_ID = 'base:0x4200000000000000000000000000000000000006';
+export const USDC_BASE_ASSET_ID = 'base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913';
+
+// Default destination: ETH on Base (native)
+export const DEFAULT_DESTINATION_ASSET_ID = WETH_BASE_ASSET_ID;
 
 export interface ChainInfo {
   id: string;
