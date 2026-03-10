@@ -1,6 +1,6 @@
 import { memo, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { LayoutGrid, TrendingUp, DollarSign, Search } from 'lucide-react';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
@@ -54,7 +54,12 @@ export const WhatsHappening = memo(function WhatsHappening() {
   const [activeTab, setActiveTab] = useState<Tab>('posts');
 
   const categories = useMemo(() => deriveTrendingCategories(queryClient), [queryClient]);
-  const topTickers = useMemo(() => getTopTickers(8), []);
+  const { data: topTickers = [] } = useQuery({
+    queryKey: ['trending-tickers'],
+    queryFn: () => getTopTickers(8),
+    staleTime: 60_000,
+    refetchInterval: 120_000,
+  });
 
   const handleCategoryClick = (categoryName: string) => {
     setFilterValue('home', 'category', categoryName);
@@ -140,7 +145,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
                   </div>
                 </div>
                 <span className="text-[11px] text-zinc-500 shrink-0 ml-2">
-                  {ticker.count} {t('sidebar.searches')}
+                  {ticker.search_count} {t('sidebar.searches')}
                 </span>
               </button>
             ))}

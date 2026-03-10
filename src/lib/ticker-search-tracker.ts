@@ -1,57 +1,57 @@
 /**
- * Tracks most-searched tickers (cashtags) in localStorage.
+ * Tracks most-searched tickers globally via database.
  */
 
-const STORAGE_KEY = 'dehub_ticker_searches';
-const MAX_TICKERS = 20;
-
-export interface TickerSearchEntry {
-  symbol: string; // e.g. "DHB", "BTC"
-  count: number;
-  lastSearched: number; // timestamp
-}
-
-function getAll(): TickerSearchEntry[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveAll(entries: TickerSearchEntry[]) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries.slice(0, MAX_TICKERS)));
-  } catch { /* ignore */ }
-}
+import { supabase } from '@/integrations/supabase/client';
 
 /**
- * Record a ticker search. Call when a cashtag result is displayed.
+ * Record a ticker search (fire-and-forget upsert).
  */
 export function recordTickerSearch(symbol: string) {
-  const clean = symbol.replace(/^$/, '').toUpperCase().trim();
+  const clean = symbol.replace(/^\$/, '').toUpperCase().trim();
   if (!clean || clean.length < 1) return;
 
-  const entries = getAll();
-  const existing = entries.find(e => e.symbol === clean);
-  if (existing) {
-    existing.count += 1;
-    existing.lastSearched = Date.now();
-  } else {
-    entries.push({ symbol: clean, count: 1, lastSearched: Date.now() });
-  }
-
-  // Sort by count desc, keep top MAX_TICKERS
-  entries.sort((a, b) => b.count - a.count);
-  saveAll(entries);
+  // Upsert: increment count or insert with count=1
+  supabase
+    .from('ticker_searches')
+    .upsert(
+      { symbol: clean, search_count: 1, last_searched_at: new Date().toISOString() },
+      { onConflict: 'symbol' }
+    )
+    .then(() => {
+      // After upsert with count=1, increment existing rows
+      // We use a raw rpc or just do a select+update approach
+      // Simpler: just do an update to increment
+      supabase
+        .from('ticker_searches')
+        .select('search_count')
+        .eq('symbol', clean)
+        .single()
+        .then(({ data }) => {
+          if (data) {
+            supabase
+              .from('ticker_searches')
+              .update({ 
+                search_count: (data.search_count || 0) + 1,
+                last_searched_at: new Date().toISOString()
+              })
+              .eq('symbol', clean)
+              .then(() => {});
+          }
+        });
+    });
 }
 
 /**
- * Get top N most-searched tickers.
+ * Get top N most-searched tickers from the database.
  */
-export function getTopTickers(n: number = 8): TickerSearchEntry[] {
-  return getAll()
-    .sort((a, b) => b.count - a.count)
-    .slice(0, n);
+export async function getTopTickers(n: number = 8): Promise<{ symbol: string; search_count: number }[]> {
+  const { data, error } = await supabase
+    .from('ticker_searches')
+    .select('symbol, search_count')
+    .order('search_count', { ascending: false })
+    .limit(n);
+  
+  if (error || !data) return [];
+  return data;
 }
