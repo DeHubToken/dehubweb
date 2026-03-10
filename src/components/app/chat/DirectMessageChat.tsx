@@ -16,6 +16,7 @@ import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart }
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
+import { apiCall } from '@/lib/api/dehub/core';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
 import { DmTipDialog } from './DmTipDialog';
@@ -633,10 +634,21 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           { context: 'DM fee message', chainId }
         );
 
-        // Send immediately — backend uses Alchemy webhook to confirm async (per chat-system.md)
         feeTxHash = result.hash;
         // Track this tx as locally confirmed so we don't show "confirming payment..." forever
         if (feeTxHash) confirmedTxHashes.current.add(feeTxHash.toLowerCase());
+
+        // Register payment intent with backend (required for Alchemy webhook to link tx to DM fee)
+        try {
+          await apiCall('/api/dm/verify-dm-fee', {
+            method: 'POST',
+            body: { txHash: feeTxHash, conversationId: resolvedConversationId, senderAddress: walletAddress },
+            requiresAuth: true,
+          });
+          console.log('[DM Fee] verify-dm-fee registered:', feeTxHash);
+        } catch (verifyErr) {
+          console.warn('[DM Fee] verify-dm-fee failed (non-fatal):', verifyErr);
+        }
 
         toast.success(`Paid ${activeFee.toLocaleString()} DHB`, { id: 'dm-fee-send', duration: 2000 });
 
