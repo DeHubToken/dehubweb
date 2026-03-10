@@ -1199,6 +1199,10 @@ export type Database = {
       cleanup_old_leaderboard_snapshots: { Args: never; Returns: undefined }
       cleanup_old_story_views: { Args: never; Returns: undefined }
       get_request_wallet_address: { Args: never; Returns: string }
+      increment_ticker_search: {
+        Args: { p_symbol: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
