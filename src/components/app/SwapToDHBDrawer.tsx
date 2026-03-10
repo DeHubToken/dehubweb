@@ -201,10 +201,19 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
                   <span className="text-sm text-zinc-400 font-medium shrink-0">ETH</span>
                 </div>
                 {ethBalanceFormatted && (
-                  <p className={`text-xs ${insufficientBalance ? 'text-red-400' : 'text-zinc-500'}`}>
-                    Balance: {ethBalanceFormatted} ETH
-                    {insufficientBalance && ' (insufficient)'}
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className={`text-xs ${insufficientBalance ? 'text-red-400' : 'text-zinc-500'}`}>
+                      Balance: {ethBalanceFormatted} ETH
+                      {insufficientBalance && ' (insufficient)'}
+                    </p>
+                    <button
+                      onClick={() => setBuyEthOpen(true)}
+                      className="text-xs text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1"
+                    >
+                      <Plus className="w-3 h-3" />
+                      Buy ETH
+                    </button>
+                  </div>
                 )}
               </div>
 
@@ -233,5 +242,42 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
         </div>
       </DrawerContent>
     </Drawer>
+
+    {/* Buy ETH sub-drawer */}
+    <Drawer open={buyEthOpen} onOpenChange={setBuyEthOpen}>
+      <DrawerContent glass hideHandle={false}>
+        <div className="p-5 pb-8 space-y-2">
+          <h3 className="text-white font-semibold text-base mb-4">Buy ETH</h3>
+          <button
+            disabled
+            className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] border border-white/10 opacity-50 cursor-not-allowed"
+          >
+            <CreditCard className="w-5 h-5 text-white/70" />
+            <div className="text-left flex-1">
+              <span className="text-sm font-medium text-white">Buy with Card</span>
+              <p className="text-xs text-white/40">Purchase using Visa, Mastercard, Apple Pay</p>
+            </div>
+            <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">Coming soon</span>
+          </button>
+          <button
+            onClick={() => {
+              setBuyEthOpen(false);
+              setTimeout(() => setCrossChainEthOpen(true), 200);
+            }}
+            className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
+          >
+            <Wallet className="w-5 h-5 text-white/70" />
+            <div className="text-left">
+              <span className="text-sm font-medium text-white">Buy with Crypto</span>
+              <p className="text-xs text-white/40">BTC, SOL, USDC & more from any chain</p>
+            </div>
+          </button>
+        </div>
+      </DrawerContent>
+    </Drawer>
+
+    {/* Cross-chain deposit for ETH */}
+    <CrossChainDepositDrawer open={crossChainEthOpen} onOpenChange={setCrossChainEthOpen} destinationSymbol="ETH" />
+    </>
   );
 }
