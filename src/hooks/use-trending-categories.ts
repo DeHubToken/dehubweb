@@ -40,7 +40,7 @@ async function fetchTrendingCategories(): Promise<CategoryCount[]> {
       const cats = Array.isArray(item.category) ? item.category : item.category ? [item.category] : [];
       for (const cat of cats) {
         const name = (typeof cat === 'string' ? cat : '').trim();
-        if (name) {
+        if (name && name.toLowerCase() !== 'general') {
           categoryMap.set(name, (categoryMap.get(name) || 0) + 1);
         }
       }
