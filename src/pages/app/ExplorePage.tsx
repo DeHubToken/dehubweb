@@ -42,6 +42,7 @@ import { useStockQuote } from '@/hooks/use-stock-quote';
 import { StockPriceCard } from '@/components/app/StockPriceCard';
 import { CashtagResultSwitcher } from '@/components/app/CashtagResultSwitcher';
 import type { VideoItem, ImagePost } from '@/types/feed.types';
+import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 
 const DATE_OPTION_KEYS = ['anyTime', 'today', 'thisWeek', 'thisMonth', 'thisYear'] as const;
 const DATE_OPTIONS_RAW = ['Any time', 'Today', 'This week', 'This month', 'This year'];
@@ -689,6 +690,18 @@ export default function ExplorePage() {
   const showResults = isSearching && !showLoading && (searchResults.users.length > 0 || searchResults.posts.length > 0);
   const showNoResults = isSearching && !showLoading && searchResults.users.length === 0 && searchResults.posts.length === 0;
 
+  // Track ticker searches when cashtag results appear
+  const trackedTickerRef = useRef<string>('');
+  useEffect(() => {
+    const sym = effectiveQuery.trim();
+    if (sym.startsWith('$') && sym.length >= 2 && (stockData?.found || dexPair)) {
+      const clean = sym.replace(/^\$/, '').toUpperCase();
+      if (clean !== trackedTickerRef.current) {
+        trackedTickerRef.current = clean;
+        recordTickerSearch(clean);
+      }
+    }
+  }, [effectiveQuery, stockData, dexPair]);
 
   return (
     <div className="min-h-screen">
