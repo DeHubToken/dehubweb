@@ -145,6 +145,7 @@ export function renderTextWithLinks(text: string): ReactNode[] {
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
+            recordTickerSearch(tag);
             window.location.href = `/app/explore?q=${encodeURIComponent(tag)}`;
           }}
           data-no-navigate="true"
