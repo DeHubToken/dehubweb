@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
