@@ -399,7 +399,7 @@ export default function FullWalletPage() {
         onImported={() => { setImportDialogOpen(false); }}
       />
 
-      {/* Buy Options Drawer */}
+      {/* Buy Options Drawer — top-level Buy button (DHB-focused) */}
       <Drawer open={buyDrawerOpen} onOpenChange={setBuyDrawerOpen}>
         <DrawerContent glass hideHandle={false}>
           <div className="p-5 pb-8 space-y-2">
@@ -411,20 +411,20 @@ export default function FullWalletPage() {
               <CreditCard className="w-5 h-5 text-white/70" />
               <div className="text-left">
                 <span className="text-sm font-medium text-white">Buy with Card</span>
-                <p className="text-xs text-white/40">Purchase tokens using card or bank transfer</p>
+                <p className="text-xs text-white/40">Visa, Mastercard, Apple Pay, Google Pay</p>
               </div>
             </button>
             <button
               onClick={() => {
                 setBuyDrawerOpen(false);
-                setTimeout(() => setCrossChainBuyOpen(true), 200);
+                setTimeout(() => setSwapDHBOpen(true), 200);
               }}
               className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
             >
-              <ShoppingCart className="w-5 h-5 text-white/70" />
+              <Wallet className="w-5 h-5 text-white/70" />
               <div className="text-left">
-                <span className="text-sm font-medium text-white">Buy with Crypto</span>
-                <p className="text-xs text-white/40">BTC, SOL, ETH, USDC & more from any chain</p>
+                <span className="text-sm font-medium text-white">Swap from ETH</span>
+                <p className="text-xs text-white/40">Convert your ETH to DHB via Uniswap</p>
               </div>
             </button>
           </div>
