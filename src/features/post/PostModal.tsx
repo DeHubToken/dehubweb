@@ -138,6 +138,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         hasImage={computed.hasImage}
         hasVideo={computed.hasVideo}
         isScheduled={!!state.scheduledDate}
+        onOpenCategories={() => setCategoryDrawerOpen(true)}
+      />
       />
     </>
   );
