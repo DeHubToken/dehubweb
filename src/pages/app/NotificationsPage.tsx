@@ -443,7 +443,7 @@ function NotificationItem({
             // Find avatars for actors from enriched data
             const findAvatarByUsername = (username: string | null) => {
               if (!username) return undefined;
-              for (const [, entry] of enrichedAvatars) {
+              for (const [key, entry] of enrichedAvatars) {
                 if (entry.username?.toLowerCase() === username.toLowerCase() && entry.avatarUrl) {
                   return entry.avatarUrl;
                 }
@@ -453,6 +453,9 @@ function NotificationItem({
             const avatar1Url = findAvatarByUsername(actorName1) || avatarUrl;
             const avatar2Url = findAvatarByUsername(actorName2);
             const avatar3Url = findAvatarByUsername(actorName3);
+            
+            // Debug: log what we're resolving
+            console.log('[NotifGrid]', { aggNames, actorName1, actorName2, actorName3, avatar1Url, avatar2Url, avatar3Url, avatarUrl, actorAddress: notification.actorAddress, enrichedKeys: [...enrichedAvatars.keys()] });
             
             const renderGridAvatar = (
               url: string | undefined,
