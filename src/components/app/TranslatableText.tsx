@@ -10,6 +10,7 @@
  */
 
 import { useState, useMemo, useEffect, useCallback, useRef, createContext, useContext, ReactNode } from 'react';
+import { Mail, Check } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Languages, RotateCcw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -54,15 +55,45 @@ interface TranslatableTextProps {
 }
 
 /**
+ * Inline email copy button - shows mail icon with tooltip, copies on click
+ */
+function EmailCopyInline({ email }: { email: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText(email).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          onClick={handleClick}
+          className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/20 transition-colors text-xs text-white/70 hover:text-white align-middle"
+        >
+          {copied ? <Check className="w-3 h-3 text-green-400" /> : <Mail className="w-3 h-3" />}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>{copied ? 'Copied!' : email}</TooltipContent>
+    </Tooltip>
+  );
+}
+
+/**
  * Renders text with URLs replaced by clickable link emojis and @mentions as profile links
  */
 export function renderTextWithLinks(text: string): ReactNode[] {
   const parts: ReactNode[] = [];
   let lastIndex = 0;
   
-  // Combined regex: match URLs, @mentions, or $cashtags
+  // Combined regex: match emails, URLs, @mentions, or $cashtags
   const combinedRegex = new RegExp(
-    `(${URL_REGEX.source})|(@[a-zA-Z0-9_][a-zA-Z0-9_.-]*)|(\\$[a-zA-Z]{1,20})`,
+    `([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})|(${URL_REGEX.source})|(@[a-zA-Z0-9_][a-zA-Z0-9_.-]*)|(\\$[a-zA-Z]{1,20})`,
     'gi'
   );
   
@@ -75,8 +106,15 @@ export function renderTextWithLinks(text: string): ReactNode[] {
     }
     
     const fullMatch = match[0];
+
+    // Check if this is an email address
+    const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(fullMatch);
     
-    if (fullMatch.startsWith('@')) {
+    if (isEmail) {
+      parts.push(
+        <EmailCopyInline key={`email-${match.index}`} email={fullMatch} />
+      );
+    } else if (fullMatch.startsWith('@')) {
       // @mention — render as a clickable profile link
       const username = fullMatch.slice(1); // Remove @
       parts.push(
