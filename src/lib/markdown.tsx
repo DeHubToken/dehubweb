@@ -9,6 +9,7 @@
 
 import React, { useState } from 'react';
 import { Mail, Check } from 'lucide-react';
+import { toast } from 'sonner';
 
 /**
  * Inline email copy button - shows mail icon, copies email on click.
@@ -21,6 +22,7 @@ function EmailCopyButton({ email }: { email: string }) {
     e.stopPropagation();
     navigator.clipboard.writeText(email).then(() => {
       setCopied(true);
+      toast.success('Email copied');
       setTimeout(() => setCopied(false), 2000);
     });
   };
@@ -31,7 +33,7 @@ function EmailCopyButton({ email }: { email: string }) {
       title={copied ? 'Copied!' : `Copy ${email}`}
       className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/20 transition-colors text-xs text-white/70 hover:text-white align-middle"
     >
-      {copied ? <Check className="w-3 h-3 text-green-400" /> : <Mail className="w-3 h-3" />}
+      {copied ? <Check className="w-3 h-3 text-white" /> : <Mail className="w-3 h-3" />}
       <span className="sr-only">{email}</span>
     </button>
   );
