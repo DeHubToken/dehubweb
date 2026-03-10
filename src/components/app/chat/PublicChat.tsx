@@ -131,13 +131,18 @@ export function PublicChat({ onBack }: PublicChatProps) {
   }, [messages.length]);
 
   const handleSendMessage = async (args: { content: string; type: string }) => {
-    if (!isAuthenticated || !selectedRoomId) return;
-    try {
-      await send(args.content, args.type as any);
-    } catch (err) {
-      console.error('[PublicChat] Send failed:', err);
-      toast.error('Failed to send message');
-    }
+    toast('Live chat only available in-app currently, download now on Google Play. Coming soon to iOS.', {
+      description: (
+        <button
+          onClick={() => window.open('https://play.google.com/store/apps/details?id=io.dehub.mobile&hl', '_blank')}
+          className="mt-2 w-full py-2 rounded-lg bg-white/20 hover:bg-white/30 text-white text-sm font-medium transition-colors flex items-center justify-center gap-2"
+        >
+          <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.807 1.626a1 1 0 0 1 0 1.732l-2.807 1.626L15.206 12l2.492-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/></svg>
+          Download on Google Play
+        </button>
+      ),
+    });
+    return;
   };
 
   const handlePinMessage = useCallback(async (messageId: string) => {
