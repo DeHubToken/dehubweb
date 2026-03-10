@@ -1,0 +1,1 @@
+UPDATE feature_requests SET status = 'shipped', updated_at = now() WHERE id = '57837333-7d35-488c-a88a-d3404a962041';
