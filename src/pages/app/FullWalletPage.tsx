@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
+import { SwapToDHBDrawer } from '@/components/app/SwapToDHBDrawer';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart, User, Lock, Minus, CreditCard, Wallet } from 'lucide-react';
@@ -82,6 +83,7 @@ export default function FullWalletPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [actionGrouped, setActionGrouped] = useState<GroupedToken | null>(null);
   const [sendChainPickerGrouped, setSendChainPickerGrouped] = useState<GroupedToken | null>(null);
+  const [swapDHBOpen, setSwapDHBOpen] = useState(false);
 
   const { allTokens, isLoading } = useAllChainsTokens();
 
@@ -313,6 +315,10 @@ export default function FullWalletPage() {
           setCrossChainDestSymbol(symbol);
           setTimeout(() => setCrossChainBuyOpen(true), 200);
         }}
+        onSwapDHB={() => {
+          setActionGrouped(null);
+          setTimeout(() => setSwapDHBOpen(true), 200);
+        }}
         walletAddress={walletAddress}
       />
 
@@ -425,6 +431,7 @@ export default function FullWalletPage() {
         </DrawerContent>
       </Drawer>
       <CrossChainDepositDrawer open={crossChainBuyOpen} onOpenChange={setCrossChainBuyOpen} destinationSymbol={crossChainDestSymbol} />
+      <SwapToDHBDrawer open={swapDHBOpen} onOpenChange={setSwapDHBOpen} />
     </div>
   );
 }
@@ -486,13 +493,14 @@ function GroupedTokenRow({ grouped, onClick, price }: { grouped: GroupedToken; o
 }
 
 /* ─── Grouped Action Drawer ─── */
-function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, onBuyCrypto, walletAddress }: {
+function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, onBuyCrypto, onSwapDHB, walletAddress }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   grouped: GroupedToken | null;
   onSend: () => void;
   onReceive: () => void;
   onBuyCrypto: (symbol: string) => void;
+  onSwapDHB: () => void;
   walletAddress?: string;
 }) {
   const { t } = useTranslation();
@@ -545,8 +553,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
             className="flex-col h-auto py-4 gap-2 rounded-xl"
             onClick={() => {
               if (grouped.symbol === 'DHB') {
-                onOpenChange(false);
-                navigate('/app/buy');
+                setBuyMethodOpen(true);
               } else {
                 setBuyMethodOpen(true);
               }
@@ -564,33 +571,68 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
         <DrawerContent glass hideHandle={false}>
           <div className="p-5 pb-8 space-y-2">
             <h3 className="text-white font-semibold text-base mb-4">Buy {grouped?.symbol}</h3>
-            <button
-              disabled
-              className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] border border-white/10 opacity-50 cursor-not-allowed"
-            >
-              <CreditCard className="w-5 h-5 text-white/70" />
-              <div className="text-left flex-1">
-                <span className="text-sm font-medium text-white">Buy with Card</span>
-                <p className="text-xs text-white/40">Purchase using Visa, Mastercard, Apple Pay</p>
-              </div>
-              <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">Coming soon</span>
-            </button>
-            <button
-              onClick={() => {
-                setBuyMethodOpen(false);
-                onOpenChange(false);
-                if (grouped) {
-                  onBuyCrypto(grouped.symbol);
-                }
-              }}
-              className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
-            >
-              <Wallet className="w-5 h-5 text-white/70" />
-              <div className="text-left">
-                <span className="text-sm font-medium text-white">Buy with Crypto</span>
-                <p className="text-xs text-white/40">BTC, SOL, ETH, USDC & more from any chain</p>
-              </div>
-            </button>
+            {grouped?.symbol === 'DHB' ? (
+              <>
+                <button
+                  onClick={() => {
+                    setBuyMethodOpen(false);
+                    onOpenChange(false);
+                    navigate('/app/buy');
+                  }}
+                  className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
+                >
+                  <CreditCard className="w-5 h-5 text-white/70" />
+                  <div className="text-left">
+                    <span className="text-sm font-medium text-white">Buy with Card</span>
+                    <p className="text-xs text-white/40">Visa, Mastercard, Apple Pay, Google Pay</p>
+                  </div>
+                </button>
+                <button
+                  onClick={() => {
+                    setBuyMethodOpen(false);
+                    onOpenChange(false);
+                    onSwapDHB();
+                  }}
+                  className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
+                >
+                  <Wallet className="w-5 h-5 text-white/70" />
+                  <div className="text-left">
+                    <span className="text-sm font-medium text-white">Swap from ETH</span>
+                    <p className="text-xs text-white/40">Convert your ETH to DHB via Uniswap</p>
+                  </div>
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  disabled
+                  className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] border border-white/10 opacity-50 cursor-not-allowed"
+                >
+                  <CreditCard className="w-5 h-5 text-white/70" />
+                  <div className="text-left flex-1">
+                    <span className="text-sm font-medium text-white">Buy with Card</span>
+                    <p className="text-xs text-white/40">Purchase using Visa, Mastercard, Apple Pay</p>
+                  </div>
+                  <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">Coming soon</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setBuyMethodOpen(false);
+                    onOpenChange(false);
+                    if (grouped) {
+                      onBuyCrypto(grouped.symbol);
+                    }
+                  }}
+                  className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
+                >
+                  <Wallet className="w-5 h-5 text-white/70" />
+                  <div className="text-left">
+                    <span className="text-sm font-medium text-white">Buy with Crypto</span>
+                    <p className="text-xs text-white/40">BTC, SOL, ETH, USDC & more from any chain</p>
+                  </div>
+                </button>
+              </>
+            )}
           </div>
         </DrawerContent>
       </Drawer>
