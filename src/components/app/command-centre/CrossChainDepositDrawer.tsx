@@ -15,10 +15,40 @@ import {
   type StatusResponse,
 } from '@/lib/near-intents';
 
+import ethLogo from '@/assets/eth-logo.png';
+import usdcLogo from '@/assets/usdc-logo.png';
+import usdtLogo from '@/assets/usdt-logo.png';
+import btcLogo from '@/assets/btc-logo.png';
+import bnbLogo from '@/assets/bnb-logo.png';
+import baseLogo from '@/assets/icons/base-logo.png';
+
+// Icon map: iconKey → image src
+const ICON_MAP: Record<string, string> = {
+  ETH: ethLogo,
+  USDC: usdcLogo,
+  USDT: usdtLogo,
+  BTC: btcLogo,
+  BNB: bnbLogo,
+  BASE: baseLogo,
+  WETH: ethLogo,
+};
+
+function TokenIcon({ iconKey, size = 'w-7 h-7' }: { iconKey: string; size?: string }) {
+  const src = ICON_MAP[iconKey];
+  if (src) {
+    return <img src={src} alt={iconKey} className={`${size} rounded-full`} />;
+  }
+  // Fallback: letter circle
+  return (
+    <div className={`${size} rounded-full bg-zinc-700 flex items-center justify-center shrink-0`}>
+      <span className="text-[10px] font-bold text-zinc-300">{iconKey.slice(0, 2)}</span>
+    </div>
+  );
+}
+
 interface CrossChainDepositDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Target token symbol to receive (ETH, USDC, BTC, USDT). Defaults to ETH. */
   destinationSymbol?: string;
 }
 
@@ -43,7 +73,6 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
 
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Reset on open
   useEffect(() => {
     if (open) {
       setStep('chains');
@@ -78,9 +107,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
     setQuote(null);
 
     try {
-      // Convert amount to smallest unit
       const amountInSmallest = (parseFloat(amount) * Math.pow(10, selectedToken.decimals)).toFixed(0);
-
       const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
       const res = await fetch(
         `https://${projectId}.supabase.co/functions/v1/cross-chain-quote?action=quote`,
@@ -99,7 +126,6 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
 
       const data = await res.json();
       if (!res.ok || data?.error) throw new Error(data?.error || 'Quote failed');
-
       setQuote(data);
     } catch (err: any) {
       setQuoteError(err?.message || 'Failed to get quote');
@@ -108,7 +134,6 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
     }
   }, [selectedToken, amount, walletAddress]);
 
-  // Debounced quote
   useEffect(() => {
     if (step !== 'amount' || !amount || parseFloat(amount) <= 0) return;
     const timer = setTimeout(fetchQuote, 800);
@@ -208,7 +233,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
                       onClick={() => handleSelectToken(chain, token)}
                       className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors mb-1.5"
                     >
-                      <span className="text-lg w-7 text-center">{token.icon}</span>
+                      <TokenIcon iconKey={token.iconKey} />
                       <div className="text-left flex-1">
                         <span className="text-sm font-medium text-white">{token.symbol}</span>
                         <p className="text-xs text-white/40">{chain.name}</p>
@@ -225,7 +250,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
           {step === 'amount' && selectedToken && selectedChain && (
             <>
               <div className="flex items-center gap-2 text-xs text-white/50">
-                <span className="text-lg">{selectedToken.icon}</span>
+                <TokenIcon iconKey={selectedToken.iconKey} size="w-5 h-5" />
                 <span>{selectedToken.symbol} on {selectedChain.name} → {destLabel}</span>
               </div>
 
