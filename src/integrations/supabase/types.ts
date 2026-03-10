@@ -1010,6 +1010,24 @@ export type Database = {
         }
         Relationships: []
       }
+      ticker_search_log: {
+        Row: {
+          id: string
+          searched_at: string
+          symbol: string
+        }
+        Insert: {
+          id?: string
+          searched_at?: string
+          symbol: string
+        }
+        Update: {
+          id?: string
+          searched_at?: string
+          symbol?: string
+        }
+        Relationships: []
+      }
       ticker_searches: {
         Row: {
           last_searched_at: string
