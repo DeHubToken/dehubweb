@@ -92,7 +92,8 @@ export function useTipPayment({
           { context: 'Creator tip', chainId }
         );
 
-        await result.wait(1);
+        const receipt = await result.wait(1);
+        const confirmedTxHash = receipt?.hash || result.hash;
 
         // Record tip in database for leaderboard tracking
         try {
@@ -102,7 +103,7 @@ export function useTipPayment({
               receiver_address: creatorAddress.toLowerCase(),
               amount,
               chain_id: chainId,
-              tx_hash: result.hash,
+              tx_hash: confirmedTxHash,
               token_id: tokenId || null,
             } as any),
             signerAddress

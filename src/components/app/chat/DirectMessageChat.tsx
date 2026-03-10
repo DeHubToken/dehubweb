@@ -635,13 +635,16 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         );
 
         feeTxHash = result.hash;
+
+        // Wait for on-chain confirmation. Use receipt.transactionHash — with AA (Pimlico/Safe),
+        // eth_sendTransaction may return a UserOperation hash, but receipt.transactionHash is the
+        // actual bundler tx hash that Alchemy webhook sees. They can differ — using the wrong hash
+        // means the backend never matches the Alchemy-confirmed tx → message stays pending forever.
+        const receipt = await result.wait(1);
+        if (receipt?.hash) feeTxHash = receipt.hash;
+
         // Track this tx as locally confirmed so we don't show "confirming payment..." forever
         if (feeTxHash) confirmedTxHashes.current.add(feeTxHash.toLowerCase());
-
-        // Wait for on-chain confirmation so verify-dm-fee finds the tx already confirmed.
-        // This makes the backend create the fee record as 'confirmed' immediately (not pending),
-        // so the message is delivered to the receiver in real time without waiting for the Alchemy webhook.
-        await result.wait(1);
 
         // Register payment intent + retry until backend confirms (Alchemy webhook can lag 2-8s after block).
         // 201 = backend found the tx on-chain via Alchemy → TipAndDmTnx created as confirmed → sendMessage delivers to receiver immediately.

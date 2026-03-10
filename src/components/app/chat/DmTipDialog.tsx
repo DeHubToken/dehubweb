@@ -92,7 +92,10 @@ export function DmTipDialog({
         { context: 'DM tip', chainId }
       );
 
-      await result.wait(1);
+      // Use receipt.transactionHash — AA (Pimlico/Safe) eth_sendTransaction may return a UserOp hash,
+      // but receipt.transactionHash is the actual bundler tx hash that Alchemy webhook sees.
+      const receipt = await result.wait(1);
+      const confirmedTxHash = receipt?.hash || result.hash;
 
       // Notify backend — this creates the inline tip message (msgType:'tip') in the conversation
       // and registers it for Alchemy webhook confirmation.
@@ -101,7 +104,7 @@ export function DmTipDialog({
         await apiCall('/api/dm/tip-notify', {
           method: 'POST',
           body: {
-            txHash: result.hash,
+            txHash: confirmedTxHash,
             conversationId,
             senderAddress: signerAddress,
           },
