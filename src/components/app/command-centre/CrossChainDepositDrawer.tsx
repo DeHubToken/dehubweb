@@ -139,7 +139,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
           if (pollRef.current) clearInterval(pollRef.current);
           setStatusPolling(false);
           setStep('success');
-          toast.success('Cross-chain deposit completed! ETH received on Base.');
+          toast.success(`Cross-chain deposit completed! ${destSymbol} received on Base.`);
         } else if (status.status === 'FAILED' || status.status === 'EXPIRED') {
           if (pollRef.current) clearInterval(pollRef.current);
           setStatusPolling(false);
