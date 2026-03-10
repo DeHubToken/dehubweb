@@ -39,6 +39,7 @@ interface PostActionBarProps {
   hasVideo?: boolean;
   isScheduled?: boolean;
   onCloseModal?: () => void;
+  onOpenCategories?: () => void;
 }
 
 export function PostActionBar({
