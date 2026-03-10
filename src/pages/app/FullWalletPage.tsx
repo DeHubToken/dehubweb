@@ -502,6 +502,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
   const icon = TOKEN_ICONS[grouped.symbol] || grouped.logo;
   const hasBalance = grouped.totalBalance > BigInt(0);
   return (
+    <>
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent glass>
         <DrawerHeader>
