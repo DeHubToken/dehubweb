@@ -249,7 +249,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
                   {quoteLoading ? (
                     <Loader2 className="w-3.5 h-3.5 text-white/40 animate-spin" />
                   ) : estimatedOut ? (
-                    <span className="text-white font-mono">{estimatedOut} ETH</span>
+                    <span className="text-white font-mono">{estimatedOut} {destSymbol}</span>
                   ) : (
                     <span className="text-white/30">—</span>
                   )}
