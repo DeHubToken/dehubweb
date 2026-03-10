@@ -1,59 +1,22 @@
-import { memo, useState, useMemo } from 'react';
+import { memo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQueryClient, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { LayoutGrid, TrendingUp, DollarSign, Search } from 'lucide-react';
+import { LayoutGrid, DollarSign, Search } from 'lucide-react';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { cn } from '@/lib/utils';
 import { getTopTickers } from '@/lib/ticker-search-tracker';
-import type { UnifiedFeedItem } from '@/hooks/use-unified-feed';
-
-const MAX_CATEGORIES = 8;
-
-interface TrendingCategory {
-  name: string;
-  post_count: number;
-}
-
-function deriveTrendingCategories(queryClient: ReturnType<typeof useQueryClient>): TrendingCategory[] {
-  const queries = queryClient.getQueriesData<{
-    pages?: Array<{ items?: UnifiedFeedItem[] }>;
-  }>({ queryKey: ['unified-feed'] });
-
-  const categoryMap = new Map<string, number>();
-
-  for (const [, data] of queries) {
-    if (!data?.pages) continue;
-    for (const page of data.pages) {
-      if (!page?.items) continue;
-      for (const item of page.items) {
-        if (item.category && Array.isArray(item.category)) {
-          for (const cat of item.category) {
-            const name = cat.trim();
-            if (name) {
-              categoryMap.set(name, (categoryMap.get(name) || 0) + 1);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return Array.from(categoryMap.entries())
-    .map(([name, post_count]) => ({ name, post_count }))
-    .sort((a, b) => b.post_count - a.post_count)
-    .slice(0, MAX_CATEGORIES);
-}
+import { useTrendingCategories } from '@/hooks/use-trending-categories';
 
 type Tab = 'posts' | 'tickers';
 
 export const WhatsHappening = memo(function WhatsHappening() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<Tab>('posts');
 
-  const categories = useMemo(() => deriveTrendingCategories(queryClient), [queryClient]);
+  const { data: categories = [] } = useTrendingCategories();
+
   const { data: topTickers = [] } = useQuery({
     queryKey: ['trending-tickers'],
     queryFn: () => getTopTickers(8),
