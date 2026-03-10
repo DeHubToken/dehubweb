@@ -42,6 +42,7 @@ import { useStockQuote } from '@/hooks/use-stock-quote';
 import { StockPriceCard } from '@/components/app/StockPriceCard';
 import { CashtagResultSwitcher } from '@/components/app/CashtagResultSwitcher';
 import type { VideoItem, ImagePost } from '@/types/feed.types';
+import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 
 const DATE_OPTION_KEYS = ['anyTime', 'today', 'thisWeek', 'thisMonth', 'thisYear'] as const;
 const DATE_OPTIONS_RAW = ['Any time', 'Today', 'This week', 'This month', 'This year'];
