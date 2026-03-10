@@ -493,13 +493,14 @@ function GroupedTokenRow({ grouped, onClick, price }: { grouped: GroupedToken; o
 }
 
 /* ─── Grouped Action Drawer ─── */
-function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, onBuyCrypto, walletAddress }: {
+function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, onBuyCrypto, onSwapDHB, walletAddress }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   grouped: GroupedToken | null;
   onSend: () => void;
   onReceive: () => void;
   onBuyCrypto: (symbol: string) => void;
+  onSwapDHB: () => void;
   walletAddress?: string;
 }) {
   const { t } = useTranslation();
