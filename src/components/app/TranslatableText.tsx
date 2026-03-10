@@ -66,6 +66,7 @@ function EmailCopyInline({ email }: { email: string }) {
     e.stopPropagation();
     navigator.clipboard.writeText(email).then(() => {
       setCopied(true);
+      toast.success('Email copied');
       setTimeout(() => setCopied(false), 2000);
     });
   };
