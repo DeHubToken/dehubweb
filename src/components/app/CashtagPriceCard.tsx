@@ -123,7 +123,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
           <div>
             <div className="flex items-center gap-2">
               <span className="text-white font-bold text-lg">${pair.baseToken.symbol}</span>
-              <span className="text-zinc-500 text-xs uppercase">{pair.chainId}</span>
+              
               {cmcData?.cmcRank && (
                 <span className="text-zinc-400 text-xs bg-zinc-700/50 px-1.5 py-0.5 rounded">#{cmcData.cmcRank}</span>
               )}
