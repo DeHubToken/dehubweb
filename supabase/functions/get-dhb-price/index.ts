@@ -123,6 +123,7 @@ serve(async (req) => {
     prices.WETH = prices.ETH ?? 0;
     prices.WBNB = prices.BNB ?? 0;
     if (!prices.USDT || prices.USDT === 0) prices.USDT = 1;
+    if (!prices.USDC || prices.USDC === 0) prices.USDC = 1;
 
     console.log('Token prices (DexScreener → CoinGecko fallback):', prices);
 
