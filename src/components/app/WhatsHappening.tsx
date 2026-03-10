@@ -97,20 +97,17 @@ export const WhatsHappening = memo(function WhatsHappening() {
               <button
                 key={ticker.symbol}
                 onClick={() => handleTickerClick(ticker.symbol)}
-                className="flex items-center justify-between w-full px-3 py-2 rounded-xl hover:bg-zinc-800/60 transition-colors group text-left"
+                className="flex items-center w-full px-3 py-2 rounded-xl hover:bg-zinc-800/60 transition-colors group text-left"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <span className="text-xs text-zinc-500 font-mono w-4 shrink-0">{i + 1}</span>
                   <div className="flex items-center gap-1.5 min-w-0">
                     <TickerLogo symbol={ticker.symbol} size={16} />
                     <span className="text-sm text-zinc-200 font-medium truncate group-hover:text-white transition-colors">
-                      {ticker.symbol}
+                      ${ticker.symbol}
                     </span>
                   </div>
                 </div>
-                <span className="text-[11px] text-zinc-500 shrink-0 ml-2">
-                  {ticker.search_count} {t('sidebar.searches')}
-                </span>
               </button>
             ))}
           </div>
