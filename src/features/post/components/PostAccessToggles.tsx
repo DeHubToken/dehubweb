@@ -46,6 +46,8 @@ interface PostAccessTogglesProps {
   showTitle: boolean;
   setShowTitle: (value: boolean) => void;
   hasVideoOrAudio: boolean;
+  categoryDrawerOpen?: boolean;
+  setCategoryDrawerOpen?: (value: boolean) => void;
 }
 
 export function PostAccessToggles({
