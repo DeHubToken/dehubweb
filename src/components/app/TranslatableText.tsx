@@ -76,8 +76,15 @@ export function renderTextWithLinks(text: string): ReactNode[] {
     }
     
     const fullMatch = match[0];
+
+    // Check if this is an email address
+    const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(fullMatch);
     
-    if (fullMatch.startsWith('@')) {
+    if (isEmail) {
+      parts.push(
+        <EmailCopyInline key={`email-${match.index}`} email={fullMatch} />
+      );
+    } else if (fullMatch.startsWith('@')) {
       // @mention — render as a clickable profile link
       const username = fullMatch.slice(1); // Remove @
       parts.push(
