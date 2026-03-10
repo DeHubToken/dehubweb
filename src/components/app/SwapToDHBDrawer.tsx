@@ -124,6 +124,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
   };
 
   return (
+    <>
     <Drawer open={open} onOpenChange={handleClose}>
       <DrawerContent glass hideHandle={false}>
         <DrawerHeader>
