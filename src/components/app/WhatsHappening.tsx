@@ -126,13 +126,13 @@ export const WhatsHappening = memo(function WhatsHappening() {
               transition={{ duration: 0.15 }}
             >
               {/* Period tabs */}
-              <div className="flex gap-2 mb-2 px-1">
+              <div className="flex mb-2">
                 {TICKER_PERIODS.map(p => (
                   <button
                     key={p.value}
                     onClick={() => setTickerPeriod(p.value)}
                     className={cn(
-                      'text-[10px] font-semibold transition-colors duration-150',
+                      'flex-1 text-xs font-semibold transition-colors duration-150 text-center py-1',
                       tickerPeriod === p.value
                         ? 'text-white'
                         : 'text-zinc-500 hover:text-zinc-300'

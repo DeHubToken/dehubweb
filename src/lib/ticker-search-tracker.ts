@@ -68,6 +68,9 @@ export async function getTopTickers(
 function getPeriodCutoff(period: TickerPeriod): string {
   const now = new Date();
   switch (period) {
+    case '1d':
+      now.setDate(now.getDate() - 1);
+      break;
     case '1w':
       now.setDate(now.getDate() - 7);
       break;
