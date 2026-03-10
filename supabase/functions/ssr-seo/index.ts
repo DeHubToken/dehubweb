@@ -191,6 +191,7 @@ function generateMetaHTML(data: {
   <meta property="og:image:type" content="${mimeType}">${imgWidth ? `
   <meta property="og:image:width" content="${imgWidth}">` : ""}${imgHeight ? `
   <meta property="og:image:height" content="${imgHeight}">` : ""}
+  <meta property="og:image:alt" content="${title}">
   <meta property="fb:app_id" content="966242223397117">${videoTags}
 
   <!-- Twitter -->
@@ -199,6 +200,7 @@ function generateMetaHTML(data: {
   <meta name="twitter:title" content="${title}">
   <meta name="twitter:description" content="${description}">
   <meta name="twitter:image" content="${twitterImageUrl}">
+  <meta name="twitter:image:alt" content="${title}">
   <meta name="twitter:site" content="@DeHubApp">${twitterVideoTags}
 
   ${!data.isBot
