@@ -31,8 +31,8 @@ export async function getTopTickers(
   n: number = 8,
   period: TickerPeriod = 'all'
 ): Promise<{ symbol: string; search_count: number }[]> {
-  if (period === 'all') {
-    // Use the cumulative counter for "all time" (fastest)
+  // For 1m, 1y, and all: use cumulative counter (feature is <1 month old, so all periods show same data)
+  if (period === '1m' || period === '1y' || period === 'all') {
     const { data, error } = await supabase
       .from('ticker_searches')
       .select('symbol, search_count')
