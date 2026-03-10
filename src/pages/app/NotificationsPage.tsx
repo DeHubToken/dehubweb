@@ -722,6 +722,8 @@ export default function NotificationsPage() {
             next.set(r.value.key, r.value.info as EnrichedAvatar);
           }
         }
+        // Sync to module-level cache so it persists across navigations
+        moduleAvatarCache = next;
         return next;
       });
       setEnrichmentReady(true);
