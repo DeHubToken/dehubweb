@@ -37,6 +37,10 @@ interface EnrichedAvatar {
   displayName: string | null;
 }
 
+// Module-level caches survive component unmount/remount (tab switching, navigation)
+let moduleAvatarCache = new Map<string, EnrichedAvatar>();
+const moduleEnrichedKeys = new Set<string>();
+
 // Bundled notification: wraps one or more raw notifications into a display group
 interface BundledNotification {
   /** The primary notification (most recent in the bundle) */
