@@ -62,7 +62,7 @@ async function getCoinGeckoPrices(ids: string[]): Promise<Record<string, number>
   }
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
