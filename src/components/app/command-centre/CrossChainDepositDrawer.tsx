@@ -21,6 +21,7 @@ import usdtLogo from '@/assets/usdt-logo.png';
 import btcLogo from '@/assets/btc-logo.png';
 import bnbLogo from '@/assets/bnb-logo.png';
 import baseLogo from '@/assets/icons/base-logo.png';
+import solLogo from '@/assets/icons/solana-logo.png';
 
 // Icon map: iconKey → image src
 const ICON_MAP: Record<string, string> = {
@@ -31,6 +32,7 @@ const ICON_MAP: Record<string, string> = {
   BNB: bnbLogo,
   BASE: baseLogo,
   WETH: ethLogo,
+  SOL: solLogo,
 };
 
 function TokenIcon({ iconKey, size = 'w-7 h-7' }: { iconKey: string; size?: string }) {
