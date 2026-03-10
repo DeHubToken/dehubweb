@@ -108,15 +108,15 @@ export const WhatsHappening = memo(function WhatsHappening() {
       {activeTab === 'tickers' && (
         <>
           {/* Period tabs */}
-          <div className="flex gap-0.5 bg-zinc-800/40 rounded-lg p-0.5 mb-2">
+          <div className="flex gap-2 mb-2 px-1">
             {TICKER_PERIODS.map(p => (
               <button
                 key={p.value}
                 onClick={() => setTickerPeriod(p.value)}
                 className={cn(
-                  'flex-1 py-1 text-[10px] font-semibold rounded-md transition-all duration-150',
+                  'text-[10px] font-semibold transition-colors duration-150',
                   tickerPeriod === p.value
-                    ? 'bg-zinc-600 text-white shadow-sm'
+                    ? 'text-white'
                     : 'text-zinc-500 hover:text-zinc-300'
                 )}
               >
