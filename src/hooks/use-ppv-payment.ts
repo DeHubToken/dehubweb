@@ -110,15 +110,15 @@ export function usePPVPayment({
 
         // Get Uniswap quote for the shortfall
         toast.loading('Getting swap quote...', { id: 'ppv-payment' });
-        const ethQuote = await getSwapQuote(shortfall);
+        const ethQuoteResult = await getSwapQuote(shortfall);
         
-        if (!ethQuote) {
+        if (!ethQuoteResult) {
           toast.error('Could not get swap quote. Please acquire DHB manually.', { id: 'ppv-payment' });
           setIsPaying(false);
           return;
         }
 
-        const ethNeeded = applySlippage(ethQuote);
+        const ethNeeded = applySlippage(ethQuoteResult.amountIn);
         const ethBalance = await getNativeBalance(signerAddress, chainId);
 
         if (ethBalance < ethNeeded) {
