@@ -11,6 +11,7 @@ const APP_URL = "https://dehub.io"; // Change to actual production URL if differ
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
 const IMAGE_PROXY_BASE = `${SUPABASE_URL}/functions/v1/ssr-seo`;
+const DEHUB_LOGO = "https://dehub.io/logo.png";
 
 interface DeHubUser {
     username?: string;
@@ -41,7 +42,7 @@ function getExtension(path: string): string {
 }
 
 function ensureAbsoluteUrl(url: string): string {
-    if (!url) return "https://dehub.io/og-image.png";
+    if (!url) return DEHUB_LOGO;
     if (url.startsWith("http")) return url;
     return `${DEHUB_CDN_BASE}${url.replace(/^statics\//, "")}`;
 }
@@ -51,7 +52,7 @@ function ensureAbsoluteUrl(url: string): string {
  */
 function buildAvatarUrl(user: DeHubUser): string {
     const apiPath = user.avatarImageUrl;
-    if (!apiPath) return "https://dehub.io/og-image.png";
+    if (!apiPath) return DEHUB_LOGO;
     if (apiPath.startsWith("http")) return apiPath;
 
     // Frontend logic: cdn/avatars/{address}.{ext}
@@ -305,15 +306,19 @@ serve(async (req) => {
             if (nft) {
                 const posterName = nft.minterDisplayName || nft.minterUsername || "someone";
                 const title = nft.title || nft.name || `Post by ${posterName} on DeHub`;
-                const description = nft.description || `View this post by ${posterName} on DeHub`;
+                const description = `View this post by ${posterName} on DeHub` + (nft.description ? ` — ${nft.description}` : "");
                 const postUrl = `${APP_URL}/app/post/${postId}`;
                 const videoUrl = buildVideoUrl(nft);
+                const postImage = videoUrl
+                    ? ensureAbsoluteUrl(nft.thumbnail_url || nft.imageUrl || "") || DEHUB_LOGO
+                    : buildPostImageUrl(nft);
                 const html = generateMetaHTML({
                     title,
                     description,
-                    image: videoUrl ? ensureAbsoluteUrl(nft.thumbnail_url || nft.imageUrl || "") : buildPostImageUrl(nft),
+                    image: postImage,
                     url: postUrl,
                     type: "article",
+                    twitterCard: "summary",
                     functionBaseUrl,
                     isBot,
                     videoUrl,
