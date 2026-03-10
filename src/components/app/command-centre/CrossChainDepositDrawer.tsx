@@ -220,7 +220,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
             <>
               <div className="flex items-center gap-2 text-xs text-white/50">
                 <span className="text-lg">{selectedToken.icon}</span>
-                <span>{selectedToken.symbol} on {selectedChain.name} → DHB on Base</span>
+                <span>{selectedToken.symbol} on {selectedChain.name} → ETH on Base</span>
               </div>
 
               <div className="space-y-1.5">
