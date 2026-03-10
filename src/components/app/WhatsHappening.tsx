@@ -69,6 +69,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
                 layoutId="tott-tab-indicator"
                 className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none"
                 transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                layoutScroll
               />
             )}
             <span className="relative z-10">{t(`sidebar.${tab}`)}</span>
