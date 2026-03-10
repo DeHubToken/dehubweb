@@ -315,6 +315,10 @@ export default function FullWalletPage() {
           setCrossChainDestSymbol(symbol);
           setTimeout(() => setCrossChainBuyOpen(true), 200);
         }}
+        onSwapDHB={() => {
+          setActionGrouped(null);
+          setTimeout(() => setSwapDHBOpen(true), 200);
+        }}
         walletAddress={walletAddress}
       />
 
