@@ -186,7 +186,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
                 {step === 'error' && 'Deposit Failed'}
               </h3>
               {step === 'chains' && (
-                <p className="text-xs text-white/40">Send crypto from any chain → receive DHB</p>
+                <p className="text-xs text-white/40">Send crypto from any chain → receive ETH on Base</p>
               )}
             </div>
           </div>
