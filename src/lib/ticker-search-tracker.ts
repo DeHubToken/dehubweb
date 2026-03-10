@@ -4,7 +4,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 
-export type TickerPeriod = '1w' | '1m' | '1y' | 'all';
+export type TickerPeriod = '1d' | '1w' | '1m' | '1y' | 'all';
 
 /**
  * Record a ticker/cashtag search (fire-and-forget).
