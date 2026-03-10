@@ -161,8 +161,9 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
   };
 
   const estimatedOut = quote?.amount_out
-    ? (parseInt(quote.amount_out) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 6 })
+    ? (parseInt(quote.amount_out) / Math.pow(10, dest.decimals)).toLocaleString(undefined, { maximumFractionDigits: dest.decimals <= 8 ? dest.decimals : 6 })
     : null;
+  const destSymbol = destinationSymbol || 'ETH';
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
