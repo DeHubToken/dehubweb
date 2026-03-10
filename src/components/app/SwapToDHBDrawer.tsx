@@ -157,12 +157,16 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
                   />
                   <span className="text-sm text-zinc-400 font-medium shrink-0">DHB</span>
                 </div>
-                <div className="flex gap-2">
+                <div className="grid grid-cols-4 gap-1.5">
                   {PRESETS.map(p => (
                     <button
                       key={p.value}
                       onClick={() => setDhbAmount(String(p.value))}
-                      className="flex-1 text-xs py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-zinc-300 border border-white/10 transition-colors"
+                      className={`text-xs py-1.5 rounded-lg border transition-colors ${
+                        dhbAmount === String(p.value)
+                          ? 'bg-white/20 border-white/30 text-white'
+                          : 'bg-white/[0.06] hover:bg-white/[0.12] text-zinc-300 border-white/10'
+                      }`}
                     >
                       {p.label}
                     </button>
