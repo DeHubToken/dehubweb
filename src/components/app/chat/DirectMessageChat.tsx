@@ -316,6 +316,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [feeBalanceBnb, setFeeBalanceBnb] = useState<number | null>(null);
   const [feeBalanceLoading, setFeeBalanceLoading] = useState(false);
   const [isSendingFee, setIsSendingFee] = useState(false);
+  // Track tx hashes we've confirmed on-chain so we can override 'pending' paymentStatus from API
+  const confirmedTxHashes = useRef<Set<string>>(new Set());
 
   const erc20TransferInterface = useRef(new Interface([
     'function transfer(address to, uint256 amount) returns (bool)',
