@@ -901,6 +901,29 @@ export default function PostInfoPage() {
               )}
             </section>
           )}
+
+          {/* Categories */}
+          {(() => {
+            const categories = Array.isArray(nftInfo.category) 
+              ? nftInfo.category 
+              : nftInfo.category ? [nftInfo.category] : [];
+            if (categories.length === 0) return null;
+            return (
+              <section className="bg-white/5 rounded-xl p-4 border border-white/10">
+                <h2 className="text-sm font-medium text-white/60 mb-3 flex items-center gap-2">
+                  <Tag className="w-4 h-4" />
+                  Categories
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {categories.map((cat) => (
+                    <span key={cat} className="px-3 py-1.5 bg-white/10 rounded-lg text-sm text-white">
+                      {cat}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            );
+          })()}
           
         </div>
       </div>
