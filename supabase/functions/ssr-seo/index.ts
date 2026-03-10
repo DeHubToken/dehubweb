@@ -11,7 +11,7 @@ const APP_URL = "https://dehub.io"; // Change to actual production URL if differ
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
 const IMAGE_PROXY_BASE = `${SUPABASE_URL}/functions/v1/ssr-seo`;
-const DEHUB_LOGO = "https://dehub.io/assets/dehub-logo-p1gQn9UY.png";
+const DEHUB_LOGO = "https://dehub.io/default-icon.png";
 
 interface DeHubUser {
     username?: string;
@@ -290,8 +290,8 @@ serve(async (req) => {
                     image: avatarUrl,
                     url: profileUrl,
                     twitterCard: "summary",
-                    imageWidth: isLogoFallback ? 1024 : 400,
-                    imageHeight: isLogoFallback ? 1024 : 400,
+                    imageWidth: isLogoFallback ? 200 : 400,
+                    imageHeight: isLogoFallback ? 200 : 400,
                     functionBaseUrl,
                     isBot,
                 });
