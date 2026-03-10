@@ -10,6 +10,7 @@
  */
 
 import { useState, useMemo, useEffect, useCallback, useRef, createContext, useContext, ReactNode } from 'react';
+import { Mail, Check } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Languages, RotateCcw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
