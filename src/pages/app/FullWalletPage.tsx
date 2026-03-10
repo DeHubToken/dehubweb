@@ -542,13 +542,11 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
             variant="glass"
             className="flex-col h-auto py-4 gap-2 rounded-xl"
             onClick={() => {
-              onOpenChange(false);
               if (grouped.symbol === 'DHB') {
+                onOpenChange(false);
                 navigate('/app/buy');
-              } else if (['ETH', 'BTC', 'USDT', 'USDC', 'BNB'].includes(grouped.symbol)) {
-                onBuyCrypto(grouped.symbol);
               } else {
-                toast.info('Buy not available for this token yet');
+                setBuyMethodOpen(true);
               }
             }}
           >
