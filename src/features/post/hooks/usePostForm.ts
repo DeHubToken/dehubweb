@@ -930,13 +930,32 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         postDescription = text.trim();
       }
 
+      // Extract hashtags from description and title, use as augmented categories
+      const hashtagRegex = /#([A-Za-z][A-Za-z0-9_]{0,49})/g;
+      const extractedTags = new Set<string>();
+      for (const match of (postDescription.matchAll(hashtagRegex))) {
+        extractedTags.add(match[1]);
+      }
+      for (const match of (postTitle.matchAll(hashtagRegex))) {
+        extractedTags.add(match[1]);
+      }
+
+      // Strip hashtags from the text sent to API
+      const cleanDescription = postDescription.replace(hashtagRegex, '').replace(/\s{2,}/g, ' ').trim();
+      const cleanTitle = postTitle.replace(hashtagRegex, '').replace(/\s{2,}/g, ' ').trim() || postTitle;
+
+      // Merge extracted hashtags into categories
+      const baseCategories = selectedCategory ? selectedCategory.split('|||').filter(Boolean) : ['General'];
+      const hashtagCategories = Array.from(extractedTags).map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
+      const mergedCategories = [...new Set([...baseCategories, ...hashtagCategories])];
+
       const mintResponse = await mintPost(
         {
-          name: postTitle,
-          description: postDescription,
+          name: cleanTitle,
+          description: cleanDescription,
           postType,
           chainId,
-          category: selectedCategory ? selectedCategory.split('|||').filter(Boolean) : ['General'],
+          category: mergedCategories,
           streamInfo,
           files: files.length > 0 ? files : undefined,
           thumbnail,

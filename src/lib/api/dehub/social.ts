@@ -295,11 +295,19 @@ export async function quotePost(params: {
   const token = getAuthToken();
   if (!token) throw new Error('Authentication required');
 
+  // Extract hashtags from content as augmented categories
+  const hashtagRegex = /#([A-Za-z][A-Za-z0-9_]{0,49})/g;
+  const extractedTags = Array.from(params.content.matchAll(hashtagRegex)).map(m => m[1]);
+  const cleanContent = params.content.replace(hashtagRegex, '').replace(/\s{2,}/g, ' ').trim();
+  const hashtagCategories = extractedTags.map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
+  const baseCategory = params.category || 'general';
+  const mergedCategories = [...new Set([baseCategory, ...hashtagCategories])];
+
   const formData = new FormData();
   formData.append('quotedTokenId', String(params.quotedTokenId));
-  formData.append('description', params.content);
+  formData.append('description', cleanContent);
   formData.append('postType', 'feed-simple');
-  formData.append('category', JSON.stringify([params.category || 'general']));
+  formData.append('category', JSON.stringify(mergedCategories));
   formData.append('chainId', '8453');
   formData.append('streamInfo', JSON.stringify({}));
 
