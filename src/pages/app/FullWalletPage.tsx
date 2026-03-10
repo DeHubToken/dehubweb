@@ -418,6 +418,7 @@ export default function FullWalletPage() {
           </div>
         </DrawerContent>
       </Drawer>
+      <CrossChainDepositDrawer open={crossChainBuyOpen} onOpenChange={setCrossChainBuyOpen} />
     </div>
   );
 }
