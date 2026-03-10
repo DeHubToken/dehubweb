@@ -18,12 +18,16 @@ import {
 interface CrossChainDepositDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Target token symbol to receive (ETH, USDC, BTC, USDT). Defaults to ETH. */
+  destinationSymbol?: string;
 }
 
 type Step = 'chains' | 'amount' | 'deposit' | 'success' | 'error';
 
-export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDepositDrawerProps) {
+export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol }: CrossChainDepositDrawerProps) {
   const { walletAddress } = useAuth();
+  const dest = (destinationSymbol && DESTINATION_ASSETS[destinationSymbol]) || DEFAULT_DESTINATION;
+  const destLabel = dest.label;
 
   const [step, setStep] = useState<Step>('chains');
   const [selectedChain, setSelectedChain] = useState<ChainInfo | null>(null);
