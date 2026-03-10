@@ -166,23 +166,57 @@ export async function isFollowing(targetAddress: string): Promise<boolean> {
   return response as boolean;
 }
 
-export async function voteOnPost(params: {
-  tokenId: number;
-  voteType: 'for' | 'against';
-}): Promise<VoteResponse> {
-  // Backend expects JSON body with streamTokenId (number) and vote (boolean)
-  const response = await apiCall<{ result: VoteResponse; success?: boolean } | VoteResponse>("/api/request_vote", {
-    method: "POST",
-    body: {
-      streamTokenId: params.tokenId,
-      vote: params.voteType === 'for',
-    },
-    requiresAuth: true,
+/**
+ * Wraps a promise with a timeout. Rejects if the promise doesn't settle within `ms`.
+ */
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`Vote timed out after ${ms}ms`)), ms);
+    promise.then(
+      (val) => { clearTimeout(timer); resolve(val); },
+      (err) => { clearTimeout(timer); reject(err); },
+    );
   });
-  if (response && typeof response === 'object' && 'result' in response && typeof response.result === 'object') {
-    return response.result;
+}
+
+export async function voteOnPost(
+  params: { tokenId: number; voteType: 'for' | 'against' },
+  { maxRetries = 2, timeoutMs = 5000 }: { maxRetries?: number; timeoutMs?: number } = {},
+): Promise<VoteResponse> {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      if (attempt > 0) {
+        console.log(`[voteOnPost] Retry ${attempt}/${maxRetries} for token ${params.tokenId}`);
+      }
+
+      const response = await withTimeout(
+        apiCall<{ result: VoteResponse; success?: boolean } | VoteResponse>("/api/request_vote", {
+          method: "POST",
+          body: {
+            streamTokenId: params.tokenId,
+            vote: params.voteType === 'for',
+          },
+          requiresAuth: true,
+        }),
+        timeoutMs,
+      );
+
+      if (response && typeof response === 'object' && 'result' in response && typeof response.result === 'object') {
+        return response.result;
+      }
+      return response as VoteResponse;
+    } catch (error) {
+      lastError = error;
+      // Don't retry auth errors
+      if (error instanceof Error && error.message.includes('Authentication required')) {
+        throw error;
+      }
+    }
   }
-  return response as VoteResponse;
+
+  throw lastError;
 }
 
 export async function toggleFollow(params: {
