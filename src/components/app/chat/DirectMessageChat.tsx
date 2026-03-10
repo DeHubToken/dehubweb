@@ -624,7 +624,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           return;
         }
 
-        toast.loading('Processing payment...', { id: 'dm-fee-send' });
+        toast.loading('Processing payment... (confirming on-chain)', { id: 'dm-fee-send' });
 
         const result = await writeContractAA(
           chainConfig.dhbToken,
@@ -637,6 +637,11 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         feeTxHash = result.hash;
         // Track this tx as locally confirmed so we don't show "confirming payment..." forever
         if (feeTxHash) confirmedTxHashes.current.add(feeTxHash.toLowerCase());
+
+        // Wait for on-chain confirmation so verify-dm-fee finds the tx already confirmed.
+        // This makes the backend create the fee record as 'confirmed' immediately (not pending),
+        // so the message is delivered to the receiver in real time without waiting for the Alchemy webhook.
+        await result.wait(1);
 
         // Register payment intent with backend (required for Alchemy webhook to link tx to DM fee)
         try {
