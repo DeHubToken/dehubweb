@@ -69,7 +69,7 @@ export function FundActions() {
               <Wallet className="w-5 h-5 text-white/70" />
               <div className="text-left">
                 <span className="text-sm font-medium text-white">Buy with Crypto</span>
-                <p className="text-xs text-white/40">BTC, SOL, ETH, USDC & more → DHB</p>
+                <p className="text-xs text-white/40">Send from any chain → ETH on Base</p>
               </div>
             </button>
             <button

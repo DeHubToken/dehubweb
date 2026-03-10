@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import {
   SUPPORTED_CHAINS,
-  DHB_ASSET_ID,
+  DEFAULT_DESTINATION_ASSET_ID,
   type ChainInfo,
   type TokenInfo,
   type QuoteResponse,
@@ -84,7 +84,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             originAsset: selectedToken.assetId,
-            destinationAsset: DHB_ASSET_ID,
+            destinationAsset: DEFAULT_DESTINATION_ASSET_ID,
             amount: amountInSmallest,
             recipient: `base:${walletAddress}`,
             amountType: 'in',
@@ -134,7 +134,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
           if (pollRef.current) clearInterval(pollRef.current);
           setStatusPolling(false);
           setStep('success');
-          toast.success('Cross-chain deposit completed! DHB received.');
+          toast.success('Cross-chain deposit completed! ETH received on Base.');
         } else if (status.status === 'FAILED' || status.status === 'EXPIRED') {
           if (pollRef.current) clearInterval(pollRef.current);
           setStatusPolling(false);
@@ -155,8 +155,8 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const estimatedDhbOut = quote?.amount_out
-    ? (parseInt(quote.amount_out) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 2 })
+  const estimatedOut = quote?.amount_out
+    ? (parseInt(quote.amount_out) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 6 })
     : null;
 
   return (
@@ -186,7 +186,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
                 {step === 'error' && 'Deposit Failed'}
               </h3>
               {step === 'chains' && (
-                <p className="text-xs text-white/40">Send crypto from any chain → receive DHB</p>
+                <p className="text-xs text-white/40">Send crypto from any chain → receive ETH on Base</p>
               )}
             </div>
           </div>
@@ -220,7 +220,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
             <>
               <div className="flex items-center gap-2 text-xs text-white/50">
                 <span className="text-lg">{selectedToken.icon}</span>
-                <span>{selectedToken.symbol} on {selectedChain.name} → DHB on Base</span>
+                <span>{selectedToken.symbol} on {selectedChain.name} → ETH on Base</span>
               </div>
 
               <div className="space-y-1.5">
@@ -239,11 +239,11 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
               {/* Quote display */}
               <div className="rounded-xl bg-white/[0.04] border border-white/10 p-3 space-y-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/50">Estimated DHB received</span>
+                  <span className="text-white/50">Estimated ETH received</span>
                   {quoteLoading ? (
                     <Loader2 className="w-3.5 h-3.5 text-white/40 animate-spin" />
-                  ) : estimatedDhbOut ? (
-                    <span className="text-white font-mono">{estimatedDhbOut} DHB</span>
+                  ) : estimatedOut ? (
+                    <span className="text-white font-mono">{estimatedOut} ETH</span>
                   ) : (
                     <span className="text-white/30">—</span>
                   )}
@@ -299,7 +299,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
                 </div>
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-white/50">You'll receive</span>
-                  <span className="text-white font-mono">{estimatedDhbOut} DHB</span>
+                  <span className="text-white font-mono">{estimatedOut} ETH</span>
                 </div>
               </div>
 
@@ -315,9 +315,9 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
               <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
                 <Check className="w-6 h-6 text-emerald-400" />
               </div>
-              <p className="text-sm text-white font-medium">DHB Received!</p>
+              <p className="text-sm text-white font-medium">ETH Received!</p>
               <p className="text-xs text-white/40">
-                {estimatedDhbOut} DHB deposited to your wallet
+                {estimatedOut} ETH deposited to your Base wallet
               </p>
               {depositStatus?.tx_hash && (
                 <button
