@@ -497,6 +497,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [buyMethodOpen, setBuyMethodOpen] = useState(false);
   if (!grouped) return null;
   const icon = TOKEN_ICONS[grouped.symbol] || grouped.logo;
   const hasBalance = grouped.totalBalance > BigInt(0);
