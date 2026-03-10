@@ -315,9 +315,9 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
               <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
                 <Check className="w-6 h-6 text-emerald-400" />
               </div>
-              <p className="text-sm text-white font-medium">DHB Received!</p>
+              <p className="text-sm text-white font-medium">ETH Received!</p>
               <p className="text-xs text-white/40">
-                {estimatedDhbOut} DHB deposited to your wallet
+                {estimatedOut} ETH deposited to your Base wallet
               </p>
               {depositStatus?.tx_hash && (
                 <button
