@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
@@ -17,6 +17,7 @@ interface PostModalProps {
 
 export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: PostModalProps) {
   const { state, actions, computed, refs } = usePostForm(onClose);
+  const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
 
   // Process initial files when modal opens with pending files
   useEffect(() => {
@@ -108,6 +109,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         showTitle={state.showTitle}
         setShowTitle={actions.setShowTitle}
         hasVideoOrAudio={computed.hasVideo || computed.hasAudio}
+        categoryDrawerOpen={categoryDrawerOpen}
+        setCategoryDrawerOpen={setCategoryDrawerOpen}
       />
 
       <PostActionBar
@@ -135,6 +138,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         hasImage={computed.hasImage}
         hasVideo={computed.hasVideo}
         isScheduled={!!state.scheduledDate}
+        onOpenCategories={() => setCategoryDrawerOpen(true)}
       />
     </>
   );

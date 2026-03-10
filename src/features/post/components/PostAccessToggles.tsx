@@ -46,6 +46,8 @@ interface PostAccessTogglesProps {
   showTitle: boolean;
   setShowTitle: (value: boolean) => void;
   hasVideoOrAudio: boolean;
+  categoryDrawerOpen?: boolean;
+  setCategoryDrawerOpen?: (value: boolean) => void;
 }
 
 export function PostAccessToggles({
@@ -76,13 +78,17 @@ export function PostAccessToggles({
   showTitle,
   setShowTitle,
   hasVideoOrAudio,
+  categoryDrawerOpen: categoryDrawerOpenProp,
+  setCategoryDrawerOpen: setCategoryDrawerOpenProp,
 }: PostAccessTogglesProps) {
   const { t } = useI18n();
   // Mobile drawer states
   const [ppvDrawerOpen, setPpvDrawerOpen] = useState(false);
   const [bountyDrawerOpen, setBountyDrawerOpen] = useState(false);
   const [tokenDrawerOpen, setTokenDrawerOpen] = useState(false);
-  const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
+  const [categoryDrawerOpenLocal, setCategoryDrawerOpenLocal] = useState(false);
+  const categoryDrawerOpen = categoryDrawerOpenProp ?? categoryDrawerOpenLocal;
+  const setCategoryDrawerOpen = setCategoryDrawerOpenProp ?? setCategoryDrawerOpenLocal;
 
   // Temp states for drawer inputs
   const [tempPpvAmount, setTempPpvAmount] = useState(ppvAmount);

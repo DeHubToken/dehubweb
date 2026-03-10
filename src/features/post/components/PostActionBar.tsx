@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera } from 'lucide-react';
+import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -39,6 +39,7 @@ interface PostActionBarProps {
   hasVideo?: boolean;
   isScheduled?: boolean;
   onCloseModal?: () => void;
+  onOpenCategories?: () => void;
 }
 
 export function PostActionBar({
@@ -67,6 +68,7 @@ export function PostActionBar({
   hasVideo,
   isScheduled,
   onCloseModal,
+  onOpenCategories,
 }: PostActionBarProps) {
   const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
@@ -383,6 +385,22 @@ export function PostActionBar({
           onEmojiSelect={onInsertEmoji}
           onGifSelect={onInsertGif}
         />
+
+        {/* Hashtag / Category button */}
+        {onOpenCategories && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={onOpenCategories}
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
+              >
+                <Hash className="w-5 h-5 text-white" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Categories</TooltipContent>
+          </Tooltip>
+        )}
       </div>
 
       <div className="flex items-center gap-2">
