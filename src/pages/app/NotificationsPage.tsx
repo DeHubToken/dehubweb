@@ -679,7 +679,7 @@ export default function NotificationsPage() {
       .filter(name => Boolean(name) && !moduleEnrichedKeys.has(`username:${name.toLowerCase()}`));
     
     const uniqueNewAddresses = [...new Set(newAddresses)];
-    const uniqueNewUsernames = [...new Set(secondActorUsernames)];
+    const uniqueNewUsernames = [...new Set(aggregatedActorUsernames)];
     
     if (uniqueNewAddresses.length === 0 && uniqueNewUsernames.length === 0) {
       setEnrichmentReady(true);
