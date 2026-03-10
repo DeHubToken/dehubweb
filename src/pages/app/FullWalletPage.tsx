@@ -619,17 +619,35 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
               </>
             ) : (
               <>
-                <button
-                  disabled
-                  className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] border border-white/10 opacity-50 cursor-not-allowed"
-                >
-                  <CreditCard className="w-5 h-5 text-white/70" />
-                  <div className="text-left flex-1">
-                    <span className="text-sm font-medium text-white">Buy with Card</span>
-                    <p className="text-xs text-white/40">Purchase using Visa, Mastercard, Apple Pay</p>
-                  </div>
-                  <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">Coming soon</span>
-                </button>
+                {(['ETH', 'USDT'].includes(grouped?.symbol || '')) && walletAddress ? (
+                  <button
+                    onClick={() => {
+                      const url = `https://pay.coinbase.com/buy/select-asset?appId=default&addresses=${encodeURIComponent(JSON.stringify({ [walletAddress]: ['base'] }))}&assets=${encodeURIComponent(JSON.stringify([grouped!.symbol]))}`;
+                      window.open(url, '_blank');
+                      setBuyMethodOpen(false);
+                      onOpenChange(false);
+                    }}
+                    className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
+                  >
+                    <CreditCard className="w-5 h-5 text-white/70" />
+                    <div className="text-left">
+                      <span className="text-sm font-medium text-white">Buy with Card</span>
+                      <p className="text-xs text-white/40">Purchase via Coinbase — Visa, Mastercard, Apple Pay</p>
+                    </div>
+                  </button>
+                ) : (
+                  <button
+                    disabled
+                    className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] border border-white/10 opacity-50 cursor-not-allowed"
+                  >
+                    <CreditCard className="w-5 h-5 text-white/70" />
+                    <div className="text-left flex-1">
+                      <span className="text-sm font-medium text-white">Buy with Card</span>
+                      <p className="text-xs text-white/40">Purchase using Visa, Mastercard, Apple Pay</p>
+                    </div>
+                    <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">Coming soon</span>
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     setBuyMethodOpen(false);
