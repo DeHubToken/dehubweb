@@ -11,7 +11,7 @@ const APP_URL = "https://dehub.io"; // Change to actual production URL if differ
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
 const IMAGE_PROXY_BASE = `${SUPABASE_URL}/functions/v1/ssr-seo`;
-const DEHUB_LOGO = "https://dehub.io/default-icon.png";
+const DEHUB_LOGO = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/default-icon.png";
 
 interface DeHubUser {
     username?: string;
