@@ -17,6 +17,7 @@ interface PostModalProps {
 
 export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: PostModalProps) {
   const { state, actions, computed, refs } = usePostForm(onClose);
+  const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
 
   // Process initial files when modal opens with pending files
   useEffect(() => {
