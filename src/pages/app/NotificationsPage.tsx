@@ -653,14 +653,9 @@ export default function NotificationsPage() {
   );
   
   // Batch-avatar enrichment for fresh profile pictures
-  const [enrichedAvatars, setEnrichedAvatars] = useState<Map<string, EnrichedAvatar>>(new Map());
-  const enrichedRef = useRef<Set<string>>(new Set());
-  const [enrichmentReady, setEnrichmentReady] = useState(false);
-
-  // Clear enrichment cache on mount so fresh avatars are always fetched
-  useEffect(() => {
-    enrichedRef.current.clear();
-  }, []);
+  // Module-level caches persist across navigations to prevent avatar flashing
+  const [enrichedAvatars, setEnrichedAvatars] = useState<Map<string, EnrichedAvatar>>(() => moduleAvatarCache);
+  const [enrichmentReady, setEnrichmentReady] = useState(() => moduleAvatarCache.size > 0);
 
   useEffect(() => {
     if (!allNotifications.length) return;
