@@ -45,6 +45,8 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
   const [swapping, setSwapping] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [buyEthOpen, setBuyEthOpen] = useState(false);
+  const [crossChainEthOpen, setCrossChainEthOpen] = useState(false);
 
   const debouncedAmount = useDebouncedValue(dhbAmount, 500);
 
