@@ -8,20 +8,17 @@ interface TickerLogoProps {
 
 /**
  * Displays a token/stock logo with multiple fallback sources:
- * 1. CoinGecko (crypto)
- * 2. Synth Finance (stocks)  
- * 3. First-letter fallback
+ * 1. Synth Finance (stocks — high hit rate)
+ * 2. CoinGecko search-based icon via symbol match
+ * 3. Logo.dev / Clearbit style
+ * 4. First-letter fallback
  */
 export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProps) {
   const [srcIndex, setSrcIndex] = useState(0);
   const clean = symbol.replace(/^\$/, '').toUpperCase();
 
   const sources = [
-    // CoinGecko small icon (works for most crypto)
-    `https://assets.coingecko.com/coins/images/small/${clean.toLowerCase()}.png`,
-    // DexScreener token search image (via their CDN pattern)  
-    `https://dd.dexscreener.com/ds-data/tokens/${clean.toLowerCase()}.png`,
-    // Synth Finance for stocks
+    // Synth Finance — works well for stocks & some crypto
     `https://logo.synthfinance.com/ticker/${clean}`,
     // Logo.dev / Clearbit style for well-known tickers
     `https://logo.clearbit.com/${clean.toLowerCase()}.com`,
