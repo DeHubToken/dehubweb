@@ -1,35 +1,43 @@
 
 
-## Fix: Auto-reload on chunk load failures
+## Custom In-App DHB Buy Solution
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+You already have a working **Uniswap V3 swap** integration (`uniswap-swap.ts`) that swaps ETH → DHB on Base. The best custom solution is to build a **Swap Drawer** directly in the wallet, letting users convert their ETH (or any supported token) to DHB without leaving the app.
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+### What to build
 
-### Changes
+**"Swap to DHB" Drawer** — a dedicated UI for buying DHB with ETH on Base via the existing Uniswap V3 integration.
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+### Flow
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+1. User taps **Buy** on DHB in wallet → opens the buy method drawer
+2. New option: **"Swap from ETH"** (uses in-wallet ETH balance)
+3. User enters DHB amount they want → live quote shows ETH cost (via `getSwapQuote`)
+4. User confirms → executes `swapETHForDHB` via Smart Account
+5. Success toast with tx link
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+### Implementation
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+1. **Create `SwapToDHBDrawer.tsx`** component:
+   - Input: desired DHB amount (with preset buttons: 1K, 5K, 10K, 50K)
+   - Shows live ETH cost via `getSwapQuote()` (debounced)
+   - Shows user's current ETH balance via `getNativeBalance()`
+   - Validates sufficient ETH (including 2% slippage)
+   - Executes swap via `swapETHForDHB()` on confirm
+   - Loading/success/error states
+
+2. **Update `GroupedActionDrawer`** in `FullWalletPage.tsx`:
+   - For DHB token's Buy button, show the buy method sub-drawer with:
+     - "Buy with Card" → existing `/app/buy` page
+     - "Swap from ETH" → opens `SwapToDHBDrawer`
+   - Remove the direct navigate to `/app/buy` for DHB
+
+3. **Price display**: Use `useTokenPrices` to show USD equivalent of both the DHB amount and ETH cost.
+
+### Technical details
+
+- All contract infrastructure exists: `getSwapQuote`, `applySlippage`, `swapETHForDHB` in `src/lib/contracts/uniswap-swap.ts`
+- Smart Account (AA) writes handle gas abstraction automatically
+- Uniswap V3 pool: WETH/DHB on Base, 1% fee tier, router at `0x2626664c2603336E57B271c5C0b26F421741e481`
+- No new backend or edge functions needed — pure on-chain swap
 
