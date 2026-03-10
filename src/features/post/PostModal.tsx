@@ -140,7 +140,6 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         isScheduled={!!state.scheduledDate}
         onOpenCategories={() => setCategoryDrawerOpen(true)}
       />
-      />
     </>
   );
 
