@@ -21,10 +21,11 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import ethLogo from '@/assets/eth-logo.png';
 import bnbLogo from '@/assets/bnb-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
+import usdcLogo from '@/assets/usdc-logo.png';
 import btcLogo from '@/assets/btc-logo.png';
 
 const TOKEN_ICONS: Record<string, string> = {
-  ETH: ethLogo, BNB: bnbLogo, USDT: usdtLogo, BTC: btcLogo, WETH: ethLogo, DHB: dehubCoin,
+  ETH: ethLogo, BNB: bnbLogo, USDT: usdtLogo, USDC: usdcLogo, BTC: btcLogo, WETH: ethLogo, DHB: dehubCoin,
 };
 
 const PRESETS = [
