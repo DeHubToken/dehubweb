@@ -627,6 +627,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
 
         // Send immediately — backend uses Alchemy webhook to confirm async (per chat-system.md)
         feeTxHash = result.hash;
+        // Track this tx as locally confirmed so we don't show "confirming payment..." forever
+        if (feeTxHash) confirmedTxHashes.current.add(feeTxHash.toLowerCase());
 
         toast.success(`Paid ${activeFee.toLocaleString()} DHB`, { id: 'dm-fee-send', duration: 2000 });
 
