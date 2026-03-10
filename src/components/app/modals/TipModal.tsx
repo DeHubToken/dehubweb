@@ -12,7 +12,7 @@ import { Gem, Loader2 } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+
 import {
   Drawer,
   DrawerContent,
@@ -121,21 +121,20 @@ export function TipModal({
                 placeholder="Enter amount"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="pl-11 bg-white/5 border-white/10 text-white placeholder:text-white/40 h-12"
+                className="pl-11 bg-white/5 border-white/10 text-white placeholder:text-white/40 h-12 rounded-xl"
               />
             </div>
           </div>
 
           <div className="flex gap-3 mt-2">
-            <LiquidGlassBubble
-              shimmer={false}
-              className="flex-1 cursor-pointer"
+            <Button
+              variant="glass"
+              className="flex-1"
               onClick={isTipping ? undefined : () => onOpenChange(false)}
+              disabled={isTipping}
             >
-              <span className="block text-center text-white text-sm font-medium">
-                {t('common.close', 'Close')}
-              </span>
-            </LiquidGlassBubble>
+              {t('common.close', 'Close')}
+            </Button>
             <Button
               variant="glass"
               className="flex-1 bg-yellow-500/25 hover:bg-yellow-500/35 border-yellow-500/40 text-yellow-300"
@@ -148,9 +147,7 @@ export function TipModal({
                   {t('tip.sending', 'Sending...')}
                 </>
               ) : (
-                <>
-                  {t('tip.send', 'Send')}
-                </>
+                t('tip.send', 'Send')
               )}
             </Button>
           </div>
