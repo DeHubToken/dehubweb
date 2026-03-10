@@ -1,35 +1,42 @@
 
 
-## Fix: Auto-reload on chunk load failures
+## Add Categories Section to Post Info Page
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+**What**: Display post categories as pills/badges below the Content section on the Post Info page.
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+**Where**: `src/pages/app/PostInfoPage.tsx`, after the content section (line 902), before the closing `</div>` on line 905.
 
-### Changes
+**How**:
+- Normalize `nftInfo.category` (can be `string | string[]`) into an array
+- Render a new section with `Tag` icon header and category pills using the same card style (`bg-white/5 rounded-xl p-4 border border-white/10`)
+- Each category rendered as a small pill (`bg-white/10 rounded-lg px-3 py-1.5 text-sm text-white`)
+- Only show the section if categories exist and array is non-empty
+- `Tag` icon is already imported on line 14
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+**Implementation** — insert after line 902:
+```tsx
+{(() => {
+  const categories = Array.isArray(nftInfo.category) 
+    ? nftInfo.category 
+    : nftInfo.category ? [nftInfo.category] : [];
+  if (categories.length === 0) return null;
+  return (
+    <section className="bg-white/5 rounded-xl p-4 border border-white/10">
+      <h2 className="text-sm font-medium text-white/60 mb-3 flex items-center gap-2">
+        <Tag className="w-4 h-4" />
+        Categories
+      </h2>
+      <div className="flex flex-wrap gap-2">
+        {categories.map((cat) => (
+          <span key={cat} className="px-3 py-1.5 bg-white/10 rounded-lg text-sm text-white">
+            {cat}
+          </span>
+        ))}
+      </div>
+    </section>
+  );
+})()}
+```
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
-
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
-
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+**File**: `src/pages/app/PostInfoPage.tsx` (1 file, ~15 lines added)
 
