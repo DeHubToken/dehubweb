@@ -61,9 +61,9 @@ export function renderTextWithLinks(text: string): ReactNode[] {
   const parts: ReactNode[] = [];
   let lastIndex = 0;
   
-  // Combined regex: match URLs, @mentions, or $cashtags
+  // Combined regex: match emails, URLs, @mentions, or $cashtags
   const combinedRegex = new RegExp(
-    `(${URL_REGEX.source})|(@[a-zA-Z0-9_][a-zA-Z0-9_.-]*)|(\\$[a-zA-Z]{1,20})`,
+    `([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})|(${URL_REGEX.source})|(@[a-zA-Z0-9_][a-zA-Z0-9_.-]*)|(\\$[a-zA-Z]{1,20})`,
     'gi'
   );
   
