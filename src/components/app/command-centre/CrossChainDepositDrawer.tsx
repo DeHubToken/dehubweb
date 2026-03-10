@@ -155,8 +155,8 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const estimatedDhbOut = quote?.amount_out
-    ? (parseInt(quote.amount_out) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 2 })
+  const estimatedOut = quote?.amount_out
+    ? (parseInt(quote.amount_out) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 6 })
     : null;
 
   return (
