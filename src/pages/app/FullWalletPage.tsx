@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
+import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart, User, Lock, Minus, CreditCard } from 'lucide-react';
@@ -74,6 +75,7 @@ export default function FullWalletPage() {
   const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [buyDrawerOpen, setBuyDrawerOpen] = useState(false);
+  const [crossChainBuyOpen, setCrossChainBuyOpen] = useState(false);
   const [importChainId, setImportChainId] = useState<ChainId>(BASE_CHAIN_ID);
   const [selectedToken, setSelectedToken] = useState<WalletToken | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -403,19 +405,20 @@ export default function FullWalletPage() {
             <button
               onClick={() => {
                 setBuyDrawerOpen(false);
-                window.open('https://app.uniswap.org/swap?chain=base', '_blank');
+                setTimeout(() => setCrossChainBuyOpen(true), 200);
               }}
               className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
             >
               <ShoppingCart className="w-5 h-5 text-white/70" />
               <div className="text-left">
                 <span className="text-sm font-medium text-white">Buy with Crypto</span>
-                <p className="text-xs text-white/40">Swap tokens on Uniswap DEX</p>
+                <p className="text-xs text-white/40">BTC, SOL, ETH, USDC & more → DHB</p>
               </div>
             </button>
           </div>
         </DrawerContent>
       </Drawer>
+      <CrossChainDepositDrawer open={crossChainBuyOpen} onOpenChange={setCrossChainBuyOpen} />
     </div>
   );
 }
