@@ -25,18 +25,23 @@ Deno.serve(async (req) => {
         });
       }
 
-      const quotePayload: Record<string, unknown> = {
-        defuse_asset_identifier_in: originAsset,
-        defuse_asset_identifier_out: destinationAsset,
-        min_deadline_ms: 600000,
-        destination: recipient,
-      };
+      // Build deadline 10 minutes from now
+      const deadline = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-      if (amountType === 'out') {
-        quotePayload.exact_amount_out = amount;
-      } else {
-        quotePayload.exact_amount_in = amount;
-      }
+      const quotePayload = {
+        dry: false,
+        swapType: amountType === 'out' ? 'EXACT_OUTPUT' : 'EXACT_INPUT',
+        slippageTolerance: 100, // 1% (basis points)
+        originAsset,
+        depositType: 'ORIGIN_CHAIN',
+        destinationAsset,
+        amount,
+        refundTo: recipient,
+        refundType: 'ORIGIN_CHAIN',
+        recipient,
+        recipientType: 'DESTINATION_CHAIN',
+        deadline,
+      };
 
       const quoteRes = await fetch(`${ONE_CLICK_API}/quote`, {
         method: 'POST',
