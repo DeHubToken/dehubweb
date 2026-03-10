@@ -538,13 +538,10 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, w
               onOpenChange(false);
               if (grouped.symbol === 'DHB') {
                 navigate('/app/buy');
+              } else if (['ETH', 'BTC', 'USDT', 'USDC', 'BNB'].includes(grouped.symbol)) {
+                onBuyCrypto(grouped.symbol);
               } else {
-                const dexUrl = getDexBuyLink(grouped.symbol);
-                if (dexUrl) {
-                  window.open(dexUrl, '_blank');
-                } else {
-                  window.open('https://app.uniswap.org/swap?chain=base', '_blank');
-                }
+                toast.info('Buy not available for this token yet');
               }
             }}
           >
