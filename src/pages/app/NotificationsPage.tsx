@@ -673,7 +673,7 @@ export default function NotificationsPage() {
     const secondActorUsernames = allNotifications
       .filter(n => (n as any).aggregatedCount > 1 && (n as any).latestActorNames?.length > 1)
       .flatMap(n => ((n as any).latestActorNames as string[]).slice(1))
-      .filter(name => Boolean(name) && !enrichedRef.current.has(`username:${name.toLowerCase()}`));
+      .filter(name => Boolean(name) && !moduleEnrichedKeys.has(`username:${name.toLowerCase()}`));
     
     const uniqueNewAddresses = [...new Set(newAddresses)];
     const uniqueNewUsernames = [...new Set(secondActorUsernames)];
