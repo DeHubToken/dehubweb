@@ -122,10 +122,12 @@ function MessageBubble({
   message,
   isOwnMessage,
   highlightText,
+  confirmedTxHashes,
 }: {
   message: DmMessage;
   isOwnMessage: boolean;
   highlightText?: string;
+  confirmedTxHashes: React.MutableRefObject<Set<string>>;
 }) {
   const avatarUrl = getMediaUrl(message.sender?.avatarImageUrl);
   const displayName = message.sender?.displayName || message.sender?.username ||
