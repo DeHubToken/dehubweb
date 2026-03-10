@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { LayoutGrid, Search } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { TickerLogo } from './TickerLogo';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { cn } from '@/lib/utils';
