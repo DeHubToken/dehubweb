@@ -76,6 +76,7 @@ export default function FullWalletPage() {
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [buyDrawerOpen, setBuyDrawerOpen] = useState(false);
   const [crossChainBuyOpen, setCrossChainBuyOpen] = useState(false);
+  const [crossChainDestSymbol, setCrossChainDestSymbol] = useState<string>('ETH');
   const [importChainId, setImportChainId] = useState<ChainId>(BASE_CHAIN_ID);
   const [selectedToken, setSelectedToken] = useState<WalletToken | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
