@@ -305,7 +305,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
                 </div>
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-white/50">You'll receive</span>
-                  <span className="text-white font-mono">{estimatedOut} ETH</span>
+                  <span className="text-white font-mono">{estimatedOut} {destSymbol}</span>
                 </div>
               </div>
 
