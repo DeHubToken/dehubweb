@@ -16,7 +16,7 @@ import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart }
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
-import { apiCall } from '@/lib/api/dehub/core';
+import { apiCall, getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
 import { DmTipDialog } from './DmTipDialog';
@@ -643,16 +643,45 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         // so the message is delivered to the receiver in real time without waiting for the Alchemy webhook.
         await result.wait(1);
 
-        // Register payment intent with backend (required for Alchemy webhook to link tx to DM fee)
-        try {
-          await apiCall('/api/dm/verify-dm-fee', {
-            method: 'POST',
-            body: { txHash: feeTxHash, conversationId: resolvedConversationId, senderAddress: walletAddress, receiverAddress: otherUser?.address },
-            requiresAuth: true,
+        // Register payment intent + retry until backend confirms (Alchemy webhook can lag 2-8s after block).
+        // 201 = backend found the tx on-chain via Alchemy → TipAndDmTnx created as confirmed → sendMessage delivers to receiver immediately.
+        // 202 = Alchemy webhook hasn't fired yet → TipAndDmTnx pending → message stays pending until webhook arrives (receiver won't see it).
+        {
+          const verifyBody = JSON.stringify({
+            txHash: feeTxHash,
+            conversationId: resolvedConversationId,
+            senderAddress: walletAddress,
+            receiverAddress: otherUser?.address,
           });
-          console.log('[DM Fee] verify-dm-fee registered:', feeTxHash);
-        } catch (verifyErr) {
-          console.warn('[DM Fee] verify-dm-fee failed (non-fatal):', verifyErr);
+          const verifyHeaders: HeadersInit = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${getAuthToken()}`,
+          };
+
+          let confirmed = false;
+          // Try up to 4 times (0s, 3s, 5s, 5s gaps) — total ~13s max wait
+          const delays = [0, 3000, 5000, 5000];
+          for (const delay of delays) {
+            if (delay > 0) await new Promise(res => setTimeout(res, delay));
+            try {
+              const res = await fetch(`${DEHUB_API_BASE}/api/dm/verify-dm-fee`, {
+                method: 'POST',
+                headers: verifyHeaders,
+                body: verifyBody,
+              });
+              console.log(`[DM Fee] verify-dm-fee status: ${res.status}`);
+              if (res.status === 201) {
+                confirmed = true;
+                break;
+              }
+              // 202 = still pending, retry
+            } catch (e) {
+              console.warn('[DM Fee] verify-dm-fee request error:', e);
+            }
+          }
+          if (!confirmed) {
+            console.warn('[DM Fee] Fee never confirmed by backend after retries — message may stay pending for receiver');
+          }
         }
 
         toast.success(`Paid ${activeFee.toLocaleString()} DHB`, { id: 'dm-fee-send', duration: 2000 });
