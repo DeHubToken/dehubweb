@@ -306,9 +306,10 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
               )}
 
               <Button
+                variant="glass"
                 onClick={handleSwap}
                 disabled={!amountInWithSlippage || !!insufficientBalance || swapping || quoting || !dhbAmount}
-                className="w-full rounded-xl h-12 text-sm font-semibold bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0"
+                className="w-full rounded-xl h-12 text-sm font-semibold"
               >
                 {swapping ? (
                   <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Swapping…</>
