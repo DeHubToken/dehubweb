@@ -79,12 +79,9 @@ export const WhatsHappening = memo(function WhatsHappening() {
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <span className="text-xs text-zinc-500 font-mono w-4 shrink-0">{i + 1}</span>
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <LayoutGrid className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
-                    <span className="text-sm text-zinc-200 truncate group-hover:text-white transition-colors">
-                      {cat.name}
-                    </span>
-                  </div>
+                  <span className="text-sm text-zinc-200 truncate group-hover:text-white transition-colors">
+                    {cat.name}
+                  </span>
                 </div>
                 <span className="text-[11px] text-zinc-500 shrink-0 ml-2">
                   {cat.post_count} {cat.post_count === 1 ? 'post' : 'posts'}
