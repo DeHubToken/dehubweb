@@ -50,32 +50,32 @@ export const WhatsHappening = memo(function WhatsHappening() {
         <h3 className="font-bold text-lg text-white text-center">{t('sidebar.talkOfTheTown')}</h3>
       </div>
 
-      {/* Tab switcher */}
-      <div className="flex gap-1.5 mb-3">
-        {(['posts', 'tickers'] as Tab[]).map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={cn(
-              'relative flex-1 py-1.5 text-xs font-medium rounded-xl transition-colors duration-200 overflow-hidden',
-              'backdrop-blur-xl border',
-              activeTab === tab
-                ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 border-white/30 text-white shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
-                : 'bg-white/5 border-white/10 text-zinc-400 hover:text-zinc-300 hover:bg-white/10'
-            )}
-          >
-            {activeTab === tab && (
-              <motion.div
-                layoutId="tott-tab-indicator"
-                className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none"
-                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                layoutScroll
-              />
-            )}
-            <span className="relative z-10">{t(`sidebar.${tab}`)}</span>
-          </button>
-        ))}
-      </div>
+      {/* Tab switcher - single connected toggle */}
+      <LayoutGroup id="tott">
+        <div className="relative flex bg-zinc-800/50 rounded-xl p-0.5 mb-3">
+          {(['posts', 'tickers'] as Tab[]).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className="relative flex-1 py-1.5 text-xs font-medium rounded-[10px] z-10 transition-colors duration-150"
+            >
+              {activeTab === tab && (
+                <motion.div
+                  layoutId="tott-tab-bg"
+                  className="absolute inset-0 rounded-[10px] bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
+                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                />
+              )}
+              <span className={cn(
+                'relative z-10 transition-colors duration-150',
+                activeTab === tab ? 'text-white' : 'text-zinc-500'
+              )}>
+                {t(`sidebar.${tab}`)}
+              </span>
+            </button>
+          ))}
+        </div>
+      </LayoutGroup>
 
       {/* Tab content - fixed min-height prevents scroll jumps */}
       <div style={{ minHeight: 280 }}>
