@@ -78,6 +78,8 @@ export function PostAccessToggles({
   showTitle,
   setShowTitle,
   hasVideoOrAudio,
+  categoryDrawerOpen: categoryDrawerOpenProp,
+  setCategoryDrawerOpen: setCategoryDrawerOpenProp,
 }: PostAccessTogglesProps) {
   const { t } = useI18n();
   // Mobile drawer states
