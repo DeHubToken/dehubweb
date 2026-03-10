@@ -83,7 +83,7 @@ export function QuickBuyButton({ symbol, tokenType }: QuickBuyButtonProps) {
                   <ArrowRightLeft className="w-5 h-5 text-white/70" />
                   <div className="text-left">
                     <span className="text-sm font-medium text-white">Swap from ETH</span>
-                    <p className="text-xs text-white/40">Convert your ETH to DHB via Uniswap</p>
+                    <p className="text-xs text-white/40">Convert your ETH to DHB</p>
                   </div>
                 </button>
               </>
