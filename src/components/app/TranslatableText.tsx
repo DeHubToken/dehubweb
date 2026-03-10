@@ -55,6 +55,36 @@ interface TranslatableTextProps {
 }
 
 /**
+ * Inline email copy button - shows mail icon with tooltip, copies on click
+ */
+function EmailCopyInline({ email }: { email: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText(email).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          onClick={handleClick}
+          className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/20 transition-colors text-xs text-white/70 hover:text-white align-middle"
+        >
+          {copied ? <Check className="w-3 h-3 text-green-400" /> : <Mail className="w-3 h-3" />}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>{copied ? 'Copied!' : email}</TooltipContent>
+    </Tooltip>
+  );
+}
+
+/**
  * Renders text with URLs replaced by clickable link emojis and @mentions as profile links
  */
 export function renderTextWithLinks(text: string): ReactNode[] {
