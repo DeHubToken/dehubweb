@@ -1072,6 +1072,11 @@
   "sidebar": {
     "talkOfTheTown": "Talk of The Town",
     "nothingTrending": "Nothing trending yet",
+    "posts": "Posts",
+    "tickers": "Tickers",
+    "noTickersYet": "Search $tickers to see them here",
+    "noCategoriesYet": "No trending categories yet",
+    "searches": "searches",
     "post": "Post",
     "logOut": "Log out",
     "logIn": "Log in"
