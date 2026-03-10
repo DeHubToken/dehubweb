@@ -284,7 +284,7 @@ serve(async (req) => {
                         user.aboutMe || `Connect with ${displayName} on DeHub, the open source alternative to legacy media.`,
                     image: buildAvatarUrl(user),
                     url: profileUrl,
-                    twitterCard: "summary_large_image",
+                    twitterCard: "summary",
                     imageWidth: 400,
                     imageHeight: 400,
                     functionBaseUrl,
