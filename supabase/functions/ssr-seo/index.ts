@@ -136,8 +136,10 @@ function generateMetaHTML(data: {
     const title = data.title.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const description = data.description.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const imageUrl = ensureAbsoluteUrl(data.image);
-    // For og:image tags, use proxied URL so scrapers get correct Content-Type
+    // og:image uses proxied URL so Facebook/OG scrapers get correct Content-Type
     const ogImageUrl = data.functionBaseUrl ? buildProxiedImageUrl(data.functionBaseUrl, imageUrl) : imageUrl;
+    // twitter:image uses the direct CDN URL — Twitter's crawler often fails on Supabase proxy URLs
+    const twitterImageUrl = imageUrl;
     const imgWidth = data.imageWidth;
     const imgHeight = data.imageHeight;
     const mimeType = getMimeType(imageUrl);
@@ -195,7 +197,7 @@ function generateMetaHTML(data: {
   <meta name="twitter:url" content="${data.url}">
   <meta name="twitter:title" content="${title}">
   <meta name="twitter:description" content="${description}">
-  <meta name="twitter:image" content="${ogImageUrl}">
+  <meta name="twitter:image" content="${twitterImageUrl}">
   <meta name="twitter:site" content="@DeHubApp">${twitterVideoTags}
 
   ${!data.isBot
@@ -282,7 +284,7 @@ serve(async (req) => {
                         user.aboutMe || `Connect with ${displayName} on DeHub, the open source alternative to legacy media.`,
                     image: buildAvatarUrl(user),
                     url: profileUrl,
-                    twitterCard: "summary",
+                    twitterCard: "summary_large_image",
                     imageWidth: 400,
                     imageHeight: 400,
                     functionBaseUrl,
