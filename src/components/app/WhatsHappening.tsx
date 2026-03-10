@@ -145,7 +145,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
                   </div>
                 </div>
                 <span className="text-[11px] text-zinc-500 shrink-0 ml-2">
-                  {ticker.count} {t('sidebar.searches')}
+                  {ticker.search_count} {t('sidebar.searches')}
                 </span>
               </button>
             ))}
