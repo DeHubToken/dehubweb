@@ -460,7 +460,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={handleClose}>
-        <DrawerContent className="bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden">
+        <DrawerContent className="bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[200]" overlayClassName="z-[200]">
           <DrawerHeader className="px-6 pt-6 pb-4">
             {headerContent}
             <DrawerTitle className="text-base font-medium text-white mt-4 text-center">
@@ -475,7 +475,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} aria-describedby={undefined} className="bg-black/40 backdrop-blur-2xl saturate-[180%] border border-white/10 max-w-sm p-0 gap-0 rounded-2xl overflow-hidden [&>button]:hidden">
+      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} aria-describedby={undefined} overlayClassName="z-[200]" className="bg-black/40 backdrop-blur-2xl saturate-[180%] border border-white/10 max-w-sm p-0 gap-0 rounded-2xl overflow-hidden [&>button]:hidden z-[200]">
         <DialogHeader className="px-6 pt-6 pb-4">
           {headerContent}
           <DialogTitle className="text-base font-medium text-white mt-4 text-center">
