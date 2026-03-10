@@ -1,5 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
@@ -7,7 +5,7 @@ const corsHeaders = {
 
 const ONE_CLICK_API = 'https://1click.chaindefuser.com/v0';
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -30,16 +28,14 @@ serve(async (req) => {
       const quotePayload: Record<string, unknown> = {
         defuse_asset_identifier_in: originAsset,
         defuse_asset_identifier_out: destinationAsset,
-        exact_amount_in: amountType === 'in' ? amount : undefined,
-        exact_amount_out: amountType === 'out' ? amount : undefined,
-        min_deadline_ms: 600000, // 10 minutes
+        min_deadline_ms: 600000,
         destination: recipient,
       };
 
-      // Default to exact_amount_in if no type specified
-      if (!amountType || amountType === 'in') {
+      if (amountType === 'out') {
+        quotePayload.exact_amount_out = amount;
+      } else {
         quotePayload.exact_amount_in = amount;
-        delete quotePayload.exact_amount_out;
       }
 
       const quoteRes = await fetch(`${ONE_CLICK_API}/quote`, {
@@ -50,14 +46,8 @@ serve(async (req) => {
 
       const quoteData = await quoteRes.json();
 
-      if (!quoteRes.ok) {
-        return new Response(JSON.stringify({ error: quoteData?.error || 'Quote failed', details: quoteData }), {
-          status: quoteRes.status,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      }
-
       return new Response(JSON.stringify(quoteData), {
+        status: quoteRes.ok ? 200 : quoteRes.status,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -71,11 +61,7 @@ serve(async (req) => {
         });
       }
 
-      const statusRes = await fetch(`${ONE_CLICK_API}/status/${depositAddress}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
+      const statusRes = await fetch(`${ONE_CLICK_API}/status/${depositAddress}`);
       const statusData = await statusRes.json();
 
       return new Response(JSON.stringify(statusData), {
@@ -83,7 +69,7 @@ serve(async (req) => {
       });
     }
 
-    return new Response(JSON.stringify({ error: 'Invalid action. Use ?action=quote or ?action=status' }), {
+    return new Response(JSON.stringify({ error: 'Use ?action=quote or ?action=status' }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
