@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import {
   SUPPORTED_CHAINS,
-  DHB_ASSET_ID,
+  DEFAULT_DESTINATION_ASSET_ID,
   type ChainInfo,
   type TokenInfo,
   type QuoteResponse,
