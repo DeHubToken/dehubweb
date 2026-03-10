@@ -553,8 +553,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
             className="flex-col h-auto py-4 gap-2 rounded-xl"
             onClick={() => {
               if (grouped.symbol === 'DHB') {
-                onOpenChange(false);
-                navigate('/app/buy');
+                setBuyMethodOpen(true);
               } else {
                 setBuyMethodOpen(true);
               }
