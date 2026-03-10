@@ -672,14 +672,14 @@ export default function NotificationsPage() {
       .map(n => n.actorAddress?.toLowerCase())
       .filter((addr): addr is string => Boolean(addr) && !moduleEnrichedKeys.has(addr));
     
-    // Also collect usernames from latestActorNames (for aggregated notification avatars)
-    const secondActorUsernames = allNotifications
-      .filter(n => (n as any).aggregatedCount > 1 && (n as any).latestActorNames?.length > 1)
-      .flatMap(n => ((n as any).latestActorNames as string[]).slice(1))
+    // Also collect ALL usernames from latestActorNames (for aggregated notification avatars)
+    const aggregatedActorUsernames = allNotifications
+      .filter(n => (n as any).aggregatedCount > 1 && (n as any).latestActorNames?.length > 0)
+      .flatMap(n => ((n as any).latestActorNames as string[]))
       .filter(name => Boolean(name) && !moduleEnrichedKeys.has(`username:${name.toLowerCase()}`));
     
     const uniqueNewAddresses = [...new Set(newAddresses)];
-    const uniqueNewUsernames = [...new Set(secondActorUsernames)];
+    const uniqueNewUsernames = [...new Set(aggregatedActorUsernames)];
     
     if (uniqueNewAddresses.length === 0 && uniqueNewUsernames.length === 0) {
       setEnrichmentReady(true);
