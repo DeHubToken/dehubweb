@@ -16,7 +16,8 @@ export const DEFAULT_DESTINATION = DESTINATION_ASSETS.ETH;
 export interface ChainInfo {
   id: string;
   name: string;
-  icon: string; // emoji or URL
+  /** Token symbol key for icon lookup, or empty for chain-level icon */
+  iconKey: string;
   tokens: TokenInfo[];
 }
 
@@ -25,7 +26,8 @@ export interface TokenInfo {
   name: string;
   assetId: string;
   decimals: number;
-  icon: string;
+  /** Token symbol key for icon lookup (e.g. 'ETH', 'USDC') */
+  iconKey: string;
 }
 
 export interface QuoteResponse {
@@ -49,91 +51,83 @@ export const SUPPORTED_CHAINS: ChainInfo[] = [
   {
     id: 'eth',
     name: 'Ethereum',
-    icon: '⟠',
+    iconKey: 'ETH',
     tokens: [
-      { symbol: 'ETH', name: 'Ether', assetId: 'nep141:eth.omft.near', decimals: 18, icon: '⟠' },
-      { symbol: 'USDC', name: 'USD Coin', assetId: 'nep141:eth-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.omft.near', decimals: 6, icon: '💵' },
-      { symbol: 'USDT', name: 'Tether', assetId: 'nep141:eth-0xdac17f958d2ee523a2206206994597c13d831ec7.omft.near', decimals: 6, icon: '💲' },
+      { symbol: 'ETH', name: 'Ether', assetId: 'nep141:eth.omft.near', decimals: 18, iconKey: 'ETH' },
+      { symbol: 'USDC', name: 'USD Coin', assetId: 'nep141:eth-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.omft.near', decimals: 6, iconKey: 'USDC' },
+      { symbol: 'USDT', name: 'Tether', assetId: 'nep141:eth-0xdac17f958d2ee523a2206206994597c13d831ec7.omft.near', decimals: 6, iconKey: 'USDT' },
     ],
   },
   {
     id: 'base',
     name: 'Base',
-    icon: '🔵',
+    iconKey: 'BASE',
     tokens: [
-      { symbol: 'ETH', name: 'Ether', assetId: 'nep141:base-0x0000000000000000000000000000000000000000.omft.near', decimals: 18, icon: '⟠' },
-      { symbol: 'USDC', name: 'USD Coin', assetId: 'nep141:base-0x833589fcd6edb6e08f4c7c32d4f71b54bda02913.omft.near', decimals: 6, icon: '💵' },
+      { symbol: 'ETH', name: 'Ether', assetId: 'nep141:base-0x0000000000000000000000000000000000000000.omft.near', decimals: 18, iconKey: 'ETH' },
+      { symbol: 'USDC', name: 'USD Coin', assetId: 'nep141:base-0x833589fcd6edb6e08f4c7c32d4f71b54bda02913.omft.near', decimals: 6, iconKey: 'USDC' },
     ],
   },
   {
     id: 'arb',
     name: 'Arbitrum',
-    icon: '🔷',
+    iconKey: 'ARB',
     tokens: [
-      { symbol: 'ETH', name: 'Ether', assetId: 'nep141:arb-0x0000000000000000000000000000000000000000.omft.near', decimals: 18, icon: '⟠' },
-      { symbol: 'USDC', name: 'USD Coin', assetId: 'nep141:arb-0xaf88d065e77c8cc2239327c5edb3a432268e5831.omft.near', decimals: 6, icon: '💵' },
-      { symbol: 'USDT', name: 'Tether', assetId: 'nep141:arb-0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9.omft.near', decimals: 6, icon: '💲' },
+      { symbol: 'ETH', name: 'Ether', assetId: 'nep141:arb-0x0000000000000000000000000000000000000000.omft.near', decimals: 18, iconKey: 'ETH' },
+      { symbol: 'USDC', name: 'USD Coin', assetId: 'nep141:arb-0xaf88d065e77c8cc2239327c5edb3a432268e5831.omft.near', decimals: 6, iconKey: 'USDC' },
+      { symbol: 'USDT', name: 'Tether', assetId: 'nep141:arb-0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9.omft.near', decimals: 6, iconKey: 'USDT' },
     ],
   },
   {
     id: 'sol',
     name: 'Solana',
-    icon: '◎',
+    iconKey: 'SOL',
     tokens: [
-      { symbol: 'SOL', name: 'Solana', assetId: 'nep141:sol-native.omft.near', decimals: 9, icon: '◎' },
-      { symbol: 'USDC', name: 'USD Coin', assetId: 'nep141:sol-epjfwdd5aufqssqem2qn1xzybapc8g4weggkzwytdt1v.omft.near', decimals: 6, icon: '💵' },
+      { symbol: 'SOL', name: 'Solana', assetId: 'nep141:sol-native.omft.near', decimals: 9, iconKey: 'SOL' },
+      { symbol: 'USDC', name: 'USD Coin', assetId: 'nep141:sol-epjfwdd5aufqssqem2qn1xzybapc8g4weggkzwytdt1v.omft.near', decimals: 6, iconKey: 'USDC' },
     ],
   },
   {
     id: 'bsc',
     name: 'BNB Chain',
-    icon: '🟡',
+    iconKey: 'BNB',
     tokens: [
-      { symbol: 'BNB', name: 'BNB', assetId: 'nep141:bsc-native.omft.near', decimals: 18, icon: '🟡' },
-      { symbol: 'USDT', name: 'Tether', assetId: 'nep141:bsc-0x55d398326f99059ff775485246999027b3197955.omft.near', decimals: 18, icon: '💲' },
+      { symbol: 'BNB', name: 'BNB', assetId: 'nep141:bsc-native.omft.near', decimals: 18, iconKey: 'BNB' },
+      { symbol: 'USDT', name: 'Tether', assetId: 'nep141:bsc-0x55d398326f99059ff775485246999027b3197955.omft.near', decimals: 18, iconKey: 'USDT' },
     ],
   },
   {
     id: 'polygon',
     name: 'Polygon',
-    icon: '🟣',
+    iconKey: 'POL',
     tokens: [
-      { symbol: 'POL', name: 'POL', assetId: 'nep141:pol-native.omft.near', decimals: 18, icon: '🟣' },
-      { symbol: 'USDC', name: 'USD Coin', assetId: 'nep141:pol-0x3c499c542cef5e3811e1192ce70d8cc03d5c3359.omft.near', decimals: 6, icon: '💵' },
+      { symbol: 'POL', name: 'POL', assetId: 'nep141:pol-native.omft.near', decimals: 18, iconKey: 'POL' },
+      { symbol: 'USDC', name: 'USD Coin', assetId: 'nep141:pol-0x3c499c542cef5e3811e1192ce70d8cc03d5c3359.omft.near', decimals: 6, iconKey: 'USDC' },
     ],
   },
   {
     id: 'avax',
     name: 'Avalanche',
-    icon: '🔺',
+    iconKey: 'AVAX',
     tokens: [
-      { symbol: 'AVAX', name: 'Avalanche', assetId: 'nep141:avax-native.omft.near', decimals: 18, icon: '🔺' },
-      { symbol: 'USDC', name: 'USD Coin', assetId: 'nep141:avax-0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e.omft.near', decimals: 6, icon: '💵' },
+      { symbol: 'AVAX', name: 'Avalanche', assetId: 'nep141:avax-native.omft.near', decimals: 18, iconKey: 'AVAX' },
+      { symbol: 'USDC', name: 'USD Coin', assetId: 'nep141:avax-0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e.omft.near', decimals: 6, iconKey: 'USDC' },
     ],
   },
   {
     id: 'near',
     name: 'NEAR',
-    icon: '🌐',
+    iconKey: 'NEAR',
     tokens: [
-      { symbol: 'NEAR', name: 'NEAR', assetId: 'near:mainnet', decimals: 24, icon: '🌐' },
-      { symbol: 'USDC', name: 'USD Coin', assetId: 'nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1', decimals: 6, icon: '💵' },
+      { symbol: 'NEAR', name: 'NEAR', assetId: 'near:mainnet', decimals: 24, iconKey: 'NEAR' },
+      { symbol: 'USDC', name: 'USD Coin', assetId: 'nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1', decimals: 6, iconKey: 'USDC' },
     ],
   },
   {
     id: 'btc',
     name: 'Bitcoin',
-    icon: '₿',
+    iconKey: 'BTC',
     tokens: [
-      { symbol: 'BTC', name: 'Bitcoin', assetId: 'nep141:btc.omft.near', decimals: 8, icon: '₿' },
-    ],
-  },
-  {
-    id: 'doge',
-    name: 'Dogecoin',
-    icon: '🐕',
-    tokens: [
-      { symbol: 'DOGE', name: 'Dogecoin', assetId: 'nep141:doge.omft.near', decimals: 8, icon: '🐕' },
+      { symbol: 'BTC', name: 'Bitcoin', assetId: 'nep141:btc-native.omft.near', decimals: 8, iconKey: 'BTC' },
     ],
   },
 ];
