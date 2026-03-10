@@ -17,6 +17,7 @@ import { Languages, RotateCcw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
+import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 
 export { LANGUAGE_NAMES };
 import { cn } from '@/lib/utils';
