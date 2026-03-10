@@ -57,7 +57,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={cn(
-              'relative flex-1 py-1.5 text-xs font-medium rounded-2xl transition-colors duration-200 overflow-hidden',
+              'relative flex-1 py-1.5 text-xs font-medium rounded-xl transition-colors duration-200 overflow-hidden',
               'backdrop-blur-xl border',
               activeTab === tab
                 ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 border-white/30 text-white shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
