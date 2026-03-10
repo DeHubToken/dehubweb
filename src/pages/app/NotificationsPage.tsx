@@ -434,11 +434,13 @@ function NotificationItem({
           const hasMultipleActors = aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
           
           if (hasMultipleActors) {
-            // 2×2 grid: TL=avatar1, TR=avatar2, BL=avatar3, BR=type icon
+            // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
+            // Use latestActorNames for ALL slots to avoid duplicating the primary actorAddress
+            const actorName1 = aggNames && aggNames.length > 0 ? aggNames[0] : (notification.actorUsername || null);
             const actorName2 = aggNames && aggNames.length > 1 ? aggNames[1] : null;
             const actorName3 = aggNames && aggNames.length > 2 ? aggNames[2] : null;
             
-            // Find avatars for 2nd and 3rd actors from enriched data
+            // Find avatars for actors from enriched data
             const findAvatarByUsername = (username: string | null) => {
               if (!username) return undefined;
               for (const [, entry] of enrichedAvatars) {
@@ -448,6 +450,7 @@ function NotificationItem({
               }
               return undefined;
             };
+            const avatar1Url = findAvatarByUsername(actorName1) || avatarUrl;
             const avatar2Url = findAvatarByUsername(actorName2);
             const avatar3Url = findAvatarByUsername(actorName3);
             
@@ -474,8 +477,8 @@ function NotificationItem({
             
             return (
               <div className="grid grid-cols-2 grid-rows-2 gap-0.5 w-12 h-12 flex-shrink-0">
-                {/* Top-left: primary actor */}
-                {renderGridAvatar(avatarUrl, notification.actorUsername || fallbackLetter, profileLink, 'w-[23px] h-[23px]')}
+                {/* Top-left: primary actor (from latestActorNames[0]) */}
+                {renderGridAvatar(avatar1Url, actorName1 || notification.actorUsername || fallbackLetter, actorName1 ? `/${actorName1}` : profileLink, 'w-[23px] h-[23px]')}
                 {/* Top-right: 2nd actor */}
                 {renderGridAvatar(avatar2Url, actorName2, actorName2 ? `/${actorName2}` : null, 'w-[23px] h-[23px]')}
                 {/* Bottom-left: 3rd actor */}
