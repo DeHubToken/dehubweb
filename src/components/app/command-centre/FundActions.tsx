@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Copy, CreditCard, Send, ArrowDownToLine, ArrowUpFromLine, Check, Wallet } from 'lucide-react';
+import { Copy, CreditCard, Send, ArrowDownToLine, ArrowUpFromLine, Check, Wallet, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { SwapDrawer } from './SwapDrawer';
+import { CrossChainDepositDrawer } from './CrossChainDepositDrawer';
 
 export function FundActions() {
   const { walletAddress } = useAuth();
