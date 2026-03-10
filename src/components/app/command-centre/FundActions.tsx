@@ -158,6 +158,8 @@ export function FundActions() {
       </Drawer>
       {/* Swap Drawer */}
       <SwapDrawer open={swapOpen} onOpenChange={setSwapOpen} />
+      {/* Cross-Chain Deposit Drawer */}
+      <CrossChainDepositDrawer open={crossChainOpen} onOpenChange={setCrossChainOpen} />
     </>
   );
 }
