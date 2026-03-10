@@ -27,7 +27,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
 
   const handleCategoryClick = (categoryName: string) => {
     setFilterValue('home', 'category', categoryName);
-    window.dispatchEvent(new CustomEvent('category-selected', { detail: categoryName }));
+    window.dispatchEvent(new CustomEvent('category-filter-changed', { detail: categoryName }));
     navigate('/app');
   };
 
