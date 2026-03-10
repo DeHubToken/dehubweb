@@ -950,6 +950,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
                     (walletAddress?.toLowerCase() || user?._id)
                 }
                 highlightText={searchLower}
+                confirmedTxHashes={confirmedTxHashes}
               />
             ));
           })()}
