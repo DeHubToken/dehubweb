@@ -56,7 +56,7 @@ interface LoginModalProps {
 type LoginStep = 'main' | 'email' | 'sms' | 'wallets';
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
-  const { connectWithProvider, connectWithEmail, connectWithSMS, setWagmiAuthIntent, isConnecting } = useAuth();
+  const { connectWithProvider, connectWithEmail, connectWithSMS, connectWithWallet, setWagmiAuthIntent, isConnecting } = useAuth();
   const { isConnected: isWagmiAlreadyConnected, address: wagmiCurrentAddress } = useAccount();
   const { t } = useTranslation();
   const [step, setStep] = useState<LoginStep>('main');
