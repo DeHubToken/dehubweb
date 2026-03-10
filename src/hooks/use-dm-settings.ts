@@ -66,9 +66,9 @@ export function useDmSettings() {
     try { return localStorage.getItem('dehub_dnd') === 'true'; } catch { return false; }
   });
 
-  // Update DM settings via POST /api/dm/user-status/{address}
+  // Update DM status (who can message)
   const updateMutation = useMutation({
-    mutationFn: async (payload: { status: string; action: string; perMessageFee?: number }) => {
+    mutationFn: async (payload: { status: string; action: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
       await apiCall<any>(`/api/dm/user-status/${walletAddress.toLowerCase()}`, {
         method: 'POST',
@@ -86,19 +86,39 @@ export function useDmSettings() {
     },
   });
 
+  // Update fee separately — docs example sends only { perMessageFee } without status/action.
+  // Backend uses truthy check so 0 gets skipped when bundled; sending it alone fixes it.
+  const updateFeeMutation = useMutation({
+    mutationFn: async (fee: number) => {
+      if (!walletAddress) throw new Error('Not authenticated');
+      await apiCall<any>(`/api/dm/user-status/${walletAddress.toLowerCase()}`, {
+        method: 'POST',
+        body: { perMessageFee: fee },
+        requiresAuth: true,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dm-user-status', walletAddress] });
+      toast.success('DM settings updated');
+    },
+    onError: (error) => {
+      console.error('[useDmSettings] Failed to update fee:', error);
+      toast.error('Failed to update message fee');
+    },
+  });
+
   return {
     whoCanMessage,
     messageFee,
     doNotDisturb,
     isLoading,
-    isUpdating: updateMutation.isPending,
+    isUpdating: updateMutation.isPending || updateFeeMutation.isPending,
     updateWhoCanMessage: (value: WhoCanMessage) => {
       const payload = toStatusPayload(value);
       updateMutation.mutate(payload);
     },
     updateMessageFee: (fee: number) => {
-      const currentPayload = toStatusPayload(whoCanMessage);
-      updateMutation.mutate({ ...currentPayload, perMessageFee: fee });
+      updateFeeMutation.mutate(fee);
     },
     updateDoNotDisturb: (enabled: boolean) => {
       setDoNotDisturbLocal(enabled);
