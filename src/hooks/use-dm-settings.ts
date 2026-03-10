@@ -86,14 +86,14 @@ export function useDmSettings() {
     },
   });
 
-  // Update fee separately — docs example sends only { perMessageFee } without status/action.
-  // Backend uses truthy check so 0 gets skipped when bundled; sending it alone fixes it.
+  // Update fee — API requires status+action in every POST. Include current DM access state.
   const updateFeeMutation = useMutation({
     mutationFn: async (fee: number) => {
       if (!walletAddress) throw new Error('Not authenticated');
+      const payload = toStatusPayload(whoCanMessage);
       await apiCall<any>(`/api/dm/user-status/${walletAddress.toLowerCase()}`, {
         method: 'POST',
-        body: { perMessageFee: fee },
+        body: { ...payload, perMessageFee: fee },
         requiresAuth: true,
       });
     },
