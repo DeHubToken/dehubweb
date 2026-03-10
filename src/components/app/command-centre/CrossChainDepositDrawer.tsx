@@ -77,19 +77,24 @@ export function CrossChainDepositDrawer({ open, onOpenChange }: CrossChainDeposi
       // Convert amount to smallest unit
       const amountInSmallest = (parseFloat(amount) * Math.pow(10, selectedToken.decimals)).toFixed(0);
 
-      const { data, error } = await supabase.functions.invoke('cross-chain-quote', {
-        body: {
-          originAsset: selectedToken.assetId,
-          destinationAsset: DHB_ASSET_ID,
-          amount: amountInSmallest,
-          recipient: `base:${walletAddress}`,
-          amountType: 'in',
-        },
-        headers: { 'x-action': 'quote' },
-      });
+      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      const res = await fetch(
+        `https://${projectId}.supabase.co/functions/v1/cross-chain-quote?action=quote`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            originAsset: selectedToken.assetId,
+            destinationAsset: DHB_ASSET_ID,
+            amount: amountInSmallest,
+            recipient: `base:${walletAddress}`,
+            amountType: 'in',
+          }),
+        }
+      );
 
-      if (error) throw new Error(error.message);
-      if (data?.error) throw new Error(data.error);
+      const data = await res.json();
+      if (!res.ok || data?.error) throw new Error(data?.error || 'Quote failed');
 
       setQuote(data);
     } catch (err: any) {
