@@ -684,8 +684,8 @@ export default function NotificationsPage() {
     }
     
     // Mark as in-flight immediately to prevent duplicate calls
-    uniqueNewAddresses.forEach(addr => enrichedRef.current.add(addr));
-    uniqueNewUsernames.forEach(name => enrichedRef.current.add(`username:${name.toLowerCase()}`));
+    uniqueNewAddresses.forEach(addr => moduleEnrichedKeys.add(addr));
+    uniqueNewUsernames.forEach(name => moduleEnrichedKeys.add(`username:${name.toLowerCase()}`));
     
     const addressFetches = uniqueNewAddresses.map(async (addr) => {
       try {
