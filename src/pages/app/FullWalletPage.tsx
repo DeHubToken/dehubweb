@@ -597,7 +597,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
                 >
                   <Wallet className="w-5 h-5 text-white/70" />
                   <div className="text-left">
-                    <span className="text-sm font-medium text-white">Swap from ETH</span>
+                    <span className="text-sm font-medium text-white">Buy with Crypto</span>
                     <p className="text-xs text-white/40">Convert your ETH to DHB</p>
                   </div>
                 </button>
