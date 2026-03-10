@@ -27,6 +27,7 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
 import ethLogo from '@/assets/eth-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
+import usdcLogo from '@/assets/usdc-logo.png';
 import btcLogo from '@/assets/btc-logo.png';
 import baseLogo from '@/assets/icons/base-logo.png';
 
@@ -41,6 +42,7 @@ const TOKEN_ICONS: Record<string, string> = {
   ETH: ethLogo,
   BNB: bnbLogo,
   USDT: usdtLogo,
+  USDC: usdcLogo,
   BTC: btcLogo,
   WETH: ethLogo,
   WBNB: bnbLogo,
@@ -135,7 +137,7 @@ export default function FullWalletPage() {
         });
       }
     }
-    const ORDER: Record<string, number> = { DHB: 0, ETH: 1, BNB: 2, BTC: 3, USDT: 4 };
+    const ORDER: Record<string, number> = { DHB: 0, ETH: 1, BNB: 2, BTC: 3, USDT: 4, USDC: 5 };
     return Array.from(map.values()).sort((a, b) => (ORDER[a.symbol] ?? 99) - (ORDER[b.symbol] ?? 99));
   }, [allTokens]);
 
@@ -604,7 +606,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
               </>
             ) : (
               <>
-                {(['ETH', 'USDT'].includes(grouped?.symbol || '')) && walletAddress ? (
+                {(['ETH', 'USDT', 'USDC'].includes(grouped?.symbol || '')) && walletAddress ? (
                   <button
                     onClick={() => {
                       const url = `https://pay.coinbase.com/buy/select-asset?appId=default&addresses=${encodeURIComponent(JSON.stringify({ [walletAddress]: ['base'] }))}&assets=${encodeURIComponent(JSON.stringify([grouped!.symbol]))}`;

@@ -27,6 +27,7 @@ export const DEFAULT_TOKENS: Record<number, { address: string; symbol: string; n
   [BASE_CHAIN_ID]: [
     { address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c', symbol: 'DHB', name: 'DeHub', decimals: 18 },
     { address: '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2', symbol: 'USDT', name: 'Tether', decimals: 6 },
+    { address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', symbol: 'USDC', name: 'USD Coin', decimals: 6 },
     { address: '0x236aa50979D5f3De3Bd1Eeb40E81137F22ab794b', symbol: 'BTC', name: 'Bitcoin', decimals: 8, displaySymbol: 'BTC' },
   ],
   [BNB_CHAIN_ID]: [
