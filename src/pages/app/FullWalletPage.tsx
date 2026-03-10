@@ -308,6 +308,11 @@ export default function FullWalletPage() {
           if (g) handleSmartSend(g);
         }}
         onReceive={() => { setActionGrouped(null); setReceiveDialogOpen(true); }}
+        onBuyCrypto={(symbol) => {
+          setActionGrouped(null);
+          setCrossChainDestSymbol(symbol);
+          setTimeout(() => setCrossChainBuyOpen(true), 200);
+        }}
         walletAddress={walletAddress}
       />
 
