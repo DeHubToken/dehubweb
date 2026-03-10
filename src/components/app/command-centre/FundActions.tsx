@@ -20,6 +20,7 @@ export function FundActions() {
   const [transferOpen, setTransferOpen] = useState(false);
   const [withdrawTarget, setWithdrawTarget] = useState('');
   const [swapOpen, setSwapOpen] = useState(false);
+  const [crossChainOpen, setCrossChainOpen] = useState(false);
 
   const handleBuy = () => {
     setAddFundsOpen(false);
