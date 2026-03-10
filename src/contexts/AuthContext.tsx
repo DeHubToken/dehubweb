@@ -988,6 +988,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error(`Connector for ${wallet} not found`);
       }
 
+      // If wagmi thinks it's still connected (e.g. user just logged out and
+      // the async disconnect hasn't fully propagated), force-disconnect first
+      // so connectAsync triggers a fresh connection + effect re-fire.
+      const currentAccount = getAccount(wagmiConfig);
+      if (currentAccount.isConnected) {
+        console.log('[Auth] Wagmi still connected, forcing disconnect before reconnect');
+        wagmiDisconnect();
+        // Wait a tick for wagmi state to settle
+        await new Promise(r => setTimeout(r, 100));
+      }
+
       console.log(`[Auth] Connecting with: ${connector.name} (${connector.id})`);
       await connectAsync({ connector });
       return true;
