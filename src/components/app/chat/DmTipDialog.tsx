@@ -27,8 +27,7 @@ import {
   parseTxError,
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
-import { getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
+import { apiCall } from '@/lib/api/dehub/core';
 
 
 const erc20TransferInterface = new Interface([
@@ -95,34 +94,21 @@ export function DmTipDialog({
 
       await result.wait(1);
 
-      // Send tip message via socket
-      emitSendMessage({
-        dmId: conversationId,
-        content: `Tipped ${parsedAmount.toLocaleString()} DHB`,
-        type: 'tip',
-        tipTxHash: result.hash,
-      });
-
-      // Call tip-notify API for ranking
+      // Notify backend — this creates the inline tip message (msgType:'tip') in the conversation
+      // and registers it for Alchemy webhook confirmation.
+      // DO NOT emit sendMessage via socket — backend handles the tip message creation.
       try {
-        const token = getAuthToken();
-        if (token) {
-          await fetch(`${DEHUB_API_BASE}/api/dm/tip-notify`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              txHash: result.hash,
-              receiverAddress: recipientAddress.toLowerCase(),
-              amount: parsedAmount,
-              chainId,
-            }),
-          });
-        }
+        await apiCall('/api/dm/tip-notify', {
+          method: 'POST',
+          body: {
+            txHash: result.hash,
+            conversationId,
+            senderAddress: signerAddress,
+          },
+          requiresAuth: true,
+        });
       } catch (notifyErr) {
-        console.warn('[DmTip] tip-notify failed:', notifyErr);
+        console.warn('[DmTip] tip-notify failed (non-fatal):', notifyErr);
       }
 
       toast.success(`Sent ${parsedAmount.toLocaleString()} DHB to ${recipientName}! 🎉`, { id: 'dm-tip' });
