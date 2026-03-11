@@ -211,17 +211,12 @@ export function RadioMiniPlayer() {
         <motion.div
           ref={barRef}
           drag
+          dragListener={false}
           dragMomentum={false}
           dragElastic={0.1}
           dragConstraints={{ top: -500, left: -500, right: 500, bottom: 100 }}
           onDragStart={() => { isDragging.current = true; }}
           onDragEnd={() => { setTimeout(() => { isDragging.current = false; }, 50); }}
-          onPointerDownCapture={(e) => {
-            // If pointer landed inside the volume zone, prevent Framer from initiating drag
-            if ((e.target as HTMLElement).closest?.('[data-volume-zone]')) {
-              e.stopPropagation();
-            }
-          }}
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1, scale: pinchScale }}
           exit={{ y: 100, opacity: 0 }}
@@ -230,19 +225,26 @@ export function RadioMiniPlayer() {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
           className={cn(
-            'fixed bottom-16 md:bottom-[74px] lg:bottom-4 z-50 cursor-grab active:cursor-grabbing origin-bottom-right',
-            // Mobile: 95% width with side margins
+            'fixed bottom-16 md:bottom-[74px] lg:bottom-4 z-50 origin-bottom-right',
             'left-[2.5%] right-[2.5%]',
-            // Tablet/iPad: centered with offset
             'md:left-0 md:right-[3px] md:mx-auto md:max-w-[446px]',
-            // Desktop: fixed width on right side
             'lg:left-auto lg:right-4 lg:mx-0 lg:w-[400px] lg:max-w-none',
             'bg-black/30 backdrop-blur-[40px] saturate-[180%] border border-white/[0.08]',
-            'rounded-2xl p-3 shadow-2xl',
+            'rounded-2xl shadow-2xl',
             isResizing && 'pointer-events-auto'
           )}
         >
-          <div className="flex items-center gap-3">
+          {/* TOP HALF — drag handle for moving the island */}
+          <motion.div
+            className="p-3 pb-0 cursor-grab active:cursor-grabbing"
+            onPointerDown={(e) => {
+              // Forward pointer events to parent motion.div for dragging
+              (barRef.current as any)?.dispatchEvent?.(
+                new PointerEvent('pointerdown', { ...e.nativeEvent, bubbles: true })
+              );
+            }}
+            style={{ touchAction: 'none' }}
+          >
             {/* Station Logo */}
             <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-zinc-800">
               {currentStation.favicon ? (
