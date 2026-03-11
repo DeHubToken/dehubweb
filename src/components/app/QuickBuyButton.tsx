@@ -1,7 +1,7 @@
 /**
  * Quick Buy Button — shown on cashtag/ticker cards in search.
- * Opens a drawer with "Buy with Card" (coming soon for non-DHB) and
- * "Buy with Crypto" (cross-chain) or "Swap from ETH" (for DHB).
+ * Opens a Uniswap swap drawer for any Base token, or the DHB-specific
+ * buy flow for DHB.
  */
 
 import { useState } from 'react';
@@ -15,19 +15,32 @@ import {
 } from '@/components/ui/drawer';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
 import { SwapToDHBDrawer } from '@/components/app/SwapToDHBDrawer';
+import { SwapToTokenDrawer } from '@/components/app/SwapToTokenDrawer';
 
 interface QuickBuyButtonProps {
   symbol: string;
   tokenType: 'stock' | 'crypto';
+  /** On-chain contract address (Base) — required for crypto tokens to enable instant swap */
+  tokenAddress?: string;
+  /** Decimals of the token (default 18) */
+  tokenDecimals?: number;
+  /** Logo URL for the token */
+  tokenLogo?: string;
+  /** Chain ID where the token lives */
+  chainId?: string;
 }
 
-export function QuickBuyButton({ symbol, tokenType }: QuickBuyButtonProps) {
+export function QuickBuyButton({ symbol, tokenType, tokenAddress, tokenDecimals, tokenLogo, chainId }: QuickBuyButtonProps) {
   const [open, setOpen] = useState(false);
   const [crossChainOpen, setCrossChainOpen] = useState(false);
   const [swapDHBOpen, setSwapDHBOpen] = useState(false);
+  const [swapTokenOpen, setSwapTokenOpen] = useState(false);
   const navigate = useNavigate();
 
   const isDHB = symbol.toUpperCase() === 'DHB';
+  const isBaseChain = !chainId || chainId === 'base';
+  const hasSwapSupport = isBaseChain && !!tokenAddress && !isDHB;
+
   // Tokens that can be received cross-chain
   const crossChainSymbols = ['ETH', 'USDC', 'USDT', 'BTC', 'BNB'];
   const hasCrossChain = crossChainSymbols.includes(symbol.toUpperCase()) || isDHB;
@@ -89,7 +102,24 @@ export function QuickBuyButton({ symbol, tokenType }: QuickBuyButtonProps) {
               </>
             ) : (
               <>
-                {/* Other tokens: Card (coming soon) + Buy with Crypto */}
+                {/* Instant Swap via Uniswap (Base tokens only) */}
+                {hasSwapSupport && (
+                  <button
+                    onClick={() => {
+                      setOpen(false);
+                      setTimeout(() => setSwapTokenOpen(true), 200);
+                    }}
+                    className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors"
+                  >
+                    <ArrowRightLeft className="w-5 h-5 text-white/70" />
+                    <div className="text-left">
+                      <span className="text-sm font-medium text-white">Instant Swap</span>
+                      <p className="text-xs text-white/40">Swap ETH or any Base token via Uniswap</p>
+                    </div>
+                  </button>
+                )}
+
+                {/* Buy with Card (coming soon for non-DHB) */}
                 <button
                   disabled
                   className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] border border-white/10 opacity-50 cursor-not-allowed"
@@ -101,6 +131,8 @@ export function QuickBuyButton({ symbol, tokenType }: QuickBuyButtonProps) {
                   </div>
                   <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">Coming soon</span>
                 </button>
+
+                {/* Cross-chain deposit */}
                 {hasCrossChain && (
                   <button
                     onClick={() => {
@@ -131,6 +163,18 @@ export function QuickBuyButton({ symbol, tokenType }: QuickBuyButtonProps) {
 
       {/* Swap ETH→DHB drawer */}
       <SwapToDHBDrawer open={swapDHBOpen} onOpenChange={setSwapDHBOpen} />
+
+      {/* Generic swap drawer for any Base token */}
+      {hasSwapSupport && (
+        <SwapToTokenDrawer
+          open={swapTokenOpen}
+          onOpenChange={setSwapTokenOpen}
+          targetSymbol={symbol.toUpperCase()}
+          targetAddress={tokenAddress!}
+          targetDecimals={tokenDecimals}
+          targetLogo={tokenLogo}
+        />
+      )}
     </>
   );
 }
