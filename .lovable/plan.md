@@ -1,35 +1,38 @@
 
 
-## Fix: Auto-reload on chunk load failures
+## Auto-Detect All Base Wallet Tokens for Swap
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+### Problem
+The swap drawer only shows 5 hardcoded tokens (ETH, DHB, USDT, USDC, BTC). Users with other Base ERC20 tokens (e.g. DEGEN, AERO, BRETT) can't use them to swap.
 
 ### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+Use Alchemy's `alchemy_getTokenBalances` API to discover all ERC20 tokens with non-zero balances, then fetch their metadata. Merge with the existing known token list.
 
 ### Changes
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+1. **New utility: `src/lib/wallet/alchemy-tokens.ts`**
+   - Call Alchemy `alchemy_getTokenBalances` (Base endpoint) to get all non-zero ERC20 balances
+   - Call `alchemy_getTokenMetadata` in batch for discovered tokens to get symbol/name/decimals/logo
+   - Cache results in React Query (same stale time as existing token queries)
+   - Merge with existing `DEFAULT_TOKENS` (known tokens take priority for metadata/logos)
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+2. **Update `src/lib/wallet/tokens.ts` → `getAllTokenBalances`**
+   - Add an optional `discoverAll?: boolean` parameter
+   - When true, call Alchemy discovery and merge results with the known list
+   - Fall back to current behavior if Alchemy call fails
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+3. **Create edge function `supabase/functions/alchemy-tokens/index.ts`**
+   - Proxy the Alchemy API calls server-side to keep the API key secret
+   - Accept wallet address and chain ID, return token balances + metadata
+   - JWT verification disabled (public data)
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+4. **Update `SwapToTokenDrawer.tsx`**
+   - Pass `discoverAll: true` when building payTokens so the swap drawer shows all detected tokens
+   - No UI changes needed — tokens already render dynamically from the `payTokens` array
+
+### Technical Notes
+- Alchemy's `alchemy_getTokenBalances` with `DEFAULT_TOKENS` param returns all non-zero ERC20 balances in a single call
+- Metadata calls can be batched but may need rate limiting consideration
+- Results cached for 5 minutes (matching existing stale time)
+- Known tokens retain their custom logos; discovered tokens use Alchemy-provided logos or a generic icon
 
