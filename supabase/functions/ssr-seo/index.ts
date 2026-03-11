@@ -1,16 +1,4 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
-
-let wasmInitialized = false;
-async function svgToPng(svg: string): Promise<Uint8Array> {
-    if (!wasmInitialized) {
-        const wasmResp = await fetch("https://esm.sh/@resvg/resvg-wasm@2.6.2/index_bg.wasm");
-        await initWasm(await wasmResp.arrayBuffer());
-        wasmInitialized = true;
-    }
-    const resvg = new Resvg(svg, { fitTo: { mode: "width", value: 1200 } });
-    return resvg.render().asPng();
-}
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -24,6 +12,7 @@ const APP_URL = "https://dehub.io"; // Change to actual production URL if differ
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
 const IMAGE_PROXY_BASE = `${SUPABASE_URL}/functions/v1/ssr-seo`;
 const DEHUB_LOGO = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/default-icon.png";
+const AUDIO_OG_IMAGE = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/audio-wave%20(1).png";
 
 interface DeHubUser {
     username?: string;
@@ -96,7 +85,6 @@ function buildPostImageUrl(nft: DeHubNFT): string {
 }
 
 function getMimeType(url: string): string {
-    if (url.includes("audio_og=")) return "image/png";
     const ext = url.split("?")[0].match(/\.([a-zA-Z0-9]+)$/)?.[1]?.toLowerCase();
     switch (ext) {
         case "jpg":
@@ -135,74 +123,6 @@ function getVideoMimeType(url: string): string {
         default:
             return "video/mp4";
     }
-}
-
-function escapeXml(s: string): string {
-    return s
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&apos;");
-}
-
-/** Deterministic LCG seeded by tokenId — produces a consistent waveform per post. */
-function seededVal(seed: number, i: number): number {
-    const x = Math.sin(seed * 9301 + i * 49297 + 233) * 100003;
-    return x - Math.floor(x);
-}
-
-function generateAudioOgSvg(nft: DeHubNFT): string {
-    const W = 1200;
-    const H = 630;
-    const BAR_COUNT = 80;
-    const CENTER_Y = H / 2;
-    const MAX_BAR_H = H * 0.52;
-    const BAR_AREA_W = W * 0.84;
-    const BAR_AREA_X = (W - BAR_AREA_W) / 2;
-    const GAP = 3;
-    const BAR_W = (BAR_AREA_W - GAP * (BAR_COUNT - 1)) / BAR_COUNT;
-    const seed = nft.tokenId;
-
-    let barsSvg = "";
-    for (let i = 0; i < BAR_COUNT; i++) {
-        // Smooth with neighbours, apply bell-curve envelope so edges taper
-        const r0 = seededVal(seed, i - 1);
-        const r1 = seededVal(seed, i);
-        const r2 = seededVal(seed, i + 1);
-        const smooth = (r0 + r1 * 2 + r2) / 4;
-        // Bell envelope: peaks in the middle, lower at edges
-        const t = i / (BAR_COUNT - 1);
-        const envelope = 0.15 + 0.85 * Math.sin(Math.PI * t);
-        const barH = Math.max(4, smooth * envelope * MAX_BAR_H * 0.9 + MAX_BAR_H * 0.06);
-        const x = BAR_AREA_X + i * (BAR_W + GAP);
-        const y = CENTER_Y - barH / 2;
-        const rx = Math.min(2, BAR_W / 2);
-        barsSvg += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${BAR_W.toFixed(1)}" height="${barH.toFixed(1)}" rx="${rx}" fill="rgba(255,255,255,0.22)"/>`;
-    }
-
-    const posterName = escapeXml(nft.minterDisplayName || nft.minterUsername || "DeHub");
-    const desc = escapeXml((nft.description || "").slice(0, 100));
-    const cx = W / 2;
-    const cy = H / 2;
-
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
-  <defs>
-    <radialGradient id="bg" cx="50%" cy="50%" r="70%">
-      <stop offset="0%" stop-color="#16161e"/>
-      <stop offset="100%" stop-color="#080810"/>
-    </radialGradient>
-    <filter id="glow"><feGaussianBlur stdDeviation="60" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-  </defs>
-  <rect width="${W}" height="${H}" fill="url(#bg)"/>
-  <ellipse cx="${cx}" cy="${cy}" rx="420" ry="200" fill="rgba(255,255,255,0.025)" filter="url(#glow)"/>
-  ${barsSvg}
-  <circle cx="${cx}" cy="${cy}" r="46" fill="rgba(0,0,0,0.55)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
-  <polygon points="${(cx - 14).toFixed(1)},${(cy - 16).toFixed(1)} ${(cx + 18).toFixed(1)},${cy.toFixed(1)} ${(cx - 14).toFixed(1)},${(cy + 16).toFixed(1)}" fill="white" opacity="0.92"/>
-  <text x="${cx}" y="${H - 88}" font-family="system-ui,-apple-system,sans-serif" font-size="28" font-weight="600" fill="rgba(255,255,255,0.88)" text-anchor="middle">${posterName}</text>
-  ${desc ? `<text x="${cx}" y="${H - 52}" font-family="system-ui,-apple-system,sans-serif" font-size="19" fill="rgba(255,255,255,0.45)" text-anchor="middle">${desc}</text>` : ""}
-  <text x="48" y="50" font-family="system-ui,-apple-system,sans-serif" font-size="20" font-weight="700" fill="rgba(255,255,255,0.28)">DeHub</text>
-</svg>`;
 }
 
 function generateMetaHTML(data: {
@@ -314,23 +234,6 @@ serve(async (req) => {
     try {
         const url = new URL(req.url);
 
-        // Audio post OG image: returns a seeded PNG waveform for the given tokenId
-        const audioOgId = url.searchParams.get("audio_og");
-        if (audioOgId) {
-            const response = await fetch(`${DEHUB_API_BASE}/api/nft_info/${audioOgId}`);
-            const nftData = await response.json();
-            const nft: DeHubNFT = nftData.result || nftData;
-            const svg = generateAudioOgSvg(nft);
-            const png = await svgToPng(svg);
-            return new Response(png, {
-                headers: {
-                    ...corsHeaders,
-                    "Content-Type": "image/png",
-                    "Cache-Control": "public, max-age=86400",
-                },
-            });
-        }
-
         // Facebook/Twitter scrapers need proper MIME types to display images
         const proxyImageUrl = url.searchParams.get("image_url");
         if (proxyImageUrl) {
@@ -419,8 +322,7 @@ serve(async (req) => {
 
                 let postImage: string;
                 if (isAudio) {
-                    // Use the audio waveform OG image served by this function
-                    postImage = `${IMAGE_PROXY_BASE}?audio_og=${postId}`;
+                    postImage = AUDIO_OG_IMAGE;
                 } else if (videoUrl) {
                     postImage = ensureAbsoluteUrl(nft.thumbnail_url || nft.imageUrl || "") || DEHUB_LOGO;
                 } else {
