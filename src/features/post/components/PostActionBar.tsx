@@ -378,7 +378,7 @@ export function PostActionBar({
 
         {/* Removed audio buttons when hasImage - functionality is on the image thumbnail */}
 
-        <div className="w-px h-4 bg-white/10 mx-1" />
+        
 
         {/* Emoji/GIF picker - single working button */}
         <EmojiGifPicker 
