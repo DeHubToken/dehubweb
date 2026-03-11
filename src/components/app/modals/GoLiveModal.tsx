@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Radio, Loader2, Copy, Check, ExternalLink, Tag, Search, X, Plus } from 'lucide-react';
+import { Radio, Loader2, Copy, Check, ExternalLink, Hash, Search, X, Plus } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
