@@ -99,8 +99,10 @@ function ImageCarousel({
   
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
-    setCurrentIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
+    const idx = emblaApi.selectedScrollSnap();
+    setCurrentIndex(idx);
+    onIndexChange?.(idx);
+  }, [emblaApi, onIndexChange]);
   
   // Set up the select callback when emblaApi becomes available
   useEffect(() => {
