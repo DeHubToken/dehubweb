@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
 import { SwapToDHBDrawer } from '@/components/app/SwapToDHBDrawer';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
