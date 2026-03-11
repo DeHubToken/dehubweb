@@ -398,7 +398,7 @@ export function ActionBar({
             onClick={(e) => {
               e.stopPropagation();
               if (isOptimistic) {
-                toast('Post processing, click ⓘ for more info', {
+                toast(t('postActions.postProcessing'), {
                   icon: <Info className="w-4 h-4" />,
                 });
               } else {
