@@ -1264,6 +1264,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       stopRecording,
       setChainId,
       setSelectedCategory,
+      markCategorySaved: () => { categorySavedRef.current = true; },
       setShowTitle: handleSetShowTitle,
       setTitleText,
       insertEmoji,
