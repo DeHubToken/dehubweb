@@ -33,7 +33,7 @@ interface CachedCategoryData {
 }
 
 const CACHE_KEY_PREFIX = 'trending-cats-cache-';
-const CACHE_TTL_MS = 10 * 60_000; // 10 minutes
+const CACHE_TTL_MS = 10 * 60_000; // 10 minutes for time-bounded periods
 
 function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
