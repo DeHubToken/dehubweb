@@ -1,4 +1,4 @@
-import { memo, useState, useRef, useCallback } from 'react';
+import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LayoutGrid } from 'lucide-react';
@@ -40,6 +40,7 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
   const { t } = useTranslation();
   const [topicPeriod, setTopicPeriod] = useState<TopicPeriod>(defaultPeriod);
   const dirRef = useRef(0);
+  const [isAutoRotating, setIsAutoRotating] = useState(true);
 
   // Prefetch all periods
   useTrendingCategories('1d');
@@ -48,9 +49,25 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
   useTrendingCategories('1y');
   const { data: categories = [] } = useTrendingCategories(topicPeriod);
 
+  // Auto-rotate through periods every 5 seconds
+  useEffect(() => {
+    if (!isAutoRotating) return;
+    const interval = setInterval(() => {
+      setTopicPeriod(prev => {
+        const idx = TOPIC_PERIODS.findIndex(p => p.value === prev);
+        const next = TOPIC_PERIODS[(idx + 1) % TOPIC_PERIODS.length].value;
+        dirRef.current = 1;
+        return next;
+      });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isAutoRotating]);
+
   const handlePeriodChange = useCallback((newPeriod: TopicPeriod) => {
     dirRef.current = PERIOD_INDEX[newPeriod] - PERIOD_INDEX[topicPeriod];
     setTopicPeriod(newPeriod);
+    setIsAutoRotating(false);
+    setTimeout(() => setIsAutoRotating(true), 30000);
   }, [topicPeriod]);
 
   const handleCategoryClick = (categoryName: string) => {
