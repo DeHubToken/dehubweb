@@ -99,7 +99,7 @@ export function EditPostModal({
       const result = await editPost(tokenId, params as any);
       if (result.result) {
         toast.success('Post updated successfully');
-        onSuccess?.();
+        onSuccess?.({ name: name.trim(), description: description.trim(), categories });
         onOpenChange(false);
       } else {
         toast.error('Failed to update post');
