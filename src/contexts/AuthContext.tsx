@@ -951,7 +951,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           await new Promise(r => setTimeout(r, 2000));
           return connectWithSMS(phone, true);
         }
-        toast.error('Failed to send verification code. Please check your number and try again.');
+        toast.error(i18n.t('auth.failedSendVerificationSMS'));
       }
       setConnectionSource(null);
       localStorage.removeItem('dehub_connection_source');
