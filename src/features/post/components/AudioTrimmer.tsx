@@ -3,6 +3,7 @@ import { X, Play, Pause, Scissors, Check, Music } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { generateWaveformFromBlob, sliceAudioBlob, formatTime } from '@/lib/audio-waveform';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface AudioTrimmerProps {

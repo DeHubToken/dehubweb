@@ -1277,5 +1277,43 @@
     "addressCopied": "Address copied to clipboard",
     "noWalletAddress": "No wallet address available",
     "notificationsEnabled": "Notifications enabled for this profile"
+  },
+  "postActions": {
+    "logInToEngage": "Log in to engage",
+    "failedToVote": "Failed to vote. Please try again.",
+    "urlCopied": "Post URL copied to clipboard",
+    "reposted": "Reposted!",
+    "repostNotAvailable": "Repost not available for this post",
+    "repostRemoved": "Repost removed",
+    "quoteNotAvailable": "Quote not available for this post",
+    "postProcessing": "Post processing, click ⓘ for more info"
+  },
+  "editPost": {
+    "noChanges": "No changes to save",
+    "titleTooLong": "Title must be 140 characters or less",
+    "descriptionTooLong": "Description must be 500 characters or less",
+    "postUpdated": "Post updated successfully",
+    "failedToUpdate": "Failed to update post"
+  },
+  "quotePost": {
+    "addText": "Add some text to your quote",
+    "publishing": "Publishing to decentralized database...",
+    "quotePosted": "Quote posted!",
+    "failedToPost": "Failed to post quote"
+  },
+  "drafts": {
+    "deleted": "Draft deleted",
+    "loaded": "Draft loaded",
+    "saved": "Draft saved"
+  },
+  "postMedia": {
+    "cameraError": "Could not access camera. Please check permissions.",
+    "photoCaptured": "Photo captured!",
+    "failedToTrimAudio": "Failed to trim audio",
+    "failedToLoadAudio": "Failed to load audio file",
+    "selectImageFile": "Please select an image file",
+    "dropImageFile": "Please drop an image file",
+    "videoTrimmed": "Video trimmed!",
+    "defaultCategoriesSaved": "Default categories saved"
   }
 }

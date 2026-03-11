@@ -5,6 +5,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { Progress } from '@/components/ui/progress';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import type { MediaFile, AudioFile } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import { AudioVisualizer } from '@/components/app/audio';

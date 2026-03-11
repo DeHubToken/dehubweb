@@ -8,6 +8,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { X } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { quotePost } from '@/lib/api/dehub';
 import { mintOnChain } from '@/lib/contracts/stream-collection';
