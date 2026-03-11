@@ -256,18 +256,27 @@ export async function getWatchHistory(
 export async function getCategories(): Promise<DeHubCategory[]> {
   const response = await apiCall<string[] | DeHubCategory[]>("/api/get_categories");
   
+  let cats: DeHubCategory[] = [];
   if (Array.isArray(response) && response.length > 0) {
     if (typeof response[0] === 'object' && 'name' in response[0]) {
-      return response as DeHubCategory[];
+      cats = response as DeHubCategory[];
+    } else {
+      cats = (response as string[]).map((name) => ({
+        id: name.trim(),
+        name: name.trim(),
+        slug: name.toLowerCase().trim().replace(/\s+/g, '-'),
+      }));
     }
-    return (response as string[]).map((name) => ({
-      id: name.trim(),
-      name: name.trim(),
-      slug: name.toLowerCase().trim().replace(/\s+/g, '-'),
-    }));
   }
-  
-  return [];
+
+  // Deduplicate by lowercase name
+  const seen = new Set<string>();
+  return cats.filter(c => {
+    const key = c.name.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 export async function getServerTime(): Promise<{ time: string }> {

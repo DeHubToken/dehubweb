@@ -126,7 +126,16 @@ export function PostAccessToggles({
   const filteredCategories = useMemo(() => {
     if (!categorySearch.trim()) return categories;
     const q = categorySearch.toLowerCase();
-    return categories.filter(c => c.name.toLowerCase().includes(q));
+    return categories
+      .filter(c => c.name.toLowerCase().includes(q))
+      .sort((a, b) => {
+        const aName = a.name.toLowerCase();
+        const bName = b.name.toLowerCase();
+        // Exact match first, then starts-with, then includes
+        const aExact = aName === q ? 0 : aName.startsWith(q) ? 1 : 2;
+        const bExact = bName === q ? 0 : bName.startsWith(q) ? 1 : 2;
+        return aExact - bExact || aName.localeCompare(bName);
+      });
   }, [categories, categorySearch]);
 
   const handleCategoryToggle = (checked: boolean) => {
