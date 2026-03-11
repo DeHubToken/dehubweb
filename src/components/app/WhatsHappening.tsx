@@ -99,6 +99,24 @@ export const WhatsHappening = memo(function WhatsHappening() {
               : 'opacity-0 pointer-events-none absolute inset-0'
           )}
         >
+          {/* Period tabs */}
+          <div className="flex mb-2">
+            {TOPIC_PERIODS.map(p => (
+              <button
+                key={p.value}
+                onClick={() => setTopicPeriod(p.value)}
+                className={cn(
+                  'flex-1 text-xs font-semibold transition-colors duration-150 text-center py-1',
+                  topicPeriod === p.value
+                    ? 'text-white'
+                    : 'text-zinc-500 hover:text-zinc-300'
+                )}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+
           {categories.length > 0 ? (
             <div className="flex flex-col gap-1">
               {categories.map((cat, i) => (
