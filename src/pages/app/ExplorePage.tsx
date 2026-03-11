@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
-import { TrendingTopicsList } from '@/components/app/TrendingTopicsList';
+import { WhatsHappening } from '@/components/app/WhatsHappening';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
