@@ -845,7 +845,8 @@
     "title": "Messages",
     "searchConversations": "Search conversations...",
     "failedToLoad": "Failed to load conversations",
-    "tryAgain": "Try Again"
+    "tryAgain": "Try Again",
+    "loginDescription": "Log in to access your messages and chat with others."
   },
   "music": {
     "all": "All",
