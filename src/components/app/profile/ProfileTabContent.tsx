@@ -658,7 +658,7 @@ function CommentCard({ comment, parentPost, isOwnComment, onClick }: { comment: 
             </div>
           ) : (
             <p className="text-white/90 text-sm sm:text-base whitespace-pre-wrap break-words line-clamp-4">
-              {comment.content}
+              {renderTextWithLinks(comment.content)}
             </p>
           )}
 
