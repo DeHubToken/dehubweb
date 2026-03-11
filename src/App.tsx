@@ -113,6 +113,7 @@ function AppContent() {
             <Route path="/docs/*" element={<DocsPage />} />
             
             <Route path="/delete-account" element={<DeleteAccount />} />
+            <Route path="/winterwonderland" element={<Suspense fallback={<PageLoader />}><WinterWonderlandPage /></Suspense>} />
             <Route path="/creators" element={<CreatorsPage />} />
             <Route path="/skill.md" element={<SkillPage />} />
 
