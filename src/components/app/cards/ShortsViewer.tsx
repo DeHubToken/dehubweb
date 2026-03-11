@@ -296,7 +296,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     if (!tokenId || tokenId === 'undefined' || isVoting) return;
     
     if (!isAuthenticated) {
-      toast.error('Log in to engage');
+      toast.error(t('shorts.logInToEngage'));
       return;
     }
 
