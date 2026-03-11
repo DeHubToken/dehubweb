@@ -185,12 +185,16 @@ function mapToResult(categoryMap: Map<string, number>): CategoryCount[] {
 }
 
 export function useTrendingCategories(period: TopicPeriod = 'all') {
+  const isAll = period === 'all';
   return useQuery<CategoryCount[]>({
     queryKey: ['trending-categories', period],
     queryFn: () => fetchTrendingCategories(period),
-    staleTime: 5 * 60_000,
-    gcTime: 30 * 60_000,
-    refetchInterval: 10 * 60_000,
+    // "all" never needs to refetch once loaded; others refresh every 10 min
+    staleTime: isAll ? Infinity : 10 * 60_000,
+    gcTime: isAll ? Infinity : 30 * 60_000,
+    refetchInterval: isAll ? false : 10 * 60_000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     placeholderData: (prev) => prev,
   });
 }
