@@ -918,12 +918,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       <div className={`relative flex-1 min-h-0 ${!isMobile && activeTab === 'search' ? 'max-h-[272px]' : ''}`}>
         {/* Replies Tab */}
         {activeTab === 'replies' && (
-          <div
-            className={cn(
-              "absolute inset-0 overflow-y-auto pt-2 pb-2",
-              isMobile && "pb-24"
-            )}
-          >
+          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
@@ -981,12 +976,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
         {/* Quotes Tab */}
         {activeTab === 'quotes' && (
-          <div
-            className={cn(
-              "absolute inset-0 overflow-y-auto pt-2 pb-2",
-              isMobile && "pb-24"
-            )}
-          >
+          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -999,12 +989,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
         {/* Reposts Tab */}
         {activeTab === 'reposts' && (
-          <div
-            className={cn(
-              "absolute inset-0 overflow-y-auto pt-2 pb-2",
-              isMobile && "pb-24"
-            )}
-          >
+          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
             {isLoadingReposters ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
@@ -1094,12 +1079,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
         {/* Search Tab */}
         {activeTab === 'search' && (
-          <div
-            className={cn(
-              "absolute inset-0 overflow-y-auto pt-2 pb-2",
-              isMobile && "pb-24"
-            )}
-          >
+          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
@@ -1247,11 +1227,13 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                 </button>
               </div>
             ) : (
-              <div 
+              <div
                 data-vaul-no-drag
                 className={cn(
-                  "flex-1 flex items-start bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl px-3 relative",
-                  isMobile ? "min-h-[56px]" : "min-h-[80px]"
+                  "flex-1 flex items-start backdrop-blur-xl border rounded-xl px-3 relative",
+                  isMobile
+                    ? "min-h-[56px] bg-zinc-800/80 border-zinc-700"
+                    : "min-h-[80px] bg-white/[0.08] border-white/[0.12]"
                 )}
               >
                 <textarea
@@ -1267,7 +1249,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                     "flex-1 bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 py-2.5",
                     isMobile ? "min-h-[40px] max-h-[96px]" : "min-h-[80px] max-h-[120px]"
                   )}
-                  rows={3}
+                  rows={isMobile ? 2 : 3}
                   onKeyDown={(e) => {
                     if (mention.isOpen) {
                       const handled = mention.handleKeyDown(e);
