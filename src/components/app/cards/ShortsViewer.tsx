@@ -184,7 +184,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       // Check if error indicates already following
       const errorMessage = error instanceof Error ? error.message : String(error);
       if (errorMessage.toLowerCase().includes('already') || errorMessage.toLowerCase().includes('following')) {
-        toast.info(`You're already following ${currentShort.displayName || currentShort.creatorUsername || 'this user'}`);
+        toast.info(t('shorts.alreadyFollowing', { name: currentShort.displayName || currentShort.creatorUsername || 'this user' }));
         // Mark as followed to update UI
         setFollowedCreators(prev => new Set(prev).add(creatorAddress));
       } else {
