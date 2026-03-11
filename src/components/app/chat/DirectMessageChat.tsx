@@ -630,47 +630,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
 
         // Track this tx as locally confirmed so we don't show "confirming payment..." forever
         if (feeTxHash) confirmedTxHashes.current.add(feeTxHash.toLowerCase());
-
-        // Register payment intent + retry until backend confirms (Alchemy webhook can lag 2-8s after block).
-        // 201 = backend found the tx on-chain via Alchemy → TipAndDmTnx created as confirmed → sendMessage delivers to receiver immediately.
-        // 202 = Alchemy webhook hasn't fired yet → TipAndDmTnx pending → message stays pending until webhook arrives (receiver won't see it).
-        {
-          const verifyBody = JSON.stringify({
-            txHash: feeTxHash,
-            conversationId: resolvedConversationId,
-            senderAddress: walletAddress,
-            receiverAddress: otherUser?.address,
-          });
-          const verifyHeaders: HeadersInit = {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${getAuthToken()}`,
-          };
-
-          let confirmed = false;
-          // Try up to 4 times (0s, 3s, 5s, 5s gaps) — total ~13s max wait
-          const delays = [0, 3000, 5000, 5000];
-          for (const delay of delays) {
-            if (delay > 0) await new Promise(res => setTimeout(res, delay));
-            try {
-              const res = await fetch(`${DEHUB_API_BASE}/api/dm/verify-dm-fee`, {
-                method: 'POST',
-                headers: verifyHeaders,
-                body: verifyBody,
-              });
-              console.log(`[DM Fee] verify-dm-fee status: ${res.status}`);
-              if (res.status === 201) {
-                confirmed = true;
-                break;
-              }
-              // 202 = still pending, retry
-            } catch (e) {
-              console.warn('[DM Fee] verify-dm-fee request error:', e);
-            }
-          }
-          if (!confirmed) {
-            console.warn('[DM Fee] Fee never confirmed by backend after retries — message may stay pending for receiver');
-          }
-        }
+        // txHash is bundled directly into sendMessage socket event below — backend verifies inline.
+        // Do NOT call verify-dm-fee separately: it marks txHash as used, causing "already used" error on sendMessage.
 
         toast.success(`Paid ${activeFee.toLocaleString()} DHB`, { id: 'dm-fee-send', duration: 2000 });
 

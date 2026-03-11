@@ -21,7 +21,6 @@ import {
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
-import { getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 
 interface DmFeeGateProps {
   fee: number;
@@ -72,29 +71,7 @@ export function DmFeeGate({
         chainId,
       });
 
-      // Register fee payment with backend (verify-dm-fee)
-      try {
-        const token = getAuthToken();
-        if (token) {
-          await fetch(`${DEHUB_API_BASE}/api/dm/verify-dm-fee`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              txHash,
-              conversationId,
-              senderAddress: signerAddress,
-              receiverAddress: recipientAddress.toLowerCase(),
-            }),
-          });
-        }
-      } catch (notifyErr) {
-        console.warn('[DmFeeGate] verify-dm-fee failed:', notifyErr);
-      }
-
-      // Send the message with txHash so backend links it to the fee payment
+      // Send the message with txHash — backend verifies fee inline via sendMessage socket event.
       emitSendMessage({
         dmId: conversationId,
         content: messageText.trim(),

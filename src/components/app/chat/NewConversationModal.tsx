@@ -30,7 +30,6 @@ import {
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
-import { getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 
 interface NewConversationModalProps {
@@ -386,27 +385,7 @@ export function NewConversationModal({
 
       // Send the first message if provided (from fee payment step)
       if (firstMessage && conversation.id) {
-        // Register fee payment with backend before sending the message
-        if (feeTxHash) {
-          try {
-            const signerAddress = await getWalletAddress();
-            const token = getAuthToken();
-            if (token) {
-              await fetch(`${DEHUB_API_BASE}/api/dm/verify-dm-fee`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                body: JSON.stringify({
-                  txHash: feeTxHash,
-                  conversationId: conversation.id,
-                  senderAddress: signerAddress,
-                  receiverAddress: (user.address || '').toLowerCase(),
-                }),
-              });
-            }
-          } catch (e) {
-            console.warn('[NewConversationModal] verify-dm-fee failed:', e);
-          }
-        }
+        // txHash bundled in sendMessage — backend verifies fee inline. Do NOT call verify-dm-fee separately.
         emitSendMessage({
           dmId: conversation.id,
           content: firstMessage,
