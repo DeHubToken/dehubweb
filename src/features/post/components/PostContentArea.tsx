@@ -381,6 +381,21 @@ export function PostContentArea({
       first = false;
     }
     
+    // Enforce 500 character limit on description
+    if (plainText.length > 500) {
+      plainText = plainText.slice(0, 500);
+      if (editor) {
+        editor.textContent = plainText;
+        // Move cursor to end
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.selectNodeContents(editor);
+        range.collapse(false);
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+      }
+    }
+    
     setText(plainText);
     
     // Trigger mention detection
@@ -653,7 +668,7 @@ export function PostContentArea({
                 value={titleText}
                 onChange={(e) => setTitleText(e.target.value)}
                 placeholder="Title"
-                maxLength={100}
+                maxLength={140}
                 className="w-full bg-transparent text-white text-lg sm:text-xl font-medium resize-none outline-none mb-1 placeholder:text-white/50 sm:placeholder:text-white/70 caret-white"
               />
             )}
