@@ -166,7 +166,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     }
     
     if (!isAuthenticated) {
-      toast.error('Please log in to follow');
+      toast.error(t('shorts.pleaseLogInToFollow'));
       return;
     }
     
