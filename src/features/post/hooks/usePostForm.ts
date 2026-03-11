@@ -133,23 +133,27 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const { addOptimisticPost } = useOptimisticPosts();
   const { user } = useAuth();
   
-  // Form state
-  const [text, setText] = useState('');
-  const [description, setDescription] = useState('');
-  const [showDescription, setShowDescription] = useState(false);
+  // Restore active draft from localStorage
+  const savedDraft = useRef(loadActiveDraft());
+  const d = savedDraft.current;
+
+  // Form state — initialize from saved draft if available
+  const [text, setText] = useState(d?.text ?? '');
+  const [description, setDescription] = useState(d?.description ?? '');
+  const [showDescription, setShowDescription] = useState(d?.showDescription ?? false);
   const [media, setMedia] = useState<MediaFile[]>([]);
-  const [isSubscribersOnly, setIsSubscribersOnly] = useState(false);
-  const [isPPV, setIsPPV] = useState(false);
-  const [ppvAmount, setPpvAmount] = useState('');
-  const [ppvCurrency, setPpvCurrency] = useState<Currency>('USD');
-  const [isWatch2Earn, setIsWatch2Earn] = useState(false);
-  const [w2eViews, setW2eViews] = useState('');
-  const [w2eComments, setW2eComments] = useState('');
-  const [w2eTotal, setW2eTotal] = useState('');
-  const [w2eCurrency, setW2eCurrency] = useState<Currency>('USD');
-  const [isTokenGated, setIsTokenGated] = useState(false);
-  const [tokenContract, setTokenContract] = useState('');
-  const [tokenAmount, setTokenAmount] = useState('');
+  const [isSubscribersOnly, setIsSubscribersOnly] = useState(d?.isSubscribersOnly ?? false);
+  const [isPPV, setIsPPV] = useState(d?.isPPV ?? false);
+  const [ppvAmount, setPpvAmount] = useState(d?.ppvAmount ?? '');
+  const [ppvCurrency, setPpvCurrency] = useState<Currency>(d?.ppvCurrency ?? 'USD');
+  const [isWatch2Earn, setIsWatch2Earn] = useState(d?.isWatch2Earn ?? false);
+  const [w2eViews, setW2eViews] = useState(d?.w2eViews ?? '');
+  const [w2eComments, setW2eComments] = useState(d?.w2eComments ?? '');
+  const [w2eTotal, setW2eTotal] = useState(d?.w2eTotal ?? '');
+  const [w2eCurrency, setW2eCurrency] = useState<Currency>(d?.w2eCurrency ?? 'USD');
+  const [isTokenGated, setIsTokenGated] = useState(d?.isTokenGated ?? false);
+  const [tokenContract, setTokenContract] = useState(d?.tokenContract ?? '');
+  const [tokenAmount, setTokenAmount] = useState(d?.tokenAmount ?? '');
   const [liveMode, setLiveMode] = useState<LiveMode>(null);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
@@ -161,15 +165,16 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [recordingTime, setRecordingTime] = useState(0);
   const [chainId, setChainId] = useState<ChainId>(BASE_CHAIN_ID as ChainId);
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
-    try {
-      return localStorage.getItem('post_default_categories') || '';
-    } catch { return ''; }
+    // Active draft category takes priority, then saved defaults
+    if (d?.selectedCategory) return d.selectedCategory;
+    try { return localStorage.getItem('post_default_categories') || ''; } catch { return ''; }
   });
   const categorySavedRef = useRef(false);
   const [showTitle, setShowTitle] = useState(() => {
+    if (d?.showTitle != null) return d.showTitle;
     try { return localStorage.getItem('post_show_title') === 'true'; } catch { return false; }
   });
-  const [titleText, setTitleText] = useState('');
+  const [titleText, setTitleText] = useState(d?.titleText ?? '');
 
   // Persist title toggle preference
   const handleSetShowTitle = useCallback((value: boolean) => {
