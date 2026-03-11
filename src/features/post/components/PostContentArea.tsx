@@ -761,6 +761,15 @@ export function PostContentArea({
                   {dest}
                 </span>
               ))}
+              {onOpenCategories && (
+                <button
+                  type="button"
+                  onClick={onOpenCategories}
+                  className="text-zinc-500 hover:text-zinc-300 transition-colors"
+                >
+                  <Hash className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
             <span className={cn("text-xs ml-auto", charCount > 500 ? "text-amber-400" : "text-white/60")}>
               {charCount}/500
