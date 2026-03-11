@@ -237,7 +237,7 @@ serve(async (req) => {
         // Facebook/Twitter scrapers need proper MIME types to display images
         const proxyImageUrl = url.searchParams.get("image_url");
         if (proxyImageUrl) {
-            if (!proxyImageUrl.startsWith(DEHUB_CDN_BASE) && !proxyImageUrl.startsWith("https://dehub.io/")) {
+            if (!proxyImageUrl.startsWith(DEHUB_CDN_BASE) && !proxyImageUrl.startsWith("https://dehub.io/") && !proxyImageUrl.startsWith("https://aigxuutjaqsywioxjefr.supabase.co/storage/")) {
                 return new Response("Forbidden", { status: 403 });
             }
             const imgResp = await fetch(proxyImageUrl);
@@ -322,7 +322,7 @@ serve(async (req) => {
 
                 let postImage: string;
                 if (isAudio) {
-                    postImage = AUDIO_OG_IMAGE;
+                    postImage = buildProxiedImageUrl(IMAGE_PROXY_BASE, AUDIO_OG_IMAGE);
                 } else if (videoUrl) {
                     postImage = ensureAbsoluteUrl(nft.thumbnail_url || nft.imageUrl || "") || DEHUB_LOGO;
                 } else {
@@ -336,6 +336,8 @@ serve(async (req) => {
                     url: postUrl,
                     type: "article",
                     twitterCard: isAudio ? "summary_large_image" : "summary",
+                    imageWidth: isAudio ? 1200 : undefined,
+                    imageHeight: isAudio ? 630 : undefined,
                     functionBaseUrl,
                     isBot,
                     videoUrl,
