@@ -270,7 +270,7 @@ export function ActionBar({
       ? `${window.location.origin}/app/post/${postId}`
       : window.location.href;
     navigator.clipboard.writeText(url);
-    toast.success('Post URL copied to clipboard');
+    toast.success(t('postActions.urlCopied'));
     setSheetOpen(false);
   };
 
