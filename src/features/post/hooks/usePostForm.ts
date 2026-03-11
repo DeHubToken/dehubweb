@@ -183,6 +183,27 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   }, []);
   const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false);
 
+  // Auto-save active draft to localStorage whenever text fields change
+  useEffect(() => {
+    const draft: ActiveDraft = {
+      text, description, showDescription, titleText, showTitle,
+      selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
+      isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
+      isTokenGated, tokenContract, tokenAmount,
+    };
+    // Only save if there's meaningful content
+    const hasContent = text.trim() || description.trim() || titleText.trim() ||
+      selectedCategory || isPPV || isWatch2Earn || isTokenGated || isSubscribersOnly;
+    if (hasContent) {
+      saveActiveDraft(draft);
+    } else {
+      clearActiveDraft();
+    }
+  }, [text, description, showDescription, titleText, showTitle,
+    selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
+    isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
+    isTokenGated, tokenContract, tokenAmount]);
+
   // Refs
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
