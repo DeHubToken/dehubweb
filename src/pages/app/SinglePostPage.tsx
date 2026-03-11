@@ -789,9 +789,48 @@ export default function SinglePostPage() {
               >
                 <Link2 className="w-5 h-5" /> {t('postOptions.copyLink')}
               </button>
+              {!(walletAddress && videoData.creatorId?.toLowerCase() === walletAddress.toLowerCase()) && (
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
+                </button>
+              )}
+              {walletAddress && videoData.creatorId?.toLowerCase() === walletAddress.toLowerCase() && (
+                <>
+                  <div className="border-t border-white/10 my-1" />
+                  <button
+                    onClick={() => { setShowDesktopOptionsDrawer(false); setShowEditModal(true); }}
+                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                  >
+                    <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
+                  </button>
+                  <button
+                    onClick={() => { setShowDesktopOptionsDrawer(false); setShowDeleteModal(true); }}
+                    className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-white/10 rounded-xl transition-colors text-left"
+                  >
+                    <Trash2 className="w-5 h-5" /> {t('postOptions.deletePost')}
+                  </button>
+                </>
+              )}
             </div>
           </DrawerContent>
         </Drawer>
+
+        {/* Edit Post Modal */}
+        <EditPostModal
+          open={showEditModal}
+          onOpenChange={setShowEditModal}
+          tokenId={id || ''}
+          currentTitle={videoData.title}
+          currentDescription={videoData.description}
+        />
+
+        {/* Delete Post Modal */}
+        <DeletePostModal
+          open={showDeleteModal}
+          onOpenChange={setShowDeleteModal}
+          tokenId={id || ''}
+          onSuccess={() => navigate('/app')}
+        />
 
         {/* Tip Modal */}
         <TipModal
