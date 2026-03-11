@@ -178,7 +178,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     try {
       await followUser(creatorAddress);
       setFollowedCreators(prev => new Set(prev).add(creatorAddress));
-      toast.success(`Following ${currentShort.displayName || currentShort.creatorUsername || currentShort.username}!`);
+      toast.success(t('shorts.followingUser', { name: currentShort.displayName || currentShort.creatorUsername || currentShort.username }));
     } catch (error: unknown) {
       console.error('Failed to follow:', error);
       // Check if error indicates already following
