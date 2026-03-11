@@ -167,7 +167,7 @@ export function IncomeChart() {
                 />
                 <span className="text-sm text-zinc-300 truncate">
                   <span className="font-medium" style={{ color: item.color }}>{item.value}%</span>
-                  {' '}{item.name}
+                  {' '}{t(SOURCE_I18N[item.key] || item.name)}
                   <span className="text-zinc-500 ml-1">({item.rawValue.toLocaleString()})</span>
                 </span>
               </div>
