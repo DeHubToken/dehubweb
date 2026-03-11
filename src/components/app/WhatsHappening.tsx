@@ -35,7 +35,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
   const [topicPeriod, setTopicPeriod] = useState<TopicPeriod>('all');
   const [tickerPeriod, setTickerPeriod] = useState<TickerPeriod>('all');
 
-  const { data: categories = [] } = useTrendingCategories();
+  const { data: categories = [] } = useTrendingCategories(topicPeriod);
 
   const { data: topTickers = [] } = useQuery({
     queryKey: ['trending-tickers', tickerPeriod],
