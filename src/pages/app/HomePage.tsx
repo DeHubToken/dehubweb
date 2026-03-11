@@ -21,7 +21,9 @@ import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { setTabSwitchTime } from '@/lib/gesture-state';
 import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
-import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
+import { clearPersistedFeedFilters, usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
+import { SORT_OPTIONS, DATE_FILTER_OPTIONS } from '@/lib/feed-utils';
+import type { SortOption, DateFilterOption, PostTypeFilterValue } from '@/lib/feed-utils';
 
 
 // Feed components
@@ -141,7 +143,20 @@ export default function HomePage() {
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [showMusicFilters, setShowMusicFilters] = useState(false);
   const [showStagesModal, setShowStagesModal] = useState(false);
-  
+
+  // Read persisted home feed filters to detect active state for settings button
+  const [homeSort] = usePersistedFeedFilter<SortOption>('home', 'sort', SORT_OPTIONS[0]);
+  const [homeCategory] = usePersistedFeedFilter<string>('home', 'category', 'all');
+  const [homePostType] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
+  const [homeContentFilters] = usePersistedContentFilters('home');
+
+  const hasActiveFilters = 
+    homeSort.value !== SORT_OPTIONS[0].value ||
+    homeCategory !== 'all' ||
+    homePostType !== 'all' ||
+    homeContentFilters.ppv ||
+    homeContentFilters.w2e ||
+    homeContentFilters.locked;
   // Save tab state to sessionStorage whenever it changes and notify GlobalFeedNav
   useEffect(() => {
     try {
@@ -546,10 +561,18 @@ export default function HomePage() {
               {/* Settings Button - toggles current tab's filters */}
               <button
                 onClick={() => handleTabClick(activeTab)}
-                className="flex items-center justify-center px-3 py-2.5 rounded-xl text-white hover:bg-white/5"
+                className={cn(
+                  "relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors",
+                  hasActiveFilters
+                    ? "text-white"
+                    : "text-zinc-400 hover:text-white hover:bg-white/5"
+                )}
                 aria-label="Feed settings"
               >
-                <Settings2 className="w-4 h-4" />
+                {hasActiveFilters && (
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]" />
+                )}
+                <Settings2 className="relative z-10 w-4 h-4" />
               </button>
             </div>
           </div>
