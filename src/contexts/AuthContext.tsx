@@ -505,7 +505,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         window.history.replaceState({}, '', window.location.pathname);
       } catch (error) {
         console.error('[Auth] [REDIRECT] Processing failed:', error);
-        toast.error('Login failed. Please try again.');
+        toast.error(i18n.t('auth.loginFailed'));
         // Clear params even on error to prevent infinite loop
         window.history.replaceState({}, '', window.location.pathname);
       } finally {
