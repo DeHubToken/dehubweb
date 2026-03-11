@@ -63,6 +63,7 @@ export function RadioMiniPlayer() {
   const resizeStartX = useRef(0);
   const resizeStartScale = useRef(1);
   const barRef = useRef<HTMLDivElement>(null);
+  const dragControls = useDragControls();
 
   // Desktop mouse resize from corners
   const handleResizeMouseDown = useCallback((e: React.MouseEvent) => {
