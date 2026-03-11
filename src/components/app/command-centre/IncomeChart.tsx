@@ -10,7 +10,14 @@ import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
-const COLORS = ['#22c55e', '#3b82f6', '#eab308', '#ef4444', '#a855f7', '#ec4899', '#14b8a6', '#f97316'];
+
+const SOURCE_CONFIG = [
+  { key: 'tips', label: 'Tips', color: '#22c55e' },
+  { key: 'subs', label: 'Subs', color: '#3b82f6' },
+  { key: 'adRevenue', label: 'Ad Revenue', color: '#eab308' },
+  { key: 'bounties', label: 'Bounties', color: '#a855f7' },
+  { key: 'ppv', label: 'PPV Sales', color: '#ec4899' },
+] as const;
 
 function getFilterStartDate(filter: string): Date | null {
   const now = new Date();
@@ -23,113 +30,110 @@ function getFilterStartDate(filter: string): Date | null {
   }
 }
 
-function truncateAddress(addr: string) {
-  return addr.length > 10 ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : addr;
-}
-
 export function IncomeChart() {
   const [activeFilter, setActiveFilter] = useState('1m');
   const { isAuthenticated, walletAddress } = useAuth();
   const { t } = useTranslation();
 
-  // Fetch tips received by this wallet from tip_records (Supabase)
+  // Fetch tips received
   const { data: tipRecords = [], isLoading: tipsLoading } = useQuery({
     queryKey: ['tip-records-received', walletAddress],
     queryFn: async () => {
       if (!walletAddress) return [];
       const { data, error } = await supabase
         .from('tip_records')
-        .select('sender_address, amount, created_at')
+        .select('amount, created_at, tx_hash')
         .eq('receiver_address', walletAddress.toLowerCase())
         .order('created_at', { ascending: false });
-      if (error) {
-        console.error('[IncomeChart] Error fetching tip records:', error);
-        return [];
-      }
+      if (error) { console.error('[IncomeChart] tip_records error:', error); return []; }
       return data || [];
     },
     enabled: isAuthenticated && !!walletAddress,
     staleTime: 30_000,
   });
 
-  // Also fetch on-chain DHB transfers to capture tips not recorded in Supabase
+  // Fetch PPV sales as creator
+  const { data: ppvRecords = [], isLoading: ppvLoading } = useQuery({
+    queryKey: ['ppv-sales-received', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return [];
+      const { data, error } = await supabase
+        .from('ppv_purchases')
+        .select('amount, created_at')
+        .eq('creator_address', walletAddress.toLowerCase())
+        .order('created_at', { ascending: false });
+      if (error) { console.error('[IncomeChart] ppv_purchases error:', error); return []; }
+      return data || [];
+    },
+    enabled: isAuthenticated && !!walletAddress,
+    staleTime: 30_000,
+  });
+
+  // On-chain DHB transfers
   const { data: onchainTransfers = [], isLoading: onchainLoading } = useOnchainDHBTransfers(walletAddress);
 
-  const isLoading = tipsLoading || onchainLoading;
-
-  // Merge Supabase tip_records with on-chain incoming transfers
-  const mergedTips = useMemo(() => {
-    const tips: Array<{ sender_address: string; amount: number; created_at: string }> = [];
-
-    // Add Supabase tip records
-    tipRecords.forEach((tip: any) => {
-      tips.push({
-        sender_address: tip.sender_address?.toLowerCase() || '',
-        amount: Number(tip.amount),
-        created_at: tip.created_at,
-      });
-    });
-
-    // Add on-chain incoming transfers (deduplicate by matching tx_hash if possible)
-    const supabaseTxHashes = new Set(tipRecords.map((t: any) => t.tx_hash?.toLowerCase()).filter(Boolean));
-    
-    onchainTransfers.forEach(transfer => {
-      // Only incoming, non-fiat-purchase transfers (tips/rewards from other users)
-      if (!transfer.isIncoming || transfer.isFiatPurchase) return;
-      // Skip if already in Supabase records
-      if (transfer.txHash && supabaseTxHashes.has(transfer.txHash.toLowerCase())) return;
-
-      tips.push({
-        sender_address: transfer.from.toLowerCase(),
-        amount: transfer.amount,
-        created_at: new Date(transfer.timestamp * 1000).toISOString(),
-      });
-    });
-
-    return tips;
-  }, [tipRecords, onchainTransfers]);
-
-  const filteredTips = useMemo(() => {
-    const startDate = getFilterStartDate(activeFilter);
-    if (!startDate) return mergedTips;
-    return mergedTips.filter((tip) => new Date(tip.created_at) >= startDate);
-  }, [mergedTips, activeFilter]);
+  const isLoading = tipsLoading || ppvLoading || onchainLoading;
 
   const { chartData, totalEarned } = useMemo(() => {
-    if (filteredTips.length === 0) return { chartData: [], totalEarned: 0 };
+    const startDate = getFilterStartDate(activeFilter);
 
-    const bySender: Record<string, number> = {};
-    let total = 0;
+    const inRange = (dateStr: string) => !startDate || new Date(dateStr) >= startDate;
 
-    for (const tip of filteredTips) {
-      const sender = tip.sender_address;
-      bySender[sender] = (bySender[sender] || 0) + Number(tip.amount);
-      total += Number(tip.amount);
-    }
+    // Tips from Supabase
+    let tipsTotal = 0;
+    tipRecords.forEach((r: any) => {
+      if (inRange(r.created_at)) tipsTotal += Number(r.amount);
+    });
 
-    const sorted = Object.entries(bySender)
-      .sort(([, a], [, b]) => b - a)
-      .slice(0, 8); // top 8 senders
+    // On-chain incoming (non-fiat, not already in tip_records) → add to tips
+    const supabaseTxHashes = new Set(tipRecords.map((t: any) => t.tx_hash?.toLowerCase()).filter(Boolean));
+    onchainTransfers.forEach(transfer => {
+      if (!transfer.isIncoming || transfer.isFiatPurchase) return;
+      if (transfer.txHash && supabaseTxHashes.has(transfer.txHash.toLowerCase())) return;
+      const ts = new Date(transfer.timestamp * 1000).toISOString();
+      if (inRange(ts)) tipsTotal += transfer.amount;
+    });
 
-    const data = sorted.map(([address, value], i) => ({
-      name: truncateAddress(address),
-      fullAddress: address,
-      value: Math.round((value / total) * 1000) / 10,
-      rawValue: Math.round(value * 100) / 100,
-      color: COLORS[i % COLORS.length],
-    }));
+    // PPV Sales
+    let ppvTotal = 0;
+    ppvRecords.forEach((r: any) => {
+      if (inRange(r.created_at)) ppvTotal += Number(r.amount);
+    });
+
+    // Subs, Ad Revenue, Bounties — no DB source yet, placeholder 0
+    const subsTotal = 0;
+    const adRevenueTotal = 0;
+    const bountiesTotal = 0;
+
+    const totals: Record<string, number> = {
+      tips: Math.round(tipsTotal * 100) / 100,
+      subs: Math.round(subsTotal * 100) / 100,
+      adRevenue: Math.round(adRevenueTotal * 100) / 100,
+      bounties: Math.round(bountiesTotal * 100) / 100,
+      ppv: Math.round(ppvTotal * 100) / 100,
+    };
+
+    const total = Object.values(totals).reduce((a, b) => a + b, 0);
+
+    const data = SOURCE_CONFIG
+      .filter(s => totals[s.key] > 0)
+      .map(s => ({
+        name: s.label,
+        value: total > 0 ? Math.round((totals[s.key] / total) * 1000) / 10 : 0,
+        rawValue: totals[s.key],
+        color: s.color,
+      }));
 
     return { chartData: data, totalEarned: Math.round(total * 100) / 100 };
-  }, [filteredTips]);
+  }, [tipRecords, ppvRecords, onchainTransfers, activeFilter]);
 
   return (
     <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
-      {/* Header with time filters */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <div className="flex items-center gap-2 mr-auto">
           <span className="text-white font-semibold">{t('commandCentre.incomeChart')}</span>
           {totalEarned > 0 && (
-            <span className="text-emerald-400 text-sm font-semibold">{totalEarned} DHB</span>
+            <span className="text-emerald-400 text-sm font-semibold">{totalEarned.toLocaleString()} DHB</span>
           )}
         </div>
         <GlassFilterRow
@@ -139,7 +143,6 @@ export function IncomeChart() {
         />
       </div>
 
-      {/* Donut Chart with Legend */}
       {isLoading ? (
         <div className="flex items-center justify-center h-40">
           <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
@@ -156,7 +159,7 @@ export function IncomeChart() {
                 <span className="text-sm text-zinc-300 truncate">
                   <span className="font-medium" style={{ color: item.color }}>{item.value}%</span>
                   {' '}{item.name}
-                  <span className="text-zinc-500 ml-1">({item.rawValue})</span>
+                  <span className="text-zinc-500 ml-1">({item.rawValue.toLocaleString()})</span>
                 </span>
               </div>
             ))}
