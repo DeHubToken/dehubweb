@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { Snowflake, Trophy, Gift, Star, Loader2, ExternalLink } from 'lucide-react';
+import { Snowflake, Trophy, Gift, Star, Loader2, ExternalLink, Crown } from 'lucide-react';
 
 interface WinnerEntry {
   wallet: string;
-  buyAmount: string;
-  rawAmount: number;
-  bonusAmount: string;
-  rawBonusAmount: number;
-  txHash: string;
+  buyAmount?: string;
+  rawAmount?: number;
+  bonusAmount?: string;
+  rawBonusAmount?: number;
+  prize?: string;
+  rawPrize?: number;
+  txHash?: string;
   currentBalance: string;
   tier: string;
   username?: string | null;
@@ -24,11 +26,14 @@ interface DrawResult {
     uniqueBuyers: number;
     eligibleBuys: number;
     eligibleUniqueBuyers: number;
+    preDecemberHolders?: number;
+    eligibleStakers?: number;
   };
   winners: {
     tier1: WinnerEntry[];
     tier2: WinnerEntry[];
     tier3: WinnerEntry[];
+    stakerTier?: WinnerEntry[];
   };
   totalWinners: number;
 }
@@ -69,7 +74,7 @@ function WalletCell({ winner }: { winner: WinnerEntry }) {
   );
 }
 
-function TierTable({
+function BuyerTierTable({
   title,
   icon,
   color,
@@ -97,29 +102,60 @@ function TierTable({
               <th className="text-right p-3">Buy Amount</th>
               <th className="text-right p-3">Bonus</th>
               <th className="text-right p-3">Current Balance</th>
-              <th className="text-center p-3">Tx</th>
+              {winners[0]?.txHash && <th className="text-center p-3">Tx</th>}
             </tr>
           </thead>
           <tbody>
             {winners.map((w, i) => (
-              <tr key={w.txHash} className="border-b border-white/5 hover:bg-white/[0.03] transition-colors">
+              <tr key={w.txHash || w.wallet} className="border-b border-white/5 hover:bg-white/[0.03] transition-colors">
                 <td className="p-3 text-white/40">{i + 1}</td>
-                <td className="p-3">
-                  <WalletCell winner={w} />
-                </td>
+                <td className="p-3"><WalletCell winner={w} /></td>
                 <td className="p-3 text-right text-white font-mono">{w.buyAmount} DHB</td>
                 <td className={`p-3 text-right font-mono font-semibold ${color}`}>+{w.bonusAmount} DHB</td>
                 <td className="p-3 text-right text-white/60 font-mono">{w.currentBalance}</td>
-                <td className="p-3 text-center">
-                  <a
-                    href={`${BASESCAN_TX}${w.txHash}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white/40 hover:text-white/80"
-                  >
-                    <ExternalLink className="w-4 h-4 inline" />
-                  </a>
-                </td>
+                {w.txHash && (
+                  <td className="p-3 text-center">
+                    <a href={`${BASESCAN_TX}${w.txHash}`} target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white/80">
+                      <ExternalLink className="w-4 h-4 inline" />
+                    </a>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function StakerTierTable({ winners }: { winners: WinnerEntry[] }) {
+  if (!winners.length) return null;
+  return (
+    <div className="mb-8">
+      <div className="flex items-center gap-2 mb-3">
+        <Crown className="w-5 h-5 text-amber-400" />
+        <h2 className="text-lg font-bold text-amber-400">Stakers & Holders — 1,000,000 DHB Each</h2>
+        <span className="text-white/40 text-sm">({winners.length} winner{winners.length > 1 ? 's' : ''})</span>
+      </div>
+      <p className="text-white/40 text-xs mb-3">Pre-December holders & stakers who still hold DHB</p>
+      <div className="overflow-x-auto rounded-xl border border-white/10 bg-white/[0.03]">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-white/10 text-white/50 text-xs uppercase tracking-wider">
+              <th className="text-left p-3">#</th>
+              <th className="text-left p-3">Wallet</th>
+              <th className="text-right p-3">Prize</th>
+              <th className="text-right p-3">Current Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            {winners.map((w, i) => (
+              <tr key={w.wallet} className="border-b border-white/5 hover:bg-white/[0.03] transition-colors">
+                <td className="p-3 text-white/40">{i + 1}</td>
+                <td className="p-3"><WalletCell winner={w} /></td>
+                <td className="p-3 text-right font-mono font-semibold text-amber-400">{w.prize}</td>
+                <td className="p-3 text-right text-white/60 font-mono">{w.currentBalance}</td>
               </tr>
             ))}
           </tbody>
@@ -159,8 +195,7 @@ export default function WinterWonderlandPage() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-4">
           <Loader2 className="w-8 h-8 animate-spin text-white/60 mx-auto" />
-          <p className="text-white/50 text-sm">Running on-chain draw... scanning Uniswap buys & verifying holdings</p>
-          <p className="text-white/30 text-xs">This may take 30-60 seconds</p>
+          <p className="text-white/50 text-sm">Loading draw results...</p>
         </div>
       </div>
     );
@@ -187,7 +222,7 @@ export default function WinterWonderlandPage() {
           Random draw from Uniswap buys between Dec 1, 2025 – Jan 25, 2026
         </p>
         <p className="text-white/30 text-xs mt-1">
-          Only buyers still holding qualify • {data.totalWinners} winners drawn
+          {data.totalWinners} winners drawn • Results are final
         </p>
       </div>
 
@@ -196,7 +231,7 @@ export default function WinterWonderlandPage() {
         {[
           { label: 'Total Buys', value: data.stats.totalBuysScanned.toLocaleString() },
           { label: 'Unique Buyers', value: data.stats.uniqueBuyers.toLocaleString() },
-          { label: 'Still Holding', value: data.stats.eligibleUniqueBuyers.toLocaleString() },
+          { label: 'Eligible', value: data.stats.eligibleUniqueBuyers.toLocaleString() },
           { label: 'Winners', value: data.totalWinners.toString() },
         ].map((s) => (
           <div key={s.label} className="bg-white/[0.04] rounded-xl p-4 text-center border border-white/5">
@@ -206,30 +241,35 @@ export default function WinterWonderlandPage() {
         ))}
       </div>
 
-      {/* Tier Tables */}
-      <TierTable
+      {/* Buyer Tier Tables */}
+      <BuyerTierTable
         title="Tier 1 — 100% Bonus (max 5M buy)"
         icon={<Trophy className="w-5 h-5 text-yellow-400" />}
         color="text-yellow-400"
         winners={data.winners.tier1}
       />
-      <TierTable
+      <BuyerTierTable
         title="Tier 2 — 50% Bonus (max 10M buy)"
         icon={<Star className="w-5 h-5 text-sky-400" />}
         color="text-sky-400"
         winners={data.winners.tier2}
       />
-      <TierTable
+      <BuyerTierTable
         title="Tier 3 — 20% Bonus (no max)"
         icon={<Gift className="w-5 h-5 text-emerald-400" />}
         color="text-emerald-400"
         winners={data.winners.tier3}
       />
 
+      {/* Staker/Holder Tier */}
+      {data.winners.stakerTier && data.winners.stakerTier.length > 0 && (
+        <StakerTierTable winners={data.winners.stakerTier} />
+      )}
+
       {/* Footer */}
       <div className="text-center text-white/30 text-xs mt-8 space-y-1">
         <p>Draw executed: {new Date(data.drawDate).toLocaleString()}</p>
-        <p>⚠️ Results are randomized — refreshing will produce different winners</p>
+        <p>Results are final and stored on-chain verification</p>
       </div>
     </div>
   );
