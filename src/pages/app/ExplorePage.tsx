@@ -36,6 +36,7 @@ import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { VideoCard, ImageCard, PostCard } from '@/components/app/cards';
 import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
 import { useDexScreenerSearchMulti } from '@/hooks/use-dexscreener';
+import { useContractToTicker } from '@/hooks/use-contract-to-ticker';
 import { useCmcMarketCap } from '@/hooks/use-cmc-market-cap';
 import { CashtagPriceCard } from '@/components/app/CashtagPriceCard';
 import { useStockQuote } from '@/hooks/use-stock-quote';
@@ -422,7 +423,13 @@ export default function ExplorePage() {
   // CRITICAL: Use debounced values for ALL hooks to prevent race conditions
   // Previously, raw searchQuery was passed to some hooks while useDeHubSearch debounced internally,
   // causing results from different hooks to be out of sync (flashing between old/new results)
-  const effectiveQuery = isShortSearch ? debouncedShortQuery : debouncedFullQuery;
+  const baseEffectiveQuery = isShortSearch ? debouncedShortQuery : debouncedFullQuery;
+
+  // Resolve contract addresses (0x...) to ticker symbols via DexScreener
+  const { resolvedTicker, isResolving: isResolvingContract } = useContractToTicker(baseEffectiveQuery);
+  
+  // If a contract address resolved to a ticker, use that instead
+  const effectiveQuery = resolvedTicker || baseEffectiveQuery;
 
   // Save scroll position only when there's an active search
   useEffect(() => {
@@ -805,6 +812,23 @@ export default function ExplorePage() {
                     <X className="w-5 h-5" />
                   </button>
                 </div>
+
+                {/* Contract address resolving indicator */}
+                {isResolvingContract && (
+                  <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-zinc-900/80 border border-zinc-800/50 text-sm text-muted-foreground">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Resolving contract address…</span>
+                  </div>
+                )}
+
+                {/* Resolved ticker badge */}
+                {resolvedTicker && !isResolvingContract && /^0x[a-f0-9]{40}$/i.test(baseEffectiveQuery.trim()) && (
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-800/60 border border-zinc-700/40 text-xs text-muted-foreground mb-1">
+                    <span className="truncate max-w-[120px] font-mono">{baseEffectiveQuery.trim().slice(0, 6)}…{baseEffectiveQuery.trim().slice(-4)}</span>
+                    <span>→</span>
+                    <span className="font-semibold text-foreground">{resolvedTicker}</span>
+                  </div>
+                )}
 
                 {/* Stock / Crypto Cashtag Result Switcher */}
                 {(stockData?.found || dexPairs.length > 0) && (
