@@ -226,13 +226,10 @@ Deno.serve(async (req) => {
 
     console.log(`[WinterDraw] Registered: ${Object.keys(registeredUsers).length}, Unregistered: ${unregisteredWallets.size}`);
 
-    // ── Step 6: Filter eligible buys (must still hold purchased amount) ──
-    // Registration is NOT required — "every buy enters"
-    const eligibleBuys = buysList.filter(buy => {
-      const currentBalance = balances[buy.buyer] || 0;
-      return currentBalance >= buy.amount;
-    });
-    console.log(`[WinterDraw] Eligible buys (still holding): ${eligibleBuys.length}`);
+    // ── Step 6: ALL buys are eligible — "every buy enters the draw" ──
+    // No holding requirement, no registration requirement
+    const eligibleBuys = [...buysList];
+    console.log(`[WinterDraw] All buys eligible: ${eligibleBuys.length}`);
 
     // ── Step 7: STAKER/HOLDER TIER ──
     // Find holders who had DHB before Dec 1 2025 by checking transfers before that date
