@@ -558,7 +558,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   };
 
   const handleQuote = () => {
-    toast.info('Quote for shorts coming soon!');
+    toast.info(t('shorts.quoteComingSoon'));
     setShareSheetOpen(false);
   };
 
