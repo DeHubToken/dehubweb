@@ -33,6 +33,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
     queryFn: () => getTopTickers(10, tickerPeriod),
     staleTime: 60_000,
     refetchInterval: 120_000,
+    placeholderData: (previousData) => previousData,
   });
 
   const handleCategoryClick = (categoryName: string) => {
