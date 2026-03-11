@@ -47,9 +47,9 @@ export function StatsBar() {
       <div className="grid grid-cols-5 divide-x divide-white/[0.06]">
         {stats.map((stat) => (
           <div key={stat.label} className="flex flex-col items-center gap-1 px-2">
-            <stat.icon className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm sm:text-base font-bold text-foreground">{stat.value}</span>
-            <span className="text-[10px] sm:text-xs text-muted-foreground">{stat.label}</span>
+            <stat.icon className="w-4 h-4 text-white/60" />
+            <span className="text-sm sm:text-base font-bold text-white">{stat.value}</span>
+            <span className="text-[10px] sm:text-xs text-white/50">{stat.label}</span>
           </div>
         ))}
       </div>
