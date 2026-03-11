@@ -286,27 +286,23 @@ Deno.serve(async (req) => {
 
     console.log(`[WinterDraw] Pre-December addresses found: ${preDecHolders.size}`);
 
-    // Now filter: must currently hold OR have staked, AND be registered
-    // Check staked balances (DHB sent to staking address = staked)
+    // Now filter: must currently hold DHB (no registration requirement)
     const stakerCandidates: { addr: string; totalBalance: number }[] = [];
 
     const preDecList = [...preDecHolders];
     for (let i = 0; i < preDecList.length; i += 10) {
       const batch = preDecList.slice(i, i + 10);
       await Promise.all(batch.map(async (addr) => {
-        // Skip addresses already in buyer pool (they compete in buyer tiers)
-        // Actually per rules they CAN be in both - but staker tier is separate
         const walletBalance = balances[addr] ?? await getBalance(baseUrl, DHB_TOKEN_BASE, addr);
         balances[addr] = walletBalance;
 
-        // Check if registered
+        // Try to resolve username/avatar for display (but NOT required for eligibility)
         if (!registeredUsers[addr] && !unregisteredWallets.has(addr)) {
           const user = await checkRegistered(addr);
           if (user) registeredUsers[addr] = user;
           else unregisteredWallets.add(addr);
         }
 
-        if (unregisteredWallets.has(addr)) return;
         if (walletBalance <= 0) return;
 
         stakerCandidates.push({ addr, totalBalance: walletBalance });
