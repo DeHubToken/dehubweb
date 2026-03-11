@@ -36,6 +36,7 @@ import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { VideoCard, ImageCard, PostCard } from '@/components/app/cards';
 import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
 import { useDexScreenerSearchMulti } from '@/hooks/use-dexscreener';
+import { useContractToTicker } from '@/hooks/use-contract-to-ticker';
 import { useCmcMarketCap } from '@/hooks/use-cmc-market-cap';
 import { CashtagPriceCard } from '@/components/app/CashtagPriceCard';
 import { useStockQuote } from '@/hooks/use-stock-quote';
