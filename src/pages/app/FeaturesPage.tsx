@@ -631,6 +631,44 @@ function SubmitFeatureDrawer({
             </div>
           </div>
 
+          {/* Media Upload */}
+          <div>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">Attach Image or Video (optional)</label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,video/*"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            {mediaPreview ? (
+              <div className="relative rounded-xl overflow-hidden border border-white/10 bg-zinc-900">
+                {mediaFile?.type.startsWith('video/') ? (
+                  <video src={mediaPreview} className="w-full max-h-48 object-contain" controls />
+                ) : (
+                  <img src={mediaPreview} alt="Preview" className="w-full max-h-48 object-contain" />
+                )}
+                <button
+                  type="button"
+                  onClick={removeMedia}
+                  className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full h-24 rounded-xl border border-dashed border-white/10 bg-zinc-900/50 flex flex-col items-center justify-center gap-1.5 text-zinc-500 hover:text-zinc-300 hover:border-white/20 transition-colors"
+              >
+                <ImagePlus className="w-5 h-5" />
+                <span className="text-xs">Click to upload</span>
+              </button>
+            )}
+            {errors.media && <span className="text-red-400 text-[11px] mt-1 block">{errors.media}</span>}
+          </div>
+
           {/* Submit */}
           <Button
             onClick={handleSubmit}
