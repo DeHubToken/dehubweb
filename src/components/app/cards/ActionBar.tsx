@@ -185,7 +185,7 @@ export function ActionBar({
     if (!postId || isVoting) return;
     
     if (!isAuthenticated) {
-      toast.error('Log in to engage');
+      toast.error(t('postActions.logInToEngage'));
       return;
     }
 
