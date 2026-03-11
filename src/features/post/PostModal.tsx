@@ -107,6 +107,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         setTokenAmount={actions.setTokenAmount}
         selectedCategory={state.selectedCategory}
         setSelectedCategory={actions.setSelectedCategory}
+        markCategorySaved={actions.markCategorySaved}
         showTitle={state.showTitle}
         setShowTitle={actions.setShowTitle}
         hasVideoOrAudio={computed.hasVideo || computed.hasAudio}

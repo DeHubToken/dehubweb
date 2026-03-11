@@ -43,6 +43,7 @@ interface PostAccessTogglesProps {
   setTokenAmount: (value: string) => void;
   selectedCategory: string;
   setSelectedCategory: (value: string) => void;
+  markCategorySaved?: () => void;
   showTitle: boolean;
   setShowTitle: (value: boolean) => void;
   hasVideoOrAudio: boolean;
@@ -75,6 +76,7 @@ export function PostAccessToggles({
   setTokenAmount,
   selectedCategory,
   setSelectedCategory,
+  markCategorySaved,
   showTitle,
   setShowTitle,
   hasVideoOrAudio,
@@ -265,6 +267,7 @@ export function PostAccessToggles({
                 type="button"
                 onClick={() => {
                   localStorage.setItem('post_default_categories', selectedCategory);
+                  markCategorySaved?.();
                   toast.success('Default categories saved');
                 }}
                 className="text-xs text-white/50 hover:text-white"

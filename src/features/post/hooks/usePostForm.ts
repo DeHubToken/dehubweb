@@ -127,6 +127,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       return localStorage.getItem('post_default_categories') || '';
     } catch { return ''; }
   });
+  const categorySavedRef = useRef(false);
   const [showTitle, setShowTitle] = useState(() => {
     try { return localStorage.getItem('post_show_title') === 'true'; } catch { return false; }
   });
@@ -623,6 +624,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setScheduledDate(null);
     setChainId(BASE_CHAIN_ID as ChainId);
     setTitleText('');
+    // Only persist category if user explicitly saved defaults
+    if (!categorySavedRef.current) {
+      setSelectedCategory('');
+      try { localStorage.removeItem('post_default_categories'); } catch {}
+    }
+    categorySavedRef.current = false;
   }, []);
 
   // Drafts actions
@@ -1257,6 +1264,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       stopRecording,
       setChainId,
       setSelectedCategory,
+      markCategorySaved: () => { categorySavedRef.current = true; },
       setShowTitle: handleSetShowTitle,
       setTitleText,
       insertEmoji,
