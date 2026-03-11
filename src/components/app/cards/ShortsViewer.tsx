@@ -217,7 +217,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     if (!inlineCommentText.trim() || !currentShort?.id || isPostingComment) return;
     
     if (!isAuthenticated) {
-      toast.error('Please log in to comment');
+      toast.error(t('shorts.pleaseLogInToComment'));
       return;
     }
     
