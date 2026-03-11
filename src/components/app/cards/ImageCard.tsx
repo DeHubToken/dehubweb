@@ -79,10 +79,12 @@ interface ImageCardProps {
  */
 function ImageCarousel({ 
   images, 
-  onImageClick 
+  onImageClick,
+  onIndexChange 
 }: { 
   images: string[];
   onImageClick: (index: number) => void;
+  onIndexChange?: (index: number) => void;
 }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [currentIndex, setCurrentIndex] = useState(0);
