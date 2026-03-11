@@ -226,7 +226,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       await postComment(currentShort.id, inlineCommentText.trim());
       setInlineCommentText('');
       queryClient.invalidateQueries({ queryKey: ['shorts-inline-comments', currentShort.id] });
-      toast.success('Comment posted!');
+      toast.success(t('shorts.commentPosted'));
     } catch (error) {
       toast.error('Failed to post comment');
     } finally {
