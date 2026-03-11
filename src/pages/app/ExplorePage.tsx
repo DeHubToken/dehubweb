@@ -288,7 +288,9 @@ const UserResultCard = ({
           )}
         </div>
       </div>
-      {!isFollowing && (
+      {isFollowing ? (
+        <span className="text-xs text-zinc-500 flex-shrink-0 ml-2">Following ✓</span>
+      ) : (
         <Button
           variant="outline"
           size="sm"
