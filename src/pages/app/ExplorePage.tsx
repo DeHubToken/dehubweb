@@ -317,6 +317,7 @@ export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [exploreCategoryId, setExploreCategoryId] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterState>({
     w2e: false,
     ppv: false,
@@ -327,6 +328,67 @@ export default function ExplorePage() {
     comments: 'Any',
   });
   const [selectedCountry, setSelectedCountry] = useState('Global');
+
+  // Fetch categories for the carousel
+  const { data: exploreCategories = [] } = useQuery({
+    queryKey: ['dehub-categories'],
+    queryFn: getCategories,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Category browse feed (when a category is selected, not searching)
+  const categoryBrowseFeed = useInfiniteQuery({
+    queryKey: ['explore-category-feed', exploreCategoryId],
+    queryFn: async ({ pageParam = 0 }) => {
+      const result = await searchNFTs({
+        page: pageParam,
+        unit: 15,
+        category: exploreCategoryId || undefined,
+        sortMode: 'new',
+        status: 'minted',
+      });
+      return {
+        items: result.data || [],
+        page: pageParam,
+        hasMore: result.has_more,
+      };
+    },
+    getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.page + 1 : undefined,
+    initialPageParam: 0,
+    enabled: !!exploreCategoryId && !searchQuery.trim(),
+    staleTime: 1000 * 60 * 2,
+  });
+
+  const categoryFeedItems = useMemo(() => {
+    if (!categoryBrowseFeed.data?.pages) return [];
+    const allNfts = categoryBrowseFeed.data.pages.flatMap(p => p.items || []);
+    return allNfts.map((nft, index) => {
+      const contentType = getContentType(nft);
+      if (contentType === 'video' || contentType === 'audio') {
+        return { type: 'video' as const, item: mapNFTToVideoItem(nft, index) };
+      } else {
+        return { type: 'image' as const, item: mapNFTToImagePost(nft, index) };
+      }
+    });
+  }, [categoryBrowseFeed.data]);
+
+  // Infinite scroll for category browse
+  const categoryLoaderRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!exploreCategoryId || searchQuery.trim()) return;
+    const el = categoryLoaderRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && categoryBrowseFeed.hasNextPage && !categoryBrowseFeed.isFetchingNextPage) {
+          categoryBrowseFeed.fetchNextPage();
+        }
+      },
+      { threshold: 0.1, rootMargin: '200px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [exploreCategoryId, searchQuery, categoryBrowseFeed.hasNextPage, categoryBrowseFeed.isFetchingNextPage, categoryBrowseFeed.fetchNextPage]);
 
   // Search history hook
   const { recentSearches, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
