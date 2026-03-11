@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { PostMetadata } from '@/components/app/cards/PostMetadata';
+import { renderTextWithLinks } from '@/components/app/TranslatableText';
 
 import { PostCard } from '@/components/app/cards/PostCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
