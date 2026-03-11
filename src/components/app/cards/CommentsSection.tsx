@@ -96,11 +96,18 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
   } : undefined;
 
   // Resolve imageUrl (GIF comments or image comments)
+  // API may return gif in imageUrl, gifUrl, or image field
   let commentImageUrl: string | undefined;
-  if (apiComment.imageUrl) {
-    commentImageUrl = apiComment.imageUrl.startsWith('http')
-      ? apiComment.imageUrl
-      : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${apiComment.imageUrl}`;
+  const rawImageUrl = apiComment.imageUrl || (apiComment as any).gifUrl || (apiComment as any).image || (apiComment as any).gif;
+  if (rawImageUrl) {
+    commentImageUrl = rawImageUrl.startsWith('http')
+      ? rawImageUrl
+      : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawImageUrl}`;
+  }
+  
+  // Debug: log comments that have any media-related fields
+  if (rawImageUrl || (apiComment as any).gifUrl || (apiComment as any).image || (apiComment as any).gif) {
+    console.log('[Comment] media fields:', { id: apiComment.id, imageUrl: apiComment.imageUrl, gifUrl: (apiComment as any).gifUrl, image: (apiComment as any).image, gif: (apiComment as any).gif, resolved: commentImageUrl });
   }
 
   return {
