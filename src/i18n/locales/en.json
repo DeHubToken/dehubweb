@@ -912,7 +912,41 @@
     "statusDeclined": "Declined"
   },
   "auth": {
-    "loginRequired": "Log in required"
+    "loginRequired": "Log in required",
+    "pleaseSignMessage": "Please sign the message in your wallet...",
+    "signatureRejected": "Signature rejected. Please try again.",
+    "walletSignatureFailed": "Wallet signature failed. Please try again.",
+    "welcomeNew": "Welcome to DeHub!",
+    "welcomeBack": "Welcome back!",
+    "gettingAccount": "Getting your account...",
+    "loginFailed": "Login failed. Please try again.",
+    "settingUpAccount": "Setting up your account...",
+    "signingIn": "Signing in...",
+    "almostThere": "Almost there...",
+    "authFailed": "Authentication failed",
+    "retrying": "Retrying...",
+    "failedConnectProvider": "Failed to connect with {{provider}}. Please try again.",
+    "failedSendVerificationEmail": "Failed to send verification code. Please check your email and try again.",
+    "failedSendVerificationSMS": "Failed to send verification code. Please check your number and try again.",
+    "connectionRejected": "Connection rejected",
+    "failedConnectWallet": "Failed to connect to {{wallet}}. Please try again.",
+    "connectingTo": "Connecting to {{provider}}..."
+  },
+  "shorts": {
+    "unableToFollow": "Unable to follow - creator not found",
+    "pleaseLogInToFollow": "Please log in to follow",
+    "followingUser": "Following {{name}}!",
+    "alreadyFollowing": "You're already following {{name}}",
+    "failedToFollow": "Failed to follow user",
+    "pleaseLogInToComment": "Please log in to comment",
+    "commentPosted": "Comment posted!",
+    "failedToPostComment": "Failed to post comment",
+    "logInToEngage": "Log in to engage",
+    "failedToVote": "Failed to vote. Please try again.",
+    "urlCopied": "Post URL copied to clipboard",
+    "reposted": "Reposted!",
+    "failedToRepost": "Failed to repost",
+    "quoteComingSoon": "Quote for shorts coming soon!"
   },
   "messages": {
     "title": "Messages",
