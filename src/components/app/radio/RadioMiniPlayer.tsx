@@ -333,7 +333,7 @@ export function RadioMiniPlayer() {
                 <X className="w-4 h-4 text-zinc-400" />
               </button>
             </div>
-          </motion.div>
+          </div>
           
           {/* BOTTOM HALF — volume control (no drag, fully interactive) */}
           <div className="px-3 pb-3">
