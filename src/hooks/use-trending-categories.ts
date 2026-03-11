@@ -7,7 +7,8 @@ import { useQuery } from '@tanstack/react-query';
 
 const DEHUB_API_BASE = 'https://api.dehub.io';
 const POSTS_PER_PAGE = 50;
-const DELAY_BETWEEN_REQUESTS_MS = 350;
+const DELAY_BETWEEN_REQUESTS_MS = 500;
+const MAX_RETRIES = 2;
 
 export type TopicPeriod = '1d' | '1w' | '1m' | '1y' | 'all';
 
