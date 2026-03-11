@@ -306,7 +306,7 @@ export function RadioMiniPlayer() {
           </div>
           
           {/* Volume bar below controls */}
-          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/[0.06]">
+          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/[0.06]" onPointerDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()}>
             <button
               onClick={() => setVolume(isMuted ? 0.7 : 0)}
               className="flex-shrink-0"
