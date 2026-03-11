@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { getAccountInfo } from '@/lib/api/dehub/users';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { Snowflake, Trophy, Gift, Star, Loader2, ExternalLink } from 'lucide-react';
 
