@@ -759,7 +759,9 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           type: 'image',
           author: post.username,
           caption: post.description || post.title || post.caption,
-          imageUrl: post.image
+          imageUrl: images[activeImageIndex] || post.image,
+          imageUrls: images.length > 1 ? images : undefined,
+          activeImageIndex: images.length > 1 ? activeImageIndex : undefined,
         }}
       />
 
