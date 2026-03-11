@@ -8,10 +8,9 @@ import { TickerLogo } from './TickerLogo';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { cn } from '@/lib/utils';
 import { getTopTickers, type TickerPeriod } from '@/lib/ticker-search-tracker';
-import { useTrendingCategories } from '@/hooks/use-trending-categories';
+import { useTrendingCategories, type TopicPeriod } from '@/hooks/use-trending-categories';
 
 type Tab = 'posts' | 'tickers';
-type TopicPeriod = '1d' | '1w' | '1m' | '1y' | 'all';
 
 const TOPIC_PERIODS: { value: TopicPeriod; label: string }[] = [
   { value: '1d', label: '1D' },
