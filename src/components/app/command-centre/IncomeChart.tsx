@@ -123,13 +123,14 @@ export function IncomeChart() {
 
     const total = Object.values(totals).reduce((a, b) => a + b, 0);
 
-    const data = SOURCE_CONFIG
-      .filter(s => totals[s.key] > 0)
-      .map(s => ({
-        name: s.label,
-        value: total > 0 ? Math.round((totals[s.key] / total) * 1000) / 10 : 0,
-        rawValue: totals[s.key],
-        color: s.color,
+    const data = SOURCE_KEYS
+      .filter(key => totals[key] > 0)
+      .map(key => ({
+        key,
+        name: key,
+        value: total > 0 ? Math.round((totals[key] / total) * 1000) / 10 : 0,
+        rawValue: totals[key],
+        color: SOURCE_COLORS[key],
       }));
 
     return { chartData: data, totalEarned: Math.round(total * 100) / 100 };
