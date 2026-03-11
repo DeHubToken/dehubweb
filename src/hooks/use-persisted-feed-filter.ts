@@ -75,6 +75,8 @@ export function setFilterValue<T>(feedType: FeedType, filterKey: string, value: 
   
   allFilters[feedType]![filterKey] = value;
   saveAllFilters(allFilters);
+  // Notify any listeners that feed filters changed
+  window.dispatchEvent(new CustomEvent('feed-filters-changed'));
 }
 
 /**
