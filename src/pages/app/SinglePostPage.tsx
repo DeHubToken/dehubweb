@@ -683,9 +683,9 @@ export default function SinglePostPage() {
     return (
       <>
         {/* Mobile/Tablet: Full immersive scrollable overlay */}
-        <div 
+         <div 
           ref={mobileScrollContainerRef}
-          className="flex flex-col fixed inset-0 z-50 bg-black lg:hidden overflow-y-auto"
+          className={`flex flex-col fixed inset-0 bg-black lg:hidden overflow-y-auto ${showEditModal || showDeleteModal ? 'z-40' : 'z-50'}`}
         >
           <div className="relative">
             <ImmersiveVideoHeader
