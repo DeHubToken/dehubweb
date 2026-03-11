@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
 import { SwapToDHBDrawer } from '@/components/app/SwapToDHBDrawer';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
@@ -903,7 +904,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
   );
 }
 
-/* ─── Import Token Dialog ─── */
+/* ─── Import Token Drawer ─── */
 function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImported }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
@@ -911,10 +912,29 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
   onImported: () => void;
 }) {
   const { t } = useTranslation();
+  const { walletAddress } = useAuth();
   const [chainId, setChainId] = useState<ChainId>(initialChainId);
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const [tokenInfo, setTokenInfo] = useState<{ name: string; symbol: string; decimals: number } | null>(null);
+
+  // Discover all wallet tokens via Alchemy
+  const { data: discoveredTokens = [], isLoading: discovering } = useQuery({
+    queryKey: ['alchemy-discover', walletAddress?.toLowerCase(), chainId],
+    queryFn: async () => {
+      const { discoverAlchemyTokens } = await import('@/lib/wallet/alchemy-tokens');
+      // Get ALL tokens (including defaults) for display
+      const { getAllTokenBalances } = await import('@/lib/wallet/tokens');
+      const allKnown = await getAllTokenBalances(walletAddress!, chainId);
+      const discovered = await discoverAlchemyTokens(walletAddress!, chainId);
+      // Merge: known tokens first, then discovered (no duplicates)
+      const knownAddrs = new Set(allKnown.map(t => t.address.toLowerCase()));
+      const extra = discovered.filter(t => !knownAddrs.has(t.address.toLowerCase()));
+      return [...allKnown.filter(t => !t.isNative && t.balance > BigInt(0)), ...extra];
+    },
+    enabled: !!walletAddress && open,
+    staleTime: 5 * 60_000,
+  });
 
   const handleLookup = async () => {
     const trimmed = address.trim();
@@ -942,69 +962,128 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
     onImported();
   };
 
+  const handleQuickImport = (token: WalletToken) => {
+    saveCustomToken(chainId, {
+      address: token.address,
+      symbol: token.symbol,
+      name: token.name,
+      decimals: token.decimals,
+    });
+    toast.success(t('wallet.imported', { symbol: token.symbol }));
+    onImported();
+  };
+
   return (
-    <Dialog open={open} onOpenChange={v => { onOpenChange(v); if (!v) { setAddress(''); setTokenInfo(null); } }}>
-      <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-white">{t('wallet.importCustomToken')}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4 pt-2">
-          {/* Chain selector for import */}
-          <div className="flex gap-1.5">
-            {CHAIN_OPTIONS.map(chain => (
-              <button
-                key={chain.id}
-                onClick={() => { setChainId(chain.id); setTokenInfo(null); }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                  chainId === chain.id ? 'bg-white/15 text-white border border-white/20' : 'bg-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-white/10 border border-white/5'
-                }`}
-              >
-                <img src={chain.icon} alt={chain.name} className="w-4 h-4 rounded-sm" />
-                {chain.name}
-              </button>
-            ))}
-          </div>
+    <Drawer open={open} onOpenChange={v => { onOpenChange(v); if (!v) { setAddress(''); setTokenInfo(null); } }}>
+      <DrawerContent glass hideHandle={false}>
+        <div className="p-5 pb-8 max-h-[85vh] overflow-y-auto">
+          <DrawerHeader className="p-0 mb-4">
+            <DrawerTitle className="text-white">{t('wallet.importCustomToken')}</DrawerTitle>
+          </DrawerHeader>
+          <div className="space-y-4">
+            {/* Chain selector for import */}
+            <div className="flex gap-1.5">
+              {CHAIN_OPTIONS.map(chain => (
+                <button
+                  key={chain.id}
+                  onClick={() => { setChainId(chain.id); setTokenInfo(null); }}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    chainId === chain.id ? 'bg-white/15 text-white border border-white/20' : 'bg-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-white/10 border border-white/5'
+                  }`}
+                >
+                  <img src={chain.icon} alt={chain.name} className="w-4 h-4 rounded-sm" />
+                  {chain.name}
+                </button>
+              ))}
+            </div>
 
-          <p className="text-xs text-zinc-400">{t('wallet.importDescription', { network: CHAIN_CONFIGS[chainId]?.name || 'this network' })}</p>
-          <div className="space-y-2">
-            <label className="text-sm text-zinc-400">{t('wallet.tokenContractAddress')}</label>
-            <Input
-              placeholder="0x..."
-              value={address}
-              onChange={e => { setAddress(e.target.value); setTokenInfo(null); }}
-              className="bg-white/5 border-white/10 text-white font-mono text-sm placeholder:text-zinc-500"
-            />
-          </div>
+            <p className="text-xs text-zinc-400">{t('wallet.importDescription', { network: CHAIN_CONFIGS[chainId]?.name || 'this network' })}</p>
+            <div className="space-y-2">
+              <label className="text-sm text-zinc-400">{t('wallet.tokenContractAddress')}</label>
+              <Input
+                placeholder="0x..."
+                value={address}
+                onChange={e => { setAddress(e.target.value); setTokenInfo(null); }}
+                className="bg-white/5 border-white/10 text-white font-mono text-sm placeholder:text-zinc-500"
+              />
+            </div>
 
-          {!tokenInfo ? (
-            <Button variant="glass" className="w-full rounded-xl" onClick={handleLookup} disabled={loading || !address.trim()}>
-              {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Search className="w-4 h-4 mr-2" />}
-              {loading ? t('wallet.lookingUp') : t('wallet.lookUpToken')}
-            </Button>
-          ) : (
-            <>
-              <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-zinc-400">{t('wallet.name')}</span>
-                  <span className="text-sm text-white font-medium">{tokenInfo.name}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-zinc-400">{t('wallet.symbol')}</span>
-                  <span className="text-sm text-white font-medium">{tokenInfo.symbol}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-zinc-400">{t('wallet.decimals')}</span>
-                  <span className="text-sm text-white font-medium">{tokenInfo.decimals}</span>
-                </div>
-              </div>
-              <Button variant="glass" className="w-full rounded-xl" onClick={handleImport}>
-                <Plus className="w-4 h-4 mr-2" />
-                {t('wallet.importToken', { symbol: tokenInfo.symbol })}
+            {!tokenInfo ? (
+              <Button variant="glass" className="w-full rounded-xl" onClick={handleLookup} disabled={loading || !address.trim()}>
+                {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Search className="w-4 h-4 mr-2" />}
+                {loading ? t('wallet.lookingUp') : t('wallet.lookUpToken')}
               </Button>
-            </>
-          )}
+            ) : (
+              <>
+                <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-zinc-400">{t('wallet.name')}</span>
+                    <span className="text-sm text-white font-medium">{tokenInfo.name}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-zinc-400">{t('wallet.symbol')}</span>
+                    <span className="text-sm text-white font-medium">{tokenInfo.symbol}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-zinc-400">{t('wallet.decimals')}</span>
+                    <span className="text-sm text-white font-medium">{tokenInfo.decimals}</span>
+                  </div>
+                </div>
+                <Button variant="glass" className="w-full rounded-xl" onClick={handleImport}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  {t('wallet.importToken', { symbol: tokenInfo.symbol })}
+                </Button>
+              </>
+            )}
+
+            {/* Discovered wallet tokens */}
+            <div className="pt-2 border-t border-white/10">
+              <p className="text-xs text-zinc-400 mb-3">Your tokens on {CHAIN_CONFIGS[chainId]?.name || 'this network'}</p>
+              {discovering ? (
+                <div className="flex items-center justify-center py-6">
+                  <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
+                </div>
+              ) : discoveredTokens.length > 0 ? (
+                <div className="space-y-1 max-h-[280px] overflow-y-auto">
+                  {discoveredTokens.map(token => (
+                    <div
+                      key={token.address}
+                      className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-white/5 transition-colors group"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        {token.logo ? (
+                          <img src={token.logo} alt={token.symbol} className="w-7 h-7 rounded-full" />
+                        ) : (
+                          <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-zinc-400 font-bold">
+                            {token.symbol.slice(0, 2)}
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="text-sm text-white font-medium truncate">{token.symbol}</p>
+                          <p className="text-[11px] text-zinc-500 truncate">{token.name}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-zinc-400">{token.formattedBalance}</span>
+                        {!token.isCustom && (
+                          <button
+                            onClick={() => handleQuickImport(token)}
+                            className="opacity-0 group-hover:opacity-100 text-xs text-emerald-400 hover:text-emerald-300 transition-all"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-zinc-500 text-center py-4">No tokens found</p>
+              )}
+            </div>
+          </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </DrawerContent>
+    </Drawer>
   );
 }
