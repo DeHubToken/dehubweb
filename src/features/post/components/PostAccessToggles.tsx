@@ -239,24 +239,24 @@ export function PostAccessToggles({
       <div className="px-4 py-2 border-t border-white/10 space-y-1">
         {/* Title - forced on for video/audio, toggleable for others */}
         {!hasVideoOrAudio && (
-          <div className="flex items-center justify-between py-0.5">
+          <label className="flex items-center justify-between py-0.5 cursor-pointer">
             <div className="flex items-center gap-2 shrink-0">
               <Type className="w-4 h-4 text-white" />
               <span className="text-sm text-white">Title</span>
             </div>
             <Switch checked={showTitle} onCheckedChange={setShowTitle} className="data-[state=checked]:bg-white scale-75" />
-          </div>
+          </label>
         )}
 
         {/* Category */}
         <div className="space-y-1.5">
-          <div className="flex items-center justify-between py-0.5">
+          <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handleCategoryToggle(selectedCategoriesArray.length === 0)}>
             <div className="flex items-center gap-2 shrink-0">
               <Hash className="w-4 h-4 text-white" />
               <span className="text-sm text-white">Category</span>
             </div>
-            <Switch checked={selectedCategoriesArray.length > 0} onCheckedChange={handleCategoryToggle} className="data-[state=checked]:bg-white scale-75" />
-          </div>
+            <Switch checked={selectedCategoriesArray.length > 0} onCheckedChange={handleCategoryToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
+          </label>
           {selectedCategoriesArray.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5 pl-6">
               {selectedCategoriesArray.length < MAX_CATEGORIES && (
@@ -288,16 +288,16 @@ export function PostAccessToggles({
         </div>
 
         {/* Subscribers */}
-        <div className="flex items-center justify-between py-0.5">
+        <label className="flex items-center justify-between py-0.5 cursor-pointer">
           <div className="flex items-center gap-2">
             <Lock className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Subscribers</span>
           </div>
           <Switch checked={isSubscribersOnly} onCheckedChange={setIsSubscribersOnly} className="data-[state=checked]:bg-white scale-75" />
-        </div>
+        </label>
 
         {/* PPV */}
-        <div className="flex items-center justify-between py-0.5">
+        <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handlePpvToggle(!isPPV)}>
           <div className="flex items-center gap-2">
             <Ticket className="w-4 h-4 text-white" />
             <span className="text-sm text-white">PPV</span>
@@ -305,11 +305,11 @@ export function PostAccessToggles({
               <span className="text-xs text-white/50">({ppvAmount} {ppvCurrency})</span>
             )}
           </div>
-          <Switch checked={isPPV} onCheckedChange={handlePpvToggle} className="data-[state=checked]:bg-white scale-75" />
-        </div>
+          <Switch checked={isPPV} onCheckedChange={handlePpvToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
+        </label>
 
         {/* Bounty */}
-        <div className="flex items-center justify-between py-0.5">
+        <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handleBountyToggle(!isWatch2Earn)}>
           <div className="flex items-center gap-2">
             <Gift className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Bounty</span>
@@ -317,11 +317,11 @@ export function PostAccessToggles({
               <span className="text-xs text-white/50">({w2eTotal} DHB)</span>
             )}
           </div>
-          <Switch checked={isWatch2Earn} onCheckedChange={handleBountyToggle} className="data-[state=checked]:bg-white scale-75" />
-        </div>
+          <Switch checked={isWatch2Earn} onCheckedChange={handleBountyToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
+        </label>
 
         {/* Token Gated */}
-        <div className="flex items-center justify-between py-0.5">
+        <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handleTokenToggle(!isTokenGated)}>
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Token Gated</span>
@@ -329,8 +329,8 @@ export function PostAccessToggles({
               <span className="text-xs text-white/50">({tokenAmount} DHB)</span>
             )}
           </div>
-          <Switch checked={isTokenGated} onCheckedChange={handleTokenToggle} className="data-[state=checked]:bg-white scale-75" />
-        </div>
+          <Switch checked={isTokenGated} onCheckedChange={handleTokenToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
+        </label>
       </div>
 
       {/* Category Drawer */}
