@@ -1020,7 +1020,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const fullError = (err.message || '').toLowerCase() + ' ' + (err.cause?.message || '').toLowerCase();
       if (fullError.includes('rejected') || fullError.includes('denied')) {
-        toast.error('Connection rejected');
+        toast.error(i18n.t('auth.connectionRejected'));
       } else {
         const names: Record<string, string> = { metamask: 'MetaMask', phantom: 'Phantom', trust: 'Trust Wallet', rabby: 'Rabby' };
         toast.error(`Failed to connect to ${names[wallet] || wallet}. Please try again.`);
