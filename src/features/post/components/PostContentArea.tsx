@@ -647,25 +647,16 @@ export function PostContentArea({
           </div>
           <div className="flex-1 min-w-0 mt-12 sm:mt-0">
             {/* Title input - shown when title toggle is on OR video/audio */}
-            <AnimatePresence>
-              {(showTitle || hasVideo || hasAudio) && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <input
-                    type="text"
-                    value={titleText}
-                    onChange={(e) => setTitleText(e.target.value)}
-                    placeholder="Title"
-                    maxLength={100}
-                    className="w-full bg-transparent text-white text-lg sm:text-xl font-medium resize-none outline-none mb-1 placeholder:text-white/50 sm:placeholder:text-white/70"
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {(showTitle || hasVideo || hasAudio) && (
+              <input
+                type="text"
+                value={titleText}
+                onChange={(e) => setTitleText(e.target.value)}
+                placeholder="Title"
+                maxLength={100}
+                className="w-full bg-transparent text-white text-lg sm:text-xl font-medium resize-none outline-none mb-1 placeholder:text-white/50 sm:placeholder:text-white/70 caret-white"
+              />
+            )}
             <div
               ref={editorRef}
               contentEditable
@@ -688,8 +679,8 @@ export function PostContentArea({
                 }
               }}
               data-placeholder={(showTitle || hasVideo || hasAudio) ? "Description (optional)" : "What's happening?"}
-              className="w-full bg-transparent text-white text-base sm:text-lg resize-none outline-none min-h-[48px] sm:min-h-[60px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 sm:empty:before:text-white/70 empty:before:pointer-events-none empty:before:cursor-text inline focus:empty:before:content-[''] focus:caret-white"
-              style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', display: 'inline' }}
+              className="w-full bg-transparent text-white text-base sm:text-lg resize-none outline-none min-h-[48px] sm:min-h-[60px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 sm:empty:before:text-white/70 empty:before:pointer-events-none empty:before:cursor-text focus:empty:before:content-[''] caret-white"
+              style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
             />
             {onOpenCategories && text.trim().length > 0 && (
               <button
