@@ -227,7 +227,7 @@ const UserResultCard = ({
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(user.isFollowing ?? false);
   const [isLoading, setIsLoading] = useState(false);
   
   // user.avatar is already a fully built URL from mapAccountToCreator/extractUniqueCreators
@@ -288,7 +288,9 @@ const UserResultCard = ({
           )}
         </div>
       </div>
-      {!isFollowing && (
+      {isFollowing ? (
+        <span className="text-xs text-zinc-500 flex-shrink-0 ml-2">Following ✓</span>
+      ) : (
         <Button
           variant="outline"
           size="sm"
