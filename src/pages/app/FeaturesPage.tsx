@@ -337,6 +337,17 @@ function FeatureCard({
             <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
             <TranslatableText text={feature.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />
 
+            {/* Attached media */}
+            {feature.image_url && (
+              <div className="rounded-xl overflow-hidden border border-white/10">
+                {feature.image_url.match(/\.(mp4|mov|webm|ogg)$/i) ? (
+                  <video src={feature.image_url} className="w-full max-h-64 object-contain bg-black" controls />
+                ) : (
+                  <img src={feature.image_url} alt="Attachment" className="w-full max-h-64 object-contain bg-black/30" loading="lazy" />
+                )}
+              </div>
+            )}
+
         {/* Category badge - liquid glass style */}
         <div className="flex items-center gap-2">
           <span className="text-zinc-300 text-[10px] font-medium px-2 py-0.5 rounded-lg bg-gradient-to-br from-white/15 via-white/8 to-white/3 backdrop-blur-xl border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)]">
