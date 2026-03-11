@@ -647,25 +647,16 @@ export function PostContentArea({
           </div>
           <div className="flex-1 min-w-0 mt-12 sm:mt-0">
             {/* Title input - shown when title toggle is on OR video/audio */}
-            <AnimatePresence>
-              {(showTitle || hasVideo || hasAudio) && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <input
-                    type="text"
-                    value={titleText}
-                    onChange={(e) => setTitleText(e.target.value)}
-                    placeholder="Title"
-                    maxLength={100}
-                    className="w-full bg-transparent text-white text-lg sm:text-xl font-medium resize-none outline-none mb-1 placeholder:text-white/50 sm:placeholder:text-white/70"
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {(showTitle || hasVideo || hasAudio) && (
+              <input
+                type="text"
+                value={titleText}
+                onChange={(e) => setTitleText(e.target.value)}
+                placeholder="Title"
+                maxLength={100}
+                className="w-full bg-transparent text-white text-lg sm:text-xl font-medium resize-none outline-none mb-1 placeholder:text-white/50 sm:placeholder:text-white/70 caret-white"
+              />
+            )}
             <div
               ref={editorRef}
               contentEditable
