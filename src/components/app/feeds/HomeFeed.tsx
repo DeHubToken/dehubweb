@@ -11,7 +11,7 @@
 import { useEffect, useRef, useMemo, useCallback, useState, type ReactNode } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
 import { HomeFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -315,6 +315,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const loaderRef = useRef<HTMLDivElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
   const { isCollapsed } = useSidebarCollapse();
+  const queryClient = useQueryClient();
 
   // Clear persisted filters on fresh page load (not in-app navigation)
   useEffect(() => {
@@ -355,14 +356,21 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string>('home', 'category', 'all');
 
   // Listen for external category changes (e.g. from Talk of the Town sidebar)
+  // Clear feed cache immediately so skeletons show instantly (no stale data flash)
   useEffect(() => {
     const handler = (e: Event) => {
       const categoryId = (e as CustomEvent).detail;
-      if (categoryId) setSelectedCategory(categoryId);
+      if (categoryId) {
+        // Remove all cached unified-feed data so the UI drops to skeleton state immediately
+        queryClient.removeQueries({ queryKey: ['unified-feed'] });
+        setSelectedCategory(categoryId);
+        // Scroll to top for instant feedback
+        window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+      }
     };
     window.addEventListener('category-filter-changed', handler);
     return () => window.removeEventListener('category-filter-changed', handler);
-  }, [setSelectedCategory]);
+  }, [setSelectedCategory, queryClient]);
 
   // Fetch categories
   const { data: categories = [] } = useQuery({
