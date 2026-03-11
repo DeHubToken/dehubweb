@@ -105,7 +105,7 @@ function TierTable({
               <tr key={w.txHash} className="border-b border-white/5 hover:bg-white/[0.03] transition-colors">
                 <td className="p-3 text-white/40">{i + 1}</td>
                 <td className="p-3">
-                  <WalletCell wallet={w.wallet} profile={profiles[w.wallet.toLowerCase()]} />
+                  <WalletCell winner={w} />
                 </td>
                 <td className="p-3 text-right text-white font-mono">{w.buyAmount} DHB</td>
                 <td className={`p-3 text-right font-mono font-semibold ${color}`}>+{w.bonusAmount} DHB</td>
