@@ -88,6 +88,7 @@ export function applyOptimisticEdit(
     ['dehub-images'],
     ['dehub-shorts'],
     ['dehub-audio'],
+    ['dehub-user-content'],
     ...additionalQueryKeys,
   ];
 
