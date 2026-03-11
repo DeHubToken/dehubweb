@@ -174,6 +174,20 @@ export default function WinterWonderlandPage() {
   useEffect(() => {
     async function fetchDraw() {
       try {
+        // First try to read cached results from DB
+        const { data: cached } = await supabase
+          .from('winter_wonderland_results')
+          .select('results')
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+
+        if (cached?.results) {
+          setData(cached.results as unknown as DrawResult);
+          return;
+        }
+
+        // Fallback: call edge function to run + store the draw (one-time only)
         const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
         const res = await fetch(
           `https://${projectId}.supabase.co/functions/v1/winter-wonderland-draw`,
