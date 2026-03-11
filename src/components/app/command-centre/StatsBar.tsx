@@ -2,9 +2,11 @@ import { Users, UserCheck, Heart, ArrowUpRight, ArrowDownLeft } from 'lucide-rea
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { getAccountInfo } from '@/lib/api/dehub';
+import { useTranslation } from 'react-i18next';
 
 export function StatsBar() {
   const { walletAddress, user } = useAuth();
+  const { t } = useTranslation();
 
   const { data: profile } = useQuery({
     queryKey: ['command-centre-stats', walletAddress],
@@ -36,11 +38,11 @@ export function StatsBar() {
   };
 
   const stats = [
-    { label: 'Followers', value: fmt(followers), icon: Users },
-    { label: 'Following', value: fmt(following), icon: UserCheck },
-    { label: 'Likes', value: fmt(likes), icon: Heart },
-    { label: 'Tips Made', value: fmt(tipsMade), icon: ArrowUpRight },
-    { label: 'Tips Earned', value: fmt(tipsEarned), icon: ArrowDownLeft },
+    { label: t('commandCentre.statsFollowers'), value: fmt(followers), icon: Users },
+    { label: t('commandCentre.statsFollowing'), value: fmt(following), icon: UserCheck },
+    { label: t('commandCentre.statsLikes'), value: fmt(likes), icon: Heart },
+    { label: t('commandCentre.statsTipsMade'), value: fmt(tipsMade), icon: ArrowUpRight },
+    { label: t('commandCentre.statsTipsEarned'), value: fmt(tipsEarned), icon: ArrowDownLeft },
   ];
 
   return (

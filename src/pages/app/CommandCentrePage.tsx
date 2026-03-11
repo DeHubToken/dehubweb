@@ -8,7 +8,7 @@ export default function CommandCentrePage() {
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
-    return <AuthGate description="Log in to access your wallet and manage your funds." />;
+    return <AuthGate description={t('commandCentre.loginDescription')} />;
   }
 
   return (

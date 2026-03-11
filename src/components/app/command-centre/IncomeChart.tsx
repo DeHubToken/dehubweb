@@ -11,13 +11,21 @@ import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 
-const SOURCE_CONFIG = [
-  { key: 'tips', label: 'Tips', color: '#22c55e' },
-  { key: 'subs', label: 'Subs', color: '#3b82f6' },
-  { key: 'adRevenue', label: 'Ad Revenue', color: '#eab308' },
-  { key: 'bounties', label: 'Bounties', color: '#a855f7' },
-  { key: 'ppv', label: 'PPV Sales', color: '#ec4899' },
-] as const;
+const SOURCE_KEYS = ['tips', 'subs', 'adRevenue', 'bounties', 'ppv'] as const;
+const SOURCE_COLORS: Record<string, string> = {
+  tips: '#22c55e',
+  subs: '#3b82f6',
+  adRevenue: '#eab308',
+  bounties: '#a855f7',
+  ppv: '#ec4899',
+};
+const SOURCE_I18N: Record<string, string> = {
+  tips: 'commandCentre.sourceTips',
+  subs: 'commandCentre.sourceSubs',
+  adRevenue: 'commandCentre.sourceAdRevenue',
+  bounties: 'commandCentre.sourceBounties',
+  ppv: 'commandCentre.sourcePpv',
+};
 
 function getFilterStartDate(filter: string): Date | null {
   const now = new Date();
@@ -115,13 +123,14 @@ export function IncomeChart() {
 
     const total = Object.values(totals).reduce((a, b) => a + b, 0);
 
-    const data = SOURCE_CONFIG
-      .filter(s => totals[s.key] > 0)
-      .map(s => ({
-        name: s.label,
-        value: total > 0 ? Math.round((totals[s.key] / total) * 1000) / 10 : 0,
-        rawValue: totals[s.key],
-        color: s.color,
+    const data = SOURCE_KEYS
+      .filter(key => totals[key] > 0)
+      .map(key => ({
+        key,
+        name: key,
+        value: total > 0 ? Math.round((totals[key] / total) * 1000) / 10 : 0,
+        rawValue: totals[key],
+        color: SOURCE_COLORS[key],
       }));
 
     return { chartData: data, totalEarned: Math.round(total * 100) / 100 };
@@ -158,7 +167,7 @@ export function IncomeChart() {
                 />
                 <span className="text-sm text-zinc-300 truncate">
                   <span className="font-medium" style={{ color: item.color }}>{item.value}%</span>
-                  {' '}{item.name}
+                  {' '}{t(SOURCE_I18N[item.key] || item.name)}
                   <span className="text-zinc-500 ml-1">({item.rawValue.toLocaleString()})</span>
                 </span>
               </div>
