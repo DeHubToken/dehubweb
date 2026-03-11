@@ -8,6 +8,7 @@ import searchIcon from '@/assets/icons/search-icon.png';
 import search3dIcon from '@/assets/icons/search-3d-icon.png';
 import trendingFireIcon from '@/assets/icons/trending-fire-icon.png';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check, Clock, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
