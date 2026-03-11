@@ -232,8 +232,7 @@ Deno.serve(async (req) => {
       const currentBalance = balances[buy.buyer] || 0;
       return currentBalance >= buy.amount;
     });
-
-    console.log(`[WinterDraw] Eligible buys: ${eligibleBuys.length}`);
+    console.log(`[WinterDraw] Eligible buys (still holding): ${eligibleBuys.length}`);
 
     // ── Step 7: STAKER/HOLDER TIER ──
     // Find holders who had DHB before Dec 1 2025 by checking transfers before that date
