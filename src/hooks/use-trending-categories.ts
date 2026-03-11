@@ -13,6 +13,69 @@ const MAX_RETRIES = 2;
 
 export type TopicPeriod = '1d' | '1w' | '1m' | '1y' | 'all';
 
+const HARDCODED_DATA: Record<TopicPeriod, CategoryCount[]> = {
+  'all': [
+    { name: 'Entertainment', post_count: 117 },
+    { name: 'Crypto', post_count: 63 },
+    { name: 'Comedy', post_count: 53 },
+    { name: 'Action', post_count: 52 },
+    { name: 'Music', post_count: 51 },
+    { name: 'Life', post_count: 39 },
+    { name: 'Sport', post_count: 32 },
+    { name: 'Dehub', post_count: 31 },
+    { name: 'Viral', post_count: 31 },
+    { name: 'Educational', post_count: 24 },
+  ],
+  '1y': [
+    { name: 'Entertainment', post_count: 61 },
+    { name: 'Gaming', post_count: 42 },
+    { name: 'Viral', post_count: 40 },
+    { name: 'Action', post_count: 25 },
+    { name: 'Comedy', post_count: 24 },
+    { name: 'Funny', post_count: 20 },
+    { name: 'Sport', post_count: 19 },
+    { name: 'Blockchain', post_count: 18 },
+    { name: 'Music', post_count: 18 },
+    { name: 'Dehub', post_count: 16 },
+  ],
+  '1m': [
+    { name: 'Viral', post_count: 18 },
+    { name: 'Elder scrolls online', post_count: 9 },
+    { name: 'Xbox', post_count: 9 },
+    { name: 'Gaming clips', post_count: 9 },
+    { name: 'Action', post_count: 6 },
+    { name: 'Ai', post_count: 5 },
+    { name: 'Animals', post_count: 5 },
+    { name: 'Interesting', post_count: 5 },
+    { name: 'Israel', post_count: 5 },
+    { name: 'Advertising', post_count: 4 },
+  ],
+  '1w': [
+    { name: 'Action', post_count: 3 },
+    { name: 'Viral', post_count: 3 },
+    { name: 'Animals', post_count: 3 },
+    { name: 'Israel', post_count: 3 },
+    { name: 'Dehub', post_count: 2 },
+    { name: 'Scifi', post_count: 2 },
+    { name: 'Art', post_count: 2 },
+    { name: 'Crypto', post_count: 2 },
+    { name: 'Sports', post_count: 2 },
+    { name: 'Skateboarding', post_count: 2 },
+  ],
+  '1d': [
+    { name: 'Israel', post_count: 3 },
+    { name: 'Art', post_count: 2 },
+    { name: 'Dhb', post_count: 2 },
+    { name: 'Chads', post_count: 1 },
+    { name: 'Chad', post_count: 1 },
+    { name: 'Tommy', post_count: 1 },
+    { name: 'Memories', post_count: 1 },
+    { name: 'Felling', post_count: 1 },
+    { name: '夕陽吻過的背影', post_count: 1 },
+    { name: 'Crypto', post_count: 1 },
+  ],
+};
+
 export interface CategoryCount {
   name: string;
   post_count: number;
