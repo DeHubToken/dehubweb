@@ -423,7 +423,13 @@ export default function ExplorePage() {
   // CRITICAL: Use debounced values for ALL hooks to prevent race conditions
   // Previously, raw searchQuery was passed to some hooks while useDeHubSearch debounced internally,
   // causing results from different hooks to be out of sync (flashing between old/new results)
-  const effectiveQuery = isShortSearch ? debouncedShortQuery : debouncedFullQuery;
+  const baseEffectiveQuery = isShortSearch ? debouncedShortQuery : debouncedFullQuery;
+
+  // Resolve contract addresses (0x...) to ticker symbols via DexScreener
+  const { resolvedTicker, isResolving: isResolvingContract } = useContractToTicker(baseEffectiveQuery);
+  
+  // If a contract address resolved to a ticker, use that instead
+  const effectiveQuery = resolvedTicker || baseEffectiveQuery;
 
   // Save scroll position only when there's an active search
   useEffect(() => {
