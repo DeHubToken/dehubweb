@@ -584,7 +584,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (signError: any) {
       console.error('[Auth] signMessageAsync failed:', signError);
       const userRejected = signError?.code === 4001 || signError?.message?.includes('rejected');
-      toast.error(userRejected ? 'Signature rejected. Please try again.' : 'Wallet signature failed. Please try again.');
+      toast.error(userRejected ? i18n.t('auth.signatureRejected') : i18n.t('auth.walletSignatureFailed'));
       throw signError;
     }
     
