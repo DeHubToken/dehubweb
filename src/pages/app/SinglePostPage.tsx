@@ -562,6 +562,8 @@ export default function SinglePostPage() {
   const [showDesktopOptionsDrawer, setShowDesktopOptionsDrawer] = useState(false);
   const [showDesktopReportModal, setShowDesktopReportModal] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { walletAddress } = useAuth();
   
   // Ref for mobile scroll container (needed for IntersectionObserver)
