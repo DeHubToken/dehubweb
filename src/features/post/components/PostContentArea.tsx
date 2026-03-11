@@ -143,6 +143,7 @@ export function PostContentArea({
   showTitle,
   titleText,
   setTitleText,
+  onOpenCategories,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
   const isProcessingLinks = useRef(false);
