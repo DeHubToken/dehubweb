@@ -63,6 +63,8 @@ interface PostContentAreaProps {
   showTitle: boolean;
   titleText: string;
   setTitleText: (text: string) => void;
+  // Category
+  onOpenCategories?: () => void;
 }
 
 // URL regex pattern - create fresh each time to avoid state issues with global flag
