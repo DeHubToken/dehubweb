@@ -552,7 +552,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       await repostPost(numericId);
       toast.success(t('shorts.reposted'));
     } catch {
-      toast.error('Failed to repost');
+      toast.error(t('shorts.failedToRepost'));
     }
     setShareSheetOpen(false);
   };
