@@ -34,6 +34,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<Tab>('posts');
   const [topicPeriod, setTopicPeriod] = useState<TopicPeriod>('all');
+  const [tickerPeriod, setTickerPeriod] = useState<TickerPeriod>('all');
 
   const { data: categories = [] } = useTrendingCategories();
 
