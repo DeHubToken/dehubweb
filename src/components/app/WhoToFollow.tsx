@@ -222,9 +222,9 @@ export function WhoToFollow() {
                 </AvatarFallback>
               </Avatar>
             </div>
-            <div className="flex-1 min-w-0">
-              <span className={`relative inline-flex items-baseline shrink min-w-0${getBadgeUrl(user.badgeBalance, user.username) ? ' pr-3' : ''}`}>
-                <span className="font-semibold text-white text-sm truncate block">{getDisplayName(user)}</span>
+            <div className="flex-1 min-w-0 overflow-hidden">
+              <span className={`relative inline-flex items-baseline shrink min-w-0 max-w-full${getBadgeUrl(user.badgeBalance, user.username) ? ' pr-3' : ''}`}>
+                <span className="font-semibold text-white text-sm truncate">{getDisplayName(user)}</span>
                 {getBadgeUrl(user.badgeBalance, user.username) && (
                   <img
                     src={getBadgeUrl(user.badgeBalance, user.username)!}
@@ -239,14 +239,14 @@ export function WhoToFollow() {
               variant="outline"
               onClick={(e) => handleFollow(e, user)}
               disabled={loadingUsers.has(user.address) || isAlreadyFollowed(user)}
-              className={`h-8 w-[82px] text-xs font-semibold rounded-xl flex items-center justify-center ${
+              className={`h-5 min-w-0 w-auto px-2 text-[10px] font-semibold rounded-lg flex items-center justify-center ${
                 isAlreadyFollowed(user)
                   ? 'border-zinc-600 text-zinc-400 bg-transparent cursor-default'
                   : 'border-zinc-700 text-white hover:bg-zinc-800 bg-transparent'
               }`}
             >
               {loadingUsers.has(user.address) ? (
-                <Loader2 className="w-3 h-3 animate-spin" />
+                <Loader2 className="w-2.5 h-2.5 animate-spin" />
               ) : isAlreadyFollowed(user) ? (
                 'Following'
               ) : (
