@@ -188,7 +188,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         // Mark as followed to update UI
         setFollowedCreators(prev => new Set(prev).add(creatorAddress));
       } else {
-        toast.error('Failed to follow user');
+        toast.error(t('shorts.failedToFollow'));
       }
     } finally {
       setIsFollowLoading(false);
