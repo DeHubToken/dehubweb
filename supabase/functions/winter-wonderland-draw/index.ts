@@ -306,6 +306,7 @@ serve(async (req) => {
       stats: {
         totalBuysScanned: buysList.length,
         uniqueBuyers: uniqueBuyers.length,
+        registeredBuyers: Object.keys(registeredUsers).length,
         eligibleBuys: eligibleBuys.length,
         eligibleUniqueBuyers: new Set(eligibleBuys.map(b => b.buyer)).size,
         pagesScanned: pageCount,
@@ -313,6 +314,8 @@ serve(async (req) => {
       winners: {
         tier1: tier1Winners.map(w => ({
           wallet: w.buyer,
+          username: registeredUsers[w.buyer]?.username || null,
+          avatar: registeredUsers[w.buyer]?.avatar || null,
           buyAmount: formatAmount(w.amount),
           rawAmount: w.amount,
           bonusAmount: formatAmount(w.amount * 1.0),
@@ -323,6 +326,8 @@ serve(async (req) => {
         })),
         tier2: tier2Winners.map(w => ({
           wallet: w.buyer,
+          username: registeredUsers[w.buyer]?.username || null,
+          avatar: registeredUsers[w.buyer]?.avatar || null,
           buyAmount: formatAmount(w.amount),
           rawAmount: w.amount,
           bonusAmount: formatAmount(w.amount * 0.5),
@@ -333,6 +338,8 @@ serve(async (req) => {
         })),
         tier3: tier3Winners.map(w => ({
           wallet: w.buyer,
+          username: registeredUsers[w.buyer]?.username || null,
+          avatar: registeredUsers[w.buyer]?.avatar || null,
           buyAmount: formatAmount(w.amount),
           rawAmount: w.amount,
           bonusAmount: formatAmount(w.amount * 0.2),
