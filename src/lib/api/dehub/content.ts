@@ -103,7 +103,9 @@ export async function mintPost(
       } else {
         let errorData: Record<string, string> = {};
         try { errorData = JSON.parse(xhr.responseText); } catch { /* ignore */ }
-        reject(new Error(errorData.message || errorData.error || `Mint failed: ${xhr.status}`));
+        const msg = errorData.message || errorData.error || 'Unknown error';
+        console.error(`[MintPost] HTTP ${xhr.status} — ${msg}`, { responseText: xhr.responseText });
+        reject(new Error(`Mint failed (HTTP ${xhr.status}): ${msg}`));
       }
     };
 
