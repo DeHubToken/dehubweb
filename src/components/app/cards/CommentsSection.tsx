@@ -848,7 +848,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="flex flex-col min-h-[400px] max-h-[600px] p-4 mt-3 relative"
+      className={isMobile ? "flex flex-col h-full p-4 relative" : "flex flex-col min-h-[400px] max-h-[600px] p-4 mt-3 relative"}
     >
 
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
@@ -915,7 +915,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       </div>
 
       {/* Content Area - scrollable, takes remaining space */}
-      <div className={`relative flex-1 min-h-0 ${activeTab === 'search' ? 'max-h-[272px]' : ''}`}>
+      <div className={`relative flex-1 min-h-0 ${!isMobile && activeTab === 'search' ? 'max-h-[272px]' : ''}`}>
         {/* Replies Tab */}
         {activeTab === 'replies' && (
           <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">

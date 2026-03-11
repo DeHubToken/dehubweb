@@ -43,7 +43,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId }: CommentsWrapper
         dismissible={true}
       >
         <DrawerContent glass className="max-h-[75vh] flex flex-col overflow-hidden !bg-black/60 !backdrop-blur-[24px] border border-white/[0.08]">
-          <div className="flex-1 min-h-0 px-4 pb-4" data-vaul-no-drag>
+          <div className="flex-1 min-h-0 px-4 pb-4 h-full" data-vaul-no-drag>
             <CommentsSection
               tokenId={tokenId}
               onClose={() => onOpenChange(false)}
