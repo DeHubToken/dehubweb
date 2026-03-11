@@ -764,8 +764,8 @@ export function PostContentArea({
                 </span>
               ))}
             </div>
-            <span className={cn("text-xs ml-auto", charCount > 280 ? "text-amber-400" : "text-white/60")}>
-              {charCount}/280
+            <span className={cn("text-xs ml-auto", charCount > 500 ? "text-amber-400" : "text-white/60")}>
+              {charCount}/500
             </span>
           </div>
         </div>
