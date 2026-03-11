@@ -549,6 +549,7 @@ function DesktopCreatorInfo({
 
 export default function SinglePostPage() {
   const { postId, tokenId } = useParams<{ postId?: string; tokenId?: string }>();
+  const navigate = useNavigate();
   const { t } = useI18n();
   const id = postId || tokenId;
   const navigationType = useNavigationType();
