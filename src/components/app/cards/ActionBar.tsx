@@ -251,7 +251,7 @@ export function ActionBar({
       const revertState = { isLiked, isDisliked, likeCount: localLikeCount, dislikeCount: localDislikeCount };
       setVoteCache(postId, revertState);
       patchFeedCaches(queryClient, postId, revertState);
-      toast.error('Failed to vote. Please try again.');
+      toast.error(t('postActions.failedToVote'));
     } finally {
       setIsVoting(false);
     }
