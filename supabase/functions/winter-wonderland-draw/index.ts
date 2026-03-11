@@ -22,8 +22,8 @@ const UNISWAP_POOLS = new Set([
 ]);
 
 // Date range: Dec 1 2024 to Jan 25 2025
-const START_DATE = new Date('2024-12-01T00:00:00Z');
-const END_DATE = new Date('2025-01-25T23:59:59Z');
+const START_DATE = new Date('2025-12-01T00:00:00Z');
+const END_DATE = new Date('2026-01-25T23:59:59Z');
 
 interface Buy {
   buyer: string;

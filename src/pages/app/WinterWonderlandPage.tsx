@@ -221,7 +221,7 @@ export default function WinterWonderlandPage() {
           <Snowflake className="w-6 h-6 text-sky-300" />
         </div>
         <p className="text-white/50 text-sm">
-          Random draw from Uniswap buys between Dec 1, 2024 – Jan 25, 2025
+          Random draw from Uniswap buys between Dec 1, 2025 – Jan 25, 2026
         </p>
         <p className="text-white/30 text-xs mt-1">
           Only buyers still holding qualify • {data.totalWinners} winners drawn
