@@ -686,6 +686,18 @@ export function PostContentArea({
               className="w-full bg-transparent text-white text-base sm:text-lg resize-none outline-none min-h-[48px] sm:min-h-[60px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 sm:empty:before:text-white/70 empty:before:pointer-events-none"
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
             />
+
+            {/* Hashtag button inline after text */}
+            {onOpenCategories && (
+              <button
+                type="button"
+                onClick={onOpenCategories}
+                className="inline-flex items-center gap-1 mt-1 px-2 py-1 rounded-lg hover:bg-white/10 transition-colors text-white/40 hover:text-white/70"
+              >
+                <Hash className="w-4 h-4" />
+                <span className="text-xs">Category</span>
+              </button>
+            )}
           </div>
         </div>
 
