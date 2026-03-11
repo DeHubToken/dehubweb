@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { getAccountInfo } from '@/lib/api/dehub/users';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { Snowflake, Trophy, Gift, Star, Loader2, ExternalLink } from 'lucide-react';
 
@@ -13,6 +11,8 @@ interface WinnerEntry {
   txHash: string;
   currentBalance: string;
   tier: string;
+  username?: string | null;
+  avatar?: string | null;
 }
 
 interface DrawResult {
@@ -33,12 +33,6 @@ interface DrawResult {
   totalWinners: number;
 }
 
-interface ResolvedProfile {
-  username?: string;
-  avatar?: string;
-  displayName?: string;
-}
-
 const BASESCAN_TX = 'https://basescan.org/tx/';
 const BASESCAN_ADDR = 'https://basescan.org/address/';
 
@@ -46,27 +40,28 @@ function shortAddr(addr: string) {
   return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 }
 
-function WalletCell({ wallet, profile }: { wallet: string; profile?: ResolvedProfile }) {
+function WalletCell({ winner }: { winner: WinnerEntry }) {
+  const avatarUrl = winner.avatar ? buildAvatarUrl(winner.wallet, winner.avatar) : undefined;
   return (
     <div className="flex items-center gap-2 min-w-0">
-      {profile?.avatar ? (
-        <img src={profile.avatar} alt="" className="w-7 h-7 rounded-full object-cover shrink-0" />
+      {avatarUrl ? (
+        <img src={avatarUrl} alt="" className="w-7 h-7 rounded-full object-cover shrink-0" />
       ) : (
         <div className="w-7 h-7 rounded-full bg-white/10 shrink-0" />
       )}
       <div className="min-w-0">
-        {profile?.username && (
-          <a href={`/${profile.username}`} className="block text-sm font-medium text-white hover:underline truncate">
-            @{profile.username}
+        {winner.username && (
+          <a href={`/${winner.username}`} className="block text-sm font-medium text-white hover:underline truncate">
+            @{winner.username}
           </a>
         )}
         <a
-          href={`${BASESCAN_ADDR}${wallet}`}
+          href={`${BASESCAN_ADDR}${winner.wallet}`}
           target="_blank"
           rel="noopener noreferrer"
           className="text-xs text-white/50 hover:text-white/80 font-mono flex items-center gap-1"
         >
-          {shortAddr(wallet)}
+          {shortAddr(winner.wallet)}
           <ExternalLink className="w-3 h-3" />
         </a>
       </div>
@@ -79,13 +74,11 @@ function TierTable({
   icon,
   color,
   winners,
-  profiles,
 }: {
   title: string;
   icon: React.ReactNode;
   color: string;
   winners: WinnerEntry[];
-  profiles: Record<string, ResolvedProfile>;
 }) {
   if (!winners.length) return null;
   return (
@@ -112,7 +105,7 @@ function TierTable({
               <tr key={w.txHash} className="border-b border-white/5 hover:bg-white/[0.03] transition-colors">
                 <td className="p-3 text-white/40">{i + 1}</td>
                 <td className="p-3">
-                  <WalletCell wallet={w.wallet} profile={profiles[w.wallet.toLowerCase()]} />
+                  <WalletCell winner={w} />
                 </td>
                 <td className="p-3 text-right text-white font-mono">{w.buyAmount} DHB</td>
                 <td className={`p-3 text-right font-mono font-semibold ${color}`}>+{w.bonusAmount} DHB</td>
@@ -138,7 +131,6 @@ function TierTable({
 
 export default function WinterWonderlandPage() {
   const [data, setData] = useState<DrawResult | null>(null);
-  const [profiles, setProfiles] = useState<Record<string, ResolvedProfile>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -153,35 +145,6 @@ export default function WinterWonderlandPage() {
         if (!res.ok) throw new Error('Failed to fetch draw results');
         const json: DrawResult = await res.json();
         setData(json);
-
-        // Resolve profiles for all winner wallets
-        const allWallets = [
-          ...json.winners.tier1,
-          ...json.winners.tier2,
-          ...json.winners.tier3,
-        ].map((w) => w.wallet.toLowerCase());
-        const unique = [...new Set(allWallets)];
-
-        const resolved: Record<string, ResolvedProfile> = {};
-        await Promise.all(
-          unique.map(async (addr) => {
-            try {
-              const user = await getAccountInfo(addr);
-              if (user) {
-                resolved[addr] = {
-                  username: user.username || undefined,
-                  displayName: user.displayName || undefined,
-                  avatar: user.avatarImageUrl
-                    ? buildAvatarUrl(addr, user.avatarImageUrl)
-                    : undefined,
-                };
-              }
-            } catch {
-              // No profile found, that's fine
-            }
-          })
-        );
-        setProfiles(resolved);
       } catch (e: any) {
         setError(e.message);
       } finally {
@@ -249,21 +212,18 @@ export default function WinterWonderlandPage() {
         icon={<Trophy className="w-5 h-5 text-yellow-400" />}
         color="text-yellow-400"
         winners={data.winners.tier1}
-        profiles={profiles}
       />
       <TierTable
         title="Tier 2 — 50% Bonus (max 10M buy)"
         icon={<Star className="w-5 h-5 text-sky-400" />}
         color="text-sky-400"
         winners={data.winners.tier2}
-        profiles={profiles}
       />
       <TierTable
         title="Tier 3 — 20% Bonus (no max)"
         icon={<Gift className="w-5 h-5 text-emerald-400" />}
         color="text-emerald-400"
         winners={data.winners.tier3}
-        profiles={profiles}
       />
 
       {/* Footer */}

@@ -209,13 +209,45 @@ serve(async (req) => {
       }
     }
 
-    // Step 5: Filter - buyer must still hold at least the buy amount
+    // Step 5: Check which buyers are registered DeHub users
+    const registeredUsers: Record<string, { username?: string; avatar?: string }> = {};
+    const unregisteredWallets = new Set<string>();
+    
+    console.log(`[WinterDraw] Checking ${uniqueBuyers.length} wallets against DeHub API...`);
+    for (let i = 0; i < uniqueBuyers.length; i += 10) {
+      const batch = uniqueBuyers.slice(i, i + 10);
+      await Promise.all(
+        batch.map(async (addr) => {
+          try {
+            const res = await fetch(`https://api.dehub.io/api/account_info/${addr}`);
+            if (res.ok) {
+              const data = await res.json();
+              const user = data?.result || data;
+              if (user && (user.username || user.displayName)) {
+                registeredUsers[addr] = {
+                  username: user.username || undefined,
+                  avatar: user.avatarImageUrl || undefined,
+                };
+                return;
+              }
+            }
+            unregisteredWallets.add(addr);
+          } catch {
+            unregisteredWallets.add(addr);
+          }
+        })
+      );
+    }
+
+    console.log(`[WinterDraw] Registered users: ${Object.keys(registeredUsers).length}, Unregistered: ${unregisteredWallets.size}`);
+
+    // Step 6: Filter - buyer must still hold AND be a registered user
     const eligibleBuys = buysList.filter(buy => {
       const currentBalance = balances[buy.buyer] || 0;
-      return currentBalance >= buy.amount;
+      return currentBalance >= buy.amount && !unregisteredWallets.has(buy.buyer);
     });
 
-    console.log(`[WinterDraw] Eligible buys (still holding): ${eligibleBuys.length}`);
+    console.log(`[WinterDraw] Eligible buys (holding + registered): ${eligibleBuys.length}`);
     console.log(`[WinterDraw] Eligible unique buyers: ${new Set(eligibleBuys.map(b => b.buyer)).size}`);
 
     // Step 6: Random draw!
@@ -274,6 +306,7 @@ serve(async (req) => {
       stats: {
         totalBuysScanned: buysList.length,
         uniqueBuyers: uniqueBuyers.length,
+        registeredBuyers: Object.keys(registeredUsers).length,
         eligibleBuys: eligibleBuys.length,
         eligibleUniqueBuyers: new Set(eligibleBuys.map(b => b.buyer)).size,
         pagesScanned: pageCount,
@@ -281,6 +314,8 @@ serve(async (req) => {
       winners: {
         tier1: tier1Winners.map(w => ({
           wallet: w.buyer,
+          username: registeredUsers[w.buyer]?.username || null,
+          avatar: registeredUsers[w.buyer]?.avatar || null,
           buyAmount: formatAmount(w.amount),
           rawAmount: w.amount,
           bonusAmount: formatAmount(w.amount * 1.0),
@@ -291,6 +326,8 @@ serve(async (req) => {
         })),
         tier2: tier2Winners.map(w => ({
           wallet: w.buyer,
+          username: registeredUsers[w.buyer]?.username || null,
+          avatar: registeredUsers[w.buyer]?.avatar || null,
           buyAmount: formatAmount(w.amount),
           rawAmount: w.amount,
           bonusAmount: formatAmount(w.amount * 0.5),
@@ -301,6 +338,8 @@ serve(async (req) => {
         })),
         tier3: tier3Winners.map(w => ({
           wallet: w.buyer,
+          username: registeredUsers[w.buyer]?.username || null,
+          avatar: registeredUsers[w.buyer]?.avatar || null,
           buyAmount: formatAmount(w.amount),
           rawAmount: w.amount,
           bonusAmount: formatAmount(w.amount * 0.2),
