@@ -17,28 +17,10 @@ import { getCountryFlag } from '@/lib/api/radio-browser';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { RadioFullscreenVisualizer } from './RadioFullscreenVisualizer';
 
-/** Isolated volume control that blocks Framer Motion drag via native capture-phase listeners */
+/** Isolated volume control — marked with data-volume-zone for drag exclusion */
 function VolumeControl({ volume, isMuted, setVolume }: { volume: number; isMuted: boolean; setVolume: (v: number) => void }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const stop = (e: PointerEvent | TouchEvent) => { e.stopPropagation(); };
-    el.addEventListener('pointerdown', stop, { capture: true });
-    el.addEventListener('touchstart', stop, { capture: true });
-    el.addEventListener('pointermove', stop, { capture: true });
-    el.addEventListener('touchmove', stop, { capture: true });
-    return () => {
-      el.removeEventListener('pointerdown', stop, { capture: true });
-      el.removeEventListener('touchstart', stop, { capture: true });
-      el.removeEventListener('pointermove', stop, { capture: true });
-      el.removeEventListener('touchmove', stop, { capture: true });
-    };
-  }, []);
-
   return (
-    <div ref={ref} className="flex items-center gap-2 mt-2 pt-2 border-t border-white/[0.06]">
+    <div data-volume-zone className="flex items-center gap-2 mt-2 pt-2 border-t border-white/[0.06]" style={{ touchAction: 'none' }}>
       <button onClick={() => setVolume(isMuted ? 0.7 : 0)} className="flex-shrink-0">
         {isMuted ? (
           <VolumeX className="w-3.5 h-3.5 text-zinc-500" />
@@ -234,6 +216,12 @@ export function RadioMiniPlayer() {
           dragConstraints={{ top: -500, left: -500, right: 500, bottom: 100 }}
           onDragStart={() => { isDragging.current = true; }}
           onDragEnd={() => { setTimeout(() => { isDragging.current = false; }, 50); }}
+          onPointerDownCapture={(e) => {
+            // If pointer landed inside the volume zone, prevent Framer from initiating drag
+            if ((e.target as HTMLElement).closest?.('[data-volume-zone]')) {
+              e.stopPropagation();
+            }
+          }}
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1, scale: pinchScale }}
           exit={{ y: 100, opacity: 0 }}
