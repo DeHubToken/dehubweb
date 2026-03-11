@@ -147,6 +147,7 @@ export async function universalSearch(params: UniversalSearchParams): Promise<Un
         verified: item.isVerified || false,
         followerCount: typeof item.followers === 'number' ? item.followers : undefined,
         isFollowing: item.isFollowing,
+        followsYou: item.followsYou,
       }))
       .filter((a: SearchAccount) => a.id && a.address);
   }

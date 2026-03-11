@@ -116,6 +116,7 @@ export function mapAccountToCreator(account: SearchAccount): SearchCreator {
     bio: account.bio,
     followerCount: account.followerCount,
     isFollowing: account.isFollowing,
+    followsYou: account.followsYou,
   };
 }
 

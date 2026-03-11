@@ -242,6 +242,7 @@ export interface SearchAccount {
   followerCount?: number;
   followingCount?: number;
   isFollowing?: boolean;
+  followsYou?: boolean;
 }
 
 export interface SearchLivestream {
