@@ -787,7 +787,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('[Auth] [POPUP] Signature received, authenticating...');
-      toast.loading('Almost there...', { id: toastId });
+      toast.loading(i18n.t('auth.almostThere'), { id: toastId });
 
       const authResponse = await authenticateWallet(
         authAddressForApi,
