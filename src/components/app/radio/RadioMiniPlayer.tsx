@@ -9,7 +9,7 @@
 
 import { Play, Pause, X, Radio, Volume2, VolumeX, Loader2, Maximize2, Minus, GripVertical } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks';
 import { Slider } from '@/components/ui/slider';
@@ -63,6 +63,7 @@ export function RadioMiniPlayer() {
   const resizeStartX = useRef(0);
   const resizeStartScale = useRef(1);
   const barRef = useRef<HTMLDivElement>(null);
+  const dragControls = useDragControls();
 
   // Desktop mouse resize from corners
   const handleResizeMouseDown = useCallback((e: React.MouseEvent) => {
@@ -211,17 +212,13 @@ export function RadioMiniPlayer() {
         <motion.div
           ref={barRef}
           drag
+          dragControls={dragControls}
+          dragListener={false}
           dragMomentum={false}
           dragElastic={0.1}
           dragConstraints={{ top: -500, left: -500, right: 500, bottom: 100 }}
           onDragStart={() => { isDragging.current = true; }}
           onDragEnd={() => { setTimeout(() => { isDragging.current = false; }, 50); }}
-          onPointerDownCapture={(e) => {
-            // If pointer landed inside the volume zone, prevent Framer from initiating drag
-            if ((e.target as HTMLElement).closest?.('[data-volume-zone]')) {
-              e.stopPropagation();
-            }
-          }}
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1, scale: pinchScale }}
           exit={{ y: 100, opacity: 0 }}
@@ -230,112 +227,118 @@ export function RadioMiniPlayer() {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
           className={cn(
-            'fixed bottom-16 md:bottom-[74px] lg:bottom-4 z-50 cursor-grab active:cursor-grabbing origin-bottom-right',
-            // Mobile: 95% width with side margins
+            'fixed bottom-16 md:bottom-[74px] lg:bottom-4 z-50 origin-bottom-right',
             'left-[2.5%] right-[2.5%]',
-            // Tablet/iPad: centered with offset
             'md:left-0 md:right-[3px] md:mx-auto md:max-w-[446px]',
-            // Desktop: fixed width on right side
             'lg:left-auto lg:right-4 lg:mx-0 lg:w-[400px] lg:max-w-none',
             'bg-black/30 backdrop-blur-[40px] saturate-[180%] border border-white/[0.08]',
-            'rounded-2xl p-3 shadow-2xl',
+            'rounded-2xl shadow-2xl',
             isResizing && 'pointer-events-auto'
           )}
         >
-          <div className="flex items-center gap-3">
-            {/* Station Logo */}
-            <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-zinc-800">
-              {currentStation.favicon ? (
-                <img 
-                  src={currentStation.favicon} 
-                  alt={currentStation.name}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Radio className="w-5 h-5 text-zinc-500" />
-                </div>
-              )}
-              
-              {/* Now Playing Animation */}
-              {isPlaying && !isLoading && (
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                  <div className="flex items-end gap-0.5 h-3">
-                    <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '60%', animationDelay: '0ms' }} />
-                    <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '100%', animationDelay: '150ms' }} />
-                    <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '40%', animationDelay: '300ms' }} />
+          {/* TOP HALF — drag handle for moving the island */}
+          <div
+            className="p-3 pb-0 cursor-grab active:cursor-grabbing"
+            onPointerDown={(e) => dragControls.start(e)}
+            style={{ touchAction: 'none' }}
+          >
+            <div className="flex items-center gap-3">
+              {/* Station Logo */}
+              <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-zinc-800">
+                {currentStation.favicon ? (
+                  <img 
+                    src={currentStation.favicon} 
+                    alt={currentStation.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Radio className="w-5 h-5 text-zinc-500" />
                   </div>
-                </div>
-              )}
-            </div>
-            
-            {/* Station Info */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs text-zinc-400 uppercase tracking-wider">
-                  {isLoading ? 'Connecting...' : 'Now Playing'}
-                </span>
-                <span className="text-sm">{countryFlag}</span>
+                )}
+                
+                {/* Now Playing Animation */}
+                {isPlaying && !isLoading && (
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <div className="flex items-end gap-0.5 h-3">
+                      <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '60%', animationDelay: '0ms' }} />
+                      <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '100%', animationDelay: '150ms' }} />
+                      <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '40%', animationDelay: '300ms' }} />
+                    </div>
+                  </div>
+                )}
               </div>
-              <h4 className="font-semibold text-white truncate text-sm">
-                {currentStation.name}
-              </h4>
+              
+              {/* Station Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs text-zinc-400 uppercase tracking-wider">
+                    {isLoading ? 'Connecting...' : 'Now Playing'}
+                  </span>
+                  <span className="text-sm">{countryFlag}</span>
+                </div>
+                <h4 className="font-semibold text-white truncate text-sm">
+                  {currentStation.name}
+                </h4>
+              </div>
+              
+              {/* Play/Pause Button */}
+              <button
+                onClick={togglePlayPause}
+                className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center flex-shrink-0 hover:bg-white/10 transition-colors"
+              >
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 text-white animate-spin" />
+                ) : isPlaying ? (
+                  <Pause className="w-4 h-4 text-white fill-white" />
+                ) : (
+                  <Play className="w-4 h-4 text-white fill-white ml-0.5" />
+                )}
+              </button>
+              
+              {/* Fullscreen Visualizer Button */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setShowVisualizer(true)}
+                    className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+                  >
+                    <Maximize2 className="w-4 h-4 text-zinc-400" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Fullscreen visualizer</TooltipContent>
+              </Tooltip>
+              
+              {/* Minimize Button */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setIsMinimized(true)}
+                    className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+                  >
+                    <Minus className="w-4 h-4 text-zinc-400" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Minimize player</TooltipContent>
+              </Tooltip>
+              
+              {/* Close Button */}
+              <button
+                onClick={stop}
+                className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+              >
+                <X className="w-4 h-4 text-zinc-400" />
+              </button>
             </div>
-            
-            {/* Play/Pause Button - Liquid glass squared */}
-            <button
-              onClick={togglePlayPause}
-              className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center flex-shrink-0 hover:bg-white/10 transition-colors"
-            >
-              {isLoading ? (
-                <Loader2 className="w-4 h-4 text-white animate-spin" />
-              ) : isPlaying ? (
-                <Pause className="w-4 h-4 text-white fill-white" />
-              ) : (
-                <Play className="w-4 h-4 text-white fill-white ml-0.5" />
-              )}
-            </button>
-            
-            {/* Fullscreen Visualizer Button */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => setShowVisualizer(true)}
-                  className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
-                >
-                  <Maximize2 className="w-4 h-4 text-zinc-400" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>Fullscreen visualizer</TooltipContent>
-            </Tooltip>
-            
-            {/* Minimize Button */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => setIsMinimized(true)}
-                  className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
-                >
-                  <Minus className="w-4 h-4 text-zinc-400" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>Minimize player</TooltipContent>
-            </Tooltip>
-            
-            {/* Close Button */}
-            <button
-              onClick={stop}
-              className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
-            >
-              <X className="w-4 h-4 text-zinc-400" />
-            </button>
           </div>
           
-          {/* Volume bar below controls — uses ref to block Framer Motion drag capture */}
-          <VolumeControl volume={volume} isMuted={isMuted} setVolume={setVolume} />
+          {/* BOTTOM HALF — volume control (no drag, fully interactive) */}
+          <div className="px-3 pb-3">
+            <VolumeControl volume={volume} isMuted={isMuted} setVolume={setVolume} />
+          </div>
 
           {/* Desktop resize handles on corners */}
           <div
