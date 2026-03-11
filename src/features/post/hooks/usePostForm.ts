@@ -26,6 +26,44 @@ import type { ChainId } from '@/components/app/ChainSelector';
 
 // Storage key for drafts
 const DRAFTS_STORAGE_KEY = 'post_drafts';
+const ACTIVE_DRAFT_KEY = 'post_active_draft';
+
+interface ActiveDraft {
+  text: string;
+  description: string;
+  showDescription: boolean;
+  titleText: string;
+  showTitle: boolean;
+  selectedCategory: string;
+  isSubscribersOnly: boolean;
+  isPPV: boolean;
+  ppvAmount: string;
+  ppvCurrency: Currency;
+  isWatch2Earn: boolean;
+  w2eViews: string;
+  w2eComments: string;
+  w2eTotal: string;
+  w2eCurrency: Currency;
+  isTokenGated: boolean;
+  tokenContract: string;
+  tokenAmount: string;
+}
+
+function loadActiveDraft(): ActiveDraft | null {
+  try {
+    const stored = localStorage.getItem(ACTIVE_DRAFT_KEY);
+    if (stored) return JSON.parse(stored);
+  } catch {}
+  return null;
+}
+
+function saveActiveDraft(draft: ActiveDraft): void {
+  try { localStorage.setItem(ACTIVE_DRAFT_KEY, JSON.stringify(draft)); } catch {}
+}
+
+function clearActiveDraft(): void {
+  try { localStorage.removeItem(ACTIVE_DRAFT_KEY); } catch {}
+}
 
 // Load drafts from localStorage
 const loadDrafts = (): Draft[] => {
