@@ -326,7 +326,7 @@ export function PostAccessToggles({
         <DrawerContent glass hideHandle>
           <div className="flex items-center justify-between px-4 pt-4 pb-2">
             <div className="flex items-center gap-2 text-white font-medium">
-              <Tag className="w-5 h-5" />
+              <Hash className="w-5 h-5" />
               Select Categories
             </div>
             <button type="button" onClick={() => setCategoryDrawerOpen(false)} className="text-sm text-white/60 hover:text-white transition-colors">
