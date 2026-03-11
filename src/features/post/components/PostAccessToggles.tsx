@@ -267,6 +267,7 @@ export function PostAccessToggles({
                 type="button"
                 onClick={() => {
                   localStorage.setItem('post_default_categories', selectedCategory);
+                  markCategorySaved?.();
                   toast.success('Default categories saved');
                 }}
                 className="text-xs text-white/50 hover:text-white"
