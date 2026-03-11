@@ -497,12 +497,20 @@ export function PostContentArea({
     }
   }, [onFileDrop]);
 
-  // Sync content when text is cleared (e.g., on form reset)
+  // Sync contentEditable DOM with React text state (draft restore + form reset)
+  const hasHydrated = useRef(false);
   useEffect(() => {
-    if (text === '' && editorRef.current && editorRef.current.innerHTML !== '') {
+    if (!editorRef.current) return;
+    if (text === '' && editorRef.current.innerHTML !== '') {
       editorRef.current.innerHTML = '';
+      hasHydrated.current = false;
+    } else if (text && !hasHydrated.current) {
+      // Hydrate contentEditable with restored draft text (e.g., after drawer reopen)
+      editorRef.current.textContent = text;
+      hasHydrated.current = true;
+      setTimeout(processLinks, 0);
     }
-  }, [text, editorRef]);
+  }, [text, editorRef, processLinks]);
 
   return (
     <>
