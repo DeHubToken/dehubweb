@@ -1134,13 +1134,26 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         )}
       </div>
 
-        {/* New Comment Input - sticky at bottom, clean minimal style */}
-        <div className="mt-auto pt-3">
+        {/* New Comment Input - sticky at bottom, optimized for mobile space */}
+        <div className={cn(
+          "mt-auto pt-3",
+          isMobile && "pb-2"
+        )}>
           {/* Reply indicator */}
           {replyTo && (
-            <div className="flex items-center gap-2 mb-2 px-3 py-2 bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl">
+            <div
+              className={cn(
+                "flex items-center gap-1.5 px-3 bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl",
+                isMobile ? "mb-1 py-1.5" : "mb-2 py-2"
+              )}
+            >
               <Reply className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="text-xs text-zinc-400">Replying to @{replyTo.username}</span>
+              <span className={cn(
+                "text-xs text-zinc-400",
+                isMobile && "truncate max-w-[70%]"
+              )}>
+                Replying to @{replyTo.username}
+              </span>
               <button 
                 onClick={handleClearReply}
                 className="ml-auto text-zinc-500 hover:text-white transition-colors"
@@ -1216,7 +1229,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
             ) : (
               <div 
                 data-vaul-no-drag
-                className="flex-1 flex items-start bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl px-3 min-h-[80px] relative"
+                className={cn(
+                  "flex-1 flex items-start bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl px-3 relative",
+                  isMobile ? "min-h-[56px]" : "min-h-[80px]"
+                )}
               >
                 <textarea
                   ref={inputRef}
@@ -1227,7 +1243,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                     setNewComment(e.target.value);
                     mention.handleInput(e.target.value, e.target.selectionStart ?? undefined);
                   }}
-                  className="flex-1 bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 py-2.5 min-h-[80px] max-h-[120px]"
+                  className={cn(
+                    "flex-1 bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 py-2.5",
+                    isMobile ? "min-h-[40px] max-h-[96px]" : "min-h-[80px] max-h-[120px]"
+                  )}
                   rows={3}
                   onKeyDown={(e) => {
                     if (mention.isOpen) {
