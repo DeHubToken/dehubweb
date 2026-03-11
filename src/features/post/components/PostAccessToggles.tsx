@@ -76,6 +76,7 @@ export function PostAccessToggles({
   setTokenAmount,
   selectedCategory,
   setSelectedCategory,
+  markCategorySaved,
   showTitle,
   setShowTitle,
   hasVideoOrAudio,
