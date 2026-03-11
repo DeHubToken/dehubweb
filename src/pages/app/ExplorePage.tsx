@@ -807,10 +807,10 @@ export default function ExplorePage() {
                 </div>
 
                 {/* Stock / Crypto Cashtag Result Switcher */}
-                {(stockData?.found || dexPair) && (
+                {(stockData?.found || dexPairs.length > 0) && (
                   <CashtagResultSwitcher
                     stockData={stockData ?? null}
-                    dexPair={dexPair ?? null}
+                    dexPairs={dexPairs}
                     cmcData={cmcData}
                     symbol={effectiveQuery.trim()}
                   />
