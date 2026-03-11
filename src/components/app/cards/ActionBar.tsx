@@ -295,7 +295,7 @@ export function ActionBar({
       setIsReposted(false);
       if (postId) unmarkReposted(postId);
       onRepost(); // Same API call toggles the repost off
-      toast.success('Repost removed');
+      toast.success(t('postActions.repostRemoved'));
     }
     setSheetOpen(false);
   };
