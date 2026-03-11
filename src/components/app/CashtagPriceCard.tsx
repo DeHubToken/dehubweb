@@ -132,7 +132,13 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
           </div>
         </div>
         <div className="flex items-center gap-1">
-          <QuickBuyButton symbol={pair.baseToken.symbol} tokenType="crypto" />
+          <QuickBuyButton
+                    symbol={pair.baseToken.symbol}
+                    tokenType="crypto"
+                    tokenAddress={pair.baseToken.address}
+                    chainId={pair.chainId}
+                    tokenLogo={pair.info?.imageUrl}
+                  />
           <button
             onClick={handleCopyCA}
             className="text-zinc-400 hover:text-white transition-colors p-1.5"
