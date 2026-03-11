@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { LayoutGrid, Search } from 'lucide-react';
-import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { motion, LayoutGroup } from 'framer-motion';
 import { TickerLogo } from './TickerLogo';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { cn } from '@/lib/utils';
@@ -79,100 +79,96 @@ export const WhatsHappening = memo(function WhatsHappening() {
         </div>
       </LayoutGroup>
 
-      {/* Tab content - fixed min-height prevents scroll jumps */}
-      <div style={{ minHeight: 280 }}>
-        <AnimatePresence mode="wait" initial={false}>
-          {/* Posts tab */}
-          {activeTab === 'posts' && (
-            <motion.div
-              key="posts"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-            >
-              {categories.length > 0 ? (
-                <div className="flex flex-col gap-1">
-                  {categories.map((cat, i) => (
-                    <button
-                      key={cat.name}
-                      onClick={() => handleCategoryClick(cat.name)}
-                      className="flex items-center justify-between w-full px-3 py-2 rounded-xl hover:bg-zinc-800/60 transition-colors group text-left"
-                    >
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <span className="text-xs text-zinc-500 font-mono w-4 shrink-0">{i + 1}</span>
-                        <span className="text-sm text-zinc-200 truncate group-hover:text-white transition-colors">
-                          {cat.name}
-                        </span>
-                      </div>
-                      <span className="text-[11px] text-zinc-500 shrink-0 ml-2">
-                        {cat.post_count} {cat.post_count === 1 ? 'post' : 'posts'}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <EmptyState icon={LayoutGrid} text={t('sidebar.noCategoriesYet')} />
-              )}
-            </motion.div>
+      {/* Tab content - both tabs always mounted, CSS toggles visibility */}
+      <div style={{ minHeight: 280 }} className="relative">
+        {/* Posts tab */}
+        <div
+          className={cn(
+            'transition-opacity duration-150',
+            activeTab === 'posts'
+              ? 'opacity-100 relative z-10'
+              : 'opacity-0 pointer-events-none absolute inset-0'
           )}
-
-          {/* Tickers tab */}
-          {activeTab === 'tickers' && (
-            <motion.div
-              key="tickers"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-            >
-              {/* Period tabs */}
-              <div className="flex mb-2">
-                {TICKER_PERIODS.map(p => (
-                  <button
-                    key={p.value}
-                    onClick={() => setTickerPeriod(p.value)}
-                    className={cn(
-                      'flex-1 text-xs font-semibold transition-colors duration-150 text-center py-1',
-                      tickerPeriod === p.value
-                        ? 'text-white'
-                        : 'text-zinc-500 hover:text-zinc-300'
-                    )}
-                  >
-                    {p.label}
-                  </button>
-                ))}
-              </div>
-
-              {topTickers.length > 0 ? (
-                <div className="flex flex-col gap-1">
-                  {topTickers.map((ticker, i) => (
-                    <button
-                      key={ticker.symbol}
-                      onClick={() => handleTickerClick(ticker.symbol)}
-                      className="flex items-center justify-between w-full px-3 py-2 rounded-xl hover:bg-zinc-800/60 transition-colors group text-left"
-                    >
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <span className="text-xs text-zinc-500 font-mono w-4 shrink-0">{i + 1}</span>
-                        <div className="flex items-center gap-1.5 min-w-0">
-                          <TickerLogo symbol={ticker.symbol} size={16} />
-                          <span className="text-sm text-zinc-200 font-medium truncate group-hover:text-white transition-colors">
-                            {ticker.symbol}
-                          </span>
-                        </div>
-                      </div>
-                      <span className="text-[11px] text-zinc-500 shrink-0 ml-2">
-                        {ticker.search_count} {t('sidebar.searches')}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <EmptyState icon={Search} text={t('sidebar.noTickersYet')} />
-              )}
-            </motion.div>
+        >
+          {categories.length > 0 ? (
+            <div className="flex flex-col gap-1">
+              {categories.map((cat, i) => (
+                <button
+                  key={cat.name}
+                  onClick={() => handleCategoryClick(cat.name)}
+                  className="flex items-center justify-between w-full px-3 py-2 rounded-xl hover:bg-zinc-800/60 transition-colors group text-left"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="text-xs text-zinc-500 font-mono w-4 shrink-0">{i + 1}</span>
+                    <span className="text-sm text-zinc-200 truncate group-hover:text-white transition-colors">
+                      {cat.name}
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-zinc-500 shrink-0 ml-2">
+                    {cat.post_count} {cat.post_count === 1 ? 'post' : 'posts'}
+                  </span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <EmptyState icon={LayoutGrid} text={t('sidebar.noCategoriesYet')} />
           )}
-        </AnimatePresence>
+        </div>
+
+        {/* Tickers tab */}
+        <div
+          className={cn(
+            'transition-opacity duration-150',
+            activeTab === 'tickers'
+              ? 'opacity-100 relative z-10'
+              : 'opacity-0 pointer-events-none absolute inset-0'
+          )}
+        >
+          {/* Period tabs */}
+          <div className="flex mb-2">
+            {TICKER_PERIODS.map(p => (
+              <button
+                key={p.value}
+                onClick={() => setTickerPeriod(p.value)}
+                className={cn(
+                  'flex-1 text-xs font-semibold transition-colors duration-150 text-center py-1',
+                  tickerPeriod === p.value
+                    ? 'text-white'
+                    : 'text-zinc-500 hover:text-zinc-300'
+                )}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+
+          {topTickers.length > 0 ? (
+            <div className="flex flex-col gap-1">
+              {topTickers.map((ticker, i) => (
+                <button
+                  key={ticker.symbol}
+                  onClick={() => handleTickerClick(ticker.symbol)}
+                  className="flex items-center justify-between w-full px-3 py-2 rounded-xl hover:bg-zinc-800/60 transition-colors group text-left"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="text-xs text-zinc-500 font-mono w-4 shrink-0">{i + 1}</span>
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <TickerLogo symbol={ticker.symbol} size={16} />
+                      <span className="text-sm text-zinc-200 font-medium truncate group-hover:text-white transition-colors">
+                        {ticker.symbol}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-[11px] text-zinc-500 shrink-0 ml-2">
+                    {ticker.search_count} {t('sidebar.searches')}
+                  </span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <EmptyState icon={Search} text={t('sidebar.noTickersYet')} />
+          )}
+        </div>
       </div>
     </div>
   );

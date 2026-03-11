@@ -1,19 +1,35 @@
 
 
-## Fix: Seamless Tab Switching Between Topics and Tickers
+## Fix: Auto-reload on chunk load failures
 
-**Problem**: `AnimatePresence mode="wait"` causes the exiting tab to animate out before the entering tab animates in, creating a visible flash/collapse that shifts scroll position.
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-**Fix** (single file — `src/components/app/WhatsHappening.tsx`):
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-1. **Remove `AnimatePresence`** entirely — it's the source of the mount/unmount cycle that causes layout shifts.
+### Changes
 
-2. **Render both tabs simultaneously**, using CSS to show/hide:
-   - Both `posts` and `tickers` content stay mounted at all times
-   - Use `opacity` + `pointer-events` to toggle visibility with a quick CSS transition
-   - This means no DOM unmounting, no height collapse, no scroll jump
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-3. **Keep the fixed `minHeight: 280`** container as-is for safety.
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
 
-The key change: replace the conditional rendering (`activeTab === 'posts' && ...`) with always-rendered divs that toggle `opacity-0 pointer-events-none absolute` vs `opacity-100 relative`, using a `position: relative` wrapper so both tabs occupy the same space.
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 
