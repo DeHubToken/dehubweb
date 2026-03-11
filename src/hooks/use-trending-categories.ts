@@ -44,8 +44,8 @@ function loadCache(period: TopicPeriod): CachedCategoryData | null {
     const raw = sessionStorage.getItem(CACHE_KEY_PREFIX + period);
     if (!raw) return null;
     const data: CachedCategoryData = JSON.parse(raw);
-    // Expire cache after TTL
-    if (Date.now() - data.timestamp > CACHE_TTL_MS) return null;
+    // "all" cache never expires; others expire after TTL
+    if (period !== 'all' && Date.now() - data.timestamp > CACHE_TTL_MS) return null;
     return data;
   } catch {
     return null;
