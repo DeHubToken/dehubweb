@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { Snowflake, Trophy, Gift, Star, Loader2, ExternalLink, Crown } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface WinnerEntry {
   wallet: string;
