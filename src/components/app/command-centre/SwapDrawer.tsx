@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { useTranslation } from 'react-i18next';
 import {
   getSwapQuote,
   swapETHForDHB,
@@ -23,7 +22,6 @@ type SwapStep = 'input' | 'confirming' | 'success' | 'error';
 
 export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
   const { walletAddress } = useAuth();
-  const { t } = useTranslation();
 
   const [dhbAmount, setDhbAmount] = useState('');
   const [ethBalance, setEthBalance] = useState<bigint | null>(null);
@@ -33,6 +31,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
   const [txHash, setTxHash] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
 
+  // Fetch ETH balance on open
   useEffect(() => {
     if (!open || !walletAddress) return;
     setStep('input');
@@ -40,14 +39,17 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
     setQuoteEth(null);
     setTxHash(null);
     setErrorMsg('');
+
     getNativeBalance(walletAddress).then(setEthBalance).catch(() => setEthBalance(null));
   }, [open, walletAddress]);
 
+  // Debounced quote fetching
   useEffect(() => {
     if (!dhbAmount || parseFloat(dhbAmount) <= 0) {
       setQuoteEth(null);
       return;
     }
+
     const timeout = setTimeout(async () => {
       setQuoteLoading(true);
       try {
@@ -60,6 +62,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
         setQuoteLoading(false);
       }
     }, 600);
+
     return () => clearTimeout(timeout);
   }, [dhbAmount]);
 
@@ -72,6 +75,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
     : null;
 
   const maxEthWithSlippage = quoteEth !== null ? applySlippage(quoteEth) : null;
+
   const insufficientBalance = ethBalance !== null && maxEthWithSlippage !== null && ethBalance < maxEthWithSlippage;
 
   const canSwap =
@@ -83,37 +87,40 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
 
   const handleSwap = useCallback(async () => {
     if (!walletAddress || !quoteEth || !maxEthWithSlippage) return;
+
     setStep('confirming');
     try {
       const amountWei = parseUnits(dhbAmount, 18);
       const result = await swapETHForDHB(amountWei, maxEthWithSlippage, walletAddress);
       setTxHash(result.hash);
       setStep('success');
-      toast.success(t('commandCentre.swapCompleted'));
+      toast.success('Swap completed!');
     } catch (err: any) {
       const msg = err?.message || 'Swap failed';
       setErrorMsg(msg.length > 120 ? msg.slice(0, 120) + '…' : msg);
       setStep('error');
-      toast.error(t('commandCentre.swapFailedToast'));
+      toast.error('Swap failed');
     }
-  }, [walletAddress, quoteEth, maxEthWithSlippage, dhbAmount, t]);
+  }, [walletAddress, quoteEth, maxEthWithSlippage, dhbAmount]);
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent glass hideHandle={false}>
         <div className="p-5 pb-8 space-y-4">
-          <h3 className="text-white font-semibold text-base">{t('commandCentre.swapTitle')}</h3>
-          <p className="text-xs text-white/40">{t('commandCentre.swapSubtitle')}</p>
+          <h3 className="text-white font-semibold text-base">Buy with Crypto</h3>
+          <p className="text-xs text-white/40">Swap ETH → DHB on Base via Uniswap V3</p>
 
           {step === 'input' && (
             <>
+              {/* ETH Balance */}
               <div className="flex items-center justify-between text-xs">
-                <span className="text-white/50">{t('commandCentre.swapEthBalance')}</span>
+                <span className="text-white/50">Your ETH Balance (Base)</span>
                 <span className="text-white/70 font-mono">{ethBalanceFormatted} ETH</span>
               </div>
 
+              {/* DHB Amount Input */}
               <div className="space-y-1.5">
-                <label className="text-sm text-white/50">{t('commandCentre.swapDhbAmount')}</label>
+                <label className="text-sm text-white/50">DHB Amount</label>
                 <Input
                   type="number"
                   min="0"
@@ -125,9 +132,10 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
                 />
               </div>
 
+              {/* Quote */}
               <div className="rounded-xl bg-white/[0.04] border border-white/10 p-3 space-y-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/50">{t('commandCentre.swapEstimatedCost')}</span>
+                  <span className="text-white/50">Estimated Cost</span>
                   {quoteLoading ? (
                     <Loader2 className="w-3.5 h-3.5 text-white/40 animate-spin" />
                   ) : quoteEthFormatted ? (
@@ -137,23 +145,24 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
                   )}
                 </div>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/50">{t('commandCentre.swapMaxSlippage')}</span>
+                  <span className="text-white/50">Max (incl. 2% slippage)</span>
                   <span className="text-white/50 font-mono">
                     {maxEthWithSlippage ? parseFloat(formatUnits(maxEthWithSlippage, 18)).toFixed(6) + ' ETH' : '—'}
                   </span>
                 </div>
                 {quoteEth === null && !quoteLoading && dhbAmount && parseFloat(dhbAmount) > 0 && (
                   <p className="text-xs text-amber-400/80 flex items-center gap-1">
-                    <AlertTriangle className="w-3 h-3" /> {t('commandCentre.swapNoLiquidity')}
+                    <AlertTriangle className="w-3 h-3" /> No liquidity or quote unavailable
                   </p>
                 )}
                 {insufficientBalance && (
                   <p className="text-xs text-red-400/80 flex items-center gap-1">
-                    <AlertTriangle className="w-3 h-3" /> {t('commandCentre.swapInsufficientEth')}
+                    <AlertTriangle className="w-3 h-3" /> Insufficient ETH balance
                   </p>
                 )}
               </div>
 
+              {/* Swap Button */}
               <Button
                 variant="glass"
                 className="w-full rounded-xl"
@@ -161,7 +170,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
                 onClick={handleSwap}
               >
                 <ArrowDownUp className="w-4 h-4 mr-2" />
-                {t('commandCentre.swapButton')}
+                Swap ETH → DHB
               </Button>
             </>
           )}
@@ -169,8 +178,8 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
           {step === 'confirming' && (
             <div className="flex flex-col items-center gap-3 py-6">
               <Loader2 className="w-8 h-8 text-white/60 animate-spin" />
-              <p className="text-sm text-white/60">{t('commandCentre.swapConfirming')}</p>
-              <p className="text-xs text-white/30">{t('commandCentre.swapMayTakeSeconds')}</p>
+              <p className="text-sm text-white/60">Confirming swap on Base…</p>
+              <p className="text-xs text-white/30">This may take a few seconds</p>
             </div>
           )}
 
@@ -179,18 +188,18 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
               <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
                 <ArrowDownUp className="w-6 h-6 text-emerald-400" />
               </div>
-              <p className="text-sm text-white font-medium">{t('commandCentre.swapSuccessful')}</p>
-              <p className="text-xs text-white/40">{t('commandCentre.swapDhbReceived', { amount: dhbAmount })}</p>
+              <p className="text-sm text-white font-medium">Swap Successful!</p>
+              <p className="text-xs text-white/40">{dhbAmount} DHB received</p>
               {txHash && (
                 <button
                   onClick={() => window.open(`https://basescan.org/tx/${txHash}`, '_blank')}
                   className="text-xs text-blue-400 flex items-center gap-1 hover:underline"
                 >
-                  {t('commandCentre.swapViewBaseScan')} <ExternalLink className="w-3 h-3" />
+                  View on BaseScan <ExternalLink className="w-3 h-3" />
                 </button>
               )}
               <Button variant="glass" className="w-full rounded-xl mt-2" onClick={() => onOpenChange(false)}>
-                {t('commandCentre.swapDone')}
+                Done
               </Button>
             </div>
           )}
@@ -200,10 +209,10 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
               <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
                 <AlertTriangle className="w-6 h-6 text-red-400" />
               </div>
-              <p className="text-sm text-white font-medium">{t('commandCentre.swapFailed')}</p>
+              <p className="text-sm text-white font-medium">Swap Failed</p>
               <p className="text-xs text-white/40 text-center max-w-[260px]">{errorMsg}</p>
               <Button variant="glass" className="w-full rounded-xl mt-2" onClick={() => setStep('input')}>
-                {t('commandCentre.swapTryAgain')}
+                Try Again
               </Button>
             </div>
           )}

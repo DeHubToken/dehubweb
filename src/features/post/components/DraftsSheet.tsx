@@ -5,7 +5,6 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
-import { useTranslation } from 'react-i18next';
 
 export interface Draft {
   id: string;

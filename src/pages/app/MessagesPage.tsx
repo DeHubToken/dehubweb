@@ -272,7 +272,7 @@ export default function MessagesPage() {
   // Block access for unauthenticated users
   if (!isAuthenticated) {
     return (
-      <AuthGate description={t('messages.loginDescription')} />
+      <AuthGate description="Log in to access your messages and chat with others." />
     );
   }
 

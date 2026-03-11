@@ -3,7 +3,6 @@ import { X, Play, Pause, Scissors, Check, Film } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { Slider } from '@/components/ui/slider';
 import { toast } from 'sonner';
-import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface VideoTrimmerProps {

@@ -19,7 +19,6 @@ import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, 
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { voteOnPost } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
@@ -138,7 +137,6 @@ export function ActionBar({
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
-  const { t } = useTranslation();
   
   // Sync local state with props when they change, but skip if user recently voted (or cache active)
   useEffect(() => {
@@ -185,7 +183,7 @@ export function ActionBar({
     if (!postId || isVoting) return;
     
     if (!isAuthenticated) {
-      toast.error(t('postActions.logInToEngage'));
+      toast.error('Log in to engage');
       return;
     }
 
@@ -251,7 +249,7 @@ export function ActionBar({
       const revertState = { isLiked, isDisliked, likeCount: localLikeCount, dislikeCount: localDislikeCount };
       setVoteCache(postId, revertState);
       patchFeedCaches(queryClient, postId, revertState);
-      toast.error(t('postActions.failedToVote'));
+      toast.error('Failed to vote. Please try again.');
     } finally {
       setIsVoting(false);
     }
@@ -270,7 +268,7 @@ export function ActionBar({
       ? `${window.location.origin}/app/post/${postId}`
       : window.location.href;
     navigator.clipboard.writeText(url);
-    toast.success(t('postActions.urlCopied'));
+    toast.success('Post URL copied to clipboard');
     setSheetOpen(false);
   };
 
@@ -282,9 +280,9 @@ export function ActionBar({
       setIsReposted(true);
       if (postId) markReposted(postId);
       onRepost();
-      toast.success(t('postActions.reposted'));
+      toast.success('Reposted!');
     } else {
-      toast.info(t('postActions.repostNotAvailable'));
+      toast.info('Repost not available for this post');
     }
     setSheetOpen(false);
   };
@@ -295,7 +293,7 @@ export function ActionBar({
       setIsReposted(false);
       if (postId) unmarkReposted(postId);
       onRepost(); // Same API call toggles the repost off
-      toast.success(t('postActions.repostRemoved'));
+      toast.success('Repost removed');
     }
     setSheetOpen(false);
   };
@@ -304,7 +302,7 @@ export function ActionBar({
     if (onQuote) {
       onQuote();
     } else {
-      toast.info(t('postActions.quoteNotAvailable'));
+      toast.info('Quote not available for this post');
     }
     setSheetOpen(false);
   };
@@ -398,7 +396,7 @@ export function ActionBar({
             onClick={(e) => {
               e.stopPropagation();
               if (isOptimistic) {
-                toast(t('postActions.postProcessing'), {
+                toast('Post processing, click ⓘ for more info', {
                   icon: <Info className="w-4 h-4" />,
                 });
               } else {

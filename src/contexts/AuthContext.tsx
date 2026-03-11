@@ -14,7 +14,6 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { createLogger } from '@/lib/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import i18n from '@/i18n';
 import { useAccount, useSignMessage, useDisconnect, useConnect } from 'wagmi';
 import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
@@ -498,14 +497,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           closeLoginModal();
         } else {
           console.warn('[Auth] [REDIRECT] Web3Auth not connected after redirect processing. Status:', web3authInstance.status);
-        toast.error(i18n.t('auth.loginFailed'));
+          toast.error('Login failed. Please try again.');
         }
 
         // Clear URL parameters to prevent reprocessing on refresh
         window.history.replaceState({}, '', window.location.pathname);
       } catch (error) {
         console.error('[Auth] [REDIRECT] Processing failed:', error);
-        toast.error(i18n.t('auth.loginFailed'));
+        toast.error('Login failed. Please try again.');
         // Clear params even on error to prevent infinite loop
         window.history.replaceState({}, '', window.location.pathname);
       } finally {
@@ -573,7 +572,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     console.log('[Auth] Requesting signature for address:', authAddress);
     console.log('[Auth] Message:', message);
-    toast.info(i18n.t('auth.pleaseSignMessage'));
+    toast.info('Please sign the message in your wallet...');
 
     let signature: string;
     try {
@@ -584,7 +583,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (signError: any) {
       console.error('[Auth] signMessageAsync failed:', signError);
       const userRejected = signError?.code === 4001 || signError?.message?.includes('rejected');
-      toast.error(userRejected ? i18n.t('auth.signatureRejected') : i18n.t('auth.walletSignatureFailed'));
+      toast.error(userRejected ? 'Signature rejected. Please try again.' : 'Wallet signature failed. Please try again.');
       throw signError;
     }
     
@@ -617,7 +616,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
 
-    toast.success(authResponse.result?.isNewAccount ? i18n.t('auth.welcomeNew') : i18n.t('auth.welcomeBack'));
+    toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!');
     console.log('[Auth] ✓ DeHub authentication complete (Wagmi)');
     authLogger.info('Login success', { method: 'wagmi', address: authAddress, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
   };
@@ -633,7 +632,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const toastId = 'auth-redirect';
     console.log('[Auth] [REDIRECT] Starting DeHub authentication sequence...');
-    toast.loading(i18n.t('auth.gettingAccount'), { id: toastId });
+    toast.loading('Getting your account...', { id: toastId });
 
     // Gather web3AuthMeta for the auth request
     const web3AuthMeta = await getWeb3AuthMeta();
@@ -681,7 +680,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
           queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
           queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-            toast.success(saAuthResponse.result?.isNewAccount ? i18n.t('auth.welcomeNew') : i18n.t('auth.welcomeBack'), { id: toastId });
+          toast.success(saAuthResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: toastId });
           console.log('[Auth] ✓ DeHub authentication complete via Smart Account (Redirect Flow)');
           authLogger.info('Login success', { method: 'redirect-sa', address: saResult.address, username: normalizedUser.username, isNewAccount: !!saAuthResponse.result?.isNewAccount });
           return;
@@ -693,7 +692,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw new Error('No Smart Account address available.');
     } catch (err: any) {
       console.error('[Auth] [REDIRECT] Sequence failed:', err);
-      toast.error(err.message || i18n.t('auth.authFailed'), { id: 'auth-redirect' });
+      toast.error(err.message || 'Authentication failed', { id: 'auth-redirect' });
       setIsProcessingRedirect(false);
       setIsLoading(false);
     }
@@ -711,7 +710,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const isSocial = isSocialLoginConnected();
     const toastId = 'auth-popup';
     console.log('[Auth] [POPUP] Connection type:', isSocial ? 'SOCIAL' : 'EXTERNAL');
-    toast.loading(i18n.t('auth.settingUpAccount'), { id: toastId });
+    toast.loading('Setting up your account...', { id: toastId });
 
     // Gather web3AuthMeta for social logins
     const web3AuthMeta = isSocial ? await getWeb3AuthMeta() : undefined;
@@ -758,7 +757,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
           if (saResult) {
             console.log('[Auth] [POPUP] Trying Smart Account address:', smartAccountAddress);
-            toast.loading(i18n.t('auth.signingIn'), { id: toastId });
+            toast.loading('Signing in...', { id: toastId });
             const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID, web3AuthMeta);
             const normalizedUser = normalizeUser(saAuthResponse.user, saResult.address);
             localStorage.setItem('dehub_wallet', saResult.address);
@@ -769,7 +768,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
             queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
             queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-            toast.success(saAuthResponse.result?.isNewAccount ? i18n.t('auth.welcomeNew') : i18n.t('auth.welcomeBack'), { id: toastId });
+            toast.success(saAuthResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: toastId });
             console.log('[Auth] ✓ DeHub authentication complete via Smart Account (Popup Flow)');
             authLogger.info('Login success', { method: 'popup-sa', address: saResult.address, username: normalizedUser.username, isNewAccount: !!saAuthResponse.result?.isNewAccount });
             return;
@@ -787,7 +786,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('[Auth] [POPUP] Signature received, authenticating...');
-      toast.loading(i18n.t('auth.almostThere'), { id: toastId });
+      toast.loading('Almost there...', { id: toastId });
 
       const authResponse = await authenticateWallet(
         authAddressForApi,
@@ -815,12 +814,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
       queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
 
-      toast.success(authResponse.result?.isNewAccount ? i18n.t('auth.welcomeNew') : i18n.t('auth.welcomeBack'), { id: 'auth-popup' });
+      toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: 'auth-popup' });
       console.log('[Auth] ✓ DeHub authentication complete (Popup Flow)');
       authLogger.info('Login success', { method: 'popup', address: authAddressForApi, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
     } catch (err: any) {
       console.error('[Auth] [POPUP] Sequence failed:', err);
-      toast.error(err.message || i18n.t('auth.authFailed'), { id: 'auth-popup' });
+      toast.error(err.message || 'Authentication failed', { id: 'auth-popup' });
     }
   };
 
@@ -853,7 +852,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('dehub_connection_source', 'web3auth');
 
     // Show immediate feedback before popup opens
-    toast.loading(i18n.t('auth.connectingTo', { provider: provider === 'google' ? 'Google' : provider === 'twitter' ? 'X' : provider }), { id: 'auth-popup' });
+    toast.loading(`Connecting to ${provider === 'google' ? 'Google' : provider === 'twitter' ? 'X' : provider}...`, { id: 'auth-popup' });
 
     try {
       const socialProvider = mapSocialProvider(provider);
@@ -872,13 +871,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Auto-retry once on first failure (common when app/config not fully loaded)
         if (!isRetry) {
           console.log(`[Auth] First attempt failed, retrying in 2s...`);
-          toast.info(i18n.t('auth.retrying'), { duration: 2000 });
+          toast.info('Retrying...', { duration: 2000 });
           setConnectionSource(null);
           await forceCleanupWeb3Auth();
           await new Promise(r => setTimeout(r, 2000));
           return connectWithProvider(provider, true);
         }
-        toast.error(i18n.t('auth.failedConnectProvider', { provider }));
+        toast.error(`Failed to connect with ${provider}. Please try again.`);
       }
       
       setConnectionSource(null);
@@ -909,13 +908,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!isCancellationError(errorMessage)) {
         if (!isRetry) {
           console.log('[Auth] Email login first attempt failed, retrying in 2s...');
-          toast.info(i18n.t('auth.retrying'), { duration: 2000 });
+          toast.info('Retrying...', { duration: 2000 });
           setConnectionSource(null);
           await forceCleanupWeb3Auth();
           await new Promise(r => setTimeout(r, 2000));
           return connectWithEmail(email, true);
         }
-        toast.error(i18n.t('auth.failedSendVerificationEmail'));
+        toast.error('Failed to send verification code. Please check your email and try again.');
       }
       setConnectionSource(null);
       localStorage.removeItem('dehub_connection_source');
@@ -945,13 +944,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!isCancellationError(errorMessage)) {
         if (!isRetry) {
           console.log('[Auth] SMS login first attempt failed, retrying in 2s...');
-          toast.info(i18n.t('auth.retrying'), { duration: 2000 });
+          toast.info('Retrying...', { duration: 2000 });
           setConnectionSource(null);
           await forceCleanupWeb3Auth();
           await new Promise(r => setTimeout(r, 2000));
           return connectWithSMS(phone, true);
         }
-        toast.error(i18n.t('auth.failedSendVerificationSMS'));
+        toast.error('Failed to send verification code. Please check your number and try again.');
       }
       setConnectionSource(null);
       localStorage.removeItem('dehub_connection_source');
@@ -1020,10 +1019,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const fullError = (err.message || '').toLowerCase() + ' ' + (err.cause?.message || '').toLowerCase();
       if (fullError.includes('rejected') || fullError.includes('denied')) {
-        toast.error(i18n.t('auth.connectionRejected'));
+        toast.error('Connection rejected');
       } else {
         const names: Record<string, string> = { metamask: 'MetaMask', phantom: 'Phantom', trust: 'Trust Wallet', rabby: 'Rabby' };
-        toast.error(i18n.t('auth.failedConnectWallet', { wallet: names[wallet] || wallet }));
+        toast.error(`Failed to connect to ${names[wallet] || wallet}. Please try again.`);
       }
       return false;
     }

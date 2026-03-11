@@ -20,7 +20,6 @@ import {
 } from '@/components/ui/drawer';
 import { editPost } from '@/lib/api/dehub';
 import { toast } from 'sonner';
-import { useTranslation } from 'react-i18next';
 
 interface EditPostModalProps {
   open: boolean;
