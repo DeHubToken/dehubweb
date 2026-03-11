@@ -60,7 +60,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect }: EmojiGifPickerPro
           type="button"
           variant="ghost"
           size="icon"
-          className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
+          className="h-8 w-8 text-white hover:text-white hover:bg-zinc-700"
         >
           <Smile className="w-5 h-5" />
         </Button>
