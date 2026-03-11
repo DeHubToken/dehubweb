@@ -16,6 +16,7 @@ import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-
 import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
 import { toast } from '@/hooks/use-toast';
 import { parseUnits } from 'ethers';
+import { useTranslation } from 'react-i18next';
 import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
 import baseLogo from '@/assets/icons/base-logo.png';
@@ -85,6 +86,7 @@ function StatCard({
 
 export default function StakingPage() {
   const { isCollapsed } = useSidebarCollapse();
+  const { t } = useTranslation();
   const { data: stats, isLoading: statsLoading, refetch: refetchStats } = useStakingStats();
   const { data: unstakeQueue, isLoading: queueLoading, refetch: refetchQueue } = useUnstakeQueue();
   const { data: userData, refetch: refetchUser } = useUserStakingData();
@@ -96,7 +98,6 @@ export default function StakingPage() {
   const [isStaking, setIsStaking] = useState(false);
   const [isUnstaking, setIsUnstaking] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
-  // Track which chain we're currently staking on (for multi-chain flow)
   const [stakingChainLabel, setStakingChainLabel] = useState('');
 
   const handleRefresh = () => {
@@ -105,14 +106,10 @@ export default function StakingPage() {
     refetchUser();
   };
 
-  /**
-   * Smart stake: auto-detect chain with balance, stake there.
-   * If both chains have balance, stake on first available and notify user to repeat.
-   */
   const handleStake = async () => {
     const amount = parseFloat(stakeAmount);
     if (!amount || amount <= 0) {
-      toast({ title: 'Invalid amount', description: 'Please enter a valid amount to stake.', variant: 'destructive' });
+      toast({ title: t('staking.invalidAmount'), description: t('staking.enterValidStakeAmount'), variant: 'destructive' });
       return;
     }
 
@@ -120,30 +117,26 @@ export default function StakingPage() {
     try {
       const walletAddress = await getWalletAddress();
       if (!walletAddress) {
-        toast({ title: 'Not connected', description: 'Please connect your wallet first.', variant: 'destructive' });
+        toast({ title: t('staking.notConnected'), description: t('staking.connectWalletFirst'), variant: 'destructive' });
         return;
       }
 
-      // Detect which chain(s) have balance
       const hasBNB = userData?.hasBNBBalance ?? false;
       const hasBase = userData?.hasBaseBalance ?? false;
 
       if (!hasBNB && !hasBase) {
-        toast({ title: 'No DHB balance', description: 'You don\'t have DHB tokens on either chain.', variant: 'destructive' });
+        toast({ title: t('staking.noDhbBalance'), description: t('staking.noDhbTokens'), variant: 'destructive' });
         return;
       }
 
       const bothChains = hasBNB && hasBase;
-
-      // Determine which chain to stake on
-      // Prefer BNB (has contract staking), fall back to Base
       const targetChain: 'BNB' | 'Base' = hasBNB ? 'BNB' : 'Base';
       setStakingChainLabel(targetChain);
 
       if (bothChains) {
         toast({
-          title: 'DHB found on both chains',
-          description: `Staking on ${targetChain} first. After this completes, come back to stake your ${targetChain === 'BNB' ? 'Base' : 'BNB'} balance.`,
+          title: t('staking.dhbFoundBothChains'),
+          description: t('staking.stakingOnChainFirst', { chain: targetChain, otherChain: targetChain === 'BNB' ? 'Base' : 'BNB' }),
         });
       }
 
@@ -154,7 +147,7 @@ export default function StakingPage() {
       }
     } catch (err: any) {
       console.error('[Staking] Stake error:', err);
-      toast({ title: 'Stake failed', description: err?.message || 'Unknown error', variant: 'destructive' });
+      toast({ title: t('staking.stakeFailed'), description: err?.message || t('staking.unknownError'), variant: 'destructive' });
     } finally {
       setIsStaking(false);
       setIsApproving(false);
@@ -163,34 +156,33 @@ export default function StakingPage() {
   };
 
   const stakeBNBFlow = async (amount: number) => {
-    // Check allowance
     const amountWei = parseUnits(stakeAmount, 18);
     const currentAllowance = userData?.bnbAllowance ?? BigInt(0);
 
     if (currentAllowance < amountWei) {
       setIsApproving(true);
-      toast({ title: 'Approving DHB...', description: 'Please confirm the approval transaction.' });
+      toast({ title: t('staking.approvingDhb'), description: t('staking.confirmApproval') });
       const approvalResult = await approveBNBStaking(stakeAmount);
       const approvalReceipt = await approvalResult.wait();
       if (approvalReceipt.status !== 1) {
-        toast({ title: 'Approval failed', description: 'Token approval was reverted.', variant: 'destructive' });
+        toast({ title: t('staking.approvalFailed'), description: t('staking.approvalReverted'), variant: 'destructive' });
         return;
       }
-      toast({ title: 'Approved ✅', description: 'DHB approved. Now staking...' });
+      toast({ title: t('staking.approved'), description: t('staking.dhbApprovedStaking') });
       setIsApproving(false);
     }
 
-    toast({ title: 'Staking DHB...', description: 'Please confirm the stake transaction.' });
+    toast({ title: t('staking.stakingDhb'), description: t('staking.confirmStake') });
     const result = await stakeBNB(stakeAmount);
     const receipt = await result.wait();
 
     if (receipt.status === 1) {
-      toast({ title: 'Staked successfully! ✅', description: `${stakeAmount} DHB staked on BNB Chain.` });
+      toast({ title: t('staking.stakedSuccessfully'), description: t('staking.dhbStakedOnChain', { amount: stakeAmount, chain: 'BNB Chain' }) });
       setStakeAmount('');
       refetchStats();
       refetchUser();
     } else {
-      toast({ title: 'Stake failed', description: 'Transaction reverted.', variant: 'destructive' });
+      toast({ title: t('staking.stakeFailed'), description: t('staking.transactionReverted'), variant: 'destructive' });
     }
   };
 
@@ -198,31 +190,28 @@ export default function StakingPage() {
     await switchChain(BASE_CHAIN_ID);
     const dhbTokenAddress = CHAIN_CONFIGS[BASE_CHAIN_ID]?.dhbToken;
     if (!dhbTokenAddress) {
-      toast({ title: 'Error', description: 'DHB token not configured for Base.', variant: 'destructive' });
+      toast({ title: t('staking.error'), description: t('staking.dhbNotConfiguredBase'), variant: 'destructive' });
       return;
     }
 
-    toast({ title: 'Staking DHB...', description: 'Please confirm the stake transaction.' });
+    toast({ title: t('staking.stakingDhb'), description: t('staking.confirmStake') });
     const result = await sendERC20Token(dhbTokenAddress, BASE_STAKING_ADDRESS, stakeAmount, 18, BASE_CHAIN_ID as any);
     const receipt = await result.wait();
 
     if (receipt.status === 1) {
-      toast({ title: 'Staked successfully! ✅', description: `${stakeAmount} DHB staked on Base.` });
+      toast({ title: t('staking.stakedSuccessfully'), description: t('staking.dhbStakedOnChain', { amount: stakeAmount, chain: 'Base' }) });
       setStakeAmount('');
       refetchStats();
       refetchUser();
     } else {
-      toast({ title: 'Stake failed', description: 'Transaction reverted.', variant: 'destructive' });
+      toast({ title: t('staking.stakeFailed'), description: t('staking.transactionReverted'), variant: 'destructive' });
     }
   };
 
-  /**
-   * Smart unstake: detect where user has staked balance
-   */
   const handleUnstake = async () => {
     const amount = parseFloat(unstakeAmount);
     if (!amount || amount <= 0) {
-      toast({ title: 'Invalid amount', description: 'Please enter a valid amount to unstake.', variant: 'destructive' });
+      toast({ title: t('staking.invalidAmount'), description: t('staking.enterValidUnstakeAmount'), variant: 'destructive' });
       return;
     }
 
@@ -230,37 +219,35 @@ export default function StakingPage() {
     try {
       const walletAddress = await getWalletAddress();
       if (!walletAddress) {
-        toast({ title: 'Not connected', description: 'Please connect your wallet first.', variant: 'destructive' });
+        toast({ title: t('staking.notConnected'), description: t('staking.connectWalletFirst'), variant: 'destructive' });
         return;
       }
 
       const hasStakedBNB = (userData?.totalStaked ?? 0) > 0;
 
       if (hasStakedBNB) {
-        // Unstake from BNB contract
-        toast({ title: 'Unstaking DHB...', description: 'Please confirm the unstake transaction.' });
+        toast({ title: t('staking.unstakingDhb'), description: t('staking.confirmUnstake') });
         const result = await unstakeBNB(unstakeAmount);
         const receipt = await result.wait();
 
         if (receipt.status === 1) {
-          toast({ title: 'Unstaked successfully! ✅', description: `${unstakeAmount} DHB unstaked.` });
+          toast({ title: t('staking.unstakedSuccessfully'), description: t('staking.dhbUnstaked', { amount: unstakeAmount }) });
           setUnstakeAmount('');
           refetchStats();
           refetchUser();
         } else {
-          toast({ title: 'Unstake failed', description: 'Transaction reverted.', variant: 'destructive' });
+          toast({ title: t('staking.unstakeFailed'), description: t('staking.transactionReverted'), variant: 'destructive' });
         }
       } else {
-        // Base unstake goes into queue
         toast({
-          title: 'Unstake initiated ⏳',
-          description: `${unstakeAmount} DHB unstake request submitted. You will be notified when complete.`,
+          title: t('staking.unstakeInitiated'),
+          description: t('staking.unstakeRequestSubmitted', { amount: unstakeAmount }),
         });
         setUnstakeAmount('');
       }
     } catch (err: any) {
       console.error('[Staking] Unstake error:', err);
-      toast({ title: 'Unstake failed', description: err?.message || 'Unknown error', variant: 'destructive' });
+      toast({ title: t('staking.unstakeFailed'), description: err?.message || t('staking.unknownError'), variant: 'destructive' });
     } finally {
       setIsUnstaking(false);
     }
@@ -271,23 +258,23 @@ export default function StakingPage() {
     try {
       const walletAddress = await getWalletAddress();
       if (!walletAddress) {
-        toast({ title: 'Not connected', description: 'Please connect your wallet first.', variant: 'destructive' });
+        toast({ title: t('staking.notConnected'), description: t('staking.connectWalletFirst'), variant: 'destructive' });
         return;
       }
 
-      toast({ title: 'Claiming rewards...', description: 'Please confirm the claim transaction.' });
+      toast({ title: t('staking.claimingRewards'), description: t('staking.confirmClaim') });
       const result = await claimBNBRewards();
       const receipt = await result.wait();
 
       if (receipt.status === 1) {
-        toast({ title: 'Rewards claimed! 🎉', description: 'Your staking rewards have been sent to your wallet.' });
+        toast({ title: t('staking.rewardsClaimed'), description: t('staking.rewardsSentToWallet') });
         refetchUser();
       } else {
-        toast({ title: 'Claim failed', description: 'Transaction reverted.', variant: 'destructive' });
+        toast({ title: t('staking.claimFailed'), description: t('staking.transactionReverted'), variant: 'destructive' });
       }
     } catch (err: any) {
       console.error('[Staking] Claim error:', err);
-      toast({ title: 'Claim failed', description: err?.message || 'Unknown error', variant: 'destructive' });
+      toast({ title: t('staking.claimFailed'), description: err?.message || t('staking.unknownError'), variant: 'destructive' });
     } finally {
       setIsClaiming(false);
     }
@@ -310,8 +297,8 @@ export default function StakingPage() {
             <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">DHB Staking</h1>
-            <p className="text-xs text-white/40">Stake your DHB tokens to earn rewards</p>
+            <h1 className="text-xl font-bold text-white">{t('staking.title')}</h1>
+            <p className="text-xs text-white/40">{t('staking.subtitle')}</p>
           </div>
         </div>
         <button
@@ -324,13 +311,13 @@ export default function StakingPage() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-        <StatCard icon={Lock} label="Total Staked" value={statsLoading ? '—' : formatNumber(stats?.totalStaked ?? '0')} subtitle="DHB across all chains" accent="bg-blue-500" delay={0} />
-        <StatCard icon={DollarSign} label="Total Value Locked" value={statsLoading ? '—' : formatUSD(tvl)} subtitle={`@ $${dhbPrice.toFixed(6)}/DHB`} accent="bg-emerald-500" delay={0.05} />
-        <StatCard icon={TrendingUp} label="Est. APY" value={`${ESTIMATED_APY}%`} subtitle="Variable rate" accent="bg-purple-500" delay={0.1} />
-        <StatCard icon={Activity} label="Unstake Events" value={queueLoading ? '—' : `${unstakeQueue?.length ?? 0}`} subtitle="Recent unstakes" accent="bg-rose-500" delay={0.15} />
+        <StatCard icon={Lock} label={t('staking.totalStaked')} value={statsLoading ? '—' : formatNumber(stats?.totalStaked ?? '0')} subtitle={t('staking.dhbAcrossAllChains')} accent="bg-blue-500" delay={0} />
+        <StatCard icon={DollarSign} label={t('staking.totalValueLocked')} value={statsLoading ? '—' : formatUSD(tvl)} subtitle={`@ $${dhbPrice.toFixed(6)}/DHB`} accent="bg-emerald-500" delay={0.05} />
+        <StatCard icon={TrendingUp} label={t('staking.estApy')} value={`${ESTIMATED_APY}%`} subtitle={t('staking.variableRate')} accent="bg-purple-500" delay={0.1} />
+        <StatCard icon={Activity} label={t('staking.unstakeEvents')} value={queueLoading ? '—' : `${unstakeQueue?.length ?? 0}`} subtitle={t('staking.recentUnstakes')} accent="bg-rose-500" delay={0.15} />
       </div>
 
-      {/* User Balance Row — Staked + Unstaked + Rewards + Claim */}
+      {/* User Balance Row */}
       {userData && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -341,21 +328,21 @@ export default function StakingPage() {
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
             <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
             <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">Staked</p>
+              <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.staked')}</p>
               <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)} <span className="text-white/40 text-xs">DHB</span></p>
             </div>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
             <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
             <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">Unstaked</p>
+              <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.unstaked')}</p>
               <p className="text-sm font-bold text-white truncate">{formatNumber(userUnstaked)} <span className="text-white/40 text-xs">DHB</span></p>
             </div>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
             <Gift className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
             <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">Rewards</p>
+              <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.rewards')}</p>
               <p className="text-sm font-bold text-white truncate">{formatNumber(userEarned, 2)} <span className="text-white/40 text-xs">DHB</span></p>
             </div>
           </div>
@@ -370,7 +357,7 @@ export default function StakingPage() {
             )}
           >
             {isClaiming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Gift className="w-4 h-4" />}
-            Claim
+            {t('staking.claim')}
           </button>
         </motion.div>
       )}
@@ -384,7 +371,7 @@ export default function StakingPage() {
         >
           <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
           <p className="text-xs text-amber-300/80">
-            You have DHB on both BNB and Base chains. Staking will process one chain at a time — come back after to stake the other.
+            {t('staking.multiChainNotice')}
           </p>
         </motion.div>
       )}
@@ -400,16 +387,16 @@ export default function StakingPage() {
         >
           <div className="flex items-center gap-2 mb-4">
             <ArrowDownToLine className="w-4 h-4 text-emerald-400" />
-            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Stake DHB</h2>
+            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">{t('staking.stakeDhb')}</h2>
           </div>
           <p className="text-xs text-white/40 mb-4">
-            Stake your DHB tokens to earn rewards. The correct chain will be detected automatically.
+            {t('staking.stakeDescription')}
           </p>
           <div className="flex gap-2">
             <div className="relative flex-1 min-w-0">
               <input
                 type="number"
-                placeholder="Amount DHB"
+                placeholder={t('staking.amountDhb')}
                 value={stakeAmount}
                 onChange={(e) => setStakeAmount(e.target.value)}
                 className="w-full px-3 py-2.5 pr-14 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-white/30"
@@ -419,7 +406,7 @@ export default function StakingPage() {
                 onClick={() => setStakeAmount(userUnstaked.toString())}
                 className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md bg-white/10 text-white/70 text-[10px] font-bold uppercase hover:bg-white/20 hover:text-white transition-colors"
               >
-                Max
+                {t('staking.max')}
               </button>
             </div>
             <button
@@ -433,17 +420,17 @@ export default function StakingPage() {
               )}
             >
               {isApproving ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> Approving...</>
+                <><Loader2 className="w-4 h-4 animate-spin" /> {t('staking.approving')}</>
               ) : isStaking ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> {stakingChainLabel || 'Staking'}...</>
+                <><Loader2 className="w-4 h-4 animate-spin" /> {stakingChainLabel || t('staking.staking')}...</>
               ) : (
-                <><ArrowDownToLine className="w-4 h-4" /> Stake</>
+                <><ArrowDownToLine className="w-4 h-4" /> {t('staking.stake')}</>
               )}
             </button>
           </div>
         </motion.div>
 
-        {/* Unstake — only visible when user has staked balance */}
+        {/* Unstake */}
         {userStaked > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -453,16 +440,16 @@ export default function StakingPage() {
           >
             <div className="flex items-center gap-2 mb-4">
               <ArrowUpFromLine className="w-4 h-4 text-amber-400" />
-              <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Unstake DHB</h2>
+              <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">{t('staking.unstakeDhb')}</h2>
             </div>
             <p className="text-xs text-white/40 mb-4">
-              Withdraw your staked DHB. Tokens will be returned to your wallet.
+              {t('staking.unstakeDescription')}
             </p>
             <div className="flex gap-2">
               <div className="relative flex-1 min-w-0">
                 <input
                   type="number"
-                  placeholder="Amount DHB"
+                  placeholder={t('staking.amountDhb')}
                   value={unstakeAmount}
                   onChange={(e) => setUnstakeAmount(e.target.value)}
                   className="w-full px-3 py-2.5 pr-14 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-amber-500/50"
@@ -472,7 +459,7 @@ export default function StakingPage() {
                   onClick={() => setUnstakeAmount(userStaked.toString())}
                   className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 text-[10px] font-bold uppercase hover:bg-amber-500/30 transition-colors"
                 >
-                  Max
+                  {t('staking.max')}
                 </button>
               </div>
               <button
@@ -486,7 +473,7 @@ export default function StakingPage() {
                 )}
               >
                 {isUnstaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Clock className="w-4 h-4" />}
-                Unstake
+                {t('staking.unstake')}
               </button>
             </div>
           </motion.div>
@@ -500,13 +487,13 @@ export default function StakingPage() {
         transition={{ delay: 0.35 }}
         className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5 mb-6"
       >
-        <h2 className="text-sm font-semibold text-white/70 mb-4 uppercase tracking-wider">Chain Breakdown</h2>
+        <h2 className="text-sm font-semibold text-white/70 mb-4 uppercase tracking-wider">{t('staking.chainBreakdown')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/5">
             <img src={bnbLogo} alt="BNB" className="w-8 h-8 rounded-full flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white">BNB Chain</p>
-              <p className="text-xs text-white/40">Staking Contract</p>
+              <p className="text-xs text-white/40">{t('staking.stakingContract')}</p>
             </div>
             <div className="text-right flex-shrink-0">
               <p className="text-sm font-bold text-white">{statsLoading ? '—' : formatNumber(stats?.bnbStaked ?? '0')}</p>
@@ -517,7 +504,7 @@ export default function StakingPage() {
             <img src={baseLogo} alt="Base" className="w-8 h-8 rounded-full flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white">Base</p>
-              <p className="text-xs text-white/40">Staking Address</p>
+              <p className="text-xs text-white/40">{t('staking.stakingAddress')}</p>
             </div>
             <div className="text-right flex-shrink-0">
               <p className="text-sm font-bold text-white">{statsLoading ? '—' : formatNumber(stats?.baseStaked ?? '0')}</p>
@@ -535,27 +522,27 @@ export default function StakingPage() {
         className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden"
       >
         <div className="p-5 border-b border-white/5">
-          <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Unstake Queue</h2>
-          <p className="text-xs text-white/30 mt-1">Recent unstake transactions across all chains</p>
+          <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">{t('staking.unstakeQueue')}</h2>
+          <p className="text-xs text-white/30 mt-1">{t('staking.unstakeQueueDescription')}</p>
         </div>
 
         {queueLoading ? (
           <div className="p-8 text-center">
             <RefreshCw className="w-5 h-5 text-white/30 animate-spin mx-auto mb-2" />
-            <p className="text-xs text-white/30">Loading events...</p>
+            <p className="text-xs text-white/30">{t('staking.loadingEvents')}</p>
           </div>
         ) : !unstakeQueue?.length ? (
           <div className="p-8 text-center">
             <Activity className="w-6 h-6 text-white/20 mx-auto mb-2" />
-            <p className="text-sm text-white/30">No recent unstake events</p>
+            <p className="text-sm text-white/30">{t('staking.noRecentUnstakeEvents')}</p>
           </div>
         ) : (
           <div className="divide-y divide-white/5">
             <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_80px_40px] gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
-              <span>Wallet</span>
-              <span className="text-right">Amount</span>
-              <span className="text-center">Chain</span>
-              <span className="text-right">When</span>
+              <span>{t('staking.wallet')}</span>
+              <span className="text-right">{t('staking.amount')}</span>
+              <span className="text-center">{t('staking.chain')}</span>
+              <span className="text-right">{t('staking.when')}</span>
               <span />
             </div>
             {unstakeQueue.map((event: UnstakeEvent, idx: number) => (
