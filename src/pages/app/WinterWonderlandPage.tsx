@@ -131,7 +131,6 @@ function TierTable({
 
 export default function WinterWonderlandPage() {
   const [data, setData] = useState<DrawResult | null>(null);
-  const [profiles, setProfiles] = useState<Record<string, ResolvedProfile>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -146,35 +145,6 @@ export default function WinterWonderlandPage() {
         if (!res.ok) throw new Error('Failed to fetch draw results');
         const json: DrawResult = await res.json();
         setData(json);
-
-        // Resolve profiles for all winner wallets
-        const allWallets = [
-          ...json.winners.tier1,
-          ...json.winners.tier2,
-          ...json.winners.tier3,
-        ].map((w) => w.wallet.toLowerCase());
-        const unique = [...new Set(allWallets)];
-
-        const resolved: Record<string, ResolvedProfile> = {};
-        await Promise.all(
-          unique.map(async (addr) => {
-            try {
-              const user = await getAccountInfo(addr);
-              if (user) {
-                resolved[addr] = {
-                  username: user.username || undefined,
-                  displayName: user.displayName || undefined,
-                  avatar: user.avatarImageUrl
-                    ? buildAvatarUrl(addr, user.avatarImageUrl)
-                    : undefined,
-                };
-              }
-            } catch {
-              // No profile found, that's fine
-            }
-          })
-        );
-        setProfiles(resolved);
       } catch (e: any) {
         setError(e.message);
       } finally {
