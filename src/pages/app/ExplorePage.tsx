@@ -35,7 +35,7 @@ import { getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { VideoCard, ImageCard, PostCard } from '@/components/app/cards';
 import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
-import { useDexScreenerSearch } from '@/hooks/use-dexscreener';
+import { useDexScreenerSearchMulti } from '@/hooks/use-dexscreener';
 import { useCmcMarketCap } from '@/hooks/use-cmc-market-cap';
 import { CashtagPriceCard } from '@/components/app/CashtagPriceCard';
 import { useStockQuote } from '@/hooks/use-stock-quote';
@@ -484,7 +484,7 @@ export default function ExplorePage() {
   const isBrandQuery = BRAND_QUERIES.includes(effectiveQuery.trim().toLowerCase());
 
   // DexScreener cashtag price lookup
-  const { data: dexPair, isLoading: isDexLoading } = useDexScreenerSearch(effectiveQuery, isSearching);
+  const { data: dexPairs = [], isLoading: isDexLoading } = useDexScreenerSearchMulti(effectiveQuery, isSearching);
   
   // CoinMarketCap market cap (overrides DexScreener when available)
   const { data: cmcData } = useCmcMarketCap(effectiveQuery, isSearching);
@@ -694,14 +694,14 @@ export default function ExplorePage() {
   const trackedTickerRef = useRef<string>('');
   useEffect(() => {
     const sym = effectiveQuery.trim();
-    if (sym.startsWith('$') && sym.length >= 2 && (stockData?.found || dexPair)) {
+    if (sym.startsWith('$') && sym.length >= 2 && (stockData?.found || dexPairs.length > 0)) {
       const clean = sym.replace(/^\$/, '').toUpperCase();
       if (clean !== trackedTickerRef.current) {
         trackedTickerRef.current = clean;
         recordTickerSearch(clean);
       }
     }
-  }, [effectiveQuery, stockData, dexPair]);
+  }, [effectiveQuery, stockData, dexPairs]);
 
   return (
     <div className="min-h-screen">
@@ -807,10 +807,10 @@ export default function ExplorePage() {
                 </div>
 
                 {/* Stock / Crypto Cashtag Result Switcher */}
-                {(stockData?.found || dexPair) && (
+                {(stockData?.found || dexPairs.length > 0) && (
                   <CashtagResultSwitcher
                     stockData={stockData ?? null}
-                    dexPair={dexPair ?? null}
+                    dexPairs={dexPairs}
                     cmcData={cmcData}
                     symbol={effectiveQuery.trim()}
                   />
