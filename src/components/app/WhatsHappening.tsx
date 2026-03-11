@@ -11,6 +11,15 @@ import { getTopTickers, type TickerPeriod } from '@/lib/ticker-search-tracker';
 import { useTrendingCategories } from '@/hooks/use-trending-categories';
 
 type Tab = 'posts' | 'tickers';
+type TopicPeriod = '1d' | '1w' | '1m' | '1y' | 'all';
+
+const TOPIC_PERIODS: { value: TopicPeriod; label: string }[] = [
+  { value: '1d', label: '1D' },
+  { value: '1w', label: '1W' },
+  { value: '1m', label: '1M' },
+  { value: '1y', label: '1Y' },
+  { value: 'all', label: 'All' },
+];
 
 const TICKER_PERIODS: { value: TickerPeriod; label: string }[] = [
   { value: '1d', label: '1D' },
@@ -24,6 +33,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<Tab>('posts');
+  const [topicPeriod, setTopicPeriod] = useState<TopicPeriod>('all');
   const [tickerPeriod, setTickerPeriod] = useState<TickerPeriod>('all');
 
   const { data: categories = [] } = useTrendingCategories();
@@ -90,6 +100,24 @@ export const WhatsHappening = memo(function WhatsHappening() {
               : 'opacity-0 pointer-events-none absolute inset-0'
           )}
         >
+          {/* Period tabs */}
+          <div className="flex mb-2">
+            {TOPIC_PERIODS.map(p => (
+              <button
+                key={p.value}
+                onClick={() => setTopicPeriod(p.value)}
+                className={cn(
+                  'flex-1 text-xs font-semibold transition-colors duration-150 text-center py-1',
+                  topicPeriod === p.value
+                    ? 'text-white'
+                    : 'text-zinc-500 hover:text-zinc-300'
+                )}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+
           {categories.length > 0 ? (
             <div className="flex flex-col gap-1">
               {categories.map((cat, i) => (
