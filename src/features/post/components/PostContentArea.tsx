@@ -680,45 +680,31 @@ export function PostContentArea({
                 className="w-full bg-transparent text-white text-lg sm:text-xl font-medium resize-none outline-none mb-1 placeholder:text-white/50 sm:placeholder:text-white/70 caret-white"
               />
             )}
-            <div className="flex items-end gap-1">
-              <div
-                ref={editorRef}
-                contentEditable
-                onInput={handleInput}
-                onPaste={handlePaste}
-                onClick={() => {
-                  if (editorRef.current) {
-                    editorRef.current.focus();
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (mention.handleKeyDown(e)) {
-                    if (e.key === 'Enter' || e.key === 'Tab') {
-                      e.preventDefault();
-                      const liveResults = (window as any).__mentionResults || [];
-                      if (liveResults[mention.selectedIndex]) {
-                        mention.handleSelect(liveResults[mention.selectedIndex]);
-                      }
+            <div
+              ref={editorRef}
+              contentEditable
+              onInput={handleInput}
+              onPaste={handlePaste}
+              onClick={() => {
+                if (editorRef.current) {
+                  editorRef.current.focus();
+                }
+              }}
+              onKeyDown={(e) => {
+                if (mention.handleKeyDown(e)) {
+                  if (e.key === 'Enter' || e.key === 'Tab') {
+                    e.preventDefault();
+                    const liveResults = (window as any).__mentionResults || [];
+                    if (liveResults[mention.selectedIndex]) {
+                      mention.handleSelect(liveResults[mention.selectedIndex]);
                     }
                   }
-                }}
-                data-placeholder={(showTitle || hasVideo || hasAudio) ? "Description (optional)" : "What's happening?"}
-                className="flex-1 min-w-0 bg-transparent text-white text-base sm:text-lg resize-none outline-none min-h-[48px] sm:min-h-[60px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 sm:empty:before:text-white/70 empty:before:pointer-events-none empty:before:cursor-text focus:empty:before:content-['\200b'] caret-white block"
-                style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', caretColor: 'white' }}
-              />
-              {onOpenCategories && (
-                <button
-                  type="button"
-                  onClick={onOpenCategories}
-                  className={cn(
-                    "flex-shrink-0 mb-1 transition-opacity",
-                    text.trim().length > 0 ? "text-white/30 hover:text-white/60 opacity-100" : "opacity-0 pointer-events-none"
-                  )}
-                >
-                  <Hash className="w-5 h-5" />
-                </button>
-              )}
-            </div>
+                }
+              }}
+              data-placeholder={(showTitle || hasVideo || hasAudio) ? "Description (optional)" : "What's happening?"}
+              className="w-full bg-transparent text-white text-base sm:text-lg resize-none outline-none min-h-[48px] sm:min-h-[60px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 sm:empty:before:text-white/70 empty:before:pointer-events-none empty:before:cursor-text focus:empty:before:content-['\200b'] caret-white block"
+              style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', caretColor: 'white' }}
+            />
           </div>
         </div>
 
@@ -775,6 +761,15 @@ export function PostContentArea({
                   {dest}
                 </span>
               ))}
+              {onOpenCategories && (
+                <button
+                  type="button"
+                  onClick={onOpenCategories}
+                  className="text-zinc-500 hover:text-zinc-300 transition-colors"
+                >
+                  <Hash className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
             <span className={cn("text-xs ml-auto", charCount > 500 ? "text-amber-400" : "text-white/60")}>
               {charCount}/500
