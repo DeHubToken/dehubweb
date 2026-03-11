@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 const DEHUB_API_BASE = 'https://api.dehub.io';
 const POSTS_PER_PAGE = 50;
 const DELAY_BETWEEN_REQUESTS_MS = 500;
+const STAGGER_DELAY_MS = 200;
 const MAX_RETRIES = 2;
 
 export type TopicPeriod = '1d' | '1w' | '1m' | '1y' | 'all';
@@ -36,6 +37,11 @@ interface CachedCategoryData {
 const CACHE_KEY_PREFIX = 'trending-cats-cache-';
 const CACHE_TTL_MS = 10 * 60_000; // 10 minutes for time-bounded periods
 
+interface FetchPageResult {
+  data: any[] | null;
+  rateLimited: boolean;
+}
+
 function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -59,7 +65,7 @@ function saveCache(period: TopicPeriod, data: CachedCategoryData) {
   } catch { /* ignore quota errors */ }
 }
 
-async function fetchPage(page: number, fromDate?: string): Promise<any[] | null> {
+async function fetchPageOnce(page: number, fromDate?: string): Promise<FetchPageResult> {
   const url = new URL('/api/feed', DEHUB_API_BASE);
   url.searchParams.set('page', String(page));
   url.searchParams.set('limit', String(POSTS_PER_PAGE));
@@ -71,13 +77,23 @@ async function fetchPage(page: number, fromDate?: string): Promise<any[] | null>
     const r = await fetch(url.toString(), {
       headers: { 'Accept': 'application/json' },
     });
-    if (r.status === 429) return null;
-    if (!r.ok) return null;
+    if (r.status === 429) return { data: null, rateLimited: true };
+    if (!r.ok) return { data: null, rateLimited: false };
     const data = await r.json();
-    return data?.result ?? null;
+    return { data: data?.result ?? null, rateLimited: false };
   } catch {
-    return null;
+    return { data: null, rateLimited: false };
   }
+}
+
+async function fetchPage(page: number, fromDate?: string): Promise<FetchPageResult> {
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    const result = await fetchPageOnce(page, fromDate);
+    if (!result.rateLimited) return result;
+    const waitMs = Math.pow(2, attempt) * 500 + Math.random() * 300;
+    await delay(waitMs);
+  }
+  return { data: null, rateLimited: true };
 }
 
 function aggregateCategories(items: any[], categoryMap: Map<string, number>) {
@@ -117,33 +133,36 @@ async function fetchTrendingCategories(period: TopicPeriod): Promise<CategoryCou
 
   let lastPageScanned = cached?.pagesScanned ?? 0;
 
-  // Fetch first batch in parallel (up to 3 pages), then sequential
-  const parallelEnd = Math.min(startPage + 2, totalPages);
-  const parallelPages: number[] = [];
-  for (let i = startPage; i <= parallelEnd; i++) parallelPages.push(i);
-
-  const firstBatch = await Promise.all(parallelPages.map(p => fetchPage(p, fromDate)));
+  // Staggered initial batch (up to 3 pages, 200ms apart) instead of full parallel
+  const staggerEnd = Math.min(startPage + 2, totalPages);
+  const staggerResults: FetchPageResult[] = [];
+  for (let i = startPage; i <= staggerEnd; i++) {
+    if (i > startPage) await delay(STAGGER_DELAY_MS);
+    staggerResults.push(await fetchPage(i, fromDate));
+  }
 
   let hitEnd = false;
-  for (let idx = 0; idx < firstBatch.length; idx++) {
-    const result = firstBatch[idx];
-    if (!result || result.length === 0) { hitEnd = true; break; }
-    aggregateCategories(result, categoryMap);
-    lastPageScanned = parallelPages[idx];
+  for (let idx = 0; idx < staggerResults.length; idx++) {
+    const { data, rateLimited } = staggerResults[idx];
+    if (rateLimited) { hitEnd = true; break; } // Don't advance lastPageScanned
+    if (!data || data.length === 0) { hitEnd = true; break; }
+    aggregateCategories(data, categoryMap);
+    lastPageScanned = startPage + idx;
   }
 
   // Continue sequentially for remaining pages
-  if (!hitEnd && parallelEnd < totalPages) {
-    for (let i = parallelEnd + 1; i <= totalPages; i++) {
+  if (!hitEnd && staggerEnd < totalPages) {
+    for (let i = staggerEnd + 1; i <= totalPages; i++) {
       await delay(DELAY_BETWEEN_REQUESTS_MS);
-      const result = await fetchPage(i, fromDate);
-      if (!result || result.length === 0) break;
-      aggregateCategories(result, categoryMap);
+      const { data, rateLimited } = await fetchPage(i, fromDate);
+      if (rateLimited) break; // Stop but don't mark this page as scanned
+      if (!data || data.length === 0) break;
+      aggregateCategories(data, categoryMap);
       lastPageScanned = i;
     }
   }
 
-  // Save to cache
+  // Save to cache — only records pages actually successfully fetched
   const cacheObj: Record<string, number> = {};
   categoryMap.forEach((v, k) => { cacheObj[k] = v; });
   saveCache(period, {
