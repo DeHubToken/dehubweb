@@ -216,6 +216,12 @@ export function RadioMiniPlayer() {
           dragConstraints={{ top: -500, left: -500, right: 500, bottom: 100 }}
           onDragStart={() => { isDragging.current = true; }}
           onDragEnd={() => { setTimeout(() => { isDragging.current = false; }, 50); }}
+          onPointerDownCapture={(e) => {
+            // If pointer landed inside the volume zone, prevent Framer from initiating drag
+            if ((e.target as HTMLElement).closest?.('[data-volume-zone]')) {
+              e.stopPropagation();
+            }
+          }}
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1, scale: pinchScale }}
           exit={{ y: 100, opacity: 0 }}
