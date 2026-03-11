@@ -1206,7 +1206,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     ? (videosFeed.data?.pages?.length || imagesFeed.data?.pages?.length || textsFeed.data?.pages?.length)
     : (singleFeed.data?.pages?.length);
   const hasCachedData = hasQueryData && items.length > 0;
-  const isLoadingState = !hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading));
+  const isLoadingState = isCategoryTransitioning || (!hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading)));
+
+  // Clear transitioning flag once new data has arrived
+  useEffect(() => {
+    if (isCategoryTransitioning && hasQueryData && items.length > 0) {
+      setIsCategoryTransitioning(false);
+    }
+  }, [isCategoryTransitioning, hasQueryData, items.length]);
 
   const { isAutoRetrying, retriesExhausted } = useAutoRetryFeed({
     itemCount: items.length,
