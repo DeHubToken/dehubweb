@@ -579,6 +579,7 @@ export default function SinglePostPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { walletAddress } = useAuth();
+  const queryClient = useQueryClient();
   
   // Ref for mobile scroll container (needed for IntersectionObserver)
   const mobileScrollContainerRef = useRef<HTMLDivElement>(null);
