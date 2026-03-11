@@ -19,6 +19,7 @@ import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, 
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { voteOnPost } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
