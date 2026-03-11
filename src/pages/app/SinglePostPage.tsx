@@ -36,6 +36,7 @@ import { PostAIChat } from '@/components/app/cards/PostAIChat';
 import { ReportModal } from '@/components/app/modals/ReportModal';
 import { TipModal } from '@/components/app/modals/TipModal';
 import { EditPostModal } from '@/components/app/modals/EditPostModal';
+import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { DeletePostModal } from '@/components/app/modals/DeletePostModal';
 import {
   Drawer,

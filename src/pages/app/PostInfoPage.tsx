@@ -30,6 +30,7 @@ import medal2 from '@/assets/medal-2.png';
 import dehubCoin from '@/assets/dehub-coin.png';
 import medal3 from '@/assets/medal-3.png';
 import { EditPostModal } from '@/components/app/modals/EditPostModal';
+import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { usePPVPurchaseCount } from '@/hooks/use-ppv-purchase-count';
 
 // Visibility options configuration
