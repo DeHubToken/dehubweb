@@ -8,6 +8,7 @@ import searchIcon from '@/assets/icons/search-icon.png';
 import search3dIcon from '@/assets/icons/search-3d-icon.png';
 import trendingFireIcon from '@/assets/icons/trending-fire-icon.png';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check, Clock, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -32,7 +33,7 @@ import {
 import { useSearchHistory } from '@/hooks/use-search-history';
 import { useDeHubUserSearch } from '@/hooks/use-dehub-user-search';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
+import { getMediaUrl, getCategories, searchNFTs, type DeHubNFT, type DeHubCategory } from '@/lib/api/dehub';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { VideoCard, ImageCard, PostCard } from '@/components/app/cards';
 import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
@@ -316,6 +317,7 @@ export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [exploreCategoryId, setExploreCategoryId] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterState>({
     w2e: false,
     ppv: false,
@@ -326,6 +328,67 @@ export default function ExplorePage() {
     comments: 'Any',
   });
   const [selectedCountry, setSelectedCountry] = useState('Global');
+
+  // Fetch categories for the carousel
+  const { data: exploreCategories = [] } = useQuery({
+    queryKey: ['dehub-categories'],
+    queryFn: getCategories,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Category browse feed (when a category is selected, not searching)
+  const categoryBrowseFeed = useInfiniteQuery({
+    queryKey: ['explore-category-feed', exploreCategoryId],
+    queryFn: async ({ pageParam = 0 }) => {
+      const result = await searchNFTs({
+        page: pageParam,
+        unit: 15,
+        category: exploreCategoryId || undefined,
+        sortMode: 'new',
+        status: 'minted',
+      });
+      return {
+        items: result.data || [],
+        page: pageParam,
+        hasMore: result.has_more,
+      };
+    },
+    getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.page + 1 : undefined,
+    initialPageParam: 0,
+    enabled: !!exploreCategoryId && !searchQuery.trim(),
+    staleTime: 1000 * 60 * 2,
+  });
+
+  const categoryFeedItems = useMemo(() => {
+    if (!categoryBrowseFeed.data?.pages) return [];
+    const allNfts = categoryBrowseFeed.data.pages.flatMap(p => p.items || []);
+    return allNfts.map((nft, index) => {
+      const contentType = getContentType(nft);
+      if (contentType === 'video' || contentType === 'audio') {
+        return { type: 'video' as const, item: mapNFTToVideoItem(nft, index) };
+      } else {
+        return { type: 'image' as const, item: mapNFTToImagePost(nft, index) };
+      }
+    });
+  }, [categoryBrowseFeed.data]);
+
+  // Infinite scroll for category browse
+  const categoryLoaderRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!exploreCategoryId || searchQuery.trim()) return;
+    const el = categoryLoaderRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && categoryBrowseFeed.hasNextPage && !categoryBrowseFeed.isFetchingNextPage) {
+          categoryBrowseFeed.fetchNextPage();
+        }
+      },
+      { threshold: 0.1, rootMargin: '200px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [exploreCategoryId, searchQuery, categoryBrowseFeed.hasNextPage, categoryBrowseFeed.isFetchingNextPage, categoryBrowseFeed.fetchNextPage]);
 
   // Search history hook
   const { recentSearches, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
@@ -961,55 +1024,138 @@ export default function ExplorePage() {
               exit={{ opacity: 0, y: -10 }}
               className="space-y-2"
             >
-              {/* Recent Searches Bento */}
-              <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                    <img src={search3dIcon} alt="Search" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
-                    {t('explorePage.searchHistory')}
-                  </h2>
-                  {recentSearches.length > 0 && (
+              {/* Category Carousel */}
+              {exploreCategories.length > 0 && (
+                <div className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
+                  <div className="flex gap-2 overflow-x-auto scrollbar-hide" style={{ touchAction: 'pan-x' }}>
                     <button
-                      onClick={clearHistory}
-                      className="text-zinc-500 hover:text-white text-sm flex items-center gap-1 transition-colors"
+                      onClick={() => setExploreCategoryId(null)}
+                      className={cn(
+                        'flex-shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap',
+                        !exploreCategoryId
+                          ? 'text-white bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]'
+                          : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
+                      )}
                     >
-                      <Trash2 className="w-4 h-4" />
-                      {t('explorePage.clearHistory')}
+                      All
                     </button>
-                  )}
-                </div>
-                {recentSearches.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {recentSearches.map((term) => (
-                      <div
-                        key={term}
-                        className="group flex items-center bg-zinc-800 hover:bg-zinc-700 rounded-xl transition-colors max-w-full"
+                    {exploreCategories.map((cat) => (
+                      <button
+                        key={cat.id}
+                        onClick={() => {
+                          setExploreCategoryId(cat.id);
+                          window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+                        }}
+                        className={cn(
+                          'flex-shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap',
+                          exploreCategoryId === cat.id
+                            ? 'text-white bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]'
+                            : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
+                        )}
                       >
-                        <button
-                          onClick={() => setSearchQuery(term)}
-                          className="px-3 sm:px-4 py-2 text-white text-sm text-left break-all"
-                        >
-                          {term}
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removeFromHistory(term);
-                          }}
-                          className="pr-3 pl-1 py-2 text-zinc-500 hover:text-white transition-colors"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
+                        {cat.name}
+                      </button>
                     ))}
                   </div>
-                ) : (
-                  <p className="text-zinc-500 text-sm">{t('explorePage.noRecentSearches')}</p>
-                )}
-              </div>
+                </div>
+              )}
 
-              {/* Trending Bento — same component as sidebar */}
-              <WhatsHappening />
+              {/* Category Browse Feed */}
+              {exploreCategoryId ? (
+                <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+                  <h2 className="text-lg sm:text-xl font-bold text-white mb-4">
+                    {exploreCategories.find(c => c.id === exploreCategoryId)?.name || exploreCategoryId}
+                  </h2>
+                  
+                  {categoryBrowseFeed.isLoading ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="flex items-center gap-3 text-zinc-400">
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>{t('explorePage.searching')}</span>
+                      </div>
+                    </div>
+                  ) : categoryFeedItems.length === 0 ? (
+                    <div className="text-center py-8">
+                      <p className="text-zinc-400">No content found in this category</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {categoryFeedItems.map((feedItem) => {
+                        if (feedItem.type === 'video') {
+                          const video = feedItem.item as VideoItem;
+                          return <VideoCard key={video.id} video={video} />;
+                        } else {
+                          const image = feedItem.item as ImagePost;
+                          return <ImageCard key={image.id} post={image} />;
+                        }
+                      })}
+                      <div ref={categoryLoaderRef} className="h-10 flex items-center justify-center">
+                        {categoryBrowseFeed.isFetchingNextPage && (
+                          <div className="flex items-center gap-2 text-zinc-400">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span className="text-sm">{t('explorePage.loadingMore')}</span>
+                          </div>
+                        )}
+                        {!categoryBrowseFeed.hasNextPage && categoryFeedItems.length > 0 && (
+                          <p className="text-zinc-500 text-sm">{t('explorePage.noMoreResults')}</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <>
+                  {/* Recent Searches Bento */}
+                  <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                        <img src={search3dIcon} alt="Search" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
+                        {t('explorePage.searchHistory')}
+                      </h2>
+                      {recentSearches.length > 0 && (
+                        <button
+                          onClick={clearHistory}
+                          className="text-zinc-500 hover:text-white text-sm flex items-center gap-1 transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          {t('explorePage.clearHistory')}
+                        </button>
+                      )}
+                    </div>
+                    {recentSearches.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {recentSearches.map((term) => (
+                          <div
+                            key={term}
+                            className="group flex items-center bg-zinc-800 hover:bg-zinc-700 rounded-xl transition-colors max-w-full"
+                          >
+                            <button
+                              onClick={() => setSearchQuery(term)}
+                              className="px-3 sm:px-4 py-2 text-white text-sm text-left break-all"
+                            >
+                              {term}
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removeFromHistory(term);
+                              }}
+                              className="pr-3 pl-1 py-2 text-zinc-500 hover:text-white transition-colors"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-zinc-500 text-sm">{t('explorePage.noRecentSearches')}</p>
+                    )}
+                  </div>
+
+                  {/* Trending Bento — same component as sidebar */}
+                  <WhatsHappening />
+                </>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
