@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Lock, Ticket, Gift, Shield, Eye, MessageCircle, Check, Info, Tag, Search, X, Plus, Save, Type } from 'lucide-react';
+import { Lock, Ticket, Gift, Shield, Eye, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -241,7 +241,7 @@ export function PostAccessToggles({
         <div className="space-y-1.5">
           <div className="flex items-center justify-between py-0.5">
             <div className="flex items-center gap-2 shrink-0">
-              <Tag className="w-4 h-4 text-white" />
+              <Hash className="w-4 h-4 text-white" />
               <span className="text-sm text-white">Category</span>
             </div>
             <Switch checked={selectedCategoriesArray.length > 0} onCheckedChange={handleCategoryToggle} className="data-[state=checked]:bg-white scale-75" />
@@ -326,7 +326,7 @@ export function PostAccessToggles({
         <DrawerContent glass hideHandle>
           <div className="flex items-center justify-between px-4 pt-4 pb-2">
             <div className="flex items-center gap-2 text-white font-medium">
-              <Tag className="w-5 h-5" />
+              <Hash className="w-5 h-5" />
               Select Categories
             </div>
             <button type="button" onClick={() => setCategoryDrawerOpen(false)} className="text-sm text-white/60 hover:text-white transition-colors">

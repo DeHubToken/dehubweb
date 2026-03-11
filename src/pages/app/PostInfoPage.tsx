@@ -11,7 +11,7 @@
 
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageSquare, User, Loader2, Users, Tag, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio, Ticket, Coins } from 'lucide-react';
+import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageSquare, User, Loader2, Users, Tag, Hash, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio, Ticket, Coins } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -911,7 +911,7 @@ export default function PostInfoPage() {
             return (
               <section className="bg-white/5 rounded-xl p-4 border border-white/10">
                 <h2 className="text-sm font-medium text-white/60 mb-3 flex items-center gap-2">
-                  <Tag className="w-4 h-4" />
+                  <Hash className="w-4 h-4" />
                   Categories
                 </h2>
                 <div className="flex flex-wrap gap-2">
