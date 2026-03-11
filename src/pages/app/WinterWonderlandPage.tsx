@@ -33,12 +33,6 @@ interface DrawResult {
   totalWinners: number;
 }
 
-interface ResolvedProfile {
-  username?: string;
-  avatar?: string;
-  displayName?: string;
-}
-
 const BASESCAN_TX = 'https://basescan.org/tx/';
 const BASESCAN_ADDR = 'https://basescan.org/address/';
 
@@ -46,27 +40,28 @@ function shortAddr(addr: string) {
   return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 }
 
-function WalletCell({ wallet, profile }: { wallet: string; profile?: ResolvedProfile }) {
+function WalletCell({ winner }: { winner: WinnerEntry }) {
+  const avatarUrl = winner.avatar ? buildAvatarUrl(winner.wallet, winner.avatar) : undefined;
   return (
     <div className="flex items-center gap-2 min-w-0">
-      {profile?.avatar ? (
-        <img src={profile.avatar} alt="" className="w-7 h-7 rounded-full object-cover shrink-0" />
+      {avatarUrl ? (
+        <img src={avatarUrl} alt="" className="w-7 h-7 rounded-full object-cover shrink-0" />
       ) : (
         <div className="w-7 h-7 rounded-full bg-white/10 shrink-0" />
       )}
       <div className="min-w-0">
-        {profile?.username && (
-          <a href={`/${profile.username}`} className="block text-sm font-medium text-white hover:underline truncate">
-            @{profile.username}
+        {winner.username && (
+          <a href={`/${winner.username}`} className="block text-sm font-medium text-white hover:underline truncate">
+            @{winner.username}
           </a>
         )}
         <a
-          href={`${BASESCAN_ADDR}${wallet}`}
+          href={`${BASESCAN_ADDR}${winner.wallet}`}
           target="_blank"
           rel="noopener noreferrer"
           className="text-xs text-white/50 hover:text-white/80 font-mono flex items-center gap-1"
         >
-          {shortAddr(wallet)}
+          {shortAddr(winner.wallet)}
           <ExternalLink className="w-3 h-3" />
         </a>
       </div>
@@ -79,13 +74,11 @@ function TierTable({
   icon,
   color,
   winners,
-  profiles,
 }: {
   title: string;
   icon: React.ReactNode;
   color: string;
   winners: WinnerEntry[];
-  profiles: Record<string, ResolvedProfile>;
 }) {
   if (!winners.length) return null;
   return (
