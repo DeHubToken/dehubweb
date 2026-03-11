@@ -143,7 +143,20 @@ export default function HomePage() {
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [showMusicFilters, setShowMusicFilters] = useState(false);
   const [showStagesModal, setShowStagesModal] = useState(false);
-  
+
+  // Read persisted home feed filters to detect active state for settings button
+  const [homeSort] = usePersistedFeedFilter<SortOption>('home', 'sort', SORT_OPTIONS[0]);
+  const [homeCategory] = usePersistedFeedFilter<string>('home', 'category', 'all');
+  const [homePostType] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
+  const [homeContentFilters] = usePersistedContentFilters('home');
+
+  const hasActiveFilters = 
+    homeSort.value !== SORT_OPTIONS[0].value ||
+    homeCategory !== 'all' ||
+    homePostType !== 'all' ||
+    homeContentFilters.ppv ||
+    homeContentFilters.w2e ||
+    homeContentFilters.locked;
   // Save tab state to sessionStorage whenever it changes and notify GlobalFeedNav
   useEffect(() => {
     try {
