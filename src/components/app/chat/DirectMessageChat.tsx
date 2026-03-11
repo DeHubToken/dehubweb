@@ -22,15 +22,14 @@ import { SharedVideosDrawer } from './SharedVideosDrawer';
 import { DmTipDialog } from './DmTipDialog';
 import { DmFeeInfoBanner } from './DmFeeInfoBanner';
 import { formatDistanceToNow } from 'date-fns';
-import { Interface } from 'ethers';
 import {
-  writeContractAA,
   getWalletAddress,
   getERC20Balance,
   switchChain,
   parseTxError,
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { sendTip } from '@/lib/contracts/stream-controller';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -328,10 +327,6 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   // Track tx hashes we've confirmed on-chain so we can override 'pending' paymentStatus from API
   const confirmedTxHashes = useRef<Set<string>>(new Set());
 
-  const erc20TransferInterface = useRef(new Interface([
-    'function transfer(address to, uint256 amount) returns (bool)',
-  ]));
-
   // Determine if fee is required
   const feeRequired = dmFee?.required && !dmFee.hasFreeAccess;
   const activeFee = feeRequired ? (customTipAmount ? parseFloat(customTipAmount) || dmFee!.fee : dmFee!.fee) : 0;
@@ -626,22 +621,12 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
 
         toast.loading('Processing payment... (confirming on-chain)', { id: 'dm-fee-send' });
 
-        const result = await writeContractAA(
-          chainConfig.dhbToken,
-          erc20TransferInterface.current,
-          'transfer',
-          [recipientAddress, amountWei],
-          { context: 'DM fee message', chainId }
-        );
-
-        feeTxHash = result.hash;
-
-        // Wait for on-chain confirmation. Use receipt.transactionHash — with AA (Pimlico/Safe),
-        // eth_sendTransaction may return a UserOperation hash, but receipt.transactionHash is the
-        // actual bundler tx hash that Alchemy webhook sees. They can differ — using the wrong hash
-        // means the backend never matches the Alchemy-confirmed tx → message stays pending forever.
-        const receipt = await result.wait(1);
-        if (receipt?.hash) feeTxHash = receipt.hash;
+        feeTxHash = await sendTip({
+          tokenId: 0,
+          amount: activeFee,
+          to: recipientAddress,
+          chainId,
+        });
 
         // Track this tx as locally confirmed so we don't show "confirming payment..." forever
         if (feeTxHash) confirmedTxHashes.current.add(feeTxHash.toLowerCase());

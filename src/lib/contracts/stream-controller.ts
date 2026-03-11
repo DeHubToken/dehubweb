@@ -21,8 +21,11 @@ import type { ChainId } from '@/components/app/ChainSelector';
 // StreamController contract address on Base Mainnet (default for backward compatibility)
 export const STREAM_CONTROLLER_ADDRESS = '0x4fa30dAef50c6dc8593470750F3c721CA3275581';
 
-// ABI for StreamController - mintWithBounty(id, timestamp, v, r, s, uri, bountyAmount, countOfViewers, countOfCommentors, tokenAddress)
+// ABI for StreamController
+// sendTip: for tips (DM and post); emits SendFunds( FundType.TIP ) so backend can detect tips
+// mintWithBounty: for stream minting with bounty
 export const STREAM_CONTROLLER_ABI = [
+  'function sendTip(uint256 tokenId, uint256 amount, address to, address tokenAddress)',
   'function mintWithBounty(uint256 id, uint256 timestamp, uint8 v, bytes32 r, bytes32 s, string uri, uint256 bountyAmount, uint32 countOfViewers, uint32 countOfCommentors, address tokenAddress)',
   'function bounties(uint256) view returns (uint256 totalAmount, uint256 reserveAmount, uint256 bountyAmount, uint32 countOfViewers, uint32 countOfCommentors, address tokenAddress)',
   'function streamCollection() view returns (address)',
@@ -75,6 +78,64 @@ export async function approveDHB(amount: bigint, chainId: ChainId = BASE_CHAIN_I
   const receipt = await result.wait(1);
   console.log('[StreamController] Approval confirmed:', receipt.hash);
   
+  return receipt.hash;
+}
+
+/**
+ * Parameters for sendTip
+ * @param tokenId - Stream/post token ID. Use 0 for DM tips (no associated post).
+ * @param amount - Human-readable DHB amount
+ * @param to - Recipient address
+ * @param chainId - Chain ID (default: Base)
+ */
+export interface SendTipParams {
+  tokenId: string | number;
+  amount: number;
+  to: string;
+  chainId?: ChainId;
+}
+
+/**
+ * Send tip via StreamController.sendTip().
+ * Emits SendFunds(FundType.TIP) so backend can detect tips (unlike direct ERC20 transfer).
+ * Requires prior DHB approval for StreamController — will approve if needed.
+ */
+export async function sendTip(params: SendTipParams): Promise<string> {
+  const chainId = params.chainId || BASE_CHAIN_ID;
+  const chainConfig = getChainConfig(chainId);
+
+  await switchChain(chainId);
+
+  const signerAddress = await getWalletAddress();
+  const amountWei = toWei(params.amount, DHB_TOKEN.decimals);
+
+  // Check balance
+  const balance = await getDHBBalance(signerAddress, chainId);
+  if (balance < amountWei) {
+    throw new Error(
+      `Insufficient DHB balance. Need ${params.amount} DHB but have ${Number(balance) / 1e18} DHB`
+    );
+  }
+
+  // Check allowance and approve if needed
+  const allowance = await getDHBAllowance(signerAddress, chainId);
+  if (allowance < amountWei) {
+    console.log('[StreamController] Approving DHB for sendTip...');
+    const maxApproval = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+    await approveDHB(maxApproval, chainId);
+  }
+
+  const tokenId = BigInt(params.tokenId);
+
+  const result = await writeContractAA(
+    chainConfig.streamController,
+    streamControllerInterface,
+    'sendTip',
+    [tokenId, amountWei, params.to, chainConfig.dhbToken],
+    { context: 'send tip', chainId }
+  );
+
+  const receipt = await result.wait(1);
   return receipt.hash;
 }
 

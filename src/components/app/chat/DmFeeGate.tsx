@@ -13,22 +13,15 @@ import padlockImg from '@/assets/padlock.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { Interface } from 'ethers';
 import {
-  writeContractAA,
   getWalletAddress,
-  getERC20Balance,
   switchChain,
   parseTxError,
 } from '@/lib/contracts/aa-utils';
-import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { sendTip } from '@/lib/contracts/stream-controller';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 import { getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
-
-
-const erc20TransferInterface = new Interface([
-  'function transfer(address to, uint256 amount) returns (bool)',
-]);
 
 interface DmFeeGateProps {
   fee: number;
@@ -66,68 +59,48 @@ export function DmFeeGate({
     setIsSending(true);
     try {
       const chainId = BASE_CHAIN_ID;
-      const chainConfig = getChainConfig(chainId);
 
       await switchChain(chainId);
       const signerAddress = await getWalletAddress();
 
-      const amountWei = toWei(amount, DHB_TOKEN.decimals);
-      const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
-
-      if (balance < amountWei) {
-        const balanceHuman = Number(balance) / 1e18;
-        toast.error(`Insufficient DHB. Need ${amount.toLocaleString()} but have ${balanceHuman.toFixed(2)}`);
-        setIsSending(false);
-        return;
-      }
-
       toast.loading('Sending tip & message...', { id: 'dm-fee-gate' });
 
-      const result = await writeContractAA(
-        chainConfig.dhbToken,
-        erc20TransferInterface,
-        'transfer',
-        [recipientAddress, amountWei],
-        { context: 'DM fee unlock', chainId }
-      );
-
-      await result.wait(1);
-
-      // Send tip message via socket
-      emitSendMessage({
-        dmId: conversationId,
-        content: `Tipped ${amount.toLocaleString()} DHB`,
-        type: 'tip',
-        tipTxHash: result.hash,
+      const txHash = await sendTip({
+        tokenId: 0,
+        amount,
+        to: recipientAddress,
+        chainId,
       });
 
-      // Send the actual user message
-      emitSendMessage({
-        dmId: conversationId,
-        content: messageText.trim(),
-        type: 'msg',
-      });
-
+      // Register fee payment with backend (verify-dm-fee)
       try {
         const token = getAuthToken();
         if (token) {
-          await fetch(`${DEHUB_API_BASE}/api/dm/tip-notify`, {
+          await fetch(`${DEHUB_API_BASE}/api/dm/verify-dm-fee`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
-              txHash: result.hash,
+              txHash,
+              conversationId,
+              senderAddress: signerAddress,
               receiverAddress: recipientAddress.toLowerCase(),
-              amount,
-              chainId,
             }),
           });
         }
       } catch (notifyErr) {
-        console.warn('[DmFeeGate] tip-notify failed:', notifyErr);
+        console.warn('[DmFeeGate] verify-dm-fee failed:', notifyErr);
       }
+
+      // Send the message with txHash so backend links it to the fee payment
+      emitSendMessage({
+        dmId: conversationId,
+        content: messageText.trim(),
+        type: 'msg',
+        txHash,
+      });
 
       toast.success(`Sent ${amount.toLocaleString()} DHB + message to ${recipientName}! 🎉`, { id: 'dm-fee-gate' });
       onUnlocked();

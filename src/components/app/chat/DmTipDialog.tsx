@@ -18,21 +18,14 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { toast } from 'sonner';
-import { Interface } from 'ethers';
 import {
-  writeContractAA,
   getWalletAddress,
-  getERC20Balance,
   switchChain,
   parseTxError,
 } from '@/lib/contracts/aa-utils';
-import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { sendTip } from '@/lib/contracts/stream-controller';
 import { apiCall } from '@/lib/api/dehub/core';
-
-
-const erc20TransferInterface = new Interface([
-  'function transfer(address to, uint256 amount) returns (bool)',
-]);
 
 const QUICK_AMOUNTS = [500, 1_000, 5_000, 10_000, 25_000, 50_000, 100_000, 1_000_000];
 
@@ -67,35 +60,18 @@ export function DmTipDialog({
     setIsSending(true);
     try {
       const chainId = BASE_CHAIN_ID;
-      const chainConfig = getChainConfig(chainId);
 
       await switchChain(chainId);
       const signerAddress = await getWalletAddress();
 
-      const amountWei = toWei(parsedAmount, DHB_TOKEN.decimals);
-      const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
-
-      if (balance < amountWei) {
-        const balanceHuman = Number(balance) / 1e18;
-        toast.error(`Insufficient DHB. Need ${parsedAmount.toLocaleString()} but have ${balanceHuman.toFixed(2)}`);
-        setIsSending(false);
-        return;
-      }
-
       toast.loading('Sending tip...', { id: 'dm-tip' });
 
-      const result = await writeContractAA(
-        chainConfig.dhbToken,
-        erc20TransferInterface,
-        'transfer',
-        [recipientAddress, amountWei],
-        { context: 'DM tip', chainId }
-      );
-
-      // Use receipt.transactionHash — AA (Pimlico/Safe) eth_sendTransaction may return a UserOp hash,
-      // but receipt.transactionHash is the actual bundler tx hash that Alchemy webhook sees.
-      const receipt = await result.wait(1);
-      const confirmedTxHash = receipt?.hash || result.hash;
+      const confirmedTxHash = await sendTip({
+        tokenId: 0,
+        amount: parsedAmount,
+        to: recipientAddress,
+        chainId,
+      });
 
       // Notify backend — this creates the inline tip message (msgType:'tip') in the conversation
       // and registers it for Alchemy webhook confirmation.

@@ -1,29 +1,19 @@
 /**
  * Tip Payment Hook
  * ================
- * Handles tipping creators via DHB ERC20 transfer.
- * Same pattern as usePPVPayment but amount is user-specified.
+ * Handles tipping creators via StreamController.sendTip().
+ * Uses contract so backend can detect tips via SendFunds event (not direct ERC20 transfer).
  */
 
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
-import { Interface } from 'ethers';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
-import {
-  writeContractAA,
-  getWalletAddress,
-  getERC20Balance,
-  switchChain,
-  parseTxError,
-} from '@/lib/contracts/aa-utils';
-import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { getWalletAddress, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
+import { getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { sendTip } from '@/lib/contracts/stream-controller';
 import { useAuth } from '@/contexts/AuthContext';
 import type { ChainId } from '@/components/app/ChainSelector';
-
-const erc20TransferInterface = new Interface([
-  'function transfer(address to, uint256 amount) returns (bool)',
-]);
 
 export const MIN_TIP_DHB = 1;
 export const MAX_TIP_DHB = Infinity;
@@ -64,36 +54,17 @@ export function useTipPayment({
       setIsTipping(true);
 
       try {
-        const chainConfig = getChainConfig(chainId);
-
         await switchChain(chainId);
-
         const signerAddress = await getWalletAddress();
-
-        const amountWei = toWei(amount, DHB_TOKEN.decimals);
-        const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
-
-        if (balance < amountWei) {
-          const balanceHuman = Number(balance) / 1e18;
-          toast.error(
-            `Insufficient DHB balance. Need ${amount} DHB but have ${balanceHuman.toFixed(2)} DHB`
-          );
-          setIsTipping(false);
-          return;
-        }
 
         toast.loading('Sending tip...', { id: 'tip-payment' });
 
-        const result = await writeContractAA(
-          chainConfig.dhbToken,
-          erc20TransferInterface,
-          'transfer',
-          [creatorAddress, amountWei],
-          { context: 'Creator tip', chainId }
-        );
-
-        const receipt = await result.wait(1);
-        const confirmedTxHash = receipt?.hash || result.hash;
+        const confirmedTxHash = await sendTip({
+          tokenId: tokenId || 0,
+          amount,
+          to: creatorAddress,
+          chainId,
+        });
 
         // Record tip in database for leaderboard tracking
         try {
@@ -111,8 +82,6 @@ export function useTipPayment({
         } catch (dbErr) {
           console.warn('[Tip] Failed to record tip in DB:', dbErr);
         }
-
-        // tip-notify is handled by DmTipDialog for DM tips only
 
         toast.success(`Tip of ${amount} DHB sent! 🎉`, { id: 'tip-payment' });
         onSuccess?.();

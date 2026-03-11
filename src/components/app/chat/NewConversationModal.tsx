@@ -13,7 +13,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { Search, Loader2, MessageCircle, X, Lock, ArrowLeft, AlertCircle } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import padlockImg from '@/assets/padlock.png';
-import { Interface } from 'ethers';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -24,19 +23,15 @@ import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { toast } from 'sonner';
 import { VerifiedBadge } from '../VerifiedBadge';
 import {
-  writeContractAA,
   getWalletAddress,
   getERC20Balance,
   switchChain,
   parseTxError,
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { sendTip } from '@/lib/contracts/stream-controller';
 import { getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
-
-const erc20TransferInterface = new Interface([
-  'function transfer(address to, uint256 amount) returns (bool)',
-]);
 
 interface NewConversationModalProps {
   open: boolean;
@@ -126,7 +121,7 @@ function FeePaymentStep({
 }: {
   user: DeHubUser;
   fee: number;
-  onPaid: (firstMessage?: string) => void;
+  onPaid: (firstMessage?: string, feeTxHash?: string) => void;
   onBack: () => void;
 }) {
   const [messageText, setMessageText] = useState('');
@@ -200,40 +195,15 @@ function FeePaymentStep({
 
       toast.loading('Sending tip to unlock DMs...', { id: 'dm-fee-gate' });
 
-      const result = await writeContractAA(
-        chainConfig.dhbToken,
-        erc20TransferInterface,
-        'transfer',
-        [user.address, amountWei],
-        { context: 'DM fee unlock', chainId }
-      );
-
-      await result.wait(1);
-
-      // Notify DeHub API about the tip
-      try {
-        const token = getAuthToken();
-        if (token) {
-          await fetch(`${DEHUB_API_BASE}/api/dm/tip-notify`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              txHash: result.hash,
-              receiverAddress: (user.address || '').toLowerCase(),
-              amount,
-              chainId,
-            }),
-          });
-        }
-      } catch (notifyErr) {
-        console.warn('[NewConversationModal] tip-notify failed:', notifyErr);
-      }
+      const txHash = await sendTip({
+        tokenId: 0,
+        amount,
+        to: user.address!,
+        chainId,
+      });
 
       toast.success(`Paid ${amount.toLocaleString()} DHB — opening chat! 🎉`, { id: 'dm-fee-gate' });
-      onPaid(messageText.trim());
+      onPaid(messageText.trim(), txHash);
     } catch (error: unknown) {
       console.error('[NewConversationModal] Payment failed:', error);
       const message = parseTxError(error as Error);
@@ -399,15 +369,15 @@ export function NewConversationModal({
   const { data: searchResults, isLoading: isSearching } = useUserSearchForDM(searchQuery);
   const createConversation = useCreateConversation();
 
-  const startConversation = async (user: DeHubUser, firstMessage?: string) => {
+  const startConversation = async (user: DeHubUser, firstMessage?: string, feeTxHash?: string) => {
     const userAddress = user.address || user._id;
     if (!userAddress) {
       toast.error('Unable to start conversation with this user');
       return;
     }
-    
+
     setSelectedUserId(userAddress);
-    
+
     try {
       const conversation = await createConversation.mutateAsync({
         recipientAddress: userAddress,
@@ -416,10 +386,32 @@ export function NewConversationModal({
 
       // Send the first message if provided (from fee payment step)
       if (firstMessage && conversation.id) {
+        // Register fee payment with backend before sending the message
+        if (feeTxHash) {
+          try {
+            const signerAddress = await getWalletAddress();
+            const token = getAuthToken();
+            if (token) {
+              await fetch(`${DEHUB_API_BASE}/api/dm/verify-dm-fee`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({
+                  txHash: feeTxHash,
+                  conversationId: conversation.id,
+                  senderAddress: signerAddress,
+                  receiverAddress: (user.address || '').toLowerCase(),
+                }),
+              });
+            }
+          } catch (e) {
+            console.warn('[NewConversationModal] verify-dm-fee failed:', e);
+          }
+        }
         emitSendMessage({
           dmId: conversation.id,
           content: firstMessage,
           type: 'msg',
+          ...(feeTxHash ? { txHash: feeTxHash } : {}),
         });
       }
 
