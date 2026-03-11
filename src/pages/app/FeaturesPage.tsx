@@ -510,9 +510,32 @@ function SubmitFeatureDrawer({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<FeatureCategory>('new_feature');
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
+  const [mediaPreview, setMediaPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const submitMutation = useSubmitFeatureRequest();
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    // Max 20MB
+    if (file.size > 20 * 1024 * 1024) {
+      setErrors(prev => ({ ...prev, media: 'File must be under 20MB' }));
+      return;
+    }
+    setMediaFile(file);
+    setMediaPreview(URL.createObjectURL(file));
+    setErrors(prev => { const { media, ...rest } = prev; return rest; });
+  };
+
+  const removeMedia = () => {
+    setMediaFile(null);
+    if (mediaPreview) URL.revokeObjectURL(mediaPreview);
+    setMediaPreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
 
   const handleSubmit = () => {
     const result = featureSchema.safeParse({ title, description, category });
@@ -526,12 +549,13 @@ function SubmitFeatureDrawer({
     }
     setErrors({});
     submitMutation.mutate(
-      { title: result.data.title, description: result.data.description, category: result.data.category as FeatureCategory },
+      { title: result.data.title, description: result.data.description, category: result.data.category as FeatureCategory, mediaFile },
       {
         onSuccess: () => {
           setTitle('');
           setDescription('');
           setCategory('new_feature');
+          removeMedia();
           onOpenChange(false);
         },
       }
