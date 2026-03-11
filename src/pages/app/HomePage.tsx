@@ -143,19 +143,33 @@ export default function HomePage() {
   const [showMusicFilters, setShowMusicFilters] = useState(false);
   const [showStagesModal, setShowStagesModal] = useState(false);
 
-  // Read persisted home feed filters to detect active state for settings button
-  const [homeSort] = usePersistedFeedFilter<SortOption>('home', 'sort', SORT_OPTIONS[0]);
-  const [homeCategory] = usePersistedFeedFilter<string>('home', 'category', 'all');
-  const [homePostType] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
-  const [homeContentFilters] = usePersistedContentFilters('home');
+  // Reactively detect active filters by reading sessionStorage when filters change
+  const [hasActiveFilters, setHasActiveFilters] = useState(false);
 
-  const hasActiveFilters = 
-    homeSort.value !== SORT_OPTIONS[0].value ||
-    homeCategory !== 'all' ||
-    homePostType !== 'all' ||
-    homeContentFilters.ppv ||
-    homeContentFilters.w2e ||
-    homeContentFilters.locked;
+  const checkActiveFilters = useCallback(() => {
+    try {
+      const stored = sessionStorage.getItem('feed-filter-states');
+      if (!stored) { setHasActiveFilters(false); return; }
+      const all = JSON.parse(stored);
+      const home = all?.home || {};
+      const sort = home.sort;
+      const category = home.category;
+      const postType = home.postType;
+      const cf = home.contentFilters;
+      const active = 
+        (sort && sort.value !== SORT_OPTIONS[0].value) ||
+        (category && category !== 'all') ||
+        (postType && postType !== 'all') ||
+        (cf && (cf.ppv || cf.w2e || cf.locked));
+      setHasActiveFilters(!!active);
+    } catch { setHasActiveFilters(false); }
+  }, []);
+
+  useEffect(() => {
+    checkActiveFilters();
+    window.addEventListener('feed-filters-changed', checkActiveFilters);
+    return () => window.removeEventListener('feed-filters-changed', checkActiveFilters);
+  }, [checkActiveFilters]);
   // Save tab state to sessionStorage whenever it changes and notify GlobalFeedNav
   useEffect(() => {
     try {
