@@ -88,6 +88,7 @@ const SMOOTH_TRANSITION = {
 } as const;
 
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore }: ShortsViewerProps) {
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isMuted, setIsMuted] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
