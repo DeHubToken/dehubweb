@@ -305,27 +305,8 @@ export function RadioMiniPlayer() {
             </button>
           </div>
           
-          {/* Volume bar below controls */}
-          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/[0.06]" onPointerDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()}>
-            <button
-              onClick={() => setVolume(isMuted ? 0.7 : 0)}
-              className="flex-shrink-0"
-            >
-              {isMuted ? (
-                <VolumeX className="w-3.5 h-3.5 text-zinc-500" />
-              ) : (
-                <Volume2 className="w-3.5 h-3.5 text-zinc-400" />
-              )}
-            </button>
-            <Slider
-              variant="lava"
-              value={[volume * 100]}
-              onValueChange={([val]) => setVolume(val / 100)}
-              max={100}
-              step={1}
-              className="flex-1"
-            />
-          </div>
+          {/* Volume bar below controls — uses ref to block Framer Motion drag capture */}
+          <VolumeControl volume={volume} isMuted={isMuted} setVolume={setVolume} />
 
           {/* Desktop resize handles on corners */}
           <div
