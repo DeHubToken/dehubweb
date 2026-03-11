@@ -1232,6 +1232,27 @@ export type Database = {
         }
         Relationships: []
       }
+      winter_wonderland_results: {
+        Row: {
+          created_at: string
+          draw_date: string
+          id: string
+          results: Json
+        }
+        Insert: {
+          created_at?: string
+          draw_date?: string
+          id?: string
+          results: Json
+        }
+        Update: {
+          created_at?: string
+          draw_date?: string
+          id?: string
+          results?: Json
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
