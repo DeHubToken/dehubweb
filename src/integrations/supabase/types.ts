@@ -423,6 +423,7 @@ export type Database = {
           description: string
           dislike_count: number
           id: string
+          image_url: string | null
           like_count: number
           status: string
           title: string
@@ -439,6 +440,7 @@ export type Database = {
           description: string
           dislike_count?: number
           id?: string
+          image_url?: string | null
           like_count?: number
           status?: string
           title: string
@@ -455,6 +457,7 @@ export type Database = {
           description?: string
           dislike_count?: number
           id?: string
+          image_url?: string | null
           like_count?: number
           status?: string
           title?: string
