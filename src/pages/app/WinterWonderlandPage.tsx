@@ -212,21 +212,18 @@ export default function WinterWonderlandPage() {
         icon={<Trophy className="w-5 h-5 text-yellow-400" />}
         color="text-yellow-400"
         winners={data.winners.tier1}
-        profiles={profiles}
       />
       <TierTable
         title="Tier 2 — 50% Bonus (max 10M buy)"
         icon={<Star className="w-5 h-5 text-sky-400" />}
         color="text-sky-400"
         winners={data.winners.tier2}
-        profiles={profiles}
       />
       <TierTable
         title="Tier 3 — 20% Bonus (no max)"
         icon={<Gift className="w-5 h-5 text-emerald-400" />}
         color="text-emerald-400"
         winners={data.winners.tier3}
-        profiles={profiles}
       />
 
       {/* Footer */}
