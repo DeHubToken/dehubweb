@@ -252,6 +252,7 @@ export function useTrendingCategories(period: TopicPeriod = 'all') {
   return useQuery<CategoryCount[]>({
     queryKey: ['trending-categories', period],
     queryFn: () => fetchTrendingCategories(period),
+    initialData: HARDCODED_DATA[period],
     // "all" never needs to refetch once loaded; others refresh every 10 min
     staleTime: isAll ? Infinity : 10 * 60_000,
     gcTime: isAll ? Infinity : 30 * 60_000,
