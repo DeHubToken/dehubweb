@@ -21,6 +21,12 @@ import {
 import { editPost } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 
+export interface EditPostResult {
+  name: string;
+  description: string;
+  categories: string[];
+}
+
 interface EditPostModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -28,7 +34,7 @@ interface EditPostModalProps {
   currentTitle?: string;
   currentDescription?: string;
   currentCategories?: string[];
-  onSuccess?: () => void;
+  onSuccess?: (edited: EditPostResult) => void;
 }
 
 export function EditPostModal({
