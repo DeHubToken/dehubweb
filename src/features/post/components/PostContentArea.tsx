@@ -381,6 +381,21 @@ export function PostContentArea({
       first = false;
     }
     
+    // Enforce 500 character limit on description
+    if (plainText.length > 500) {
+      plainText = plainText.slice(0, 500);
+      if (editor) {
+        editor.textContent = plainText;
+        // Move cursor to end
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.selectNodeContents(editor);
+        range.collapse(false);
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+      }
+    }
+    
     setText(plainText);
     
     // Trigger mention detection
