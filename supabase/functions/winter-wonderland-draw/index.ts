@@ -418,7 +418,7 @@ Deno.serve(async (req) => {
       .insert({ results: result });
 
     if (insertError) {
-      console.error('[WinterDraw] Failed to store results:', insertError);
+      console.error('[WinterDraw] Failed to store results:', JSON.stringify(insertError));
     } else {
       console.log('[WinterDraw] Results stored permanently in DB');
     }
