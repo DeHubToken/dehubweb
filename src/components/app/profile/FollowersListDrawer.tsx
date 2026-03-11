@@ -348,12 +348,19 @@ export function FollowersListDrawer({
         }
       }
     } catch (error: any) {
-      const msg = error?.message || error?.error || '';
-      if (typeof msg === 'string' && msg.toLowerCase().includes('already pending')) {
+      const msg = error?.message || error?.error || String(error);
+      const msgLower = typeof msg === 'string' ? msg.toLowerCase() : '';
+      if (msgLower.includes('already pending')) {
         setUsers(prev => prev.map(u => 
           u.address === user.address ? { ...u, isPending: true } : u
         ));
         toast.info('Follow request already pending. Waiting for approval.');
+      } else if (msgLower.includes('already') || msgLower.includes('following')) {
+        followingSetRef.current?.add(user.address.toLowerCase());
+        setUsers(prev => prev.map(u => 
+          u.address === user.address ? { ...u, isFollowing: true } : u
+        ));
+        toast.info(`Already following ${user.displayName || user.username || 'user'}`);
       } else {
         handleApiError(error, 'Failed to update follow status');
       }
