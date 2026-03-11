@@ -76,6 +76,8 @@ interface CommentsSectionProps {
 // formatTimeAgo is now imported from @/lib/feed-utils
 
 function mapApiComment(apiComment: ApiCommentResponse): Comment {
+  // Debug: log all keys of each comment to find GIF field
+  console.log('[Comment] raw keys:', apiComment.id, Object.keys(apiComment), 'imageUrl:', apiComment.imageUrl);
   const address = apiComment.address;
   // Use centralized utility for avatar field extraction
   const rawAvatarPath = extractAvatarPath(apiComment.writor);
