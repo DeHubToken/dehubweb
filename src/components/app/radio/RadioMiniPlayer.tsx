@@ -212,6 +212,7 @@ export function RadioMiniPlayer() {
         <motion.div
           ref={barRef}
           drag
+          dragControls={dragControls}
           dragListener={false}
           dragMomentum={false}
           dragElastic={0.1}
@@ -236,14 +237,9 @@ export function RadioMiniPlayer() {
           )}
         >
           {/* TOP HALF — drag handle for moving the island */}
-          <motion.div
+          <div
             className="p-3 pb-0 cursor-grab active:cursor-grabbing"
-            onPointerDown={(e) => {
-              // Forward pointer events to parent motion.div for dragging
-              (barRef.current as any)?.dispatchEvent?.(
-                new PointerEvent('pointerdown', { ...e.nativeEvent, bubbles: true })
-              );
-            }}
+            onPointerDown={(e) => dragControls.start(e)}
             style={{ touchAction: 'none' }}
           >
             <div className="flex items-center gap-3">
