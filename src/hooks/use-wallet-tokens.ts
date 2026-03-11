@@ -50,7 +50,7 @@ export function useAllChainsTokens() {
 
   const baseQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), BASE_CHAIN_ID],
-    queryFn: () => getAllTokenBalances(walletAddress!, BASE_CHAIN_ID),
+    queryFn: () => getAllTokenBalances(walletAddress!, BASE_CHAIN_ID, true),
     enabled: !!walletAddress && isAuthenticated,
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
