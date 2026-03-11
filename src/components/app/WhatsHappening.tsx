@@ -11,6 +11,15 @@ import { getTopTickers, type TickerPeriod } from '@/lib/ticker-search-tracker';
 import { useTrendingCategories } from '@/hooks/use-trending-categories';
 
 type Tab = 'posts' | 'tickers';
+type TopicPeriod = '1d' | '1w' | '1m' | '1y' | 'all';
+
+const TOPIC_PERIODS: { value: TopicPeriod; label: string }[] = [
+  { value: '1d', label: '1D' },
+  { value: '1w', label: '1W' },
+  { value: '1m', label: '1M' },
+  { value: '1y', label: '1Y' },
+  { value: 'all', label: 'All' },
+];
 
 const TICKER_PERIODS: { value: TickerPeriod; label: string }[] = [
   { value: '1d', label: '1D' },
