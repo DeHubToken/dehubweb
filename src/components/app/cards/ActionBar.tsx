@@ -138,6 +138,7 @@ export function ActionBar({
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   
   // Sync local state with props when they change, but skip if user recently voted (or cache active)
   useEffect(() => {
