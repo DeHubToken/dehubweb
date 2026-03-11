@@ -304,7 +304,7 @@ export function ActionBar({
     if (onQuote) {
       onQuote();
     } else {
-      toast.info('Quote not available for this post');
+      toast.info(t('postActions.quoteNotAvailable'));
     }
     setSheetOpen(false);
   };
