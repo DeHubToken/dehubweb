@@ -1,35 +1,27 @@
 
 
-## Fix: Auto-reload on chunk load failures
+# Fix: Talk of the Town stops scanning early on 429 errors
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+## Root Cause
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+In `fetchPage()`, a 429 response returns `null`. In the main loop, `null` triggers `hitEnd = true` or `break`, stopping the scan. The incomplete data then gets cached as if all pages were scanned. On mainnet, where there's more traffic and more concurrent API calls, 429s happen earlier and more often.
 
-### Changes
+## Fix — `src/hooks/use-trending-categories.ts`
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+1. **Distinguish 429 from empty results**: Change `fetchPage` to return a sentinel value (e.g., `'rate-limited'`) instead of `null` for 429s, and `null` only for truly empty/error responses.
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+2. **Retry on 429**: When a 429 is encountered, wait longer (1-2 seconds) and retry up to 2 times before giving up on that page.
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+3. **Don't cache incomplete scans as complete**: Only set `lastPageScanned` to a page number if that page was successfully fetched. If scanning was cut short by a 429, save what we have but with the correct `pagesScanned` so the next run resumes from the right spot.
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+4. **Increase delay between sequential requests** from 350ms to 500ms to reduce 429 likelihood.
+
+5. **Stagger the initial parallel batch**: Instead of firing 3 requests simultaneously, fire them with 200ms gaps to avoid triggering the rate limiter.
+
+### Key changes:
+- `fetchPage` returns `{ data, rateLimited }` instead of `any[] | null`
+- Add retry logic with exponential backoff (500ms, 1500ms) for 429s
+- Sequential delay increased from 350ms to 500ms
+- Parallel batch replaced with staggered requests (200ms apart)
+- Cache only records pages that were actually successfully fetched
 
