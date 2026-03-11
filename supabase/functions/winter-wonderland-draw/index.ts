@@ -226,10 +226,11 @@ Deno.serve(async (req) => {
 
     console.log(`[WinterDraw] Registered: ${Object.keys(registeredUsers).length}, Unregistered: ${unregisteredWallets.size}`);
 
-    // ── Step 6: Filter eligible buys (must still hold + registered) ──
+    // ── Step 6: Filter eligible buys (must still hold purchased amount) ──
+    // Registration is NOT required — "every buy enters"
     const eligibleBuys = buysList.filter(buy => {
       const currentBalance = balances[buy.buyer] || 0;
-      return currentBalance >= buy.amount && !unregisteredWallets.has(buy.buyer);
+      return currentBalance >= buy.amount;
     });
 
     console.log(`[WinterDraw] Eligible buys: ${eligibleBuys.length}`);
