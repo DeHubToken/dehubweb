@@ -32,7 +32,7 @@ import {
 import { useSearchHistory } from '@/hooks/use-search-history';
 import { useDeHubUserSearch } from '@/hooks/use-dehub-user-search';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
+import { getMediaUrl, getCategories, searchNFTs, type DeHubNFT, type DeHubCategory } from '@/lib/api/dehub';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { VideoCard, ImageCard, PostCard } from '@/components/app/cards';
 import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
