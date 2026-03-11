@@ -1,11 +1,11 @@
 import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LayoutGrid } from 'lucide-react';
+import { LayoutGrid, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { cn } from '@/lib/utils';
-import { useTrendingCategories, type TopicPeriod } from '@/hooks/use-trending-categories';
+import { useTrendingCategories, useAllTrendingCategories, type TopicPeriod, type CategoryCount } from '@/hooks/use-trending-categories';
 
 const TOPIC_PERIODS: { value: TopicPeriod; label: string }[] = [
   { value: '1d', label: '1D' },
@@ -25,6 +25,8 @@ const slideVariants = {
 
 const slideTransition = { type: 'tween' as const, duration: 0.2, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] };
 
+const PAGE_SIZE = 10;
+
 interface TrendingTopicsListProps {
   /** Override default period */
   defaultPeriod?: TopicPeriod;
@@ -41,13 +43,45 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
   const [topicPeriod, setTopicPeriod] = useState<TopicPeriod>(defaultPeriod);
   const dirRef = useRef(0);
   const [isAutoRotating, setIsAutoRotating] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const loaderRef = useRef<HTMLDivElement>(null);
 
-  // Prefetch all periods
+  // Prefetch all periods (limited to 10)
   useTrendingCategories('1d');
   useTrendingCategories('1w');
   useTrendingCategories('1m');
   useTrendingCategories('1y');
-  const { data: categories = [] } = useTrendingCategories(topicPeriod);
+  const { data: limitedCategories = [] } = useTrendingCategories(topicPeriod);
+  
+  // Fetch ALL categories for the "all" period (unlimited)
+  const { data: allCategories = [] } = useAllTrendingCategories();
+
+  // Use unlimited data for "all" period, limited for others
+  const categories: CategoryCount[] = topicPeriod === 'all' ? allCategories : limitedCategories;
+  const visibleCategories = topicPeriod === 'all' ? categories.slice(0, visibleCount) : categories;
+  const hasMore = topicPeriod === 'all' && visibleCount < categories.length;
+
+  // Reset visible count when period changes
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [topicPeriod]);
+
+  // Infinite scroll observer for "all" period
+  useEffect(() => {
+    if (topicPeriod !== 'all' || !hasMore) return;
+    const el = loaderRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount(prev => prev + PAGE_SIZE);
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [topicPeriod, hasMore]);
 
   // Auto-rotate through periods every 5 seconds
   useEffect(() => {
@@ -106,9 +140,9 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
           exit="exit"
           transition={slideTransition}
         >
-          {categories.length > 0 ? (
+          {visibleCategories.length > 0 ? (
             <div className="flex flex-col gap-1">
-              {categories.map((cat, i) => (
+              {visibleCategories.map((cat, i) => (
                 <button
                   key={cat.name}
                   onClick={() => handleCategoryClick(cat.name)}
@@ -125,6 +159,12 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
                   </span>
                 </button>
               ))}
+              {/* Infinite scroll trigger for "all" period */}
+              {hasMore && (
+                <div ref={loaderRef} className="flex items-center justify-center py-2">
+                  <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
+                </div>
+              )}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-6 text-center">

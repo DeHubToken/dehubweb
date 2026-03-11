@@ -77,14 +77,19 @@ const HARDCODED_DATA: Record<TopicPeriod, CategoryCount[]> = {
   ],
 };
 
-async function fetchTrendingCategories(_period: TopicPeriod): Promise<CategoryCount[]> {
+async function fetchTrendingCategories(_period: TopicPeriod, fetchAll = false): Promise<CategoryCount[]> {
   // For now, all periods read from the same cumulative table (all-time counts).
   // Time-period filtering can be added later with a created_at column.
-  const { data, error } = await supabase
+  let query = supabase
     .from('trending_categories')
     .select('name, post_count')
-    .order('post_count', { ascending: false })
-    .limit(10);
+    .order('post_count', { ascending: false });
+  
+  if (!fetchAll) {
+    query = query.limit(10);
+  }
+
+  const { data, error } = await query;
 
   if (error || !data || data.length === 0) {
     // Fallback to hardcoded
@@ -109,5 +114,19 @@ export function useTrendingCategories(period: TopicPeriod = 'all') {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     placeholderData: (prev) => prev,
+  });
+}
+
+/**
+ * Fetch ALL categories (no limit) for infinite scroll in the "All" period
+ */
+export function useAllTrendingCategories() {
+  return useQuery<CategoryCount[]>({
+    queryKey: ['trending-categories-all-unlimited'],
+    queryFn: () => fetchTrendingCategories('all', true),
+    staleTime: 5 * 60_000,
+    gcTime: 30 * 60_000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 }
