@@ -245,99 +245,103 @@ export function RadioMiniPlayer() {
             }}
             style={{ touchAction: 'none' }}
           >
-            {/* Station Logo */}
-            <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-zinc-800">
-              {currentStation.favicon ? (
-                <img 
-                  src={currentStation.favicon} 
-                  alt={currentStation.name}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Radio className="w-5 h-5 text-zinc-500" />
-                </div>
-              )}
-              
-              {/* Now Playing Animation */}
-              {isPlaying && !isLoading && (
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                  <div className="flex items-end gap-0.5 h-3">
-                    <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '60%', animationDelay: '0ms' }} />
-                    <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '100%', animationDelay: '150ms' }} />
-                    <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '40%', animationDelay: '300ms' }} />
+            <div className="flex items-center gap-3">
+              {/* Station Logo */}
+              <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-zinc-800">
+                {currentStation.favicon ? (
+                  <img 
+                    src={currentStation.favicon} 
+                    alt={currentStation.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Radio className="w-5 h-5 text-zinc-500" />
                   </div>
-                </div>
-              )}
-            </div>
-            
-            {/* Station Info */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs text-zinc-400 uppercase tracking-wider">
-                  {isLoading ? 'Connecting...' : 'Now Playing'}
-                </span>
-                <span className="text-sm">{countryFlag}</span>
+                )}
+                
+                {/* Now Playing Animation */}
+                {isPlaying && !isLoading && (
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <div className="flex items-end gap-0.5 h-3">
+                      <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '60%', animationDelay: '0ms' }} />
+                      <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '100%', animationDelay: '150ms' }} />
+                      <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '40%', animationDelay: '300ms' }} />
+                    </div>
+                  </div>
+                )}
               </div>
-              <h4 className="font-semibold text-white truncate text-sm">
-                {currentStation.name}
-              </h4>
+              
+              {/* Station Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs text-zinc-400 uppercase tracking-wider">
+                    {isLoading ? 'Connecting...' : 'Now Playing'}
+                  </span>
+                  <span className="text-sm">{countryFlag}</span>
+                </div>
+                <h4 className="font-semibold text-white truncate text-sm">
+                  {currentStation.name}
+                </h4>
+              </div>
+              
+              {/* Play/Pause Button */}
+              <button
+                onClick={togglePlayPause}
+                className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center flex-shrink-0 hover:bg-white/10 transition-colors"
+              >
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 text-white animate-spin" />
+                ) : isPlaying ? (
+                  <Pause className="w-4 h-4 text-white fill-white" />
+                ) : (
+                  <Play className="w-4 h-4 text-white fill-white ml-0.5" />
+                )}
+              </button>
+              
+              {/* Fullscreen Visualizer Button */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setShowVisualizer(true)}
+                    className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+                  >
+                    <Maximize2 className="w-4 h-4 text-zinc-400" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Fullscreen visualizer</TooltipContent>
+              </Tooltip>
+              
+              {/* Minimize Button */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setIsMinimized(true)}
+                    className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+                  >
+                    <Minus className="w-4 h-4 text-zinc-400" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Minimize player</TooltipContent>
+              </Tooltip>
+              
+              {/* Close Button */}
+              <button
+                onClick={stop}
+                className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+              >
+                <X className="w-4 h-4 text-zinc-400" />
+              </button>
             </div>
-            
-            {/* Play/Pause Button - Liquid glass squared */}
-            <button
-              onClick={togglePlayPause}
-              className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center flex-shrink-0 hover:bg-white/10 transition-colors"
-            >
-              {isLoading ? (
-                <Loader2 className="w-4 h-4 text-white animate-spin" />
-              ) : isPlaying ? (
-                <Pause className="w-4 h-4 text-white fill-white" />
-              ) : (
-                <Play className="w-4 h-4 text-white fill-white ml-0.5" />
-              )}
-            </button>
-            
-            {/* Fullscreen Visualizer Button */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => setShowVisualizer(true)}
-                  className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
-                >
-                  <Maximize2 className="w-4 h-4 text-zinc-400" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>Fullscreen visualizer</TooltipContent>
-            </Tooltip>
-            
-            {/* Minimize Button */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => setIsMinimized(true)}
-                  className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
-                >
-                  <Minus className="w-4 h-4 text-zinc-400" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>Minimize player</TooltipContent>
-            </Tooltip>
-            
-            {/* Close Button */}
-            <button
-              onClick={stop}
-              className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
-            >
-              <X className="w-4 h-4 text-zinc-400" />
-            </button>
-          </div>
+          </motion.div>
           
-          {/* Volume bar below controls — uses ref to block Framer Motion drag capture */}
-          <VolumeControl volume={volume} isMuted={isMuted} setVolume={setVolume} />
+          {/* BOTTOM HALF — volume control (no drag, fully interactive) */}
+          <div className="px-3 pb-3">
+            <VolumeControl volume={volume} isMuted={isMuted} setVolume={setVolume} />
+          </div>
 
           {/* Desktop resize handles on corners */}
           <div
