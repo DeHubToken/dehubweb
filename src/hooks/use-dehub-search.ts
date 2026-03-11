@@ -31,6 +31,7 @@ export interface SearchCreator {
   bio?: string;
   followerCount?: number;
   isFollowing?: boolean;
+  followsYou?: boolean;
 }
 
 export interface UseDeHubSearchOptions {
@@ -115,6 +116,7 @@ export function mapAccountToCreator(account: SearchAccount): SearchCreator {
     bio: account.bio,
     followerCount: account.followerCount,
     isFollowing: account.isFollowing,
+    followsYou: account.followsYou,
   };
 }
 

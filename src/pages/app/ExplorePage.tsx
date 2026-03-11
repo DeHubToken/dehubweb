@@ -298,7 +298,7 @@ const UserResultCard = ({
           onClick={handleFollow}
           disabled={isLoading || !walletAddress}
         >
-          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : t('explorePage.follow')}
+          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (user.followsYou ? t('explorePage.followBack', 'Follow Back') : t('explorePage.follow'))}
         </Button>
       )}
     </div>
