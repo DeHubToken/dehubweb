@@ -33,7 +33,7 @@ interface CachedCategoryData {
 }
 
 const CACHE_KEY_PREFIX = 'trending-cats-cache-';
-const CACHE_TTL_MS = 10 * 60_000; // 10 minutes
+const CACHE_TTL_MS = 10 * 60_000; // 10 minutes for time-bounded periods
 
 function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -44,8 +44,8 @@ function loadCache(period: TopicPeriod): CachedCategoryData | null {
     const raw = sessionStorage.getItem(CACHE_KEY_PREFIX + period);
     if (!raw) return null;
     const data: CachedCategoryData = JSON.parse(raw);
-    // Expire cache after TTL
-    if (Date.now() - data.timestamp > CACHE_TTL_MS) return null;
+    // "all" cache never expires; others expire after TTL
+    if (period !== 'all' && Date.now() - data.timestamp > CACHE_TTL_MS) return null;
     return data;
   } catch {
     return null;
