@@ -102,6 +102,7 @@ export interface PostFormActions {
   insertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   handlePost: () => void;
   resetForm: () => void;
+  markCategorySaved: () => void;
 }
 
 export interface PostFormComputed {
