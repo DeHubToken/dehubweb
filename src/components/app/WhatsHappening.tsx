@@ -109,7 +109,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
       </LayoutGroup>
 
       {/* Tab content */}
-      <div style={{ minHeight: 280 }} className="relative overflow-hidden">
+      <div style={{ minHeight: 280, maxHeight: 400 }} className="relative overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
         {/* Posts tab — shared component */}
         <div
           className={cn(
