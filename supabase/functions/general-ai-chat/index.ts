@@ -1079,7 +1079,12 @@ IMPORTANT FORMATTING RULES:
       if (postContext.type === 'video' || postContext.type === 'live') {
         postContextInfo += `\n\nIMPORTANT: You cannot watch or analyze video content. If the user asks about what's happening in the video, respond with: "I don't watch videos, but I can help analyze comments and reactions for you!" You can still discuss the title, caption, game being played, streamer info, and other metadata provided.`;
       } else if (postContext.type === 'image' && postContext.imageUrl) {
-        postContextInfo += `\n\nYou can see the image and analyze its visual content. Help the user understand the content, provide insights, answer questions about what's shown in the image, or discuss the topic.`;
+        if (postContext.imageUrls && postContext.imageUrls.length > 1) {
+          const activeIdx = (postContext.activeImageIndex ?? 0) + 1;
+          postContextInfo += `\n\nThis post contains ${postContext.imageUrls.length} images. The user is currently viewing image ${activeIdx} of ${postContext.imageUrls.length}. You can see and analyze this specific image. Always refer to the image the user is currently viewing, not a different one.`;
+        } else {
+          postContextInfo += `\n\nYou can see the image and analyze its visual content. Help the user understand the content, provide insights, answer questions about what's shown in the image, or discuss the topic.`;
+        }
       }
     }
     
