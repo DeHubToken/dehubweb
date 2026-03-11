@@ -17,6 +17,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { voteOnPost, getNFTComments, postComment, followUser, isFollowing as checkIsFollowing, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { CommentsWrapper } from './CommentsWrapper';
 import { CommentsSection } from './CommentsSection';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
