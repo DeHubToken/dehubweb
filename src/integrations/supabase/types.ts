@@ -1112,6 +1112,27 @@ export type Database = {
         }
         Relationships: []
       }
+      trending_categories: {
+        Row: {
+          id: string
+          name: string
+          post_count: number
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          post_count?: number
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          post_count?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       tv_channels_verified: {
         Row: {
           broken_reports: number
@@ -1220,6 +1241,7 @@ export type Database = {
       cleanup_old_leaderboard_snapshots: { Args: never; Returns: undefined }
       cleanup_old_story_views: { Args: never; Returns: undefined }
       get_request_wallet_address: { Args: never; Returns: string }
+      increment_category_count: { Args: { p_name: string }; Returns: undefined }
       increment_ticker_search: {
         Args: { p_symbol: string }
         Returns: undefined
