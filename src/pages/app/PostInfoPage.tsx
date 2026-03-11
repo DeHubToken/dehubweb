@@ -911,7 +911,7 @@ export default function PostInfoPage() {
             return (
               <section className="bg-white/5 rounded-xl p-4 border border-white/10">
                 <h2 className="text-sm font-medium text-white/60 mb-3 flex items-center gap-2">
-                  <Tag className="w-4 h-4" />
+                  <Hash className="w-4 h-4" />
                   Categories
                 </h2>
                 <div className="flex flex-wrap gap-2">
