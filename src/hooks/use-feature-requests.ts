@@ -201,8 +201,22 @@ export function useSubmitFeatureRequest() {
   const { walletAddress, user } = useAuth();
 
   return useMutation({
-    mutationFn: async ({ title, description, category }: { title: string; description: string; category: FeatureCategory }) => {
+    mutationFn: async ({ title, description, category, mediaFile }: { title: string; description: string; category: FeatureCategory; mediaFile?: File | null }) => {
       if (!walletAddress) throw new Error('Not authenticated');
+
+      let imageUrl: string | null = null;
+
+      // Upload media file if provided
+      if (mediaFile) {
+        const ext = mediaFile.name.split('.').pop()?.toLowerCase() || 'bin';
+        const filePath = `${walletAddress.toLowerCase()}/${Date.now()}.${ext}`;
+        const { error: uploadError } = await supabase.storage
+          .from('feature-media')
+          .upload(filePath, mediaFile, { contentType: mediaFile.type, upsert: false });
+        if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
+        const { data: urlData } = supabase.storage.from('feature-media').getPublicUrl(filePath);
+        imageUrl = urlData.publicUrl;
+      }
 
       const { data, error } = await supabase
         .from('feature_requests')
@@ -210,6 +224,7 @@ export function useSubmitFeatureRequest() {
           title: title.trim(),
           description: description.trim(),
           category,
+          image_url: imageUrl,
           author_wallet_address: walletAddress.toLowerCase(),
           author_username: user?.username || null,
           author_avatar: user?.avatarImageUrl || null,
