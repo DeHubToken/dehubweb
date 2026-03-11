@@ -915,7 +915,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           await new Promise(r => setTimeout(r, 2000));
           return connectWithEmail(email, true);
         }
-        toast.error('Failed to send verification code. Please check your email and try again.');
+        toast.error(i18n.t('auth.failedSendVerificationEmail'));
       }
       setConnectionSource(null);
       localStorage.removeItem('dehub_connection_source');
