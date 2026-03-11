@@ -114,6 +114,7 @@ export function mapAccountToCreator(account: SearchAccount): SearchCreator {
     verified: account.verified || false,
     bio: account.bio,
     followerCount: account.followerCount,
+    isFollowing: account.isFollowing,
   };
 }
 

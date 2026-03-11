@@ -227,7 +227,7 @@ const UserResultCard = ({
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(user.isFollowing ?? false);
   const [isLoading, setIsLoading] = useState(false);
   
   // user.avatar is already a fully built URL from mapAccountToCreator/extractUniqueCreators

@@ -241,6 +241,7 @@ export interface SearchAccount {
   verified?: boolean;
   followerCount?: number;
   followingCount?: number;
+  isFollowing?: boolean;
 }
 
 export interface SearchLivestream {
