@@ -241,7 +241,7 @@ export function PostAccessToggles({
         <div className="space-y-1.5">
           <div className="flex items-center justify-between py-0.5">
             <div className="flex items-center gap-2 shrink-0">
-              <Tag className="w-4 h-4 text-white" />
+              <Hash className="w-4 h-4 text-white" />
               <span className="text-sm text-white">Category</span>
             </div>
             <Switch checked={selectedCategoriesArray.length > 0} onCheckedChange={handleCategoryToggle} className="data-[state=checked]:bg-white scale-75" />
