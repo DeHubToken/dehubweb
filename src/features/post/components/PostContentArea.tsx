@@ -653,7 +653,7 @@ export function PostContentArea({
                 value={titleText}
                 onChange={(e) => setTitleText(e.target.value)}
                 placeholder="Title"
-                maxLength={100}
+                maxLength={140}
                 className="w-full bg-transparent text-white text-lg sm:text-xl font-medium resize-none outline-none mb-1 placeholder:text-white/50 sm:placeholder:text-white/70 caret-white"
               />
             )}
