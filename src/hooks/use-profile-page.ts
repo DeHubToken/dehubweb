@@ -87,6 +87,7 @@ export function useProfilePage() {
   });
 
   // Fetch user reposts (and enrich quote posts with quoted post data)
+  // Capped at 5 concurrent getNFTInfo calls to avoid N+1 API floods
   const { data: repostsData } = useQuery({
     queryKey: ['user-reposts', apiProfile?.walletAddress],
     queryFn: async () => {
@@ -94,20 +95,32 @@ export function useProfilePage() {
       const res = await getUserReposts(apiProfile.walletAddress, 1, 50);
       const items = res.result || [];
       
-      // For quote posts that have quotedTokenId but no quotedPost object, fetch the quoted post
-      const enrichPromises = items.map(async (item: any) => {
-        if (item.isQuotePost && item.quotedTokenId && !item.quotedPost) {
-          try {
-            const quoted = await getNFTInfo(String(item.quotedTokenId));
-            return { ...item, quotedPost: quoted };
-          } catch {
-            return item;
-          }
-        }
-        return item;
-      });
+      // Separate items that need enrichment vs those that don't
+      const needsEnrich: { idx: number; item: any }[] = [];
+      const result = [...items];
       
-      return Promise.all(enrichPromises);
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.isQuotePost && item.quotedTokenId && !item.quotedPost) {
+          needsEnrich.push({ idx: i, item });
+        }
+      }
+      
+      // Process in batches of 5
+      const BATCH_SIZE = 5;
+      for (let b = 0; b < needsEnrich.length; b += BATCH_SIZE) {
+        const batch = needsEnrich.slice(b, b + BATCH_SIZE);
+        const settled = await Promise.allSettled(
+          batch.map(({ item }) => getNFTInfo(String(item.quotedTokenId)))
+        );
+        settled.forEach((outcome, i) => {
+          if (outcome.status === 'fulfilled' && outcome.value) {
+            result[batch[i].idx] = { ...batch[i].item, quotedPost: outcome.value };
+          }
+        });
+      }
+      
+      return result;
     },
     enabled: !!apiProfile?.walletAddress,
     staleTime: 2 * 60 * 1000,
@@ -168,12 +181,19 @@ export function useProfilePage() {
     };
   }, [userContentData, repostsData]);
 
-  // Comment count for posts tab
+  // Comment count — lazy-loaded with a 2s delay to prioritize visible content
+  const [commentCountEnabled, setCommentCountEnabled] = useState(false);
+  useEffect(() => {
+    if (!apiProfile?.walletAddress) return;
+    const timer = setTimeout(() => setCommentCountEnabled(true), 2000);
+    return () => clearTimeout(timer);
+  }, [apiProfile?.walletAddress]);
+
   const { data: commentCountData } = useQuery({
     queryKey: ['user-comments-count', apiProfile?.walletAddress],
-    queryFn: () => getUserComments(apiProfile!.walletAddress, 1, 20),
-    enabled: !!apiProfile?.walletAddress,
-    staleTime: 2 * 60 * 1000,
+    queryFn: () => getUserComments(apiProfile!.walletAddress, 1, 1), // fetch only 1 item, we just need .total
+    enabled: commentCountEnabled && !!apiProfile?.walletAddress,
+    staleTime: 5 * 60 * 1000,
   });
   const commentCount = commentCountData?.total || commentCountData?.data?.length || 0;
 

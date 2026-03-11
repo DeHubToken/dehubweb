@@ -30,6 +30,7 @@ import { useProfilePage } from '@/hooks/use-profile-page';
 import { useProfileFollow } from '@/hooks/use-profile-follow';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
+import { ProfileSkeleton } from '@/components/app/profile/ProfileSkeleton';
 import { ProfileOptionsContent } from '@/components/app/profile/ProfileOptionsDrawer';
 import type { TabValue } from '@/components/app/profile/ProfileConstants';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
@@ -141,13 +142,9 @@ export default function ProfilePage() {
     setOfferAmount('');
   };
 
-  // Loading state
+  // Loading state — show skeleton instead of blocking spinner
   if (data.isAuthLoading || data.isLoadingProfile) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-10 h-10 text-white animate-spin" />
-      </div>
-    );
+    return <ProfileSkeleton />;
   }
 
   // Auth gate for own profile
