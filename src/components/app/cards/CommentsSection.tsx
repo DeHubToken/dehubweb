@@ -55,6 +55,7 @@ export interface Comment {
   displayName?: string;
   avatar?: string;
   text: string;
+  imageUrl?: string;
   likes: number;
   dislikes: number;
   timeAgo: string;
