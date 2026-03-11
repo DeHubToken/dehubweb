@@ -1,4 +1,16 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
+
+let wasmInitialized = false;
+async function svgToPng(svg: string): Promise<Uint8Array> {
+    if (!wasmInitialized) {
+        const wasmResp = await fetch("https://esm.sh/@resvg/resvg-wasm@2.6.2/index_bg.wasm");
+        await initWasm(await wasmResp.arrayBuffer());
+        wasmInitialized = true;
+    }
+    const resvg = new Resvg(svg, { fitTo: { mode: "width", value: 1200 } });
+    return resvg.render().asPng();
+}
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -84,7 +96,7 @@ function buildPostImageUrl(nft: DeHubNFT): string {
 }
 
 function getMimeType(url: string): string {
-    if (url.includes("audio_og=")) return "image/svg+xml";
+    if (url.includes("audio_og=")) return "image/png";
     const ext = url.split("?")[0].match(/\.([a-zA-Z0-9]+)$/)?.[1]?.toLowerCase();
     switch (ext) {
         case "jpg":
@@ -302,17 +314,18 @@ serve(async (req) => {
     try {
         const url = new URL(req.url);
 
-        // Audio post OG image: returns a seeded SVG waveform for the given tokenId
+        // Audio post OG image: returns a seeded PNG waveform for the given tokenId
         const audioOgId = url.searchParams.get("audio_og");
         if (audioOgId) {
             const response = await fetch(`${DEHUB_API_BASE}/api/nft_info/${audioOgId}`);
             const nftData = await response.json();
             const nft: DeHubNFT = nftData.result || nftData;
             const svg = generateAudioOgSvg(nft);
-            return new Response(svg, {
+            const png = await svgToPng(svg);
+            return new Response(png, {
                 headers: {
                     ...corsHeaders,
-                    "Content-Type": "image/svg+xml",
+                    "Content-Type": "image/png",
                     "Cache-Control": "public, max-age=86400",
                 },
             });
