@@ -77,6 +77,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         showTitle={state.showTitle}
         titleText={state.titleText}
         setTitleText={actions.setTitleText}
+        onOpenCategories={() => setCategoryDrawerOpen(true)}
       />
 
       <PostAccessToggles

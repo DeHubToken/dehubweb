@@ -386,21 +386,6 @@ export function PostActionBar({
           onGifSelect={onInsertGif}
         />
 
-        {/* Hashtag / Category button */}
-        {onOpenCategories && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                type="button"
-                onClick={onOpenCategories}
-                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
-              >
-                <Hash className="w-5 h-5 text-white" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>Categories</TooltipContent>
-          </Tooltip>
-        )}
       </div>
 
       <div className="flex items-center gap-2">
