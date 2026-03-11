@@ -649,7 +649,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           </>
         ) : (
           <SwipeableCarousel>
-            <ImageCarousel images={images} onImageClick={handleImageClick} />
+            <ImageCarousel images={images} onImageClick={handleImageClick} onIndexChange={setActiveImageIndex} />
           </SwipeableCarousel>
         )}
 
