@@ -219,6 +219,15 @@ function toTextPost(nft: DeHubNFT): TextPost {
   const resolvedAddress = nft.minter || creatorObj?.id || creatorObj?.address;
   const avatar = rawAvatarPath && resolvedAddress ? buildAvatarUrl(resolvedAddress, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
   
+  // Determine if the name is a meaningful title (matches feed normalization)
+  const rawName = nft.name || '';
+  const rawDescription = nft.description || '';
+  const trimmedName = rawName.trim();
+  const trimmedDesc = rawDescription.trim();
+  const hasMeaningfulTitle = trimmedName.length > 0 
+    && trimmedName !== trimmedDesc 
+    && !trimmedDesc.startsWith(trimmedName);
+
   return {
     id: String(nft.tokenId),
     type: 'post',
@@ -232,7 +241,10 @@ function toTextPost(nft: DeHubNFT): TextPost {
       avatarSeed: avatar,
       verified: false,
     },
-    content: nft.description || nft.title || nft.name || '',
+    title: hasMeaningfulTitle ? trimmedName : undefined,
+    content: trimmedDesc || (hasMeaningfulTitle ? '' : trimmedName) || '',
+    rawName,
+    rawDescription,
     stats: {
       comments: nft.commentCount || nft.comment_count || 0,
       reposts: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
