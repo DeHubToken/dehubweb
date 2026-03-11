@@ -95,12 +95,21 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
     duration: (apiComment as any).audioDuration || 0,
   } : undefined;
 
+  // Resolve imageUrl (GIF comments or image comments)
+  let commentImageUrl: string | undefined;
+  if (apiComment.imageUrl) {
+    commentImageUrl = apiComment.imageUrl.startsWith('http')
+      ? apiComment.imageUrl
+      : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${apiComment.imageUrl}`;
+  }
+
   return {
     id: String(apiComment.id),
     username: apiComment.writor?.username || 'Anonymous',
     displayName: apiComment.writor?.displayName || undefined,
     avatar: resolvedAvatar,
     text: apiComment.content || (apiComment as any).text || (apiComment as any).body || '',
+    imageUrl: commentImageUrl,
     likes: apiComment.likeCount ?? 0,
     dislikes: 0,
     timeAgo: formatTimeAgo(apiComment.createdAt),
