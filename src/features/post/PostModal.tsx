@@ -28,7 +28,6 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
   }, [isOpen, initialFiles, actions.handleFileDrop, onFilesProcessed]);
 
   const handleClose = () => {
-    actions.resetForm();
     onClose();
   };
 
