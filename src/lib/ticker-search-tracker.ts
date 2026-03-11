@@ -12,7 +12,7 @@ export type TickerPeriod = '1d' | '1w' | '1m' | '1y' | 'all';
  */
 export function recordTickerSearch(symbol: string) {
   const clean = symbol.replace(/^\$/, '').toUpperCase().trim();
-  if (!clean || clean.length < 1) return;
+  if (!clean || clean.length < 2) return;
 
   // Cumulative counter (legacy)
   supabase.rpc('increment_ticker_search', { p_symbol: clean }).then(() => {});
