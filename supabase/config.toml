@@ -74,3 +74,6 @@ verify_jwt = false
 
 [functions.stock-quote]
 verify_jwt = false
+
+[functions.winter-wonderland-draw]
+verify_jwt = false
