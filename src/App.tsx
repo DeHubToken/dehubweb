@@ -24,7 +24,7 @@ const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
 const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));
 const GovernanceProposalPage = React.lazy(() => import("./pages/app/GovernanceProposalPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
-const WinterWonderlandPage = React.lazy(() => import("./pages/app/WinterWonderlandPage"));
+
 
 // Preload critical dynamic-route chunks after initial render so first navigation is instant
 const preloadCriticalChunks = () => {
@@ -113,7 +113,7 @@ function AppContent() {
             <Route path="/docs/*" element={<DocsPage />} />
             
             <Route path="/delete-account" element={<DeleteAccount />} />
-            <Route path="/winterwonderland" element={<Suspense fallback={<PageLoader />}><WinterWonderlandPage /></Suspense>} />
+            
             <Route path="/creators" element={<CreatorsPage />} />
             <Route path="/skill.md" element={<SkillPage />} />
 
