@@ -63,19 +63,19 @@ function isNativeETH(address: string): boolean {
 }
 
 /**
- * Get a quote for swapping tokenIn → DHB on Uniswap V3.
+ * Get a quote for swapping tokenIn → tokenOut on Uniswap V3.
  * Tries multiple fee tiers and returns the best (lowest input) quote.
- * Returns the estimated tokenIn amount (in wei) needed to receive `amountOutDHB` (wei) of DHB.
  * Returns null if no quote succeeds.
  */
 export async function getSwapQuote(
-  amountOutDHB: bigint,
+  amountOut: bigint,
   tokenInAddress: string = '0x0',
+  tokenOutAddress: string = DHB_BASE,
 ): Promise<{ amountIn: bigint; feeTier: number } | null> {
   await initChainRpcUrls();
   const tokenIn = resolveTokenAddress(tokenInAddress);
+  const tokenOut = resolveTokenAddress(tokenOutAddress);
 
-  // Try each fee tier, return best quote
   const results: { amountIn: bigint; feeTier: number }[] = [];
 
   for (const fee of FEE_TIERS) {
@@ -86,8 +86,8 @@ export async function getSwapQuote(
         'quoteExactOutputSingle',
         [{
           tokenIn,
-          tokenOut: DHB_BASE,
-          amount: amountOutDHB,
+          tokenOut,
+          amount: amountOut,
           fee,
           sqrtPriceLimitX96: BigInt(0),
         }],
@@ -105,12 +105,12 @@ export async function getSwapQuote(
     return null;
   }
 
-  // Return lowest amountIn (best rate)
   results.sort((a, b) => (a.amountIn < b.amountIn ? -1 : 1));
   const best = results[0];
   console.log('[Uniswap] Best quote:', {
     tokenIn,
-    amountOutDHB: amountOutDHB.toString(),
+    tokenOut,
+    amountOut: amountOut.toString(),
     amountIn: best.amountIn.toString(),
     feeTier: best.feeTier,
   });
