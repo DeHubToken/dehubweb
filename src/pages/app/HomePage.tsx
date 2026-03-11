@@ -21,9 +21,8 @@ import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { setTabSwitchTime } from '@/lib/gesture-state';
 import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
-import { clearPersistedFeedFilters, usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
-import { SORT_OPTIONS, DATE_FILTER_OPTIONS } from '@/lib/feed-utils';
-import type { SortOption, DateFilterOption, PostTypeFilterValue } from '@/lib/feed-utils';
+import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
+import { SORT_OPTIONS } from '@/lib/feed-utils';
 
 
 // Feed components
