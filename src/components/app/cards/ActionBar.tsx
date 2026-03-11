@@ -282,9 +282,9 @@ export function ActionBar({
       setIsReposted(true);
       if (postId) markReposted(postId);
       onRepost();
-      toast.success('Reposted!');
+      toast.success(t('postActions.reposted'));
     } else {
-      toast.info('Repost not available for this post');
+      toast.info(t('postActions.repostNotAvailable'));
     }
     setSheetOpen(false);
   };
