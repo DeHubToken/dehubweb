@@ -142,13 +142,9 @@ export default function ProfilePage() {
     setOfferAmount('');
   };
 
-  // Loading state
+  // Loading state — show skeleton instead of blocking spinner
   if (data.isAuthLoading || data.isLoadingProfile) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-10 h-10 text-white animate-spin" />
-      </div>
-    );
+    return <ProfileSkeleton />;
   }
 
   // Auth gate for own profile

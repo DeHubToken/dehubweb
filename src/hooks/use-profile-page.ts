@@ -181,12 +181,19 @@ export function useProfilePage() {
     };
   }, [userContentData, repostsData]);
 
-  // Comment count for posts tab
+  // Comment count — lazy-loaded with a 2s delay to prioritize visible content
+  const [commentCountEnabled, setCommentCountEnabled] = useState(false);
+  useEffect(() => {
+    if (!apiProfile?.walletAddress) return;
+    const timer = setTimeout(() => setCommentCountEnabled(true), 2000);
+    return () => clearTimeout(timer);
+  }, [apiProfile?.walletAddress]);
+
   const { data: commentCountData } = useQuery({
     queryKey: ['user-comments-count', apiProfile?.walletAddress],
-    queryFn: () => getUserComments(apiProfile!.walletAddress, 1, 20),
-    enabled: !!apiProfile?.walletAddress,
-    staleTime: 2 * 60 * 1000,
+    queryFn: () => getUserComments(apiProfile!.walletAddress, 1, 1), // fetch only 1 item, we just need .total
+    enabled: commentCountEnabled && !!apiProfile?.walletAddress,
+    staleTime: 5 * 60 * 1000,
   });
   const commentCount = commentCountData?.total || commentCountData?.data?.length || 0;
 
