@@ -19,7 +19,8 @@ export function StatsBar() {
     : Array.isArray(profile?.followers) ? profile.followers.length : (profile?.follower_count ?? 0);
 
   const following = profile?.following_count
-    ?? (Array.isArray(profile?.followings) ? profile.followings.length : 0);
+    ?? (typeof profile?.followings === 'number' ? profile.followings
+    : Array.isArray(profile?.followings) ? profile.followings.length : 0);
 
   const likes = typeof profile?.likes === 'number'
     ? profile.likes
