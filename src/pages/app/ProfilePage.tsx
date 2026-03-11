@@ -440,7 +440,7 @@ export default function ProfilePage() {
         onOpenChange={setShowTipModal}
         creatorAddress={data.profile?.walletAddress}
         creatorName={data.profile?.name}
-        context="profile"
+        tokenId="0"
       />
     </div>
   );
