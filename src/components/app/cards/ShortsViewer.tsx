@@ -537,7 +537,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const handleCopyLink = () => {
     const url = `${window.location.origin}/app/post/${currentShort.id}`;
     navigator.clipboard.writeText(url);
-    toast.success('Post URL copied to clipboard');
+    toast.success(t('shorts.urlCopied'));
     setShareSheetOpen(false);
   };
 
