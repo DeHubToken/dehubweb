@@ -272,6 +272,15 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
                 hideControls 
               />
             )}
+            {comment.imageUrl && (
+              <img
+                src={comment.imageUrl}
+                alt="Comment media"
+                className="mt-1.5 rounded-lg max-w-[240px] max-h-[200px] object-contain cursor-pointer"
+                onClick={() => window.open(comment.imageUrl, '_blank')}
+                loading="lazy"
+              />
+            )}
             {comment.voiceNote && (
               <div className="mt-1">
                 <VoiceNotePlayer voiceNote={comment.voiceNote} />
