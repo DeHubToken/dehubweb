@@ -498,7 +498,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           closeLoginModal();
         } else {
           console.warn('[Auth] [REDIRECT] Web3Auth not connected after redirect processing. Status:', web3authInstance.status);
-          toast.error('Login failed. Please try again.');
+        toast.error(i18n.t('auth.loginFailed'));
         }
 
         // Clear URL parameters to prevent reprocessing on refresh
