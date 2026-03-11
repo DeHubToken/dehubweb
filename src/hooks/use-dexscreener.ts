@@ -57,30 +57,41 @@ interface DexSearchResponse {
   pairs: DexPair[] | null;
 }
 
-async function searchDexScreener(query: string): Promise<DexPair | null> {
+async function searchDexScreenerMulti(query: string): Promise<DexPair[]> {
   const symbol = query.replace(/^\$/, '').toUpperCase();
-  if (!symbol) return null;
+  if (!symbol) return [];
 
   const res = await fetch(`https://api.dexscreener.com/latest/dex/search?q=${encodeURIComponent(symbol)}`);
-  if (!res.ok) return null;
+  if (!res.ok) return [];
 
   const data: DexSearchResponse = await res.json();
-  if (!data.pairs || data.pairs.length === 0) return null;
+  if (!data.pairs || data.pairs.length === 0) return [];
 
   const exactMatches = data.pairs.filter(
     (p) => p.baseToken.symbol.toUpperCase() === symbol
   );
 
-  if (exactMatches.length === 0) return null;
+  if (exactMatches.length === 0) return [];
 
-  // Prioritize Base chain, then by liquidity
+  // Sort: Base chain first, then by liquidity
   exactMatches.sort((a, b) => {
     const aIsBase = a.chainId === 'base' ? 1 : 0;
     const bIsBase = b.chainId === 'base' ? 1 : 0;
     if (aIsBase !== bIsBase) return bIsBase - aIsBase;
     return (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0);
   });
-  return exactMatches[0];
+
+  // Deduplicate by chain — keep highest-liquidity pair per chain
+  const seenChains = new Set<string>();
+  const deduped: DexPair[] = [];
+  for (const pair of exactMatches) {
+    if (seenChains.has(pair.chainId)) continue;
+    seenChains.add(pair.chainId);
+    deduped.push(pair);
+    if (deduped.length >= 4) break;
+  }
+
+  return deduped;
 }
 
 export function useDexScreenerSearch(query: string, enabled: boolean) {
@@ -88,7 +99,22 @@ export function useDexScreenerSearch(query: string, enabled: boolean) {
 
   return useQuery({
     queryKey: ['dexscreener', query.trim()],
-    queryFn: () => searchDexScreener(query.trim()),
+    queryFn: async () => {
+      const results = await searchDexScreenerMulti(query.trim());
+      return results[0] || null;
+    },
+    enabled: enabled && isCashtag,
+    staleTime: 30_000,
+    retry: 1,
+  });
+}
+
+export function useDexScreenerSearchMulti(query: string, enabled: boolean) {
+  const isCashtag = query.trim().startsWith('$') && query.trim().length >= 2;
+
+  return useQuery({
+    queryKey: ['dexscreener-multi', query.trim()],
+    queryFn: () => searchDexScreenerMulti(query.trim()),
     enabled: enabled && isCashtag,
     staleTime: 30_000,
     retry: 1,
