@@ -356,15 +356,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string>('home', 'category', 'all');
 
   // Listen for external category changes (e.g. from Talk of the Town sidebar)
-  // Clear feed cache immediately so skeletons show instantly (no stale data flash)
+  // Set a transitioning flag so we force skeleton state (bypasses placeholderData)
+  const [isCategoryTransitioning, setIsCategoryTransitioning] = useState(false);
+
   useEffect(() => {
     const handler = (e: Event) => {
       const categoryId = (e as CustomEvent).detail;
       if (categoryId) {
-        // Remove all cached unified-feed data so the UI drops to skeleton state immediately
+        setIsCategoryTransitioning(true);
         queryClient.removeQueries({ queryKey: ['unified-feed'] });
         setSelectedCategory(categoryId);
-        // Scroll to top for instant feedback
         window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
       }
     };
@@ -1205,7 +1206,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     ? (videosFeed.data?.pages?.length || imagesFeed.data?.pages?.length || textsFeed.data?.pages?.length)
     : (singleFeed.data?.pages?.length);
   const hasCachedData = hasQueryData && items.length > 0;
-  const isLoadingState = !hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading));
+  const isLoadingState = isCategoryTransitioning || (!hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading)));
+
+  // Clear transitioning flag once new data has arrived
+  useEffect(() => {
+    if (isCategoryTransitioning && hasQueryData && items.length > 0) {
+      setIsCategoryTransitioning(false);
+    }
+  }, [isCategoryTransitioning, hasQueryData, items.length]);
 
   const { isAutoRetrying, retriesExhausted } = useAutoRetryFeed({
     itemCount: items.length,
