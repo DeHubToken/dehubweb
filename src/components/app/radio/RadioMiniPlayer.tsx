@@ -17,28 +17,54 @@ import { getCountryFlag } from '@/lib/api/radio-browser';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { RadioFullscreenVisualizer } from './RadioFullscreenVisualizer';
 
-/** Isolated volume control that blocks Framer Motion drag via native capture-phase listeners */
+/** Isolated volume control that fully blocks Framer Motion drag */
 function VolumeControl({ volume, isMuted, setVolume }: { volume: number; isMuted: boolean; setVolume: (v: number) => void }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const stop = (e: PointerEvent | TouchEvent) => { e.stopPropagation(); };
-    el.addEventListener('pointerdown', stop, { capture: true });
-    el.addEventListener('touchstart', stop, { capture: true });
-    el.addEventListener('pointermove', stop, { capture: true });
-    el.addEventListener('touchmove', stop, { capture: true });
+
+    const blockAndRelease = (e: PointerEvent) => {
+      e.stopPropagation();
+      // Framer Motion calls setPointerCapture on the drag target.
+      // We must release it so the Radix slider can capture the pointer instead.
+      // Walk up to find any element that captured this pointer and release it.
+      try {
+        const draggable = el.closest('[style*="touch-action"]') as HTMLElement | null;
+        if (draggable && draggable.hasPointerCapture(e.pointerId)) {
+          draggable.releasePointerCapture(e.pointerId);
+        }
+      } catch { /* ignore */ }
+    };
+
+    const stopProp = (e: Event) => { e.stopPropagation(); };
+
+    el.addEventListener('pointerdown', blockAndRelease, true);
+    el.addEventListener('pointermove', stopProp, true);
+    el.addEventListener('pointerup', stopProp, true);
+    el.addEventListener('touchstart', stopProp, true);
+    el.addEventListener('touchmove', stopProp, true);
+    el.addEventListener('touchend', stopProp, true);
+    // Also handle gotpointercapture to release it immediately
+    el.addEventListener('gotpointercapture', (e: Event) => {
+      const pe = e as PointerEvent;
+      // If a child inside volume got pointer capture that's fine (Radix slider thumb)
+      // But if the motion.div ancestor got it, we need to release
+    }, true);
+    
     return () => {
-      el.removeEventListener('pointerdown', stop, { capture: true });
-      el.removeEventListener('touchstart', stop, { capture: true });
-      el.removeEventListener('pointermove', stop, { capture: true });
-      el.removeEventListener('touchmove', stop, { capture: true });
+      el.removeEventListener('pointerdown', blockAndRelease, true);
+      el.removeEventListener('pointermove', stopProp, true);
+      el.removeEventListener('pointerup', stopProp, true);
+      el.removeEventListener('touchstart', stopProp, true);
+      el.removeEventListener('touchmove', stopProp, true);
+      el.removeEventListener('touchend', stopProp, true);
     };
   }, []);
 
   return (
-    <div ref={ref} className="flex items-center gap-2 mt-2 pt-2 border-t border-white/[0.06]">
+    <div ref={ref} className="flex items-center gap-2 mt-2 pt-2 border-t border-white/[0.06]" style={{ touchAction: 'none' }}>
       <button onClick={() => setVolume(isMuted ? 0.7 : 0)} className="flex-shrink-0">
         {isMuted ? (
           <VolumeX className="w-3.5 h-3.5 text-zinc-500" />
