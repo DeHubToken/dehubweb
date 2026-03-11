@@ -20,6 +20,8 @@ interface PostContext {
   viewers?: string;
   thumbnail?: string;
   imageUrl?: string;
+  imageUrls?: string[];
+  activeImageIndex?: number;
 }
 
 const PERSONALITY_STYLES: Record<string, string> = {
