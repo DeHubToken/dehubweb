@@ -835,6 +835,9 @@ export default function SinglePostPage() {
           tokenId={id || ''}
           currentTitle={videoData.title}
           currentDescription={videoData.description}
+          onSuccess={(edited) => {
+            applyOptimisticEdit(queryClient, id || '', edited);
+          }}
         />
 
         {/* Delete Post Modal */}

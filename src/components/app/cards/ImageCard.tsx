@@ -798,9 +798,8 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         currentTitle={post.title}
         currentDescription={post.description}
         currentCategories={post.categories}
-        onSuccess={() => {
-          queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-          queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+        onSuccess={(edited) => {
+          applyOptimisticEdit(queryClient, post.id, edited);
         }}
       />
 

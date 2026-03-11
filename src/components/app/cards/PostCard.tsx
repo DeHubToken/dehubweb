@@ -318,8 +318,8 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         currentTitle={post.rawName || ''}
         currentDescription={post.rawDescription || ''}
         currentCategories={post.categories}
-        onSuccess={() => {
-          queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+        onSuccess={(edited) => {
+          applyOptimisticEdit(queryClient, post.id, edited);
         }}
       />
 

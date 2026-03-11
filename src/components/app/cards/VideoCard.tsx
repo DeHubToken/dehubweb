@@ -1651,9 +1651,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         currentTitle={video.title}
         currentDescription={video.description}
         currentCategories={video.categories}
-        onSuccess={() => {
-          queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-          queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+        onSuccess={(edited) => {
+          applyOptimisticEdit(queryClient, video.id, edited);
         }}
       />
 

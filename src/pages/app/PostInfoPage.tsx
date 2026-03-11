@@ -937,7 +937,9 @@ export default function PostInfoPage() {
           currentTitle={nftInfo.title || nftInfo.name || ''}
           currentDescription={nftInfo.description || ''}
           currentCategories={Array.isArray(nftInfo.category) ? nftInfo.category : nftInfo.category ? [nftInfo.category] : []}
-          onSuccess={() => queryClient.invalidateQueries({ queryKey: ['nft-info', postId] })}
+          onSuccess={(edited) => {
+            applyOptimisticEdit(queryClient, nftInfo.tokenId, edited);
+          }}
         />
       )}
     </div>
