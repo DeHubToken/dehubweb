@@ -813,6 +813,23 @@ export default function ExplorePage() {
                   </button>
                 </div>
 
+                {/* Contract address resolving indicator */}
+                {isResolvingContract && (
+                  <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-zinc-900/80 border border-zinc-800/50 text-sm text-muted-foreground">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Resolving contract address…</span>
+                  </div>
+                )}
+
+                {/* Resolved ticker badge */}
+                {resolvedTicker && !isResolvingContract && /^0x[a-f0-9]{40}$/i.test(baseEffectiveQuery.trim()) && (
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-800/60 border border-zinc-700/40 text-xs text-muted-foreground mb-1">
+                    <span className="truncate max-w-[120px] font-mono">{baseEffectiveQuery.trim().slice(0, 6)}…{baseEffectiveQuery.trim().slice(-4)}</span>
+                    <span>→</span>
+                    <span className="font-semibold text-foreground">{resolvedTicker}</span>
+                  </div>
+                )}
+
                 {/* Stock / Crypto Cashtag Result Switcher */}
                 {(stockData?.found || dexPairs.length > 0) && (
                   <CashtagResultSwitcher
