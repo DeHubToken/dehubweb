@@ -105,9 +105,12 @@ function GovernanceCard({
   };
 
   const resolvedAddress = KNOWN_AVATAR_ADDRESSES[proposal.author_wallet_address.toLowerCase()] || proposal.author_wallet_address;
+  
+  // Use useProfileAvatar as fallback when author_avatar is not stored
+  const cachedAvatar = useProfileAvatar(resolvedAddress);
   const avatarUrl = proposal.author_avatar
     ? buildAvatarUrl(resolvedAddress, proposal.author_avatar)
-    : null;
+    : cachedAvatar || null;
 
   const username_raw = proposal.author_username || '';
   const displayName = KNOWN_DISPLAY_NAMES[username_raw.toLowerCase()] || username_raw || proposal.author_wallet_address.slice(0, 6);
