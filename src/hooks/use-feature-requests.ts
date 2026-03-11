@@ -24,6 +24,7 @@ export interface FeatureRequest {
   author_wallet_address: string;
   author_username: string | null;
   author_avatar: string | null;
+  image_url: string | null;
   vote_count: number;
   like_count: number;
   dislike_count: number;
