@@ -281,7 +281,7 @@ export function SwapToTokenDrawer({
                     )}
                   </span>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
                   <p className={`text-xs ${insufficientBalance ? 'text-red-400' : 'text-zinc-500'}`}>
                     Balance: {balanceFormatted} {selectedToken.symbol}
                     {insufficientBalance && ' (insufficient)'}
