@@ -11,7 +11,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2, MoreVertical, Pencil } from 'lucide-react';
+import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2, MoreVertical, Pencil, ImagePlus } from 'lucide-react';
 import featuresLightbulb from '@/assets/features-lightbulb.png';
 import { TranslatableText, SharedTranslationProvider, useSharedTranslationControl } from '@/components/app/TranslatableText';
 import { PostMetadata } from '@/components/app/cards/PostMetadata';
@@ -337,6 +337,17 @@ function FeatureCard({
             <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
             <TranslatableText text={feature.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />
 
+            {/* Attached media */}
+            {feature.image_url && (
+              <div className="rounded-xl overflow-hidden border border-white/10">
+                {feature.image_url.match(/\.(mp4|mov|webm|ogg)$/i) ? (
+                  <video src={feature.image_url} className="w-full max-h-64 object-contain bg-black" controls />
+                ) : (
+                  <img src={feature.image_url} alt="Attachment" className="w-full max-h-64 object-contain bg-black/30" loading="lazy" />
+                )}
+              </div>
+            )}
+
         {/* Category badge - liquid glass style */}
         <div className="flex items-center gap-2">
           <span className="text-zinc-300 text-[10px] font-medium px-2 py-0.5 rounded-lg bg-gradient-to-br from-white/15 via-white/8 to-white/3 backdrop-blur-xl border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)]">
@@ -510,9 +521,32 @@ function SubmitFeatureDrawer({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<FeatureCategory>('new_feature');
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
+  const [mediaPreview, setMediaPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const submitMutation = useSubmitFeatureRequest();
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    // Max 20MB
+    if (file.size > 20 * 1024 * 1024) {
+      setErrors(prev => ({ ...prev, media: 'File must be under 20MB' }));
+      return;
+    }
+    setMediaFile(file);
+    setMediaPreview(URL.createObjectURL(file));
+    setErrors(prev => { const { media, ...rest } = prev; return rest; });
+  };
+
+  const removeMedia = () => {
+    setMediaFile(null);
+    if (mediaPreview) URL.revokeObjectURL(mediaPreview);
+    setMediaPreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
 
   const handleSubmit = () => {
     const result = featureSchema.safeParse({ title, description, category });
@@ -526,12 +560,13 @@ function SubmitFeatureDrawer({
     }
     setErrors({});
     submitMutation.mutate(
-      { title: result.data.title, description: result.data.description, category: result.data.category as FeatureCategory },
+      { title: result.data.title, description: result.data.description, category: result.data.category as FeatureCategory, mediaFile },
       {
         onSuccess: () => {
           setTitle('');
           setDescription('');
           setCategory('new_feature');
+          removeMedia();
           onOpenChange(false);
         },
       }
@@ -605,6 +640,44 @@ function SubmitFeatureDrawer({
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Media Upload */}
+          <div>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">Attach Image or Video (optional)</label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,video/*"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            {mediaPreview ? (
+              <div className="relative rounded-xl overflow-hidden border border-white/10 bg-zinc-900">
+                {mediaFile?.type.startsWith('video/') ? (
+                  <video src={mediaPreview} className="w-full max-h-48 object-contain" controls />
+                ) : (
+                  <img src={mediaPreview} alt="Preview" className="w-full max-h-48 object-contain" />
+                )}
+                <button
+                  type="button"
+                  onClick={removeMedia}
+                  className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full h-24 rounded-xl border border-dashed border-white/10 bg-zinc-900/50 flex flex-col items-center justify-center gap-1.5 text-zinc-500 hover:text-zinc-300 hover:border-white/20 transition-colors"
+              >
+                <ImagePlus className="w-5 h-5" />
+                <span className="text-xs">Click to upload</span>
+              </button>
+            )}
+            {errors.media && <span className="text-red-400 text-[11px] mt-1 block">{errors.media}</span>}
           </div>
 
           {/* Submit */}
