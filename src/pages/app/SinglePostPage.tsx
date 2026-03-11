@@ -12,7 +12,7 @@
  */
 
 import { useParams, useNavigationType, useNavigate, useLocation } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef } from 'react';
 import { AlertCircle, Clock, ArrowLeft, Sparkles, MoreVertical, ListPlus, Flag, Download, Link2, Gem, Pencil, Trash2, Ban } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -36,6 +36,7 @@ import { PostAIChat } from '@/components/app/cards/PostAIChat';
 import { ReportModal } from '@/components/app/modals/ReportModal';
 import { TipModal } from '@/components/app/modals/TipModal';
 import { EditPostModal } from '@/components/app/modals/EditPostModal';
+import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { DeletePostModal } from '@/components/app/modals/DeletePostModal';
 import {
   Drawer,
@@ -578,6 +579,7 @@ export default function SinglePostPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { walletAddress } = useAuth();
+  const queryClient = useQueryClient();
   
   // Ref for mobile scroll container (needed for IntersectionObserver)
   const mobileScrollContainerRef = useRef<HTMLDivElement>(null);
@@ -835,6 +837,9 @@ export default function SinglePostPage() {
           tokenId={id || ''}
           currentTitle={videoData.title}
           currentDescription={videoData.description}
+          onSuccess={(edited) => {
+            applyOptimisticEdit(queryClient, id || '', edited);
+          }}
         />
 
         {/* Delete Post Modal */}

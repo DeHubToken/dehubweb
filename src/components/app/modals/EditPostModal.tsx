@@ -21,6 +21,12 @@ import {
 import { editPost } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 
+export interface EditPostResult {
+  name: string;
+  description: string;
+  categories: string[];
+}
+
 interface EditPostModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -28,7 +34,7 @@ interface EditPostModalProps {
   currentTitle?: string;
   currentDescription?: string;
   currentCategories?: string[];
-  onSuccess?: () => void;
+  onSuccess?: (edited: EditPostResult) => void;
 }
 
 export function EditPostModal({
@@ -93,7 +99,7 @@ export function EditPostModal({
       const result = await editPost(tokenId, params as any);
       if (result.result) {
         toast.success('Post updated successfully');
-        onSuccess?.();
+        onSuccess?.({ name: name.trim(), description: description.trim(), categories });
         onOpenChange(false);
       } else {
         toast.error('Failed to update post');

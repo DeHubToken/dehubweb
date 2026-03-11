@@ -33,6 +33,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
+import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { QuotePostModal } from '../modals/QuotePostModal';
 import { TipModal } from '../modals/TipModal';
@@ -1651,9 +1652,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         currentTitle={video.title}
         currentDescription={video.description}
         currentCategories={video.categories}
-        onSuccess={() => {
-          queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-          queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+        onSuccess={(edited) => {
+          applyOptimisticEdit(queryClient, video.id, edited);
         }}
       />
 

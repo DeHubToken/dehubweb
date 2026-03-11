@@ -29,6 +29,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
+import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { QuotePostModal } from '../modals/QuotePostModal';
@@ -798,9 +799,8 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         currentTitle={post.title}
         currentDescription={post.description}
         currentCategories={post.categories}
-        onSuccess={() => {
-          queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-          queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+        onSuccess={(edited) => {
+          applyOptimisticEdit(queryClient, post.id, edited);
         }}
       />
 

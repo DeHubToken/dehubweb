@@ -30,6 +30,7 @@ import medal2 from '@/assets/medal-2.png';
 import dehubCoin from '@/assets/dehub-coin.png';
 import medal3 from '@/assets/medal-3.png';
 import { EditPostModal } from '@/components/app/modals/EditPostModal';
+import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { usePPVPurchaseCount } from '@/hooks/use-ppv-purchase-count';
 
 // Visibility options configuration
@@ -937,7 +938,9 @@ export default function PostInfoPage() {
           currentTitle={nftInfo.title || nftInfo.name || ''}
           currentDescription={nftInfo.description || ''}
           currentCategories={Array.isArray(nftInfo.category) ? nftInfo.category : nftInfo.category ? [nftInfo.category] : []}
-          onSuccess={() => queryClient.invalidateQueries({ queryKey: ['nft-info', postId] })}
+          onSuccess={(edited) => {
+            applyOptimisticEdit(queryClient, nftInfo.tokenId, edited);
+          }}
         />
       )}
     </div>
