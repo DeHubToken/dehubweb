@@ -35,6 +35,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
   const [activeTab, setActiveTab] = useState<Tab>('posts');
   const [tickerPeriod, setTickerPeriod] = useState<TickerPeriod>('all');
   const tickerDirRef = useRef(0);
+  const [isTickerAutoRotating, setIsTickerAutoRotating] = useState(true);
 
   // Prefetch all ticker periods
   useQuery({ queryKey: ['trending-tickers', '1d' as TickerPeriod], queryFn: () => getTopTickers(10, '1d'), staleTime: 60_000, refetchInterval: 120_000, placeholderData: (p: any) => p });
@@ -49,9 +50,25 @@ export const WhatsHappening = memo(function WhatsHappening() {
     placeholderData: (previousData) => previousData,
   });
 
+  // Auto-rotate ticker periods every 5 seconds
+  useEffect(() => {
+    if (!isTickerAutoRotating || activeTab !== 'tickers') return;
+    const interval = setInterval(() => {
+      setTickerPeriod(prev => {
+        const idx = TICKER_PERIODS.findIndex(p => p.value === prev);
+        const next = TICKER_PERIODS[(idx + 1) % TICKER_PERIODS.length].value;
+        tickerDirRef.current = 1;
+        return next;
+      });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isTickerAutoRotating, activeTab]);
+
   const handleTickerPeriodChange = useCallback((newPeriod: TickerPeriod) => {
     tickerDirRef.current = PERIOD_INDEX[newPeriod] - PERIOD_INDEX[tickerPeriod];
     setTickerPeriod(newPeriod);
+    setIsTickerAutoRotating(false);
+    setTimeout(() => setIsTickerAutoRotating(true), 30000);
   }, [tickerPeriod]);
 
   const handleTickerClick = (symbol: string) => {
