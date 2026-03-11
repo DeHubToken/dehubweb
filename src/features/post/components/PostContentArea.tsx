@@ -690,8 +690,8 @@ export function PostContentArea({
               <button
                 type="button"
                 onClick={onOpenCategories}
-                className="inline-flex items-center align-baseline ml-1 text-white/30 hover:text-white/60 transition-colors"
-                style={{ verticalAlign: 'baseline' }}
+                className="inline-flex items-center ml-1 text-white/30 hover:text-white/60 transition-colors"
+                style={{ verticalAlign: 'middle', display: 'inline-flex' }}
               >
                 <Hash className="w-5 h-5" />
               </button>
