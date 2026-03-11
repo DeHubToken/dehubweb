@@ -345,7 +345,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       setLocalDislikeCount(prev => Math.max(0, prev - dislikeDelta));
       // Clear stale cache on error
       setVoteCache(tokenId, { isLiked, isDisliked, likeCount: Math.max(0, localLikeCount), dislikeCount: Math.max(0, localDislikeCount) });
-      toast.error('Failed to vote. Please try again.');
+      toast.error(t('shorts.failedToVote'));
     } finally {
       setIsVoting(false);
     }
