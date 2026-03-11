@@ -51,9 +51,15 @@ export function useProfileFollow({
       } else {
         toast.success(`Following ${profile.name}`);
       }
-    } catch (error) {
-      setFollowStatus(false);
-      handleApiError(error, 'Failed to follow. Please try again.');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      if (errorMessage.toLowerCase().includes('already') || errorMessage.toLowerCase().includes('following')) {
+        toast.info(`Already following ${profile.name}`);
+        // Keep follow state as true since they're already following
+      } else {
+        setFollowStatus(false);
+        handleApiError(error, 'Failed to follow. Please try again.');
+      }
     } finally {
       setIsFollowLoading(false);
     }
