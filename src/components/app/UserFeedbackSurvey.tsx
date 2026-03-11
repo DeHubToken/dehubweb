@@ -59,18 +59,35 @@ export function UserFeedbackSurvey() {
   useEffect(() => {
     if (!isAuthenticated || !walletAddress) return;
 
-    // Check if already completed
+    // Quick local check first
     const completed = localStorage.getItem(SURVEY_DISMISSED_KEY);
     if (completed) return;
 
-    // Check if this login is a returning user (not brand new)
-    // We use a flag set in AuthContext on login — isNewAccount users don't see it
     const isNewAccount = sessionStorage.getItem('dehub_is_new_account');
     if (isNewAccount === 'true') return;
 
-    // Small delay so login flow completes first
-    const timer = setTimeout(() => setShow(true), 2000);
-    return () => clearTimeout(timer);
+    // Check DB to ensure they haven't already submitted (handles cross-device)
+    let cancelled = false;
+    (async () => {
+      try {
+        const { count } = await supabase
+          .from('user_feedback_surveys')
+          .select('id', { count: 'exact', head: true })
+          .eq('wallet_address', walletAddress.toLowerCase());
+
+        if (cancelled) return;
+        if (count && count > 0) {
+          // Already submitted — persist locally so we never check again
+          localStorage.setItem(SURVEY_DISMISSED_KEY, 'true');
+          return;
+        }
+        // Small delay so login flow completes first
+        setTimeout(() => { if (!cancelled) setShow(true); }, 2000);
+      } catch {
+        // On error, don't show survey
+      }
+    })();
+    return () => { cancelled = true; };
   }, [isAuthenticated, walletAddress]);
 
   const currentQuestion = QUESTIONS[step];
