@@ -41,6 +41,8 @@ interface PostContext {
   viewers?: string;
   thumbnail?: string;
   imageUrl?: string;
+  imageUrls?: string[];
+  activeImageIndex?: number;
 }
 
 interface PostAIChatProps {
