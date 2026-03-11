@@ -820,7 +820,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       authLogger.info('Login success', { method: 'popup', address: authAddressForApi, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
     } catch (err: any) {
       console.error('[Auth] [POPUP] Sequence failed:', err);
-      toast.error(err.message || 'Authentication failed', { id: 'auth-popup' });
+      toast.error(err.message || i18n.t('auth.authFailed'), { id: 'auth-popup' });
     }
   };
 
