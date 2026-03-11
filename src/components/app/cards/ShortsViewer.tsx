@@ -550,7 +550,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     try {
       const { repostPost } = await import('@/lib/api/dehub');
       await repostPost(numericId);
-      toast.success('Reposted!');
+      toast.success(t('shorts.reposted'));
     } catch {
       toast.error('Failed to repost');
     }
