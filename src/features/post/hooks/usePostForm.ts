@@ -405,7 +405,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
     // Move existing text to title field when adding audio
     if (text.trim() && !titleText.trim()) {
-      setTitleText(text.trim().slice(0, 100));
+      setTitleText(text.trim().slice(0, 140));
       setText('');
       if (editorRef.current) {
         editorRef.current.innerText = '';
