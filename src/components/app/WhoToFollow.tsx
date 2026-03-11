@@ -239,10 +239,10 @@ export function WhoToFollow() {
               variant="outline"
               onClick={(e) => handleFollow(e, user)}
               disabled={loadingUsers.has(user.address) || isAlreadyFollowed(user)}
-              className={`h-5 min-w-0 w-auto px-2 text-[10px] font-semibold rounded-lg flex items-center justify-center ${
+              className={`h-6 min-w-0 w-auto px-2.5 text-[11px] font-semibold rounded-lg flex items-center justify-center transition-all duration-150 ${
                 isAlreadyFollowed(user)
                   ? 'border-zinc-600 text-zinc-400 bg-transparent cursor-default'
-                  : 'border-zinc-700 text-white hover:bg-zinc-800 bg-transparent'
+                  : 'border-zinc-700 text-white bg-transparent hover:bg-white hover:text-black hover:border-white'
               }`}
             >
               {loadingUsers.has(user.address) ? (
