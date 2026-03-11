@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { PostMetadata } from '@/components/app/cards/PostMetadata';
+import { renderTextWithLinks } from '@/components/app/TranslatableText';
 
 import { PostCard } from '@/components/app/cards/PostCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
@@ -657,7 +658,7 @@ function CommentCard({ comment, parentPost, isOwnComment, onClick }: { comment: 
             </div>
           ) : (
             <p className="text-white/90 text-sm sm:text-base whitespace-pre-wrap break-words line-clamp-4">
-              {comment.content}
+              {renderTextWithLinks(comment.content)}
             </p>
           )}
 
