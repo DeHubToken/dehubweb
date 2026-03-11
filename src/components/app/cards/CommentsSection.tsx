@@ -848,11 +848,11 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className={isMobile ? "flex flex-col h-full p-4 relative" : "flex flex-col min-h-[400px] max-h-[600px] p-4 mt-3 relative"}
+      className={isMobile ? "flex flex-col h-full px-1 pt-1 pb-2 relative" : "flex flex-col min-h-[400px] max-h-[600px] p-4 mt-3 relative"}
     >
 
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
-      <div className="flex justify-between items-center gap-1 mb-3">
+      <div className={cn("flex justify-between items-center gap-1", isMobile ? "mb-1" : "mb-3")}>
         {/* Mobile close button removed — drawer dismisses via drag-down or tapping overlay */}
         {false && (
           <button
@@ -1136,8 +1136,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
         {/* New Comment Input - sticky at bottom, optimized for mobile space */}
         <div className={cn(
-          "mt-auto pt-3",
-          isMobile && "pb-2"
+          "mt-auto",
+          isMobile ? "pt-2 pb-1" : "pt-3"
         )}>
           {/* Reply indicator */}
           {replyTo && (
@@ -1212,7 +1212,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
             onChange={handleImageSelect}
           />
 
-          <div className="pb-1 mt-2.5 flex flex-col gap-2">
+          <div className={cn("flex flex-col gap-1.5", isMobile ? "pb-0 mt-1" : "pb-1 mt-2.5")}>
             {isRecording ? (
               /* Recording indicator */
               <div className="flex-1 flex items-center gap-2 bg-red-500/10 rounded-xl px-4 h-10">
