@@ -484,7 +484,7 @@ export default function ExplorePage() {
   const isBrandQuery = BRAND_QUERIES.includes(effectiveQuery.trim().toLowerCase());
 
   // DexScreener cashtag price lookup
-  const { data: dexPair, isLoading: isDexLoading } = useDexScreenerSearch(effectiveQuery, isSearching);
+  const { data: dexPairs = [], isLoading: isDexLoading } = useDexScreenerSearchMulti(effectiveQuery, isSearching);
   
   // CoinMarketCap market cap (overrides DexScreener when available)
   const { data: cmcData } = useCmcMarketCap(effectiveQuery, isSearching);
