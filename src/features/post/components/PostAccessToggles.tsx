@@ -43,6 +43,7 @@ interface PostAccessTogglesProps {
   setTokenAmount: (value: string) => void;
   selectedCategory: string;
   setSelectedCategory: (value: string) => void;
+  markCategorySaved?: () => void;
   showTitle: boolean;
   setShowTitle: (value: boolean) => void;
   hasVideoOrAudio: boolean;
