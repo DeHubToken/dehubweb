@@ -30,6 +30,7 @@ export interface SearchCreator {
   verified: boolean;
   bio?: string;
   followerCount?: number;
+  isFollowing?: boolean;
 }
 
 export interface UseDeHubSearchOptions {
