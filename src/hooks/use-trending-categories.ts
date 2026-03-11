@@ -116,3 +116,17 @@ export function useTrendingCategories(period: TopicPeriod = 'all') {
     placeholderData: (prev) => prev,
   });
 }
+
+/**
+ * Fetch ALL categories (no limit) for infinite scroll in the "All" period
+ */
+export function useAllTrendingCategories() {
+  return useQuery<CategoryCount[]>({
+    queryKey: ['trending-categories-all-unlimited'],
+    queryFn: () => fetchTrendingCategories('all', true),
+    staleTime: 5 * 60_000,
+    gcTime: 30 * 60_000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+}
