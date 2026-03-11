@@ -117,9 +117,9 @@ export function formatBalance(balance: bigint, decimals: number, maxDecimals: nu
 
 /**
  * Get all token balances for a wallet on a specific chain.
- * Only shows default tokens + user-imported custom tokens (no auto-detection).
+ * When discoverAll is true, also discovers unknown ERC20 tokens via Alchemy.
  */
-export async function getAllTokenBalances(walletAddress: string, chainId: ChainId): Promise<WalletToken[]> {
+export async function getAllTokenBalances(walletAddress: string, chainId: ChainId, discoverAll?: boolean): Promise<WalletToken[]> {
   await initChainRpcUrls();
   
   const nativeInfo = NATIVE_TOKEN[chainId] || NATIVE_TOKEN[BASE_CHAIN_ID];
@@ -169,6 +169,17 @@ export async function getAllTokenBalances(walletAddress: string, chainId: ChainI
 
   // Known ERC20 tokens
   tokens.push(...otherErc20);
+
+  // Discover additional tokens via Alchemy if requested
+  if (discoverAll) {
+    try {
+      const { discoverAlchemyTokens } = await import('@/lib/wallet/alchemy-tokens');
+      const discovered = await discoverAlchemyTokens(walletAddress, chainId);
+      tokens.push(...discovered);
+    } catch (err) {
+      console.warn('[tokens] Alchemy discovery failed, continuing with known tokens:', err);
+    }
+  }
 
   return tokens;
 }
