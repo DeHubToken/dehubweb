@@ -55,6 +55,7 @@ export interface Comment {
   displayName?: string;
   avatar?: string;
   text: string;
+  imageUrl?: string;
   likes: number;
   dislikes: number;
   timeAgo: string;
@@ -94,12 +95,21 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
     duration: (apiComment as any).audioDuration || 0,
   } : undefined;
 
+  // Resolve imageUrl (GIF comments or image comments)
+  let commentImageUrl: string | undefined;
+  if (apiComment.imageUrl) {
+    commentImageUrl = apiComment.imageUrl.startsWith('http')
+      ? apiComment.imageUrl
+      : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${apiComment.imageUrl}`;
+  }
+
   return {
     id: String(apiComment.id),
     username: apiComment.writor?.username || 'Anonymous',
     displayName: apiComment.writor?.displayName || undefined,
     avatar: resolvedAvatar,
     text: apiComment.content || (apiComment as any).text || (apiComment as any).body || '',
+    imageUrl: commentImageUrl,
     likes: apiComment.likeCount ?? 0,
     dislikes: 0,
     timeAgo: formatTimeAgo(apiComment.createdAt),
@@ -260,6 +270,15 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
                 className="text-zinc-300 text-sm leading-relaxed break-words" 
                 as="p" 
                 hideControls 
+              />
+            )}
+            {comment.imageUrl && (
+              <img
+                src={comment.imageUrl}
+                alt="Comment media"
+                className="mt-1.5 rounded-lg max-w-[240px] max-h-[200px] object-contain cursor-pointer"
+                onClick={() => window.open(comment.imageUrl, '_blank')}
+                loading="lazy"
               />
             )}
             {comment.voiceNote && (
