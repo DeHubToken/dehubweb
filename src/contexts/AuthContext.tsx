@@ -711,7 +711,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const isSocial = isSocialLoginConnected();
     const toastId = 'auth-popup';
     console.log('[Auth] [POPUP] Connection type:', isSocial ? 'SOCIAL' : 'EXTERNAL');
-    toast.loading('Setting up your account...', { id: toastId });
+    toast.loading(i18n.t('auth.settingUpAccount'), { id: toastId });
 
     // Gather web3AuthMeta for social logins
     const web3AuthMeta = isSocial ? await getWeb3AuthMeta() : undefined;
