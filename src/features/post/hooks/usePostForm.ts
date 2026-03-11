@@ -694,6 +694,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       try { localStorage.removeItem('post_default_categories'); } catch {}
     }
     categorySavedRef.current = false;
+    // Clear persisted active draft
+    clearActiveDraft();
   }, []);
 
   // Drafts actions
