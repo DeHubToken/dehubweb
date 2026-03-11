@@ -161,7 +161,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const handleFollow = useCallback(async () => {
     const creatorAddress = currentShort?.creatorId;
     if (!creatorAddress) {
-      toast.error('Unable to follow - creator not found');
+      toast.error(t('shorts.unableToFollow'));
       return;
     }
     
