@@ -17,6 +17,47 @@ import { getCountryFlag } from '@/lib/api/radio-browser';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { RadioFullscreenVisualizer } from './RadioFullscreenVisualizer';
 
+/** Isolated volume control that blocks Framer Motion drag via native capture-phase listeners */
+function VolumeControl({ volume, isMuted, setVolume }: { volume: number; isMuted: boolean; setVolume: (v: number) => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const stop = (e: PointerEvent | TouchEvent) => { e.stopPropagation(); };
+    el.addEventListener('pointerdown', stop, { capture: true });
+    el.addEventListener('touchstart', stop, { capture: true });
+    el.addEventListener('pointermove', stop, { capture: true });
+    el.addEventListener('touchmove', stop, { capture: true });
+    return () => {
+      el.removeEventListener('pointerdown', stop, { capture: true });
+      el.removeEventListener('touchstart', stop, { capture: true });
+      el.removeEventListener('pointermove', stop, { capture: true });
+      el.removeEventListener('touchmove', stop, { capture: true });
+    };
+  }, []);
+
+  return (
+    <div ref={ref} className="flex items-center gap-2 mt-2 pt-2 border-t border-white/[0.06]">
+      <button onClick={() => setVolume(isMuted ? 0.7 : 0)} className="flex-shrink-0">
+        {isMuted ? (
+          <VolumeX className="w-3.5 h-3.5 text-zinc-500" />
+        ) : (
+          <Volume2 className="w-3.5 h-3.5 text-zinc-400" />
+        )}
+      </button>
+      <Slider
+        variant="lava"
+        value={[volume * 100]}
+        onValueChange={([val]: number[]) => setVolume(val / 100)}
+        max={100}
+        step={1}
+        className="flex-1"
+      />
+    </div>
+  );
+}
+
 export function RadioMiniPlayer() {
   const { 
     currentStation, 
@@ -305,27 +346,8 @@ export function RadioMiniPlayer() {
             </button>
           </div>
           
-          {/* Volume bar below controls */}
-          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/[0.06]" onPointerDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()}>
-            <button
-              onClick={() => setVolume(isMuted ? 0.7 : 0)}
-              className="flex-shrink-0"
-            >
-              {isMuted ? (
-                <VolumeX className="w-3.5 h-3.5 text-zinc-500" />
-              ) : (
-                <Volume2 className="w-3.5 h-3.5 text-zinc-400" />
-              )}
-            </button>
-            <Slider
-              variant="lava"
-              value={[volume * 100]}
-              onValueChange={([val]) => setVolume(val / 100)}
-              max={100}
-              step={1}
-              className="flex-1"
-            />
-          </div>
+          {/* Volume bar below controls — uses ref to block Framer Motion drag capture */}
+          <VolumeControl volume={volume} isMuted={isMuted} setVolume={setVolume} />
 
           {/* Desktop resize handles on corners */}
           <div
