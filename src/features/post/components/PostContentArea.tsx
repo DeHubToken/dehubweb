@@ -705,11 +705,14 @@ export function PostContentArea({
               className="w-full bg-transparent text-white text-base sm:text-lg resize-none outline-none min-h-[48px] sm:min-h-[60px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 sm:empty:before:text-white/70 empty:before:pointer-events-none empty:before:cursor-text focus:empty:before:content-['\200b'] caret-white block"
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', caretColor: 'white' }}
             />
-            {onOpenCategories && text.trim().length > 0 && (
+            {onOpenCategories && (
               <button
                 type="button"
                 onClick={onOpenCategories}
-                className="inline-flex items-center ml-1 text-white/30 hover:text-white/60 transition-colors"
+                className={cn(
+                  "inline-flex items-center ml-1 transition-opacity",
+                  text.trim().length > 0 ? "text-white/30 hover:text-white/60 opacity-100" : "opacity-0 pointer-events-none"
+                )}
                 style={{ verticalAlign: 'middle', display: 'inline-flex' }}
               >
                 <Hash className="w-5 h-5" />
