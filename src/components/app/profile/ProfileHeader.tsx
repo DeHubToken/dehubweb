@@ -379,7 +379,7 @@ export function ProfileHeader({
             </div>
           </div>
           
-          {profile.walletAddress && (() => {
+          {isViewingOwnProfile && profile.walletAddress && (() => {
             const displayAddr = DISPLAY_WALLET_OVERRIDES[profile.walletAddress!.toLowerCase()] || profile.walletAddress!;
             return (
               <button
