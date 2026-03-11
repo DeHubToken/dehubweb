@@ -36,7 +36,7 @@ const slideVariants = {
   exit: (dir: number) => ({ x: dir > 0 ? -60 : 60, opacity: 0 }),
 };
 
-const slideTransition = { type: 'tween', duration: 0.2, ease: [0.25, 0.1, 0.25, 1] };
+const slideTransition = { type: 'tween' as const, duration: 0.2, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] };
 
 export const WhatsHappening = memo(function WhatsHappening() {
   const navigate = useNavigate();
