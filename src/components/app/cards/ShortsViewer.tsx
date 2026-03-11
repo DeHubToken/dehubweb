@@ -17,6 +17,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { voteOnPost, getNFTComments, postComment, followUser, isFollowing as checkIsFollowing, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { CommentsWrapper } from './CommentsWrapper';
 import { CommentsSection } from './CommentsSection';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -87,6 +88,7 @@ const SMOOTH_TRANSITION = {
 } as const;
 
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore }: ShortsViewerProps) {
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isMuted, setIsMuted] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -159,12 +161,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const handleFollow = useCallback(async () => {
     const creatorAddress = currentShort?.creatorId;
     if (!creatorAddress) {
-      toast.error('Unable to follow - creator not found');
+      toast.error(t('shorts.unableToFollow'));
       return;
     }
     
     if (!isAuthenticated) {
-      toast.error('Please log in to follow');
+      toast.error(t('shorts.pleaseLogInToFollow'));
       return;
     }
     
@@ -176,17 +178,17 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     try {
       await followUser(creatorAddress);
       setFollowedCreators(prev => new Set(prev).add(creatorAddress));
-      toast.success(`Following ${currentShort.displayName || currentShort.creatorUsername || currentShort.username}!`);
+      toast.success(t('shorts.followingUser', { name: currentShort.displayName || currentShort.creatorUsername || currentShort.username }));
     } catch (error: unknown) {
       console.error('Failed to follow:', error);
       // Check if error indicates already following
       const errorMessage = error instanceof Error ? error.message : String(error);
       if (errorMessage.toLowerCase().includes('already') || errorMessage.toLowerCase().includes('following')) {
-        toast.info(`You're already following ${currentShort.displayName || currentShort.creatorUsername || 'this user'}`);
+        toast.info(t('shorts.alreadyFollowing', { name: currentShort.displayName || currentShort.creatorUsername || 'this user' }));
         // Mark as followed to update UI
         setFollowedCreators(prev => new Set(prev).add(creatorAddress));
       } else {
-        toast.error('Failed to follow user');
+        toast.error(t('shorts.failedToFollow'));
       }
     } finally {
       setIsFollowLoading(false);
@@ -215,7 +217,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     if (!inlineCommentText.trim() || !currentShort?.id || isPostingComment) return;
     
     if (!isAuthenticated) {
-      toast.error('Please log in to comment');
+      toast.error(t('shorts.pleaseLogInToComment'));
       return;
     }
     
@@ -224,9 +226,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       await postComment(currentShort.id, inlineCommentText.trim());
       setInlineCommentText('');
       queryClient.invalidateQueries({ queryKey: ['shorts-inline-comments', currentShort.id] });
-      toast.success('Comment posted!');
+      toast.success(t('shorts.commentPosted'));
     } catch (error) {
-      toast.error('Failed to post comment');
+      toast.error(t('shorts.failedToPostComment'));
     } finally {
       setIsPostingComment(false);
     }
@@ -294,7 +296,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     if (!tokenId || tokenId === 'undefined' || isVoting) return;
     
     if (!isAuthenticated) {
-      toast.error('Log in to engage');
+      toast.error(t('shorts.logInToEngage'));
       return;
     }
 
@@ -343,7 +345,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       setLocalDislikeCount(prev => Math.max(0, prev - dislikeDelta));
       // Clear stale cache on error
       setVoteCache(tokenId, { isLiked, isDisliked, likeCount: Math.max(0, localLikeCount), dislikeCount: Math.max(0, localDislikeCount) });
-      toast.error('Failed to vote. Please try again.');
+      toast.error(t('shorts.failedToVote'));
     } finally {
       setIsVoting(false);
     }
@@ -535,7 +537,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const handleCopyLink = () => {
     const url = `${window.location.origin}/app/post/${currentShort.id}`;
     navigator.clipboard.writeText(url);
-    toast.success('Post URL copied to clipboard');
+    toast.success(t('shorts.urlCopied'));
     setShareSheetOpen(false);
   };
 
@@ -548,15 +550,15 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     try {
       const { repostPost } = await import('@/lib/api/dehub');
       await repostPost(numericId);
-      toast.success('Reposted!');
+      toast.success(t('shorts.reposted'));
     } catch {
-      toast.error('Failed to repost');
+      toast.error(t('shorts.failedToRepost'));
     }
     setShareSheetOpen(false);
   };
 
   const handleQuote = () => {
-    toast.info('Quote for shorts coming soon!');
+    toast.info(t('shorts.quoteComingSoon'));
     setShareSheetOpen(false);
   };
 
