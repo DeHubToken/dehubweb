@@ -624,6 +624,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setScheduledDate(null);
     setChainId(BASE_CHAIN_ID as ChainId);
     setTitleText('');
+    // Only persist category if user explicitly saved defaults
+    if (!categorySavedRef.current) {
+      setSelectedCategory('');
+      try { localStorage.removeItem('post_default_categories'); } catch {}
+    }
+    categorySavedRef.current = false;
   }, []);
 
   // Drafts actions
