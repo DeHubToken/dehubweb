@@ -11,13 +11,21 @@ import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 
-const SOURCE_CONFIG = [
-  { key: 'tips', label: 'Tips', color: '#22c55e' },
-  { key: 'subs', label: 'Subs', color: '#3b82f6' },
-  { key: 'adRevenue', label: 'Ad Revenue', color: '#eab308' },
-  { key: 'bounties', label: 'Bounties', color: '#a855f7' },
-  { key: 'ppv', label: 'PPV Sales', color: '#ec4899' },
-] as const;
+const SOURCE_KEYS = ['tips', 'subs', 'adRevenue', 'bounties', 'ppv'] as const;
+const SOURCE_COLORS: Record<string, string> = {
+  tips: '#22c55e',
+  subs: '#3b82f6',
+  adRevenue: '#eab308',
+  bounties: '#a855f7',
+  ppv: '#ec4899',
+};
+const SOURCE_I18N: Record<string, string> = {
+  tips: 'commandCentre.sourceTips',
+  subs: 'commandCentre.sourceSubs',
+  adRevenue: 'commandCentre.sourceAdRevenue',
+  bounties: 'commandCentre.sourceBounties',
+  ppv: 'commandCentre.sourcePpv',
+};
 
 function getFilterStartDate(filter: string): Date | null {
   const now = new Date();
