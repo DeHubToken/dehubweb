@@ -122,7 +122,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [chainId, setChainId] = useState<ChainId>(BASE_CHAIN_ID as ChainId);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>(() => {
+    try {
+      return localStorage.getItem('post_default_categories') || '';
+    } catch { return ''; }
+  });
+  const categorySavedRef = useRef(false);
   const [showTitle, setShowTitle] = useState(() => {
     try { return localStorage.getItem('post_show_title') === 'true'; } catch { return false; }
   });
