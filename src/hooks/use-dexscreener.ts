@@ -73,7 +73,13 @@ async function searchDexScreener(query: string): Promise<DexPair | null> {
 
   if (exactMatches.length === 0) return null;
 
-  exactMatches.sort((a, b) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0));
+  // Prioritize Base chain, then by liquidity
+  exactMatches.sort((a, b) => {
+    const aIsBase = a.chainId === 'base' ? 1 : 0;
+    const bIsBase = b.chainId === 'base' ? 1 : 0;
+    if (aIsBase !== bIsBase) return bIsBase - aIsBase;
+    return (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0);
+  });
   return exactMatches[0];
 }
 

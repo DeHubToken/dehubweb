@@ -64,8 +64,9 @@ export function CashtagResultSwitcher({ stockData, dexPair, cmcData, symbol }: C
       ].filter(Boolean).length
     : 0;
 
-  // Determine best default
-  const bestId = stockScore >= cryptoScore ? 'stock' : 'crypto';
+  // Determine best default — crypto-first platform, prefer crypto especially on Base
+  const cryptoOnBase = dexPair?.chainId === 'base';
+  const bestId = cryptoOnBase ? 'crypto' : (stockScore >= cryptoScore ? 'stock' : 'crypto');
 
   // Build list of available results — order by richest data first
   const options: ResultOption[] = [];
