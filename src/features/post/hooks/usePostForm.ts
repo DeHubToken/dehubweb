@@ -1127,6 +1127,16 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }
       
       resetForm();
+
+      // Increment trending category counts in DB
+      try {
+        const catsToIncrement = mergedCategories.filter(c => c.toLowerCase() !== 'general' && c.trim() !== '');
+        for (const cat of catsToIncrement) {
+          await supabase.rpc('increment_category_count', { p_name: cat });
+        }
+      } catch (catErr) {
+        console.warn('[Mint] Failed to increment category counts:', catErr);
+      }
       onClose();
       
       // Navigate to home to show the new post
