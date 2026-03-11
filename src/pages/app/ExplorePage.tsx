@@ -694,14 +694,14 @@ export default function ExplorePage() {
   const trackedTickerRef = useRef<string>('');
   useEffect(() => {
     const sym = effectiveQuery.trim();
-    if (sym.startsWith('$') && sym.length >= 2 && (stockData?.found || dexPair)) {
+    if (sym.startsWith('$') && sym.length >= 2 && (stockData?.found || dexPairs.length > 0)) {
       const clean = sym.replace(/^\$/, '').toUpperCase();
       if (clean !== trackedTickerRef.current) {
         trackedTickerRef.current = clean;
         recordTickerSearch(clean);
       }
     }
-  }, [effectiveQuery, stockData, dexPair]);
+  }, [effectiveQuery, stockData, dexPairs]);
 
   return (
     <div className="min-h-screen">
