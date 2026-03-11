@@ -727,6 +727,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     const videoEl = videoRef.current as any;
     const containerEl = containerRef.current as any;
 
+    // Exit simulated fullscreen if active
+    if (isFullscreen && !document.fullscreenElement && !(document as any).webkitFullscreenElement) {
+      setIsFullscreen(false);
+      return;
+    }
+
     // Check if already in fullscreen (standard or iOS video)
     if (document.fullscreenElement || (document as any).webkitFullscreenElement) {
       if (document.exitFullscreen) {
@@ -747,11 +753,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     if (containerEl) {
       if (containerEl.requestFullscreen) {
         containerEl.requestFullscreen();
+        return;
       } else if (containerEl.webkitRequestFullscreen) {
         containerEl.webkitRequestFullscreen();
+        return;
       }
     }
-  }, []);
+
+    // Fallback: simulated fullscreen (iOS audio posts where no native API works)
+    setIsFullscreen(true);
+  }, [isFullscreen]);
 
   const handleFullscreen = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
