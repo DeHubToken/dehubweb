@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
+import { TrendingTopicsList } from '@/components/app/TrendingTopicsList';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
@@ -1007,19 +1008,11 @@ export default function ExplorePage() {
 
               {/* Trending Bento */}
               <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <img src={trendingFireIcon} alt="" className="w-[35px] h-[35px] object-contain" />
-                    <h2 className="text-lg sm:text-xl font-bold text-white">{t('explorePage.trending')}</h2>
-                  </div>
-                  <FilterDropdown
-                    label={t('explorePage.country')}
-                    value={selectedCountry}
-                    options={COUNTRY_OPTIONS}
-                    onChange={setSelectedCountry}
-                  />
+                <div className="flex items-center gap-2 mb-4">
+                  <img src={trendingFireIcon} alt="" className="w-[35px] h-[35px] object-contain" />
+                  <h2 className="text-lg sm:text-xl font-bold text-white">{t('explorePage.trending')}</h2>
                 </div>
-                <p className="text-zinc-500 text-sm">{t('explorePage.nothingTrending')}</p>
+                <TrendingTopicsList minHeight={200} />
               </div>
             </motion.div>
           )}

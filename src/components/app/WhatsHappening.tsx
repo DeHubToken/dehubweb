@@ -1,24 +1,15 @@
 import { memo, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { LayoutGrid, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
 import { TickerLogo } from './TickerLogo';
-import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { cn } from '@/lib/utils';
 import { getTopTickers, type TickerPeriod } from '@/lib/ticker-search-tracker';
-import { useTrendingCategories, type TopicPeriod } from '@/hooks/use-trending-categories';
+import { TrendingTopicsList } from './TrendingTopicsList';
 
 type Tab = 'posts' | 'tickers';
-
-const TOPIC_PERIODS: { value: TopicPeriod; label: string }[] = [
-  { value: '1d', label: '1D' },
-  { value: '1w', label: '1W' },
-  { value: '1m', label: '1M' },
-  { value: '1y', label: '1Y' },
-  { value: 'all', label: 'All' },
-];
 
 const TICKER_PERIODS: { value: TickerPeriod; label: string }[] = [
   { value: '1d', label: '1D' },
@@ -42,17 +33,8 @@ export const WhatsHappening = memo(function WhatsHappening() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<Tab>('posts');
-  const [topicPeriod, setTopicPeriod] = useState<TopicPeriod>('all');
   const [tickerPeriod, setTickerPeriod] = useState<TickerPeriod>('all');
-  const topicDirRef = useRef(0);
   const tickerDirRef = useRef(0);
-
-  // Prefetch all topic periods so switching is instant
-  useTrendingCategories('1d');
-  useTrendingCategories('1w');
-  useTrendingCategories('1m');
-  useTrendingCategories('1y');
-  const { data: categories = [] } = useTrendingCategories(topicPeriod);
 
   // Prefetch all ticker periods
   useQuery({ queryKey: ['trending-tickers', '1d' as TickerPeriod], queryFn: () => getTopTickers(10, '1d'), staleTime: 60_000, refetchInterval: 120_000, placeholderData: (p: any) => p });
@@ -67,21 +49,10 @@ export const WhatsHappening = memo(function WhatsHappening() {
     placeholderData: (previousData) => previousData,
   });
 
-  const handleTopicPeriodChange = useCallback((newPeriod: TopicPeriod) => {
-    topicDirRef.current = PERIOD_INDEX[newPeriod] - PERIOD_INDEX[topicPeriod];
-    setTopicPeriod(newPeriod);
-  }, [topicPeriod]);
-
   const handleTickerPeriodChange = useCallback((newPeriod: TickerPeriod) => {
     tickerDirRef.current = PERIOD_INDEX[newPeriod] - PERIOD_INDEX[tickerPeriod];
     setTickerPeriod(newPeriod);
   }, [tickerPeriod]);
-
-  const handleCategoryClick = (categoryName: string) => {
-    setFilterValue('home', 'category', categoryName);
-    window.dispatchEvent(new CustomEvent('category-filter-changed', { detail: categoryName }));
-    navigate('/app');
-  };
 
   const handleTickerClick = (symbol: string) => {
     navigate(`/app/explore?q=${encodeURIComponent('$' + symbol)}`);
@@ -122,7 +93,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
 
       {/* Tab content */}
       <div style={{ minHeight: 280 }} className="relative overflow-hidden">
-        {/* Posts tab */}
+        {/* Posts tab — shared component */}
         <div
           className={cn(
             'transition-opacity duration-150',
@@ -131,59 +102,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
               : 'opacity-0 pointer-events-none absolute inset-0'
           )}
         >
-          {/* Period tabs */}
-          <div className="flex mb-2">
-            {TOPIC_PERIODS.map(p => (
-              <button
-                key={p.value}
-                onClick={() => handleTopicPeriodChange(p.value)}
-                className={cn(
-                  'flex-1 text-xs font-semibold transition-colors duration-150 text-center py-1',
-                  topicPeriod === p.value
-                    ? 'text-white'
-                    : 'text-zinc-500 hover:text-zinc-300'
-                )}
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
-
-          <AnimatePresence mode="popLayout" custom={topicDirRef.current} initial={false}>
-            <motion.div
-              key={topicPeriod}
-              custom={topicDirRef.current}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={slideTransition}
-            >
-              {categories.length > 0 ? (
-                <div className="flex flex-col gap-1">
-                  {categories.map((cat, i) => (
-                    <button
-                      key={cat.name}
-                      onClick={() => handleCategoryClick(cat.name)}
-                      className="flex items-center justify-between w-full px-3 py-2 rounded-xl hover:bg-zinc-800/60 transition-colors group text-left"
-                    >
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <span className="text-xs text-zinc-500 font-mono w-4 shrink-0">{i + 1}</span>
-                        <span className="text-sm text-zinc-200 truncate group-hover:text-white transition-colors">
-                          {cat.name}
-                        </span>
-                      </div>
-                      <span className="text-[11px] text-zinc-500 shrink-0 ml-2">
-                        {cat.post_count} {cat.post_count === 1 ? 'post' : 'posts'}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <EmptyState icon={LayoutGrid} text={t('sidebar.noCategoriesYet')} />
-              )}
-            </motion.div>
-          </AnimatePresence>
+          <TrendingTopicsList minHeight={0} />
         </div>
 
         {/* Tickers tab */}
