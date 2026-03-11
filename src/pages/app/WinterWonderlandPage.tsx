@@ -13,6 +13,8 @@ interface WinnerEntry {
   txHash: string;
   currentBalance: string;
   tier: string;
+  username?: string | null;
+  avatar?: string | null;
 }
 
 interface DrawResult {
