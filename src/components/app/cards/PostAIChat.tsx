@@ -41,6 +41,8 @@ interface PostContext {
   viewers?: string;
   thumbnail?: string;
   imageUrl?: string;
+  imageUrls?: string[];
+  activeImageIndex?: number;
 }
 
 interface PostAIChatProps {
@@ -172,8 +174,12 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
 
   const getContextDescription = (ctx: PostContext): string => {
     switch (ctx.type) {
-      case 'image':
-        return `It's an image post by @${ctx.author || 'unknown'}${ctx.caption ? `. Caption: "${ctx.caption}"` : ''}`;
+      case 'image': {
+        const multiInfo = ctx.imageUrls && ctx.imageUrls.length > 1
+          ? ` This post has ${ctx.imageUrls.length} images, and the user is currently viewing image ${(ctx.activeImageIndex ?? 0) + 1} of ${ctx.imageUrls.length}.`
+          : '';
+        return `It's an image post by @${ctx.author || 'unknown'}${ctx.caption ? `. Caption: "${ctx.caption}"` : ''}${multiInfo}`;
+      }
       case 'video':
         return `It's a video titled "${ctx.title || 'a video'}" by ${ctx.author || 'unknown'}`;
       case 'live':

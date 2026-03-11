@@ -79,10 +79,12 @@ interface ImageCardProps {
  */
 function ImageCarousel({ 
   images, 
-  onImageClick 
+  onImageClick,
+  onIndexChange 
 }: { 
   images: string[];
   onImageClick: (index: number) => void;
+  onIndexChange?: (index: number) => void;
 }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -97,8 +99,10 @@ function ImageCarousel({
   
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
-    setCurrentIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
+    const idx = emblaApi.selectedScrollSnap();
+    setCurrentIndex(idx);
+    onIndexChange?.(idx);
+  }, [emblaApi, onIndexChange]);
   
   // Set up the select callback when emblaApi becomes available
   useEffect(() => {
@@ -308,6 +312,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [showAIChat, setShowAIChat] = useState(false);
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -644,7 +649,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           </>
         ) : (
           <SwipeableCarousel>
-            <ImageCarousel images={images} onImageClick={handleImageClick} />
+            <ImageCarousel images={images} onImageClick={handleImageClick} onIndexChange={setActiveImageIndex} />
           </SwipeableCarousel>
         )}
 
@@ -754,7 +759,9 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           type: 'image',
           author: post.username,
           caption: post.description || post.title || post.caption,
-          imageUrl: post.image
+          imageUrl: images[activeImageIndex] || post.image,
+          imageUrls: images.length > 1 ? images : undefined,
+          activeImageIndex: images.length > 1 ? activeImageIndex : undefined,
         }}
       />
 
