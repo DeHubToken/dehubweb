@@ -267,22 +267,20 @@ function buildCanonicalActors(
 
     const usernameKey = toUsernameCacheKey(normalized);
     const byUsername = usernameKey ? enrichedAvatarsMap?.get(usernameKey) : undefined;
-    const byDirect = enrichedAvatarsMap?.get(normalized);
-    const entry = byUsername || byDirect;
 
-    if (entry) {
-      const resolvedAddress = entry.address?.toLowerCase();
-      const resolvedUsername = normalizeUsername(entry.username);
+    if (byUsername) {
+      const resolvedAddress = byUsername.address?.toLowerCase();
+      const resolvedUsername = normalizeUsername(byUsername.username);
       return {
         canonicalId: resolvedAddress || resolvedUsername || normalized,
-        resolvedUsername: entry.username || undefined,
+        resolvedUsername: byUsername.username || undefined,
         address: resolvedAddress || undefined,
       };
     }
 
     if (enrichedAvatarsMap) {
       for (const [, candidate] of enrichedAvatarsMap) {
-        if (normalizeUsername(candidate.username) === normalized || normalizeUsername(candidate.displayName) === normalized) {
+        if (normalizeUsername(candidate.username) === normalized || candidate.address?.toLowerCase() === normalized) {
           const resolvedAddress = candidate.address?.toLowerCase();
           const resolvedUsername = normalizeUsername(candidate.username);
           return {
