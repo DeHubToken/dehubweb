@@ -266,6 +266,23 @@ function MessageBubble({
 
         <div className={`text-xs text-zinc-500 mt-1 flex items-center gap-1 ${isOwnMessage ? 'justify-end' : ''}`}>
           <span>{formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}</span>
+          {!isTooShort && message.msgType === 'msg' && !message.isDeleted && (
+            <button
+              type="button"
+              onClick={isTranslated ? handleShowOriginal : handleTranslate}
+              disabled={isTranslating}
+              className="inline-flex items-center gap-0.5 text-zinc-500 hover:text-zinc-300 transition-colors disabled:opacity-50"
+              title={isTranslated ? 'Show original' : 'Translate'}
+            >
+              {isTranslating ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : isTranslated ? (
+                <Undo2 className="w-3 h-3" />
+              ) : (
+                <Globe className="w-3 h-3" />
+              )}
+            </button>
+          )}
           {message.isEdited && <span className="text-zinc-600">· edited</span>}
           {isOwnMessage && message.paymentStatus === 'pending' && 
             !(message.paymentTxHash && confirmedTxHashes.current.has(message.paymentTxHash.toLowerCase())) &&
