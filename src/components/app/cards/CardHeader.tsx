@@ -70,6 +70,8 @@ export function CardHeader({
   badgeBalance,
 }: CardHeaderProps) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { walletAddress: viewerAddress } = useAuth();
   const [imageError, setImageError] = useState(false);
   const badge = CONTENT_BADGES[contentType];
 
@@ -84,9 +86,20 @@ export function CardHeader({
   const avatarSrc = hasRealAvatar ? avatarSeed : agentFallback;
 
   const handleProfileClick = () => {
+    // Seed profile cache with data we already have from the feed card
+    const cleanUsername = creatorUsername?.replace('@', '');
+    if (cleanUsername || creatorId) {
+      seedProfileCache(queryClient, {
+        address: creatorId,
+        username: cleanUsername,
+        displayName: username,
+        avatarUrl: hasRealAvatar ? avatarSeed : undefined,
+        badgeBalance,
+      }, viewerAddress || undefined);
+    }
+
     // Prefer username-based navigation, fallback to ID
     if (creatorUsername) {
-      const cleanUsername = creatorUsername.replace('@', '');
       navigate(`/${cleanUsername}`);
     } else if (creatorId) {
       navigate(`/app/profile?id=${creatorId}`);
