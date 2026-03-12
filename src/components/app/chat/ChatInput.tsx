@@ -180,10 +180,10 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     <div className="p-3 lg:pl-4 border-t border-transparent bg-zinc-900">
       {/* Reply preview */}
       {replyTo && (
-        <div className="flex items-center gap-2 mb-2 px-2 py-1.5 bg-zinc-800/70 rounded-lg border-l-2 border-primary/50">
-          <Reply className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+        <div className="flex items-center gap-2 mb-2 px-2 py-1.5 bg-zinc-800/70 rounded-lg border-l-2 border-white/30">
+          <Reply className="w-3.5 h-3.5 text-white flex-shrink-0" />
           <div className="flex-1 min-w-0">
-            <span className="text-xs font-medium text-primary">{replyTo.userName}</span>
+            <span className="text-xs font-medium text-white">{replyTo.userName}</span>
             <p className="text-xs text-zinc-400 truncate">{replyTo.content || (replyTo.type === 'gif' ? 'GIF' : 'Image')}</p>
           </div>
           <button

@@ -118,7 +118,7 @@ function ReactionBar({
             }}
             className={`group/reaction inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded-full border transition-colors ${
               myReaction
-                ? 'border-primary/40 bg-primary/10 text-primary'
+                ? 'border-white/30 bg-white/10 text-white'
                 : 'border-zinc-700 bg-zinc-800/50 text-zinc-400 hover:border-zinc-600'
             }`}
           >
@@ -219,8 +219,8 @@ export function ChatMessage({
               const el = document.getElementById(`chat-msg-${message.replyTo!.id}`);
               if (el) {
                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                el.classList.add('ring-1', 'ring-primary/40');
-                setTimeout(() => el.classList.remove('ring-1', 'ring-primary/40'), 2000);
+                el.classList.add('ring-1', 'ring-white/40');
+                setTimeout(() => el.classList.remove('ring-1', 'ring-white/40'), 2000);
               }
             }}
             className="flex items-center gap-1.5 text-[11px] text-zinc-500 hover:text-zinc-300 mb-0.5 transition-colors"
@@ -295,7 +295,7 @@ export function ChatMessage({
                           key={emoji}
                           onClick={() => handleQuickReact(emoji)}
                           className={`w-8 h-8 flex items-center justify-center text-lg rounded-lg transition-colors ${
-                            isActive ? 'bg-primary/20 ring-1 ring-primary/40' : 'hover:bg-zinc-700'
+                            isActive ? 'bg-white/15 ring-1 ring-white/30' : 'hover:bg-zinc-700'
                           }`}
                         >
                           {emoji}
