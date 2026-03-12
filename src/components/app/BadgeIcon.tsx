@@ -3,29 +3,34 @@
  */
 import { useNavigate } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { getBadgeName, getBadgeUrl, isBigBadge } from '@/lib/staking-badges';
+import { getBadgeName, getBadgeUrl, isBigBadge, isBigBadgeUrl } from '@/lib/staking-badges';
 
 interface BadgeIconProps {
-  badgeBalance: number | string | undefined | null;
+  /** Pass badgeBalance to resolve badge from balance */
+  badgeBalance?: number | string | null;
+  /** Username for override lookup */
   username?: string | null;
+  /** Or pass a pre-resolved badgeUrl directly */
+  src?: string | null;
+  /** Extra classes (positioning, sizing) */
   className?: string;
 }
 
-export function BadgeIcon({ badgeBalance, username, className = 'w-[9px] h-[9px]' }: BadgeIconProps) {
+export function BadgeIcon({ badgeBalance, username, src, className = 'w-[9px] h-[9px]' }: BadgeIconProps) {
   const navigate = useNavigate();
-  const badgeUrl = getBadgeUrl(badgeBalance, username);
-  const badgeName = getBadgeName(badgeBalance, username);
-  const big = isBigBadge(badgeBalance, username);
+  const resolvedUrl = src || getBadgeUrl(badgeBalance, username);
+  const resolvedName = getBadgeName(badgeBalance, username);
+  const big = src ? isBigBadgeUrl(src) : isBigBadge(badgeBalance, username);
 
-  if (!badgeUrl || !badgeName) return null;
+  if (!resolvedUrl) return null;
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <img
-          src={badgeUrl}
-          alt={badgeName}
-          className={`shrink-0 brightness-0 invert cursor-pointer hover:scale-125 transition-transform ${big ? 'scale-110' : ''} ${className}`}
+          src={resolvedUrl}
+          alt={resolvedName || 'Badge'}
+          className={`shrink-0 brightness-0 invert cursor-pointer hover:brightness-100 hover:invert-0 transition-all ${big ? 'scale-110' : ''} ${className}`}
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
@@ -34,7 +39,7 @@ export function BadgeIcon({ badgeBalance, username, className = 'w-[9px] h-[9px]
         />
       </TooltipTrigger>
       <TooltipContent side="top" className="text-xs capitalize">
-        {badgeName}
+        {resolvedName || 'Badge'}
       </TooltipContent>
     </Tooltip>
   );
