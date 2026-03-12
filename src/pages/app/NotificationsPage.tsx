@@ -433,7 +433,17 @@ function NotificationItem({
         {(() => {
           const aggCount = (notification as any).aggregatedCount || 1;
           const aggNames = (notification as any).latestActorNames as string[] | undefined;
-          const hasMultipleActors = aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
+          
+          // Count unique actors to distinguish "multiple users liked 1 post" from "1 user liked multiple posts"
+          const uniqueActorCount = (() => {
+            const seen = new Set<string>();
+            const primaryName = enriched?.username?.toLowerCase() || notification.actorUsername?.toLowerCase();
+            if (primaryName) seen.add(primaryName);
+            if (aggNames) aggNames.forEach(n => seen.add(n.toLowerCase()));
+            return seen.size;
+          })();
+          
+          const hasMultipleActors = uniqueActorCount >= 2 && aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
           
           if (hasMultipleActors) {
             // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
