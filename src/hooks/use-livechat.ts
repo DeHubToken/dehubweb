@@ -92,10 +92,17 @@ function parseReplyTo(raw: unknown): { id: string; content: string; sender_name:
   const id = r.id || r._id || r.messageId;
   if (!id) return undefined;
   const sender = r.sender as Record<string, unknown> | undefined;
+  // Try nested sender object first, then top-level fields
+  const senderName =
+    sender?.displayName || sender?.username || sender?.name ||
+    r.senderDisplayName || r.senderUsername || r.sender_display_name || r.sender_username ||
+    r.displayName || r.username || r.name ||
+    sender?.address ||
+    'Unknown';
   return {
     id: String(id),
-    content: String(r.content || ''),
-    sender_name: String(sender?.username || sender?.displayName || sender?.address || 'User'),
+    content: String(r.content || r.message || ''),
+    sender_name: String(senderName),
   };
 }
 
@@ -120,11 +127,21 @@ function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId
   };
 }
 
-/** Deduplicate messages by id, keeping latest version */
+/** Deduplicate messages by id, keeping latest version but preserving rich reply_to data */
 function deduplicateMessages(msgs: SupabaseLiveChatMessage[]): SupabaseLiveChatMessage[] {
   const seen = new Map<string, SupabaseLiveChatMessage>();
   for (const m of msgs) {
-    seen.set(m.id, m);
+    const existing = seen.get(m.id);
+    if (existing) {
+      // Preserve good reply_to data if the new version has incomplete info
+      const merged = { ...m };
+      if (existing.reply_to && (!merged.reply_to || merged.reply_to.sender_name === 'Unknown' || merged.reply_to.sender_name === 'User')) {
+        merged.reply_to = existing.reply_to;
+      }
+      seen.set(m.id, merged);
+    } else {
+      seen.set(m.id, m);
+    }
   }
   return Array.from(seen.values()).sort(
     (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
