@@ -21,6 +21,7 @@ type ResultOption = {
   id: string;
   label: string;
   sublabel: string;
+  chainLogo?: string;
   type: 'stock' | 'crypto';
   pairIndex?: number; // index into dexPairs array
 };
