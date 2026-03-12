@@ -47,7 +47,7 @@ interface CardHeaderProps {
  */
 const CONTENT_BADGES: Record<ContentType, { label: string; className: string }> = {
   post: { label: 'Post', className: 'bg-zinc-500/20 text-zinc-400' },
-  video: { label: 'Video', className: 'bg-blue-500/20 text-blue-400' },
+  video: { label: 'Video', className: 'bg-zinc-500/20 text-zinc-300' },
   image: { label: 'Image', className: 'bg-purple-500/20 text-purple-400' },
   live: { label: 'LIVE', className: 'bg-red-500 text-white' },
   short: { label: 'Short', className: 'bg-pink-500/20 text-pink-400' },
