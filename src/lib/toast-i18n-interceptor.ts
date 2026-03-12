@@ -9,31 +9,24 @@
  * 2. Look up translation via i18n.t() — synchronous, instant, no API calls
  * 3. Show translated toast immediately (no English flash)
  * 4. Falls back to original English if key not found in locale file
- * 5. For untranslated toasts in non-English locales, adds a 🌐 Translate button
  */
 
 import { toast } from 'sonner';
 import i18n from '@/i18n';
-import { supabase } from '@/integrations/supabase/client';
-import { createElement } from 'react';
-import { Languages } from 'lucide-react';
 
 /**
  * Normalize an English toast string into a flat i18n key.
- * "Saved to bookmarks" → "saved_to_bookmarks"
- * "Failed to send message!" → "failed_to_send_message"
  */
 function normalizeToKey(msg: string): string {
   return msg
     .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, '') // strip punctuation
+    .replace(/[^a-z0-9\s]/g, '')
     .trim()
-    .replace(/\s+/g, '_');       // spaces → underscores
+    .replace(/\s+/g, '_');
 }
 
 /**
  * Translate a toast message using the static i18n system.
- * Returns { text, wasTranslated }.
  */
 function translateToast(msg: string): { text: string; wasTranslated: boolean } {
   const key = `toasts.${normalizeToKey(msg)}`;
@@ -48,56 +41,6 @@ function translateDescription(opts?: Record<string, unknown>): Record<string, un
   if (!opts || typeof opts.description !== 'string') return opts;
   const { text } = translateToast(opts.description as string);
   return { ...opts, description: text };
-}
-
-/**
- * Get the user's preferred language from localStorage.
- */
-function getUserLang(): string {
-  return localStorage.getItem('user-preferred-language') || navigator.language?.split('-')[0] || 'en';
-}
-
-/**
- * On-demand translate via edge function, then re-show the toast.
- */
-async function onDemandTranslate(
-  originalMsg: string,
-  originalOpts: Record<string, unknown> | undefined,
-  method: string,
-  toastId: string | number
-) {
-  const targetLang = getUserLang();
-
-  // Show loading state
-  toast.loading('…', { id: toastId });
-
-  try {
-    const { data, error } = await supabase.functions.invoke('translate-text', {
-      body: { text: originalMsg, targetLang },
-    });
-
-    if (error || !data?.translatedText) {
-      // Re-show original on failure
-      (originalMethods[method] as Function)(originalMsg, { ...originalOpts, id: toastId });
-      return;
-    }
-
-    // Show translated toast without the translate button
-    const translatedDesc = originalOpts?.description && typeof originalOpts.description === 'string'
-      ? (await supabase.functions.invoke('translate-text', {
-          body: { text: originalOpts.description, targetLang },
-        })).data?.translatedText || originalOpts.description
-      : originalOpts?.description;
-
-    (originalMethods[method] as Function)(data.translatedText, {
-      ...originalOpts,
-      ...(translatedDesc !== undefined ? { description: translatedDesc } : {}),
-      id: toastId,
-      duration: 4000,
-    });
-  } catch {
-    (originalMethods[method] as Function)(originalMsg, { ...originalOpts, id: toastId });
-  }
 }
 
 // Store original methods before patching
@@ -118,7 +61,7 @@ for (const method of methodNames) {
     }
 
     // Translate immediately — synchronous, no flash
-    const { text: translated, wasTranslated } = translateToast(msg);
+    const { text: translated } = translateToast(msg);
     const translatedOpts = translateDescription(opts);
 
     return original(translated, translatedOpts);
