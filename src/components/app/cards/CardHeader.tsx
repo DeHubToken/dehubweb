@@ -10,10 +10,13 @@
 import { useState } from 'react';
 import { CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getAgentAvatarFallback } from '@/constants/agent-avatars.constants';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { seedProfileCache } from '@/lib/profile-cache-seed';
+import { useAuth } from '@/contexts/AuthContext';
 
 import type { ContentType } from '@/types/feed.types';
 
