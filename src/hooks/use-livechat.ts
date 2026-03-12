@@ -400,8 +400,8 @@ export function useLiveChatMessages(roomId: string | null) {
       return;
     }
     // Optimistic update
-    setMessages((prev) =>
-      prev.map((m) => {
+    setMessages((prev) => {
+      const next = prev.map((m) => {
         if (m.id !== messageId) return m;
         const reactions = { ...(m.reactions || {}) };
         const existing = reactions[emoji] || [];
@@ -409,16 +409,18 @@ export function useLiveChatMessages(roomId: string | null) {
           reactions[emoji] = [...existing, walletAddress.toLowerCase()];
         }
         return { ...m, reactions };
-      })
-    );
+      });
+      if (roomId) liveChatMessagesCache.set(roomId, next);
+      return next;
+    });
     emitAddReaction(messageId, emoji);
   }, [isAuthenticated, walletAddress]);
 
   const removeReaction = useCallback((messageId: string, emoji: string) => {
     if (!walletAddress) return;
     // Optimistic update
-    setMessages((prev) =>
-      prev.map((m) => {
+    setMessages((prev) => {
+      const next = prev.map((m) => {
         if (m.id !== messageId) return m;
         const reactions = { ...(m.reactions || {}) };
         reactions[emoji] = (reactions[emoji] || []).filter(
@@ -426,8 +428,10 @@ export function useLiveChatMessages(roomId: string | null) {
         );
         if (reactions[emoji].length === 0) delete reactions[emoji];
         return { ...m, reactions: Object.keys(reactions).length > 0 ? reactions : undefined };
-      })
-    );
+      });
+      if (roomId) liveChatMessagesCache.set(roomId, next);
+      return next;
+    });
     emitRemoveReaction(messageId, emoji);
   }, [walletAddress]);
 
