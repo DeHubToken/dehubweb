@@ -27,6 +27,7 @@ import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Switch } from '@/components/ui/switch';
 import { FollowersListDrawer } from '@/components/app/profile';
 
