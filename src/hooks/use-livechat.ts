@@ -92,10 +92,17 @@ function parseReplyTo(raw: unknown): { id: string; content: string; sender_name:
   const id = r.id || r._id || r.messageId;
   if (!id) return undefined;
   const sender = r.sender as Record<string, unknown> | undefined;
+  // Try nested sender object first, then top-level fields
+  const senderName =
+    sender?.displayName || sender?.username || sender?.name ||
+    r.senderDisplayName || r.senderUsername || r.sender_display_name || r.sender_username ||
+    r.displayName || r.username || r.name ||
+    sender?.address ||
+    'Unknown';
   return {
     id: String(id),
-    content: String(r.content || ''),
-    sender_name: String(sender?.username || sender?.displayName || sender?.address || 'User'),
+    content: String(r.content || r.message || ''),
+    sender_name: String(senderName),
   };
 }
 
