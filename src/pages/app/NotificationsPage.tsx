@@ -49,6 +49,8 @@ interface BundledNotification {
   primary: DeHubNotification;
   /** All notification IDs in this bundle */
   allIds: string[];
+  /** All raw notifications in this bundle (for same-actor: each has its own tokenId/title/thumbnail) */
+  allNotifications: DeHubNotification[];
   /** For same-actor bundles: how many posts they interacted with */
   postCount: number;
   /** For multi-actor bundles: list of actor names */
