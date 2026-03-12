@@ -6,7 +6,7 @@
  * @module hooks/use-dehub-profile
  */
 
-import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import i18n from 'i18next';
 import { getAccountInfo, getAccountByUsername, getAuthToken, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
