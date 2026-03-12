@@ -36,6 +36,7 @@ interface EnrichedAvatar {
   avatarUrl: string | null;
   username: string | null;
   displayName: string | null;
+  address?: string | null;
 }
 
 // Module-level caches survive component unmount/remount (tab switching, navigation)
