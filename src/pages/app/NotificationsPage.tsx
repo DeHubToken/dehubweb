@@ -870,6 +870,10 @@ export default function NotificationsPage() {
         for (const r of results) {
           if (r.status === 'fulfilled') {
             next.set(r.value.key, r.value.info as EnrichedAvatar);
+            // Also store under the display-name key so lookups by display name resolve
+            if ((r.value as any).extraKey) {
+              next.set((r.value as any).extraKey, r.value.info as EnrichedAvatar);
+            }
           }
         }
         // Sync to module-level cache so it persists across navigations
