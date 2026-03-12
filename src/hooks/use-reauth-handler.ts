@@ -9,6 +9,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthenticationError } from '@/lib/api/dehub';
 import { toast } from 'sonner';
+import i18n from '@/i18n';
 
 /**
  * Hook that provides error handling for API calls with auth error detection.
@@ -30,21 +31,21 @@ export function useReauthHandler() {
   const handleApiError = async (error: unknown, fallbackMessage: string): Promise<boolean> => {
     if (error instanceof AuthenticationError) {
       // Try seamless refresh first
-      const toastId = toast.loading('Refreshing session...');
+      const toastId = toast.loading(i18n.t('toasts.reauth.refreshing'));
       
       const refreshed = await refreshSession();
       toast.dismiss(toastId);
       
       if (refreshed) {
-        toast.success('Session refreshed! Please try again.');
+        toast.success(i18n.t('toasts.reauth.refreshed'));
         return true; // Caller can retry the action
       }
       
       // Fallback to full sign-in if refresh fails
-      toast.error('Session expired', {
-        description: 'Please sign in again to continue',
+      toast.error(i18n.t('toasts.reauth.expired'), {
+        description: i18n.t('toasts.reauth.signInAgain'),
         action: {
-          label: 'Sign in',
+          label: i18n.t('toasts.reauth.signIn'),
           onClick: openLoginModal,
         },
         duration: 8000,
