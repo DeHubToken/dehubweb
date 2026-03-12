@@ -1,16 +1,27 @@
 import { useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import type { PricePoint } from '@/hooks/use-token-chart';
+import type { PricePoint, ChartTimeframe } from '@/hooks/use-token-chart';
 import { Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface TokenPriceChartProps {
   data: PricePoint[];
   isLoading?: boolean;
+  timeframe?: ChartTimeframe;
+  onTimeframeChange?: (tf: ChartTimeframe) => void;
 }
 
-function formatTime(timestamp: number): string {
+const TIMEFRAMES: ChartTimeframe[] = ['1D', '7D', '30D', '90D', '1Y', 'ALL'];
+
+function formatTime(timestamp: number, timeframe: ChartTimeframe = '1D'): string {
   const d = new Date(timestamp);
-  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  if (timeframe === '1D') {
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+  if (timeframe === '7D' || timeframe === '30D') {
+    return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+  }
+  return d.toLocaleDateString([], { month: 'short', year: '2-digit' });
 }
 
 function formatTooltipPrice(value: number): string {
@@ -19,31 +30,40 @@ function formatTooltipPrice(value: number): string {
   return `$${value.toFixed(8)}`;
 }
 
-export function TokenPriceChart({ data, isLoading }: TokenPriceChartProps) {
+function formatTooltipLabel(timestamp: number, timeframe: ChartTimeframe = '1D'): string {
+  const d = new Date(timestamp);
+  if (timeframe === '1D') {
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+  return d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) +
+    ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframeChange }: TokenPriceChartProps) {
   const isPositive = useMemo(() => {
     if (data.length < 2) return true;
     return data[data.length - 1].price >= data[0].price;
   }, [data]);
 
-  const color = isPositive ? '#34d399' : '#f87171'; // emerald-400 / red-400
+  const percentChange = useMemo(() => {
+    if (data.length < 2) return null;
+    const first = data[0].price;
+    const last = data[data.length - 1].price;
+    if (first === 0) return null;
+    return ((last - first) / first) * 100;
+  }, [data]);
 
-  if (isLoading) {
-    return (
-      <div className="w-full h-[180px] bg-zinc-900/50 flex items-center justify-center">
-        <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
-      </div>
-    );
-  }
+  const color = isPositive ? '#34d399' : '#f87171';
 
-  if (!data || data.length === 0) {
-    return (
-      <div className="w-full h-[180px] bg-zinc-900/50 flex items-center justify-center">
-        <span className="text-zinc-600 text-sm">Chart unavailable</span>
-      </div>
-    );
-  }
-
-  return (
+  const chartContent = isLoading ? (
+    <div className="w-full h-[180px] bg-zinc-900/50 flex items-center justify-center">
+      <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
+    </div>
+  ) : !data || data.length === 0 ? (
+    <div className="w-full h-[180px] bg-zinc-900/50 flex items-center justify-center">
+      <span className="text-zinc-600 text-sm">Chart unavailable</span>
+    </div>
+  ) : (
     <div className="w-full h-[180px] bg-zinc-900/50">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 8, right: 0, left: 0, bottom: 0 }}>
@@ -55,16 +75,13 @@ export function TokenPriceChart({ data, isLoading }: TokenPriceChartProps) {
           </defs>
           <XAxis
             dataKey="time"
-            tickFormatter={formatTime}
+            tickFormatter={(t) => formatTime(t, timeframe)}
             axisLine={false}
             tickLine={false}
             tick={{ fill: '#71717a', fontSize: 10 }}
             minTickGap={40}
           />
-          <YAxis
-            domain={['auto', 'auto']}
-            hide
-          />
+          <YAxis domain={['auto', 'auto']} hide />
           <Tooltip
             contentStyle={{
               backgroundColor: '#27272a',
@@ -73,7 +90,7 @@ export function TokenPriceChart({ data, isLoading }: TokenPriceChartProps) {
               padding: '8px 12px',
               fontSize: '12px',
             }}
-            labelFormatter={formatTime}
+            labelFormatter={(t) => formatTooltipLabel(t, timeframe)}
             formatter={(value: number) => [formatTooltipPrice(value), 'Price']}
             labelStyle={{ color: '#a1a1aa' }}
             itemStyle={{ color: '#ffffff' }}
@@ -89,6 +106,42 @@ export function TokenPriceChart({ data, isLoading }: TokenPriceChartProps) {
           />
         </AreaChart>
       </ResponsiveContainer>
+    </div>
+  );
+
+  return (
+    <div>
+      {chartContent}
+
+      {/* Timeframe selector + period change badge */}
+      {onTimeframeChange && (
+        <div className="flex items-center justify-between px-4 py-2 border-t border-zinc-700/50">
+          <div className="flex items-center gap-1">
+            {TIMEFRAMES.map((tf) => (
+              <button
+                key={tf}
+                onClick={() => onTimeframeChange(tf)}
+                className={cn(
+                  "px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all",
+                  timeframe === tf
+                    ? "bg-white/10 text-white border border-white/20"
+                    : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50"
+                )}
+              >
+                {tf}
+              </button>
+            ))}
+          </div>
+          {percentChange != null && !isLoading && (
+            <span className={cn(
+              "text-[11px] font-medium",
+              percentChange >= 0 ? "text-emerald-400" : "text-red-400"
+            )}>
+              {percentChange >= 0 ? '+' : ''}{percentChange.toFixed(2)}%
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 }
