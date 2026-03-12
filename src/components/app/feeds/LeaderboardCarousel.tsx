@@ -10,7 +10,7 @@ import { Trophy, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getLeaderboard, type LeaderboardEntry } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { getBadgeUrl } from '@/lib/staking-badges';
+import { getBadgeUrl, isBigBadge } from '@/lib/staking-badges';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import medal1 from '@/assets/medal-1.png';
