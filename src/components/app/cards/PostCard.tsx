@@ -21,6 +21,7 @@ import { ActionBar } from './ActionBar';
 import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
+import { FeedLinkPreviews } from './FeedLinkPreviews';
 import { TranslatableText, useTranslation } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
@@ -251,6 +252,9 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         {post.isQuotePost && post.quotedPost && (
           <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
         )}
+
+        {/* Link previews for URLs in content */}
+        {post.content && <FeedLinkPreviews text={post.content} />}
 
         {/* Metadata: timestamp and views */}
         <PostMetadata 
