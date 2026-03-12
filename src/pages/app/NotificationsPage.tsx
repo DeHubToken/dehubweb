@@ -203,51 +203,68 @@ function normalizeUsername(name: string | null | undefined): string {
 
 /**
  * Build a canonical, deduplicated actor list from latestActorNames + primary actor.
- * latestActorNames is the source of truth; primary actor is only appended as fallback.
- * Returns { display, key } pairs where key is the normalized form.
+ * Deduplicates by RESOLVED IDENTITY (address or canonical username from enrichment),
+ * not by raw display text — so the same person under different name forms only gets one slot.
  */
 function buildCanonicalActors(
   latestActorNames: string[] | undefined,
   primaryUsername: string | null | undefined,
   enrichedUsername: string | null | undefined,
   enrichedAvatarsMap?: Map<string, EnrichedAvatar>,
-): { display: string; key: string; resolvedUsername?: string }[] {
-  const actors: { display: string; key: string; resolvedUsername?: string }[] = [];
-  const seen = new Set<string>();
+): { display: string; key: string; resolvedUsername?: string; canonicalId: string }[] {
+  const actors: { display: string; key: string; resolvedUsername?: string; canonicalId: string }[] = [];
+  const seenCanonicalIds = new Set<string>();
 
-  // Helper: find the real username from enriched data for a given normalized key
-  const resolveUsername = (key: string, displayName: string): string | undefined => {
-    if (!enrichedAvatarsMap || !key) return undefined;
-    // Check direct username key
+  /**
+   * Resolve the canonical identity for a normalized username key.
+   * Priority: enriched address > enriched canonical username > raw key.
+   * This ensures "Alcazar" and "alcazar_123" map to the same identity if
+   * they resolve to the same address or username via enrichment.
+   */
+  const resolveCanonicalId = (key: string): { canonicalId: string; resolvedUsername?: string } => {
+    if (!enrichedAvatarsMap || !key) return { canonicalId: key };
+    
+    // Check direct username lookup
     const byKey = enrichedAvatarsMap.get(`username:${key}`);
-    if (byKey?.username && byKey.username !== displayName) return byKey.username;
-    // Scan all entries
+    if (byKey) {
+      // Use address as strongest canonical identity, else resolved username
+      const cid = (byKey as any).address?.toLowerCase?.() || normalizeUsername(byKey.username) || key;
+      return { canonicalId: cid, resolvedUsername: byKey.username || undefined };
+    }
+    
+    // Scan all entries for matching username or displayName
     for (const [, entry] of enrichedAvatarsMap) {
       if (normalizeUsername(entry.username) === key || normalizeUsername(entry.displayName) === key) {
-        if (entry.username && normalizeUsername(entry.username) !== key) return entry.username;
-        if (entry.username) return entry.username;
+        const cid = (entry as any).address?.toLowerCase?.() || normalizeUsername(entry.username) || key;
+        return { canonicalId: cid, resolvedUsername: entry.username || undefined };
       }
     }
-    return undefined;
+    
+    return { canonicalId: key };
   };
 
   // latestActorNames is the primary source (order preserved from API)
   if (latestActorNames) {
     for (const name of latestActorNames) {
       const key = normalizeUsername(name);
-      if (key && !seen.has(key)) {
-        seen.add(key);
-        actors.push({ display: name.trim(), key, resolvedUsername: resolveUsername(key, name.trim()) });
+      if (!key) continue;
+      const { canonicalId, resolvedUsername } = resolveCanonicalId(key);
+      if (!seenCanonicalIds.has(canonicalId)) {
+        seenCanonicalIds.add(canonicalId);
+        actors.push({ display: name.trim(), key, resolvedUsername, canonicalId });
       }
     }
   }
 
-  // Append primary actor only if not already present
+  // Append primary actor only if not already present by canonical identity
   const primaryKey = normalizeUsername(enrichedUsername || primaryUsername);
   const primaryDisplay = (enrichedUsername || primaryUsername || '').trim();
-  if (primaryKey && !seen.has(primaryKey) && primaryDisplay) {
-    seen.add(primaryKey);
-    actors.push({ display: primaryDisplay, key: primaryKey, resolvedUsername: resolveUsername(primaryKey, primaryDisplay) });
+  if (primaryKey && primaryDisplay) {
+    const { canonicalId, resolvedUsername } = resolveCanonicalId(primaryKey);
+    if (!seenCanonicalIds.has(canonicalId)) {
+      seenCanonicalIds.add(canonicalId);
+      actors.push({ display: primaryDisplay, key: primaryKey, resolvedUsername, canonicalId });
+    }
   }
 
   return actors;
