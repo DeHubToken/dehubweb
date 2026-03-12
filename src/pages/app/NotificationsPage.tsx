@@ -202,6 +202,51 @@ function normalizeUsername(name: string | null | undefined): string {
   return name.trim().replace(/^@/, '').toLowerCase();
 }
 
+function toUsernameCacheKey(name: string | null | undefined): string | null {
+  const normalized = normalizeUsername(name);
+  return normalized ? `username:${normalized}` : null;
+}
+
+interface CanonicalActor {
+  display: string;
+  key: string;
+  resolvedUsername?: string;
+  canonicalId: string;
+  address?: string;
+}
+
+function findActorEnrichment(actor: CanonicalActor, enrichedAvatarsMap?: Map<string, EnrichedAvatar>): EnrichedAvatar | undefined {
+  if (!enrichedAvatarsMap) return undefined;
+
+  const candidateKeys = new Set<string>();
+  if (actor.address) candidateKeys.add(actor.address.toLowerCase());
+  if (actor.canonicalId) {
+    candidateKeys.add(actor.canonicalId);
+    const canonicalUsernameKey = toUsernameCacheKey(actor.canonicalId);
+    if (canonicalUsernameKey) candidateKeys.add(canonicalUsernameKey);
+  }
+  const actorUsernameKey = toUsernameCacheKey(actor.key);
+  if (actorUsernameKey) candidateKeys.add(actorUsernameKey);
+  const resolvedUsernameKey = toUsernameCacheKey(actor.resolvedUsername);
+  if (resolvedUsernameKey) candidateKeys.add(resolvedUsernameKey);
+
+  for (const key of candidateKeys) {
+    const hit = enrichedAvatarsMap.get(key);
+    if (hit) return hit;
+  }
+
+  const normalizedActorKey = normalizeUsername(actor.resolvedUsername || actor.key || actor.display);
+  const actorAddress = (actor.address || '').toLowerCase();
+
+  for (const [, entry] of enrichedAvatarsMap) {
+    if (!entry) continue;
+    if (actorAddress && entry.address?.toLowerCase() === actorAddress) return entry;
+    if (normalizeUsername(entry.username) === normalizedActorKey) return entry;
+  }
+
+  return undefined;
+}
+
 /**
  * Build a canonical, deduplicated actor list from latestActorNames + primary actor.
  * Deduplicates by RESOLVED IDENTITY (address or canonical username from enrichment),
@@ -212,74 +257,93 @@ function buildCanonicalActors(
   primaryUsername: string | null | undefined,
   enrichedUsername: string | null | undefined,
   enrichedAvatarsMap?: Map<string, EnrichedAvatar>,
-): { display: string; key: string; resolvedUsername?: string; canonicalId: string }[] {
-  const actors: { display: string; key: string; resolvedUsername?: string; canonicalId: string }[] = [];
+): CanonicalActor[] {
+  const actors: CanonicalActor[] = [];
   const seenCanonicalIds = new Set<string>();
 
-  /**
-   * Resolve the canonical identity for a normalized username key.
-   * Priority: enriched address > enriched canonical username > raw key.
-   * This ensures "Alcazar" and "alcazar_123" map to the same identity if
-   * they resolve to the same address or username via enrichment.
-   */
-  const resolveCanonicalId = (key: string): { canonicalId: string; resolvedUsername?: string } => {
-    if (!enrichedAvatarsMap || !key) return { canonicalId: key };
-    
-    // Check direct username lookup
-    const byKey = enrichedAvatarsMap.get(`username:${key}`);
-    if (byKey) {
-      // Use address as strongest canonical identity, else resolved username
-      const cid = (byKey as any).address?.toLowerCase?.() || normalizeUsername(byKey.username) || key;
-      return { canonicalId: cid, resolvedUsername: byKey.username || undefined };
+  const resolveCanonicalIdentity = (nameOrKey: string): { canonicalId: string; resolvedUsername?: string; address?: string } => {
+    const normalized = normalizeUsername(nameOrKey);
+    if (!normalized) return { canonicalId: '' };
+
+    const usernameKey = toUsernameCacheKey(normalized);
+    const byUsername = usernameKey ? enrichedAvatarsMap?.get(usernameKey) : undefined;
+    const byDirect = enrichedAvatarsMap?.get(normalized);
+    const entry = byUsername || byDirect;
+
+    if (entry) {
+      const resolvedAddress = entry.address?.toLowerCase();
+      const resolvedUsername = normalizeUsername(entry.username);
+      return {
+        canonicalId: resolvedAddress || resolvedUsername || normalized,
+        resolvedUsername: entry.username || undefined,
+        address: resolvedAddress || undefined,
+      };
     }
-    
-    // Scan all entries for matching username or displayName
-    for (const [, entry] of enrichedAvatarsMap) {
-      if (normalizeUsername(entry.username) === key || normalizeUsername(entry.displayName) === key) {
-        const cid = (entry as any).address?.toLowerCase?.() || normalizeUsername(entry.username) || key;
-        return { canonicalId: cid, resolvedUsername: entry.username || undefined };
+
+    if (enrichedAvatarsMap) {
+      for (const [, candidate] of enrichedAvatarsMap) {
+        if (normalizeUsername(candidate.username) === normalized || normalizeUsername(candidate.displayName) === normalized) {
+          const resolvedAddress = candidate.address?.toLowerCase();
+          const resolvedUsername = normalizeUsername(candidate.username);
+          return {
+            canonicalId: resolvedAddress || resolvedUsername || normalized,
+            resolvedUsername: candidate.username || undefined,
+            address: resolvedAddress || undefined,
+          };
+        }
       }
     }
-    
-    return { canonicalId: key };
+
+    return { canonicalId: normalized };
   };
 
-  // latestActorNames is the primary source (order preserved from API)
-  if (latestActorNames) {
-    for (const name of latestActorNames) {
-      const key = normalizeUsername(name);
-      if (!key) continue;
-      const { canonicalId, resolvedUsername } = resolveCanonicalId(key);
-      if (!seenCanonicalIds.has(canonicalId)) {
-        seenCanonicalIds.add(canonicalId);
-        actors.push({ display: name.trim(), key, resolvedUsername, canonicalId });
-      }
-    }
-  }
+  const addActorCandidate = (displayValue: string | null | undefined, preferredKey?: string | null) => {
+    const display = (displayValue || '').trim();
+    const key = normalizeUsername(preferredKey || displayValue);
+    if (!key) return;
 
-  // Append primary actor only if not already present by canonical identity
-  const primaryKey = normalizeUsername(enrichedUsername || primaryUsername);
-  const primaryDisplay = (enrichedUsername || primaryUsername || '').trim();
-  if (primaryKey && primaryDisplay) {
-    const { canonicalId, resolvedUsername } = resolveCanonicalId(primaryKey);
-    if (!seenCanonicalIds.has(canonicalId)) {
-      seenCanonicalIds.add(canonicalId);
-      actors.push({ display: primaryDisplay, key: primaryKey, resolvedUsername, canonicalId });
-    }
-  }
+    const identity = resolveCanonicalIdentity(key);
+    if (!identity.canonicalId || seenCanonicalIds.has(identity.canonicalId)) return;
+
+    seenCanonicalIds.add(identity.canonicalId);
+    actors.push({
+      display: display || key,
+      key,
+      resolvedUsername: identity.resolvedUsername,
+      canonicalId: identity.canonicalId,
+      address: identity.address,
+    });
+  };
+
+  latestActorNames?.forEach((name) => addActorCandidate(name));
+  addActorCandidate(enrichedUsername || primaryUsername, enrichedUsername || primaryUsername);
 
   return actors;
 }
 
-/** Resolve a safe profile link for an actor, avoiding broken display-name URLs */
-function resolveActorProfileLink(actor: { display: string; key: string; resolvedUsername?: string }): string | null {
-  if (actor.resolvedUsername) return `/${actor.resolvedUsername}`;
-  // If the key looks like a valid handle (alphanumeric + underscores/dots), use it
-  if (/^[a-z0-9._]+$/.test(actor.key)) return `/${actor.key}`;
-  // Display name with spaces/special chars — not a valid route
-  return null;
+function resolveActorAvatarUrl(actor: CanonicalActor, enrichedAvatarsMap?: Map<string, EnrichedAvatar>): string | undefined {
+  return findActorEnrichment(actor, enrichedAvatarsMap)?.avatarUrl || undefined;
 }
-function getNotificationContent(notification: DeHubNotification, bundle?: BundledNotification, t?: (key: string, opts?: any) => string, onOthersClick?: () => void): React.ReactNode {
+
+/** Resolve a safe profile link for an actor, avoiding broken display-name URLs */
+function resolveActorProfileLink(actor: CanonicalActor, enrichedAvatarsMap?: Map<string, EnrichedAvatar>): string | null {
+  const enriched = findActorEnrichment(actor, enrichedAvatarsMap);
+  const resolvedHandle = normalizeUsername(actor.resolvedUsername || enriched?.username);
+  if (resolvedHandle && /^[a-z0-9._]+$/.test(resolvedHandle)) return `/${resolvedHandle}`;
+
+  const safeKey = normalizeUsername(actor.key);
+  if (safeKey && /^[a-z0-9._]+$/.test(safeKey)) return `/${safeKey}`;
+
+  const address = (actor.address || enriched?.address || '').toLowerCase();
+  return address ? `/${address}` : null;
+}
+function getNotificationContent(
+  notification: DeHubNotification,
+  bundle?: BundledNotification,
+  t?: (key: string, opts?: any) => string,
+  onOthersClick?: () => void,
+  canonicalActors?: CanonicalActor[],
+): React.ReactNode {
 
   const tr = t || ((key: string) => key);
   const actorName = notification.actorUsername || 'Someone';
@@ -327,29 +391,29 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
   // Backend-aggregated like/comment/repost (aggregatedCount > 1 with latestActorNames)
   const aggCount = (notification as any).aggregatedCount || 1;
   const aggNames = (notification as any).latestActorNames as string[] | undefined;
-  if (aggCount > 2 && aggNames && aggNames.length > 0 && ['like', 'comment', 'repost'].includes(notification.type as string)) {
-    // Use canonical actor list for consistent naming with grid
-    const canonical = buildCanonicalActors(aggNames, notification.actorUsername, undefined);
-    const isSingleActor = canonical.length <= 1;
-    
-    if (isSingleActor) {
+  const typeStr = notification.type as string;
+  if (aggCount > 2 && ['like', 'comment', 'repost'].includes(typeStr)) {
+    const canonical = (canonicalActors && canonicalActors.length > 0)
+      ? canonicalActors
+      : buildCanonicalActors(aggNames, notification.actorUsername, undefined);
+
+    if (canonical.length <= 1) {
       const name = canonical[0]?.display || actorName;
       const postCount = aggCount;
-      const typeStr = notification.type as string;
       if (typeStr === 'like') return `${name} liked ${postCount} of your posts`;
       if (typeStr === 'comment') return `${name} commented on ${postCount} of your posts`;
       if (typeStr === 'repost') return `${name} reposted ${postCount} of your posts`;
     } else {
-      // Multiple users — first name from canonical list matches grid slot 1
-      const first = canonical[0]?.display || aggNames[0];
-      const rest = aggCount - 1;
+      // Multiple users — first name and others count come from the exact same canonical source as the grid
+      const first = canonical[0]?.display || aggNames?.[0] || actorName;
+      const rest = Math.max(canonical.length - 1, 0);
       const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
       const othersSpan = onOthersClick ? (
         <span className="cursor-pointer hover:text-white" onClick={(e) => { e.stopPropagation(); e.preventDefault(); onOthersClick(); }}>
           {othersText}
         </span>
       ) : othersText;
-      const typeStr = notification.type as string;
+
       if (typeStr === 'like') return <>{first} and {othersSpan} liked your post</>;
       if (typeStr === 'comment') return <>{first} and {othersSpan} commented on your post</>;
       if (typeStr === 'repost') return <>{first} and {othersSpan} reposted your post</>;
@@ -493,6 +557,20 @@ function NotificationItem({
       ? `/${notification.actorUsername}` 
       : null;
 
+  const aggregatedActorNames = (notification as any).latestActorNames as string[] | undefined;
+  const canonicalActors = buildCanonicalActors(
+    aggregatedActorNames,
+    notification.actorUsername,
+    enriched?.username,
+    enrichedAvatars,
+  );
+  const primaryKey = normalizeUsername(enriched?.username || notification.actorUsername);
+
+  const resolveActorAvatar = (actor: CanonicalActor | null | undefined): string | undefined => {
+    if (!actor) return undefined;
+    return resolveActorAvatarUrl(actor, enrichedAvatars) || (actor.key === primaryKey ? avatarUrl : undefined);
+  };
+
   const hasUnread = bundle.bundleType !== 'single' 
     ? bundle.allIds.some(id => {
         // Check if any notification in the bundle is unread - we only have the primary easily
@@ -539,50 +617,16 @@ function NotificationItem({
       <div className="relative flex-shrink-0">
         {(() => {
           const aggCount = (notification as any).aggregatedCount || 1;
-          const aggNames = (notification as any).latestActorNames as string[] | undefined;
-          
-          // Build one canonical actor list — single source of truth for grid, text, drawer
-          const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username, enrichedAvatars);
           const uniqueActorCount = canonicalActors.length;
-          
           const hasMultipleActors = uniqueActorCount >= 2 && aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string) && bundle.bundleType !== 'same-actor';
           
           if (hasMultipleActors) {
             // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
-            
-            // Find avatar URL by canonical identity (address or username key) from enriched data
-            const findAvatarForActor = (actor: { key: string; canonicalId: string }): string | undefined => {
-              if (!actor.key) return undefined;
-              // Try by address (canonicalId may be an address)
-              const byAddr = enrichedAvatars.get(actor.canonicalId);
-              if (byAddr?.avatarUrl) return byAddr.avatarUrl;
-              // Try by username key
-              const byKey = enrichedAvatars.get(`username:${actor.key}`);
-              if (byKey?.avatarUrl) return byKey.avatarUrl;
-              // Scan all entries
-              for (const [, entry] of enrichedAvatars) {
-                if ((normalizeUsername(entry.username) === actor.key || entry.address?.toLowerCase() === actor.canonicalId) && entry.avatarUrl) {
-                  return entry.avatarUrl;
-                }
-              }
-              return undefined;
-            };
-            
-            const primaryKey = normalizeUsername(enriched?.username || notification.actorUsername);
-            
-            const actor1 = canonicalActors[0] || null;
-            const actor2 = canonicalActors[1] || null;
-            const actor3 = canonicalActors[2] || null;
-            
-            // Resolve avatars — only fall back to notification's avatarUrl for the primary actor
-            const avatar1Url = actor1 ? (findAvatarForActor(actor1) || (actor1.key === primaryKey ? avatarUrl : undefined)) : undefined;
-            let avatar2Url = actor2 ? (findAvatarForActor(actor2) || (actor2.key === primaryKey ? avatarUrl : undefined)) : undefined;
-            let avatar3Url = actor3 ? (findAvatarForActor(actor3) || (actor3.key === primaryKey ? avatarUrl : undefined)) : undefined;
-            
-            // Safety: prevent duplicate avatar images across different canonical identities
-            if (avatar2Url && avatar1Url && avatar2Url === avatar1Url && actor2?.canonicalId !== actor1?.canonicalId) avatar2Url = undefined;
-            if (avatar3Url && avatar1Url && avatar3Url === avatar1Url && actor3?.canonicalId !== actor1?.canonicalId) avatar3Url = undefined;
-            
+            const [actor1, actor2, actor3] = canonicalActors.slice(0, 3);
+            const avatar1Url = resolveActorAvatar(actor1);
+            const avatar2Url = resolveActorAvatar(actor2);
+            const avatar3Url = resolveActorAvatar(actor3);
+
             const renderGridAvatar = (
               url: string | undefined,
               name: string | null,
@@ -606,10 +650,10 @@ function NotificationItem({
             
             return (
               <div className="grid grid-cols-2 grid-rows-2 gap-0.5 w-12 h-12 flex-shrink-0">
-                {renderGridAvatar(avatar1Url, actor1?.display || fallbackLetter, actor1 ? resolveActorProfileLink(actor1) || profileLink : profileLink, 'w-[23px] h-[23px]')}
-                {renderGridAvatar(avatar2Url, actor2?.display || null, actor2 ? resolveActorProfileLink(actor2) : null, 'w-[23px] h-[23px]')}
+                {renderGridAvatar(avatar1Url, actor1?.display || fallbackLetter, actor1 ? resolveActorProfileLink(actor1, enrichedAvatars) || profileLink : profileLink, 'w-[23px] h-[23px]')}
+                {renderGridAvatar(avatar2Url, actor2?.display || null, actor2 ? resolveActorProfileLink(actor2, enrichedAvatars) : null, 'w-[23px] h-[23px]')}
                 {actor3 ? (
-                  renderGridAvatar(avatar3Url, actor3.display, resolveActorProfileLink(actor3), 'w-[23px] h-[23px]')
+                  renderGridAvatar(avatar3Url, actor3.display, resolveActorProfileLink(actor3, enrichedAvatars), 'w-[23px] h-[23px]')
                 ) : (
                   renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
                 )}
@@ -658,7 +702,7 @@ function NotificationItem({
       {/* Content */}
       <div className="flex-1 min-w-0">
         <p className={`text-sm ${(notification.read || isClosing) ? 'text-zinc-400' : 'text-white'}`}>
-          {getNotificationContent(notification, bundle, t, () => setShowActorsDrawer(true))}
+          {getNotificationContent(notification, bundle, t, () => setShowActorsDrawer(true), canonicalActors)}
         </p>
         
         {/* Post preview snippet — for replies/mentions show the comment text, otherwise the post title */}
@@ -753,36 +797,26 @@ function NotificationItem({
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[50vh]" data-vaul-no-drag>
-            {(() => {
-              const aggNames = (notification as any).latestActorNames as string[] | undefined;
-              const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username, enrichedAvatars);
-              const findAvatar = (actor: { key: string; canonicalId: string }) => {
-                // Try by address/canonicalId
-                const byAddr = enrichedAvatars.get(actor.canonicalId);
-                if (byAddr?.avatarUrl) return byAddr.avatarUrl;
-                // Try by username key
-                const byKey = enrichedAvatars.get(`username:${actor.key}`);
-                if (byKey?.avatarUrl) return byKey.avatarUrl;
-                for (const [, entry] of enrichedAvatars) {
-                  if ((normalizeUsername(entry.username) === actor.key || entry.address?.toLowerCase() === actor.canonicalId) && entry.avatarUrl) return entry.avatarUrl;
-                }
-                return undefined;
-              };
-              return canonicalActors.map((actor) => (
+            {canonicalActors.map((actor) => {
+              const actorLink = resolveActorProfileLink(actor, enrichedAvatars);
+              const actorAvatar = resolveActorAvatar(actor);
+              const actorHandle = normalizeUsername(actor.resolvedUsername || actor.key || actor.display) || actor.display;
+
+              return (
                 <Link
-                  key={actor.key}
-                  to={resolveActorProfileLink(actor) || '#'}
+                  key={actor.canonicalId}
+                  to={actorLink || '#'}
                   onClick={() => setShowActorsDrawer(false)}
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors"
                 >
                   <Avatar className="w-10 h-10">
-                    {findAvatar(actor) && <AvatarImage src={findAvatar(actor)!} />}
+                    {actorAvatar && <AvatarImage src={actorAvatar} />}
                     <AvatarFallback className="bg-zinc-700 text-white font-medium">{actor.display.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
-                  <span className="text-white text-sm font-medium">@{actor.display}</span>
+                  <span className="text-white text-sm font-medium">@{actorHandle}</span>
                 </Link>
-              ));
-            })()}
+              );
+            })}
           </div>
         </DrawerContent>
       </Drawer>
@@ -852,7 +886,12 @@ export default function NotificationsPage() {
     const aggregatedActorUsernames = allNotifications
       .filter(n => (n as any).aggregatedCount > 1 && (n as any).latestActorNames?.length > 0)
       .flatMap(n => ((n as any).latestActorNames as string[]))
-      .filter(name => Boolean(name) && !moduleEnrichedKeys.has(`username:${name.toLowerCase()}`));
+      .map(name => normalizeUsername(name))
+      .filter((name): name is string => Boolean(name))
+      .filter(name => {
+        const cacheKey = toUsernameCacheKey(name);
+        return cacheKey ? !moduleEnrichedKeys.has(cacheKey) : false;
+      });
     
     const uniqueNewAddresses = [...new Set(newAddresses)];
     const uniqueNewUsernames = [...new Set(aggregatedActorUsernames)];
@@ -864,7 +903,10 @@ export default function NotificationsPage() {
     
     // Mark as in-flight immediately to prevent duplicate calls
     uniqueNewAddresses.forEach(addr => moduleEnrichedKeys.add(addr));
-    uniqueNewUsernames.forEach(name => moduleEnrichedKeys.add(`username:${name.toLowerCase()}`));
+    uniqueNewUsernames.forEach(name => {
+      const cacheKey = toUsernameCacheKey(name);
+      if (cacheKey) moduleEnrichedKeys.add(cacheKey);
+    });
     
     const addressFetches = uniqueNewAddresses.map(async (addr) => {
       try {
@@ -873,9 +915,30 @@ export default function NotificationsPage() {
         const user = await getAccountInfo(addr);
         const rawPath = extractAvatarPath(user);
         const avatarUrl = buildAvatarUrl(user.address || addr, rawPath);
-        return { key: addr, info: { address: addr, avatarUrl, username: user.username || null, displayName: user.displayName || null } };
+
+        return {
+          resolved: true,
+          key: addr,
+          info: {
+            address: (user.address || addr).toLowerCase(),
+            avatarUrl,
+            username: user.username || null,
+            displayName: user.displayName || null,
+          } as EnrichedAvatar,
+          extraKeys: [] as string[],
+        };
       } catch {
-        return { key: addr, info: { address: addr, avatarUrl: null, username: null, displayName: null } };
+        return {
+          resolved: true,
+          key: addr,
+          info: {
+            address: addr,
+            avatarUrl: null,
+            username: null,
+            displayName: null,
+          } as EnrichedAvatar,
+          extraKeys: [] as string[],
+        };
       }
     });
     
@@ -885,40 +948,61 @@ export default function NotificationsPage() {
         const { extractAvatarPath, buildAvatarUrl } = await import('@/lib/media-url');
         const user = await getAccountByUsername(username);
         
-        // Detect empty API result (200 OK but no real user data)
+        // Detect empty API result (200 OK but no real user data) and avoid caching pseudo identities
         if (!user._id && !user.address && !user.username) {
-          return { key: `username:${username.toLowerCase()}`, info: { address: username, avatarUrl: null, username, displayName: null }, extraKey: null };
+          return { resolved: false };
+        }
+
+        const resolvedUsername = normalizeUsername(user.username || username);
+        const inputKey = toUsernameCacheKey(username);
+        const resolvedKey = toUsernameCacheKey(resolvedUsername);
+        const addressKey = user.address?.toLowerCase() || null;
+        const primaryKey = addressKey || inputKey;
+
+        if (!primaryKey) {
+          return { resolved: false };
         }
         
         const rawPath = extractAvatarPath(user);
         const avatarUrl = user.address ? buildAvatarUrl(user.address, rawPath) : null;
-        const key = user.address?.toLowerCase() || `username:${username.toLowerCase()}`;
-        const info = { address: user.address || username, avatarUrl, username: user.username || username, displayName: user.displayName || null };
-        // Store under both the input name AND the resolved canonical username so all name variants resolve
-        const extraKeys: string[] = [];
-        const inputKey = `username:${username.toLowerCase()}`;
-        if (key !== inputKey) extraKeys.push(inputKey);
-        const resolvedKey = user.username ? `username:${user.username.toLowerCase()}` : null;
-        if (resolvedKey && resolvedKey !== inputKey && resolvedKey !== key) extraKeys.push(resolvedKey);
-        return { key, info, extraKeys };
+        const info: EnrichedAvatar = {
+          address: user.address?.toLowerCase() || null,
+          avatarUrl,
+          username: user.username || resolvedUsername || null,
+          displayName: user.displayName || null,
+        };
+
+        const extraKeys = [inputKey, resolvedKey]
+          .filter((k): k is string => Boolean(k) && k !== primaryKey);
+
+        return {
+          resolved: true,
+          key: primaryKey,
+          info,
+          extraKeys,
+        };
       } catch {
-        return { key: `username:${username.toLowerCase()}`, info: { address: username, avatarUrl: null, username, displayName: null }, extraKey: null };
+        return { resolved: false };
       }
     });
     
     Promise.allSettled([...addressFetches, ...usernameFetches]).then((results) => {
       setEnrichedAvatars(prev => {
         const next = new Map(prev);
+
         for (const r of results) {
-          if (r.status === 'fulfilled') {
-            next.set(r.value.key, r.value.info as EnrichedAvatar);
-            // Store under all alias keys so all name variants resolve to same entry
-            const extras = (r.value as any).extraKeys || ((r.value as any).extraKey ? [(r.value as any).extraKey] : []);
-            for (const ek of extras) {
-              if (ek) next.set(ek, r.value.info as EnrichedAvatar);
-            }
+          if (r.status !== 'fulfilled' || !r.value?.resolved || !r.value.key || !r.value.info) continue;
+
+          next.set(r.value.key, r.value.info as EnrichedAvatar);
+          moduleEnrichedKeys.add(r.value.key);
+
+          const extras = (r.value.extraKeys || []).filter(Boolean);
+          for (const ek of extras) {
+            next.set(ek, r.value.info as EnrichedAvatar);
+            moduleEnrichedKeys.add(ek);
           }
         }
+
         // Sync to module-level cache so it persists across navigations
         moduleAvatarCache = next;
         return next;
