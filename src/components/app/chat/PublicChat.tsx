@@ -36,7 +36,7 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
     content: msg.content || '',
     timestamp: new Date(msg.created_at),
     type: (msg.message_type as Message['type']) || 'text',
-    imageUrl: msg.image_url ? getMediaUrl(msg.image_url) : undefined,
+    imageUrl: msg.image_url ? getMediaUrl(msg.image_url) : (msg.message_type === 'gif' && msg.content ? getMediaUrl(msg.content) : undefined),
     isPinned: msg.is_pinned || false,
   };
 }
