@@ -99,8 +99,15 @@ export function emitSendMessage(payload: {
 }) {
   const s = getSocket();
 
+  // DeHub livechat history API returns `roomId: "global"`.
+  // Some backend paths require an explicit room identifier in the socket payload
+  // to persist the message (otherwise UI-only optimistic messages "disappear" on refresh).
+  const roomId = payload.roomId || 'global';
+
   // Redundant fields for API compatibility
   const sendPayload: Record<string, unknown> = {
+    roomId,
+    room_id: roomId,
     content: payload.content,
     message: payload.content,
     text: payload.content,
