@@ -617,50 +617,16 @@ function NotificationItem({
       <div className="relative flex-shrink-0">
         {(() => {
           const aggCount = (notification as any).aggregatedCount || 1;
-          const aggNames = (notification as any).latestActorNames as string[] | undefined;
-          
-          // Build one canonical actor list — single source of truth for grid, text, drawer
-          const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username, enrichedAvatars);
           const uniqueActorCount = canonicalActors.length;
-          
           const hasMultipleActors = uniqueActorCount >= 2 && aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string) && bundle.bundleType !== 'same-actor';
           
           if (hasMultipleActors) {
             // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
-            
-            // Find avatar URL by canonical identity (address or username key) from enriched data
-            const findAvatarForActor = (actor: { key: string; canonicalId: string }): string | undefined => {
-              if (!actor.key) return undefined;
-              // Try by address (canonicalId may be an address)
-              const byAddr = enrichedAvatars.get(actor.canonicalId);
-              if (byAddr?.avatarUrl) return byAddr.avatarUrl;
-              // Try by username key
-              const byKey = enrichedAvatars.get(`username:${actor.key}`);
-              if (byKey?.avatarUrl) return byKey.avatarUrl;
-              // Scan all entries
-              for (const [, entry] of enrichedAvatars) {
-                if ((normalizeUsername(entry.username) === actor.key || entry.address?.toLowerCase() === actor.canonicalId) && entry.avatarUrl) {
-                  return entry.avatarUrl;
-                }
-              }
-              return undefined;
-            };
-            
-            const primaryKey = normalizeUsername(enriched?.username || notification.actorUsername);
-            
-            const actor1 = canonicalActors[0] || null;
-            const actor2 = canonicalActors[1] || null;
-            const actor3 = canonicalActors[2] || null;
-            
-            // Resolve avatars — only fall back to notification's avatarUrl for the primary actor
-            const avatar1Url = actor1 ? (findAvatarForActor(actor1) || (actor1.key === primaryKey ? avatarUrl : undefined)) : undefined;
-            let avatar2Url = actor2 ? (findAvatarForActor(actor2) || (actor2.key === primaryKey ? avatarUrl : undefined)) : undefined;
-            let avatar3Url = actor3 ? (findAvatarForActor(actor3) || (actor3.key === primaryKey ? avatarUrl : undefined)) : undefined;
-            
-            // Safety: prevent duplicate avatar images across different canonical identities
-            if (avatar2Url && avatar1Url && avatar2Url === avatar1Url && actor2?.canonicalId !== actor1?.canonicalId) avatar2Url = undefined;
-            if (avatar3Url && avatar1Url && avatar3Url === avatar1Url && actor3?.canonicalId !== actor1?.canonicalId) avatar3Url = undefined;
-            
+            const [actor1, actor2, actor3] = canonicalActors.slice(0, 3);
+            const avatar1Url = resolveActorAvatar(actor1);
+            const avatar2Url = resolveActorAvatar(actor2);
+            const avatar3Url = resolveActorAvatar(actor3);
+
             const renderGridAvatar = (
               url: string | undefined,
               name: string | null,
@@ -684,10 +650,10 @@ function NotificationItem({
             
             return (
               <div className="grid grid-cols-2 grid-rows-2 gap-0.5 w-12 h-12 flex-shrink-0">
-                {renderGridAvatar(avatar1Url, actor1?.display || fallbackLetter, actor1 ? resolveActorProfileLink(actor1) || profileLink : profileLink, 'w-[23px] h-[23px]')}
-                {renderGridAvatar(avatar2Url, actor2?.display || null, actor2 ? resolveActorProfileLink(actor2) : null, 'w-[23px] h-[23px]')}
+                {renderGridAvatar(avatar1Url, actor1?.display || fallbackLetter, actor1 ? resolveActorProfileLink(actor1, enrichedAvatars) || profileLink : profileLink, 'w-[23px] h-[23px]')}
+                {renderGridAvatar(avatar2Url, actor2?.display || null, actor2 ? resolveActorProfileLink(actor2, enrichedAvatars) : null, 'w-[23px] h-[23px]')}
                 {actor3 ? (
-                  renderGridAvatar(avatar3Url, actor3.display, resolveActorProfileLink(actor3), 'w-[23px] h-[23px]')
+                  renderGridAvatar(avatar3Url, actor3.display, resolveActorProfileLink(actor3, enrichedAvatars), 'w-[23px] h-[23px]')
                 ) : (
                   renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
                 )}
