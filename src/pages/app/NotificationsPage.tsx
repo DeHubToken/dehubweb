@@ -776,7 +776,7 @@ function NotificationItem({
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors"
                 >
                   <Avatar className="w-10 h-10">
-                    {findAvatar(actor.key) && <AvatarImage src={findAvatar(actor.key)} />}
+                    {findAvatar(actor) && <AvatarImage src={findAvatar(actor)!} />}
                     <AvatarFallback className="bg-zinc-700 text-white font-medium">{actor.display.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <span className="text-white text-sm font-medium">@{actor.display}</span>
