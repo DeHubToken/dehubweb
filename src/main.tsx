@@ -3,6 +3,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { clearChunkReloadFlag } from "./lib/lazy-with-retry";
 import App from "./App.tsx";
 import "./i18n";
+import "./lib/toast-i18n-interceptor"; // Auto-translate all toast messages
 import "./index.css";
 import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
 
