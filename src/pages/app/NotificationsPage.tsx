@@ -301,7 +301,7 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
       const rest = aggCount - 1;
       const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
       const othersSpan = onOthersClick ? (
-        <span className="underline decoration-dotted cursor-pointer hover:text-white" onClick={(e) => { e.stopPropagation(); e.preventDefault(); onOthersClick(); }}>
+        <span className="cursor-pointer hover:text-white" onClick={(e) => { e.stopPropagation(); e.preventDefault(); onOthersClick(); }}>
           {othersText}
         </span>
       ) : othersText;
