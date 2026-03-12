@@ -9,8 +9,8 @@ import { LoginModal } from "@/components/app/LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { AppLayout } from "./components/app/AppLayout";
-import React, { Suspense } from "react";
-import { useTranslation } from "react-i18next";
+import React, { Suspense, useState, useEffect } from "react";
+import i18nInstance from "@/i18n";
 
 // Pages — lazy loaded
 const Index = React.lazy(() => import("./pages/Index"));
@@ -96,13 +96,19 @@ const queryClient = new QueryClient({
 // Inner app component that uses auth context
 function AppContent() {
   const { isLoginModalOpen, closeLoginModal } = useAuth();
-  const { i18n } = useTranslation();
-  
+  const [currentLang, setCurrentLang] = useState(() => i18nInstance.language || 'en');
+
+  useEffect(() => {
+    const handleLangChange = (lng: string) => setCurrentLang(lng);
+    i18nInstance.on('languageChanged', handleLangChange);
+    return () => { i18nInstance.off('languageChanged', handleLangChange); };
+  }, []);
+
   // Preload 3D icons on app mount to prevent flicker during navigation
   usePreloadIcons();
-  
+
   return (
-    <div key={i18n.language}>
+    <div key={currentLang}>
       <Sonner />
       <UsernameRequiredModal />
       <LoginModal open={isLoginModalOpen} onOpenChange={closeLoginModal} />

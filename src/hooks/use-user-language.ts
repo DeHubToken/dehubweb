@@ -39,7 +39,7 @@ export function useUserLanguage() {
     }
     setLanguage(lang);
     localStorage.setItem(STORAGE_KEY, lang);
-    i18n.changeLanguage(lang);
+    await i18n.changeLanguage(lang);
   }, []);
 
   return { language, isLoading, setPreferredLanguage };
