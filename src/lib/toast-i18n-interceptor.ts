@@ -2,97 +2,50 @@
  * Toast i18n Interceptor
  * ======================
  * Monkey-patches sonner's toast methods to auto-translate messages
- * using the translate-text edge function (same system as TranslatableText).
+ * using the same static i18n system as the rest of the UI.
  *
  * Flow:
- * 1. Show toast immediately with English text
- * 2. If user language ≠ English, translate async via edge function
- * 3. Update toast in-place with translated text
- *
- * Uses an LRU cache to avoid redundant API calls.
+ * 1. Normalize English toast string → i18n key (e.g. "Saved to bookmarks" → "toasts.saved_to_bookmarks")
+ * 2. Look up translation via i18n.t() — synchronous, instant, no API calls
+ * 3. Show translated toast immediately (no English flash)
+ * 4. Falls back to original English if key not found in locale file
  */
 
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
+import i18n from '@/i18n';
 
-const STORAGE_KEY = 'user-preferred-language';
-const MIN_LENGTH = 1;
-
-// Simple translation cache (same pattern as TranslatableText)
-const translationCache = new Map<string, string>();
-const MAX_CACHE = 300;
-
-function getUserLang(): string {
-  try {
-    return localStorage.getItem(STORAGE_KEY) || navigator.language?.split('-')[0] || 'en';
-  } catch {
-    return 'en';
-  }
+/**
+ * Normalize an English toast string into a flat i18n key.
+ * "Saved to bookmarks" → "saved_to_bookmarks"
+ * "Failed to send message!" → "failed_to_send_message"
+ */
+function normalizeToKey(msg: string): string {
+  return msg
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, '') // strip punctuation
+    .trim()
+    .replace(/\s+/g, '_');       // spaces → underscores
 }
 
-async function translateText(text: string, targetLang: string): Promise<string | null> {
-  const cacheKey = `${text}::${targetLang}`;
-  if (translationCache.has(cacheKey)) {
-    return translationCache.get(cacheKey)!;
-  }
-
-  try {
-    const { data, error } = await supabase.functions.invoke('translate-text', {
-      body: { text, targetLang },
-    });
-
-    if (error || !data?.translatedText) return null;
-
-    const translated = data.translatedText;
-
-    // Don't cache if identical to source (same language)
-    if (translated === text) return null;
-
-    // LRU eviction
-    if (translationCache.size >= MAX_CACHE) {
-      const firstKey = translationCache.keys().next().value;
-      if (firstKey) translationCache.delete(firstKey);
-    }
-    translationCache.set(cacheKey, translated);
-
-    return translated;
-  } catch {
-    return null;
-  }
+/**
+ * Translate a toast message using the static i18n system.
+ * Returns translated string, or original if no translation found.
+ */
+function translateToast(msg: string): string {
+  const key = `toasts.${normalizeToKey(msg)}`;
+  const translated = i18n.t(key, { defaultValue: msg });
+  return translated;
 }
 
-/** Translate a toast message and update it in-place */
-function translateAndUpdate(
-  toastId: string | number,
-  msg: string,
-  method: 'success' | 'error' | 'info' | 'warning' | 'loading' | 'message',
-  opts?: Record<string, unknown>
-) {
-  const lang = getUserLang();
-  if (lang === 'en' || msg.length < MIN_LENGTH) return;
-
-  // Translate main message
-  translateText(msg, lang).then((translated) => {
-    if (!translated) return;
-
-    // Also translate description if present
-    const descPromise = typeof opts?.description === 'string'
-      ? translateText(opts.description as string, lang)
-      : Promise.resolve(null);
-
-    descPromise.then((translatedDesc) => {
-      const updateOpts: Record<string, unknown> = {
-        ...opts,
-        id: toastId,
-      };
-      if (translatedDesc) {
-        updateOpts.description = translatedDesc;
-      }
-
-      // Use the original (unpatched) method to update
-      (originalMethods as any)[method](translated, updateOpts);
-    });
-  });
+/**
+ * Translate a toast description if it's a string.
+ */
+function translateDescription(opts?: Record<string, unknown>): Record<string, unknown> | undefined {
+  if (!opts || typeof opts.description !== 'string') return opts;
+  return {
+    ...opts,
+    description: translateToast(opts.description as string),
+  };
 }
 
 // Store original methods before patching
@@ -104,9 +57,6 @@ for (const method of methodNames) {
   originalMethods[method] = (toast as any)[method];
 }
 
-// Counter for generating unique toast IDs
-let toastCounter = 0;
-
 // Patch all sonner toast methods
 for (const method of methodNames) {
   const original = originalMethods[method];
@@ -115,16 +65,10 @@ for (const method of methodNames) {
       return original(msg, opts);
     }
 
-    // Generate a stable ID so we can update the toast later
-    const id = (opts?.id as string | number) ?? `toast-i18n-${++toastCounter}`;
-    const finalOpts = { ...opts, id };
+    // Translate immediately — synchronous, no flash
+    const translated = translateToast(msg);
+    const translatedOpts = translateDescription(opts);
 
-    // Show immediately in English
-    const result = original(msg, finalOpts);
-
-    // Async translate & update
-    translateAndUpdate(id, msg, method, finalOpts);
-
-    return result;
+    return original(translated, translatedOpts);
   };
 }
