@@ -126,7 +126,7 @@ function ReactionBar({
             {myReaction ? (
               <>
                 <span className="text-[10px] group-hover/reaction:hidden">{addresses.length}</span>
-                <X className="w-3 h-3 hidden group-hover/reaction:block text-primary/70" />
+                <X className="w-3 h-3 hidden group-hover/reaction:block text-white" />
               </>
             ) : (
               <span className="text-[10px]">{addresses.length}</span>
