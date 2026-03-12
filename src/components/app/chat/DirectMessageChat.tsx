@@ -277,9 +277,9 @@ function MessageBubble({
               {isTranslating ? (
                 <Loader2 className="w-3 h-3 animate-spin" />
               ) : isTranslated ? (
-                <Undo2 className="w-3 h-3" />
+                <RotateCcw className="w-3 h-3" />
               ) : (
-                <Globe className="w-3 h-3" />
+                <Languages className="w-3 h-3" />
               )}
             </button>
           )}
