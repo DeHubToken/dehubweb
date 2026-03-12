@@ -135,31 +135,27 @@ export async function getLiveChatMessages(
     return [];
   };
 
-  // Per `doc.md`: GET /api/livechat/rooms/{roomId}/messages
-  try {
-    const response = await apiCall<Record<string, unknown>>(
-      `/api/livechat/rooms/${_roomId}/messages`,
-      { params: queryParams, requiresAuth: false }
-    );
-    const parsed = parse(response);
-    if (parsed.length || (response && typeof response === 'object')) return parsed;
-  } catch (error: any) {
-    console.warn('[LiveChat API] rooms/{roomId}/messages failed:', error?.message);
-  }
-
-  // Backward-compat fallback (older backend): GET /api/livechat/messages
+  // Prefer the currently deployed endpoint (many deployments still use this)
   try {
     const response = await apiCall<Record<string, unknown>>('/api/livechat/messages', {
       params: queryParams,
       requiresAuth: false,
     });
     const parsed = parse(response);
-    if (!parsed.length) {
-      console.warn('[LiveChat API] fallback /api/livechat/messages returned empty/unexpected', response);
-    }
-    return parsed;
+    if (parsed.length) return parsed;
   } catch (error: any) {
-    console.error('[LiveChat API] getLiveChatMessages failed:', error?.message);
+    // continue to fallback below
+  }
+
+  // Fallback: spec endpoint from `doc.md` (may be enabled in newer backends)
+  try {
+    const response = await apiCall<Record<string, unknown>>(
+      `/api/livechat/rooms/${_roomId}/messages`,
+      { params: queryParams, requiresAuth: false }
+    );
+    return parse(response);
+  } catch (error: any) {
+    console.warn('[LiveChat API] getLiveChatMessages failed:', error?.message);
     return [];
   }
 }
