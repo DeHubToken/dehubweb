@@ -602,8 +602,8 @@ function NotificationItem({
   const { walletAddress } = useAuth();
 
   const handleClick = () => {
-    // If actors drawer is open, don't navigate — user is interacting with the drawer
-    if (showActorsDrawer) return;
+    // If a drawer is open, don't navigate — user is interacting with it
+    if (showActorsDrawer || showPostsDrawer) return;
     
     // Mark all notifications in bundle as read
     if (hasUnread) {
@@ -613,8 +613,13 @@ function NotificationItem({
     // Aggregated follow notifications → open followers drawer inline
     const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 2;
     if (isAggregatedFollow && walletAddress) {
-      // Dispatch custom event to open followers drawer in NotificationsPage
       window.dispatchEvent(new CustomEvent('open-followers-drawer'));
+      return;
+    }
+    
+    // Same-actor bundle with multiple posts → open posts drawer
+    if (bundle.bundleType === 'same-actor' && bundle.postCount > 1) {
+      setShowPostsDrawer(true);
       return;
     }
     
