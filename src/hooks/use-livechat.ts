@@ -185,13 +185,17 @@ export function useLiveChatMessages(roomId: string | null) {
       console.log('[LiveChat] Room joined, messages:', data.messages?.length, 'banned:', data.isBanned);
       setIsBanned(data.isBanned || false);
       initialLoadDone.current = true;
-      
+
       if (data.messages && Array.isArray(data.messages)) {
         const mapped = data.messages
           .map((m: unknown) => socketMsgToLocal(m, roomId))
           .filter(Boolean) as SupabaseLiveChatMessage[];
         if (mapped.length > 0) {
-          setMessages(mapped);
+          // Merge with existing — keep optimistic messages, don't wipe on reconnect
+          setMessages((prev) => {
+            const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
+            return deduplicateMessages([...mapped, ...optimistic]);
+          });
         }
       }
     });

@@ -300,19 +300,7 @@ export function useSendMessage(conversationId: string) {
       replyTo?: string;
       txHash?: string;
     }): Promise<DmMessage> => {
-      if (msgType === 'media' || msgType === 'voice') {
-        if (!mediaFile) throw new Error('No file provided for media/voice message');
-        const senderId = user?._id || walletAddress || '';
-        return uploadAndSendMedia(mediaFile, conversationId, senderId, {
-          content,
-          msgType,
-          voiceDuration,
-          replyTo,
-          txHash,
-        });
-      }
-
-      // Virtual conversations need createAndStart first to get real ID
+      // Virtual conversations need createAndStart first to get real ID (applies to all message types)
       const isVirtual = conversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(conversationId);
       let resolvedId = conversationId;
       if (isVirtual) {
@@ -330,6 +318,19 @@ export function useSendMessage(conversationId: string) {
           console.error('[useSendMessage] createAndStart failed:', err);
           throw new Error('Could not establish conversation. Please try again.');
         }
+      }
+
+      // Media/voice: upload file then return — resolvedId is now guaranteed real
+      if (msgType === 'media' || msgType === 'voice') {
+        if (!mediaFile) throw new Error('No file provided for media/voice message');
+        const senderId = user?._id || walletAddress || '';
+        return uploadAndSendMedia(mediaFile, resolvedId, senderId, {
+          content,
+          msgType,
+          voiceDuration,
+          replyTo,
+          txHash,
+        });
       }
 
       // Real conversation: emit via socket (fire and forget)

@@ -9,7 +9,7 @@ import { ChatInput } from './ChatInput';
 import { CreateTopicRoomModal } from './CreateTopicRoomModal';
 import { RoomSettingsModal } from './RoomSettingsModal';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatRoomDetails, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
-import { getMediaUrl, pinLiveChatMessage, unpinLiveChatMessage, banLiveChatUser, unbanLiveChatUser, type LiveChatRoom } from '@/lib/api/dehub';
+import { getMediaUrl, pinLiveChatMessage, unpinLiveChatMessage, banLiveChatUser, unbanLiveChatUser, uploadChatImage, type LiveChatRoom } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -130,19 +130,19 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [messages.length]);
 
-  const handleSendMessage = async (args: { content: string; type: string; gifUrl?: string }) => {
+  const handleSendMessage = async (args: { content: string; type: string; gifUrl?: string; mediaFile?: File }) => {
     if (!isAuthenticated || !selectedRoomId) return;
-    // Map ChatInput DM types → LiveChat socket types
-    const typeMap: Record<string, 'text' | 'image' | 'gif' | 'voice'> = {
-      msg: 'text',
-      media: 'image',
-      gif: 'gif',
-      voice: 'voice',
-      text: 'text',
-    };
-    const livechatType = typeMap[args.type] ?? 'text';
     try {
-      await send(args.content || args.gifUrl || '', livechatType, args.gifUrl);
+      if (args.type === 'media' && args.mediaFile) {
+        // Upload image first, then send URL
+        const { url: imageUrl } = await uploadChatImage(args.mediaFile);
+        await send(args.content || '', 'image', imageUrl);
+      } else if (args.type === 'gif' && args.gifUrl) {
+        await send(args.gifUrl, 'gif', args.gifUrl);
+      } else {
+        // msg → text
+        await send(args.content || '', 'text');
+      }
     } catch (err) {
       console.error('[PublicChat] Send failed:', err);
       toast.error('Failed to send message');
