@@ -573,7 +573,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     console.log('[Auth] Requesting signature for address:', authAddress);
     console.log('[Auth] Message:', message);
-    toast.info('Please sign the message in your wallet...');
+    toast.info(i18n.t('toasts.auth.signMessage'));
 
     let signature: string;
     try {
