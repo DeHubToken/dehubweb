@@ -227,66 +227,171 @@ export async function getUserReposts(address: string, page: number = 1, limit: n
 
 /**
  * Get list of users who reposted a specific post (by tokenId).
- * Tries /api/reposts?tokenId=X — returns user account objects.
+ * Backend shape is inconsistent across environments, so we try known variants.
  */
+const normalizeReposter = (entry: any): FollowListItem => {
+  const u = entry?.user || entry?.account || entry?.minterUser || entry?.creator || entry?.owner || entry;
+  return {
+    address:
+      u?.address ||
+      u?.walletAddress ||
+      u?.wallet_address ||
+      u?.minter ||
+      entry?.address ||
+      entry?.walletAddress ||
+      entry?.wallet_address ||
+      entry?.minter ||
+      '',
+    username: u?.username || u?.minterUsername || entry?.username || entry?.minterUsername || undefined,
+    displayName:
+      u?.displayName ||
+      u?.display_name ||
+      u?.minterDisplayName ||
+      entry?.displayName ||
+      entry?.display_name ||
+      entry?.minterDisplayName ||
+      undefined,
+    avatarImageUrl:
+      u?.avatarImageUrl ||
+      u?.avatar_url ||
+      u?.avatarUrl ||
+      u?.minterAvatarUrl ||
+      entry?.avatarImageUrl ||
+      entry?.avatar_url ||
+      entry?.avatarUrl ||
+      entry?.minterAvatarUrl ||
+      undefined,
+    isVerified: !!(u?.isVerified ?? entry?.isVerified),
+    isFollowing: !!(u?.isFollowing ?? entry?.isFollowing),
+    followsYou: !!(u?.followsYou ?? entry?.followsYou),
+  };
+};
+
+const dedupeReposters = (items: FollowListItem[]): FollowListItem[] => {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    if (!item.address) return false;
+    const key = item.address.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+
+const extractRepostersFromPayload = (payload: any): { items: FollowListItem[]; pagination?: any } => {
+  const raw = payload && typeof payload === 'object' && 'result' in payload ? payload.result : payload;
+
+  const candidates: any[] = [];
+  if (Array.isArray(raw)) {
+    candidates.push(...raw);
+  } else if (raw && typeof raw === 'object') {
+    if (Array.isArray(raw.items)) candidates.push(...raw.items);
+
+    // Common alternate shapes from nft_info / activity style responses
+    const arrayKeys = ['reposters', 'repostedBy', 'repostUsers', 'latestReposters', 'users', 'accounts', 'reposts'];
+    for (const key of arrayKeys) {
+      if (Array.isArray((raw as any)[key])) {
+        candidates.push(...(raw as any)[key]);
+      }
+    }
+
+    if (raw.post && typeof raw.post === 'object') {
+      for (const key of arrayKeys) {
+        if (Array.isArray((raw.post as any)[key])) {
+          candidates.push(...(raw.post as any)[key]);
+        }
+      }
+    }
+  }
+
+  // Sometimes array entries are plain addresses
+  const normalized = candidates.map((entry: any) => {
+    if (typeof entry === 'string') {
+      return { address: entry } as FollowListItem;
+    }
+    return normalizeReposter(entry);
+  });
+
+  return {
+    items: dedupeReposters(normalized),
+    pagination: raw?.pagination,
+  };
+};
+
 export async function getPostReposters(
   tokenId: string | number,
   page: number = 1,
   limit: number = 50
 ): Promise<{ items: FollowListItem[]; pagination?: any }> {
-  try {
-    const response = await apiCall<{ result: any; status?: boolean }>("/api/reposts", {
-      params: { tokenId, page, limit },
-    });
-    
-    const raw: any = (response && typeof response === 'object' && 'result' in response)
-      ? (response as any).result
-      : response;
+  const tokenIdString = String(tokenId);
 
-    console.log('[Reposters] raw API response for tokenId', tokenId, JSON.stringify(raw).slice(0, 2000));
+  // Try known endpoint variants first
+  const attempts: Array<{ endpoint: string; params?: Record<string, string | number> }> = [
+    { endpoint: '/api/reposts', params: { tokenId: tokenIdString, page, limit } },
+    { endpoint: `/api/nft/${tokenIdString}/reposts`, params: { page, limit } },
+    { endpoint: `/api/reposts/${tokenIdString}`, params: { page, limit } },
+    { endpoint: '/api/reposters', params: { tokenId: tokenIdString, page, limit } },
+  ];
 
-    let entries: any[];
-    if (raw && typeof raw === 'object' && !Array.isArray(raw) && Array.isArray(raw.items)) {
-      entries = raw.items;
-    } else if (Array.isArray(raw)) {
-      entries = raw;
-    } else {
-      console.log('[Reposters] unexpected shape, returning empty');
-      return { items: [] };
+  for (const attempt of attempts) {
+    try {
+      const response = await apiCall<any>(attempt.endpoint, { params: attempt.params });
+      const parsed = extractRepostersFromPayload(response);
+      if (parsed.items.length > 0) {
+        return parsed;
+      }
+    } catch {
+      // silently try next endpoint shape
     }
-
-    // Each entry could be: a user object, an NFT object, or a wrapper with .user/.account
-    const normalized: FollowListItem[] = entries.map((entry: any) => {
-      // If there's a nested user/account object, prefer that
-      const u = entry.user || entry.account || entry;
-      return {
-        // NFT objects use 'minter' for the wallet address
-        address: u.address || u.walletAddress || u.minter || entry.minter || '',
-        username: u.username || u.minterUsername || entry.minterUsername || undefined,
-        displayName: u.displayName || u.display_name || u.minterDisplayName || entry.minterDisplayName || undefined,
-        avatarImageUrl: u.avatarImageUrl || u.avatar_url || u.avatarUrl || entry.avatarImageUrl || undefined,
-        isVerified: u.isVerified || false,
-        isFollowing: u.isFollowing || false,
-        followsYou: u.followsYou || false,
-      };
-    });
-
-    // Dedupe by address (same user can have multiple repost entries)
-    const seen = new Set<string>();
-    const deduped = normalized.filter(i => {
-      if (!i.address) return false;
-      const key = i.address.toLowerCase();
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-
-    console.log('[Reposters] normalized', deduped.length, 'unique reposters');
-    return { items: deduped, pagination: raw?.pagination };
-  } catch (err) {
-    console.error('[Reposters] fetch error', err);
-    return { items: [] };
   }
+
+  // Fallback: some deployments expose reposter details in nft_info
+  try {
+    const nftInfo = await apiCall<any>(`/api/nft_info/${tokenIdString}`);
+    const parsed = extractRepostersFromPayload(nftInfo);
+    if (parsed.items.length > 0) {
+      return parsed;
+    }
+  } catch {
+    // continue to notification fallback
+  }
+
+  // Final fallback: infer from notifications for this token (owner view)
+  try {
+    const notificationsResponse = await apiCall<any>('/api/notification', {
+      params: { page: 1, limit: Math.max(100, limit), category: 'engagement' },
+      requiresAuth: true,
+    });
+
+    const notifications = notificationsResponse && typeof notificationsResponse === 'object' && 'result' in notificationsResponse
+      ? notificationsResponse.result
+      : notificationsResponse;
+
+    if (Array.isArray(notifications)) {
+      const inferred = notifications
+        .filter((n: any) => String(n?.tokenId ?? '') === tokenIdString)
+        .filter((n: any) => {
+          const type = String(n?.type ?? '').toLowerCase();
+          const content = String(n?.content ?? '').toLowerCase();
+          return type.includes('repost') || content.includes('repost');
+        })
+        .map((n: any) => normalizeReposter({
+          address: n?.actorAddress || n?.actor?.address,
+          username: n?.actorUsername || n?.actor?.username,
+          displayName: n?.actor?.displayName || n?.actorUsername,
+          avatarImageUrl: n?.actorAvatar || n?.actor?.avatarImageUrl || n?.actor?.avatarUrl,
+        }));
+
+      const deduped = dedupeReposters(inferred);
+      if (deduped.length > 0) {
+        return { items: deduped };
+      }
+    }
+  } catch {
+    // no-op
+  }
+
+  return { items: [] };
 }
 
 export async function repostPost(tokenId: number): Promise<{ result: boolean }> {
