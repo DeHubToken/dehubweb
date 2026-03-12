@@ -940,6 +940,8 @@ export default function NotificationsPage() {
     });
     
     const usernameFetches = uniqueNewUsernames.map(async (username) => {
+      const attemptedKey = toUsernameCacheKey(username);
+
       try {
         const { getAccountByUsername } = await import('@/lib/api/dehub');
         const { extractAvatarPath, buildAvatarUrl } = await import('@/lib/media-url');
@@ -947,7 +949,7 @@ export default function NotificationsPage() {
         
         // Detect empty API result (200 OK but no real user data) and avoid caching pseudo identities
         if (!user._id && !user.address && !user.username) {
-          return { resolved: false };
+          return { resolved: false, attemptedKey };
         }
 
         const resolvedUsername = normalizeUsername(user.username || username);
@@ -957,7 +959,7 @@ export default function NotificationsPage() {
         const primaryKey = addressKey || inputKey;
 
         if (!primaryKey) {
-          return { resolved: false };
+          return { resolved: false, attemptedKey };
         }
         
         const rawPath = extractAvatarPath(user);
@@ -979,7 +981,7 @@ export default function NotificationsPage() {
           extraKeys,
         };
       } catch {
-        return { resolved: false };
+        return { resolved: false, attemptedKey };
       }
     });
     
@@ -988,7 +990,16 @@ export default function NotificationsPage() {
         const next = new Map(prev);
 
         for (const r of results) {
-          if (r.status !== 'fulfilled' || !r.value?.resolved || !r.value.key || !r.value.info) continue;
+          if (r.status !== 'fulfilled') continue;
+
+          if (!r.value?.resolved) {
+            if ((r.value as any).attemptedKey) {
+              moduleEnrichedKeys.delete((r.value as any).attemptedKey);
+            }
+            continue;
+          }
+
+          if (!r.value.key || !r.value.info) continue;
 
           next.set(r.value.key, r.value.info as EnrichedAvatar);
           moduleEnrichedKeys.add(r.value.key);
