@@ -510,9 +510,18 @@ function NotificationItem({
             const isPrimaryActor1 = actorName1?.toLowerCase() === primaryActorUsername;
             const avatar1Url = findAvatarByUsername(actorName1) || (isPrimaryActor1 ? avatarUrl : undefined);
             const isPrimaryActor2 = actorName2?.toLowerCase() === primaryActorUsername;
-            const avatar2Url = findAvatarByUsername(actorName2) || (isPrimaryActor2 ? avatarUrl : undefined);
+            let avatar2Url = findAvatarByUsername(actorName2) || (isPrimaryActor2 ? avatarUrl : undefined);
             const isPrimaryActor3 = actorName3?.toLowerCase() === primaryActorUsername;
-            const avatar3Url = findAvatarByUsername(actorName3) || (isPrimaryActor3 ? avatarUrl : undefined);
+            let avatar3Url = findAvatarByUsername(actorName3) || (isPrimaryActor3 ? avatarUrl : undefined);
+            
+            // Safety: if a non-primary actor ended up with the same URL as the primary, clear it
+            // This prevents showing duplicate avatars when enrichment returns wrong data
+            if (avatar2Url && avatar1Url && avatar2Url === avatar1Url && actorName2?.toLowerCase() !== actorName1?.toLowerCase()) {
+              avatar2Url = undefined;
+            }
+            if (avatar3Url && avatar1Url && avatar3Url === avatar1Url && actorName3?.toLowerCase() !== actorName1?.toLowerCase()) {
+              avatar3Url = undefined;
+            }
             
             const renderGridAvatar = (
               url: string | undefined,
