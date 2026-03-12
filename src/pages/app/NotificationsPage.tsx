@@ -49,6 +49,8 @@ interface BundledNotification {
   primary: DeHubNotification;
   /** All notification IDs in this bundle */
   allIds: string[];
+  /** All raw notifications in this bundle (for same-actor: each has its own tokenId/title/thumbnail) */
+  allNotifications: DeHubNotification[];
   /** For same-actor bundles: how many posts they interacted with */
   postCount: number;
   /** For multi-actor bundles: list of actor names */
@@ -114,6 +116,7 @@ function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars
         bundles.push({
           primary: group[0],
           allIds: group.map(g => g.id),
+          allNotifications: group,
           postCount: group.length,
           actorNames: [],
           actorCount: 1,
@@ -128,6 +131,7 @@ function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars
     bundles.push({
       primary: n,
       allIds: [n.id],
+      allNotifications: [n],
       postCount: 1,
       actorNames: [],
       actorCount: 1,
@@ -525,6 +529,7 @@ function NotificationItem({
   const { t } = useTranslation();
   const [isClosing, setIsClosing] = useState(false);
   const [showActorsDrawer, setShowActorsDrawer] = useState(false);
+  const [showPostsDrawer, setShowPostsDrawer] = useState(false);
 
   // Prefer fresh enriched avatar over stale API snapshot
   const enriched = notification.actorAddress ? enrichedAvatars.get(notification.actorAddress.toLowerCase()) : undefined;
@@ -597,8 +602,8 @@ function NotificationItem({
   const { walletAddress } = useAuth();
 
   const handleClick = () => {
-    // If actors drawer is open, don't navigate — user is interacting with the drawer
-    if (showActorsDrawer) return;
+    // If a drawer is open, don't navigate — user is interacting with it
+    if (showActorsDrawer || showPostsDrawer) return;
     
     // Mark all notifications in bundle as read
     if (hasUnread) {
@@ -608,8 +613,13 @@ function NotificationItem({
     // Aggregated follow notifications → open followers drawer inline
     const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 2;
     if (isAggregatedFollow && walletAddress) {
-      // Dispatch custom event to open followers drawer in NotificationsPage
       window.dispatchEvent(new CustomEvent('open-followers-drawer'));
+      return;
+    }
+    
+    // Same-actor bundle with multiple posts → open posts drawer
+    if (bundle.bundleType === 'same-actor' && bundle.postCount > 1) {
+      setShowPostsDrawer(true);
       return;
     }
     
@@ -828,6 +838,44 @@ function NotificationItem({
                     <AvatarFallback className="bg-zinc-700 text-white font-medium">{actor.display.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <span className="text-white text-sm font-medium">@{actorHandle}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Posts drawer — shows all posts in a same-actor bundle */}
+      <Drawer open={showPostsDrawer} onOpenChange={setShowPostsDrawer}>
+        <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[70vh]">
+          <DrawerHeader className="text-center pb-2">
+            <DrawerTitle className="text-white text-base">
+              {notification.type === 'like' ? 'Liked posts' : notification.type === 'comment' ? 'Commented posts' : (notification.type as string) === 'repost' ? 'Reposted posts' : 'Posts'}
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[50vh]" data-vaul-no-drag>
+            {bundle.allNotifications.map((n) => {
+              const thumb = n.tokenThumbnail
+                ? (n.tokenThumbnail.startsWith('http') ? n.tokenThumbnail : `${DEHUB_CDN_BASE}${n.tokenThumbnail}`)
+                : null;
+              const title = n.tokenTitle || 'Untitled post';
+              const link = getNavigationLink(n);
+
+              return (
+                <Link
+                  key={n.id}
+                  to={link || '#'}
+                  onClick={() => setShowPostsDrawer(false)}
+                  className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors"
+                >
+                  {thumb ? (
+                    <img src={thumb} alt={title} className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center flex-shrink-0">
+                      {getNotificationIcon(n.type)}
+                    </div>
+                  )}
+                  <span className="text-white text-sm font-medium line-clamp-2">{title}</span>
                 </Link>
               );
             })}
