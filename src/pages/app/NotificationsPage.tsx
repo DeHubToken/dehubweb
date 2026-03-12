@@ -483,23 +483,24 @@ function NotificationItem({
             const primaryActorUsername = enriched?.username?.toLowerCase() || notification.actorUsername?.toLowerCase();
             
             // Build deduplicated list of unique actor names for the grid
-            // Start with latestActorNames, filter out the primary actor if it's the same as actorAddress
             const allNames = aggNames || [];
             const uniqueGridNames: string[] = [];
             const seenLower = new Set<string>();
             
+            // Add primary actor first if we know their name
+            if (primaryActorUsername) {
+              const primaryDisplayName = enriched?.username || notification.actorUsername || primaryActorUsername;
+              seenLower.add(primaryActorUsername);
+              uniqueGridNames.push(primaryDisplayName);
+            }
+            
+            // Then add remaining unique names from latestActorNames
             for (const name of allNames) {
               const lower = name.toLowerCase();
               if (!seenLower.has(lower)) {
                 seenLower.add(lower);
                 uniqueGridNames.push(name);
               }
-            }
-            
-            // If actorAddress maps to a name already in the list, use that list as-is
-            // If not, prepend the primary actor
-            if (primaryActorUsername && !seenLower.has(primaryActorUsername)) {
-              uniqueGridNames.unshift(notification.actorUsername || primaryActorUsername);
             }
             
             const actorName1 = uniqueGridNames[0] || notification.actorUsername || null;
