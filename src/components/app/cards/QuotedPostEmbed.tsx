@@ -83,7 +83,7 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
             </AvatarFallback>
           </Avatar>
           <span className="text-sm font-semibold text-white truncate">{displayName}</span>
-          <CheckCircle className="w-3.5 h-3.5 text-blue-400 shrink-0 hidden" />
+          <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 hidden" />
           <span className="text-xs text-zinc-500 truncate">@{handle}</span>
         </div>
 

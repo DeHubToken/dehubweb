@@ -535,7 +535,7 @@ export default function BuyCoinsPage() {
             <div className="w-px h-10 bg-zinc-800" />
             <div className="text-center">
               <div className="flex items-center justify-center gap-1.5 mb-1">
-                <Activity className="w-4 h-4 text-blue-400" />
+                <Activity className="w-4 h-4 text-white" />
                 <span className="text-xs text-zinc-400">Transactions</span>
               </div>
               <span className="text-white font-semibold">
