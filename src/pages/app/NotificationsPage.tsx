@@ -501,9 +501,13 @@ function NotificationItem({
             const actorName2 = uniqueGridNames[1] || null;
             const actorName3 = uniqueGridNames[2] || null;
             
-            const avatar1Url = findAvatarByUsername(actorName1) || avatarUrl;
-            const avatar2Url = findAvatarByUsername(actorName2);
-            const avatar3Url = findAvatarByUsername(actorName3);
+            // Only fall back to the notification's avatarUrl if this name IS the primary actor
+            const isPrimaryActor1 = actorName1?.toLowerCase() === primaryActorUsername;
+            const avatar1Url = findAvatarByUsername(actorName1) || (isPrimaryActor1 ? avatarUrl : undefined);
+            const isPrimaryActor2 = actorName2?.toLowerCase() === primaryActorUsername;
+            const avatar2Url = findAvatarByUsername(actorName2) || (isPrimaryActor2 ? avatarUrl : undefined);
+            const isPrimaryActor3 = actorName3?.toLowerCase() === primaryActorUsername;
+            const avatar3Url = findAvatarByUsername(actorName3) || (isPrimaryActor3 ? avatarUrl : undefined);
             
             const renderGridAvatar = (
               url: string | undefined,
