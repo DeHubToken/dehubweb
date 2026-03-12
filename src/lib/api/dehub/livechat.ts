@@ -116,41 +116,52 @@ export async function getLiveChatMessages(
   _roomId: string,
   params?: { page?: number; limit?: number; before?: string; after?: string }
 ): Promise<LiveChatMessage[]> {
-  try {
-    const queryParams: Record<string, string | number | undefined> = {
-      limit: Math.min(params?.limit ?? 100, 100),
-    };
-    if (params?.before) queryParams.before = params.before;
-    if (params?.after) queryParams.after = params.after;
+  const queryParams: Record<string, string | number | undefined> = {
+    limit: Math.min(params?.limit ?? 100, 100),
+  };
+  if (params?.before) queryParams.before = params.before;
+  if (params?.after) queryParams.after = params.after;
 
+  const parse = (response: unknown): LiveChatMessage[] => {
+    const r = response as any;
+    if (r && typeof r === 'object') {
+      if (Array.isArray(r.messages)) return r.messages as LiveChatMessage[];
+      if (r.result && typeof r.result === 'object') {
+        if (Array.isArray(r.result.messages)) return r.result.messages as LiveChatMessage[];
+      }
+      if (Array.isArray(r.data)) return r.data as LiveChatMessage[];
+    }
+    if (Array.isArray(response)) return response as LiveChatMessage[];
+    return [];
+  };
+
+  // Per `doc.md`: GET /api/livechat/rooms/{roomId}/messages
+  try {
+    const response = await apiCall<Record<string, unknown>>(
+      `/api/livechat/rooms/${_roomId}/messages`,
+      { params: queryParams, requiresAuth: false }
+    );
+    const parsed = parse(response);
+    if (parsed.length || (response && typeof response === 'object')) return parsed;
+  } catch (error: any) {
+    console.warn('[LiveChat API] rooms/{roomId}/messages failed:', error?.message);
+  }
+
+  // Backward-compat fallback (older backend): GET /api/livechat/messages
+  try {
     const response = await apiCall<Record<string, unknown>>('/api/livechat/messages', {
       params: queryParams,
       requiresAuth: false,
     });
-
-    // Response shape: { messages: [...], hasMore: boolean }
-    if (response && typeof response === 'object') {
-      if ('messages' in response && Array.isArray(response.messages)) {
-        return response.messages as LiveChatMessage[];
-      }
-      if ('result' in response && typeof response.result === 'object' && response.result !== null) {
-        const inner = response.result as Record<string, unknown>;
-        if ('messages' in inner && Array.isArray(inner.messages)) {
-          return inner.messages as LiveChatMessage[];
-        }
-      }
-      if ('data' in response && Array.isArray(response.data)) {
-        return response.data as LiveChatMessage[];
-      }
+    const parsed = parse(response);
+    if (!parsed.length) {
+      console.warn('[LiveChat API] fallback /api/livechat/messages returned empty/unexpected', response);
     }
-    if (Array.isArray(response)) return response as unknown as LiveChatMessage[];
-
-    console.warn('[LiveChat API] /api/livechat/messages: unexpected response format', response);
+    return parsed;
   } catch (error: any) {
     console.error('[LiveChat API] getLiveChatMessages failed:', error?.message);
+    return [];
   }
-
-  return [];
 }
 
 /**
