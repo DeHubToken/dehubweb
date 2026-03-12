@@ -608,7 +608,7 @@ function NotificationItem({
       {/* Content */}
       <div className="flex-1 min-w-0">
         <p className={`text-sm ${(notification.read || isClosing) ? 'text-zinc-400' : 'text-white'}`}>
-          {getNotificationContent(notification, bundle, t)}
+          {getNotificationContent(notification, bundle, t, () => setShowActorsDrawer(true))}
         </p>
         
         {/* Post preview snippet — for replies/mentions show the comment text, otherwise the post title */}
