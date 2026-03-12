@@ -94,7 +94,7 @@ export function ChatMessage({ message, showActions, moderators, onPin, onUnpin, 
   const isClickable = !!message.userHandle;
 
   return (
-    <div className={`flex gap-3 py-2 px-4 hover:bg-zinc-800/30 transition-colors group ${message.isPinned ? 'bg-yellow-500/5 border-l-2 border-yellow-500/30' : ''}`}>
+    <div id={`chat-msg-${message.id}`} className={`flex gap-3 py-2 px-4 hover:bg-zinc-800/30 transition-colors group ${message.isPinned ? 'bg-yellow-500/5 border-l-2 border-yellow-500/30' : ''}`}>
       <button
         onClick={handleProfileClick}
         disabled={!isClickable}
