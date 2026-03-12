@@ -498,80 +498,42 @@ function NotificationItem({
           const aggCount = (notification as any).aggregatedCount || 1;
           const aggNames = (notification as any).latestActorNames as string[] | undefined;
           
-          // Count unique actors to distinguish "multiple users liked 1 post" from "1 user liked multiple posts"
-          const uniqueActorCount = (() => {
-            const seen = new Set<string>();
-            const primaryName = enriched?.username?.toLowerCase() || notification.actorUsername?.toLowerCase();
-            if (primaryName) seen.add(primaryName);
-            if (aggNames) aggNames.forEach(n => seen.add(n.toLowerCase()));
-            return seen.size;
-          })();
+          // Build one canonical actor list — single source of truth for grid, text, drawer
+          const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username);
+          const uniqueActorCount = canonicalActors.length;
           
           const hasMultipleActors = uniqueActorCount >= 2 && aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string) && bundle.bundleType !== 'same-actor';
           
           if (hasMultipleActors) {
             // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
             
-            // Find avatar URL by username from enriched data — strict match only
-            const findAvatarByUsername = (username: string | null): string | undefined => {
-              if (!username) return undefined;
-              const lower = username.toLowerCase();
-              // First try direct key lookup by username prefix
-              const byKey = enrichedAvatars.get(`username:${lower}`);
-              if (byKey?.avatarUrl && byKey.username?.toLowerCase() === lower) return byKey.avatarUrl;
-              // Then scan all entries for matching username
-              for (const [key, entry] of enrichedAvatars) {
-                if (entry.username?.toLowerCase() === lower && entry.avatarUrl) {
+            // Find avatar URL by normalized username from enriched data
+            const findAvatarByUsername = (key: string): string | undefined => {
+              if (!key) return undefined;
+              const byKey = enrichedAvatars.get(`username:${key}`);
+              if (byKey?.avatarUrl && normalizeUsername(byKey.username) === key) return byKey.avatarUrl;
+              for (const [, entry] of enrichedAvatars) {
+                if (normalizeUsername(entry.username) === key && entry.avatarUrl) {
                   return entry.avatarUrl;
                 }
               }
               return undefined;
             };
             
-            // Find username for the primary actorAddress (to deduplicate)
-            const primaryActorUsername = enriched?.username?.toLowerCase() || notification.actorUsername?.toLowerCase();
+            const primaryKey = normalizeUsername(enriched?.username || notification.actorUsername);
             
-            // Build deduplicated list of unique actor names for the grid
-            const allNames = aggNames || [];
-            const uniqueGridNames: string[] = [];
-            const seenLower = new Set<string>();
+            const actor1 = canonicalActors[0] || null;
+            const actor2 = canonicalActors[1] || null;
+            const actor3 = canonicalActors[2] || null;
             
-            // Add primary actor first if we know their name
-            if (primaryActorUsername) {
-              const primaryDisplayName = enriched?.username || notification.actorUsername || primaryActorUsername;
-              seenLower.add(primaryActorUsername);
-              uniqueGridNames.push(primaryDisplayName);
-            }
+            // Resolve avatars — only fall back to notification's avatarUrl for the primary actor
+            const avatar1Url = actor1 ? (findAvatarByUsername(actor1.key) || (actor1.key === primaryKey ? avatarUrl : undefined)) : undefined;
+            let avatar2Url = actor2 ? (findAvatarByUsername(actor2.key) || (actor2.key === primaryKey ? avatarUrl : undefined)) : undefined;
+            let avatar3Url = actor3 ? (findAvatarByUsername(actor3.key) || (actor3.key === primaryKey ? avatarUrl : undefined)) : undefined;
             
-            // Then add remaining unique names from latestActorNames
-            for (const name of allNames) {
-              const lower = name.toLowerCase();
-              if (!seenLower.has(lower)) {
-                seenLower.add(lower);
-                uniqueGridNames.push(name);
-              }
-            }
-            
-            const actorName1 = uniqueGridNames[0] || notification.actorUsername || null;
-            const actorName2 = uniqueGridNames[1] || null;
-            const actorName3 = uniqueGridNames[2] || null;
-            
-            // Only fall back to the notification's avatarUrl if this name IS the primary actor
-            const isPrimaryActor1 = actorName1?.toLowerCase() === primaryActorUsername;
-            const avatar1Url = findAvatarByUsername(actorName1) || (isPrimaryActor1 ? avatarUrl : undefined);
-            const isPrimaryActor2 = actorName2?.toLowerCase() === primaryActorUsername;
-            let avatar2Url = findAvatarByUsername(actorName2) || (isPrimaryActor2 ? avatarUrl : undefined);
-            const isPrimaryActor3 = actorName3?.toLowerCase() === primaryActorUsername;
-            let avatar3Url = findAvatarByUsername(actorName3) || (isPrimaryActor3 ? avatarUrl : undefined);
-            
-            // Safety: if a non-primary actor ended up with the same URL as the primary, clear it
-            // This prevents showing duplicate avatars when enrichment returns wrong data
-            if (avatar2Url && avatar1Url && avatar2Url === avatar1Url && actorName2?.toLowerCase() !== actorName1?.toLowerCase()) {
-              avatar2Url = undefined;
-            }
-            if (avatar3Url && avatar1Url && avatar3Url === avatar1Url && actorName3?.toLowerCase() !== actorName1?.toLowerCase()) {
-              avatar3Url = undefined;
-            }
+            // Safety: prevent duplicate avatar images across different actors
+            if (avatar2Url && avatar1Url && avatar2Url === avatar1Url && actor2?.key !== actor1?.key) avatar2Url = undefined;
+            if (avatar3Url && avatar1Url && avatar3Url === avatar1Url && actor3?.key !== actor1?.key) avatar3Url = undefined;
             
             const renderGridAvatar = (
               url: string | undefined,
@@ -596,17 +558,13 @@ function NotificationItem({
             
             return (
               <div className="grid grid-cols-2 grid-rows-2 gap-0.5 w-12 h-12 flex-shrink-0">
-                {/* Top-left: primary actor (from latestActorNames[0]) */}
-                {renderGridAvatar(avatar1Url, actorName1 || notification.actorUsername || fallbackLetter, actorName1 ? `/${actorName1}` : profileLink, 'w-[23px] h-[23px]')}
-                {/* Top-right: 2nd actor */}
-                {renderGridAvatar(avatar2Url, actorName2, actorName2 ? `/${actorName2}` : null, 'w-[23px] h-[23px]')}
-                {/* Bottom-left: 3rd actor */}
-                {actorName3 ? (
-                  renderGridAvatar(avatar3Url, actorName3, `/${actorName3}`, 'w-[23px] h-[23px]')
+                {renderGridAvatar(avatar1Url, actor1?.display || fallbackLetter, actor1 ? `/${actor1.display}` : profileLink, 'w-[23px] h-[23px]')}
+                {renderGridAvatar(avatar2Url, actor2?.display || null, actor2 ? `/${actor2.display}` : null, 'w-[23px] h-[23px]')}
+                {actor3 ? (
+                  renderGridAvatar(avatar3Url, actor3.display, `/${actor3.display}`, 'w-[23px] h-[23px]')
                 ) : (
                   renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
                 )}
-                {/* Bottom-right: notification type icon — clickable to show all actors */}
                 <button
                   className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition-colors cursor-pointer"
                   onClick={(e) => {
