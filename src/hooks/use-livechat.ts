@@ -60,7 +60,7 @@ export function useLiveChatRooms() {
 
 /** Convert a DeHub API message to our internal format */
 function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId?: string): SupabaseLiveChatMessage {
-  const raw = msg as Record<string, unknown>;
+  const raw = msg as unknown as Record<string, unknown>;
   const gifUrl = raw?.gif && typeof raw.gif === 'object' && (raw.gif as Record<string, unknown>)?.url;
   return {
     id: msg.id,
