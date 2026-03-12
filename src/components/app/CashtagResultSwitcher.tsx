@@ -173,12 +173,16 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
                       opt.id === selectedId && "bg-zinc-700/30"
                     )}
                   >
-                    <span className="text-xs font-medium px-2 py-0.5 rounded bg-white/10 text-foreground">
+                    <span className="text-xs font-medium px-2 py-0.5 rounded bg-white/10 text-white">
                       {opt.type === 'stock' ? 'Stock' : 'Crypto'}
                     </span>
-                    <div className="flex-1 min-w-0">
-                      <span className="text-foreground text-sm font-medium">{opt.label}</span>
-                      <span className="text-muted-foreground text-xs ml-2">{opt.sublabel}</span>
+                    <div className="flex-1 min-w-0 flex items-center gap-2">
+                      <span className="text-white text-sm font-medium">{opt.label}</span>
+                      {opt.chainLogo ? (
+                        <img src={opt.chainLogo} alt={opt.sublabel} className="w-4 h-4 rounded-md" />
+                      ) : (
+                        <span className="text-white/60 text-xs">{opt.sublabel}</span>
+                      )}
                     </div>
                     {opt.id === selectedId && (
                       <div className="w-1.5 h-1.5 rounded-full bg-foreground" />
