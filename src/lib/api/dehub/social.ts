@@ -243,27 +243,48 @@ export async function getPostReposters(
       ? (response as any).result
       : response;
 
-    let items: any[];
+    console.log('[Reposters] raw API response for tokenId', tokenId, JSON.stringify(raw).slice(0, 2000));
+
+    let entries: any[];
     if (raw && typeof raw === 'object' && !Array.isArray(raw) && Array.isArray(raw.items)) {
-      items = raw.items.map((entry: any) => entry.user || entry.account || entry);
+      entries = raw.items;
     } else if (Array.isArray(raw)) {
-      items = raw.map((entry: any) => entry.user || entry.account || entry);
+      entries = raw;
     } else {
+      console.log('[Reposters] unexpected shape, returning empty');
       return { items: [] };
     }
 
-    const normalized: FollowListItem[] = items.map((u: any) => ({
-      address: u.address || u.walletAddress || u.minter || '',
-      username: u.username || u.minterUsername || undefined,
-      displayName: u.displayName || u.display_name || u.minterDisplayName || undefined,
-      avatarImageUrl: u.avatarImageUrl || u.avatar_url || u.avatarUrl || undefined,
-      isVerified: u.isVerified || false,
-      isFollowing: u.isFollowing || false,
-      followsYou: u.followsYou || false,
-    }));
+    // Each entry could be: a user object, an NFT object, or a wrapper with .user/.account
+    const normalized: FollowListItem[] = entries.map((entry: any) => {
+      // If there's a nested user/account object, prefer that
+      const u = entry.user || entry.account || entry;
+      return {
+        // NFT objects use 'minter' for the wallet address
+        address: u.address || u.walletAddress || u.minter || entry.minter || '',
+        username: u.username || u.minterUsername || entry.minterUsername || undefined,
+        displayName: u.displayName || u.display_name || u.minterDisplayName || entry.minterDisplayName || undefined,
+        avatarImageUrl: u.avatarImageUrl || u.avatar_url || u.avatarUrl || entry.avatarImageUrl || undefined,
+        isVerified: u.isVerified || false,
+        isFollowing: u.isFollowing || false,
+        followsYou: u.followsYou || false,
+      };
+    });
 
-    return { items: normalized.filter(i => !!i.address), pagination: raw?.pagination };
-  } catch {
+    // Dedupe by address (same user can have multiple repost entries)
+    const seen = new Set<string>();
+    const deduped = normalized.filter(i => {
+      if (!i.address) return false;
+      const key = i.address.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    console.log('[Reposters] normalized', deduped.length, 'unique reposters');
+    return { items: deduped, pagination: raw?.pagination };
+  } catch (err) {
+    console.error('[Reposters] fetch error', err);
     return { items: [] };
   }
 }
