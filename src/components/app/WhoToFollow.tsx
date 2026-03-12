@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { getSuggestedAccounts, getCachedSuggestedProfiles, followUser, type SuggestedAccount } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { getBadgeUrl } from '@/lib/staking-badges';
+import { getBadgeUrl, isBigBadge } from '@/lib/staking-badges';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { useFollowedSuggestions } from '@/hooks/use-followed-suggestions';
@@ -229,7 +229,7 @@ export function WhoToFollow() {
                   <img
                     src={getBadgeUrl(user.badgeBalance, user.username)!}
                     alt="badge"
-                    className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0 brightness-0 invert"
+                    className={`w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0 brightness-0 invert${isBigBadge(user.badgeBalance, user.username) ? ' scale-110' : ''}`}
                   />
                 )}
               </span>

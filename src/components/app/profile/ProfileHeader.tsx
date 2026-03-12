@@ -29,6 +29,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
+import { isBigBadgeUrl } from '@/lib/staking-badges';
 import { toast } from 'sonner';
 import { DISPLAY_WALLET_OVERRIDES, getDefaultBanner, type TabValue } from './ProfileConstants';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
@@ -353,7 +354,7 @@ export function ProfileHeader({
                   <img
                     src={badgeUrl}
                     alt="Badge tier"
-                    className="w-[10px] h-[10px] shrink-0 absolute -top-1 right-0 brightness-0 invert"
+                    className={`w-[10px] h-[10px] shrink-0 absolute -top-1 right-0 brightness-0 invert${isBigBadgeUrl(badgeUrl) ? ' scale-110' : ''}`}
                   />
                 )}
               </span>
