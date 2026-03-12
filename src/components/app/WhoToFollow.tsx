@@ -229,7 +229,7 @@ export function WhoToFollow() {
                   <img
                     src={getBadgeUrl(user.badgeBalance, user.username)!}
                     alt="badge"
-                    className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0 brightness-0 invert"
+                    className={`w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0 brightness-0 invert${isBigBadge(user.badgeBalance, user.username) ? ' scale-110' : ''}`}
                   />
                 )}
               </span>

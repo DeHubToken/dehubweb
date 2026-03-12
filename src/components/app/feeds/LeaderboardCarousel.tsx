@@ -73,7 +73,7 @@ const LeaderboardCard = memo(function LeaderboardCard({
           <div className="flex items-center gap-0.5">
             <span className="relative inline-flex items-baseline shrink min-w-0">
               <span className="text-sm font-semibold text-white truncate">{displayName}</span>
-              {badgeUrl && <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3 brightness-0 invert" />}
+              {badgeUrl && <img src={badgeUrl} alt="Badge" className={`w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3 brightness-0 invert${isBigBadge(entry.badgeBalance || entry.total) ? ' scale-110' : ''}`} />}
             </span>
           </div>
         </div>

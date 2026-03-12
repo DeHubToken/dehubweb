@@ -24,7 +24,7 @@ import dehubLogo from '@/assets/dehub-logo.png';
 function ConversationBadge({ badgeBalance }: { badgeBalance?: number }) {
   const badgeUrl = getBadgeUrl(badgeBalance);
   if (!badgeUrl) return null;
-  return <img src={badgeUrl} alt="Badge" className="w-[14px] h-[14px] shrink-0 brightness-0 invert" />;
+  return <img src={badgeUrl} alt="Badge" className={`w-[14px] h-[14px] shrink-0 brightness-0 invert${isBigBadge(badgeBalance) ? ' scale-110' : ''}`} />;
 }
 
 function ConversationsSkeleton() {

@@ -113,7 +113,7 @@ export function CardHeader({
                 <img
                   src={badgeUrl}
                   alt="Badge"
-                  className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0 brightness-0 invert"
+                  className={`w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0 brightness-0 invert${isBigBadge(badgeBalance, handle || username) ? ' scale-110' : ''}`}
                 />
               )}
             </span>

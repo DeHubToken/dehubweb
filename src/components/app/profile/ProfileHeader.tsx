@@ -353,7 +353,7 @@ export function ProfileHeader({
                   <img
                     src={badgeUrl}
                     alt="Badge tier"
-                    className="w-[10px] h-[10px] shrink-0 absolute -top-1 right-0 brightness-0 invert"
+                    className={`w-[10px] h-[10px] shrink-0 absolute -top-1 right-0 brightness-0 invert${isBigBadgeUrl(badgeUrl) ? ' scale-110' : ''}`}
                   />
                 )}
               </span>
