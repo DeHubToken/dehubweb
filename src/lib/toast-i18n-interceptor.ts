@@ -121,22 +121,6 @@ for (const method of methodNames) {
     const { text: translated, wasTranslated } = translateToast(msg);
     const translatedOpts = translateDescription(opts);
 
-    const userLang = getUserLang();
-    const needsTranslateButton = !wasTranslated && userLang !== 'en' && msg.length >= 2;
-
-    if (needsTranslateButton) {
-      // Generate a stable toast ID so we can replace it
-      const toastId = opts?.id || `toast-translate-${Date.now()}`;
-      return original(translated, {
-        ...translatedOpts,
-        id: toastId,
-        action: {
-          label: createElement(Languages, { className: 'w-3.5 h-3.5' }),
-          onClick: () => onDemandTranslate(msg, opts, method, toastId as string | number),
-        },
-      });
-    }
-
     return original(translated, translatedOpts);
   };
 }
