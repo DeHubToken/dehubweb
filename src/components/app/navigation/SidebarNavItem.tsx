@@ -111,7 +111,7 @@ export function SidebarNavItem({
         )}>
           <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
         </div>
-        <span className={cn("relative z-10 truncate", labelClass)}>{translatedLabel}</span>
+        <span className={cn("relative z-10 truncate", labelClass)}>{safeLabel}</span>
       </a>
     );
   }
