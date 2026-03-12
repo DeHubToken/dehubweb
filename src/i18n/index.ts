@@ -9,6 +9,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import en from './locales/en.json';
+import { fillMissingTranslations } from './fill-missing-translations';
 
 const STORAGE_KEY = 'user-preferred-language';
 
