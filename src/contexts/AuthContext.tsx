@@ -589,6 +589,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     console.log('[Auth] Wagmi signature received, authenticating with backend...');
 
+    // Address guard: prevent silent account switch during session refresh
+    if (walletAddress && walletAddress.toLowerCase() !== authAddress.toLowerCase()) {
+      console.error('[Auth] Address mismatch during refresh!', { expected: walletAddress, got: authAddress });
+      throw new Error('Wallet address changed during session refresh. Please sign in again.');
+    }
+
     const BASE_CHAIN_ID = 8453;
     const authResponse = await authenticateWallet(
       authAddress,
