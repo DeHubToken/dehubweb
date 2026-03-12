@@ -171,6 +171,11 @@ export default function GlossaryPage() {
         }),
         { icon: <Trophy size={iconSize} />, title: t('glossary.leaderboardRanking', 'Leaderboard Ranking'), description: t('glossary.leaderboardRankingDesc', 'Users are ranked by total DHB balance (wallet + staked across all chains). Rankings update periodically and track 1-day and 1-week changes. You can also sort by tips sent, tips received, followers, likes, or subscribers.') },
         { icon: <TrendingUp size={iconSize} />, title: t('glossary.delta', 'Ranking Delta (▲▼)'), description: t('glossary.deltaDesc', 'The green or red arrow next to a leaderboard entry shows how much a user\'s balance changed over the selected time period (1 day, 1 week, etc.).') },
+        ...MEDALS.map((medal, i) => ({
+          icon: <img src={medal} alt={`Rank ${i + 1}`} className="w-6 h-6 object-contain" />,
+          title: `#${i + 1} Trophy`,
+          description: `Awarded to the #${i + 1} ranked user on the leaderboard. Displayed next to their avatar.`,
+        })),
         { icon: <Zap size={iconSize} />, title: t('glossary.tokenId', 'Token ID'), description: t('glossary.tokenIdDesc', 'A unique on-chain identifier assigned to each post when it\'s minted as an NFT on the blockchain.') },
       ],
     },
