@@ -1,17 +1,32 @@
 import { useState, useCallback } from 'react';
-import { Pin, ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages } from 'lucide-react';
+import { Pin, ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages, SmilePlus, Reply, CornerDownRight } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TranslatableText, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useTextTranslation } from '../TranslatableText';
 import { useNavigate } from 'react-router-dom';
-
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+
+/** Reaction data: emoji → list of addresses who reacted */
+export interface ReactionData {
+  [emoji: string]: string[];
+}
+
+export interface ReplyToData {
+  id: string;
+  content: string;
+  senderName: string;
+}
 
 export interface Message {
   id: string;
@@ -24,21 +39,28 @@ export interface Message {
   type: 'text' | 'image' | 'gif';
   imageUrl?: string;
   isPinned?: boolean;
+  reactions?: ReactionData;
+  replyTo?: ReplyToData;
 }
 
 interface ChatMessageProps {
   message: Message;
   showActions?: boolean;
   moderators?: string[];
+  currentUserAddress?: string;
   onPin?: (messageId: string) => void;
   onUnpin?: (messageId: string) => void;
   onBan?: (userId: string, userName: string) => void;
   onUnban?: (userId: string, userName: string) => void;
+  onReact?: (messageId: string, emoji: string) => void;
+  onRemoveReaction?: (messageId: string, emoji: string) => void;
+  onReply?: (message: Message) => void;
 }
+
+const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
 
 /** Inline moderator badge shown next to the username */
 function ModeratorBadge({ address, moderators }: { address: string; moderators?: string[] }) {
-  // Check against room's moderators list (source of truth from API)
   const isMod = moderators?.some(
     (mod) => mod.toLowerCase() === address.toLowerCase()
   );
@@ -56,14 +78,74 @@ function ModeratorBadge({ address, moderators }: { address: string; moderators?:
   );
 }
 
-
 /** Inline staking badge — no longer fetched via edge function (livechat has no badge data) */
 function StakingBadgeInline({ address: _address }: { address: string }) {
   return null;
 }
 
-export function ChatMessage({ message, showActions, moderators, onPin, onUnpin, onBan, onUnban }: ChatMessageProps) {
+/** Reaction pills displayed below a message */
+function ReactionBar({
+  reactions,
+  currentUserAddress,
+  onReact,
+  onRemoveReaction,
+  messageId,
+}: {
+  reactions: ReactionData;
+  currentUserAddress?: string;
+  onReact?: (messageId: string, emoji: string) => void;
+  onRemoveReaction?: (messageId: string, emoji: string) => void;
+  messageId: string;
+}) {
+  const entries = Object.entries(reactions).filter(([, addrs]) => addrs.length > 0);
+  if (entries.length === 0) return null;
+
+  return (
+    <div className="flex flex-wrap gap-1 mt-1">
+      {entries.map(([emoji, addresses]) => {
+        const myReaction = currentUserAddress
+          ? addresses.some((a) => a.toLowerCase() === currentUserAddress.toLowerCase())
+          : false;
+        return (
+          <button
+            key={emoji}
+            onClick={() => {
+              if (myReaction) {
+                onRemoveReaction?.(messageId, emoji);
+              } else {
+                onReact?.(messageId, emoji);
+              }
+            }}
+            className={`inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded-full border transition-colors ${
+              myReaction
+                ? 'border-primary/40 bg-primary/10 text-primary'
+                : 'border-zinc-700 bg-zinc-800/50 text-zinc-400 hover:border-zinc-600'
+            }`}
+          >
+            <span>{emoji}</span>
+            <span className="text-[10px]">{addresses.length}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+export function ChatMessage({
+  message,
+  showActions,
+  moderators,
+  currentUserAddress,
+  onPin,
+  onUnpin,
+  onBan,
+  onUnban,
+  onReact,
+  onRemoveReaction,
+  onReply,
+}: ChatMessageProps) {
   const navigate = useNavigate();
+  const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const {
     isTranslated,
     translatedText,
@@ -91,6 +173,11 @@ export function ChatMessage({ message, showActions, moderators, onPin, onUnpin, 
     }
   };
 
+  const handleQuickReact = useCallback((emoji: string) => {
+    onReact?.(message.id, emoji);
+    setEmojiPickerOpen(false);
+  }, [message.id, onReact]);
+
   const isClickable = !!message.userHandle;
 
   return (
@@ -109,6 +196,25 @@ export function ChatMessage({ message, showActions, moderators, onPin, onUnpin, 
       </button>
       
       <div className="flex-1 min-w-0">
+        {/* Reply indicator */}
+        {message.replyTo && (
+          <button
+            onClick={() => {
+              const el = document.getElementById(`chat-msg-${message.replyTo!.id}`);
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('ring-1', 'ring-primary/40');
+                setTimeout(() => el.classList.remove('ring-1', 'ring-primary/40'), 2000);
+              }
+            }}
+            className="flex items-center gap-1.5 text-[11px] text-zinc-500 hover:text-zinc-300 mb-0.5 transition-colors"
+          >
+            <CornerDownRight className="w-3 h-3" />
+            <span className="font-medium">{message.replyTo.senderName}</span>
+            <span className="truncate max-w-[200px]">{message.replyTo.content}</span>
+          </button>
+        )}
+
         <div className="flex items-baseline gap-2">
           <span className="relative inline-flex items-baseline">
             <button
@@ -128,9 +234,58 @@ export function ChatMessage({ message, showActions, moderators, onPin, onUnpin, 
             </span>
           )}
           
-          {/* Action menu - visible on hover */}
-          {showActions && (
-            <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+          {/* Action buttons - visible on hover */}
+          <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
+            {/* Reply button */}
+            {onReply && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => onReply(message)}
+                    className="p-1 text-zinc-500 hover:text-white transition-colors rounded-lg hover:bg-zinc-700/50"
+                  >
+                    <Reply className="w-3.5 h-3.5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Reply</TooltipContent>
+              </Tooltip>
+            )}
+
+            {/* Reaction picker */}
+            {onReact && (
+              <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <PopoverTrigger asChild>
+                      <button className="p-1 text-zinc-500 hover:text-white transition-colors rounded-lg hover:bg-zinc-700/50">
+                        <SmilePlus className="w-3.5 h-3.5" />
+                      </button>
+                    </PopoverTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent>React</TooltipContent>
+                </Tooltip>
+                <PopoverContent
+                  side="top"
+                  align="end"
+                  className="w-auto p-1.5 bg-zinc-800 border-zinc-700 rounded-xl"
+                >
+                  <div className="flex gap-0.5">
+                    {QUICK_EMOJIS.map((emoji) => (
+                      <button
+                        key={emoji}
+                        onClick={() => handleQuickReact(emoji)}
+                        className="w-8 h-8 flex items-center justify-center text-lg hover:bg-zinc-700 rounded-lg transition-colors"
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            )}
+
+            {/* Mod actions */}
+            {showActions && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="p-1 text-zinc-500 hover:text-white transition-colors rounded-lg hover:bg-zinc-700/50">
@@ -173,8 +328,8 @@ export function ChatMessage({ message, showActions, moderators, onPin, onUnpin, 
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>
-            </div>
-          )}
+            )}
+          </div>
         </div>
         
         {message.type === 'text' && (
@@ -243,6 +398,17 @@ export function ChatMessage({ message, showActions, moderators, onPin, onUnpin, 
               className="max-w-xs max-h-48 rounded-lg"
             />
           </div>
+        )}
+
+        {/* Reactions display */}
+        {message.reactions && (
+          <ReactionBar
+            reactions={message.reactions}
+            currentUserAddress={currentUserAddress}
+            onReact={onReact}
+            onRemoveReaction={onRemoveReaction}
+            messageId={message.id}
+          />
         )}
       </div>
     </div>

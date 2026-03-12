@@ -10,8 +10,14 @@ import {
   type LiveChatMessage,
   type LiveChatUserProfile,
 } from '@/lib/api/dehub';
-import { getSocket, joinRoom, leaveRoom, emitSendMessage, onLiveChatMessage, onRoomJoined, onMessageDeleted, onUserBanned, onUserUnbanned, debugSocketEvents } from '@/lib/api/dehub/socket';
+import {
+  getSocket, joinRoom, leaveRoom, emitSendMessage,
+  onLiveChatMessage, onRoomJoined, onMessageDeleted,
+  onUserBanned, onUserUnbanned, onReactionUpdated,
+  emitAddReaction, emitRemoveReaction, debugSocketEvents,
+} from '@/lib/api/dehub/socket';
 import { useAuth } from '@/contexts/AuthContext';
+import type { ReactionData, ReplyToData } from '@/components/app/chat/ChatMessage';
 
 /** Shape of a livechat message used internally in the UI */
 export interface SupabaseLiveChatMessage {
@@ -26,6 +32,12 @@ export interface SupabaseLiveChatMessage {
   image_url: string | null;
   is_pinned: boolean;
   created_at: string;
+  reactions?: ReactionData;
+  reply_to?: {
+    id: string;
+    content: string;
+    sender_name: string;
+  };
 }
 
 export function useLiveChatRooms() {
@@ -58,6 +70,35 @@ export function useLiveChatRooms() {
   return { rooms, isLoading, error, refetch: fetchRooms };
 }
 
+/** Parse reaction data from API — could be { emoji: [addr] } or { emoji: count } */
+function parseReactions(raw: unknown): ReactionData | undefined {
+  if (!raw || typeof raw !== 'object') return undefined;
+  const result: ReactionData = {};
+  for (const [key, val] of Object.entries(raw as Record<string, unknown>)) {
+    if (Array.isArray(val)) {
+      result[key] = val as string[];
+    } else if (typeof val === 'number' && val > 0) {
+      // If API only gives counts, create placeholder array
+      result[key] = Array.from({ length: val }, (_, i) => `unknown-${i}`);
+    }
+  }
+  return Object.keys(result).length > 0 ? result : undefined;
+}
+
+/** Parse reply-to data from API */
+function parseReplyTo(raw: unknown): { id: string; content: string; sender_name: string } | undefined {
+  if (!raw || typeof raw !== 'object') return undefined;
+  const r = raw as Record<string, unknown>;
+  const id = r.id || r._id || r.messageId;
+  if (!id) return undefined;
+  const sender = r.sender as Record<string, unknown> | undefined;
+  return {
+    id: String(id),
+    content: String(r.content || ''),
+    sender_name: String(sender?.username || sender?.displayName || sender?.address || 'User'),
+  };
+}
+
 /** Convert a DeHub API message to our internal format */
 function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId?: string): SupabaseLiveChatMessage {
   const raw = msg as unknown as Record<string, unknown>;
@@ -74,6 +115,8 @@ function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId
     image_url: msg.imageUrl || (typeof gifUrl === 'string' ? gifUrl : null) || ((raw as any).media?.[0]?.url ?? null),
     is_pinned: msg.isPinned || false,
     created_at: msg.createdAt,
+    reactions: parseReactions(msg.reactions || (raw as any).reactions),
+    reply_to: parseReplyTo((raw as any).replyTo || (raw as any).reply_to || (raw as any).parentMessage),
   };
 }
 
@@ -110,18 +153,13 @@ function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChatMessage
     image_url: (m.imageUrl ?? m.image_url ?? null) as string | null,
     is_pinned: (m.isPinned ?? m.is_pinned ?? false) as boolean,
     created_at: (m.createdAt ?? m.created_at ?? new Date().toISOString()) as string,
+    reactions: parseReactions(m.reactions),
+    reply_to: parseReplyTo(m.replyTo || m.reply_to || m.parentMessage),
   };
 }
 
 /**
  * Livechat messages hook.
- *
- * Flow:
- * 1. Connect to /livechat namespace socket
- * 2. On livechat:roomJoined → receive initial messages
- * 3. On livechat:newMessage → append new messages
- * 4. Fallback: REST GET for history
- * 5. Send: socket livechat:sendMessage
  */
 export function useLiveChatMessages(roomId: string | null) {
   const [messages, setMessages] = useState<SupabaseLiveChatMessage[]>([]);
@@ -132,8 +170,6 @@ export function useLiveChatMessages(roomId: string | null) {
   const { isAuthenticated, user, walletAddress } = useAuth();
   const initialLoadDone = useRef(false);
 
-  // Fetch messages via REST API — source of truth for history (roomJoined must not overwrite)
-  // Merge with current state: keep optimistic (temp-*) messages that are not yet in API response
   const fetchMessages = useCallback(async (showLoading = false) => {
     if (!roomId) return;
     if (showLoading) setIsLoading(true);
@@ -160,8 +196,6 @@ export function useLiveChatMessages(roomId: string | null) {
     }
   }, [roomId]);
 
-  // Load messages via REST on mount / room change only — NOT on auth changes
-  // Hydrate from cache first so remounts (auth flicker) don't show empty list
   useEffect(() => {
     if (!roomId) {
       setMessages([]);
@@ -174,7 +208,7 @@ export function useLiveChatMessages(roomId: string | null) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId]);
 
-  // Socket connection for real-time updates (supplementary)
+  // Socket connection for real-time updates
   useEffect(() => {
     if (!roomId) return;
 
@@ -197,16 +231,12 @@ export function useLiveChatMessages(roomId: string | null) {
       joinRoom(roomId);
     }
 
-    // Handle roomJoined — use ONLY for isBanned. Never overwrite messages from roomJoined.
-    // REST fetch on mount is the source of truth for history. roomJoined can fire before/after
-    // REST and would overwrite with stale/empty data, causing messages to vanish on navigate back.
     const unsubJoined = onRoomJoined((data) => {
       console.log('[LiveChat] Room joined, banned:', data.isBanned);
       setIsBanned(data.isBanned || false);
       initialLoadDone.current = true;
     });
 
-    // Listen for new messages — replace matching optimistic (temp-*) to avoid ghost duplicates
     const unsubMsg = onLiveChatMessage((msg) => {
       const local = socketMsgToLocal(msg, roomId);
       if (local) {
@@ -225,6 +255,19 @@ export function useLiveChatMessages(roomId: string | null) {
       setMessages((prev) => prev.filter((m) => m.id !== data.messageId));
     });
 
+    // Handle reaction updates from other users
+    const unsubReaction = onReactionUpdated((data: unknown) => {
+      const d = data as Record<string, unknown>;
+      const messageId = String(d.messageId || d.message_id || '');
+      if (!messageId) return;
+      const reactions = parseReactions(d.reactions);
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === messageId ? { ...m, reactions } : m
+        )
+      );
+    });
+
     const unsubBanned = onUserBanned((data) => {
       setIsBanned(true);
       toast.error(data.message || 'You have been banned from chat');
@@ -239,6 +282,7 @@ export function useLiveChatMessages(roomId: string | null) {
       unsubJoined();
       unsubMsg();
       unsubDeleted();
+      unsubReaction();
       unsubBanned();
       unsubUnbanned();
       unsubDebug();
@@ -252,7 +296,8 @@ export function useLiveChatMessages(roomId: string | null) {
     async (
       content: string,
       type: 'text' | 'image' | 'gif' | 'voice' = 'text',
-      imageUrl?: string
+      imageUrl?: string,
+      replyToId?: string
     ) => {
       if (!roomId || !isAuthenticated || !walletAddress) return;
       if (isBanned) {
@@ -284,7 +329,6 @@ export function useLiveChatMessages(roomId: string | null) {
       try {
         const socket = getSocket();
         if (!socket.connected) {
-          // Wait briefly for connection
           await new Promise<void>((resolve, reject) => {
             const timeout = setTimeout(() => reject(new Error('Socket connection timeout')), 5000);
             socket.once('connect', () => { clearTimeout(timeout); resolve(); });
@@ -292,12 +336,9 @@ export function useLiveChatMessages(roomId: string | null) {
           });
         }
 
-        // Map 'image'/'voice' to the API-supported 'media' type
         const apiType = type === 'image' || type === 'voice' ? 'media' : type;
-        emitSendMessage({ roomId, content, messageType: apiType, imageUrl });
+        emitSendMessage({ roomId, content, messageType: apiType, imageUrl, replyTo: replyToId });
 
-        // Server may not echo newMessage back to sender — refetch so we get the confirmed message.
-        // Merge keeps our optimistic until API returns it, so message never disappears.
         setTimeout(() => { fetchMessages(false); }, 1500);
       } catch (err: any) {
         setMessages((prev) => {
@@ -315,11 +356,52 @@ export function useLiveChatMessages(roomId: string | null) {
     [roomId, isAuthenticated, walletAddress, user, isBanned, fetchMessages]
   );
 
-  return { messages, isLoading, isSending, isConnected, isBanned, send, refetch: () => fetchMessages(false) };
+  const addReaction = useCallback((messageId: string, emoji: string) => {
+    if (!isAuthenticated || !walletAddress) {
+      toast.error('Sign in to react');
+      return;
+    }
+    // Optimistic update
+    setMessages((prev) =>
+      prev.map((m) => {
+        if (m.id !== messageId) return m;
+        const reactions = { ...(m.reactions || {}) };
+        const existing = reactions[emoji] || [];
+        if (!existing.some((a) => a.toLowerCase() === walletAddress.toLowerCase())) {
+          reactions[emoji] = [...existing, walletAddress.toLowerCase()];
+        }
+        return { ...m, reactions };
+      })
+    );
+    emitAddReaction(messageId, emoji);
+  }, [isAuthenticated, walletAddress]);
+
+  const removeReaction = useCallback((messageId: string, emoji: string) => {
+    if (!walletAddress) return;
+    // Optimistic update
+    setMessages((prev) =>
+      prev.map((m) => {
+        if (m.id !== messageId) return m;
+        const reactions = { ...(m.reactions || {}) };
+        reactions[emoji] = (reactions[emoji] || []).filter(
+          (a) => a.toLowerCase() !== walletAddress.toLowerCase()
+        );
+        if (reactions[emoji].length === 0) delete reactions[emoji];
+        return { ...m, reactions: Object.keys(reactions).length > 0 ? reactions : undefined };
+      })
+    );
+    emitRemoveReaction(messageId, emoji);
+  }, [walletAddress]);
+
+  return {
+    messages, isLoading, isSending, isConnected, isBanned,
+    send, addReaction, removeReaction,
+    refetch: () => fetchMessages(false),
+  };
 }
 
 /**
- * Presence hook — fetches online count from /api/livechat/online
+ * Presence hook
  */
 export function useLiveChatPresence(_roomId: string | null) {
   const [onlineCount, setOnlineCount] = useState(0);
@@ -339,18 +421,12 @@ export function useLiveChatPresence(_roomId: string | null) {
   };
 }
 
-/**
- * Fetch full details for a single livechat room.
- */
 export function useLiveChatRoomDetails(roomId: string | null) {
   const [room, setRoom] = useState<LiveChatRoom | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetch = useCallback(async () => {
-    if (!roomId) {
-      setRoom(null);
-      return;
-    }
+    if (!roomId) { setRoom(null); return; }
     setIsLoading(true);
     try {
       const data = await getLiveChatRoom(roomId);
@@ -362,25 +438,17 @@ export function useLiveChatRoomDetails(roomId: string | null) {
     }
   }, [roomId]);
 
-  useEffect(() => {
-    fetch();
-  }, [fetch]);
+  useEffect(() => { fetch(); }, [fetch]);
 
   return { room, isLoading, refetch: fetch };
 }
 
-/**
- * Fetch a livechat user's profile by wallet address.
- */
 export function useLiveChatUser(address: string | null) {
   const [profile, setProfile] = useState<LiveChatUserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetch = useCallback(async () => {
-    if (!address) {
-      setProfile(null);
-      return;
-    }
+    if (!address) { setProfile(null); return; }
     setIsLoading(true);
     try {
       const data = await getLiveChatUserProfile(address);
@@ -392,9 +460,7 @@ export function useLiveChatUser(address: string | null) {
     }
   }, [address]);
 
-  useEffect(() => {
-    fetch();
-  }, [fetch]);
+  useEffect(() => { fetch(); }, [fetch]);
 
   return { profile, isLoading, refetch: fetch };
 }

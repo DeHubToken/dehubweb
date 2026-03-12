@@ -38,6 +38,12 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
     type: (msg.message_type as Message['type']) || 'text',
     imageUrl: msg.image_url ? getMediaUrl(msg.image_url) : (msg.message_type === 'gif' && msg.content ? getMediaUrl(msg.content) : undefined),
     isPinned: msg.is_pinned || false,
+    reactions: msg.reactions,
+    replyTo: msg.reply_to ? {
+      id: msg.reply_to.id,
+      content: msg.reply_to.content,
+      senderName: msg.reply_to.sender_name,
+    } : undefined,
   };
 }
 
@@ -51,6 +57,9 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // Search state
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Reply state
+  const [replyTo, setReplyTo] = useState<Message | null>(null);
 
   // Translation state
   const [translateSignal, setTranslateSignal] = useState(0);
@@ -70,15 +79,18 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [rooms, selectedRoomId]);
 
-  const { messages: apiMessages, isLoading: messagesLoading, isSending, isBanned, send, refetch } = useLiveChatMessages(selectedRoomId);
+  const {
+    messages: apiMessages, isLoading: messagesLoading, isSending, isBanned,
+    send, addReaction, removeReaction, refetch,
+  } = useLiveChatMessages(selectedRoomId);
 
-  // Fetch full room details (description, moderators, messageCount) for the selected room
+  // Fetch full room details
   const { room: roomDetails } = useLiveChatRoomDetails(selectedRoomId);
 
   // Online presence
   const { onlineCount } = useLiveChatPresence(selectedRoomId);
 
-  // Determine if current user is a moderator for this room
+  // Determine if current user is a moderator
   const isModerator = useMemo(() => {
     if (!walletAddress || !roomDetails?.moderators) return false;
     return roomDetails.moderators.some(
@@ -130,18 +142,26 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [messages.length]);
 
+  const handleReply = useCallback((message: Message) => {
+    setReplyTo(message);
+  }, []);
+
+  const handleCancelReply = useCallback(() => {
+    setReplyTo(null);
+  }, []);
+
   const handleSendMessage = async (args: { content: string; type: string; gifUrl?: string; mediaFile?: File }) => {
     if (!isAuthenticated || !selectedRoomId) return;
+    const replyToId = replyTo?.id;
+    setReplyTo(null); // Clear reply after sending
     try {
       if (args.type === 'media' && args.mediaFile) {
-        // Upload image first, then send URL
         const { url: imageUrl } = await uploadChatImage(args.mediaFile);
-        await send(args.content || '', 'image', imageUrl);
+        await send(args.content || '', 'image', imageUrl, replyToId);
       } else if (args.type === 'gif' && args.gifUrl) {
-        await send(args.gifUrl, 'gif', args.gifUrl);
+        await send(args.gifUrl, 'gif', args.gifUrl, replyToId);
       } else {
-        // msg → text
-        await send(args.content || '', 'text');
+        await send(args.content || '', 'text', undefined, replyToId);
       }
     } catch (err) {
       console.error('[PublicChat] Send failed:', err);
@@ -209,7 +229,6 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // Merge list-level room data with the richer single-room details
   const selectedRoom = rooms.find((r) => r.id === selectedRoomId) || null;
   const enrichedRoom = roomDetails || selectedRoom;
-  // Only show skeleton on true initial load (no messages yet), not on background refetches
   const isLoading = roomsLoading || (messagesLoading && apiMessages.length === 0);
   const roomName = t('publicChat.title');
   const roomDescription = t('publicChat.allThingsDeHub');
@@ -427,10 +446,14 @@ export function PublicChat({ onBack }: PublicChatProps) {
                 message={message}
                 showActions={isModerator}
                 moderators={roomDetails?.moderators}
+                currentUserAddress={walletAddress || undefined}
                 onPin={handlePinMessage}
                 onUnpin={handleUnpinMessage}
                 onBan={handleBanUser}
                 onUnban={handleUnbanUser}
+                onReact={isAuthenticated ? addReaction : undefined}
+                onRemoveReaction={isAuthenticated ? removeReaction : undefined}
+                onReply={isAuthenticated ? handleReply : undefined}
               />
             ))
           )}
@@ -447,7 +470,11 @@ export function PublicChat({ onBack }: PublicChatProps) {
             Sending...
           </div>
         )}
-        <ChatInput onSendMessage={handleSendMessage} />
+        <ChatInput
+          onSendMessage={handleSendMessage}
+          replyTo={replyTo}
+          onCancelReply={handleCancelReply}
+        />
       </div>
 
       {/* Modals */}
