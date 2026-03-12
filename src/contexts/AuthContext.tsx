@@ -1110,6 +1110,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const token = getAuthToken();
     if (token && !isTokenExpired()) return true;
 
+    // Capture current wallet before refresh to detect silent swaps
+    const walletBefore = walletAddress || localStorage.getItem('dehub_wallet');
+
     // For wagmi users: if wagmi is still connected, re-sign silently
     const savedSource = localStorage.getItem('dehub_connection_source');
     if ((connectionSource === 'wagmi' || savedSource === 'wagmi') && isWagmiConnected && wagmiAddress) {
@@ -1118,6 +1121,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setConnectionSource('wagmi');
         localStorage.setItem('dehub_connection_source', 'wagmi');
         await completeDeHubAuthWagmi(wagmiAddress);
+        // Safety net: verify wallet didn't change
+        const walletAfter = localStorage.getItem('dehub_wallet');
+        if (walletBefore && walletAfter && walletBefore.toLowerCase() !== walletAfter.toLowerCase()) {
+          console.error('[Auth] CRITICAL: Wallet changed during refresh!', { before: walletBefore, after: walletAfter });
+          await logout();
+          return false;
+        }
         return true;
       } catch (e) {
         console.warn('[Auth] Silent wagmi re-auth failed:', e);
@@ -1132,6 +1142,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (w3a.connected && w3a.provider) {
           console.log('[Auth] Attempting silent Web3Auth re-auth');
           await completeDeHubAuth(w3a.provider);
+          // Safety net: verify wallet didn't change
+          const walletAfter = localStorage.getItem('dehub_wallet');
+          if (walletBefore && walletAfter && walletBefore.toLowerCase() !== walletAfter.toLowerCase()) {
+            console.error('[Auth] CRITICAL: Wallet changed during refresh!', { before: walletBefore, after: walletAfter });
+            await logout();
+            return false;
+          }
           return true;
         }
       } catch (e) {
