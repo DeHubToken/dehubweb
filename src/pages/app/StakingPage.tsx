@@ -570,7 +570,7 @@ export default function StakingPage() {
                   <span className="text-sm text-white/70 font-mono">{truncateAddress(event.wallet)}</span>
                   <span className="text-sm text-white font-medium text-right">{event.amount} <span className="text-white/40 text-xs">DHB</span></span>
                   <span className="text-center">
-                    <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium", event.chain === 'BNB' ? "bg-yellow-500/10 text-yellow-400/80" : "bg-blue-500/10 text-blue-400/80")}>{event.chain}</span>
+                    <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium", event.chain === 'BNB' ? "bg-yellow-500/10 text-yellow-400/80" : "bg-zinc-500/10 text-zinc-300")}>{event.chain}</span>
                   </span>
                   <span className="text-xs text-white/40 text-right">{timeAgo(event.timestamp)}</span>
                   <a href={getExplorerUrl(event.txHash, event.chain)} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-7 h-7 rounded-lg hover:bg-white/10 transition-colors">
