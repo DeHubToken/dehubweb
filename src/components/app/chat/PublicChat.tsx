@@ -343,20 +343,30 @@ export function PublicChat({ onBack }: PublicChatProps) {
 
       {/* Pinned message banner */}
       {pinnedMessage && (
-        <div className="flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border-b border-yellow-500/20 text-sm">
+        <button
+          onClick={() => {
+            const el = document.getElementById(`chat-msg-${pinnedMessage.id}`);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              el.classList.add('ring-2', 'ring-yellow-500/50');
+              setTimeout(() => el.classList.remove('ring-2', 'ring-yellow-500/50'), 2000);
+            }
+          }}
+          className="flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border-b border-yellow-500/20 text-sm w-full text-left hover:bg-yellow-500/15 transition-colors cursor-pointer"
+        >
           <Pin className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
           <span className="text-yellow-200/80 font-medium text-xs truncate">
             {pinnedMessage.userName}: {pinnedMessage.content}
           </span>
           {isModerator && (
-            <button
-              onClick={() => handleUnpinMessage(pinnedMessage.id)}
+            <span
+              onClick={(e) => { e.stopPropagation(); handleUnpinMessage(pinnedMessage.id); }}
               className="ml-auto text-yellow-500/50 hover:text-yellow-300 text-xs flex-shrink-0"
             >
               Unpin
-            </button>
+            </span>
           )}
-        </div>
+        </button>
       )}
       
       {/* Messages Area */}
