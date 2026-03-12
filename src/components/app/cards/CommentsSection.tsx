@@ -379,8 +379,8 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
                     onClick={() => translation.isTranslated ? translation.handleShowOriginal() : translation.handleTranslate()}
                     className={cn(
                       "transition-colors",
-                      translation.isLoading ? "text-blue-400" : 
-                      translation.isTranslated ? "text-blue-400" : "text-white hover:text-zinc-400"
+                      translation.isLoading ? "text-white/60" : 
+                      translation.isTranslated ? "text-white" : "text-white hover:text-zinc-400"
                     )}
                     aria-label="Translate"
                     disabled={translation.isLoading}
