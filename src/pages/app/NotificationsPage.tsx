@@ -1012,7 +1012,6 @@ export default function NotificationsPage() {
     const uniqueNewUsernames = [...new Set(aggregatedActorUsernames)];
     
     if (uniqueNewAddresses.length === 0 && uniqueNewUsernames.length === 0) {
-      setEnrichmentReady(true);
       return;
     }
     
