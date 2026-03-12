@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
 import i18n, { loadLanguage } from '@/i18n';
 
 const STORAGE_KEY = 'user-preferred-language';
@@ -31,10 +32,13 @@ export function useUserLanguage() {
   }, []);
 
   const setPreferredLanguage = useCallback(async (lang: string) => {
+    const ok = await loadLanguage(lang);
+    if (!ok) {
+      toast.error('Could not load language. Please try again.');
+      return;
+    }
     setLanguage(lang);
     localStorage.setItem(STORAGE_KEY, lang);
-    // Lazy-load locale then switch
-    await loadLanguage(lang);
     i18n.changeLanguage(lang);
   }, []);
 

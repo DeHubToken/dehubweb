@@ -245,18 +245,23 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
 };
 
 /**
- * Lazy-load a locale's translations. Returns immediately if already loaded.
+ * Lazy-load a locale's translations. Returns true if loaded (or already loaded), false if failed.
  */
-export async function loadLanguage(lang: string): Promise<void> {
-  if (lang === 'en') return; // already bundled
-  if (i18n.hasResourceBundle(lang, 'translation')) return; // already loaded
+export async function loadLanguage(lang: string): Promise<boolean> {
+  if (lang === 'en') return true; // already bundled
+  if (i18n.hasResourceBundle(lang, 'translation')) return true; // already loaded
   const loader = localeLoaders[lang];
-  if (!loader) return; // unsupported language, will fall back to en
+  if (!loader) {
+    console.warn(`[i18n] No loader for locale "${lang}"`);
+    return false;
+  }
   try {
     const module = await loader();
     i18n.addResourceBundle(lang, 'translation', module.default, true, true);
+    return true;
   } catch (err) {
-    console.warn(`[i18n] Failed to load locale "${lang}", falling back to English`, err);
+    console.warn(`[i18n] Failed to load locale "${lang}"`, err);
+    return false;
   }
 }
 
@@ -271,8 +276,8 @@ i18n.use(initReactI18next).init({
 
 // If user's preferred language isn't English, lazy-load it immediately
 if (defaultLang && defaultLang !== 'en') {
-  loadLanguage(defaultLang).then(() => {
-    i18n.changeLanguage(defaultLang);
+  loadLanguage(defaultLang).then((ok) => {
+    if (ok) i18n.changeLanguage(defaultLang);
   });
 }
 
