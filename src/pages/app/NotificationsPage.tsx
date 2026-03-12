@@ -212,8 +212,24 @@ function buildCanonicalActors(
   enrichedUsername: string | null | undefined,
   enrichedAvatarsMap?: Map<string, EnrichedAvatar>,
 ): { display: string; key: string; resolvedUsername?: string }[] {
-  const actors: { display: string; key: string }[] = [];
+  const actors: { display: string; key: string; resolvedUsername?: string }[] = [];
   const seen = new Set<string>();
+
+  // Helper: find the real username from enriched data for a given normalized key
+  const resolveUsername = (key: string, displayName: string): string | undefined => {
+    if (!enrichedAvatarsMap || !key) return undefined;
+    // Check direct username key
+    const byKey = enrichedAvatarsMap.get(`username:${key}`);
+    if (byKey?.username && byKey.username !== displayName) return byKey.username;
+    // Scan all entries
+    for (const [, entry] of enrichedAvatarsMap) {
+      if (normalizeUsername(entry.username) === key || normalizeUsername(entry.displayName) === key) {
+        if (entry.username && normalizeUsername(entry.username) !== key) return entry.username;
+        if (entry.username) return entry.username;
+      }
+    }
+    return undefined;
+  };
 
   // latestActorNames is the primary source (order preserved from API)
   if (latestActorNames) {
@@ -221,7 +237,7 @@ function buildCanonicalActors(
       const key = normalizeUsername(name);
       if (key && !seen.has(key)) {
         seen.add(key);
-        actors.push({ display: name.trim(), key });
+        actors.push({ display: name.trim(), key, resolvedUsername: resolveUsername(key, name.trim()) });
       }
     }
   }
@@ -231,7 +247,7 @@ function buildCanonicalActors(
   const primaryDisplay = (enrichedUsername || primaryUsername || '').trim();
   if (primaryKey && !seen.has(primaryKey) && primaryDisplay) {
     seen.add(primaryKey);
-    actors.push({ display: primaryDisplay, key: primaryKey });
+    actors.push({ display: primaryDisplay, key: primaryKey, resolvedUsername: resolveUsername(primaryKey, primaryDisplay) });
   }
 
   return actors;
