@@ -704,7 +704,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw new Error('No Smart Account address available.');
     } catch (err: any) {
       console.error('[Auth] [REDIRECT] Sequence failed:', err);
-      toast.error(err.message || 'Authentication failed', { id: 'auth-redirect' });
+      toast.error(err.message || i18n.t('toasts.auth.authFailed'), { id: 'auth-redirect' });
       setIsProcessingRedirect(false);
       setIsLoading(false);
     }
