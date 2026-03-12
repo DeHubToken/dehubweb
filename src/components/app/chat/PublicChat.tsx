@@ -130,10 +130,19 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [messages.length]);
 
-  const handleSendMessage = async (args: { content: string; type: string }) => {
+  const handleSendMessage = async (args: { content: string; type: string; gifUrl?: string }) => {
     if (!isAuthenticated || !selectedRoomId) return;
+    // Map ChatInput DM types → LiveChat socket types
+    const typeMap: Record<string, 'text' | 'image' | 'gif' | 'voice'> = {
+      msg: 'text',
+      media: 'image',
+      gif: 'gif',
+      voice: 'voice',
+      text: 'text',
+    };
+    const livechatType = typeMap[args.type] ?? 'text';
     try {
-      await send(args.content, args.type as any);
+      await send(args.content || args.gifUrl || '', livechatType, args.gifUrl);
     } catch (err) {
       console.error('[PublicChat] Send failed:', err);
       toast.error('Failed to send message');
