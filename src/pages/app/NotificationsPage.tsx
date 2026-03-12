@@ -985,15 +985,9 @@ export default function NotificationsPage() {
   // Batch-avatar enrichment for fresh profile pictures
   // Module-level caches persist across navigations to prevent avatar flashing
   const [enrichedAvatars, setEnrichedAvatars] = useState<Map<string, EnrichedAvatar>>(() => moduleAvatarCache);
-  const [enrichmentReady, setEnrichmentReady] = useState(() => moduleAvatarCache.size > 0);
+  
 
-  // Safety reset: clear any stale username alias cache that may have been produced by older dedupe logic
-  useEffect(() => {
-    moduleAvatarCache = new Map();
-    moduleEnrichedKeys.clear();
-    setEnrichedAvatars(new Map());
-    setEnrichmentReady(false);
-  }, []);
+  // Module-level caches persist across navigations — no clearing on mount
 
   useEffect(() => {
     if (!allNotifications.length) return;
@@ -1018,7 +1012,6 @@ export default function NotificationsPage() {
     const uniqueNewUsernames = [...new Set(aggregatedActorUsernames)];
     
     if (uniqueNewAddresses.length === 0 && uniqueNewUsernames.length === 0) {
-      setEnrichmentReady(true);
       return;
     }
     
@@ -1109,38 +1102,35 @@ export default function NotificationsPage() {
       }
     });
     
-    Promise.allSettled([...addressFetches, ...usernameFetches]).then((results) => {
-      setEnrichedAvatars(prev => {
-        const next = new Map(prev);
-
-        for (const r of results) {
-          if (r.status !== 'fulfilled') continue;
-
-          if (!r.value?.resolved) {
-            if ((r.value as any).attemptedKey) {
-              moduleEnrichedKeys.delete((r.value as any).attemptedKey);
-            }
-            continue;
+    // Incremental enrichment: update state as each fetch resolves individually
+    const allFetches = [...addressFetches, ...usernameFetches];
+    for (const fetchPromise of allFetches) {
+      fetchPromise.then((value) => {
+        if (!value?.resolved) {
+          if ((value as any).attemptedKey) {
+            moduleEnrichedKeys.delete((value as any).attemptedKey);
           }
+          return;
+        }
+        if (!value.key || !value.info) return;
 
-          if (!r.value.key || !r.value.info) continue;
+        setEnrichedAvatars(prev => {
+          const next = new Map(prev);
+          next.set(value.key!, value.info as EnrichedAvatar);
+          moduleEnrichedKeys.add(value.key!);
 
-          next.set(r.value.key, r.value.info as EnrichedAvatar);
-          moduleEnrichedKeys.add(r.value.key);
-
-          const extras = (r.value.extraKeys || []).filter(Boolean);
+          const extras = ((value as any).extraKeys || []).filter(Boolean);
           for (const ek of extras) {
-            next.set(ek, r.value.info as EnrichedAvatar);
+            next.set(ek, value.info as EnrichedAvatar);
             moduleEnrichedKeys.add(ek);
           }
-        }
 
-        // Sync to module-level cache so it persists across navigations
-        moduleAvatarCache = next;
-        return next;
-      });
-      setEnrichmentReady(true);
-    });
+          // Sync to module-level cache
+          moduleAvatarCache = next;
+          return next;
+        });
+      }).catch(() => { /* individual fetch failed, skip */ });
+    }
   }, [allNotifications]);
 
   const [markingNotificationId, setMarkingNotificationId] = useState<string | null>(null);
@@ -1423,7 +1413,7 @@ export default function NotificationsPage() {
       {/* Notifications List */}
       <div className="px-2 sm:px-3 pt-2 pb-2">
         <div className="bg-zinc-900 rounded-2xl overflow-hidden">
-          {isLoading || (notifications.length > 0 && !enrichmentReady) ? (
+          {isLoading ? (
             <div className="flex justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-zinc-500" />
             </div>
