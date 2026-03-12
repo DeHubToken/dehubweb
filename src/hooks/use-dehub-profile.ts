@@ -6,7 +6,7 @@
  * @module hooks/use-dehub-profile
  */
 
-import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import i18n from 'i18next';
 import { getAccountInfo, getAccountByUsername, getAuthToken, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
@@ -172,6 +172,9 @@ export function useDeHubProfile({ userId, username, address, enabled = true }: U
     enabled: enabled && !!(userId || username),
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 2,
+    // Keep showing previous profile data when address changes (auth resolves)
+    // instead of flashing skeleton while refetching with the new address
+    placeholderData: keepPreviousData,
   });
 
   // Helper to update follow status optimistically
