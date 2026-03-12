@@ -210,7 +210,8 @@ function buildCanonicalActors(
   latestActorNames: string[] | undefined,
   primaryUsername: string | null | undefined,
   enrichedUsername: string | null | undefined,
-): { display: string; key: string }[] {
+  enrichedAvatarsMap?: Map<string, EnrichedAvatar>,
+): { display: string; key: string; resolvedUsername?: string }[] {
   const actors: { display: string; key: string }[] = [];
   const seen = new Set<string>();
 
