@@ -127,6 +127,15 @@ export function getBadgeInfo(badgeBalance: number | string | undefined | null, u
 }
 
 /**
+ * Returns true if the badge is a shark or whale tier (excluding Megalodon) — rendered 10% larger.
+ */
+const BIG_BADGES = new Set(["Tiger Shark", "Killer Whale", "Great White Shark", "Blue Whale"]);
+export function isBigBadge(badgeBalance: number | string | undefined | null, username?: string | null): boolean {
+  const name = getBadgeName(badgeBalance, username);
+  return name ? BIG_BADGES.has(name) : false;
+}
+
+/**
  * Export badge levels for reference (e.g., tooltip showing all tiers)
  */
 export { BADGE_LEVELS };
