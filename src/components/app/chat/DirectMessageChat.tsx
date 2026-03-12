@@ -138,6 +138,16 @@ function MessageBubble({
 
   const primaryMediaUrl = message.mediaUrls?.[0]?.url;
 
+  const textContent = message.content || '';
+  const {
+    isTranslated,
+    translatedText,
+    isLoading: isTranslating,
+    isTooShort,
+    handleTranslate,
+    handleShowOriginal,
+  } = useTranslation(textContent);
+
   return (
     <div className={`flex gap-3 py-2 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
       {!isOwnMessage && (
