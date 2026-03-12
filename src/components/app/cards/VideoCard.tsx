@@ -180,7 +180,7 @@ function MobileCreatorInfo({
             <div className="flex items-center gap-1.5">
               <span className="font-semibold text-white text-sm leading-tight truncate">{channel}</span>
               {verified && (
-                <svg className="w-3.5 h-3.5 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <svg className="w-3.5 h-3.5 text-white shrink-0" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
                 </svg>
               )}

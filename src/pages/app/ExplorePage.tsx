@@ -203,7 +203,7 @@ const FilterDropdown = ({
                     {option}
                   </span>
                   {value === option && (
-                    <Check className="w-4 h-4 text-primary" />
+                    <Check className="w-4 h-4 text-white" />
                   )}
                 </button>
               ))
@@ -949,7 +949,7 @@ export default function ExplorePage() {
                     {activeTab === 'all' && searchResults.users.length > 5 && (
                       <button
                         onClick={() => setActiveTab('people')}
-                        className="text-primary text-sm mt-3 hover:underline"
+                        className="text-white text-sm mt-3 hover:underline"
                       >
                         {t('explorePage.viewAllPeople', { count: searchResults.users.length })}
                       </button>

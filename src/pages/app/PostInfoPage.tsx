@@ -403,10 +403,10 @@ export default function PostInfoPage() {
         <div className="flex flex-col items-center justify-center p-8 text-center max-w-md mx-auto mt-16">
           {/* Animated processing indicator */}
           <div className="relative mb-6">
-            <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-              <Loader2 className="w-10 h-10 text-primary animate-spin" />
+            <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-white/15 to-white/5 flex items-center justify-center">
+              <Loader2 className="w-10 h-10 text-white animate-spin" />
             </div>
-            <div className="absolute inset-0 rounded-xl bg-primary/10 animate-ping" />
+            <div className="absolute inset-0 rounded-xl bg-white/10 animate-ping" />
           </div>
           
           <h2 className="text-xl font-semibold text-white mb-3">
@@ -461,7 +461,7 @@ export default function PostInfoPage() {
           <p className="text-white/60 mb-4">{error?.message || 'Post not found'}</p>
           <button
             onClick={() => navigate(-1)}
-            className="text-primary hover:underline"
+            className="text-white hover:underline"
           >
             {t('postInfo.goBack')}
           </button>

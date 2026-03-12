@@ -47,7 +47,7 @@ interface CardHeaderProps {
  */
 const CONTENT_BADGES: Record<ContentType, { label: string; className: string }> = {
   post: { label: 'Post', className: 'bg-zinc-500/20 text-zinc-400' },
-  video: { label: 'Video', className: 'bg-blue-500/20 text-blue-400' },
+  video: { label: 'Video', className: 'bg-zinc-500/20 text-zinc-300' },
   image: { label: 'Image', className: 'bg-purple-500/20 text-purple-400' },
   live: { label: 'LIVE', className: 'bg-red-500 text-white' },
   short: { label: 'Short', className: 'bg-pink-500/20 text-pink-400' },
@@ -112,7 +112,7 @@ export function CardHeader({
               <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
               <BadgeIcon badgeBalance={badgeBalance} username={handle || username} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
             </span>
-            {verified && <CheckCircle className="w-3.5 h-3.5 text-blue-500 shrink-0" />}
+            {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />}
             
           </div>
           <div className="flex items-center gap-1 min-w-0">

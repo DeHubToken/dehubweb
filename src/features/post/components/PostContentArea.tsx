@@ -79,7 +79,7 @@ function createLinkChip(url: string): HTMLSpanElement {
   chip.setAttribute('data-link-chip', 'true');
   chip.setAttribute('data-url', url);
   chip.contentEditable = 'false';
-  chip.className = 'inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 bg-primary/20 text-primary rounded-lg text-sm cursor-pointer hover:bg-primary/30 transition-colors';
+  chip.className = 'inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 bg-white/10 text-white rounded-lg text-sm cursor-pointer hover:bg-white/20 transition-colors';
   chip.innerHTML = `🔗`;
   chip.title = url;
   chip.onclick = (e) => {

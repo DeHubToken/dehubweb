@@ -357,7 +357,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
               {depositStatus?.tx_hash && (
                 <button
                   onClick={() => window.open(`https://basescan.org/tx/${depositStatus.tx_hash}`, '_blank')}
-                  className="text-xs text-blue-400 flex items-center gap-1 hover:underline"
+                  className="text-xs text-white flex items-center gap-1 hover:underline"
                 >
                   View on BaseScan <ExternalLink className="w-3 h-3" />
                 </button>

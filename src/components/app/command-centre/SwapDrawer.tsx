@@ -193,7 +193,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
               {txHash && (
                 <button
                   onClick={() => window.open(`https://basescan.org/tx/${txHash}`, '_blank')}
-                  className="text-xs text-blue-400 flex items-center gap-1 hover:underline"
+                  className="text-xs text-white flex items-center gap-1 hover:underline"
                 >
                   View on BaseScan <ExternalLink className="w-3 h-3" />
                 </button>

@@ -7,7 +7,7 @@ interface VerifiedBadgeProps {
 export function VerifiedBadge({ className }: VerifiedBadgeProps) {
   return (
     <svg
-      className={cn('w-4 h-4 text-blue-400 flex-shrink-0', className)}
+      className={cn('w-4 h-4 text-white flex-shrink-0', className)}
       fill="currentColor"
       viewBox="0 0 24 24"
       aria-label="Verified account"
