@@ -58,9 +58,9 @@ function GlossaryCard({ icon, title, description }: GlossaryEntry) {
   );
 }
 
-function SectionBlock({ title, entries }: GlossarySection) {
+function SectionBlock({ title, entries, id }: GlossarySection & { id?: string }) {
   return (
-    <div className="mb-6">
+    <div className="mb-6" id={id}>
       <h2 className="text-base font-bold text-white mb-3 flex items-center gap-2">
         <div className="w-1 h-5 rounded-full bg-gradient-to-b from-purple-500 to-blue-500" />
         {title}
