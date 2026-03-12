@@ -797,36 +797,26 @@ function NotificationItem({
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[50vh]" data-vaul-no-drag>
-            {(() => {
-              const aggNames = (notification as any).latestActorNames as string[] | undefined;
-              const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username, enrichedAvatars);
-              const findAvatar = (actor: { key: string; canonicalId: string }) => {
-                // Try by address/canonicalId
-                const byAddr = enrichedAvatars.get(actor.canonicalId);
-                if (byAddr?.avatarUrl) return byAddr.avatarUrl;
-                // Try by username key
-                const byKey = enrichedAvatars.get(`username:${actor.key}`);
-                if (byKey?.avatarUrl) return byKey.avatarUrl;
-                for (const [, entry] of enrichedAvatars) {
-                  if ((normalizeUsername(entry.username) === actor.key || entry.address?.toLowerCase() === actor.canonicalId) && entry.avatarUrl) return entry.avatarUrl;
-                }
-                return undefined;
-              };
-              return canonicalActors.map((actor) => (
+            {canonicalActors.map((actor) => {
+              const actorLink = resolveActorProfileLink(actor, enrichedAvatars);
+              const actorAvatar = resolveActorAvatar(actor);
+              const actorHandle = normalizeUsername(actor.resolvedUsername || actor.key || actor.display) || actor.display;
+
+              return (
                 <Link
-                  key={actor.key}
-                  to={resolveActorProfileLink(actor) || '#'}
+                  key={actor.canonicalId}
+                  to={actorLink || '#'}
                   onClick={() => setShowActorsDrawer(false)}
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors"
                 >
                   <Avatar className="w-10 h-10">
-                    {findAvatar(actor) && <AvatarImage src={findAvatar(actor)!} />}
+                    {actorAvatar && <AvatarImage src={actorAvatar} />}
                     <AvatarFallback className="bg-zinc-700 text-white font-medium">{actor.display.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
-                  <span className="text-white text-sm font-medium">@{actor.display}</span>
+                  <span className="text-white text-sm font-medium">@{actorHandle}</span>
                 </Link>
-              ));
-            })()}
+              );
+            })}
           </div>
         </DrawerContent>
       </Drawer>
