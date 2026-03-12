@@ -116,14 +116,21 @@ function ReactionBar({
                 onReact?.(messageId, emoji);
               }
             }}
-            className={`inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded-full border transition-colors ${
+            className={`group/reaction inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded-full border transition-colors ${
               myReaction
                 ? 'border-primary/40 bg-primary/10 text-primary'
                 : 'border-zinc-700 bg-zinc-800/50 text-zinc-400 hover:border-zinc-600'
             }`}
           >
             <span>{emoji}</span>
-            <span className="text-[10px]">{addresses.length}</span>
+            {myReaction ? (
+              <>
+                <span className="text-[10px] group-hover/reaction:hidden">{addresses.length}</span>
+                <X className="w-3 h-3 hidden group-hover/reaction:block text-primary/70" />
+              </>
+            ) : (
+              <span className="text-[10px]">{addresses.length}</span>
+            )}
           </button>
         );
       })}
