@@ -27,19 +27,6 @@ interface PublicChatProps {
 
 /** Map Supabase livechat message to local ChatMessage format */
 function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
-  const baseType = msg.message_type || 'text';
-  const mappedType: Message['type'] =
-    baseType === 'gif' ? 'gif' :
-    baseType === 'media' ? 'image' :
-    'text';
-
-  const imageUrl =
-    msg.image_url
-      ? getMediaUrl(msg.image_url)
-      : (baseType === 'gif' && msg.content
-          ? getMediaUrl(msg.content)
-          : undefined);
-
   return {
     id: msg.id,
     userId: msg.sender_address || 'unknown',
@@ -48,8 +35,8 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
     userAvatar: buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url) || undefined,
     content: msg.content || '',
     timestamp: new Date(msg.created_at),
-    type: mappedType,
-    imageUrl,
+    type: (msg.message_type as Message['type']) || 'text',
+    imageUrl: msg.image_url ? getMediaUrl(msg.image_url) : (msg.message_type === 'gif' && msg.content ? getMediaUrl(msg.content) : undefined),
     isPinned: msg.is_pinned || false,
     reactions: msg.reactions,
     replyTo: msg.reply_to ? {

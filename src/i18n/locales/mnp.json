@@ -1101,4 +1101,5 @@
     "noStories": "还无故事"
   }
 ,"profileOptions": { "copyProfileUrl": "复制资料链接", "copyUsername": "复制用户名", "copyAddress": "复制地址", "openWallet": "打开钱包", "message": "发消息", "sendTip": "打赏", "notify": "通知", "makeOffer": "出价", "unfollow": "取消关注", "block": "拉黑", "unblock": "取消拉黑", "profileUrlCopied": "资料链接已复制", "usernameCopied": "用户名已复制", "addressCopied": "地址已复制", "noWalletAddress": "没有可用的钱包地址", "notificationsEnabled": "已为此资料开启通知" }
+,"toasts": { "saved_to_bookmarks": "已保存到书签", "removed_from_bookmarks": "已从书签移除", "copied_to_clipboard": "已复制到剪贴板", "post_deleted": "帖子已删除", "comment_posted": "评论已发布！", "comment_deleted": "评论已删除", "reposted": "已转发！", "signed_in_successfully": "登录成功", "signed_out": "已退出登录", "signing_in": "登录中...", "failed_to_post_comment": "评论发布失败", "failed_to_send_message": "消息发送失败", "payment_failed": "支付失败", "log_in_to_comment": "登录后评论", "transaction_rejected": "交易被拒绝", "copied": "已复制！", "message_sent": "消息已发送！", "sending": "发送中...", "processing": "处理中...", "uploading": "上传中...", "deleting": "删除中..." }
 }
