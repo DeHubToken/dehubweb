@@ -79,16 +79,25 @@ function NotificationPostCards({ tokenIds }: { tokenIds: number[] }) {
   return (
     <div className="space-y-3">
       {feedItems.map((item) => {
+        let card: React.ReactNode = null;
         switch (item.type) {
           case 'video':
-            return <VideoCard key={item.id} video={item} />;
+            card = <VideoCard key={item.id} video={item} />;
+            break;
           case 'image':
-            return <ImageCard key={item.id} post={item} />;
+            card = <ImageCard key={item.id} post={item} />;
+            break;
           case 'post':
-            return <PostCard key={item.id} post={item} />;
+            card = <PostCard key={item.id} post={item} />;
+            break;
           default:
             return null;
         }
+        return (
+          <div key={item.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3">
+            {card}
+          </div>
+        );
       })}
     </div>
   );
