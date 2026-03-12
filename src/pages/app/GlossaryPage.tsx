@@ -78,9 +78,17 @@ function SectionBlock({ title, entries, id }: GlossarySection & { id?: string })
 
 export default function GlossaryPage() {
   const { t } = useTranslation();
+  const location = useLocation();
   const iconSize = 18;
 
-  const sections: GlossarySection[] = [
+  useEffect(() => {
+    if (location.hash) {
+      const el = document.getElementById(location.hash.slice(1));
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+  }, [location.hash]);
+
+  const sections: (GlossarySection & { id?: string })[] = [
     {
       title: t('glossary.sections.postInteractions', 'Post Interactions'),
       entries: [
