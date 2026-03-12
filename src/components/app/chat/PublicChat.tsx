@@ -451,8 +451,8 @@ export function PublicChat({ onBack }: PublicChatProps) {
                 onUnpin={handleUnpinMessage}
                 onBan={handleBanUser}
                 onUnban={handleUnbanUser}
-                onReact={isAuthenticated ? addReaction : undefined}
-                onRemoveReaction={isAuthenticated ? removeReaction : undefined}
+                onReact={addReaction}
+                onRemoveReaction={removeReaction}
                 onReply={isAuthenticated ? handleReply : undefined}
               />
             ))
