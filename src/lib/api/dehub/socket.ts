@@ -209,12 +209,17 @@ export function onUserUnbanned(cb: (data: { message: string }) => void): () => v
 /** Add/remove reactions */
 export function emitAddReaction(messageId: string, emoji: string) {
   const s = getSocket();
-  s.emit('addReaction', { messageId, emoji });
+  const payload = { messageId, emoji };
+  // Support both legacy and namespaced events
+  s.emit('addReaction', payload);
+  s.emit('livechat:addReaction', payload);
 }
 
 export function emitRemoveReaction(messageId: string, emoji: string) {
   const s = getSocket();
-  s.emit('removeReaction', { messageId, emoji });
+  const payload = { messageId, emoji };
+  s.emit('removeReaction', payload);
+  s.emit('livechat:removeReaction', payload);
 }
 
 /** Typing indicator */

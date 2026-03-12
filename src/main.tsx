@@ -4,7 +4,6 @@ import { clearChunkReloadFlag } from "./lib/lazy-with-retry";
 import App from "./App.tsx";
 import "./i18n";
 import "./lib/toast-i18n-interceptor"; // Auto-translate all toast messages
-import "./i18n/auth-toast-translations"; // Runtime auth toast translations for all languages
 import "./index.css";
 import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
 
