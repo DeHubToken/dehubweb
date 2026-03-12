@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { AppLayout } from "./components/app/AppLayout";
 import React, { Suspense } from "react";
+import { useTranslation } from "react-i18next";
 
 // Pages — lazy loaded
 const Index = React.lazy(() => import("./pages/Index"));
@@ -95,12 +96,13 @@ const queryClient = new QueryClient({
 // Inner app component that uses auth context
 function AppContent() {
   const { isLoginModalOpen, closeLoginModal } = useAuth();
+  const { i18n } = useTranslation();
   
   // Preload 3D icons on app mount to prevent flicker during navigation
   usePreloadIcons();
   
   return (
-    <>
+    <div key={i18n.language}>
       <Sonner />
       <UsernameRequiredModal />
       <LoginModal open={isLoginModalOpen} onOpenChange={closeLoginModal} />
@@ -161,8 +163,8 @@ function AppContent() {
           </Routes>
         </Suspense>
       </BrowserRouter>
-      </>
-    );
+    </div>
+  );
 }
 
 import { WagmiProvider } from 'wagmi';
