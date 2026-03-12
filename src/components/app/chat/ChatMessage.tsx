@@ -116,7 +116,7 @@ function ReactionBar({
                 onReact?.(messageId, emoji);
               }
             }}
-            className={`group/reaction inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded-full border transition-colors ${
+            className={`group/reaction inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded-md border transition-colors ${
               myReaction
                 ? 'border-white/30 bg-white/10 text-white'
                 : 'border-zinc-700 bg-zinc-800/50 text-zinc-400 hover:border-zinc-600'
