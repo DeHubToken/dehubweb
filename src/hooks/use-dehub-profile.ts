@@ -161,6 +161,12 @@ export function useDeHubProfile({ userId, username, address, enabled = true }: U
         throw new Error('Either userId or username is required');
       }
       
+      // Guard: API may return 200 with an empty shell (no _id, address, or username).
+      // Treat this as "not found" so the profile page shows an error state.
+      if (!user._id && !user.address && !user.wallet_address && !user.username) {
+        throw new Error('Profile not found');
+      }
+      
       return mapUserToProfile(user);
     },
     enabled: enabled && !!(userId || username),

@@ -1,39 +1,35 @@
 
 
-## Problem
+## Fix: Auto-reload on chunk load failures
 
-The API call `GET /api/account_info/SableRaven_9847` returns 200 but with an **empty result** — no `_id`, no `username`, no `address`. This means the backend username lookup is **case-sensitive**. `SableRaven_9847` is a **display name** from `latestActorNames`, not the actual username.
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-The notification grid and drawer link to `/${actor.display}` (e.g. `/SableRaven_9847`), but the profile page then looks up that exact casing via the API and gets nothing back — resulting in the "Unknown Profile" / empty state.
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-Two issues to fix:
+### Changes
 
-## Fix 1: Use enriched username for profile links (NotificationsPage)
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-When enrichment fetches `getAccountInfo("SableRaven_9847")`, the API returns an empty result (no username). But if the enrichment had resolved a wallet address + real username, it should be used for links.
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
 
-**In `NotificationsPage.tsx`:**
-- In the grid rendering (lines 560-563) and drawer links (line 719), replace `/${actor.display}` with a resolved username from enriched data when available.
-- Add a helper `resolveActorLink(actor)` that checks the enriched cache for a matching key and returns `/${enrichedUsername}` if found, or falls back to `/${actor.display}`.
-- Also store the enriched `username` keyed by `username:${normalizedDisplayName}` so lookups by display name work.
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
 
-## Fix 2: Treat empty API results as "not found" (ProfilePage / mapUserToProfile)
-
-When the API returns `{"result": {"balanceData":[], "followersList":[], ...}}` with no `_id`, no `username`, no `address`:
-
-**In `use-dehub-profile.ts`:**
-- After calling `getAccountByUsername` or `getAccountInfo`, check if the returned user has at least an `_id` or `address` or `username`. If none exist, return `null` (or throw) so the profile page renders the "not found" state instead of a broken "Unknown User" page.
-
-## Fix 3: Enrichment stores username under display-name key
-
-**In `NotificationsPage.tsx` enrichment (line 827-839):**
-- When enriching by username/display name, also store the result under the `username:${normalizedInputName}` key so `findAvatarByUsername` and link resolution can find it.
-- Currently if `getAccountInfo("SableRaven_9847")` returns empty (no address), the key becomes `username:sableraven_9847` with `username: "SableRaven_9847"` — but no real username is resolved. We should detect this empty-result case and avoid using it for links.
-
-## Summary of changes
-
-| File | Change |
-|---|---|
-| `src/hooks/use-dehub-profile.ts` | After API call, if result lacks `_id`/`address`/`username`, throw error so query fails → profile page shows "not found" |
-| `src/pages/app/NotificationsPage.tsx` | Grid + drawer links use enriched resolved username when available; add `resolveActorLink` helper |
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 

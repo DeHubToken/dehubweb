@@ -210,9 +210,26 @@ function buildCanonicalActors(
   latestActorNames: string[] | undefined,
   primaryUsername: string | null | undefined,
   enrichedUsername: string | null | undefined,
-): { display: string; key: string }[] {
-  const actors: { display: string; key: string }[] = [];
+  enrichedAvatarsMap?: Map<string, EnrichedAvatar>,
+): { display: string; key: string; resolvedUsername?: string }[] {
+  const actors: { display: string; key: string; resolvedUsername?: string }[] = [];
   const seen = new Set<string>();
+
+  // Helper: find the real username from enriched data for a given normalized key
+  const resolveUsername = (key: string, displayName: string): string | undefined => {
+    if (!enrichedAvatarsMap || !key) return undefined;
+    // Check direct username key
+    const byKey = enrichedAvatarsMap.get(`username:${key}`);
+    if (byKey?.username && byKey.username !== displayName) return byKey.username;
+    // Scan all entries
+    for (const [, entry] of enrichedAvatarsMap) {
+      if (normalizeUsername(entry.username) === key || normalizeUsername(entry.displayName) === key) {
+        if (entry.username && normalizeUsername(entry.username) !== key) return entry.username;
+        if (entry.username) return entry.username;
+      }
+    }
+    return undefined;
+  };
 
   // latestActorNames is the primary source (order preserved from API)
   if (latestActorNames) {
@@ -220,7 +237,7 @@ function buildCanonicalActors(
       const key = normalizeUsername(name);
       if (key && !seen.has(key)) {
         seen.add(key);
-        actors.push({ display: name.trim(), key });
+        actors.push({ display: name.trim(), key, resolvedUsername: resolveUsername(key, name.trim()) });
       }
     }
   }
@@ -230,7 +247,7 @@ function buildCanonicalActors(
   const primaryDisplay = (enrichedUsername || primaryUsername || '').trim();
   if (primaryKey && !seen.has(primaryKey) && primaryDisplay) {
     seen.add(primaryKey);
-    actors.push({ display: primaryDisplay, key: primaryKey });
+    actors.push({ display: primaryDisplay, key: primaryKey, resolvedUsername: resolveUsername(primaryKey, primaryDisplay) });
   }
 
   return actors;
@@ -498,7 +515,7 @@ function NotificationItem({
           const aggNames = (notification as any).latestActorNames as string[] | undefined;
           
           // Build one canonical actor list — single source of truth for grid, text, drawer
-          const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username);
+          const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username, enrichedAvatars);
           const uniqueActorCount = canonicalActors.length;
           
           const hasMultipleActors = uniqueActorCount >= 2 && aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string) && bundle.bundleType !== 'same-actor';
@@ -557,10 +574,10 @@ function NotificationItem({
             
             return (
               <div className="grid grid-cols-2 grid-rows-2 gap-0.5 w-12 h-12 flex-shrink-0">
-                {renderGridAvatar(avatar1Url, actor1?.display || fallbackLetter, actor1 ? `/${actor1.display}` : profileLink, 'w-[23px] h-[23px]')}
-                {renderGridAvatar(avatar2Url, actor2?.display || null, actor2 ? `/${actor2.display}` : null, 'w-[23px] h-[23px]')}
+                {renderGridAvatar(avatar1Url, actor1?.display || fallbackLetter, actor1 ? `/${actor1.resolvedUsername || actor1.display}` : profileLink, 'w-[23px] h-[23px]')}
+                {renderGridAvatar(avatar2Url, actor2?.display || null, actor2 ? `/${actor2.resolvedUsername || actor2.display}` : null, 'w-[23px] h-[23px]')}
                 {actor3 ? (
-                  renderGridAvatar(avatar3Url, actor3.display, `/${actor3.display}`, 'w-[23px] h-[23px]')
+                  renderGridAvatar(avatar3Url, actor3.display, `/${actor3.resolvedUsername || actor3.display}`, 'w-[23px] h-[23px]')
                 ) : (
                   renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
                 )}
@@ -706,7 +723,7 @@ function NotificationItem({
           <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[50vh]" data-vaul-no-drag>
             {(() => {
               const aggNames = (notification as any).latestActorNames as string[] | undefined;
-              const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username);
+              const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username, enrichedAvatars);
               const findAvatar = (key: string) => {
                 for (const [, entry] of enrichedAvatars) {
                   if (normalizeUsername(entry.username) === key && entry.avatarUrl) return entry.avatarUrl;
@@ -716,7 +733,7 @@ function NotificationItem({
               return canonicalActors.map((actor) => (
                 <Link
                   key={actor.key}
-                  to={`/${actor.display}`}
+                  to={`/${actor.resolvedUsername || actor.display}`}
                   onClick={() => setShowActorsDrawer(false)}
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors"
                 >
@@ -829,12 +846,21 @@ export default function NotificationsPage() {
         const { getAccountInfo } = await import('@/lib/api/dehub');
         const { extractAvatarPath, buildAvatarUrl } = await import('@/lib/media-url');
         const user = await getAccountInfo(username);
+        
+        // Detect empty API result (200 OK but no real user data)
+        if (!user._id && !user.address && !user.username) {
+          return { key: `username:${username.toLowerCase()}`, info: { address: username, avatarUrl: null, username, displayName: null }, extraKey: null };
+        }
+        
         const rawPath = extractAvatarPath(user);
         const avatarUrl = user.address ? buildAvatarUrl(user.address, rawPath) : null;
         const key = user.address?.toLowerCase() || `username:${username.toLowerCase()}`;
-        return { key, info: { address: user.address || username, avatarUrl, username: user.username || username, displayName: user.displayName || null } };
+        const info = { address: user.address || username, avatarUrl, username: user.username || username, displayName: user.displayName || null };
+        // Also store under the normalized input name so display-name lookups resolve
+        const extraKey = key !== `username:${username.toLowerCase()}` ? `username:${username.toLowerCase()}` : null;
+        return { key, info, extraKey };
       } catch {
-        return { key: `username:${username.toLowerCase()}`, info: { address: username, avatarUrl: null, username, displayName: null } };
+        return { key: `username:${username.toLowerCase()}`, info: { address: username, avatarUrl: null, username, displayName: null }, extraKey: null };
       }
     });
     
@@ -844,6 +870,10 @@ export default function NotificationsPage() {
         for (const r of results) {
           if (r.status === 'fulfilled') {
             next.set(r.value.key, r.value.info as EnrichedAvatar);
+            // Also store under the display-name key so lookups by display name resolve
+            if ((r.value as any).extraKey) {
+              next.set((r.value as any).extraKey, r.value.info as EnrichedAvatar);
+            }
           }
         }
         // Sync to module-level cache so it persists across navigations
