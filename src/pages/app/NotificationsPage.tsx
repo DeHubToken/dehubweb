@@ -756,9 +756,15 @@ function NotificationItem({
             {(() => {
               const aggNames = (notification as any).latestActorNames as string[] | undefined;
               const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username, enrichedAvatars);
-              const findAvatar = (key: string) => {
+              const findAvatar = (actor: { key: string; canonicalId: string }) => {
+                // Try by address/canonicalId
+                const byAddr = enrichedAvatars.get(actor.canonicalId);
+                if (byAddr?.avatarUrl) return byAddr.avatarUrl;
+                // Try by username key
+                const byKey = enrichedAvatars.get(`username:${actor.key}`);
+                if (byKey?.avatarUrl) return byKey.avatarUrl;
                 for (const [, entry] of enrichedAvatars) {
-                  if (normalizeUsername(entry.username) === key && entry.avatarUrl) return entry.avatarUrl;
+                  if ((normalizeUsername(entry.username) === actor.key || entry.address?.toLowerCase() === actor.canonicalId) && entry.avatarUrl) return entry.avatarUrl;
                 }
                 return undefined;
               };
