@@ -261,9 +261,9 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
       const rest = aggCount - 1;
       const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
       const typeStr = notification.type as string;
-      if (typeStr === 'like') return `${first} ${othersText} liked your post`;
-      if (typeStr === 'comment') return `${first} ${othersText} commented on your post`;
-      if (typeStr === 'repost') return `${first} ${othersText} reposted your post`;
+      if (typeStr === 'like') return `${first} and ${othersText} liked your post`;
+      if (typeStr === 'comment') return `${first} and ${othersText} commented on your post`;
+      if (typeStr === 'repost') return `${first} and ${othersText} reposted your post`;
     }
   }
 
@@ -463,11 +463,16 @@ function NotificationItem({
           if (hasMultipleActors) {
             // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
             
-            // Find avatar URL by username from enriched data
-            const findAvatarByUsername = (username: string | null) => {
+            // Find avatar URL by username from enriched data — strict match only
+            const findAvatarByUsername = (username: string | null): string | undefined => {
               if (!username) return undefined;
-              for (const [, entry] of enrichedAvatars) {
-                if (entry.username?.toLowerCase() === username.toLowerCase() && entry.avatarUrl) {
+              const lower = username.toLowerCase();
+              // First try direct key lookup by username prefix
+              const byKey = enrichedAvatars.get(`username:${lower}`);
+              if (byKey?.avatarUrl && byKey.username?.toLowerCase() === lower) return byKey.avatarUrl;
+              // Then scan all entries for matching username
+              for (const [key, entry] of enrichedAvatars) {
+                if (entry.username?.toLowerCase() === lower && entry.avatarUrl) {
                   return entry.avatarUrl;
                 }
               }
@@ -505,9 +510,18 @@ function NotificationItem({
             const isPrimaryActor1 = actorName1?.toLowerCase() === primaryActorUsername;
             const avatar1Url = findAvatarByUsername(actorName1) || (isPrimaryActor1 ? avatarUrl : undefined);
             const isPrimaryActor2 = actorName2?.toLowerCase() === primaryActorUsername;
-            const avatar2Url = findAvatarByUsername(actorName2) || (isPrimaryActor2 ? avatarUrl : undefined);
+            let avatar2Url = findAvatarByUsername(actorName2) || (isPrimaryActor2 ? avatarUrl : undefined);
             const isPrimaryActor3 = actorName3?.toLowerCase() === primaryActorUsername;
-            const avatar3Url = findAvatarByUsername(actorName3) || (isPrimaryActor3 ? avatarUrl : undefined);
+            let avatar3Url = findAvatarByUsername(actorName3) || (isPrimaryActor3 ? avatarUrl : undefined);
+            
+            // Safety: if a non-primary actor ended up with the same URL as the primary, clear it
+            // This prevents showing duplicate avatars when enrichment returns wrong data
+            if (avatar2Url && avatar1Url && avatar2Url === avatar1Url && actorName2?.toLowerCase() !== actorName1?.toLowerCase()) {
+              avatar2Url = undefined;
+            }
+            if (avatar3Url && avatar1Url && avatar3Url === avatar1Url && actorName3?.toLowerCase() !== actorName1?.toLowerCase()) {
+              avatar3Url = undefined;
+            }
             
             const renderGridAvatar = (
               url: string | undefined,
