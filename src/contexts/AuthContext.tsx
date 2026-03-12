@@ -14,6 +14,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { createLogger } from '@/lib/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import i18n from '@/i18n';
 import { useAccount, useSignMessage, useDisconnect, useConnect } from 'wagmi';
 import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
