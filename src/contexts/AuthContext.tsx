@@ -901,7 +901,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           await new Promise(r => setTimeout(r, 2000));
           return connectWithProvider(provider, true);
         }
-        toast.error(`Failed to connect with ${provider}. Please try again.`);
+        toast.error(i18n.t('toasts.auth.failedConnect', { provider }));
       }
       
       setConnectionSource(null);
