@@ -276,10 +276,15 @@ i18n.use(initReactI18next).init({
 
 // If user's preferred language isn't English, lazy-load it immediately.
 // Guard: only apply startup language if the user hasn't manually changed it in the meantime.
+console.log('[Lang] i18n init | defaultLang:', defaultLang, '| i18n.language:', i18n.language);
 if (defaultLang && defaultLang !== 'en') {
   loadLanguage(defaultLang).then((ok) => {
+    console.log('[Lang] startup loadLanguage done | ok:', ok, '| i18n.language now:', i18n.language);
     if (ok && i18n.language === 'en') {
+      console.log('[Lang] startup applying defaultLang:', defaultLang);
       i18n.changeLanguage(defaultLang);
+    } else {
+      console.log('[Lang] startup skipping changeLanguage (already changed or load failed)');
     }
   });
 }

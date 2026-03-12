@@ -99,9 +99,16 @@ function AppContent() {
   const [currentLang, setCurrentLang] = useState(() => i18nInstance.language || 'en');
 
   useEffect(() => {
-    const handleLangChange = (lng: string) => setCurrentLang(lng);
+    console.log('[Lang] AppContent mounted, subscribing to languageChanged. currentLang:', currentLang);
+    const handleLangChange = (lng: string) => {
+      console.log('[Lang] languageChanged event fired with:', lng, '| currentLang state was:', currentLang);
+      setCurrentLang(lng);
+    };
     i18nInstance.on('languageChanged', handleLangChange);
-    return () => { i18nInstance.off('languageChanged', handleLangChange); };
+    return () => {
+      console.log('[Lang] AppContent unsubscribing languageChanged');
+      i18nInstance.off('languageChanged', handleLangChange);
+    };
   }, []);
 
   // Preload 3D icons on app mount to prevent flicker during navigation
