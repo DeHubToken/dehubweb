@@ -843,9 +843,9 @@ export default function NotificationsPage() {
     
     const usernameFetches = uniqueNewUsernames.map(async (username) => {
       try {
-        const { getAccountInfo } = await import('@/lib/api/dehub');
+        const { getAccountByUsername } = await import('@/lib/api/dehub');
         const { extractAvatarPath, buildAvatarUrl } = await import('@/lib/media-url');
-        const user = await getAccountInfo(username);
+        const user = await getAccountByUsername(username);
         
         // Detect empty API result (200 OK but no real user data)
         if (!user._id && !user.address && !user.username) {
