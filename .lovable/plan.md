@@ -1,26 +1,35 @@
 
 
-# Fix: Line breaks destroyed when posting text with links
+## Fix: Auto-reload on chunk load failures
 
-## Problem
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-When you type text, press Enter to create a new line, then paste a URL, the line break gets stripped out. The posted content shows the text and URL stuck together with no space.
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-**Root cause** — Line 1017 in `usePostForm.ts`:
+### Changes
 
-```typescript
-const cleanDescription = postDescription.replace(hashtagRegex, '').replace(/\s{2,}/g, ' ').trim();
-const cleanTitle = postTitle.replace(hashtagRegex, '').replace(/\s{2,}/g, ' ').trim() || postTitle;
-```
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-The regex `/\s{2,}/g` matches **any whitespace character** 2 or more times — including `\n`, `\n\n`, `\r\n`, etc. — and replaces them all with a single space. This collapses all line breaks into spaces.
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
 
-## Fix
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
 
-Replace the aggressive whitespace collapse with one that only collapses **consecutive spaces** on the same line, preserving newlines:
-
-- `cleanDescription`: Replace `/\s{2,}/g` with `/[^\S\n]{2,}/g` (collapses multiple spaces/tabs but keeps newlines intact). Then also normalize more than 2 consecutive blank lines down to 2 with `/\n{3,}/g` → `\n\n`.
-- `cleanTitle`: Same treatment.
-
-This is a **2-line change** in `src/features/post/hooks/usePostForm.ts`.
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 

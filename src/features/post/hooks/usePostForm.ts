@@ -1014,8 +1014,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }
 
       // Strip hashtags from the text sent to API
-      const cleanDescription = postDescription.replace(hashtagRegex, '').replace(/\s{2,}/g, ' ').trim();
-      const cleanTitle = postTitle.replace(hashtagRegex, '').replace(/\s{2,}/g, ' ').trim() || postTitle;
+      const cleanDescription = postDescription.replace(hashtagRegex, '').replace(/[^\S\n]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
+      const cleanTitle = postTitle.replace(hashtagRegex, '').replace(/[^\S\n]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim() || postTitle;
 
       // Merge extracted hashtags into categories
       const baseCategories = selectedCategory ? selectedCategory.split('|||').filter(Boolean) : ['General'];
