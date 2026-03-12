@@ -391,29 +391,29 @@ function getNotificationContent(
   // Backend-aggregated like/comment/repost (aggregatedCount > 1 with latestActorNames)
   const aggCount = (notification as any).aggregatedCount || 1;
   const aggNames = (notification as any).latestActorNames as string[] | undefined;
-  if (aggCount > 2 && aggNames && aggNames.length > 0 && ['like', 'comment', 'repost'].includes(notification.type as string)) {
-    // Use canonical actor list for consistent naming with grid
-    const canonical = buildCanonicalActors(aggNames, notification.actorUsername, undefined);
-    const isSingleActor = canonical.length <= 1;
-    
-    if (isSingleActor) {
+  const typeStr = notification.type as string;
+  if (aggCount > 2 && ['like', 'comment', 'repost'].includes(typeStr)) {
+    const canonical = (canonicalActors && canonicalActors.length > 0)
+      ? canonicalActors
+      : buildCanonicalActors(aggNames, notification.actorUsername, undefined);
+
+    if (canonical.length <= 1) {
       const name = canonical[0]?.display || actorName;
       const postCount = aggCount;
-      const typeStr = notification.type as string;
       if (typeStr === 'like') return `${name} liked ${postCount} of your posts`;
       if (typeStr === 'comment') return `${name} commented on ${postCount} of your posts`;
       if (typeStr === 'repost') return `${name} reposted ${postCount} of your posts`;
     } else {
-      // Multiple users — first name from canonical list matches grid slot 1
-      const first = canonical[0]?.display || aggNames[0];
-      const rest = aggCount - 1;
+      // Multiple users — first name and others count come from the exact same canonical source as the grid
+      const first = canonical[0]?.display || aggNames?.[0] || actorName;
+      const rest = Math.max(canonical.length - 1, 0);
       const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
       const othersSpan = onOthersClick ? (
         <span className="cursor-pointer hover:text-white" onClick={(e) => { e.stopPropagation(); e.preventDefault(); onOthersClick(); }}>
           {othersText}
         </span>
       ) : othersText;
-      const typeStr = notification.type as string;
+
       if (typeStr === 'like') return <>{first} and {othersSpan} liked your post</>;
       if (typeStr === 'comment') return <>{first} and {othersSpan} commented on your post</>;
       if (typeStr === 'repost') return <>{first} and {othersSpan} reposted your post</>;
