@@ -1,35 +1,27 @@
 
 
-## Fix: Auto-reload on chunk load failures
+# Fix: GIFs not loading in live chat
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+## Root Cause
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+When a GIF message comes from the API (either via socket or REST), it arrives with this shape:
+```json
+{
+  "content": "https://media.giphy.com/media/.../giphy.gif",
+  "messageType": "gif",
+  "media": [{ "url": "https://...", "type": "image" }]
+}
+```
 
-### Changes
+The `apiMsgToLocal` function in `use-livechat.ts` (line 110) maps `image_url` from `m.imageUrl` or `m.image_url`, but **never checks `m.media[]`**. So for GIF messages, `image_url` ends up as `null`.
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+In `PublicChat.tsx`, the mapping only sets `imageUrl` from `msg.image_url`. And in `ChatMessage.tsx`, GIF rendering requires `message.type === 'gif' && message.imageUrl` --- since `imageUrl` is undefined, the GIF doesn't render.
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+## Fix (two small changes)
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+### 1. `src/hooks/use-livechat.ts` -- `apiMsgToLocal`
+Extract the first `media[].url` as a fallback for `image_url` when `imageUrl`/`image_url` are absent.
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+### 2. `src/components/app/chat/PublicChat.tsx` -- `toUiMessage`
+For GIF messages, if `image_url` is still null, fall back to using `msg.content` as the image URL (since the content IS the GIF URL for gif-type messages).
 
