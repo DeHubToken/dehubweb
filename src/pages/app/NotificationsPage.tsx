@@ -22,14 +22,77 @@ import { formatDistanceToNow } from 'date-fns';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
 import notificationsIcon from '@/assets/icons/notifications-icon.png';
+import { useQueries } from '@tanstack/react-query';
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
-import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
+import { DEHUB_CDN_BASE, getNFTInfo } from '@/lib/api/dehub';
+import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Switch } from '@/components/ui/switch';
 import { FollowersListDrawer } from '@/components/app/profile';
+import { VideoCard } from '@/components/app/cards/VideoCard';
+import { ImageCard } from '@/components/app/cards/ImageCard';
+import { PostCard } from '@/components/app/cards/PostCard';
+import { Skeleton } from '@/components/ui/skeleton';
+import type { FeedItem } from '@/types/feed.types';
+
+// ============================================================================
+// NotificationPostCards — fetches full NFT data and renders real feed cards
+// ============================================================================
+function NotificationPostCards({ tokenIds }: { tokenIds: number[] }) {
+  const results = useQueries({
+    queries: tokenIds.map((id) => ({
+      queryKey: ['nft-info', String(id)],
+      queryFn: () => getNFTInfo(String(id)),
+      staleTime: 5 * 60 * 1000,
+    })),
+  });
+
+  const isLoading = results.some((r) => r.isLoading);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-3">
+        {tokenIds.map((id) => (
+          <div key={id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+            <div className="flex items-center gap-3 pb-3">
+              <Skeleton className="w-10 h-10 rounded-md" />
+              <div className="space-y-2 flex-1">
+                <Skeleton className="h-4 w-1/3 bg-white/[0.06]" />
+                <Skeleton className="h-3 w-1/4 bg-white/[0.06]" />
+              </div>
+            </div>
+            <Skeleton className="aspect-video w-full rounded-lg bg-white/[0.06]" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  const feedItems: FeedItem[] = results
+    .map((r) => r.data)
+    .filter((nft): nft is NonNullable<typeof nft> => nft != null)
+    .map(mapNFTToFeedItem);
+
+  return (
+    <div className="space-y-3">
+      {feedItems.map((item) => {
+        switch (item.type) {
+          case 'video':
+            return <VideoCard key={item.id} video={item} />;
+          case 'image':
+            return <ImageCard key={item.id} post={item} />;
+          case 'post':
+            return <PostCard key={item.id} post={item} />;
+          default:
+            return null;
+        }
+      })}
+    </div>
+  );
+}
 
 // Batch avatar enrichment cache for fresh profile pictures
 interface EnrichedAvatar {
@@ -859,38 +922,14 @@ function NotificationItem({
         if (!open) { drawerJustClosed.current = true; setTimeout(() => { drawerJustClosed.current = false; }, 300); }
         setShowPostsDrawer(open);
       }}>
-        <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[70vh]">
+        <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[80vh]">
           <DrawerHeader className="text-center pb-2">
             <DrawerTitle className="text-white text-base">
               {notification.type === 'like' ? 'Liked posts' : notification.type === 'comment' ? 'Commented posts' : (notification.type as string) === 'repost' ? 'Reposted posts' : 'Posts'}
             </DrawerTitle>
           </DrawerHeader>
-          <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[50vh]" data-vaul-no-drag>
-            {bundle.allNotifications.map((n) => {
-              const thumb = n.tokenThumbnail
-                ? (n.tokenThumbnail.startsWith('http') ? n.tokenThumbnail : `${DEHUB_CDN_BASE}${n.tokenThumbnail}`)
-                : null;
-              const title = n.tokenTitle || 'Untitled post';
-              const link = getNavigationLink(n);
-
-              return (
-                <Link
-                  key={n.id}
-                  to={link || '#'}
-                  onClick={() => setShowPostsDrawer(false)}
-                  className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors"
-                >
-                  {thumb ? (
-                    <img src={thumb} alt={title} className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
-                  ) : (
-                    <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center flex-shrink-0">
-                      {getNotificationIcon(n.type)}
-                    </div>
-                  )}
-                  <span className="text-white text-sm font-medium line-clamp-2">{title}</span>
-                </Link>
-              );
-            })}
+          <div className="px-3 pb-6 overflow-y-auto max-h-[65vh] space-y-3" data-vaul-no-drag>
+            <NotificationPostCards tokenIds={bundle.allNotifications.map(n => n.tokenId).filter((id): id is number => id != null)} />
           </div>
         </DrawerContent>
       </Drawer>
