@@ -845,12 +845,20 @@ function NotificationItem({
                 </Link>
               );
             })}
+            {aggregatedCount > canonicalActors.length && (
+              <p className="text-center text-zinc-500 text-xs py-2">
+                and {aggregatedCount - canonicalActors.length} more
+              </p>
+            )}
           </div>
         </DrawerContent>
       </Drawer>
 
       {/* Posts drawer — shows all posts in a same-actor bundle */}
-      <Drawer open={showPostsDrawer} onOpenChange={setShowPostsDrawer}>
+      <Drawer open={showPostsDrawer} onOpenChange={(open) => {
+        if (!open) { drawerJustClosed.current = true; setTimeout(() => { drawerJustClosed.current = false; }, 300); }
+        setShowPostsDrawer(open);
+      }}>
         <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[70vh]">
           <DrawerHeader className="text-center pb-2">
             <DrawerTitle className="text-white text-base">
