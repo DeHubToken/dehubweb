@@ -6,12 +6,13 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Globe, Undo2 } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput } from './ChatInput';
 import { TranslatableText } from '../TranslatableText';
+import { useTranslation } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
@@ -137,6 +138,16 @@ function MessageBubble({
 
   const primaryMediaUrl = message.mediaUrls?.[0]?.url;
 
+  const textContent = message.content || '';
+  const {
+    isTranslated,
+    translatedText,
+    isLoading: isTranslating,
+    isTooShort,
+    handleTranslate,
+    handleShowOriginal,
+  } = useTranslation(textContent);
+
   return (
     <div className={`flex gap-3 py-2 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
       {!isOwnMessage && (
@@ -182,7 +193,9 @@ function MessageBubble({
           >
             {/* Text message */}
             {(message.msgType === 'msg') && (
-              <TranslatableText text={message.content} className="text-sm break-words" as="p" />
+              <p className="text-sm break-words whitespace-pre-wrap">
+                {isTranslated ? translatedText : message.content}
+              </p>
             )}
 
             {/* Media (image) — show loading when upload pending / mediaUrls empty */}
@@ -253,6 +266,23 @@ function MessageBubble({
 
         <div className={`text-xs text-zinc-500 mt-1 flex items-center gap-1 ${isOwnMessage ? 'justify-end' : ''}`}>
           <span>{formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}</span>
+          {!isTooShort && message.msgType === 'msg' && !message.isDeleted && (
+            <button
+              type="button"
+              onClick={isTranslated ? handleShowOriginal : handleTranslate}
+              disabled={isTranslating}
+              className="inline-flex items-center gap-0.5 text-zinc-500 hover:text-zinc-300 transition-colors disabled:opacity-50"
+              title={isTranslated ? 'Show original' : 'Translate'}
+            >
+              {isTranslating ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : isTranslated ? (
+                <Undo2 className="w-3 h-3" />
+              ) : (
+                <Globe className="w-3 h-3" />
+              )}
+            </button>
+          )}
           {message.isEdited && <span className="text-zinc-600">· edited</span>}
           {isOwnMessage && message.paymentStatus === 'pending' && 
             !(message.paymentTxHash && confirmedTxHashes.current.has(message.paymentTxHash.toLowerCase())) &&
