@@ -48,7 +48,7 @@ export function ImageTranslationSheet({
         <DrawerHeader className="border-b border-white/10 pb-3">
           <div className="flex items-center justify-between">
             <DrawerTitle className="text-white font-semibold flex items-center gap-2">
-              <Languages className="w-5 h-5 text-blue-400" />
+              <Languages className="w-5 h-5 text-white" />
               Image Translation
             </DrawerTitle>
             <button
