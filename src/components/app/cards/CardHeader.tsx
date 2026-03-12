@@ -12,7 +12,7 @@ import { CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getAgentAvatarFallback } from '@/constants/agent-avatars.constants';
-import { getBadgeUrl } from '@/lib/staking-badges';
+import { getBadgeUrl, isBigBadge } from '@/lib/staking-badges';
 
 import type { ContentType } from '@/types/feed.types';
 
