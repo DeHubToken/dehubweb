@@ -639,7 +639,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const toastId = 'auth-redirect';
     console.log('[Auth] [REDIRECT] Starting DeHub authentication sequence...');
-    toast.loading('Getting your account...', { id: toastId });
+    toast.loading(i18n.t('toasts.auth.gettingAccount'), { id: toastId });
 
     // Gather web3AuthMeta for the auth request
     const web3AuthMeta = await getWeb3AuthMeta();
