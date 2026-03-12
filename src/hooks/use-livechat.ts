@@ -106,6 +106,13 @@ function parseReplyTo(raw: unknown): { id: string; content: string; sender_name:
   };
 }
 
+/** Normalize API message type to the set ChatMessage understands: 'text' | 'image' | 'gif' */
+function normalizeMsgType(raw: string | undefined | null): string {
+  if (!raw) return 'text';
+  if (raw === 'media') return 'image'; // API uses "media", ChatMessage expects "image"
+  return raw;
+}
+
 /** Convert a DeHub API message to our internal format */
 function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId?: string): SupabaseLiveChatMessage {
   const raw = msg as unknown as Record<string, unknown>;
@@ -118,7 +125,7 @@ function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId
     sender_display_name: msg.sender?.displayName || null,
     sender_avatar_url: msg.sender?.avatarUrl || msg.sender?.avatarImageUrl || null,
     content: msg.content || (typeof gifUrl === 'string' ? gifUrl : ''),
-    message_type: msg.type || msg.messageType || 'text',
+    message_type: normalizeMsgType(msg.type || msg.messageType),
     image_url: msg.imageUrl || (typeof gifUrl === 'string' ? gifUrl : null) || ((raw as any).media?.[0]?.url ?? null),
     is_pinned: msg.isPinned || false,
     created_at: msg.createdAt,
@@ -166,8 +173,8 @@ function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChatMessage
     sender_display_name: (sender?.displayName ?? sender?.display_name ?? m.senderDisplayName ?? null) as string | null,
     sender_avatar_url: (sender?.avatarUrl ?? sender?.avatarImageUrl ?? sender?.avatar_image_url ?? m.imageUrl ?? null) as string | null,
     content: (m.content ?? '') as string,
-    message_type: (m.type ?? m.messageType ?? m.message_type ?? 'text') as string,
-    image_url: (m.imageUrl ?? m.image_url ?? null) as string | null,
+    message_type: normalizeMsgType((m.type ?? m.messageType ?? m.message_type) as string | undefined),
+    image_url: (m.imageUrl ?? m.image_url ?? (Array.isArray(m.media) ? (m.media as any[])[0]?.url : null) ?? null) as string | null,
     is_pinned: (m.isPinned ?? m.is_pinned ?? false) as boolean,
     created_at: (m.createdAt ?? m.created_at ?? new Date().toISOString()) as string,
     reactions: parseReactions(m.reactions),
