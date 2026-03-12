@@ -550,13 +550,18 @@ function NotificationItem({
           if (hasMultipleActors) {
             // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
             
-            // Find avatar URL by normalized username from enriched data
-            const findAvatarByUsername = (key: string): string | undefined => {
-              if (!key) return undefined;
-              const byKey = enrichedAvatars.get(`username:${key}`);
-              if (byKey?.avatarUrl && normalizeUsername(byKey.username) === key) return byKey.avatarUrl;
+            // Find avatar URL by canonical identity (address or username key) from enriched data
+            const findAvatarForActor = (actor: { key: string; canonicalId: string }): string | undefined => {
+              if (!actor.key) return undefined;
+              // Try by address (canonicalId may be an address)
+              const byAddr = enrichedAvatars.get(actor.canonicalId);
+              if (byAddr?.avatarUrl) return byAddr.avatarUrl;
+              // Try by username key
+              const byKey = enrichedAvatars.get(`username:${actor.key}`);
+              if (byKey?.avatarUrl) return byKey.avatarUrl;
+              // Scan all entries
               for (const [, entry] of enrichedAvatars) {
-                if (normalizeUsername(entry.username) === key && entry.avatarUrl) {
+                if ((normalizeUsername(entry.username) === actor.key || entry.address?.toLowerCase() === actor.canonicalId) && entry.avatarUrl) {
                   return entry.avatarUrl;
                 }
               }
@@ -570,13 +575,13 @@ function NotificationItem({
             const actor3 = canonicalActors[2] || null;
             
             // Resolve avatars — only fall back to notification's avatarUrl for the primary actor
-            const avatar1Url = actor1 ? (findAvatarByUsername(actor1.key) || (actor1.key === primaryKey ? avatarUrl : undefined)) : undefined;
-            let avatar2Url = actor2 ? (findAvatarByUsername(actor2.key) || (actor2.key === primaryKey ? avatarUrl : undefined)) : undefined;
-            let avatar3Url = actor3 ? (findAvatarByUsername(actor3.key) || (actor3.key === primaryKey ? avatarUrl : undefined)) : undefined;
+            const avatar1Url = actor1 ? (findAvatarForActor(actor1) || (actor1.key === primaryKey ? avatarUrl : undefined)) : undefined;
+            let avatar2Url = actor2 ? (findAvatarForActor(actor2) || (actor2.key === primaryKey ? avatarUrl : undefined)) : undefined;
+            let avatar3Url = actor3 ? (findAvatarForActor(actor3) || (actor3.key === primaryKey ? avatarUrl : undefined)) : undefined;
             
-            // Safety: prevent duplicate avatar images across different actors
-            if (avatar2Url && avatar1Url && avatar2Url === avatar1Url && actor2?.key !== actor1?.key) avatar2Url = undefined;
-            if (avatar3Url && avatar1Url && avatar3Url === avatar1Url && actor3?.key !== actor1?.key) avatar3Url = undefined;
+            // Safety: prevent duplicate avatar images across different canonical identities
+            if (avatar2Url && avatar1Url && avatar2Url === avatar1Url && actor2?.canonicalId !== actor1?.canonicalId) avatar2Url = undefined;
+            if (avatar3Url && avatar1Url && avatar3Url === avatar1Url && actor3?.canonicalId !== actor1?.canonicalId) avatar3Url = undefined;
             
             const renderGridAvatar = (
               url: string | undefined,
