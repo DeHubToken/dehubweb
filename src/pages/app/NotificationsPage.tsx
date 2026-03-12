@@ -261,9 +261,9 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
       const rest = aggCount - 1;
       const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
       const typeStr = notification.type as string;
-      if (typeStr === 'like') return `${first} ${othersText} liked your post`;
-      if (typeStr === 'comment') return `${first} ${othersText} commented on your post`;
-      if (typeStr === 'repost') return `${first} ${othersText} reposted your post`;
+      if (typeStr === 'like') return `${first} and ${othersText} liked your post`;
+      if (typeStr === 'comment') return `${first} and ${othersText} commented on your post`;
+      if (typeStr === 'repost') return `${first} and ${othersText} reposted your post`;
     }
   }
 
