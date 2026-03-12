@@ -767,6 +767,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.warn('[Auth] [POPUP] AA provider sign failed:', e);
           }
           if (saResult) {
+            // Address guard: prevent silent account switch during session refresh
+            if (walletAddress && walletAddress.toLowerCase() !== saResult.address.toLowerCase()) {
+              console.error('[Auth] [POPUP] Address mismatch during refresh!', { expected: walletAddress, got: saResult.address });
+              throw new Error('Wallet address changed during session refresh. Please sign in again.');
+            }
             console.log('[Auth] [POPUP] Trying Smart Account address:', smartAccountAddress);
             toast.loading('Signing in...', { id: toastId });
             const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID, web3AuthMeta);
