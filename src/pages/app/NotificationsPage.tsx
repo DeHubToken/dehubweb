@@ -116,6 +116,7 @@ function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars
         bundles.push({
           primary: group[0],
           allIds: group.map(g => g.id),
+          allNotifications: group,
           postCount: group.length,
           actorNames: [],
           actorCount: 1,
