@@ -1,35 +1,49 @@
 
 
-## Fix: Auto-reload on chunk load failures
+## Fix Toast Translation: Use Static i18n System (Not Live API)
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+### Problem
+The current toast interceptor calls the `translate-text` edge function (designed for user posts), causing:
+- English flash before translation appears
+- Unnecessary API costs per toast
+- Different system from how all other UI text translates
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+### How the UI System Actually Works
+- **110+ pre-translated JSON files** in `src/i18n/locales/` (e.g., `de.json` has `"logOut": "Abmelden"`)
+- Components use `t('key')` from `react-i18next` — returns translated string **instantly, synchronously**
+- Language file lazy-loaded once on app start, then all lookups are local
+- Zero API calls, zero flicker
 
-### Changes
+### Plan
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+**1. Add toast keys to `en.json`** under a `toasts` namespace:
+```json
+"toasts": {
+  "saved_to_bookmarks": "Saved to bookmarks",
+  "removed_from_bookmarks": "Removed from bookmarks",
+  "copied_to_clipboard": "Copied to clipboard",
+  "failed_to_send_message": "Failed to send message",
+  ...
+}
+```
+This requires scanning the codebase for all `toast.success(...)`, `toast.error(...)` etc. calls to collect every string.
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+**2. Add translations to all 110+ locale JSON files** — add the `toasts` namespace with translated values to `de.json`, `fr.json`, `es.json`, etc.
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+**3. Rewrite `src/lib/toast-i18n-interceptor.ts`** to use `i18n.t()`:
+- Remove the edge function call, remove the translation cache
+- Normalize English toast strings to keys (e.g., `"Saved to bookmarks"` → `toasts.saved_to_bookmarks`)
+- Call `i18n.t(key, { defaultValue: originalEnglish })` — instant, synchronous, falls back to English if key missing
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+**4. No other files change** — all existing `toast.success("Saved to bookmarks")` calls stay exactly as they are. The interceptor handles the translation transparently.
+
+### Result
+- Toasts appear in the user's language **immediately** — same as all other UI text
+- Zero API calls for toasts
+- Falls back to English gracefully if a key is missing
+
+### Files to Change
+- `src/lib/toast-i18n-interceptor.ts` — rewrite to use `i18n.t()` instead of edge function
+- `src/i18n/locales/en.json` — add `toasts` namespace with all toast strings
+- `src/i18n/locales/*.json` (110+ files) — add translated `toasts` namespace to each
 
