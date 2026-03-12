@@ -876,7 +876,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('dehub_connection_source', 'web3auth');
 
     // Show immediate feedback before popup opens
-    toast.loading(`Connecting to ${provider === 'google' ? 'Google' : provider === 'twitter' ? 'X' : provider}...`, { id: 'auth-popup' });
+    toast.loading(i18n.t('toasts.auth.connectingTo', { provider: provider === 'google' ? 'Google' : provider === 'twitter' ? 'X' : provider }), { id: 'auth-popup' });
 
     try {
       const socialProvider = mapSocialProvider(provider);
