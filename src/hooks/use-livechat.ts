@@ -71,7 +71,7 @@ function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId
     sender_avatar_url: msg.sender?.avatarUrl || msg.sender?.avatarImageUrl || null,
     content: msg.content || (typeof gifUrl === 'string' ? gifUrl : ''),
     message_type: msg.type || msg.messageType || 'text',
-    image_url: msg.imageUrl || (typeof gifUrl === 'string' ? gifUrl : null),
+    image_url: msg.imageUrl || (typeof gifUrl === 'string' ? gifUrl : null) || ((raw as any).media?.[0]?.url ?? null),
     is_pinned: msg.isPinned || false,
     created_at: msg.createdAt,
   };
