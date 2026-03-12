@@ -253,7 +253,16 @@ function buildCanonicalActors(
   return actors;
 }
 
+/** Resolve a safe profile link for an actor, avoiding broken display-name URLs */
+function resolveActorProfileLink(actor: { display: string; key: string; resolvedUsername?: string }): string | null {
+  if (actor.resolvedUsername) return `/${actor.resolvedUsername}`;
+  // If the key looks like a valid handle (alphanumeric + underscores/dots), use it
+  if (/^[a-z0-9._]+$/.test(actor.key)) return `/${actor.key}`;
+  // Display name with spaces/special chars — not a valid route
+  return null;
+}
 function getNotificationContent(notification: DeHubNotification, bundle?: BundledNotification, t?: (key: string, opts?: any) => string, onOthersClick?: () => void): React.ReactNode {
+
   const tr = t || ((key: string) => key);
   const actorName = notification.actorUsername || 'Someone';
   
@@ -574,10 +583,10 @@ function NotificationItem({
             
             return (
               <div className="grid grid-cols-2 grid-rows-2 gap-0.5 w-12 h-12 flex-shrink-0">
-                {renderGridAvatar(avatar1Url, actor1?.display || fallbackLetter, actor1 ? `/${actor1.resolvedUsername || actor1.display}` : profileLink, 'w-[23px] h-[23px]')}
-                {renderGridAvatar(avatar2Url, actor2?.display || null, actor2 ? `/${actor2.resolvedUsername || actor2.display}` : null, 'w-[23px] h-[23px]')}
+                {renderGridAvatar(avatar1Url, actor1?.display || fallbackLetter, actor1 ? resolveActorProfileLink(actor1) || profileLink : profileLink, 'w-[23px] h-[23px]')}
+                {renderGridAvatar(avatar2Url, actor2?.display || null, actor2 ? resolveActorProfileLink(actor2) : null, 'w-[23px] h-[23px]')}
                 {actor3 ? (
-                  renderGridAvatar(avatar3Url, actor3.display, `/${actor3.resolvedUsername || actor3.display}`, 'w-[23px] h-[23px]')
+                  renderGridAvatar(avatar3Url, actor3.display, resolveActorProfileLink(actor3), 'w-[23px] h-[23px]')
                 ) : (
                   renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
                 )}
@@ -733,7 +742,7 @@ function NotificationItem({
               return canonicalActors.map((actor) => (
                 <Link
                   key={actor.key}
-                  to={`/${actor.resolvedUsername || actor.display}`}
+                  to={resolveActorProfileLink(actor) || '#'}
                   onClick={() => setShowActorsDrawer(false)}
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors"
                 >
@@ -843,9 +852,9 @@ export default function NotificationsPage() {
     
     const usernameFetches = uniqueNewUsernames.map(async (username) => {
       try {
-        const { getAccountInfo } = await import('@/lib/api/dehub');
+        const { getAccountByUsername } = await import('@/lib/api/dehub');
         const { extractAvatarPath, buildAvatarUrl } = await import('@/lib/media-url');
-        const user = await getAccountInfo(username);
+        const user = await getAccountByUsername(username);
         
         // Detect empty API result (200 OK but no real user data)
         if (!user._id && !user.address && !user.username) {

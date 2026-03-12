@@ -14,6 +14,11 @@ export async function getAccountInfo(userId: string, address?: string): Promise<
   return response as DeHubUser;
 }
 
+/** Detect empty-shell API responses that return 200 but have no real user data */
+function isEmptyUserResult(user: any): boolean {
+  return !user?._id && !user?.address && !user?.wallet_address && !user?.username;
+}
+
 export async function getAccountByUsername(username: string, address?: string): Promise<DeHubUser> {
   const cleanUsername = username.replace("@", "").trim();
   const params: Record<string, string> = {};
@@ -21,15 +26,28 @@ export async function getAccountByUsername(username: string, address?: string): 
     params.address = address;
   }
 
+  // 1. Try exact input
   const response = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${encodeURIComponent(cleanUsername)}`, { params });
   const user = (response && typeof response === "object" && "result" in response)
     ? response.result
     : (response as DeHubUser);
 
-  // Some usernames are case-sensitive on the backend and may return an empty shell object.
-  // Fallback: resolve canonical username via search and retry account_info with exact casing.
-  const isEmptyUser = !user?._id && !user?.address && !user?.wallet_address && !user?.username;
-  if (isEmptyUser) {
+  if (!isEmptyUserResult(user)) return user;
+
+  // 2. Try lowercase (backend is case-sensitive, e.g. "SableRaven_9847" → "sableraven_9847")
+  const lowerUsername = cleanUsername.toLowerCase();
+  if (lowerUsername !== cleanUsername) {
+    try {
+      const lowerResponse = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${encodeURIComponent(lowerUsername)}`, { params });
+      const lowerUser = (lowerResponse && typeof lowerResponse === "object" && "result" in lowerResponse)
+        ? lowerResponse.result
+        : (lowerResponse as DeHubUser);
+      if (!isEmptyUserResult(lowerUser)) return lowerUser;
+    } catch { /* continue to search fallback */ }
+  }
+
+  // 3. Search fallback — strict match only
+  try {
     const searchResponse = await apiCall<{ result: DeHubUser[] } | PaginatedResponse<DeHubUser>>("/api/users_search", {
       params: { q: cleanUsername, page: 1, limit: 10 },
     });
@@ -41,13 +59,17 @@ export async function getAccountByUsername(username: string, address?: string): 
         : [];
 
     const canonicalMatch = candidates.find(
-      (candidate) => candidate?.username?.toLowerCase() === cleanUsername.toLowerCase(),
+      (c) => c?.username?.toLowerCase() === lowerUsername || c?.displayName?.toLowerCase() === lowerUsername,
     );
 
-    if (canonicalMatch?.username && canonicalMatch.username !== cleanUsername) {
-      return getAccountInfo(canonicalMatch.username, address);
+    if (canonicalMatch?.username) {
+      const retryResponse = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${encodeURIComponent(canonicalMatch.username)}`, { params });
+      const retryUser = (retryResponse && typeof retryResponse === "object" && "result" in retryResponse)
+        ? retryResponse.result
+        : (retryResponse as DeHubUser);
+      if (!isEmptyUserResult(retryUser)) return retryUser;
     }
-  }
+  } catch { /* exhausted all fallbacks */ }
 
   return user;
 }
