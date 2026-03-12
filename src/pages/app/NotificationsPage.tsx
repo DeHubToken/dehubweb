@@ -463,7 +463,7 @@ function NotificationItem({
             return seen.size;
           })();
           
-          const hasMultipleActors = uniqueActorCount >= 2 && aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
+          const hasMultipleActors = uniqueActorCount >= 2 && aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string) && bundle.bundleType !== 'same-actor';
           
           if (hasMultipleActors) {
             // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
@@ -598,7 +598,7 @@ function NotificationItem({
           );
         })()}
         {/* Type icon badge — only for single-actor notifications (aggregated ones render it inside) */}
-        {!((notification as any).aggregatedCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string)) && (
+        {!(bundle.bundleType !== 'same-actor' && (notification as any).aggregatedCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string)) && (
           <div className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
             {getNotificationIcon(notification.type)}
           </div>
