@@ -202,6 +202,51 @@ function normalizeUsername(name: string | null | undefined): string {
   return name.trim().replace(/^@/, '').toLowerCase();
 }
 
+function toUsernameCacheKey(name: string | null | undefined): string | null {
+  const normalized = normalizeUsername(name);
+  return normalized ? `username:${normalized}` : null;
+}
+
+interface CanonicalActor {
+  display: string;
+  key: string;
+  resolvedUsername?: string;
+  canonicalId: string;
+  address?: string;
+}
+
+function findActorEnrichment(actor: CanonicalActor, enrichedAvatarsMap?: Map<string, EnrichedAvatar>): EnrichedAvatar | undefined {
+  if (!enrichedAvatarsMap) return undefined;
+
+  const candidateKeys = new Set<string>();
+  if (actor.address) candidateKeys.add(actor.address.toLowerCase());
+  if (actor.canonicalId) {
+    candidateKeys.add(actor.canonicalId);
+    const canonicalUsernameKey = toUsernameCacheKey(actor.canonicalId);
+    if (canonicalUsernameKey) candidateKeys.add(canonicalUsernameKey);
+  }
+  const actorUsernameKey = toUsernameCacheKey(actor.key);
+  if (actorUsernameKey) candidateKeys.add(actorUsernameKey);
+  const resolvedUsernameKey = toUsernameCacheKey(actor.resolvedUsername);
+  if (resolvedUsernameKey) candidateKeys.add(resolvedUsernameKey);
+
+  for (const key of candidateKeys) {
+    const hit = enrichedAvatarsMap.get(key);
+    if (hit) return hit;
+  }
+
+  const normalizedActorKey = normalizeUsername(actor.resolvedUsername || actor.key || actor.display);
+  const actorAddress = (actor.address || '').toLowerCase();
+
+  for (const [, entry] of enrichedAvatarsMap) {
+    if (!entry) continue;
+    if (actorAddress && entry.address?.toLowerCase() === actorAddress) return entry;
+    if (normalizeUsername(entry.username) === normalizedActorKey) return entry;
+  }
+
+  return undefined;
+}
+
 /**
  * Build a canonical, deduplicated actor list from latestActorNames + primary actor.
  * Deduplicates by RESOLVED IDENTITY (address or canonical username from enrichment),
@@ -212,74 +257,93 @@ function buildCanonicalActors(
   primaryUsername: string | null | undefined,
   enrichedUsername: string | null | undefined,
   enrichedAvatarsMap?: Map<string, EnrichedAvatar>,
-): { display: string; key: string; resolvedUsername?: string; canonicalId: string }[] {
-  const actors: { display: string; key: string; resolvedUsername?: string; canonicalId: string }[] = [];
+): CanonicalActor[] {
+  const actors: CanonicalActor[] = [];
   const seenCanonicalIds = new Set<string>();
 
-  /**
-   * Resolve the canonical identity for a normalized username key.
-   * Priority: enriched address > enriched canonical username > raw key.
-   * This ensures "Alcazar" and "alcazar_123" map to the same identity if
-   * they resolve to the same address or username via enrichment.
-   */
-  const resolveCanonicalId = (key: string): { canonicalId: string; resolvedUsername?: string } => {
-    if (!enrichedAvatarsMap || !key) return { canonicalId: key };
-    
-    // Check direct username lookup
-    const byKey = enrichedAvatarsMap.get(`username:${key}`);
-    if (byKey) {
-      // Use address as strongest canonical identity, else resolved username
-      const cid = (byKey as any).address?.toLowerCase?.() || normalizeUsername(byKey.username) || key;
-      return { canonicalId: cid, resolvedUsername: byKey.username || undefined };
+  const resolveCanonicalIdentity = (nameOrKey: string): { canonicalId: string; resolvedUsername?: string; address?: string } => {
+    const normalized = normalizeUsername(nameOrKey);
+    if (!normalized) return { canonicalId: '' };
+
+    const usernameKey = toUsernameCacheKey(normalized);
+    const byUsername = usernameKey ? enrichedAvatarsMap?.get(usernameKey) : undefined;
+    const byDirect = enrichedAvatarsMap?.get(normalized);
+    const entry = byUsername || byDirect;
+
+    if (entry) {
+      const resolvedAddress = entry.address?.toLowerCase();
+      const resolvedUsername = normalizeUsername(entry.username);
+      return {
+        canonicalId: resolvedAddress || resolvedUsername || normalized,
+        resolvedUsername: entry.username || undefined,
+        address: resolvedAddress || undefined,
+      };
     }
-    
-    // Scan all entries for matching username or displayName
-    for (const [, entry] of enrichedAvatarsMap) {
-      if (normalizeUsername(entry.username) === key || normalizeUsername(entry.displayName) === key) {
-        const cid = (entry as any).address?.toLowerCase?.() || normalizeUsername(entry.username) || key;
-        return { canonicalId: cid, resolvedUsername: entry.username || undefined };
+
+    if (enrichedAvatarsMap) {
+      for (const [, candidate] of enrichedAvatarsMap) {
+        if (normalizeUsername(candidate.username) === normalized || normalizeUsername(candidate.displayName) === normalized) {
+          const resolvedAddress = candidate.address?.toLowerCase();
+          const resolvedUsername = normalizeUsername(candidate.username);
+          return {
+            canonicalId: resolvedAddress || resolvedUsername || normalized,
+            resolvedUsername: candidate.username || undefined,
+            address: resolvedAddress || undefined,
+          };
+        }
       }
     }
-    
-    return { canonicalId: key };
+
+    return { canonicalId: normalized };
   };
 
-  // latestActorNames is the primary source (order preserved from API)
-  if (latestActorNames) {
-    for (const name of latestActorNames) {
-      const key = normalizeUsername(name);
-      if (!key) continue;
-      const { canonicalId, resolvedUsername } = resolveCanonicalId(key);
-      if (!seenCanonicalIds.has(canonicalId)) {
-        seenCanonicalIds.add(canonicalId);
-        actors.push({ display: name.trim(), key, resolvedUsername, canonicalId });
-      }
-    }
-  }
+  const addActorCandidate = (displayValue: string | null | undefined, preferredKey?: string | null) => {
+    const display = (displayValue || '').trim();
+    const key = normalizeUsername(preferredKey || displayValue);
+    if (!key) return;
 
-  // Append primary actor only if not already present by canonical identity
-  const primaryKey = normalizeUsername(enrichedUsername || primaryUsername);
-  const primaryDisplay = (enrichedUsername || primaryUsername || '').trim();
-  if (primaryKey && primaryDisplay) {
-    const { canonicalId, resolvedUsername } = resolveCanonicalId(primaryKey);
-    if (!seenCanonicalIds.has(canonicalId)) {
-      seenCanonicalIds.add(canonicalId);
-      actors.push({ display: primaryDisplay, key: primaryKey, resolvedUsername, canonicalId });
-    }
-  }
+    const identity = resolveCanonicalIdentity(key);
+    if (!identity.canonicalId || seenCanonicalIds.has(identity.canonicalId)) return;
+
+    seenCanonicalIds.add(identity.canonicalId);
+    actors.push({
+      display: display || key,
+      key,
+      resolvedUsername: identity.resolvedUsername,
+      canonicalId: identity.canonicalId,
+      address: identity.address,
+    });
+  };
+
+  latestActorNames?.forEach((name) => addActorCandidate(name));
+  addActorCandidate(enrichedUsername || primaryUsername, enrichedUsername || primaryUsername);
 
   return actors;
 }
 
-/** Resolve a safe profile link for an actor, avoiding broken display-name URLs */
-function resolveActorProfileLink(actor: { display: string; key: string; resolvedUsername?: string }): string | null {
-  if (actor.resolvedUsername) return `/${actor.resolvedUsername}`;
-  // If the key looks like a valid handle (alphanumeric + underscores/dots), use it
-  if (/^[a-z0-9._]+$/.test(actor.key)) return `/${actor.key}`;
-  // Display name with spaces/special chars — not a valid route
-  return null;
+function resolveActorAvatarUrl(actor: CanonicalActor, enrichedAvatarsMap?: Map<string, EnrichedAvatar>): string | undefined {
+  return findActorEnrichment(actor, enrichedAvatarsMap)?.avatarUrl || undefined;
 }
-function getNotificationContent(notification: DeHubNotification, bundle?: BundledNotification, t?: (key: string, opts?: any) => string, onOthersClick?: () => void): React.ReactNode {
+
+/** Resolve a safe profile link for an actor, avoiding broken display-name URLs */
+function resolveActorProfileLink(actor: CanonicalActor, enrichedAvatarsMap?: Map<string, EnrichedAvatar>): string | null {
+  const enriched = findActorEnrichment(actor, enrichedAvatarsMap);
+  const resolvedHandle = normalizeUsername(actor.resolvedUsername || enriched?.username);
+  if (resolvedHandle && /^[a-z0-9._]+$/.test(resolvedHandle)) return `/${resolvedHandle}`;
+
+  const safeKey = normalizeUsername(actor.key);
+  if (safeKey && /^[a-z0-9._]+$/.test(safeKey)) return `/${safeKey}`;
+
+  const address = (actor.address || enriched?.address || '').toLowerCase();
+  return address ? `/${address}` : null;
+}
+function getNotificationContent(
+  notification: DeHubNotification,
+  bundle?: BundledNotification,
+  t?: (key: string, opts?: any) => string,
+  onOthersClick?: () => void,
+  canonicalActors?: CanonicalActor[],
+): React.ReactNode {
 
   const tr = t || ((key: string) => key);
   const actorName = notification.actorUsername || 'Someone';
