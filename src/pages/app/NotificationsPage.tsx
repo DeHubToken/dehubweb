@@ -463,11 +463,16 @@ function NotificationItem({
           if (hasMultipleActors) {
             // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
             
-            // Find avatar URL by username from enriched data
-            const findAvatarByUsername = (username: string | null) => {
+            // Find avatar URL by username from enriched data — strict match only
+            const findAvatarByUsername = (username: string | null): string | undefined => {
               if (!username) return undefined;
-              for (const [, entry] of enrichedAvatars) {
-                if (entry.username?.toLowerCase() === username.toLowerCase() && entry.avatarUrl) {
+              const lower = username.toLowerCase();
+              // First try direct key lookup by username prefix
+              const byKey = enrichedAvatars.get(`username:${lower}`);
+              if (byKey?.avatarUrl && byKey.username?.toLowerCase() === lower) return byKey.avatarUrl;
+              // Then scan all entries for matching username
+              for (const [key, entry] of enrichedAvatars) {
+                if (entry.username?.toLowerCase() === lower && entry.avatarUrl) {
                   return entry.avatarUrl;
                 }
               }
