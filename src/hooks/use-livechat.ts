@@ -59,7 +59,9 @@ export function useLiveChatRooms() {
 }
 
 /** Convert a DeHub API message to our internal format */
-function apiMsgToLocal(msg: LiveChatMessage, roomId?: string): SupabaseLiveChatMessage {
+function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId?: string): SupabaseLiveChatMessage {
+  const raw = msg as Record<string, unknown>;
+  const gifUrl = raw?.gif && typeof raw.gif === 'object' && (raw.gif as Record<string, unknown>)?.url;
   return {
     id: msg.id,
     room_id: msg.roomId || roomId || '',
@@ -67,9 +69,9 @@ function apiMsgToLocal(msg: LiveChatMessage, roomId?: string): SupabaseLiveChatM
     sender_username: msg.sender?.username || null,
     sender_display_name: msg.sender?.displayName || null,
     sender_avatar_url: msg.sender?.avatarUrl || msg.sender?.avatarImageUrl || null,
-    content: msg.content || '',
+    content: msg.content || (typeof gifUrl === 'string' ? gifUrl : ''),
     message_type: msg.type || msg.messageType || 'text',
-    image_url: msg.imageUrl || null,
+    image_url: msg.imageUrl || (typeof gifUrl === 'string' ? gifUrl : null),
     is_pinned: msg.isPinned || false,
     created_at: msg.createdAt,
   };
@@ -127,19 +129,17 @@ export function useLiveChatMessages(roomId: string | null) {
   const { isAuthenticated, user, walletAddress } = useAuth();
   const initialLoadDone = useRef(false);
 
-  // Fetch messages via REST API as fallback/initial load
+  // Fetch messages via REST API — source of truth for history (roomJoined must not overwrite)
   const fetchMessages = useCallback(async (showLoading = false) => {
     if (!roomId) return;
     if (showLoading) setIsLoading(true);
     try {
       const apiMessages = await fetchApiMessages(roomId, { limit: 200 });
-      if (apiMessages.length > 0) {
-        const mapped = apiMessages.map((m) => apiMsgToLocal(m, roomId));
-        setMessages((prev) => {
-          const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
-          return deduplicateMessages([...mapped, ...optimistic]);
-        });
-      }
+      const mapped = apiMessages.map((m) => apiMsgToLocal(m, roomId));
+      setMessages((prev) => {
+        const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
+        return deduplicateMessages([...mapped, ...optimistic]);
+      });
     } catch (err) {
       console.error('[LiveChat] REST messages fetch failed:', err);
     } finally {
@@ -147,7 +147,9 @@ export function useLiveChatMessages(roomId: string | null) {
     }
   }, [roomId]);
 
-  // Load messages via REST immediately on mount and when auth state changes
+  // Load messages via REST on mount / room change only — NOT on auth changes
+  // isAuthenticated intentionally excluded: Wagmi reconnect triggers auth re-checks
+  // which caused fetchMessages(showLoading=true) → skeleton flash → optimistic message lost
   useEffect(() => {
     if (!roomId) {
       setMessages([]);
@@ -155,7 +157,8 @@ export function useLiveChatMessages(roomId: string | null) {
       return;
     }
     fetchMessages(true);
-  }, [roomId, fetchMessages, isAuthenticated]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roomId]);
 
   // Socket connection for real-time updates (supplementary)
   useEffect(() => {
@@ -180,27 +183,13 @@ export function useLiveChatMessages(roomId: string | null) {
       joinRoom(roomId);
     }
 
-    // Handle roomJoined — ONLY use for initial load (first connect)
-    // On reconnects, ignore message list to prevent wiping optimistic/recent messages
-    // New messages arrive via newMessage events; history is fetched via REST on mount
+    // Handle roomJoined — use ONLY for isBanned. Never overwrite messages from roomJoined.
+    // REST fetch on mount is the source of truth for history. roomJoined can fire before/after
+    // REST and would overwrite with stale/empty data, causing messages to vanish on navigate back.
     const unsubJoined = onRoomJoined((data) => {
-      console.log('[LiveChat] Room joined, messages:', data.messages?.length, 'banned:', data.isBanned, 'initialDone:', initialLoadDone.current);
+      console.log('[LiveChat] Room joined, banned:', data.isBanned);
       setIsBanned(data.isBanned || false);
-
-      if (initialLoadDone.current) {
-        // Reconnect — skip message update entirely
-        return;
-      }
       initialLoadDone.current = true;
-
-      if (data.messages && Array.isArray(data.messages)) {
-        const mapped = data.messages
-          .map((m: unknown) => socketMsgToLocal(m, roomId))
-          .filter(Boolean) as SupabaseLiveChatMessage[];
-        if (mapped.length > 0) {
-          setMessages(mapped);
-        }
-      }
     });
 
     // Listen for new messages — replace matching optimistic (temp-*) to avoid ghost duplicates

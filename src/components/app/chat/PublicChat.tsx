@@ -209,7 +209,8 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // Merge list-level room data with the richer single-room details
   const selectedRoom = rooms.find((r) => r.id === selectedRoomId) || null;
   const enrichedRoom = roomDetails || selectedRoom;
-  const isLoading = roomsLoading || messagesLoading;
+  // Only show skeleton on true initial load (no messages yet), not on background refetches
+  const isLoading = roomsLoading || (messagesLoading && apiMessages.length === 0);
   const roomName = t('publicChat.title');
   const roomDescription = t('publicChat.allThingsDeHub');
 
