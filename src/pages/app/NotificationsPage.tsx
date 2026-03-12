@@ -393,7 +393,7 @@ function getNotificationContent(
   if (aggCount > 2 && ['like', 'comment', 'repost'].includes(typeStr)) {
     const canonical = (canonicalActors && canonicalActors.length > 0)
       ? canonicalActors
-      : buildCanonicalActors(aggNames, notification.actorUsername, undefined);
+      : buildCanonicalActors(aggNames, undefined, undefined);
 
     if (canonical.length <= 1) {
       const name = canonical[0]?.display || actorName;
