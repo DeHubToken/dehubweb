@@ -513,10 +513,18 @@ function NotificationItem({
                 ) : (
                   renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
                 )}
-                {/* Bottom-right: notification type icon */}
-                <div className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                {/* Bottom-right: notification type icon — clickable to show all actors */}
+                <button
+                  className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition-colors cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setShowActorsDrawer(true);
+                  }}
+                  title="View all"
+                >
                   {getNotificationIcon(notification.type)}
-                </div>
+                </button>
               </div>
             );
           }
