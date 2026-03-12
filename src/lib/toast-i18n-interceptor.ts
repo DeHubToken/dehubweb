@@ -15,6 +15,8 @@
 import { toast } from 'sonner';
 import i18n from '@/i18n';
 import { supabase } from '@/integrations/supabase/client';
+import { createElement } from 'react';
+import { Languages } from 'lucide-react';
 
 /**
  * Normalize an English toast string into a flat i18n key.
@@ -129,7 +131,7 @@ for (const method of methodNames) {
         ...translatedOpts,
         id: toastId,
         action: {
-          label: '🌐',
+          label: createElement(Languages, { className: 'w-3.5 h-3.5' }),
           onClick: () => onDemandTranslate(msg, opts, method, toastId as string | number),
         },
       });
