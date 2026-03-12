@@ -138,11 +138,15 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
             onClick={() => setShowDropdown(!showDropdown)}
             className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-800/80 border border-zinc-700/50 text-sm text-foreground hover:bg-zinc-700/80 transition-colors"
           >
-            <span className="font-medium">{selected.label}</span>
-            <span className="text-muted-foreground text-xs">{selected.sublabel}</span>
-            <span className="text-muted-foreground text-xs ml-1">({options.length})</span>
+            <span className="font-medium text-white">{selected.label}</span>
+            {selected.chainLogo ? (
+              <img src={selected.chainLogo} alt={selected.sublabel} className="w-4 h-4 rounded-md" />
+            ) : (
+              <span className="text-white/60 text-xs">{selected.sublabel}</span>
+            )}
+            <span className="text-white/60 text-xs ml-1">({options.length})</span>
             <ChevronDown className={cn(
-              "w-3.5 h-3.5 text-muted-foreground transition-transform",
+              "w-3.5 h-3.5 text-white/60 transition-transform",
               showDropdown && "rotate-180"
             )} />
           </button>
