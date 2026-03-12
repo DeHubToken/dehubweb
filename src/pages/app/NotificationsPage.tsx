@@ -419,6 +419,9 @@ function NotificationItem({
   const { walletAddress } = useAuth();
 
   const handleClick = () => {
+    // If actors drawer is open, don't navigate — user is interacting with the drawer
+    if (showActorsDrawer) return;
+    
     // Mark all notifications in bundle as read
     if (hasUnread) {
       bundle.allIds.forEach(id => onMarkAsRead(id));
