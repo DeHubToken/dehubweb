@@ -723,7 +723,7 @@ function NotificationItem({
           <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[50vh]" data-vaul-no-drag>
             {(() => {
               const aggNames = (notification as any).latestActorNames as string[] | undefined;
-              const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username);
+              const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username, enrichedAvatars);
               const findAvatar = (key: string) => {
                 for (const [, entry] of enrichedAvatars) {
                   if (normalizeUsername(entry.username) === key && entry.avatarUrl) return entry.avatarUrl;
@@ -733,7 +733,7 @@ function NotificationItem({
               return canonicalActors.map((actor) => (
                 <Link
                   key={actor.key}
-                  to={`/${actor.display}`}
+                  to={`/${actor.resolvedUsername || actor.display}`}
                   onClick={() => setShowActorsDrawer(false)}
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors"
                 >
