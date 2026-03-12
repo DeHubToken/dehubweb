@@ -37,7 +37,7 @@ export default function SkillPage() {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="flex items-center gap-2">
-              <Bot className="w-6 h-6 text-primary" />
+              <Bot className="w-6 h-6 text-white" />
               <h1 className="text-lg font-semibold">DeHub MCP API</h1>
             </div>
           </div>
