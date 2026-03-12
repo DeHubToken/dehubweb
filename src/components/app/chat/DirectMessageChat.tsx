@@ -6,7 +6,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Globe, Undo2 } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -277,9 +277,9 @@ function MessageBubble({
               {isTranslating ? (
                 <Loader2 className="w-3 h-3 animate-spin" />
               ) : isTranslated ? (
-                <Undo2 className="w-3 h-3" />
+                <RotateCcw className="w-3 h-3" />
               ) : (
-                <Globe className="w-3 h-3" />
+                <Languages className="w-3 h-3" />
               )}
             </button>
           )}
