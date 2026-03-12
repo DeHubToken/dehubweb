@@ -692,7 +692,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
           queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
           queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-          toast.success(saAuthResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: toastId });
+          toast.success(saAuthResponse.result?.isNewAccount ? i18n.t('toasts.auth.welcomeNew') : i18n.t('toasts.auth.welcomeBack'), { id: toastId });
           console.log('[Auth] ✓ DeHub authentication complete via Smart Account (Redirect Flow)');
           authLogger.info('Login success', { method: 'redirect-sa', address: saResult.address, username: normalizedUser.username, isNewAccount: !!saAuthResponse.result?.isNewAccount });
           return;
