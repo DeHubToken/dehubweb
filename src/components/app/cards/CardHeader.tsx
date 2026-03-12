@@ -113,7 +113,7 @@ export function CardHeader({
                 <img
                   src={badgeUrl}
                   alt="Badge"
-                  className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0"
+                  className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0 brightness-0 invert"
                 />
               )}
             </span>
