@@ -131,7 +131,7 @@ for (const method of methodNames) {
         ...translatedOpts,
         id: toastId,
         action: {
-          label: '🌐',
+          label: createElement(Languages, { className: 'w-3.5 h-3.5' }),
           onClick: () => onDemandTranslate(msg, opts, method, toastId as string | number),
         },
       });
