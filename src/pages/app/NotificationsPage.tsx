@@ -556,12 +556,11 @@ function NotificationItem({
       : null;
 
   const aggregatedActorNames = (notification as any).latestActorNames as string[] | undefined;
-  const canonicalActors = buildCanonicalActors(
-    aggregatedActorNames,
-    notification.actorUsername,
-    enriched?.username,
-    enrichedAvatars,
-  );
+  const canonicalActors = (() => {
+    const fromAggregated = buildCanonicalActors(aggregatedActorNames, undefined, undefined, enrichedAvatars);
+    if (fromAggregated.length > 0) return fromAggregated;
+    return buildCanonicalActors(undefined, notification.actorUsername, enriched?.username, enrichedAvatars);
+  })();
   const primaryKey = normalizeUsername(enriched?.username || notification.actorUsername);
 
   const resolveActorAvatar = (actor: CanonicalActor | null | undefined): string | undefined => {
