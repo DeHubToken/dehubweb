@@ -181,9 +181,18 @@ export function ChatMessage({
   };
 
   const handleQuickReact = useCallback((emoji: string) => {
-    onReact?.(message.id, emoji);
+    // Toggle: if already reacted with this emoji, remove it
+    const myReactions = message.reactions?.[emoji] || [];
+    const alreadyReacted = currentUserAddress && myReactions.some(
+      (a) => a.toLowerCase() === currentUserAddress.toLowerCase()
+    );
+    if (alreadyReacted) {
+      onRemoveReaction?.(message.id, emoji);
+    } else {
+      onReact?.(message.id, emoji);
+    }
     setEmojiPickerOpen(false);
-  }, [message.id, onReact]);
+  }, [message.id, message.reactions, currentUserAddress, onReact, onRemoveReaction]);
 
   const isClickable = !!message.userHandle;
 
@@ -277,15 +286,22 @@ export function ChatMessage({
                   className="w-auto p-1.5 bg-zinc-800 border-zinc-700 rounded-xl"
                 >
                   <div className="flex gap-0.5">
-                    {QUICK_EMOJIS.map((emoji) => (
-                      <button
-                        key={emoji}
-                        onClick={() => handleQuickReact(emoji)}
-                        className="w-8 h-8 flex items-center justify-center text-lg hover:bg-zinc-700 rounded-lg transition-colors"
-                      >
-                        {emoji}
-                      </button>
-                    ))}
+                    {QUICK_EMOJIS.map((emoji) => {
+                      const isActive = currentUserAddress && message.reactions?.[emoji]?.some(
+                        (a) => a.toLowerCase() === currentUserAddress.toLowerCase()
+                      );
+                      return (
+                        <button
+                          key={emoji}
+                          onClick={() => handleQuickReact(emoji)}
+                          className={`w-8 h-8 flex items-center justify-center text-lg rounded-lg transition-colors ${
+                            isActive ? 'bg-primary/20 ring-1 ring-primary/40' : 'hover:bg-zinc-700'
+                          }`}
+                        >
+                          {emoji}
+                        </button>
+                      );
+                    })}
                   </div>
                 </PopoverContent>
               </Popover>
