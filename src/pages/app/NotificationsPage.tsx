@@ -195,6 +195,47 @@ function getNotificationIcon(type: string) {
   }
 }
 
+/** Normalize a username for comparison: trim, strip leading @, lowercase */
+function normalizeUsername(name: string | null | undefined): string {
+  if (!name) return '';
+  return name.trim().replace(/^@/, '').toLowerCase();
+}
+
+/**
+ * Build a canonical, deduplicated actor list from latestActorNames + primary actor.
+ * latestActorNames is the source of truth; primary actor is only appended as fallback.
+ * Returns { display, key } pairs where key is the normalized form.
+ */
+function buildCanonicalActors(
+  latestActorNames: string[] | undefined,
+  primaryUsername: string | null | undefined,
+  enrichedUsername: string | null | undefined,
+): { display: string; key: string }[] {
+  const actors: { display: string; key: string }[] = [];
+  const seen = new Set<string>();
+
+  // latestActorNames is the primary source (order preserved from API)
+  if (latestActorNames) {
+    for (const name of latestActorNames) {
+      const key = normalizeUsername(name);
+      if (key && !seen.has(key)) {
+        seen.add(key);
+        actors.push({ display: name.trim(), key });
+      }
+    }
+  }
+
+  // Append primary actor only if not already present
+  const primaryKey = normalizeUsername(enrichedUsername || primaryUsername);
+  const primaryDisplay = (enrichedUsername || primaryUsername || '').trim();
+  if (primaryKey && !seen.has(primaryKey) && primaryDisplay) {
+    seen.add(primaryKey);
+    actors.push({ display: primaryDisplay, key: primaryKey });
+  }
+
+  return actors;
+}
+
 function getNotificationContent(notification: DeHubNotification, bundle?: BundledNotification, t?: (key: string, opts?: any) => string, onOthersClick?: () => void): React.ReactNode {
   const tr = t || ((key: string) => key);
   const actorName = notification.actorUsername || 'Someone';
