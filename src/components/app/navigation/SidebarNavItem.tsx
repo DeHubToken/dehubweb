@@ -48,11 +48,8 @@ export function SidebarNavItem({
 }: SidebarNavItemProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const translationKey = NAV_LABEL_KEYS[item.label];
-  const translatedLabel = translationKey
-    ? t(translationKey, { defaultValue: item.label })
-    : item.label;
-  const safeLabel = translatedLabel === translationKey ? item.label : translatedLabel;
+  const translatedLabel = t(NAV_LABEL_KEYS[item.label] || item.label);
+  
   const handleClick = (e: React.MouseEvent) => {
     onClick?.(e);
     if (e.defaultPrevented) return;
@@ -111,7 +108,7 @@ export function SidebarNavItem({
         )}>
           <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
         </div>
-        <span className={cn("relative z-10 truncate", labelClass)}>{safeLabel}</span>
+        <span className={cn("relative z-10 truncate", labelClass)}>{translatedLabel}</span>
       </a>
     );
   }
@@ -160,7 +157,7 @@ export function SidebarNavItem({
           )}
         </div>
       )}
-      <span className={cn("relative z-10 truncate", labelClass)}>{safeLabel}</span>
+      <span className={cn("relative z-10 truncate", labelClass)}>{translatedLabel}</span>
     </NavLink>
   );
 }
