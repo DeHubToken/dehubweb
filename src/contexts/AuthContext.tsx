@@ -774,7 +774,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               throw new Error('Wallet address changed during session refresh. Please sign in again.');
             }
             console.log('[Auth] [POPUP] Trying Smart Account address:', smartAccountAddress);
-            toast.loading('Signing in...', { id: toastId });
+            toast.loading(i18n.t('toasts.auth.signingIn'), { id: toastId });
             const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID, web3AuthMeta);
             const normalizedUser = normalizeUser(saAuthResponse.user, saResult.address);
             localStorage.setItem('dehub_wallet', saResult.address);
