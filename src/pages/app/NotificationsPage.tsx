@@ -574,10 +574,10 @@ function NotificationItem({
             
             return (
               <div className="grid grid-cols-2 grid-rows-2 gap-0.5 w-12 h-12 flex-shrink-0">
-                {renderGridAvatar(avatar1Url, actor1?.display || fallbackLetter, actor1 ? `/${actor1.display}` : profileLink, 'w-[23px] h-[23px]')}
-                {renderGridAvatar(avatar2Url, actor2?.display || null, actor2 ? `/${actor2.display}` : null, 'w-[23px] h-[23px]')}
+                {renderGridAvatar(avatar1Url, actor1?.display || fallbackLetter, actor1 ? `/${actor1.resolvedUsername || actor1.display}` : profileLink, 'w-[23px] h-[23px]')}
+                {renderGridAvatar(avatar2Url, actor2?.display || null, actor2 ? `/${actor2.resolvedUsername || actor2.display}` : null, 'w-[23px] h-[23px]')}
                 {actor3 ? (
-                  renderGridAvatar(avatar3Url, actor3.display, `/${actor3.display}`, 'w-[23px] h-[23px]')
+                  renderGridAvatar(avatar3Url, actor3.display, `/${actor3.resolvedUsername || actor3.display}`, 'w-[23px] h-[23px]')
                 ) : (
                   renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
                 )}
