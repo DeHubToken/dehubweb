@@ -243,13 +243,28 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
   const aggCount = (notification as any).aggregatedCount || 1;
   const aggNames = (notification as any).latestActorNames as string[] | undefined;
   if (aggCount > 2 && aggNames && aggNames.length > 0 && ['like', 'comment', 'repost'].includes(notification.type as string)) {
-    const first = aggNames[0];
-    const rest = aggCount - 1;
-    const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
-    const typeStr = notification.type as string;
-    if (typeStr === 'like') return `${first} ${othersText} liked your post`;
-    if (typeStr === 'comment') return `${first} ${othersText} commented on your post`;
-    if (typeStr === 'repost') return `${first} ${othersText} reposted your post`;
+    // Check if it's actually multiple unique actors or one actor on multiple posts
+    const uniqueNames = new Set(aggNames.map(n => n.toLowerCase()));
+    const isSingleActor = uniqueNames.size <= 1;
+    
+    if (isSingleActor) {
+      // Single user liked/commented/reposted multiple posts
+      const name = aggNames[0] || actorName;
+      const postCount = aggCount;
+      const typeStr = notification.type as string;
+      if (typeStr === 'like') return `${name} liked ${postCount} of your posts`;
+      if (typeStr === 'comment') return `${name} commented on ${postCount} of your posts`;
+      if (typeStr === 'repost') return `${name} reposted ${postCount} of your posts`;
+    } else {
+      // Multiple users on same post
+      const first = aggNames[0];
+      const rest = aggCount - 1;
+      const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
+      const typeStr = notification.type as string;
+      if (typeStr === 'like') return `${first} ${othersText} liked your post`;
+      if (typeStr === 'comment') return `${first} ${othersText} commented on your post`;
+      if (typeStr === 'repost') return `${first} ${othersText} reposted your post`;
+    }
   }
 
   switch (notification.type) {
