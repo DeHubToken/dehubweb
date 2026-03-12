@@ -1,35 +1,35 @@
 
+Root cause confirmed from live requests and current code:
+- Route is `/SableRaven_9847`.
+- `GET /api/account_info/SableRaven_9847` returns an empty shell object (no `_id`, `address`, `username`).
+- Current fallback in `getAccountByUsername` depends on `/api/users_search`, but that endpoint is returning unrelated users for this query, so canonical username recovery fails.
+- Notifications still build some profile links from display text, which can keep sending users to non-resolvable handles.
 
-## Fix: Auto-reload on chunk load failures
+Plan to fix:
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+1) Harden username resolution in `src/lib/api/dehub/users.ts`
+- Add a shared helper to detect “empty shell” account responses.
+- Fallback order for `getAccountByUsername`:
+  1. exact input
+  2. lowercase handle retry (critical for `SableRaven_9847 -> sableraven_9847`)
+  3. users_search as last resort (exact match only against username/displayName)
+- Keep `address` param across retries.
+- Prevent recursive loops by only retrying each candidate once.
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+2) Make notification profile links safer in `src/pages/app/NotificationsPage.tsx`
+- Add a route resolver for actor links:
+  - prefer `resolvedUsername`
+  - else if display is handle-like (`[a-z0-9_.]+`), use normalized lowercase key
+  - else do not create a profile link (avoid broken “display name as URL” navigation)
+- Apply this in both 2x2 avatar grid and actors drawer.
 
-### Changes
+3) Keep current profile error behavior, but only after real fallback exhaustion
+- `use-dehub-profile.ts` can continue treating empty-shell user as not found.
+- With step (1), valid users should resolve before this state.
+- Existing URL canonicalization in `use-profile-page.ts` will then auto-replace casing once profile resolves.
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
-
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
-
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
-
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
-
+Validation checklist after implementation:
+- Open `/SableRaven_9847` directly: should load and normalize to canonical handle.
+- Click this user from aggregated notifications: should open profile, not “profile not found”.
+- Verify a non-handle display name in actor lists is no longer clickable to a broken route.
+- Re-test known working profiles (`xluna`, `0xkai`) for no regressions.
