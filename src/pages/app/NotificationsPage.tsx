@@ -561,11 +561,30 @@ function NotificationItem({
     if (fromAggregated.length > 0) return fromAggregated;
     return buildCanonicalActors(undefined, notification.actorUsername, enriched?.username, enrichedAvatars);
   })();
+  const aggregatedCount = (notification as any).aggregatedCount || 1;
+  const isBackendAggregatedMultiActor =
+    canonicalActors.length >= 2 &&
+    aggregatedCount > 2 &&
+    ['like', 'comment', 'repost', 'following'].includes(notification.type as string) &&
+    bundle.bundleType !== 'same-actor';
+
   const primaryKey = normalizeUsername(enriched?.username || notification.actorUsername);
+  const primaryAddress = notification.actorAddress?.toLowerCase();
 
   const resolveActorAvatar = (actor: CanonicalActor | null | undefined): string | undefined => {
     if (!actor) return undefined;
-    return resolveActorAvatarUrl(actor, enrichedAvatars) || (actor.key === primaryKey ? avatarUrl : undefined);
+
+    const resolved = resolveActorAvatarUrl(actor, enrichedAvatars);
+    if (resolved) return resolved;
+
+    // Critical: for backend multi-actor aggregates, never borrow the primary actor avatar
+    // for other actors (this causes "wrong face under correct name" mismatches).
+    if (isBackendAggregatedMultiActor) return undefined;
+
+    const actorAddress = actor.address?.toLowerCase();
+    if (primaryAddress && actorAddress && actorAddress === primaryAddress) return avatarUrl;
+
+    return actor.key === primaryKey ? avatarUrl : undefined;
   };
 
   const hasUnread = bundle.bundleType !== 'single' 
