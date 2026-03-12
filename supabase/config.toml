@@ -77,3 +77,6 @@ verify_jwt = false
 
 [functions.winter-wonderland-draw]
 verify_jwt = false
+
+[functions.translate-locale-batch]
+verify_jwt = false
