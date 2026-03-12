@@ -32,18 +32,14 @@ export function useUserLanguage() {
   }, []);
 
   const setPreferredLanguage = useCallback(async (lang: string) => {
-    console.log('[Lang] setPreferredLanguage called with:', lang);
     const ok = await loadLanguage(lang);
-    console.log('[Lang] loadLanguage result:', ok, '| i18n.language before change:', i18n.language);
     if (!ok) {
       toast.error('Could not load language. Please try again.');
       return;
     }
     setLanguage(lang);
     localStorage.setItem(STORAGE_KEY, lang);
-    console.log('[Lang] calling i18n.changeLanguage...');
     await i18n.changeLanguage(lang);
-    console.log('[Lang] i18n.changeLanguage done | i18n.language now:', i18n.language);
   }, []);
 
   return { language, isLoading, setPreferredLanguage };

@@ -96,26 +96,21 @@ const queryClient = new QueryClient({
 // Inner app component that uses auth context
 function AppContent() {
   const { isLoginModalOpen, closeLoginModal } = useAuth();
-  const [currentLang, setCurrentLang] = useState(() => i18nInstance.language || 'en');
+  const [langVersion, setLangVersion] = useState(0);
 
   useEffect(() => {
-    console.log('[Lang] AppContent mounted, subscribing to languageChanged. currentLang:', currentLang);
-    const handleLangChange = (lng: string) => {
-      console.log('[Lang] languageChanged event fired with:', lng, '| currentLang state was:', currentLang);
-      setCurrentLang(lng);
+    const handleLangChange = () => {
+      setLangVersion(v => v + 1);
     };
     i18nInstance.on('languageChanged', handleLangChange);
-    return () => {
-      console.log('[Lang] AppContent unsubscribing languageChanged');
-      i18nInstance.off('languageChanged', handleLangChange);
-    };
+    return () => { i18nInstance.off('languageChanged', handleLangChange); };
   }, []);
 
   // Preload 3D icons on app mount to prevent flicker during navigation
   usePreloadIcons();
 
   return (
-    <div key={currentLang}>
+    <div key={langVersion}>
       <Sonner />
       <UsernameRequiredModal />
       <LoginModal open={isLoginModalOpen} onOpenChange={closeLoginModal} />
