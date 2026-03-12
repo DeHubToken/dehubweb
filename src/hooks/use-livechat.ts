@@ -88,6 +88,9 @@ function deduplicateMessages(msgs: SupabaseLiveChatMessage[]): SupabaseLiveChatM
   );
 }
 
+/** Module-level cache so remounts (auth flicker, navigate back) show last-known messages */
+const liveChatMessagesCache = new Map<string, SupabaseLiveChatMessage[]>();
+
 /** Normalize socket message to our format */
 function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChatMessage | null {
   const m = msg as Record<string, unknown>;
@@ -130,19 +133,25 @@ export function useLiveChatMessages(roomId: string | null) {
   const initialLoadDone = useRef(false);
 
   // Fetch messages via REST API — source of truth for history (roomJoined must not overwrite)
-  // clearOptimistic: remove a specific temp-* id once its real message is confirmed in API
-  const fetchMessages = useCallback(async (showLoading = false, clearOptimisticId?: string) => {
+  // Merge with current state: keep optimistic (temp-*) messages that are not yet in API response
+  const fetchMessages = useCallback(async (showLoading = false) => {
     if (!roomId) return;
     if (showLoading) setIsLoading(true);
     try {
       const apiMessages = await fetchApiMessages(roomId, { limit: 200 });
       const mapped = apiMessages.map((m) => apiMsgToLocal(m, roomId));
       setMessages((prev) => {
-        // Keep all optimistic temp messages EXCEPT the one we just confirmed via REST
-        const optimistic = prev.filter(
-          (m) => m.id.startsWith('temp-') && m.id !== clearOptimisticId
+        const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
+        const keepOptimistic = optimistic.filter(
+          (temp) =>
+            !mapped.some(
+              (real) =>
+                real.content === temp.content && real.sender_address === temp.sender_address
+            )
         );
-        return deduplicateMessages([...mapped, ...optimistic]);
+        const next = deduplicateMessages([...mapped, ...keepOptimistic]);
+        liveChatMessagesCache.set(roomId, next);
+        return next;
       });
     } catch (err) {
       console.error('[LiveChat] REST messages fetch failed:', err);
@@ -152,14 +161,15 @@ export function useLiveChatMessages(roomId: string | null) {
   }, [roomId]);
 
   // Load messages via REST on mount / room change only — NOT on auth changes
-  // isAuthenticated intentionally excluded: Wagmi reconnect triggers auth re-checks
-  // which caused fetchMessages(showLoading=true) → skeleton flash → optimistic message lost
+  // Hydrate from cache first so remounts (auth flicker) don't show empty list
   useEffect(() => {
     if (!roomId) {
       setMessages([]);
       setIsLoading(false);
       return;
     }
+    const cached = liveChatMessagesCache.get(roomId);
+    if (cached?.length) setMessages(cached);
     fetchMessages(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId]);
@@ -201,11 +211,12 @@ export function useLiveChatMessages(roomId: string | null) {
       const local = socketMsgToLocal(msg, roomId);
       if (local) {
         setMessages((prev) => {
-          // Remove any temp message with same content+sender (it's now confirmed by server)
           const withoutMatchingTemp = prev.filter(
             (x) => !(x.id.startsWith('temp-') && x.content === local.content && x.sender_address === local.sender_address)
           );
-          return deduplicateMessages([...withoutMatchingTemp.filter((x) => x.id !== local.id), local]);
+          const next = deduplicateMessages([...withoutMatchingTemp.filter((x) => x.id !== local.id), local]);
+          liveChatMessagesCache.set(roomId, next);
+          return next;
         });
       }
     });
@@ -264,7 +275,11 @@ export function useLiveChatMessages(roomId: string | null) {
         is_pinned: false,
         created_at: new Date().toISOString(),
       };
-      setMessages((prev) => [...prev, optimisticMsg]);
+      setMessages((prev) => {
+        const next = [...prev, optimisticMsg];
+        if (roomId) liveChatMessagesCache.set(roomId, next);
+        return next;
+      });
 
       try {
         const socket = getSocket();
@@ -281,12 +296,15 @@ export function useLiveChatMessages(roomId: string | null) {
         const apiType = type === 'image' || type === 'voice' ? 'media' : type;
         emitSendMessage({ roomId, content, messageType: apiType, imageUrl });
 
-        // Server does NOT echo newMessage back to sender — schedule a REST refetch
-        // to get the confirmed message and remove the optimistic ghost
-        const idToClean = optimisticId;
-        setTimeout(() => { fetchMessages(false, idToClean); }, 1500);
+        // Server may not echo newMessage back to sender — refetch so we get the confirmed message.
+        // Merge keeps our optimistic until API returns it, so message never disappears.
+        setTimeout(() => { fetchMessages(false); }, 1500);
       } catch (err: any) {
-        setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
+        setMessages((prev) => {
+          const next = prev.filter((m) => m.id !== optimisticId);
+          if (roomId) liveChatMessagesCache.set(roomId, next);
+          return next;
+        });
         toast.error(`Failed to send: ${err?.message || 'Unknown error'}`);
         console.error('[LiveChat] Failed to send message:', err);
         throw err;
@@ -294,7 +312,7 @@ export function useLiveChatMessages(roomId: string | null) {
         setIsSending(false);
       }
     },
-    [roomId, isAuthenticated, walletAddress, user, isBanned]
+    [roomId, isAuthenticated, walletAddress, user, isBanned, fetchMessages]
   );
 
   return { messages, isLoading, isSending, isConnected, isBanned, send, refetch: () => fetchMessages(false) };
