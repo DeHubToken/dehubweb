@@ -29,6 +29,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
+import { isBigBadgeUrl } from '@/lib/staking-badges';
 import { toast } from 'sonner';
 import { DISPLAY_WALLET_OVERRIDES, getDefaultBanner, type TabValue } from './ProfileConstants';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
