@@ -116,7 +116,7 @@ for (const method of methodNames) {
     }
 
     // Generate a stable ID so we can update the toast later
-    const id = opts?.id ?? `toast-i18n-${++toastCounter}`;
+    const id = (opts?.id as string | number) ?? `toast-i18n-${++toastCounter}`;
     const finalOpts = { ...opts, id };
 
     // Show immediately in English
