@@ -22,14 +22,21 @@ import { formatDistanceToNow } from 'date-fns';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
 import notificationsIcon from '@/assets/icons/notifications-icon.png';
+import { useQueries } from '@tanstack/react-query';
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
-import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
+import { DEHUB_CDN_BASE, getNFTInfo } from '@/lib/api/dehub';
+import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Switch } from '@/components/ui/switch';
 import { FollowersListDrawer } from '@/components/app/profile';
+import { VideoCard } from '@/components/app/cards/VideoCard';
+import { ImageCard } from '@/components/app/cards/ImageCard';
+import { PostCard } from '@/components/app/cards/PostCard';
+import { Skeleton } from '@/components/ui/skeleton';
+import type { FeedItem } from '@/types/feed.types';
 
 // Batch avatar enrichment cache for fresh profile pictures
 interface EnrichedAvatar {
