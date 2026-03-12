@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { AppLayout } from "./components/app/AppLayout";
 import React, { Suspense, useState, useEffect } from "react";
+import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
 
 // Pages — lazy loaded
@@ -181,19 +182,21 @@ import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <WagmiProvider config={wagmiConfig}>
-      <RainbowKitProvider theme={darkTheme()} modalSize="compact">
-        <AuthProvider>
-          <OptimisticPostsProvider>
-            <TooltipProvider>
-              <AppContent />
-            </TooltipProvider>
-          </OptimisticPostsProvider>
-        </AuthProvider>
-      </RainbowKitProvider>
-    </WagmiProvider>
-  </QueryClientProvider>
+  <I18nextProvider i18n={i18nInstance}>
+    <QueryClientProvider client={queryClient}>
+      <WagmiProvider config={wagmiConfig}>
+        <RainbowKitProvider theme={darkTheme()} modalSize="compact">
+          <AuthProvider>
+            <OptimisticPostsProvider>
+              <TooltipProvider>
+                <AppContent />
+              </TooltipProvider>
+            </OptimisticPostsProvider>
+          </AuthProvider>
+        </RainbowKitProvider>
+      </WagmiProvider>
+    </QueryClientProvider>
+  </I18nextProvider>
 );
 
 export default App;
