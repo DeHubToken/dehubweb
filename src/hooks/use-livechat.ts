@@ -130,14 +130,18 @@ export function useLiveChatMessages(roomId: string | null) {
   const initialLoadDone = useRef(false);
 
   // Fetch messages via REST API — source of truth for history (roomJoined must not overwrite)
-  const fetchMessages = useCallback(async (showLoading = false) => {
+  // clearOptimistic: remove a specific temp-* id once its real message is confirmed in API
+  const fetchMessages = useCallback(async (showLoading = false, clearOptimisticId?: string) => {
     if (!roomId) return;
     if (showLoading) setIsLoading(true);
     try {
       const apiMessages = await fetchApiMessages(roomId, { limit: 200 });
       const mapped = apiMessages.map((m) => apiMsgToLocal(m, roomId));
       setMessages((prev) => {
-        const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
+        // Keep all optimistic temp messages EXCEPT the one we just confirmed via REST
+        const optimistic = prev.filter(
+          (m) => m.id.startsWith('temp-') && m.id !== clearOptimisticId
+        );
         return deduplicateMessages([...mapped, ...optimistic]);
       });
     } catch (err) {
@@ -276,6 +280,11 @@ export function useLiveChatMessages(roomId: string | null) {
         // Map 'image'/'voice' to the API-supported 'media' type
         const apiType = type === 'image' || type === 'voice' ? 'media' : type;
         emitSendMessage({ roomId, content, messageType: apiType, imageUrl });
+
+        // Server does NOT echo newMessage back to sender — schedule a REST refetch
+        // to get the confirmed message and remove the optimistic ghost
+        const idToClean = optimisticId;
+        setTimeout(() => { fetchMessages(false, idToClean); }, 1500);
       } catch (err: any) {
         setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
         toast.error(`Failed to send: ${err?.message || 'Unknown error'}`);
