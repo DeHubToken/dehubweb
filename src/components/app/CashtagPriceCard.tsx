@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { DexPair } from '@/hooks/use-dexscreener';
 import type { CmcMarketData } from '@/hooks/use-cmc-market-cap';
-import { useTokenChart } from '@/hooks/use-token-chart';
+import { useTokenChart, type ChartTimeframe } from '@/hooks/use-token-chart';
 import { TokenPriceChart } from '@/components/app/TokenPriceChart';
 import { TrendingUp, TrendingDown, Copy, Check, ChevronDown, ExternalLink, Globe, Twitter, MessageCircle } from 'lucide-react';
 import { QuickBuyButton } from '@/components/app/QuickBuyButton';
@@ -66,7 +66,8 @@ function StatRow({ label, value }: { label: string; value: string }) {
 export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProps) {
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const { data: chartData, isLoading: isChartLoading } = useTokenChart(symbol, true);
+  const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>('1D');
+  const { data: chartData, isLoading: isChartLoading } = useTokenChart(symbol, true, chartTimeframe);
   
   const change24h = cmcData?.percentChange24h ?? pair.priceChange?.h24;
   const isPositive = change24h != null && change24h >= 0;
@@ -175,7 +176,12 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
       </div>
 
       {/* Price Chart */}
-      <TokenPriceChart data={chartData || []} isLoading={isChartLoading} />
+      <TokenPriceChart
+        data={chartData || []}
+        isLoading={isChartLoading}
+        timeframe={chartTimeframe}
+        onTimeframeChange={setChartTimeframe}
+      />
 
       {/* Stats row */}
       <div className="px-4 py-3 flex items-center gap-4 text-xs border-t border-zinc-700/50">
