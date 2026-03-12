@@ -38,6 +38,62 @@ import { PostCard } from '@/components/app/cards/PostCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { FeedItem } from '@/types/feed.types';
 
+// ============================================================================
+// NotificationPostCards — fetches full NFT data and renders real feed cards
+// ============================================================================
+function NotificationPostCards({ tokenIds }: { tokenIds: number[] }) {
+  const results = useQueries({
+    queries: tokenIds.map((id) => ({
+      queryKey: ['nft-info', String(id)],
+      queryFn: () => getNFTInfo(String(id)),
+      staleTime: 5 * 60 * 1000,
+    })),
+  });
+
+  const isLoading = results.some((r) => r.isLoading);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-3">
+        {tokenIds.map((id) => (
+          <div key={id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+            <div className="flex items-center gap-3 pb-3">
+              <Skeleton className="w-10 h-10 rounded-md" />
+              <div className="space-y-2 flex-1">
+                <Skeleton className="h-4 w-1/3 bg-white/[0.06]" />
+                <Skeleton className="h-3 w-1/4 bg-white/[0.06]" />
+              </div>
+            </div>
+            <Skeleton className="aspect-video w-full rounded-lg bg-white/[0.06]" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  const feedItems: FeedItem[] = results
+    .map((r) => r.data)
+    .filter((nft): nft is NonNullable<typeof nft> => nft != null)
+    .map(mapNFTToFeedItem);
+
+  return (
+    <div className="space-y-3">
+      {feedItems.map((item) => {
+        switch (item.type) {
+          case 'video':
+            return <VideoCard key={item.id} video={item} />;
+          case 'image':
+            return <ImageCard key={item.id} post={item} />;
+          case 'post':
+            return <PostCard key={item.id} post={item} />;
+          default:
+            return null;
+        }
+      })}
+    </div>
+  );
+}
+
 // Batch avatar enrichment cache for fresh profile pictures
 interface EnrichedAvatar {
   avatarUrl: string | null;
