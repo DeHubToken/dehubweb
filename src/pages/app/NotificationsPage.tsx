@@ -729,7 +729,6 @@ function NotificationItem({
                 </Link>
               ));
             })()}
-            })()}
           </div>
         </DrawerContent>
       </Drawer>
