@@ -195,7 +195,7 @@ function getNotificationIcon(type: string) {
   }
 }
 
-function getNotificationContent(notification: DeHubNotification, bundle?: BundledNotification, t?: (key: string, opts?: any) => string): React.ReactNode {
+function getNotificationContent(notification: DeHubNotification, bundle?: BundledNotification, t?: (key: string, opts?: any) => string, onOthersClick?: () => void): React.ReactNode {
   const tr = t || ((key: string) => key);
   const actorName = notification.actorUsername || 'Someone';
   
