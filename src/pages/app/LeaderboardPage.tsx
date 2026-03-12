@@ -30,7 +30,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { getBadgeUrl, isBigBadge } from '@/lib/staking-badges';
+import { getBadgeUrl } from '@/lib/staking-badges';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 
 
 type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
