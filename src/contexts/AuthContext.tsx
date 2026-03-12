@@ -895,7 +895,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Auto-retry once on first failure (common when app/config not fully loaded)
         if (!isRetry) {
           console.log(`[Auth] First attempt failed, retrying in 2s...`);
-          toast.info('Retrying...', { duration: 2000 });
+          toast.info(i18n.t('toasts.auth.retrying'), { duration: 2000 });
           setConnectionSource(null);
           await forceCleanupWeb3Auth();
           await new Promise(r => setTimeout(r, 2000));
