@@ -193,7 +193,9 @@ function MessageBubble({
           >
             {/* Text message */}
             {(message.msgType === 'msg') && (
-              <TranslatableText text={message.content} className="text-sm break-words" as="p" />
+              <p className="text-sm break-words whitespace-pre-wrap">
+                {isTranslated ? translatedText : message.content}
+              </p>
             )}
 
             {/* Media (image) — show loading when upload pending / mediaUrls empty */}
