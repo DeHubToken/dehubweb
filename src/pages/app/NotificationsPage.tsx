@@ -814,7 +814,10 @@ function NotificationItem({
       </AnimatePresence>
 
       {/* Actors drawer — shows all users who performed this action */}
-      <Drawer open={showActorsDrawer} onOpenChange={setShowActorsDrawer}>
+      <Drawer open={showActorsDrawer} onOpenChange={(open) => {
+        if (!open) { drawerJustClosed.current = true; setTimeout(() => { drawerJustClosed.current = false; }, 300); }
+        setShowActorsDrawer(open);
+      }}>
         <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[70vh]">
           <DrawerHeader className="text-center pb-2">
             <DrawerTitle className="text-white text-base">
