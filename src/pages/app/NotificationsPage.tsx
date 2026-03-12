@@ -195,6 +195,47 @@ function getNotificationIcon(type: string) {
   }
 }
 
+/** Normalize a username for comparison: trim, strip leading @, lowercase */
+function normalizeUsername(name: string | null | undefined): string {
+  if (!name) return '';
+  return name.trim().replace(/^@/, '').toLowerCase();
+}
+
+/**
+ * Build a canonical, deduplicated actor list from latestActorNames + primary actor.
+ * latestActorNames is the source of truth; primary actor is only appended as fallback.
+ * Returns { display, key } pairs where key is the normalized form.
+ */
+function buildCanonicalActors(
+  latestActorNames: string[] | undefined,
+  primaryUsername: string | null | undefined,
+  enrichedUsername: string | null | undefined,
+): { display: string; key: string }[] {
+  const actors: { display: string; key: string }[] = [];
+  const seen = new Set<string>();
+
+  // latestActorNames is the primary source (order preserved from API)
+  if (latestActorNames) {
+    for (const name of latestActorNames) {
+      const key = normalizeUsername(name);
+      if (key && !seen.has(key)) {
+        seen.add(key);
+        actors.push({ display: name.trim(), key });
+      }
+    }
+  }
+
+  // Append primary actor only if not already present
+  const primaryKey = normalizeUsername(enrichedUsername || primaryUsername);
+  const primaryDisplay = (enrichedUsername || primaryUsername || '').trim();
+  if (primaryKey && !seen.has(primaryKey) && primaryDisplay) {
+    seen.add(primaryKey);
+    actors.push({ display: primaryDisplay, key: primaryKey });
+  }
+
+  return actors;
+}
+
 function getNotificationContent(notification: DeHubNotification, bundle?: BundledNotification, t?: (key: string, opts?: any) => string, onOthersClick?: () => void): React.ReactNode {
   const tr = t || ((key: string) => key);
   const actorName = notification.actorUsername || 'Someone';
@@ -243,21 +284,20 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
   const aggCount = (notification as any).aggregatedCount || 1;
   const aggNames = (notification as any).latestActorNames as string[] | undefined;
   if (aggCount > 2 && aggNames && aggNames.length > 0 && ['like', 'comment', 'repost'].includes(notification.type as string)) {
-    // Check if it's actually multiple unique actors or one actor on multiple posts
-    const uniqueNames = new Set(aggNames.map(n => n.toLowerCase()));
-    const isSingleActor = uniqueNames.size <= 1;
+    // Use canonical actor list for consistent naming with grid
+    const canonical = buildCanonicalActors(aggNames, notification.actorUsername, undefined);
+    const isSingleActor = canonical.length <= 1;
     
     if (isSingleActor) {
-      // Single user liked/commented/reposted multiple posts
-      const name = aggNames[0] || actorName;
+      const name = canonical[0]?.display || actorName;
       const postCount = aggCount;
       const typeStr = notification.type as string;
       if (typeStr === 'like') return `${name} liked ${postCount} of your posts`;
       if (typeStr === 'comment') return `${name} commented on ${postCount} of your posts`;
       if (typeStr === 'repost') return `${name} reposted ${postCount} of your posts`;
     } else {
-      // Multiple users on same post
-      const first = aggNames[0];
+      // Multiple users — first name from canonical list matches grid slot 1
+      const first = canonical[0]?.display || aggNames[0];
       const rest = aggCount - 1;
       const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
       const othersSpan = onOthersClick ? (
@@ -457,80 +497,42 @@ function NotificationItem({
           const aggCount = (notification as any).aggregatedCount || 1;
           const aggNames = (notification as any).latestActorNames as string[] | undefined;
           
-          // Count unique actors to distinguish "multiple users liked 1 post" from "1 user liked multiple posts"
-          const uniqueActorCount = (() => {
-            const seen = new Set<string>();
-            const primaryName = enriched?.username?.toLowerCase() || notification.actorUsername?.toLowerCase();
-            if (primaryName) seen.add(primaryName);
-            if (aggNames) aggNames.forEach(n => seen.add(n.toLowerCase()));
-            return seen.size;
-          })();
+          // Build one canonical actor list — single source of truth for grid, text, drawer
+          const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username);
+          const uniqueActorCount = canonicalActors.length;
           
           const hasMultipleActors = uniqueActorCount >= 2 && aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string) && bundle.bundleType !== 'same-actor';
           
           if (hasMultipleActors) {
             // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
             
-            // Find avatar URL by username from enriched data — strict match only
-            const findAvatarByUsername = (username: string | null): string | undefined => {
-              if (!username) return undefined;
-              const lower = username.toLowerCase();
-              // First try direct key lookup by username prefix
-              const byKey = enrichedAvatars.get(`username:${lower}`);
-              if (byKey?.avatarUrl && byKey.username?.toLowerCase() === lower) return byKey.avatarUrl;
-              // Then scan all entries for matching username
-              for (const [key, entry] of enrichedAvatars) {
-                if (entry.username?.toLowerCase() === lower && entry.avatarUrl) {
+            // Find avatar URL by normalized username from enriched data
+            const findAvatarByUsername = (key: string): string | undefined => {
+              if (!key) return undefined;
+              const byKey = enrichedAvatars.get(`username:${key}`);
+              if (byKey?.avatarUrl && normalizeUsername(byKey.username) === key) return byKey.avatarUrl;
+              for (const [, entry] of enrichedAvatars) {
+                if (normalizeUsername(entry.username) === key && entry.avatarUrl) {
                   return entry.avatarUrl;
                 }
               }
               return undefined;
             };
             
-            // Find username for the primary actorAddress (to deduplicate)
-            const primaryActorUsername = enriched?.username?.toLowerCase() || notification.actorUsername?.toLowerCase();
+            const primaryKey = normalizeUsername(enriched?.username || notification.actorUsername);
             
-            // Build deduplicated list of unique actor names for the grid
-            const allNames = aggNames || [];
-            const uniqueGridNames: string[] = [];
-            const seenLower = new Set<string>();
+            const actor1 = canonicalActors[0] || null;
+            const actor2 = canonicalActors[1] || null;
+            const actor3 = canonicalActors[2] || null;
             
-            // Add primary actor first if we know their name
-            if (primaryActorUsername) {
-              const primaryDisplayName = enriched?.username || notification.actorUsername || primaryActorUsername;
-              seenLower.add(primaryActorUsername);
-              uniqueGridNames.push(primaryDisplayName);
-            }
+            // Resolve avatars — only fall back to notification's avatarUrl for the primary actor
+            const avatar1Url = actor1 ? (findAvatarByUsername(actor1.key) || (actor1.key === primaryKey ? avatarUrl : undefined)) : undefined;
+            let avatar2Url = actor2 ? (findAvatarByUsername(actor2.key) || (actor2.key === primaryKey ? avatarUrl : undefined)) : undefined;
+            let avatar3Url = actor3 ? (findAvatarByUsername(actor3.key) || (actor3.key === primaryKey ? avatarUrl : undefined)) : undefined;
             
-            // Then add remaining unique names from latestActorNames
-            for (const name of allNames) {
-              const lower = name.toLowerCase();
-              if (!seenLower.has(lower)) {
-                seenLower.add(lower);
-                uniqueGridNames.push(name);
-              }
-            }
-            
-            const actorName1 = uniqueGridNames[0] || notification.actorUsername || null;
-            const actorName2 = uniqueGridNames[1] || null;
-            const actorName3 = uniqueGridNames[2] || null;
-            
-            // Only fall back to the notification's avatarUrl if this name IS the primary actor
-            const isPrimaryActor1 = actorName1?.toLowerCase() === primaryActorUsername;
-            const avatar1Url = findAvatarByUsername(actorName1) || (isPrimaryActor1 ? avatarUrl : undefined);
-            const isPrimaryActor2 = actorName2?.toLowerCase() === primaryActorUsername;
-            let avatar2Url = findAvatarByUsername(actorName2) || (isPrimaryActor2 ? avatarUrl : undefined);
-            const isPrimaryActor3 = actorName3?.toLowerCase() === primaryActorUsername;
-            let avatar3Url = findAvatarByUsername(actorName3) || (isPrimaryActor3 ? avatarUrl : undefined);
-            
-            // Safety: if a non-primary actor ended up with the same URL as the primary, clear it
-            // This prevents showing duplicate avatars when enrichment returns wrong data
-            if (avatar2Url && avatar1Url && avatar2Url === avatar1Url && actorName2?.toLowerCase() !== actorName1?.toLowerCase()) {
-              avatar2Url = undefined;
-            }
-            if (avatar3Url && avatar1Url && avatar3Url === avatar1Url && actorName3?.toLowerCase() !== actorName1?.toLowerCase()) {
-              avatar3Url = undefined;
-            }
+            // Safety: prevent duplicate avatar images across different actors
+            if (avatar2Url && avatar1Url && avatar2Url === avatar1Url && actor2?.key !== actor1?.key) avatar2Url = undefined;
+            if (avatar3Url && avatar1Url && avatar3Url === avatar1Url && actor3?.key !== actor1?.key) avatar3Url = undefined;
             
             const renderGridAvatar = (
               url: string | undefined,
@@ -555,17 +557,13 @@ function NotificationItem({
             
             return (
               <div className="grid grid-cols-2 grid-rows-2 gap-0.5 w-12 h-12 flex-shrink-0">
-                {/* Top-left: primary actor (from latestActorNames[0]) */}
-                {renderGridAvatar(avatar1Url, actorName1 || notification.actorUsername || fallbackLetter, actorName1 ? `/${actorName1}` : profileLink, 'w-[23px] h-[23px]')}
-                {/* Top-right: 2nd actor */}
-                {renderGridAvatar(avatar2Url, actorName2, actorName2 ? `/${actorName2}` : null, 'w-[23px] h-[23px]')}
-                {/* Bottom-left: 3rd actor */}
-                {actorName3 ? (
-                  renderGridAvatar(avatar3Url, actorName3, `/${actorName3}`, 'w-[23px] h-[23px]')
+                {renderGridAvatar(avatar1Url, actor1?.display || fallbackLetter, actor1 ? `/${actor1.display}` : profileLink, 'w-[23px] h-[23px]')}
+                {renderGridAvatar(avatar2Url, actor2?.display || null, actor2 ? `/${actor2.display}` : null, 'w-[23px] h-[23px]')}
+                {actor3 ? (
+                  renderGridAvatar(avatar3Url, actor3.display, `/${actor3.display}`, 'w-[23px] h-[23px]')
                 ) : (
                   renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
                 )}
-                {/* Bottom-right: notification type icon — clickable to show all actors */}
                 <button
                   className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition-colors cursor-pointer"
                   onClick={(e) => {
@@ -708,39 +706,25 @@ function NotificationItem({
           <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[50vh]" data-vaul-no-drag>
             {(() => {
               const aggNames = (notification as any).latestActorNames as string[] | undefined;
-              const primaryUsername = enriched?.username || notification.actorUsername;
-              const allActors: string[] = [];
-              const seen = new Set<string>();
-              if (primaryUsername && !seen.has(primaryUsername.toLowerCase())) {
-                seen.add(primaryUsername.toLowerCase());
-                allActors.push(primaryUsername);
-              }
-              if (aggNames) {
-                for (const name of aggNames) {
-                  if (!seen.has(name.toLowerCase())) {
-                    seen.add(name.toLowerCase());
-                    allActors.push(name);
-                  }
-                }
-              }
-              const findAvatar = (username: string) => {
+              const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username);
+              const findAvatar = (key: string) => {
                 for (const [, entry] of enrichedAvatars) {
-                  if (entry.username?.toLowerCase() === username.toLowerCase() && entry.avatarUrl) return entry.avatarUrl;
+                  if (normalizeUsername(entry.username) === key && entry.avatarUrl) return entry.avatarUrl;
                 }
                 return undefined;
               };
-              return allActors.map((name) => (
+              return canonicalActors.map((actor) => (
                 <Link
-                  key={name}
-                  to={`/${name}`}
+                  key={actor.key}
+                  to={`/${actor.display}`}
                   onClick={() => setShowActorsDrawer(false)}
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors"
                 >
                   <Avatar className="w-10 h-10">
-                    {findAvatar(name) && <AvatarImage src={findAvatar(name)} />}
-                    <AvatarFallback className="bg-zinc-700 text-white font-medium">{name.charAt(0).toUpperCase()}</AvatarFallback>
+                    {findAvatar(actor.key) && <AvatarImage src={findAvatar(actor.key)} />}
+                    <AvatarFallback className="bg-zinc-700 text-white font-medium">{actor.display.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
-                  <span className="text-white text-sm font-medium">@{name}</span>
+                  <span className="text-white text-sm font-medium">@{actor.display}</span>
                 </Link>
               ));
             })()}
