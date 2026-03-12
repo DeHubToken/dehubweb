@@ -515,7 +515,7 @@ function NotificationItem({
           const aggNames = (notification as any).latestActorNames as string[] | undefined;
           
           // Build one canonical actor list — single source of truth for grid, text, drawer
-          const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username);
+          const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username, enrichedAvatars);
           const uniqueActorCount = canonicalActors.length;
           
           const hasMultipleActors = uniqueActorCount >= 2 && aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string) && bundle.bundleType !== 'same-actor';
