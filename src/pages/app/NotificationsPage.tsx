@@ -561,11 +561,30 @@ function NotificationItem({
     if (fromAggregated.length > 0) return fromAggregated;
     return buildCanonicalActors(undefined, notification.actorUsername, enriched?.username, enrichedAvatars);
   })();
+  const aggregatedCount = (notification as any).aggregatedCount || 1;
+  const isBackendAggregatedMultiActor =
+    canonicalActors.length >= 2 &&
+    aggregatedCount > 2 &&
+    ['like', 'comment', 'repost', 'following'].includes(notification.type as string) &&
+    bundle.bundleType !== 'same-actor';
+
   const primaryKey = normalizeUsername(enriched?.username || notification.actorUsername);
+  const primaryAddress = notification.actorAddress?.toLowerCase();
 
   const resolveActorAvatar = (actor: CanonicalActor | null | undefined): string | undefined => {
     if (!actor) return undefined;
-    return resolveActorAvatarUrl(actor, enrichedAvatars) || (actor.key === primaryKey ? avatarUrl : undefined);
+
+    const resolved = resolveActorAvatarUrl(actor, enrichedAvatars);
+    if (resolved) return resolved;
+
+    // Critical: for backend multi-actor aggregates, never borrow the primary actor avatar
+    // for other actors (this causes "wrong face under correct name" mismatches).
+    if (isBackendAggregatedMultiActor) return undefined;
+
+    const actorAddress = actor.address?.toLowerCase();
+    if (primaryAddress && actorAddress && actorAddress === primaryAddress) return avatarUrl;
+
+    return actor.key === primaryKey ? avatarUrl : undefined;
   };
 
   const hasUnread = bundle.bundleType !== 'single' 
@@ -613,9 +632,7 @@ function NotificationItem({
       {/* Avatar with type icon overlay — stacked for aggregated notifications */}
       <div className="relative flex-shrink-0">
         {(() => {
-          const aggCount = (notification as any).aggregatedCount || 1;
-          const uniqueActorCount = canonicalActors.length;
-          const hasMultipleActors = uniqueActorCount >= 2 && aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string) && bundle.bundleType !== 'same-actor';
+          const hasMultipleActors = isBackendAggregatedMultiActor;
           
           if (hasMultipleActors) {
             // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
@@ -689,7 +706,7 @@ function NotificationItem({
           );
         })()}
         {/* Type icon badge — only for single-actor notifications (aggregated ones render it inside) */}
-        {!(bundle.bundleType !== 'same-actor' && (notification as any).aggregatedCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string)) && (
+        {!isBackendAggregatedMultiActor && (
           <div className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
             {getNotificationIcon(notification.type)}
           </div>
