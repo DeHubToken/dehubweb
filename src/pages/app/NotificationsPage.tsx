@@ -985,7 +985,7 @@ export default function NotificationsPage() {
   // Batch-avatar enrichment for fresh profile pictures
   // Module-level caches persist across navigations to prevent avatar flashing
   const [enrichedAvatars, setEnrichedAvatars] = useState<Map<string, EnrichedAvatar>>(() => moduleAvatarCache);
-  const [enrichmentReady, setEnrichmentReady] = useState(() => moduleAvatarCache.size > 0);
+  
 
   // Module-level caches persist across navigations — no clearing on mount
 
