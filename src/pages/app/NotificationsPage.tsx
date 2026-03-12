@@ -894,9 +894,13 @@ export default function NotificationsPage() {
         const avatarUrl = user.address ? buildAvatarUrl(user.address, rawPath) : null;
         const key = user.address?.toLowerCase() || `username:${username.toLowerCase()}`;
         const info = { address: user.address || username, avatarUrl, username: user.username || username, displayName: user.displayName || null };
-        // Also store under the normalized input name so display-name lookups resolve
-        const extraKey = key !== `username:${username.toLowerCase()}` ? `username:${username.toLowerCase()}` : null;
-        return { key, info, extraKey };
+        // Store under both the input name AND the resolved canonical username so all name variants resolve
+        const extraKeys: string[] = [];
+        const inputKey = `username:${username.toLowerCase()}`;
+        if (key !== inputKey) extraKeys.push(inputKey);
+        const resolvedKey = user.username ? `username:${user.username.toLowerCase()}` : null;
+        if (resolvedKey && resolvedKey !== inputKey && resolvedKey !== key) extraKeys.push(resolvedKey);
+        return { key, info, extraKeys };
       } catch {
         return { key: `username:${username.toLowerCase()}`, info: { address: username, avatarUrl: null, username, displayName: null }, extraKey: null };
       }
