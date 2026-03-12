@@ -408,7 +408,7 @@ function getNotificationContent(
     } else {
       // Multiple users — first name and others count come from the exact same canonical source as the grid
       const first = canonical[0]?.display || aggNames?.[0] || actorName;
-      const rest = Math.max(canonical.length - 1, 0);
+      const rest = Math.max(aggCount - 1, 0);
       const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
       const othersSpan = onOthersClick ? (
         <span className="cursor-pointer hover:text-white" onClick={(e) => { e.stopPropagation(); e.preventDefault(); onOthersClick(); }}>
@@ -530,6 +530,7 @@ function NotificationItem({
   const [isClosing, setIsClosing] = useState(false);
   const [showActorsDrawer, setShowActorsDrawer] = useState(false);
   const [showPostsDrawer, setShowPostsDrawer] = useState(false);
+  const drawerJustClosed = useRef(false);
 
   // Prefer fresh enriched avatar over stale API snapshot
   const enriched = notification.actorAddress ? enrichedAvatars.get(notification.actorAddress.toLowerCase()) : undefined;
@@ -602,8 +603,8 @@ function NotificationItem({
   const { walletAddress } = useAuth();
 
   const handleClick = () => {
-    // If a drawer is open, don't navigate — user is interacting with it
-    if (showActorsDrawer || showPostsDrawer) return;
+    // If a drawer is open or just closed, don't navigate
+    if (showActorsDrawer || showPostsDrawer || drawerJustClosed.current) return;
     
     // Mark all notifications in bundle as read
     if (hasUnread) {
@@ -813,7 +814,10 @@ function NotificationItem({
       </AnimatePresence>
 
       {/* Actors drawer — shows all users who performed this action */}
-      <Drawer open={showActorsDrawer} onOpenChange={setShowActorsDrawer}>
+      <Drawer open={showActorsDrawer} onOpenChange={(open) => {
+        if (!open) { drawerJustClosed.current = true; setTimeout(() => { drawerJustClosed.current = false; }, 300); }
+        setShowActorsDrawer(open);
+      }}>
         <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[70vh]">
           <DrawerHeader className="text-center pb-2">
             <DrawerTitle className="text-white text-base">
@@ -841,12 +845,20 @@ function NotificationItem({
                 </Link>
               );
             })}
+            {aggregatedCount > canonicalActors.length && (
+              <p className="text-center text-zinc-500 text-xs py-2">
+                and {aggregatedCount - canonicalActors.length} more
+              </p>
+            )}
           </div>
         </DrawerContent>
       </Drawer>
 
       {/* Posts drawer — shows all posts in a same-actor bundle */}
-      <Drawer open={showPostsDrawer} onOpenChange={setShowPostsDrawer}>
+      <Drawer open={showPostsDrawer} onOpenChange={(open) => {
+        if (!open) { drawerJustClosed.current = true; setTimeout(() => { drawerJustClosed.current = false; }, 300); }
+        setShowPostsDrawer(open);
+      }}>
         <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[70vh]">
           <DrawerHeader className="text-center pb-2">
             <DrawerTitle className="text-white text-base">
