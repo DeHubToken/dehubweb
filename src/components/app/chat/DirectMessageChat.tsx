@@ -170,10 +170,14 @@ function MessageBubble({
         {/* Regular message bubble */}
         {message.msgType !== 'tip' && !message.isDeleted && (
           <div
-            className={`inline-block rounded-2xl px-4 py-2 ${
-              isOwnMessage
-                ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] text-white rounded-br-md'
-                : 'bg-zinc-800 text-white rounded-bl-md'
+            className={`inline-block rounded-2xl ${
+              message.msgType === 'media' || message.msgType === 'gif'
+                ? 'text-white'
+                : `px-4 py-2 ${
+                    isOwnMessage
+                      ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] text-white rounded-br-md'
+                      : 'bg-zinc-800 text-white rounded-bl-md'
+                  }`
             }`}
           >
             {/* Text message */}
