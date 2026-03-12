@@ -463,7 +463,7 @@ function NotificationItem({
             return seen.size;
           })();
           
-          const hasMultipleActors = uniqueActorCount >= 2 && aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
+          const hasMultipleActors = uniqueActorCount >= 2 && aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string) && bundle.bundleType !== 'same-actor';
           
           if (hasMultipleActors) {
             // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
