@@ -243,13 +243,28 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
   const aggCount = (notification as any).aggregatedCount || 1;
   const aggNames = (notification as any).latestActorNames as string[] | undefined;
   if (aggCount > 2 && aggNames && aggNames.length > 0 && ['like', 'comment', 'repost'].includes(notification.type as string)) {
-    const first = aggNames[0];
-    const rest = aggCount - 1;
-    const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
-    const typeStr = notification.type as string;
-    if (typeStr === 'like') return `${first} ${othersText} liked your post`;
-    if (typeStr === 'comment') return `${first} ${othersText} commented on your post`;
-    if (typeStr === 'repost') return `${first} ${othersText} reposted your post`;
+    // Check if it's actually multiple unique actors or one actor on multiple posts
+    const uniqueNames = new Set(aggNames.map(n => n.toLowerCase()));
+    const isSingleActor = uniqueNames.size <= 1;
+    
+    if (isSingleActor) {
+      // Single user liked/commented/reposted multiple posts
+      const name = aggNames[0] || actorName;
+      const postCount = aggCount;
+      const typeStr = notification.type as string;
+      if (typeStr === 'like') return `${name} liked ${postCount} of your posts`;
+      if (typeStr === 'comment') return `${name} commented on ${postCount} of your posts`;
+      if (typeStr === 'repost') return `${name} reposted ${postCount} of your posts`;
+    } else {
+      // Multiple users on same post
+      const first = aggNames[0];
+      const rest = aggCount - 1;
+      const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
+      const typeStr = notification.type as string;
+      if (typeStr === 'like') return `${first} ${othersText} liked your post`;
+      if (typeStr === 'comment') return `${first} ${othersText} commented on your post`;
+      if (typeStr === 'repost') return `${first} ${othersText} reposted your post`;
+    }
   }
 
   switch (notification.type) {
@@ -433,7 +448,17 @@ function NotificationItem({
         {(() => {
           const aggCount = (notification as any).aggregatedCount || 1;
           const aggNames = (notification as any).latestActorNames as string[] | undefined;
-          const hasMultipleActors = aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
+          
+          // Count unique actors to distinguish "multiple users liked 1 post" from "1 user liked multiple posts"
+          const uniqueActorCount = (() => {
+            const seen = new Set<string>();
+            const primaryName = enriched?.username?.toLowerCase() || notification.actorUsername?.toLowerCase();
+            if (primaryName) seen.add(primaryName);
+            if (aggNames) aggNames.forEach(n => seen.add(n.toLowerCase()));
+            return seen.size;
+          })();
+          
+          const hasMultipleActors = uniqueActorCount >= 2 && aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string);
           
           if (hasMultipleActors) {
             // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
