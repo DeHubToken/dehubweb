@@ -589,6 +589,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     console.log('[Auth] Wagmi signature received, authenticating with backend...');
 
+    // Address guard: prevent silent account switch during session refresh
+    if (walletAddress && walletAddress.toLowerCase() !== authAddress.toLowerCase()) {
+      console.error('[Auth] Address mismatch during refresh!', { expected: walletAddress, got: authAddress });
+      throw new Error('Wallet address changed during session refresh. Please sign in again.');
+    }
+
     const BASE_CHAIN_ID = 8453;
     const authResponse = await authenticateWallet(
       authAddress,
@@ -669,6 +675,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.warn('[Auth] [REDIRECT] AA provider sign failed:', e);
         }
         if (saResult) {
+          // Address guard: prevent silent account switch during session refresh
+          if (walletAddress && walletAddress.toLowerCase() !== saResult.address.toLowerCase()) {
+            console.error('[Auth] [REDIRECT] Address mismatch during refresh!', { expected: walletAddress, got: saResult.address });
+            throw new Error('Wallet address changed during session refresh. Please sign in again.');
+          }
           console.log('[Auth] [REDIRECT] Trying Smart Account address:', smartAccountAddress);
           const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID, web3AuthMeta);
           const normalizedUser = normalizeUser(saAuthResponse.user, saResult.address);
@@ -756,6 +767,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.warn('[Auth] [POPUP] AA provider sign failed:', e);
           }
           if (saResult) {
+            // Address guard: prevent silent account switch during session refresh
+            if (walletAddress && walletAddress.toLowerCase() !== saResult.address.toLowerCase()) {
+              console.error('[Auth] [POPUP] Address mismatch during refresh!', { expected: walletAddress, got: saResult.address });
+              throw new Error('Wallet address changed during session refresh. Please sign in again.');
+            }
             console.log('[Auth] [POPUP] Trying Smart Account address:', smartAccountAddress);
             toast.loading('Signing in...', { id: toastId });
             const saAuthResponse = await authenticateWallet(saResult.address, saResult.signature, timestamp, BASE_CHAIN_ID, web3AuthMeta);
@@ -786,6 +802,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('[Auth] [POPUP] Signature received, authenticating...');
+
+      // Address guard: prevent silent account switch during session refresh
+      if (walletAddress && walletAddress.toLowerCase() !== authAddressForApi.toLowerCase()) {
+        console.error('[Auth] [POPUP] Address mismatch during refresh!', { expected: walletAddress, got: authAddressForApi });
+        throw new Error('Wallet address changed during session refresh. Please sign in again.');
+      }
+
       toast.loading('Almost there...', { id: toastId });
 
       const authResponse = await authenticateWallet(
@@ -1087,6 +1110,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const token = getAuthToken();
     if (token && !isTokenExpired()) return true;
 
+    // Capture current wallet before refresh to detect silent swaps
+    const walletBefore = walletAddress || localStorage.getItem('dehub_wallet');
+
     // For wagmi users: if wagmi is still connected, re-sign silently
     const savedSource = localStorage.getItem('dehub_connection_source');
     if ((connectionSource === 'wagmi' || savedSource === 'wagmi') && isWagmiConnected && wagmiAddress) {
@@ -1095,6 +1121,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setConnectionSource('wagmi');
         localStorage.setItem('dehub_connection_source', 'wagmi');
         await completeDeHubAuthWagmi(wagmiAddress);
+        // Safety net: verify wallet didn't change
+        const walletAfter = localStorage.getItem('dehub_wallet');
+        if (walletBefore && walletAfter && walletBefore.toLowerCase() !== walletAfter.toLowerCase()) {
+          console.error('[Auth] CRITICAL: Wallet changed during refresh!', { before: walletBefore, after: walletAfter });
+          await disconnect();
+          return false;
+        }
         return true;
       } catch (e) {
         console.warn('[Auth] Silent wagmi re-auth failed:', e);
@@ -1109,6 +1142,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (w3a.connected && w3a.provider) {
           console.log('[Auth] Attempting silent Web3Auth re-auth');
           await completeDeHubAuth(w3a.provider);
+          // Safety net: verify wallet didn't change
+          const walletAfter = localStorage.getItem('dehub_wallet');
+          if (walletBefore && walletAfter && walletBefore.toLowerCase() !== walletAfter.toLowerCase()) {
+            console.error('[Auth] CRITICAL: Wallet changed during refresh!', { before: walletBefore, after: walletAfter });
+            await disconnect();
+            return false;
+          }
           return true;
         }
       } catch (e) {
