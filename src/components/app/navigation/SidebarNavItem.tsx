@@ -48,8 +48,11 @@ export function SidebarNavItem({
 }: SidebarNavItemProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const translatedLabel = t(NAV_LABEL_KEYS[item.label] || item.label);
-  
+  const translationKey = NAV_LABEL_KEYS[item.label];
+  const translatedLabel = translationKey
+    ? t(translationKey, { defaultValue: item.label })
+    : item.label;
+  const safeLabel = translatedLabel === translationKey ? item.label : translatedLabel;
   const handleClick = (e: React.MouseEvent) => {
     onClick?.(e);
     if (e.defaultPrevented) return;
