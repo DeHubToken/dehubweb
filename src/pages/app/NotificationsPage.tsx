@@ -742,7 +742,7 @@ function NotificationItem({
               return canonicalActors.map((actor) => (
                 <Link
                   key={actor.key}
-                  to={`/${actor.resolvedUsername || actor.display}`}
+                  to={resolveActorProfileLink(actor) || '#'}
                   onClick={() => setShowActorsDrawer(false)}
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors"
                 >
