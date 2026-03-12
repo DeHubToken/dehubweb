@@ -591,7 +591,7 @@ function VoteWeightInfo({ badgeBalance, username }: { badgeBalance: number | und
     <div className="bg-zinc-800/50 rounded-xl p-3 mb-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          {badgeImageUrl && <img src={badgeImageUrl} alt={badgeName || ''} className="w-5 h-5" />}
+          {badgeImageUrl && <img src={badgeImageUrl} alt={badgeName || ''} className="w-5 h-5 brightness-0 invert" />}
           <span className="text-zinc-300 text-xs font-medium">
             {weight > 0 ? (
               <>{t('governance.yourVoteWeight')} <span className="text-white font-bold">{weight}×</span> ({badgeName})</>
