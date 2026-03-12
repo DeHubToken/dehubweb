@@ -203,7 +203,7 @@ const FilterDropdown = ({
                     {option}
                   </span>
                   {value === option && (
-                    <Check className="w-4 h-4 text-primary" />
+                    <Check className="w-4 h-4 text-white" />
                   )}
                 </button>
               ))
