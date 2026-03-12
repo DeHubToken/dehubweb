@@ -172,6 +172,9 @@ export function useDeHubProfile({ userId, username, address, enabled = true }: U
     enabled: enabled && !!(userId || username),
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 2,
+    // Keep showing previous profile data when address changes (auth resolves)
+    // instead of flashing skeleton while refetching with the new address
+    placeholderData: keepPreviousData,
   });
 
   // Helper to update follow status optimistically
