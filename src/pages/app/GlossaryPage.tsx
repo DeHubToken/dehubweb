@@ -171,7 +171,7 @@ export default function GlossaryPage() {
       id: 'badges',
       title: t('glossary.sections.badges', 'Badges & Ranking'),
       entries: [
-        { icon: <Star size={iconSize} />, title: t('glossary.stakingBadge', 'Staking Badges'), description: t('glossary.stakingBadgeDesc', 'Badges displayed next to your username based on your total DHB holdings (wallet + staked). There are 13 tiers — the more DHB you hold, the higher your badge rank. Higher tiers grant more governance voting power and lower platform fees.') },
+        { icon: <CheckCircle2 size={iconSize} />, title: t('glossary.stakingBadge', 'Staking Badges'), description: t('glossary.stakingBadgeDesc', 'Badges displayed next to your username based on your total DHB holdings (wallet + staked). There are 13 tiers — the more DHB you hold, the higher your badge rank. Higher tiers grant more governance voting power and lower platform fees.') },
         ...BADGE_LEVELS.map((b, i) => {
           const fee = i === BADGE_LEVELS.length - 1 ? 1 : parseFloat((10 - i * 0.69).toFixed(2));
           return {
