@@ -411,7 +411,7 @@ function getNotificationContent(
       const rest = Math.max(aggCount - 1, 0);
       const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
       const othersSpan = onOthersClick ? (
-        <span className="cursor-pointer hover:text-white" onClick={(e) => { e.stopPropagation(); e.preventDefault(); onOthersClick(); }}>
+        <span className="cursor-pointer hover:text-white hover:underline decoration-solid" onClick={(e) => { e.stopPropagation(); e.preventDefault(); onOthersClick(); }}>
           {othersText}
         </span>
       ) : othersText;
