@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput } from './ChatInput';
 import { TranslatableText } from '../TranslatableText';
+import { useTranslation } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
