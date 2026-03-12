@@ -15,7 +15,7 @@ import { getMediaUrl, getAccountInfo, type DeHubConversation, type DeHubUser } f
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getBadgeUrl } from '@/lib/staking-badges';
+import { getBadgeUrl, isBigBadge } from '@/lib/staking-badges';
 import { useDMRealtime } from '@/hooks/use-dm-realtime';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
