@@ -180,10 +180,17 @@ export function useLiveChatMessages(roomId: string | null) {
       joinRoom(roomId);
     }
 
-    // Handle roomJoined — server sends initial messages (may or may not fire)
+    // Handle roomJoined — ONLY use for initial load (first connect)
+    // On reconnects, ignore message list to prevent wiping optimistic/recent messages
+    // New messages arrive via newMessage events; history is fetched via REST on mount
     const unsubJoined = onRoomJoined((data) => {
-      console.log('[LiveChat] Room joined, messages:', data.messages?.length, 'banned:', data.isBanned);
+      console.log('[LiveChat] Room joined, messages:', data.messages?.length, 'banned:', data.isBanned, 'initialDone:', initialLoadDone.current);
       setIsBanned(data.isBanned || false);
+
+      if (initialLoadDone.current) {
+        // Reconnect — skip message update entirely
+        return;
+      }
       initialLoadDone.current = true;
 
       if (data.messages && Array.isArray(data.messages)) {
@@ -191,20 +198,22 @@ export function useLiveChatMessages(roomId: string | null) {
           .map((m: unknown) => socketMsgToLocal(m, roomId))
           .filter(Boolean) as SupabaseLiveChatMessage[];
         if (mapped.length > 0) {
-          // Merge with existing — keep optimistic messages, don't wipe on reconnect
-          setMessages((prev) => {
-            const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
-            return deduplicateMessages([...mapped, ...optimistic]);
-          });
+          setMessages(mapped);
         }
       }
     });
 
-    // Listen for new messages
+    // Listen for new messages — replace matching optimistic (temp-*) to avoid ghost duplicates
     const unsubMsg = onLiveChatMessage((msg) => {
       const local = socketMsgToLocal(msg, roomId);
       if (local) {
-        setMessages((prev) => deduplicateMessages([...prev.filter((x) => x.id !== local.id), local]));
+        setMessages((prev) => {
+          // Remove any temp message with same content+sender (it's now confirmed by server)
+          const withoutMatchingTemp = prev.filter(
+            (x) => !(x.id.startsWith('temp-') && x.content === local.content && x.sender_address === local.sender_address)
+          );
+          return deduplicateMessages([...withoutMatchingTemp.filter((x) => x.id !== local.id), local]);
+        });
       }
     });
 
