@@ -66,7 +66,8 @@ function StatRow({ label, value }: { label: string; value: string }) {
 export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProps) {
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const { data: chartData, isLoading: isChartLoading } = useTokenChart(symbol, true);
+  const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>('1D');
+  const { data: chartData, isLoading: isChartLoading } = useTokenChart(symbol, true, chartTimeframe);
   
   const change24h = cmcData?.percentChange24h ?? pair.priceChange?.h24;
   const isPositive = change24h != null && change24h >= 0;
