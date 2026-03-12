@@ -295,7 +295,7 @@ export function ChatMessage({
                           key={emoji}
                           onClick={() => handleQuickReact(emoji)}
                           className={`w-8 h-8 flex items-center justify-center text-lg rounded-lg transition-colors ${
-                            isActive ? 'bg-primary/20 ring-1 ring-primary/40' : 'hover:bg-zinc-700'
+                            isActive ? 'bg-white/15 ring-1 ring-white/30' : 'hover:bg-zinc-700'
                           }`}
                         >
                           {emoji}
