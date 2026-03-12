@@ -9,6 +9,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import en from './locales/en.json';
+import { fillMissingTranslations } from './fill-missing-translations';
 
 const STORAGE_KEY = 'user-preferred-language';
 
@@ -255,6 +256,8 @@ export async function loadLanguage(lang: string): Promise<void> {
   try {
     const module = await loader();
     i18n.addResourceBundle(lang, 'translation', module.default, true, true);
+    // Fill missing keys with English fallbacks + queue AI translation
+    fillMissingTranslations(lang);
   } catch (err) {
     console.warn(`[i18n] Failed to load locale "${lang}", falling back to English`, err);
   }
