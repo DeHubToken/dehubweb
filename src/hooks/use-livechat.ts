@@ -395,7 +395,10 @@ export function useLiveChatMessages(roomId: string | null) {
   );
 
   const addReaction = useCallback((messageId: string, emoji: string) => {
-    if (!isAuthenticated || !walletAddress) {
+    // Allow optimistic UI reaction as long as we know the current wallet address.
+    // Auth state can briefly flicker during Web3Auth/Wagmi handshakes, which was
+    // blocking reactions even for already-signed-in users.
+    if (!walletAddress) {
       toast.error('Sign in to react');
       return;
     }
@@ -412,7 +415,7 @@ export function useLiveChatMessages(roomId: string | null) {
       })
     );
     emitAddReaction(messageId, emoji);
-  }, [isAuthenticated, walletAddress]);
+  }, [walletAddress]);
 
   const removeReaction = useCallback((messageId: string, emoji: string) => {
     if (!walletAddress) return;
