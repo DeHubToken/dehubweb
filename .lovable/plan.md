@@ -1,48 +1,35 @@
 
-You’re right — I found why this still happens.
 
-## Root cause
-The UI is deciding the avatar layout from the **primary raw notification’s backend aggregation fields** (`aggregatedCount`, `latestActorNames`), but the text is coming from the **client-side same-actor bundle** (`bundleType === 'same-actor'`, `postCount=2`).
+## Fix: Auto-reload on chunk load failures
 
-So in mixed cases, it can render:
-- text: `kwame1 liked 2 of your posts` (same-actor bundle)
-- avatar: 2x2 grid (because primary notification still has multi-actor metadata)
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-That mismatch is exactly what your screenshot shows.
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-## Implementation plan
-1. **Unify “display mode” decision in `NotificationItem`**
-   - Compute one boolean (e.g. `shouldShowActorGrid`) that includes:
-     - notification type supports grid
-     - `aggregatedCount > 2`
-     - `uniqueActorCount >= 2`
-     - **AND NOT** `bundle.bundleType === 'same-actor'`
-2. **Use that same boolean everywhere**
-   - Grid rendering branch
-   - Type-icon overlay visibility (currently separately hidden by raw aggregated fields)
-   - Any “open actors drawer” affordance tied to grid mode
-3. **Keep same-actor bundle visually single-actor**
-   - If bundled as same-actor, force single avatar + normal badge.
-   - Keep text as “X liked N of your posts”.
-4. **Add a defensive bundling guard (optional but recommended)**
-   - In `bundleNotifications`, do not merge a backend multi-actor aggregated row into same-actor bundles.
-   - This prevents future mixed-state regressions.
+### Changes
 
-## Technical details
-```text
-Current mismatch:
-  content source -> bundle.bundleType
-  avatar source  -> notification.aggregatedCount/latestActorNames
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-Target:
-  content + avatar + icon visibility
-  all driven by one derived mode:
-    same-actor bundle  => single avatar mode
-    true multi-actor   => 2x2 grid mode
-```
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
 
-## Validation checklist after fix
-1. **One user / multiple posts** → single avatar, no 2x2 grid, text “liked N of your posts”.
-2. **Multiple users / one post** → 2x2 grid appears correctly.
-3. **Grid fallback slot click** still opens correct user (or fallback with no wrong profile jump).
-4. **“N others” click** still opens actors drawer.
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+
