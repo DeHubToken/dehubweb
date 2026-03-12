@@ -802,6 +802,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('[Auth] [POPUP] Signature received, authenticating...');
+
+      // Address guard: prevent silent account switch during session refresh
+      if (walletAddress && walletAddress.toLowerCase() !== authAddressForApi.toLowerCase()) {
+        console.error('[Auth] [POPUP] Address mismatch during refresh!', { expected: walletAddress, got: authAddressForApi });
+        throw new Error('Wallet address changed during session refresh. Please sign in again.');
+      }
+
       toast.loading('Almost there...', { id: toastId });
 
       const authResponse = await authenticateWallet(
