@@ -846,12 +846,21 @@ export default function NotificationsPage() {
         const { getAccountInfo } = await import('@/lib/api/dehub');
         const { extractAvatarPath, buildAvatarUrl } = await import('@/lib/media-url');
         const user = await getAccountInfo(username);
+        
+        // Detect empty API result (200 OK but no real user data)
+        if (!user._id && !user.address && !user.username) {
+          return { key: `username:${username.toLowerCase()}`, info: { address: username, avatarUrl: null, username, displayName: null }, extraKey: null };
+        }
+        
         const rawPath = extractAvatarPath(user);
         const avatarUrl = user.address ? buildAvatarUrl(user.address, rawPath) : null;
         const key = user.address?.toLowerCase() || `username:${username.toLowerCase()}`;
-        return { key, info: { address: user.address || username, avatarUrl, username: user.username || username, displayName: user.displayName || null } };
+        const info = { address: user.address || username, avatarUrl, username: user.username || username, displayName: user.displayName || null };
+        // Also store under the normalized input name so display-name lookups resolve
+        const extraKey = key !== `username:${username.toLowerCase()}` ? `username:${username.toLowerCase()}` : null;
+        return { key, info, extraKey };
       } catch {
-        return { key: `username:${username.toLowerCase()}`, info: { address: username, avatarUrl: null, username, displayName: null } };
+        return { key: `username:${username.toLowerCase()}`, info: { address: username, avatarUrl: null, username, displayName: null }, extraKey: null };
       }
     });
     
