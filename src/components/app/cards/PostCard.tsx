@@ -21,6 +21,7 @@ import { ActionBar } from './ActionBar';
 import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
+import { FeedLinkPreviews } from './FeedLinkPreviews';
 import { TranslatableText, useTranslation } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
