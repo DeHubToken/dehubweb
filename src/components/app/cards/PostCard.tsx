@@ -253,6 +253,9 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
         )}
 
+        {/* Link previews for URLs in content */}
+        {post.content && <FeedLinkPreviews text={post.content} />}
+
         {/* Metadata: timestamp and views */}
         <PostMetadata 
           timestamp={post.createdAt} 
