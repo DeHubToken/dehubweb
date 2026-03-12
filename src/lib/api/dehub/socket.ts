@@ -78,7 +78,9 @@ export function getSocket(): Socket {
 export function joinRoom(_roomId?: string) {
   const s = getSocket();
   console.log('[LiveChat Socket] Joining room');
+  // Support both legacy and namespaced event names – backend may listen on either.
   s.emit('joinRoom');
+  s.emit('livechat:joinRoom');
 }
 
 /** Leave the livechat room */
@@ -125,7 +127,9 @@ export function emitSendMessage(payload: {
   }
 
   console.log('[LiveChat Socket] Sending message:', sendPayload);
+  // Emit on both generic and namespaced channels to match mobile / backend expectations.
   s.emit('sendMessage', sendPayload);
+  s.emit('livechat:sendMessage', sendPayload);
 }
 
 /** Subscribe to new messages. Returns unsubscribe fn. */
