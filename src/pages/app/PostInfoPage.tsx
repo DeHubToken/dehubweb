@@ -461,7 +461,7 @@ export default function PostInfoPage() {
           <p className="text-white/60 mb-4">{error?.message || 'Post not found'}</p>
           <button
             onClick={() => navigate(-1)}
-            className="text-primary hover:underline"
+            className="text-white hover:underline"
           >
             {t('postInfo.goBack')}
           </button>
