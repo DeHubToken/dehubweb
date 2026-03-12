@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Image, Send, Sparkles, Loader2, X, Gem } from 'lucide-react';
+import { Image, Send, Sparkles, Loader2, X, Gem, Reply } from 'lucide-react';
 import { EmojiGifPicker } from './EmojiGifPicker';
 import { VoiceRecorder } from './VoiceRecorder';
 import { UserMentionDropdown } from '@/components/app/mentions';
@@ -9,6 +9,7 @@ import { useMention } from '@/hooks/use-mention';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import type { Message } from './ChatMessage';
 
 interface ChatInputSendArgs {
   content: string;
@@ -27,9 +28,13 @@ interface ChatInputProps {
   sendDisabledReason?: string;
   /** If true, shows a processing spinner on the send button */
   isSendingFee?: boolean;
+  /** Message being replied to */
+  replyTo?: Message | null;
+  /** Cancel the current reply */
+  onCancelReply?: () => void;
 }
 
-export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee }: ChatInputProps) {
+export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, replyTo, onCancelReply }: ChatInputProps) {
   const [message, setMessage] = useState('');
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -173,6 +178,23 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
   return (
     <div className="p-3 lg:pl-4 border-t border-transparent bg-zinc-900">
+      {/* Reply preview */}
+      {replyTo && (
+        <div className="flex items-center gap-2 mb-2 px-2 py-1.5 bg-zinc-800/70 rounded-lg border-l-2 border-primary/50">
+          <Reply className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+          <div className="flex-1 min-w-0">
+            <span className="text-xs font-medium text-primary">{replyTo.userName}</span>
+            <p className="text-xs text-zinc-400 truncate">{replyTo.content || (replyTo.type === 'gif' ? 'GIF' : 'Image')}</p>
+          </div>
+          <button
+            onClick={onCancelReply}
+            className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white transition-colors rounded"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* Image Preview */}
       {imagePreviewUrl && (
         <div className="mb-2 relative inline-block">
