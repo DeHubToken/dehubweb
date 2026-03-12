@@ -557,6 +557,20 @@ function NotificationItem({
       ? `/${notification.actorUsername}` 
       : null;
 
+  const aggregatedActorNames = (notification as any).latestActorNames as string[] | undefined;
+  const canonicalActors = buildCanonicalActors(
+    aggregatedActorNames,
+    notification.actorUsername,
+    enriched?.username,
+    enrichedAvatars,
+  );
+  const primaryKey = normalizeUsername(enriched?.username || notification.actorUsername);
+
+  const resolveActorAvatar = (actor: CanonicalActor | null | undefined): string | undefined => {
+    if (!actor) return undefined;
+    return resolveActorAvatarUrl(actor, enrichedAvatars) || (actor.key === primaryKey ? avatarUrl : undefined);
+  };
+
   const hasUnread = bundle.bundleType !== 'single' 
     ? bundle.allIds.some(id => {
         // Check if any notification in the bundle is unread - we only have the primary easily
