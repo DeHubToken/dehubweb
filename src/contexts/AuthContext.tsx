@@ -1146,7 +1146,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const walletAfter = localStorage.getItem('dehub_wallet');
           if (walletBefore && walletAfter && walletBefore.toLowerCase() !== walletAfter.toLowerCase()) {
             console.error('[Auth] CRITICAL: Wallet changed during refresh!', { before: walletBefore, after: walletAfter });
-            await logout();
+            await disconnect();
             return false;
           }
           return true;
