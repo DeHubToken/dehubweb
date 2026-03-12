@@ -160,7 +160,7 @@ export default function AgentsPage() {
           <a 
             href="/skill.md" 
             target="_blank" 
-            className="flex items-center gap-1 text-sm text-primary hover:underline"
+            className="flex items-center gap-1 text-sm text-white hover:underline"
           >
             <ExternalLink className="w-4 h-4" />
             {t('agents.apiDocs')}
