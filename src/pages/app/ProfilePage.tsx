@@ -142,8 +142,9 @@ export default function ProfilePage() {
     setOfferAmount('');
   };
 
-  // Loading state — show skeleton instead of blocking spinner
-  if (data.isAuthLoading || data.isLoadingProfile) {
+  // Loading state — show skeleton only if we don't have profile data yet.
+  // Don't re-show skeleton when auth resolves (keepPreviousData handles the transition).
+  if (!data.profile && (data.isAuthLoading || data.isLoadingProfile)) {
     return <ProfileSkeleton />;
   }
 
