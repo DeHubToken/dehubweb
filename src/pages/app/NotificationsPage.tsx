@@ -253,7 +253,16 @@ function buildCanonicalActors(
   return actors;
 }
 
-function getNotificationContent(notification: DeHubNotification, bundle?: BundledNotification, t?: (key: string, opts?: any) => string, onOthersClick?: () => void): React.ReactNode {
+/** Resolve a safe profile link for an actor, avoiding broken display-name URLs */
+function resolveActorProfileLink(actor: { display: string; key: string; resolvedUsername?: string }): string | null {
+  if (actor.resolvedUsername) return `/${actor.resolvedUsername}`;
+  // If the key looks like a valid handle (alphanumeric + underscores/dots), use it
+  if (/^[a-z0-9._]+$/.test(actor.key)) return `/${actor.key}`;
+  // Display name with spaces/special chars — not a valid route
+  return null;
+}
+
+
   const tr = t || ((key: string) => key);
   const actorName = notification.actorUsername || 'Someone';
   
