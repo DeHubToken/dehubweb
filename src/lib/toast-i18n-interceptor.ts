@@ -15,6 +15,8 @@
 import { toast } from 'sonner';
 import i18n from '@/i18n';
 import { supabase } from '@/integrations/supabase/client';
+import { createElement } from 'react';
+import { Languages } from 'lucide-react';
 
 /**
  * Normalize an English toast string into a flat i18n key.
