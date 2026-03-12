@@ -206,15 +206,21 @@ export function onUserUnbanned(cb: (data: { message: string }) => void): () => v
   };
 }
 
-/** Add/remove reactions */
-export function emitAddReaction(messageId: string, emoji: string) {
+/** Add/remove reactions — backend may require roomId and namespaced events */
+export function emitAddReaction(roomId: string, messageId: string, emoji: string) {
   const s = getSocket();
-  s.emit('addReaction', { messageId, emoji });
+  const payload = { roomId: roomId || 'global', room_id: roomId || 'global', messageId, emoji };
+  // eslint-disable-next-line no-console
+  console.log('[LiveChat Socket] Emitting addReaction', payload);
+  s.emit('addReaction', payload);
+  s.emit('livechat:addReaction', payload);
 }
 
-export function emitRemoveReaction(messageId: string, emoji: string) {
+export function emitRemoveReaction(roomId: string, messageId: string, emoji: string) {
   const s = getSocket();
-  s.emit('removeReaction', { messageId, emoji });
+  const payload = { roomId: roomId || 'global', room_id: roomId || 'global', messageId, emoji };
+  s.emit('removeReaction', payload);
+  s.emit('livechat:removeReaction', payload);
 }
 
 /** Typing indicator */

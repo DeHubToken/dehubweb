@@ -395,6 +395,8 @@ export function useLiveChatMessages(roomId: string | null) {
   );
 
   const addReaction = useCallback((messageId: string, emoji: string) => {
+    // eslint-disable-next-line no-console
+    console.log('[LiveChat] addReaction called', { roomId, messageId, emoji });
     // Allow optimistic UI reaction as long as we know the current wallet address.
     // Auth state can briefly flicker during Web3Auth/Wagmi handshakes, which was
     // blocking reactions even for already-signed-in users.
@@ -414,8 +416,8 @@ export function useLiveChatMessages(roomId: string | null) {
         return { ...m, reactions };
       })
     );
-    emitAddReaction(messageId, emoji);
-  }, [walletAddress]);
+    emitAddReaction(roomId, messageId, emoji);
+  }, [roomId, walletAddress]);
 
   const removeReaction = useCallback((messageId: string, emoji: string) => {
     if (!walletAddress) return;
@@ -431,8 +433,8 @@ export function useLiveChatMessages(roomId: string | null) {
         return { ...m, reactions: Object.keys(reactions).length > 0 ? reactions : undefined };
       })
     );
-    emitRemoveReaction(messageId, emoji);
-  }, [walletAddress]);
+    emitRemoveReaction(roomId, messageId, emoji);
+  }, [roomId, walletAddress]);
 
   return {
     messages, isLoading, isSending, isConnected, isBanned,
