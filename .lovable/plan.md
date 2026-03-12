@@ -1,35 +1,43 @@
 
+What I got wrong is this: I’ve been deduplicating actors by text labels (display names / handles), not by a stable user identity. In your case, the same person is arriving under two different name forms, so Alcazar gets counted into two avatar slots, and one real user gets pushed out of the first 3.
 
-## Fix: Auto-reload on chunk load failures
+Plan to fix it properly:
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+1) Unify actor identity before rendering
+- Build one canonical identity key per actor (priority: resolved username from enrichment, then normalized username text).
+- Use that identity key everywhere (grid, drawer, link resolution), not raw display strings.
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+2) Fix dedupe logic in `buildCanonicalActors`
+- Deduplicate by canonical identity key, not `latestActorNames` raw key.
+- When appending primary actor fallback, skip if that canonical identity already exists.
+- This prevents “same person twice with different casing/name forms.”
 
-### Changes
+3) Fix enrichment cache key mismatch
+- Enrichment currently stores username keys with lowercase only, while render lookup uses normalized usernames.
+- Store and read usernames using the exact same normalization function (strip `@`, trim, lowercase).
+- Keep aliases (raw + normalized) pointing to same enriched record so mixed API formats still resolve to one user.
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+4) Use resolved identity for avatar lookup
+- In grid and drawer avatar lookup, prefer `resolvedUsername` identity first, then fallback keys.
+- This prevents one slot showing a fallback initial while another slot shows the same user’s real avatar.
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+5) Enforce unique grid slots
+- Before rendering the 2x2 grid, create a strict unique actor list by canonical identity and slice first 3 unique users.
+- This guarantees “3 different users” means 3 different avatar identities, always.
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+6) Validate against your exact failure case
+- Re-test the notification row with “sherdil and 3 others”.
+- Confirm the three avatar slots are three unique users (no duplicate Alcazar).
+- Confirm drawer list also has unique users and matching profile links.
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
-
+Technical details
+- Files to update:
+  - `src/pages/app/NotificationsPage.tsx`
+- Key functions/areas:
+  - `buildCanonicalActors(...)`
+  - aggregated username enrichment effect (`uniqueNewUsernames`, keying into `moduleEnrichedKeys` / `enrichedAvatars`)
+  - grid avatar resolver (`findAvatarByUsername` usage)
+  - drawer actor avatar/link rendering
+- Core invariant after fix:
+  - Every rendered actor object has one canonical identity key.
+  - UI dedupe is based on canonical identity key only, never raw display text.
