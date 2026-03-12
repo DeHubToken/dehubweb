@@ -27,6 +27,7 @@ import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Switch } from '@/components/ui/switch';
 import { FollowersListDrawer } from '@/components/app/profile';
 
@@ -357,6 +358,7 @@ function NotificationItem({
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [isClosing, setIsClosing] = useState(false);
+  const [showActorsDrawer, setShowActorsDrawer] = useState(false);
 
   // Prefer fresh enriched avatar over stale API snapshot
   const enriched = notification.actorAddress ? enrichedAvatars.get(notification.actorAddress.toLowerCase()) : undefined;
@@ -511,10 +513,18 @@ function NotificationItem({
                 ) : (
                   renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
                 )}
-                {/* Bottom-right: notification type icon */}
-                <div className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                {/* Bottom-right: notification type icon — clickable to show all actors */}
+                <button
+                  className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition-colors cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setShowActorsDrawer(true);
+                  }}
+                  title="View all"
+                >
                   {getNotificationIcon(notification.type)}
-                </div>
+                </button>
               </div>
             );
           }
@@ -634,6 +644,57 @@ function NotificationItem({
           </motion.button>
         )}
       </AnimatePresence>
+
+      {/* Actors drawer — shows all users who performed this action */}
+      <Drawer open={showActorsDrawer} onOpenChange={setShowActorsDrawer}>
+        <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[70vh]">
+          <DrawerHeader className="text-center pb-2">
+            <DrawerTitle className="text-white text-base">
+              {(notification.type as string) === 'like' ? 'Liked by' : (notification.type as string) === 'repost' ? 'Reposted by' : (notification.type as string) === 'comment' ? 'Commented by' : 'Users'}
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[50vh]" data-vaul-no-drag>
+            {(() => {
+              const aggNames = (notification as any).latestActorNames as string[] | undefined;
+              const primaryUsername = enriched?.username || notification.actorUsername;
+              const allActors: string[] = [];
+              const seen = new Set<string>();
+              if (primaryUsername && !seen.has(primaryUsername.toLowerCase())) {
+                seen.add(primaryUsername.toLowerCase());
+                allActors.push(primaryUsername);
+              }
+              if (aggNames) {
+                for (const name of aggNames) {
+                  if (!seen.has(name.toLowerCase())) {
+                    seen.add(name.toLowerCase());
+                    allActors.push(name);
+                  }
+                }
+              }
+              const findAvatar = (username: string) => {
+                for (const [, entry] of enrichedAvatars) {
+                  if (entry.username?.toLowerCase() === username.toLowerCase() && entry.avatarUrl) return entry.avatarUrl;
+                }
+                return undefined;
+              };
+              return allActors.map((name) => (
+                <Link
+                  key={name}
+                  to={`/${name}`}
+                  onClick={() => setShowActorsDrawer(false)}
+                  className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors"
+                >
+                  <Avatar className="w-10 h-10">
+                    {findAvatar(name) && <AvatarImage src={findAvatar(name)} />}
+                    <AvatarFallback className="bg-zinc-700 text-white font-medium">{name.charAt(0).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <span className="text-white text-sm font-medium">@{name}</span>
+                </Link>
+              ));
+            })()}
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }
