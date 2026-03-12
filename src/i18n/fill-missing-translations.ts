@@ -123,12 +123,17 @@ async function requestBatchTranslation(
   return allTranslated;
 }
 
+// Track which languages we've already processed to avoid duplicate work
+const processedLangs = new Set<string>();
+
 /**
  * Main entry: fill missing translations for a loaded locale.
  * Call this AFTER the locale JSON has been added to i18n.
  */
 export async function fillMissingTranslations(lang: string): Promise<void> {
   if (lang === 'en') return;
+  if (processedLangs.has(lang)) return;
+  processedLangs.add(lang);
 
   const enFlat = flattenKeys(en as Record<string, unknown>);
   const loadedBundle = i18n.getResourceBundle(lang, 'translation') || {};

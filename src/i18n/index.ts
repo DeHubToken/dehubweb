@@ -247,20 +247,25 @@ const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
 
 /**
  * Lazy-load a locale's translations. Returns immediately if already loaded.
+ * Always runs fillMissingTranslations to patch gaps vs English.
  */
 export async function loadLanguage(lang: string): Promise<void> {
   if (lang === 'en') return; // already bundled
-  if (i18n.hasResourceBundle(lang, 'translation')) return; // already loaded
-  const loader = localeLoaders[lang];
-  if (!loader) return; // unsupported language, will fall back to en
-  try {
-    const module = await loader();
-    i18n.addResourceBundle(lang, 'translation', module.default, true, true);
-    // Fill missing keys with English fallbacks + queue AI translation
-    fillMissingTranslations(lang);
-  } catch (err) {
-    console.warn(`[i18n] Failed to load locale "${lang}", falling back to English`, err);
+
+  if (!i18n.hasResourceBundle(lang, 'translation')) {
+    const loader = localeLoaders[lang];
+    if (!loader) return; // unsupported language, will fall back to en
+    try {
+      const module = await loader();
+      i18n.addResourceBundle(lang, 'translation', module.default, true, true);
+    } catch (err) {
+      console.warn(`[i18n] Failed to load locale "${lang}", falling back to English`, err);
+      return;
+    }
   }
+
+  // Always fill missing keys (English fallback + cached AI translations + background AI request)
+  fillMissingTranslations(lang);
 }
 
 i18n.use(initReactI18next).init({
