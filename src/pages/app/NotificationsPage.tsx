@@ -408,7 +408,7 @@ function getNotificationContent(
     } else {
       // Multiple users — first name and others count come from the exact same canonical source as the grid
       const first = canonical[0]?.display || aggNames?.[0] || actorName;
-      const rest = Math.max(canonical.length - 1, 0);
+      const rest = Math.max(aggCount - 1, 0);
       const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
       const othersSpan = onOthersClick ? (
         <span className="cursor-pointer hover:text-white" onClick={(e) => { e.stopPropagation(); e.preventDefault(); onOthersClick(); }}>
