@@ -9,6 +9,18 @@ import { useTranslation } from 'react-i18next';
 import glossaryIcon from '@/assets/glossary-icon.png';
 import dhbCoinIcon from '@/assets/dehub-coin.png';
 import { BADGE_LEVELS, getBadgeUrl } from '@/lib/staking-badges';
+import medal1 from '@/assets/medal-1.png';
+import medal2 from '@/assets/medal-2.png';
+import medal3 from '@/assets/medal-3.png';
+import medal4 from '@/assets/medal-4.png';
+import medal5 from '@/assets/medal-5.png';
+import medal6 from '@/assets/medal-6.png';
+import medal7 from '@/assets/medal-7.png';
+import medal8 from '@/assets/medal-8.png';
+import medal9 from '@/assets/medal-9.png';
+import medal10 from '@/assets/medal-10.png';
+
+const MEDALS = [medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10];
 import {
   ThumbsUp, ThumbsDown, Languages, Eye, MessageSquare, Share2, Ticket,
   Bookmark, Bell, Send, Heart, Flag, MoreHorizontal,
