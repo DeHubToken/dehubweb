@@ -987,13 +987,7 @@ export default function NotificationsPage() {
   const [enrichedAvatars, setEnrichedAvatars] = useState<Map<string, EnrichedAvatar>>(() => moduleAvatarCache);
   const [enrichmentReady, setEnrichmentReady] = useState(() => moduleAvatarCache.size > 0);
 
-  // Safety reset: clear any stale username alias cache that may have been produced by older dedupe logic
-  useEffect(() => {
-    moduleAvatarCache = new Map();
-    moduleEnrichedKeys.clear();
-    setEnrichedAvatars(new Map());
-    setEnrichmentReady(false);
-  }, []);
+  // Module-level caches persist across navigations — no clearing on mount
 
   useEffect(() => {
     if (!allNotifications.length) return;
