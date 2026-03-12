@@ -9,6 +9,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthenticationError } from '@/lib/api/dehub';
 import { toast } from 'sonner';
+import i18n from '@/i18n';
 
 /**
  * Hook that provides error handling for API calls with auth error detection.
