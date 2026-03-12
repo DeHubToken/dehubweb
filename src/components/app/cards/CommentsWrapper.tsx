@@ -54,7 +54,6 @@ export function CommentsWrapper({ open, onOpenChange, tokenId }: CommentsWrapper
     );
   }
 
-  // Desktop: inline expandable section
   // When sidebar is collapsed (multi-column feed), use compact sizing
   const isCompact = isCollapsed;
 
