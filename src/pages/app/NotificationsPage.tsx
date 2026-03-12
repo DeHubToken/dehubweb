@@ -632,9 +632,7 @@ function NotificationItem({
       {/* Avatar with type icon overlay — stacked for aggregated notifications */}
       <div className="relative flex-shrink-0">
         {(() => {
-          const aggCount = (notification as any).aggregatedCount || 1;
-          const uniqueActorCount = canonicalActors.length;
-          const hasMultipleActors = uniqueActorCount >= 2 && aggCount > 2 && ['like', 'comment', 'repost', 'following'].includes(notification.type as string) && bundle.bundleType !== 'same-actor';
+          const hasMultipleActors = isBackendAggregatedMultiActor;
           
           if (hasMultipleActors) {
             // 2×2 grid: TL=actor1, TR=actor2, BL=actor3, BR=type icon
