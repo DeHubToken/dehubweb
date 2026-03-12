@@ -181,9 +181,18 @@ export function ChatMessage({
   };
 
   const handleQuickReact = useCallback((emoji: string) => {
-    onReact?.(message.id, emoji);
+    // Toggle: if already reacted with this emoji, remove it
+    const myReactions = message.reactions?.[emoji] || [];
+    const alreadyReacted = currentUserAddress && myReactions.some(
+      (a) => a.toLowerCase() === currentUserAddress.toLowerCase()
+    );
+    if (alreadyReacted) {
+      onRemoveReaction?.(message.id, emoji);
+    } else {
+      onReact?.(message.id, emoji);
+    }
     setEmojiPickerOpen(false);
-  }, [message.id, onReact]);
+  }, [message.id, message.reactions, currentUserAddress, onReact, onRemoveReaction]);
 
   const isClickable = !!message.userHandle;
 
