@@ -351,13 +351,7 @@ export function ProfileHeader({
             <div className="flex items-center gap-2">
               <span className={`relative inline-flex items-baseline${badgeUrl ? ' pr-3.5' : ''}`}>
                 <h2 className="text-xl font-bold text-white">{profile.name}</h2>
-                {badgeUrl && (
-                  <img
-                    src={badgeUrl}
-                    alt="Badge tier"
-                    className={`w-[10px] h-[10px] shrink-0 absolute -top-1 right-0 brightness-0 invert${isBigBadgeUrl(badgeUrl) ? ' scale-110' : ''}`}
-                  />
-                )}
+                <BadgeIcon src={badgeUrl} className="w-[10px] h-[10px] absolute -top-1 right-0" />
               </span>
               {/* Lock icon removed for private accounts */}
             </div>

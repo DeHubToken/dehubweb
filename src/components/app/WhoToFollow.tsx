@@ -226,13 +226,7 @@ export function WhoToFollow() {
             <div className="flex-1 min-w-0 overflow-hidden">
               <span className={`relative inline-flex items-baseline shrink min-w-0 max-w-full${getBadgeUrl(user.badgeBalance, user.username) ? ' pr-3' : ''}`}>
                 <span className="font-semibold text-white text-sm truncate">{getDisplayName(user)}</span>
-                {getBadgeUrl(user.badgeBalance, user.username) && (
-                  <img
-                    src={getBadgeUrl(user.badgeBalance, user.username)!}
-                    alt="badge"
-                    className={`w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0 brightness-0 invert${isBigBadge(user.badgeBalance, user.username) ? ' scale-110' : ''}`}
-                  />
-                )}
+                <BadgeIcon badgeBalance={user.badgeBalance} username={user.username} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
               </span>
             </div>
             <Button

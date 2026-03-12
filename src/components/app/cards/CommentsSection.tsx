@@ -228,13 +228,7 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
           >
             <span className={`relative inline-flex items-baseline shrink min-w-0${badgeUrl ? ' pr-3' : ''}`}>
               <span className="font-semibold text-white text-sm truncate max-w-[120px] leading-tight">{shownName}</span>
-              {badgeUrl && (
-                <img
-                  src={badgeUrl}
-                  alt="Badge"
-                  className={`w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0 brightness-0 invert${isBigBadge(comment.badgeBalance, comment.username) ? ' scale-110' : ''}`}
-                />
-              )}
+              <BadgeIcon badgeBalance={comment.badgeBalance} username={comment.username} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
             </span>
           </button>
           {comment.displayName && (
