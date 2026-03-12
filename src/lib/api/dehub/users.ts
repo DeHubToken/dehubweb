@@ -58,8 +58,10 @@ export async function getAccountByUsername(username: string, address?: string): 
         ? (searchResponse as any).data as DeHubUser[]
         : [];
 
+    // Identity safety: only accept strict username match here.
+    // Display names are not unique and can map to the wrong account.
     const canonicalMatch = candidates.find(
-      (c) => c?.username?.toLowerCase() === lowerUsername || c?.displayName?.toLowerCase() === lowerUsername,
+      (c) => c?.username?.toLowerCase() === lowerUsername,
     );
 
     if (canonicalMatch?.username) {

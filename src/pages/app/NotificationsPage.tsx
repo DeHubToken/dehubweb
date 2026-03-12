@@ -267,22 +267,20 @@ function buildCanonicalActors(
 
     const usernameKey = toUsernameCacheKey(normalized);
     const byUsername = usernameKey ? enrichedAvatarsMap?.get(usernameKey) : undefined;
-    const byDirect = enrichedAvatarsMap?.get(normalized);
-    const entry = byUsername || byDirect;
 
-    if (entry) {
-      const resolvedAddress = entry.address?.toLowerCase();
-      const resolvedUsername = normalizeUsername(entry.username);
+    if (byUsername) {
+      const resolvedAddress = byUsername.address?.toLowerCase();
+      const resolvedUsername = normalizeUsername(byUsername.username);
       return {
         canonicalId: resolvedAddress || resolvedUsername || normalized,
-        resolvedUsername: entry.username || undefined,
+        resolvedUsername: byUsername.username || undefined,
         address: resolvedAddress || undefined,
       };
     }
 
     if (enrichedAvatarsMap) {
       for (const [, candidate] of enrichedAvatarsMap) {
-        if (normalizeUsername(candidate.username) === normalized || normalizeUsername(candidate.displayName) === normalized) {
+        if (normalizeUsername(candidate.username) === normalized || candidate.address?.toLowerCase() === normalized) {
           const resolvedAddress = candidate.address?.toLowerCase();
           const resolvedUsername = normalizeUsername(candidate.username);
           return {
@@ -395,7 +393,7 @@ function getNotificationContent(
   if (aggCount > 2 && ['like', 'comment', 'repost'].includes(typeStr)) {
     const canonical = (canonicalActors && canonicalActors.length > 0)
       ? canonicalActors
-      : buildCanonicalActors(aggNames, notification.actorUsername, undefined);
+      : buildCanonicalActors(aggNames, undefined, undefined);
 
     if (canonical.length <= 1) {
       const name = canonical[0]?.display || actorName;
@@ -558,12 +556,11 @@ function NotificationItem({
       : null;
 
   const aggregatedActorNames = (notification as any).latestActorNames as string[] | undefined;
-  const canonicalActors = buildCanonicalActors(
-    aggregatedActorNames,
-    notification.actorUsername,
-    enriched?.username,
-    enrichedAvatars,
-  );
+  const canonicalActors = (() => {
+    const fromAggregated = buildCanonicalActors(aggregatedActorNames, undefined, undefined, enrichedAvatars);
+    if (fromAggregated.length > 0) return fromAggregated;
+    return buildCanonicalActors(undefined, notification.actorUsername, enriched?.username, enrichedAvatars);
+  })();
   const primaryKey = normalizeUsername(enriched?.username || notification.actorUsername);
 
   const resolveActorAvatar = (actor: CanonicalActor | null | undefined): string | undefined => {
@@ -874,6 +871,14 @@ export default function NotificationsPage() {
   const [enrichedAvatars, setEnrichedAvatars] = useState<Map<string, EnrichedAvatar>>(() => moduleAvatarCache);
   const [enrichmentReady, setEnrichmentReady] = useState(() => moduleAvatarCache.size > 0);
 
+  // Safety reset: clear any stale username alias cache that may have been produced by older dedupe logic
+  useEffect(() => {
+    moduleAvatarCache = new Map();
+    moduleEnrichedKeys.clear();
+    setEnrichedAvatars(new Map());
+    setEnrichmentReady(false);
+  }, []);
+
   useEffect(() => {
     if (!allNotifications.length) return;
     
@@ -943,6 +948,8 @@ export default function NotificationsPage() {
     });
     
     const usernameFetches = uniqueNewUsernames.map(async (username) => {
+      const attemptedKey = toUsernameCacheKey(username);
+
       try {
         const { getAccountByUsername } = await import('@/lib/api/dehub');
         const { extractAvatarPath, buildAvatarUrl } = await import('@/lib/media-url');
@@ -950,7 +957,7 @@ export default function NotificationsPage() {
         
         // Detect empty API result (200 OK but no real user data) and avoid caching pseudo identities
         if (!user._id && !user.address && !user.username) {
-          return { resolved: false };
+          return { resolved: false, attemptedKey };
         }
 
         const resolvedUsername = normalizeUsername(user.username || username);
@@ -960,7 +967,7 @@ export default function NotificationsPage() {
         const primaryKey = addressKey || inputKey;
 
         if (!primaryKey) {
-          return { resolved: false };
+          return { resolved: false, attemptedKey };
         }
         
         const rawPath = extractAvatarPath(user);
@@ -982,7 +989,7 @@ export default function NotificationsPage() {
           extraKeys,
         };
       } catch {
-        return { resolved: false };
+        return { resolved: false, attemptedKey };
       }
     });
     
@@ -991,7 +998,16 @@ export default function NotificationsPage() {
         const next = new Map(prev);
 
         for (const r of results) {
-          if (r.status !== 'fulfilled' || !r.value?.resolved || !r.value.key || !r.value.info) continue;
+          if (r.status !== 'fulfilled') continue;
+
+          if (!r.value?.resolved) {
+            if ((r.value as any).attemptedKey) {
+              moduleEnrichedKeys.delete((r.value as any).attemptedKey);
+            }
+            continue;
+          }
+
+          if (!r.value.key || !r.value.info) continue;
 
           next.set(r.value.key, r.value.info as EnrichedAvatar);
           moduleEnrichedKeys.add(r.value.key);

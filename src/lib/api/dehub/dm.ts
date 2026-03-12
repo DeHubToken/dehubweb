@@ -24,8 +24,6 @@ export interface DeHubConversation {
   id: string;
   participants: DeHubUser[];
   lastMessage?: DeHubDMMessage;
-  /** Last 20 messages pre-loaded from contacts API — use to seed message cache instantly */
-  messages?: DmMessage[];
   unreadCount: number;
   createdAt: string;
   updatedAt: string;
@@ -208,22 +206,11 @@ function mapApiConversationToDeHub(item: any, myAddress: string): DeHubConversat
     }
   }
 
-  // Preserve embedded messages from contacts API (last 20, newest-first)
-  const embeddedMessages: DmMessage[] | undefined =
-    Array.isArray(item.messages) && item.messages.length > 0
-      ? item.messages
-          .map((msg: any) => parseDmMessage(msg, myAddress))
-          .sort((a: DmMessage, b: DmMessage) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          )
-      : undefined;
-
   return {
     id,
     participants,
     otherUser,
     lastMessage,
-    messages: embeddedMessages,
     unreadCount: item.unreadCount || 0,
     createdAt: item.createdAt || item.lastMessageAt || new Date().toISOString(),
     updatedAt: item.updatedAt || item.lastMessageAt || new Date().toISOString(),

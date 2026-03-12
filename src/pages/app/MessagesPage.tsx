@@ -10,8 +10,7 @@ import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector
 
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
-import { useConversations, useUserOnlineStatus, useCreateConversation, useUserSearchForDM, messagesKeys } from '@/hooks/use-messages';
-import { useQueryClient } from '@tanstack/react-query';
+import { useConversations, useUserOnlineStatus, useCreateConversation, useUserSearchForDM } from '@/hooks/use-messages';
 import { getMediaUrl, getAccountInfo, type DeHubConversation, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatDistanceToNow } from 'date-fns';
@@ -140,7 +139,6 @@ export default function MessagesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [readConvIds, setReadConvIds] = useState<Set<string>>(new Set());
   const { isAuthenticated, walletAddress } = useAuth();
-  const queryClient = useQueryClient();
   
   // Subscribe to DM realtime updates only when on messages page
   useDMRealtime();
@@ -363,8 +361,8 @@ export default function MessagesPage() {
               </div>
             </button>
 
-            {/* Loading State — show while query is loading OR while walletAddress is not yet available */}
-            {(isLoading || (isAuthenticated && !walletAddress)) && <ConversationsSkeleton />}
+            {/* Loading State */}
+            {isLoading && <ConversationsSkeleton />}
 
             {/* Error State */}
             {isError && (
@@ -389,17 +387,6 @@ export default function MessagesPage() {
                 key={conv.id}
                 conversation={readConvIds.has(conv.id) ? { ...conv, unreadCount: 0 } : conv}
                 onClick={() => {
-                  // Pre-seed message cache with embedded messages so DirectMessageChat
-                  // shows messages instantly (no loading skeleton) while fresh data loads
-                  if (conv.messages?.length && conv.id && !conv.id.startsWith('new_')) {
-                    queryClient.setQueryData(
-                      messagesKeys.messages(conv.id),
-                      (old: any) => old ?? {
-                        pages: [{ items: conv.messages, totalCount: conv.messages!.length, hasMore: conv.messages!.length >= 20 }],
-                        pageParams: [0],
-                      }
-                    );
-                  }
                   setReadConvIds(prev => new Set(prev).add(conv.id));
                   setSelectedConversation({ ...conv, unreadCount: 0 });
                 }}
