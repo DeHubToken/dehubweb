@@ -284,21 +284,20 @@ function getNotificationContent(notification: DeHubNotification, bundle?: Bundle
   const aggCount = (notification as any).aggregatedCount || 1;
   const aggNames = (notification as any).latestActorNames as string[] | undefined;
   if (aggCount > 2 && aggNames && aggNames.length > 0 && ['like', 'comment', 'repost'].includes(notification.type as string)) {
-    // Check if it's actually multiple unique actors or one actor on multiple posts
-    const uniqueNames = new Set(aggNames.map(n => n.toLowerCase()));
-    const isSingleActor = uniqueNames.size <= 1;
+    // Use canonical actor list for consistent naming with grid
+    const canonical = buildCanonicalActors(aggNames, notification.actorUsername, undefined);
+    const isSingleActor = canonical.length <= 1;
     
     if (isSingleActor) {
-      // Single user liked/commented/reposted multiple posts
-      const name = aggNames[0] || actorName;
+      const name = canonical[0]?.display || actorName;
       const postCount = aggCount;
       const typeStr = notification.type as string;
       if (typeStr === 'like') return `${name} liked ${postCount} of your posts`;
       if (typeStr === 'comment') return `${name} commented on ${postCount} of your posts`;
       if (typeStr === 'repost') return `${name} reposted ${postCount} of your posts`;
     } else {
-      // Multiple users on same post
-      const first = aggNames[0];
+      // Multiple users — first name from canonical list matches grid slot 1
+      const first = canonical[0]?.display || aggNames[0];
       const rest = aggCount - 1;
       const othersText = rest === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: rest });
       const othersSpan = onOthersClick ? (
