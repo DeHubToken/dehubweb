@@ -844,6 +844,44 @@ function NotificationItem({
           </div>
         </DrawerContent>
       </Drawer>
+
+      {/* Posts drawer — shows all posts in a same-actor bundle */}
+      <Drawer open={showPostsDrawer} onOpenChange={setShowPostsDrawer}>
+        <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[70vh]">
+          <DrawerHeader className="text-center pb-2">
+            <DrawerTitle className="text-white text-base">
+              {notification.type === 'like' ? 'Liked posts' : notification.type === 'comment' ? 'Commented posts' : notification.type === 'repost' ? 'Reposted posts' : 'Posts'}
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[50vh]" data-vaul-no-drag>
+            {bundle.allNotifications.map((n) => {
+              const thumb = n.tokenThumbnail
+                ? (n.tokenThumbnail.startsWith('http') ? n.tokenThumbnail : `${DEHUB_CDN_BASE}${n.tokenThumbnail}`)
+                : null;
+              const title = n.tokenTitle || 'Untitled post';
+              const link = getNavigationLink(n);
+
+              return (
+                <Link
+                  key={n.id}
+                  to={link || '#'}
+                  onClick={() => setShowPostsDrawer(false)}
+                  className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors"
+                >
+                  {thumb ? (
+                    <img src={thumb} alt={title} className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center flex-shrink-0">
+                      {getNotificationIcon(n.type)}
+                    </div>
+                  )}
+                  <span className="text-white text-sm font-medium line-clamp-2">{title}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }
