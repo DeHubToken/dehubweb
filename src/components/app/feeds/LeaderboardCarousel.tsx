@@ -10,7 +10,8 @@ import { Trophy, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getLeaderboard, type LeaderboardEntry } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { getBadgeUrl, isBigBadge } from '@/lib/staking-badges';
+import { getBadgeUrl } from '@/lib/staking-badges';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import medal1 from '@/assets/medal-1.png';
@@ -73,7 +74,7 @@ const LeaderboardCard = memo(function LeaderboardCard({
           <div className="flex items-center gap-0.5">
             <span className="relative inline-flex items-baseline shrink min-w-0">
               <span className="text-sm font-semibold text-white truncate">{displayName}</span>
-              {badgeUrl && <img src={badgeUrl} alt="Badge" className={`w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3 brightness-0 invert${isBigBadge(entry.badgeBalance || entry.total) ? ' scale-110' : ''}`} />}
+              <BadgeIcon badgeBalance={entry.badgeBalance || entry.total} className="w-[9px] h-[9px] absolute -top-0.5 -right-3" />
             </span>
           </div>
         </div>

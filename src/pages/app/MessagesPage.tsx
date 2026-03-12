@@ -15,7 +15,8 @@ import { getMediaUrl, getAccountInfo, type DeHubConversation, type DeHubUser } f
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getBadgeUrl, isBigBadge } from '@/lib/staking-badges';
+import { getBadgeUrl } from '@/lib/staking-badges';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useDMRealtime } from '@/hooks/use-dm-realtime';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
@@ -24,7 +25,7 @@ import dehubLogo from '@/assets/dehub-logo.png';
 function ConversationBadge({ badgeBalance }: { badgeBalance?: number }) {
   const badgeUrl = getBadgeUrl(badgeBalance);
   if (!badgeUrl) return null;
-  return <img src={badgeUrl} alt="Badge" className={`w-[14px] h-[14px] shrink-0 brightness-0 invert${isBigBadge(badgeBalance) ? ' scale-110' : ''}`} />;
+  return <BadgeIcon badgeBalance={badgeBalance} className="w-[14px] h-[14px]" />;
 }
 
 function ConversationsSkeleton() {

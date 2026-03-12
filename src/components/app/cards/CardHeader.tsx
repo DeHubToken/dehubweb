@@ -12,7 +12,8 @@ import { CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getAgentAvatarFallback } from '@/constants/agent-avatars.constants';
-import { getBadgeUrl, isBigBadge } from '@/lib/staking-badges';
+import { getBadgeUrl } from '@/lib/staking-badges';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 
 import type { ContentType } from '@/types/feed.types';
 
@@ -109,13 +110,7 @@ export function CardHeader({
           <div className="flex items-center gap-1.5 min-w-0">
             <span className={`relative inline-flex items-baseline shrink min-w-0${badgeUrl ? ' pr-3' : ''}`}>
               <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
-              {badgeUrl && (
-                <img
-                  src={badgeUrl}
-                  alt="Badge"
-                  className={`w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0 brightness-0 invert${isBigBadge(badgeBalance, handle || username) ? ' scale-110' : ''}`}
-                />
-              )}
+              <BadgeIcon badgeBalance={badgeBalance} username={handle || username} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
             </span>
             {verified && <CheckCircle className="w-3.5 h-3.5 text-blue-500 shrink-0" />}
             

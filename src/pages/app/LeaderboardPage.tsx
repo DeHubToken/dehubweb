@@ -30,7 +30,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { getBadgeUrl, isBigBadge } from '@/lib/staking-badges';
+import { getBadgeUrl } from '@/lib/staking-badges';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 
 
 type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
@@ -459,10 +460,7 @@ export default function LeaderboardPage() {
                       <div className="flex items-center gap-1">
                         <span className="relative inline-flex items-baseline shrink min-w-0">
                           <span className="font-semibold text-white truncate">{getDisplayName(entry)}</span>
-                          {(() => {
-                            const badgeUrl = getBadgeUrl(entry.badgeBalance || entry.total, entry.username);
-                            return badgeUrl ? <img src={badgeUrl} alt="Badge" className={`w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3 brightness-0 invert${isBigBadge(entry.badgeBalance || entry.total, entry.username) ? ' scale-110' : ''}`} /> : null;
-                          })()}
+                          <BadgeIcon badgeBalance={entry.badgeBalance || entry.total} username={entry.username} className="w-[9px] h-[9px] absolute -top-0.5 -right-3" />
                         </span>
                       </div>
                       <span className="text-zinc-500 text-sm">{getHandle(entry)}</span>

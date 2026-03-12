@@ -5,6 +5,8 @@
  * Native-feeling page rendered inside the app layout.
  */
 
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import glossaryIcon from '@/assets/glossary-icon.png';
 import dhbCoinIcon from '@/assets/dehub-coin.png';
@@ -58,9 +60,9 @@ function GlossaryCard({ icon, title, description }: GlossaryEntry) {
   );
 }
 
-function SectionBlock({ title, entries }: GlossarySection) {
+function SectionBlock({ title, entries, id }: GlossarySection & { id?: string }) {
   return (
-    <div className="mb-6">
+    <div className="mb-6" id={id}>
       <h2 className="text-base font-bold text-white mb-3 flex items-center gap-2">
         <div className="w-1 h-5 rounded-full bg-gradient-to-b from-purple-500 to-blue-500" />
         {title}
@@ -76,9 +78,17 @@ function SectionBlock({ title, entries }: GlossarySection) {
 
 export default function GlossaryPage() {
   const { t } = useTranslation();
+  const location = useLocation();
   const iconSize = 18;
 
-  const sections: GlossarySection[] = [
+  useEffect(() => {
+    if (location.hash) {
+      const el = document.getElementById(location.hash.slice(1));
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+  }, [location.hash]);
+
+  const sections: (GlossarySection & { id?: string })[] = [
     {
       title: t('glossary.sections.postInteractions', 'Post Interactions'),
       entries: [
@@ -158,6 +168,7 @@ export default function GlossaryPage() {
       ],
     },
     {
+      id: 'badges',
       title: t('glossary.sections.badges', 'Badges & Ranking'),
       entries: [
         { icon: <Star size={iconSize} />, title: t('glossary.stakingBadge', 'Staking Badges'), description: t('glossary.stakingBadgeDesc', 'Badges displayed next to your username based on your total DHB holdings (wallet + staked). There are 13 tiers — the more DHB you hold, the higher your badge rank. Higher tiers grant more governance voting power and lower platform fees.') },

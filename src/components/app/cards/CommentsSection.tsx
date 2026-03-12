@@ -32,7 +32,8 @@ import {
 import { TranslatableText, useTranslation } from '../TranslatableText';
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
-import { getBadgeUrl, isBigBadge } from '@/lib/staking-badges';
+import { getBadgeUrl } from '@/lib/staking-badges';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { getNFTComments, postComment, toggleCommentLike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, followUser, unfollowUser, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
@@ -227,13 +228,7 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
           >
             <span className={`relative inline-flex items-baseline shrink min-w-0${badgeUrl ? ' pr-3' : ''}`}>
               <span className="font-semibold text-white text-sm truncate max-w-[120px] leading-tight">{shownName}</span>
-              {badgeUrl && (
-                <img
-                  src={badgeUrl}
-                  alt="Badge"
-                  className={`w-[9px] h-[9px] shrink-0 absolute -top-0.5 right-0 brightness-0 invert${isBigBadge(comment.badgeBalance, comment.username) ? ' scale-110' : ''}`}
-                />
-              )}
+              <BadgeIcon badgeBalance={comment.badgeBalance} username={comment.username} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
             </span>
           </button>
           {comment.displayName && (
