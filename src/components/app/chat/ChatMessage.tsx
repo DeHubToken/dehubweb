@@ -118,7 +118,7 @@ function ReactionBar({
             }}
             className={`group/reaction inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded-full border transition-colors ${
               myReaction
-                ? 'border-primary/40 bg-primary/10 text-primary'
+                ? 'border-white/30 bg-white/10 text-white'
                 : 'border-zinc-700 bg-zinc-800/50 text-zinc-400 hover:border-zinc-600'
             }`}
           >
