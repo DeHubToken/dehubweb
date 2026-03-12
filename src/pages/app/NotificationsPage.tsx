@@ -886,7 +886,12 @@ export default function NotificationsPage() {
     const aggregatedActorUsernames = allNotifications
       .filter(n => (n as any).aggregatedCount > 1 && (n as any).latestActorNames?.length > 0)
       .flatMap(n => ((n as any).latestActorNames as string[]))
-      .filter(name => Boolean(name) && !moduleEnrichedKeys.has(`username:${name.toLowerCase()}`));
+      .map(name => normalizeUsername(name))
+      .filter((name): name is string => Boolean(name))
+      .filter(name => {
+        const cacheKey = toUsernameCacheKey(name);
+        return cacheKey ? !moduleEnrichedKeys.has(cacheKey) : false;
+      });
     
     const uniqueNewAddresses = [...new Set(newAddresses)];
     const uniqueNewUsernames = [...new Set(aggregatedActorUsernames)];
@@ -898,7 +903,10 @@ export default function NotificationsPage() {
     
     // Mark as in-flight immediately to prevent duplicate calls
     uniqueNewAddresses.forEach(addr => moduleEnrichedKeys.add(addr));
-    uniqueNewUsernames.forEach(name => moduleEnrichedKeys.add(`username:${name.toLowerCase()}`));
+    uniqueNewUsernames.forEach(name => {
+      const cacheKey = toUsernameCacheKey(name);
+      if (cacheKey) moduleEnrichedKeys.add(cacheKey);
+    });
     
     const addressFetches = uniqueNewAddresses.map(async (addr) => {
       try {
@@ -907,9 +915,30 @@ export default function NotificationsPage() {
         const user = await getAccountInfo(addr);
         const rawPath = extractAvatarPath(user);
         const avatarUrl = buildAvatarUrl(user.address || addr, rawPath);
-        return { key: addr, info: { address: addr, avatarUrl, username: user.username || null, displayName: user.displayName || null } };
+
+        return {
+          resolved: true,
+          key: addr,
+          info: {
+            address: (user.address || addr).toLowerCase(),
+            avatarUrl,
+            username: user.username || null,
+            displayName: user.displayName || null,
+          } as EnrichedAvatar,
+          extraKeys: [] as string[],
+        };
       } catch {
-        return { key: addr, info: { address: addr, avatarUrl: null, username: null, displayName: null } };
+        return {
+          resolved: true,
+          key: addr,
+          info: {
+            address: addr,
+            avatarUrl: null,
+            username: null,
+            displayName: null,
+          } as EnrichedAvatar,
+          extraKeys: [] as string[],
+        };
       }
     });
     
@@ -919,40 +948,61 @@ export default function NotificationsPage() {
         const { extractAvatarPath, buildAvatarUrl } = await import('@/lib/media-url');
         const user = await getAccountByUsername(username);
         
-        // Detect empty API result (200 OK but no real user data)
+        // Detect empty API result (200 OK but no real user data) and avoid caching pseudo identities
         if (!user._id && !user.address && !user.username) {
-          return { key: `username:${username.toLowerCase()}`, info: { address: username, avatarUrl: null, username, displayName: null }, extraKey: null };
+          return { resolved: false };
+        }
+
+        const resolvedUsername = normalizeUsername(user.username || username);
+        const inputKey = toUsernameCacheKey(username);
+        const resolvedKey = toUsernameCacheKey(resolvedUsername);
+        const addressKey = user.address?.toLowerCase() || null;
+        const primaryKey = addressKey || inputKey;
+
+        if (!primaryKey) {
+          return { resolved: false };
         }
         
         const rawPath = extractAvatarPath(user);
         const avatarUrl = user.address ? buildAvatarUrl(user.address, rawPath) : null;
-        const key = user.address?.toLowerCase() || `username:${username.toLowerCase()}`;
-        const info = { address: user.address || username, avatarUrl, username: user.username || username, displayName: user.displayName || null };
-        // Store under both the input name AND the resolved canonical username so all name variants resolve
-        const extraKeys: string[] = [];
-        const inputKey = `username:${username.toLowerCase()}`;
-        if (key !== inputKey) extraKeys.push(inputKey);
-        const resolvedKey = user.username ? `username:${user.username.toLowerCase()}` : null;
-        if (resolvedKey && resolvedKey !== inputKey && resolvedKey !== key) extraKeys.push(resolvedKey);
-        return { key, info, extraKeys };
+        const info: EnrichedAvatar = {
+          address: user.address?.toLowerCase() || null,
+          avatarUrl,
+          username: user.username || resolvedUsername || null,
+          displayName: user.displayName || null,
+        };
+
+        const extraKeys = [inputKey, resolvedKey]
+          .filter((k): k is string => Boolean(k) && k !== primaryKey);
+
+        return {
+          resolved: true,
+          key: primaryKey,
+          info,
+          extraKeys,
+        };
       } catch {
-        return { key: `username:${username.toLowerCase()}`, info: { address: username, avatarUrl: null, username, displayName: null }, extraKey: null };
+        return { resolved: false };
       }
     });
     
     Promise.allSettled([...addressFetches, ...usernameFetches]).then((results) => {
       setEnrichedAvatars(prev => {
         const next = new Map(prev);
+
         for (const r of results) {
-          if (r.status === 'fulfilled') {
-            next.set(r.value.key, r.value.info as EnrichedAvatar);
-            // Store under all alias keys so all name variants resolve to same entry
-            const extras = (r.value as any).extraKeys || ((r.value as any).extraKey ? [(r.value as any).extraKey] : []);
-            for (const ek of extras) {
-              if (ek) next.set(ek, r.value.info as EnrichedAvatar);
-            }
+          if (r.status !== 'fulfilled' || !r.value?.resolved || !r.value.key || !r.value.info) continue;
+
+          next.set(r.value.key, r.value.info as EnrichedAvatar);
+          moduleEnrichedKeys.add(r.value.key);
+
+          const extras = (r.value.extraKeys || []).filter(Boolean);
+          for (const ek of extras) {
+            next.set(ek, r.value.info as EnrichedAvatar);
+            moduleEnrichedKeys.add(ek);
           }
         }
+
         // Sync to module-level cache so it persists across navigations
         moduleAvatarCache = next;
         return next;
