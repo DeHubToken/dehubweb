@@ -367,7 +367,7 @@ export function useLiveChatMessages(roomId: string | null) {
         setIsSending(false);
       }
     },
-    [roomId, isAuthenticated, walletAddress, user, isBanned, fetchMessages]
+    [roomId, isAuthenticated, walletAddress, user, isBanned, fetchMessages, messages]
   );
 
   const addReaction = useCallback((messageId: string, emoji: string) => {
