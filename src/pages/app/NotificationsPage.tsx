@@ -261,7 +261,7 @@ function resolveActorProfileLink(actor: { display: string; key: string; resolved
   // Display name with spaces/special chars — not a valid route
   return null;
 }
-
+function getNotificationContent(notification: DeHubNotification, bundle?: BundledNotification, t?: (key: string, opts?: any) => string, onOthersClick?: () => void): React.ReactNode {
 
   const tr = t || ((key: string) => key);
   const actorName = notification.actorUsername || 'Someone';
