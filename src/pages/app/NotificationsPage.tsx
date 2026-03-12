@@ -650,7 +650,7 @@ function NotificationItem({
         <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[70vh]">
           <DrawerHeader className="text-center pb-2">
             <DrawerTitle className="text-white text-base">
-              {notification.type === 'like' ? 'Liked by' : notification.type === 'repost' ? 'Reposted by' : notification.type === 'comment' ? 'Commented by' : 'Users'}
+              {(notification.type as string) === 'like' ? 'Liked by' : (notification.type as string) === 'repost' ? 'Reposted by' : (notification.type as string) === 'comment' ? 'Commented by' : 'Users'}
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[50vh]" data-vaul-no-drag>
