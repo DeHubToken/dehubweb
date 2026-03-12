@@ -603,8 +603,8 @@ function NotificationItem({
   const { walletAddress } = useAuth();
 
   const handleClick = () => {
-    // If a drawer is open, don't navigate — user is interacting with it
-    if (showActorsDrawer || showPostsDrawer) return;
+    // If a drawer is open or just closed, don't navigate
+    if (showActorsDrawer || showPostsDrawer || drawerJustClosed.current) return;
     
     // Mark all notifications in bundle as read
     if (hasUnread) {
