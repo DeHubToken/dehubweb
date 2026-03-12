@@ -69,6 +69,10 @@ export function useProfilePage() {
           navigate(`/${cleanHandle}`, { replace: true });
         }
       }
+      // Route like /sableraven_9847 where canonical is /SableRaven_9847 → normalize casing
+      else if (routeUsername && cleanHandle.toLowerCase() === routeUsername.toLowerCase() && cleanHandle !== routeUsername) {
+        navigate(`/${cleanHandle}`, { replace: true });
+      }
       // Route like /app/profile?id=0xABC... → /username
       else if (userId && !routeUsername) {
         navigate(`/${cleanHandle}`, { replace: true });

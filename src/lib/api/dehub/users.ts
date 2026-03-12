@@ -15,16 +15,41 @@ export async function getAccountInfo(userId: string, address?: string): Promise<
 }
 
 export async function getAccountByUsername(username: string, address?: string): Promise<DeHubUser> {
-  const cleanUsername = username.replace("@", "");
+  const cleanUsername = username.replace("@", "").trim();
   const params: Record<string, string> = {};
   if (address) {
     params.address = address;
   }
+
   const response = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${encodeURIComponent(cleanUsername)}`, { params });
-  if (response && typeof response === "object" && "result" in response) {
-    return response.result;
+  const user = (response && typeof response === "object" && "result" in response)
+    ? response.result
+    : (response as DeHubUser);
+
+  // Some usernames are case-sensitive on the backend and may return an empty shell object.
+  // Fallback: resolve canonical username via search and retry account_info with exact casing.
+  const isEmptyUser = !user?._id && !user?.address && !user?.wallet_address && !user?.username;
+  if (isEmptyUser) {
+    const searchResponse = await apiCall<{ result: DeHubUser[] } | PaginatedResponse<DeHubUser>>("/api/users_search", {
+      params: { q: cleanUsername, page: 1, limit: 10 },
+    });
+
+    const candidates = Array.isArray((searchResponse as any)?.result)
+      ? (searchResponse as any).result as DeHubUser[]
+      : Array.isArray((searchResponse as any)?.data)
+        ? (searchResponse as any).data as DeHubUser[]
+        : [];
+
+    const canonicalMatch = candidates.find(
+      (candidate) => candidate?.username?.toLowerCase() === cleanUsername.toLowerCase(),
+    );
+
+    if (canonicalMatch?.username && canonicalMatch.username !== cleanUsername) {
+      return getAccountInfo(canonicalMatch.username, address);
+    }
   }
-  return response as DeHubUser;
+
+  return user;
 }
 
 export interface UpdateProfileData {
