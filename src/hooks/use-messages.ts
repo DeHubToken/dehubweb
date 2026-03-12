@@ -63,7 +63,7 @@ export function useConversations(searchQuery: string = '') {
   const queryClient = useQueryClient();
 
   const query = useQuery({
-    queryKey: [...messagesKeys.conversations(), searchQuery, walletAddress],
+    queryKey: [...messagesKeys.conversations(), searchQuery],
     queryFn: async () => {
       console.log('[useConversations] Fetching...', { searchQuery, walletAddress });
       try {
@@ -81,7 +81,8 @@ export function useConversations(searchQuery: string = '') {
     enabled: isAuthenticated && !!walletAddress,
     staleTime: 15 * 1000,
     refetchOnWindowFocus: false,
-    // Poll to pick up new Supabase conversations (when other user sends first)
+    placeholderData: (prev) => prev,
+    // Poll to pick up new conversations (when other user sends first)
     refetchInterval: 20 * 1000,
   });
 
