@@ -810,7 +810,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error('Wallet address changed during session refresh. Please sign in again.');
       }
 
-      toast.loading('Almost there...', { id: toastId });
+      toast.loading(i18n.t('toasts.auth.almostThere'), { id: toastId });
 
       const authResponse = await authenticateWallet(
         authAddressForApi,
