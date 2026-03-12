@@ -357,6 +357,7 @@ function NotificationItem({
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [isClosing, setIsClosing] = useState(false);
+  const [showActorsDrawer, setShowActorsDrawer] = useState(false);
 
   // Prefer fresh enriched avatar over stale API snapshot
   const enriched = notification.actorAddress ? enrichedAvatars.get(notification.actorAddress.toLowerCase()) : undefined;
