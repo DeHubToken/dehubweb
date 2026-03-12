@@ -260,7 +260,7 @@ function MessageBubble({
             (message.paymentStatus !== 'pending' || 
               (message.paymentTxHash && confirmedTxHashes.current.has(message.paymentTxHash.toLowerCase())) ||
               (Date.now() - new Date(message.createdAt).getTime() >= 90_000)) && (
-            <span className="text-primary">✓✓</span>
+            <span className="text-white">✓✓</span>
           )}
         </div>
       </div>
