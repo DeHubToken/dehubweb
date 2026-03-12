@@ -306,6 +306,19 @@ export function useLiveChatMessages(roomId: string | null) {
       }
       setIsSending(true);
 
+      // Build reply_to data from the original message so sender_name is correct
+      let replyToData: SupabaseLiveChatMessage['reply_to'];
+      if (replyToId) {
+        const original = messages.find((m) => m.id === replyToId);
+        if (original) {
+          replyToData = {
+            id: original.id,
+            content: original.content || 'Media',
+            sender_name: original.sender_display_name || original.sender_username || original.sender_address?.slice(0, 6) || 'User',
+          };
+        }
+      }
+
       const optimisticId = `temp-${Date.now()}`;
       const optimisticMsg: SupabaseLiveChatMessage = {
         id: optimisticId,
@@ -319,6 +332,7 @@ export function useLiveChatMessages(roomId: string | null) {
         image_url: imageUrl || null,
         is_pinned: false,
         created_at: new Date().toISOString(),
+        reply_to: replyToData,
       };
       setMessages((prev) => {
         const next = [...prev, optimisticMsg];
@@ -353,7 +367,7 @@ export function useLiveChatMessages(roomId: string | null) {
         setIsSending(false);
       }
     },
-    [roomId, isAuthenticated, walletAddress, user, isBanned, fetchMessages]
+    [roomId, isAuthenticated, walletAddress, user, isBanned, fetchMessages, messages]
   );
 
   const addReaction = useCallback((messageId: string, emoji: string) => {
