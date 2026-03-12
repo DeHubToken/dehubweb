@@ -707,41 +707,28 @@ function NotificationItem({
           <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[50vh]" data-vaul-no-drag>
             {(() => {
               const aggNames = (notification as any).latestActorNames as string[] | undefined;
-              const primaryUsername = enriched?.username || notification.actorUsername;
-              const allActors: string[] = [];
-              const seen = new Set<string>();
-              if (primaryUsername && !seen.has(primaryUsername.toLowerCase())) {
-                seen.add(primaryUsername.toLowerCase());
-                allActors.push(primaryUsername);
-              }
-              if (aggNames) {
-                for (const name of aggNames) {
-                  if (!seen.has(name.toLowerCase())) {
-                    seen.add(name.toLowerCase());
-                    allActors.push(name);
-                  }
-                }
-              }
-              const findAvatar = (username: string) => {
+              const canonicalActors = buildCanonicalActors(aggNames, notification.actorUsername, enriched?.username);
+              const findAvatar = (key: string) => {
                 for (const [, entry] of enrichedAvatars) {
-                  if (entry.username?.toLowerCase() === username.toLowerCase() && entry.avatarUrl) return entry.avatarUrl;
+                  if (normalizeUsername(entry.username) === key && entry.avatarUrl) return entry.avatarUrl;
                 }
                 return undefined;
               };
-              return allActors.map((name) => (
+              return canonicalActors.map((actor) => (
                 <Link
-                  key={name}
-                  to={`/${name}`}
+                  key={actor.key}
+                  to={`/${actor.display}`}
                   onClick={() => setShowActorsDrawer(false)}
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors"
                 >
                   <Avatar className="w-10 h-10">
-                    {findAvatar(name) && <AvatarImage src={findAvatar(name)} />}
-                    <AvatarFallback className="bg-zinc-700 text-white font-medium">{name.charAt(0).toUpperCase()}</AvatarFallback>
+                    {findAvatar(actor.key) && <AvatarImage src={findAvatar(actor.key)} />}
+                    <AvatarFallback className="bg-zinc-700 text-white font-medium">{actor.display.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
-                  <span className="text-white text-sm font-medium">@{name}</span>
+                  <span className="text-white text-sm font-medium">@{actor.display}</span>
                 </Link>
               ));
+            })()}
             })()}
           </div>
         </DrawerContent>
