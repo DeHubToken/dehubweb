@@ -176,7 +176,12 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
       </div>
 
       {/* Price Chart */}
-      <TokenPriceChart data={chartData || []} isLoading={isChartLoading} />
+      <TokenPriceChart
+        data={chartData || []}
+        isLoading={isChartLoading}
+        timeframe={chartTimeframe}
+        onTimeframeChange={setChartTimeframe}
+      />
 
       {/* Stats row */}
       <div className="px-4 py-3 flex items-center gap-4 text-xs border-t border-zinc-700/50">
