@@ -160,7 +160,7 @@ export function SidebarNavItem({
           )}
         </div>
       )}
-      <span className={cn("relative z-10 truncate", labelClass)}>{translatedLabel}</span>
+      <span className={cn("relative z-10 truncate", labelClass)}>{safeLabel}</span>
     </NavLink>
   );
 }
