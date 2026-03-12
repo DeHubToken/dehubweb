@@ -427,7 +427,7 @@ export default function BuyCoinsPage() {
               <p className="text-white font-medium">{t('buyCoins.cardBank')}</p>
               <p className="text-xs text-zinc-400">Visa, Mastercard, Apple Pay, Google Pay</p>
             </div>
-            {paymentMethod === 'card' && <Check className="w-5 h-5 text-primary" />}
+            {paymentMethod === 'card' && <Check className="w-5 h-5 text-white" />}
           </button>
 
         </div>
