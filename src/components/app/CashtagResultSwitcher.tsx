@@ -7,6 +7,8 @@ import type { StockQuote } from '@/hooks/use-stock-quote';
 import type { DexPair } from '@/hooks/use-dexscreener';
 import type { CmcMarketData } from '@/hooks/use-cmc-market-cap';
 import { AnimatePresence, motion } from 'framer-motion';
+import baseLogo from '@/assets/icons/base-logo.png';
+import solLogo from '@/assets/icons/solana-logo.png';
 
 interface CashtagResultSwitcherProps {
   stockData: StockQuote | null;
