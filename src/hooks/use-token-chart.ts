@@ -16,6 +16,11 @@ const TIMEFRAME_DAYS: Record<ChartTimeframe, number> = {
   '1Y': 365,
 };
 
+function extractCashtagSymbol(input: string): string | null {
+  const match = input.trim().match(/^\$([a-zA-Z0-9]+)/);
+  return match?.[1]?.toUpperCase() ?? null;
+}
+
 async function fetchTokenChart(symbol: string, timeframe: ChartTimeframe): Promise<PricePoint[]> {
   const days = TIMEFRAME_DAYS[timeframe];
 
@@ -40,14 +45,14 @@ export function useTokenChart(
   symbol: string,
   enabled: boolean,
   timeframe: ChartTimeframe = '1D',
-  options?: UseTokenChartOptions
+  _options?: UseTokenChartOptions
 ) {
-  const isCashtag = symbol.trim().startsWith('$') && symbol.trim().length >= 2;
+  const normalizedSymbol = extractCashtagSymbol(symbol);
 
   return useQuery({
-    queryKey: ['token-chart', symbol.trim(), timeframe],
-    queryFn: () => fetchTokenChart(symbol.trim(), timeframe),
-    enabled: enabled && isCashtag,
+    queryKey: ['token-chart', normalizedSymbol, timeframe],
+    queryFn: () => fetchTokenChart(normalizedSymbol as string, timeframe),
+    enabled: enabled && Boolean(normalizedSymbol),
     staleTime: 60_000,
     retry: 2,
   });

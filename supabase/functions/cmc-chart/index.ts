@@ -11,6 +11,10 @@ function downsample(points: { time: number; price: number }[], max = 60) {
   return points.filter((_, i) => i % step === 0 || i === points.length - 1);
 }
 
+function normalizeSymbol(raw: string) {
+  return raw.replace(/^\$/, '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -20,21 +24,32 @@ serve(async (req) => {
     const apiKey = Deno.env.get('CMC_API_KEY');
     if (!apiKey) {
       return new Response(JSON.stringify({ error: 'CMC_API_KEY not configured' }), {
-        status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    const { symbol, days } = await req.json();
-    if (!symbol || !days) {
-      return new Response(JSON.stringify({ error: 'symbol and days required' }), {
-        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    const body = await req.json().catch(() => null);
+    const rawSymbol = typeof body?.symbol === 'string' ? body.symbol : '';
+    const days = Number(body?.days);
+
+    if (!rawSymbol || !Number.isFinite(days) || days <= 0) {
+      return new Response(JSON.stringify({ error: 'symbol and positive numeric days are required' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    const clean = symbol.replace(/^\$/, '').toUpperCase();
+    const clean = normalizeSymbol(rawSymbol);
+    if (!clean) {
+      return new Response(JSON.stringify({ error: 'Invalid symbol format' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const now = new Date();
     const start = new Date(now.getTime() - days * 86400 * 1000);
-
     const interval = days <= 7 ? 'hourly' : 'daily';
 
     const params = new URLSearchParams({
@@ -54,13 +69,19 @@ serve(async (req) => {
     if (!res.ok) {
       const text = await res.text();
       return new Response(JSON.stringify({ error: `CMC API error: ${res.status}`, details: text }), {
-        status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 502,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     const data = await res.json();
+    if (data?.status?.error_code && data.status.error_code !== 0) {
+      return new Response(JSON.stringify({ error: data.status.error_message || 'CMC response error' }), {
+        status: 502,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
-    // v2 returns data keyed by symbol, e.g. data.data["BTC"][0].quotes
     const symbolData = data.data?.[clean];
     if (!symbolData || !Array.isArray(symbolData) || symbolData.length === 0) {
       return new Response(JSON.stringify({ prices: [] }), {
@@ -68,7 +89,6 @@ serve(async (req) => {
       });
     }
 
-    // Take the first match (most relevant by market cap)
     const quotes = symbolData[0]?.quotes;
     if (!quotes || !Array.isArray(quotes)) {
       return new Response(JSON.stringify({ prices: [] }), {
@@ -76,17 +96,25 @@ serve(async (req) => {
       });
     }
 
-    const points = quotes.map((q: any) => ({
-      time: new Date(q.time_close || q.time_open).getTime(),
-      price: q.quote?.USD?.close ?? q.quote?.USD?.open ?? 0,
-    }));
+    const points = quotes
+      .map((q: any) => ({
+        time: new Date(q.time_close || q.time_open).getTime(),
+        price: Number(q.quote?.USD?.close ?? q.quote?.USD?.open ?? 0),
+      }))
+      .filter((p: { time: number; price: number }) => Number.isFinite(p.time) && Number.isFinite(p.price) && p.price > 0);
 
     return new Response(JSON.stringify({ prices: downsample(points) }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=300' },
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=300',
+      },
     });
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    return new Response(JSON.stringify({ error: message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 });
