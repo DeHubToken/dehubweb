@@ -27,30 +27,66 @@ Deno.serve(async (req) => {
       fetch(quoteUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }),
     ]);
 
-    if (!chartRes.ok) {
+    let result: any = null;
+    let meta: any = {};
+    let chartData: { time: number; price: number }[] = [];
+
+    if (chartRes.ok) {
+      const data = await chartRes.json();
+      result = data?.chart?.result?.[0];
+      if (result) {
+        meta = result.meta || {};
+        const timestamps = result.timestamp || [];
+        const closes = result.indicators?.quote?.[0]?.close || [];
+        chartData = timestamps.map((t: number, i: number) => ({
+          time: t * 1000,
+          price: closes[i] ?? null,
+        })).filter((p: { time: number; price: number | null }) => p.price !== null);
+      }
+    } else {
       const text = await chartRes.text();
       console.error('Yahoo Finance chart error:', chartRes.status, text);
-      if (!quoteRes.ok) await quoteRes.text();
+    }
+
+    // Extract rich quote data
+    let q: Record<string, unknown> | null = null;
+    try {
+      if (quoteRes.ok) {
+        const quoteData = await quoteRes.json();
+        q = quoteData?.quoteResponse?.result?.[0] ?? null;
+      } else {
+        await quoteRes.text();
+      }
+    } catch (e) {
+      console.error('Quote fetch error:', e);
+    }
+
+    // If neither chart nor quote found anything, bail
+    if (!result && !q) {
       return new Response(JSON.stringify({ found: false }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    const data = await chartRes.json();
-    const result = data?.chart?.result?.[0];
-    if (!result) {
-      if (!quoteRes.ok) await quoteRes.text();
-      return new Response(JSON.stringify({ found: false }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+    // Use quote data as fallback for meta if chart failed
+    if (!result && q) {
+      meta = {
+        symbol: q.symbol,
+        shortName: q.shortName || q.longName,
+        regularMarketPrice: q.regularMarketPrice,
+        chartPreviousClose: q.regularMarketPreviousClose,
+        previousClose: q.regularMarketPreviousClose,
+        currency: q.currency || 'USD',
+        exchangeName: q.exchange,
+        fullExchangeName: q.fullExchangeName,
+        instrumentType: q.quoteType || '',
+      };
     }
 
-    const meta = result.meta;
-    const instrumentType = meta.instrumentType || '';
+    const instrumentType = (meta.instrumentType || (q?.quoteType as string) || '').toUpperCase();
 
-    const validTypes = ['EQUITY', 'ETF', 'MUTUALFUND', 'INDEX'];
-    if (!validTypes.includes(instrumentType.toUpperCase())) {
-      if (!quoteRes.ok) await quoteRes.text();
+    const validTypes = ['EQUITY', 'ETF', 'MUTUALFUND', 'INDEX', 'FUTURE'];
+    if (!validTypes.includes(instrumentType)) {
       return new Response(JSON.stringify({ found: false }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
