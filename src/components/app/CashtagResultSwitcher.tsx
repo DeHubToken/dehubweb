@@ -7,8 +7,6 @@ import type { StockQuote } from '@/hooks/use-stock-quote';
 import type { DexPair } from '@/hooks/use-dexscreener';
 import type { CmcMarketData } from '@/hooks/use-cmc-market-cap';
 import { AnimatePresence, motion } from 'framer-motion';
-import baseLogo from '@/assets/icons/base-logo.png';
-import solLogo from '@/assets/icons/solana-logo.png';
 
 interface CashtagResultSwitcherProps {
   stockData: StockQuote | null;
@@ -21,7 +19,6 @@ type ResultOption = {
   id: string;
   label: string;
   sublabel: string;
-  chainLogo?: string;
   type: 'stock' | 'crypto';
   pairIndex?: number; // index into dexPairs array
 };
@@ -44,15 +41,12 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
     });
   }
 
-  // Crypto options — one per chain
+  // Token options — one per chain
   dexPairs.forEach((pair, i) => {
-    const chainName = pair.chainId?.toLowerCase() || '';
-    const chainLogo = chainName === 'base' ? baseLogo : chainName === 'solana' ? solLogo : undefined;
     options.push({
       id: `crypto-${i}`,
       label: `$${pair.baseToken.symbol}`,
-      sublabel: pair.chainId?.toUpperCase() || 'Crypto',
-      chainLogo,
+      sublabel: 'Token',
       type: 'crypto',
       pairIndex: i,
     });
@@ -139,11 +133,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
             className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-800/80 border border-zinc-700/50 text-sm text-foreground hover:bg-zinc-700/80 transition-colors"
           >
             <span className="font-medium text-white">{selected.label}</span>
-            {selected.chainLogo ? (
-              <img src={selected.chainLogo} alt={selected.sublabel} className="w-4 h-4 rounded-md" />
-            ) : (
-              <span className="text-white/60 text-xs">{selected.sublabel}</span>
-            )}
+            <span className="text-white/60 text-xs">{selected.type === 'stock' ? 'Stock' : 'Token'}</span>
             <span className="text-white/60 text-xs ml-1">({options.length})</span>
             <ChevronDown className={cn(
               "w-3.5 h-3.5 text-white/60 transition-transform",
@@ -174,15 +164,10 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
                     )}
                   >
                     <span className="text-xs font-medium px-2 py-0.5 rounded bg-white/10 text-white">
-                      {opt.type === 'stock' ? 'Stock' : 'Crypto'}
+                      {opt.type === 'stock' ? 'Stock' : 'Token'}
                     </span>
                     <div className="flex-1 min-w-0 flex items-center gap-2">
                       <span className="text-white text-sm font-medium">{opt.label}</span>
-                      {opt.chainLogo ? (
-                        <img src={opt.chainLogo} alt={opt.sublabel} className="w-4 h-4 rounded-md" />
-                      ) : (
-                        <span className="text-white/60 text-xs">{opt.sublabel}</span>
-                      )}
                     </div>
                     {opt.id === selectedId && (
                       <div className="w-1.5 h-1.5 rounded-full bg-foreground" />
