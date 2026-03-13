@@ -338,22 +338,19 @@ export function ProfileHeader({
             </div>
         </div>
 
-        {/* Social links below buttons row */}
-        {profile.customs && (
-          <div className="flex justify-end mt-1 mb-1">
-            <ProfileSocialLinks customs={profile.customs} />
-          </div>
-        )}
-
         {/* Profile Info */}
         <div>
           <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <span className={`relative inline-flex items-baseline${badgeUrl ? ' pr-3.5' : ''}`}>
-                <h2 className="text-xl font-bold text-white">{profile.name}</h2>
-                <BadgeIcon src={badgeUrl} className="w-[10px] h-[10px] absolute -top-1 right-0" />
-              </span>
-              {/* Lock icon removed for private accounts */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className={`relative inline-flex items-baseline${badgeUrl ? ' pr-3.5' : ''}`}>
+                  <h2 className="text-xl font-bold text-white">{profile.name}</h2>
+                  <BadgeIcon src={badgeUrl} className="w-[10px] h-[10px] absolute -top-1 right-0" />
+                </span>
+              </div>
+              {profile.customs && (
+                <ProfileSocialLinks customs={profile.customs} />
+              )}
             </div>
             <div className="flex items-center gap-2">
               <button
