@@ -650,13 +650,13 @@
     "action": "Ação",
     "viewTx": "Ver tx",
     "loadingSubscriptions": "Carregando assinaturas...",
-    "txPurchased": "You purchased {{amount}} DHB",
-    "txSold": "You sold {{amount}} DHB",
-    "txTransfer": "Transfer of {{amount}} DHB",
-    "txPpvUnlock": "PPV unlock — {{amount}} DHB",
-    "txPpvSale": "PPV sale — {{amount}} DHB",
-    "txTipSent": "You tipped {{name}} {{amount}} DHB",
-    "txTipReceived": "{{name}} tipped you {{amount}} DHB"
+    "txPurchased": "Você comprou {{amount}} DHB",
+    "txSold": "Você vendeu {{amount}} DHB",
+    "txTransfer": "Transferência de {{amount}} DHB",
+    "txPpvUnlock": "Desbloqueio PPV — {{amount}} DHB",
+    "txPpvSale": "Venda PPV — {{amount}} DHB",
+    "txTipSent": "Gorjeta para {{name}} — {{amount}} DHB",
+    "txTipReceived": "{{name}} deu gorjeta — {{amount}} DHB"
   },
   "bookmarks": {
     "title": "Seus favoritos",
