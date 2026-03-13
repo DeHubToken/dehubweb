@@ -59,14 +59,16 @@ export function bumpProfileImageVersion(address: string): void {
  */
 export function buildAvatarUrl(address: string, apiAvatarPath: string | undefined | null): string | undefined {
   if (!apiAvatarPath) return undefined;
-  if (!address) return undefined;
 
   // Blob or data URLs (optimistic previews) - return as-is
   if (apiAvatarPath.startsWith('blob:') || apiAvatarPath.startsWith('data:')) {
     return apiAvatarPath;
   }
 
-  const cacheBust = getProfileImageVersion(address);
+  const normalizedAddress = address?.toLowerCase?.() || '';
+  const cacheBust = normalizedAddress
+    ? getProfileImageVersion(normalizedAddress)
+    : String(Math.floor(Date.now() / 300000));
 
   // If it's already a dehubcdn URL, append cache-bust and return
   if (apiAvatarPath.startsWith('https://dehubcdn')) {
