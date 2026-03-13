@@ -1,35 +1,40 @@
 
 
-## Fix: Auto-reload on chunk load failures
+# Add Sidebar Translation Keys (Topics/Tickers) to All Locales
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+## Context
+The "Topics" and "Tickers" tab labels in the WhatsHappening sidebar widget use `t('sidebar.posts')` and `t('sidebar.tickers')`, plus `sidebar.searches`, `sidebar.noTickersYet`, and `sidebar.noCategoriesYet`. These 5 keys only exist in `en.json` — all other locales fall back to English.
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+## How the "View All" button worked instantly
+It uses `t('commandCentre.viewAll')`, which was **already translated** in every locale from the earlier Command Centre translation pass. No per-file work was needed — it just referenced an existing key.
 
-### Changes
+## Plan
+Add these 5 missing keys to the `sidebar` section of **all 17 major locale files** (es, de, fr, ja, tr, da, nl, pl, pt, it, ru, ko, zh, ar, hi, sv, no). The remaining 90+ minor locales will gracefully fall back to English via i18next.
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+**Keys to add per locale:**
+| Key | EN value |
+|-----|----------|
+| `posts` | Topics |
+| `tickers` | Tickers |
+| `noTickersYet` | Search $tickers to see them here |
+| `noCategoriesYet` | No trending categories yet |
+| `searches` | searches |
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+**Example (German):**
+```json
+"sidebar": {
+  "talkOfTheTown": "Stadtgespräch",
+  "nothingTrending": "Noch keine Trends",
+  "posts": "Themen",
+  "tickers": "Ticker",
+  "noTickersYet": "Suche nach $Tickern, um sie hier zu sehen",
+  "noCategoriesYet": "Noch keine Trendkategorien",
+  "searches": "Suchen",
+  "post": "Posten",
+  "logOut": "Abmelden",
+  "logIn": "Anmelden"
+}
+```
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
-
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+Single task: update 17 locale files by inserting 5 keys each into their existing `sidebar` objects. No component changes needed — the code already uses these translation keys.
 
