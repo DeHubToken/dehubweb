@@ -49,7 +49,9 @@ serve(async (req) => {
     }
 
     const now = new Date();
-    const start = new Date(now.getTime() - days * 86400 * 1000);
+    // For 1D, use 2-day window to ensure we get hourly data spanning today
+    const effectiveDays = days <= 1 ? 2 : days;
+    const start = new Date(now.getTime() - effectiveDays * 86400 * 1000);
     const interval = days <= 7 ? 'hourly' : 'daily';
 
     const params = new URLSearchParams({
