@@ -305,6 +305,14 @@ export const FuturisticAlienHero = () => {
           />
           <AppStoreButtons />
           <SocialLinks />
+          {/* Desktop-only Enter button */}
+          <div className="hidden md:flex justify-center mt-8">
+            <a href="/app">
+              <LiquidGlassBubble shimmer className="px-16 py-4 cursor-pointer">
+                <span className="text-white text-lg font-semibold tracking-wide">Enter</span>
+              </LiquidGlassBubble>
+            </a>
+          </div>
         </div>
       </section>
     </motion.div>
