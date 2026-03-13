@@ -8,9 +8,10 @@ import type { DeHubNFT } from '@/lib/api/dehub';
 import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
 
 function detectPostType(nft: DeHubNFT): 'video' | 'image' | 'text' {
-  const postType = nft.postType || nft.media_type;
-  if (postType === 'video' || nft.videoUrl) return 'video';
-  if (postType === 'image' || nft.imageUrl || nft.imageUrls?.length) return 'image';
+  const postType = (nft.postType || nft.media_type) as string | undefined;
+  if (postType === 'video' || postType === 'feed-video' || nft.videoUrl) return 'video';
+  if (postType === 'image' || postType === 'feed-images' || nft.imageUrl || nft.imageUrls?.length) return 'image';
+  if (postType === 'feed-simple' || postType === 'feed-all' || postType === 'text') return 'text';
   return 'text';
 }
 
@@ -26,7 +27,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     id,
     type: 'video',
     thumbnail,
-    videoUrl: videoUrl || nft.videoUrl,
+    videoUrl: videoUrl || nft.videoUrl || undefined,
     duration: formatDuration(nft.videoDuration || nft.duration),
     title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
     channel: nft.minterDisplayName || nft.mintername || 'Unknown Creator',

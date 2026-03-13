@@ -77,7 +77,11 @@ export function getContentType(nft: DeHubNFT): 'video' | 'image' | 'audio' {
   // Detect by URL patterns - if has video URL, it's video
   if (nft.videoUrl && nft.videoUrl.length > 0) return 'video';
   if (nft.imageUrl && !nft.videoUrl) return 'image';
-  return 'video'; // Default
+  // Search API postType values that are not videos
+  if (pt === 'feed-simple' || pt === 'feed-all' || pt === 'text') return 'image';
+  if (pt === 'feed-images') return 'image';
+  if (pt === 'feed-video') return 'video';
+  return 'image'; // Default to image instead of video to avoid broken players
 }
 
 /**
@@ -104,7 +108,9 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     ? undefined
     : isAudioPost
       ? undefined
-      : (tokenId ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4` : undefined);
+      : (tokenId
+          ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4`
+          : getMediaUrl(nft.videoUrl) || undefined);
 
   // Build audio URL from API audioUrl field
   const audioUrl = isAudioPost && (nft as any).audioUrl
