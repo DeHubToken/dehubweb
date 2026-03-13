@@ -1687,8 +1687,15 @@
   },
   "sidebar": {
     "talkOfTheTown": "Talk of The Town",
-    "nothingTrending": "Nothing trending yet",
-    "post": "Post",
+    "nothingTrending": "Ще нічого не в тренді",
+    "posts": "Теми",
+    "tickers": "Котирування",
+    "noTickersYet": "Шукайте $котирування щоб побачити тут",
+    "noCategoriesYet": "Ще немає популярних категорій",
+    "searches": "пошуки",
+    "global": "Глобально",
+    "comingSoon": "Незабаром — регіональні тренди вже в дорозі!",
+    "post": "Опублікувати",
     "logOut": "Log out",
     "logIn": "Log in"
   },

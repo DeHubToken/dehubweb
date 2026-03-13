@@ -1388,8 +1388,15 @@
   },
   "sidebar": {
     "talkOfTheTown": "Talk of The Town",
-    "nothingTrending": "Nothing trending yet",
-    "post": "Post",
+    "nothingTrending": "Wala pang trending",
+    "posts": "Paksa",
+    "tickers": "Stock",
+    "noTickersYet": "Maghanap ng $stock upang makita dito",
+    "noCategoriesYet": "Wala pang trending na kategorya",
+    "searches": "paghahanap",
+    "global": "Global",
+    "comingSoon": "Malapit na — ang mga regional trends ay paparating!",
+    "post": "I-post",
     "logOut": "Log out",
     "logIn": "Log in"
   },

@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "د ښار خبرې",
     "nothingTrending": "تر اوسه هیڅ ټرنډ نه دی",
+    "posts": "موضوعات",
+    "tickers": "سوداګري",
+    "noTickersYet": "$سوداګري ولټوئ چې دلته یې وګورئ",
+    "noCategoriesYet": "تر اوسه هیڅ ټرنډ کتګوري نشته",
+    "searches": "لټونونه",
+    "global": "نړیواله",
+    "comingSoon": "ډیر ژر — سیمه ایزې ټرنډونه په لاره دي!",
     "post": "خپره کړئ",
     "logOut": "وتل",
     "logIn": "ننوتل"

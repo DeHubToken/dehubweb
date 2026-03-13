@@ -812,6 +812,13 @@
   "sidebar": {
     "talkOfTheTown": "Téma dňa",
     "nothingTrending": "Zatiaľ nič netrenduje",
+    "posts": "Témy",
+    "tickers": "Kurzy",
+    "noTickersYet": "Hľadajte $kurzy aby ste ich videli tu",
+    "noCategoriesYet": "Zatiaľ žiadne trendové kategórie",
+    "searches": "vyhľadávania",
+    "global": "Globálne",
+    "comingSoon": "Čoskoro — regionálne trendy sú na ceste!",
     "post": "Pridať príspevok",
     "logOut": "Odhlásiť sa",
     "logIn": "Prihlásiť sa"

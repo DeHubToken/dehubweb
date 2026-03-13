@@ -1,61 +1,35 @@
 
 
-# Fix: "Tickers" Left Untranslated in Many Locales
+## Fix: Auto-reload on chunk load failures
 
-## Problem
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-The `sidebar.tickers` value is set to the raw English word `"Tickers"` in **28+ locale files** — including French, Spanish, Portuguese, Dutch, Greek, Swedish, Norwegian, Danish, and many others. These should use the proper localized term for stock/crypto ticker symbols in each language.
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-For example:
-- **French**: should be `"Boursiers"`, not `"Tickers"`
-- **Spanish**: should be `"Cotizaciones"`
-- **Portuguese**: should be `"Cotações"`
-- etc.
+### Changes
 
-## Scope
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-Update `sidebar.tickers` (and the related `sidebar.noTickersYet` which references `$tickers`) in all locale files where the value is currently the untranslated English `"Tickers"`.
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
 
-**Files affected (~28):** fr, es, pt, el, nl, sv, no, da, af, ca, et, fi, gsw, ha, id, ig, jv, ku, lo, lt, lv, mg, mi, mn, om, plus others from the recent batch that also used raw "Tickers".
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
 
-Also audit the ~34 remaining files that haven't been updated yet (or, pa, pbt, pcm, qu, rkt, ro, sa, sd, sdr, si, sk, skr, so, sq, sr, sw, syl, ta, te, tg, th, ti, tk, tl, tts, ug, uk, ur, uz, vi, wes, wuu, yo, yue, zu) — these still need the 7 sidebar keys added AND should use properly translated ticker terms.
-
-## Translations
-
-| Language | Code | Tickers Translation |
-|----------|------|---------------------|
-| French | fr | Boursiers |
-| Spanish | es | Cotizaciones |
-| Portuguese | pt | Cotações |
-| Italian | it | Quotazioni |
-| German | de | Kurse |
-| Dutch | nl | Koersen |
-| Greek | el | Δείκτες |
-| Swedish | sv | Kurser |
-| Norwegian | no | Kurser |
-| Danish | da | Kurser |
-| Finnish | fi | Kurssit |
-| Estonian | et | Börsisümbolid |
-| Lithuanian | lt | Biržos |
-| Latvian | lv | Biržas |
-| Catalan | ca | Cotitzacions |
-| Croatian | hr | Burzovni |
-| Hungarian | hu | Árfolyamok |
-| Czech | cs | Kotace |
-| Bulgarian | bg | Котировки |
-| Romanian | ro | Cotații |
-| Slovak | sk | Kurzy |
-| Turkish | tr | Borsa |
-| Indonesian | id | Saham |
-| Malay | ms | Saham |
-| Javanese | jv | Saham |
-| Afrikaans | af | Aandele |
-| Swahili | sw | Hisa |
-| + all remaining languages with appropriate terms |
-
-## Implementation
-
-1. Fix `sidebar.tickers` in all 28 files that currently have `"Tickers"` untranslated
-2. Also fix the corresponding `sidebar.noTickersYet` to use the translated term instead of `$tickers`
-3. Complete the remaining ~34 locale files that still need the 7 sidebar keys added — using proper translations from the start
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 

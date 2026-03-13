@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Talk of Di Town",
     "nothingTrending": "Nothing dey trend yet",
+    "posts": "Topics",
+    "tickers": "Stocks",
+    "noTickersYet": "Search $stocks for see dem here",
+    "noCategoriesYet": "No trending category yet",
+    "searches": "searches",
+    "global": "Global",
+    "comingSoon": "E dey come — area trends dey for road!",
     "post": "Post",
     "logOut": "Log Out",
     "logIn": "Log In"

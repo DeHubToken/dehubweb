@@ -1096,6 +1096,13 @@
   "sidebar": {
     "talkOfTheTown": "Llaqtap rimaynin",
     "nothingTrending": "Mana imapas trending kanchu kunan",
+    "posts": "Rimaykuna",
+    "tickers": "Qhatuy",
+    "noTickersYet": "$qhatuy maskay kaypi rikuchinaykipaq",
+    "noCategoriesYet": "Mana trending categoría kanchu kunan",
+    "searches": "maskay",
+    "global": "Tukuy pachapi",
+    "comingSoon": "Chayamunqa — suyup trendinkuna hamuchkanña!",
     "post": "Apachiy",
     "logOut": "Lluqsiy",
     "logIn": "Yaykuy"

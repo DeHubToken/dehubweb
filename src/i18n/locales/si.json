@@ -1105,6 +1105,13 @@
   "sidebar": {
     "talkOfTheTown": "නගරයේ කතාව",
     "nothingTrending": "දැනට කිසිවක් ට්‍රෙන්ඩ් නැත",
+    "posts": "මාතෘකා",
+    "tickers": "කොටස්",
+    "noTickersYet": "$කොටස් සොයන්න මෙහි බැලීමට",
+    "noCategoriesYet": "දැනට ට්‍රෙන්ඩ් කාණ්ඩ නැත",
+    "searches": "සෙවීම්",
+    "global": "ගෝලීය",
+    "comingSoon": "ඉක්මනින් — ප්‍රාදේශීය ප්‍රවණතා පැමිණෙමින්!",
     "post": "පළ කරන්න",
     "logOut": "ඉවත් වන්න",
     "logIn": "පිවිසෙන්න"

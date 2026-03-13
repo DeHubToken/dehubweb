@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Sheekada Magaalada",
     "nothingTrending": "Wali waxba trend ma aha",
+    "posts": "Mawduucyo",
+    "tickers": "Sahaamiyad",
+    "noTickersYet": "$sahaamiyad raadi si aad halkan ugu aragto",
+    "noCategoriesYet": "Wali qeyb trending ma jirto",
+    "searches": "raadin",
+    "global": "Caalamiga",
+    "comingSoon": "Dhawaan — trendiyada gobolka waa soo socotaa!",
     "post": "Dhaji",
     "logOut": "Ka bax",
     "logIn": "Gal"

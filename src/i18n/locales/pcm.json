@@ -1066,6 +1066,13 @@
   "sidebar": {
     "talkOfTheTown": "Wetin Dey Happen",
     "nothingTrending": "Nothing dey trend now",
+    "posts": "Topics",
+    "tickers": "Stocks",
+    "noTickersYet": "Search $stocks to see dem here",
+    "noCategoriesYet": "No trending category yet",
+    "searches": "searches",
+    "global": "Global",
+    "comingSoon": "E dey come — area trends dey road!",
     "post": "Post",
     "logOut": "Comot",
     "logIn": "Enter"

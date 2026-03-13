@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "شہر دی گل",
     "nothingTrending": "ابھی کجھ ٹرینڈنگ کائنی",
+    "posts": "موضوعات",
+    "tickers": "حصص",
+    "noTickersYet": "$حصص ڳولو ہتھاں ڏسݨ کیتے",
+    "noCategoriesYet": "ابھی کوئی ٹرینڈنگ کیٹگری کائنی",
+    "searches": "ڳول",
+    "global": "عالمی",
+    "comingSoon": "جلد آ ریہا ہے — علاقائی ٹرینڈز راستے وچ ہن!",
     "post": "پوسٹ",
     "logOut": "لاگ آؤٹ",
     "logIn": "لاگ ان"

@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "ናይ ከተማ ዕላል",
     "nothingTrending": "ገና ዝዘወር ነገር የለን",
+    "posts": "ኣርእስቲ",
+    "tickers": "ሸቐጥ",
+    "noTickersYet": "$ሸቐጥ ድለ ኣብዚ ንምርኣይ",
+    "noCategoriesYet": "ገና ዝዘወር ዓይነት የለን",
+    "searches": "ድልየት",
+    "global": "ዓለมለኸ",
+    "comingSoon": "ቀረባ — ናይ ዞባ ዝዘወር ኣብ መንገዲ ኣሎ!",
     "post": "ለኣኽ",
     "logOut": "ውጻእ",
     "logIn": "እቶ"

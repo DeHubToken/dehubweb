@@ -1096,6 +1096,13 @@
   "sidebar": {
     "talkOfTheTown": "Izindaba Zomuzi",
     "nothingTrending": "Akukho okutrendayo manje",
+    "posts": "Izihloko",
+    "tickers": "Izabelo",
+    "noTickersYet": "Sesha $izabelo ukuzibona lapha",
+    "noCategoriesYet": "Akukho izinhlobo ezitrendayo manje",
+    "searches": "ukusesha",
+    "global": "Emhlabeni",
+    "comingSoon": "Kuyeza maduze — ama-trends esifunda asendleleni!",
     "post": "Thumela",
     "logOut": "Phuma",
     "logIn": "Ngena"

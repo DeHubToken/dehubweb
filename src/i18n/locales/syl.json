@@ -893,6 +893,13 @@
   "sidebar": {
     "talkOfTheTown": "শহরর কথা",
     "nothingTrending": "এখনো কিছু ট্রেন্ডিং নাই",
+    "posts": "বিষয়",
+    "tickers": "শেয়ার",
+    "noTickersYet": "$শেয়ার খুইজো এইটে দেখতে",
+    "noCategoriesYet": "এখনো কোনো ট্রেন্ডিং ক্যাটাগরি নাই",
+    "searches": "সার্চ",
+    "global": "গ্লোবাল",
+    "comingSoon": "আসতাসে — এলাকার ট্রেন্ড আসতাসে!",
     "post": "পোস্ট",
     "logOut": "লগ আউট",
     "logIn": "লগ ইন"

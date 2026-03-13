@@ -1246,8 +1246,15 @@
   },
   "sidebar": {
     "talkOfTheTown": "Talk of The Town",
-    "nothingTrending": "Nothing trending yet",
-    "post": "Post",
+    "nothingTrending": "ยังไม่มีเทรนด์",
+    "posts": "หัวข้อ",
+    "tickers": "หุ้น",
+    "noTickersYet": "ค้นหา $หุ้น เพื่อดูที่นี่",
+    "noCategoriesYet": "ยังไม่มีหมวดหมู่ที่กำลังเป็นที่นิยม",
+    "searches": "การค้นหา",
+    "global": "ทั่วโลก",
+    "comingSoon": "เร็วๆ นี้ — เทรนด์ภูมิภาคกำลังมา!",
+    "post": "โพสต์",
     "logOut": "Log out",
     "logIn": "Log in"
   },

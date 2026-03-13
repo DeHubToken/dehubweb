@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "城中熱話",
     "nothingTrending": "暫時冇熱門嘢",
+    "posts": "話題",
+    "tickers": "行情",
+    "noTickersYet": "搵$行情嚟睇",
+    "noCategoriesYet": "暫時冇熱門分類",
+    "searches": "搜尋",
+    "global": "全球",
+    "comingSoon": "就快嚟喇——地區趨勢就快上線！",
     "post": "發佈",
     "logOut": "登出",
     "logIn": "登入"

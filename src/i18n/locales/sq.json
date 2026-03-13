@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Biseda e Qytetit",
     "nothingTrending": "Asgjë në trend akoma",
+    "posts": "Temat",
+    "tickers": "Aksione",
+    "noTickersYet": "Kërko $aksione për t'i parë këtu",
+    "noCategoriesYet": "Nuk ka ende kategori në trend",
+    "searches": "kërkim",
+    "global": "Global",
+    "comingSoon": "Së shpejti — trendet rajonale janë në rrugë!",
     "post": "Publiko",
     "logOut": "Dil",
     "logIn": "Hyr"

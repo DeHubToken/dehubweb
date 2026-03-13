@@ -1066,6 +1066,13 @@
   "sidebar": {
     "talkOfTheTown": "Mazungumzo ya Mji",
     "nothingTrending": "Hakuna kinachoendelea sasa",
+    "posts": "Mada",
+    "tickers": "Hisa",
+    "noTickersYet": "Tafuta $hisa kuziona hapa",
+    "noCategoriesYet": "Bado hakuna kategoria zinazoendelea",
+    "searches": "utaftaji",
+    "global": "Ulimwenguni",
+    "comingSoon": "Inakuja hivi karibuni — mitindo ya eneo inakuja!",
     "post": "Chapisha",
     "logOut": "Toka",
     "logIn": "Ingia"
