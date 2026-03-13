@@ -928,11 +928,11 @@
     "emailRequired": "L'email est requis",
     "email": "Email",
     "emailPlaceholder": "votre@email.com",
-    "followerReachPlaceholder": "e.g., 500K across all platforms",
-    "emailOrTelegram": "Email or Telegram ID to Contact",
-    "compensationPlaceholder": "e.g., $100/month",
-    "submitApplication": "Submit Application",
-    "fillRequired": "Please fill in all required fields"
+    "followerReachPlaceholder": "ex. 500K sur toutes les plateformes",
+    "emailOrTelegram": "Email ou Telegram pour vous contacter",
+    "compensationPlaceholder": "ex. 100$/mois",
+    "submitApplication": "Soumettre la candidature",
+    "fillRequired": "Veuillez remplir tous les champs requis"
   },
   "loginModal": {
     "title": "Se connecter",
