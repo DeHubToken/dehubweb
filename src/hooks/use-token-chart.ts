@@ -16,44 +16,101 @@ const TIMEFRAME_DAYS: Record<ChartTimeframe, number | 'max'> = {
   'ALL': 'max',
 };
 
-async function fetchTokenChart(symbol: string, timeframe: ChartTimeframe): Promise<PricePoint[]> {
-  const clean = symbol.replace(/^\$/, '').toLowerCase();
+const CHAIN_TO_COINGECKO_PLATFORM: Record<string, string> = {
+  ethereum: 'ethereum',
+  bsc: 'binance-smart-chain',
+  base: 'base',
+  solana: 'solana',
+  polygon: 'polygon-pos',
+  arbitrum: 'arbitrum-one',
+  avalanche: 'avalanche',
+  optimism: 'optimistic-ethereum',
+};
 
-  // Step 1: Search CoinGecko for coin ID
-  const searchRes = await fetch(`https://api.coingecko.com/api/v3/search?query=${encodeURIComponent(clean)}`);
-  if (!searchRes.ok) return [];
-
-  const searchData = await searchRes.json();
-  const coin = searchData.coins?.find(
-    (c: any) => c.symbol?.toLowerCase() === clean
-  );
-  if (!coin) return [];
-
-  // Step 2: Fetch market chart for the selected timeframe
-  const days = TIMEFRAME_DAYS[timeframe];
-  const chartRes = await fetch(
-    `https://api.coingecko.com/api/v3/coins/${coin.id}/market_chart?vs_currency=usd&days=${days}`
-  );
-  if (!chartRes.ok) return [];
-
-  const chartData = await chartRes.json();
-  if (!chartData.prices || !Array.isArray(chartData.prices)) return [];
-
-  // Downsample to ~60 points for performance
-  const prices: [number, number][] = chartData.prices;
+function downsample(prices: [number, number][]): PricePoint[] {
   const step = Math.max(1, Math.floor(prices.length / 60));
-
   return prices
     .filter((_, i) => i % step === 0 || i === prices.length - 1)
     .map(([timestamp, price]) => ({ time: timestamp, price }));
 }
 
-export function useTokenChart(symbol: string, enabled: boolean, timeframe: ChartTimeframe = '1D') {
+async function fetchChartBySymbol(symbol: string, days: number | 'max'): Promise<PricePoint[] | null> {
+  const clean = symbol.replace(/^\$/, '').toLowerCase();
+
+  const searchRes = await fetch(`https://api.coingecko.com/api/v3/search?query=${encodeURIComponent(clean)}`);
+  if (!searchRes.ok) return null;
+
+  const searchData = await searchRes.json();
+  const coin = searchData.coins?.find((c: any) => c.symbol?.toLowerCase() === clean);
+  if (!coin) return null;
+
+  const chartRes = await fetch(
+    `https://api.coingecko.com/api/v3/coins/${coin.id}/market_chart?vs_currency=usd&days=${days}`
+  );
+  if (!chartRes.ok) return null;
+
+  const chartData = await chartRes.json();
+  if (!chartData.prices || !Array.isArray(chartData.prices) || chartData.prices.length === 0) return null;
+
+  return downsample(chartData.prices);
+}
+
+async function fetchChartByContract(
+  contractAddress: string,
+  chainId: string,
+  days: number | 'max'
+): Promise<PricePoint[] | null> {
+  const platform = CHAIN_TO_COINGECKO_PLATFORM[chainId];
+  if (!platform) return null;
+
+  const chartRes = await fetch(
+    `https://api.coingecko.com/api/v3/coins/${platform}/contract/${contractAddress.toLowerCase()}/market_chart?vs_currency=usd&days=${days}`
+  );
+  if (!chartRes.ok) return null;
+
+  const chartData = await chartRes.json();
+  if (!chartData.prices || !Array.isArray(chartData.prices) || chartData.prices.length === 0) return null;
+
+  return downsample(chartData.prices);
+}
+
+async function fetchTokenChart(
+  symbol: string,
+  timeframe: ChartTimeframe,
+  contractAddress?: string,
+  chainId?: string
+): Promise<PricePoint[]> {
+  const days = TIMEFRAME_DAYS[timeframe];
+
+  // Try symbol-based lookup first
+  const symbolResult = await fetchChartBySymbol(symbol, days);
+  if (symbolResult && symbolResult.length > 0) return symbolResult;
+
+  // Fallback: try contract address lookup on CoinGecko
+  if (contractAddress && chainId) {
+    const contractResult = await fetchChartByContract(contractAddress, chainId, days);
+    if (contractResult && contractResult.length > 0) return contractResult;
+  }
+
+  return [];
+}
+
+export interface UseTokenChartOptions {
+  contractAddress?: string;
+  chainId?: string;
+}
+
+export function useTokenChart(
+  symbol: string,
+  enabled: boolean,
+  timeframe: ChartTimeframe = '1D',
+  options?: UseTokenChartOptions
+) {
   const isCashtag = symbol.trim().startsWith('$') && symbol.trim().length >= 2;
 
   return useQuery({
-    queryKey: ['token-chart', symbol.trim(), timeframe],
-    queryFn: () => fetchTokenChart(symbol.trim(), timeframe),
+    queryKey: ['token-chart', symbol.trim(), timeframe, options?.contractAddress],
+    queryFn: () => fetchTokenChart(symbol.trim(), timeframe, options?.contractAddress, options?.chainId),
     enabled: enabled && isCashtag,
     staleTime: 60_000,
     retry: 1,
