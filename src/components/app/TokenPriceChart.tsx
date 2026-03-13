@@ -10,7 +10,8 @@ interface TokenPriceChartProps {
   isLoading?: boolean;
   timeframe?: ChartTimeframe;
   onTimeframeChange?: (tf: ChartTimeframe) => void;
-  symbol?: string;
+  /** Full external URL for the "ALL" button (e.g. CMC or CoinGecko page) */
+  externalUrl?: string;
 }
 
 const SELECTABLE_TIMEFRAMES: ChartTimeframe[] = ['1D', '7D', '30D', '90D', '1Y'];
