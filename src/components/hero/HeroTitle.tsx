@@ -32,12 +32,12 @@ export const HeroTitle = ({
   subtitle: subtitleProp
 }: HeroTitleProps) => {
   const { t } = useTranslation();
-  const title = titleProp || t('hero.title', 'A New World');
-  const subtitle = subtitleProp || t('hero.subtitle', 'Awaits');
+  const title = titleProp || t('hero.title', 'Welcome To');
+  const subtitle = subtitleProp || t('hero.subtitle', 'Our World');
   // Split title for mobile 3-line layout
   const titleWords = title.split(' ');
-  const mobileLine1 = titleWords.slice(0, 2).join(' '); // "A New"
-  const mobileLine2 = titleWords.slice(2).join(' '); // "World"
+  const mobileLine1 = titleWords.slice(0, 2).join(' ');
+  const mobileLine2 = titleWords.slice(2).join(' ');
 
   return (
     <motion.h1
