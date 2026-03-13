@@ -10,7 +10,7 @@ import { useQuery, useInfiniteQuery, useMutation, useQueryClient, keepPreviousDa
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { getAccountInfo } from '@/lib/api/dehub';
+import { getAccountInfo, getAccountByUsername } from '@/lib/api/dehub';
 import { extractAvatarPath } from '@/lib/media-url';
 
 export type FeatureCategory = 'ui_ux' | 'performance' | 'new_feature' | 'bug_fix' | 'integration' | 'other';
@@ -220,12 +220,20 @@ export function useSubmitFeatureRequest() {
         imageUrl = urlData.publicUrl;
       }
 
-      // Resolve avatar: use auth context first, then fetch from API
+      // Resolve avatar: auth context → wallet lookup → username lookup
       let avatarPath = user?.avatarImageUrl || null;
       if (!avatarPath && walletAddress) {
         try {
           const accountInfo = await getAccountInfo(walletAddress);
           avatarPath = extractAvatarPath(accountInfo) || null;
+        } catch {
+          // continue to username fallback
+        }
+      }
+      if (!avatarPath && user?.username) {
+        try {
+          const accountInfoByUsername = await getAccountByUsername(user.username, walletAddress);
+          avatarPath = extractAvatarPath(accountInfoByUsername) || null;
         } catch {
           // Silently fail — avatar is optional
         }

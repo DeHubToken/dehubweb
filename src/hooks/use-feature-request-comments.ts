@@ -8,7 +8,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { getAccountInfo } from '@/lib/api/dehub';
+import { getAccountInfo, getAccountByUsername } from '@/lib/api/dehub';
 import { extractAvatarPath } from '@/lib/media-url';
 
 export interface FeatureRequestComment {
@@ -48,12 +48,20 @@ export function useSubmitComment() {
     mutationFn: async ({ featureRequestId, content }: { featureRequestId: string; content: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
 
-      // Resolve avatar: use auth context first, then fetch from API
+      // Resolve avatar: auth context → wallet lookup → username lookup
       let avatarPath = user?.avatarImageUrl || null;
       if (!avatarPath && walletAddress) {
         try {
           const accountInfo = await getAccountInfo(walletAddress);
           avatarPath = extractAvatarPath(accountInfo) || null;
+        } catch {
+          // continue to username fallback
+        }
+      }
+      if (!avatarPath && user?.username) {
+        try {
+          const accountInfoByUsername = await getAccountByUsername(user.username, walletAddress);
+          avatarPath = extractAvatarPath(accountInfoByUsername) || null;
         } catch {
           // Silently fail
         }
