@@ -19,7 +19,7 @@ serve(async (req) => {
     }
 
     const res = await fetch(
-      'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=100&convert=USD',
+      'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=5000&convert=USD',
       { headers: { 'X-CMC_PRO_API_KEY': apiKey, Accept: 'application/json' } }
     );
 
