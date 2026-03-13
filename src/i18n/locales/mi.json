@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Kōrero o te tāone",
     "nothingTrending": "Kāore anō he mea rongonui",
+    "posts": "Kaupapa",
+    "tickers": "Tickers",
+    "noTickersYet": "Rapua $tickers kia kitea ki konei",
+    "noCategoriesYet": "Kāore anō he kāwai rongonui",
+    "searches": "rapunga",
+    "global": "Ao whānui",
+    "comingSoon": "Ka tae mai — ngā ia ā-rohe kei te ara mai!",
     "post": "Tuku",
     "logOut": "Takiputa",
     "logIn": "Takiuru"

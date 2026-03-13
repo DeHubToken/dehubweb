@@ -1473,6 +1473,13 @@
   "sidebar": {
     "talkOfTheTown": "Talk of The Town",
     "nothingTrending": "Nothing trending yet",
+    "posts": "Topik",
+    "tickers": "Tickers",
+    "noTickersYet": "Cari $tickers untuk melihatnya di sini",
+    "noCategoriesYet": "Belum ada kategori trending",
+    "searches": "carian",
+    "global": "Global",
+    "comingSoon": "Akan datang — trend serantau sedang dalam perjalanan!",
     "post": "Post",
     "logOut": "Log out",
     "logIn": "Log in"

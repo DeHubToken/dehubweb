@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Pilsētas saruna",
     "nothingTrending": "Nekas vēl nav populārs",
+    "posts": "Tēmas",
+    "tickers": "Tickers",
+    "noTickersYet": "Meklējiet $tickers lai tos redzētu šeit",
+    "noCategoriesYet": "Pagaidām nav populāru kategoriju",
+    "searches": "meklējumi",
+    "global": "Globāli",
+    "comingSoon": "Drīzumā — reģionālās tendences ir ceļā!",
     "post": "Publicēt",
     "logOut": "Iziet",
     "logIn": "Ieiet"
