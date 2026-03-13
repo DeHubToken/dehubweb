@@ -362,10 +362,10 @@
     "txPpvSale": "Vente PPV — {{amount}} DHB",
     "txTipSent": "Pourboire envoyé à {{name}} — {{amount}} DHB",
     "txTipReceived": "{{name}} vous a envoyé un pourboire — {{amount}} DHB",
-    "purchaseWithCard": "Purchase with card",
-    "copyWalletAddress": "Copy your wallet address",
-    "sendToWalletOrUsername": "Send to wallet or username",
-    "withdrawToBank": "Withdraw to bank"
+    "purchaseWithCard": "Acheter par carte",
+    "copyWalletAddress": "Copier l'adresse du portefeuille",
+    "sendToWalletOrUsername": "Envoyer vers un portefeuille ou un nom d'utilisateur",
+    "withdrawToBank": "Retirer vers un compte bancaire"
   },
   "wallet": {
     "title": "Portefeuille",
