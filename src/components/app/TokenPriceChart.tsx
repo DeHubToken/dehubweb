@@ -119,7 +119,7 @@ export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframe
       {onTimeframeChange && (
         <div className="flex items-center justify-between px-4 py-2 border-t border-zinc-700/50">
           <div className="relative flex items-center gap-0.5 rounded-lg bg-zinc-800/60 p-0.5">
-            {TIMEFRAMES.map((tf) => (
+            {SELECTABLE_TIMEFRAMES.map((tf) => (
               <button
                 key={tf}
                 onClick={() => onTimeframeChange(tf)}
@@ -140,6 +140,19 @@ export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframe
                 <span className="relative z-10">{tf}</span>
               </button>
             ))}
+            {/* ALL button → opens CoinGecko page */}
+            <button
+              onClick={() => {
+                const clean = (symbol || '').replace(/^\$/, '').toLowerCase();
+                if (clean) {
+                  window.open(`https://www.coingecko.com/en/coins/${clean}`, '_blank', 'noopener');
+                }
+              }}
+              className="relative z-10 px-2.5 py-1 rounded-md text-[11px] font-medium text-zinc-500 hover:text-zinc-300 flex items-center gap-0.5 transition-colors duration-200"
+            >
+              ALL
+              <ExternalLink className="w-2.5 h-2.5" />
+            </button>
           </div>
           {percentChange != null && !isLoading && (
             <span className={cn(
