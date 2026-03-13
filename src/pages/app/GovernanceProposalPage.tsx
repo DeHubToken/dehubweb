@@ -41,13 +41,7 @@ function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string):
   return t('governance.monthsAgo', { count: months });
 }
 
-const KNOWN_AVATAR_ADDRESSES: Record<string, string> = {
-  '0xmaldoteth': '0x9324840523a5d17dd12a2f11a9472e5a199c1937',
-  maldoteth: '0x9324840523a5d17dd12a2f11a9472e5a199c1937',
-};
-const KNOWN_DISPLAY_NAMES: Record<string, string> = {
-  maldoteth: 'mal',
-};
+const KNOWN_DISPLAY_NAMES: Record<string, string> = {};
 
 export default function GovernanceProposalPage() {
   const { proposalId } = useParams<{ proposalId: string }>();
