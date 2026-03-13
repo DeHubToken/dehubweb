@@ -147,58 +147,66 @@ export function FollowersListDrawer({
           currentUserAddress &&
           profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
 
-        // Fetch current user's following list once to resolve isFollowing locally
-        if (!isOwnFollowingList && isAuthenticated && currentUserAddress && !followingSetRef.current) {
-          try {
-            const allFollowing: string[] = [];
-            let page = 1;
-            let hasMore = true;
-            while (hasMore) {
-              const { items, pagination } = await getFollowList(currentUserAddress, 'following', { page, limit: FOLLOWING_CACHE_PAGE_SIZE });
-              allFollowing.push(...items.map(f => (f.address || '').toLowerCase()));
-              hasMore = pagination?.hasMore ?? false;
-              page++;
-              if (page > 10) break;
-            }
-            followingSetRef.current = new Set(allFollowing);
-          } catch {
-            followingSetRef.current = new Set();
-          }
-        }
+        // Phase 1: Show list immediately with basic info
+        const initialUsers: UserListItem[] = isOwnFollowingList
+          ? processed.map(u => ({ ...u, isFollowing: true }))
+          : isOwnFollowersList
+            ? processed.map(u => ({ ...u, followsYou: true }))
+            : processed;
 
-        // Fetch current user's followers list once to resolve followsYou on the following list
-        if (isOwnFollowingList && isAuthenticated && currentUserAddress && !followersSetRef.current) {
-          try {
-            const allFollowers: string[] = [];
-            let page = 1;
-            let hasMore = true;
-            while (hasMore) {
-              const { items, pagination } = await getFollowList(currentUserAddress, 'followers', { page, limit: FOLLOWING_CACHE_PAGE_SIZE });
-              allFollowers.push(...items.map(f => (f.address || '').toLowerCase()));
-              hasMore = pagination?.hasMore ?? false;
-              page++;
-              if (page > 10) break;
-            }
-            followersSetRef.current = new Set(allFollowers);
-          } catch {
-            followersSetRef.current = new Set();
-          }
-        }
-
-        const followingSet = followingSetRef.current;
-        const followersSet = followersSetRef.current;
-        const finalUsers: UserListItem[] = isOwnFollowingList
-          ? processed.map(u => ({ ...u, isFollowing: true, followsYou: followersSet ? followersSet.has(u.address.toLowerCase()) : false }))
-          : processed.map(u => ({
-              ...u,
-              isFollowing: followingSet ? followingSet.has(u.address.toLowerCase()) : false,
-              followsYou: isOwnFollowersList ? true : u.followsYou,
-            }));
-
-        setUsers(finalUsers);
+        setUsers(initialUsers);
         setCurrentPage(1);
         setHasMore(pagination?.hasMore ?? false);
         setTotalCount(pagination?.totalCount ?? null);
+        setIsLoading(false);
+
+        // Phase 2: Resolve follow statuses in background
+        const needsFollowingCache = !isOwnFollowingList && isAuthenticated && currentUserAddress && !followingSetRef.current;
+        const needsFollowersCache = isOwnFollowingList && isAuthenticated && currentUserAddress && !followersSetRef.current;
+
+        if (needsFollowingCache || needsFollowersCache) {
+          setIsResolvingStatus(true);
+          try {
+            const buildCache = async (cacheType: 'following' | 'followers'): Promise<Set<string>> => {
+              const all: string[] = [];
+              let pg = 1;
+              let more = true;
+              while (more) {
+                const res = await getFollowList(currentUserAddress!, cacheType, { page: pg, limit: FOLLOWING_CACHE_PAGE_SIZE });
+                all.push(...res.items.map(f => (f.address || '').toLowerCase()));
+                more = res.pagination?.hasMore ?? false;
+                pg++;
+                if (pg > 10) break;
+              }
+              return new Set(all);
+            };
+
+            if (needsFollowingCache) {
+              try { followingSetRef.current = await buildCache('following'); }
+              catch { followingSetRef.current = new Set(); }
+            }
+            if (needsFollowersCache) {
+              try { followersSetRef.current = await buildCache('followers'); }
+              catch { followersSetRef.current = new Set(); }
+            }
+
+            // Patch users with resolved statuses
+            const followingSet = followingSetRef.current;
+            const followersSet = followersSetRef.current;
+            setUsers(prev => prev.map(u => {
+              if (isOwnFollowingList) {
+                return { ...u, isFollowing: true, followsYou: followersSet ? followersSet.has(u.address.toLowerCase()) : false };
+              }
+              return {
+                ...u,
+                isFollowing: followingSet ? followingSet.has(u.address.toLowerCase()) : u.isFollowing,
+                followsYou: isOwnFollowersList ? true : u.followsYou,
+              };
+            }));
+          } finally {
+            setIsResolvingStatus(false);
+          }
+        }
       } catch (err: any) {
         console.error('Error fetching follow list:', err);
         const msg = err?.message || '';
@@ -211,7 +219,6 @@ export function FollowersListDrawer({
           setError('Failed to load list. Please try again.');
           toast.error('Failed to load follow list');
         }
-      } finally {
         setIsLoading(false);
       }
     };
