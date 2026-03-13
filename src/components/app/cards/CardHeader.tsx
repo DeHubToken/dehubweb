@@ -131,17 +131,19 @@ export function CardHeader({
             {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />}
             
           </div>
-          <div className="flex items-center gap-1 min-w-0">
-            {formattedHandle && (
-              <span className="text-zinc-500 text-xs truncate max-w-[160px] sm:max-w-none">{formattedHandle}</span>
-            )}
-            {timestamp && (
-              <>
-                <span className="text-zinc-600 text-xs">·</span>
-                <span className="text-zinc-500 text-xs shrink-0">{timestamp}</span>
-              </>
-            )}
-          </div>
+          {(formattedHandle || timestamp) && (
+            <div className="flex items-center gap-1 min-w-0">
+              {formattedHandle && (
+                <span className="text-zinc-500 text-xs truncate max-w-[160px] sm:max-w-none">{formattedHandle}</span>
+              )}
+              {timestamp && (
+                <>
+                  <span className="text-zinc-600 text-xs">·</span>
+                  <span className="text-zinc-500 text-xs shrink-0">{timestamp}</span>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </button>
     </div>
