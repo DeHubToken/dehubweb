@@ -128,8 +128,13 @@ function FeatureCard({
   const dbAvatarUrl = feature.author_avatar
     ? buildAvatarUrl(feature.author_wallet_address, feature.author_avatar)
     : undefined;
-  const liveAvatarUrl = useProfileAvatar(feature.author_wallet_address, dbAvatarUrl);
-  const avatarUrl = liveAvatarUrl ?? dbAvatarUrl ?? null;
+  const walletAvatarUrl = useProfileAvatar(feature.author_wallet_address, dbAvatarUrl);
+  const usernameAvatarUrl = useProfileAvatar(
+    feature.author_username && feature.author_username.toLowerCase() !== feature.author_wallet_address.toLowerCase()
+      ? feature.author_username
+      : undefined
+  );
+  const avatarUrl = walletAvatarUrl ?? usernameAvatarUrl ?? dbAvatarUrl ?? null;
 
   const displayName = feature.author_username || feature.author_wallet_address.slice(0, 6);
   const handle = feature.author_username ? `@${feature.author_username}` : `${feature.author_wallet_address.slice(0, 6)}...${feature.author_wallet_address.slice(-4)}`;
