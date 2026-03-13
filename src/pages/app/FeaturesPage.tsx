@@ -125,20 +125,10 @@ function FeatureCard({
   const submitComment = useSubmitComment();
   const deleteComment = useDeleteComment();
 
-  // Known avatar overrides for non-wallet identifiers (username-based accounts)
-  const KNOWN_AVATAR_ADDRESSES: Record<string, string> = {
-    maldoteth: '0x9324840523a5d17dd12a2f11a9472e5a199c1937',
-    '0xmal': '0x9324840523a5d17dd12a2f11a9472e5a199c1937',
-  };
-
-  const resolvedAddress = KNOWN_AVATAR_ADDRESSES[feature.author_wallet_address.toLowerCase()] || feature.author_wallet_address;
-  const knownFallbackAvatar = KNOWN_AVATAR_ADDRESSES[feature.author_wallet_address.toLowerCase()]
-    ? buildAvatarUrl(KNOWN_AVATAR_ADDRESSES[feature.author_wallet_address.toLowerCase()], `avatars/${KNOWN_AVATAR_ADDRESSES[feature.author_wallet_address.toLowerCase()]}.jpg`)
-    : undefined;
   const dbAvatarUrl = feature.author_avatar
-    ? buildAvatarUrl(resolvedAddress, feature.author_avatar)
-    : knownFallbackAvatar;
-  const liveAvatarUrl = useProfileAvatar(resolvedAddress, dbAvatarUrl ?? undefined);
+    ? buildAvatarUrl(feature.author_wallet_address, feature.author_avatar)
+    : undefined;
+  const liveAvatarUrl = useProfileAvatar(feature.author_wallet_address, dbAvatarUrl);
   const avatarUrl = liveAvatarUrl ?? dbAvatarUrl ?? null;
 
   const displayName = feature.author_username || feature.author_wallet_address.slice(0, 6);
@@ -403,13 +393,9 @@ function FeatureCard({
                 ) : comments && comments.length > 0 ? (
                   <div className="space-y-2.5 mb-3 max-h-60 overflow-y-auto scrollbar-invisible">
                     {comments.map((comment) => {
-                      const commentResolvedAddr = KNOWN_AVATAR_ADDRESSES[comment.wallet_address.toLowerCase()] || comment.wallet_address;
-                      const commentKnownFallback = KNOWN_AVATAR_ADDRESSES[comment.wallet_address.toLowerCase()]
-                        ? buildAvatarUrl(KNOWN_AVATAR_ADDRESSES[comment.wallet_address.toLowerCase()], `avatars/${KNOWN_AVATAR_ADDRESSES[comment.wallet_address.toLowerCase()]}.jpg`)
-                        : null;
                       const commentAvatar = comment.avatar && comment.wallet_address
-                        ? buildAvatarUrl(commentResolvedAddr, comment.avatar)
-                        : commentKnownFallback;
+                        ? buildAvatarUrl(comment.wallet_address, comment.avatar)
+                        : null;
                       const commentName = comment.username
                         ? `@${comment.username}`
                         : `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;

@@ -97,25 +97,13 @@ function GovernanceCard({
   const submitComment = useSubmitGovernanceComment();
   const deleteComment = useDeleteGovernanceComment();
 
-  const KNOWN_AVATAR_ADDRESSES: Record<string, string> = {
-    '0xmaldoteth': '0x9324840523a5d17dd12a2f11a9472e5a199c1937',
-    maldoteth: '0x9324840523a5d17dd12a2f11a9472e5a199c1937',
-  };
-
-  const KNOWN_DISPLAY_NAMES: Record<string, string> = {
-    maldoteth: 'mal',
-  };
-
-  const resolvedAddress = KNOWN_AVATAR_ADDRESSES[proposal.author_wallet_address.toLowerCase()] || proposal.author_wallet_address;
-  
-  // Use useProfileAvatar as fallback when author_avatar is not stored
-  const cachedAvatar = useProfileAvatar(resolvedAddress);
+  const cachedAvatar = useProfileAvatar(proposal.author_wallet_address);
   const avatarUrl = proposal.author_avatar
-    ? buildAvatarUrl(resolvedAddress, proposal.author_avatar)
+    ? buildAvatarUrl(proposal.author_wallet_address, proposal.author_avatar)
     : cachedAvatar || null;
 
   const username_raw = proposal.author_username || '';
-  const displayName = KNOWN_DISPLAY_NAMES[username_raw.toLowerCase()] || username_raw || proposal.author_wallet_address.slice(0, 6);
+  const displayName = username_raw || proposal.author_wallet_address.slice(0, 6);
   const handle = username_raw ? `@${username_raw}` : `${proposal.author_wallet_address.slice(0, 6)}...${proposal.author_wallet_address.slice(-4)}`;
 
   const isLiked = currentVote === 1;

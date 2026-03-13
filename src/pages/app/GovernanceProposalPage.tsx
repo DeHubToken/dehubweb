@@ -41,13 +41,7 @@ function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string):
   return t('governance.monthsAgo', { count: months });
 }
 
-const KNOWN_AVATAR_ADDRESSES: Record<string, string> = {
-  '0xmaldoteth': '0x9324840523a5d17dd12a2f11a9472e5a199c1937',
-  maldoteth: '0x9324840523a5d17dd12a2f11a9472e5a199c1937',
-};
-const KNOWN_DISPLAY_NAMES: Record<string, string> = {
-  maldoteth: 'mal',
-};
+
 
 export default function GovernanceProposalPage() {
   const { proposalId } = useParams<{ proposalId: string }>();
@@ -77,11 +71,9 @@ export default function GovernanceProposalPage() {
 
   const currentVote = userVotes?.[proposalId ?? '']?.type;
 
-  // Resolve avatar — must be before any early return
   const authorAddress = proposal?.author_wallet_address ?? '';
-  const resolvedAddress = KNOWN_AVATAR_ADDRESSES[authorAddress.toLowerCase()] || authorAddress;
-  const cachedAvatar = useProfileAvatar(resolvedAddress || undefined);
-  const avatarUrl = proposal?.author_avatar ? buildAvatarUrl(resolvedAddress, proposal.author_avatar) : cachedAvatar || null;
+  const cachedAvatar = useProfileAvatar(authorAddress || undefined);
+  const avatarUrl = proposal?.author_avatar ? buildAvatarUrl(authorAddress, proposal.author_avatar) : cachedAvatar || null;
 
   const handleVote = useCallback(
     (voteType: 1 | -1) => {
@@ -124,7 +116,7 @@ export default function GovernanceProposalPage() {
     );
   }
   const username_raw = proposal.author_username || '';
-  const displayName = KNOWN_DISPLAY_NAMES[username_raw.toLowerCase()] || username_raw || proposal.author_wallet_address.slice(0, 6);
+  const displayName = username_raw || proposal.author_wallet_address.slice(0, 6);
   const handle = username_raw ? `@${username_raw}` : `${proposal.author_wallet_address.slice(0, 6)}...${proposal.author_wallet_address.slice(-4)}`;
 
   const isLiked = currentVote === 1;
