@@ -929,11 +929,11 @@
     "emailRequired": "邮箱必填",
     "email": "邮箱",
     "emailPlaceholder": "your@email.com",
-    "followerReachPlaceholder": "e.g., 500K across all platforms",
-    "emailOrTelegram": "Email or Telegram ID to Contact",
-    "compensationPlaceholder": "e.g., $100/month",
-    "submitApplication": "Submit Application",
-    "fillRequired": "Please fill in all required fields"
+    "followerReachPlaceholder": "例如，全平台50万粉丝",
+    "emailOrTelegram": "联系邮箱或 Telegram",
+    "compensationPlaceholder": "例如，$100/月",
+    "submitApplication": "提交申请",
+    "fillRequired": "请填写所有必填字段"
   },
   "loginModal": {
     "title": "登录",
