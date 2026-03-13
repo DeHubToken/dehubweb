@@ -1030,7 +1030,7 @@ export default function ExplorePage() {
               {/* Category Carousel */}
               {exploreCategories.length > 0 && (
                 <div className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
-                  <div className="flex gap-2 overflow-x-auto scrollbar-hide" style={{ touchAction: 'pan-x' }}>
+                  <SwipeableCarousel className="flex gap-2 overflow-x-auto scrollbar-hide">
                     <button
                       onClick={() => setExploreCategoryId(null)}
                       className={cn(
