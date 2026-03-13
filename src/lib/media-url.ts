@@ -73,9 +73,13 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
     return `${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
   }
 
-  // If it's any api.dehub.io URL, extract the path portion and rebuild with CDN
+  // If it's any api.dehub.io URL with statics/, keep it on the API server
+  if (apiAvatarPath.includes('api.dehub.io') && apiAvatarPath.includes('/statics/')) {
+    return `${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
+  }
+
+  // If it's any api.dehub.io URL (non-statics), extract path and rebuild with CDN
   if (apiAvatarPath.includes('api.dehub.io')) {
-    // Extract relative path after the domain (e.g. "avatars/0x9e19...jpg")
     const match = apiAvatarPath.match(/api\.dehub\.io\/(.+)/);
     if (match) {
       return `${DEHUB_CDN_BASE}${match[1]}${match[1].includes('?') ? '&' : '?'}v=${cacheBust}`;
@@ -85,14 +89,13 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
   // Other full URLs (dicebear, external CDNs, etc.) - return as-is
   if (apiAvatarPath.startsWith('http')) return apiAvatarPath;
 
-  // Strip known folder prefixes (statics/, nfts/) that don't exist on CDN
-  let cleanPath = apiAvatarPath;
-  if (cleanPath.startsWith('statics/')) {
-    cleanPath = cleanPath.replace(/^statics\//, '');
+  // "statics/" paths are served from the API server, not the CDN
+  if (apiAvatarPath.startsWith('statics/')) {
+    return `https://api.dehub.io/${apiAvatarPath}?v=${cacheBust}`;
   }
 
-  // Relative path - use cleaned path with CDN base
-  return `${DEHUB_CDN_BASE}${cleanPath}${cleanPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
+  // Relative path - use with CDN base
+  return `${DEHUB_CDN_BASE}${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
 }
 
 /**
