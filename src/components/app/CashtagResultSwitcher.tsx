@@ -44,15 +44,12 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
     });
   }
 
-  // Crypto options — one per chain
+  // Token options — one per chain
   dexPairs.forEach((pair, i) => {
-    const chainName = pair.chainId?.toLowerCase() || '';
-    const chainLogo = chainName === 'base' ? baseLogo : chainName === 'solana' ? solLogo : undefined;
     options.push({
       id: `crypto-${i}`,
       label: `$${pair.baseToken.symbol}`,
-      sublabel: pair.chainId?.toUpperCase() || 'Crypto',
-      chainLogo,
+      sublabel: 'Token',
       type: 'crypto',
       pairIndex: i,
     });
