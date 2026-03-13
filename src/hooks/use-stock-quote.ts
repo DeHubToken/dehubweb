@@ -87,18 +87,51 @@ export interface StockQuote {
   postMarketChangePercent: number | null;
 }
 
+// Commodity aliases → Yahoo Finance futures symbols
+const COMMODITY_MAP: Record<string, string> = {
+  GOLD: 'GC=F',
+  SILVER: 'SI=F',
+  OIL: 'CL=F',
+  CRUDEOIL: 'CL=F',
+  CRUDE: 'CL=F',
+  WTI: 'CL=F',
+  BRENT: 'BZ=F',
+  NATGAS: 'NG=F',
+  GAS: 'NG=F',
+  COPPER: 'HG=F',
+  PLATINUM: 'PL=F',
+  PALLADIUM: 'PA=F',
+  WHEAT: 'ZW=F',
+  CORN: 'ZC=F',
+  SOYBEAN: 'ZS=F',
+  COTTON: 'CT=F',
+  SUGAR: 'SB=F',
+  COFFEE: 'KC=F',
+  COCOA: 'CC=F',
+};
+
+export function resolveSymbol(raw: string): { yahooSymbol: string; displaySymbol: string; isCommodity: boolean } {
+  const upper = raw.replace(/^\$/, '').toUpperCase();
+  const commodity = COMMODITY_MAP[upper];
+  if (commodity) {
+    return { yahooSymbol: commodity, displaySymbol: upper, isCommodity: true };
+  }
+  return { yahooSymbol: upper, displaySymbol: upper, isCommodity: false };
+}
+
 export function useStockQuote(query: string, enabled: boolean) {
   const trimmed = query.trim();
   // Only trigger stock search when query starts with $ (cashtag format)
   const isCashtagQuery = trimmed.startsWith('$') && trimmed.length >= 2;
-  const symbol = trimmed.replace(/^\$/, '').toUpperCase();
-  const isValidTicker = /^[A-Z]{1,5}(\.[A-Z])?$/.test(symbol);
+  const rawSymbol = trimmed.replace(/^\$/, '').toUpperCase();
+  const { yahooSymbol, isCommodity } = resolveSymbol(trimmed);
+  const isValidTicker = isCommodity || /^[A-Z]{1,5}(\.[A-Z])?$/.test(rawSymbol);
 
   return useQuery<StockQuote | null>({
-    queryKey: ['stock-quote', symbol],
+    queryKey: ['stock-quote', yahooSymbol],
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke('stock-quote', {
-        body: { symbol },
+        body: { symbol: yahooSymbol },
       });
       if (error) {
         console.error('Stock quote error:', error);

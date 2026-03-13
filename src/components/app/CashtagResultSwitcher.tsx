@@ -19,7 +19,7 @@ type ResultOption = {
   id: string;
   label: string;
   sublabel: string;
-  type: 'stock' | 'crypto';
+  type: 'stock' | 'crypto' | 'commodity';
   pairIndex?: number; // index into dexPairs array
 };
 
@@ -31,13 +31,14 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
   // Build options list
   const options: ResultOption[] = [];
 
-  // Stock option
+  // Stock / commodity option
   if (stockData?.found) {
+    const isCommodity = stockData.instrumentType === 'FUTURE' || stockData.symbol?.includes('=F');
     options.push({
       id: 'stock',
-      label: `$${stockData.symbol}`,
-      sublabel: stockData.exchangeShort || stockData.exchange || 'Stock',
-      type: 'stock',
+      label: `$${stockData.symbol?.replace('=F', '') || symbol}`,
+      sublabel: isCommodity ? 'Commodity' : (stockData.exchangeShort || stockData.exchange || 'Stock'),
+      type: isCommodity ? 'commodity' : 'stock',
     });
   }
 
@@ -76,14 +77,14 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
   // Re-sort: put preferred type first
   if (cryptoFirst) {
     options.sort((a, b) => {
-      if (a.type === 'crypto' && b.type === 'stock') return -1;
-      if (a.type === 'stock' && b.type === 'crypto') return 1;
+      if (a.type === 'crypto' && a.type !== b.type) return -1;
+      if (b.type === 'crypto' && a.type !== b.type) return 1;
       return 0;
     });
   } else {
     options.sort((a, b) => {
-      if (a.type === 'stock' && b.type === 'crypto') return -1;
-      if (a.type === 'crypto' && b.type === 'stock') return 1;
+      if (a.type !== 'crypto' && b.type === 'crypto') return -1;
+      if (a.type === 'crypto' && b.type !== 'crypto') return 1;
       return 0;
     });
   }
@@ -133,7 +134,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
             className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-800/80 border border-zinc-700/50 text-sm text-foreground hover:bg-zinc-700/80 transition-colors"
           >
             <span className="font-medium text-white">{selected.label}</span>
-            <span className="text-white/60 text-xs">{selected.type === 'stock' ? 'Stock' : 'Token'}</span>
+            <span className="text-white/60 text-xs">{selected.type === 'commodity' ? 'Commodity' : selected.type === 'stock' ? 'Stock' : 'Token'}</span>
             <span className="text-white/60 text-xs ml-1">({options.length})</span>
             <ChevronDown className={cn(
               "w-3.5 h-3.5 text-white/60 transition-transform",
@@ -164,7 +165,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
                     )}
                   >
                     <span className="text-xs font-medium px-2 py-0.5 rounded bg-white/10 text-white">
-                      {opt.type === 'stock' ? 'Stock' : 'Token'}
+                      {opt.type === 'commodity' ? 'Commodity' : opt.type === 'stock' ? 'Stock' : 'Token'}
                     </span>
                     <div className="flex-1 min-w-0 flex items-center gap-2">
                       <span className="text-white text-sm font-medium">{opt.label}</span>
@@ -181,7 +182,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
       )}
 
       {/* Render selected card */}
-      {selected.type === 'stock' && stockData?.found ? (
+      {(selected.type === 'stock' || selected.type === 'commodity') && stockData?.found ? (
         <StockPriceCard data={stockData} />
       ) : selectedPair ? (
         <CashtagPriceCard pair={selectedPair} symbol={symbol} cmcData={selected.pairIndex === 0 ? cmcData : undefined} />
