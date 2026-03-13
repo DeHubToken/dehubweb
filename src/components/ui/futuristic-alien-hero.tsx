@@ -7,6 +7,7 @@ import { X } from 'lucide-react';
 import { motion, useAnimation } from 'framer-motion';
 import { useNebulaPrefetch } from '@/hooks/use-nebula-prefetch';
 import { cn } from '@/lib/utils';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import dehubLogoCenter from '@/assets/dehub-logo-center.png';
 
 // Shared modules
@@ -305,6 +306,14 @@ export const FuturisticAlienHero = () => {
           />
           <AppStoreButtons />
           <SocialLinks />
+          {/* Desktop-only Enter button */}
+          <div className="hidden md:flex justify-center mt-8">
+            <a href="/app">
+              <LiquidGlassBubble shimmer className="px-16 py-4 cursor-pointer">
+                <span className="text-white text-lg font-semibold tracking-wide">Enter</span>
+              </LiquidGlassBubble>
+            </a>
+          </div>
         </div>
       </section>
     </motion.div>
