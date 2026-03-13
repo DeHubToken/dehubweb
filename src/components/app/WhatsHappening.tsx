@@ -178,7 +178,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
 
   return (
     <div className="bg-zinc-900 rounded-2xl p-4 relative">
-      <div className="flex items-center justify-between mb-3">
+      <div className={cn("flex items-center mb-3", showCountrySelector ? "justify-between" : "justify-center")}>
         <h3 className="font-bold text-lg text-white">{t('sidebar.talkOfTheTown')}</h3>
         {showCountrySelector && (
           <div ref={countryDropdownRef} className="relative">
