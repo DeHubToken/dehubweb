@@ -1059,7 +1059,7 @@ export default function ExplorePage() {
                         {cat.name}
                       </button>
                     ))}
-                  </div>
+                  </SwipeableCarousel>
                 </div>
               )}
 
