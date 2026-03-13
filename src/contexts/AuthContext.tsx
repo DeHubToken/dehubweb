@@ -204,8 +204,21 @@ async function signWithProvider(
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const queryClient = useQueryClient();
-  const [user, setUser] = useState<DeHubUser | null>(null);
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+
+  // Hydrate user/wallet immediately from localStorage to prevent zombie state on mobile refresh.
+  // Without this, the UI renders with null user while the async init makes network calls.
+  // If those calls fail (common on flaky mobile connections), the session is cleared
+  // even though the token is valid, leaving the user visually "signed in" but unable to interact.
+  const [user, setUser] = useState<DeHubUser | null>(() => {
+    try {
+      const cached = localStorage.getItem('dehub_user');
+      if (cached) return JSON.parse(cached) as DeHubUser;
+    } catch {}
+    return null;
+  });
+  const [walletAddress, setWalletAddress] = useState<string | null>(
+    () => localStorage.getItem('dehub_wallet')
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [isConnecting, setIsConnecting] = useState(false);
   const [isProcessingRedirect, setIsProcessingRedirect] = useState(false);
