@@ -351,7 +351,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                 <div className="flex items-center gap-2 py-1">
                   <span className="text-zinc-400 text-xs truncate flex-1 font-mono">{contractAddress}</span>
                   <button onClick={handleCopyCA} className="text-zinc-500 hover:text-white p-1 shrink-0">
-                    {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                    {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <ClipboardCopy className="w-3 h-3" />}
                   </button>
                 </div>
                 <StatRow label="Chain" value={pair.chainId.toUpperCase()} />
