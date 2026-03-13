@@ -1,7 +1,10 @@
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useCmcTop100, type CmcCoin } from '@/hooks/use-cmc-top-100';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, TrendingUp, TrendingDown } from 'lucide-react';
+import { ArrowLeft, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+const PAGE_SIZE = 100;
 
 function formatPrice(price: number): string {
   if (price >= 1) return `$${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -61,6 +64,31 @@ function CoinRow({ coin, onClick }: { coin: CmcCoin; onClick: () => void }) {
 export default function Top100CryptosPage() {
   const { data: coins, isLoading, error } = useCmcTop100();
   const navigate = useNavigate();
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  const hasMore = coins ? visibleCount < coins.length : false;
+  const visibleCoins = coins?.slice(0, visibleCount) ?? [];
+
+  const loadMore = useCallback(() => {
+    if (hasMore) {
+      setVisibleCount(prev => Math.min(prev + PAGE_SIZE, coins?.length ?? prev));
+    }
+  }, [hasMore, coins?.length]);
+
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) loadMore();
+      },
+      { rootMargin: '400px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [loadMore]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6">
@@ -69,6 +97,11 @@ export default function Top100CryptosPage() {
           <ArrowLeft className="w-5 h-5" />
         </button>
         <h1 className="text-xl font-bold text-white">Top Cryptocurrencies</h1>
+        {coins && (
+          <span className="text-zinc-500 text-sm">
+            Showing {visibleCoins.length.toLocaleString()} of {coins.length.toLocaleString()}
+          </span>
+        )}
       </div>
 
       {isLoading && (
@@ -83,7 +116,7 @@ export default function Top100CryptosPage() {
         <div className="text-red-400 text-center py-10">Failed to load data. Please try again later.</div>
       )}
 
-      {coins && coins.length > 0 && (
+      {visibleCoins.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-white/10">
           <table className="w-full">
             <thead>
@@ -99,7 +132,7 @@ export default function Top100CryptosPage() {
               </tr>
             </thead>
             <tbody>
-              {coins.map(coin => (
+              {visibleCoins.map(coin => (
                 <CoinRow
                   key={coin.id}
                   coin={coin}
@@ -110,6 +143,11 @@ export default function Top100CryptosPage() {
           </table>
         </div>
       )}
+
+      {/* Infinite scroll sentinel */}
+      <div ref={sentinelRef} className="py-4 flex justify-center">
+        {hasMore && <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />}
+      </div>
     </div>
   );
 }
