@@ -520,7 +520,7 @@ export function FollowersListDrawer({
                       size="sm"
                       variant="ghost"
                       onClick={(e) => handleFollowToggle(user, e)}
-                      disabled={loadingFollows.has(user.address) || user.isPending}
+                      disabled={loadingFollows.has(user.address) || user.isPending || isResolvingStatus}
                       className={cn(
                         "shrink-0 rounded-lg",
                         user.isFollowing
