@@ -331,6 +331,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 console.warn('[Auth] Token invalid server-side, clearing zombie session');
                 clearAuthSession();
                 localStorage.removeItem('dehub_user');
+                setUser(null);
+                setWalletAddress(null);
                 setIsLoading(false);
                 return;
               }
@@ -347,15 +349,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (!normalizedUser.username) {
               setRequiresUsername(true);
             }
-          } catch (error) {
-            console.error('Session restoration failed:', error);
-            clearAuthSession();
-            localStorage.removeItem('dehub_user');
+          } catch (error: any) {
+            // Distinguish auth errors from network errors.
+            // Auth errors (401, token invalid) → clear the session.
+            // Network errors (timeout, DNS, offline) → keep the cached session
+            // so mobile users aren't logged out by flaky connections.
+            const isAuthError = error?.name === 'AuthenticationError' ||
+              error?.message?.includes('Session expired') ||
+              error?.message?.includes('Authentication required');
+            
+            if (isAuthError) {
+              console.error('[Auth] Session restoration failed (auth error), clearing:', error?.message);
+              clearAuthSession();
+              localStorage.removeItem('dehub_user');
+              setUser(null);
+              setWalletAddress(null);
+            } else {
+              // Network error — keep cached user from localStorage hydration.
+              // The token is still valid client-side, user can interact.
+              console.warn('[Auth] Session restoration failed (network), keeping cached session:', error?.message);
+              // user + walletAddress are already hydrated from localStorage initializers
+            }
           }
         } else if (token && isTokenExpired()) {
           console.log('Token expired, clearing session');
           clearAuthSession();
           localStorage.removeItem('dehub_user');
+          setUser(null);
+          setWalletAddress(null);
+        } else if (!token) {
+          // No token at all — clear any stale hydrated state
+          setUser(null);
+          setWalletAddress(null);
         }
       } catch (error) {
         console.error('Auth initialization failed:', error);
