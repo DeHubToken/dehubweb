@@ -929,11 +929,11 @@
     "emailRequired": "Email obrigatório",
     "email": "Email",
     "emailPlaceholder": "seu@email.com",
-    "followerReachPlaceholder": "e.g., 500K across all platforms",
-    "emailOrTelegram": "Email or Telegram ID to Contact",
-    "compensationPlaceholder": "e.g., $100/month",
-    "submitApplication": "Submit Application",
-    "fillRequired": "Please fill in all required fields"
+    "followerReachPlaceholder": "ex. 500K em todas as plataformas",
+    "emailOrTelegram": "Email ou Telegram para contato",
+    "compensationPlaceholder": "ex. $100/mês",
+    "submitApplication": "Enviar candidatura",
+    "fillRequired": "Por favor preencha todos os campos obrigatórios"
   },
   "loginModal": {
     "title": "Entrar",
