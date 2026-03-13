@@ -16,19 +16,29 @@ export function useUserLanguage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check localStorage first
-    const cached = localStorage.getItem(STORAGE_KEY);
-    if (cached) {
-      setLanguage(cached);
+    const initLanguage = async () => {
+      // Check localStorage first
+      const cached = localStorage.getItem(STORAGE_KEY);
+      const lang = cached || navigator.language?.split('-')[0] || 'en';
+      
+      if (!cached) {
+        localStorage.setItem(STORAGE_KEY, lang);
+      }
+      
+      setLanguage(lang);
+      
+      // Always ensure i18n is synced to the correct language
+      if (lang !== 'en' && i18n.language !== lang) {
+        const ok = await loadLanguage(lang);
+        if (ok) {
+          await i18n.changeLanguage(lang);
+        }
+      }
+      
       setIsLoading(false);
-      return;
-    }
-
-    // Use browser language
-    const browserLang = navigator.language?.split('-')[0] || 'en';
-    setLanguage(browserLang);
-    localStorage.setItem(STORAGE_KEY, browserLang);
-    setIsLoading(false);
+    };
+    
+    initLanguage();
   }, []);
 
   const setPreferredLanguage = useCallback(async (lang: string) => {
