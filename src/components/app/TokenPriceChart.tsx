@@ -10,9 +10,10 @@ interface TokenPriceChartProps {
   isLoading?: boolean;
   timeframe?: ChartTimeframe;
   onTimeframeChange?: (tf: ChartTimeframe) => void;
+  symbol?: string;
 }
 
-const TIMEFRAMES: ChartTimeframe[] = ['1D', '7D', '30D', '90D', '1Y', 'ALL'];
+const SELECTABLE_TIMEFRAMES: ChartTimeframe[] = ['1D', '7D', '30D', '90D', '1Y'];
 
 function formatTime(timestamp: number, timeframe: ChartTimeframe = '1D'): string {
   const d = new Date(timestamp);
