@@ -116,14 +116,16 @@ function normalizeMsgType(raw: string | undefined | null): string {
 /** Convert a DeHub API message to our internal format */
 function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId?: string): SupabaseLiveChatMessage {
   const raw = msg as unknown as Record<string, unknown>;
+  const sender = (msg.sender || (raw.sender as Record<string, unknown> | undefined)) as Record<string, unknown> | undefined;
   const gifUrl = raw?.gif && typeof raw.gif === 'object' && (raw.gif as Record<string, unknown>)?.url;
+
   return {
     id: msg.id,
     room_id: msg.roomId || roomId || '',
-    sender_address: msg.sender?.address || '',
-    sender_username: msg.sender?.username || null,
-    sender_display_name: msg.sender?.displayName || null,
-    sender_avatar_url: msg.sender?.avatarUrl || msg.sender?.avatarImageUrl || null,
+    sender_address: String(sender?.address ?? raw.senderAddress ?? raw.sender_address ?? ''),
+    sender_username: (sender?.username ?? raw.senderUsername ?? raw.sender_username ?? null) as string | null,
+    sender_display_name: (sender?.displayName ?? sender?.display_name ?? raw.senderDisplayName ?? raw.sender_display_name ?? null) as string | null,
+    sender_avatar_url: (sender?.avatarUrl ?? sender?.avatarImageUrl ?? sender?.avatar_url ?? sender?.avatar_image_url ?? raw.senderAvatarUrl ?? raw.sender_avatar_url ?? null) as string | null,
     content: msg.content || (typeof gifUrl === 'string' ? gifUrl : ''),
     message_type: normalizeMsgType(msg.type || msg.messageType),
     image_url: msg.imageUrl || (typeof gifUrl === 'string' ? gifUrl : null) || ((raw as any).media?.[0]?.url ?? null),
@@ -137,19 +139,34 @@ function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId
 /** Deduplicate messages by id, keeping latest version but preserving rich reply_to data */
 function deduplicateMessages(msgs: SupabaseLiveChatMessage[]): SupabaseLiveChatMessage[] {
   const seen = new Map<string, SupabaseLiveChatMessage>();
+
   for (const m of msgs) {
     const existing = seen.get(m.id);
     if (existing) {
-      // Preserve good reply_to data if the new version has incomplete info
-      const merged = { ...m };
+      const merged: SupabaseLiveChatMessage = {
+        ...existing,
+        ...m,
+        room_id: m.room_id || existing.room_id,
+        sender_address: m.sender_address || existing.sender_address,
+        sender_username: m.sender_username || existing.sender_username,
+        sender_display_name: m.sender_display_name || existing.sender_display_name,
+        sender_avatar_url: m.sender_avatar_url || existing.sender_avatar_url,
+        content: m.content || existing.content,
+        message_type: m.message_type || existing.message_type,
+        image_url: m.image_url || existing.image_url,
+        created_at: m.created_at || existing.created_at,
+      };
+
       if (existing.reply_to && (!merged.reply_to || merged.reply_to.sender_name === 'Unknown' || merged.reply_to.sender_name === 'User')) {
         merged.reply_to = existing.reply_to;
       }
+
       seen.set(m.id, merged);
     } else {
       seen.set(m.id, m);
     }
   }
+
   return Array.from(seen.values()).sort(
     (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
   );
@@ -164,14 +181,16 @@ function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChatMessage
   if (!m || typeof m !== 'object') return null;
   const id = String(m.id ?? m._id ?? '');
   if (!id) return null;
+
   const sender = m.sender as Record<string, unknown> | undefined;
+
   return {
     id,
     room_id: roomId,
-    sender_address: (sender?.address ?? m.senderAddress ?? '') as string,
-    sender_username: (sender?.username ?? m.senderUsername ?? null) as string | null,
-    sender_display_name: (sender?.displayName ?? sender?.display_name ?? m.senderDisplayName ?? null) as string | null,
-    sender_avatar_url: (sender?.avatarUrl ?? sender?.avatarImageUrl ?? sender?.avatar_image_url ?? m.imageUrl ?? null) as string | null,
+    sender_address: String(sender?.address ?? m.senderAddress ?? m.sender_address ?? ''),
+    sender_username: (sender?.username ?? m.senderUsername ?? m.sender_username ?? null) as string | null,
+    sender_display_name: (sender?.displayName ?? sender?.display_name ?? m.senderDisplayName ?? m.sender_display_name ?? null) as string | null,
+    sender_avatar_url: (sender?.avatarUrl ?? sender?.avatarImageUrl ?? sender?.avatar_url ?? sender?.avatar_image_url ?? m.senderAvatarUrl ?? m.sender_avatar_url ?? null) as string | null,
     content: (m.content ?? '') as string,
     message_type: normalizeMsgType((m.type ?? m.messageType ?? m.message_type) as string | undefined),
     image_url: (m.imageUrl ?? m.image_url ?? (Array.isArray(m.media) ? (m.media as any[])[0]?.url : null) ?? null) as string | null,
