@@ -838,11 +838,11 @@
     "emailRequired": "Email обязателен",
     "email": "Email",
     "emailPlaceholder": "ваш@email.com",
-    "followerReachPlaceholder": "e.g., 500K across all platforms",
-    "emailOrTelegram": "Email or Telegram ID to Contact",
-    "compensationPlaceholder": "e.g., $100/month",
-    "submitApplication": "Submit Application",
-    "fillRequired": "Please fill in all required fields"
+    "followerReachPlaceholder": "напр., 500К на всех платформах",
+    "emailOrTelegram": "Email или Telegram для связи",
+    "compensationPlaceholder": "напр., $100/мес.",
+    "submitApplication": "Отправить заявку",
+    "fillRequired": "Пожалуйста, заполните все обязательные поля"
   },
   "assistant": {
     "title": "Ассистент",
