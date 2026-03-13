@@ -68,8 +68,8 @@ export function FundActions() {
             >
               <Wallet className="w-5 h-5 text-white/70" />
               <div className="text-left">
-                <span className="text-sm font-medium text-white">Buy with Crypto</span>
-                <p className="text-xs text-white/40">BTC, SOL, ETH, USDC & more from any chain</p>
+                <span className="text-sm font-medium text-white">{t('commandCentre.buyWithCrypto')}</span>
+                <p className="text-xs text-white/40">{t('commandCentre.crossChainDesc')}</p>
               </div>
             </button>
             <button
