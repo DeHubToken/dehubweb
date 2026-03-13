@@ -1,7 +1,7 @@
 import { useMemo, useRef, useEffect, useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import type { PricePoint, ChartTimeframe } from '@/hooks/use-token-chart';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
@@ -10,9 +10,10 @@ interface TokenPriceChartProps {
   isLoading?: boolean;
   timeframe?: ChartTimeframe;
   onTimeframeChange?: (tf: ChartTimeframe) => void;
+  symbol?: string;
 }
 
-const TIMEFRAMES: ChartTimeframe[] = ['1D', '7D', '30D', '90D', '1Y', 'ALL'];
+const SELECTABLE_TIMEFRAMES: ChartTimeframe[] = ['1D', '7D', '30D', '90D', '1Y'];
 
 function formatTime(timestamp: number, timeframe: ChartTimeframe = '1D'): string {
   const d = new Date(timestamp);
@@ -40,7 +41,7 @@ function formatTooltipLabel(timestamp: number, timeframe: ChartTimeframe = '1D')
     ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframeChange }: TokenPriceChartProps) {
+export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframeChange, symbol }: TokenPriceChartProps) {
   const isPositive = useMemo(() => {
     if (data.length < 2) return true;
     return data[data.length - 1].price >= data[0].price;
@@ -118,7 +119,7 @@ export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframe
       {onTimeframeChange && (
         <div className="flex items-center justify-between px-4 py-2 border-t border-zinc-700/50">
           <div className="relative flex items-center gap-0.5 rounded-lg bg-zinc-800/60 p-0.5">
-            {TIMEFRAMES.map((tf) => (
+            {SELECTABLE_TIMEFRAMES.map((tf) => (
               <button
                 key={tf}
                 onClick={() => onTimeframeChange(tf)}
@@ -139,6 +140,19 @@ export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframe
                 <span className="relative z-10">{tf}</span>
               </button>
             ))}
+            {/* ALL button → opens CoinGecko page */}
+            <button
+              onClick={() => {
+                const clean = (symbol || '').replace(/^\$/, '').toLowerCase();
+                if (clean) {
+                  window.open(`https://www.coingecko.com/en/coins/${clean}`, '_blank', 'noopener');
+                }
+              }}
+              className="relative z-10 px-2.5 py-1 rounded-md text-[11px] font-medium text-zinc-500 hover:text-zinc-300 flex items-center gap-0.5 transition-colors duration-200"
+            >
+              ALL
+              <ExternalLink className="w-2.5 h-2.5" />
+            </button>
           </div>
           {percentChange != null && !isLoading && (
             <span className={cn(
