@@ -134,7 +134,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
             className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-800/80 border border-zinc-700/50 text-sm text-foreground hover:bg-zinc-700/80 transition-colors"
           >
             <span className="font-medium text-white">{selected.label}</span>
-            <span className="text-white/60 text-xs">{selected.type === 'stock' ? 'Stock' : 'Token'}</span>
+            <span className="text-white/60 text-xs">{selected.type === 'commodity' ? 'Commodity' : selected.type === 'stock' ? 'Stock' : 'Token'}</span>
             <span className="text-white/60 text-xs ml-1">({options.length})</span>
             <ChevronDown className={cn(
               "w-3.5 h-3.5 text-white/60 transition-transform",
