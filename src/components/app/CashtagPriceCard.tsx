@@ -190,7 +190,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
         isLoading={isChartLoading}
         timeframe={chartTimeframe}
         onTimeframeChange={setChartTimeframe}
-        symbol={symbol}
+        externalUrl={cmcData?.slug ? `https://coinmarketcap.com/currencies/${cmcData.slug}/` : undefined}
       />
 
       {/* Stats row */}
