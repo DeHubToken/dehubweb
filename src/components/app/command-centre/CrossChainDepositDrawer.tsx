@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { ArrowLeft, Copy, Check, Loader2, Globe, ExternalLink, AlertTriangle, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -60,6 +61,7 @@ type Step = 'chains' | 'amount' | 'deposit' | 'success' | 'error';
 
 export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol }: CrossChainDepositDrawerProps) {
   const { walletAddress } = useAuth();
+  const { t } = useTranslation();
   const dest = (destinationSymbol && DESTINATION_ASSETS[destinationSymbol]) || DEFAULT_DESTINATION;
   const destLabel = dest.label;
 
@@ -150,6 +152,8 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
     startStatusPolling(quote.deposit_address);
   };
 
+  const destSymbol = destinationSymbol || 'ETH';
+
   const startStatusPolling = (depositAddress: string) => {
     setStatusPolling(true);
     if (pollRef.current) clearInterval(pollRef.current);
@@ -168,11 +172,11 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
           if (pollRef.current) clearInterval(pollRef.current);
           setStatusPolling(false);
           setStep('success');
-          toast.success(`Cross-chain deposit completed! ${destSymbol} received on Base.`);
+          toast.success(t('commandCentre.crossChainCompleted', { symbol: destSymbol }));
         } else if (status.status === 'FAILED' || status.status === 'EXPIRED') {
           if (pollRef.current) clearInterval(pollRef.current);
           setStatusPolling(false);
-          setErrorMsg(status.status === 'EXPIRED' ? 'Deposit expired. Please try again.' : 'Deposit failed.');
+          setErrorMsg(status.status === 'EXPIRED' ? t('commandCentre.depositExpired') : t('commandCentre.depositFailedMsg'));
           setStep('error');
         }
       } catch {
@@ -185,14 +189,13 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
     if (!quote?.deposit_address) return;
     navigator.clipboard.writeText(quote.deposit_address);
     setCopied(true);
-    toast.success('Deposit address copied');
+    toast.success(t('toasts.deposit_address_copied'));
     setTimeout(() => setCopied(false), 2000);
   };
 
   const estimatedOut = quote?.amount_out
     ? (parseInt(quote.amount_out) / Math.pow(10, dest.decimals)).toLocaleString(undefined, { maximumFractionDigits: dest.decimals <= 8 ? dest.decimals : 6 })
     : null;
-  const destSymbol = destinationSymbol || 'ETH';
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
@@ -214,14 +217,14 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
             )}
             <div>
               <h3 className="text-white font-semibold text-base">
-                {step === 'chains' && 'Deposit from Any Chain'}
-                {step === 'amount' && `Send ${selectedToken?.symbol}`}
-                {step === 'deposit' && 'Send to Deposit Address'}
-                {step === 'success' && 'Deposit Complete!'}
-                {step === 'error' && 'Deposit Failed'}
+                {step === 'chains' && t('commandCentre.depositFromAnyChain')}
+                {step === 'amount' && t('commandCentre.send') + ' ' + selectedToken?.symbol}
+                {step === 'deposit' && t('commandCentre.sendToDepositAddress')}
+                {step === 'success' && t('commandCentre.depositComplete')}
+                {step === 'error' && t('commandCentre.depositFailed')}
               </h3>
               {step === 'chains' && (
-                <p className="text-xs text-white/40">Send crypto from any chain → receive {destLabel}</p>
+                <p className="text-xs text-white/40">{t('commandCentre.sendCryptoToReceive', { dest: destLabel })}</p>
               )}
             </div>
           </div>
@@ -255,11 +258,11 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
             <>
               <div className="flex items-center gap-2 text-xs text-white/50">
                 <TokenIcon iconKey={selectedToken.iconKey} size="w-5 h-5" />
-                <span>{selectedToken.symbol} on {selectedChain.name} → {destLabel}</span>
+                <span>{t('commandCentre.tokenOnChainTo', { symbol: selectedToken.symbol, chain: selectedChain.name, dest: destLabel })}</span>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-sm text-white/50">{selectedToken.symbol} Amount</label>
+                <label className="text-sm text-white/50">{t('commandCentre.tokenAmount', { symbol: selectedToken.symbol })}</label>
                 <Input
                   type="number"
                   min="0"
@@ -274,7 +277,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
               {/* Quote display */}
               <div className="rounded-xl bg-white/[0.04] border border-white/10 p-3 space-y-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/50">Estimated {destSymbol} received</span>
+                  <span className="text-white/50">{t('commandCentre.estimatedReceived', { symbol: destSymbol })}</span>
                   {quoteLoading ? (
                     <Loader2 className="w-3.5 h-3.5 text-white/40 animate-spin" />
                   ) : estimatedOut ? (
@@ -297,7 +300,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
                 onClick={handleProceedToDeposit}
               >
                 <Globe className="w-4 h-4 mr-2" />
-                Get Deposit Address
+                {t('commandCentre.getDepositAddress')}
               </Button>
             </>
           )}
@@ -307,7 +310,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
             <>
               <div className="rounded-xl bg-white/[0.04] border border-white/10 p-4 space-y-3">
                 <p className="text-xs text-white/50 text-center">
-                  Send exactly <span className="text-white font-mono font-medium">{amount} {selectedToken.symbol}</span> on <span className="text-white">{selectedChain.name}</span> to:
+                  {t('commandCentre.sendExactlyTo', { amount, symbol: selectedToken.symbol, chain: selectedChain.name })}
                 </p>
                 <div className="bg-white/[0.06] rounded-lg p-3 break-all font-mono text-xs text-white/80 text-center">
                   {quote.deposit_address}
@@ -318,28 +321,28 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
                   onClick={handleCopyAddress}
                 >
                   {copied ? <Check className="w-4 h-4 mr-2" /> : <Copy className="w-4 h-4 mr-2" />}
-                  {copied ? 'Copied!' : 'Copy Address'}
+                  {copied ? t('commandCentre.copiedAddress') : t('commandCentre.copyAddress')}
                 </Button>
               </div>
 
               <div className="rounded-xl bg-white/[0.04] border border-white/10 p-3 space-y-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/50">Status</span>
+                  <span className="text-white/50">{t('commandCentre.status')}</span>
                   <span className="flex items-center gap-1.5">
                     {statusPolling && <Loader2 className="w-3 h-3 text-white/40 animate-spin" />}
                     <span className="text-white/70">
-                      {depositStatus?.status === 'EXECUTING' ? 'Processing…' : 'Waiting for deposit…'}
+                      {depositStatus?.status === 'EXECUTING' ? t('commandCentre.processingDeposit') : t('commandCentre.waitingForDeposit')}
                     </span>
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/50">You'll receive</span>
+                  <span className="text-white/50">{t('commandCentre.youllReceive')}</span>
                   <span className="text-white font-mono">{estimatedOut} {destSymbol}</span>
                 </div>
               </div>
 
               <p className="text-[10px] text-white/30 text-center">
-                The deposit address expires in ~10 minutes. Send the exact amount on the correct chain.
+                {t('commandCentre.depositExpireNote')}
               </p>
             </>
           )}
@@ -350,20 +353,20 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
               <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
                 <Check className="w-6 h-6 text-emerald-400" />
               </div>
-              <p className="text-sm text-white font-medium">{destSymbol} Received!</p>
+              <p className="text-sm text-white font-medium">{t('commandCentre.tokenReceived', { symbol: destSymbol })}</p>
               <p className="text-xs text-white/40">
-                {estimatedOut} {destSymbol} deposited to your Base wallet
+                {t('commandCentre.depositedToWallet', { amount: estimatedOut, symbol: destSymbol })}
               </p>
               {depositStatus?.tx_hash && (
                 <button
                   onClick={() => window.open(`https://basescan.org/tx/${depositStatus.tx_hash}`, '_blank')}
                   className="text-xs text-white flex items-center gap-1 hover:underline"
                 >
-                  View on BaseScan <ExternalLink className="w-3 h-3" />
+                  {t('commandCentre.viewOnBaseScan')} <ExternalLink className="w-3 h-3" />
                 </button>
               )}
               <Button variant="glass" className="w-full rounded-xl mt-2" onClick={() => onOpenChange(false)}>
-                Done
+                {t('commandCentre.done')}
               </Button>
             </div>
           )}
@@ -374,10 +377,10 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol 
               <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
                 <AlertTriangle className="w-6 h-6 text-red-400" />
               </div>
-              <p className="text-sm text-white font-medium">Deposit Failed</p>
+              <p className="text-sm text-white font-medium">{t('commandCentre.depositFailed')}</p>
               <p className="text-xs text-white/40 text-center max-w-[260px]">{errorMsg}</p>
               <Button variant="glass" className="w-full rounded-xl mt-2" onClick={() => setStep('chains')}>
-                Try Again
+                {t('commandCentre.tryAgain')}
               </Button>
             </div>
           )}
