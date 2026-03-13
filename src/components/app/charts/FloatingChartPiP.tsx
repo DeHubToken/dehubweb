@@ -141,7 +141,7 @@ export function FloatingChartPiP({ item, index, onClose, onUpdate }: FloatingCha
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.2 }}
-      className="fixed z-[9998] rounded-xl overflow-hidden shadow-2xl border border-zinc-700/60 bg-zinc-900/95 backdrop-blur-md"
+      className="fixed z-[9998] rounded-xl shadow-2xl border border-zinc-700/60 bg-zinc-900/95 backdrop-blur-md"
       style={{
         left: position.x,
         top: position.y,
@@ -184,7 +184,7 @@ export function FloatingChartPiP({ item, index, onClose, onUpdate }: FloatingCha
       </div>
 
       {/* Chart area */}
-      <div className="flex-1" style={{ height: size.h - 68 }}>
+      <div className="flex-1 relative" style={{ height: size.h - 68 }}>
         {chartData && chartData.length > 1 ? (
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
@@ -197,6 +197,8 @@ export function FloatingChartPiP({ item, index, onClose, onUpdate }: FloatingCha
               <XAxis dataKey="time" hide />
               <YAxis domain={['auto', 'auto']} hide />
               <Tooltip
+                wrapperStyle={{ zIndex: 10000 }}
+                allowEscapeViewBox={{ x: true, y: true }}
                 contentStyle={{
                   backgroundColor: '#27272a',
                   border: '1px solid #3f3f46',
