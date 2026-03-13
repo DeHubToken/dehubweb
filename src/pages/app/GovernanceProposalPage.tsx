@@ -41,7 +41,7 @@ function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string):
   return t('governance.monthsAgo', { count: months });
 }
 
-const KNOWN_DISPLAY_NAMES: Record<string, string> = {};
+
 
 export default function GovernanceProposalPage() {
   const { proposalId } = useParams<{ proposalId: string }>();
