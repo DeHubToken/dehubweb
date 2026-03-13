@@ -49,7 +49,11 @@ const slideVariants = {
 
 const slideTransition = { type: 'tween' as const, duration: 0.2, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] };
 
-export const WhatsHappening = memo(function WhatsHappening() {
+interface WhatsHappeningProps {
+  showCountrySelector?: boolean;
+}
+
+export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector = false }: WhatsHappeningProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<Tab>('posts');
@@ -61,6 +65,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
 
   // Close dropdown on click outside
   useEffect(() => {
+    if (!showCountrySelector) return;
     const handler = (e: MouseEvent) => {
       if (countryDropdownRef.current && !countryDropdownRef.current.contains(e.target as Node)) {
         setShowCountryDropdown(false);
@@ -70,7 +75,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
       document.addEventListener('mousedown', handler);
       return () => document.removeEventListener('mousedown', handler);
     }
-  }, [showCountryDropdown]);
+  }, [showCountryDropdown, showCountrySelector]);
 
   const handleCountrySelect = useCallback((code: string) => {
     setShowCountryDropdown(false);
