@@ -140,7 +140,7 @@ export function ProfileHeader({
       {/* Profile Content */}
       <div className="px-4 sm:px-6 pb-4">
         {/* Avatar */}
-        <div className="relative -mt-12 sm:-mt-14 mb-4 flex items-end justify-between">
+        <div className="relative -mt-12 sm:-mt-14 mb-1.5 flex items-end justify-between">
           <div className="relative">
             {hasStories ? (
               <div className="relative">
