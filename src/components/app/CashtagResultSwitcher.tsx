@@ -31,13 +31,14 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
   // Build options list
   const options: ResultOption[] = [];
 
-  // Stock option
+  // Stock / commodity option
   if (stockData?.found) {
+    const isCommodity = stockData.instrumentType === 'FUTURE' || stockData.symbol?.includes('=F');
     options.push({
       id: 'stock',
-      label: `$${stockData.symbol}`,
-      sublabel: stockData.exchangeShort || stockData.exchange || 'Stock',
-      type: 'stock',
+      label: `$${stockData.symbol?.replace('=F', '') || symbol}`,
+      sublabel: isCommodity ? 'Commodity' : (stockData.exchangeShort || stockData.exchange || 'Stock'),
+      type: isCommodity ? 'commodity' : 'stock',
     });
   }
 
