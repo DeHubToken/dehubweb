@@ -2,12 +2,32 @@ import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Search } from 'lucide-react';
+import { Search, Globe, ChevronDown } from 'lucide-react';
 import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
 import { TickerLogo } from './TickerLogo';
 import { cn } from '@/lib/utils';
 import { getTopTickers, type TickerPeriod } from '@/lib/ticker-search-tracker';
 import { TrendingTopicsList } from './TrendingTopicsList';
+
+const COUNTRIES = [
+  { code: 'global', flag: '🌍', name: 'Global' },
+  { code: 'us', flag: '🇺🇸', name: 'United States' },
+  { code: 'gb', flag: '🇬🇧', name: 'United Kingdom' },
+  { code: 'de', flag: '🇩🇪', name: 'Germany' },
+  { code: 'fr', flag: '🇫🇷', name: 'France' },
+  { code: 'jp', flag: '🇯🇵', name: 'Japan' },
+  { code: 'kr', flag: '🇰🇷', name: 'South Korea' },
+  { code: 'in', flag: '🇮🇳', name: 'India' },
+  { code: 'br', flag: '🇧🇷', name: 'Brazil' },
+  { code: 'tr', flag: '🇹🇷', name: 'Turkey' },
+  { code: 'au', flag: '🇦🇺', name: 'Australia' },
+  { code: 'ca', flag: '🇨🇦', name: 'Canada' },
+  { code: 'es', flag: '🇪🇸', name: 'Spain' },
+  { code: 'it', flag: '🇮🇹', name: 'Italy' },
+  { code: 'nl', flag: '🇳🇱', name: 'Netherlands' },
+  { code: 'sg', flag: '🇸🇬', name: 'Singapore' },
+];
 
 type Tab = 'posts' | 'tickers';
 
