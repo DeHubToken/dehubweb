@@ -129,7 +129,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
               
               {cmcData?.cmcRank && (
                 <button
-                  onClick={(e) => { e.stopPropagation(); window.location.href = '/app/top-100'; }}
+                  onClick={(e) => { e.stopPropagation(); navigate('/app/top-100'); }}
                   className="text-zinc-400 text-xs bg-zinc-700/50 px-1.5 py-0.5 rounded hover:bg-zinc-600/50 hover:text-white transition-colors cursor-pointer"
                   title="View Top 100 Cryptocurrencies"
                 >#{cmcData.cmcRank}</button>
