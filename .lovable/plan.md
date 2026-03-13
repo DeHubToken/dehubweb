@@ -1,35 +1,39 @@
 
 
-## Fix: Auto-reload on chunk load failures
+## Fix: Videos Not Playable on Search/Explore Page
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+### Root Cause
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+Two issues in `mapNFTToVideoItem` (`src/hooks/use-dehub-feed.ts`, lines 98-107):
 
-### Changes
+1. **API-provided `videoUrl` is completely ignored.** The mapper always constructs the video URL from `tokenId` using the CDN pattern (`dehubcdn.../videos/${tokenId}.mp4`). But search API results may return items where:
+   - `tokenId` is `0`, `undefined`, or a non-numeric MongoDB `_id` string
+   - The item has a valid `videoUrl` field directly from the API that would work
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+2. **Text posts misclassified as videos.** `getContentType` (line 80) defaults to `'video'` when `postType` doesn't match known values (e.g., `feed-simple`, `feed-all`). These text posts render as `VideoCard` components with no `videoUrl`, showing a thumbnail + play button that does nothing on click.
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+### Fix
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+**`src/hooks/use-dehub-feed.ts`:**
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+1. In `mapNFTToVideoItem` — use the API's `videoUrl` field as a fallback when the CDN URL can't be constructed:
+   ```typescript
+   const videoUrl = isLivePost
+     ? undefined
+     : isAudioPost
+       ? undefined
+       : (tokenId
+           ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4`
+           : getMediaUrl(nft.videoUrl) || undefined);
+   ```
+
+2. In `getContentType` — handle additional `postType` values from the search API and improve the default fallback:
+   ```typescript
+   // Handle feed-specific postType values from search API
+   if (pt === 'feed-simple' || pt === 'feed-all' || pt === 'text') return 'image'; // text posts → ImageCard
+   if (pt === 'feed-images') return 'image';
+   if (pt === 'feed-video') return 'video';
+   ```
+
+These two changes ensure: (a) videos from search play correctly using the API-provided URL when tokenId is missing, and (b) text posts aren't rendered as broken video cards.
 
