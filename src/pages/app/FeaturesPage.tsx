@@ -393,13 +393,9 @@ function FeatureCard({
                 ) : comments && comments.length > 0 ? (
                   <div className="space-y-2.5 mb-3 max-h-60 overflow-y-auto scrollbar-invisible">
                     {comments.map((comment) => {
-                      const commentResolvedAddr = KNOWN_AVATAR_ADDRESSES[comment.wallet_address.toLowerCase()] || comment.wallet_address;
-                      const commentKnownFallback = KNOWN_AVATAR_ADDRESSES[comment.wallet_address.toLowerCase()]
-                        ? buildAvatarUrl(KNOWN_AVATAR_ADDRESSES[comment.wallet_address.toLowerCase()], `avatars/${KNOWN_AVATAR_ADDRESSES[comment.wallet_address.toLowerCase()]}.jpg`)
-                        : null;
                       const commentAvatar = comment.avatar && comment.wallet_address
-                        ? buildAvatarUrl(commentResolvedAddr, comment.avatar)
-                        : commentKnownFallback;
+                        ? buildAvatarUrl(comment.wallet_address, comment.avatar)
+                        : null;
                       const commentName = comment.username
                         ? `@${comment.username}`
                         : `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;
