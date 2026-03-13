@@ -214,6 +214,7 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
 
 export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function SidebarLeaderboard(_props, ref) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [activePeriod, setActivePeriod] = useState<string>('All');
   const [isAutoRotating, setIsAutoRotating] = useState(true);
 
