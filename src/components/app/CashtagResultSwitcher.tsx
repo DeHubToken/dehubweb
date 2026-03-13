@@ -19,7 +19,7 @@ type ResultOption = {
   id: string;
   label: string;
   sublabel: string;
-  type: 'stock' | 'crypto';
+  type: 'stock' | 'crypto' | 'commodity';
   pairIndex?: number; // index into dexPairs array
 };
 
