@@ -220,6 +220,17 @@ export function useSubmitFeatureRequest() {
         imageUrl = urlData.publicUrl;
       }
 
+      // Resolve avatar: use auth context first, then fetch from API
+      let avatarPath = user?.avatarImageUrl || null;
+      if (!avatarPath && walletAddress) {
+        try {
+          const accountInfo = await getAccountInfo(walletAddress);
+          avatarPath = extractAvatarPath(accountInfo) || null;
+        } catch {
+          // Silently fail — avatar is optional
+        }
+      }
+
       const { data, error } = await supabase
         .from('feature_requests')
         .insert({
@@ -229,7 +240,7 @@ export function useSubmitFeatureRequest() {
           image_url: imageUrl,
           author_wallet_address: walletAddress.toLowerCase(),
           author_username: user?.username || null,
-          author_avatar: user?.avatarImageUrl || null,
+          author_avatar: avatarPath,
         })
         .select()
         .single()
