@@ -116,7 +116,7 @@ export default function GovernanceProposalPage() {
     );
   }
   const username_raw = proposal.author_username || '';
-  const displayName = KNOWN_DISPLAY_NAMES[username_raw.toLowerCase()] || username_raw || proposal.author_wallet_address.slice(0, 6);
+  const displayName = username_raw || proposal.author_wallet_address.slice(0, 6);
   const handle = username_raw ? `@${username_raw}` : `${proposal.author_wallet_address.slice(0, 6)}...${proposal.author_wallet_address.slice(-4)}`;
 
   const isLiked = currentVote === 1;
