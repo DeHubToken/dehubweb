@@ -4,8 +4,9 @@ import type { DexPair } from '@/hooks/use-dexscreener';
 import type { CmcMarketData } from '@/hooks/use-cmc-market-cap';
 import { useTokenChart, type ChartTimeframe } from '@/hooks/use-token-chart';
 import { TokenPriceChart } from '@/components/app/TokenPriceChart';
-import { TrendingUp, TrendingDown, Copy, Check, ChevronDown, ExternalLink, Globe, Twitter, MessageCircle } from 'lucide-react';
+import { TrendingUp, TrendingDown, Copy, Check, ChevronDown, ExternalLink, Globe, Twitter, MessageCircle, PictureInPicture2 } from 'lucide-react';
 import { QuickBuyButton } from '@/components/app/QuickBuyButton';
+import { useChartPiP } from '@/contexts/ChartPiPContext';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -66,6 +67,7 @@ function StatRow({ label, value }: { label: string; value: string }) {
 
 export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProps) {
   const navigate = useNavigate();
+  const { addChartPiP, isChartPiP } = useChartPiP();
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>('1D');
@@ -149,6 +151,25 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                     chainId={pair.chainId}
                     tokenLogo={pair.info?.imageUrl}
                   />
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              addChartPiP({
+                symbol: pair.baseToken.symbol,
+                displayName: cmcData?.name || pair.baseToken.name,
+                logo: cmcData?.logo || pair.info?.imageUrl,
+              });
+            }}
+            className={cn(
+              "transition-colors p-1.5",
+              isChartPiP(pair.baseToken.symbol)
+                ? "text-emerald-400"
+                : "text-zinc-400 hover:text-white"
+            )}
+            title="Float chart"
+          >
+            <PictureInPicture2 className="w-4 h-4" />
+          </button>
           <button
             onClick={handleCopyCA}
             className="text-zinc-400 hover:text-white transition-colors p-1.5"

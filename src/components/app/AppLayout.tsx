@@ -10,7 +10,9 @@ import { SidebarCollapseProvider, useSidebarCollapse } from '@/contexts/SidebarC
 import { AutoplayProvider } from '@/contexts/AutoplayContext';
 import { AnimationsProvider } from '@/contexts/AnimationsContext';
 import { PiPProvider } from '@/contexts/PiPContext';
+import { ChartPiPProvider } from '@/contexts/ChartPiPContext';
 import { FloatingPiPOverlay } from '@/components/app/tv/FloatingPiPOverlay';
+import { FloatingChartPiPOverlay } from '@/components/app/charts/FloatingChartPiPOverlay';
 import { UserFeedbackSurvey } from '@/components/app/UserFeedbackSurvey';
 import { PostModal } from '@/features/post/PostModal';
 import { DevelopmentNoticeModal } from './modals';
@@ -235,15 +237,18 @@ export function AppLayout({ children }: AppLayoutProps) {
       <AutoplayProvider>
         <AnimationsProvider>
           <PiPProvider>
-            <RadioPlayerProvider>
-              <CoinPlacementProvider>
-                <GlobalDropZoneProvider>
-                  <AppLayoutContent>{children}</AppLayoutContent>
-                  <FloatingPiPOverlay />
-                  <UserFeedbackSurvey />
-                </GlobalDropZoneProvider>
-              </CoinPlacementProvider>
-            </RadioPlayerProvider>
+            <ChartPiPProvider>
+              <RadioPlayerProvider>
+                <CoinPlacementProvider>
+                  <GlobalDropZoneProvider>
+                    <AppLayoutContent>{children}</AppLayoutContent>
+                    <FloatingPiPOverlay />
+                    <FloatingChartPiPOverlay />
+                    <UserFeedbackSurvey />
+                  </GlobalDropZoneProvider>
+                </CoinPlacementProvider>
+              </RadioPlayerProvider>
+            </ChartPiPProvider>
           </PiPProvider>
         </AnimationsProvider>
       </AutoplayProvider>
