@@ -952,6 +952,11 @@
   "sidebar": {
     "talkOfTheTown": "चर्चा का विषय",
     "nothingTrending": "अभी कोई ट्रेंड नहीं",
+    "posts": "विषय",
+    "tickers": "टिकर",
+    "noTickersYet": "यहाँ देखने के लिए $टिकर खोजें",
+    "noCategoriesYet": "अभी तक कोई ट्रेंडिंग श्रेणी नहीं",
+    "searches": "खोज",
     "post": "पोस्ट",
     "logOut": "लॉग आउट",
     "logIn": "लॉग इन"

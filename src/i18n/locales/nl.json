@@ -1491,6 +1491,11 @@
   "sidebar": {
     "talkOfTheTown": "Onderwerp van de dag",
     "nothingTrending": "Nog niets trending",
+    "posts": "Onderwerpen",
+    "tickers": "Tickers",
+    "noTickersYet": "Zoek naar $tickers om ze hier te zien",
+    "noCategoriesYet": "Nog geen trending categorieën",
+    "searches": "zoekopdrachten",
     "post": "Plaatsen",
     "logOut": "Uitloggen",
     "logIn": "Inloggen"

@@ -1096,6 +1096,11 @@
   "sidebar": {
     "talkOfTheTown": "화제의 중심",
     "nothingTrending": "아직 트렌드 없음",
+    "posts": "주제",
+    "tickers": "티커",
+    "noTickersYet": "$티커를 검색하여 여기에서 확인하세요",
+    "noCategoriesYet": "아직 인기 카테고리가 없습니다",
+    "searches": "검색",
     "post": "게시",
     "logOut": "로그아웃",
     "logIn": "로그인"

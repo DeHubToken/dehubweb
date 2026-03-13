@@ -1092,6 +1092,11 @@
   "sidebar": {
     "talkOfTheTown": "Di cosa si parla",
     "nothingTrending": "Niente in tendenza",
+    "posts": "Argomenti",
+    "tickers": "Ticker",
+    "noTickersYet": "Cerca $ticker per vederli qui",
+    "noCategoriesYet": "Nessuna categoria di tendenza ancora",
+    "searches": "ricerche",
     "post": "Pubblica",
     "logOut": "Esci",
     "logIn": "Accedi"

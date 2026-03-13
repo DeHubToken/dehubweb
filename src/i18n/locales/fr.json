@@ -1095,6 +1095,11 @@
   "sidebar": {
     "talkOfTheTown": "Tendances",
     "nothingTrending": "Rien de tendance pour l'instant",
+    "posts": "Sujets",
+    "tickers": "Tickers",
+    "noTickersYet": "Recherchez des $tickers pour les voir ici",
+    "noCategoriesYet": "Pas encore de catégories tendance",
+    "searches": "recherches",
     "post": "Publier",
     "logOut": "Se déconnecter",
     "logIn": "Se connecter"

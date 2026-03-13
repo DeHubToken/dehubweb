@@ -1096,6 +1096,11 @@
   "sidebar": {
     "talkOfTheTown": "Обсуждаемое",
     "nothingTrending": "Пока нет трендов",
+    "posts": "Темы",
+    "tickers": "Тикеры",
+    "noTickersYet": "Ищите $тикеры, чтобы увидеть их здесь",
+    "noCategoriesYet": "Пока нет трендовых категорий",
+    "searches": "поисков",
     "post": "Опубликовать",
     "logOut": "Выйти",
     "logIn": "Войти"

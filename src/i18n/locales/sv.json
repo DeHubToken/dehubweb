@@ -1096,6 +1096,11 @@
   "sidebar": {
     "talkOfTheTown": "Stadens snackis",
     "nothingTrending": "Inget trendigt just nu",
+    "posts": "Ämnen",
+    "tickers": "Tickers",
+    "noTickersYet": "Sök efter $tickers för att se dem här",
+    "noCategoriesYet": "Inga trendande kategorier ännu",
+    "searches": "sökningar",
     "post": "Publicera",
     "logOut": "Logga ut",
     "logIn": "Logga in"
