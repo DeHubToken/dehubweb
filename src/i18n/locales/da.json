@@ -559,13 +559,13 @@
     "action": "Handling",
     "viewTx": "Se transaktion",
     "loadingSubscriptions": "Indlæser abonnementer...",
-    "txPurchased": "You purchased {{amount}} DHB",
-    "txSold": "You sold {{amount}} DHB",
-    "txTransfer": "Transfer of {{amount}} DHB",
-    "txPpvUnlock": "PPV unlock — {{amount}} DHB",
-    "txPpvSale": "PPV sale — {{amount}} DHB",
-    "txTipSent": "You tipped {{name}} {{amount}} DHB",
-    "txTipReceived": "{{name}} tipped you {{amount}} DHB"
+    "txPurchased": "Du købte {{amount}} DHB",
+    "txSold": "Du solgte {{amount}} DHB",
+    "txTransfer": "Overførsel af {{amount}} DHB",
+    "txPpvUnlock": "PPV-oplåsning — {{amount}} DHB",
+    "txPpvSale": "PPV-salg — {{amount}} DHB",
+    "txTipSent": "Du gav {{name}} drikkepenge — {{amount}} DHB",
+    "txTipReceived": "{{name}} gav dig drikkepenge — {{amount}} DHB"
   },
   "bookmarks": {
     "title": "Bogmærker",
