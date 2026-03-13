@@ -838,11 +838,11 @@
     "emailRequired": "E-mail er påkrævet",
     "email": "E-mail",
     "emailPlaceholder": "din@email.dk",
-    "followerReachPlaceholder": "e.g., 500K across all platforms",
-    "emailOrTelegram": "Email or Telegram ID to Contact",
-    "compensationPlaceholder": "e.g., $100/month",
-    "submitApplication": "Submit Application",
-    "fillRequired": "Please fill in all required fields"
+    "followerReachPlaceholder": "f.eks. 500K på tværs af alle platforme",
+    "emailOrTelegram": "E-mail eller Telegram-ID til kontakt",
+    "compensationPlaceholder": "f.eks. $100/måned",
+    "submitApplication": "Indsend ansøgning",
+    "fillRequired": "Udfyld venligst alle påkrævede felter"
   },
   "assistant": {
     "title": "Assistent",
