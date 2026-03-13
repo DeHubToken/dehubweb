@@ -1011,7 +1011,12 @@ export default function FeaturesPage() {
             <div className="space-y-3">
               {shippedFeatures.map((feature) => (
                 <SharedTranslationProvider key={feature.id}>
-                  <ShippedCard feature={feature} />
+                  <FeatureCard
+                    feature={feature}
+                    currentVote={userVotes?.[feature.id]}
+                    onVote={handleVote}
+                    voteDisabled={voteMutation.isPending}
+                  />
                 </SharedTranslationProvider>
               ))}
             </div>
