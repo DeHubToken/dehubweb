@@ -190,6 +190,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
         isLoading={isChartLoading}
         timeframe={chartTimeframe}
         onTimeframeChange={setChartTimeframe}
+        symbol={symbol}
       />
 
       {/* Stats row */}
