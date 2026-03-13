@@ -233,7 +233,7 @@
     "noOffers": "Вы ещё не делали предложений",
     "walletCopied": "Адрес кошелька скопирован!",
     "note": "Заметка",
-    "loginDescription": "Log in to access and manage your account settings."
+    "loginDescription": "Войдите для доступа и управления настройками аккаунта."
   },
   "common": {
     "save": "Сохранить",
@@ -838,11 +838,11 @@
     "emailRequired": "Email обязателен",
     "email": "Email",
     "emailPlaceholder": "ваш@email.com",
-    "followerReachPlaceholder": "e.g., 500K across all platforms",
-    "emailOrTelegram": "Email or Telegram ID to Contact",
-    "compensationPlaceholder": "e.g., $100/month",
-    "submitApplication": "Submit Application",
-    "fillRequired": "Please fill in all required fields"
+    "followerReachPlaceholder": "напр., 500К на всех платформах",
+    "emailOrTelegram": "Email или Telegram для связи",
+    "compensationPlaceholder": "напр., $100/мес.",
+    "submitApplication": "Отправить заявку",
+    "fillRequired": "Пожалуйста, заполните все обязательные поля"
   },
   "assistant": {
     "title": "Ассистент",
@@ -904,18 +904,18 @@
     "generateVideoOf": "Сгенерировать видео ",
     "whatsHappeningNews": "Что нового в новостях?",
     "loginRequired": "Войдите для доступа к Ассистенту.",
-    "errorRateLimit": "⏳ Rate limit reached. Please wait a moment and try again.",
-    "errorCreditsExhausted": "💳 AI credits exhausted. Please try again later.",
-    "errorTimeout": "⏱️ Request timed out. The AI service may be busy — please try again.",
-    "errorUpstream": "🔧 AI service error ({{status}}). The AI provider is having issues. Please try again in a moment.",
-    "errorUnknown": "❌ Something went wrong: {{message}}. Please try again.",
-    "errorVideoGenFailed": "Video generation failed",
-    "errorVideoGenStart": "Failed to start video generation",
-    "errorImageGenFailed": "Failed to generate image",
-    "fallbackGrokNotConfigured": "Using DeHub AI - Grok API key not configured",
-    "paymentSuccessGenerating": "Payment successful! Generating your video...",
-    "imageGenerated": "Image generated!",
-    "videoGenFailedDetail": "Video generation failed: {{error}}"
+    "errorRateLimit": "⏳ Лимит запросов достигнут. Подождите немного и попробуйте снова.",
+    "errorCreditsExhausted": "💳 Кредиты ИИ исчерпаны. Попробуйте позже.",
+    "errorTimeout": "⏱️ Время ожидания истекло. Сервис ИИ может быть занят — попробуйте снова.",
+    "errorUpstream": "🔧 Ошибка сервиса ИИ ({{status}}). Поставщик испытывает проблемы. Попробуйте через минуту.",
+    "errorUnknown": "❌ Что-то пошло не так: {{message}}. Попробуйте снова.",
+    "errorVideoGenFailed": "Не удалось сгенерировать видео",
+    "errorVideoGenStart": "Не удалось начать генерацию видео",
+    "errorImageGenFailed": "Не удалось сгенерировать изображение",
+    "fallbackGrokNotConfigured": "Используется DeHub AI — ключ API Grok не настроен",
+    "paymentSuccessGenerating": "Оплата прошла! Генерация видео...",
+    "imageGenerated": "Изображение сгенерировано!",
+    "videoGenFailedDetail": "Генерация видео не удалась: {{error}}"
   },
   "aiChat": {
     "title": "Ассистент",
