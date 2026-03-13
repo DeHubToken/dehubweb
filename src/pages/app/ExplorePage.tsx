@@ -480,8 +480,10 @@ export default function ExplorePage() {
   
   // Determine search mode based on query length
   const trimmedQuery = searchQuery.trim();
-  const isShortSearch = trimmedQuery.length >= 1 && trimmedQuery.length <= 2 && debouncedShortQuery.trim().length >= 1;
-  const isFullSearch = trimmedQuery.length >= 3;
+  const isCashtagQuery = trimmedQuery.startsWith('$');
+  const minSearchLength = isCashtagQuery ? 2 : 3;
+  const isShortSearch = !isCashtagQuery && trimmedQuery.length >= 1 && trimmedQuery.length <= 2 && debouncedShortQuery.trim().length >= 1;
+  const isFullSearch = trimmedQuery.length >= minSearchLength;
   const isSearching = isFullSearch || isShortSearch;
   
   // For short queries (1-2 chars), only search people
