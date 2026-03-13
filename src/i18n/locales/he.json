@@ -1069,6 +1069,13 @@
   "sidebar": {
     "talkOfTheTown": "שיחת העיר",
     "nothingTrending": "אין טרנדים עדיין",
+    "posts": "נושאים",
+    "tickers": "טיקרים",
+    "noTickersYet": "חפשו $טיקרים כדי לראות אותם כאן",
+    "noCategoriesYet": "עדיין אין קטגוריות פופולריות",
+    "searches": "חיפושים",
+    "global": "עולמי",
+    "comingSoon": "בקרוב — מגמות אזוריות בדרך!",
     "post": "פרסם",
     "logOut": "התנתק",
     "logIn": "התחבר"

@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Omongan Kutha",
     "nothingTrending": "Durung ana sing trending",
+    "posts": "Topik",
+    "tickers": "Tickers",
+    "noTickersYet": "Goleki $tickers kanggo ndeleng ing kene",
+    "noCategoriesYet": "Durung ana kategori trending",
+    "searches": "telusuran",
+    "global": "Global",
+    "comingSoon": "Bakal teka — tren wilayah lagi dalan!",
     "post": "Kirim",
     "logOut": "Metu",
     "logIn": "Mlebu"

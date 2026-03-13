@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "શહેરની ચર્ચા",
     "nothingTrending": "હજુ કંઈ ટ્રેન્ડિંગ નથી",
+    "posts": "વિષયો",
+    "tickers": "ટિકર્સ",
+    "noTickersYet": "અહીં જોવા માટે $ટિકર્સ શોધો",
+    "noCategoriesYet": "હજુ સુધી કોઈ ટ્રેન્ડિંગ શ્રેણી નથી",
+    "searches": "શોધ",
+    "global": "વૈશ્વિક",
+    "comingSoon": "ટૂંક સમયમાં — પ્રાદેશિક વલણો આવી રહ્યા છે!",
     "post": "પોસ્ટ",
     "logOut": "લૉગ આઉટ",
     "logIn": "લૉગ ઇન"

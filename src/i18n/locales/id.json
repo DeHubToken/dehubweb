@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Yang Dibicarakan",
     "nothingTrending": "Belum ada yang trending",
+    "posts": "Topik",
+    "tickers": "Tickers",
+    "noTickersYet": "Cari $tickers untuk melihatnya di sini",
+    "noCategoriesYet": "Belum ada kategori trending",
+    "searches": "pencarian",
+    "global": "Global",
+    "comingSoon": "Segera hadir — tren regional sedang dalam perjalanan!",
     "post": "Posting",
     "logOut": "Keluar",
     "logIn": "Masuk"

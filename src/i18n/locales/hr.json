@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Priča grada",
     "nothingTrending": "Još ništa u trendu",
+    "posts": "Teme",
+    "tickers": "Tickeri",
+    "noTickersYet": "Pretražite $tickere da ih vidite ovdje",
+    "noCategoriesYet": "Još nema trending kategorija",
+    "searches": "pretraživanja",
+    "global": "Globalno",
+    "comingSoon": "Uskoro — regionalni trendovi su na putu!",
     "post": "Objavi",
     "logOut": "Odjava",
     "logIn": "Prijava"

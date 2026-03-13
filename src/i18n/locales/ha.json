@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Labarin gari",
     "nothingTrending": "Babu abin da ke trending tukuna",
+    "posts": "Batutuwa",
+    "tickers": "Tickers",
+    "noTickersYet": "Nemo $tickers don ganin su a nan",
+    "noCategoriesYet": "Babu rukunin trending har yanzu",
+    "searches": "bincike",
+    "global": "Duniya",
+    "comingSoon": "Ba da jimawa ba — yanayin yanki suna zuwa!",
     "post": "Buga",
     "logOut": "Fita",
     "logIn": "Shiga"

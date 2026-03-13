@@ -1069,6 +1069,13 @@
   "sidebar": {
     "talkOfTheTown": "A város beszéde",
     "nothingTrending": "Még semmi sem trendi",
+    "posts": "Témák",
+    "tickers": "Tickerek",
+    "noTickersYet": "Keressen $tickereket hogy itt lássa",
+    "noCategoriesYet": "Még nincsenek felkapott kategóriák",
+    "searches": "keresések",
+    "global": "Globális",
+    "comingSoon": "Hamarosan — a regionális trendek úton vannak!",
     "post": "Bejegyzés",
     "logOut": "Kijelentkezés",
     "logIn": "Bejelentkezés"

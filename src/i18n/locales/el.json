@@ -1095,6 +1095,13 @@
   "sidebar": {
     "talkOfTheTown": "Τα λένε όλοι",
     "nothingTrending": "Τίποτα δεν είναι τάση ακόμα",
+    "posts": "Θέματα",
+    "tickers": "Tickers",
+    "noTickersYet": "Αναζητήστε $tickers για να τα δείτε εδώ",
+    "noCategoriesYet": "Δεν υπάρχουν ακόμα δημοφιλείς κατηγορίες",
+    "searches": "αναζητήσεις",
+    "global": "Παγκόσμιο",
+    "comingSoon": "Σύντομα — οι περιφερειακές τάσεις έρχονται!",
     "post": "Δημοσίευση",
     "logOut": "Αποσύνδεση",
     "logIn": "Σύνδεση"

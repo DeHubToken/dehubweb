@@ -1105,6 +1105,13 @@
   "sidebar": {
     "talkOfTheTown": "ការនិយាយរបស់ទីក្រុង",
     "nothingTrending": "គ្មានអ្វីពេញនិយមឥឡូវនេះ",
+    "posts": "ប្រធានបទ",
+    "tickers": "Tickers",
+    "noTickersYet": "ស្វែងរក $tickers ដើម្បីមើលនៅទីនេះ",
+    "noCategoriesYet": "មិនទាន់មានប្រភេទពេញនិយមទេ",
+    "searches": "ការស្វែងរក",
+    "global": "សកល",
+    "comingSoon": "មកដល់ឆាប់ៗ — និន្នាការក្នុងតំបន់កំពុងមក!",
     "post": "បង្ហោះ",
     "logOut": "ចាកចេញ",
     "logIn": "ចូល"

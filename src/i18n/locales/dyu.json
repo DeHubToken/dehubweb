@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Kɔrɔbɔ",
     "nothingTrending": "Kɔrɔbɔ bɔ",
+    "posts": "Kɔrɔbɔw",
+    "tickers": "Tickers",
+    "noTickersYet": "$tickers ɲini u ye yan",
+    "noCategoriesYet": "Kɔrɔbɔ catégorie tɛ yan fɔlɔ",
+    "searches": "ɲininiw",
+    "global": "Duniya bɛɛ",
+    "comingSoon": "A bɛ na — yanfan kɔrɔbɔw bɛ sira kan!",
     "post": "Post",
     "logOut": "Bɔ",
     "logIn": "Don"

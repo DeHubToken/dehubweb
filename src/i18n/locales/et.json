@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Linna jutt",
     "nothingTrending": "Midagi pole veel populaarne",
+    "posts": "Teemad",
+    "tickers": "Tickers",
+    "noTickersYet": "Otsige $tickereid et neid siin näha",
+    "noCategoriesYet": "Veel pole populaarseid kategooriaid",
+    "searches": "otsingud",
+    "global": "Globaalne",
+    "comingSoon": "Peagi — piirkondlikud trendid on teel!",
     "post": "Postita",
     "logOut": "Logi välja",
     "logIn": "Logi sisse"
