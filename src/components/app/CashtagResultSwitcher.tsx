@@ -182,7 +182,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
       )}
 
       {/* Render selected card */}
-      {selected.type === 'stock' && stockData?.found ? (
+      {(selected.type === 'stock' || selected.type === 'commodity') && stockData?.found ? (
         <StockPriceCard data={stockData} />
       ) : selectedPair ? (
         <CashtagPriceCard pair={selectedPair} symbol={symbol} cmcData={selected.pairIndex === 0 ? cmcData : undefined} />
