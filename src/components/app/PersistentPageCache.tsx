@@ -48,6 +48,7 @@ const FullWalletPage = lazyWithRetry(() => import('@/pages/app/FullWalletPage'))
 const CareersPage = lazyWithRetry(() => import('@/pages/app/CareersPage'));
 const GlossaryPage = lazyWithRetry(() => import('@/pages/app/GlossaryPage'));
 const StakingPage = lazyWithRetry(() => import('@/pages/app/StakingPage'));
+const Top100CryptosPage = lazyWithRetry(() => import('@/pages/app/Top100CryptosPage'));
 
 // Pages that get cached (mount-once, hide with CSS)
 interface CachedPageConfig {
