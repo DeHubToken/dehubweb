@@ -204,8 +204,21 @@ async function signWithProvider(
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const queryClient = useQueryClient();
-  const [user, setUser] = useState<DeHubUser | null>(null);
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+
+  // Hydrate user/wallet immediately from localStorage to prevent zombie state on mobile refresh.
+  // Without this, the UI renders with null user while the async init makes network calls.
+  // If those calls fail (common on flaky mobile connections), the session is cleared
+  // even though the token is valid, leaving the user visually "signed in" but unable to interact.
+  const [user, setUser] = useState<DeHubUser | null>(() => {
+    try {
+      const cached = localStorage.getItem('dehub_user');
+      if (cached) return JSON.parse(cached) as DeHubUser;
+    } catch {}
+    return null;
+  });
+  const [walletAddress, setWalletAddress] = useState<string | null>(
+    () => localStorage.getItem('dehub_wallet')
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [isConnecting, setIsConnecting] = useState(false);
   const [isProcessingRedirect, setIsProcessingRedirect] = useState(false);
@@ -318,6 +331,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 console.warn('[Auth] Token invalid server-side, clearing zombie session');
                 clearAuthSession();
                 localStorage.removeItem('dehub_user');
+                setUser(null);
+                setWalletAddress(null);
                 setIsLoading(false);
                 return;
               }
@@ -334,15 +349,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (!normalizedUser.username) {
               setRequiresUsername(true);
             }
-          } catch (error) {
-            console.error('Session restoration failed:', error);
-            clearAuthSession();
-            localStorage.removeItem('dehub_user');
+          } catch (error: any) {
+            // Distinguish auth errors from network errors.
+            // Auth errors (401, token invalid) → clear the session.
+            // Network errors (timeout, DNS, offline) → keep the cached session
+            // so mobile users aren't logged out by flaky connections.
+            const isAuthError = error?.name === 'AuthenticationError' ||
+              error?.message?.includes('Session expired') ||
+              error?.message?.includes('Authentication required');
+            
+            if (isAuthError) {
+              console.error('[Auth] Session restoration failed (auth error), clearing:', error?.message);
+              clearAuthSession();
+              localStorage.removeItem('dehub_user');
+              setUser(null);
+              setWalletAddress(null);
+            } else {
+              // Network error — keep cached user from localStorage hydration.
+              // The token is still valid client-side, user can interact.
+              console.warn('[Auth] Session restoration failed (network), keeping cached session:', error?.message);
+              // user + walletAddress are already hydrated from localStorage initializers
+            }
           }
         } else if (token && isTokenExpired()) {
           console.log('Token expired, clearing session');
           clearAuthSession();
           localStorage.removeItem('dehub_user');
+          setUser(null);
+          setWalletAddress(null);
+        } else if (!token) {
+          // No token at all — clear any stale hydrated state
+          setUser(null);
+          setWalletAddress(null);
         }
       } catch (error) {
         console.error('Auth initialization failed:', error);
