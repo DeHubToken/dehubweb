@@ -175,7 +175,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
             className="text-zinc-400 hover:text-white transition-colors p-1.5"
             title="Copy contract address"
           >
-            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <ClipboardCopy className="w-4 h-4" />}
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
