@@ -96,11 +96,6 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
     return `https://api.dehub.io/${apiAvatarPath}?v=${cacheBust}`;
   }
 
-  // "avatars/" paths — serve from API server (not all avatars are synced to CDN)
-  if (apiAvatarPath.startsWith('avatars/')) {
-    return `https://api.dehub.io/${apiAvatarPath}?v=${cacheBust}`;
-  }
-
   // Relative path - use with CDN base
   return `${DEHUB_CDN_BASE}${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
 }
