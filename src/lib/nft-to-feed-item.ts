@@ -9,8 +9,9 @@ import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.type
 
 function detectPostType(nft: DeHubNFT): 'video' | 'image' | 'text' {
   const postType = nft.postType || nft.media_type;
-  if (postType === 'video' || nft.videoUrl) return 'video';
-  if (postType === 'image' || nft.imageUrl || nft.imageUrls?.length) return 'image';
+  if (postType === 'video' || postType === 'feed-video' || nft.videoUrl) return 'video';
+  if (postType === 'image' || postType === 'feed-images' || nft.imageUrl || nft.imageUrls?.length) return 'image';
+  if (postType === 'feed-simple' || postType === 'feed-all' || postType === 'text') return 'text';
   return 'text';
 }
 
