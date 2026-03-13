@@ -56,6 +56,28 @@ export const WhatsHappening = memo(function WhatsHappening() {
   const [tickerPeriod, setTickerPeriod] = useState<TickerPeriod>('all');
   const tickerDirRef = useRef(0);
   const [isTickerAutoRotating, setIsTickerAutoRotating] = useState(true);
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+  const countryDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(e.target as Node)) {
+        setShowCountryDropdown(false);
+      }
+    };
+    if (showCountryDropdown) {
+      document.addEventListener('mousedown', handler);
+      return () => document.removeEventListener('mousedown', handler);
+    }
+  }, [showCountryDropdown]);
+
+  const handleCountrySelect = useCallback((code: string) => {
+    setShowCountryDropdown(false);
+    if (code !== 'global') {
+      toast.info(t('sidebar.comingSoon'));
+    }
+  }, [t]);
 
   // Prefetch all ticker periods
   useQuery({ queryKey: ['trending-tickers', '1d' as TickerPeriod], queryFn: () => getTopTickers(10, '1d'), staleTime: 60_000, refetchInterval: 120_000, placeholderData: (p: any) => p });
