@@ -135,7 +135,7 @@ export function FundActions() {
               className="w-full rounded-xl"
               disabled={!withdrawTarget.trim()}
               onClick={() => {
-                toast.info('Transfer feature coming soon');
+                toast.info(t('toasts.transfer_feature_coming_soon'));
                 setTransferOpen(false);
                 setWithdrawTarget('');
               }}
