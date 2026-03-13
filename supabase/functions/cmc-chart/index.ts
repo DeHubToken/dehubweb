@@ -49,14 +49,17 @@ serve(async (req) => {
     }
 
     const now = new Date();
-    const start = new Date(now.getTime() - days * 86400 * 1000);
-    const interval = days <= 7 ? 'hourly' : 'daily';
+    // CMC OHLCV historical only returns completed candles (daily).
+    // For 1D, show last 7 days of daily data so the chart isn't empty.
+    // For 7D, show last 14 days for better coverage.
+    const effectiveDays = days <= 1 ? 7 : days <= 7 ? 14 : days;
+    const start = new Date(now.getTime() - effectiveDays * 86400 * 1000);
 
     const params = new URLSearchParams({
       symbol: clean,
       time_start: start.toISOString().split('T')[0],
       time_end: now.toISOString().split('T')[0],
-      interval,
+      interval: 'daily',
       convert: 'USD',
     });
 
@@ -96,12 +99,15 @@ serve(async (req) => {
       });
     }
 
-    const points = quotes
+    let points = quotes
       .map((q: any) => ({
         time: new Date(q.time_close || q.time_open).getTime(),
         price: Number(q.quote?.USD?.close ?? q.quote?.USD?.open ?? 0),
       }))
       .filter((p: { time: number; price: number }) => Number.isFinite(p.time) && Number.isFinite(p.price) && p.price > 0);
+
+
+
 
     return new Response(JSON.stringify({ prices: downsample(points) }), {
       headers: {
