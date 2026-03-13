@@ -49,8 +49,9 @@ serve(async (req) => {
     }
 
     const now = new Date();
-    // For 1D, use 2-day window to ensure we get hourly data spanning today
-    const effectiveDays = days <= 1 ? 2 : days;
+    // CMC only returns completed candles, so for 1D we need a 3-day window
+    // then trim to last 24h on the response
+    const effectiveDays = days <= 1 ? 3 : days;
     const start = new Date(now.getTime() - effectiveDays * 86400 * 1000);
     const interval = days <= 7 ? 'hourly' : 'daily';
 
