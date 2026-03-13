@@ -47,9 +47,8 @@ export function useUserLanguage() {
       toast.error('Could not load language. Please try again.');
       return;
     }
-    setLanguage(lang);
     localStorage.setItem(STORAGE_KEY, lang);
-    await i18n.changeLanguage(lang);
+    window.location.reload();
   }, []);
 
   return { language, isLoading, setPreferredLanguage };
