@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useRef, useEffect, useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import type { PricePoint, ChartTimeframe } from '@/hooks/use-token-chart';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface TokenPriceChartProps {
   data: PricePoint[];
@@ -116,19 +117,26 @@ export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframe
       {/* Timeframe selector + period change badge */}
       {onTimeframeChange && (
         <div className="flex items-center justify-between px-4 py-2 border-t border-zinc-700/50">
-          <div className="flex items-center gap-1">
+          <div className="relative flex items-center gap-0.5 rounded-lg bg-zinc-800/60 p-0.5">
             {TIMEFRAMES.map((tf) => (
               <button
                 key={tf}
                 onClick={() => onTimeframeChange(tf)}
                 className={cn(
-                  "px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all",
+                  "relative z-10 px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors duration-200",
                   timeframe === tf
-                    ? "bg-white/10 text-white border border-white/20"
-                    : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50"
+                    ? "text-white"
+                    : "text-zinc-500 hover:text-zinc-300"
                 )}
               >
-                {tf}
+                {timeframe === tf && (
+                  <motion.div
+                    layoutId="timeframe-pill"
+                    className="absolute inset-0 rounded-md bg-white/15 border border-white/10"
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{tf}</span>
               </button>
             ))}
           </div>
