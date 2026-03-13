@@ -152,6 +152,25 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                     tokenLogo={pair.info?.imageUrl}
                   />
           <button
+            onClick={(e) => {
+              e.stopPropagation();
+              addChartPiP({
+                symbol: pair.baseToken.symbol,
+                displayName: cmcData?.name || pair.baseToken.name,
+                logo: cmcData?.logo || pair.info?.imageUrl,
+              });
+            }}
+            className={cn(
+              "transition-colors p-1.5",
+              isChartPiP(pair.baseToken.symbol)
+                ? "text-emerald-400"
+                : "text-zinc-400 hover:text-white"
+            )}
+            title="Float chart"
+          >
+            <PictureInPicture2 className="w-4 h-4" />
+          </button>
+          <button
             onClick={handleCopyCA}
             className="text-zinc-400 hover:text-white transition-colors p-1.5"
             title="Copy contract address"
