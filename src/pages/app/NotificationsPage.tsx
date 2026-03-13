@@ -985,10 +985,15 @@ export default function NotificationsPage() {
   const markAllCustomAsRead = useMarkAllCustomNotificationsAsRead();
   
   // Merge DeHub + custom notifications, sorted by date (memoized to prevent re-triggering enrichment)
+  // Filter out notifications where the actor is the current user (e.g. backend sends DM notif to sender)
   const allNotifications = useMemo(
     () => [...dehubNotifications, ...customNotifications]
+      .filter(n => {
+        if (!pageWalletAddress || !n.actorAddress) return true;
+        return n.actorAddress.toLowerCase() !== pageWalletAddress.toLowerCase();
+      })
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
-    [dehubNotifications, customNotifications]
+    [dehubNotifications, customNotifications, pageWalletAddress]
   );
   
   // Batch-avatar enrichment for fresh profile pictures
