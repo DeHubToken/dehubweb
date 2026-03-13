@@ -85,10 +85,9 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
   // Other full URLs (dicebear, external CDNs, etc.) - return as-is
   if (apiAvatarPath.startsWith('http')) return apiAvatarPath;
 
-  // Strip known folder prefixes (statics/, nfts/) that don't exist on CDN
-  let cleanPath = apiAvatarPath;
+  // "statics/" paths are served from the API server, not the CDN
   if (cleanPath.startsWith('statics/')) {
-    cleanPath = cleanPath.replace(/^statics\//, '');
+    return `https://api.dehub.io/${cleanPath}?v=${cacheBust}`;
   }
 
   // Relative path - use cleaned path with CDN base
