@@ -108,7 +108,9 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     ? undefined
     : isAudioPost
       ? undefined
-      : (tokenId ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4` : undefined);
+      : (tokenId
+          ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4`
+          : getMediaUrl(nft.videoUrl) || undefined);
 
   // Build audio URL from API audioUrl field
   const audioUrl = isAudioPost && (nft as any).audioUrl
