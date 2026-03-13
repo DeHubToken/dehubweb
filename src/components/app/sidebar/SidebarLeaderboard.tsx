@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef, useMemo, forwardRef, useImperativeHandle, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -213,6 +214,7 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
 
 export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function SidebarLeaderboard(_props, ref) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [activePeriod, setActivePeriod] = useState<string>('All');
   const [isAutoRotating, setIsAutoRotating] = useState(true);
 
@@ -287,15 +289,14 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
       </div>
 
       {/* Bottom fade gradient */}
-      <div className="relative">
+      <div className="relative px-4 pb-2">
         <div className="absolute -top-8 left-0 right-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none" />
-        <Button
-          variant="ghost"
+        <button
           onClick={() => navigate('/app/leaderboard')}
-          className="w-full mt-2 text-white/50 hover:text-white hover:bg-transparent"
+          className="w-full mt-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-xl bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-700/50 transition-colors"
         >
-          View All
-        </Button>
+          {t('commandCentre.viewAll')}
+        </button>
       </div>
     </div>
   );
