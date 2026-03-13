@@ -77,7 +77,7 @@ function NotificationPostCards({ tokenIds }: { tokenIds: number[] }) {
     .map(mapNFTToFeedItem);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {feedItems.map((item) => {
         let card: React.ReactNode = null;
         switch (item.type) {
