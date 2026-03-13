@@ -165,7 +165,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
                     )}
                   >
                     <span className="text-xs font-medium px-2 py-0.5 rounded bg-white/10 text-white">
-                      {opt.type === 'stock' ? 'Stock' : 'Token'}
+                      {opt.type === 'commodity' ? 'Commodity' : opt.type === 'stock' ? 'Stock' : 'Token'}
                     </span>
                     <div className="flex-1 min-w-0 flex items-center gap-2">
                       <span className="text-white text-sm font-medium">{opt.label}</span>
