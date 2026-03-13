@@ -1,7 +1,7 @@
 import { useMemo, useRef, useEffect, useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import type { PricePoint, ChartTimeframe } from '@/hooks/use-token-chart';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
