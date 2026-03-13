@@ -141,7 +141,7 @@ export function FloatingChartPiP({ item, index, onClose, onUpdate }: FloatingCha
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.2 }}
-      className="fixed z-[9998] rounded-xl overflow-hidden shadow-2xl border border-zinc-700/60 bg-zinc-900/95 backdrop-blur-md"
+      className="fixed z-[9998] rounded-xl shadow-2xl border border-zinc-700/60 bg-zinc-900/95 backdrop-blur-md"
       style={{
         left: position.x,
         top: position.y,
