@@ -82,6 +82,7 @@ export function FollowersListDrawer({
   const { handleApiError } = useReauthHandler();
   const [users, setUsers] = useState<UserListItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isResolvingStatus, setIsResolvingStatus] = useState(false);
   const [loadingFollows, setLoadingFollows] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
   const [sortOption, setSortOption] = useState<SortOption>('newest');
