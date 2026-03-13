@@ -1,35 +1,33 @@
 
 
-## Fix: Auto-reload on chunk load failures
+# Dutch (nl.json) Complete Rebuild
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+## Problem
+The Dutch locale file is only ~20% translated. The `nav`, `common`, `glossary`, and `profileOptions` sections are in Dutch, but **everything else** (settings, feed, explore, filters, drawers, assistant, commandCentre, wallet, bookmarks, notifications, toasts, careers, governance, and 15+ more sections) is still in English. The `common` section also has ~170 bloated duplicate `status*` keys that don't exist in the Spanish baseline.
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+This was identified as "Tier 3 — Major Work Needed" in the previous analysis but wasn't implemented yet (only Tier 1 and Tier 2 were done).
 
-### Changes
+## Plan
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+**Single task**: Rewrite `nl.json` to fully align with the Spanish baseline structure.
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+1. **Remove bloat**: Delete all `status*` duplicate keys from `common` (lines 232-402) — these are redundant copies of keys that already exist without the `status` prefix.
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+2. **Translate all English sections** (~800 keys across 25+ sections):
+   - `feed`, `explore`, `settings` (full ~190-key section)
+   - `toasts` (~60 remaining English keys from line 508 onward)
+   - `postOptions`, `filters`, `drawers`
+   - `assistant`, `publicChat`, `aiChat`
+   - `commandCentre`, `wallet`
+   - `features`, `bookmarks`, `notifications`, `messages`, `music`
+   - `leaderboard`, `explorePage`, `notFound`, `profile`
+   - `buyCoins`, `agents`, `hero`, `creators`
+   - `loginModal`, `careers`, `governance`
+   - `sidebar`, `postInfo`
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+3. **Use informal "je/jij" form** consistently (standard for Dutch apps), matching the existing `profileOptions` style.
+
+4. **Preserve** already-translated sections (`nav`, `common` non-status keys, `glossary`, `profileOptions`, first ~30 toast keys).
+
+This will bring Dutch from ~20% to 100% alignment with the Spanish baseline, matching the quality of Danish and all other completed locales.
 
