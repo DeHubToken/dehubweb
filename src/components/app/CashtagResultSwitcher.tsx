@@ -71,8 +71,9 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
        cmcData?.circulatingSupply, cmcData?.description, cmcData?.logo].filter(Boolean).length
     : 0;
 
+  const hasCommodity = options.some(o => o.type === 'commodity');
   const cryptoOnBase = topPair?.chainId === 'base';
-  const cryptoFirst = cryptoOnBase || cryptoScore > stockScore;
+  const cryptoFirst = !hasCommodity && (cryptoOnBase || cryptoScore > stockScore);
 
   // Re-sort: put preferred type first
   if (cryptoFirst) {
