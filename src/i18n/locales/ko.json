@@ -838,11 +838,11 @@
     "emailRequired": "이메일 필수",
     "email": "이메일",
     "emailPlaceholder": "your@email.com",
-    "followerReachPlaceholder": "e.g., 500K across all platforms",
-    "emailOrTelegram": "Email or Telegram ID to Contact",
-    "compensationPlaceholder": "e.g., $100/month",
-    "submitApplication": "Submit Application",
-    "fillRequired": "Please fill in all required fields"
+    "followerReachPlaceholder": "예: 전체 플랫폼 50만",
+    "emailOrTelegram": "연락용 이메일 또는 Telegram",
+    "compensationPlaceholder": "예: $100/월",
+    "submitApplication": "지원서 제출",
+    "fillRequired": "모든 필수 항목을 작성해 주세요"
   },
   "assistant": {
     "title": "어시스턴트",
