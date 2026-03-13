@@ -4,7 +4,7 @@ import type { DexPair } from '@/hooks/use-dexscreener';
 import type { CmcMarketData } from '@/hooks/use-cmc-market-cap';
 import { useTokenChart, type ChartTimeframe } from '@/hooks/use-token-chart';
 import { TokenPriceChart } from '@/components/app/TokenPriceChart';
-import { TrendingUp, TrendingDown, Copy, Check, ChevronDown, ExternalLink, Globe, Twitter, MessageCircle, PictureInPicture2 } from 'lucide-react';
+import { TrendingUp, TrendingDown, ClipboardCopy, Check, ChevronDown, ExternalLink, Globe, Twitter, MessageCircle, PictureInPicture2 } from 'lucide-react';
 import { QuickBuyButton } from '@/components/app/QuickBuyButton';
 import { useChartPiP } from '@/contexts/ChartPiPContext';
 import { cn } from '@/lib/utils';
@@ -175,7 +175,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
             className="text-zinc-400 hover:text-white transition-colors p-1.5"
             title="Copy contract address"
           >
-            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <ClipboardCopy className="w-4 h-4" />}
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
@@ -351,7 +351,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                 <div className="flex items-center gap-2 py-1">
                   <span className="text-zinc-400 text-xs truncate flex-1 font-mono">{contractAddress}</span>
                   <button onClick={handleCopyCA} className="text-zinc-500 hover:text-white p-1 shrink-0">
-                    {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                    {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <ClipboardCopy className="w-3 h-3" />}
                   </button>
                 </div>
                 <StatRow label="Chain" value={pair.chainId.toUpperCase()} />
