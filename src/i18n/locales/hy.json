@@ -1056,9 +1056,16 @@
   "sidebar": {
     "talkOfTheTown": "Kaghaqin khoske",
     "nothingTrending": "Derevs ochints taradzoghe che",
-    "post": "Հրապdelays",
-    "logOut": "Ելք",
-    "logIn": "Մուտdelays"
+    "posts": "Temaner",
+    "tickers": "Borsa",
+    "noTickersYet": "$borsa pntrecek aystex tesnel",
+    "noCategoriesYet": "Derevs trend kategoriya chka",
+    "searches": "pntrum",
+    "global": "Hamashkharhayin",
+    "comingSoon": "Shudov — taratsashrjanayin trendery chanaporhin en!",
+    "post": "Hratarakel",
+    "logOut": "Yelq",
+    "logIn": "Mutq"
   },
   "postInfo": {
     "title": "Գdelaysայթի տdelaysdelays",
