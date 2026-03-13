@@ -197,6 +197,8 @@ export function FloatingChartPiP({ item, index, onClose, onUpdate }: FloatingCha
               <XAxis dataKey="time" hide />
               <YAxis domain={['auto', 'auto']} hide />
               <Tooltip
+                wrapperStyle={{ zIndex: 10000 }}
+                allowEscapeViewBox={{ x: true, y: true }}
                 contentStyle={{
                   backgroundColor: '#27272a',
                   border: '1px solid #3f3f46',
