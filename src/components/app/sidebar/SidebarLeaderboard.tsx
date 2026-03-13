@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef, useMemo, forwardRef, useImperativeHandle, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
