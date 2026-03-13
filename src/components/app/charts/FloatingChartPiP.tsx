@@ -194,7 +194,30 @@ export function FloatingChartPiP({ item, index, onClose, onUpdate }: FloatingCha
                   <stop offset="100%" stopColor={color} stopOpacity={0} />
                 </linearGradient>
               </defs>
+              <XAxis dataKey="time" hide />
               <YAxis domain={['auto', 'auto']} hide />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#27272a',
+                  border: '1px solid #3f3f46',
+                  borderRadius: '12px',
+                  padding: '6px 10px',
+                  fontSize: '11px',
+                }}
+                labelFormatter={(t: number) => {
+                  const d = new Date(t);
+                  if (timeframe === '1D') return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                  return d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                }}
+                formatter={(value: number) => {
+                  const formatted = value >= 1
+                    ? `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}`
+                    : value >= 0.0001 ? `$${value.toFixed(6)}` : `$${value.toFixed(8)}`;
+                  return [formatted, 'Price'];
+                }}
+                labelStyle={{ color: '#a1a1aa' }}
+                itemStyle={{ color: '#ffffff' }}
+              />
               <Area
                 type="monotone"
                 dataKey="price"
@@ -202,6 +225,7 @@ export function FloatingChartPiP({ item, index, onClose, onUpdate }: FloatingCha
                 strokeWidth={1.5}
                 fill={`url(#pip-grad-${item.id})`}
                 dot={false}
+                activeDot={{ r: 3, fill: color, stroke: '#18181b', strokeWidth: 2 }}
               />
             </AreaChart>
           </ResponsiveContainer>
