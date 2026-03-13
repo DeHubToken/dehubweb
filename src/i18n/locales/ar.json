@@ -1096,6 +1096,11 @@
   "sidebar": {
     "talkOfTheTown": "حديث المدينة",
     "nothingTrending": "لا شيء رائج بعد",
+    "posts": "مواضيع",
+    "tickers": "رموز",
+    "noTickersYet": "ابحث عن $رموز لرؤيتها هنا",
+    "noCategoriesYet": "لا توجد فئات رائجة بعد",
+    "searches": "عمليات بحث",
     "post": "نشر",
     "logOut": "تسجيل خروج",
     "logIn": "تسجيل دخول"

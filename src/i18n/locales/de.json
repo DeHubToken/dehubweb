@@ -1091,6 +1091,11 @@
   "sidebar": {
     "talkOfTheTown": "Stadtgespräch",
     "nothingTrending": "Noch keine Trends",
+    "posts": "Themen",
+    "tickers": "Ticker",
+    "noTickersYet": "Suche nach $Tickern, um sie hier zu sehen",
+    "noCategoriesYet": "Noch keine Trendkategorien",
+    "searches": "Suchen",
     "post": "Posten",
     "logOut": "Abmelden",
     "logIn": "Anmelden"

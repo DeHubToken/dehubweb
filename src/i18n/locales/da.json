@@ -1096,6 +1096,11 @@
   "sidebar": {
     "talkOfTheTown": "Byens snak",
     "nothingTrending": "Intet trending endnu",
+    "posts": "Emner",
+    "tickers": "Tickers",
+    "noTickersYet": "Søg efter $tickers for at se dem her",
+    "noCategoriesYet": "Ingen trendende kategorier endnu",
+    "searches": "søgninger",
     "post": "Opslå",
     "logOut": "Log ud",
     "logIn": "Log ind"

@@ -1094,6 +1094,11 @@
   "sidebar": {
     "talkOfTheTown": "話題の中心",
     "nothingTrending": "まだトレンドはありません",
+    "posts": "トピック",
+    "tickers": "ティッカー",
+    "noTickersYet": "$ティッカーを検索してここに表示",
+    "noCategoriesYet": "トレンドカテゴリはまだありません",
+    "searches": "検索",
     "post": "投稿",
     "logOut": "ログアウト",
     "logIn": "ログイン"

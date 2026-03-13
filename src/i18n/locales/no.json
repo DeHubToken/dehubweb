@@ -1083,6 +1083,11 @@
   "sidebar": {
     "talkOfTheTown": "Snakkisen i byen",
     "nothingTrending": "Ingenting populært ennå",
+    "posts": "Emner",
+    "tickers": "Tickers",
+    "noTickersYet": "Søk etter $tickers for å se dem her",
+    "noCategoriesYet": "Ingen trendende kategorier ennå",
+    "searches": "søk",
     "post": "Publiser",
     "logOut": "Logg ut",
     "logIn": "Logg inn"

@@ -1259,6 +1259,11 @@
   "sidebar": {
     "talkOfTheTown": "Temat dnia",
     "nothingTrending": "Jeszcze nic nie jest popularne",
+    "posts": "Tematy",
+    "tickers": "Tickery",
+    "noTickersYet": "Szukaj $tickerów, aby je tu zobaczyć",
+    "noCategoriesYet": "Brak popularnych kategorii",
+    "searches": "wyszukiwań",
     "post": "Opublikuj",
     "logOut": "Wyloguj się",
     "logIn": "Zaloguj się"
