@@ -184,7 +184,7 @@ export function FloatingChartPiP({ item, index, onClose, onUpdate }: FloatingCha
       </div>
 
       {/* Chart area */}
-      <div className="flex-1" style={{ height: size.h - 68 }}>
+      <div className="flex-1 relative" style={{ height: size.h - 68 }}>
         {chartData && chartData.length > 1 ? (
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
