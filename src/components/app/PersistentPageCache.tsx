@@ -78,6 +78,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'careers', path: ['/app/jobs', '/jobs'], component: CareersPage, skeleton: GenericPageSkeleton },
   { key: 'glossary', path: ['/app/glossary', '/glossary'], component: GlossaryPage, skeleton: GenericPageSkeleton },
   { key: 'stake', path: ['/app/stake', '/stake'], component: StakingPage, skeleton: GenericPageSkeleton },
+  { key: 'top-100', path: '/app/top-100', component: Top100CryptosPage, skeleton: LeaderboardSkeleton },
   { key: 'profile', path: '/app/profile', component: ProfilePage, skeleton: ProfileSkeleton },
 ];
 
