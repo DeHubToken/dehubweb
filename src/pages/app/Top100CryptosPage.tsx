@@ -68,7 +68,7 @@ export default function Top100CryptosPage() {
         <button onClick={() => navigate(-1)} className="text-zinc-400 hover:text-white transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-xl font-bold text-white">Top 100 Cryptocurrencies</h1>
+        <h1 className="text-xl font-bold text-white">Top Cryptocurrencies</h1>
       </div>
 
       {isLoading && (
