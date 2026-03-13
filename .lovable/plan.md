@@ -1,30 +1,35 @@
 
 
-# Add Country Dropdown to Topics/Tickers Bento
+## Fix: Auto-reload on chunk load failures
 
-## Overview
-Add a small country selector dropdown in the top-right corner of the "Talk of the Town" bento header. Defaults to "Global". Selecting any other country shows a "Coming Soon" toast. The data remains global for now.
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-## Changes
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-### 1. `src/components/app/WhatsHappening.tsx`
-- Import `ChevronDown` from lucide and `Globe` icon
-- Add state: `selectedCountry` defaulting to `'Global'` and `showDropdown` boolean
-- Restructure the header row: title left-aligned or centered, country pill button top-right
-- Country pill button shows a globe icon + country name + chevron, styled to match the bento (zinc-800/50 bg, small rounded pill)
-- Dropdown: absolutely positioned list of countries (reuse a short curated list like US, UK, Japan, Germany, India, Brazil, etc. — not the full 200 list), with "Global" at top
-- On selecting any country other than Global: show a sonner toast "Coming Soon" and keep selection as Global
-- Click-outside closes dropdown
+### Changes
 
-### 2. Country list (inline constant)
-Short curated list (~15 popular countries + Global) to keep it clean. No need for the full 200-country list from ExplorePage.
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-### 3. Translations
-Add `sidebar.global`, `sidebar.comingSoon` keys to `en.json` and the 17 major locale files.
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
 
-## Technical Details
-- Dropdown uses absolute positioning within the existing bento container
-- Uses `useRef` + click-outside pattern already common in the codebase
-- Toast via `sonner` (already installed)
-- No backend changes needed
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 

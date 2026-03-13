@@ -2,12 +2,32 @@ import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Search } from 'lucide-react';
+import { Search, Globe, ChevronDown } from 'lucide-react';
 import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
 import { TickerLogo } from './TickerLogo';
 import { cn } from '@/lib/utils';
 import { getTopTickers, type TickerPeriod } from '@/lib/ticker-search-tracker';
 import { TrendingTopicsList } from './TrendingTopicsList';
+
+const COUNTRIES = [
+  { code: 'global', flag: '🌍', name: 'Global' },
+  { code: 'us', flag: '🇺🇸', name: 'United States' },
+  { code: 'gb', flag: '🇬🇧', name: 'United Kingdom' },
+  { code: 'de', flag: '🇩🇪', name: 'Germany' },
+  { code: 'fr', flag: '🇫🇷', name: 'France' },
+  { code: 'jp', flag: '🇯🇵', name: 'Japan' },
+  { code: 'kr', flag: '🇰🇷', name: 'South Korea' },
+  { code: 'in', flag: '🇮🇳', name: 'India' },
+  { code: 'br', flag: '🇧🇷', name: 'Brazil' },
+  { code: 'tr', flag: '🇹🇷', name: 'Turkey' },
+  { code: 'au', flag: '🇦🇺', name: 'Australia' },
+  { code: 'ca', flag: '🇨🇦', name: 'Canada' },
+  { code: 'es', flag: '🇪🇸', name: 'Spain' },
+  { code: 'it', flag: '🇮🇹', name: 'Italy' },
+  { code: 'nl', flag: '🇳🇱', name: 'Netherlands' },
+  { code: 'sg', flag: '🇸🇬', name: 'Singapore' },
+];
 
 type Tab = 'posts' | 'tickers';
 
@@ -36,6 +56,28 @@ export const WhatsHappening = memo(function WhatsHappening() {
   const [tickerPeriod, setTickerPeriod] = useState<TickerPeriod>('all');
   const tickerDirRef = useRef(0);
   const [isTickerAutoRotating, setIsTickerAutoRotating] = useState(true);
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+  const countryDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(e.target as Node)) {
+        setShowCountryDropdown(false);
+      }
+    };
+    if (showCountryDropdown) {
+      document.addEventListener('mousedown', handler);
+      return () => document.removeEventListener('mousedown', handler);
+    }
+  }, [showCountryDropdown]);
+
+  const handleCountrySelect = useCallback((code: string) => {
+    setShowCountryDropdown(false);
+    if (code !== 'global') {
+      toast.info(t('sidebar.comingSoon'));
+    }
+  }, [t]);
 
   // Prefetch all ticker periods
   useQuery({ queryKey: ['trending-tickers', '1d' as TickerPeriod], queryFn: () => getTopTickers(10, '1d'), staleTime: 60_000, refetchInterval: 120_000, placeholderData: (p: any) => p });
@@ -76,9 +118,37 @@ export const WhatsHappening = memo(function WhatsHappening() {
   };
 
   return (
-    <div className="bg-zinc-900 rounded-2xl p-4">
-      <div className="flex items-center justify-center mb-3">
-        <h3 className="font-bold text-lg text-white text-center">{t('sidebar.talkOfTheTown')}</h3>
+    <div className="bg-zinc-900 rounded-2xl p-4 relative">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-bold text-lg text-white">{t('sidebar.talkOfTheTown')}</h3>
+        <div ref={countryDropdownRef} className="relative">
+          <button
+            onClick={() => setShowCountryDropdown(prev => !prev)}
+            className="flex items-center gap-1 px-2 py-1 rounded-lg bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-700/50 transition-colors text-xs text-zinc-400 hover:text-white"
+          >
+            <Globe className="w-3 h-3" />
+            <span>{t('sidebar.global')}</span>
+            <ChevronDown className={cn('w-3 h-3 transition-transform', showCountryDropdown && 'rotate-180')} />
+          </button>
+          {showCountryDropdown && (
+            <div className="absolute right-0 top-full mt-1 w-48 bg-zinc-800 border border-zinc-700/50 rounded-xl shadow-xl z-50 py-1 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-transparent">
+              {COUNTRIES.map(c => (
+                <button
+                  key={c.code}
+                  onClick={() => handleCountrySelect(c.code)}
+                  className={cn(
+                    'w-full flex items-center gap-2 px-3 py-2 text-xs transition-colors hover:bg-zinc-700/50 text-left',
+                    c.code === 'global' ? 'text-white font-medium' : 'text-zinc-400 hover:text-white'
+                  )}
+                >
+                  <span>{c.flag}</span>
+                  <span>{c.name}</span>
+                  {c.code === 'global' && <span className="ml-auto text-[10px] text-emerald-400">✓</span>}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Tab switcher */}

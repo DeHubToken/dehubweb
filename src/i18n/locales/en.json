@@ -1104,6 +1104,8 @@
     "noTickersYet": "Search $tickers to see them here",
     "noCategoriesYet": "No trending categories yet",
     "searches": "searches",
+    "global": "Global",
+    "comingSoon": "Coming soon — regional trends are on the way!",
     "post": "Post",
     "logOut": "Log out",
     "logIn": "Log in"

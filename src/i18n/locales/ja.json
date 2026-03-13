@@ -1099,6 +1099,8 @@
     "noTickersYet": "$ティッカーを検索してここに表示",
     "noCategoriesYet": "トレンドカテゴリはまだありません",
     "searches": "検索",
+    "global": "グローバル",
+    "comingSoon": "近日公開 — 地域別トレンドは準備中です！",
     "post": "投稿",
     "logOut": "ログアウト",
     "logIn": "ログイン"
