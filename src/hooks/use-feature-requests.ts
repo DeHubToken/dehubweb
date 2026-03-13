@@ -220,12 +220,20 @@ export function useSubmitFeatureRequest() {
         imageUrl = urlData.publicUrl;
       }
 
-      // Resolve avatar: use auth context first, then fetch from API
+      // Resolve avatar: auth context → wallet lookup → username lookup
       let avatarPath = user?.avatarImageUrl || null;
       if (!avatarPath && walletAddress) {
         try {
           const accountInfo = await getAccountInfo(walletAddress);
           avatarPath = extractAvatarPath(accountInfo) || null;
+        } catch {
+          // continue to username fallback
+        }
+      }
+      if (!avatarPath && user?.username) {
+        try {
+          const accountInfoByUsername = await getAccountByUsername(user.username, walletAddress);
+          avatarPath = extractAvatarPath(accountInfoByUsername) || null;
         } catch {
           // Silently fail — avatar is optional
         }
