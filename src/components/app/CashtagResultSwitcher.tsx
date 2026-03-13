@@ -148,7 +148,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.15 }}
-                className="absolute top-full left-0 mt-1 z-50 min-w-[220px] rounded-xl bg-zinc-800 border border-zinc-700/50 overflow-hidden shadow-xl"
+                className="absolute top-full left-0 mt-1 z-50 min-w-[160px] rounded-xl bg-zinc-800 border border-zinc-700/50 overflow-hidden shadow-xl"
               >
                 {options.map((opt) => (
                   <button
@@ -159,7 +159,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
                       setShowDropdown(false);
                     }}
                     className={cn(
-                      "w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-zinc-700/50 transition-colors",
+                      "w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-zinc-700/50 transition-colors",
                       opt.id === selectedId && "bg-zinc-700/30"
                     )}
                   >
