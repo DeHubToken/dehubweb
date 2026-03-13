@@ -931,13 +931,13 @@ function NotificationItem({
         if (!open) { drawerJustClosed.current = true; setTimeout(() => { drawerJustClosed.current = false; }, 300); }
         setShowPostsDrawer(open);
       }}>
-        <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[80vh]">
+        <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[80vh]">
           <DrawerHeader className="text-center pb-2">
             <DrawerTitle className="text-white text-base">
               {notification.type === 'like' ? 'Liked posts' : notification.type === 'comment' ? 'Commented posts' : (notification.type as string) === 'repost' ? 'Reposted posts' : 'Posts'}
             </DrawerTitle>
           </DrawerHeader>
-          <div className="px-3 pb-6 overflow-y-auto max-h-[65vh] space-y-3" data-vaul-no-drag>
+          <div className="px-4 pb-6 overflow-y-auto max-h-[65vh] space-y-4" data-vaul-no-drag>
             <NotificationPostCards tokenIds={bundle.allNotifications.map(n => n.tokenId).filter((id): id is number => id != null)} />
           </div>
         </DrawerContent>
