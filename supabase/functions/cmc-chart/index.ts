@@ -99,12 +99,18 @@ serve(async (req) => {
       });
     }
 
-    const points = quotes
+    let points = quotes
       .map((q: any) => ({
         time: new Date(q.time_close || q.time_open).getTime(),
         price: Number(q.quote?.USD?.close ?? q.quote?.USD?.open ?? 0),
       }))
       .filter((p: { time: number; price: number }) => Number.isFinite(p.time) && Number.isFinite(p.price) && p.price > 0);
+
+    // For 1D, trim to only the last 24 hours of data
+    if (days <= 1) {
+      const cutoff = now.getTime() - 24 * 60 * 60 * 1000;
+      points = points.filter((p: { time: number }) => p.time >= cutoff);
+    }
 
     return new Response(JSON.stringify({ prices: downsample(points) }), {
       headers: {
