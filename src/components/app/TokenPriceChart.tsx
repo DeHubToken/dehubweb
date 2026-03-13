@@ -42,7 +42,7 @@ function formatTooltipLabel(timestamp: number, timeframe: ChartTimeframe = '1D')
     ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframeChange, symbol }: TokenPriceChartProps) {
+export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframeChange, externalUrl }: TokenPriceChartProps) {
   const isPositive = useMemo(() => {
     if (data.length < 2) return true;
     return data[data.length - 1].price >= data[0].price;
