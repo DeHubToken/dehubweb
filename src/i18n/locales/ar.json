@@ -838,11 +838,11 @@
     "emailRequired": "البريد الإلكتروني مطلوب",
     "email": "البريد الإلكتروني",
     "emailPlaceholder": "your@email.com",
-    "followerReachPlaceholder": "e.g., 500K across all platforms",
-    "emailOrTelegram": "Email or Telegram ID to Contact",
-    "compensationPlaceholder": "e.g., $100/month",
-    "submitApplication": "Submit Application",
-    "fillRequired": "Please fill in all required fields"
+    "followerReachPlaceholder": "مثال: 500 ألف عبر جميع المنصات",
+    "emailOrTelegram": "البريد الإلكتروني أو معرّف تيليجرام للتواصل",
+    "compensationPlaceholder": "مثال: 100$/شهر",
+    "submitApplication": "إرسال الطلب",
+    "fillRequired": "يرجى ملء جميع الحقول المطلوبة"
   },
   "assistant": {
     "title": "المساعد",
