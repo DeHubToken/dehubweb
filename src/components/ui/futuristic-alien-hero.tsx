@@ -7,6 +7,7 @@ import { X } from 'lucide-react';
 import { motion, useAnimation } from 'framer-motion';
 import { useNebulaPrefetch } from '@/hooks/use-nebula-prefetch';
 import { cn } from '@/lib/utils';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import dehubLogoCenter from '@/assets/dehub-logo-center.png';
 
 // Shared modules
