@@ -1,32 +1,35 @@
 
 
-## Use CMC API for Chart Data (Replace CoinGecko)
+## Fix: Auto-reload on chunk load failures
 
-### Problem
-Charts currently use CoinGecko's free API, which rate-limits and breaks 90D/1Y timeframes. You're already paying for CMC API which has the `/v1/cryptocurrency/ohlcv/historical` endpoint.
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-### Plan
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-**1. Create `coingecko-chart` → `cmc-chart` edge function** (`supabase/functions/cmc-chart/index.ts`)
-- Uses your existing `CMC_API_KEY` secret
-- Endpoint: `POST { symbol, days }`
-- Calls `https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical` with:
-  - `symbol` (cleaned)
-  - `time_start` / `time_end` computed from `days` param
-  - `interval`: `hourly` for 1D/7D, `daily` for 30D/90D/1Y
-- Returns array of `{ time, price }` (using the `close` price from OHLCV)
-- Downsamples to ~60 points for performance
-- Add `verify_jwt = false` to config.toml
+### Changes
 
-**2. Update `use-token-chart.ts`**
-- Replace all CoinGecko fetch calls with `supabase.functions.invoke('cmc-chart', { body: { symbol, days } })`
-- Remove CoinGecko platform mappings and contract-based fallback (CMC resolves by symbol directly)
-- Keep the same `PricePoint` interface and downsampling
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-**3. Remove `ChartTimeframe` 'ALL' from type** (already handled as external link, just clean up the `TIMEFRAME_DAYS` map)
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
 
-### Result
-- All timeframes (1D through 1Y) use your paid CMC API — no rate limiting
-- CoinGecko dependency fully removed from charts
-- Edge function keeps API key server-side
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 
