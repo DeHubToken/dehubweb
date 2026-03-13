@@ -92,31 +92,10 @@ Deno.serve(async (req) => {
       });
     }
 
-    const price = meta.regularMarketPrice ?? null;
-    const previousClose = meta.chartPreviousClose ?? meta.previousClose ?? null;
+    const price = meta.regularMarketPrice ?? (q?.regularMarketPrice as number) ?? null;
+    const previousClose = meta.chartPreviousClose ?? meta.previousClose ?? (q?.regularMarketPreviousClose as number) ?? null;
     const change24h = price && previousClose ? price - previousClose : null;
     const percentChange24h = price && previousClose ? ((price - previousClose) / previousClose) * 100 : null;
-
-    // Build chart data
-    const timestamps = result.timestamp || [];
-    const closes = result.indicators?.quote?.[0]?.close || [];
-    const chartData = timestamps.map((t: number, i: number) => ({
-      time: t * 1000,
-      price: closes[i] ?? null,
-    })).filter((p: { time: number; price: number | null }) => p.price !== null);
-
-    // Extract rich quote data
-    let q: Record<string, unknown> | null = null;
-    try {
-      if (quoteRes.ok) {
-        const quoteData = await quoteRes.json();
-        q = quoteData?.quoteResponse?.result?.[0] ?? null;
-      } else {
-        await quoteRes.text();
-      }
-    } catch (e) {
-      console.error('Quote fetch error:', e);
-    }
 
     const exchange = meta.exchangeName || meta.fullExchangeName || '';
 
