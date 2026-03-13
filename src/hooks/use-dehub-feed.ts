@@ -77,7 +77,11 @@ export function getContentType(nft: DeHubNFT): 'video' | 'image' | 'audio' {
   // Detect by URL patterns - if has video URL, it's video
   if (nft.videoUrl && nft.videoUrl.length > 0) return 'video';
   if (nft.imageUrl && !nft.videoUrl) return 'image';
-  return 'video'; // Default
+  // Search API postType values that are not videos
+  if (pt === 'feed-simple' || pt === 'feed-all' || pt === 'text') return 'image';
+  if (pt === 'feed-images') return 'image';
+  if (pt === 'feed-video') return 'video';
+  return 'image'; // Default to image instead of video to avoid broken players
 }
 
 /**
