@@ -1095,6 +1095,13 @@
   "sidebar": {
     "talkOfTheTown": "حرف شهر",
     "nothingTrending": "هنوز چیزی ترند نیست",
+    "posts": "موضوعات",
+    "tickers": "تیکرها",
+    "noTickersYet": "$تیکرها را جستجو کنید تا اینجا ببینید",
+    "noCategoriesYet": "هنوز دسته‌بندی پرطرفداری نیست",
+    "searches": "جستجوها",
+    "global": "جهانی",
+    "comingSoon": "به‌زودی — روندهای منطقه‌ای در راه هستند!",
     "post": "ارسال",
     "logOut": "خروج",
     "logIn": "ورود"

@@ -1095,6 +1095,13 @@
   "sidebar": {
     "talkOfTheTown": "Stadtgspröch",
     "nothingTrending": "No nüt im Trend",
+    "posts": "Theme",
+    "tickers": "Ticker",
+    "noTickersYet": "Suech $Ticker zum si da z gseh",
+    "noCategoriesYet": "No kei trendigi Kategorie",
+    "searches": "Sueche",
+    "global": "Global",
+    "comingSoon": "Chunnt bald — regionali Trends sind underwegs!",
     "post": "Veröffentliche",
     "logOut": "Abmelde",
     "logIn": "Aamelde"

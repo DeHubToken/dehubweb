@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "حديث المدينة",
     "nothingTrending": "مفيش حاجة ترند لسه",
+    "posts": "مواضيع",
+    "tickers": "تيكرز",
+    "noTickersYet": "دور على $تيكرز عشان تشوفهم هنا",
+    "noCategoriesYet": "مفيش فئات ترندينج لسه",
+    "searches": "عمليات بحث",
+    "global": "عالمي",
+    "comingSoon": "قريباً — التريندات المحلية في السكة!",
     "post": "انشر",
     "logOut": "تسجيل خروج",
     "logIn": "تسجيل دخول"

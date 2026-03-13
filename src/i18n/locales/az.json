@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Şəhərin Söhbəti",
     "nothingTrending": "Hələ trend olan heç nə yoxdur",
+    "posts": "Mövzular",
+    "tickers": "Tikerlər",
+    "noTickersYet": "$tikerlər axtarın burada görmək üçün",
+    "noCategoriesYet": "Hələ trend kateqoriyalar yoxdur",
+    "searches": "axtarışlar",
+    "global": "Qlobal",
+    "comingSoon": "Tezliklə — regional trendlər yoldadır!",
     "post": "Paylaş",
     "logOut": "Çıxış",
     "logIn": "Giriş"

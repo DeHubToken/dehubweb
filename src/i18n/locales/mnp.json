@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "热门话题",
     "nothingTrending": "暂无热门",
+    "posts": "话题",
+    "tickers": "行情",
+    "noTickersYet": "搜$代码来这里看",
+    "noCategoriesYet": "暂无热门分类",
+    "searches": "搜索",
+    "global": "全球",
+    "comingSoon": "快来了——地区趋势快上线了！",
     "post": "发布",
     "logOut": "退出",
     "logIn": "登录"

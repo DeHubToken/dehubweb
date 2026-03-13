@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Okwu obodo",
     "nothingTrending": "Ọ nweghị ihe ọ bụla na-atụ ọkụ",
+    "posts": "Isiokwu",
+    "tickers": "Tickers",
+    "noTickersYet": "Chọọ $tickers ka ị hụ ha ebe a",
+    "noCategoriesYet": "Ọ nweghị trending kategori",
+    "searches": "ọchịchọ",
+    "global": "Ụwa",
+    "comingSoon": "Ọ na-abịa — trend mpaghara na-abịa!",
     "post": "Bipụta",
     "logOut": "Pụọ",
     "logIn": "Banye"

@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Miesto kalba",
     "nothingTrending": "Dar nėra nieko populiaraus",
+    "posts": "Temos",
+    "tickers": "Tickers",
+    "noTickersYet": "Ieškokite $tickers kad pamatytumėte čia",
+    "noCategoriesYet": "Dar nėra populiarių kategorijų",
+    "searches": "paieškos",
+    "global": "Visuotinis",
+    "comingSoon": "Netrukus — regioninės tendencijos jau pakeliui!",
     "post": "Skelbti",
     "logOut": "Atsijungti",
     "logIn": "Prisijungti"

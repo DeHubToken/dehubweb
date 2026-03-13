@@ -1069,6 +1069,13 @@
   "sidebar": {
     "talkOfTheTown": "शहराची चर्चा",
     "nothingTrending": "सध्या काहीही ट्रेंडिंग नाही",
+    "posts": "विषय",
+    "tickers": "टिकर",
+    "noTickersYet": "येथे पाहण्यासाठी $टिकर शोधा",
+    "noCategoriesYet": "अद्याप ट्रेंडिंग श्रेणी नाहीत",
+    "searches": "शोध",
+    "global": "जागतिक",
+    "comingSoon": "लवकरच — प्रादेशिक ट्रेंड येत आहेत!",
     "post": "पोस्ट",
     "logOut": "लॉग आउट",
     "logIn": "लॉग इन"

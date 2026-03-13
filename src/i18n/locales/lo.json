@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "ເລື່ອງທີ່ຄົນເວົ້າ",
     "nothingTrending": "ຍັງບໍ່ມີເທຣນ",
+    "posts": "ຫົວຂໍ້",
+    "tickers": "Tickers",
+    "noTickersYet": "ຄົ້ນຫາ $tickers ເພື່ອເບິ່ງທີ່ນີ້",
+    "noCategoriesYet": "ຍັງບໍ່ມີໝວດໝູ່ທີ່ກຳລັງເປັນກະແສ",
+    "searches": "ຄົ້ນຫາ",
+    "global": "ທົ່ວໂລກ",
+    "comingSoon": "ໃກ້ຈະມາ — ແນວໂນ້ມພາກພື້ນກຳລັງມາ!",
     "post": "ໂພສ",
     "logOut": "ອອກຈາກລະບົບ",
     "logIn": "ເຂົ້າສູ່ລະບົບ"

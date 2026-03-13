@@ -1105,6 +1105,13 @@
   "sidebar": {
     "talkOfTheTown": "शहरको चर्चा",
     "nothingTrending": "अहिले केही ट्रेन्डिङ छैन",
+    "posts": "विषय",
+    "tickers": "टिकर",
+    "noTickersYet": "यहाँ हेर्न $टिकर खोज्नुहोस्",
+    "noCategoriesYet": "अहिले सम्म ट्रेन्डिङ श्रेणी छैन",
+    "searches": "खोजी",
+    "global": "विश्वव्यापी",
+    "comingSoon": "चाँडै आउँदैछ — क्षेत्रीय प्रवृत्ति बाटोमा छन्!",
     "post": "पोस्ट",
     "logOut": "लग आउट",
     "logIn": "लग इन"

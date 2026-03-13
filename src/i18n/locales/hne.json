@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "शहर के चरचा",
     "nothingTrending": "अभी कुछू ट्रेंडिंग नइ हे",
+    "posts": "विषय",
+    "tickers": "टिकर",
+    "noTickersYet": "इहाँ देखे बर $टिकर खोजो",
+    "noCategoriesYet": "अभी तक कोनो ट्रेंडिंग श्रेणी नइ हे",
+    "searches": "खोज",
+    "global": "वैश्विक",
+    "comingSoon": "जल्दी आवत हे — क्षेत्रीय रुझान रस्ता म हें!",
     "post": "पोस्ट",
     "logOut": "लॉग आउट",
     "logIn": "लॉग इन"

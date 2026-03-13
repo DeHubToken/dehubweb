@@ -1095,6 +1095,13 @@
   "sidebar": {
     "talkOfTheTown": "የከተማ ወሬ",
     "nothingTrending": "እስካሁን ምንም ትሬንድ የለም",
+    "posts": "ርዕሰ ጉዳዮች",
+    "tickers": "ቲከሮች",
+    "noTickersYet": "$ቲከሮችን ፈልጉ እዚህ ለማየት",
+    "noCategoriesYet": "እስካሁን ምንም ተወዳጅ ምድቦች የሉም",
+    "searches": "ፍለጋዎች",
+    "global": "ዓለም አቀፍ",
+    "comingSoon": "በቅርቡ — የአካባቢ አዝማሚያዎች በመንገድ ላይ ናቸው!",
     "post": "ለጥፍ",
     "logOut": "ውጣ",
     "logIn": "ግባ"

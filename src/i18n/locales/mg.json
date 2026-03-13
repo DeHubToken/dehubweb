@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "Resak'olona",
     "nothingTrending": "Tsy mbola misy malaza",
+    "posts": "Lohahevitra",
+    "tickers": "Tickers",
+    "noTickersYet": "Tadiavo $tickers hahitana azy eto",
+    "noCategoriesYet": "Mbola tsy misy sokajy malaza",
+    "searches": "fikarohana",
+    "global": "Eran-tany",
+    "comingSoon": "Ho avy tsy ho ela — ny fironana eo an-toerana dia efa eo an-dalana!",
     "post": "Alefa",
     "logOut": "Hiala",
     "logIn": "Hiditra"

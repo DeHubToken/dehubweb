@@ -1115,6 +1115,13 @@
   "sidebar": {
     "talkOfTheTown": "Dubbii Magaalaa",
     "nothingTrending": "Ammatti wanti trending hin jiru",
+    "posts": "Mataduree",
+    "tickers": "Tickers",
+    "noTickersYet": "$tickers barbaadaa asitti argachuuf",
+    "noCategoriesYet": "Ammatti wanti trending hin jiran",
+    "searches": "barbaacha",
+    "global": "Addunyaa",
+    "comingSoon": "Dhihotti — kallattiinitti naannolee karaa irra jiran!",
     "post": "Maxxansi",
     "logOut": "Ba'i",
     "logIn": "Seeni"
