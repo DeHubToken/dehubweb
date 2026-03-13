@@ -73,9 +73,13 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
     return `${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
   }
 
-  // If it's any api.dehub.io URL, extract the path portion and rebuild with CDN
+  // If it's any api.dehub.io URL with statics/, keep it on the API server
+  if (apiAvatarPath.includes('api.dehub.io') && apiAvatarPath.includes('/statics/')) {
+    return `${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
+  }
+
+  // If it's any api.dehub.io URL (non-statics), extract path and rebuild with CDN
   if (apiAvatarPath.includes('api.dehub.io')) {
-    // Extract relative path after the domain (e.g. "avatars/0x9e19...jpg")
     const match = apiAvatarPath.match(/api\.dehub\.io\/(.+)/);
     if (match) {
       return `${DEHUB_CDN_BASE}${match[1]}${match[1].includes('?') ? '&' : '?'}v=${cacheBust}`;
