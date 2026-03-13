@@ -49,17 +49,17 @@ serve(async (req) => {
     }
 
     const now = new Date();
-    // CMC only returns completed candles, so for 1D we need a 3-day window
-    // then trim to last 24h on the response
-    const effectiveDays = days <= 1 ? 3 : days;
+    // CMC OHLCV historical only returns completed candles (daily).
+    // For 1D, show last 7 days of daily data so the chart isn't empty.
+    // For 7D, show last 14 days for better coverage.
+    const effectiveDays = days <= 1 ? 7 : days <= 7 ? 14 : days;
     const start = new Date(now.getTime() - effectiveDays * 86400 * 1000);
-    const interval = days <= 7 ? 'hourly' : 'daily';
 
     const params = new URLSearchParams({
       symbol: clean,
       time_start: start.toISOString().split('T')[0],
       time_end: now.toISOString().split('T')[0],
-      interval,
+      interval: 'daily',
       convert: 'USD',
     });
 
