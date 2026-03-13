@@ -1066,6 +1066,13 @@
   "sidebar": {
     "talkOfTheTown": "Ọ̀rọ̀ Ìlú",
     "nothingTrending": "Kò sí ohun tó ń trend lọ́wọ́lọ́wọ́",
+    "posts": "Àkọlé",
+    "tickers": "Ọjà",
+    "noTickersYet": "Wá $ọjà láti rí wọn níbí",
+    "noCategoriesYet": "Kò sí ẹ̀ka tó ń trend",
+    "searches": "àwárí",
+    "global": "Àgbáyé",
+    "comingSoon": "Ó ń bọ̀ láìpẹ́ — àwọn trend àdúgbò ń bọ̀!",
     "post": "Firánṣẹ́",
     "logOut": "Jáde",
     "logIn": "Wọlé"

@@ -1216,8 +1216,15 @@
   },
   "sidebar": {
     "talkOfTheTown": "Talk of The Town",
-    "nothingTrending": "Nothing trending yet",
-    "post": "Post",
+    "nothingTrending": "Nimic în trend deocamdată",
+    "posts": "Subiecte",
+    "tickers": "Cotații",
+    "noTickersYet": "Caută $cotații pentru a le vedea aici",
+    "noCategoriesYet": "Nu există încă categorii în trend",
+    "searches": "căutări",
+    "global": "Global",
+    "comingSoon": "În curând — tendințele regionale sunt pe drum!",
+    "post": "Publică",
     "logOut": "Log out",
     "logIn": "Log in"
   },

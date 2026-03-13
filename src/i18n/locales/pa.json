@@ -1069,6 +1069,13 @@
   "sidebar": {
     "talkOfTheTown": "ਸ਼ਹਿਰ ਦੀ ਚਰਚਾ",
     "nothingTrending": "ਹੁਣ ਕੁਝ ਵੀ ਟ੍ਰੈਂਡ ਨਹੀਂ ਹੋ ਰਿਹਾ",
+    "posts": "ਵਿਸ਼ੇ",
+    "tickers": "ਸ਼ੇਅਰ",
+    "noTickersYet": "$ਸ਼ੇਅਰ ਖੋਜੋ ਇੱਥੇ ਦੇਖਣ ਲਈ",
+    "noCategoriesYet": "ਅਜੇ ਕੋਈ ਟ੍ਰੈਂਡਿੰਗ ਸ਼੍ਰੇਣੀ ਨਹੀਂ",
+    "searches": "ਖੋਜ",
+    "global": "ਗਲੋਬਲ",
+    "comingSoon": "ਜਲਦੀ ਆ ਰਿਹਾ — ਖੇਤਰੀ ਰੁਝਾਨ ਰਸਤੇ ਵਿੱਚ ਹਨ!",
     "post": "ਪੋਸਟ",
     "logOut": "ਲੌਗ ਆਊਟ",
     "logIn": "ਲੌਗ ਇਨ"

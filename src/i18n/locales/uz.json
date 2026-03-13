@@ -1096,6 +1096,13 @@
   "sidebar": {
     "talkOfTheTown": "Shahar gapi",
     "nothingTrending": "Hozir hech narsa trendda emas",
+    "posts": "Mavzular",
+    "tickers": "Birja",
+    "noTickersYet": "$birja qidiring bu yerda ko'rish uchun",
+    "noCategoriesYet": "Hozir hech qanday trend kategoriya yo'q",
+    "searches": "qidiruvlar",
+    "global": "Global",
+    "comingSoon": "Tez orada — mintaqaviy trendlar yo'lda!",
     "post": "Joylash",
     "logOut": "Chiqish",
     "logIn": "Kirish"

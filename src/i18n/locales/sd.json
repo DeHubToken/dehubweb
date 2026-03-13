@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "شهر جي ڳالهه",
     "nothingTrending": "اڃا ڪجهه رجحاني ناهي",
+    "posts": "عنوان",
+    "tickers": "حصص",
+    "noTickersYet": "$حصص ڳوليو هتي ڏسڻ لاءِ",
+    "noCategoriesYet": "اڃا ڪا رجحاني زمرا ناهي",
+    "searches": "ڳولا",
+    "global": "عالمي",
+    "comingSoon": "جلد اچي رهيو — علائقائي رجحان رستي ۾ آهن!",
     "post": "پوسٽ",
     "logOut": "لاڳ آئوٽ",
     "logIn": "لاڳ ان"

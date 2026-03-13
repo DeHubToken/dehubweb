@@ -1291,8 +1291,15 @@
   },
   "sidebar": {
     "talkOfTheTown": "Talk of The Town",
-    "nothingTrending": "Nothing trending yet",
-    "post": "Post",
+    "nothingTrending": "Chưa có gì xu hướng",
+    "posts": "Chủ đề",
+    "tickers": "Cổ phiếu",
+    "noTickersYet": "Tìm $cổ phiếu để xem ở đây",
+    "noCategoriesYet": "Chưa có danh mục xu hướng",
+    "searches": "tìm kiếm",
+    "global": "Toàn cầu",
+    "comingSoon": "Sắp ra mắt — xu hướng khu vực đang đến!",
+    "post": "Đăng",
     "logOut": "Log out",
     "logIn": "Log in"
   },

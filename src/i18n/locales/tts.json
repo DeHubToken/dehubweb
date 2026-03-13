@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "เรื่องฮ็อต",
     "nothingTrending": "ยังบ่มีเทรนด์",
+    "posts": "หัวข้อ",
+    "tickers": "หุ้น",
+    "noTickersYet": "ค้นหา $หุ้น เพื่อเบิ่งตี่นี่",
+    "noCategoriesYet": "ยังบ่มีหมวดหมู่ที่ฮ็อต",
+    "searches": "การค้นหา",
+    "global": "ทั่วโลก",
+    "comingSoon": "ใกล้จะมา — เทรนด์ภูมิภาคกำลังมา!",
     "post": "โพสต์",
     "logOut": "ออกจากระบบ",
     "logIn": "เข้าสู่ระบบ"

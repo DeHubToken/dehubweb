@@ -1069,6 +1069,13 @@
   "sidebar": {
     "talkOfTheTown": "شہر کی چرچا",
     "nothingTrending": "ابھی کچھ بھی ٹرینڈ نہیں ہو رہا",
+    "posts": "عنوانات",
+    "tickers": "حصص",
+    "noTickersYet": "$حصص تلاش کریں یہاں دیکھنے کے لیے",
+    "noCategoriesYet": "ابھی کوئی ٹرینڈنگ کیٹگری نہیں",
+    "searches": "تلاش",
+    "global": "عالمی",
+    "comingSoon": "جلد آ رہا ہے — علاقائی رجحانات راستے میں ہیں!",
     "post": "پوسٹ",
     "logOut": "لاگ آؤٹ",
     "logIn": "لاگ ان"
