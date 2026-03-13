@@ -4,8 +4,9 @@ import type { DexPair } from '@/hooks/use-dexscreener';
 import type { CmcMarketData } from '@/hooks/use-cmc-market-cap';
 import { useTokenChart, type ChartTimeframe } from '@/hooks/use-token-chart';
 import { TokenPriceChart } from '@/components/app/TokenPriceChart';
-import { TrendingUp, TrendingDown, Copy, Check, ChevronDown, ExternalLink, Globe, Twitter, MessageCircle } from 'lucide-react';
+import { TrendingUp, TrendingDown, Copy, Check, ChevronDown, ExternalLink, Globe, Twitter, MessageCircle, PictureInPicture2 } from 'lucide-react';
 import { QuickBuyButton } from '@/components/app/QuickBuyButton';
+import { useChartPiP } from '@/contexts/ChartPiPContext';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 
