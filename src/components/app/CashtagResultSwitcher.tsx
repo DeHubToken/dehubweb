@@ -77,14 +77,14 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
   // Re-sort: put preferred type first
   if (cryptoFirst) {
     options.sort((a, b) => {
-      if (a.type === 'crypto' && b.type === 'stock') return -1;
-      if (a.type === 'stock' && b.type === 'crypto') return 1;
+      if (a.type === 'crypto' && a.type !== b.type) return -1;
+      if (b.type === 'crypto' && a.type !== b.type) return 1;
       return 0;
     });
   } else {
     options.sort((a, b) => {
-      if (a.type === 'stock' && b.type === 'crypto') return -1;
-      if (a.type === 'crypto' && b.type === 'stock') return 1;
+      if (a.type !== 'crypto' && b.type === 'crypto') return -1;
+      if (a.type === 'crypto' && b.type !== 'crypto') return 1;
       return 0;
     });
   }
