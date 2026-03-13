@@ -1069,6 +1069,13 @@
   "sidebar": {
     "talkOfTheTown": "O čem se mluví",
     "nothingTrending": "Zatím nic netrenduje",
+    "posts": "Témata",
+    "tickers": "Tickery",
+    "noTickersYet": "Hledejte $tickery abyste je viděli zde",
+    "noCategoriesYet": "Zatím žádné trendové kategorie",
+    "searches": "vyhledávání",
+    "global": "Globální",
+    "comingSoon": "Již brzy — regionální trendy jsou na cestě!",
     "post": "Přidat příspěvek",
     "logOut": "Odhlásit se",
     "logIn": "Přihlásit se"

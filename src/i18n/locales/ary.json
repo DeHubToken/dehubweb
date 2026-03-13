@@ -1095,6 +1095,13 @@
   "sidebar": {
     "talkOfTheTown": "هضرة الناس",
     "nothingTrending": "ما كاين والو رائج",
+    "posts": "مواضيع",
+    "tickers": "تيكرز",
+    "noTickersYet": "قلب على $تيكرز باش تشوفهم هنا",
+    "noCategoriesYet": "مازال ما كاين حتى فئة رائجة",
+    "searches": "عمليات بحث",
+    "global": "عالمي",
+    "comingSoon": "قريباً — الاتجاهات الجهوية فالطريق!",
     "post": "انشر",
     "logOut": "خرج",
     "logIn": "دخل"

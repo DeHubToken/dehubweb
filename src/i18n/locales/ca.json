@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "El tema del moment",
     "nothingTrending": "Encara no hi ha res en tendència",
+    "posts": "Temes",
+    "tickers": "Tickers",
+    "noTickersYet": "Cerca $tickers per veure'ls aquí",
+    "noCategoriesYet": "Encara no hi ha categories en tendència",
+    "searches": "cerques",
+    "global": "Global",
+    "comingSoon": "Properament — les tendències regionals estan en camí!",
     "post": "Publica",
     "logOut": "Tanca sessió",
     "logIn": "Inicia sessió"

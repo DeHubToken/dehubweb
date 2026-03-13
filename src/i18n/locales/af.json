@@ -1329,6 +1329,13 @@
   "sidebar": {
     "talkOfTheTown": "Talk of The Town",
     "nothingTrending": "Nothing trending yet",
+    "posts": "Onderwerpe",
+    "tickers": "Tickers",
+    "noTickersYet": "Soek $tickers om hulle hier te sien",
+    "noCategoriesYet": "Geen trending kategorieë nog nie",
+    "searches": "soektogte",
+    "global": "Globaal",
+    "comingSoon": "Binnekort — streekstendense is op pad!",
     "post": "Post",
     "logOut": "Log out",
     "logIn": "Log in"

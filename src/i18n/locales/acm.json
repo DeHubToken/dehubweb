@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "حديث المدينة",
     "nothingTrending": "ما في شي رائج بعد",
+    "posts": "مواضيع",
+    "tickers": "تيكرز",
+    "noTickersYet": "ابحث عن $تيكرز لتشوفهم هنا",
+    "noCategoriesYet": "ما في فئات رائجة بعد",
+    "searches": "عمليات بحث",
+    "global": "عالمي",
+    "comingSoon": "قريباً — الاتجاهات الإقليمية في الطريق!",
     "post": "انشر",
     "logOut": "تسجيل خروج",
     "logIn": "تسجيل دخول"

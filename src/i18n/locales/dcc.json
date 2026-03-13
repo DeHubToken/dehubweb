@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "شہر کی بات",
     "nothingTrending": "ابھی کچھ ٹرینڈنگ نئیں",
+    "posts": "ٹاپکس",
+    "tickers": "ٹکرز",
+    "noTickersYet": "یہاں دیکھنے کے لیے $ٹکرز تلاش کرو",
+    "noCategoriesYet": "ابھی تک کوئی ٹرینڈنگ کیٹیگری نئیں",
+    "searches": "تلاش",
+    "global": "عالمی",
+    "comingSoon": "جلد آ رہا ہے — علاقائی رجحانات راستے میں ہیں!",
     "post": "پوسٹ",
     "logOut": "لاگ آؤٹ",
     "logIn": "لاگ ان"

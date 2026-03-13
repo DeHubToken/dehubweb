@@ -1065,6 +1065,13 @@
   "sidebar": {
     "talkOfTheTown": "শহরের আলোচনা",
     "nothingTrending": "এখনো কোনো ট্রেন্ড নেই",
+    "posts": "বিষয়",
+    "tickers": "টিকার",
+    "noTickersYet": "এখানে দেখতে $টিকার অনুসন্ধান করুন",
+    "noCategoriesYet": "এখনো কোনো ট্রেন্ডিং বিভাগ নেই",
+    "searches": "অনুসন্ধান",
+    "global": "বৈশ্বিক",
+    "comingSoon": "শীঘ্রই আসছে — আঞ্চলিক প্রবণতা পথে!",
     "post": "পোস্ট",
     "logOut": "লগ আউট",
     "logIn": "লগ ইন"
