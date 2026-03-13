@@ -148,7 +148,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.15 }}
-                className="absolute top-full left-0 mt-1 z-50 min-w-[220px] rounded-xl bg-zinc-800 border border-zinc-700/50 overflow-hidden shadow-xl"
+                className="absolute top-full left-0 mt-1 z-50 min-w-[160px] rounded-xl bg-zinc-800 border border-zinc-700/50 overflow-hidden shadow-xl"
               >
                 {options.map((opt) => (
                   <button
