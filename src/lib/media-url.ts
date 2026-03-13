@@ -86,12 +86,12 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
   if (apiAvatarPath.startsWith('http')) return apiAvatarPath;
 
   // "statics/" paths are served from the API server, not the CDN
-  if (cleanPath.startsWith('statics/')) {
-    return `https://api.dehub.io/${cleanPath}?v=${cacheBust}`;
+  if (apiAvatarPath.startsWith('statics/')) {
+    return `https://api.dehub.io/${apiAvatarPath}?v=${cacheBust}`;
   }
 
-  // Relative path - use cleaned path with CDN base
-  return `${DEHUB_CDN_BASE}${cleanPath}${cleanPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
+  // Relative path - use with CDN base
+  return `${DEHUB_CDN_BASE}${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
 }
 
 /**
