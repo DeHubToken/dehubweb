@@ -71,11 +71,9 @@ export default function GovernanceProposalPage() {
 
   const currentVote = userVotes?.[proposalId ?? '']?.type;
 
-  // Resolve avatar — must be before any early return
   const authorAddress = proposal?.author_wallet_address ?? '';
-  const resolvedAddress = KNOWN_AVATAR_ADDRESSES[authorAddress.toLowerCase()] || authorAddress;
-  const cachedAvatar = useProfileAvatar(resolvedAddress || undefined);
-  const avatarUrl = proposal?.author_avatar ? buildAvatarUrl(resolvedAddress, proposal.author_avatar) : cachedAvatar || null;
+  const cachedAvatar = useProfileAvatar(authorAddress || undefined);
+  const avatarUrl = proposal?.author_avatar ? buildAvatarUrl(authorAddress, proposal.author_avatar) : cachedAvatar || null;
 
   const handleVote = useCallback(
     (voteType: 1 | -1) => {
