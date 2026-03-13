@@ -1153,7 +1153,7 @@ export default function ExplorePage() {
                   </div>
 
                   {/* Trending Bento — same component as sidebar */}
-                  <WhatsHappening />
+                  <WhatsHappening showCountrySelector />
                 </>
               )}
             </motion.div>

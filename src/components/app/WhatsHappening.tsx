@@ -49,7 +49,11 @@ const slideVariants = {
 
 const slideTransition = { type: 'tween' as const, duration: 0.2, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] };
 
-export const WhatsHappening = memo(function WhatsHappening() {
+interface WhatsHappeningProps {
+  showCountrySelector?: boolean;
+}
+
+export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector = false }: WhatsHappeningProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<Tab>('posts');
@@ -61,6 +65,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
 
   // Close dropdown on click outside
   useEffect(() => {
+    if (!showCountrySelector) return;
     const handler = (e: MouseEvent) => {
       if (countryDropdownRef.current && !countryDropdownRef.current.contains(e.target as Node)) {
         setShowCountryDropdown(false);
@@ -70,7 +75,7 @@ export const WhatsHappening = memo(function WhatsHappening() {
       document.addEventListener('mousedown', handler);
       return () => document.removeEventListener('mousedown', handler);
     }
-  }, [showCountryDropdown]);
+  }, [showCountryDropdown, showCountrySelector]);
 
   const handleCountrySelect = useCallback((code: string) => {
     setShowCountryDropdown(false);
@@ -121,34 +126,36 @@ export const WhatsHappening = memo(function WhatsHappening() {
     <div className="bg-zinc-900 rounded-2xl p-4 relative">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-lg text-white">{t('sidebar.talkOfTheTown')}</h3>
-        <div ref={countryDropdownRef} className="relative">
-          <button
-            onClick={() => setShowCountryDropdown(prev => !prev)}
-            className="flex items-center gap-1 px-2 py-1 rounded-lg bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-700/50 transition-colors text-xs text-zinc-400 hover:text-white"
-          >
-            <Globe className="w-3 h-3" />
-            <span>{t('sidebar.global')}</span>
-            <ChevronDown className={cn('w-3 h-3 transition-transform', showCountryDropdown && 'rotate-180')} />
-          </button>
-          {showCountryDropdown && (
-            <div className="absolute right-0 top-full mt-1 w-48 bg-zinc-800 border border-zinc-700/50 rounded-xl shadow-xl z-50 py-1 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-transparent">
-              {COUNTRIES.map(c => (
-                <button
-                  key={c.code}
-                  onClick={() => handleCountrySelect(c.code)}
-                  className={cn(
-                    'w-full flex items-center gap-2 px-3 py-2 text-xs transition-colors hover:bg-zinc-700/50 text-left',
-                    c.code === 'global' ? 'text-white font-medium' : 'text-zinc-400 hover:text-white'
-                  )}
-                >
-                  <span>{c.flag}</span>
-                  <span>{c.name}</span>
-                  {c.code === 'global' && <span className="ml-auto text-[10px] text-emerald-400">✓</span>}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        {showCountrySelector && (
+          <div ref={countryDropdownRef} className="relative">
+            <button
+              onClick={() => setShowCountryDropdown(prev => !prev)}
+              className="flex items-center gap-1 px-2 py-1 rounded-lg bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-700/50 transition-colors text-xs text-zinc-400 hover:text-white"
+            >
+              <Globe className="w-3 h-3" />
+              <span>{t('sidebar.global')}</span>
+              <ChevronDown className={cn('w-3 h-3 transition-transform', showCountryDropdown && 'rotate-180')} />
+            </button>
+            {showCountryDropdown && (
+              <div className="absolute right-0 top-full mt-1 w-48 bg-zinc-800 border border-zinc-700/50 rounded-xl shadow-xl z-50 py-1 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-transparent">
+                {COUNTRIES.map(c => (
+                  <button
+                    key={c.code}
+                    onClick={() => handleCountrySelect(c.code)}
+                    className={cn(
+                      'w-full flex items-center gap-2 px-3 py-2 text-xs transition-colors hover:bg-zinc-700/50 text-left',
+                      c.code === 'global' ? 'text-white font-medium' : 'text-zinc-400 hover:text-white'
+                    )}
+                  >
+                    <span>{c.flag}</span>
+                    <span>{c.name}</span>
+                    {c.code === 'global' && <span className="ml-auto text-[10px] text-emerald-400">✓</span>}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Tab switcher */}
