@@ -1,35 +1,32 @@
 
 
-## Fix: Auto-reload on chunk load failures
+# Add Top 100 Cryptos Page (Linked from Rank Badge)
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+## Overview
+Make the CMC rank badge (e.g. "#69") in the cashtag price card clickable. Clicking it navigates to a new `/app/top-100` page showing the top 100 cryptocurrencies by market cap, fetched from the CMC API.
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+## Changes
 
-### Changes
+### 1. New Edge Function: `supabase/functions/cmc-top-100/index.ts`
+- Calls CMC `/v1/cryptocurrency/listings/latest?limit=100&convert=USD`
+- Returns array of coins with: rank, name, symbol, price, market_cap, volume_24h, percent_change_24h, percent_change_7d
+- Uses existing `CMC_API_KEY` secret
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+### 2. New Hook: `src/hooks/use-cmc-top-100.ts`
+- Calls the edge function via `supabase.functions.invoke('cmc-top-100')`
+- Caches for 5 minutes (`staleTime: 300_000`)
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+### 3. New Page: `src/pages/app/Top100CryptosPage.tsx`
+- Scrollable table/list showing rank, symbol, name, price, 24h%, 7d%, market cap, volume
+- Green/red coloring for percent changes
+- Each row clickable → navigates to `/app/explore?q=$SYMBOL`
+- Mobile-responsive (horizontal scroll for table)
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+### 4. Make Rank Badge Clickable in `CashtagPriceCard.tsx`
+- Wrap the `#{cmcData.cmcRank}` span with a link/button that navigates to `/app/top-100`
+- Add hover styling to indicate clickability
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+### 5. Register Route
+- Add route in `App.tsx`: `<Route path="top-100" element={null} />`
+- Add entry in `PersistentPageCache.tsx` for `/app/top-100`
 
