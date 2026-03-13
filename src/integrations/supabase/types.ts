@@ -228,6 +228,24 @@ export type Database = {
         }
         Relationships: []
       }
+      category_post_log: {
+        Row: {
+          id: string
+          name: string
+          posted_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          posted_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          posted_at?: string
+        }
+        Relationships: []
+      }
       client_error_logs: {
         Row: {
           component: string | null
