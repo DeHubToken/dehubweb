@@ -191,7 +191,7 @@ export function MobileBottomNav() {
                         : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
                     )} 
                   />
-                </span>
+                
               </NavLink>
             </div>
 
