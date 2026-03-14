@@ -651,23 +651,26 @@ export default function StakingPage() {
             <p className="text-xs text-white/50 leading-relaxed mb-2">
               {t('staking.reducedFeesDesc')}
             </p>
-            <div className="space-y-1 max-h-[10.7rem] overflow-y-auto pr-1">
-              {BADGE_LEVELS.map((b, i) => {
-                const fee = i === BADGE_LEVELS.length - 1 ? 1 : parseFloat((10 - i * 0.69).toFixed(2));
-                const badgeUrl = getBadgeUrl(b.min);
-                return (
-                  <div key={b.name} className="flex items-center justify-between py-1 px-2 rounded-md bg-white/[0.02]">
-                    <div className="flex items-center gap-2">
-                      {badgeUrl && <img src={badgeUrl} alt={b.name} className="w-4 h-4 brightness-0 invert" />}
-                      <span className="text-[11px] text-white/60">{b.name}</span>
+            <div className="relative">
+              <div className="space-y-1 max-h-[10.7rem] overflow-y-auto pr-1">
+                {BADGE_LEVELS.map((b, i) => {
+                  const fee = i === BADGE_LEVELS.length - 1 ? 1 : parseFloat((10 - i * 0.69).toFixed(2));
+                  const badgeUrl = getBadgeUrl(b.min);
+                  return (
+                    <div key={b.name} className="flex items-center justify-between py-1 px-2 rounded-md bg-white/[0.02]">
+                      <div className="flex items-center gap-2">
+                        {badgeUrl && <img src={badgeUrl} alt={b.name} className="w-4 h-4 brightness-0 invert" />}
+                        <span className="text-[11px] text-white/60">{b.name}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-[10px] text-white/30">{b.min.toLocaleString()} DHB</span>
+                        <span className="text-[11px] font-medium text-white/80">{fee}%</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-[10px] text-white/30">{b.min.toLocaleString()} DHB</span>
-                      <span className="text-[11px] font-medium text-white/80">{fee}%</span>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
+              <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/60 to-transparent rounded-b-xl" />
             </div>
           </div>
 
