@@ -70,7 +70,7 @@ export const AppStoreButtons = ({ onEnterApp }: AppStoreButtonsProps) => {
       custom={2} 
       initial="hidden" 
       animate="visible" 
-      className="mt-6 -translate-y-[30px] md:translate-y-0 flex flex-col justify-center items-stretch gap-3 w-full px-1"
+      className="mt-7 -translate-y-[30px] md:translate-y-0 flex flex-col justify-center items-stretch gap-3 w-full px-1"
     >
       {/* Enter App button */}
       {onEnterApp && (
