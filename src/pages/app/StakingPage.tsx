@@ -380,19 +380,19 @@ export default function StakingPage() {
           <p className="text-xs text-white/40 mb-4">
             Stake your DHB tokens to earn rewards. The correct chain will be detected automatically.
           </p>
-          <div className="flex items-stretch gap-2">
+          <div className="flex gap-2">
             <LiquidGlassBubble
               shimmer={false}
               noBorder
-              className="flex-1 min-w-0 [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl [&>div]:!py-0 [&>div]:!px-3 [&>div]:flex [&>div]:items-center"
+              className="flex-1 min-w-0 [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl"
             >
-              <div className="relative w-full z-10">
+              <div className="relative">
                 <input
                   type="number"
                   placeholder={userUnstaked > 0 ? formatNumber(userUnstaked) : '0'}
                   value={stakeAmount}
                   onChange={(e) => setStakeAmount(e.target.value)}
-                  className="w-full bg-transparent text-white text-sm placeholder:text-white/30 focus:outline-none pr-10 py-0 h-full"
+                  className="w-full bg-transparent text-white text-sm placeholder:text-white/30 focus:outline-none pr-10"
                 />
                 <button
                   type="button"
@@ -440,19 +440,19 @@ export default function StakingPage() {
             <p className="text-xs text-white/40 mb-4">
               Withdraw your staked DHB. Tokens will be returned to your wallet.
             </p>
-            <div className="flex items-stretch gap-2">
+            <div className="flex gap-2">
               <LiquidGlassBubble
                 shimmer={false}
                 noBorder
-                className="flex-1 min-w-0 [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl [&>div]:!py-0 [&>div]:!px-3 [&>div]:flex [&>div]:items-center"
+                className="flex-1 min-w-0 [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl"
               >
-                <div className="relative w-full z-10">
+                <div className="relative">
                   <input
                     type="number"
                     placeholder={formatNumber(userStaked)}
                     value={unstakeAmount}
                     onChange={(e) => setUnstakeAmount(e.target.value)}
-                    className="w-full bg-transparent text-white text-sm placeholder:text-white/30 focus:outline-none pr-10 py-0 h-full"
+                    className="w-full bg-transparent text-white text-sm placeholder:text-white/30 focus:outline-none pr-10"
                   />
                   <button
                     type="button"
