@@ -641,7 +641,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
 
         if (balance < amountWei) {
           const balanceHuman = Number(balance) / 1e18;
-          toast.error(`Insufficient DHB on ${chainConfig.name}. Need ${activeFee.toLocaleString()} but have ${balanceHuman.toFixed(2)}`);
+          toast.error(dhbText(`Insufficient DHB on ${chainConfig.name}. Need ${activeFee.toLocaleString()} but have ${balanceHuman.toFixed(2)}`));
           setIsSendingFee(false);
           return;
         }
