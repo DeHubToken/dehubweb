@@ -435,12 +435,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     sortOrder,
     range,
     status: 'minted' as const,
-    category: selectedCategory !== 'all' ? selectedCategory : undefined,
+    // Single category → pass to API; multiple → fetch all, filter client-side
+    category: selectedCategories.length === 1 ? selectedCategories[0] : undefined,
     isPPV: contentFilters.ppv ? true : undefined,
     hasBounty: contentFilters.w2e ? true : undefined,
     isLocked: contentFilters.locked ? true : undefined,
     followingOnly: selectedSort.value === 'following' ? true : undefined,
-  }), [sortBy, sortOrder, range, selectedCategory, contentFilters, selectedSort.value]);
+  }), [sortBy, sortOrder, range, selectedCategories, contentFilters, selectedSort.value]);
 
   // ============================================================================
   // THREE SEPARATE FEED QUERIES
