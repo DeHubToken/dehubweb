@@ -271,7 +271,7 @@ export function ActionBar({
     } finally {
       setIsVoting(false);
     }
-  }, [postId, isVoting, isLiked, isDisliked, localLikeCount, localDislikeCount, isAuthenticated, queryClient, onLike, onDislike]);
+  }, [postId, isVoting, externalDisabled, isLiked, isDisliked, localLikeCount, localDislikeCount, isAuthenticated, queryClient, onLike, onDislike]);
 
   const hasVoted = isLiked || isDisliked;
 
