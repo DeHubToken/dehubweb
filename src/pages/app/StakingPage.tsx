@@ -397,24 +397,25 @@ export default function StakingPage() {
                 Max
               </button>
             </div>
-            <button
-              onClick={handleStake}
-              disabled={isStaking || isApproving || !stakeAmount}
+            <LiquidGlassBubble
+              shimmer
+              noBorder={isStaking || isApproving || !stakeAmount}
+              onClick={(isStaking || isApproving || !stakeAmount) ? undefined : handleStake}
               className={cn(
-                "px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all flex-shrink-0",
-                (isStaking || isApproving)
-                  ? "bg-white/10 text-white/40 cursor-not-allowed"
-                  : "bg-white/10 text-white hover:bg-white/20 border border-white/15"
+                "flex-shrink-0 cursor-pointer",
+                (isStaking || isApproving || !stakeAmount) && "opacity-40 cursor-not-allowed"
               )}
             >
-              {isApproving ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> Approving...</>
-              ) : isStaking ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> {stakingChainLabel || 'Staking'}...</>
-              ) : (
-                <><ArrowDownToLine className="w-4 h-4" /> Stake</>
-              )}
-            </button>
+              <span className="flex items-center gap-2 text-white text-sm font-medium px-1">
+                {isApproving ? (
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Approving...</>
+                ) : isStaking ? (
+                  <><Loader2 className="w-4 h-4 animate-spin" /> {stakingChainLabel || 'Staking'}...</>
+                ) : (
+                  <><ArrowDownToLine className="w-4 h-4" /> Stake</>
+                )}
+              </span>
+            </LiquidGlassBubble>
           </div>
         </motion.div>
 
@@ -450,19 +451,20 @@ export default function StakingPage() {
                   Max
                 </button>
               </div>
-              <button
-                onClick={handleUnstake}
-                disabled={isUnstaking || !unstakeAmount}
+              <LiquidGlassBubble
+                shimmer
+                noBorder={isUnstaking || !unstakeAmount}
+                onClick={(isUnstaking || !unstakeAmount) ? undefined : handleUnstake}
                 className={cn(
-                  "px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all flex-shrink-0",
-                  isUnstaking
-                    ? "bg-white/10 text-white/40 cursor-not-allowed"
-                    : "bg-white/10 text-white hover:bg-white/20 border border-white/15"
+                  "flex-shrink-0 cursor-pointer",
+                  (isUnstaking || !unstakeAmount) && "opacity-40 cursor-not-allowed"
                 )}
               >
-                {isUnstaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Clock className="w-4 h-4" />}
-                Unstake
-              </button>
+                <span className="flex items-center gap-2 text-white text-sm font-medium px-1">
+                  {isUnstaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Clock className="w-4 h-4" />}
+                  Unstake
+                </span>
+              </LiquidGlassBubble>
             </div>
           </motion.div>
         )}
