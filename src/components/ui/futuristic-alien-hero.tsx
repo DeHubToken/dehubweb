@@ -35,7 +35,10 @@ const SKIP_LANDING_KEY = "dehub_skip_landing";
 export const FuturisticAlienHero = () => {
   const mountRef = useRef<HTMLCanvasElement>(null);
   const navigate = useNavigate();
-  const { masterGlitch, corruptedTitle, corruptedSubtitle, showPixelCorruption } = useGlitchEffect();
+  const { t } = useTranslation();
+  const heroTitle = t('hero.title', 'Welcome To');
+  const heroSubtitle = t('hero.subtitle', 'Our World');
+  const { masterGlitch, corruptedTitle, corruptedSubtitle, showPixelCorruption } = useGlitchEffect(heroTitle, heroSubtitle);
   const [isCloseButtonGlitching, setIsCloseButtonGlitching] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const controls = useAnimation();
