@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -24,7 +24,7 @@ const cursorStyle = {
 const glassOverride = "[&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.04] [&>div]:!via-white/[0.02] [&>div]:!to-transparent [&>div]:!border-white/[0.08] [&>div]:!shadow-none [&>div]:before:!bg-none [&>div]:after:!bg-none";
 
 // Fixed dimensions for all buttons
-const btnClass = `w-full cursor-pointer glass-morph-in [&>div]:!py-3 ${glassOverride}`;
+const baseBtnClass = `w-full cursor-pointer glass-morph-in [&>div]:!py-3 ${glassOverride}`;
 
 const GooglePlayIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0" fill="none">
@@ -47,12 +47,22 @@ interface AppStoreButtonsProps {
 
 export const AppStoreButtons = ({ onEnterApp }: AppStoreButtonsProps) => {
   const { t } = useTranslation();
+  const [morphed, setMorphed] = useState(false);
+
+  useEffect(() => {
+    // Trigger morph after the fade-up animation starts (delay=2s in fadeUpVariants)
+    const timer = setTimeout(() => setMorphed(true), 2200);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleAppStoreClick = () => {
     toast.info(t('hero.comingSoon', 'Coming Soon'), {
       description: t('hero.iosComingSoon', 'The iOS app will be available soon!'),
       duration: 3000,
     });
   };
+
+  const btnClass = `${baseBtnClass}${morphed ? ' morphed' : ''}`;
 
   return (
     <motion.div 
