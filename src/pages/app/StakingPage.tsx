@@ -12,7 +12,7 @@ import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { sendERC20Token } from '@/lib/wallet/send';
 import { supabase } from '@/integrations/supabase/client';
-import { STAKING_ADDRESS, unstakeBNB, claimBNBRewards } from '@/lib/contracts/staking';
+import { STAKING_ADDRESS, claimBNBRewards } from '@/lib/contracts/staking';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
 import { toast } from 'sonner';
@@ -208,6 +208,12 @@ export default function StakingPage() {
       return;
     }
 
+    const userStakedNow = userData?.totalStaked ?? 0;
+    if (amount > userStakedNow) {
+      toast.error('Insufficient staked balance', { description: `You only have ${userStakedNow.toFixed(2)} DHB staked.` });
+      return;
+    }
+
     setIsUnstaking(true);
     try {
       const walletAddress = await getWalletAddress();
@@ -216,30 +222,24 @@ export default function StakingPage() {
         return;
       }
 
-      const hasStakedBNB = (userData?.totalStaked ?? 0) > 0;
+      const { error } = await supabase
+        .from('staking_records')
+        .insert({
+          wallet_address: walletAddress.toLowerCase(),
+          amount,
+          chain: 'unified',
+          action: 'unstake',
+          tx_hash: `unstake-request-${Date.now()}`,
+        });
 
-      if (hasStakedBNB) {
-        toast.loading('Unstaking DHB...', { description: 'Please confirm the transaction.' });
-        const result = await unstakeBNB(unstakeAmount);
-        const receipt = await result.wait();
+      if (error) throw error;
 
-        if (receipt.status === 1) {
-          toast.dismiss();
-          toast.success('Unstaked successfully! ✅', { description: `${unstakeAmount} DHB unstaked.` });
-          setUnstakeAmount('');
-          refetchStats();
-          refetchUser();
-        } else {
-          toast.dismiss();
-          toast.error('Unstake failed', { description: 'Transaction reverted.' });
-        }
-      } else {
-        toast.info('Unstake initiated ⏳', { description: `${unstakeAmount} DHB unstake request submitted.` });
-        setUnstakeAmount('');
-      }
+      toast.success('Unstake request submitted! ✅', { description: `${unstakeAmount} DHB added to unstake queue.` });
+      setUnstakeAmount('');
+      refetchStats();
+      refetchUser();
     } catch (err: any) {
       console.error('[Staking] Unstake error:', err);
-      toast.dismiss();
       toast.error('Unstake failed', { description: err?.message || 'Unknown error' });
     } finally {
       setIsUnstaking(false);
