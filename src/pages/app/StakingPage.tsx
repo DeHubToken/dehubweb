@@ -561,9 +561,9 @@ export default function StakingPage() {
           <p className="text-xs text-white/30 mt-1">Unlock powerful benefits by staking your DHB tokens</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5 items-start">
+        <div className="p-5 columns-1 sm:columns-2 gap-4 space-y-4">
           {/* Profit Share */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
+          <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <DollarSign className="w-4 h-4 text-white" />
@@ -576,7 +576,7 @@ export default function StakingPage() {
           </div>
 
           {/* Reduced Fees */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-3">
+          <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-3">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <Percent className="w-4 h-4 text-white" />
@@ -607,7 +607,7 @@ export default function StakingPage() {
           </div>
 
           {/* Super Powers */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
+          <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <Zap className="w-4 h-4 text-white" />
@@ -627,7 +627,7 @@ export default function StakingPage() {
           </div>
 
           {/* Increased Limits */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
+          <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <Crown className="w-4 h-4 text-white" />
@@ -640,7 +640,7 @@ export default function StakingPage() {
           </div>
 
           {/* Early Access */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
+          <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <Clock className="w-4 h-4 text-white" />
@@ -653,7 +653,7 @@ export default function StakingPage() {
           </div>
 
           {/* Enhanced Experience */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
+          <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <TrendingUp className="w-4 h-4 text-white" />
@@ -666,7 +666,7 @@ export default function StakingPage() {
           </div>
 
           {/* Airdrops */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
+          <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <Gift className="w-4 h-4 text-white" />
