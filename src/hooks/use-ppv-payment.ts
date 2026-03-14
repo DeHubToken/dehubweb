@@ -134,7 +134,7 @@ export function usePPVPayment({
         }
 
         // Execute swap
-        toast.loading('Swapping ETH → DHB...', { id: 'ppv-payment' });
+        toast.loading(dhbText('Swapping ETH → DHB...'), { id: 'ppv-payment' });
         try {
           await swapETHForDHB(shortfall, ethNeeded, signerAddress);
           console.log('[PPV] Auto-swap complete, proceeding with payment');
