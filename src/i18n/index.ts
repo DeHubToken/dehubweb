@@ -286,6 +286,6 @@ if (defaultLang && defaultLang !== 'en') {
 
 // Inject runtime translation bundles after init
 import { injectStakingTranslations } from './staking-translations';
-injectStakingTranslations();
+injectStakingTranslations(i18n);
 
 export default i18n;

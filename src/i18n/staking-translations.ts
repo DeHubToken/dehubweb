@@ -1191,14 +1191,14 @@ const stakingTranslations: Record<string, StakingTranslation> = {
  * Inject staking translations into i18n resource bundles.
  * Call after i18n initialization and whenever a new language is loaded.
  */
-export function injectStakingTranslations(lang?: string): void {
+export function injectStakingTranslations(i18nInstance: I18nInstance, lang?: string): void {
   const targetLangs = lang ? [lang] : Object.keys(stakingTranslations);
 
   for (const l of targetLangs) {
     const translations = stakingTranslations[l];
     if (!translations) continue;
 
-    i18n.addResourceBundle(l, 'translation', {
+    i18nInstance.addResourceBundle(l, 'translation', {
       staking: translations.staking,
       toasts: translations.toasts,
     }, true, true);
