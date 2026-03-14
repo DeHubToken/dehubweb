@@ -1,35 +1,20 @@
 
 
-## Fix: Auto-reload on chunk load failures
+## Fix: Simplify Unstake to Database-Only Operation
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+### Problem
+`handleUnstake` calls `unstakeBNB()` which tries to execute an on-chain `unstake()` function on the legacy BNB staking contract. But the current staking model is transfer-based (tokens sent to a vault address) — there is no `unstake()` function to call, so it always fails.
 
 ### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+Replace the on-chain contract call with a simple database insert into `staking_records` with `action: 'unstake'`. The `useUserStakingData` hook already calculates net staked by subtracting unstake records from stake records (lines 127-134), so this will automatically update the user's displayed staked balance.
 
 ### Changes
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+**`src/pages/app/StakingPage.tsx`** — Rewrite `handleUnstake`:
+- Remove the `unstakeBNB()` contract call
+- Validate that `amount <= userStaked`
+- Insert a record into `staking_records` with `{ wallet_address, amount, chain: 'unified', tx_hash: 'unstake-request-<timestamp>', action: 'unstake' }`
+- Show success toast, clear input, refetch stats/user/queue
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
-
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
-
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+**No other files need changes.** The hook already handles unstake records correctly.
 
