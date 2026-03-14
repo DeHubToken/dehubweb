@@ -402,7 +402,7 @@ export default function StakingPage() {
               <div className="relative flex-1 min-w-0">
                 <input
                   type="number"
-                  placeholder="Amount DHB"
+                  placeholder={`${userStaked.toLocaleString()} DHB`}
                   value={unstakeAmount}
                   onChange={(e) => setUnstakeAmount(e.target.value)}
                   className="w-full px-3 py-2.5 pr-14 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-amber-500/50"
@@ -410,7 +410,7 @@ export default function StakingPage() {
                 <button
                   type="button"
                   onClick={() => setUnstakeAmount(userStaked.toString())}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 text-[10px] font-bold uppercase hover:bg-amber-500/30 transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-amber-400 text-[10px] font-bold uppercase hover:text-amber-300 transition-colors"
                 >
                   Max
                 </button>
