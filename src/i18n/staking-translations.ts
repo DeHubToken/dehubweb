@@ -1204,6 +1204,5 @@ export function injectStakingTranslations(lang?: string): void {
     }, true, true);
   }
 }
-
-// Auto-inject on import for all pre-defined languages
-injectStakingTranslations();
+// Do NOT auto-invoke here — i18n may not be initialized yet.
+// Called explicitly from i18n/index.ts after init.
