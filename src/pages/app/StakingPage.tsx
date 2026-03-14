@@ -506,12 +506,12 @@ export default function StakingPage() {
             noBorder
             onClick={(isClaiming || userEarned <= 0) ? undefined : handleClaim}
             className={cn(
-              "cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl",
+              "cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl flex items-center",
               (isClaiming || userEarned <= 0) && "opacity-40 cursor-not-allowed"
             )}
           >
-            <span className="flex items-center justify-center gap-2 text-white text-sm font-medium h-full">
-              {isClaiming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Gift className="w-4 h-4" />}
+            <span className="flex items-center justify-center gap-2 text-white text-sm font-medium w-full py-2">
+              {isClaiming ? <Loader2 className="w-4 h-4 animate-spin shrink-0 -mt-px" /> : <Gift className="w-4 h-4 shrink-0 -mt-px" />}
               {t('staking.claim')}
             </span>
           </LiquidGlassBubble>
