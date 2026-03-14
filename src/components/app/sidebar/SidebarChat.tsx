@@ -13,7 +13,7 @@ import { EmojiGifPicker } from '../chat/EmojiGifPicker';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
 import { getMediaUrl, getAuthToken } from '@/lib/api/dehub';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +22,27 @@ import { toast } from 'sonner';
 import type { ReactionData } from '../chat/ChatMessage';
 
 const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
+
+/** Avatar with cascading fallback: primary → CDN → initials */
+function SidebarAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
+  const [failed, setFailed] = useState(false);
+  const [cdnFailed, setCdnFailed] = useState(false);
+  const cdnUrl = address ? buildAvatarCdnFallbackUrl(address, src ?? undefined) : undefined;
+  const activeSrc = failed ? cdnUrl : (src ?? undefined);
+  return (
+    <Avatar className="w-6 h-6">
+      {activeSrc && !cdnFailed && (
+        <AvatarImage
+          src={activeSrc}
+          onError={() => failed ? setCdnFailed(true) : setFailed(true)}
+        />
+      )}
+      <AvatarFallback className="bg-zinc-700 text-white text-[10px] font-medium">
+        {name.charAt(0).toUpperCase()}
+      </AvatarFallback>
+    </Avatar>
+  );
+}
 
 /** Sidebar chat badge — livechat messages have no badge data */
 function SidebarChatBadge({ address: _address }: { address: string }) {
@@ -243,12 +264,7 @@ export function SidebarChat() {
                   )}
                   <div className="flex items-start gap-2">
                     <button onClick={goToProfile} disabled={!handle} className={`flex-shrink-0 ${handle ? 'cursor-pointer' : 'cursor-default'}`}>
-                      <Avatar className="w-6 h-6">
-                        {avatarUrl && <AvatarImage src={avatarUrl} />}
-                        <AvatarFallback className="bg-zinc-700 text-white text-[10px] font-medium">
-                          {name.charAt(0).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
+                      <SidebarAvatar src={avatarUrl} address={msg.sender_address} name={name} />
                     </button>
                     <div className="min-w-0 flex-1">
                       <span className="relative inline-flex items-baseline gap-1.5">

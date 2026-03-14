@@ -15,12 +15,34 @@ import { replaceLinksWithEmoji, renderTextWithLinks } from '@/components/app/Tra
 import { useTranslation as useTextTranslation } from '@/components/app/TranslatableText';
 import { useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
 import { useAuth } from '@/contexts/AuthContext';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { getMediaUrl, getAuthToken } from '@/lib/api/dehub';
 import { VoiceRecorder } from '@/components/app/chat/VoiceRecorder';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
+
+/** Avatar with cascading fallback: primary → CDN → initials */
+function LiveChatAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
+  const [failed, setFailed] = useState(false);
+  const [cdnFailed, setCdnFailed] = useState(false);
+  const cdnUrl = address ? buildAvatarCdnFallbackUrl(address, src ?? undefined) : undefined;
+  const activeSrc = failed ? cdnUrl : (src ?? undefined);
+  return (
+    <Avatar className="w-6 h-6 rounded-md flex-shrink-0 mt-0.5">
+      {activeSrc && !cdnFailed && (
+        <AvatarImage
+          src={activeSrc}
+          className="rounded-md"
+          onError={() => failed ? setCdnFailed(true) : setFailed(true)}
+        />
+      )}
+      <AvatarFallback className="bg-zinc-700 text-white text-[10px] rounded-md">
+        {name[0]?.toUpperCase()}
+      </AvatarFallback>
+    </Avatar>
+  );
+}
 
 /** Live chat badge — livechat messages have no badge data, removed edge function call */
 function LiveChatBadge({ address: _address }: { address: string }) {
@@ -200,12 +222,7 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
             return (
               <div key={msg.id} className="group py-1.5 px-1">
                 <div className="flex items-start gap-2">
-                  <Avatar className="w-6 h-6 rounded-md flex-shrink-0 mt-0.5">
-                    {avatarUrl && <AvatarImage src={avatarUrl} className="rounded-md" />}
-                    <AvatarFallback className="bg-zinc-700 text-white text-[10px] rounded-md">
-                      {displayName[0]?.toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+                  <LiveChatAvatar src={avatarUrl} address={msg.sender_address} name={displayName} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-1.5">
                       <span className="relative inline-flex items-baseline">

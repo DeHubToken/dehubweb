@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { Pin, ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages, SmilePlus, Reply, CornerDownRight, X } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { TranslatableText, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useTextTranslation } from '../TranslatableText';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +17,27 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+
+/** Avatar with cascading fallback: primary → CDN → initials */
+function ChatAvatar({ src, address, name, className }: { src?: string; address?: string; name: string; className?: string }) {
+  const [failed, setFailed] = useState(false);
+  const [cdnFailed, setCdnFailed] = useState(false);
+  const cdnUrl = address ? buildAvatarCdnFallbackUrl(address, src) : undefined;
+  const activeSrc = failed ? cdnUrl : src;
+  return (
+    <Avatar className={className}>
+      {activeSrc && !cdnFailed && (
+        <AvatarImage
+          src={activeSrc}
+          onError={() => failed ? setCdnFailed(true) : setFailed(true)}
+        />
+      )}
+      <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
+        {name.charAt(0).toUpperCase()}
+      </AvatarFallback>
+    </Avatar>
+  );
+}
 
 /** Reaction data: emoji → list of addresses who reacted */
 export interface ReactionData {
@@ -203,12 +225,12 @@ export function ChatMessage({
         disabled={!isClickable}
         className={`flex-shrink-0 ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
       >
-        <Avatar className="w-8 h-8">
-          {message.userAvatar && <AvatarImage src={message.userAvatar} />}
-          <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
-            {message.userName.charAt(0).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+        <ChatAvatar
+          src={message.userAvatar}
+          address={message.userId}
+          name={message.userName}
+          className="w-8 h-8"
+        />
       </button>
       
       <div className="flex-1 min-w-0">
