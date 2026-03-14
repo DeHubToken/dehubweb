@@ -168,7 +168,7 @@ export default function StakingPage() {
       return;
     }
 
-    toast.loading('Staking DHB...', { description: 'Please confirm the transaction in your wallet.' });
+    toast.loading('Staking DHB...', { description: 'Confirming transaction...' });
     const result = await sendERC20Token(dhbTokenAddress, STAKING_ADDRESS, stakeAmount, 18, chainId as any);
     
     toast.loading('Transaction sent', { description: 'Waiting for confirmation...' });
