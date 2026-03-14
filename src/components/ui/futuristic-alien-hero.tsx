@@ -41,6 +41,19 @@ export const FuturisticAlienHero = () => {
   
   // Prefetch app data on first user interaction (mousemove/touch/scroll)
   useNebulaPrefetch();
+
+  const handleEnterApp = useCallback(() => {
+    if (isExiting) return;
+    setIsExiting(true);
+    localStorage.setItem(SKIP_LANDING_KEY, "true");
+    controls.start({
+      y: '100%',
+      opacity: 0,
+      transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
+    }).then(() => {
+      navigate('/app');
+    });
+  }, [isExiting, controls, navigate]);
   
   // Close button glitch effect - triggers every 4-6 seconds
   useEffect(() => {
