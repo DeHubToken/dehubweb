@@ -166,6 +166,7 @@ export function useUserStakingData() {
         baseBalanceRaw,
         totalStaked: totalStakedNum,
         totalUnstaked: bnbBalNum + baseBalNum,
+        totalUnstakeQueued: dbUnstakeQueued,
         hasBNBBalance: bnbBalNum > 0,
         hasBaseBalance: baseBalNum > 0,
         hasBothChains: bnbBalNum > 0 && baseBalNum > 0,
