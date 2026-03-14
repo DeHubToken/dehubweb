@@ -200,7 +200,7 @@ export const FuturisticAlienHero = () => {
       <button
         onClick={handleEnterApp}
         className={cn(
-          "absolute top-4 right-4 z-20 p-2 rounded-md bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-200 group",
+          "absolute top-4 right-4 z-20 p-2 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-200 group",
           isCloseButtonGlitching && "animate-close-button-glitch"
         )}
         aria-label="Enter App"
