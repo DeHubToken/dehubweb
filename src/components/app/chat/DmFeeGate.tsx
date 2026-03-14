@@ -13,6 +13,7 @@ import padlockImg from '@/assets/padlock.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { dhbText } from '@/lib/dhb-toast';
 import {
   getWalletAddress,
   switchChain,
