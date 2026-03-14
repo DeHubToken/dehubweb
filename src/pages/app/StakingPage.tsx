@@ -183,6 +183,7 @@ export default function StakingPage() {
       }
     } catch (err: any) {
       console.error('[Staking] Stake error:', err);
+      toast.dismiss();
       toast.error('Stake failed', { description: err?.message || 'Unknown error' });
     } finally {
       setIsStaking(false);
