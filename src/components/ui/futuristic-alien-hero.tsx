@@ -233,7 +233,7 @@ export const FuturisticAlienHero = () => {
             className="flex justify-center mt-6 md:mt-8"
           >
             <a href="/app" onClick={(e) => { e.preventDefault(); handleEnterApp(); }}>
-              <LiquidGlassBubble shimmer className="px-12 py-3 md:px-16 md:py-4 cursor-pointer [&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.06] [&>div]:!via-white/[0.03] [&>div]:!to-transparent [&>div]:!border-white/[0.12]">
+              <LiquidGlassBubble shimmer className="px-12 py-3 md:px-16 md:py-4 cursor-pointer [&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.04] [&>div]:!via-white/[0.02] [&>div]:!to-transparent [&>div]:!border-white/[0.08] [&>div]:!shadow-none [&>div]:before:!bg-none [&>div]:after:!bg-none">
                 <span className="text-white text-base md:text-lg font-semibold tracking-wide">Enter</span>
               </LiquidGlassBubble>
             </a>
