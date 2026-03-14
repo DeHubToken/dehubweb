@@ -137,29 +137,39 @@ export function ActionBar({
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
-  
+  // When external handlers are provided (governance), always sync from props
+  const hasExternalHandlers = !!(onLike || onDislike);
+
   // Sync local state with props when they change, but skip if user recently voted (or cache active)
   useEffect(() => {
-    if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
-    if (postId && getVoteCache(postId)) return;
+    if (!hasExternalHandlers) {
+      if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
+      if (postId && getVoteCache(postId)) return;
+    }
     setIsLiked(initialIsLiked);
   }, [initialIsLiked]);
 
   useEffect(() => {
-    if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
-    if (postId && getVoteCache(postId)) return;
+    if (!hasExternalHandlers) {
+      if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
+      if (postId && getVoteCache(postId)) return;
+    }
     setIsDisliked(initialIsDisliked);
   }, [initialIsDisliked]);
 
   useEffect(() => {
-    if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
-    if (postId && getVoteCache(postId)) return;
+    if (!hasExternalHandlers) {
+      if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
+      if (postId && getVoteCache(postId)) return;
+    }
     setLocalLikeCount(likeCount ?? 0);
   }, [likeCount]);
 
   useEffect(() => {
-    if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
-    if (postId && getVoteCache(postId)) return;
+    if (!hasExternalHandlers) {
+      if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
+      if (postId && getVoteCache(postId)) return;
+    }
     setLocalDislikeCount(dislikeCount ?? 0);
   }, [dislikeCount]);
 
@@ -187,6 +197,10 @@ export function ActionBar({
       return;
     }
 
+    // When external handlers are provided (e.g. governance), skip local optimistic updates
+    // since the parent mutation handles optimistic state via React Query cache
+    const hasExternalHandler = (vote && onLike) || (!vote && onDislike);
+
     // If clicking the same vote again, it's a toggle (remove vote)
     const isRemovingVote = (vote && isLiked) || (!vote && isDisliked);
     // If switching from one vote to another
@@ -210,18 +224,20 @@ export function ActionBar({
     setIsVoting(true);
     lastVoteTimeRef.current = Date.now();
 
-    // Optimistic UI update using computed values
-    setIsLiked(newLiked);
-    setIsDisliked(newDisliked);
-    setLocalLikeCount(newLikeCount);
-    setLocalDislikeCount(newDislikeCount);
-    if (!isRemovingVote) setJustVoted(vote ? 'like' : 'dislike');
-    setTimeout(() => setJustVoted(null), 400);
+    if (!hasExternalHandler) {
+      // Only do local optimistic updates for regular posts (not governance)
+      setIsLiked(newLiked);
+      setIsDisliked(newDisliked);
+      setLocalLikeCount(newLikeCount);
+      setLocalDislikeCount(newDislikeCount);
+      if (!isRemovingVote) setJustVoted(vote ? 'like' : 'dislike');
+      setTimeout(() => setJustVoted(null), 400);
 
-    // Sync global vote cache & all feed caches synchronously with computed values
-    const voteState = { isLiked: newLiked, isDisliked: newDisliked, likeCount: newLikeCount, dislikeCount: newDislikeCount };
-    setVoteCache(postId, voteState);
-    patchFeedCaches(queryClient, postId, voteState);
+      // Sync global vote cache & all feed caches synchronously with computed values
+      const voteState = { isLiked: newLiked, isDisliked: newDisliked, likeCount: newLikeCount, dislikeCount: newDislikeCount };
+      setVoteCache(postId, voteState);
+      patchFeedCaches(queryClient, postId, voteState);
+    }
 
     try {
       // Use override if provided, otherwise default to voteOnPost
@@ -233,27 +249,26 @@ export function ActionBar({
         const numericId = parseInt(postId, 10);
         if (isNaN(numericId)) {
           console.warn('[ActionBar] Non-numeric postId used without override handler:', postId);
-          // For non-numeric IDs, we don't call voteOnPost but we keep the optimistic UI state
-          // This allows Supabase-based IDs to at least look like they are working if the parent
-          // eventually syncs the state.
           return;
         }
         await voteOnPost({ tokenId: numericId, voteType: vote ? 'for' : 'against' });
       }
     } catch (error: unknown) {
-      // Revert to pre-vote state on error
-      setIsLiked(isLiked);
-      setIsDisliked(isDisliked);
-      setLocalLikeCount(localLikeCount);
-      setLocalDislikeCount(localDislikeCount);
-      const revertState = { isLiked, isDisliked, likeCount: localLikeCount, dislikeCount: localDislikeCount };
-      setVoteCache(postId, revertState);
-      patchFeedCaches(queryClient, postId, revertState);
+      if (!hasExternalHandler) {
+        // Revert to pre-vote state on error (only for local optimistic updates)
+        setIsLiked(isLiked);
+        setIsDisliked(isDisliked);
+        setLocalLikeCount(localLikeCount);
+        setLocalDislikeCount(localDislikeCount);
+        const revertState = { isLiked, isDisliked, likeCount: localLikeCount, dislikeCount: localDislikeCount };
+        setVoteCache(postId, revertState);
+        patchFeedCaches(queryClient, postId, revertState);
+      }
       toast.error('Failed to vote. Please try again.');
     } finally {
       setIsVoting(false);
     }
-  }, [postId, isVoting, isLiked, isDisliked, localLikeCount, localDislikeCount, isAuthenticated, queryClient]);
+  }, [postId, isVoting, isLiked, isDisliked, localLikeCount, localDislikeCount, isAuthenticated, queryClient, onLike, onDislike]);
 
   const hasVoted = isLiked || isDisliked;
 
