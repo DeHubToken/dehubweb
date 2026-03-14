@@ -410,7 +410,7 @@ export default function StakingPage() {
                 <button
                   type="button"
                   onClick={() => setUnstakeAmount(userStaked.toString())}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-amber-400 text-[10px] font-bold uppercase hover:text-amber-300 transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-white/50 text-[10px] font-bold uppercase hover:text-white transition-colors"
                 >
                   Max
                 </button>
