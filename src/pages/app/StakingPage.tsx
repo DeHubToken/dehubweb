@@ -178,7 +178,7 @@ export default function StakingPage() {
       setIsApproving(false);
     }
 
-    toast({ title: 'Staking DHB...', description: 'Please confirm the stake transaction.' });
+    toast({ title: dhbText('Staking DHB...') as any, description: 'Please confirm the stake transaction.' });
     const result = await stakeBNB(stakeAmount);
     const receipt = await result.wait();
 
