@@ -71,8 +71,8 @@ async function fetchAllLogRowsSince(cutoffIso: string): Promise<Array<{ name: st
 
   while (true) {
     const { data, error } = await supabase
-      .from('category_post_log' as any)
-      .select('name')
+      .from('category_post_log')
+      .select('name, posted_at')
       .gte('posted_at', cutoffIso)
       .order('posted_at', { ascending: false })
       .range(from, from + PAGE_SIZE - 1);
@@ -81,7 +81,7 @@ async function fetchAllLogRowsSince(cutoffIso: string): Promise<Array<{ name: st
       throw error;
     }
 
-    const chunk = (data as Array<{ name: string | null }>) || [];
+    const chunk = (data || []).map((row) => ({ name: row.name }));
     if (chunk.length === 0) break;
 
     rows.push(...chunk);
