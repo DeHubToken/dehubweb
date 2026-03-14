@@ -146,9 +146,9 @@ export default function StakingPage() {
       }
 
       if (targetChain === 'BNB') {
-        await stakeBNBFlow(amount);
+        await stakeTransferFlow(amount, BNB_CHAIN_ID, 'BNB Chain');
       } else {
-        await stakeBaseFlow(amount);
+        await stakeTransferFlow(amount, BASE_CHAIN_ID, 'Base');
       }
     } catch (err: any) {
       console.error('[Staking] Stake error:', err);
