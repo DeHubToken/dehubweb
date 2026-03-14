@@ -105,8 +105,8 @@ export function MobileBottomNav() {
           {/* Nav items container */}
           <div 
             ref={scrollRef}
-            className={cn("flex items-center h-12 md:h-14 overflow-x-auto scrollbar-hide scroll-smooth", carouselAnimating && "overflow-hidden")}
-            style={{ scrollSnapType: 'x proximity', perspective: '600px' }}
+            className="flex items-center h-12 md:h-14 overflow-x-auto scrollbar-hide scroll-smooth"
+            style={{ scrollSnapType: 'x proximity' }}
           >
             {/* Left side items - Home + Messages */}
             <div className="flex items-center justify-start flex-shrink-0 pl-1" style={{ width: 'calc(50% - 24px)' }}>
