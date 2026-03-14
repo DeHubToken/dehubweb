@@ -384,7 +384,7 @@ export default function StakingPage() {
             <LiquidGlassBubble
               shimmer={false}
               noBorder
-              className="flex-1 min-w-0 [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl"
+              className="flex-1 min-w-0 [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl [&>div]:!py-1.5"
             >
               <div className="relative">
                 <input
@@ -444,7 +444,7 @@ export default function StakingPage() {
               <LiquidGlassBubble
                 shimmer={false}
                 noBorder
-                className="flex-1 min-w-0 [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl"
+                className="flex-1 min-w-0 [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl [&>div]:!py-1.5"
               >
                 <div className="relative">
                   <input
