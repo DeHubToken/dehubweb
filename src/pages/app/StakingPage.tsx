@@ -11,7 +11,7 @@ import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserStakingData, ty
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { sendERC20Token } from '@/lib/wallet/send';
-import { BASE_STAKING_ADDRESS, approveBNBStaking, stakeBNB, unstakeBNB, claimBNBRewards } from '@/lib/contracts/staking';
+import { STAKING_ADDRESS, unstakeBNB, claimBNBRewards } from '@/lib/contracts/staking';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
 import { toast } from '@/hooks/use-toast';
