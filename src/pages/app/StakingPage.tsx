@@ -229,7 +229,7 @@ export default function StakingPage() {
         .insert({
           wallet_address: walletAddress.toLowerCase(),
           amount,
-          chain: 'unified',
+          chain: 'Base',
           action: 'unstake',
           tx_hash: `unstake-request-${Date.now()}`,
         });
