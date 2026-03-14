@@ -130,7 +130,7 @@ export function renderTextWithLinks(text: string): ReactNode[] {
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
-            window.location.href = `/${username}`;
+            clientNavigate(`/${username}`);
           }}
           data-no-navigate="true"
         >
