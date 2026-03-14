@@ -12,7 +12,7 @@ import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { sendERC20Token } from '@/lib/wallet/send';
 import { supabase } from '@/integrations/supabase/client';
-import { STAKING_ADDRESS, unstakeBNB, claimBNBRewards } from '@/lib/contracts/staking';
+import { STAKING_ADDRESS, claimBNBRewards } from '@/lib/contracts/staking';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
 import { toast } from 'sonner';
