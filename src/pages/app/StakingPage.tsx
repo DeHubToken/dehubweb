@@ -638,6 +638,45 @@ export default function StakingPage() {
               Higher staking tiers unlock increased transaction limits, priority support, exclusive features, and stronger governance voting power.
             </p>
           </div>
+
+          {/* Early Access */}
+          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                <Clock className="w-4 h-4 text-cyan-400" />
+              </div>
+              <h3 className="text-sm font-semibold text-white">Early Access to Features</h3>
+            </div>
+            <p className="text-xs text-white/50 leading-relaxed">
+              Be the first to try new platform features before they roll out to everyone. Stakers get priority access to beta releases and upcoming tools.
+            </p>
+          </div>
+
+          {/* Enhanced Experience */}
+          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
+                <TrendingUp className="w-4 h-4 text-indigo-400" />
+              </div>
+              <h3 className="text-sm font-semibold text-white">Enhanced Experience</h3>
+            </div>
+            <p className="text-xs text-white/50 leading-relaxed">
+              Enjoy a premium experience with ad-free browsing, higher upload limits, and exclusive UI customizations.
+            </p>
+          </div>
+
+          {/* Airdrops */}
+          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-pink-500/10 flex items-center justify-center">
+                <Gift className="w-4 h-4 text-pink-400" />
+              </div>
+              <h3 className="text-sm font-semibold text-white">Airdrops</h3>
+            </div>
+            <p className="text-xs text-white/50 leading-relaxed">
+              Stakers are eligible for exclusive token airdrops and bonus reward distributions. The more you stake, the more you receive.
+            </p>
+          </div>
         </div>
       </motion.div>
     </div>
