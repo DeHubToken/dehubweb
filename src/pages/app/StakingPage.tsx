@@ -241,7 +241,7 @@ export default function StakingPage() {
         const receipt = await result.wait();
 
         if (receipt.status === 1) {
-          toast({ title: 'Unstaked successfully! ✅', description: `${unstakeAmount} DHB unstaked.` });
+          toast({ title: 'Unstaked successfully! ✅', description: dhbText(`${unstakeAmount} DHB unstaked.`) as any });
           setUnstakeAmount('');
           refetchStats();
           refetchUser();
