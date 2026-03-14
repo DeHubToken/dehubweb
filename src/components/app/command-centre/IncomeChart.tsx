@@ -148,23 +148,7 @@ export function IncomeChart() {
           <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
         </div>
       ) : chartData.length > 0 ? (
-        <div className="flex items-center justify-center gap-4">
-          <div className="space-y-2.5 shrink-0">
-            {chartData.map((item, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <div
-                  className="w-3 h-3 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: item.color }}
-                />
-                <span className="text-sm text-zinc-300 whitespace-nowrap">
-                  <span className="font-medium" style={{ color: item.color }}>{item.value}%</span>
-                  {' '}{item.name}
-                  <span className="text-zinc-500 ml-1">({item.rawValue.toLocaleString()})</span>
-                </span>
-              </div>
-            ))}
-          </div>
-
+        <div className="flex flex-col items-center gap-3">
           <div className="w-36 h-36 flex-shrink-0">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -183,6 +167,22 @@ export function IncomeChart() {
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5">
+            {chartData.map((item, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: item.color }}
+                />
+                <span className="text-sm text-zinc-300 whitespace-nowrap">
+                  <span className="font-medium" style={{ color: item.color }}>{item.value}%</span>
+                  {' '}{item.name}
+                  <span className="text-zinc-500 ml-1">({item.rawValue.toLocaleString()})</span>
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       ) : (
