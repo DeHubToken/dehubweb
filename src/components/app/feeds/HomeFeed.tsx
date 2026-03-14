@@ -724,9 +724,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // Final items to render with creator diversity limiting
   // This ensures users see content from a variety of creators (max 2 per creator in view)
-  const rawItems = useInterleavedFeed ? interleavedItems : singleFeedItems;
-  
-  const items = rawItems;
+  // Client-side multi-category filtering (when >1 category selected, API returns all)
+  const items = useMemo(() => {
+    if (selectedCategories.length <= 1) return rawItems; // 0 = all, 1 = API-filtered
+    const catSet = new Set(selectedCategories.map(c => c.toLowerCase()));
+    return rawItems.filter(item => {
+      const itemCats: string[] = (item.data as any)?.category || (item.data as any)?.categories || [];
+      if (!itemCats.length) return false;
+      return itemCats.some(c => catSet.has(String(c).toLowerCase()));
+    });
+  }, [rawItems, selectedCategories]);
 
   // Auto-remove optimistic posts once their real counterpart appears in the feed
   useEffect(() => {
