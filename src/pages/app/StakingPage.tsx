@@ -593,7 +593,7 @@ export default function StakingPage() {
                 return (
                   <div key={b.name} className="flex items-center justify-between py-1 px-2 rounded-md bg-white/[0.02]">
                     <div className="flex items-center gap-2">
-                      {badgeUrl && <img src={badgeUrl} alt={b.name} className="w-4 h-4" />}
+                      {badgeUrl && <img src={badgeUrl} alt={b.name} className="w-4 h-4 brightness-0 invert" />}
                       <span className="text-[11px] text-white/60">{b.name}</span>
                     </div>
                     <div className="flex items-center gap-3">
