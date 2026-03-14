@@ -6,7 +6,7 @@
  * English and Spanish are defined in en.json/es.json; this file covers all other languages.
  */
 
-import i18n from 'i18next';
+import type { i18n as I18nInstance } from 'i18next';
 
 interface StakingTranslation {
   staking: Record<string, string>;
