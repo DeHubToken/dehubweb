@@ -480,26 +480,17 @@ export default function StakingPage() {
           transition={{ delay: 0.2 }}
           className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6"
         >
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
-            <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
-            <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.yourStaked')}</p>
-              <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)} <span className="text-white/40 text-xs">DHB</span></p>
-            </div>
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4">
+            <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.yourStaked')}</p>
+            <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)} <span className="text-white/40 text-xs">DHB</span></p>
           </div>
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
-            <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
-            <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.unstaking')}</p>
-              <p className="text-sm font-bold text-white truncate">{formatNumber(userData?.totalUnstakeQueued ?? 0)} <span className="text-white/40 text-xs">DHB</span></p>
-            </div>
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4">
+            <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.unstaking')}</p>
+            <p className="text-sm font-bold text-white truncate">{formatNumber(userData?.totalUnstakeQueued ?? 0)} <span className="text-white/40 text-xs">DHB</span></p>
           </div>
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
-            <Gift className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
-            <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.rewards')}</p>
-              <p className="text-sm font-bold text-white truncate">{formatNumber(userEarned, 2)} <span className="text-white/40 text-xs">DHB</span></p>
-            </div>
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4">
+            <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.rewards')}</p>
+            <p className="text-sm font-bold text-white truncate">{formatNumber(userEarned, 2)} <span className="text-white/40 text-xs">DHB</span></p>
           </div>
           <LiquidGlassBubble
             shimmer
