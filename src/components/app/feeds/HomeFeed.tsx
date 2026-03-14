@@ -349,13 +349,17 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       if (categoryId) {
         setIsCategoryTransitioning(true);
         queryClient.removeQueries({ queryKey: ['unified-feed'] });
-        setSelectedCategory(categoryId);
+        // Add category to selection (toggle if already present)
+        setSelectedCategories(prev => {
+          if (prev.includes(categoryId)) return prev;
+          return [...prev, categoryId];
+        });
         window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
       }
     };
     window.addEventListener('category-filter-changed', handler);
     return () => window.removeEventListener('category-filter-changed', handler);
-  }, [setSelectedCategory, queryClient]);
+  }, [setSelectedCategories, queryClient]);
 
   // Fetch categories
   const { data: categories = [] } = useQuery({
