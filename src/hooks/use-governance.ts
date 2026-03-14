@@ -360,11 +360,15 @@ export function useVoteGovernanceProposal() {
       if (context?.previousVotes) {
         queryClient.setQueryData(['governance-votes', walletAddress], context.previousVotes);
       }
+      if (context?.previousDetail && context?.proposalId) {
+        queryClient.setQueryData(['governance-proposal', context.proposalId], context.previousDetail);
+      }
       const msg = parseTxError(err) || err?.message || 'Vote failed. You must hold DHB tokens to vote.';
       toast.error(msg);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['governance-proposals'] });
+      queryClient.invalidateQueries({ queryKey: ['governance-proposal'] });
       queryClient.invalidateQueries({ queryKey: ['governance-votes'] });
     },
   });

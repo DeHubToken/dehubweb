@@ -193,7 +193,7 @@ export function ActionBar({
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(postId || '');
   
   const handleVote = useCallback(async (vote: boolean) => {
-    if (!postId || isVoting) return;
+    if (!postId || isVoting || externalDisabled) return;
     
     if (!isAuthenticated) {
       toast.error('Log in to engage');
