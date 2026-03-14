@@ -43,6 +43,27 @@ export function MobileBottomNav() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
+  // First-visit scroll hint: nudge right then back to show more options
+  useEffect(() => {
+    const HINT_KEY = 'dehub_nav_scroll_hint_seen';
+    if (localStorage.getItem(HINT_KEY)) return;
+    
+    const timer = setTimeout(() => {
+      const el = scrollRef.current;
+      if (!el || el.scrollWidth <= el.clientWidth) return;
+      
+      // Smooth scroll right
+      el.scrollTo({ left: 120, behavior: 'smooth' });
+      
+      // Then scroll back after a pause
+      setTimeout(() => {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+        localStorage.setItem(HINT_KEY, 'true');
+      }, 600);
+    }, 1500);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
 
   const handleNavClick = (e: React.MouseEvent, path: string) => {
