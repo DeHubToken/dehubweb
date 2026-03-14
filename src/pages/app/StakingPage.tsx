@@ -440,19 +440,19 @@ export default function StakingPage() {
             <p className="text-xs text-white/40 mb-4">
               Withdraw your staked DHB. Tokens will be returned to your wallet.
             </p>
-            <div className="flex gap-2">
+            <div className="flex items-stretch gap-2">
               <LiquidGlassBubble
                 shimmer={false}
                 noBorder
-                className="flex-1 min-w-0 [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl"
+                className="flex-1 min-w-0 [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl [&>div]:!py-0 [&>div]:!px-3 [&>div]:flex [&>div]:items-center"
               >
-                <div className="relative">
+                <div className="relative w-full z-10">
                   <input
                     type="number"
                     placeholder={formatNumber(userStaked)}
                     value={unstakeAmount}
                     onChange={(e) => setUnstakeAmount(e.target.value)}
-                    className="w-full bg-transparent text-white text-sm placeholder:text-white/30 focus:outline-none pr-10"
+                    className="w-full bg-transparent text-white text-sm placeholder:text-white/30 focus:outline-none pr-10 py-0 h-full"
                   />
                   <button
                     type="button"
