@@ -47,6 +47,14 @@ interface AppStoreButtonsProps {
 
 export const AppStoreButtons = ({ onEnterApp }: AppStoreButtonsProps) => {
   const { t } = useTranslation();
+  const [morphed, setMorphed] = useState(false);
+
+  useEffect(() => {
+    // Trigger morph after the fade-up animation starts (delay=2s in fadeUpVariants)
+    const timer = setTimeout(() => setMorphed(true), 2200);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleAppStoreClick = () => {
     toast.info(t('hero.comingSoon', 'Coming Soon'), {
       description: t('hero.iosComingSoon', 'The iOS app will be available soon!'),
