@@ -565,8 +565,8 @@ export default function StakingPage() {
           {/* Profit Share */}
           <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                <DollarSign className="w-4 h-4 text-emerald-400" />
+              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
+                <DollarSign className="w-4 h-4 text-white" />
               </div>
               <h3 className="text-sm font-semibold text-white">Profit Share</h3>
             </div>
@@ -578,8 +578,8 @@ export default function StakingPage() {
           {/* Reduced Fees */}
           <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                <Percent className="w-4 h-4 text-blue-400" />
+              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
+                <Percent className="w-4 h-4 text-white" />
               </div>
               <h3 className="text-sm font-semibold text-white">Reduced Fees</h3>
             </div>
@@ -609,8 +609,8 @@ export default function StakingPage() {
           {/* Super Powers */}
           <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                <Zap className="w-4 h-4 text-purple-400" />
+              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
+                <Zap className="w-4 h-4 text-white" />
               </div>
               <h3 className="text-sm font-semibold text-white">Super Powers</h3>
             </div>
@@ -629,8 +629,8 @@ export default function StakingPage() {
           {/* Increased Limits */}
           <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                <Crown className="w-4 h-4 text-amber-400" />
+              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
+                <Crown className="w-4 h-4 text-white" />
               </div>
               <h3 className="text-sm font-semibold text-white">Increased Limits & Better Features</h3>
             </div>
@@ -642,8 +642,8 @@ export default function StakingPage() {
           {/* Early Access */}
           <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
-                <Clock className="w-4 h-4 text-cyan-400" />
+              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
+                <Clock className="w-4 h-4 text-white" />
               </div>
               <h3 className="text-sm font-semibold text-white">Early Access to Features</h3>
             </div>
@@ -655,8 +655,8 @@ export default function StakingPage() {
           {/* Enhanced Experience */}
           <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
-                <TrendingUp className="w-4 h-4 text-indigo-400" />
+              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
+                <TrendingUp className="w-4 h-4 text-white" />
               </div>
               <h3 className="text-sm font-semibold text-white">Enhanced Experience</h3>
             </div>
@@ -668,8 +668,8 @@ export default function StakingPage() {
           {/* Airdrops */}
           <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-pink-500/10 flex items-center justify-center">
-                <Gift className="w-4 h-4 text-pink-400" />
+              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
+                <Gift className="w-4 h-4 text-white" />
               </div>
               <h3 className="text-sm font-semibold text-white">Airdrops</h3>
             </div>
