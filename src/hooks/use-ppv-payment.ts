@@ -7,6 +7,7 @@
 
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
+import { dhbText } from '@/lib/dhb-toast';
 import { Interface } from 'ethers';
 import { 
   writeContractAA, 
