@@ -1229,7 +1229,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                   "flex-1 flex backdrop-blur-xl border rounded-xl relative transition-all duration-200",
                   isInputExpanded
                     ? "items-start flex-col px-3"
-                    : "items-center flex-row px-3 pr-1.5 gap-1.5",
+                    : "items-center flex-row px-3 pr-2 gap-1.5",
                   isMobile
                     ? "bg-zinc-800/80 border-zinc-700"
                     : "bg-white/[0.08] border-white/[0.12]",
