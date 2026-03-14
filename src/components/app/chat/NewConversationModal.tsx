@@ -186,7 +186,7 @@ function FeePaymentStep({
 
       if (balance < amountWei) {
         const balanceHuman = Number(balance) / 1e18;
-        toast.error(`Insufficient DHB. Need ${amount.toLocaleString()} but have ${balanceHuman.toFixed(2)}`);
+        toast.error(dhbText(`Insufficient DHB. Need ${amount.toLocaleString()} but have ${balanceHuman.toFixed(2)}`));
         setBalanceInfo({ checked: true, balance: balanceHuman, sufficient: false });
         setIsSending(false);
         return;
