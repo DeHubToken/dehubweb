@@ -7,6 +7,7 @@
 
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
+import { dhbText } from '@/lib/dhb-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { getWalletAddress, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
