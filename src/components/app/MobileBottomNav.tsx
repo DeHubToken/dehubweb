@@ -6,7 +6,7 @@ import { PostModal } from './PostModal';
 import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
 
-const CAROUSEL_ANIM_KEY = 'dehub_nav_carousel_seen';
+
 
 // Left side: Home, Messages
 const LEFT_NAV_ITEMS = [
