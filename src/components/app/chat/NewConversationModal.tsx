@@ -167,7 +167,7 @@ function FeePaymentStep({
 
   const handlePay = async (amount: number) => {
     if (Number.isNaN(amount) || amount < fee) {
-      toast.error(`Minimum tip is ${fee.toLocaleString()} DHB`);
+      toast.error(dhbText(`Minimum tip is ${fee.toLocaleString()} DHB`));
       return;
     }
     if (!messageText.trim()) {
