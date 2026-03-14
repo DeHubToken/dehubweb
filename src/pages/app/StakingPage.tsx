@@ -260,7 +260,7 @@ export default function StakingPage() {
 
       if (error) throw error;
 
-      toast.success(t('toasts.unstake_request_submitted'), { description: t('toasts.dhb_added_to_unstake_queue', { amount: unstakeAmount }) });
+      toast.success(t('toasts.unstake_request_submitted'), { description: t('toasts.dhb_added_to_unstake_queue', { amount: unstakeAmount, tokenWord: parseFloat(unstakeAmount) === 1 ? 'token' : 'tokens' }) });
       setUnstakeAmount('');
       refetchStats();
       refetchUser();
