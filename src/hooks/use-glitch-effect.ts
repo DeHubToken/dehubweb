@@ -8,7 +8,7 @@ export interface GlitchState {
   showPixelCorruption: boolean;
 }
 
-export const useGlitchEffect = (title: string = 'A New World', subtitle: string = 'Awaits') => {
+export const useGlitchEffect = (title: string = 'Welcome To', subtitle: string = 'Our World') => {
   const [masterGlitch, setMasterGlitch] = useState(false);
   const [corruptedTitle, setCorruptedTitle] = useState(title);
   const [corruptedSubtitle, setCorruptedSubtitle] = useState(subtitle);
