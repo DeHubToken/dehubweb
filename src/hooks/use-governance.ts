@@ -276,21 +276,24 @@ export function useVoteGovernanceProposal() {
         return { action: 'voted' as const };
       }
     },
-    onMutate: async ({ proposalId, voteType, currentVote, voteWeight }) => {
+    onMutate: async ({ proposalId, voteType, voteWeight }) => {
       await queryClient.cancelQueries({ queryKey: ['governance-proposals'] });
       await queryClient.cancelQueries({ queryKey: ['governance-votes'] });
+      await queryClient.cancelQueries({ queryKey: ['governance-proposal'] });
 
       const previousRequests = queryClient.getQueriesData({ queryKey: ['governance-proposals'] });
       const previousVotes = queryClient.getQueryData(['governance-votes', walletAddress]);
+      const previousDetail = queryClient.getQueryData(['governance-proposal', proposalId]);
 
-      // Get old vote weight from cached data
-      const oldVotes = previousVotes as Record<string, { type: number; weight: number }> | undefined;
-      const oldWeight = oldVotes?.[proposalId]?.weight ?? voteWeight;
+      // Read ACTUAL current vote from cache (not the stale prop)
+      const cachedVotes = previousVotes as Record<string, { type: number; weight: number }> | undefined;
+      const actualCurrentVote = cachedVotes?.[proposalId]?.type;
+      const oldWeight = cachedVotes?.[proposalId]?.weight ?? voteWeight;
 
       // Optimistic vote map update
       queryClient.setQueryData(['governance-votes', walletAddress], (old: Record<string, { type: number; weight: number }> | undefined) => {
         const newVotes = { ...(old || {}) };
-        if (currentVote === voteType) {
+        if (actualCurrentVote === voteType) {
           delete newVotes[proposalId];
         } else {
           newVotes[proposalId] = { type: voteType, weight: voteWeight };
@@ -298,7 +301,24 @@ export function useVoteGovernanceProposal() {
         return newVotes;
       });
 
-      // Optimistic vote count update (weighted)
+      // Compute deltas once
+      let likeDelta = 0;
+      let dislikeDelta = 0;
+      if (actualCurrentVote === voteType) {
+        // Removing vote — use old weight
+        if (voteType === 1) likeDelta = -oldWeight;
+        else dislikeDelta = -oldWeight;
+      } else if (actualCurrentVote) {
+        // Changing vote — remove old weight, add new weight
+        if (actualCurrentVote === 1) { likeDelta = -oldWeight; dislikeDelta = voteWeight; }
+        else { dislikeDelta = -oldWeight; likeDelta = voteWeight; }
+      } else {
+        // New vote
+        if (voteType === 1) likeDelta = voteWeight;
+        else dislikeDelta = voteWeight;
+      }
+
+      // Optimistic vote count update on list pages (weighted)
       queryClient.setQueriesData({ queryKey: ['governance-proposals'] }, (old: any) => {
         if (!old?.pages) return old;
         return {
@@ -306,23 +326,6 @@ export function useVoteGovernanceProposal() {
           pages: old.pages.map((page: GovernanceProposal[]) =>
             page.map((p) => {
               if (p.id !== proposalId) return p;
-              let likeDelta = 0;
-              let dislikeDelta = 0;
-
-              if (currentVote === voteType) {
-                // Removing vote — use old weight
-                if (voteType === 1) likeDelta = -oldWeight;
-                else dislikeDelta = -oldWeight;
-              } else if (currentVote) {
-                // Changing vote — remove old weight, add new weight
-                if (currentVote === 1) { likeDelta = -oldWeight; dislikeDelta = voteWeight; }
-                else { dislikeDelta = -oldWeight; likeDelta = voteWeight; }
-              } else {
-                // New vote
-                if (voteType === 1) likeDelta = voteWeight;
-                else dislikeDelta = voteWeight;
-              }
-
               return {
                 ...p,
                 vote_count: p.vote_count + likeDelta - dislikeDelta,
@@ -334,7 +337,18 @@ export function useVoteGovernanceProposal() {
         };
       });
 
-      return { previousRequests, previousVotes };
+      // Optimistic update on detail page query
+      queryClient.setQueryData(['governance-proposal', proposalId], (old: GovernanceProposal | undefined) => {
+        if (!old) return old;
+        return {
+          ...old,
+          vote_count: old.vote_count + likeDelta - dislikeDelta,
+          like_count: (old.like_count ?? 0) + likeDelta,
+          dislike_count: (old.dislike_count ?? 0) + dislikeDelta,
+        };
+      });
+
+      return { previousRequests, previousVotes, previousDetail, proposalId };
     },
     onError: (err: any, _vars, context) => {
       toast.dismiss('governance-vote-fee');
@@ -346,11 +360,15 @@ export function useVoteGovernanceProposal() {
       if (context?.previousVotes) {
         queryClient.setQueryData(['governance-votes', walletAddress], context.previousVotes);
       }
+      if (context?.previousDetail && context?.proposalId) {
+        queryClient.setQueryData(['governance-proposal', context.proposalId], context.previousDetail);
+      }
       const msg = parseTxError(err) || err?.message || 'Vote failed. You must hold DHB tokens to vote.';
       toast.error(msg);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['governance-proposals'] });
+      queryClient.invalidateQueries({ queryKey: ['governance-proposal'] });
       queryClient.invalidateQueries({ queryKey: ['governance-votes'] });
     },
   });

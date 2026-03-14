@@ -79,6 +79,8 @@ interface ActionBarProps {
   tipCount?: number;
   /** Handler for tip action */
   onTip?: () => void;
+  /** Whether voting buttons should be disabled (e.g. mutation pending) */
+  disabled?: boolean;
 }
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
@@ -112,6 +114,7 @@ export function ActionBar({
   voteWeight = 1,
   tipCount,
   onTip,
+  disabled: externalDisabled = false,
 }: ActionBarProps) {
   // Add localStorage delta to comment count for instant feedback
   const commentCountDelta = postId ? getCommentCountDelta(postId) : 0;
@@ -190,7 +193,7 @@ export function ActionBar({
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(postId || '');
   
   const handleVote = useCallback(async (vote: boolean) => {
-    if (!postId || isVoting) return;
+    if (!postId || isVoting || externalDisabled) return;
     
     if (!isAuthenticated) {
       toast.error('Log in to engage');
@@ -268,7 +271,7 @@ export function ActionBar({
     } finally {
       setIsVoting(false);
     }
-  }, [postId, isVoting, isLiked, isDisliked, localLikeCount, localDislikeCount, isAuthenticated, queryClient, onLike, onDislike]);
+  }, [postId, isVoting, externalDisabled, isLiked, isDisliked, localLikeCount, localDislikeCount, isAuthenticated, queryClient, onLike, onDislike]);
 
   const hasVoted = isLiked || isDisliked;
 

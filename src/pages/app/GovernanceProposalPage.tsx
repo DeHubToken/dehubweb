@@ -186,6 +186,7 @@ export default function GovernanceProposalPage() {
           dislikeCount={proposal.dislike_count ?? 0}
           commentCount={proposal.comment_count}
           voteWeight={userWeight}
+          disabled={voteMutation.isPending}
         />
       </div>
 
