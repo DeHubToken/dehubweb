@@ -104,7 +104,7 @@ export function usePPVPayment({
         // Only Base supports auto-swap via Uniswap
         if (!isAutoSwapSupported(chainId)) {
           const balanceHuman = fromWei(dhbBalance);
-          toast.error(`Insufficient DHB balance. Need ${price} DHB but have ${balanceHuman} DHB. Auto-swap is only available on Base.`);
+          toast.error(dhbText(`Insufficient DHB balance. Need ${price} DHB but have ${balanceHuman} DHB. Auto-swap is only available on Base.`));
           setIsPaying(false);
           return;
         }
