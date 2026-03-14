@@ -45,8 +45,20 @@ export function seedProfileCache(
 
   for (const key of keys) {
     const existing = queryClient.getQueryData<ProfileData>(key);
-    // If we already have any data, don't overwrite — let real fetch handle it
-    if (existing) continue;
+
+    // Existing visual-only shell can get stuck as "fresh" due staleTime,
+    // so explicitly mark it stale to force a real profile fetch on mount.
+    if (existing) {
+      const isVisualOnlyShell =
+        existing.followers == null ||
+        existing.following == null ||
+        existing.postsCount == null;
+
+      if (isVisualOnlyShell) {
+        queryClient.invalidateQueries({ queryKey: key, exact: true, refetchType: 'none' });
+      }
+      continue;
+    }
 
     // Seed a minimal visual-only shell — stats left undefined so UI shows skeleton for them
     const shell: ProfileData = {
@@ -64,6 +76,8 @@ export function seedProfileCache(
       walletAddress: address,
       badgeBalance: data.badgeBalance,
     };
+
     queryClient.setQueryData(key, shell);
+    queryClient.invalidateQueries({ queryKey: key, exact: true, refetchType: 'none' });
   }
 }
