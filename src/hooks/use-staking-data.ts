@@ -95,6 +95,7 @@ export interface UserStakingData {
   // Combined
   totalStaked: number;
   totalUnstaked: number;
+  totalUnstakeQueued: number;
   hasBNBBalance: boolean;
   hasBaseBalance: boolean;
   hasBothChains: boolean;
