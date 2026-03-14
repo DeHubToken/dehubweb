@@ -63,7 +63,7 @@ export const AppStoreButtons = ({ onEnterApp }: AppStoreButtonsProps) => {
     >
       {/* Enter App button */}
       {onEnterApp && (
-        <a href="/app" onClick={(e) => { e.preventDefault(); onEnterApp(); }} style={cursorStyle}>
+        <a href="/app" onClick={(e) => { e.preventDefault(); onEnterApp(); }} style={cursorStyle} className="w-full block">
           <LiquidGlassBubble shimmer className={btnClass}>
             <div className="flex items-center justify-center h-full">
               <span className="text-white text-base md:text-sm font-semibold tracking-wide">Enter App</span>
