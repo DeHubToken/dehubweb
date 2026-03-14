@@ -53,6 +53,17 @@ export function bumpProfileImageVersion(address: string): void {
 }
 
 /**
+ * Build a direct CDN avatar URL: cdn/avatars/{address}.{ext}
+ * Used as a cascading fallback when the primary API-server URL fails.
+ */
+export function buildAvatarCdnFallbackUrl(address: string, apiAvatarPath?: string | null): string | undefined {
+  if (!address) return undefined;
+  const ext = apiAvatarPath ? getExtension(apiAvatarPath) : 'jpg';
+  const cacheBust = getProfileImageVersion(address.toLowerCase());
+  return `${DEHUB_CDN_BASE}avatars/${address.toLowerCase()}.${ext}?v=${cacheBust}`;
+}
+
+/**
  * Build canonical avatar URL: cdn/avatars/{address}.{ext}
  * API may return paths like "avatars/xxx.jpg" or "statics/avatars/xxx.octet-stream"
  * We normalize to: https://dehubcdn.../avatars/{address}.{ext}
@@ -84,12 +95,9 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
     }
   }
 
-  // Any other api.dehub.io URL — extract path and rebuild with CDN
+  // Any other api.dehub.io URL — keep on API server (not all avatars are synced to CDN)
   if (apiAvatarPath.includes('api.dehub.io')) {
-    const match = apiAvatarPath.match(/api\.dehub\.io\/([^?]+)/);
-    if (match) {
-      return `${DEHUB_CDN_BASE}${match[1]}?v=${cacheBust}`;
-    }
+    return `${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
   }
 
   // Other full URLs (dicebear, external CDNs, etc.) - return as-is
@@ -105,12 +113,7 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
   // For remaining relative paths, require a known address
   if (!normalizedAddress) return undefined;
 
-  // "avatars/" paths — serve from API server (not all avatars are synced to CDN)
-  if (apiAvatarPath.startsWith('avatars/')) {
-    return `https://api.dehub.io/${apiAvatarPath}?v=${cacheBust}`;
-  }
-
-  // Relative path - use with CDN base
+  // Relative path (including avatars/) — use CDN base
   return `${DEHUB_CDN_BASE}${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
 }
 

@@ -5,6 +5,7 @@ import {
 import {
   getExtension,
   buildAvatarUrl,
+  buildAvatarCdnFallbackUrl,
   buildCoverUrl,
   buildImageUrl,
   buildVideoUrl,
@@ -67,9 +68,10 @@ describe('buildAvatarUrl', () => {
     expect(buildAvatarUrl(addr, url)).toMatch(/\?v=/);
   });
 
-  it('converts api.dehub.io/avatars/ URLs to CDN', () => {
+  it('keeps api.dehub.io/avatars/ URLs on API server (not all avatars on CDN)', () => {
     const result = buildAvatarUrl(addr, 'https://api.dehub.io/avatars/0xabc.png');
-    expect(result).toContain(`${DEHUB_CDN_BASE}avatars/0xabc.png`);
+    expect(result).toContain('https://api.dehub.io/avatars/0xabc.png');
+    expect(result).toMatch(/\?v=/);
   });
 
   it('converts api.dehub.io/statics/avatars/ URLs to CDN by stripping statics/', () => {
@@ -82,14 +84,32 @@ describe('buildAvatarUrl', () => {
     expect(buildAvatarUrl(addr, ext)).toBe(ext);
   });
 
-  it('routes avatars/ relative paths to API server', () => {
+  it('routes avatars/ relative paths to CDN', () => {
     const result = buildAvatarUrl(addr, 'avatars/0xabc.jpg');
-    expect(result).toContain('https://api.dehub.io/avatars/0xabc.jpg');
+    expect(result).toContain(`${DEHUB_CDN_BASE}avatars/0xabc.jpg`);
   });
 
   it('routes statics/ relative paths to CDN after stripping prefix', () => {
     const result = buildAvatarUrl(addr, 'statics/avatars/0xabc.png');
     expect(result).toContain(`${DEHUB_CDN_BASE}avatars/0xabc.png`);
+  });
+});
+
+// ── buildAvatarCdnFallbackUrl ──
+
+describe('buildAvatarCdnFallbackUrl', () => {
+  it('returns undefined for empty address', () => {
+    expect(buildAvatarCdnFallbackUrl('', 'avatars/x.jpg')).toBeUndefined();
+  });
+
+  it('builds CDN URL with address and extension from path', () => {
+    const result = buildAvatarCdnFallbackUrl('0xabc', 'https://api.dehub.io/avatars/0xabc.png');
+    expect(result).toContain(`${DEHUB_CDN_BASE}avatars/0xabc.png`);
+  });
+
+  it('defaults to jpg when path has no extension', () => {
+    const result = buildAvatarCdnFallbackUrl('0xabc', undefined);
+    expect(result).toContain(`${DEHUB_CDN_BASE}avatars/0xabc.jpg`);
   });
 });
 

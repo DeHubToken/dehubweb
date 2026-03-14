@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import { isBigBadgeUrl } from '@/lib/staking-badges';
+import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { toast } from 'sonner';
 import { DISPLAY_WALLET_OVERRIDES, getDefaultBanner, type TabValue } from './ProfileConstants';
@@ -122,7 +123,9 @@ export function ProfileHeader({
 
   const { t } = useTranslation();
   const [showUnfollowConfirm, setShowUnfollowConfirm] = useState(false);
-  const [avatarError, setAvatarError] = useState(false);
+  const [avatarFailed, setAvatarFailed] = useState(false);
+  const [avatarCdnFailed, setAvatarCdnFailed] = useState(false);
+  const cdnFallbackUrl = buildAvatarCdnFallbackUrl(profile.walletAddress || '', profile.avatarUrl);
 
   return (
     <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
@@ -150,12 +153,12 @@ export function ProfileHeader({
                     className="w-full h-full rounded-[10px] bg-zinc-900 overflow-hidden relative group"
                     onClick={() => setShowAvatarOverlay(prev => !prev)}
                   >
-                    {profile.avatarUrl && !avatarError ? (
+                    {profile.avatarUrl && !avatarCdnFailed ? (
                       <img
-                        src={profile.avatarUrl}
+                        src={avatarFailed ? cdnFallbackUrl : profile.avatarUrl}
                         alt={profile.name}
                         className="w-full h-full rounded-[10px] object-cover aspect-square"
-                        onError={() => setAvatarError(true)}
+                        onError={() => avatarFailed ? setAvatarCdnFailed(true) : setAvatarFailed(true)}
                       />
                     ) : (
                       <UserAvatar
@@ -208,12 +211,12 @@ export function ProfileHeader({
                 onClick={() => profile.avatarUrl && setFullscreenImage(profile.avatarUrl)}
                 disabled={!profile.avatarUrl}
               >
-                {profile.avatarUrl && !avatarError ? (
+                {profile.avatarUrl && !avatarCdnFailed ? (
                   <img
-                    src={profile.avatarUrl}
+                    src={avatarFailed ? cdnFallbackUrl : profile.avatarUrl}
                     alt={profile.name}
                     className="w-full h-full rounded-lg object-cover aspect-square"
-                    onError={() => setAvatarError(true)}
+                    onError={() => avatarFailed ? setAvatarCdnFailed(true) : setAvatarFailed(true)}
                   />
                 ) : (
                   <UserAvatar
