@@ -80,3 +80,6 @@ verify_jwt = false
 
 [functions.cmc-chart]
 verify_jwt = false
+
+[functions.sync-category-log]
+verify_jwt = false
