@@ -124,8 +124,9 @@ function getDateRange(dateValue: string): 'day' | 'week' | 'month' | 'year' | un
 interface FilterSectionProps {
   selectedSort: SortOption;
   onSortSelect: (o: SortOption) => void;
-  selectedCategory: string;
-  onCategorySelect: (category: string) => void;
+  selectedCategories: string[];
+  onCategoryToggle: (category: string) => void;
+  onCategoryClear: () => void;
   categories: DeHubCategory[];
   selectedDate: DateFilterOption;
   onDateSelect: (o: DateFilterOption) => void;
@@ -139,8 +140,9 @@ interface FilterSectionProps {
 function SortFilterSection({ 
   selectedSort, 
   onSortSelect,
-  selectedCategory,
-  onCategorySelect,
+  selectedCategories,
+  onCategoryToggle,
+  onCategoryClear,
   categories,
   selectedDate, 
   onDateSelect,
@@ -153,24 +155,14 @@ function SortFilterSection({
   const { t } = useI18n();
   const [categorySearch, setCategorySearch] = useState('');
 
-  // Find the currently selected category object (if not 'all')
-  const selectedCategoryObj = useMemo(() => {
-    if (selectedCategory === 'all') return null;
-    return categories.find(cat => cat.id === selectedCategory) || null;
-  }, [categories, selectedCategory]);
-
   const filteredCategories = useMemo(() => {
     let filtered = categories;
     if (categorySearch.trim()) {
       const q = categorySearch.toLowerCase();
       filtered = categories.filter(cat => cat.name.toLowerCase().includes(q));
     }
-    // Remove selected category from the list (it will be pinned separately)
-    if (selectedCategoryObj) {
-      filtered = filtered.filter(cat => cat.id !== selectedCategory);
-    }
     return filtered;
-  }, [categories, categorySearch, selectedCategory, selectedCategoryObj]);
+  }, [categories, categorySearch]);
 
   const activeFilterClass = 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]';
   const inactiveFilterClass = 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700';
@@ -202,41 +194,33 @@ function SortFilterSection({
         />
         <div className="relative">
           <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
-            {/* Pinned selected category chip (before All) */}
-            {selectedCategoryObj && (
-              <button
-                onClick={() => { onCategorySelect('all'); setCategorySearch(''); }}
-                className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", activeFilterClass)}
-              >
-                {selectedCategoryObj.name}
-                <span className="ml-0.5 text-white/50 hover:text-white">✕</span>
-              </button>
-            )}
             <button
-              onClick={() => { onCategorySelect('all'); setCategorySearch(''); }}
+              onClick={() => { onCategoryClear(); setCategorySearch(''); }}
               className={cn(
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                selectedCategory === 'all'
+                selectedCategories.length === 0
                   ? activeFilterClass
                   : inactiveFilterClass
               )}
             >
               {t('filters.all')}
             </button>
-            {filteredCategories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => { onCategorySelect(cat.id); setCategorySearch(''); }}
-                className={cn(
-                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                  selectedCategory === cat.id
-                    ? activeFilterClass
-                    : inactiveFilterClass
-                )}
-              >
-                {cat.name}
-              </button>
-            ))}
+            {filteredCategories.map((cat) => {
+              const isActive = selectedCategories.includes(cat.id);
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => { onCategoryToggle(cat.id); setCategorySearch(''); }}
+                  className={cn(
+                    'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                    isActive ? activeFilterClass : inactiveFilterClass
+                  )}
+                >
+                  {cat.name}
+                  {isActive && <span className="ml-1 text-white/50">✓</span>}
+                </button>
+              );
+            })}
             {filteredCategories.length === 0 && categorySearch.trim() && (
               <span className="text-xs text-zinc-500 py-1.5">{t('filters.noMatches')}</span>
             )}
@@ -353,7 +337,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const [selectedDate, setSelectedDate] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
   const [selectedPostType, setSelectedPostType] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('home');
-  const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string>('home', 'category', 'all');
+  const [selectedCategories, setSelectedCategories] = usePersistedFeedFilter<string[]>('home', 'categories', []);
 
   // Listen for external category changes (e.g. from Talk of the Town sidebar)
   // Set a transitioning flag so we force skeleton state (bypasses placeholderData)
@@ -365,13 +349,17 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       if (categoryId) {
         setIsCategoryTransitioning(true);
         queryClient.removeQueries({ queryKey: ['unified-feed'] });
-        setSelectedCategory(categoryId);
+        // Add category to selection (toggle if already present)
+        setSelectedCategories(prev => {
+          if (prev.includes(categoryId)) return prev;
+          return [...prev, categoryId];
+        });
         window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
       }
     };
     window.addEventListener('category-filter-changed', handler);
     return () => window.removeEventListener('category-filter-changed', handler);
-  }, [setSelectedCategory, queryClient]);
+  }, [setSelectedCategories, queryClient]);
 
   // Fetch categories
   const { data: categories = [] } = useQuery({
@@ -447,12 +435,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     sortOrder,
     range,
     status: 'minted' as const,
-    category: selectedCategory !== 'all' ? selectedCategory : undefined,
+    // Single category → pass to API; multiple → fetch all, filter client-side
+    category: selectedCategories.length === 1 ? selectedCategories[0] : undefined,
     isPPV: contentFilters.ppv ? true : undefined,
     hasBounty: contentFilters.w2e ? true : undefined,
     isLocked: contentFilters.locked ? true : undefined,
     followingOnly: selectedSort.value === 'following' ? true : undefined,
-  }), [sortBy, sortOrder, range, selectedCategory, contentFilters, selectedSort.value]);
+  }), [sortBy, sortOrder, range, selectedCategories, contentFilters, selectedSort.value]);
 
   // ============================================================================
   // THREE SEPARATE FEED QUERIES
@@ -734,10 +723,18 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   }, [useInterleavedFeed, singleFeed.data, pinnedPostId, selectedSort.value]);
 
   // Final items to render with creator diversity limiting
-  // This ensures users see content from a variety of creators (max 2 per creator in view)
   const rawItems = useInterleavedFeed ? interleavedItems : singleFeedItems;
   
-  const items = rawItems;
+  // Client-side multi-category filtering (when >1 category selected, API returns all)
+  const items = useMemo(() => {
+    if (selectedCategories.length <= 1) return rawItems; // 0 = all, 1 = API-filtered
+    const catSet = new Set(selectedCategories.map(c => c.toLowerCase()));
+    return rawItems.filter(item => {
+      const itemCats: string[] = (item.data as any)?.category || (item.data as any)?.categories || [];
+      if (!itemCats.length) return false;
+      return itemCats.some(c => catSet.has(String(c).toLowerCase()));
+    });
+  }, [rawItems, selectedCategories]);
 
   // Auto-remove optimistic posts once their real counterpart appears in the feed
   useEffect(() => {
@@ -1269,8 +1266,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               <SortFilterSection 
                 selectedSort={selectedSort} 
                 onSortSelect={handleSortSelect}
-                selectedCategory={selectedCategory}
-                onCategorySelect={setSelectedCategory}
+                selectedCategories={selectedCategories}
+                onCategoryToggle={(cat) => {
+                  setSelectedCategories(prev => 
+                    prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+                  );
+                }}
+                onCategoryClear={() => setSelectedCategories([])}
                 categories={categories}
                 selectedDate={selectedDate}
                 onDateSelect={setSelectedDate}
@@ -1288,7 +1290,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 onContentFilterToggle={toggleContentFilter}
                 onReset={() => {
                   setSelectedSort(SORT_OPTIONS[0]);
-                  setSelectedCategory('all');
+                  setSelectedCategories([]);
                   setSelectedDate(DATE_FILTER_OPTIONS[0]);
                   setSelectedPostType('all');
                   resetContentFilters();
@@ -1298,6 +1300,31 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Active category chips bar */}
+      {selectedCategories.length > 0 && (
+        <div className="flex items-center gap-1.5 flex-wrap px-1">
+          {selectedCategories.map(catId => {
+            const catObj = categories.find(c => c.id === catId);
+            return (
+              <button
+                key={catId}
+                onClick={() => setSelectedCategories(prev => prev.filter(c => c !== catId))}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+              >
+                {catObj?.name || catId}
+                <span className="text-white/40 hover:text-white text-[10px]">✕</span>
+              </button>
+            );
+          })}
+          <button
+            onClick={() => setSelectedCategories([])}
+            className="px-2 py-1 rounded-lg text-[10px] text-zinc-500 hover:text-white transition-colors"
+          >
+            Clear all
+          </button>
+        </div>
+      )}
 
       {(isLoadingState || isAutoRetrying) ? (
         <HomeFeedSkeleton />

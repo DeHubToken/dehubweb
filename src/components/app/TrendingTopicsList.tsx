@@ -105,7 +105,23 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
   }, [topicPeriod]);
 
   const handleCategoryClick = (categoryName: string) => {
-    setFilterValue('home', 'category', categoryName);
+    // Add to multi-select array (read existing, toggle)
+    const existing: string[] = (() => {
+      try {
+        const stored = sessionStorage.getItem('feed-filter-states');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          return parsed?.home?.categories || [];
+        }
+      } catch {}
+      return [];
+    })();
+    
+    const updated = existing.includes(categoryName)
+      ? existing.filter((c: string) => c !== categoryName)
+      : [...existing, categoryName];
+    
+    setFilterValue('home', 'categories', updated);
     window.dispatchEvent(new CustomEvent('category-filter-changed', { detail: categoryName }));
     navigate('/app');
   };
