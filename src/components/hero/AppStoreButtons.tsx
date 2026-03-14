@@ -62,6 +62,8 @@ export const AppStoreButtons = ({ onEnterApp }: AppStoreButtonsProps) => {
     });
   };
 
+  const btnClass = `${baseBtnClass}${morphed ? ' morphed' : ''}`;
+
   return (
     <motion.div 
       variants={fadeUpVariants} 
