@@ -1,24 +1,35 @@
 
 
-## Fix: Mobile Header Avatar Not Showing
+## Fix: Auto-reload on chunk load failures
 
-### Root Cause
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-The `normalizeUser` function in `AuthContext.tsx` (line 107) only reads `safe.avatarImageUrl`:
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-```typescript
-avatarImageUrl: safe.avatarImageUrl || null,
-```
+### Changes
 
-But the DeHub API sometimes returns the avatar path under `avatarUrl` or `avatar_url` instead. Other parts of the codebase (e.g., `social.ts`) already handle this with a cascading fallback, but `normalizeUser` does not — so `user.avatarImageUrl` ends up `null`, and the MobileHeader condition `user.avatarImageUrl && user.address` on line 103 skips rendering `AvatarImage`.
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-### Fix
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
 
-**`src/contexts/AuthContext.tsx`** — Update line 107 in `normalizeUser` to cascade across all avatar field names:
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
 
-```typescript
-avatarImageUrl: safe.avatarImageUrl || safe.avatarUrl || safe.avatar_url || null,
-```
-
-Single line change. No other files affected.
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 
