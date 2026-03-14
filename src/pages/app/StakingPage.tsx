@@ -469,7 +469,7 @@ export default function StakingPage() {
               "rounded-xl border p-3 sm:p-4 flex items-center justify-center gap-2 text-sm font-medium transition-all",
               isClaiming || userEarned <= 0
                 ? "bg-white/[0.02] border-white/5 text-white/30 cursor-not-allowed"
-                : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20"
+                : "bg-white/10 border-white/15 text-white hover:bg-white/20"
             )}
           >
             {isClaiming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Gift className="w-4 h-4" />}
