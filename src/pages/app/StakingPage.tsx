@@ -290,12 +290,12 @@ export default function StakingPage() {
         className="flex items-center justify-between py-5 sm:py-6"
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
+          <LiquidGlassBubble shimmer noBorder className="w-10 h-10 flex items-center justify-center flex-shrink-0 !rounded-xl !p-0">
             <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
-          </div>
+          </LiquidGlassBubble>
           <div>
-            <h1 className="text-xl font-bold text-white">DHB Staking</h1>
-            <p className="text-xs text-white/40">Stake your DHB tokens to earn rewards</p>
+            <h1 className="text-xl font-bold text-white">Staking</h1>
+            <p className="text-xs text-white/40">Stake to unlock profit share, lower fees, superpowers and more!</p>
           </div>
         </div>
         <button
