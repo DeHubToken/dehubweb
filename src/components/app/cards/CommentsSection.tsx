@@ -1223,13 +1223,19 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                 </button>
               </div>
             ) : (
-              <div
+            <div
                 data-vaul-no-drag
                 className={cn(
-                  "flex-1 flex items-start backdrop-blur-xl border rounded-xl px-3 relative",
+                  "flex-1 flex backdrop-blur-xl border rounded-xl px-3 relative transition-all duration-200",
+                  isInputExpanded
+                    ? "items-start flex-col"
+                    : "items-center flex-row",
                   isMobile
-                    ? "min-h-[88px] bg-zinc-800/80 border-zinc-700"
-                    : "min-h-[96px] bg-white/[0.08] border-white/[0.12]"
+                    ? "bg-zinc-800/80 border-zinc-700"
+                    : "bg-white/[0.08] border-white/[0.12]",
+                  isInputExpanded
+                    ? (isMobile ? "min-h-[88px]" : "min-h-[96px]")
+                    : "min-h-0 h-10"
                 )}
               >
                 <textarea
@@ -1241,11 +1247,20 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                     setNewComment(e.target.value);
                     mention.handleInput(e.target.value, e.target.selectionStart ?? undefined);
                   }}
+                  onFocus={() => setIsInputExpanded(true)}
+                  onBlur={() => {
+                    // Collapse only if empty and no attachments
+                    if (!newComment.trim() && !voiceNote && !commentImage && !replyTo) {
+                      setTimeout(() => setIsInputExpanded(false), 150);
+                    }
+                  }}
                   className={cn(
-                    "flex-1 bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 pt-2.5 pb-12 pr-1",
-                    isMobile ? "min-h-[72px] max-h-[144px]" : "min-h-[84px] max-h-[160px]"
+                    "flex-1 bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 w-full",
+                    isInputExpanded
+                      ? cn("pt-2.5 pb-12 pr-1", isMobile ? "min-h-[72px] max-h-[144px]" : "min-h-[84px] max-h-[160px]")
+                      : "h-10 py-0 leading-10 overflow-hidden pr-0"
                   )}
-                  rows={3}
+                  rows={isInputExpanded ? 3 : 1}
                   onKeyDown={(e) => {
                     if (mention.isOpen) {
                       const handled = mention.handleKeyDown(e);
@@ -1269,6 +1284,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                     }
                   }}
                   onInput={(e) => {
+                    if (!isInputExpanded) return;
                     const target = e.target as HTMLTextAreaElement;
                     target.style.height = 'auto';
                     const maxHeight = isMobile ? 144 : 160;
@@ -1284,8 +1300,13 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                   onSelect={mention.handleSelect}
                   onClose={mention.handleClose}
                 />
-                {/* Buttons inside textarea, bottom-right */}
-                <div className="absolute bottom-2 right-2 flex items-center gap-1.5">
+                {/* Buttons - inline when collapsed, bottom-right when expanded */}
+                <div className={cn(
+                  "flex items-center gap-1.5",
+                  isInputExpanded
+                    ? "absolute bottom-2 right-2"
+                    : "shrink-0 ml-1"
+                )}>
                   <button
                     onClick={() => imageInputRef.current?.click()}
                     className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors"
