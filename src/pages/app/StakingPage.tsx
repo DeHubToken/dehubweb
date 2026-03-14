@@ -100,11 +100,41 @@ export default function StakingPage() {
   const [isClaiming, setIsClaiming] = useState(false);
   // Track which chain we're currently staking on (for multi-chain flow)
   const [stakingChainLabel, setStakingChainLabel] = useState('');
+  const [currentWallet, setCurrentWallet] = useState('');
+  const [cancellingTx, setCancellingTx] = useState<string | null>(null);
+
+  useEffect(() => {
+    getWalletAddress().then(addr => {
+      if (addr) setCurrentWallet(addr.toLowerCase());
+    });
+  }, []);
 
   const handleRefresh = () => {
     refetchStats();
     refetchQueue();
     refetchUser();
+  };
+
+  const handleCancelUnstake = async (txHash: string) => {
+    setCancellingTx(txHash);
+    try {
+      const { error } = await supabase
+        .from('staking_records')
+        .delete()
+        .eq('tx_hash', txHash);
+
+      if (error) throw error;
+
+      toast.success('Unstake cancelled', { description: 'Your unstake request has been removed.' });
+      refetchQueue();
+      refetchUser();
+      refetchStats();
+    } catch (err: any) {
+      console.error('[Staking] Cancel unstake error:', err);
+      toast.error('Failed to cancel', { description: err?.message || 'Unknown error' });
+    } finally {
+      setCancellingTx(null);
+    }
   };
 
   /**
