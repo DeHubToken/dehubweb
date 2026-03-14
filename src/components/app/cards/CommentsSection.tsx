@@ -437,6 +437,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const [commentImagePreview, setCommentImagePreview] = useState<string | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [isInputExpanded, setIsInputExpanded] = useState(false);
   const mention = useMention({
     inputRef,
     onMentionInsert: (_user, newText) => setNewComment(newText),
