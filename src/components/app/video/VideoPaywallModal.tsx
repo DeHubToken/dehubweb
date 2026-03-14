@@ -125,7 +125,7 @@ export function VideoPaywallModal({
       const chainConfig = getChainConfig(payChainId);
       await switchChain(payChainId);
 
-      toast.loading('Processing DHB payment...', { id: 'video-gen-payment' });
+      toast.loading(dhbText('Processing DHB payment...'), { id: 'video-gen-payment' });
       const result = await writeContractAA(
         chainConfig.dhbToken,
         erc20TransferInterface,

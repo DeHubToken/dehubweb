@@ -80,7 +80,7 @@ export function DmFeeGate({
         txHash,
       });
 
-      toast.success(`Sent ${amount.toLocaleString()} DHB + message to ${recipientName}! 🎉`, { id: 'dm-fee-gate' });
+      toast.success(dhbText(`Sent ${amount.toLocaleString()} DHB + message to ${recipientName}! 🎉`), { id: 'dm-fee-gate' });
       onUnlocked();
     } catch (error: unknown) {
       console.error('[DmFeeGate] Payment failed:', error);

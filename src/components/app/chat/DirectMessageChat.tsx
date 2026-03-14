@@ -668,7 +668,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         // txHash is bundled directly into sendMessage socket event below — backend verifies inline.
         // Do NOT call verify-dm-fee separately: it marks txHash as used, causing "already used" error on sendMessage.
 
-        toast.success(`Paid ${activeFee.toLocaleString()} DHB`, { id: 'dm-fee-send', duration: 2000 });
+        toast.success(dhbText(`Paid ${activeFee.toLocaleString()} DHB`), { id: 'dm-fee-send', duration: 2000 });
 
         // Update balance after payment
         if (chainId === BASE_CHAIN_ID) {

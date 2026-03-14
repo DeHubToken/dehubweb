@@ -877,7 +877,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           const balanceNum = Number(balance) / 1e18;
           
           if (balanceNum < totalBounty) {
-            toast.error(`Insufficient DHB balance. Need ${totalBounty} DHB but have ${balanceNum.toFixed(2)} DHB`);
+            toast.error(dhbText(`Insufficient DHB balance. Need ${totalBounty} DHB but have ${balanceNum.toFixed(2)} DHB`));
             setIsPosting(false);
             return;
           }

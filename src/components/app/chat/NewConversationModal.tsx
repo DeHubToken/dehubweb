@@ -201,7 +201,7 @@ function FeePaymentStep({
         chainId,
       });
 
-      toast.success(`Paid ${amount.toLocaleString()} DHB — opening chat! 🎉`, { id: 'dm-fee-gate' });
+      toast.success(dhbText(`Paid ${amount.toLocaleString()} DHB — opening chat! 🎉`), { id: 'dm-fee-gate' });
       onPaid(messageText.trim(), txHash);
     } catch (error: unknown) {
       console.error('[NewConversationModal] Payment failed:', error);

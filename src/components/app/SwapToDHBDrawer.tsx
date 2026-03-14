@@ -169,7 +169,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
         quoteResult.feeTier,
       );
       setSuccess(true);
-      toast.success(`Swapped for ${Math.floor(amt).toLocaleString()} DHB`, {
+      toast.success(dhbText(`Swapped for ${Math.floor(amt).toLocaleString()} DHB`), {
         description: `TX: ${receipt.hash.slice(0, 10)}…`,
       });
     } catch (err: any) {
