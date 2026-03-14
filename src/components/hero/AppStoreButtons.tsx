@@ -77,7 +77,7 @@ export const AppStoreButtons = ({ onEnterApp }: AppStoreButtonsProps) => {
         href="https://play.google.com/store/apps/details?id=io.dehub.mobile&hl"
         target="_blank"
         rel="noopener noreferrer"
-        className="transition-transform hover:scale-105"
+        className="w-full block transition-transform hover:scale-105"
         style={cursorStyle}
       >
         <LiquidGlassBubble shimmer className={btnClass}>
