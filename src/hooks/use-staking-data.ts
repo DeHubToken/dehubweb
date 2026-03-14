@@ -95,6 +95,7 @@ export interface UserStakingData {
   // Combined
   totalStaked: number;
   totalUnstaked: number;
+  totalUnstakeQueued: number;
   hasBNBBalance: boolean;
   hasBaseBalance: boolean;
   hasBothChains: boolean;
@@ -123,12 +124,16 @@ export function useUserStakingData() {
           .eq('wallet_address', addr),
       ]);
 
-      // Calculate net staked from DB records (stakes - unstakes)
+      // Calculate net staked and total unstake-queued from DB records
       let dbStaked = 0;
+      let dbUnstakeQueued = 0;
       if (stakingRecords) {
         for (const r of stakingRecords) {
           if (r.action === 'stake') dbStaked += Number(r.amount);
-          else if (r.action === 'unstake') dbStaked -= Number(r.amount);
+          else if (r.action === 'unstake') {
+            dbStaked -= Number(r.amount);
+            dbUnstakeQueued += Number(r.amount);
+          }
         }
       }
       if (dbStaked < 0) dbStaked = 0;
@@ -161,6 +166,7 @@ export function useUserStakingData() {
         baseBalanceRaw,
         totalStaked: totalStakedNum,
         totalUnstaked: bnbBalNum + baseBalNum,
+        totalUnstakeQueued: dbUnstakeQueued,
         hasBNBBalance: bnbBalNum > 0,
         hasBaseBalance: baseBalNum > 0,
         hasBothChains: bnbBalNum > 0 && baseBalNum > 0,
