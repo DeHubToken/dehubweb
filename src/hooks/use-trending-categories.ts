@@ -1,6 +1,7 @@
 /**
- * Hook to fetch trending categories from category_post_log.
- * Counts are always computed fresh from logged posts, with period cutoffs.
+ * Hook to fetch trending categories.
+ * Uses time-filtered event logs for short windows (1D/1W)
+ * and aggregated counters for longer windows (1M/1Y/All).
  */
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
