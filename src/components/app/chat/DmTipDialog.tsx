@@ -18,6 +18,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { toast } from 'sonner';
+import { dhbText } from '@/lib/dhb-toast';
 import {
   getWalletAddress,
   switchChain,

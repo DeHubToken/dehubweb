@@ -21,6 +21,7 @@ import { useUserSearchForDM, useCreateConversation } from '@/hooks/use-messages'
 import { type DeHubUser, type DeHubConversation } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { toast } from 'sonner';
+import { dhbText } from '@/lib/dhb-toast';
 import { VerifiedBadge } from '../VerifiedBadge';
 import {
   getWalletAddress,

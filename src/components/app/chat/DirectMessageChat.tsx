@@ -49,6 +49,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
+import { dhbText } from '@/lib/dhb-toast';
 import {
   emitReadReceipt,
   onConversationDeleted,
