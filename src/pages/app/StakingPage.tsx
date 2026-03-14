@@ -174,7 +174,7 @@ export default function StakingPage() {
         toast({ title: 'Approval failed', description: 'Token approval was reverted.', variant: 'destructive' });
         return;
       }
-      toast({ title: 'Approved ✅', description: 'DHB approved. Now staking...' });
+      toast({ title: 'Approved ✅', description: dhbText('DHB approved. Now staking...') as any });
       setIsApproving(false);
     }
 
