@@ -4,15 +4,16 @@
  * Chain-abstracted DHB staking. Auto-detects which chain(s) user has balance on.
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, Rocket } from 'lucide-react';
+import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, Rocket, X } from 'lucide-react';
 import { BADGE_LEVELS, getBadgeUrl } from '@/lib/staking-badges';
 import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserStakingData, type UnstakeEvent } from '@/hooks/use-staking-data';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { sendERC20Token } from '@/lib/wallet/send';
 import { supabase } from '@/integrations/supabase/client';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { STAKING_ADDRESS, claimBNBRewards } from '@/lib/contracts/staking';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
@@ -100,11 +101,44 @@ export default function StakingPage() {
   const [isClaiming, setIsClaiming] = useState(false);
   // Track which chain we're currently staking on (for multi-chain flow)
   const [stakingChainLabel, setStakingChainLabel] = useState('');
+  const [currentWallet, setCurrentWallet] = useState('');
+  const [cancellingTx, setCancellingTx] = useState<string | null>(null);
+
+  useEffect(() => {
+    getWalletAddress().then(addr => {
+      if (addr) setCurrentWallet(addr.toLowerCase());
+    });
+  }, []);
 
   const handleRefresh = () => {
     refetchStats();
     refetchQueue();
     refetchUser();
+  };
+
+  const handleCancelUnstake = async (txHash: string) => {
+    setCancellingTx(txHash);
+    try {
+      const { error } = await withWalletHeader(
+        supabase
+          .from('staking_records')
+          .delete()
+          .eq('tx_hash', txHash),
+        currentWallet
+      );
+
+      if (error) throw error;
+
+      toast.success('Unstake cancelled', { description: 'Your unstake request has been removed.' });
+      refetchQueue();
+      refetchUser();
+      refetchStats();
+    } catch (err: any) {
+      console.error('[Staking] Cancel unstake error:', err);
+      toast.error('Failed to cancel', { description: err?.message || 'Unknown error' });
+    } finally {
+      setCancellingTx(null);
+    }
   };
 
   /**
@@ -503,49 +537,74 @@ export default function StakingPage() {
           </div>
         ) : (
           <div className="divide-y divide-white/5">
-            <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_80px_40px] gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
+            <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_80px_40px_40px] gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
               <span>Wallet</span>
               <span className="text-right">Amount</span>
               <span className="text-center">Chain</span>
               <span className="text-right">When</span>
               <span />
+              <span />
             </div>
-            {unstakeQueue.map((event: UnstakeEvent, idx: number) => (
-              <motion.div
-                key={event.txHash + idx}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.02 * idx }}
-                className="px-4 sm:px-5 py-3 hover:bg-white/[0.02] transition-colors"
-              >
-                <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_80px_40px] gap-2 items-center">
-                  <span className="text-sm text-white/70 font-mono">{truncateAddress(event.wallet)}</span>
-                  <span className="text-sm text-white font-medium text-right">{event.amount} <span className="text-white/40 text-xs">DHB</span></span>
-                  <span className="text-center">
-                    <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium", event.chain === 'BNB' ? "bg-yellow-500/10 text-yellow-400/80" : "bg-zinc-500/10 text-zinc-300")}>{event.chain}</span>
-                  </span>
-                  <span className="text-xs text-white/40 text-right">{timeAgo(event.timestamp)}</span>
-                  <a href={getExplorerUrl(event.txHash, event.chain)} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-7 h-7 rounded-lg hover:bg-white/10 transition-colors">
-                    <ExternalLink className="w-3.5 h-3.5 text-white/30" />
-                  </a>
-                </div>
-                <div className="flex sm:hidden items-center justify-between gap-2">
-                  <div className="min-w-0">
-                    <span className="text-sm text-white/70 font-mono block">{truncateAddress(event.wallet)}</span>
-                    <span className="text-xs text-white/40">{timeAgo(event.timestamp)}</span>
-                  </div>
-                  <div className="text-right flex items-center gap-2 flex-shrink-0">
-                    <div>
-                      <span className="text-sm text-white font-medium block">{event.amount} DHB</span>
-                      <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium", event.chain === 'BNB' ? "bg-yellow-500/10 text-yellow-400/80" : "bg-zinc-500/10 text-zinc-300")}>{event.chain}</span>
-                    </div>
-                    <a href={getExplorerUrl(event.txHash, event.chain)} target="_blank" rel="noopener noreferrer" className="w-7 h-7 flex items-center justify-center">
+            {unstakeQueue.map((event: UnstakeEvent, idx: number) => {
+              const isOwn = currentWallet && event.wallet.toLowerCase() === currentWallet;
+              const isCancelling = cancellingTx === event.txHash;
+              return (
+                <motion.div
+                  key={event.txHash + idx}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.02 * idx }}
+                  className="px-4 sm:px-5 py-3 hover:bg-white/[0.02] transition-colors"
+                >
+                  <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_80px_40px_40px] gap-2 items-center">
+                    <span className="text-sm text-white/70 font-mono">{truncateAddress(event.wallet)}</span>
+                    <span className="text-sm text-white font-medium text-right">{event.amount} <span className="text-white/40 text-xs">DHB</span></span>
+                    <span className="text-center">
+                      <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium", event.chain === 'BNB' ? "bg-white/10 text-white/70" : "bg-white/10 text-white/70")}>{event.chain}</span>
+                    </span>
+                    <span className="text-xs text-white/40 text-right">{timeAgo(event.timestamp)}</span>
+                    <a href={getExplorerUrl(event.txHash, event.chain)} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-7 h-7 rounded-lg hover:bg-white/10 transition-colors">
                       <ExternalLink className="w-3.5 h-3.5 text-white/30" />
                     </a>
+                    {isOwn ? (
+                      <button
+                        onClick={() => handleCancelUnstake(event.txHash)}
+                        disabled={isCancelling}
+                        className="flex items-center justify-center w-7 h-7 rounded-lg hover:bg-red-500/20 transition-colors group"
+                        title="Cancel unstake"
+                      >
+                        {isCancelling ? <Loader2 className="w-3.5 h-3.5 text-white/30 animate-spin" /> : <X className="w-3.5 h-3.5 text-white/30 group-hover:text-red-400" />}
+                      </button>
+                    ) : <span />}
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                  <div className="flex sm:hidden items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <span className="text-sm text-white/70 font-mono block">{truncateAddress(event.wallet)}</span>
+                      <span className="text-xs text-white/40">{timeAgo(event.timestamp)}</span>
+                    </div>
+                    <div className="text-right flex items-center gap-2 flex-shrink-0">
+                      <div>
+                        <span className="text-sm text-white font-medium block">{event.amount} DHB</span>
+                        <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium", event.chain === 'BNB' ? "bg-white/10 text-white/70" : "bg-white/10 text-white/70")}>{event.chain}</span>
+                      </div>
+                      {isOwn ? (
+                        <button
+                          onClick={() => handleCancelUnstake(event.txHash)}
+                          disabled={isCancelling}
+                          className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-500/20 transition-colors"
+                        >
+                          {isCancelling ? <Loader2 className="w-3.5 h-3.5 text-white/30 animate-spin" /> : <X className="w-3.5 h-3.5 text-white/40" />}
+                        </button>
+                      ) : (
+                        <a href={getExplorerUrl(event.txHash, event.chain)} target="_blank" rel="noopener noreferrer" className="w-7 h-7 flex items-center justify-center">
+                          <ExternalLink className="w-3.5 h-3.5 text-white/30" />
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         )}
       </motion.div>
