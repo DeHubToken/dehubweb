@@ -9,10 +9,11 @@ import { readContract, writeContractAA, getWalletAddress, switchChain, type AAWr
 import { CHAIN_CONFIGS, BNB_CHAIN_ID, BASE_CHAIN_ID } from './dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
 
-// BNB staking contract (proxy)
-export const BNB_STAKING_CONTRACT = '0x26d2cd7763106fdce443fadd36163e2ad33a76e6';
+// Unified staking address for both BNB and Base (transfer-based)
+export const STAKING_ADDRESS = '0xcF573a682Bf7A7Cc58000e9eCA9c9d04dA102Da7';
 
-// Base staking address (just tracks DHB transfers to this address)
+// Legacy addresses (kept for reading old staked balances)
+export const BNB_STAKING_CONTRACT = '0x26d2cd7763106fdce443fadd36163e2ad33a76e6';
 export const BASE_STAKING_ADDRESS = '0x7b10dd033Ac41B8AF85eE1701e344B86e446250B';
 
 const BNB_STAKING_DHB_TOKEN = CHAIN_CONFIGS[BNB_CHAIN_ID].dhbToken;
