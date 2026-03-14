@@ -165,7 +165,6 @@ export function MobileBottomNav() {
                     to={item.path}
                     className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white"
                   >
-                    <span style={getSpinStyle(3)}>
                       <item.icon 
                         className={cn(
                           'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
@@ -175,7 +174,6 @@ export function MobileBottomNav() {
                           'ml-[6px] lg:ml-0'
                         )} 
                       />
-                    </span>
                   </NavLink>
                 );
               })}
