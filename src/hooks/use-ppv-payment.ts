@@ -125,7 +125,7 @@ export function usePPVPayment({
         if (ethBalance < ethNeeded) {
           const ethHuman = fromWei(ethBalance);
           const ethRequired = fromWei(ethNeeded);
-          toast.error(
+          toast.error(dhbText(`Insufficient DHB and ETH. Need ~${ethRequired} ETH for auto-swap but have ${ethHuman} ETH.`),
             `Insufficient DHB and ETH. Need ~${ethRequired} ETH for auto-swap but have ${ethHuman} ETH.`,
             { id: 'ppv-payment' }
           );
