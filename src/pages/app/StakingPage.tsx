@@ -299,51 +299,6 @@ export default function StakingPage() {
         <StatCard icon={Activity} label="Unstake Events" value={queueLoading ? '—' : `${unstakeQueue?.length ?? 0}`} subtitle="Recent unstakes" accent="bg-rose-500" delay={0.15} />
       </div>
 
-      {/* User Balance Row — Staked + Unstaked + Rewards + Claim */}
-      {userData && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6"
-        >
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
-            <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
-            <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">Staked</p>
-              <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)} <span className="text-white/40 text-xs">DHB</span></p>
-            </div>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
-            <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
-            <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">Unstaked</p>
-              <p className="text-sm font-bold text-white truncate">{formatNumber(userUnstaked)} <span className="text-white/40 text-xs">DHB</span></p>
-            </div>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
-            <Gift className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
-            <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">Rewards</p>
-              <p className="text-sm font-bold text-white truncate">{formatNumber(userEarned, 2)} <span className="text-white/40 text-xs">DHB</span></p>
-            </div>
-          </div>
-          <button
-            onClick={handleClaim}
-            disabled={isClaiming || userEarned <= 0}
-            className={cn(
-              "rounded-xl border p-3 sm:p-4 flex items-center justify-center gap-2 text-sm font-medium transition-all",
-              isClaiming || userEarned <= 0
-                ? "bg-white/[0.02] border-white/5 text-white/30 cursor-not-allowed"
-                : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20"
-            )}
-          >
-            {isClaiming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Gift className="w-4 h-4" />}
-            Claim
-          </button>
-        </motion.div>
-      )}
-
       {/* Multi-chain notice */}
       {userData?.hasBothChains && (
         <motion.div
