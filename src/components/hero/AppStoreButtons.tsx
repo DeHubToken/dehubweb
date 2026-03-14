@@ -23,7 +23,7 @@ const cursorStyle = {
 const glassOverride = "[&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.04] [&>div]:!via-white/[0.02] [&>div]:!to-transparent [&>div]:!border-white/[0.08] [&>div]:!shadow-none [&>div]:before:!bg-none [&>div]:after:!bg-none";
 
 // Fixed dimensions for all buttons
-const btnClass = `w-[220px] h-[52px] md:w-[200px] md:h-[46px] cursor-pointer ${glassOverride}`;
+const btnClass = `w-full cursor-pointer ${glassOverride}`;
 
 const GooglePlayIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0" fill="none">
@@ -59,14 +59,14 @@ export const AppStoreButtons = ({ onEnterApp }: AppStoreButtonsProps) => {
       custom={2} 
       initial="hidden" 
       animate="visible" 
-      className="mt-6 -translate-y-[30px] md:translate-y-0 flex flex-col justify-center items-center gap-3"
+      className="mt-6 -translate-y-[30px] md:translate-y-0 flex flex-col justify-center items-center gap-3 w-full px-6"
     >
       {/* Enter App button */}
       {onEnterApp && (
         <a href="/app" onClick={(e) => { e.preventDefault(); onEnterApp(); }} style={cursorStyle}>
           <LiquidGlassBubble shimmer className={btnClass}>
             <div className="flex items-center justify-center h-full">
-              <span className="text-white text-base md:text-sm font-semibold tracking-wide">Enter</span>
+              <span className="text-white text-base md:text-sm font-semibold tracking-wide">Enter App</span>
             </div>
           </LiquidGlassBubble>
         </a>
