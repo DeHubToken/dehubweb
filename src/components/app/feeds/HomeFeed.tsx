@@ -124,8 +124,9 @@ function getDateRange(dateValue: string): 'day' | 'week' | 'month' | 'year' | un
 interface FilterSectionProps {
   selectedSort: SortOption;
   onSortSelect: (o: SortOption) => void;
-  selectedCategory: string;
-  onCategorySelect: (category: string) => void;
+  selectedCategories: string[];
+  onCategoryToggle: (category: string) => void;
+  onCategoryClear: () => void;
   categories: DeHubCategory[];
   selectedDate: DateFilterOption;
   onDateSelect: (o: DateFilterOption) => void;
