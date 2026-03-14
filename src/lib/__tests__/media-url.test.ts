@@ -67,10 +67,14 @@ describe('buildAvatarUrl', () => {
     expect(buildAvatarUrl(addr, url)).toMatch(/\?v=/);
   });
 
-  it('converts non-statics api.dehub.io URLs to CDN', () => {
-    const apiUrl = 'https://api.dehub.io/avatars/0xabc.png';
-    const result = buildAvatarUrl(addr, apiUrl);
-    expect(result).toContain(`${DEHUB_CDN_BASE}avatars/`);
+  it('converts api.dehub.io/avatars/ URLs to CDN', () => {
+    const result = buildAvatarUrl(addr, 'https://api.dehub.io/avatars/0xabc.png');
+    expect(result).toContain(`${DEHUB_CDN_BASE}avatars/0xabc.png`);
+  });
+
+  it('converts api.dehub.io/statics/avatars/ URLs to CDN by stripping statics/', () => {
+    const result = buildAvatarUrl(addr, 'https://api.dehub.io/statics/avatars/0xabc.png');
+    expect(result).toContain(`${DEHUB_CDN_BASE}avatars/0xabc.png`);
   });
 
   it('passes through external URLs', () => {

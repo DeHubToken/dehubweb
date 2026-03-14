@@ -75,16 +75,20 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
     return `${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
   }
 
-  // If it's any api.dehub.io URL with statics/, keep it on the API server
+  // api.dehub.io/statics/... — strip statics/ prefix and route to CDN
+  // e.g. "https://api.dehub.io/statics/avatars/0x.png" → "https://dehubcdn.../avatars/0x.png"
   if (apiAvatarPath.includes('api.dehub.io') && apiAvatarPath.includes('/statics/')) {
-    return `${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
+    const match = apiAvatarPath.match(/statics\/([^?]+)/);
+    if (match) {
+      return `${DEHUB_CDN_BASE}${match[1]}?v=${cacheBust}`;
+    }
   }
 
-  // If it's any api.dehub.io URL (non-statics), extract path and rebuild with CDN
+  // Any other api.dehub.io URL — extract path and rebuild with CDN
   if (apiAvatarPath.includes('api.dehub.io')) {
-    const match = apiAvatarPath.match(/api\.dehub\.io\/(.+)/);
+    const match = apiAvatarPath.match(/api\.dehub\.io\/([^?]+)/);
     if (match) {
-      return `${DEHUB_CDN_BASE}${match[1]}${match[1].includes('?') ? '&' : '?'}v=${cacheBust}`;
+      return `${DEHUB_CDN_BASE}${match[1]}?v=${cacheBust}`;
     }
   }
 
