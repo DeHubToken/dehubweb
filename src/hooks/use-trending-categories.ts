@@ -1,7 +1,7 @@
 /**
  * Hook to fetch trending categories.
- * Uses time-filtered event logs for short windows (1D/1W)
- * and aggregated counters for longer windows (1M/1Y/All).
+ * 1D/1W/1M/1Y use time-filtered data from category_post_log (synced from feed API).
+ * "All" uses the trending_categories aggregate table.
  */
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -13,7 +13,7 @@ export interface CategoryCount {
   post_count: number;
 }
 
-const EXCLUDED_CATEGORIES = new Set(['general', '', '-']);
+const EXCLUDED_CATEGORIES = new Set(['general', '', '-', 'other']);
 const TOP_LIMIT = 10;
 const PAGE_SIZE = 1000;
 
@@ -34,7 +34,6 @@ function getPeriodCutoff(period: TopicPeriod): string {
       now.setFullYear(now.getFullYear() - 1);
       break;
     case 'all':
-      // Explicitly scope "All" to the last 3 years as requested.
       now.setFullYear(now.getFullYear() - 3);
       break;
   }
@@ -66,7 +65,12 @@ function withTopTenPlaceholders(items: CategoryCount[]): CategoryCount[] {
   ];
 }
 
-async function fetchAllLogRowsSince(cutoffIso: string): Promise<Array<{ name: string | null }>> {
+/**
+ * Fetch category counts from the per-post event log, filtered by time window.
+ * This table is synced from the DeHub feed API by the sync-category-log edge function.
+ */
+async function fetchFromLog(period: TopicPeriod): Promise<CategoryCount[]> {
+  const cutoff = getPeriodCutoff(period);
   const rows: Array<{ name: string | null }> = [];
   let from = 0;
 
@@ -74,37 +78,24 @@ async function fetchAllLogRowsSince(cutoffIso: string): Promise<Array<{ name: st
     const { data, error } = await supabase
       .from('category_post_log')
       .select('name, posted_at')
-      .gte('posted_at', cutoffIso)
+      .gte('posted_at', cutoff)
       .order('posted_at', { ascending: false })
       .range(from, from + PAGE_SIZE - 1);
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     const chunk = (data || []).map((row) => ({ name: row.name }));
     if (chunk.length === 0) break;
 
     rows.push(...chunk);
-
     if (chunk.length < PAGE_SIZE) break;
     from += PAGE_SIZE;
   }
 
-  return rows;
-}
-
-async function fetchFromLog(period: TopicPeriod): Promise<CategoryCount[]> {
-  const cutoff = getPeriodCutoff(period);
-  const data = await fetchAllLogRowsSince(cutoff);
-
-  if (!data.length) {
-    return [];
-  }
+  if (!rows.length) return [];
 
   const counts = new Map<string, number>();
-
-  for (const row of data) {
+  for (const row of rows) {
     const normalized = normalizeCategoryName(row.name);
     if (!normalized || EXCLUDED_CATEGORIES.has(normalized)) continue;
     counts.set(normalized, (counts.get(normalized) || 0) + 1);
@@ -115,6 +106,9 @@ async function fetchFromLog(period: TopicPeriod): Promise<CategoryCount[]> {
     .sort((a, b) => b.post_count - a.post_count);
 }
 
+/**
+ * Fetch from the aggregate trending_categories table (for "All" period).
+ */
 async function fetchFromAggregateTable(): Promise<CategoryCount[]> {
   const { data, error } = await supabase
     .from('trending_categories')
@@ -122,12 +116,9 @@ async function fetchFromAggregateTable(): Promise<CategoryCount[]> {
     .order('post_count', { ascending: false })
     .order('updated_at', { ascending: false });
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
   const counts = new Map<string, number>();
-
   for (const row of data || []) {
     const normalized = normalizeCategoryName(row.name);
     if (!normalized || EXCLUDED_CATEGORIES.has(normalized)) continue;
@@ -141,28 +132,20 @@ async function fetchFromAggregateTable(): Promise<CategoryCount[]> {
 }
 
 async function fetchTrendingCategories(period: TopicPeriod, fetchAll = false): Promise<CategoryCount[]> {
-  // Always use the aggregate table as primary source — it has real data
-  // from the feed sync. The category_post_log only captures posts made
-  // from the app UI, which is a tiny fraction of all content.
-  // For 1D/1W, try the log first but fall back to aggregate if it's too sparse.
   let computed: CategoryCount[];
 
-  if (period === '1d' || period === '1w') {
-    const logData = await fetchFromLog(period);
-    // Only trust the log if it has meaningful data (3+ distinct categories)
-    computed = logData.length >= 3 ? logData : await fetchFromAggregateTable();
-  } else {
+  if (period === 'all') {
+    // "All" uses the aggregate table as-is
     computed = await fetchFromAggregateTable();
+  } else {
+    // 1D/1W/1M/1Y use the time-filtered event log (synced from feed API)
+    const logData = await fetchFromLog(period);
+    // Fall back to aggregate if log is too sparse (sync hasn't run yet)
+    computed = logData.length >= 3 ? logData : await fetchFromAggregateTable();
   }
 
-  // Safety fallback if aggregate table is also empty
-  const safeComputed = computed.length > 0 ? computed : await fetchFromLog('all');
-
-  if (fetchAll) {
-    return safeComputed;
-  }
-
-  return withTopTenPlaceholders(safeComputed);
+  if (fetchAll) return computed;
+  return withTopTenPlaceholders(computed);
 }
 
 export function useTrendingCategories(period: TopicPeriod = 'all') {
