@@ -490,7 +490,7 @@ export default function StakingPage() {
             <img src={bnbLogo} alt="BNB" className="w-8 h-8 rounded-full flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white">BNB Chain</p>
-              <p className="text-xs text-white/40">Staking Contract</p>
+              <p className="text-xs text-white/40">Staked</p>
             </div>
             <div className="text-right flex-shrink-0">
               <p className="text-sm font-bold text-white">{statsLoading ? '—' : formatNumber(stats?.bnbStaked ?? '0')}</p>
