@@ -1301,6 +1301,31 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         )}
       </AnimatePresence>
 
+      {/* Active category chips bar */}
+      {selectedCategories.length > 0 && (
+        <div className="flex items-center gap-1.5 flex-wrap px-1">
+          {selectedCategories.map(catId => {
+            const catObj = categories.find(c => c.id === catId);
+            return (
+              <button
+                key={catId}
+                onClick={() => setSelectedCategories(prev => prev.filter(c => c !== catId))}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+              >
+                {catObj?.name || catId}
+                <span className="text-white/40 hover:text-white text-[10px]">✕</span>
+              </button>
+            );
+          })}
+          <button
+            onClick={() => setSelectedCategories([])}
+            className="px-2 py-1 rounded-lg text-[10px] text-zinc-500 hover:text-white transition-colors"
+          >
+            Clear all
+          </button>
+        </div>
+      )}
+
       {(isLoadingState || isAutoRetrying) ? (
         <HomeFeedSkeleton />
       ) : (
