@@ -23,7 +23,7 @@ const cursorStyle = {
 const glassOverride = "[&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.04] [&>div]:!via-white/[0.02] [&>div]:!to-transparent [&>div]:!border-white/[0.08] [&>div]:!shadow-none [&>div]:before:!bg-none [&>div]:after:!bg-none";
 
 // Fixed dimensions for all buttons
-const btnClass = `w-full cursor-pointer ${glassOverride}`;
+const btnClass = `w-full cursor-pointer [&>div]:!py-3 ${glassOverride}`;
 
 const GooglePlayIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0" fill="none">
