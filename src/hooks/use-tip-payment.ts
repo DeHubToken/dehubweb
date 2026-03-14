@@ -48,7 +48,7 @@ export function useTipPayment({
       }
 
       if (amount < MIN_TIP_DHB || amount > MAX_TIP_DHB) {
-        toast.error(`Amount must be between ${MIN_TIP_DHB} and ${MAX_TIP_DHB} DHB`);
+        toast.error(dhbText(`Amount must be between ${MIN_TIP_DHB} and ${MAX_TIP_DHB} DHB`));
         return;
       }
 
