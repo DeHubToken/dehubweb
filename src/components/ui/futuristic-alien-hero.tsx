@@ -216,7 +216,7 @@ export const FuturisticAlienHero = () => {
       </button>
       
       <section className="relative h-screen flex items-center justify-center overflow-hidden z-10">
-        <div className="text-center p-4 -translate-y-[40px] md:translate-y-0">
+        <div className="text-center p-4 -translate-y-[60px] sm:-translate-y-[40px] md:translate-y-0">
           <HeroTitle
             masterGlitch={masterGlitch}
             corruptedTitle={corruptedTitle}
@@ -225,16 +225,16 @@ export const FuturisticAlienHero = () => {
           />
           <AppStoreButtons />
           <SocialLinks />
-          {/* Desktop-only Enter button — appears last */}
+          {/* Enter button — visible on all sizes */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 3.5, duration: 1.2, ease: [0.23, 0.86, 0.39, 0.96] }}
-            className="hidden md:flex justify-center mt-8"
+            className="flex justify-center mt-6 md:mt-8"
           >
-            <a href="/app">
-              <LiquidGlassBubble shimmer className="px-16 py-4 cursor-pointer">
-                <span className="text-white text-lg font-semibold tracking-wide">Enter</span>
+            <a href="/app" onClick={(e) => { e.preventDefault(); handleEnterApp(); }}>
+              <LiquidGlassBubble shimmer className="px-12 py-3 md:px-16 md:py-4 cursor-pointer">
+                <span className="text-white text-base md:text-lg font-semibold tracking-wide">Enter</span>
               </LiquidGlassBubble>
             </a>
           </motion.div>
