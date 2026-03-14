@@ -320,10 +320,10 @@ export default function StakingPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="flex items-start gap-2.5 p-3 rounded-xl border border-amber-500/20 bg-amber-500/5 mb-4"
+          className="flex items-start gap-2.5 p-3 rounded-xl border border-white/10 bg-white/5 mb-4"
         >
-          <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
-          <p className="text-xs text-amber-300/80">
+          <AlertTriangle className="w-4 h-4 text-white/60 flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-white/60">
             You have DHB on both BNB and Base chains. Staking will process one chain at a time — come back after to stake the other.
           </p>
         </motion.div>
