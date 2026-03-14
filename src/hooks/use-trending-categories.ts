@@ -115,14 +115,46 @@ async function fetchFromLog(period: TopicPeriod): Promise<CategoryCount[]> {
     .sort((a, b) => b.post_count - a.post_count);
 }
 
-async function fetchTrendingCategories(period: TopicPeriod, fetchAll = false): Promise<CategoryCount[]> {
-  const computed = await fetchFromLog(period);
+async function fetchFromAggregateTable(): Promise<CategoryCount[]> {
+  const { data, error } = await supabase
+    .from('trending_categories')
+    .select('name, post_count')
+    .order('post_count', { ascending: false })
+    .order('updated_at', { ascending: false });
 
-  if (fetchAll) {
-    return computed;
+  if (error) {
+    throw error;
   }
 
-  return withTopTenPlaceholders(computed);
+  const counts = new Map<string, number>();
+
+  for (const row of data || []) {
+    const normalized = normalizeCategoryName(row.name);
+    if (!normalized || EXCLUDED_CATEGORIES.has(normalized)) continue;
+    const value = typeof row.post_count === 'number' ? row.post_count : Number(row.post_count ?? 0);
+    counts.set(normalized, Math.max(counts.get(normalized) || 0, Number.isFinite(value) ? value : 0));
+  }
+
+  return Array.from(counts.entries())
+    .map(([name, post_count]) => ({ name: capitalize(name), post_count }))
+    .sort((a, b) => b.post_count - a.post_count);
+}
+
+async function fetchTrendingCategories(period: TopicPeriod, fetchAll = false): Promise<CategoryCount[]> {
+  // Short windows must come from per-post logs for time accuracy.
+  // Longer windows use aggregate counters (historical totals).
+  const computed = (period === '1d' || period === '1w')
+    ? await fetchFromLog(period)
+    : await fetchFromAggregateTable();
+
+  // Safety fallback if aggregate table is unexpectedly empty.
+  const safeComputed = computed.length > 0 ? computed : await fetchFromLog('all');
+
+  if (fetchAll) {
+    return safeComputed;
+  }
+
+  return withTopTenPlaceholders(safeComputed);
 }
 
 export function useTrendingCategories(period: TopicPeriod = 'all') {
