@@ -1226,18 +1226,17 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
             <div
                 data-vaul-no-drag
                 className={cn(
-                  "flex-1 flex backdrop-blur-xl border rounded-xl px-3 relative transition-all duration-200",
+                  "flex-1 flex backdrop-blur-xl border rounded-xl relative transition-all duration-200",
                   isInputExpanded
-                    ? "items-start flex-col"
-                    : "items-center flex-row",
+                    ? "items-start flex-col px-3"
+                    : "items-center flex-row px-3 pr-1.5 gap-1.5",
                   isMobile
                     ? "bg-zinc-800/80 border-zinc-700"
                     : "bg-white/[0.08] border-white/[0.12]",
                   isInputExpanded
                     ? (isMobile ? "min-h-[88px]" : "min-h-[96px]")
                     : "min-h-0 h-10"
-                )}
-              >
+                )}>
                 <textarea
                   ref={inputRef}
                   data-vaul-no-drag
