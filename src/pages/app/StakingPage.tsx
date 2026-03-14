@@ -15,7 +15,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { STAKING_ADDRESS, unstakeBNB, claimBNBRewards } from '@/lib/contracts/staking';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
 
 import dehubCoin from '@/assets/dehub-coin.png';
