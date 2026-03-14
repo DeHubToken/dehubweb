@@ -309,10 +309,10 @@ export default function StakingPage() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-        <StatCard icon={Lock} label="Total Staked" value={statsLoading ? '—' : formatNumber(stats?.totalStaked ?? '0')} subtitle="DHB across all chains" accent="bg-blue-500" delay={0} />
-        <StatCard icon={DollarSign} label="Total Value Locked" value={statsLoading ? '—' : formatUSD(tvl)} subtitle={`@ $${dhbPrice.toFixed(6)}/DHB`} accent="bg-emerald-500" delay={0.05} />
-        <StatCard icon={TrendingUp} label="Est. APY" value={`${ESTIMATED_APY}%`} subtitle="Variable rate" accent="bg-purple-500" delay={0.1} />
-        <StatCard icon={Activity} label="Unstake Events" value={queueLoading ? '—' : `${unstakeQueue?.length ?? 0}`} subtitle="Recent unstakes" accent="bg-rose-500" delay={0.15} />
+        <StatCard icon={Lock} label="Total Staked" value={statsLoading ? '—' : formatNumber(stats?.totalStaked ?? '0')} subtitle="DHB across all chains" accent="bg-white/20" delay={0} />
+        <StatCard icon={DollarSign} label="Total Value Locked" value={statsLoading ? '—' : formatUSD(tvl)} subtitle={`@ $${dhbPrice.toFixed(6)}/DHB`} accent="bg-white/20" delay={0.05} />
+        <StatCard icon={TrendingUp} label="Est. APY" value={`${ESTIMATED_APY}%`} subtitle="Variable rate" accent="bg-white/20" delay={0.1} />
+        <StatCard icon={Activity} label="Unstake Events" value={queueLoading ? '—' : `${unstakeQueue?.length ?? 0}`} subtitle="Recent unstakes" accent="bg-white/20" delay={0.15} />
       </div>
 
       {/* Multi-chain notice */}
@@ -320,10 +320,10 @@ export default function StakingPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="flex items-start gap-2.5 p-3 rounded-xl border border-amber-500/20 bg-amber-500/5 mb-4"
+          className="flex items-start gap-2.5 p-3 rounded-xl border border-white/10 bg-white/5 mb-4"
         >
-          <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
-          <p className="text-xs text-amber-300/80">
+          <AlertTriangle className="w-4 h-4 text-white/60 flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-white/60">
             You have DHB on both BNB and Base chains. Staking will process one chain at a time — come back after to stake the other.
           </p>
         </motion.div>
@@ -339,7 +339,7 @@ export default function StakingPage() {
           className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
         >
           <div className="flex items-center gap-2 mb-4">
-            <ArrowDownToLine className="w-4 h-4 text-emerald-400" />
+            <ArrowDownToLine className="w-4 h-4 text-white" />
             <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Stake DHB</h2>
           </div>
           <p className="text-xs text-white/40 mb-4">
@@ -392,7 +392,7 @@ export default function StakingPage() {
             className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
           >
             <div className="flex items-center gap-2 mb-4">
-              <ArrowUpFromLine className="w-4 h-4 text-amber-400" />
+              <ArrowUpFromLine className="w-4 h-4 text-white" />
               <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Unstake DHB</h2>
             </div>
             <p className="text-xs text-white/40 mb-4">
@@ -405,12 +405,12 @@ export default function StakingPage() {
                   placeholder={`${userStaked.toLocaleString()} DHB`}
                   value={unstakeAmount}
                   onChange={(e) => setUnstakeAmount(e.target.value)}
-                  className="w-full px-3 py-2.5 pr-14 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-amber-500/50"
+                  className="w-full px-3 py-2.5 pr-14 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-white/30"
                 />
                 <button
                   type="button"
                   onClick={() => setUnstakeAmount(userStaked.toString())}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-amber-400 text-[10px] font-bold uppercase hover:text-amber-300 transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-white/50 text-[10px] font-bold uppercase hover:text-white transition-colors"
                 >
                   Max
                 </button>
@@ -421,8 +421,8 @@ export default function StakingPage() {
                 className={cn(
                   "px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all flex-shrink-0",
                   isUnstaking
-                    ? "bg-amber-500/20 text-amber-400/60 cursor-not-allowed"
-                    : "bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 border border-amber-500/20"
+                    ? "bg-white/10 text-white/40 cursor-not-allowed"
+                    : "bg-white/10 text-white hover:bg-white/20 border border-white/15"
                 )}
               >
                 {isUnstaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Clock className="w-4 h-4" />}
@@ -469,7 +469,7 @@ export default function StakingPage() {
               "rounded-xl border p-3 sm:p-4 flex items-center justify-center gap-2 text-sm font-medium transition-all",
               isClaiming || userEarned <= 0
                 ? "bg-white/[0.02] border-white/5 text-white/30 cursor-not-allowed"
-                : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20"
+                : "bg-white/10 border-white/15 text-white hover:bg-white/20"
             )}
           >
             {isClaiming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Gift className="w-4 h-4" />}
