@@ -233,16 +233,19 @@ export type Database = {
           id: string
           name: string
           posted_at: string
+          token_id: number | null
         }
         Insert: {
           id?: string
           name: string
           posted_at?: string
+          token_id?: number | null
         }
         Update: {
           id?: string
           name?: string
           posted_at?: string
+          token_id?: number | null
         }
         Relationships: []
       }
