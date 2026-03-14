@@ -79,6 +79,8 @@ interface ActionBarProps {
   tipCount?: number;
   /** Handler for tip action */
   onTip?: () => void;
+  /** Whether voting buttons should be disabled (e.g. mutation pending) */
+  disabled?: boolean;
 }
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
