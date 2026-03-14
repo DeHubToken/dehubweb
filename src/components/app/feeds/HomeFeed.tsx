@@ -194,41 +194,33 @@ function SortFilterSection({
         />
         <div className="relative">
           <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
-            {/* Pinned selected category chip (before All) */}
-            {selectedCategoryObj && (
-              <button
-                onClick={() => { onCategorySelect('all'); setCategorySearch(''); }}
-                className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", activeFilterClass)}
-              >
-                {selectedCategoryObj.name}
-                <span className="ml-0.5 text-white/50 hover:text-white">✕</span>
-              </button>
-            )}
             <button
-              onClick={() => { onCategorySelect('all'); setCategorySearch(''); }}
+              onClick={() => { onCategoryClear(); setCategorySearch(''); }}
               className={cn(
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                selectedCategory === 'all'
+                selectedCategories.length === 0
                   ? activeFilterClass
                   : inactiveFilterClass
               )}
             >
               {t('filters.all')}
             </button>
-            {filteredCategories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => { onCategorySelect(cat.id); setCategorySearch(''); }}
-                className={cn(
-                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                  selectedCategory === cat.id
-                    ? activeFilterClass
-                    : inactiveFilterClass
-                )}
-              >
-                {cat.name}
-              </button>
-            ))}
+            {filteredCategories.map((cat) => {
+              const isActive = selectedCategories.includes(cat.id);
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => { onCategoryToggle(cat.id); setCategorySearch(''); }}
+                  className={cn(
+                    'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                    isActive ? activeFilterClass : inactiveFilterClass
+                  )}
+                >
+                  {cat.name}
+                  {isActive && <span className="ml-1 text-white/50">✓</span>}
+                </button>
+              );
+            })}
             {filteredCategories.length === 0 && categorySearch.trim() && (
               <span className="text-xs text-zinc-500 py-1.5">{t('filters.noMatches')}</span>
             )}
