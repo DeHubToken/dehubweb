@@ -723,7 +723,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   }, [useInterleavedFeed, singleFeed.data, pinnedPostId, selectedSort.value]);
 
   // Final items to render with creator diversity limiting
-  // This ensures users see content from a variety of creators (max 2 per creator in view)
+  const rawItems = useInterleavedFeed ? interleavedItems : singleFeedItems;
+  
   // Client-side multi-category filtering (when >1 category selected, API returns all)
   const items = useMemo(() => {
     if (selectedCategories.length <= 1) return rawItems; // 0 = all, 1 = API-filtered
