@@ -441,22 +441,28 @@ export default function StakingPage() {
               Withdraw your staked DHB. Tokens will be returned to your wallet.
             </p>
             <div className="flex gap-2">
-              <div className="relative flex-1 min-w-0">
-                <input
-                  type="number"
-                  placeholder={`${userStaked.toLocaleString()} DHB`}
-                  value={unstakeAmount}
-                  onChange={(e) => setUnstakeAmount(e.target.value)}
-                  className="w-full px-3 py-2.5 pr-14 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-white/30"
-                />
-                <button
-                  type="button"
-                  onClick={() => setUnstakeAmount(userStaked.toString())}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-white/50 text-[10px] font-bold uppercase hover:text-white transition-colors"
-                >
-                  Max
-                </button>
-              </div>
+              <LiquidGlassBubble
+                shimmer={false}
+                noBorder
+                className="flex-1 min-w-0 [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl"
+              >
+                <div className="relative">
+                  <input
+                    type="number"
+                    placeholder={formatNumber(userStaked)}
+                    value={unstakeAmount}
+                    onChange={(e) => setUnstakeAmount(e.target.value)}
+                    className="w-full bg-transparent text-white text-sm placeholder:text-white/30 focus:outline-none pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setUnstakeAmount(userStaked.toString())}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 text-white/50 text-[10px] font-bold uppercase hover:text-white transition-colors"
+                  >
+                    Max
+                  </button>
+                </div>
+              </LiquidGlassBubble>
               <LiquidGlassBubble
                 shimmer
                 noBorder={isUnstaking || !unstakeAmount}
