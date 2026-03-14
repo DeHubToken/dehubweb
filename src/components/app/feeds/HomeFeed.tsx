@@ -1258,8 +1258,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               <SortFilterSection 
                 selectedSort={selectedSort} 
                 onSortSelect={handleSortSelect}
-                selectedCategory={selectedCategory}
-                onCategorySelect={setSelectedCategory}
+                selectedCategories={selectedCategories}
+                onCategoryToggle={(cat) => {
+                  setSelectedCategories(prev => 
+                    prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+                  );
+                }}
+                onCategoryClear={() => setSelectedCategories([])}
                 categories={categories}
                 selectedDate={selectedDate}
                 onDateSelect={setSelectedDate}
