@@ -1752,7 +1752,7 @@ export default function AssistantPage() {
                       onClick={() => {
                         fileInputRef.current?.click();
                       }}
-                      className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
+                      className="px-3 py-1.5 text-xs rounded-md bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
                     >
                       {t('assistant.editImage')}
                     </button>
