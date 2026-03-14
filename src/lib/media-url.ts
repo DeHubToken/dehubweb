@@ -91,8 +91,18 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
   // Other full URLs (dicebear, external CDNs, etc.) - return as-is
   if (apiAvatarPath.startsWith('http')) return apiAvatarPath;
 
-  // "statics/" paths are served from the API server, not the CDN
+  // "statics/" prefix — strip it and serve from CDN
+  // e.g. "statics/avatars/0x.png" → "https://dehubcdn.../avatars/0x.png"
   if (apiAvatarPath.startsWith('statics/')) {
+    const cdnPath = apiAvatarPath.slice('statics/'.length);
+    return `${DEHUB_CDN_BASE}${cdnPath}?v=${cacheBust}`;
+  }
+
+  // For remaining relative paths, require a known address
+  if (!normalizedAddress) return undefined;
+
+  // "avatars/" paths — serve from API server (not all avatars are synced to CDN)
+  if (apiAvatarPath.startsWith('avatars/')) {
     return `https://api.dehub.io/${apiAvatarPath}?v=${cacheBust}`;
   }
 

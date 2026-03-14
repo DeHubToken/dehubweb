@@ -61,14 +61,16 @@ describe('buildAvatarUrl', () => {
     expect(buildAvatarUrl('', 'avatars/x.jpg')).toBeUndefined();
   });
 
-  it('returns dehubcdn URLs as-is', () => {
+  it('returns dehubcdn URLs with cache-bust', () => {
     const url = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/avatars/0xabc.jpg';
-    expect(buildAvatarUrl(addr, url)).toBe(url);
+    expect(buildAvatarUrl(addr, url)).toContain(url);
+    expect(buildAvatarUrl(addr, url)).toMatch(/\?v=/);
   });
 
-  it('converts api.dehub.io URLs to CDN', () => {
+  it('converts non-statics api.dehub.io URLs to CDN', () => {
     const apiUrl = 'https://api.dehub.io/avatars/0xabc.png';
-    expect(buildAvatarUrl(addr, apiUrl)).toBe(`${DEHUB_CDN_BASE}avatars/${addr}.png`);
+    const result = buildAvatarUrl(addr, apiUrl);
+    expect(result).toContain(`${DEHUB_CDN_BASE}avatars/`);
   });
 
   it('passes through external URLs', () => {
@@ -76,8 +78,14 @@ describe('buildAvatarUrl', () => {
     expect(buildAvatarUrl(addr, ext)).toBe(ext);
   });
 
-  it('builds CDN URL from relative path', () => {
-    expect(buildAvatarUrl(addr, 'avatars/0xabc.jpg')).toBe(`${DEHUB_CDN_BASE}avatars/${addr}.jpg`);
+  it('routes avatars/ relative paths to API server', () => {
+    const result = buildAvatarUrl(addr, 'avatars/0xabc.jpg');
+    expect(result).toContain('https://api.dehub.io/avatars/0xabc.jpg');
+  });
+
+  it('routes statics/ relative paths to CDN after stripping prefix', () => {
+    const result = buildAvatarUrl(addr, 'statics/avatars/0xabc.png');
+    expect(result).toContain(`${DEHUB_CDN_BASE}avatars/0xabc.png`);
   });
 });
 

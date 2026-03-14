@@ -18,6 +18,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
 import { apiCall, getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
 import { DmTipDialog } from './DmTipDialog';
@@ -130,7 +131,7 @@ function MessageBubble({
   highlightText?: string;
   confirmedTxHashes: React.MutableRefObject<Set<string>>;
 }) {
-  const avatarUrl = getMediaUrl(message.sender?.avatarImageUrl);
+  const avatarUrl = buildAvatarUrl(message.sender?.address || '', message.sender?.avatarImageUrl);
   const displayName = message.sender?.displayName || message.sender?.username ||
     (message.sender?.address
       ? `${message.sender.address.slice(0, 6)}...${message.sender.address.slice(-4)}`
@@ -408,7 +409,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     ) ||
     conversation.participants?.[0];
 
-  const avatarUrl = getMediaUrl(otherUser?.avatarImageUrl || otherUser?.avatarUrl);
+  const avatarUrl = buildAvatarUrl(otherUser?.address || '', otherUser?.avatarImageUrl || otherUser?.avatarUrl);
   const displayName = otherUser?.displayName || otherUser?.display_name || otherUser?.username ||
     (otherUser?.address ? `${otherUser.address.slice(0, 6)}...${otherUser.address.slice(-4)}` : 'User');
   const profileLink = otherUser?.username ? `/${otherUser.username}` : otherUser?.address ? `/${otherUser.address}` : '#';

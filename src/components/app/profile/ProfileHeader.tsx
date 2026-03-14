@@ -122,6 +122,7 @@ export function ProfileHeader({
 
   const { t } = useTranslation();
   const [showUnfollowConfirm, setShowUnfollowConfirm] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   return (
     <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
@@ -149,17 +150,18 @@ export function ProfileHeader({
                     className="w-full h-full rounded-[10px] bg-zinc-900 overflow-hidden relative group"
                     onClick={() => setShowAvatarOverlay(prev => !prev)}
                   >
-                    {profile.avatarUrl ? (
-                      <img 
-                        src={profile.avatarUrl} 
-                        alt={profile.name} 
+                    {profile.avatarUrl && !avatarError ? (
+                      <img
+                        src={profile.avatarUrl}
+                        alt={profile.name}
                         className="w-full h-full rounded-[10px] object-cover aspect-square"
+                        onError={() => setAvatarError(true)}
                       />
                     ) : (
-                      <UserAvatar 
-                        name={profile.name} 
-                        handle={profile.handle} 
-                        size="lg" 
+                      <UserAvatar
+                        name={profile.name}
+                        handle={profile.handle}
+                        size="lg"
                         className="w-full h-full rounded-[10px]"
                       />
                     )}
@@ -206,17 +208,18 @@ export function ProfileHeader({
                 onClick={() => profile.avatarUrl && setFullscreenImage(profile.avatarUrl)}
                 disabled={!profile.avatarUrl}
               >
-                {profile.avatarUrl ? (
-                  <img 
-                    src={profile.avatarUrl} 
-                    alt={profile.name} 
+                {profile.avatarUrl && !avatarError ? (
+                  <img
+                    src={profile.avatarUrl}
+                    alt={profile.name}
                     className="w-full h-full rounded-lg object-cover aspect-square"
+                    onError={() => setAvatarError(true)}
                   />
                 ) : (
-                  <UserAvatar 
-                    name={profile.name} 
-                    handle={profile.handle} 
-                    size="lg" 
+                  <UserAvatar
+                    name={profile.name}
+                    handle={profile.handle}
+                    size="lg"
                     className="w-full h-full rounded-lg"
                   />
                 )}

@@ -54,7 +54,7 @@ function ConversationItem({
   isSelected: boolean;
 }) {
   const otherUser = conversation.otherUser || conversation.participants?.[0];
-  const avatarUrl = getMediaUrl(otherUser?.avatarImageUrl || otherUser?.avatarUrl);
+  const avatarUrl = buildAvatarUrl(otherUser?.address || '', otherUser?.avatarImageUrl || otherUser?.avatarUrl);
   const displayName = otherUser?.displayName || otherUser?.display_name || '';
   const username = otherUser?.username || '';
   const fallbackName = displayName || username ||
