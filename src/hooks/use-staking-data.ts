@@ -123,12 +123,16 @@ export function useUserStakingData() {
           .eq('wallet_address', addr),
       ]);
 
-      // Calculate net staked from DB records (stakes - unstakes)
+      // Calculate net staked and total unstake-queued from DB records
       let dbStaked = 0;
+      let dbUnstakeQueued = 0;
       if (stakingRecords) {
         for (const r of stakingRecords) {
           if (r.action === 'stake') dbStaked += Number(r.amount);
-          else if (r.action === 'unstake') dbStaked -= Number(r.amount);
+          else if (r.action === 'unstake') {
+            dbStaked -= Number(r.amount);
+            dbUnstakeQueued += Number(r.amount);
+          }
         }
       }
       if (dbStaked < 0) dbStaked = 0;
