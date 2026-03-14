@@ -563,7 +563,7 @@ export default function StakingPage() {
 
         <div className="p-5 columns-1 sm:columns-2 gap-4 space-y-4">
           {/* Profit Share */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
+          <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <DollarSign className="w-4 h-4 text-white" />
