@@ -49,6 +49,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
+import { dhbText } from '@/lib/dhb-toast';
 import {
   emitReadReceipt,
   onConversationDeleted,
@@ -641,7 +642,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
 
         if (balance < amountWei) {
           const balanceHuman = Number(balance) / 1e18;
-          toast.error(`Insufficient DHB on ${chainConfig.name}. Need ${activeFee.toLocaleString()} but have ${balanceHuman.toFixed(2)}`);
+          toast.error(dhbText(`Insufficient DHB on ${chainConfig.name}. Need ${activeFee.toLocaleString()} but have ${balanceHuman.toFixed(2)}`));
           setIsSendingFee(false);
           return;
         }
@@ -668,7 +669,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         // txHash is bundled directly into sendMessage socket event below — backend verifies inline.
         // Do NOT call verify-dm-fee separately: it marks txHash as used, causing "already used" error on sendMessage.
 
-        toast.success(`Paid ${activeFee.toLocaleString()} DHB`, { id: 'dm-fee-send', duration: 2000 });
+        toast.success(dhbText(`Paid ${activeFee.toLocaleString()} DHB`), { id: 'dm-fee-send', duration: 2000 });
 
         // Update balance after payment
         if (chainId === BASE_CHAIN_ID) {

@@ -13,6 +13,7 @@ import padlockImg from '@/assets/padlock.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { dhbText } from '@/lib/dhb-toast';
 import {
   getWalletAddress,
   switchChain,
@@ -46,7 +47,7 @@ export function DmFeeGate({
 
   const handlePay = async (amount: number) => {
     if (Number.isNaN(amount) || amount < fee) {
-      toast.error(`Minimum tip is ${fee.toLocaleString()} DHB`);
+      toast.error(dhbText(`Minimum tip is ${fee.toLocaleString()} DHB`));
       return;
     }
 
@@ -79,7 +80,7 @@ export function DmFeeGate({
         txHash,
       });
 
-      toast.success(`Sent ${amount.toLocaleString()} DHB + message to ${recipientName}! 🎉`, { id: 'dm-fee-gate' });
+      toast.success(dhbText(`Sent ${amount.toLocaleString()} DHB + message to ${recipientName}! 🎉`), { id: 'dm-fee-gate' });
       onUnlocked();
     } catch (error: unknown) {
       console.error('[DmFeeGate] Payment failed:', error);

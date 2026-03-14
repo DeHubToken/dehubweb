@@ -15,6 +15,7 @@ import { BASE_STAKING_ADDRESS, approveBNBStaking, stakeBNB, unstakeBNB, claimBNB
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
 import { toast } from '@/hooks/use-toast';
+import { dhbText } from '@/lib/dhb-toast';
 import { parseUnits } from 'ethers';
 import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
@@ -129,7 +130,7 @@ export default function StakingPage() {
       const hasBase = userData?.hasBaseBalance ?? false;
 
       if (!hasBNB && !hasBase) {
-        toast({ title: 'No DHB balance', description: 'You don\'t have DHB tokens on either chain.', variant: 'destructive' });
+        toast({ title: dhbText('No DHB balance') as any, description: dhbText('You don\'t have DHB tokens on either chain.') as any, variant: 'destructive' });
         return;
       }
 
@@ -141,10 +142,7 @@ export default function StakingPage() {
       setStakingChainLabel(targetChain);
 
       if (bothChains) {
-        toast({
-          title: 'DHB found on both chains',
-          description: `Staking on ${targetChain} first. After this completes, come back to stake your ${targetChain === 'BNB' ? 'Base' : 'BNB'} balance.`,
-        });
+        toast({ title: dhbText('DHB found on both chains') as any, description: `Staking on ${targetChain} first. After this completes, come back to stake your ${targetChain === 'BNB' ? 'Base' : 'BNB'} balance.` });
       }
 
       if (targetChain === 'BNB') {
@@ -169,23 +167,23 @@ export default function StakingPage() {
 
     if (currentAllowance < amountWei) {
       setIsApproving(true);
-      toast({ title: 'Approving DHB...', description: 'Please confirm the approval transaction.' });
+      toast({ title: dhbText('Approving DHB...') as any, description: 'Please confirm the approval transaction.' });
       const approvalResult = await approveBNBStaking(stakeAmount);
       const approvalReceipt = await approvalResult.wait();
       if (approvalReceipt.status !== 1) {
         toast({ title: 'Approval failed', description: 'Token approval was reverted.', variant: 'destructive' });
         return;
       }
-      toast({ title: 'Approved ✅', description: 'DHB approved. Now staking...' });
+      toast({ title: 'Approved ✅', description: dhbText('DHB approved. Now staking...') as any });
       setIsApproving(false);
     }
 
-    toast({ title: 'Staking DHB...', description: 'Please confirm the stake transaction.' });
+    toast({ title: dhbText('Staking DHB...') as any, description: 'Please confirm the stake transaction.' });
     const result = await stakeBNB(stakeAmount);
     const receipt = await result.wait();
 
     if (receipt.status === 1) {
-      toast({ title: 'Staked successfully! ✅', description: `${stakeAmount} DHB staked on BNB Chain.` });
+      toast({ title: 'Staked successfully! ✅', description: dhbText(`${stakeAmount} DHB staked on BNB Chain.`) as any });
       setStakeAmount('');
       refetchStats();
       refetchUser();
@@ -198,16 +196,16 @@ export default function StakingPage() {
     await switchChain(BASE_CHAIN_ID);
     const dhbTokenAddress = CHAIN_CONFIGS[BASE_CHAIN_ID]?.dhbToken;
     if (!dhbTokenAddress) {
-      toast({ title: 'Error', description: 'DHB token not configured for Base.', variant: 'destructive' });
+      toast({ title: 'Error', description: dhbText('DHB token not configured for Base.') as any, variant: 'destructive' });
       return;
     }
 
-    toast({ title: 'Staking DHB...', description: 'Please confirm the stake transaction.' });
+    toast({ title: dhbText('Staking DHB...') as any, description: 'Please confirm the stake transaction.' });
     const result = await sendERC20Token(dhbTokenAddress, BASE_STAKING_ADDRESS, stakeAmount, 18, BASE_CHAIN_ID as any);
     const receipt = await result.wait();
 
     if (receipt.status === 1) {
-      toast({ title: 'Staked successfully! ✅', description: `${stakeAmount} DHB staked on Base.` });
+      toast({ title: 'Staked successfully! ✅', description: dhbText(`${stakeAmount} DHB staked on Base.`) as any });
       setStakeAmount('');
       refetchStats();
       refetchUser();
@@ -238,12 +236,12 @@ export default function StakingPage() {
 
       if (hasStakedBNB) {
         // Unstake from BNB contract
-        toast({ title: 'Unstaking DHB...', description: 'Please confirm the unstake transaction.' });
+        toast({ title: dhbText('Unstaking DHB...') as any, description: 'Please confirm the unstake transaction.' });
         const result = await unstakeBNB(unstakeAmount);
         const receipt = await result.wait();
 
         if (receipt.status === 1) {
-          toast({ title: 'Unstaked successfully! ✅', description: `${unstakeAmount} DHB unstaked.` });
+          toast({ title: 'Unstaked successfully! ✅', description: dhbText(`${unstakeAmount} DHB unstaked.`) as any });
           setUnstakeAmount('');
           refetchStats();
           refetchUser();

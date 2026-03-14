@@ -17,6 +17,7 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { toast } from 'sonner';
+import { dhbText } from '@/lib/dhb-toast';
 import dehubCoin from '@/assets/dehub-coin.png';
 import ethLogo from '@/assets/eth-logo.png';
 import bnbLogo from '@/assets/bnb-logo.png';
@@ -169,7 +170,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
         quoteResult.feeTier,
       );
       setSuccess(true);
-      toast.success(`Swapped for ${Math.floor(amt).toLocaleString()} DHB`, {
+      toast.success(dhbText(`Swapped for ${Math.floor(amt).toLocaleString()} DHB`), {
         description: `TX: ${receipt.hash.slice(0, 10)}…`,
       });
     } catch (err: any) {

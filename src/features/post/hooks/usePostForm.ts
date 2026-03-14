@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
@@ -877,7 +878,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           const balanceNum = Number(balance) / 1e18;
           
           if (balanceNum < totalBounty) {
-            toast.error(`Insufficient DHB balance. Need ${totalBounty} DHB but have ${balanceNum.toFixed(2)} DHB`);
+            toast.error(dhbText(`Insufficient DHB balance. Need ${totalBounty} DHB but have ${balanceNum.toFixed(2)} DHB`));
             setIsPosting(false);
             return;
           }

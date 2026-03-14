@@ -21,6 +21,7 @@ import { useUserSearchForDM, useCreateConversation } from '@/hooks/use-messages'
 import { type DeHubUser, type DeHubConversation } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { toast } from 'sonner';
+import { dhbText } from '@/lib/dhb-toast';
 import { VerifiedBadge } from '../VerifiedBadge';
 import {
   getWalletAddress,
@@ -167,7 +168,7 @@ function FeePaymentStep({
 
   const handlePay = async (amount: number) => {
     if (Number.isNaN(amount) || amount < fee) {
-      toast.error(`Minimum tip is ${fee.toLocaleString()} DHB`);
+      toast.error(dhbText(`Minimum tip is ${fee.toLocaleString()} DHB`));
       return;
     }
     if (!messageText.trim()) {
@@ -186,7 +187,7 @@ function FeePaymentStep({
 
       if (balance < amountWei) {
         const balanceHuman = Number(balance) / 1e18;
-        toast.error(`Insufficient DHB. Need ${amount.toLocaleString()} but have ${balanceHuman.toFixed(2)}`);
+        toast.error(dhbText(`Insufficient DHB. Need ${amount.toLocaleString()} but have ${balanceHuman.toFixed(2)}`));
         setBalanceInfo({ checked: true, balance: balanceHuman, sufficient: false });
         setIsSending(false);
         return;
@@ -201,7 +202,7 @@ function FeePaymentStep({
         chainId,
       });
 
-      toast.success(`Paid ${amount.toLocaleString()} DHB — opening chat! 🎉`, { id: 'dm-fee-gate' });
+      toast.success(dhbText(`Paid ${amount.toLocaleString()} DHB — opening chat! 🎉`), { id: 'dm-fee-gate' });
       onPaid(messageText.trim(), txHash);
     } catch (error: unknown) {
       console.error('[NewConversationModal] Payment failed:', error);

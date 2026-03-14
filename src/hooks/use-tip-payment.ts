@@ -7,6 +7,7 @@
 
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
+import { dhbText } from '@/lib/dhb-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { getWalletAddress, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
@@ -47,7 +48,7 @@ export function useTipPayment({
       }
 
       if (amount < MIN_TIP_DHB || amount > MAX_TIP_DHB) {
-        toast.error(`Amount must be between ${MIN_TIP_DHB} and ${MAX_TIP_DHB} DHB`);
+        toast.error(dhbText(`Amount must be between ${MIN_TIP_DHB} and ${MAX_TIP_DHB} DHB`));
         return;
       }
 
@@ -83,7 +84,7 @@ export function useTipPayment({
           console.warn('[Tip] Failed to record tip in DB:', dbErr);
         }
 
-        toast.success(`Tip of ${amount} DHB sent! 🎉`, { id: 'tip-payment' });
+        toast.success(dhbText(`Tip of ${amount} DHB sent! 🎉`), { id: 'tip-payment' });
         onSuccess?.();
       } catch (error: unknown) {
         console.error('[Tip] Payment failed:', error);

@@ -18,6 +18,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { toast } from 'sonner';
+import { dhbText } from '@/lib/dhb-toast';
 import {
   getWalletAddress,
   switchChain,
@@ -90,7 +91,7 @@ export function DmTipDialog({
         console.warn('[DmTip] tip-notify failed (non-fatal):', notifyErr);
       }
 
-      toast.success(`Sent ${parsedAmount.toLocaleString()} DHB to ${recipientName}! 🎉`, { id: 'dm-tip' });
+      toast.success(dhbText(`Sent ${parsedAmount.toLocaleString()} DHB to ${recipientName}! 🎉`), { id: 'dm-tip' });
       setAmount('');
       onOpenChange(false);
     } catch (error: unknown) {
