@@ -451,19 +451,20 @@ export default function StakingPage() {
                   Max
                 </button>
               </div>
-              <button
-                onClick={handleUnstake}
-                disabled={isUnstaking || !unstakeAmount}
+              <LiquidGlassBubble
+                shimmer
+                noBorder={isUnstaking || !unstakeAmount}
+                onClick={(isUnstaking || !unstakeAmount) ? undefined : handleUnstake}
                 className={cn(
-                  "px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all flex-shrink-0",
-                  isUnstaking
-                    ? "bg-white/10 text-white/40 cursor-not-allowed"
-                    : "bg-white/10 text-white hover:bg-white/20 border border-white/15"
+                  "flex-shrink-0 cursor-pointer",
+                  (isUnstaking || !unstakeAmount) && "opacity-40 cursor-not-allowed"
                 )}
               >
-                {isUnstaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Clock className="w-4 h-4" />}
-                Unstake
-              </button>
+                <span className="flex items-center gap-2 text-white text-sm font-medium px-1">
+                  {isUnstaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Clock className="w-4 h-4" />}
+                  Unstake
+                </span>
+              </LiquidGlassBubble>
             </div>
           </motion.div>
         )}
