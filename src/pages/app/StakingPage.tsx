@@ -610,7 +610,7 @@ export default function StakingPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden"
+        className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden"
       >
         <div className="p-5 border-b border-white/5">
           <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">{t('staking.whyStake')}</h2>
@@ -620,46 +620,24 @@ export default function StakingPage() {
         <div className="p-5 columns-1 sm:columns-2 gap-4 space-y-4">
           {/* Profit Share */}
           <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
-                <DollarSign className="w-4 h-4 text-white" />
-              </div>
-              <h3 className="text-sm font-semibold text-white">{t('staking.profitShare')}</h3>
-            </div>
+            <h3 className="text-sm font-semibold text-white">{t('staking.profitShare')}</h3>
             <p className="text-xs text-white/50 leading-relaxed">
               {t('staking.profitShareDesc')}
             </p>
           </div>
 
-
           {/* Super Powers */}
           <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
-                <Zap className="w-4 h-4 text-white" />
-              </div>
-              <h3 className="text-sm font-semibold text-white">{t('staking.superPowers')}</h3>
-            </div>
+            <h3 className="text-sm font-semibold text-white">{t('staking.superPowers')}</h3>
             <ul className="space-y-1.5 text-xs text-white/50">
-              <li className="flex items-center gap-2">
-                <Rocket className="w-3 h-3 text-white/30 flex-shrink-0" />
-                <span>{t('staking.trendingBoosts')}</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <TrendingUp className="w-3 h-3 text-white/30 flex-shrink-0" />
-                <span>{t('staking.timelineExposure')}</span>
-              </li>
+              <li>• {t('staking.trendingBoosts')}</li>
+              <li>• {t('staking.timelineExposure')}</li>
             </ul>
           </div>
 
           {/* Increased Limits */}
           <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
-                <Crown className="w-4 h-4 text-white" />
-              </div>
-              <h3 className="text-sm font-semibold text-white">{t('staking.increasedLimits')}</h3>
-            </div>
+            <h3 className="text-sm font-semibold text-white">{t('staking.increasedLimits')}</h3>
             <p className="text-xs text-white/50 leading-relaxed">
               {t('staking.increasedLimitsDesc')}
             </p>
@@ -667,12 +645,7 @@ export default function StakingPage() {
 
           {/* Early Access */}
           <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
-                <Clock className="w-4 h-4 text-white" />
-              </div>
-              <h3 className="text-sm font-semibold text-white">{t('staking.earlyAccess')}</h3>
-            </div>
+            <h3 className="text-sm font-semibold text-white">{t('staking.earlyAccess')}</h3>
             <p className="text-xs text-white/50 leading-relaxed">
               {t('staking.earlyAccessDesc')}
             </p>
@@ -680,12 +653,7 @@ export default function StakingPage() {
 
           {/* Enhanced Experience */}
           <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
-                <TrendingUp className="w-4 h-4 text-white" />
-              </div>
-              <h3 className="text-sm font-semibold text-white">{t('staking.enhancedExperience')}</h3>
-            </div>
+            <h3 className="text-sm font-semibold text-white">{t('staking.enhancedExperience')}</h3>
             <p className="text-xs text-white/50 leading-relaxed">
               {t('staking.enhancedExperienceDesc')}
             </p>
@@ -693,12 +661,7 @@ export default function StakingPage() {
 
           {/* Airdrops */}
           <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
-                <Gift className="w-4 h-4 text-white" />
-              </div>
-              <h3 className="text-sm font-semibold text-white">{t('staking.airdrops')}</h3>
-            </div>
+            <h3 className="text-sm font-semibold text-white">{t('staking.airdrops')}</h3>
             <p className="text-xs text-white/50 leading-relaxed">
               {t('staking.airdropsDesc')}
             </p>
