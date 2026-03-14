@@ -482,15 +482,15 @@ export default function StakingPage() {
         >
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4">
             <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.yourStaked')}</p>
-            <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)} <span className="text-white/40 text-xs">DHB</span></p>
+            <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)}</p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4">
             <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.unstaking')}</p>
-            <p className="text-sm font-bold text-white truncate">{formatNumber(userData?.totalUnstakeQueued ?? 0)} <span className="text-white/40 text-xs">DHB</span></p>
+            <p className="text-sm font-bold text-white truncate">{formatNumber(userData?.totalUnstakeQueued ?? 0)}</p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4">
             <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.rewards')}</p>
-            <p className="text-sm font-bold text-white truncate">{formatNumber(userEarned, 2)} <span className="text-white/40 text-xs">DHB</span></p>
+            <p className="text-sm font-bold text-white truncate">{formatNumber(userEarned, 2)}</p>
           </div>
           <LiquidGlassBubble
             shimmer
