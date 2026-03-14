@@ -37,26 +37,18 @@ const stakingInterface = new Interface([
  */
 export async function getTotalStaked(chainId: ChainId): Promise<bigint> {
   const config = CHAIN_CONFIGS[chainId];
-
-  // Use the correct token address per chain
-  const tokenAddress = chainId === BNB_CHAIN_ID
-    ? BNB_STAKING_DHB_TOKEN
-    : config?.dhbToken;
-  
+  const tokenAddress = chainId === BNB_CHAIN_ID ? BNB_STAKING_DHB_TOKEN : config?.dhbToken;
   if (!tokenAddress) return BigInt(0);
 
-  const stakingAddress = chainId === BNB_CHAIN_ID
-    ? BNB_STAKING_CONTRACT
-    : BASE_STAKING_ADDRESS;
+  // Read from new staking address + legacy addresses
+  const legacyAddress = chainId === BNB_CHAIN_ID ? BNB_STAKING_CONTRACT : BASE_STAKING_ADDRESS;
 
   try {
-    return await readContract<bigint>(
-      tokenAddress,
-      erc20Interface,
-      'balanceOf',
-      [stakingAddress],
-      chainId
-    );
+    const [newBalance, legacyBalance] = await Promise.all([
+      readContract<bigint>(tokenAddress, erc20Interface, 'balanceOf', [STAKING_ADDRESS], chainId),
+      readContract<bigint>(tokenAddress, erc20Interface, 'balanceOf', [legacyAddress], chainId),
+    ]);
+    return newBalance + legacyBalance;
   } catch (err) {
     console.error(`[Staking] Failed to read totalStaked on chain ${chainId}:`, err);
     return BigInt(0);
