@@ -1227,8 +1227,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                 className={cn(
                   "flex-1 flex items-start backdrop-blur-xl border rounded-xl px-3 relative",
                   isMobile
-                    ? "min-h-[56px] bg-zinc-800/80 border-zinc-700"
-                    : "min-h-[80px] bg-white/[0.08] border-white/[0.12]"
+                    ? "min-h-[88px] bg-zinc-800/80 border-zinc-700"
+                    : "min-h-[96px] bg-white/[0.08] border-white/[0.12]"
                 )}
               >
                 <textarea
@@ -1241,10 +1241,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                     mention.handleInput(e.target.value, e.target.selectionStart ?? undefined);
                   }}
                   className={cn(
-                    "flex-1 bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 py-2.5 pr-24",
-                    isMobile ? "min-h-[48px] max-h-[96px]" : "min-h-[80px] max-h-[120px]"
+                    "flex-1 bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 pt-2.5 pb-12 pr-1",
+                    isMobile ? "min-h-[72px] max-h-[144px]" : "min-h-[84px] max-h-[160px]"
                   )}
-                  rows={isMobile ? 2 : 3}
+                  rows={3}
                   onKeyDown={(e) => {
                     if (mention.isOpen) {
                       const handled = mention.handleKeyDown(e);
