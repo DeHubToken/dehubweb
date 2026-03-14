@@ -19,7 +19,7 @@ import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-
 import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
 import { toast } from 'sonner';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
-
+import { useTranslation } from 'react-i18next';
 
 import dehubCoin from '@/assets/dehub-coin.png';
 
@@ -36,16 +36,6 @@ function formatUSD(val: number): string {
   if (val >= 1_000_000) return '$' + (val / 1_000_000).toFixed(2) + 'M';
   if (val >= 1_000) return '$' + (val / 1_000).toFixed(2) + 'K';
   return '$' + val.toFixed(2);
-}
-
-function timeAgo(timestamp: number): string {
-  if (!timestamp) return '—';
-  const now = Math.floor(Date.now() / 1000);
-  const diff = now - timestamp;
-  if (diff < 60) return 'just now';
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  return `${Math.floor(diff / 86400)}d ago`;
 }
 
 function truncateAddress(addr: string): string {
@@ -87,6 +77,7 @@ function StatCard({
 }
 
 export default function StakingPage() {
+  const { t } = useTranslation();
   const { isCollapsed } = useSidebarCollapse();
   const { data: stats, isLoading: statsLoading, refetch: refetchStats } = useStakingStats();
   const { data: unstakeQueue, isLoading: queueLoading, refetch: refetchQueue } = useUnstakeQueue();
@@ -99,10 +90,19 @@ export default function StakingPage() {
   const [isStaking, setIsStaking] = useState(false);
   const [isUnstaking, setIsUnstaking] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
-  // Track which chain we're currently staking on (for multi-chain flow)
   const [stakingChainLabel, setStakingChainLabel] = useState('');
   const [currentWallet, setCurrentWallet] = useState('');
   const [cancellingTx, setCancellingTx] = useState<string | null>(null);
+
+  function timeAgo(timestamp: number): string {
+    if (!timestamp) return '—';
+    const now = Math.floor(Date.now() / 1000);
+    const diff = now - timestamp;
+    if (diff < 60) return t('staking.justNow');
+    if (diff < 3600) return t('staking.minutesAgo', { count: Math.floor(diff / 60) });
+    if (diff < 86400) return t('staking.hoursAgo', { count: Math.floor(diff / 3600) });
+    return t('staking.daysAgo', { count: Math.floor(diff / 86400) });
+  }
 
   useEffect(() => {
     getWalletAddress().then(addr => {
@@ -129,26 +129,22 @@ export default function StakingPage() {
 
       if (error) throw error;
 
-      toast.success('Unstake cancelled', { description: 'Your unstake request has been removed.' });
+      toast.success(t('toasts.unstake_cancelled'), { description: t('toasts.unstake_request_removed') });
       refetchQueue();
       refetchUser();
       refetchStats();
     } catch (err: any) {
       console.error('[Staking] Cancel unstake error:', err);
-      toast.error('Failed to cancel', { description: err?.message || 'Unknown error' });
+      toast.error(t('toasts.failed_to_cancel'), { description: err?.message || 'Unknown error' });
     } finally {
       setCancellingTx(null);
     }
   };
 
-  /**
-   * Smart stake: auto-detect chain with balance, stake there.
-   * If both chains have balance, stake on first available and notify user to repeat.
-   */
   const handleStake = async () => {
     const amount = parseFloat(stakeAmount);
     if (!amount || amount <= 0) {
-      toast.error('Invalid amount', { description: 'Please enter a valid amount to stake.' });
+      toast.error(t('toasts.invalid_amount'), { description: t('toasts.please_enter_valid_amount_stake') });
       return;
     }
 
@@ -156,7 +152,7 @@ export default function StakingPage() {
     try {
       const walletAddress = await getWalletAddress();
       if (!walletAddress) {
-        toast.error('Not connected', { description: 'Please connect your wallet first.' });
+        toast.error(t('toasts.not_connected'), { description: t('toasts.please_connect_wallet_first') });
         return;
       }
 
@@ -164,7 +160,7 @@ export default function StakingPage() {
       const hasBase = userData?.hasBaseBalance ?? false;
 
       if (!hasBNB && !hasBase) {
-        toast.error('No DHB balance', { description: 'You don\'t have DHB tokens on either chain.' });
+        toast.error(t('toasts.no_dhb_balance'), { description: t('toasts.no_dhb_tokens_either_chain') });
         return;
       }
 
@@ -173,7 +169,7 @@ export default function StakingPage() {
       setStakingChainLabel(targetChain);
 
       if (bothChains) {
-        toast.info('DHB found on both chains', { description: `Staking on ${targetChain} first. Come back after to stake the other.` });
+        toast.info(t('toasts.dhb_found_on_both_chains'), { description: t('toasts.staking_on_chain_first', { chain: targetChain }) });
       }
 
       if (targetChain === 'BNB') {
@@ -184,7 +180,7 @@ export default function StakingPage() {
     } catch (err: any) {
       console.error('[Staking] Stake error:', err);
       toast.dismiss();
-      toast.error('Stake failed', { description: err?.message || 'Unknown error' });
+      toast.error(t('toasts.stake_failed'), { description: err?.message || 'Unknown error' });
     } finally {
       setIsStaking(false);
       setIsApproving(false);
@@ -192,25 +188,21 @@ export default function StakingPage() {
     }
   };
 
-  /**
-   * Unified transfer-based staking: send DHB to the staking address on the given chain.
-   */
   const stakeTransferFlow = async (amount: number, chainId: typeof BNB_CHAIN_ID | typeof BASE_CHAIN_ID, chainLabel: string) => {
     await switchChain(chainId);
     const dhbTokenAddress = CHAIN_CONFIGS[chainId]?.dhbToken;
     if (!dhbTokenAddress) {
-      toast.error('Error', { description: `DHB token not configured for ${chainLabel}.` });
+      toast.error(t('toasts.error'), { description: t('toasts.dhb_token_not_configured', { chain: chainLabel }) });
       return;
     }
 
-    toast.loading('Staking DHB...', { description: 'Confirming transaction...' });
+    toast.loading(t('toasts.staking_dhb'), { description: t('toasts.confirming_transaction') });
     const result = await sendERC20Token(dhbTokenAddress, STAKING_ADDRESS, stakeAmount, 18, chainId as any);
     
-    toast.loading('Transaction sent', { description: 'Waiting for confirmation...' });
+    toast.loading(t('toasts.transaction_submitted'), { description: t('toasts.waiting_for_confirmation') });
     const receipt = await result.wait();
 
     if (receipt.status === 1) {
-      // Record stake in database for per-user tracking
       const chainName = chainId === BNB_CHAIN_ID ? 'BNB' : 'Base';
       try {
         const walletAddr = await getWalletAddress();
@@ -225,29 +217,26 @@ export default function StakingPage() {
         console.error('[Staking] Failed to record stake in DB:', dbErr);
       }
       toast.dismiss();
-      toast.success('Staked successfully! ✅', { description: `${stakeAmount} DHB staked on ${chainLabel}.` });
+      toast.success(t('toasts.staked_successfully'), { description: t('toasts.dhb_staked_on_chain', { amount: stakeAmount, chain: chainLabel }) });
       setStakeAmount('');
       refetchStats();
       refetchUser();
     } else {
       toast.dismiss();
-      toast.error('Stake failed', { description: 'Transaction reverted.' });
+      toast.error(t('toasts.stake_failed'), { description: t('toasts.transaction_reverted') });
     }
   };
 
-  /**
-   * Smart unstake: detect where user has staked balance
-   */
   const handleUnstake = async () => {
     const amount = parseFloat(unstakeAmount);
     if (!amount || amount <= 0) {
-      toast.error('Invalid amount', { description: 'Please enter a valid amount to unstake.' });
+      toast.error(t('toasts.invalid_amount'), { description: t('toasts.please_enter_valid_amount_unstake') });
       return;
     }
 
     const userStakedNow = userData?.totalStaked ?? 0;
     if (amount > userStakedNow) {
-      toast.error('Insufficient staked balance', { description: `You only have ${userStakedNow.toFixed(2)} DHB staked.` });
+      toast.error(t('toasts.insufficient_staked_balance'), { description: t('toasts.only_have_dhb_staked', { amount: userStakedNow.toFixed(2) }) });
       return;
     }
 
@@ -255,7 +244,7 @@ export default function StakingPage() {
     try {
       const walletAddress = await getWalletAddress();
       if (!walletAddress) {
-        toast.error('Not connected', { description: 'Please connect your wallet first.' });
+        toast.error(t('toasts.not_connected'), { description: t('toasts.please_connect_wallet_first') });
         return;
       }
 
@@ -271,14 +260,14 @@ export default function StakingPage() {
 
       if (error) throw error;
 
-      toast.success('Unstake request submitted! ✅', { description: `${unstakeAmount} DHB added to unstake queue.` });
+      toast.success(t('toasts.unstake_request_submitted'), { description: t('toasts.dhb_added_to_unstake_queue', { amount: unstakeAmount }) });
       setUnstakeAmount('');
       refetchStats();
       refetchUser();
       refetchQueue();
     } catch (err: any) {
       console.error('[Staking] Unstake error:', err);
-      toast.error('Unstake failed', { description: err?.message || 'Unknown error' });
+      toast.error(t('toasts.unstake_failed'), { description: err?.message || 'Unknown error' });
     } finally {
       setIsUnstaking(false);
     }
@@ -289,26 +278,26 @@ export default function StakingPage() {
     try {
       const walletAddress = await getWalletAddress();
       if (!walletAddress) {
-        toast.error('Not connected', { description: 'Please connect your wallet first.' });
+        toast.error(t('toasts.not_connected'), { description: t('toasts.please_connect_wallet_first') });
         return;
       }
 
-      toast.loading('Claiming rewards...', { description: 'Please confirm the transaction.' });
+      toast.loading(t('toasts.claiming_rewards'), { description: t('toasts.please_confirm_transaction') });
       const result = await claimBNBRewards();
       const receipt = await result.wait();
 
       if (receipt.status === 1) {
         toast.dismiss();
-        toast.success('Rewards claimed! 🎉', { description: 'Your staking rewards have been sent to your wallet.' });
+        toast.success(t('toasts.rewards_claimed'), { description: t('toasts.rewards_sent_to_wallet') });
         refetchUser();
       } else {
         toast.dismiss();
-        toast.error('Claim failed', { description: 'Transaction reverted.' });
+        toast.error(t('toasts.claim_failed'), { description: t('toasts.transaction_reverted') });
       }
     } catch (err: any) {
       console.error('[Staking] Claim error:', err);
       toast.dismiss();
-      toast.error('Claim failed', { description: err?.message || 'Unknown error' });
+      toast.error(t('toasts.claim_failed'), { description: err?.message || 'Unknown error' });
     } finally {
       setIsClaiming(false);
     }
@@ -331,8 +320,8 @@ export default function StakingPage() {
             <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">Staking</h1>
-            <p className="text-xs text-white/40">Stake to unlock profit share, lower fees, superpowers and more!</p>
+            <h1 className="text-xl font-bold text-white">{t('staking.title')}</h1>
+            <p className="text-xs text-white/40">{t('staking.subtitle')}</p>
           </div>
         </div>
         <button
@@ -345,10 +334,10 @@ export default function StakingPage() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-        <StatCard icon={Lock} label="Total Staked" value={statsLoading ? '—' : formatNumber(stats?.totalStaked ?? '0')} subtitle="DHB across all chains" accent="bg-white/20" delay={0} />
-        <StatCard icon={DollarSign} label="Total Value Locked" value={statsLoading ? '—' : formatUSD(tvl)} subtitle={`@ $${dhbPrice.toFixed(6)}/DHB`} accent="bg-white/20" delay={0.05} />
-        <StatCard icon={TrendingUp} label="Est. APY" value={`${ESTIMATED_APY}%`} subtitle="Variable rate" accent="bg-white/20" delay={0.1} />
-        <StatCard icon={Activity} label="Unstake Events" value={queueLoading ? '—' : `${unstakeQueue?.length ?? 0}`} subtitle="Recent unstakes" accent="bg-white/20" delay={0.15} />
+        <StatCard icon={Lock} label={t('staking.totalStaked')} value={statsLoading ? '—' : formatNumber(stats?.totalStaked ?? '0')} subtitle={t('staking.dhbAcrossAllChains')} accent="bg-white/20" delay={0} />
+        <StatCard icon={DollarSign} label={t('staking.totalValueLocked')} value={statsLoading ? '—' : formatUSD(tvl)} subtitle={`@ $${dhbPrice.toFixed(6)}/DHB`} accent="bg-white/20" delay={0.05} />
+        <StatCard icon={TrendingUp} label={t('staking.estApy')} value={`${ESTIMATED_APY}%`} subtitle={t('staking.variableRate')} accent="bg-white/20" delay={0.1} />
+        <StatCard icon={Activity} label={t('staking.unstakeEvents')} value={queueLoading ? '—' : `${unstakeQueue?.length ?? 0}`} subtitle={t('staking.recentUnstakes')} accent="bg-white/20" delay={0.15} />
       </div>
 
       {/* Multi-chain notice */}
@@ -360,7 +349,7 @@ export default function StakingPage() {
         >
           <AlertTriangle className="w-4 h-4 text-white/60 flex-shrink-0 mt-0.5" />
           <p className="text-xs text-white/60">
-            You have DHB on both BNB and Base chains. Staking will process one chain at a time — come back after to stake the other.
+            {t('staking.multiChainNotice')}
           </p>
         </motion.div>
       )}
@@ -376,10 +365,10 @@ export default function StakingPage() {
         >
           <div className="flex items-center gap-2 mb-4">
             <ArrowDownToLine className="w-4 h-4 text-white" />
-            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Stake DHB</h2>
+            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">{t('staking.stakeDhb')}</h2>
           </div>
           <p className="text-xs text-white/40 mb-4">
-            Stake your DHB tokens to earn rewards. The correct chain will be detected automatically.
+            {t('staking.stakeDesc')}
           </p>
           <div className="flex gap-2">
             <LiquidGlassBubble
@@ -400,7 +389,7 @@ export default function StakingPage() {
                   onClick={() => setStakeAmount(userUnstaked.toString())}
                   className="absolute right-0 top-1/2 -translate-y-1/2 px-1 text-white/50 text-[10px] font-bold uppercase hover:text-white transition-colors"
                 >
-                  Max
+                  {t('staking.max')}
                 </button>
               </div>
             </LiquidGlassBubble>
@@ -415,11 +404,11 @@ export default function StakingPage() {
             >
               <span className="flex items-center justify-center gap-2 text-white text-sm font-medium h-full">
                 {isApproving ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> Approving</>
+                  <><Loader2 className="w-4 h-4 animate-spin" /> {t('staking.approving')}</>
                 ) : isStaking ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> Staking</>
+                  <><Loader2 className="w-4 h-4 animate-spin" /> {t('staking.staking')}</>
                 ) : (
-                  <><ArrowDownToLine className="w-4 h-4" /> Stake</>
+                  <><ArrowDownToLine className="w-4 h-4" /> {t('staking.stake')}</>
                 )}
               </span>
             </LiquidGlassBubble>
@@ -436,10 +425,10 @@ export default function StakingPage() {
           >
             <div className="flex items-center gap-2 mb-4">
               <ArrowUpFromLine className="w-4 h-4 text-white" />
-              <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Unstake DHB</h2>
+              <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">{t('staking.unstakeDhb')}</h2>
             </div>
             <p className="text-xs text-white/40 mb-4">
-              Withdraw your staked DHB. Tokens will be returned to your wallet.
+              {t('staking.unstakeDesc')}
             </p>
             <div className="flex gap-2">
               <LiquidGlassBubble
@@ -460,7 +449,7 @@ export default function StakingPage() {
                     onClick={() => setUnstakeAmount(userStaked.toString())}
                     className="absolute right-0 top-1/2 -translate-y-1/2 text-white/50 text-[10px] font-bold uppercase hover:text-white transition-colors"
                   >
-                    Max
+                    {t('staking.max')}
                   </button>
                 </div>
               </LiquidGlassBubble>
@@ -475,7 +464,7 @@ export default function StakingPage() {
               >
                 <span className="flex items-center justify-center gap-2 text-white text-sm font-medium h-full">
                   {isUnstaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Clock className="w-4 h-4" />}
-                  Unstake
+                  {t('staking.unstake')}
                 </span>
               </LiquidGlassBubble>
             </div>
@@ -494,21 +483,21 @@ export default function StakingPage() {
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
             <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
             <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">Your Staked</p>
+              <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.yourStaked')}</p>
               <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)} <span className="text-white/40 text-xs">DHB</span></p>
             </div>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
             <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
             <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">Unstaking</p>
+              <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.unstaking')}</p>
               <p className="text-sm font-bold text-white truncate">{formatNumber(userData?.totalUnstakeQueued ?? 0)} <span className="text-white/40 text-xs">DHB</span></p>
             </div>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
             <Gift className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
             <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">Rewards</p>
+              <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.rewards')}</p>
               <p className="text-sm font-bold text-white truncate">{formatNumber(userEarned, 2)} <span className="text-white/40 text-xs">DHB</span></p>
             </div>
           </div>
@@ -523,7 +512,7 @@ export default function StakingPage() {
             )}
           >
             {isClaiming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Gift className="w-4 h-4" />}
-            Claim
+            {t('staking.claim')}
           </button>
         </motion.div>
       )}
@@ -536,27 +525,27 @@ export default function StakingPage() {
         className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden"
       >
         <div className="p-5 border-b border-white/5">
-          <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Unstake Queue</h2>
-          <p className="text-xs text-white/30 mt-1">Recent unstake transactions across all chains</p>
+          <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">{t('staking.unstakeQueue')}</h2>
+          <p className="text-xs text-white/30 mt-1">{t('staking.recentUnstakeTransactions')}</p>
         </div>
 
         {queueLoading ? (
           <div className="p-8 text-center">
             <RefreshCw className="w-5 h-5 text-white/30 animate-spin mx-auto mb-2" />
-            <p className="text-xs text-white/30">Loading events...</p>
+            <p className="text-xs text-white/30">{t('staking.loadingEvents')}</p>
           </div>
         ) : !unstakeQueue?.length ? (
           <div className="p-8 text-center">
             <Activity className="w-6 h-6 text-white/20 mx-auto mb-2" />
-            <p className="text-sm text-white/30">No recent unstake events</p>
+            <p className="text-sm text-white/30">{t('staking.noRecentUnstakeEvents')}</p>
           </div>
         ) : (
           <div className="divide-y divide-white/5">
             <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_80px_40px_40px] gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
-              <span>Wallet</span>
-              <span className="text-right">Amount</span>
-              <span className="text-center">Chain</span>
-              <span className="text-right">When</span>
+              <span>{t('staking.wallet')}</span>
+              <span className="text-right">{t('staking.amount')}</span>
+              <span className="text-center">{t('staking.chain')}</span>
+              <span className="text-right">{t('staking.when')}</span>
               <span />
               <span />
             </div>
@@ -586,7 +575,7 @@ export default function StakingPage() {
                         onClick={() => handleCancelUnstake(event.txHash)}
                         disabled={isCancelling}
                         className="flex items-center justify-center w-7 h-7 rounded-lg hover:bg-red-500/20 transition-colors group"
-                        title="Cancel unstake"
+                        title={t('staking.cancelUnstake')}
                       >
                         {isCancelling ? <Loader2 className="w-3.5 h-3.5 text-white/30 animate-spin" /> : <X className="w-3.5 h-3.5 text-white/30 group-hover:text-red-400" />}
                       </button>
@@ -632,8 +621,8 @@ export default function StakingPage() {
         className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden"
       >
         <div className="p-5 border-b border-white/5">
-          <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Why Stake?</h2>
-          <p className="text-xs text-white/30 mt-1">Unlock powerful benefits by staking your DHB tokens</p>
+          <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">{t('staking.whyStake')}</h2>
+          <p className="text-xs text-white/30 mt-1">{t('staking.unlockBenefits')}</p>
         </div>
 
         <div className="p-5 columns-1 sm:columns-2 gap-4 space-y-4">
@@ -643,10 +632,10 @@ export default function StakingPage() {
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <DollarSign className="w-4 h-4 text-white" />
               </div>
-              <h3 className="text-sm font-semibold text-white">Profit Share</h3>
+              <h3 className="text-sm font-semibold text-white">{t('staking.profitShare')}</h3>
             </div>
             <p className="text-xs text-white/50 leading-relaxed">
-              Earn a share of platform revenue distributed to stakers. The more you stake, the larger your share of the rewards pool.
+              {t('staking.profitShareDesc')}
             </p>
           </div>
 
@@ -656,10 +645,10 @@ export default function StakingPage() {
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <Percent className="w-4 h-4 text-white" />
               </div>
-              <h3 className="text-sm font-semibold text-white">Reduced Fees</h3>
+              <h3 className="text-sm font-semibold text-white">{t('staking.reducedFees')}</h3>
             </div>
             <p className="text-xs text-white/50 leading-relaxed mb-2">
-              Higher badge tiers unlock lower platform fees — down to just 1%.
+              {t('staking.reducedFeesDesc')}
             </p>
             <div className="space-y-1 max-h-48 overflow-y-auto pr-1">
               {BADGE_LEVELS.map((b, i) => {
@@ -687,16 +676,16 @@ export default function StakingPage() {
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <Zap className="w-4 h-4 text-white" />
               </div>
-              <h3 className="text-sm font-semibold text-white">Super Powers</h3>
+              <h3 className="text-sm font-semibold text-white">{t('staking.superPowers')}</h3>
             </div>
             <ul className="space-y-1.5 text-xs text-white/50">
               <li className="flex items-center gap-2">
                 <Rocket className="w-3 h-3 text-white/30 flex-shrink-0" />
-                <span>Trending boosts — your content ranks higher</span>
+                <span>{t('staking.trendingBoosts')}</span>
               </li>
               <li className="flex items-center gap-2">
                 <TrendingUp className="w-3 h-3 text-white/30 flex-shrink-0" />
-                <span>Timeline exposure — more visibility in feeds</span>
+                <span>{t('staking.timelineExposure')}</span>
               </li>
             </ul>
           </div>
@@ -707,10 +696,10 @@ export default function StakingPage() {
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <Crown className="w-4 h-4 text-white" />
               </div>
-              <h3 className="text-sm font-semibold text-white">Increased Limits & Better Features</h3>
+              <h3 className="text-sm font-semibold text-white">{t('staking.increasedLimits')}</h3>
             </div>
             <p className="text-xs text-white/50 leading-relaxed">
-              Higher staking tiers unlock increased transaction limits, priority support, exclusive features, and stronger governance voting power.
+              {t('staking.increasedLimitsDesc')}
             </p>
           </div>
 
@@ -720,10 +709,10 @@ export default function StakingPage() {
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <Clock className="w-4 h-4 text-white" />
               </div>
-              <h3 className="text-sm font-semibold text-white">Early Access to Features</h3>
+              <h3 className="text-sm font-semibold text-white">{t('staking.earlyAccess')}</h3>
             </div>
             <p className="text-xs text-white/50 leading-relaxed">
-              Be the first to try new platform features before they roll out to everyone. Stakers get priority access to beta releases and upcoming tools.
+              {t('staking.earlyAccessDesc')}
             </p>
           </div>
 
@@ -733,10 +722,10 @@ export default function StakingPage() {
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <TrendingUp className="w-4 h-4 text-white" />
               </div>
-              <h3 className="text-sm font-semibold text-white">Enhanced Experience</h3>
+              <h3 className="text-sm font-semibold text-white">{t('staking.enhancedExperience')}</h3>
             </div>
             <p className="text-xs text-white/50 leading-relaxed">
-              Enjoy a premium experience with ad-free browsing, higher upload limits, and exclusive UI customizations.
+              {t('staking.enhancedExperienceDesc')}
             </p>
           </div>
 
@@ -746,10 +735,10 @@ export default function StakingPage() {
               <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
                 <Gift className="w-4 h-4 text-white" />
               </div>
-              <h3 className="text-sm font-semibold text-white">Airdrops</h3>
+              <h3 className="text-sm font-semibold text-white">{t('staking.airdrops')}</h3>
             </div>
             <p className="text-xs text-white/50 leading-relaxed">
-              Stakers are eligible for exclusive token airdrops and bonus reward distributions. The more you stake, the more you receive.
+              {t('staking.airdropsDesc')}
             </p>
           </div>
         </div>
