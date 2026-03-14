@@ -114,6 +114,7 @@ export function ActionBar({
   voteWeight = 1,
   tipCount,
   onTip,
+  disabled: externalDisabled = false,
 }: ActionBarProps) {
   // Add localStorage delta to comment count for instant feedback
   const commentCountDelta = postId ? getCommentCountDelta(postId) : 0;
