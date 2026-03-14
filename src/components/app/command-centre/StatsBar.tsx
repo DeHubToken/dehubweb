@@ -1,7 +1,7 @@
-import { Users, UserCheck, Heart, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { getAccountInfo } from '@/lib/api/dehub';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 
 export function StatsBar() {
   const { walletAddress, user } = useAuth();
@@ -36,24 +36,23 @@ export function StatsBar() {
   };
 
   const stats = [
-    { label: 'Followers', value: fmt(followers), icon: Users },
-    { label: 'Following', value: fmt(following), icon: UserCheck },
-    { label: 'Likes', value: fmt(likes), icon: Heart },
-    { label: 'Tips Made', value: fmt(tipsMade), icon: ArrowUpRight },
-    { label: 'Tips Earned', value: fmt(tipsEarned), icon: ArrowDownLeft },
+    { label: 'Followers', value: fmt(followers) },
+    { label: 'Following', value: fmt(following) },
+    { label: 'Likes', value: fmt(likes) },
+    { label: 'Tips Made', value: fmt(tipsMade) },
+    { label: 'Tips Earned', value: fmt(tipsEarned) },
   ];
 
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 sm:p-4">
-      <div className="grid grid-cols-5 divide-x divide-white/[0.06]">
+    <LiquidGlassBubble noBorder className="[&>div]:!rounded-xl">
+      <div className="grid grid-cols-5 divide-x divide-white/[0.06] py-2">
         {stats.map((stat) => (
-          <div key={stat.label} className="flex flex-col items-center gap-1 px-2">
-            <stat.icon className="w-4 h-4 text-white/60" />
+          <div key={stat.label} className="flex flex-col items-center gap-0.5 px-2">
             <span className="text-sm sm:text-base font-bold text-white">{stat.value}</span>
             <span className="text-[10px] sm:text-xs text-white/50">{stat.label}</span>
           </div>
         ))}
       </div>
-    </div>
+    </LiquidGlassBubble>
   );
 }
