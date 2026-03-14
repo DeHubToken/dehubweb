@@ -861,6 +861,36 @@ export type Database = {
           },
         ]
       }
+      staking_records: {
+        Row: {
+          action: string
+          amount: number
+          chain: string
+          created_at: string
+          id: string
+          tx_hash: string
+          wallet_address: string
+        }
+        Insert: {
+          action?: string
+          amount: number
+          chain: string
+          created_at?: string
+          id?: string
+          tx_hash: string
+          wallet_address: string
+        }
+        Update: {
+          action?: string
+          amount?: number
+          chain?: string
+          created_at?: string
+          id?: string
+          tx_hash?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       stories: {
         Row: {
           avatar: string | null

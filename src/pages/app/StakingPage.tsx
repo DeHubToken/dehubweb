@@ -11,6 +11,7 @@ import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserStakingData, ty
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { sendERC20Token } from '@/lib/wallet/send';
+import { supabase } from '@/integrations/supabase/client';
 import { STAKING_ADDRESS, unstakeBNB, claimBNBRewards } from '@/lib/contracts/staking';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
@@ -176,6 +177,20 @@ export default function StakingPage() {
     const receipt = await result.wait();
 
     if (receipt.status === 1) {
+      // Record stake in database for per-user tracking
+      const chainName = chainId === BNB_CHAIN_ID ? 'BNB' : 'Base';
+      try {
+        const walletAddr = await getWalletAddress();
+        await supabase.from('staking_records').insert({
+          wallet_address: walletAddr.toLowerCase(),
+          amount: parseFloat(stakeAmount),
+          chain: chainName,
+          tx_hash: receipt.hash || receipt.transactionHash || '',
+          action: 'stake',
+        });
+      } catch (dbErr) {
+        console.error('[Staking] Failed to record stake in DB:', dbErr);
+      }
       toast({ title: 'Staked successfully! ✅', description: dhbText(`${stakeAmount} DHB staked on ${chainLabel}.`) as any });
       setStakeAmount('');
       refetchStats();
