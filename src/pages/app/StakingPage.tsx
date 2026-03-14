@@ -333,7 +333,7 @@ export default function StakingPage() {
             <div className="relative flex-1 min-w-0">
               <input
                 type="number"
-                placeholder="Amount DHB"
+                placeholder={userUnstaked > 0 ? `${formatNumber(userUnstaked)} DHB` : 'Amount DHB'}
                 value={stakeAmount}
                 onChange={(e) => setStakeAmount(e.target.value)}
                 className="w-full px-3 py-2.5 pr-14 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-white/30"
