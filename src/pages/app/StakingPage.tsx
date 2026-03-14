@@ -16,7 +16,7 @@ import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-
 import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
 import { toast } from '@/hooks/use-toast';
 import { dhbText } from '@/lib/dhb-toast';
-import { parseUnits } from 'ethers';
+
 import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
 import baseLogo from '@/assets/icons/base-logo.png';
