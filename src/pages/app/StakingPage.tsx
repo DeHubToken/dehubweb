@@ -17,6 +17,7 @@ import { STAKING_ADDRESS, claimBNBRewards } from '@/lib/contracts/staking';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
 import { toast } from 'sonner';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 
 
 import dehubCoin from '@/assets/dehub-coin.png';
