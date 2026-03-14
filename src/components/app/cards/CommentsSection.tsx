@@ -1241,8 +1241,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                     mention.handleInput(e.target.value, e.target.selectionStart ?? undefined);
                   }}
                   className={cn(
-                    "flex-1 bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 py-2.5",
-                    isMobile ? "min-h-[40px] max-h-[96px]" : "min-h-[80px] max-h-[120px]"
+                    "flex-1 bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 py-2.5 pr-24",
+                    isMobile ? "min-h-[48px] max-h-[96px]" : "min-h-[80px] max-h-[120px]"
                   )}
                   rows={isMobile ? 2 : 3}
                   onKeyDown={(e) => {
