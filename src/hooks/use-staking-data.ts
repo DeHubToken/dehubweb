@@ -6,8 +6,8 @@ import { fetchStakingStats, getUserStakedBNB, getUserEarnedBNB, getStakingAllowa
 import { useTokenPrices } from './use-token-prices';
 import { supabase } from '@/integrations/supabase/client';
 import { fromWei, CHAIN_CONFIGS, BNB_CHAIN_ID, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { getWalletAddress } from '@/lib/contracts/aa-utils';
 import { readContract } from '@/lib/contracts/aa-utils';
+import { useAuth } from '@/contexts/AuthContext';
 import { Interface } from 'ethers';
 import type { ChainId } from '@/components/app/ChainSelector';
 
