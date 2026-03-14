@@ -42,26 +42,30 @@ export function seedProfileCache(
   const username = data.username?.replace('@', '');
   const address = data.address || '';
 
-  // Build a partial ProfileData object
+  // Build a partial ProfileData object — only include fields the source actually has
   const avatarRaw = data.avatarUrl || data.avatarImageUrl;
-  const partial: ProfileData = {
+  const partial: Partial<ProfileData> = {
     id: address,
     name: data.displayName || username || 'Unknown User',
     handle: username ? `@${username}` : '@unknown',
     verified: false,
-    bio: data.bio || '',
     avatarUrl: avatarRaw?.startsWith('http') ? avatarRaw : buildAvatarUrl(address, avatarRaw),
-    joinedDate: data.createdAt
-      ? new Date(data.createdAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })
-      : '',
-    following: data.followings ?? data.following ?? 0,
-    followers: data.followers ?? 0,
-    postsCount: data.uploads ?? 0,
     walletAddress: address,
     isFollowing: data.isFollowing,
     followsYou: data.followsYou,
     badgeBalance: data.badgeBalance,
   };
+
+  // Only include stats if the source actually provides them (avoid seeding 0s)
+  if (data.bio) partial.bio = data.bio;
+  if (data.createdAt) {
+    partial.joinedDate = new Date(data.createdAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+  }
+  if (data.followings != null || data.following != null) {
+    partial.following = data.followings ?? data.following;
+  }
+  if (data.followers != null) partial.followers = data.followers;
+  if (data.uploads != null) partial.postsCount = data.uploads;
 
   // Seed for both with and without viewer address (covers both query key variants)
   const keys = [
@@ -70,10 +74,30 @@ export function seedProfileCache(
   ];
 
   for (const key of keys) {
-    // Only seed if we don't already have fresh data
-    const existing = queryClient.getQueryData(key);
-    if (!existing) {
-      queryClient.setQueryData(key, partial);
-    }
+    // Merge with existing cache data — never overwrite real data with partial seed
+    const existing = queryClient.getQueryData<ProfileData>(key);
+    const merged: ProfileData = {
+      ...({
+        id: '',
+        name: 'Unknown User',
+        handle: '@unknown',
+        verified: false,
+        bio: '',
+        avatarUrl: '',
+        joinedDate: '',
+        following: 0,
+        followers: 0,
+        postsCount: 0,
+        walletAddress: '',
+      } satisfies ProfileData),
+      ...existing,
+      ...partial,
+      // Preserve existing non-zero stats if seed doesn't provide them
+      ...(existing?.followers && partial.followers == null ? { followers: existing.followers } : {}),
+      ...(existing?.following && partial.following == null ? { following: existing.following } : {}),
+      ...(existing?.bio && !partial.bio ? { bio: existing.bio } : {}),
+      ...(existing?.postsCount && partial.postsCount == null ? { postsCount: existing.postsCount } : {}),
+    };
+    queryClient.setQueryData(key, merged);
   }
 }
