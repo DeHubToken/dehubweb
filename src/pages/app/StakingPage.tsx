@@ -463,7 +463,7 @@ export default function StakingPage() {
                 )}
               >
                 <span className="flex items-center justify-center gap-2 text-white text-sm font-medium h-full">
-                  {isUnstaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Clock className="w-4 h-4" />}
+                  {isUnstaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUpFromLine className="w-4 h-4" />}
                   {t('staking.unstake')}
                 </span>
               </LiquidGlassBubble>
