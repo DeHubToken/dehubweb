@@ -447,7 +447,7 @@ export function ProfileHeader({
                 </button>
               ) : (
                 <div>
-                  <span className="font-bold text-white">{profile.followers.toLocaleString()}</span>
+                  <span className="font-bold text-white">{(profile.followers ?? 0).toLocaleString()}</span>
                   <span className="text-zinc-500 ml-1">{t('profile.followers')}</span>
                 </div>
               )}
