@@ -392,7 +392,7 @@ export default function StakingPage() {
             className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
           >
             <div className="flex items-center gap-2 mb-4">
-              <ArrowUpFromLine className="w-4 h-4 text-amber-400" />
+              <ArrowUpFromLine className="w-4 h-4 text-white" />
               <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Unstake DHB</h2>
             </div>
             <p className="text-xs text-white/40 mb-4">
