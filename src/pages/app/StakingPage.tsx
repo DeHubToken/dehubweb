@@ -501,19 +501,20 @@ export default function StakingPage() {
               <p className="text-sm font-bold text-white truncate">{formatNumber(userEarned, 2)} <span className="text-white/40 text-xs">DHB</span></p>
             </div>
           </div>
-          <button
-            onClick={handleClaim}
-            disabled={isClaiming || userEarned <= 0}
+          <LiquidGlassBubble
+            shimmer
+            noBorder
+            onClick={(isClaiming || userEarned <= 0) ? undefined : handleClaim}
             className={cn(
-              "rounded-xl border p-3 sm:p-4 flex items-center justify-center gap-2 text-sm font-medium transition-all",
-              isClaiming || userEarned <= 0
-                ? "bg-white/[0.02] border-white/5 text-white/30 cursor-not-allowed"
-                : "bg-white/10 border-white/15 text-white hover:bg-white/20"
+              "cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl",
+              (isClaiming || userEarned <= 0) && "opacity-40 cursor-not-allowed"
             )}
           >
-            {isClaiming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Gift className="w-4 h-4" />}
-            {t('staking.claim')}
-          </button>
+            <span className="flex items-center justify-center gap-2 text-white text-sm font-medium h-full">
+              {isClaiming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Gift className="w-4 h-4" />}
+              {t('staking.claim')}
+            </span>
+          </LiquidGlassBubble>
         </motion.div>
       )}
 
