@@ -125,7 +125,6 @@ export function MobileBottomNav() {
                       index === 0 && 'rounded-l-2xl'
                     )}
                   >
-                    <span style={getSpinStyle(index)}>
                       <item.icon 
                         className={cn(
                           'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
@@ -136,7 +135,6 @@ export function MobileBottomNav() {
                           item.label === 'Home' ? '-ml-[6.5px] lg:ml-0' : '-ml-[5.5px] lg:ml-0'
                         )} 
                       />
-                    </span>
                   </NavLink>
                 );
               })}
