@@ -6,7 +6,8 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle } from 'lucide-react';
+import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, Rocket } from 'lucide-react';
+import { BADGE_LEVELS, getBadgeUrl } from '@/lib/staking-badges';
 import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserStakingData, type UnstakeEvent } from '@/hooks/use-staking-data';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
@@ -545,6 +546,98 @@ export default function StakingPage() {
             ))}
           </div>
         )}
+      </motion.div>
+
+      {/* Why Stake Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden"
+      >
+        <div className="p-5 border-b border-white/5">
+          <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Why Stake?</h2>
+          <p className="text-xs text-white/30 mt-1">Unlock powerful benefits by staking your DHB tokens</p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5">
+          {/* Profit Share */}
+          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                <DollarSign className="w-4 h-4 text-emerald-400" />
+              </div>
+              <h3 className="text-sm font-semibold text-white">Profit Share</h3>
+            </div>
+            <p className="text-xs text-white/50 leading-relaxed">
+              Earn a share of platform revenue distributed to stakers. The more you stake, the larger your share of the rewards pool.
+            </p>
+          </div>
+
+          {/* Reduced Fees */}
+          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                <Percent className="w-4 h-4 text-blue-400" />
+              </div>
+              <h3 className="text-sm font-semibold text-white">Reduced Fees</h3>
+            </div>
+            <p className="text-xs text-white/50 leading-relaxed mb-2">
+              Higher badge tiers unlock lower platform fees — down to just 1%.
+            </p>
+            <div className="space-y-1 max-h-48 overflow-y-auto pr-1">
+              {BADGE_LEVELS.map((b, i) => {
+                const fee = i === BADGE_LEVELS.length - 1 ? 1 : parseFloat((10 - i * 0.69).toFixed(2));
+                const badgeUrl = getBadgeUrl(b.min);
+                return (
+                  <div key={b.name} className="flex items-center justify-between py-1 px-2 rounded-md bg-white/[0.02]">
+                    <div className="flex items-center gap-2">
+                      {badgeUrl && <img src={badgeUrl} alt={b.name} className="w-4 h-4" />}
+                      <span className="text-[11px] text-white/60">{b.name}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-[10px] text-white/30">{b.min.toLocaleString()} DHB</span>
+                      <span className="text-[11px] font-medium text-white/80">{fee}%</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Super Powers */}
+          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                <Zap className="w-4 h-4 text-purple-400" />
+              </div>
+              <h3 className="text-sm font-semibold text-white">Super Powers</h3>
+            </div>
+            <ul className="space-y-1.5 text-xs text-white/50">
+              <li className="flex items-center gap-2">
+                <Rocket className="w-3 h-3 text-white/30 flex-shrink-0" />
+                <span>Trending boosts — your content ranks higher</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <TrendingUp className="w-3 h-3 text-white/30 flex-shrink-0" />
+                <span>Timeline exposure — more visibility in feeds</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Increased Limits */}
+          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                <Crown className="w-4 h-4 text-amber-400" />
+              </div>
+              <h3 className="text-sm font-semibold text-white">Increased Limits & Better Features</h3>
+            </div>
+            <p className="text-xs text-white/50 leading-relaxed">
+              Higher staking tiers unlock increased transaction limits, priority support, exclusive features, and stronger governance voting power.
+            </p>
+          </div>
+        </div>
       </motion.div>
     </div>
   );
