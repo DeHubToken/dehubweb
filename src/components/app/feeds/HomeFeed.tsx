@@ -1282,7 +1282,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 onContentFilterToggle={toggleContentFilter}
                 onReset={() => {
                   setSelectedSort(SORT_OPTIONS[0]);
-                  setSelectedCategory('all');
+                  setSelectedCategories([]);
                   setSelectedDate(DATE_FILTER_OPTIONS[0]);
                   setSelectedPostType('all');
                   resetContentFilters();
