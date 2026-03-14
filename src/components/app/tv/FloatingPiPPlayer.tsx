@@ -26,7 +26,8 @@ export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayer
   const hlsRef = useRef<Hls | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [isMuted, setIsMuted] = useState(false); // PiP starts unmuted
+  const [isMuted, setIsMuted] = useState(true); // Start muted for autoplay compatibility
+  const workerRetried = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ 
     x: window.innerWidth - PLAYER_WIDTH - MARGIN, 
