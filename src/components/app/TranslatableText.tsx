@@ -18,6 +18,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
+import { clientNavigate } from '@/lib/client-navigate';
 
 export { LANGUAGE_NAMES };
 import { cn } from '@/lib/utils';
@@ -129,7 +130,7 @@ export function renderTextWithLinks(text: string): ReactNode[] {
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
-            window.location.href = `/${username}`;
+            clientNavigate(`/${username}`);
           }}
           data-no-navigate="true"
         >
@@ -148,7 +149,7 @@ export function renderTextWithLinks(text: string): ReactNode[] {
             e.stopPropagation();
             e.preventDefault();
             recordTickerSearch(tag);
-            window.location.href = `/app/explore?q=${encodeURIComponent(tag)}`;
+            clientNavigate(`/app/explore?q=${encodeURIComponent(tag)}`);
           }}
           data-no-navigate="true"
         >

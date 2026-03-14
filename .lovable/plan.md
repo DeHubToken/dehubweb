@@ -1,30 +1,35 @@
 
 
-## Problem
+## Fix: Auto-reload on chunk load failures
 
-When clicking a **$cashtag** in a post (e.g. `$DHB`), the app does a **full browser reload** (`window.location.href = ...`) instead of a client-side React Router navigation. This:
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-1. Destroys all React state — sidebar panels, query caches, scroll positions
-2. Forces a complete re-mount of the entire app (AppLayout, RightSidebar, TabbedSidePanel)
-3. Makes the transition feel slow and jarring instead of instant
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-The sidebar's `WhatsHappening` ticker click correctly uses `navigate()` — the bug is isolated to `TranslatableText.tsx` line 151.
+### Changes
 
-## Fix
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-**File: `src/components/app/TranslatableText.tsx`** (line ~147-152)
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
 
-Replace `window.location.href` with React Router's `useNavigate()` for cashtag clicks:
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
 
-```tsx
-// Before (full page reload)
-window.location.href = `/app/explore?q=${encodeURIComponent(tag)}`;
-
-// After (client-side navigation)
-navigate(`/app/explore?q=${encodeURIComponent(tag)}`);
-```
-
-The component already receives or can import `useNavigate`. Need to check if it's a pure render function or a component — if it's not a component, we'll need to pass `navigate` as a prop or restructure slightly.
-
-Also fix the `@mention` click on line 132 which has the same `window.location.href` problem.
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 
