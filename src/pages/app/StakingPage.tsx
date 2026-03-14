@@ -205,7 +205,7 @@ export default function StakingPage() {
     const receipt = await result.wait();
 
     if (receipt.status === 1) {
-      toast({ title: 'Staked successfully! ✅', description: `${stakeAmount} DHB staked on Base.` });
+      toast({ title: 'Staked successfully! ✅', description: dhbText(`${stakeAmount} DHB staked on Base.`) as any });
       setStakeAmount('');
       refetchStats();
       refetchUser();
