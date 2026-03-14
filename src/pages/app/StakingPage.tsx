@@ -200,7 +200,7 @@ export default function StakingPage() {
       return;
     }
 
-    toast({ title: 'Staking DHB...', description: 'Please confirm the stake transaction.' });
+    toast({ title: dhbText('Staking DHB...') as any, description: 'Please confirm the stake transaction.' });
     const result = await sendERC20Token(dhbTokenAddress, BASE_STAKING_ADDRESS, stakeAmount, 18, BASE_CHAIN_ID as any);
     const receipt = await result.wait();
 
