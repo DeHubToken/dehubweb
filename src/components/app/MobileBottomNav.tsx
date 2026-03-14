@@ -52,34 +52,15 @@ export function MobileBottomNav() {
       const el = scrollRef.current;
       if (!el || el.scrollWidth <= el.clientWidth) return;
       
-      // Smooth scroll right to 230px
-      el.scrollTo({ left: 230, behavior: 'smooth' });
+      // Smooth scroll right
+      el.scrollTo({ left: 120, behavior: 'smooth' });
       
-      // Then scroll back with custom easing for deceleration
+      // Then scroll back after a pause
       setTimeout(() => {
-        const start = el.scrollLeft;
-        const startTime = performance.now();
-        const duration = 900; // ms — slower return
-        
-        // Ease-out cubic: decelerates strongly toward the end
-        const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-        
-        const animateBack = (now: number) => {
-          const elapsed = now - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          const eased = easeOutCubic(progress);
-          el.scrollLeft = start * (1 - eased);
-          
-          if (progress < 1) {
-            requestAnimationFrame(animateBack);
-          } else {
-            localStorage.setItem(HINT_KEY, 'true');
-          }
-        };
-        
-        requestAnimationFrame(animateBack);
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+        localStorage.setItem(HINT_KEY, 'true');
       }, 600);
-    }, 500);
+    }, 1500);
     
     return () => clearTimeout(timer);
   }, []);
