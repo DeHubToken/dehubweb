@@ -1,35 +1,31 @@
 
 
-## Fix: Auto-reload on chunk load failures
+## Problem
 
-### Root cause
-Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
+The `index.html` sets the favicon via a remote Google Storage URL:
+```html
+<link rel="icon" type="image/png" href="https://storage.googleapis.com/...ftv logo (3).png">
+```
 
-### Solution
-Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
-1. Retry the import once (in case of transient network issue)
-2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
-3. Use `sessionStorage` flag to prevent infinite reload loops
+SafePal browser (and some other in-app browsers) ignore this and instead fetch the standard `/favicon.ico` from the root. The file at `public/favicon.ico` is the default Lovable icon.
 
-### Changes
+## Fix
 
-**New file: `src/lib/lazy-with-retry.ts`**
-- Export a `lazyWithRetry` function that wraps `React.lazy()`
-- On import failure: retry once after 1 second
-- If retry also fails: check sessionStorage for a `chunk-reload` flag
-  - If no flag → set flag + `window.location.reload()`
-  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
+1. **Replace `public/favicon.ico`** with the DeHub icon (the same logo used in the remote URL, converted to `.ico` format or just use a `.png` and reference it).
 
-**Edit: `src/components/app/PersistentPageCache.tsx`**
-- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
-- Import the new helper
+2. **Add additional favicon tags** to `index.html` for broader browser compatibility:
+   - `apple-touch-icon` (for iOS/Safari home screen)
+   - A `manifest.json` with icon entries (for PWA / in-app browsers)
+   - Multiple sizes (16x16, 32x32, 192x192) for different contexts
 
-**Edit: `src/components/ErrorBoundary.tsx`**
-- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
-- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+3. **Use a local favicon file** instead of the remote URL — download/copy the DeHub logo into `public/` and reference it locally. This is more reliable across all browsers.
 
-### What users will experience after this fix
-- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
-- The reload only happens once per deploy
-- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
+## Changes
+
+| File | Change |
+|------|--------|
+| `public/favicon.ico` | Replace with DeHub logo `.ico` file |
+| `public/dehub-icon-192.png` | Add 192x192 icon for manifest/touch |
+| `index.html` | Add `apple-touch-icon`, update favicon to local path, add `manifest.json` link |
+| `public/manifest.json` | Create with proper icon entries |
 
