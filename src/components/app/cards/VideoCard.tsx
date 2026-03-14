@@ -750,15 +750,22 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
       return;
     }
 
-    // Standard Fullscreen API on container
+    // Standard Fullscreen API on container — with fallback if blocked (e.g. SafePal WebView)
     if (containerEl) {
-      if (containerEl.requestFullscreen) {
-        containerEl.requestFullscreen();
-        return;
-      } else if (containerEl.webkitRequestFullscreen) {
-        containerEl.webkitRequestFullscreen();
+      const tryFullscreen = containerEl.requestFullscreen
+        ? containerEl.requestFullscreen()
+        : containerEl.webkitRequestFullscreen
+          ? containerEl.webkitRequestFullscreen()
+          : null;
+
+      if (tryFullscreen && typeof tryFullscreen.catch === 'function') {
+        tryFullscreen.catch(() => {
+          setIsFullscreen(true);
+        });
         return;
       }
+
+      if (tryFullscreen) return;
     }
 
     // Fallback: simulated fullscreen (iOS audio posts where no native API works)
