@@ -114,7 +114,7 @@ export function usePPVPayment({
         const ethQuoteResult = await getSwapQuote(shortfall);
         
         if (!ethQuoteResult) {
-          toast.error('Could not get swap quote. Please acquire DHB manually.', { id: 'ppv-payment' });
+          toast.error(dhbText('Could not get swap quote. Please acquire DHB manually.'), { id: 'ppv-payment' });
           setIsPaying(false);
           return;
         }
