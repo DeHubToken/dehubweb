@@ -385,9 +385,9 @@ export default function StakingPage() {
             <LiquidGlassBubble
               shimmer={false}
               noBorder
-              className="flex-1 min-w-0 [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl"
+              className="flex-1 min-w-0 h-[42px] [&>div]:!rounded-xl [&>div]:!h-full [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl"
             >
-              <div className="relative">
+              <div className="relative flex items-center h-full">
                 <input
                   type="number"
                   placeholder={userUnstaked > 0 ? formatNumber(userUnstaked) : '0'}
@@ -406,18 +406,18 @@ export default function StakingPage() {
             </LiquidGlassBubble>
             <LiquidGlassBubble
               shimmer
-              noBorder={isStaking || isApproving || !stakeAmount}
+              noBorder
               onClick={(isStaking || isApproving || !stakeAmount) ? undefined : handleStake}
               className={cn(
-                "flex-shrink-0 cursor-pointer [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl",
+                "flex-shrink-0 w-[110px] h-[42px] cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl",
                 (isStaking || isApproving || !stakeAmount) && "opacity-40 cursor-not-allowed"
               )}
             >
-              <span className="flex items-center gap-2 text-white text-sm font-medium px-1">
+              <span className="flex items-center justify-center gap-2 text-white text-sm font-medium h-full">
                 {isApproving ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> Approving...</>
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Approving</>
                 ) : isStaking ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> {stakingChainLabel || 'Staking'}...</>
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Staking</>
                 ) : (
                   <><ArrowDownToLine className="w-4 h-4" /> Stake</>
                 )}
