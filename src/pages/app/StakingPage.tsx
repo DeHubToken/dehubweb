@@ -196,7 +196,7 @@ export default function StakingPage() {
       return;
     }
 
-    toast.loading(t('toasts.staking_dhb'), { description: t('toasts.confirming_transaction') });
+    toast.loading(t('toasts.confirming_transaction'));
     const result = await sendERC20Token(dhbTokenAddress, STAKING_ADDRESS, stakeAmount, 18, chainId as any);
     
     toast.loading(t('toasts.transaction_submitted'), { description: t('toasts.waiting_for_confirmation') });
