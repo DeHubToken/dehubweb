@@ -502,7 +502,7 @@ export default function StakingPage() {
             )}
           >
             <span className="flex items-center justify-center gap-2 text-white text-sm font-medium">
-              {isClaiming ? <Loader2 className="w-4 h-4 animate-spin shrink-0" /> : <Gift className="w-4 h-4 shrink-0" />}
+              {isClaiming && <Loader2 className="w-4 h-4 animate-spin shrink-0" />}
               {t('staking.claim')}
             </span>
           </LiquidGlassBubble>
