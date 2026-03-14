@@ -1398,17 +1398,17 @@
     "trendingBoosts": "Trending boosts — your content ranks higher",
     "timelineExposure": "Timeline exposure — more visibility in feeds",
     "increasedLimits": "Increased Limits & Better Features",
-    "increasedLimitsDesc": "Higher staking tiers unlock increased transaction limits, priority support, exclusive features, and stronger governance voting power.",
+    "increasedLimitsDesc": "Higher deposit tiers unlock increased transaction limits, priority support, exclusive features, and stronger governance voting power.",
     "earlyAccess": "Early Access to Features",
-    "earlyAccessDesc": "Be the first to try new platform features before they roll out to everyone. Stakers get priority access to beta releases and upcoming tools.",
+    "earlyAccessDesc": "Be the first to try new platform features before they roll out to everyone. Depositors get priority access to beta releases and upcoming tools.",
     "enhancedExperience": "Enhanced Experience",
     "enhancedExperienceDesc": "Enjoy a premium experience with ad-free browsing, higher upload limits, and exclusive UI customizations.",
     "airdrops": "Airdrops",
-    "airdropsDesc": "Stakers are eligible for exclusive token airdrops and bonus reward distributions. The more you stake, the more you receive.",
+    "airdropsDesc": "Depositors are eligible for exclusive token airdrops and bonus reward distributions. The more you deposit, the more you receive.",
     "justNow": "just now",
     "minutesAgo": "{{count}}m ago",
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
-    "cancelUnstake": "Cancel unstake"
+    "cancelUnstake": "Cancel withdrawal"
   }
 }
