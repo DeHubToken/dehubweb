@@ -188,7 +188,7 @@ export const FuturisticAlienHero = () => {
 
   return (
     <motion.div 
-      className="relative h-screen w-full overflow-hidden bg-black scanline-overlay"
+      className="relative h-screen w-full overflow-hidden bg-black scanline-overlay fixed inset-0 touch-none"
       style={cursorStyle}
       animate={controls}
       initial={{ y: 0, opacity: 1 }}
