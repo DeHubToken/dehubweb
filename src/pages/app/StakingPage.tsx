@@ -402,7 +402,7 @@ export default function StakingPage() {
               noBorder={isStaking || isApproving || !stakeAmount}
               onClick={(isStaking || isApproving || !stakeAmount) ? undefined : handleStake}
               className={cn(
-                "flex-shrink-0 cursor-pointer",
+                "flex-shrink-0 cursor-pointer [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl",
                 (isStaking || isApproving || !stakeAmount) && "opacity-40 cursor-not-allowed"
               )}
             >
@@ -456,7 +456,7 @@ export default function StakingPage() {
                 noBorder={isUnstaking || !unstakeAmount}
                 onClick={(isUnstaking || !unstakeAmount) ? undefined : handleUnstake}
                 className={cn(
-                  "flex-shrink-0 cursor-pointer",
+                  "flex-shrink-0 cursor-pointer [&>div]:!rounded-xl [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl",
                   (isUnstaking || !unstakeAmount) && "opacity-40 cursor-not-allowed"
                 )}
               >
