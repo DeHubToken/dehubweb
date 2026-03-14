@@ -4,7 +4,7 @@
  * Chain-abstracted DHB staking. Auto-detects which chain(s) user has balance on.
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, Rocket } from 'lucide-react';
 import { BADGE_LEVELS, getBadgeUrl } from '@/lib/staking-badges';
