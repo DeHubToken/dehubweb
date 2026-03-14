@@ -6,8 +6,8 @@ import { fetchStakingStats, getUserStakedBNB, getUserEarnedBNB, getStakingAllowa
 import { useTokenPrices } from './use-token-prices';
 import { supabase } from '@/integrations/supabase/client';
 import { fromWei, CHAIN_CONFIGS, BNB_CHAIN_ID, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { getWalletAddress } from '@/lib/contracts/aa-utils';
 import { readContract } from '@/lib/contracts/aa-utils';
+import { useAuth } from '@/contexts/AuthContext';
 import { Interface } from 'ethers';
 import type { ChainId } from '@/components/app/ChainSelector';
 
@@ -102,22 +102,19 @@ export interface UserStakingData {
 }
 
 export function useUserStakingData() {
+  const { walletAddress, isAuthenticated } = useAuth();
+
   return useQuery({
-    queryKey: ['user-staking-data'],
+    queryKey: ['user-staking-data', walletAddress?.toLowerCase()],
     queryFn: async (): Promise<UserStakingData | null> => {
-      let userAddress: string;
-      try {
-        userAddress = await getWalletAddress();
-      } catch {
-        return null;
-      }
+      if (!walletAddress) return null;
 
       const [bnbStakedRaw, bnbEarnedRaw, bnbAllowance, bnbBalanceRaw, baseBalanceRaw] = await Promise.all([
-        getUserStakedBNB(userAddress),
-        getUserEarnedBNB(userAddress),
-        getStakingAllowance(userAddress),
-        getUserDHBBalance(userAddress, BNB_CHAIN_ID),
-        getUserDHBBalance(userAddress, BASE_CHAIN_ID),
+        getUserStakedBNB(walletAddress),
+        getUserEarnedBNB(walletAddress),
+        getStakingAllowance(walletAddress),
+        getUserDHBBalance(walletAddress, BNB_CHAIN_ID),
+        getUserDHBBalance(walletAddress, BASE_CHAIN_ID),
       ]);
 
       const bnbStaked = fromWei(bnbStakedRaw);
@@ -138,14 +135,15 @@ export function useUserStakingData() {
         bnbAllowance,
         baseBalance,
         baseBalanceRaw,
-        totalStaked: parseFloat(bnbStaked), // BNB contract tracks staked; Base is transfer-based
+        totalStaked: parseFloat(bnbStaked),
         totalUnstaked: bnbBalNum + baseBalNum,
         hasBNBBalance: bnbBalNum > 0,
         hasBaseBalance: baseBalNum > 0,
         hasBothChains: bnbBalNum > 0 && baseBalNum > 0,
-        userAddress,
+        userAddress: walletAddress,
       };
     },
+    enabled: !!walletAddress && isAuthenticated,
     staleTime: 30_000,
     refetchInterval: 60_000,
   });
