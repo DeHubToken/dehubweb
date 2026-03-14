@@ -449,8 +449,8 @@ export default function StakingPage() {
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
             <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-white/70 flex-shrink-0" />
             <div className="min-w-0">
-              <p className="text-[10px] text-white/40 uppercase tracking-wider">Unstaked</p>
-              <p className="text-sm font-bold text-white truncate">{formatNumber(userUnstaked)} <span className="text-white/40 text-xs">DHB</span></p>
+              <p className="text-[10px] text-white/40 uppercase tracking-wider">Unstake Queue</p>
+              <p className="text-sm font-bold text-white truncate">{formatNumber(userData?.totalUnstakeQueued ?? 0)} <span className="text-white/40 text-xs">DHB</span></p>
             </div>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 flex items-center gap-2.5">
