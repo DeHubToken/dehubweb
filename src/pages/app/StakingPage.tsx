@@ -476,40 +476,6 @@ export default function StakingPage() {
         </motion.div>
       )}
 
-      {/* Chain Breakdown */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.35 }}
-        className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5 mb-6"
-      >
-        <h2 className="text-sm font-semibold text-white/70 mb-4 uppercase tracking-wider">Chain Breakdown</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/5">
-            <img src={bnbLogo} alt="BNB" className="w-8 h-8 rounded-full flex-shrink-0" />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white">BNB Chain</p>
-              <p className="text-xs text-white/40">Staked</p>
-            </div>
-            <div className="text-right flex-shrink-0">
-              <p className="text-sm font-bold text-white">{statsLoading ? '—' : formatNumber(stats?.bnbStaked ?? '0')}</p>
-              <p className="text-xs text-white/40">DHB</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/5">
-            <img src={baseLogo} alt="Base" className="w-8 h-8 rounded-full flex-shrink-0" />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white">Base</p>
-              <p className="text-xs text-white/40">Staked</p>
-            </div>
-            <div className="text-right flex-shrink-0">
-              <p className="text-sm font-bold text-white">{statsLoading ? '—' : formatNumber(stats?.baseStaked ?? '0')}</p>
-              <p className="text-xs text-white/40">DHB</p>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
       {/* Unstake Queue */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
