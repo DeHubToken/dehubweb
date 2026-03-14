@@ -223,21 +223,8 @@ export const FuturisticAlienHero = () => {
             corruptedSubtitle={corruptedSubtitle}
             className="mt-[25px] md:mt-0"
           />
-          <AppStoreButtons />
+          <AppStoreButtons onEnterApp={handleEnterApp} />
           <SocialLinks />
-          {/* Enter button — visible on all sizes */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 3.5, duration: 1.2, ease: [0.23, 0.86, 0.39, 0.96] }}
-            className="flex justify-center mt-6 md:mt-8"
-          >
-            <a href="/app" onClick={(e) => { e.preventDefault(); handleEnterApp(); }}>
-              <LiquidGlassBubble shimmer className="px-12 py-3 md:px-16 md:py-4 cursor-pointer [&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.04] [&>div]:!via-white/[0.02] [&>div]:!to-transparent [&>div]:!border-white/[0.08] [&>div]:!shadow-none [&>div]:before:!bg-none [&>div]:after:!bg-none">
-                <span className="text-white text-base md:text-lg font-semibold tracking-wide">Enter</span>
-              </LiquidGlassBubble>
-            </a>
-          </motion.div>
         </div>
       </section>
     </motion.div>
