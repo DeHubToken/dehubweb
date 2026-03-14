@@ -104,7 +104,7 @@ function normalizeUser(userData: Partial<DeHubUser> | null | undefined, fallback
     address: safe.address || fallbackAddress,
     username: safe.username || null,
     displayName: safe.displayName || null,
-    avatarImageUrl: safe.avatarImageUrl || null,
+    avatarImageUrl: safe.avatarImageUrl || safe.avatarUrl || safe.avatar_url || null,
     coverImageUrl: safe.coverImageUrl || null,
     aboutMe: safe.aboutMe || null,
     followers: typeof safe.followers === 'number' ? safe.followers : 0,
