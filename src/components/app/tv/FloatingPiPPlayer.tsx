@@ -35,38 +35,66 @@ export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayer
   });
   const dragOffset = useRef({ x: 0, y: 0 });
 
+  // Muted-first play strategy: start muted, then try unmuting
+  const playWithUnmuteAttempt = useCallback((video: HTMLVideoElement) => {
+    video.muted = true;
+    video.play().then(() => {
+      // Playback started muted — now try unmuting
+      video.muted = false;
+      video.play().catch(() => {
+        // Unmuted play blocked (e.g. SafePal WebView) — stay muted
+        video.muted = true;
+        setIsMuted(true);
+      });
+    }).catch(() => {
+      // Even muted play failed — nothing we can do
+    });
+  }, []);
+
+  // Init HLS with worker fallback
+  const initHls = useCallback((video: HTMLVideoElement, streamUrl: string, useWorker: boolean) => {
+    const hls = new Hls({
+      enableWorker: useWorker,
+      lowLatencyMode: true,
+      maxBufferLength: 10,
+      maxMaxBufferLength: 20,
+    });
+    hlsRef.current = hls;
+    hls.loadSource(streamUrl);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      playWithUnmuteAttempt(video);
+    });
+    hls.on(Hls.Events.ERROR, (_event, data) => {
+      if (data.fatal) {
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+          hls.startLoad();
+        } else if (useWorker && !workerRetried.current) {
+          // Retry without Web Worker (restricted in some WebViews)
+          workerRetried.current = true;
+          hls.destroy();
+          hlsRef.current = null;
+          initHls(video, streamUrl, false);
+        } else {
+          onClose(channel.id);
+        }
+      }
+    });
+    return hls;
+  }, [playWithUnmuteAttempt, onClose, channel.id]);
+
   // Init HLS stream
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    video.muted = isMuted;
+    workerRetried.current = false;
 
     if (Hls.isSupported()) {
-      const hls = new Hls({
-        enableWorker: true,
-        lowLatencyMode: true,
-        maxBufferLength: 10,
-        maxMaxBufferLength: 20,
-      });
-      hlsRef.current = hls;
-      hls.loadSource(channel.streamUrl);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        video.play().catch(() => {});
-      });
-      hls.on(Hls.Events.ERROR, (_event, data) => {
-        if (data.fatal) {
-          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-            hls.startLoad();
-          } else {
-            onClose(channel.id);
-          }
-        }
-      });
+      initHls(video, channel.streamUrl, true);
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = channel.streamUrl;
-      video.play().catch(() => {});
+      playWithUnmuteAttempt(video);
     }
 
     return () => {
@@ -75,7 +103,7 @@ export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayer
         hlsRef.current = null;
       }
     };
-  }, [channel.streamUrl, channel.id, onClose]);
+  }, [channel.streamUrl, initHls, playWithUnmuteAttempt]);
 
   // Keep muted state in sync
   useEffect(() => {
