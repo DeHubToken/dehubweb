@@ -631,39 +631,6 @@ export default function StakingPage() {
             </p>
           </div>
 
-          {/* Reduced Fees */}
-          <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
-                <Percent className="w-4 h-4 text-white" />
-              </div>
-              <h3 className="text-sm font-semibold text-white">{t('staking.reducedFees')}</h3>
-            </div>
-            <p className="text-xs text-white/50 leading-relaxed mb-2">
-              {t('staking.reducedFeesDesc')}
-            </p>
-            <div className="relative">
-              <div className="space-y-1 max-h-[10.7rem] overflow-y-auto pr-1">
-                {BADGE_LEVELS.map((b, i) => {
-                  const fee = i === BADGE_LEVELS.length - 1 ? 1 : parseFloat((10 - i * 0.69).toFixed(2));
-                  const badgeUrl = getBadgeUrl(b.min);
-                  return (
-                    <div key={b.name} className="flex items-center justify-between py-1 px-2 rounded-md bg-white/[0.02]">
-                      <div className="flex items-center gap-2">
-                        {badgeUrl && <img src={badgeUrl} alt={b.name} className="w-4 h-4 brightness-0 invert" />}
-                        <span className="text-[11px] text-white/60">{b.name}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-[10px] text-white/30">{b.min.toLocaleString()} DHB</span>
-                        <span className="text-[11px] font-medium text-white/80">{fee}%</span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/60 to-transparent rounded-b-xl" />
-            </div>
-          </div>
 
           {/* Super Powers */}
           <div className="break-inside-avoid rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
