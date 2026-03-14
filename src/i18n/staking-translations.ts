@@ -6,7 +6,7 @@
  * English and Spanish are defined in en.json/es.json; this file covers all other languages.
  */
 
-import i18n from 'i18next';
+import type { i18n as I18nInstance } from 'i18next';
 
 interface StakingTranslation {
   staking: Record<string, string>;
@@ -1191,19 +1191,18 @@ const stakingTranslations: Record<string, StakingTranslation> = {
  * Inject staking translations into i18n resource bundles.
  * Call after i18n initialization and whenever a new language is loaded.
  */
-export function injectStakingTranslations(lang?: string): void {
+export function injectStakingTranslations(i18nInstance: I18nInstance, lang?: string): void {
   const targetLangs = lang ? [lang] : Object.keys(stakingTranslations);
 
   for (const l of targetLangs) {
     const translations = stakingTranslations[l];
     if (!translations) continue;
 
-    i18n.addResourceBundle(l, 'translation', {
+    i18nInstance.addResourceBundle(l, 'translation', {
       staking: translations.staking,
       toasts: translations.toasts,
     }, true, true);
   }
 }
-
-// Auto-inject on import for all pre-defined languages
-injectStakingTranslations();
+// Do NOT auto-invoke here — i18n may not be initialized yet.
+// Called explicitly from i18n/index.ts after init.

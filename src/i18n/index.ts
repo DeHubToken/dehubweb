@@ -284,7 +284,8 @@ if (defaultLang && defaultLang !== 'en') {
   });
 }
 
-// Import runtime translation bundles
-import './staking-translations';
+// Inject runtime translation bundles after init
+import { injectStakingTranslations } from './staking-translations';
+injectStakingTranslations(i18n);
 
 export default i18n;
