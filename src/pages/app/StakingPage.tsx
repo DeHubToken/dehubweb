@@ -240,6 +240,7 @@ export default function StakingPage() {
       setUnstakeAmount('');
       refetchStats();
       refetchUser();
+      refetchQueue();
     } catch (err: any) {
       console.error('[Staking] Unstake error:', err);
       toast.error('Unstake failed', { description: err?.message || 'Unknown error' });
