@@ -421,8 +421,8 @@ export default function StakingPage() {
                 className={cn(
                   "px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all flex-shrink-0",
                   isUnstaking
-                    ? "bg-amber-500/20 text-amber-400/60 cursor-not-allowed"
-                    : "bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 border border-amber-500/20"
+                    ? "bg-white/10 text-white/40 cursor-not-allowed"
+                    : "bg-white/10 text-white hover:bg-white/20 border border-white/15"
                 )}
               >
                 {isUnstaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Clock className="w-4 h-4" />}
