@@ -19,8 +19,6 @@ import { toast } from 'sonner';
 
 
 import dehubCoin from '@/assets/dehub-coin.png';
-import bnbLogo from '@/assets/bnb-logo.png';
-import baseLogo from '@/assets/icons/base-logo.png';
 
 function formatNumber(val: string | number, decimals = 0): string {
   const num = typeof val === 'string' ? parseFloat(val) : val;
