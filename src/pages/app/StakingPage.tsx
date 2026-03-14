@@ -167,7 +167,7 @@ export default function StakingPage() {
 
     if (currentAllowance < amountWei) {
       setIsApproving(true);
-      toast({ title: 'Approving DHB...', description: 'Please confirm the approval transaction.' });
+      toast({ title: dhbText('Approving DHB...') as any, description: 'Please confirm the approval transaction.' });
       const approvalResult = await approveBNBStaking(stakeAmount);
       const approvalReceipt = await approvalResult.wait();
       if (approvalReceipt.status !== 1) {
