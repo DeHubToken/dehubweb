@@ -109,15 +109,39 @@ export function useUserStakingData() {
     queryFn: async (): Promise<UserStakingData | null> => {
       if (!walletAddress) return null;
 
-      const [bnbStakedRaw, bnbEarnedRaw, bnbAllowance, bnbBalanceRaw, baseBalanceRaw] = await Promise.all([
-        getUserStakedBNB(walletAddress),
-        getUserEarnedBNB(walletAddress),
-        getStakingAllowance(walletAddress),
+      const addr = walletAddress.toLowerCase();
+
+      // Fetch on-chain balances + DB staking records in parallel
+      const [bnbBalanceRaw, baseBalanceRaw, bnbEarnedRaw, bnbAllowance, { data: stakingRecords }] = await Promise.all([
         getUserDHBBalance(walletAddress, BNB_CHAIN_ID),
         getUserDHBBalance(walletAddress, BASE_CHAIN_ID),
+        getUserEarnedBNB(walletAddress),
+        getStakingAllowance(walletAddress),
+        supabase
+          .from('staking_records')
+          .select('amount, action')
+          .eq('wallet_address', addr),
       ]);
 
-      const bnbStaked = fromWei(bnbStakedRaw);
+      // Calculate net staked from DB records (stakes - unstakes)
+      let dbStaked = 0;
+      if (stakingRecords) {
+        for (const r of stakingRecords) {
+          if (r.action === 'stake') dbStaked += Number(r.amount);
+          else if (r.action === 'unstake') dbStaked -= Number(r.amount);
+        }
+      }
+      if (dbStaked < 0) dbStaked = 0;
+
+      // Also check legacy BNB contract staked balance
+      let legacyStaked = BigInt(0);
+      try {
+        legacyStaked = await getUserStakedBNB(walletAddress);
+      } catch {}
+
+      const legacyStakedNum = parseFloat(fromWei(legacyStaked));
+      const totalStakedNum = dbStaked + legacyStakedNum;
+
       const bnbBalance = fromWei(bnbBalanceRaw);
       const baseBalance = fromWei(baseBalanceRaw);
       const bnbEarned = fromWei(bnbEarnedRaw);
@@ -126,8 +150,8 @@ export function useUserStakingData() {
       const baseBalNum = parseFloat(baseBalance);
 
       return {
-        bnbStaked,
-        bnbStakedRaw,
+        bnbStaked: totalStakedNum.toString(),
+        bnbStakedRaw: legacyStaked,
         bnbBalance,
         bnbBalanceRaw,
         bnbEarned,
@@ -135,7 +159,7 @@ export function useUserStakingData() {
         bnbAllowance,
         baseBalance,
         baseBalanceRaw,
-        totalStaked: parseFloat(bnbStaked),
+        totalStaked: totalStakedNum,
         totalUnstaked: bnbBalNum + baseBalNum,
         hasBNBBalance: bnbBalNum > 0,
         hasBaseBalance: baseBalNum > 0,

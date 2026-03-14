@@ -185,7 +185,7 @@ export default function StakingPage() {
           wallet_address: walletAddr.toLowerCase(),
           amount: parseFloat(stakeAmount),
           chain: chainName,
-          tx_hash: receipt.hash || receipt.transactionHash || '',
+          tx_hash: receipt.hash || '',
           action: 'stake',
         });
       } catch (dbErr) {
