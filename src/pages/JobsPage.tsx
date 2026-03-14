@@ -165,7 +165,7 @@ export default function JobsPage() {
                   This is an OTE (On-Target Earnings) commission-based position: the harder you hustle, the more you earn. 
                   The role is simple, bring on companies, projects, communities or any large profile accounts on to DeHub, and get paid. 
                   The idea is, more awareness drives more growth to our ecosystem, which pays you more bonuses for successful campaigns. 
-                  It's a infinite loop of growth with uncapped earning potential. Even those without experience are invited to apply, if the attitude is right for the role.
+                  It's a infinite loop of growth with uncapped earning potential. Bringing advertisers to the platform unlocks additional bonuses and an industry-leading commission structure — the more value you drive, the more you earn. Even those without experience are invited to apply, if the attitude is right for the role.
                 </p>
               </Section>
 
