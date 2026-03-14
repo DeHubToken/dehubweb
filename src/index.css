@@ -618,33 +618,26 @@ html.reduce-motion .hover-scale {
   transform: none !important;
 }
 
-/* Glass morph-in animation for hero buttons */
-@keyframes glassMorphIn {
-  0% {
-    backdrop-filter: blur(0px);
-    -webkit-backdrop-filter: blur(0px);
-    background: rgba(255, 255, 255, 0);
-    border-color: rgba(255, 255, 255, 0);
-    box-shadow: none;
-  }
-  100% {
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    background: linear-gradient(to bottom right, rgba(255,255,255,0.04), rgba(255,255,255,0.02), transparent);
-    border-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-  }
-}
-
+/* Glass morph-in transition for hero buttons */
 .glass-morph-in > div {
-  animation: glassMorphIn 1.8s cubic-bezier(0.23, 0.86, 0.39, 0.96) forwards;
   backdrop-filter: blur(0px) !important;
   -webkit-backdrop-filter: blur(0px) !important;
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0) !important;
+  box-shadow: none !important;
+  transition: backdrop-filter 1.8s cubic-bezier(0.23, 0.86, 0.39, 0.96),
+              -webkit-backdrop-filter 1.8s cubic-bezier(0.23, 0.86, 0.39, 0.96),
+              background 1.8s cubic-bezier(0.23, 0.86, 0.39, 0.96),
+              border-color 1.8s cubic-bezier(0.23, 0.86, 0.39, 0.96),
+              box-shadow 1.8s cubic-bezier(0.23, 0.86, 0.39, 0.96);
 }
 
-.glass-morph-in > div.morphed {
+.glass-morph-in.morphed > div {
   backdrop-filter: blur(24px) !important;
   -webkit-backdrop-filter: blur(24px) !important;
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.04), rgba(255,255,255,0.02), transparent) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
 }
 
 /* Bottom nav carousel spin-in animation */
