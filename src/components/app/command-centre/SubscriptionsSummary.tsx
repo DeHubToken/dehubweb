@@ -33,7 +33,7 @@ export function SubscriptionsSummary() {
   }
 
   return (
-    <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+    <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 max-h-[420px] overflow-y-auto">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-white font-semibold">{t('commandCentre.subscriptionsSummary')}</h3>
         <Button variant="glass" size="sm" className="text-xs h-8 rounded-xl">

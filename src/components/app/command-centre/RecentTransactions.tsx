@@ -301,7 +301,7 @@ export function RecentTransactions() {
   }, [dpayTxs, ppvPurchases, tipRecords, onchainTransfers, tipNotifications, walletAddress, activeFilter, usernameMap, t]);
 
   return (
-    <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+    <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 max-h-[420px] overflow-y-auto">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-white font-semibold">{t('commandCentre.recentTransactions')}</h3>
         <Button variant="glass" size="sm" className="text-xs h-8 rounded-xl">
