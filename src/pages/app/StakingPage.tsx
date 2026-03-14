@@ -651,7 +651,7 @@ export default function StakingPage() {
             <p className="text-xs text-white/50 leading-relaxed mb-2">
               {t('staking.reducedFeesDesc')}
             </p>
-            <div className="space-y-1 max-h-[7.7rem] overflow-y-auto pr-1">
+            <div className="space-y-1 max-h-[8.5rem] overflow-y-auto pr-1">
               {BADGE_LEVELS.map((b, i) => {
                 const fee = i === BADGE_LEVELS.length - 1 ? 1 : parseFloat((10 - i * 0.69).toFixed(2));
                 const badgeUrl = getBadgeUrl(b.min);
