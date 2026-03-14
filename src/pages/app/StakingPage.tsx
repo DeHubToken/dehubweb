@@ -196,7 +196,7 @@ export default function StakingPage() {
     await switchChain(BASE_CHAIN_ID);
     const dhbTokenAddress = CHAIN_CONFIGS[BASE_CHAIN_ID]?.dhbToken;
     if (!dhbTokenAddress) {
-      toast({ title: 'Error', description: 'DHB token not configured for Base.', variant: 'destructive' });
+      toast({ title: 'Error', description: dhbText('DHB token not configured for Base.') as any, variant: 'destructive' });
       return;
     }
 
