@@ -159,9 +159,9 @@ export function useTrendingCategories(period: TopicPeriod = 'all') {
     queryKey: ['trending-categories', period],
     queryFn: () => fetchTrendingCategories(period),
     initialData: HARDCODED_DATA[period],
-    staleTime: 5 * 60_000,
+    staleTime: 2 * 60_000,
     gcTime: 30 * 60_000,
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
     placeholderData: (prev) => prev,
   });
