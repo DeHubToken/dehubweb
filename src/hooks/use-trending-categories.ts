@@ -1,7 +1,6 @@
 /**
- * Hook to fetch trending categories from the trending_categories DB table.
- * For 1d/1w periods, aggregates from category_post_log for accurate time-filtered data.
- * Hardcoded fallback data ensures instant first render.
+ * Hook to fetch trending categories from category_post_log.
+ * Counts are always computed fresh from logged posts, with period cutoffs.
  */
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -13,73 +12,13 @@ export interface CategoryCount {
   post_count: number;
 }
 
-const EXCLUDED_CATEGORIES = new Set(['general', '']);
-
-const HARDCODED_DATA: Record<TopicPeriod, CategoryCount[]> = {
-  'all': [
-    { name: 'Entertainment', post_count: 119 },
-    { name: 'Crypto', post_count: 69 },
-    { name: 'Comedy', post_count: 54 },
-    { name: 'Music', post_count: 53 },
-    { name: 'Action', post_count: 52 },
-    { name: 'Gaming', post_count: 47 },
-    { name: 'Life', post_count: 40 },
-    { name: 'Dehub', post_count: 34 },
-    { name: 'Sport', post_count: 33 },
-    { name: 'Viral', post_count: 32 },
-  ],
-  '1y': [
-    { name: 'Entertainment', post_count: 119 },
-    { name: 'Crypto', post_count: 69 },
-    { name: 'Comedy', post_count: 54 },
-    { name: 'Music', post_count: 53 },
-    { name: 'Gaming', post_count: 47 },
-    { name: 'Life', post_count: 40 },
-    { name: 'Dehub', post_count: 34 },
-    { name: 'Sport', post_count: 33 },
-    { name: 'Viral', post_count: 32 },
-    { name: 'Educational', post_count: 25 },
-  ],
-  '1m': [
-    { name: 'Crypto', post_count: 10 },
-    { name: 'Ai', post_count: 8 },
-    { name: 'Entertainment', post_count: 6 },
-    { name: 'Gaming', post_count: 6 },
-    { name: 'Dehub', post_count: 5 },
-    { name: 'Music', post_count: 5 },
-    { name: 'Blockchain', post_count: 4 },
-    { name: 'Trump', post_count: 4 },
-    { name: 'Comedy', post_count: 3 },
-    { name: 'Sport', post_count: 3 },
-  ],
-  '1w': [
-    { name: 'Crypto', post_count: 10 },
-    { name: 'Ai', post_count: 8 },
-    { name: 'Entertainment', post_count: 6 },
-    { name: 'Gaming', post_count: 6 },
-    { name: 'Dehub', post_count: 5 },
-    { name: 'Music', post_count: 5 },
-    { name: 'Blockchain', post_count: 4 },
-    { name: 'Trump', post_count: 4 },
-    { name: 'Comedy', post_count: 3 },
-    { name: 'Sport', post_count: 3 },
-  ],
-  '1d': [
-    { name: 'Crypto', post_count: 10 },
-    { name: 'Ai', post_count: 8 },
-    { name: 'Entertainment', post_count: 6 },
-    { name: 'Gaming', post_count: 6 },
-    { name: 'Dehub', post_count: 5 },
-    { name: 'Music', post_count: 5 },
-    { name: 'Blockchain', post_count: 4 },
-    { name: 'Trump', post_count: 4 },
-    { name: 'Comedy', post_count: 3 },
-    { name: 'Sport', post_count: 3 },
-  ],
-};
+const EXCLUDED_CATEGORIES = new Set(['general', '', '-']);
+const TOP_LIMIT = 10;
+const PAGE_SIZE = 1000;
 
 function getPeriodCutoff(period: TopicPeriod): string {
   const now = new Date();
+
   switch (period) {
     case '1d':
       now.setDate(now.getDate() - 1);
@@ -87,96 +26,126 @@ function getPeriodCutoff(period: TopicPeriod): string {
     case '1w':
       now.setDate(now.getDate() - 7);
       break;
-    default:
-      return '1970-01-01T00:00:00Z';
+    case '1m':
+      now.setMonth(now.getMonth() - 1);
+      break;
+    case '1y':
+      now.setFullYear(now.getFullYear() - 1);
+      break;
+    case 'all':
+      // Explicitly scope "All" to the last 3 years as requested.
+      now.setFullYear(now.getFullYear() - 3);
+      break;
   }
+
   return now.toISOString();
 }
 
 function capitalize(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1);
+  return s
+    .split(' ')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
 }
 
-async function fetchFromLog(period: TopicPeriod, limit: number): Promise<CategoryCount[]> {
-  const cutoff = getPeriodCutoff(period);
+function normalizeCategoryName(raw: string | null | undefined): string {
+  return (raw || '').trim().toLowerCase();
+}
 
-  const { data, error } = await supabase
-    .from('category_post_log' as any)
-    .select('name')
-    .gte('posted_at', cutoff);
+function withTopTenPlaceholders(items: CategoryCount[]): CategoryCount[] {
+  const top = items.slice(0, TOP_LIMIT);
+  if (top.length >= TOP_LIMIT) return top;
 
-  if (error || !data || data.length === 0) {
-    return HARDCODED_DATA[period];
+  return [
+    ...top,
+    ...Array.from({ length: TOP_LIMIT - top.length }, () => ({
+      name: '-',
+      post_count: 0,
+    })),
+  ];
+}
+
+async function fetchAllLogRowsSince(cutoffIso: string): Promise<Array<{ name: string | null }>> {
+  const rows: Array<{ name: string | null }> = [];
+  let from = 0;
+
+  while (true) {
+    const { data, error } = await supabase
+      .from('category_post_log' as any)
+      .select('name')
+      .gte('posted_at', cutoffIso)
+      .order('posted_at', { ascending: false })
+      .range(from, from + PAGE_SIZE - 1);
+
+    if (error) {
+      throw error;
+    }
+
+    const chunk = (data as Array<{ name: string | null }>) || [];
+    if (chunk.length === 0) break;
+
+    rows.push(...chunk);
+
+    if (chunk.length < PAGE_SIZE) break;
+    from += PAGE_SIZE;
   }
 
-  // Aggregate client-side
+  return rows;
+}
+
+async function fetchFromLog(period: TopicPeriod): Promise<CategoryCount[]> {
+  const cutoff = getPeriodCutoff(period);
+  const data = await fetchAllLogRowsSince(cutoff);
+
+  if (!data.length) {
+    return [];
+  }
+
   const counts = new Map<string, number>();
-  for (const row of data as any[]) {
-    const name = (row.name as string) || '';
-    if (!EXCLUDED_CATEGORIES.has(name)) {
-      counts.set(name, (counts.get(name) || 0) + 1);
-    }
+
+  for (const row of data) {
+    const normalized = normalizeCategoryName(row.name);
+    if (!normalized || EXCLUDED_CATEGORIES.has(normalized)) continue;
+    counts.set(normalized, (counts.get(normalized) || 0) + 1);
   }
 
   return Array.from(counts.entries())
     .map(([name, post_count]) => ({ name: capitalize(name), post_count }))
-    .sort((a, b) => b.post_count - a.post_count)
-    .slice(0, limit);
-}
-
-async function fetchFromCumulative(fetchAll = false): Promise<CategoryCount[]> {
-  let query = supabase
-    .from('trending_categories')
-    .select('name, post_count')
-    .order('post_count', { ascending: false });
-
-  if (!fetchAll) {
-    query = query.limit(10);
-  }
-
-  const { data, error } = await query;
-
-  if (error || !data || data.length === 0) {
-    return HARDCODED_DATA['all'];
-  }
-
-  return (data as { name: string; post_count: number }[])
-    .filter(c => !EXCLUDED_CATEGORIES.has(c.name))
-    .map(c => ({ name: capitalize(c.name), post_count: c.post_count }));
+    .sort((a, b) => b.post_count - a.post_count);
 }
 
 async function fetchTrendingCategories(period: TopicPeriod, fetchAll = false): Promise<CategoryCount[]> {
-  // For short periods, aggregate from the event log
-  if (period === '1d' || period === '1w') {
-    return fetchFromLog(period, fetchAll ? 1000 : 10);
+  const computed = await fetchFromLog(period);
+
+  if (fetchAll) {
+    return computed;
   }
-  // For 1m, 1y, all: use cumulative counter
-  return fetchFromCumulative(fetchAll);
+
+  return withTopTenPlaceholders(computed);
 }
 
 export function useTrendingCategories(period: TopicPeriod = 'all') {
   return useQuery<CategoryCount[]>({
     queryKey: ['trending-categories', period],
     queryFn: () => fetchTrendingCategories(period),
-    initialData: HARDCODED_DATA[period],
-    staleTime: 2 * 60_000,
+    staleTime: 30_000,
     gcTime: 30 * 60_000,
     refetchOnMount: true,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
     placeholderData: (prev) => prev,
   });
 }
 
 /**
- * Fetch ALL categories (no limit) for infinite scroll in the "All" period
+ * Fetch ALL categories (no top-10 limit) for infinite scroll in the "all" period
  */
 export function useAllTrendingCategories() {
   return useQuery<CategoryCount[]>({
     queryKey: ['trending-categories-all-unlimited'],
     queryFn: () => fetchTrendingCategories('all', true),
-    staleTime: 5 * 60_000,
+    staleTime: 30_000,
     gcTime: 30 * 60_000,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 }

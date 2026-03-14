@@ -142,23 +142,33 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
         >
           {visibleCategories.length > 0 ? (
             <div className="flex flex-col gap-1">
-              {visibleCategories.map((cat, i) => (
-                <button
-                  key={cat.name}
-                  onClick={() => handleCategoryClick(cat.name)}
-                  className="flex items-center justify-between w-full px-3 py-2 rounded-xl hover:bg-zinc-800/60 transition-colors group text-left"
-                >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="text-xs text-zinc-500 font-mono w-4 shrink-0">{i + 1}</span>
-                    <span className="text-sm text-zinc-200 truncate group-hover:text-white transition-colors">
-                      {cat.name}
+              {visibleCategories.map((cat, i) => {
+                const isPlaceholder = cat.name === '-';
+
+                return (
+                  <button
+                    key={`${cat.name}-${i}`}
+                    onClick={() => !isPlaceholder && handleCategoryClick(cat.name)}
+                    disabled={isPlaceholder}
+                    className={cn(
+                      'flex items-center justify-between w-full px-3 py-2 rounded-xl transition-colors group text-left',
+                      isPlaceholder
+                        ? 'opacity-60 cursor-default'
+                        : 'hover:bg-zinc-800/60'
+                    )}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span className="text-xs text-zinc-500 font-mono w-4 shrink-0">{i + 1}</span>
+                      <span className="text-sm text-zinc-200 truncate transition-colors">
+                        {cat.name}
+                      </span>
+                    </div>
+                    <span className="text-[11px] text-zinc-500 shrink-0 ml-2">
+                      {isPlaceholder ? '-' : `${cat.post_count} ${cat.post_count === 1 ? 'post' : 'posts'}`}
                     </span>
-                  </div>
-                  <span className="text-[11px] text-zinc-500 shrink-0 ml-2">
-                    {cat.post_count} {cat.post_count === 1 ? 'post' : 'posts'}
-                  </span>
-                </button>
-              ))}
+                  </button>
+                );
+              })}
               {/* Infinite scroll trigger for "all" period */}
               {hasMore && (
                 <div ref={loaderRef} className="flex items-center justify-center py-2">
