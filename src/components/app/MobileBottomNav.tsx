@@ -6,7 +6,7 @@ import { PostModal } from './PostModal';
 import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
 
-const CAROUSEL_ANIM_KEY = 'dehub_nav_carousel_seen';
+
 
 // Left side: Home, Messages
 const LEFT_NAV_ITEMS = [
@@ -42,27 +42,8 @@ export function MobileBottomNav() {
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [carouselAnimating, setCarouselAnimating] = useState(false);
 
-  // First-visit carousel spin-in animation
-  useEffect(() => {
-    const alreadySeen = localStorage.getItem(CAROUSEL_ANIM_KEY);
-    if (alreadySeen) return;
-    setCarouselAnimating(true);
-    const timer = setTimeout(() => {
-      setCarouselAnimating(false);
-      localStorage.setItem(CAROUSEL_ANIM_KEY, 'true');
-    }, 1400); // animation duration
-    return () => clearTimeout(timer);
-  }, []);
 
-  // Helper: get staggered animation style for carousel spin-in
-  const getSpinStyle = (index: number) => {
-    if (!carouselAnimating) return {};
-    return {
-      animation: `navCarouselSpin 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${index * 80}ms both`,
-    };
-  };
 
   const handleNavClick = (e: React.MouseEvent, path: string) => {
     if (path === '/app' && location.pathname === '/app') {
@@ -124,8 +105,8 @@ export function MobileBottomNav() {
           {/* Nav items container */}
           <div 
             ref={scrollRef}
-            className={cn("flex items-center h-12 md:h-14 overflow-x-auto scrollbar-hide scroll-smooth", carouselAnimating && "overflow-hidden")}
-            style={{ scrollSnapType: 'x proximity', perspective: '600px' }}
+            className="flex items-center h-12 md:h-14 overflow-x-auto scrollbar-hide scroll-smooth"
+            style={{ scrollSnapType: 'x proximity' }}
           >
             {/* Left side items - Home + Messages */}
             <div className="flex items-center justify-start flex-shrink-0 pl-1" style={{ width: 'calc(50% - 24px)' }}>
@@ -144,7 +125,6 @@ export function MobileBottomNav() {
                       index === 0 && 'rounded-l-2xl'
                     )}
                   >
-                    <span style={getSpinStyle(index)}>
                       <item.icon 
                         className={cn(
                           'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
@@ -155,7 +135,6 @@ export function MobileBottomNav() {
                           item.label === 'Home' ? '-ml-[6.5px] lg:ml-0' : '-ml-[5.5px] lg:ml-0'
                         )} 
                       />
-                    </span>
                   </NavLink>
                 );
               })}
@@ -166,7 +145,7 @@ export function MobileBottomNav() {
               onClick={handlePostClick}
               className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center"
             >
-                <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 active:scale-95" style={getSpinStyle(2)}>
+                <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center relative transition-all duration-300 active:scale-95">
                   <div 
                     className="absolute inset-0 rounded-xl bg-white/[0.08] backdrop-blur-xl border border-white/[0.15] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_2px_8px_rgba(0,0,0,0.3)] transition-opacity duration-300"
                     style={{ opacity: buttonOpacity }}
@@ -186,7 +165,6 @@ export function MobileBottomNav() {
                     to={item.path}
                     className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white"
                   >
-                    <span style={getSpinStyle(3)}>
                       <item.icon 
                         className={cn(
                           'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
@@ -196,7 +174,6 @@ export function MobileBottomNav() {
                           'ml-[6px] lg:ml-0'
                         )} 
                       />
-                    </span>
                   </NavLink>
                 );
               })}
@@ -206,7 +183,6 @@ export function MobileBottomNav() {
                 to="/app/explore"
                 className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white rounded-r-2xl"
               >
-                <span style={getSpinStyle(4)}>
                   <Search 
                     className={cn(
                       'w-5 h-5 md:w-6 md:h-6 transition-all duration-200 ml-[4px] lg:ml-0',
@@ -215,7 +191,7 @@ export function MobileBottomNav() {
                         : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
                     )} 
                   />
-                </span>
+                
               </NavLink>
             </div>
 
