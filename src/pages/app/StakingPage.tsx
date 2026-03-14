@@ -16,7 +16,7 @@ import { STAKING_ADDRESS, unstakeBNB, claimBNBRewards } from '@/lib/contracts/st
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
 import { toast } from 'sonner';
-import { dhbText } from '@/lib/dhb-toast';
+
 
 import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
