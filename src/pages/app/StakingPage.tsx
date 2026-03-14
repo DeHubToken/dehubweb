@@ -130,7 +130,7 @@ export default function StakingPage() {
       const hasBase = userData?.hasBaseBalance ?? false;
 
       if (!hasBNB && !hasBase) {
-        toast({ title: 'No DHB balance', description: 'You don\'t have DHB tokens on either chain.', variant: 'destructive' });
+        toast({ title: dhbText('No DHB balance'), description: dhbText('You don\'t have DHB tokens on either chain.'), variant: 'destructive' });
         return;
       }
 
