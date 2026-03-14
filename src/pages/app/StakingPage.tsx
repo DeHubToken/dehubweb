@@ -119,10 +119,13 @@ export default function StakingPage() {
   const handleCancelUnstake = async (txHash: string) => {
     setCancellingTx(txHash);
     try {
-      const { error } = await supabase
-        .from('staking_records')
-        .delete()
-        .eq('tx_hash', txHash);
+      const { error } = await withWalletHeader(
+        supabase
+          .from('staking_records')
+          .delete()
+          .eq('tx_hash', txHash),
+        currentWallet
+      );
 
       if (error) throw error;
 
