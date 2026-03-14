@@ -236,7 +236,7 @@ export default function StakingPage() {
 
       if (hasStakedBNB) {
         // Unstake from BNB contract
-        toast({ title: 'Unstaking DHB...', description: 'Please confirm the unstake transaction.' });
+        toast({ title: dhbText('Unstaking DHB...') as any, description: 'Please confirm the unstake transaction.' });
         const result = await unstakeBNB(unstakeAmount);
         const receipt = await result.wait();
 
