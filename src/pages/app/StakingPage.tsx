@@ -15,8 +15,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { STAKING_ADDRESS, unstakeBNB, claimBNBRewards } from '@/lib/contracts/staking';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
-import { toast } from '@/hooks/use-toast';
-import { dhbText } from '@/lib/dhb-toast';
+import { toast } from 'sonner';
+
 
 import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
@@ -114,7 +114,7 @@ export default function StakingPage() {
   const handleStake = async () => {
     const amount = parseFloat(stakeAmount);
     if (!amount || amount <= 0) {
-      toast({ title: 'Invalid amount', description: 'Please enter a valid amount to stake.', variant: 'destructive' });
+      toast.error('Invalid amount', { description: 'Please enter a valid amount to stake.' });
       return;
     }
 
@@ -122,28 +122,24 @@ export default function StakingPage() {
     try {
       const walletAddress = await getWalletAddress();
       if (!walletAddress) {
-        toast({ title: 'Not connected', description: 'Please connect your wallet first.', variant: 'destructive' });
+        toast.error('Not connected', { description: 'Please connect your wallet first.' });
         return;
       }
 
-      // Detect which chain(s) have balance
       const hasBNB = userData?.hasBNBBalance ?? false;
       const hasBase = userData?.hasBaseBalance ?? false;
 
       if (!hasBNB && !hasBase) {
-        toast({ title: dhbText('No DHB balance') as any, description: dhbText('You don\'t have DHB tokens on either chain.') as any, variant: 'destructive' });
+        toast.error('No DHB balance', { description: 'You don\'t have DHB tokens on either chain.' });
         return;
       }
 
       const bothChains = hasBNB && hasBase;
-
-      // Determine which chain to stake on
-      // Prefer BNB (has contract staking), fall back to Base
       const targetChain: 'BNB' | 'Base' = hasBNB ? 'BNB' : 'Base';
       setStakingChainLabel(targetChain);
 
       if (bothChains) {
-        toast({ title: dhbText('DHB found on both chains') as any, description: `Staking on ${targetChain} first. After this completes, come back to stake your ${targetChain === 'BNB' ? 'Base' : 'BNB'} balance.` });
+        toast.info('DHB found on both chains', { description: `Staking on ${targetChain} first. Come back after to stake the other.` });
       }
 
       if (targetChain === 'BNB') {
@@ -153,7 +149,7 @@ export default function StakingPage() {
       }
     } catch (err: any) {
       console.error('[Staking] Stake error:', err);
-      toast({ title: 'Stake failed', description: err?.message || 'Unknown error', variant: 'destructive' });
+      toast.error('Stake failed', { description: err?.message || 'Unknown error' });
     } finally {
       setIsStaking(false);
       setIsApproving(false);
@@ -168,12 +164,14 @@ export default function StakingPage() {
     await switchChain(chainId);
     const dhbTokenAddress = CHAIN_CONFIGS[chainId]?.dhbToken;
     if (!dhbTokenAddress) {
-      toast({ title: 'Error', description: dhbText(`DHB token not configured for ${chainLabel}.`) as any, variant: 'destructive' });
+      toast.error('Error', { description: `DHB token not configured for ${chainLabel}.` });
       return;
     }
 
-    toast({ title: dhbText('Staking DHB...') as any, description: 'Please confirm the stake transaction.' });
+    toast.loading('Staking DHB...', { description: 'Please confirm the transaction in your wallet.' });
     const result = await sendERC20Token(dhbTokenAddress, STAKING_ADDRESS, stakeAmount, 18, chainId as any);
+    
+    toast.loading('Transaction sent', { description: 'Waiting for confirmation...' });
     const receipt = await result.wait();
 
     if (receipt.status === 1) {
@@ -191,12 +189,14 @@ export default function StakingPage() {
       } catch (dbErr) {
         console.error('[Staking] Failed to record stake in DB:', dbErr);
       }
-      toast({ title: 'Staked successfully! ✅', description: dhbText(`${stakeAmount} DHB staked on ${chainLabel}.`) as any });
+      toast.dismiss();
+      toast.success('Staked successfully! ✅', { description: `${stakeAmount} DHB staked on ${chainLabel}.` });
       setStakeAmount('');
       refetchStats();
       refetchUser();
     } else {
-      toast({ title: 'Stake failed', description: 'Transaction reverted.', variant: 'destructive' });
+      toast.dismiss();
+      toast.error('Stake failed', { description: 'Transaction reverted.' });
     }
   };
 
@@ -206,7 +206,7 @@ export default function StakingPage() {
   const handleUnstake = async () => {
     const amount = parseFloat(unstakeAmount);
     if (!amount || amount <= 0) {
-      toast({ title: 'Invalid amount', description: 'Please enter a valid amount to unstake.', variant: 'destructive' });
+      toast.error('Invalid amount', { description: 'Please enter a valid amount to unstake.' });
       return;
     }
 
@@ -214,37 +214,35 @@ export default function StakingPage() {
     try {
       const walletAddress = await getWalletAddress();
       if (!walletAddress) {
-        toast({ title: 'Not connected', description: 'Please connect your wallet first.', variant: 'destructive' });
+        toast.error('Not connected', { description: 'Please connect your wallet first.' });
         return;
       }
 
       const hasStakedBNB = (userData?.totalStaked ?? 0) > 0;
 
       if (hasStakedBNB) {
-        // Unstake from BNB contract
-        toast({ title: dhbText('Unstaking DHB...') as any, description: 'Please confirm the unstake transaction.' });
+        toast.loading('Unstaking DHB...', { description: 'Please confirm the transaction.' });
         const result = await unstakeBNB(unstakeAmount);
         const receipt = await result.wait();
 
         if (receipt.status === 1) {
-          toast({ title: 'Unstaked successfully! ✅', description: dhbText(`${unstakeAmount} DHB unstaked.`) as any });
+          toast.dismiss();
+          toast.success('Unstaked successfully! ✅', { description: `${unstakeAmount} DHB unstaked.` });
           setUnstakeAmount('');
           refetchStats();
           refetchUser();
         } else {
-          toast({ title: 'Unstake failed', description: 'Transaction reverted.', variant: 'destructive' });
+          toast.dismiss();
+          toast.error('Unstake failed', { description: 'Transaction reverted.' });
         }
       } else {
-        // Base unstake goes into queue
-        toast({
-          title: 'Unstake initiated ⏳',
-          description: `${unstakeAmount} DHB unstake request submitted. You will be notified when complete.`,
-        });
+        toast.info('Unstake initiated ⏳', { description: `${unstakeAmount} DHB unstake request submitted.` });
         setUnstakeAmount('');
       }
     } catch (err: any) {
       console.error('[Staking] Unstake error:', err);
-      toast({ title: 'Unstake failed', description: err?.message || 'Unknown error', variant: 'destructive' });
+      toast.dismiss();
+      toast.error('Unstake failed', { description: err?.message || 'Unknown error' });
     } finally {
       setIsUnstaking(false);
     }
@@ -255,23 +253,26 @@ export default function StakingPage() {
     try {
       const walletAddress = await getWalletAddress();
       if (!walletAddress) {
-        toast({ title: 'Not connected', description: 'Please connect your wallet first.', variant: 'destructive' });
+        toast.error('Not connected', { description: 'Please connect your wallet first.' });
         return;
       }
 
-      toast({ title: 'Claiming rewards...', description: 'Please confirm the claim transaction.' });
+      toast.loading('Claiming rewards...', { description: 'Please confirm the transaction.' });
       const result = await claimBNBRewards();
       const receipt = await result.wait();
 
       if (receipt.status === 1) {
-        toast({ title: 'Rewards claimed! 🎉', description: 'Your staking rewards have been sent to your wallet.' });
+        toast.dismiss();
+        toast.success('Rewards claimed! 🎉', { description: 'Your staking rewards have been sent to your wallet.' });
         refetchUser();
       } else {
-        toast({ title: 'Claim failed', description: 'Transaction reverted.', variant: 'destructive' });
+        toast.dismiss();
+        toast.error('Claim failed', { description: 'Transaction reverted.' });
       }
     } catch (err: any) {
       console.error('[Staking] Claim error:', err);
-      toast({ title: 'Claim failed', description: err?.message || 'Unknown error', variant: 'destructive' });
+      toast.dismiss();
+      toast.error('Claim failed', { description: err?.message || 'Unknown error' });
     } finally {
       setIsClaiming(false);
     }
