@@ -216,7 +216,7 @@ export const FuturisticAlienHero = () => {
       </button>
       
       <section className="relative h-screen flex items-center justify-center overflow-hidden z-10">
-        <div className="text-center p-4 -translate-y-[150px] sm:-translate-y-[130px] md:translate-y-0">
+        <div className="text-center p-4 -translate-y-[100px] sm:-translate-y-[80px] md:translate-y-0">
           <HeroTitle
             masterGlitch={masterGlitch}
             corruptedTitle={corruptedTitle}
