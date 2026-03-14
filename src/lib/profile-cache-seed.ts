@@ -76,27 +76,24 @@ export function seedProfileCache(
   for (const key of keys) {
     // Merge with existing cache data — never overwrite real data with partial seed
     const existing = queryClient.getQueryData<ProfileData>(key);
+
+    // CRITICAL: Do NOT seed stats fields (followers, following, postsCount) to 0
+    // when the source doesn't provide them — this causes the "0 followers" flash bug.
+    // Only include stat defaults if we actually have them from the source or existing cache.
     const merged: ProfileData = {
-      ...({
-        id: '',
-        name: 'Unknown User',
-        handle: '@unknown',
-        verified: false,
-        bio: '',
-        avatarUrl: '',
-        joinedDate: '',
-        following: 0,
-        followers: 0,
-        postsCount: 0,
-        walletAddress: '',
-      } satisfies ProfileData),
+      id: '',
+      name: 'Unknown User',
+      handle: '@unknown',
+      verified: false,
+      bio: existing?.bio ?? '',
+      avatarUrl: '',
+      joinedDate: existing?.joinedDate ?? '',
+      followers: existing?.followers ?? (partial.followers != null ? partial.followers : undefined as unknown as number),
+      following: existing?.following ?? (partial.following != null ? partial.following : undefined as unknown as number),
+      postsCount: existing?.postsCount ?? (partial.postsCount != null ? partial.postsCount : undefined as unknown as number),
+      walletAddress: '',
       ...existing,
       ...partial,
-      // Preserve existing non-zero stats if seed doesn't provide them
-      ...(existing?.followers && partial.followers == null ? { followers: existing.followers } : {}),
-      ...(existing?.following && partial.following == null ? { following: existing.following } : {}),
-      ...(existing?.bio && !partial.bio ? { bio: existing.bio } : {}),
-      ...(existing?.postsCount && partial.postsCount == null ? { postsCount: existing.postsCount } : {}),
     };
     queryClient.setQueryData(key, merged);
   }
