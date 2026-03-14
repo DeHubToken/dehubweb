@@ -94,7 +94,7 @@ export const AppStoreButtons = ({ onEnterApp }: AppStoreButtonsProps) => {
       {/* App Store */}
       <button
         onClick={handleAppStoreClick}
-        className="transition-transform hover:scale-105"
+        className="w-full transition-transform hover:scale-105"
         style={cursorStyle}
       >
         <LiquidGlassBubble shimmer className={btnClass}>
