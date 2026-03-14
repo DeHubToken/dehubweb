@@ -9,10 +9,11 @@ import { readContract, writeContractAA, getWalletAddress, switchChain, type AAWr
 import { CHAIN_CONFIGS, BNB_CHAIN_ID, BASE_CHAIN_ID } from './dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
 
-// BNB staking contract (proxy)
-export const BNB_STAKING_CONTRACT = '0x26d2cd7763106fdce443fadd36163e2ad33a76e6';
+// Unified staking address for both BNB and Base (transfer-based)
+export const STAKING_ADDRESS = '0xcF573a682Bf7A7Cc58000e9eCA9c9d04dA102Da7';
 
-// Base staking address (just tracks DHB transfers to this address)
+// Legacy addresses (kept for reading old staked balances)
+export const BNB_STAKING_CONTRACT = '0x26d2cd7763106fdce443fadd36163e2ad33a76e6';
 export const BASE_STAKING_ADDRESS = '0x7b10dd033Ac41B8AF85eE1701e344B86e446250B';
 
 const BNB_STAKING_DHB_TOKEN = CHAIN_CONFIGS[BNB_CHAIN_ID].dhbToken;
@@ -36,26 +37,18 @@ const stakingInterface = new Interface([
  */
 export async function getTotalStaked(chainId: ChainId): Promise<bigint> {
   const config = CHAIN_CONFIGS[chainId];
-
-  // Use the correct token address per chain
-  const tokenAddress = chainId === BNB_CHAIN_ID
-    ? BNB_STAKING_DHB_TOKEN
-    : config?.dhbToken;
-  
+  const tokenAddress = chainId === BNB_CHAIN_ID ? BNB_STAKING_DHB_TOKEN : config?.dhbToken;
   if (!tokenAddress) return BigInt(0);
 
-  const stakingAddress = chainId === BNB_CHAIN_ID
-    ? BNB_STAKING_CONTRACT
-    : BASE_STAKING_ADDRESS;
+  // Read from new staking address + legacy addresses
+  const legacyAddress = chainId === BNB_CHAIN_ID ? BNB_STAKING_CONTRACT : BASE_STAKING_ADDRESS;
 
   try {
-    return await readContract<bigint>(
-      tokenAddress,
-      erc20Interface,
-      'balanceOf',
-      [stakingAddress],
-      chainId
-    );
+    const [newBalance, legacyBalance] = await Promise.all([
+      readContract<bigint>(tokenAddress, erc20Interface, 'balanceOf', [STAKING_ADDRESS], chainId),
+      readContract<bigint>(tokenAddress, erc20Interface, 'balanceOf', [legacyAddress], chainId),
+    ]);
+    return newBalance + legacyBalance;
   } catch (err) {
     console.error(`[Staking] Failed to read totalStaked on chain ${chainId}:`, err);
     return BigInt(0);
