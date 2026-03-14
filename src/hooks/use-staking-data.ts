@@ -25,11 +25,46 @@ const erc20BalanceInterface = new Interface([
 
 async function fetchUnstakeQueue(): Promise<UnstakeEvent[]> {
   try {
-    const { data, error } = await supabase.functions.invoke('get-staking-events', {
+    // Fetch from edge function (block explorer)
+    const edgePromise = supabase.functions.invoke('get-staking-events', {
       body: { type: 'unstake', limit: 50 },
-    });
-    if (error) throw error;
-    return data?.events ?? [];
+    }).then(({ data, error }) => {
+      if (error) return [];
+      return (data?.events ?? []) as UnstakeEvent[];
+    }).catch(() => [] as UnstakeEvent[]);
+
+    // Also fetch DB-based unstake records as fallback/supplement
+    const dbPromise = supabase
+      .from('staking_records')
+      .select('wallet_address, amount, tx_hash, created_at, chain')
+      .eq('action', 'unstake')
+      .order('created_at', { ascending: false })
+      .limit(50)
+      .then(({ data, error }) => {
+        if (error || !data) return [];
+        return data.map((r): UnstakeEvent => ({
+          wallet: r.wallet_address,
+          amount: String(r.amount),
+          txHash: r.tx_hash,
+          timestamp: new Date(r.created_at).getTime() / 1000,
+          chain: (r.chain === 'BNB' ? 'BNB' : 'Base') as 'BNB' | 'Base',
+        }));
+      });
+
+    const [edgeEvents, dbEvents] = await Promise.all([edgePromise, dbPromise]);
+
+    // Merge and deduplicate by txHash
+    const seen = new Set<string>();
+    const merged: UnstakeEvent[] = [];
+    for (const e of [...dbEvents, ...edgeEvents]) {
+      if (!seen.has(e.txHash)) {
+        seen.add(e.txHash);
+        merged.push(e);
+      }
+    }
+    // Sort by timestamp descending
+    merged.sort((a, b) => b.timestamp - a.timestamp);
+    return merged.slice(0, 50);
   } catch (err) {
     console.error('[Staking] Failed to fetch unstake queue:', err);
     return [];
