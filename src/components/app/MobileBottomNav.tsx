@@ -42,27 +42,8 @@ export function MobileBottomNav() {
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [carouselAnimating, setCarouselAnimating] = useState(false);
 
-  // First-visit carousel spin-in animation
-  useEffect(() => {
-    const alreadySeen = localStorage.getItem(CAROUSEL_ANIM_KEY);
-    if (alreadySeen) return;
-    setCarouselAnimating(true);
-    const timer = setTimeout(() => {
-      setCarouselAnimating(false);
-      localStorage.setItem(CAROUSEL_ANIM_KEY, 'true');
-    }, 1400); // animation duration
-    return () => clearTimeout(timer);
-  }, []);
 
-  // Helper: get staggered animation style for carousel spin-in
-  const getSpinStyle = (index: number) => {
-    if (!carouselAnimating) return {};
-    return {
-      animation: `navCarouselSpin 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${index * 80}ms both`,
-    };
-  };
 
   const handleNavClick = (e: React.MouseEvent, path: string) => {
     if (path === '/app' && location.pathname === '/app') {
