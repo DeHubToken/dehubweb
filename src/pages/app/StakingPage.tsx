@@ -143,9 +143,6 @@ export default function StakingPage() {
 
       if (bothChains) {
         toast({ title: dhbText('DHB found on both chains'), description: `Staking on ${targetChain} first. After this completes, come back to stake your ${targetChain === 'BNB' ? 'Base' : 'BNB'} balance.` });
-          title: 'DHB found on both chains',
-          description: `Staking on ${targetChain} first. After this completes, come back to stake your ${targetChain === 'BNB' ? 'Base' : 'BNB'} balance.`,
-        });
       }
 
       if (targetChain === 'BNB') {
