@@ -668,8 +668,8 @@ export default function StakingPage() {
           {/* Airdrops */}
           <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-2">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-pink-500/10 flex items-center justify-center">
-                <Gift className="w-4 h-4 text-pink-400" />
+              <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
+                <Gift className="w-4 h-4 text-white" />
               </div>
               <h3 className="text-sm font-semibold text-white">Airdrops</h3>
             </div>
