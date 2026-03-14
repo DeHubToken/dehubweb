@@ -68,9 +68,9 @@ describe('buildAvatarUrl', () => {
     expect(buildAvatarUrl(addr, url)).toMatch(/\?v=/);
   });
 
-  it('keeps api.dehub.io/avatars/ URLs on API server (not all avatars on CDN)', () => {
+  it('converts api.dehub.io/avatars/ URLs to CDN (API server returns 404 for these)', () => {
     const result = buildAvatarUrl(addr, 'https://api.dehub.io/avatars/0xabc.png');
-    expect(result).toContain('https://api.dehub.io/avatars/0xabc.png');
+    expect(result).toContain(`${DEHUB_CDN_BASE}avatars/0xabc.png`);
     expect(result).toMatch(/\?v=/);
   });
 

@@ -95,9 +95,13 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
     }
   }
 
-  // Any other api.dehub.io URL — keep on API server (not all avatars are synced to CDN)
+  // Any other api.dehub.io URL — extract path and route to CDN
+  // api.dehub.io does NOT serve avatar files directly (returns 404); CDN is the source of truth
   if (apiAvatarPath.includes('api.dehub.io')) {
-    return `${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
+    const match = apiAvatarPath.match(/api\.dehub\.io\/([^?]+)/);
+    if (match) {
+      return `${DEHUB_CDN_BASE}${match[1]}?v=${cacheBust}`;
+    }
   }
 
   // Other full URLs (dicebear, external CDNs, etc.) - return as-is
