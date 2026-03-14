@@ -337,7 +337,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const [selectedDate, setSelectedDate] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
   const [selectedPostType, setSelectedPostType] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('home');
-  const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string>('home', 'category', 'all');
+  const [selectedCategories, setSelectedCategories] = usePersistedFeedFilter<string[]>('home', 'categories', []);
 
   // Listen for external category changes (e.g. from Talk of the Town sidebar)
   // Set a transitioning flag so we force skeleton state (bypasses placeholderData)
