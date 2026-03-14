@@ -141,13 +141,21 @@ async function fetchFromAggregateTable(): Promise<CategoryCount[]> {
 }
 
 async function fetchTrendingCategories(period: TopicPeriod, fetchAll = false): Promise<CategoryCount[]> {
-  // Short windows must come from per-post logs for time accuracy.
-  // Longer windows use aggregate counters (historical totals).
-  const computed = (period === '1d' || period === '1w')
-    ? await fetchFromLog(period)
-    : await fetchFromAggregateTable();
+  // Always use the aggregate table as primary source — it has real data
+  // from the feed sync. The category_post_log only captures posts made
+  // from the app UI, which is a tiny fraction of all content.
+  // For 1D/1W, try the log first but fall back to aggregate if it's too sparse.
+  let computed: CategoryCount[];
 
-  // Safety fallback if aggregate table is unexpectedly empty.
+  if (period === '1d' || period === '1w') {
+    const logData = await fetchFromLog(period);
+    // Only trust the log if it has meaningful data (3+ distinct categories)
+    computed = logData.length >= 3 ? logData : await fetchFromAggregateTable();
+  } else {
+    computed = await fetchFromAggregateTable();
+  }
+
+  // Safety fallback if aggregate table is also empty
   const safeComputed = computed.length > 0 ? computed : await fetchFromLog('all');
 
   if (fetchAll) {
