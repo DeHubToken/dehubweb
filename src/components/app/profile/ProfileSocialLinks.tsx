@@ -93,7 +93,7 @@ export function ProfileSocialLinks({ customs }: ProfileSocialLinksProps) {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-7 h-7 rounded-lg bg-white/10 backdrop-blur-xl border border-white/15 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/20 hover:border-white/30 transition-all"
+            className="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-xl border border-white/15 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/20 hover:border-white/30 transition-all"
             aria-label={label}
           >
             {icon}
