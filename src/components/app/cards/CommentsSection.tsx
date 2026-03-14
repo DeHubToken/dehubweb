@@ -1270,7 +1270,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                   onInput={(e) => {
                     const target = e.target as HTMLTextAreaElement;
                     target.style.height = 'auto';
-                    target.style.height = Math.min(target.scrollHeight, 120) + 'px';
+                    const maxHeight = isMobile ? 144 : 160;
+                    target.style.height = Math.min(target.scrollHeight, maxHeight) + 'px';
                   }}
                 />
                 <UserMentionDropdown
