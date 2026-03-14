@@ -224,20 +224,20 @@ export const FuturisticAlienHero = () => {
             className="mt-[25px] md:mt-0"
           />
           <AppStoreButtons />
-          {/* Enter App button — matches App Store badge dimensions */}
+          <SocialLinks />
+          {/* Enter button — visible on all sizes */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 3.5, duration: 1.2, ease: [0.23, 0.86, 0.39, 0.96] }}
-            className="flex justify-center -translate-y-[25px] md:translate-y-0 mt-0 md:mt-8"
+            className="flex justify-center mt-6 md:mt-8"
           >
             <a href="/app" onClick={(e) => { e.preventDefault(); handleEnterApp(); }}>
-              <LiquidGlassBubble shimmer className="h-[101px] md:h-[65.34px] w-[302px] md:w-auto md:px-16 flex items-center justify-center cursor-pointer">
-                <span className="text-white text-lg md:text-lg font-semibold tracking-wide">Enter App</span>
+              <LiquidGlassBubble shimmer className="px-12 py-3 md:px-16 md:py-4 cursor-pointer">
+                <span className="text-white text-base md:text-lg font-semibold tracking-wide">Enter</span>
               </LiquidGlassBubble>
             </a>
           </motion.div>
-          <SocialLinks />
         </div>
       </section>
     </motion.div>
