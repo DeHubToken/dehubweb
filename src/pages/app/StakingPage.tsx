@@ -160,52 +160,23 @@ export default function StakingPage() {
     }
   };
 
-  const stakeBNBFlow = async (amount: number) => {
-    // Check allowance
-    const amountWei = parseUnits(stakeAmount, 18);
-    const currentAllowance = userData?.bnbAllowance ?? BigInt(0);
-
-    if (currentAllowance < amountWei) {
-      setIsApproving(true);
-      toast({ title: dhbText('Approving DHB...') as any, description: 'Please confirm the approval transaction.' });
-      const approvalResult = await approveBNBStaking(stakeAmount);
-      const approvalReceipt = await approvalResult.wait();
-      if (approvalReceipt.status !== 1) {
-        toast({ title: 'Approval failed', description: 'Token approval was reverted.', variant: 'destructive' });
-        return;
-      }
-      toast({ title: 'Approved ✅', description: dhbText('DHB approved. Now staking...') as any });
-      setIsApproving(false);
-    }
-
-    toast({ title: dhbText('Staking DHB...') as any, description: 'Please confirm the stake transaction.' });
-    const result = await stakeBNB(stakeAmount);
-    const receipt = await result.wait();
-
-    if (receipt.status === 1) {
-      toast({ title: 'Staked successfully! ✅', description: dhbText(`${stakeAmount} DHB staked on BNB Chain.`) as any });
-      setStakeAmount('');
-      refetchStats();
-      refetchUser();
-    } else {
-      toast({ title: 'Stake failed', description: 'Transaction reverted.', variant: 'destructive' });
-    }
-  };
-
-  const stakeBaseFlow = async (amount: number) => {
-    await switchChain(BASE_CHAIN_ID);
-    const dhbTokenAddress = CHAIN_CONFIGS[BASE_CHAIN_ID]?.dhbToken;
+  /**
+   * Unified transfer-based staking: send DHB to the staking address on the given chain.
+   */
+  const stakeTransferFlow = async (amount: number, chainId: number, chainLabel: string) => {
+    await switchChain(chainId);
+    const dhbTokenAddress = CHAIN_CONFIGS[chainId]?.dhbToken;
     if (!dhbTokenAddress) {
-      toast({ title: 'Error', description: dhbText('DHB token not configured for Base.') as any, variant: 'destructive' });
+      toast({ title: 'Error', description: dhbText(`DHB token not configured for ${chainLabel}.`) as any, variant: 'destructive' });
       return;
     }
 
     toast({ title: dhbText('Staking DHB...') as any, description: 'Please confirm the stake transaction.' });
-    const result = await sendERC20Token(dhbTokenAddress, BASE_STAKING_ADDRESS, stakeAmount, 18, BASE_CHAIN_ID as any);
+    const result = await sendERC20Token(dhbTokenAddress, STAKING_ADDRESS, stakeAmount, 18, chainId as any);
     const receipt = await result.wait();
 
     if (receipt.status === 1) {
-      toast({ title: 'Staked successfully! ✅', description: dhbText(`${stakeAmount} DHB staked on Base.`) as any });
+      toast({ title: 'Staked successfully! ✅', description: dhbText(`${stakeAmount} DHB staked on ${chainLabel}.`) as any });
       setStakeAmount('');
       refetchStats();
       refetchUser();
