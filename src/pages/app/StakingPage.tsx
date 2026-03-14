@@ -163,8 +163,8 @@ export default function StakingPage() {
   /**
    * Unified transfer-based staking: send DHB to the staking address on the given chain.
    */
-  const stakeTransferFlow = async (amount: number, chainId: number, chainLabel: string) => {
-    await switchChain(chainId);
+  const stakeTransferFlow = async (amount: number, chainId: ChainId, chainLabel: string) => {
+    await switchChain(chainId as number);
     const dhbTokenAddress = CHAIN_CONFIGS[chainId]?.dhbToken;
     if (!dhbTokenAddress) {
       toast({ title: 'Error', description: dhbText(`DHB token not configured for ${chainLabel}.`) as any, variant: 'destructive' });
