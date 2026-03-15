@@ -1377,6 +1377,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         {isPlaying && duration > 0 && (showControls || isTouchDevice) && (
           <div className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
             <div className="flex items-center gap-2">
+              <button
+                onClick={(e) => { e.stopPropagation(); handlePlayClick(); }}
+                className="h-6 w-6 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 flex items-center justify-center shrink-0"
+              >
+                {isPlaying ? <Pause className="h-3 w-3 text-white fill-current" /> : <Play className="h-3 w-3 text-white fill-current ml-0.5" />}
+              </button>
               <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(currentTime)}</span>
               <input
                 type="range"
