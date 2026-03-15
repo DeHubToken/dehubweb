@@ -657,7 +657,7 @@ export default function StakingPage() {
           >
             <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.yourStaked')}</p>
             <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)}</p>
-            <p className="text-[9px] text-white/30 mt-0.5">Click to view deposits</p>
+            
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4">
             <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.unstaking')}</p>
