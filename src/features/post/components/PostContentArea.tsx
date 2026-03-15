@@ -687,6 +687,11 @@ export function PostContentArea({
               contentEditable
               onInput={handleInput}
               onPaste={handlePaste}
+              onBlur={() => {
+                // Process links immediately when user leaves the editor
+                if (linkDebounceRef.current) clearTimeout(linkDebounceRef.current);
+                processLinks();
+              }}
               onClick={() => {
                 if (editorRef.current) {
                   editorRef.current.focus();
