@@ -52,8 +52,9 @@ interface LiveFeedProps {
   showFilters?: boolean;
 }
 
-export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
+export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeedProps) {
   const [showStagesModal, setShowStagesModal] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // Fetch 5 TV channels for the carousel preview
