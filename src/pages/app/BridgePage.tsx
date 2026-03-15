@@ -164,8 +164,8 @@ export default function BridgePage() {
 
       {/* Balance Stats */}
       <div className="grid grid-cols-2 gap-3 mb-6">
-        <StatCard label="Base Balance" value={formatNumber(parseFloat(String(baseDHB?.balance ?? '0')), 2)} subtitle="DHB on Base" delay={0} />
-        <StatCard label="BNB Chain Balance" value={formatNumber(parseFloat(String(bnbDHB?.balance ?? '0')), 2)} subtitle="DHB on BNB Chain" delay={0.05} />
+        <StatCard label="Base Balance" value={formatNumber(parseFloat(baseDHB?.formattedBalance ?? '0'), 2)} subtitle="DHB on Base" delay={0} />
+        <StatCard label="BNB Chain Balance" value={formatNumber(parseFloat(bnbDHB?.formattedBalance ?? '0'), 2)} subtitle="DHB on BNB Chain" delay={0.05} />
       </div>
 
       {/* Bridge Card */}
