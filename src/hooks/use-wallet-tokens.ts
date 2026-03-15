@@ -33,10 +33,11 @@ export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), chainId],
     queryFn: () => getAllTokenBalances(walletAddress!, chainId, chainId === BASE_CHAIN_ID),
     enabled: !!walletAddress && isAuthenticated,
-    staleTime: 5 * 60_000,
-    refetchInterval: 5 * 60_000,
-    refetchOnWindowFocus: false,
-    placeholderData: keepPreviousData,
+    staleTime: 0,
+    gcTime: 60_000,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
   return { tokens, isLoading, isFetching, refetch };
