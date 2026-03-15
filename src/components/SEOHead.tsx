@@ -6,6 +6,7 @@ interface SEOHeadProps {
   image?: string;
   url?: string;
   type?: string;
+  jsonLd?: Record<string, unknown>;
 }
 
 const defaults = {
@@ -21,6 +22,7 @@ export function SEOHead({
   image = defaults.image,
   url,
   type = 'website',
+  jsonLd,
 }: SEOHeadProps) {
   const fullTitle = title ? `${title} | DeHub` : defaults.title;
   const canonicalUrl = url || defaults.url;
@@ -41,6 +43,12 @@ export function SEOHead({
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
+
+      {jsonLd && (
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLd)}
+        </script>
+      )}
     </Helmet>
   );
 }

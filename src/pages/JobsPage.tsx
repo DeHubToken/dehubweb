@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -89,6 +90,7 @@ export default function JobsPage() {
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      <SEOHead title="Careers" description="Join the DeHub team — open positions in business development, marketing and more." url="https://dehub.io/jobs" />
       {/* Background particles */}
       <div className="absolute inset-0 pointer-events-none">
         {Array.from({ length: 60 }).map((_, i) => (

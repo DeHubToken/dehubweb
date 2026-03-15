@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,6 +11,15 @@ import { toast } from 'sonner';
 import { ArrowLeft, Send, Loader2 } from 'lucide-react';
 
 export default function CreatorsPage() {
+  return (
+    <>
+      <SEOHead title="Become a Creator" description="Apply to become a creator on DeHub — the open source, censorship resistant media platform." url="https://dehub.io/creators" />
+      <CreatorsPageInner />
+    </>
+  );
+}
+
+function CreatorsPageInner() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);

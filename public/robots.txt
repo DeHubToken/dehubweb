@@ -14,3 +14,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://dehub.io/sitemap.xml
+Sitemap: https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/dynamic-sitemap
