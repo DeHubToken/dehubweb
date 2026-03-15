@@ -94,6 +94,7 @@ export default function BridgePage() {
     }
 
     setIsBridging(true);
+    let loadingToastId: string | number | undefined;
     try {
       const walletAddress = await getWalletAddress();
       if (!walletAddress) {
@@ -101,35 +102,76 @@ export default function BridgePage() {
         return;
       }
 
-      await switchChain(sourceChainId);
+      loadingToastId = toast.loading('Switching to ' + sourceChainLabel + '...');
+
+      try {
+        await switchChain(sourceChainId);
+      } catch (switchErr: any) {
+        toast.dismiss(loadingToastId);
+        toast.error('Chain switch failed', { description: `Could not switch to ${sourceChainLabel}. Please switch manually in your wallet.` });
+        return;
+      }
 
       const dhbTokenAddress = CHAIN_CONFIGS[sourceChainId]?.dhbToken;
       if (!dhbTokenAddress) {
+        toast.dismiss(loadingToastId);
         toast.error('Error', { description: `DHB token not configured on ${sourceChainLabel}.` });
         return;
       }
 
-      toast.loading('Confirming bridge transaction...');
-      const result = await sendERC20Token(dhbTokenAddress, BRIDGE_ADDRESS, amount, 18, sourceChainId as any);
+      toast.loading('Confirming bridge transaction...', { id: loadingToastId });
 
-      toast.loading('Transaction submitted', { description: 'Waiting for confirmation...' });
-      const receipt = await result.wait();
+      let result;
+      try {
+        result = await sendERC20Token(dhbTokenAddress, BRIDGE_ADDRESS, amount, 18, sourceChainId as any);
+      } catch (sendErr: any) {
+        toast.dismiss(loadingToastId);
+        const msg = String(sendErr?.message || sendErr || '').toLowerCase();
+        
+        if (msg.includes('transfer amount exceeds balance') || msg.includes('exceeds balance')) {
+          toast.error('Insufficient DHB balance', {
+            description: `Your on-chain DHB balance on ${sourceChainLabel} is too low. The displayed balance may not have synced yet.`,
+          });
+        } else if (msg.includes('user rejected') || msg.includes('user denied') || msg.includes('cancelled')) {
+          toast.error('Transaction cancelled', { description: 'You rejected the transaction in your wallet.' });
+        } else if (msg.includes('gas') || msg.includes('aa21') || msg.includes('aa25') || msg.includes('aa31')) {
+          toast.error('Gas fee issue', {
+            description: `You need native tokens (${sourceChainId === BNB_CHAIN_ID ? 'BNB' : 'ETH'}) on ${sourceChainLabel} to pay for gas.`,
+          });
+        } else if (msg.includes('session expired') || msg.includes('log in again')) {
+          toast.error('Session expired', { description: 'Please log in again to complete this transaction.' });
+        } else {
+          toast.error('Bridge failed', { description: sendErr?.shortMessage || sendErr?.message?.slice(0, 120) || 'Transaction could not be sent.' });
+        }
+        return;
+      }
+
+      toast.loading('Transaction submitted — waiting for confirmation...', { id: loadingToastId });
+
+      let receipt;
+      try {
+        receipt = await result.wait();
+      } catch (waitErr: any) {
+        toast.dismiss(loadingToastId);
+        toast.error('Confirmation failed', { description: 'Transaction was sent but confirmation timed out. Check the explorer for status.' });
+        return;
+      }
+
+      toast.dismiss(loadingToastId);
 
       if (receipt.status === 1) {
-        toast.dismiss();
         toast.success('Bridge initiated!', {
           description: `${amount} DHB sent from ${sourceChainLabel} to ${destChainLabel}. Tokens will arrive shortly.`,
         });
         setAmount('');
         queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
       } else {
-        toast.dismiss();
-        toast.error('Bridge failed', { description: 'Transaction reverted.' });
+        toast.error('Bridge failed', { description: `Transaction reverted on ${sourceChainLabel}. Your tokens were not transferred.` });
       }
     } catch (err: any) {
-      console.error('[Bridge] Error:', err);
-      toast.dismiss();
-      toast.error('Bridge failed', { description: err?.message || 'Unknown error' });
+      console.error('[Bridge] Unexpected error:', err);
+      if (loadingToastId) toast.dismiss(loadingToastId);
+      toast.error('Bridge failed', { description: err?.message?.slice(0, 120) || 'An unexpected error occurred.' });
     } finally {
       setIsBridging(false);
     }
