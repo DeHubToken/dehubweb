@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Interface, parseUnits } from 'ethers';
 import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, Rocket, X, Copy } from 'lucide-react';
 import { BADGE_LEVELS, getBadgeUrl } from '@/lib/staking-badges';
 import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserStakingData, getUserDHBBalance, type UnstakeEvent } from '@/hooks/use-staking-data';
