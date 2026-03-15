@@ -442,9 +442,11 @@ interface VideoCardProps {
   video: VideoItem;
   /** When true, renders full-width without rounded corners or header for immersive view */
   isImmersive?: boolean;
+  /** When true, disables intersection-based autoplay (video only plays on explicit click) */
+  disableAutoplay?: boolean;
 }
 
-export const VideoCard = memo(function VideoCard({ video, isImmersive = false }: VideoCardProps) {
+export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false }: VideoCardProps) {
   const instanceId = useId();
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
@@ -581,7 +583,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           if (!entry.isIntersecting && isPlayingRef.current) {
             pauseVideo();
             videoPlaybackManager.stop(instanceId);
-          } else if (entry.isIntersecting && autoplayEnabledRef.current && !isPlayingRef.current && !(video.isPPV || video.isLocked) && !video.isAudio && video.videoUrl && !hasErrorRef.current) {
+          } else if (entry.isIntersecting && autoplayEnabledRef.current && !disableAutoplay && !isPlayingRef.current && !(video.isPPV || video.isLocked) && !video.isAudio && video.videoUrl && !hasErrorRef.current) {
             const vid = videoRef.current;
             if (vid) {
               // Ask manager if this video should own audio
