@@ -17,7 +17,7 @@ const LOGOS: Record<string, string> = { ETH: ethLogo, BTC: btcLogo, USDT: usdtLo
 const NAMES: Record<string, string> = { ETH: 'Ethereum', BTC: 'Bitcoin', USDT: 'Tether' };
 
 export function BalanceCard() {
-  const { walletAddress, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
 
