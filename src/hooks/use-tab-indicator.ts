@@ -19,6 +19,10 @@ export function useTabIndicator<T extends string>(activeTab: T, layoutShiftKey?:
     if (!layer || !btn) return;
 
     const lr = layer.getBoundingClientRect();
+    // Skip update when container is hidden (e.g. PersistentPageCache hides pages
+    // with height:0 + visibility:hidden — getBoundingClientRect returns corrupted values)
+    if (lr.width === 0 && lr.height === 0) return;
+
     const br = btn.getBoundingClientRect();
     const next = {
       x: br.left - lr.left,
