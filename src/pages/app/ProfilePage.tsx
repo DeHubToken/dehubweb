@@ -211,6 +211,11 @@ export default function ProfilePage() {
       onMouseUp={data.pullHandlers.onMouseUp}
       onMouseLeave={data.pullHandlers.onMouseLeave}
     >
+      <SEOHead
+        title={data.profile?.displayName || data.profile?.handle || data.profile?.username || 'Profile'}
+        description={data.profile?.aboutMe || `View ${data.profile?.displayName || data.profile?.handle || 'this profile'} on DeHub`}
+        url={`https://dehub.io/${data.profile?.username || data.profile?.handle || ''}`}
+      />
       {/* Pull-to-refresh indicator */}
       {data.pullDistance > 0 && (
         <div 

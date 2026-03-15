@@ -863,9 +863,19 @@ export default function SinglePostPage() {
     );
   }
 
+  // Build SEO title/description from post data
+  const seoTitle = post?.title || post?.name || 'Post';
+  const seoDesc = post?.description || `View this post on DeHub`;
+
   // Standard layout for other content types
   return (
     <div className="flex flex-col">
+      <SEOHead
+        title={seoTitle}
+        description={seoDesc}
+        url={`https://dehub.io/app/post/${id}`}
+        type="article"
+      />
       <PageHeader showBack={hasHistory} />
       
       <div className="px-3 sm:px-4 pb-8 pt-2">
