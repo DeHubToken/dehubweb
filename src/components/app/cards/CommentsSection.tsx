@@ -787,7 +787,6 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     setNewComment('');
     setVoiceNote(null);
     removeCommentImage();
-    setIsInputExpanded(false);
     setIsSubmitting(true);
 
     try {
