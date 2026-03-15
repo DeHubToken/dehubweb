@@ -285,15 +285,22 @@ export default function HomePage() {
       if (tab) setActiveTab(tab);
     };
 
+    const handleTabReclick = (e: Event) => {
+      const tab = (e as CustomEvent).detail;
+      if (tab) handleTabClick(tab);
+    };
+
     window.addEventListener('home-refresh', handleHomeRefresh);
     window.addEventListener('category-filter-changed', handleCategoryFilter);
     window.addEventListener('switch-home-tab', handleSwitchTab);
+    window.addEventListener('home-tab-reclick', handleTabReclick);
     return () => {
       window.removeEventListener('home-refresh', handleHomeRefresh);
       window.removeEventListener('category-filter-changed', handleCategoryFilter);
       window.removeEventListener('switch-home-tab', handleSwitchTab);
+      window.removeEventListener('home-tab-reclick', handleTabReclick);
     };
-  }, [triggerRefresh]);
+  }, [triggerRefresh, handleTabClick]);
 
   /**
    * Reset all filter states.
