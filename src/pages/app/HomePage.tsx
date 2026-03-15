@@ -332,20 +332,6 @@ export default function HomePage() {
   }, [triggerRefresh, handleTabClick]);
 
   /**
-   * Reset all filter states.
-   */
-  const resetFilters = () => {
-    setShowHomeFilters(false);
-    setShowShortsFilters(false);
-    setShowImagesCollage(true); // Reset to collage view
-    setShowImagesFilters(false);
-    setSelectedImageId(null);
-    setShowVideosFilters(false);
-    setShowMusicFilters(false);
-    setShowLiveFilters(false);
-  };
-
-  /**
    * Handle when user selects an image from collage view.
    * Switches to feed view starting from that image.
    */
