@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 interface GlassIndicatorProps {
   rect: { x: number; y: number; width: number; height: number; ready: boolean };
@@ -30,8 +30,10 @@ export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layo
     }
   }, [rect.x, rect.y, rect.width, rect.height, rect.ready, layoutKey]);
 
-  // Use cached position if rect isn't ready yet
-  const cached = layoutKey ? positionCache.get(layoutKey) : null;
+  // Only use cache when transitioning (user actively switching tabs).
+  // When NOT transitioning (e.g. page navigation), wait for the real rect
+  // to avoid flashing at a stale cached position.
+  const cached = (enableTransition && layoutKey) ? positionCache.get(layoutKey) : null;
   const displayRect = rect.ready ? rect : cached ? { ...cached, ready: true } : rect;
 
   if (!displayRect.ready) return null;
