@@ -657,6 +657,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     }
     
     if (!video.videoUrl || isContentGated) return;
+
+    if (hasError) {
+      toast.error('File corrupted, reported to devs.');
+      return;
+    }
     
     if (isPlaying) {
       videoRef.current?.pause();
