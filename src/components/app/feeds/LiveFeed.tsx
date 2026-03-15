@@ -7,7 +7,8 @@
  * @module components/app/feeds/LiveFeed
  */
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { RefreshCw, Radio, Eye, Tv, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
