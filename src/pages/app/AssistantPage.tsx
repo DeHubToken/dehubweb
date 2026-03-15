@@ -1730,44 +1730,44 @@ export default function AssistantPage() {
                       WebkitMaskImage: 'linear-gradient(to right, black 85%, transparent 100%)'
                     }}
                   >
-                    <button
-                      onClick={() => {
-                        handleSend(t('assistant.whatsHappeningNews'));
-                      }}
-                      className="px-3 py-1.5 text-xs rounded-md bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
-                    >
-                      {t('assistant.whatsNew')}
-                    </button>
-                    <button
+                    <LiquidGlassBubble2
+                      label={t('assistant.whatsNew')}
+                      onClick={() => handleSend(t('assistant.whatsHappeningNews'))}
+                      width="auto"
+                      height="32px"
+                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                    />
+                    <LiquidGlassBubble2
+                      label={t('assistant.generateImage')}
                       onClick={() => {
                         setInput(t('assistant.generateImageOf'));
                         inputRef.current?.focus();
                         setInputGlow(true);
                         setTimeout(() => setInputGlow(false), 2000);
                       }}
-                      className="px-3 py-1.5 text-xs rounded-md bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
-                    >
-                      {t('assistant.generateImage')}
-                    </button>
-                    <button
-                      onClick={() => {
-                        fileInputRef.current?.click();
-                      }}
-                      className="px-3 py-1.5 text-xs rounded-md bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
-                    >
-                      {t('assistant.editImage')}
-                    </button>
-                    <button
+                      width="auto"
+                      height="32px"
+                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                    />
+                    <LiquidGlassBubble2
+                      label={t('assistant.editImage')}
+                      onClick={() => fileInputRef.current?.click()}
+                      width="auto"
+                      height="32px"
+                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                    />
+                    <LiquidGlassBubble2
+                      label={t('assistant.generateVideo')}
                       onClick={() => {
                         setInput(t('assistant.generateVideoOf'));
                         inputRef.current?.focus();
                         setInputGlow(true);
                         setTimeout(() => setInputGlow(false), 2000);
                       }}
-                      className="px-3 py-1.5 text-xs rounded-md bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
-                    >
-                      {t('assistant.generateVideo')}
-                    </button>
+                      width="auto"
+                      height="32px"
+                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                    />
                   </div>
                 </motion.div>
               )}
