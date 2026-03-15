@@ -230,6 +230,12 @@ export default function FullWalletPage() {
                   return isNaN(total) ? '0' : Math.floor(total).toLocaleString();
                 })()}
               </p>
+              <button
+                onClick={() => setShowBalanceBreakdown(!showBalanceBreakdown)}
+                className="text-zinc-500 hover:text-white transition-colors ml-1"
+              >
+                <Info className="w-4 h-4" />
+              </button>
             </div>
             <p className="text-zinc-500 text-xs mt-1">
               {t('wallet.totalWalletValue')}: ${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -239,6 +245,38 @@ export default function FullWalletPage() {
             {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
           </Button>
         </div>
+        {showBalanceBreakdown && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            className="mt-3 pt-3 border-t border-zinc-800 space-y-1.5"
+          >
+            {(() => {
+              const dhb = groupedTokens.find(t => t.symbol === 'DHB');
+              const baseBal = dhb?.chains.find(c => c.chainId === BASE_CHAIN_ID);
+              const bnbBal = dhb?.chains.find(c => c.chainId === BNB_CHAIN_ID);
+              const baseVal = baseBal ? parseFloat(baseBal.formattedBalance) : 0;
+              const bnbVal = bnbBal ? parseFloat(bnbBal.formattedBalance) : 0;
+              const stakedVal = userStakingData?.totalStaked ?? 0;
+              return (
+                <>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-zinc-500">Base</span>
+                    <span className="text-white font-medium">{Math.floor(baseVal).toLocaleString()} DHB</span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-zinc-500">BNB Chain</span>
+                    <span className="text-white font-medium">{Math.floor(bnbVal).toLocaleString()} DHB</span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-zinc-500">Staked</span>
+                    <span className="text-white font-medium">{Math.floor(stakedVal).toLocaleString()} DHB</span>
+                  </div>
+                </>
+              );
+            })()}
+          </motion.div>
+        )}
       </div>
 
       {/* Action buttons — horizontally scrollable */}
