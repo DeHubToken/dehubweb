@@ -27,10 +27,11 @@ import dehubCoin from '@/assets/dehub-coin.png';
 function formatNumber(val: string | number, decimals = 0): string {
   const num = typeof val === 'string' ? parseFloat(val) : val;
   if (isNaN(num)) return '0';
-  if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(2) + 'B';
-  if (num >= 1_000_000) return (num / 1_000_000).toFixed(2) + 'M';
-  if (num >= 1_000) return (num / 1_000).toFixed(2) + 'K';
-  return num.toFixed(decimals);
+  if (num >= 1_000_000_000) return (Math.floor(num / 1_000_000_000 * 100) / 100).toFixed(2) + 'B';
+  if (num >= 1_000_000) return (Math.floor(num / 1_000_000 * 100) / 100).toFixed(2) + 'M';
+  if (num >= 1_000) return (Math.floor(num / 1_000 * 100) / 100).toFixed(2) + 'K';
+  const factor = Math.pow(10, decimals);
+  return (Math.floor(num * factor) / factor).toFixed(decimals);
 }
 
 function formatUSD(val: number): string {
