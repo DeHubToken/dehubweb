@@ -86,7 +86,8 @@ export function patchFeedCaches(
         const newPages = oldData.pages.map((page) => {
           if (!page?.items) return page;
           const newItems = page.items.map((item: any) => {
-            if (String(item.id) !== String(postId)) return item;
+            const itemId = String(item.id ?? item.tokenId ?? '');
+            if (itemId !== String(postId)) return item;
             changed = true;
 
             // Clone & patch – handles all feed item shapes
