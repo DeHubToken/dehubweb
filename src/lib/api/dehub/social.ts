@@ -170,12 +170,15 @@ export async function voteOnPost(params: {
   tokenId: number;
   voteType: 'for' | 'against';
 }): Promise<VoteResponse> {
-  // Backend expects JSON body with streamTokenId (number) and vote (boolean)
+  const vote = params.voteType === 'for';
+  // Backend returns 400 "Vote params is required" when body.vote is false (falsy check).
+  // Send vote in query so the param is always present; body keeps boolean for API logic.
   const response = await apiCall<{ result: VoteResponse; success?: boolean } | VoteResponse>("/api/request_vote", {
     method: "POST",
+    params: { vote: String(vote) },
     body: {
       streamTokenId: params.tokenId,
-      vote: params.voteType === 'for',
+      vote,
     },
     requiresAuth: true,
   });
