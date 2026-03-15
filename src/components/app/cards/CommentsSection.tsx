@@ -788,6 +788,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     setVoiceNote(null);
     removeCommentImage();
     setIsInputExpanded(false);
+    // Reset textarea inline height set by auto-resize
+    if (inputRef.current) {
+      inputRef.current.style.height = '';
+    }
     setIsSubmitting(true);
 
     try {
