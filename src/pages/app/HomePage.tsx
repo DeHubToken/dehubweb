@@ -681,7 +681,7 @@ export default function HomePage() {
         )}
         {visitedTabs.has('live') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'live' ? 'block' : 'none' }}>
-            <LiveFeed key={refreshKey} isRefreshing={isRefreshing} />
+            <LiveFeed key={refreshKey} isRefreshing={isRefreshing} showFilters={showLiveFilters} />
           </div>
         )}
         {visitedTabs.has('music') && (
