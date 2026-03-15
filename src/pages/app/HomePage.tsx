@@ -322,7 +322,7 @@ export default function HomePage() {
       if (tabValue === 'home') {
         setShowHomeFilters(prev => !prev);
       } else if (tabValue === 'live') {
-        triggerRefresh();
+        setShowLiveFilters(prev => !prev);
       } else if (tabValue === 'shorts') {
         setShowShortsFilters(prev => !prev);
       } else if (tabValue === 'images') {
