@@ -5,7 +5,8 @@
  * Transfers go to the bridge relay address on both chains.
  */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { ArrowDownUp, RefreshCw, Loader2, ArrowRight } from 'lucide-react';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
