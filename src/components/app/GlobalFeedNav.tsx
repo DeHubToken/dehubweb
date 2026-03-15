@@ -62,9 +62,11 @@ export function GlobalFeedNav() {
     };
   }, [isHomePage]);
 
-  // Sync when navigating to/from home page
+  // Sync when navigating back to home page — always keep last known tab
   useEffect(() => {
-    setActiveTab(isHomePage ? getPersistedTab() : '');
+    if (isHomePage) {
+      setActiveTab(getPersistedTab());
+    }
   }, [isHomePage]);
 
   const { layerRef, setRef, rect } = useTabIndicator(activeTab, true);
