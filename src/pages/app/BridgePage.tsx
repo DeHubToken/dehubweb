@@ -5,9 +5,11 @@
  * Transfers go to the bridge relay address on both chains.
  */
 
-import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useState, useMemo } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { ArrowDownUp, RefreshCw, Loader2, ArrowRight, Search, ExternalLink } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { ArrowDownUp, RefreshCw, Loader2, ArrowRight } from 'lucide-react';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
