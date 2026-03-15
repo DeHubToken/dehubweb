@@ -34,6 +34,12 @@ export function GlobalFeedNav() {
   const isHomePage = location.pathname === '/app';
 
   const [activeTab, setActiveTab] = useState(() => isHomePage ? getPersistedTab() : '');
+  const [enableTransition, setEnableTransition] = useState(false);
+
+  // Reset transition on page change
+  useEffect(() => {
+    setEnableTransition(false);
+  }, [isHomePage]);
 
   // Listen for tab changes from HomePage swipes via custom event
   useEffect(() => {
