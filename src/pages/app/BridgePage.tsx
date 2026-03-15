@@ -405,7 +405,7 @@ function BridgeQueue() {
       className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5 mt-6"
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Bridge Queue</h3>
+        <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Bridges</h3>
         <span className="text-[10px] text-white/30">{transfers?.length ?? 0} transfers</span>
       </div>
 
