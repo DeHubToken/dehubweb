@@ -69,9 +69,10 @@ export default function BridgePage() {
   const baseDHB = allTokens?.find(t => t.symbol === 'DHB' && t.chainId === BASE_CHAIN_ID);
   const bnbDHB = allTokens?.find(t => t.symbol === 'DHB' && t.chainId === BNB_CHAIN_ID);
 
-  const sourceBalanceRaw = direction === 'base-to-bnb'
-    ? (baseDHB?.formattedBalance ?? '0')
-    : (bnbDHB?.formattedBalance ?? '0');
+  const sourceToken = direction === 'base-to-bnb' ? baseDHB : bnbDHB;
+  const sourceBalanceRaw = sourceToken
+    ? formatUnits(sourceToken.balance, sourceToken.decimals)
+    : '0';
   const sourceBalance = parseFloat(sourceBalanceRaw);
 
   const sourceChainLabel = direction === 'base-to-bnb' ? 'Base' : 'BNB Chain';
