@@ -198,8 +198,23 @@ export default function StakingPage() {
       return [];
     }
   }
+  const fetchWithdrawals = async () => {
+    if (!currentWallet) return;
+    setWithdrawalsLoading(true);
+    try {
+      const { data } = await supabase
+        .from('staking_records')
+        .select('amount, tx_hash, chain, created_at')
+        .eq('wallet_address', currentWallet.toLowerCase())
+        .eq('action', 'unstake')
+        .order('created_at', { ascending: false })
+        .limit(50);
+      setWithdrawalRecords(data ?? []);
+    } catch { setWithdrawalRecords([]); }
+    setWithdrawalsLoading(false);
+  };
 
-  function timeAgo(timestamp: number): string {
+
     if (!timestamp) return '—';
     const now = Math.floor(Date.now() / 1000);
     const diff = now - timestamp;
