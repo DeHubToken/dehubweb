@@ -214,7 +214,7 @@ export default function StakingPage() {
     setWithdrawalsLoading(false);
   };
 
-
+  function timeAgo(timestamp: number): string {
     if (!timestamp) return '—';
     const now = Math.floor(Date.now() / 1000);
     const diff = now - timestamp;
