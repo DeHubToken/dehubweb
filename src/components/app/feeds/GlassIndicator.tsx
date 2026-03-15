@@ -71,6 +71,13 @@ export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layo
 
   if (!displayRect.ready) return null;
 
+  // Smooth spring-like easing for sexy tab transitions
+  const SMOOTH_TRANSITION = [
+    'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+    'width 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+    'height 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+  ].join(', ');
+
   return (
     <div
       className={`${GLASS_CLASSES} ${className ?? ''}`}
@@ -79,9 +86,8 @@ export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layo
         transform: `translate(${displayRect.x}px, ${displayRect.y}px)`,
         width: displayRect.width,
         height: displayRect.height,
-        transition: userHasSwitched
-          ? 'transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), width 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), height 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-          : 'none',
+        transition: userHasSwitched ? SMOOTH_TRANSITION : 'none',
+        willChange: userHasSwitched ? 'transform, width' : 'auto',
       }}
     />
   );
