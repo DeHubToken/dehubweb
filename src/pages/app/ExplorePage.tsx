@@ -290,19 +290,23 @@ const UserResultCard = ({
           )}
         </div>
       </div>
-      {isFollowing ? (
-        <span className="text-xs text-zinc-500 flex-shrink-0 ml-2">Following ✓</span>
-      ) : (
-        <Button
-          variant="outline"
-          size="sm"
-          className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex-shrink-0 ml-2"
-          onClick={handleFollow}
-          disabled={isLoading || !walletAddress}
-        >
-          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (user.followsYou ? t('explorePage.followBack', 'Follow Back') : t('explorePage.follow'))}
-        </Button>
-      )}
+      <button
+        onClick={handleFollow}
+        disabled={isFollowing || isLoading || !walletAddress}
+        className={`h-6 min-w-0 w-auto px-2.5 text-[11px] font-semibold rounded-lg flex items-center justify-center transition-all duration-150 flex-shrink-0 ml-2 ${
+          isFollowing
+            ? 'bg-white/10 text-white/40 cursor-default'
+            : 'bg-gradient-to-br from-white/15 via-white/8 to-white/4 backdrop-blur-xl border border-white/20 text-white/70 hover:from-white/25 hover:via-white/15 hover:to-white/10 hover:border-white/40 hover:text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)]'
+        }`}
+      >
+        {isLoading ? (
+          <Loader2 className="w-2.5 h-2.5 animate-spin" />
+        ) : isFollowing ? (
+          'Following'
+        ) : (
+          user.followsYou ? t('explorePage.followBack', 'Follow Back') : t('explorePage.follow')
+        )}
+      </button>
     </div>
   );
 };
