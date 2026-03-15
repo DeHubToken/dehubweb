@@ -134,6 +134,11 @@ export function PersistentPageCache() {
   // Track which pages have been visited (mount on first visit, keep forever)
   const [mountedPages, setMountedPages] = useState<Set<string>>(() => new Set());
 
+  // Background-preload priority page chunks after initial render
+  useEffect(() => {
+    preloadPriorityPages();
+  }, []);
+
   // Find which cached page matches current path
   const activeCachedPage = CACHED_PAGES.find(p => matchesPath(p, pathname));
 
