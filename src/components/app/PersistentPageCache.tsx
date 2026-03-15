@@ -14,6 +14,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
+import { preloadPriorityPages } from '@/lib/preload-priority-pages';
 import {
   FeedSkeleton,
   ExploreSkeleton,
@@ -132,6 +133,11 @@ export function PersistentPageCache() {
 
   // Track which pages have been visited (mount on first visit, keep forever)
   const [mountedPages, setMountedPages] = useState<Set<string>>(() => new Set());
+
+  // Background-preload priority page chunks after initial render
+  useEffect(() => {
+    preloadPriorityPages();
+  }, []);
 
   // Find which cached page matches current path
   const activeCachedPage = CACHED_PAGES.find(p => matchesPath(p, pathname));
