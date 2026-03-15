@@ -281,13 +281,7 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
             <div
               key={period}
               className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent"
-              style={{
-                width: `${100 / PERIODS.length}%`,
-                WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%)',
-                maskImage: 'linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%)',
-                WebkitMaskRepeat: 'no-repeat',
-                maskRepeat: 'no-repeat',
-              }}
+              style={{ width: `${100 / PERIODS.length}%` }}
             >
               <PeriodList period={period} isActive={activePeriod === period} />
             </div>
@@ -295,14 +289,15 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
         </div>
       </div>
 
-      {/* Bottom action — negative margin pulls into the faded zone */}
-      <div className="px-4 pb-2 -mt-6 relative z-10">
+      {/* Bottom fade gradient */}
+      <div className="relative px-4 pb-2">
+        <div className="absolute -top-8 left-0 right-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none" />
         <LiquidGlassBubble2
           label={t('commandCentre.viewAll')}
           onClick={() => navigate('/app/leaderboard')}
           width="100%"
           height="auto"
-          className="[&>div]:!py-2 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
+          className="mt-3 [&>div]:!py-2 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
         />
       </div>
     </div>
