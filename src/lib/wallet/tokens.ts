@@ -109,8 +109,10 @@ export function formatBalance(balance: bigint, decimals: number, maxDecimals: nu
   const num = parseFloat(raw);
   if (isNaN(num) || num === 0) return '0';
   if (num < 0.01) return '<0.01';
-  // Use at most maxDecimals significant decimal places, avoid scientific notation
-  const fixed = num.toFixed(Math.min(maxDecimals, 20));
+  // Floor to maxDecimals (round down, never up)
+  const factor = Math.pow(10, maxDecimals);
+  const floored = Math.floor(num * factor) / factor;
+  const fixed = floored.toFixed(Math.min(maxDecimals, 20));
   // Remove trailing zeros
   return fixed.replace(/\.?0+$/, '');
 }
