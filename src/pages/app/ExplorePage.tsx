@@ -320,6 +320,7 @@ export default function ExplorePage() {
   const navigate = useNavigate();
   
   const [activeTab, setActiveTab] = useState('all');
+  const [enableExploreTransition, setEnableExploreTransition] = useState(false);
   const { layerRef: exploreTabLayerRef, setRef: setExploreTabRef, rect: exploreTabRect } = useTabIndicator(activeTab);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [showFilters, setShowFilters] = useState(false);
