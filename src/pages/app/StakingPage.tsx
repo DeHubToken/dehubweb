@@ -735,7 +735,7 @@ export default function StakingPage() {
                   </div>
                   <div className="flex sm:hidden items-center justify-between gap-2">
                     <div className="min-w-0">
-                      <span className="text-sm text-white/70 font-mono block">{truncateAddress(event.wallet)}</span>
+                      <a href={`${explorerBase}${event.wallet}`} target="_blank" rel="noopener noreferrer" className="text-sm text-white/70 font-mono block hover:text-white hover:underline transition-colors">{truncateAddress(event.wallet)}</a>
                       <div className="flex items-center gap-2">
                         <span className="text-xs text-white/40">{timeAgo(event.timestamp)}</span>
                         <UnstakeCountdown timestamp={event.timestamp} />
