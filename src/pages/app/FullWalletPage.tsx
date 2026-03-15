@@ -246,7 +246,7 @@ export default function FullWalletPage() {
           <ShoppingCart className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.buy')}</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => toast.info(t('wallet.stakeComingSoon'))}>
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => navigate('/app/stake')}>
           <Lock className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.stake')}</span>
         </Button>
