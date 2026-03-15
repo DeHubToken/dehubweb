@@ -65,18 +65,23 @@ export function GlobalFeedNav() {
 
   const handleTabClick = useCallback((tabValue: string) => {
     if (isHomePage) {
-      // On home page, persist and let HomePage pick up the change via storage event
-      sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: tabValue }));
-      window.dispatchEvent(new StorageEvent('storage', {
-        key: HOME_STATE_STORAGE_KEY,
-        newValue: JSON.stringify({ tab: tabValue }),
-      }));
+      if (tabValue === activeTab) {
+        // Same tab clicked — dispatch event so HomePage toggles filters
+        window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: tabValue }));
+      } else {
+        // Different tab — persist and let HomePage pick up the change via storage event
+        sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: tabValue }));
+        window.dispatchEvent(new StorageEvent('storage', {
+          key: HOME_STATE_STORAGE_KEY,
+          newValue: JSON.stringify({ tab: tabValue }),
+        }));
+      }
     } else {
       // Navigate to home with the desired tab
       sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: tabValue }));
       navigate('/app');
     }
-  }, [isHomePage, navigate]);
+  }, [isHomePage, navigate, activeTab]);
 
   return (
     <div className="sticky top-0 bg-black z-50 p-2 sm:p-3 pb-2 sm:pb-2">
