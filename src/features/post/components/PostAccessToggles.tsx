@@ -366,6 +366,18 @@ export function PostAccessToggles({
                 type="text"
                 value={categorySearch}
                 onChange={(e) => setCategorySearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && categorySearch.trim().length >= 3 && selectedCategoriesArray.length < MAX_CATEGORIES) {
+                    e.preventDefault();
+                    const exact = filteredCategories.find(c => c.name.toLowerCase() === categorySearch.trim().toLowerCase());
+                    if (exact) {
+                      toggleCategory(exact.name);
+                    } else {
+                      toggleCategory(categorySearch.trim());
+                    }
+                    setCategorySearch('');
+                  }
+                }}
                 placeholder="Search categories..."
                 className={cn(inputClass, "pl-10")}
                 autoFocus
