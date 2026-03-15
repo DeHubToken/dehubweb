@@ -335,7 +335,7 @@ serve(async (req) => {
                     image: postImage,
                     url: postUrl,
                     type: "article",
-                    twitterCard: "summary",
+                    twitterCard: "summary_large_image",
                     functionBaseUrl,
                     isBot,
                     videoUrl,
