@@ -199,19 +199,47 @@ export default function StakingPage() {
         return;
       }
 
-      const hasBNB = userData?.hasBNBBalance ?? false;
-      const hasBase = userData?.hasBaseBalance ?? false;
+      // Fresh on-chain balance check (never rely on cached data)
+      toast.loading(t('toasts.checking_balance', 'Checking balance...'));
+      const [bnbBalRaw, baseBalRaw] = await Promise.all([
+        getUserDHBBalance(walletAddress, BNB_CHAIN_ID),
+        getUserDHBBalance(walletAddress, BASE_CHAIN_ID),
+      ]);
 
-      if (!hasBNB && !hasBase) {
+      const bnbBal = parseFloat(fromWei(bnbBalRaw));
+      const baseBal = parseFloat(fromWei(baseBalRaw));
+
+      toast.dismiss();
+
+      if (bnbBal <= 0 && baseBal <= 0) {
         toast.error(t('toasts.no_dhb_balance'), { description: t('toasts.no_dhb_tokens_either_chain') });
         return;
       }
 
-      const bothChains = hasBNB && hasBase;
-      const targetChain: 'BNB' | 'Base' = hasBNB ? 'BNB' : 'Base';
+      // Pick chain with sufficient balance
+      const bothChains = bnbBal > 0 && baseBal > 0;
+      let targetChain: 'BNB' | 'Base';
+      let targetBalance: number;
+
+      if (bnbBal >= amount) {
+        targetChain = 'BNB';
+        targetBalance = bnbBal;
+      } else if (baseBal >= amount) {
+        targetChain = 'Base';
+        targetBalance = baseBal;
+      } else {
+        // Neither chain has enough for the full amount
+        const maxBal = Math.max(bnbBal, baseBal);
+        const maxChain = bnbBal >= baseBal ? 'BNB Chain' : 'Base';
+        toast.error(t('toasts.insufficient_balance', 'Insufficient balance'), {
+          description: t('toasts.max_available_on_chain', 'Max available: {{amount}} DHB on {{chain}}', { amount: maxBal.toFixed(2), chain: maxChain }),
+        });
+        return;
+      }
+
       setStakingChainLabel(targetChain);
 
-      if (bothChains) {
+      if (bothChains && bnbBal >= amount && baseBal >= amount) {
         toast.info(t('toasts.dhb_found_on_both_chains'), { description: t('toasts.staking_on_chain_first', { chain: targetChain }) });
       }
 
