@@ -505,7 +505,7 @@ const stakingTranslations: Record<string, StakingTranslation> = {
       earlyAccess: 'وصول مبكر للميزات',
       earlyAccessDesc: 'كن أول من يجرب ميزات المنصة الجديدة. المخزنون يحصلون على وصول ذي أولوية لإصدارات بيتا.',
       enhancedExperience: 'تجربة محسنة',
-      enhancedExperienceDesc: 'استمتع بتجربة متميزة مع تصفح بدون إعلانات وحدود رفع أعلى وتخصيصات واجهة حصرية.',
+      enhancedExperienceDesc: 'استمتع بتجربة متميزة مع حدود رفع أعلى وتخصيصات واجهة حصرية.',
       airdrops: 'إيردروب',
       airdropsDesc: 'المخزنون مؤهلون لإيردروب حصري من الرموز وتوزيعات مكافآت إضافية. كلما خزنت أكثر، تلقيت أكثر.',
       justNow: 'الآن',
