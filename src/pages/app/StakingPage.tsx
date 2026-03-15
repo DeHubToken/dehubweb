@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, Rocket, X, Copy } from 'lucide-react';
 import { BADGE_LEVELS, getBadgeUrl } from '@/lib/staking-badges';
-import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserStakingData, type UnstakeEvent } from '@/hooks/use-staking-data';
+import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserStakingData, getUserDHBBalance, type UnstakeEvent } from '@/hooks/use-staking-data';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { sendERC20Token } from '@/lib/wallet/send';
