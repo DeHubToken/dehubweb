@@ -18,24 +18,33 @@ interface GlassIndicatorProps {
  * to force a fresh mount instead of a broken transition.
  */
 export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layoutKey }: GlassIndicatorProps) {
-  // Track whether the indicator has completed its first render so we can
-  // skip the spring animation on mount (prevents the "stretch from 0,0" glitch
-  // that happens when navigating between pages).
-  const hasRendered = useRef(false);
-  const [mounted, setMounted] = useState(false);
+  // Track user-initiated tab changes. Animation is disabled until the user
+  // has switched tabs at least once, preventing the "stretch from origin"
+  // glitch on page load / navigation.
+  const initialRectRef = useRef<{ x: number; y: number; width: number; height: number } | null>(null);
+  const [userHasSwitched, setUserHasSwitched] = useState(false);
 
   useEffect(() => {
-    if (rect.ready && !hasRendered.current) {
-      hasRendered.current = true;
-      // Delay one frame so initial position is applied without transition
-      requestAnimationFrame(() => setMounted(true));
+    if (!rect.ready) return;
+
+    if (!initialRectRef.current) {
+      // Capture the first valid rect as the baseline
+      initialRectRef.current = { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
+      return;
     }
-  }, [rect.ready]);
+
+    // If the rect target changed significantly from the initial position,
+    // the user has switched tabs — enable animations from now on
+    const init = initialRectRef.current;
+    if (Math.abs(rect.x - init.x) > 2 || Math.abs(rect.width - init.width) > 2) {
+      setUserHasSwitched(true);
+    }
+  }, [rect]);
 
   // Reset on layoutKey change
   useEffect(() => {
-    hasRendered.current = false;
-    setMounted(false);
+    initialRectRef.current = null;
+    setUserHasSwitched(false);
   }, [layoutKey]);
 
   if (!rect.ready) return null;
@@ -57,7 +66,7 @@ export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layo
         width: rect.width,
         height: rect.height,
       }}
-      transition={mounted ? { type: 'spring', stiffness: 400, damping: 30 } : { duration: 0 }}
+      transition={userHasSwitched ? { type: 'spring', stiffness: 400, damping: 30 } : { duration: 0 }}
     />
   );
 }
