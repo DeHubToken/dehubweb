@@ -156,6 +156,7 @@ function AppContent() {
                 <Route path="governance" element={null} />
                 <Route path="governance/:proposalId" element={<Suspense fallback={<PageLoader />}><GovernanceProposalPage /></Suspense>} />
                 <Route path="stake" element={null} />
+                <Route path="bridge" element={null} />
                 <Route path="top-100" element={null} />
                 <Route path="jobs" element={null} />
                 <Route path="glossary" element={null} />
