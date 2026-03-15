@@ -302,7 +302,7 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="h-full px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 overflow-hidden">
+    <div className="h-full px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-1 overflow-hidden">
       <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] max-h-full">
         {/* Full Width Messages Panel */}
         <div className="w-full h-full bg-zinc-900 rounded-2xl flex flex-col">
