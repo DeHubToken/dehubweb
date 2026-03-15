@@ -223,9 +223,6 @@ export const VideoSlide = memo(function VideoSlide({
               alt={short.description || 'Short video'}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-              <p className="text-white/70">Video unavailable</p>
-            </div>
           </div>
         )}
       </div>
