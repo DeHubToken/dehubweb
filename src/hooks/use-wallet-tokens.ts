@@ -76,8 +76,11 @@ export function useAllChainsTokens() {
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), ETH_CHAIN_ID],
     queryFn: () => getAllTokenBalances(walletAddress!, ETH_CHAIN_ID),
     enabled: !!walletAddress && isAuthenticated,
-    staleTime: 5 * 60_000,
-    refetchOnWindowFocus: false,
+    staleTime: 0,
+    gcTime: 60_000,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
   const allTokens = useMemo(() => [
