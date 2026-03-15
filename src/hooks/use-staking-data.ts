@@ -69,7 +69,7 @@ export function useStakingStats() {
 /**
  * Get user's unstaked DHB balance on a specific chain
  */
-async function getUserDHBBalance(userAddress: string, chainId: ChainId): Promise<bigint> {
+export async function getUserDHBBalance(userAddress: string, chainId: ChainId): Promise<bigint> {
   const config = CHAIN_CONFIGS[chainId];
   if (!config?.dhbToken) return BigInt(0);
   
