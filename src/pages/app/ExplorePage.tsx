@@ -829,28 +829,36 @@ export default function ExplorePage() {
             </button>
           </div>
           
-          {/* Tabs - merged into search bento */}
-          <div className="mt-3 -mx-1" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
-            <div ref={exploreTabLayerRef} className="relative overflow-visible">
-              <GlassIndicator rect={exploreTabRect} />
-              <div className="relative z-20 flex w-full">
-                {EXPLORE_TABS.map((tab) => (
-                  <button
-                    key={tab.value}
-                    ref={setExploreTabRef(tab.value)}
-                    onClick={() => setActiveTab(tab.value)}
-                    className={cn(
-                      'relative z-40 flex-1 flex items-center justify-center px-2 py-2 rounded-xl transition-colors',
-                      activeTab === tab.value
-                        ? 'text-white'
-                        : 'text-zinc-400 hover:text-white'
-                    )}
-                  >
-                    <span className="relative z-10">
-                      <tab.icon className="w-5 h-5" />
-                    </span>
-                  </button>
-                ))}
+          {/* Tabs - toggle bar */}
+          <div className="mt-3 -mx-1">
+            <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+              <div ref={exploreTabLayerRef} className="relative overflow-visible">
+                <GlassIndicator rect={exploreTabRect} borderRadius="0.75rem" layoutKey={`explore-nav-${activeTab}`} enableTransition={enableExploreTransition} />
+                <div className="relative z-20 flex w-full">
+                  {EXPLORE_TABS.map((tab) => (
+                    <button
+                      key={tab.value}
+                      ref={setExploreTabRef(tab.value)}
+                      onClick={() => {
+                        if (tab.value !== activeTab) {
+                          setEnableExploreTransition(true);
+                          setTimeout(() => setEnableExploreTransition(false), 450);
+                        }
+                        setActiveTab(tab.value);
+                      }}
+                      className={cn(
+                        'relative z-40 flex-1 flex items-center justify-center px-2 py-2.5 rounded-xl transition-colors',
+                        activeTab === tab.value
+                          ? 'text-white'
+                          : 'text-zinc-400 hover:text-white'
+                      )}
+                    >
+                      <span className="relative z-10">
+                        <tab.icon className="w-4 h-4" />
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
