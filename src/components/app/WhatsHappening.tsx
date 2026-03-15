@@ -7,6 +7,7 @@ import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { TickerLogo } from './TickerLogo';
 import { cn } from '@/lib/utils';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { getTopTickers, type TickerPeriod } from '@/lib/ticker-search-tracker';
 import { TrendingTopicsList } from './TrendingTopicsList';
 
