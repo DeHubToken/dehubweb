@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import { SEOHead } from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
 
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -210,6 +211,11 @@ export default function ProfilePage() {
       onMouseUp={data.pullHandlers.onMouseUp}
       onMouseLeave={data.pullHandlers.onMouseLeave}
     >
+      <SEOHead
+        title={data.profile?.name || data.profile?.handle || 'Profile'}
+        description={data.profile?.bio || `View ${data.profile?.name || data.profile?.handle || 'this profile'} on DeHub`}
+        url={`https://dehub.io/${data.profile?.handle || ''}`}
+      />
       {/* Pull-to-refresh indicator */}
       {data.pullDistance > 0 && (
         <div 

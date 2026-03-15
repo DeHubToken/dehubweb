@@ -12,6 +12,7 @@
  */
 
 import { useParams, useNavigationType, useNavigate, useLocation } from 'react-router-dom';
+import { SEOHead } from '@/components/SEOHead';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef } from 'react';
 import { AlertCircle, Clock, ArrowLeft, Sparkles, MoreVertical, ListPlus, Flag, Download, Link2, Gem, Pencil, Trash2, Ban } from 'lucide-react';
@@ -862,9 +863,19 @@ export default function SinglePostPage() {
     );
   }
 
+  // Build SEO title/description from post data
+  const seoTitle = post?.title || post?.name || 'Post';
+  const seoDesc = post?.description || `View this post on DeHub`;
+
   // Standard layout for other content types
   return (
     <div className="flex flex-col">
+      <SEOHead
+        title={seoTitle}
+        description={seoDesc}
+        url={`https://dehub.io/app/post/${id}`}
+        type="article"
+      />
       <PageHeader showBack={hasHistory} />
       
       <div className="px-3 sm:px-4 pb-8 pt-2">
