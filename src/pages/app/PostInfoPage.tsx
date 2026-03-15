@@ -331,6 +331,21 @@ export default function PostInfoPage() {
   const ppvCurrency = nftInfo?.ppv_currency || 'DHB';
   const { data: ppvPurchaseCount } = usePPVPurchaseCount(isPPV ? postId : undefined);
 
+  // Fetch tips for this specific post from tip_records
+  const { data: postTipTotal = 0 } = useQuery({
+    queryKey: ['post-tips', postId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('tip_records')
+        .select('amount')
+        .eq('token_id', postId!);
+      if (error || !data) return 0;
+      return data.reduce((sum, r) => sum + Number(r.amount), 0);
+    },
+    enabled: !!postId,
+    staleTime: 2 * 60 * 1000,
+  });
+
   // Current visibility state (default to 'public' if not set)
   const currentVisibility: TokenVisibility = (nftInfo as any)?.visibility || 'public';
   
