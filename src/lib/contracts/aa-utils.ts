@@ -60,7 +60,6 @@ function getRpcUrl(chainId?: number): string {
 async function publicRpcCall(rpcUrl: string, method: string, params: unknown[]): Promise<any> {
   const response = await fetch(rpcUrl, {
     method: 'POST',
-    cache: 'no-store',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
   });

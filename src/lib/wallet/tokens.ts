@@ -67,7 +67,6 @@ export async function getNativeBalance(address: string, chainId: ChainId = BASE_
 
   const res = await fetch(config.rpcUrl, {
     method: 'POST',
-    cache: 'no-store',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       jsonrpc: '2.0', id: 1,

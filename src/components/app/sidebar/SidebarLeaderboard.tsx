@@ -297,7 +297,7 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
           onClick={() => navigate('/app/leaderboard')}
           width="100%"
           height="auto"
-          className="mt-1 [&>div]:!py-2 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
+          className="mt-3 [&>div]:!py-2 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
         />
       </div>
     </div>

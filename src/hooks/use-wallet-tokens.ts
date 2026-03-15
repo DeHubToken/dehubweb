@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useMemo } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { getAllTokenBalances, type WalletToken } from '@/lib/wallet/tokens';
 import type { ChainId } from '@/components/app/ChainSelector';
@@ -16,15 +16,6 @@ export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
   const { walletAddress, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
-  // Force live data whenever wallet token views mount
-  useEffect(() => {
-    if (!walletAddress || !isAuthenticated) return;
-    queryClient.invalidateQueries({
-      queryKey: ['wallet-tokens', walletAddress.toLowerCase()],
-      refetchType: 'all',
-    });
-  }, [walletAddress, isAuthenticated, queryClient]);
-
   // Prefetch other chains in background on mount
   useEffect(() => {
     if (!walletAddress || !isAuthenticated) return;
@@ -32,23 +23,20 @@ export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
       if (cid === chainId) return;
       queryClient.prefetchQuery({
         queryKey: ['wallet-tokens', walletAddress.toLowerCase(), cid],
-        queryFn: () => getAllTokenBalances(walletAddress, cid, true),
-        staleTime: 0,
-        gcTime: 0,
+        queryFn: () => getAllTokenBalances(walletAddress, cid),
+        staleTime: 5 * 60_000,
       });
     });
-  }, [walletAddress, isAuthenticated, chainId, queryClient]); // prefetch on mount/auth/chain change
+  }, [walletAddress, isAuthenticated]); // only on mount / auth change
 
   const { data: tokens = [], isLoading, isFetching, refetch } = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), chainId],
-    queryFn: () => getAllTokenBalances(walletAddress!, chainId, true),
+    queryFn: () => getAllTokenBalances(walletAddress!, chainId, chainId === BASE_CHAIN_ID),
     enabled: !!walletAddress && isAuthenticated,
-    staleTime: 0,
-    gcTime: 0,
-    networkMode: 'always',
-    refetchOnMount: 'always',
-    refetchOnWindowFocus: 'always',
-    refetchOnReconnect: 'always',
+    staleTime: 5 * 60_000,
+    refetchInterval: 5 * 60_000,
+    refetchOnWindowFocus: false,
+    placeholderData: keepPreviousData,
   });
 
   return { tokens, isLoading, isFetching, refetch };
@@ -59,51 +47,29 @@ export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
  */
 export function useAllChainsTokens() {
   const { walletAddress, isAuthenticated } = useAuth();
-  const queryClient = useQueryClient();
-
-  // Force fresh chain reads on wallet-related mounts
-  useEffect(() => {
-    if (!walletAddress || !isAuthenticated) return;
-    queryClient.invalidateQueries({
-      queryKey: ['wallet-tokens', walletAddress.toLowerCase()],
-      refetchType: 'all',
-    });
-  }, [walletAddress, isAuthenticated, queryClient]);
 
   const baseQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), BASE_CHAIN_ID],
     queryFn: () => getAllTokenBalances(walletAddress!, BASE_CHAIN_ID, true),
     enabled: !!walletAddress && isAuthenticated,
-    staleTime: 0,
-    gcTime: 0,
-    networkMode: 'always',
-    refetchOnMount: 'always',
-    refetchOnWindowFocus: 'always',
-    refetchOnReconnect: 'always',
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
   });
 
   const bnbQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), BNB_CHAIN_ID],
-    queryFn: () => getAllTokenBalances(walletAddress!, BNB_CHAIN_ID, true),
+    queryFn: () => getAllTokenBalances(walletAddress!, BNB_CHAIN_ID),
     enabled: !!walletAddress && isAuthenticated,
-    staleTime: 0,
-    gcTime: 0,
-    networkMode: 'always',
-    refetchOnMount: 'always',
-    refetchOnWindowFocus: 'always',
-    refetchOnReconnect: 'always',
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
   });
 
   const ethQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), ETH_CHAIN_ID],
-    queryFn: () => getAllTokenBalances(walletAddress!, ETH_CHAIN_ID, true),
+    queryFn: () => getAllTokenBalances(walletAddress!, ETH_CHAIN_ID),
     enabled: !!walletAddress && isAuthenticated,
-    staleTime: 0,
-    gcTime: 0,
-    networkMode: 'always',
-    refetchOnMount: 'always',
-    refetchOnWindowFocus: 'always',
-    refetchOnReconnect: 'always',
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
   });
 
   const allTokens = useMemo(() => [
