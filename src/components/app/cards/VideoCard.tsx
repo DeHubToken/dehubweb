@@ -657,6 +657,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     }
     
     if (!video.videoUrl || isContentGated) return;
+
+    if (hasError) {
+      toast.error('File corrupted, reported to devs.');
+      return;
+    }
     
     if (isPlaying) {
       videoRef.current?.pause();
@@ -1284,7 +1289,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                   />
                 </div>
               </div>
-            ) : video.videoUrl && !hasError ? (
+            ) : video.videoUrl ? (
+              hasError ? (
+                <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+              ) :
               <video
                 ref={videoRef}
                 src={video.videoUrl}
@@ -1439,12 +1447,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           )}
         </AnimatePresence>
 
-        {/* Error state */}
-        {hasError && !video.isAudio && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/60">
-            <p className="text-white/70 text-sm">Video unavailable</p>
-          </div>
-        )}
+        {/* Error state - show thumbnail naturally, toast on click */}
         
         {/* Duration badge - liquid glass - hide when progress bar visible */}
         {!(isPlaying && duration > 0 && (showControls || isTouchDevice)) && (
