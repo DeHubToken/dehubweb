@@ -1444,12 +1444,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           )}
         </AnimatePresence>
 
-        {/* Error state */}
-        {hasError && !video.isAudio && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/60">
-            <p className="text-white/70 text-sm">Video unavailable</p>
-          </div>
-        )}
+        {/* Error state - show thumbnail naturally, toast on click */}
         
         {/* Duration badge - liquid glass - hide when progress bar visible */}
         {!(isPlaying && duration > 0 && (showControls || isTouchDevice)) && (
