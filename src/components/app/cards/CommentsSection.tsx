@@ -1331,7 +1331,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                     </button>
                   )}
                   <button
-                    onPointerDown={(e) => { e.preventDefault(); if (canPost) handlePostComment(); }}
+                    type="button"
+                    onClick={() => { if (canPost) handlePostComment(); }}
                     disabled={!canPost}
                     className="h-8 px-3 rounded-lg text-xs font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
                   >
