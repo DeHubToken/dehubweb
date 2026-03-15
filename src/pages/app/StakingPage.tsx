@@ -533,12 +533,11 @@ export default function StakingPage() {
           </div>
         ) : (
           <div className="divide-y divide-white/5">
-            <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_80px_40px_40px] gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
+            <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_80px_40px] gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
               <span>{t('staking.wallet')}</span>
               <span className="text-right">{t('staking.amount')}</span>
               <span className="text-center">{t('staking.chain')}</span>
               <span className="text-right">{t('staking.when')}</span>
-              <span />
               <span />
             </div>
             {unstakeQueue.map((event: UnstakeEvent, idx: number) => {
@@ -552,16 +551,13 @@ export default function StakingPage() {
                   transition={{ delay: 0.02 * idx }}
                   className="px-4 sm:px-5 py-3 hover:bg-white/[0.02] transition-colors"
                 >
-                  <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_80px_40px_40px] gap-2 items-center">
+                  <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_80px_40px] gap-2 items-center">
                     <span className="text-sm text-white/70 font-mono">{truncateAddress(event.wallet)}</span>
                     <span className="text-sm text-white font-medium text-right">{event.amount} <span className="text-white/40 text-xs">DHB</span></span>
                     <span className="text-center">
                       <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium", event.chain === 'BNB' ? "bg-white/10 text-white/70" : "bg-white/10 text-white/70")}>{event.chain}</span>
                     </span>
                     <span className="text-xs text-white/40 text-right">{timeAgo(event.timestamp)}</span>
-                    <a href={getExplorerUrl(event.txHash, event.chain)} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-7 h-7 rounded-lg hover:bg-white/10 transition-colors">
-                      <ExternalLink className="w-3.5 h-3.5 text-white/30" />
-                    </a>
                     {isOwn ? (
                       <button
                         onClick={() => handleCancelUnstake(event.txHash)}
@@ -591,11 +587,7 @@ export default function StakingPage() {
                         >
                           {isCancelling ? <Loader2 className="w-3.5 h-3.5 text-white/30 animate-spin" /> : <X className="w-3.5 h-3.5 text-white/40" />}
                         </button>
-                      ) : (
-                        <a href={getExplorerUrl(event.txHash, event.chain)} target="_blank" rel="noopener noreferrer" className="w-7 h-7 flex items-center justify-center">
-                          <ExternalLink className="w-3.5 h-3.5 text-white/30" />
-                        </a>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                 </motion.div>
