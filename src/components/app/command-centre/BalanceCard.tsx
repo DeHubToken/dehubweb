@@ -9,8 +9,8 @@ import usdtLogo from '@/assets/usdt-logo.png';
 import ethLogo from '@/assets/eth-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
+import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 
 const OTHER_SYMBOLS = ['ETH', 'BTC', 'USDT'] as const;
 const LOGOS: Record<string, string> = { ETH: ethLogo, BTC: btcLogo, USDT: usdtLogo };
@@ -21,12 +21,31 @@ export function BalanceCard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  // DHB balance from API profile (no edge function needed)
-  const { data: profile, isLoading: badgeLoading } = useDeHubProfile({ userId: walletAddress || undefined, enabled: !!walletAddress });
-  const badgeBalance = profile?.badgeBalance;
-
   // Real on-chain token balances across Base, BNB Chain, Ethereum
   const { allTokens, isLoading: tokensLoading } = useAllChainsTokens();
+
+  const formattedDhbBalance = useMemo(() => {
+    const isCanonicalDHB = (tokenAddress: string, chainId: number) => {
+      if (chainId === BASE_CHAIN_ID) return tokenAddress.toLowerCase() === CHAIN_CONFIGS[BASE_CHAIN_ID].dhbToken.toLowerCase();
+      if (chainId === BNB_CHAIN_ID) return tokenAddress.toLowerCase() === CHAIN_CONFIGS[BNB_CHAIN_ID].dhbToken.toLowerCase();
+      return false;
+    };
+
+    let hasSmallBalance = false;
+    const total = allTokens
+      .filter(t => t.symbol === 'DHB' && isCanonicalDHB(t.address, t.chainId))
+      .reduce((sum, t) => {
+        if (t.formattedBalance === '<0.01') {
+          hasSmallBalance = true;
+          return sum;
+        }
+        const val = parseFloat(t.formattedBalance);
+        return sum + (isNaN(val) ? 0 : val);
+      }, 0);
+
+    if (total > 0) return Math.floor(total).toLocaleString();
+    return hasSmallBalance ? '<0.01' : '0';
+  }, [allTokens]);
 
   // Aggregate balances per symbol across chains
   const otherBalances = useMemo(() => {
@@ -52,9 +71,7 @@ export function BalanceCard() {
     });
   }, [allTokens]);
 
-  const rawBalance = badgeBalance ?? 0;
-  const formattedBalance = rawBalance === 0 ? '0' : rawBalance > 0 && rawBalance < 0.01 ? '<0.01' : Math.round(rawBalance).toLocaleString();
-  const isLoading = badgeLoading || tokensLoading;
+  const isLoading = tokensLoading;
 
   if (!isAuthenticated) {
     return (
@@ -73,7 +90,7 @@ export function BalanceCard() {
           {isLoading ? (
             <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
           ) : (
-            <span className="text-3xl sm:text-4xl font-bold text-white">{formattedBalance}</span>
+            <span className="text-3xl sm:text-4xl font-bold text-white">{formattedDhbBalance}</span>
           )}
         </div>
       </div>
