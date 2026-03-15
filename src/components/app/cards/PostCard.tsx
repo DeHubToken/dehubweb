@@ -82,6 +82,34 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const { walletAddress, openLoginModal } = useAuth();
   
   const isOwnPost = walletAddress && post.author.id?.toLowerCase() === walletAddress.toLowerCase();
+
+  // Follow state for the post author
+  const [isFollowingAuthor, setIsFollowingAuthor] = useState<boolean | null>(null);
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
+
+  useEffect(() => {
+    if (!walletAddress || isOwnPost || !post.author.id) return;
+    let cancelled = false;
+    checkIsFollowing(post.author.id).then((res) => {
+      if (!cancelled) setIsFollowingAuthor(res);
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [walletAddress, isOwnPost, post.author.id]);
+
+  const handleFollowFromMenu = useCallback(async () => {
+    if (!walletAddress) { openLoginModal(); return; }
+    if (!post.author.id) return;
+    setIsFollowLoading(true);
+    try {
+      await followUser(post.author.id);
+      setIsFollowingAuthor(true);
+      toast.success(`Following ${post.author.name || post.author.handle || 'user'}!`);
+    } catch {
+      toast.error('Failed to follow');
+    } finally {
+      setIsFollowLoading(false);
+    }
+  }, [walletAddress, openLoginModal, post.author.id, post.author.name, post.author.handle]);
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
