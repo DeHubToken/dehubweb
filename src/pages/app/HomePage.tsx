@@ -317,36 +317,6 @@ export default function HomePage() {
   };
 
   /**
-   * Handle tab click - toggle filters on same tab, switch on different tab.
-   */
-  const handleTabClick = (tabValue: string) => {
-    if (tabValue === activeTab) {
-      // Same tab clicked - always scroll to top
-      document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
-      document.body.scrollTo({ top: 0, behavior: 'smooth' });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      
-      if (tabValue === 'home') {
-        setShowHomeFilters(prev => !prev);
-      } else if (tabValue === 'live') {
-        setShowLiveFilters(prev => !prev);
-      } else if (tabValue === 'shorts') {
-        setShowShortsFilters(prev => !prev);
-      } else if (tabValue === 'images') {
-        // Double-tap on images toggles filters (like other tabs)
-        setShowImagesFilters(prev => !prev);
-      } else if (tabValue === 'videos') {
-        setShowVideosFilters(prev => !prev);
-      } else if (tabValue === 'music') {
-        setShowMusicFilters(prev => !prev);
-      }
-    } else {
-      setActiveTab(tabValue);
-      resetFilters();
-    }
-  };
-
-  /**
    * Handle when user selects an image from collage view.
    * Switches to feed view starting from that image.
    */
