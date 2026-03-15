@@ -625,7 +625,7 @@ export default function StakingPage() {
             </LiquidGlassBubble>
             <LiquidGlassBubble2
               label={t('staking.stake')}
-              icon={<ArrowDownToLine className="w-4 h-4" />}
+              icon={<ArrowDownToLine className="w-[22px] h-[22px]" />}
               loading={isApproving || isStaking}
               loadingLabel={isApproving ? t('staking.approving') : t('staking.staking')}
               disabled={!stakeAmount}
