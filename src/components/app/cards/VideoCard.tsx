@@ -1336,34 +1336,25 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           </div>
         )}
         
-        {/* Play/Pause button overlay - double click/tap for fullscreen */}
-        {(!isPlaying || (showControls && !isTouchDevice)) && !isLoading && !video.isAudio && (
-          <div 
-            className={`absolute inset-0 flex items-center justify-center bg-black/20 ${isFullscreen && isPlaying ? 'opacity-0 pointer-events-none' : isTouchDevice ? 'opacity-100' : 'opacity-0 group-hover/thumb:opacity-100'} transition-opacity`}
-            onDoubleClick={(e) => {
-              e.stopPropagation();
-              const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-              const x = e.clientX - rect.left;
-              const relativeX = x / rect.width;
-              
-              // Only toggle fullscreen in center 25% zone
-              if (relativeX >= 0.375 && relativeX <= 0.625) {
-                toggleFullscreen();
-              } else {
-                // Left/right zones trigger seek via the main handler
-                handleDoubleTapSeek(e);
-              }
-            }}
-          >
-            <div className="w-14 h-14 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
-              {isPlaying ? (
-                <Pause className="h-6 w-6 text-white fill-current" />
-              ) : (
-                <Play className="h-6 w-6 text-white fill-current ml-1" />
-              )}
-            </div>
-          </div>
-        )}
+        {/* Play/Pause brief flash indicator - only appears momentarily on click */}
+        <AnimatePresence>
+          {showPlayIndicator && !video.isAudio && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              className="absolute inset-0 flex items-center justify-center pointer-events-none z-10"
+            >
+              <div className="w-14 h-14 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+                {showPlayIndicator === 'play' ? (
+                  <Play className="h-6 w-6 text-white fill-current ml-1" />
+                ) : (
+                  <Pause className="h-6 w-6 text-white fill-current" />
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass */}
         {isPlaying && (showControls || isTouchDevice) && (
