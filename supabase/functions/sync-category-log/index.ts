@@ -88,33 +88,68 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // 2. Upsert into category_post_log in batches
-    // Using the Supabase REST API directly for bulk upsert
+    // 2. Fetch existing token_ids to avoid duplicates
+    const existingTokenIds = new Set<string>();
+    const uniqueTokenIds = [...new Set(allRows.map(r => r.token_id))];
+    
+    // Fetch in batches of 200
+    for (let i = 0; i < uniqueTokenIds.length; i += 200) {
+      const batch = uniqueTokenIds.slice(i, i + 200);
+      const checkRes = await fetch(
+        `${supabaseUrl}/rest/v1/category_post_log?select=token_id,name&token_id=in.(${batch.join(',')})`,
+        {
+          headers: {
+            'Authorization': `Bearer ${serviceKey}`,
+            'apikey': serviceKey,
+          },
+        },
+      );
+      if (checkRes.ok) {
+        const existing = await checkRes.json();
+        for (const row of existing) {
+          existingTokenIds.add(`${row.token_id}:${row.name}`);
+        }
+      } else {
+        await checkRes.text();
+      }
+    }
+
+    // Filter to only new rows
+    const newRows = allRows.filter(r => !existingTokenIds.has(`${r.token_id}:${r.name}`));
+    console.log(`[sync-category-log] ${newRows.length} new entries to insert (${allRows.length - newRows.length} already exist)`);
+
+    if (newRows.length === 0) {
+      return new Response(
+        JSON.stringify({ ok: true, pages: page - 1, synced: 0 }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+
+    // 3. Insert only new rows in batches
     const BATCH_SIZE = 500;
     let upserted = 0;
 
-    for (let i = 0; i < allRows.length; i += BATCH_SIZE) {
-      const batch = allRows.slice(i, i + BATCH_SIZE);
+    for (let i = 0; i < newRows.length; i += BATCH_SIZE) {
+      const batch = newRows.slice(i, i + BATCH_SIZE);
 
-      const upsertRes = await fetch(
-        `${supabaseUrl}/rest/v1/category_post_log?on_conflict=token_id,name`,
+      const insertRes = await fetch(
+        `${supabaseUrl}/rest/v1/category_post_log`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${serviceKey}`,
             'apikey': serviceKey,
-            'Prefer': 'resolution=ignore-duplicates,return=headers-only',
           },
           body: JSON.stringify(batch),
         },
       );
 
-      if (!upsertRes.ok) {
-        const errText = await upsertRes.text();
-        console.error(`[sync-category-log] Upsert batch error: ${upsertRes.status} ${errText}`);
-        // Continue with next batch
+      if (!insertRes.ok) {
+        const errText = await insertRes.text();
+        console.error(`[sync-category-log] Insert batch error: ${insertRes.status} ${errText}`);
       } else {
+        await insertRes.text();
         upserted += batch.length;
       }
     }
