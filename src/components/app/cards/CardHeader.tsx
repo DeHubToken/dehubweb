@@ -16,6 +16,7 @@ import { getAgentAvatarFallback } from '@/constants/agent-avatars.constants';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { seedProfileCache } from '@/lib/profile-cache-seed';
+import { ProfileHoverCard } from '@/components/app/ProfileHoverCard';
 import { useAuth } from '@/contexts/AuthContext';
 
 import type { ContentType } from '@/types/feed.types';
