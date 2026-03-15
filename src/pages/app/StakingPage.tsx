@@ -56,9 +56,9 @@ function UnstakeCountdown({ timestamp }: { timestamp: number }) {
   const progress = 1 - remaining / UNSTAKE_COOLDOWN_MS;
 
   return (
-    <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-amber-400/80">
-      <Clock className="w-3 h-3 shrink-0" />
-      {days}d {String(hours).padStart(2, '0')}h {String(mins).padStart(2, '0')}m {String(secs).padStart(2, '0')}s
+    <span className="inline-flex sm:flex-col sm:items-center items-center gap-1.5 sm:gap-0.5 text-[11px] font-mono text-amber-400/80">
+      <Clock className="w-3 h-3 shrink-0 sm:hidden" />
+      <span>{days}d {String(hours).padStart(2, '0')}h {String(mins).padStart(2, '0')}m {String(secs).padStart(2, '0')}s</span>
       <span className="w-12 h-1 rounded-full bg-white/10 overflow-hidden">
         <span className="block h-full rounded-full bg-amber-400/60 transition-all" style={{ width: `${(progress * 100).toFixed(1)}%` }} />
       </span>
@@ -685,7 +685,7 @@ export default function StakingPage() {
           </div>
         ) : (
           <div className="divide-y divide-white/5">
-            <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_minmax(120px,1fr)_80px_40px] gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
+            <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_minmax(100px,1fr)_80px_40px] gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
               <span>{t('staking.wallet')}</span>
               <span className="text-right">{t('staking.amount')}</span>
               <span className="text-center">{t('staking.chain')}</span>
@@ -696,6 +696,7 @@ export default function StakingPage() {
             {unstakeQueue.map((event: UnstakeEvent, idx: number) => {
               const isOwn = currentWallet && event.wallet.toLowerCase() === currentWallet;
               const isCancelling = cancellingTx === event.txHash;
+              const explorerBase = event.chain === 'BNB' ? 'https://bscscan.com/address/' : 'https://basescan.org/address/';
               return (
                 <motion.div
                   key={event.txHash + idx}
@@ -704,15 +705,22 @@ export default function StakingPage() {
                   transition={{ delay: 0.02 * idx }}
                   className="px-4 sm:px-5 py-3 hover:bg-white/[0.02] transition-colors"
                 >
-                  <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_minmax(120px,1fr)_80px_40px] gap-2 items-center">
-                    <span className="text-sm text-white/70 font-mono">{truncateAddress(event.wallet)}</span>
+                  <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_minmax(100px,1fr)_80px_40px] gap-2 items-center">
+                    <a
+                      href={`${explorerBase}${event.wallet}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-white/70 font-mono hover:text-white hover:underline transition-colors"
+                    >
+                      {truncateAddress(event.wallet)}
+                    </a>
                     <span className="text-sm text-white font-medium text-right">{event.amount} <span className="text-white/40 text-xs">DHB</span></span>
                     <span className="text-center">
                       <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium", event.chain === 'BNB' ? "bg-white/10 text-white/70" : "bg-white/10 text-white/70")}>{event.chain}</span>
                     </span>
-                    <span className="text-center">
+                    <div className="flex flex-col items-center gap-0.5">
                       <UnstakeCountdown timestamp={event.timestamp} />
-                    </span>
+                    </div>
                     <span className="text-xs text-white/40 text-right">{timeAgo(event.timestamp)}</span>
                     {isOwn ? (
                       <button
@@ -727,7 +735,7 @@ export default function StakingPage() {
                   </div>
                   <div className="flex sm:hidden items-center justify-between gap-2">
                     <div className="min-w-0">
-                      <span className="text-sm text-white/70 font-mono block">{truncateAddress(event.wallet)}</span>
+                      <a href={`${explorerBase}${event.wallet}`} target="_blank" rel="noopener noreferrer" className="text-sm text-white/70 font-mono block hover:text-white hover:underline transition-colors">{truncateAddress(event.wallet)}</a>
                       <div className="flex items-center gap-2">
                         <span className="text-xs text-white/40">{timeAgo(event.timestamp)}</span>
                         <UnstakeCountdown timestamp={event.timestamp} />
