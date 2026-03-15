@@ -316,7 +316,12 @@ export default function StakingPage() {
     }
   };
 
-  const stakeTransferFlow = async (amount: number, chainId: typeof BNB_CHAIN_ID | typeof BASE_CHAIN_ID, chainLabel: string) => {
+  const stakeTransferFlow = async (
+    amount: number,
+    chainId: typeof BNB_CHAIN_ID | typeof BASE_CHAIN_ID,
+    chainLabel: string,
+    walletAddress: string
+  ) => {
     await switchChain(chainId);
     const dhbTokenAddress = CHAIN_CONFIGS[chainId]?.dhbToken;
     if (!dhbTokenAddress) {
@@ -325,18 +330,33 @@ export default function StakingPage() {
     }
 
     toast.loading(t('toasts.confirming_transaction'));
-    const result = await sendERC20Token(dhbTokenAddress, STAKING_ADDRESS, stakeAmount, 18, chainId as any);
-    
+    const result = await sendERC20Token(dhbTokenAddress, STAKING_ADDRESS, String(amount), 18, chainId as any);
+
     toast.loading(t('toasts.transaction_submitted'), { description: t('toasts.waiting_for_confirmation') });
     const receipt = await result.wait();
 
     if (receipt.status === 1) {
+      const hasTransfer = await hasVerifiedStakeTransfer(
+        receipt.hash,
+        dhbTokenAddress,
+        walletAddress,
+        amount,
+        chainId
+      );
+
+      if (!hasTransfer) {
+        toast.dismiss();
+        toast.error(t('toasts.stake_failed'), {
+          description: 'No confirmed on-chain transfer to staking address was found for this transaction.',
+        });
+        return;
+      }
+
       const chainName = chainId === BNB_CHAIN_ID ? 'BNB' : 'Base';
       try {
-        const walletAddr = await getWalletAddress();
         await supabase.from('staking_records').insert({
-          wallet_address: walletAddr.toLowerCase(),
-          amount: parseFloat(stakeAmount),
+          wallet_address: walletAddress.toLowerCase(),
+          amount,
           chain: chainName,
           tx_hash: receipt.hash || '',
           action: 'stake',
@@ -345,7 +365,7 @@ export default function StakingPage() {
         console.error('[Staking] Failed to record stake in DB:', dbErr);
       }
       toast.dismiss();
-      toast.success(t('toasts.staked_successfully'), { description: t('toasts.dhb_staked_on_chain', { amount: stakeAmount, chain: chainLabel }) });
+      toast.success(t('toasts.staked_successfully'), { description: t('toasts.dhb_staked_on_chain', { amount: String(amount), chain: chainLabel }) });
       setStakeAmount('');
       refetchStats();
       refetchUser();
