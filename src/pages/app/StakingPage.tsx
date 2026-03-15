@@ -394,25 +394,14 @@ export default function StakingPage() {
                 </button>
               </div>
             </LiquidGlassBubble>
-            <LiquidGlassBubble
-              shimmer
-              noBorder
-              onClick={(isStaking || isApproving || !stakeAmount) ? undefined : handleStake}
-              className={cn(
-                "flex-shrink-0 w-[110px] h-[42px] cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl",
-                (isStaking || isApproving || !stakeAmount) && "opacity-40 cursor-not-allowed"
-              )}
-            >
-              <span className="flex items-center justify-center gap-2 text-white text-sm font-medium h-full">
-                {isApproving ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> {t('staking.approving')}</>
-                ) : isStaking ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> {t('staking.staking')}</>
-                ) : (
-                  <><ArrowDownToLine className="w-4 h-4" /> {t('staking.stake')}</>
-                )}
-              </span>
-            </LiquidGlassBubble>
+            <LiquidGlassBubble2
+              label={t('staking.stake')}
+              icon={<ArrowDownToLine className="w-4 h-4" />}
+              loading={isApproving || isStaking}
+              loadingLabel={isApproving ? t('staking.approving') : t('staking.staking')}
+              disabled={!stakeAmount}
+              onClick={handleStake}
+            />
           </div>
         </motion.div>
 
