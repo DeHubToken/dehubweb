@@ -23,6 +23,7 @@ import {
   Lightbulb,
   Briefcase,
   ShieldCheck,
+  Landmark,
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
