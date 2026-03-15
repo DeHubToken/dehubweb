@@ -140,6 +140,9 @@ export default function StakingPage() {
   const [showDeposits, setShowDeposits] = useState(false);
   const [depositRecords, setDepositRecords] = useState<{ amount: number; tx_hash: string; chain: string; created_at: string; source: 'db' | 'chain' }[]>([]);
   const [depositsLoading, setDepositsLoading] = useState(false);
+  const [showWithdrawals, setShowWithdrawals] = useState(false);
+  const [withdrawalRecords, setWithdrawalRecords] = useState<{ amount: number; tx_hash: string; chain: string; created_at: string }[]>([]);
+  const [withdrawalsLoading, setWithdrawalsLoading] = useState(false);
 
   const fetchDeposits = async () => {
     if (!currentWallet) return;
