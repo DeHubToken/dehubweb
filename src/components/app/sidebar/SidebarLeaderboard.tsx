@@ -281,13 +281,18 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
             <div
               key={period}
               className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent"
-              style={{ width: `${100 / PERIODS.length}%` }}
+              style={{
+                width: `${100 / PERIODS.length}%`,
+                WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%)',
+                maskImage: 'linear-gradient(to bottom, #000 0%, #000 78%, transparent 100%)',
+                WebkitMaskRepeat: 'no-repeat',
+                maskRepeat: 'no-repeat',
+              }}
             >
               <PeriodList period={period} isActive={activePeriod === period} />
             </div>
           ))}
         </div>
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent via-zinc-900/65 to-zinc-900" />
       </div>
 
       {/* Bottom action */}
