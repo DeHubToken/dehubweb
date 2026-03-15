@@ -256,6 +256,17 @@ export function ActionBar({
         }
         await voteOnPost({ tokenId: numericId, voteType: vote ? 'for' : 'against' });
       }
+      // After successful vote, softly invalidate feeds so fresh isLiked/isDisliked
+      // arrives from API before the vote cache expires
+      if (!hasExternalHandler) {
+        // Use a short delay so the backend has time to process the vote
+        setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: ['unified-feed'], refetchType: 'none' });
+          queryClient.invalidateQueries({ queryKey: ['dehub-videos'], refetchType: 'none' });
+          queryClient.invalidateQueries({ queryKey: ['dehub-images'], refetchType: 'none' });
+          queryClient.invalidateQueries({ queryKey: ['profile-content'], refetchType: 'none' });
+        }, 2000);
+      }
     } catch (error: unknown) {
       if (!hasExternalHandler) {
         // Revert to pre-vote state on error (only for local optimistic updates)
