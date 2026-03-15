@@ -9,6 +9,8 @@ export function useTabIndicator<T extends string>(activeTab: T, layoutShiftKey?:
   const layerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<Partial<Record<T, HTMLElement | null>>>({});
   const trackingRafRef = useRef<number | null>(null);
+  const initialTabRef = useRef<T>(activeTab);
+  const hasMountedRef = useRef(false);
   const [rect, setRect] = useState({ x: 0, y: 0, width: 0, height: 0, ready: false });
 
   const update = useCallback(() => {
@@ -65,22 +67,30 @@ export function useTabIndicator<T extends string>(activeTab: T, layoutShiftKey?:
   const setRef = useCallback((key: T) => (el: HTMLElement | null) => {
     const prev = buttonRefs.current[key];
     buttonRefs.current[key] = el;
-    // When a ref is first assigned for the active tab, trigger an update
-    // so the indicator appears on initial render without needing a click.
     if (el && !prev) {
       requestAnimationFrame(update);
     }
   }, [update]);
 
+  // Single layout update on mount
   useLayoutEffect(() => {
     update();
   }, [update]);
 
-  // Keep the indicator synced while layout is animating (e.g. sidebar collapse/expand).
+  // Only track for duration AFTER user switches tabs (not on initial mount)
   useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      // On mount, just do a single delayed update instead of 700ms polling
+      const raf = requestAnimationFrame(() => {
+        requestAnimationFrame(update);
+      });
+      return () => cancelAnimationFrame(raf);
+    }
+    // User switched tabs or layout shifted — track to stay synced
     trackForDuration(700);
     return stopTracking;
-  }, [activeTab, layoutShiftKey, trackForDuration, stopTracking]);
+  }, [activeTab, layoutShiftKey, trackForDuration, stopTracking, update]);
 
   useEffect(() => {
     const handler = () => {
