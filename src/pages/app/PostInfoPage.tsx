@@ -10,6 +10,7 @@
  */
 
 import { useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageSquare, User, Loader2, Users, Tag, Hash, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio, Ticket, Coins } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -329,6 +330,21 @@ export default function PostInfoPage() {
   const ppvPrice = nftInfo?.ppv_price || nftInfo?.streamInfo?.payPerViewAmount;
   const ppvCurrency = nftInfo?.ppv_currency || 'DHB';
   const { data: ppvPurchaseCount } = usePPVPurchaseCount(isPPV ? postId : undefined);
+
+  // Fetch tips for this specific post from tip_records
+  const { data: postTipTotal = 0 } = useQuery({
+    queryKey: ['post-tips', postId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('tip_records')
+        .select('amount')
+        .eq('token_id', postId!);
+      if (error || !data) return 0;
+      return data.reduce((sum, r) => sum + Number(r.amount), 0);
+    },
+    enabled: !!postId,
+    staleTime: 2 * 60 * 1000,
+  });
 
   // Current visibility state (default to 'public' if not set)
   const currentVisibility: TokenVisibility = (nftInfo as any)?.visibility || 'public';
@@ -839,7 +855,7 @@ export default function PostInfoPage() {
               <div className="col-span-2 bg-white/5 rounded-lg p-3 flex items-center gap-3">
                 <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
                 <div>
-                  <p className="text-lg font-bold text-white">— DHB</p>
+                  <p className="text-lg font-bold text-white">{postTipTotal.toLocaleString()} DHB</p>
                   <p className="text-xs text-white/60">{t('postInfo.tipsOnPost', 'Tips on this Post')}</p>
                 </div>
               </div>
