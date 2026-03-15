@@ -875,6 +875,16 @@ export default function SinglePostPage() {
         description={seoDesc}
         url={`https://dehub.io/app/post/${id}`}
         type="article"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: seoTitle,
+          description: seoDesc,
+          url: `https://dehub.io/app/post/${id}`,
+          ...(post?.minterDisplayName && { author: { '@type': 'Person', name: post.minterDisplayName } }),
+          ...(post?.createdAt && { datePublished: post.createdAt }),
+          publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
+        }}
       />
       <PageHeader showBack={hasHistory} />
       

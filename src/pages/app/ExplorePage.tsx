@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
+import { SEOHead } from '@/components/SEOHead';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { WhatsHappening } from '@/components/app/WhatsHappening';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';

@@ -215,6 +215,15 @@ export default function ProfilePage() {
         title={data.profile?.name || data.profile?.handle || 'Profile'}
         description={data.profile?.bio || `View ${data.profile?.name || data.profile?.handle || 'this profile'} on DeHub`}
         url={`https://dehub.io/${data.profile?.handle || ''}`}
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'Person',
+          name: data.profile?.name || data.profile?.handle || 'DeHub User',
+          url: `https://dehub.io/${data.profile?.handle || ''}`,
+          ...(data.profile?.bio && { description: data.profile.bio }),
+          ...(data.profile?.avatar && { image: data.profile.avatar }),
+          sameAs: `https://dehub.io/${data.profile?.handle || ''}`,
+        }}
       />
       {/* Pull-to-refresh indicator */}
       {data.pullDistance > 0 && (

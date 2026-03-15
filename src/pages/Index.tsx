@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { SEOHead } from "@/components/SEOHead";
 import { FuturisticAlienHero } from "@/components/ui/futuristic-alien-hero";
 
 const SKIP_LANDING_KEY = "dehub_skip_landing";

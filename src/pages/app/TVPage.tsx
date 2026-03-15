@@ -8,6 +8,7 @@
 
 import { useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { SEOHead } from '@/components/SEOHead';
 import { PageHeader } from '@/components/app/PageHeader';
 import { LiveTVSection } from '@/components/app/tv';
 
