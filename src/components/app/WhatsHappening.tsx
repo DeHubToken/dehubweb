@@ -178,6 +178,11 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
     navigate(`/app/explore?q=${encodeURIComponent('$' + symbol)}`);
   };
 
+  const handleMainTabChange = useCallback((tab: Tab) => {
+    setHasTabInteracted(true);
+    setActiveTab(tab);
+  }, []);
+
   return (
     <div className="bg-zinc-900 rounded-2xl p-4 relative">
       <div className={cn("flex items-center mb-3", showCountrySelector ? "justify-between" : "justify-center")}>
