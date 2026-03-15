@@ -102,12 +102,22 @@ const CachedPage = memo(function CachedPage({
   const SkeletonComponent = config.skeleton;
   const { isCollapsed } = useSidebarCollapse();
 
+  // Only animate fade-in on the very first activation, not on every revisit
+  const hasBeenActiveRef = useRef(false);
+  const shouldAnimate = isActive && !hasBeenActiveRef.current;
+
+  useEffect(() => {
+    if (isActive && !hasBeenActiveRef.current) {
+      hasBeenActiveRef.current = true;
+    }
+  }, [isActive]);
+
   // Apply top spacing in collapsed mode for all pages except home (which handles it internally)
   const needsCollapsedSpacing = isCollapsed && isActive && config.key !== 'home';
 
   return (
     <div
-      className={cn(isActive ? 'animate-fade-in' : '')}
+      className={cn(shouldAnimate ? 'animate-fade-in' : '')}
       style={
         isActive
           ? undefined

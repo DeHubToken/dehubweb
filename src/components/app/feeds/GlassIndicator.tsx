@@ -4,7 +4,7 @@ interface GlassIndicatorProps {
   rect: { x: number; y: number; width: number; height: number; ready: boolean };
   borderRadius?: string;
   className?: string;
-  /** Used for position caching — include the active tab so cache is per-tab */
+  /** Used for position caching so returning to a page renders instantly */
   layoutKey?: string;
   /** Explicitly enable smooth transitions (set true only on user-initiated tab clicks) */
   enableTransition?: boolean;
@@ -30,10 +30,8 @@ export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layo
     }
   }, [rect.x, rect.y, rect.width, rect.height, rect.ready, layoutKey]);
 
-  // Only use cache when transitioning (user actively switching tabs).
-  // When NOT transitioning (e.g. page navigation), wait for the real rect
-  // to avoid flashing at a stale cached position.
-  const cached = (enableTransition && layoutKey) ? positionCache.get(layoutKey) : null;
+  // Use cached position if rect isn't ready yet (always — for all indicators)
+  const cached = layoutKey ? positionCache.get(layoutKey) : null;
   const displayRect = rect.ready ? rect : cached ? { ...cached, ready: true } : rect;
 
   if (!displayRect.ready) return null;
