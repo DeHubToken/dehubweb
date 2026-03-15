@@ -1289,7 +1289,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                   />
                 </div>
               </div>
-            ) : video.videoUrl && !hasError ? (
+            ) : video.videoUrl ? (
+              hasError ? (
+                <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+              ) :
               <video
                 ref={videoRef}
                 src={video.videoUrl}
