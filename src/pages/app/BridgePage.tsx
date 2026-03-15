@@ -262,7 +262,7 @@ export default function BridgePage() {
               />
               <button
                 type="button"
-                onClick={() => setAmount(sourceBalance.toString())}
+                onClick={() => setAmount(sourceBalanceRaw)}
                 className="absolute right-0 top-1/2 -translate-y-1/2 px-1 text-white/50 text-[10px] font-bold uppercase hover:text-white transition-colors"
               >
                 MAX
