@@ -259,11 +259,11 @@ export async function getCategories(): Promise<DeHubCategory[]> {
   let cats: DeHubCategory[] = [];
   if (Array.isArray(response) && response.length > 0) {
     if (typeof response[0] === 'object' && 'name' in response[0]) {
-      cats = response as DeHubCategory[];
+      cats = (response as DeHubCategory[]).map(c => ({ ...c, name: c.name.toLowerCase() }));
     } else {
       cats = (response as string[]).map((name) => ({
-        id: name.trim(),
-        name: name.trim(),
+        id: name.trim().toLowerCase(),
+        name: name.trim().toLowerCase(),
         slug: name.toLowerCase().trim().replace(/\s+/g, '-'),
       }));
     }
