@@ -251,10 +251,14 @@ export default function FullWalletPage() {
           <Lock className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.stake')}</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => setImportDialogOpen(true)}>
-          <Plus className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.import')}</span>
-        </Button>
+        <LiquidGlassBubble2
+          label={t('wallet.import')}
+          icon={<Plus className="w-5 h-5" />}
+          onClick={() => setImportDialogOpen(true)}
+          width="auto"
+          height="auto"
+          className="flex-1 min-w-0 py-3 flex-col [&>div]:!py-3"
+        />
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => toast.info(t('wallet.cashOutComingSoon'))}>
           <Minus className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.cashOut')}</span>
