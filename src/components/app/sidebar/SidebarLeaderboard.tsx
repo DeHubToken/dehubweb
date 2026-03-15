@@ -291,7 +291,7 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
 
       {/* Bottom fade gradient */}
       <div className="relative px-4 pb-2">
-        <div className="absolute -top-8 left-0 right-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none" />
+        <div className="absolute -top-16 left-0 right-0 h-16 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent pointer-events-none" />
         <LiquidGlassBubble2
           label={t('commandCentre.viewAll')}
           onClick={() => navigate('/app/leaderboard')}
