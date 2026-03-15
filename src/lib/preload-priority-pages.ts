@@ -28,7 +28,7 @@ export function preloadPriorityPages(): void {
     idle(() => {
       preload(() => import('@/pages/app/MessagesPage'));
       preload(() => import('@/pages/app/SettingsPage'));
-      preload(() => import('@/pages/app/WalletPage'));
+      preload(() => import('@/pages/app/FullWalletPage'));
     });
   }, 6000);
 }
