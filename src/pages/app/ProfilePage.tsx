@@ -221,7 +221,7 @@ export default function ProfilePage() {
           name: data.profile?.name || data.profile?.handle || 'DeHub User',
           url: `https://dehub.io/${data.profile?.handle || ''}`,
           ...(data.profile?.bio && { description: data.profile.bio }),
-          ...(data.profile?.avatar && { image: data.profile.avatar }),
+          ...(data.profile?.avatarUrl && { image: data.profile.avatarUrl }),
           sameAs: `https://dehub.io/${data.profile?.handle || ''}`,
         }}
       />
