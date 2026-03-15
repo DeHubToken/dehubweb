@@ -137,6 +137,25 @@ export default function StakingPage() {
   const [stakingChainLabel, setStakingChainLabel] = useState('');
   const [currentWallet, setCurrentWallet] = useState('');
   const [cancellingTx, setCancellingTx] = useState<string | null>(null);
+  const [showDeposits, setShowDeposits] = useState(false);
+  const [depositRecords, setDepositRecords] = useState<{ amount: number; tx_hash: string; chain: string; created_at: string }[]>([]);
+  const [depositsLoading, setDepositsLoading] = useState(false);
+
+  const fetchDeposits = async () => {
+    if (!currentWallet) return;
+    setDepositsLoading(true);
+    try {
+      const { data } = await supabase
+        .from('staking_records')
+        .select('amount, tx_hash, chain, created_at')
+        .eq('wallet_address', currentWallet.toLowerCase())
+        .eq('action', 'stake')
+        .order('created_at', { ascending: false })
+        .limit(50);
+      setDepositRecords(data ?? []);
+    } catch { setDepositRecords([]); }
+    setDepositsLoading(false);
+  };
 
   function timeAgo(timestamp: number): string {
     if (!timestamp) return '—';
