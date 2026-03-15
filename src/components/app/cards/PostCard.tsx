@@ -13,7 +13,7 @@ import { useState, memo, useEffect, useCallback } from 'react';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Pencil, Trash2, Repeat2 } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Pencil, Trash2, Repeat2, UserPlus, UserCheck, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { CardHeader } from './CardHeader';
@@ -34,7 +34,7 @@ import { TipModal } from '../modals/TipModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { useAuth } from '@/contexts/AuthContext';
-import { updateTokenVisibility, repostPost, type TokenVisibility } from '@/lib/api/dehub';
+import { updateTokenVisibility, repostPost, followUser, isFollowing as checkIsFollowing, type TokenVisibility } from '@/lib/api/dehub';
 import { cacheTextPostForNavigation } from '@/lib/post-cache';
 import {
   Drawer,
@@ -82,6 +82,34 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const { walletAddress, openLoginModal } = useAuth();
   
   const isOwnPost = walletAddress && post.author.id?.toLowerCase() === walletAddress.toLowerCase();
+
+  // Follow state for the post author
+  const [isFollowingAuthor, setIsFollowingAuthor] = useState<boolean | null>(null);
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
+
+  useEffect(() => {
+    if (!walletAddress || isOwnPost || !post.author.id) return;
+    let cancelled = false;
+    checkIsFollowing(post.author.id).then((res) => {
+      if (!cancelled) setIsFollowingAuthor(res);
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [walletAddress, isOwnPost, post.author.id]);
+
+  const handleFollowFromMenu = useCallback(async () => {
+    if (!walletAddress) { openLoginModal(); return; }
+    if (!post.author.id) return;
+    setIsFollowLoading(true);
+    try {
+      await followUser(post.author.id);
+      setIsFollowingAuthor(true);
+      toast.success(`Following ${post.author.name || post.author.handle || 'user'}!`);
+    } catch {
+      toast.error('Failed to follow');
+    } finally {
+      setIsFollowLoading(false);
+    }
+  }, [walletAddress, openLoginModal, post.author.id, post.author.name, post.author.handle]);
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
@@ -199,6 +227,24 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
               >
                 <Link2 className="w-5 h-5" /> {t('postOptions.copyPostUrl')}
               </button>
+              {!isOwnPost && isFollowingAuthor === false && (
+                <button
+                  onClick={handleFollowFromMenu}
+                  disabled={isFollowLoading}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  {isFollowLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <UserPlus className="w-5 h-5" />}
+                  Follow
+                </button>
+              )}
+              {!isOwnPost && isFollowingAuthor === true && (
+                <button
+                  disabled
+                  className="flex items-center gap-3 px-4 py-3 text-zinc-500 rounded-xl text-left cursor-default"
+                >
+                  <UserCheck className="w-5 h-5" /> Following
+                </button>
+              )}
               <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                 <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
               </button>
