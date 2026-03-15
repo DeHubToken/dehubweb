@@ -46,6 +46,7 @@ import { ConversationHistoryDrawer } from '@/components/app/assistant/Conversati
 import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 
 // Simulation data for token transactions
 interface SimulationData {
