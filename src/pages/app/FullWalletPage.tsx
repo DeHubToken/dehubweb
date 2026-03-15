@@ -91,6 +91,7 @@ export default function FullWalletPage() {
   const [swapDHBOpen, setSwapDHBOpen] = useState(false);
 
   const { allTokens, isLoading } = useAllChainsTokens();
+  const { data: userStakingData } = useUserStakingData();
 
   // Collect auto-detected tokens (not in TOKEN_ICONS) for dynamic price lookups
   const extraTokensForPricing = useMemo(() => {
