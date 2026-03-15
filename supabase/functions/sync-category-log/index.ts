@@ -97,7 +97,7 @@ Deno.serve(async (req: Request) => {
       const batch = allRows.slice(i, i + BATCH_SIZE);
 
       const upsertRes = await fetch(
-        `${supabaseUrl}/rest/v1/category_post_log`,
+        `${supabaseUrl}/rest/v1/category_post_log?on_conflict=token_id,name`,
         {
           method: 'POST',
           headers: {
