@@ -644,10 +644,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     // Audio posts use AudioVisualizer which handles its own playback
     if (video.isAudio) {
       if (isContentGated) return;
-      setIsPlaying(prev => !prev);
-      isPlayingRef.current = !isPlayingRef.current;
+      const willPlay = !isPlayingRef.current;
+      setIsPlaying(willPlay);
+      isPlayingRef.current = willPlay;
+      setShowPlayIndicator(willPlay ? 'play' : 'pause');
+      setTimeout(() => setShowPlayIndicator(null), 500);
       // Record listen on first play
-      if (!isPlayingRef.current === false) {
+      if (willPlay) {
         import('@/lib/api/dehub/feed').then(m => m.recordListen(video.id)).catch(() => {});
       }
       return;
