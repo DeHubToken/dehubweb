@@ -1340,25 +1340,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </div>
         )}
         
-        {/* Play/Pause brief flash indicator - only appears momentarily on click */}
-        <AnimatePresence>
-          {showPlayIndicator && !video.isAudio && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="absolute inset-0 flex items-center justify-center pointer-events-none z-10"
-            >
-              <div className="w-14 h-14 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
-                {showPlayIndicator === 'play' ? (
-                  <Play className="h-6 w-6 text-white fill-current ml-1" />
-                ) : (
-                  <Pause className="h-6 w-6 text-white fill-current" />
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Center flash indicator removed — play/pause now in progress bar */}
 
         {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass */}
         {isPlaying && (showControls || isTouchDevice) && (
