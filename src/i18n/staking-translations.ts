@@ -283,7 +283,7 @@ const stakingTranslations: Record<string, StakingTranslation> = {
       earlyAccess: '抢先体验功能',
       earlyAccessDesc: '抢先体验新平台功能。质押者优先获得 Beta 版本和即将推出的工具。',
       enhancedExperience: '增强体验',
-      enhancedExperienceDesc: '享受无广告浏览、更高的上传限制和独家 UI 定制的高级体验。',
+      enhancedExperienceDesc: '享受更高的上传限制和独家 UI 定制的高级体验。',
       airdrops: '空投',
       airdropsDesc: '质押者有资格获得独家代币空投和奖励分配。您质押越多，收到越多。',
       justNow: '刚刚',
