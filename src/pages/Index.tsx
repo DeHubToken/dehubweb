@@ -19,7 +19,23 @@ const Index = () => {
 
   if (shouldSkip) return null;
 
-  return <FuturisticAlienHero />;
+  return (
+    <>
+      <SEOHead
+        title="Open Source Social Media"
+        description="DeHub is open source, user owned and censorship resistant media. Join the decentralized future of social."
+        url="https://dehub.io"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'DeHub',
+          url: 'https://dehub.io',
+          description: 'Open source, user owned and censorship resistant media.',
+        }}
+      />
+      <FuturisticAlienHero />
+    </>
+  );
 };
 
 export default Index;

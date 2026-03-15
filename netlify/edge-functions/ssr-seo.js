@@ -56,7 +56,7 @@ export default async (request, context) => {
         status: 200,
         headers: {
           'Content-Type': 'text/html; charset=utf-8',
-          'Cache-Control': 'public, max-age=0, must-revalidate', // No cache for testing
+          'Cache-Control': 'public, s-maxage=300, max-age=60, stale-while-revalidate=600',
           'Vary': 'User-Agent',
           'X-Powered-By': 'DeHub-Edge-SEO'
         },
