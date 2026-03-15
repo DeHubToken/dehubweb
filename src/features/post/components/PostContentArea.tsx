@@ -147,6 +147,7 @@ export function PostContentArea({
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
   const isProcessingLinks = useRef(false);
+  const linkDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const dragCounterRef = useRef(0);
   const [showSchedule, setShowSchedule] = useState(false);
