@@ -4,7 +4,7 @@ import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossCh
 import { SwapToDHBDrawer } from '@/components/app/SwapToDHBDrawer';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart, User, Lock, Minus, CreditCard, Wallet, Globe } from 'lucide-react';
+import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart, User, Lock, Minus, CreditCard, Wallet, Globe, ArrowDownUp } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -252,7 +252,7 @@ export default function FullWalletPage() {
           <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.stake')}</span>
         </Button>
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => navigate('/app/bridge')}>
-          <Globe className="w-5 h-5" />
+          <ArrowDownUp className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap hidden lg:inline">Bridge</span>
         </Button>
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => toast.info(t('wallet.cashOutComingSoon'))}>
