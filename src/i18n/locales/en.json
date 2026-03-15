@@ -1371,6 +1371,7 @@
     "unstake": "Withdraw",
     "totalStaked": "Total Deposited",
     "dhbAcrossAllChains": "Tokens across all chains",
+    "ofSupply": "of supply",
     "totalValueLocked": "Total Value Locked",
     "estApy": "Est. APY",
     "variableRate": "Variable rate",
