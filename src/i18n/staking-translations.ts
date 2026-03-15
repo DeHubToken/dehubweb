@@ -209,7 +209,7 @@ const stakingTranslations: Record<string, StakingTranslation> = {
       earlyAccess: 'Acesso Antecipado a Recursos',
       earlyAccessDesc: 'Seja o primeiro a experimentar novos recursos da plataforma. Stakers têm acesso prioritário a versões beta.',
       enhancedExperience: 'Experiência Aprimorada',
-      enhancedExperienceDesc: 'Aproveite uma experiência premium com navegação sem anúncios, limites de upload mais altos e personalizações exclusivas de interface.',
+      enhancedExperienceDesc: 'Aproveite uma experiência premium com limites de upload mais altos e personalizações exclusivas de interface.',
       airdrops: 'Airdrops',
       airdropsDesc: 'Stakers são elegíveis para airdrops exclusivos de tokens e distribuições de recompensas bônus. Quanto mais você faz staking, mais você recebe.',
       justNow: 'agora mesmo',
