@@ -12,11 +12,13 @@ const corsHeaders = {
 
 const BRIDGE_ADDRESS = '0x11D79aE9a0F8a8f9Fcf5BE71e403ed203EC2394d'.toLowerCase();
 
+const ALCHEMY_KEY = Deno.env.get('ALCHEMY_API_KEY') || '';
+
 const CHAINS = [
   {
     chainId: 8453,
     name: 'Base',
-    rpcUrl: 'https://base-rpc.publicnode.com',
+    rpcUrl: `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
     dhbToken: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c',
     explorer: 'https://basescan.org',
     decimals: 18,
@@ -24,7 +26,7 @@ const CHAINS = [
   {
     chainId: 56,
     name: 'BNB Chain',
-    rpcUrl: 'https://bsc-dataseed.binance.org',
+    rpcUrl: `https://bnb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
     dhbToken: '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D',
     explorer: 'https://bscscan.com',
     decimals: 18,

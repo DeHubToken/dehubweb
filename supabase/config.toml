@@ -83,3 +83,6 @@ verify_jwt = false
 
 [functions.sync-category-log]
 verify_jwt = false
+
+[functions.bridge-transfers]
+verify_jwt = false
