@@ -357,7 +357,7 @@ const stakingTranslations: Record<string, StakingTranslation> = {
       earlyAccess: '機能の早期アクセス',
       earlyAccessDesc: '新しいプラットフォーム機能を誰よりも先にお試しください。ステーカーはベータ版への優先アクセスを取得します。',
       enhancedExperience: '強化されたエクスペリエンス',
-      enhancedExperienceDesc: '広告なしのブラウジング、高いアップロード制限、独占UI カスタマイズによるプレミアム体験をお楽しみください。',
+      enhancedExperienceDesc: '高いアップロード制限、独占UIカスタマイズによるプレミアム体験をお楽しみください。',
       airdrops: 'エアドロップ',
       airdropsDesc: 'ステーカーは独占トークンエアドロップとボーナス報酬の分配を受ける資格があります。ステークするほど、より多く受け取れます。',
       justNow: 'たった今',
