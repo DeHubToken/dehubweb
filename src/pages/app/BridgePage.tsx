@@ -131,7 +131,7 @@ export default function BridgePage() {
   };
 
   const handleRefresh = () => {
-    refetchTokens();
+    // tokens auto-refetch via query
   };
 
   return (
