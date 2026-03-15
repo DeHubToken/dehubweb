@@ -114,6 +114,7 @@ function AppContent() {
 
   return (
     <div key={langVersion}>
+      <SEOHead />
       <Sonner />
       <UsernameRequiredModal />
       <LoginModal open={isLoginModalOpen} onOpenChange={closeLoginModal} />
