@@ -690,7 +690,7 @@ export default function StakingPage() {
               </LiquidGlassBubble>
               <LiquidGlassBubble2
                 label={t('staking.unstake')}
-                icon={<ArrowUpFromLine className="w-[18px] h-[18px]" />}
+                icon={<ArrowUpFromLine className="w-[22px] h-[22px]" />}
                 loading={isUnstaking}
                 disabled={!unstakeAmount}
                 onClick={handleUnstake}
