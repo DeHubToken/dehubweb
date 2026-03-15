@@ -767,23 +767,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
     // Standard Fullscreen API on container — with fallback if blocked (e.g. SafePal WebView)
     if (containerEl) {
-      const tryFullscreen = containerEl.requestFullscreen
-        ? containerEl.requestFullscreen()
-        : containerEl.webkitRequestFullscreen
-          ? containerEl.webkitRequestFullscreen()
-          : null;
-
-      if (tryFullscreen && typeof tryFullscreen.catch === 'function') {
-        tryFullscreen.catch(() => {
-          setIsFullscreen(true);
-        });
+      if (containerEl.requestFullscreen) {
+        containerEl.requestFullscreen().catch(() => setIsFullscreen(true));
         return;
+      } else if (containerEl.webkitRequestFullscreen) {
+        try { containerEl.webkitRequestFullscreen(); } catch { setIsFullscreen(true); }
       }
-
-      if (tryFullscreen) return;
+      return;
     }
 
-    // Fallback: simulated fullscreen (iOS audio posts where no native API works)
+    // Fallback: simulated fullscreen (SafePal/WebView or iOS audio posts where no native API works)
     setIsFullscreen(true);
   }, [isFullscreen]);
 
@@ -794,10 +787,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   const handlePictureInPicture = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!document.pictureInPictureEnabled) return;
     if (document.pictureInPictureElement) {
-      document.exitPictureInPicture();
+      document.exitPictureInPicture().catch(() => {});
     } else if (videoRef.current) {
-      videoRef.current.requestPictureInPicture();
+      videoRef.current.requestPictureInPicture().catch(() => {});
     }
   }, []);
 
@@ -1010,11 +1004,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           break;
         case 'p':
           e.preventDefault();
-          if (videoRef.current) {
+          if (document.pictureInPictureEnabled && videoRef.current) {
             if (document.pictureInPictureElement) {
-              document.exitPictureInPicture();
+              document.exitPictureInPicture().catch(() => {});
             } else {
-              videoRef.current.requestPictureInPicture();
+              videoRef.current.requestPictureInPicture().catch(() => {});
             }
           }
           break;
@@ -1375,17 +1369,19 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             >
               {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
             </button>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button 
-                  className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
-                  onClick={handlePictureInPicture}
-                >
-                  <PictureInPicture2 className="h-4 w-4" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>Picture in Picture (P)</TooltipContent>
-            </Tooltip>
+            {document.pictureInPictureEnabled && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+                    onClick={handlePictureInPicture}
+                  >
+                    <PictureInPicture2 className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Picture in Picture (P)</TooltipContent>
+              </Tooltip>
+            )}
             <button 
               className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
               onClick={handleFullscreen}

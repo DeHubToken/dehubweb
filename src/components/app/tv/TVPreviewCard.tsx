@@ -210,12 +210,24 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(() => {});
+    // Exit simulated fullscreen (SafePal/WebView)
+    if (isFullscreen && !document.fullscreenElement && !(document as any).webkitFullscreenElement) {
+      setIsFullscreen(false);
+      return;
+    }
+
+    if (document.fullscreenElement || (document as any).webkitFullscreenElement) {
+      document.exitFullscreen?.().catch(() => {});
+      (document as any).webkitExitFullscreen?.();
     } else {
       const el = container as HTMLElement & { webkitRequestFullscreen?: () => void };
-      if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
-      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      if (el.requestFullscreen) {
+        el.requestFullscreen().catch(() => setIsFullscreen(true));
+      } else if (el.webkitRequestFullscreen) {
+        try { el.webkitRequestFullscreen(); } catch { setIsFullscreen(true); }
+      } else {
+        setIsFullscreen(true);
+      }
     }
   };
 
@@ -232,7 +244,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
         ref={containerRef}
         className={cn(
           'relative aspect-video bg-zinc-900 cursor-pointer group',
-          isFullscreen && '!aspect-auto w-full h-full'
+          isFullscreen && 'fixed inset-0 z-[9999] !aspect-auto w-screen h-screen bg-black'
         )}
         onClick={handlePlayPause}
       >

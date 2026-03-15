@@ -9,7 +9,7 @@ import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell, 
-  Play, Volume2, VolumeX, Maximize, Radio,
+  Play, Volume2, VolumeX, Maximize, Minimize, Radio,
   Heart, Gift, StopCircle, Activity, Loader2
 } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -54,6 +54,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const [showActivityLog, setShowActivityLog] = useState(false);
   const [showGiftDrawer, setShowGiftDrawer] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMuted, setIsMuted] = useState(videoPlaybackManager.globalMuted);
   const urlsToTry = useMemo(() => [
     stream.playbackUrl,
@@ -245,18 +246,27 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   }, [isMuted]);
 
   const toggleFullscreen = useCallback(() => {
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
+    // Exit simulated fullscreen (SafePal/WebView)
+    if (isFullscreen && !document.fullscreenElement && !(document as any).webkitFullscreenElement) {
+      setIsFullscreen(false);
+      return;
+    }
+
+    if (document.fullscreenElement || (document as any).webkitFullscreenElement) {
+      document.exitFullscreen?.().catch(() => {});
+      (document as any).webkitExitFullscreen?.();
     } else {
       const el = containerRef.current as any;
       if (!el) return;
       if (el.requestFullscreen) {
-        el.requestFullscreen();
+        el.requestFullscreen().catch(() => setIsFullscreen(true));
       } else if (el.webkitRequestFullscreen) {
-        el.webkitRequestFullscreen();
+        try { el.webkitRequestFullscreen(); } catch { setIsFullscreen(true); }
+      } else {
+        setIsFullscreen(true);
       }
     }
-  }, []);
+  }, [isFullscreen]);
 
   const handleLike = useCallback(async () => {
     if (!isAuthenticated) {
@@ -412,7 +422,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       </div>
 
       {/* Video Player or Stream Ended State */}
-      <div ref={containerRef} className="aspect-video bg-black relative rounded-lg overflow-hidden">
+      <div ref={containerRef} className={`aspect-video bg-black relative rounded-lg overflow-hidden${isFullscreen ? ' fixed inset-0 z-[9999] !aspect-auto w-screen h-screen rounded-none' : ''}`}>
         {streamEnded ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900">
             <div
@@ -482,7 +492,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
                     onClick={toggleFullscreen}
                     className="p-2 text-white hover:bg-white/20 rounded transition-colors"
                   >
-                    <Maximize className="w-5 h-5" />
+                    {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
