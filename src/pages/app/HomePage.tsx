@@ -281,6 +281,8 @@ export default function HomePage() {
   /**
    * Handle tab click - toggle filters on same tab, switch on different tab.
    */
+  const [enableHomeTransition, setEnableHomeTransition] = useState(false);
+
   const handleTabClick = useCallback((tabValue: string) => {
     if (tabValue === activeTab) {
       // Same tab clicked - always scroll to top
@@ -302,6 +304,7 @@ export default function HomePage() {
         setShowMusicFilters(prev => !prev);
       }
     } else {
+      setEnableHomeTransition(true);
       setActiveTab(tabValue);
       resetFilters();
     }
@@ -560,7 +563,7 @@ export default function HomePage() {
       <div className={cn("sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 lg:mt-0", isCollapsed && "pl-2 pr-0", isCollapsed && "lg:hidden")}>
         <div className="bg-zinc-900 rounded-xl overflow-visible">
           <div ref={homeTabLayerRef} className="relative overflow-visible">
-            <GlassIndicator rect={homeTabRect} borderRadius="0.75rem" layoutKey={`home-${isCollapsed}`} />
+            <GlassIndicator rect={homeTabRect} borderRadius="0.75rem" layoutKey={`home-${isCollapsed}`} enableTransition={enableHomeTransition} />
             <div className="relative z-20 flex scrollbar-hide">
               {FEED_TABS.map((tab) => {
                 const isActive = activeTab === tab.value;

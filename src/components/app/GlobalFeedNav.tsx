@@ -34,6 +34,12 @@ export function GlobalFeedNav() {
   const isHomePage = location.pathname === '/app';
 
   const [activeTab, setActiveTab] = useState(() => isHomePage ? getPersistedTab() : '');
+  const [enableTransition, setEnableTransition] = useState(false);
+
+  // Reset transition on page change
+  useEffect(() => {
+    setEnableTransition(false);
+  }, [isHomePage]);
 
   // Listen for tab changes from HomePage swipes via custom event
   useEffect(() => {
@@ -69,7 +75,8 @@ export function GlobalFeedNav() {
         // Same tab clicked — dispatch event so HomePage toggles filters
         window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: tabValue }));
       } else {
-        // Different tab — persist and let HomePage pick up the change via storage event
+        // Different tab — enable smooth transition
+        setEnableTransition(true);
         sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: tabValue }));
         window.dispatchEvent(new StorageEvent('storage', {
           key: HOME_STATE_STORAGE_KEY,
@@ -87,7 +94,7 @@ export function GlobalFeedNav() {
     <div className="sticky top-0 bg-black z-50 p-2 sm:p-3 pb-2 sm:pb-2">
       <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
         <div ref={layerRef} className="relative overflow-visible">
-          <GlassIndicator rect={rect} borderRadius="0.75rem" layoutKey={`global-${activeTab}`} />
+          <GlassIndicator rect={rect} borderRadius="0.75rem" layoutKey="global-nav" enableTransition={enableTransition} />
           <div className="relative z-20 flex scrollbar-hide">
             {FEED_TABS.map((tab) => {
               const isActive = activeTab === tab.value;
