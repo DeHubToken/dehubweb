@@ -322,12 +322,13 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
       </div>
 
       {/* View all button */}
-      <button
+      <LiquidGlassBubble2
+        label={t('commandCentre.viewAll')}
         onClick={() => navigate(showCountrySelector && activeTab === 'tickers' ? '/app/top-100' : '/app/explore')}
-        className="w-full mt-3 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-xl bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-700/50 transition-colors"
-      >
-        {t('commandCentre.viewAll')}
-      </button>
+        width="100%"
+        height="auto"
+        className="mt-3 [&>div]:!py-2"
+      />
     </div>
   );
 });
