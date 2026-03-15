@@ -306,6 +306,7 @@ export default function HomePage() {
     setSelectedImageId(null);
     setShowVideosFilters(false);
     setShowMusicFilters(false);
+    setShowLiveFilters(false);
   };
 
   /**
