@@ -117,13 +117,19 @@ export default function FullWalletPage() {
   }, [allTokens, prices]);
 
   // Group tokens by symbol across chains
+  // Tokens may have different decimals across chains (e.g. USDT: 6 on Base, 18 on BNB)
+  // so we sum human-readable values instead of raw bigints
   const groupedTokens = useMemo(() => {
     const map = new Map<string, GroupedToken>();
     for (const token of allTokens) {
       const existing = map.get(token.symbol);
       if (existing) {
-        existing.totalBalance = existing.totalBalance + token.balance;
-        existing.totalFormattedBalance = formatBalance(existing.totalBalance, existing.decimals, 8);
+        // Sum human-readable balances to avoid decimal mismatch
+        const existingVal = parseFloat(existing.totalFormattedBalance) || 0;
+        const newVal = parseFloat(token.formattedBalance) || 0;
+        const total = existingVal + newVal;
+        existing.totalFormattedBalance = total === 0 ? '0' : total.toFixed(8).replace(/\.?0+$/, '');
+        existing.totalBalance = existing.totalBalance + token.balance; // keep for reference but not used for display
         existing.chains.push(token);
         if (token.isCustom) existing.isCustom = true;
       } else {
