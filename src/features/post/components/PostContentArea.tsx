@@ -401,8 +401,9 @@ export function PostContentArea({
     // Trigger mention detection
     mention.handleInput(plainText);
     
-    // Process links after a short delay (debounce)
-    setTimeout(processLinks, 300);
+    // Process links with proper debounce — clear any pending timeout first
+    if (linkDebounceRef.current) clearTimeout(linkDebounceRef.current);
+    linkDebounceRef.current = setTimeout(processLinks, 600);
   }, [editorRef, setText, processLinks, mention]);
 
   // Handle paste - process links immediately
