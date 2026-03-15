@@ -143,11 +143,12 @@ export function ActionBar({
   // When external handlers are provided (governance), always sync from props
   const hasExternalHandlers = !!(onLike || onDislike);
 
-  // Sync local state with props when they change, but skip if user recently voted (or cache active)
+  // Sync local state with props when they change, but prefer vote cache over stale API props
   useEffect(() => {
     if (!hasExternalHandlers) {
       if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
-      if (postId && getVoteCache(postId)) return;
+      const cached = postId ? getVoteCache(postId) : null;
+      if (cached) { setIsLiked(cached.isLiked); return; }
     }
     setIsLiked(initialIsLiked);
   }, [initialIsLiked]);
@@ -155,7 +156,8 @@ export function ActionBar({
   useEffect(() => {
     if (!hasExternalHandlers) {
       if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
-      if (postId && getVoteCache(postId)) return;
+      const cached = postId ? getVoteCache(postId) : null;
+      if (cached) { setIsDisliked(cached.isDisliked); return; }
     }
     setIsDisliked(initialIsDisliked);
   }, [initialIsDisliked]);
@@ -163,7 +165,8 @@ export function ActionBar({
   useEffect(() => {
     if (!hasExternalHandlers) {
       if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
-      if (postId && getVoteCache(postId)) return;
+      const cached = postId ? getVoteCache(postId) : null;
+      if (cached) { setLocalLikeCount(cached.likeCount); return; }
     }
     setLocalLikeCount(likeCount ?? 0);
   }, [likeCount]);
@@ -171,7 +174,8 @@ export function ActionBar({
   useEffect(() => {
     if (!hasExternalHandlers) {
       if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
-      if (postId && getVoteCache(postId)) return;
+      const cached = postId ? getVoteCache(postId) : null;
+      if (cached) { setLocalDislikeCount(cached.dislikeCount); return; }
     }
     setLocalDislikeCount(dislikeCount ?? 0);
   }, [dislikeCount]);
