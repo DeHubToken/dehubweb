@@ -55,6 +55,7 @@ function StatCard({ label, value, subtitle, delay = 0 }: { label: string; value:
 export default function BridgePage() {
   const { t } = useTranslation();
   const { isCollapsed } = useSidebarCollapse();
+  const queryClient = useQueryClient();
   const { allTokens } = useAllChainsTokens();
 
   const [direction, setDirection] = useState<BridgeDirection>('base-to-bnb');
