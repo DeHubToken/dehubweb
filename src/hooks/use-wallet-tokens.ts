@@ -54,8 +54,11 @@ export function useAllChainsTokens() {
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), BASE_CHAIN_ID],
     queryFn: () => getAllTokenBalances(walletAddress!, BASE_CHAIN_ID, true),
     enabled: !!walletAddress && isAuthenticated,
-    staleTime: 5 * 60_000,
-    refetchOnWindowFocus: false,
+    staleTime: 0,
+    gcTime: 60_000,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
   const bnbQuery = useQuery<WalletToken[]>({
