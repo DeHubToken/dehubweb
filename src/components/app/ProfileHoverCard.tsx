@@ -183,18 +183,15 @@ export function ProfileHoverCard({
                 </Avatar>
               </button>
               {!profile.isOwnProfile && !profile.isFollowing && (
-                <button
+                <LiquidGlassBubble2
+                  label="Follow"
+                  icon={isFollowLoading ? undefined : <UserPlus className="w-3.5 h-3.5" />}
+                  loading={isFollowLoading}
                   onClick={handleFollow}
-                  disabled={isFollowLoading}
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-br from-white/15 via-white/8 to-white/4 backdrop-blur-xl border border-white/20 hover:from-white/25 hover:via-white/15 hover:to-white/8 transition-all"
-                >
-                  {isFollowLoading ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <UserPlus className="w-3.5 h-3.5" />
-                  )}
-                  Follow
-                </button>
+                  width="auto"
+                  height="28px"
+                  className="[&>div]:!rounded-lg [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
+                />
               )}
               {!profile.isOwnProfile && profile.isFollowing && (
                 <span className="px-3.5 py-1.5 rounded-xl text-xs font-medium text-zinc-400 bg-white/5 border border-white/10">
