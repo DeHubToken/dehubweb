@@ -13,7 +13,7 @@ import { useState, memo, useEffect, useCallback } from 'react';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Pencil, Trash2, Repeat2 } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Pencil, Trash2, Repeat2, UserPlus, UserCheck, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { CardHeader } from './CardHeader';
