@@ -112,6 +112,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<Tab>('posts');
+  const [hasTabInteracted, setHasTabInteracted] = useState(false);
   const [tickerPeriod, setTickerPeriod] = useState<TickerPeriod>('all');
   const tickerDirRef = useRef(0);
   const [isTickerAutoRotating, setIsTickerAutoRotating] = useState(true);
