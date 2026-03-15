@@ -291,7 +291,7 @@ export default function MessagesPage() {
   // If a DM conversation is selected, show it
   if (selectedConversation) {
     return (
-      <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
+      <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-1">
         <DirectMessageChat
           key={selectedConversation.id}
           conversation={selectedConversation}
