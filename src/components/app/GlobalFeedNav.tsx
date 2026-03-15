@@ -75,8 +75,9 @@ export function GlobalFeedNav() {
         // Same tab clicked — dispatch event so HomePage toggles filters
         window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: tabValue }));
       } else {
-        // Different tab — enable smooth transition
+        // Different tab — enable smooth transition, auto-reset after animation
         setEnableTransition(true);
+        setTimeout(() => setEnableTransition(false), 450);
         sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: tabValue }));
         window.dispatchEvent(new StorageEvent('storage', {
           key: HOME_STATE_STORAGE_KEY,
