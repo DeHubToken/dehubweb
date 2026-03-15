@@ -121,7 +121,22 @@ export default function FullWalletPage() {
   // so we sum human-readable values instead of raw bigints
   const groupedTokens = useMemo(() => {
     const map = new Map<string, GroupedToken>();
+
+    const isCanonicalDHB = (token: WalletToken) => {
+      if (token.symbol !== 'DHB') return true;
+      if (token.chainId === BASE_CHAIN_ID) {
+        return token.address.toLowerCase() === CHAIN_CONFIGS[BASE_CHAIN_ID].dhbToken.toLowerCase();
+      }
+      if (token.chainId === BNB_CHAIN_ID) {
+        return token.address.toLowerCase() === CHAIN_CONFIGS[BNB_CHAIN_ID].dhbToken.toLowerCase();
+      }
+      return false;
+    };
+
     for (const token of allTokens) {
+      // Prevent symbol-collision tokens from inflating official DHB balance
+      if (!isCanonicalDHB(token)) continue;
+
       const existing = map.get(token.symbol);
       if (existing) {
         // Sum human-readable balances to avoid decimal mismatch
