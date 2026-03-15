@@ -11,6 +11,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Button } from '@/components/ui/button';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -250,10 +251,14 @@ export default function FullWalletPage() {
           <Lock className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.stake')}</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => setImportDialogOpen(true)}>
-          <Plus className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.import')}</span>
-        </Button>
+        <LiquidGlassBubble2
+          label={t('wallet.import')}
+          icon={<Plus className="w-5 h-5" />}
+          onClick={() => setImportDialogOpen(true)}
+          width="auto"
+          height="auto"
+          className="flex-1 min-w-0"
+        />
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => toast.info(t('wallet.cashOutComingSoon'))}>
           <Minus className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.cashOut')}</span>
