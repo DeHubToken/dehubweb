@@ -245,7 +245,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         <span className="text-white font-medium">Transactions</span>
       </button>
       <button
-        onClick={() => setMenuView('stake')}
+        onClick={() => { setIsOpen(false); navigate('/app/stake'); }}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
