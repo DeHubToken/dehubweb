@@ -24,6 +24,47 @@ import { useTranslation } from 'react-i18next';
 
 import dehubCoin from '@/assets/dehub-coin.png';
 
+const UNSTAKE_COOLDOWN_DAYS = 12;
+const UNSTAKE_COOLDOWN_MS = UNSTAKE_COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
+
+function UnstakeCountdown({ timestamp }: { timestamp: number }) {
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const createdAt = timestamp * 1000;
+  const endTime = createdAt + UNSTAKE_COOLDOWN_MS;
+  const remaining = endTime - now;
+
+  if (remaining <= 0) {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/20 text-emerald-400">
+        Ready
+      </span>
+    );
+  }
+
+  const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+  const secs = Math.floor((remaining % (1000 * 60)) / 1000);
+
+  const progress = 1 - remaining / UNSTAKE_COOLDOWN_MS;
+
+  return (
+    <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-amber-400/80">
+      <Clock className="w-3 h-3 shrink-0" />
+      {days}d {String(hours).padStart(2, '0')}h {String(mins).padStart(2, '0')}m {String(secs).padStart(2, '0')}s
+      <span className="w-12 h-1 rounded-full bg-white/10 overflow-hidden">
+        <span className="block h-full rounded-full bg-amber-400/60 transition-all" style={{ width: `${(progress * 100).toFixed(1)}%` }} />
+      </span>
+    </span>
+  );
+}
+
 function formatNumber(val: string | number, decimals = 0): string {
   const num = typeof val === 'string' ? parseFloat(val) : val;
   if (isNaN(num)) return '0';
@@ -539,10 +580,11 @@ export default function StakingPage() {
           </div>
         ) : (
           <div className="divide-y divide-white/5">
-            <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_80px_40px] gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
+            <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_minmax(120px,1fr)_80px_40px] gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
               <span>{t('staking.wallet')}</span>
               <span className="text-right">{t('staking.amount')}</span>
               <span className="text-center">{t('staking.chain')}</span>
+              <span className="text-center">Countdown</span>
               <span className="text-right">{t('staking.when')}</span>
               <span />
             </div>
@@ -557,11 +599,14 @@ export default function StakingPage() {
                   transition={{ delay: 0.02 * idx }}
                   className="px-4 sm:px-5 py-3 hover:bg-white/[0.02] transition-colors"
                 >
-                  <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_80px_40px] gap-2 items-center">
+                  <div className="hidden sm:grid grid-cols-[1fr_1fr_80px_minmax(120px,1fr)_80px_40px] gap-2 items-center">
                     <span className="text-sm text-white/70 font-mono">{truncateAddress(event.wallet)}</span>
                     <span className="text-sm text-white font-medium text-right">{event.amount} <span className="text-white/40 text-xs">DHB</span></span>
                     <span className="text-center">
                       <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium", event.chain === 'BNB' ? "bg-white/10 text-white/70" : "bg-white/10 text-white/70")}>{event.chain}</span>
+                    </span>
+                    <span className="text-center">
+                      <UnstakeCountdown timestamp={event.timestamp} />
                     </span>
                     <span className="text-xs text-white/40 text-right">{timeAgo(event.timestamp)}</span>
                     {isOwn ? (
@@ -578,7 +623,10 @@ export default function StakingPage() {
                   <div className="flex sm:hidden items-center justify-between gap-2">
                     <div className="min-w-0">
                       <span className="text-sm text-white/70 font-mono block">{truncateAddress(event.wallet)}</span>
-                      <span className="text-xs text-white/40">{timeAgo(event.timestamp)}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-white/40">{timeAgo(event.timestamp)}</span>
+                        <UnstakeCountdown timestamp={event.timestamp} />
+                      </div>
                     </div>
                     <div className="text-right flex items-center gap-2 flex-shrink-0">
                       <div>
