@@ -403,6 +403,22 @@ export default function StakingPage() {
               onClick={handleStake}
             />
           </div>
+
+          {/* Alternative manual deposit */}
+          <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-white/40">
+            <span>Alternatively, send your tokens directly to</span>
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(STAKING_ADDRESS);
+                toast.success('Deposit address copied!');
+              }}
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-colors font-mono text-[10px]"
+            >
+              {STAKING_ADDRESS.slice(0, 6)}...{STAKING_ADDRESS.slice(-4)}
+              <Copy className="w-3 h-3" />
+            </button>
+          </div>
         </motion.div>
 
         {/* Unstake — only visible when user has staked balance */}
