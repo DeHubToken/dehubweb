@@ -185,6 +185,65 @@ export default function StakingPage() {
     }
   };
 
+  const hasVerifiedStakeTransfer = async (
+    txHash: string,
+    tokenAddress: string,
+    fromAddress: string,
+    expectedAmount: number,
+    chainId: typeof BNB_CHAIN_ID | typeof BASE_CHAIN_ID
+  ): Promise<boolean> => {
+    const rpcUrl = CHAIN_CONFIGS[chainId]?.rpcUrl;
+    if (!rpcUrl) return false;
+
+    const transferInterface = new Interface([
+      'event Transfer(address indexed from, address indexed to, uint256 value)',
+    ]);
+
+    const response = await fetch(rpcUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'eth_getTransactionReceipt',
+        params: [txHash],
+      }),
+    });
+
+    const payload = await response.json();
+    const logs = payload?.result?.logs;
+    if (!Array.isArray(logs)) return false;
+
+    const fromLower = fromAddress.toLowerCase();
+    const toLower = STAKING_ADDRESS.toLowerCase();
+    const tokenLower = tokenAddress.toLowerCase();
+    const expected = parseUnits(String(expectedAmount), 18);
+
+    for (const log of logs as any[]) {
+      if ((log?.address ?? '').toLowerCase() !== tokenLower) continue;
+      try {
+        const parsed = transferInterface.parseLog({
+          topics: log.topics,
+          data: log.data,
+        });
+
+        if (parsed?.name !== 'Transfer') continue;
+
+        const transferFrom = String(parsed.args?.from ?? '').toLowerCase();
+        const transferTo = String(parsed.args?.to ?? '').toLowerCase();
+        const transferValue = BigInt(parsed.args?.value?.toString?.() ?? '0');
+
+        if (transferFrom === fromLower && transferTo === toLower && transferValue === expected) {
+          return true;
+        }
+      } catch {
+        // ignore unrelated logs
+      }
+    }
+
+    return false;
+  };
+
   const handleStake = async () => {
     const amount = parseFloat(stakeAmount);
     if (!amount || amount <= 0) {
@@ -220,14 +279,11 @@ export default function StakingPage() {
       // Pick chain with sufficient balance
       const bothChains = bnbBal > 0 && baseBal > 0;
       let targetChain: 'BNB' | 'Base';
-      let targetBalance: number;
 
       if (bnbBal >= amount) {
         targetChain = 'BNB';
-        targetBalance = bnbBal;
       } else if (baseBal >= amount) {
         targetChain = 'Base';
-        targetBalance = baseBal;
       } else {
         // Neither chain has enough for the full amount
         const maxBal = Math.max(bnbBal, baseBal);
@@ -245,9 +301,9 @@ export default function StakingPage() {
       }
 
       if (targetChain === 'BNB') {
-        await stakeTransferFlow(amount, BNB_CHAIN_ID, 'BNB Chain');
+        await stakeTransferFlow(amount, BNB_CHAIN_ID, 'BNB Chain', walletAddress);
       } else {
-        await stakeTransferFlow(amount, BASE_CHAIN_ID, 'Base');
+        await stakeTransferFlow(amount, BASE_CHAIN_ID, 'Base', walletAddress);
       }
     } catch (err: any) {
       console.error('[Staking] Stake error:', err);
