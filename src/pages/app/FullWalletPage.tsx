@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
+import { useUserStakingData } from '@/hooks/use-staking-data';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
 import { showWeb3AuthCheckout, isWeb3AuthConnected } from '@/lib/web3auth';
@@ -90,6 +91,7 @@ export default function FullWalletPage() {
   const [swapDHBOpen, setSwapDHBOpen] = useState(false);
 
   const { allTokens, isLoading } = useAllChainsTokens();
+  const { data: userStakingData } = useUserStakingData();
 
   // Collect auto-detected tokens (not in TOKEN_ICONS) for dynamic price lookups
   const extraTokensForPricing = useMemo(() => {
@@ -221,8 +223,10 @@ export default function FullWalletPage() {
               <p className="text-white text-2xl font-bold">
                 {(() => {
                   const dhb = groupedTokens.find(t => t.symbol === 'DHB');
-                  const bal = dhb ? parseFloat(dhb.totalFormattedBalance) : 0;
-                  return isNaN(bal) ? '0' : Math.floor(bal).toLocaleString();
+                  const walletBal = dhb ? parseFloat(dhb.totalFormattedBalance) : 0;
+                  const stakedBal = userStakingData?.totalStaked ?? 0;
+                  const total = walletBal + stakedBal;
+                  return isNaN(total) ? '0' : Math.floor(total).toLocaleString();
                 })()}
               </p>
             </div>
