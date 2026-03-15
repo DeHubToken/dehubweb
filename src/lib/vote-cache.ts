@@ -21,7 +21,7 @@ interface VoteCacheEntry {
 }
 
 const cache = new Map<string, VoteCacheEntry>();
-const TTL = 30_000; // 30 seconds
+const TTL = 300_000; // 5 minutes — must outlast feed staleTime (2min) to prevent stale props from reverting optimistic votes
 
 export function setVoteCache(
   postId: string,
