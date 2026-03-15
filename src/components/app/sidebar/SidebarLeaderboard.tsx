@@ -290,14 +290,14 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
       </div>
 
       {/* Bottom fade gradient */}
-      <div className="relative px-4 pb-2" style={{ marginTop: '-8px' }}>
+      <div className="relative px-4 pb-2" style={{ marginTop: '-3px' }}>
         <div className="absolute -top-8 left-0 right-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none" />
         <LiquidGlassBubble2
           label={t('commandCentre.viewAll')}
           onClick={() => navigate('/app/leaderboard')}
           width="100%"
           height="auto"
-          className="[&>div]:!py-2 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
+          className="-translate-y-[5px] [&>div]:!py-2 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
         />
       </div>
     </div>
