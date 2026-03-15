@@ -187,21 +187,23 @@ import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 
 const App = () => (
-  <I18nextProvider i18n={i18nInstance}>
-    <QueryClientProvider client={queryClient}>
-      <WagmiProvider config={wagmiConfig}>
-        <RainbowKitProvider theme={darkTheme()} modalSize="compact">
-          <AuthProvider>
-            <OptimisticPostsProvider>
-              <TooltipProvider>
-                <AppContent />
-              </TooltipProvider>
-            </OptimisticPostsProvider>
-          </AuthProvider>
-        </RainbowKitProvider>
-      </WagmiProvider>
-    </QueryClientProvider>
-  </I18nextProvider>
+  <HelmetProvider>
+    <I18nextProvider i18n={i18nInstance}>
+      <QueryClientProvider client={queryClient}>
+        <WagmiProvider config={wagmiConfig}>
+          <RainbowKitProvider theme={darkTheme()} modalSize="compact">
+            <AuthProvider>
+              <OptimisticPostsProvider>
+                <TooltipProvider>
+                  <AppContent />
+                </TooltipProvider>
+              </OptimisticPostsProvider>
+            </AuthProvider>
+          </RainbowKitProvider>
+        </WagmiProvider>
+      </QueryClientProvider>
+    </I18nextProvider>
+  </HelmetProvider>
 );
 
 export default App;
