@@ -651,9 +651,13 @@ export default function StakingPage() {
           transition={{ delay: 0.2 }}
           className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6"
         >
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4">
+          <div
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 cursor-pointer hover:bg-white/[0.06] transition-colors relative"
+            onClick={() => { setShowDeposits(!showDeposits); if (!showDeposits) fetchDeposits(); }}
+          >
             <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.yourStaked')}</p>
             <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)}</p>
+            <p className="text-[9px] text-white/30 mt-0.5">Click to view deposits</p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4">
             <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.unstaking')}</p>
