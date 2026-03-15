@@ -7,7 +7,8 @@
  * @module components/app/feeds/LiveFeed
  */
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { RefreshCw, Radio, Eye, Tv, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +22,7 @@ import { StagesCarousel } from '@/components/app/music/StagesCarousel';
 import { AudioSpacesModal } from '@/components/app/spaces';
 import { useQuery } from '@tanstack/react-query';
 import { getTVChannelsByCountry } from '@/lib/api/live-tv';
-import { useState } from 'react';
+import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 
 // Category images
 import apexCategory from '@/assets/apex-category.png';
@@ -49,10 +50,12 @@ const MOCK_CATEGORIES = [
 
 interface LiveFeedProps {
   isRefreshing?: boolean;
+  showFilters?: boolean;
 }
 
-export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
+export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeedProps) {
   const [showStagesModal, setShowStagesModal] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // Fetch 5 TV channels for the carousel preview
@@ -116,8 +119,35 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
     </div>
   );
 
+  const categoryItems = useMemo(() => [
+    { key: 'all', label: 'All' },
+    ...MOCK_CATEGORIES.map(c => ({ key: c.id, label: c.name })),
+  ], []);
+
   return (
     <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-4">
+      {/* Categories filter - toggles via tab re-click or settings icon */}
+      <AnimatePresence>
+        {showFilters && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden"
+          >
+            <div data-no-swipe className="relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3">
+              <span className="text-xs text-zinc-500 uppercase tracking-wider mb-2 block">Categories</span>
+              <GlassFilterRow
+                items={categoryItems}
+                activeKey={selectedCategory || 'all'}
+                onSelect={(key) => setSelectedCategory(key === 'all' ? null : key)}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {isLoading ? (
         <LiveFeedSkeleton />
       ) : (

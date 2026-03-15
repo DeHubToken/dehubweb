@@ -141,6 +141,7 @@ export default function HomePage() {
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [showMusicFilters, setShowMusicFilters] = useState(false);
+  const [showLiveFilters, setShowLiveFilters] = useState(false);
   const [showStagesModal, setShowStagesModal] = useState(false);
 
   // Reactively detect active filters by reading sessionStorage when filters change
@@ -180,8 +181,22 @@ export default function HomePage() {
       // Ignore storage errors
     }
   }, [activeTab]);
-  
-  
+
+  /**
+   * Reset all filter states.
+   */
+  const resetFilters = useCallback(() => {
+    setShowHomeFilters(false);
+    setShowShortsFilters(false);
+    setShowImagesCollage(true);
+    setShowImagesFilters(false);
+    setSelectedImageId(null);
+    setShowVideosFilters(false);
+    setShowMusicFilters(false);
+    setShowLiveFilters(false);
+  }, []);
+
+
   // Mobile touch gesture refs
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
@@ -264,6 +279,35 @@ export default function HomePage() {
   // --------------------------------------------------------------------------
 
   /**
+   * Handle tab click - toggle filters on same tab, switch on different tab.
+   */
+  const handleTabClick = useCallback((tabValue: string) => {
+    if (tabValue === activeTab) {
+      // Same tab clicked - always scroll to top
+      document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+      document.body.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      if (tabValue === 'home') {
+        setShowHomeFilters(prev => !prev);
+      } else if (tabValue === 'live') {
+        setShowLiveFilters(prev => !prev);
+      } else if (tabValue === 'shorts') {
+        setShowShortsFilters(prev => !prev);
+      } else if (tabValue === 'images') {
+        setShowImagesFilters(prev => !prev);
+      } else if (tabValue === 'videos') {
+        setShowVideosFilters(prev => !prev);
+      } else if (tabValue === 'music') {
+        setShowMusicFilters(prev => !prev);
+      }
+    } else {
+      setActiveTab(tabValue);
+      resetFilters();
+    }
+  }, [activeTab, resetFilters]);
+
+  /**
    * Listen for home refresh events from navigation.
    */
   useEffect(() => {
@@ -284,58 +328,22 @@ export default function HomePage() {
       if (tab) setActiveTab(tab);
     };
 
+    const handleTabReclick = (e: Event) => {
+      const tab = (e as CustomEvent).detail;
+      if (tab) handleTabClick(tab);
+    };
+
     window.addEventListener('home-refresh', handleHomeRefresh);
     window.addEventListener('category-filter-changed', handleCategoryFilter);
     window.addEventListener('switch-home-tab', handleSwitchTab);
+    window.addEventListener('home-tab-reclick', handleTabReclick);
     return () => {
       window.removeEventListener('home-refresh', handleHomeRefresh);
       window.removeEventListener('category-filter-changed', handleCategoryFilter);
       window.removeEventListener('switch-home-tab', handleSwitchTab);
+      window.removeEventListener('home-tab-reclick', handleTabReclick);
     };
-  }, [triggerRefresh]);
-
-  /**
-   * Reset all filter states.
-   */
-  const resetFilters = () => {
-    setShowHomeFilters(false);
-    setShowShortsFilters(false);
-    setShowImagesCollage(true); // Reset to collage view
-    setShowImagesFilters(false);
-    setSelectedImageId(null);
-    setShowVideosFilters(false);
-    setShowMusicFilters(false);
-  };
-
-  /**
-   * Handle tab click - toggle filters on same tab, switch on different tab.
-   */
-  const handleTabClick = (tabValue: string) => {
-    if (tabValue === activeTab) {
-      // Same tab clicked - always scroll to top
-      document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
-      document.body.scrollTo({ top: 0, behavior: 'smooth' });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      
-      if (tabValue === 'home') {
-        setShowHomeFilters(prev => !prev);
-      } else if (tabValue === 'live') {
-        triggerRefresh();
-      } else if (tabValue === 'shorts') {
-        setShowShortsFilters(prev => !prev);
-      } else if (tabValue === 'images') {
-        // Double-tap on images toggles filters (like other tabs)
-        setShowImagesFilters(prev => !prev);
-      } else if (tabValue === 'videos') {
-        setShowVideosFilters(prev => !prev);
-      } else if (tabValue === 'music') {
-        setShowMusicFilters(prev => !prev);
-      }
-    } else {
-      setActiveTab(tabValue);
-      resetFilters();
-    }
-  };
+  }, [triggerRefresh, handleTabClick]);
 
   /**
    * Handle when user selects an image from collage view.
@@ -679,7 +687,7 @@ export default function HomePage() {
         )}
         {visitedTabs.has('live') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'live' ? 'block' : 'none' }}>
-            <LiveFeed key={refreshKey} isRefreshing={isRefreshing} />
+            <LiveFeed key={refreshKey} isRefreshing={isRefreshing} showFilters={showLiveFilters} />
           </div>
         )}
         {visitedTabs.has('music') && (
