@@ -1255,7 +1255,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                   onBlur={() => {
                     // Collapse only if empty and no attachments
                     if (!newComment.trim() && !voiceNote && !commentImage && !replyTo) {
-                      setTimeout(() => setIsInputExpanded(false), 150);
+                      setTimeout(() => {
+                        setIsInputExpanded(false);
+                        if (inputRef.current) inputRef.current.style.height = '';
+                      }, 150);
                     }
                   }}
                   className={cn(
