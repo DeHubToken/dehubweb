@@ -117,7 +117,6 @@ export default function BridgePage() {
           description: `${amount} DHB sent from ${sourceChainLabel} to ${destChainLabel}. Tokens will arrive shortly.`,
         });
         setAmount('');
-        refetchTokens();
       } else {
         toast.dismiss();
         toast.error('Bridge failed', { description: 'Transaction reverted.' });
