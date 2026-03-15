@@ -41,11 +41,8 @@ function getPeriodCutoff(period: TopicPeriod): string {
   return now.toISOString();
 }
 
-function capitalize(s: string): string {
-  return s
-    .split(' ')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
+function formatCategoryName(s: string): string {
+  return s.toLowerCase();
 }
 
 function normalizeCategoryName(raw: string | null | undefined): string {
