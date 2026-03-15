@@ -1,19 +1,35 @@
 
 
-## Problem
+## Fix: Auto-reload on chunk load failures
 
-When navigating from any non-home page (e.g., Explore) back to `/app` via the logo, the `GlobalFeedNav` glass indicator visibly slides/flashes into position instead of appearing instantly. 
+### Root cause
+Every deploy produces new JS chunk filenames. Users with stale tabs try to load old chunks that no longer exist → uncaught dynamic import error → ErrorBoundary crash screen.
 
-**Root cause:** When `activeTab` changes from `''` (non-home) to `'home'`, the `GlassIndicator`'s `layoutKey` effect resets its state, but `useTabIndicator`'s 700ms tracking loop (`hasMountedRef` is already `true`) continuously updates the rect. During layout settling, small shifts exceed the 5px threshold, flipping `userHasSwitched = true` and enabling CSS transitions — causing the visible slide.
+### Solution
+Wrap each `React.lazy()` call with a retry-then-reload helper. On chunk load failure:
+1. Retry the import once (in case of transient network issue)
+2. If retry fails, do a full page reload **once** (to get the new HTML with correct chunk references)
+3. Use `sessionStorage` flag to prevent infinite reload loops
 
-## Fix
+### Changes
 
-**In `GlassIndicator.tsx`**: After a `layoutKey` change, enforce a suppression window (~300ms) where transitions are forced to `'none'` regardless of position changes. This ensures the indicator snaps to position instantly when navigating between pages, while still allowing smooth transitions for actual user tab clicks within the same page context.
+**New file: `src/lib/lazy-with-retry.ts`**
+- Export a `lazyWithRetry` function that wraps `React.lazy()`
+- On import failure: retry once after 1 second
+- If retry also fails: check sessionStorage for a `chunk-reload` flag
+  - If no flag → set flag + `window.location.reload()`
+  - If flag exists → clear flag and let the error propagate to ErrorBoundary (prevents infinite loop)
 
-**Changes:**
-- Add a `suppressedRef` that gets set to `true` on `layoutKey` change
-- Set a timeout to clear it after 300ms  
-- Use `transition: 'none'` whenever `suppressedRef.current` is true, overriding `userHasSwitched`
+**Edit: `src/components/app/PersistentPageCache.tsx`**
+- Replace all 19 `React.lazy(() => import(...))` calls with `lazyWithRetry(() => import(...))`
+- Import the new helper
 
-Single file change: `src/components/app/feeds/GlassIndicator.tsx`
+**Edit: `src/components/ErrorBoundary.tsx`**
+- In `componentDidCatch`, detect chunk load errors (`error.message` contains "Loading chunk" or "Failed to fetch dynamically imported module")
+- If detected and no reload flag in sessionStorage → auto-reload instead of showing crash screen
+
+### What users will experience after this fix
+- On deploy: navigating to a new page triggers a seamless full-page reload instead of a crash screen
+- The reload only happens once per deploy
+- If something is genuinely broken, the ErrorBoundary still shows after the single reload attempt
 
