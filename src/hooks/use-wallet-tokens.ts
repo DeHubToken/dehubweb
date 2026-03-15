@@ -28,7 +28,7 @@ export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
         gcTime: 60_000,
       });
     });
-  }, [walletAddress, isAuthenticated]); // only on mount / auth change
+  }, [walletAddress, isAuthenticated, chainId, queryClient]); // prefetch on mount/auth/chain change
 
   const { data: tokens = [], isLoading, isFetching, refetch } = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), chainId],
