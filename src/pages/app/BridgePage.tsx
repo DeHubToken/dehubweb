@@ -406,7 +406,7 @@ function BridgeQueue() {
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Bridge Queue</h3>
-        <span className="text-[10px] text-white/30">{transfers?.length ?? 0} transfers (7d)</span>
+        <span className="text-[10px] text-white/30">{transfers?.length ?? 0} transfers</span>
       </div>
 
       {/* Search */}
