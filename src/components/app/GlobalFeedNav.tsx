@@ -82,7 +82,7 @@ export function GlobalFeedNav() {
     <div className="sticky top-0 bg-black z-50 p-2 sm:p-3 pb-2 sm:pb-2">
       <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
         <div ref={layerRef} className="relative overflow-visible">
-          <GlassIndicator rect={rect} borderRadius="0.75rem" layoutKey="global-feed-nav" />
+          <GlassIndicator rect={rect} borderRadius="0.75rem" layoutKey={`global-${activeTab}`} />
           <div className="relative z-20 flex scrollbar-hide">
             {FEED_TABS.map((tab) => {
               const isActive = activeTab === tab.value;
