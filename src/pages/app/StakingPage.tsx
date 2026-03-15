@@ -587,11 +587,7 @@ export default function StakingPage() {
                         >
                           {isCancelling ? <Loader2 className="w-3.5 h-3.5 text-white/30 animate-spin" /> : <X className="w-3.5 h-3.5 text-white/40" />}
                         </button>
-                      ) : (
-                        <a href={getExplorerUrl(event.txHash, event.chain)} target="_blank" rel="noopener noreferrer" className="w-7 h-7 flex items-center justify-center">
-                          <ExternalLink className="w-3.5 h-3.5 text-white/30" />
-                        </a>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                 </motion.div>
