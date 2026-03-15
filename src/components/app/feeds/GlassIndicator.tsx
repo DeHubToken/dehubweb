@@ -19,10 +19,25 @@ const GLASS_CLASSES = 'pointer-events-none absolute bg-gradient-to-br from-white
 export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layoutKey }: GlassIndicatorProps) {
   const prevRectRef = useRef<{ x: number; width: number } | null>(null);
   const [userHasSwitched, setUserHasSwitched] = useState(false);
+  const justResetRef = useRef(false);
+
+  // Reset on layoutKey change — suppress transitions for the next rect update
+  useEffect(() => {
+    prevRectRef.current = null;
+    setUserHasSwitched(false);
+    justResetRef.current = true;
+  }, [layoutKey]);
 
   // Detect user-initiated tab switch (significant x/width change after initial render)
   useEffect(() => {
     if (!rect.ready) return;
+
+    // After a layoutKey reset, absorb the first position without enabling transitions
+    if (justResetRef.current) {
+      prevRectRef.current = { x: rect.x, width: rect.width };
+      justResetRef.current = false;
+      return;
+    }
 
     if (!prevRectRef.current) {
       prevRectRef.current = { x: rect.x, width: rect.width };
@@ -30,19 +45,11 @@ export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layo
     }
 
     const prev = prevRectRef.current;
-    // Only flag as "user switched" if position changed significantly
-    // Small shifts from layout settling (<5px) are ignored
     if (Math.abs(rect.x - prev.x) > 5 || Math.abs(rect.width - prev.width) > 5) {
       setUserHasSwitched(true);
     }
     prevRectRef.current = { x: rect.x, width: rect.width };
   }, [rect.x, rect.width, rect.ready]);
-
-  // Reset on layoutKey change
-  useEffect(() => {
-    prevRectRef.current = null;
-    setUserHasSwitched(false);
-  }, [layoutKey]);
 
   if (!rect.ready) return null;
 
