@@ -89,6 +89,7 @@ export default function FullWalletPage() {
   const [actionGrouped, setActionGrouped] = useState<GroupedToken | null>(null);
   const [sendChainPickerGrouped, setSendChainPickerGrouped] = useState<GroupedToken | null>(null);
   const [swapDHBOpen, setSwapDHBOpen] = useState(false);
+  const [showBalanceBreakdown, setShowBalanceBreakdown] = useState(false);
 
   const { allTokens, isLoading } = useAllChainsTokens();
   const { data: userStakingData } = useUserStakingData();
