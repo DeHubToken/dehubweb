@@ -223,8 +223,10 @@ export default function FullWalletPage() {
               <p className="text-white text-2xl font-bold">
                 {(() => {
                   const dhb = groupedTokens.find(t => t.symbol === 'DHB');
-                  const bal = dhb ? parseFloat(dhb.totalFormattedBalance) : 0;
-                  return isNaN(bal) ? '0' : Math.floor(bal).toLocaleString();
+                  const walletBal = dhb ? parseFloat(dhb.totalFormattedBalance) : 0;
+                  const stakedBal = userStakingData?.totalStaked ?? 0;
+                  const total = walletBal + stakedBal;
+                  return isNaN(total) ? '0' : Math.floor(total).toLocaleString();
                 })()}
               </p>
             </div>
