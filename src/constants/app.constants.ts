@@ -23,6 +23,7 @@ import {
   Lightbulb,
   Briefcase,
   ShieldCheck,
+  Landmark,
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
@@ -40,6 +41,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: BookOpen, label: 'Docs', path: 'https://dehub.io/docs', external: true },
   { icon: FileText, label: 'Blog', path: '/docs/blog' },
   { icon: Lightbulb, label: 'Feature Requests', path: '/features' },
+  { icon: Landmark, label: 'Staking', path: '/app/stake' },
   { icon: ShieldCheck, label: 'Governance', path: '/governance' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: BookOpen, label: 'Glossary', path: '/app/glossary' },
