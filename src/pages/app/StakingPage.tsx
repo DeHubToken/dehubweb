@@ -138,24 +138,63 @@ export default function StakingPage() {
   const [currentWallet, setCurrentWallet] = useState('');
   const [cancellingTx, setCancellingTx] = useState<string | null>(null);
   const [showDeposits, setShowDeposits] = useState(false);
-  const [depositRecords, setDepositRecords] = useState<{ amount: number; tx_hash: string; chain: string; created_at: string }[]>([]);
+  const [depositRecords, setDepositRecords] = useState<{ amount: number; tx_hash: string; chain: string; created_at: string; source: 'db' | 'chain' }[]>([]);
   const [depositsLoading, setDepositsLoading] = useState(false);
 
   const fetchDeposits = async () => {
     if (!currentWallet) return;
     setDepositsLoading(true);
     try {
-      const { data } = await supabase
-        .from('staking_records')
-        .select('amount, tx_hash, chain, created_at')
-        .eq('wallet_address', currentWallet.toLowerCase())
-        .eq('action', 'stake')
-        .order('created_at', { ascending: false })
-        .limit(50);
-      setDepositRecords(data ?? []);
+      // Fetch DB records and BscScan legacy contract deposits in parallel
+      const [dbResult, bscDeposits] = await Promise.all([
+        supabase
+          .from('staking_records')
+          .select('amount, tx_hash, chain, created_at')
+          .eq('wallet_address', currentWallet.toLowerCase())
+          .eq('action', 'stake')
+          .order('created_at', { ascending: false })
+          .limit(50),
+        fetchBscScanDeposits(currentWallet),
+      ]);
+
+      const dbRecords = (dbResult.data ?? []).map(r => ({ ...r, source: 'db' as const }));
+      const dbTxHashes = new Set(dbRecords.map(r => r.tx_hash.toLowerCase()));
+
+      // Merge: BscScan records that aren't already in DB
+      const uniqueBscRecords = bscDeposits.filter(r => !dbTxHashes.has(r.tx_hash.toLowerCase()));
+      const merged = [...dbRecords, ...uniqueBscRecords].sort(
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+
+      setDepositRecords(merged);
     } catch { setDepositRecords([]); }
     setDepositsLoading(false);
   };
+
+  /** Fetch historical ERC20 transfers TO the legacy BNB staking contract from user */
+  async function fetchBscScanDeposits(wallet: string): Promise<{ amount: number; tx_hash: string; chain: string; created_at: string; source: 'chain' }[]> {
+    const LEGACY_CONTRACT = '0x26d2cd7763106fdce443fadd36163e2ad33a76e6';
+    const DHB_BNB_TOKEN = '0x680d3113caf77b61b510f332d5ef4cf5b41a761d';
+    try {
+      const url = `https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=${DHB_BNB_TOKEN}&address=${wallet}&sort=desc&page=1&offset=100`;
+      const res = await fetch(url);
+      const json = await res.json();
+      if (json.status !== '1' || !Array.isArray(json.result)) return [];
+
+      return json.result
+        .filter((tx: any) => tx.to?.toLowerCase() === LEGACY_CONTRACT.toLowerCase() && tx.from?.toLowerCase() === wallet.toLowerCase())
+        .map((tx: any) => ({
+          amount: parseFloat(tx.value) / 1e18,
+          tx_hash: tx.hash,
+          chain: 'BNB',
+          created_at: new Date(parseInt(tx.timeStamp) * 1000).toISOString(),
+          source: 'chain' as const,
+        }));
+    } catch (err) {
+      console.error('[Staking] BscScan fetch failed:', err);
+      return [];
+    }
+  }
 
   function timeAgo(timestamp: number): string {
     if (!timestamp) return '—';
@@ -655,7 +694,7 @@ export default function StakingPage() {
             className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 cursor-pointer hover:bg-white/[0.06] transition-colors relative"
             onClick={() => { setShowDeposits(!showDeposits); if (!showDeposits) fetchDeposits(); }}
           >
-            <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.yourStaked')}</p>
+            <p className="text-[10px] text-white/40 uppercase tracking-wider">Deposits</p>
             <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)}</p>
             
           </div>
