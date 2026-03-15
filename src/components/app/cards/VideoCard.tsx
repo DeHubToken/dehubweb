@@ -1340,25 +1340,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </div>
         )}
         
-        {/* Play/Pause brief flash indicator - only appears momentarily on click */}
-        <AnimatePresence>
-          {showPlayIndicator && !video.isAudio && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="absolute inset-0 flex items-center justify-center pointer-events-none z-10"
-            >
-              <div className="w-14 h-14 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
-                {showPlayIndicator === 'play' ? (
-                  <Play className="h-6 w-6 text-white fill-current ml-1" />
-                ) : (
-                  <Pause className="h-6 w-6 text-white fill-current" />
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Center flash indicator removed — play/pause now in progress bar */}
 
         {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass */}
         {isPlaying && (showControls || isTouchDevice) && (
@@ -1395,6 +1377,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         {isPlaying && duration > 0 && (showControls || isTouchDevice) && (
           <div className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
             <div className="flex items-center gap-2">
+              <button
+                onClick={(e) => { e.stopPropagation(); handlePlayClick(); }}
+                className="h-6 w-6 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 flex items-center justify-center shrink-0"
+              >
+                {isPlaying ? <Pause className="h-3 w-3 text-white fill-current" /> : <Play className="h-3 w-3 text-white fill-current ml-0.5" />}
+              </button>
               <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(currentTime)}</span>
               <input
                 type="range"
