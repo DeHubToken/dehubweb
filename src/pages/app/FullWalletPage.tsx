@@ -257,7 +257,7 @@ export default function FullWalletPage() {
           onClick={() => setImportDialogOpen(true)}
           width="auto"
           height="auto"
-          className="flex-1 min-w-0 py-3 flex-col [&>div]:!py-3"
+          className="flex-1 min-w-0"
         />
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => toast.info(t('wallet.cashOutComingSoon'))}>
           <Minus className="w-5 h-5" />
