@@ -212,9 +212,9 @@ export default function ProfilePage() {
       onMouseLeave={data.pullHandlers.onMouseLeave}
     >
       <SEOHead
-        title={data.profile?.displayName || data.profile?.handle || data.profile?.username || 'Profile'}
-        description={data.profile?.aboutMe || `View ${data.profile?.displayName || data.profile?.handle || 'this profile'} on DeHub`}
-        url={`https://dehub.io/${data.profile?.username || data.profile?.handle || ''}`}
+        title={data.profile?.name || data.profile?.handle || 'Profile'}
+        description={data.profile?.bio || `View ${data.profile?.name || data.profile?.handle || 'this profile'} on DeHub`}
+        url={`https://dehub.io/${data.profile?.handle || ''}`}
       />
       {/* Pull-to-refresh indicator */}
       {data.pullDistance > 0 && (
