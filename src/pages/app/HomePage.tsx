@@ -281,6 +281,8 @@ export default function HomePage() {
   /**
    * Handle tab click - toggle filters on same tab, switch on different tab.
    */
+  const [enableHomeTransition, setEnableHomeTransition] = useState(false);
+
   const handleTabClick = useCallback((tabValue: string) => {
     if (tabValue === activeTab) {
       // Same tab clicked - always scroll to top
@@ -302,6 +304,7 @@ export default function HomePage() {
         setShowMusicFilters(prev => !prev);
       }
     } else {
+      setEnableHomeTransition(true);
       setActiveTab(tabValue);
       resetFilters();
     }
