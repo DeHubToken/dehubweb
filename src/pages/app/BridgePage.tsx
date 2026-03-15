@@ -68,9 +68,10 @@ export default function BridgePage() {
   const baseDHB = allTokens?.find(t => t.symbol === 'DHB' && t.chainId === BASE_CHAIN_ID);
   const bnbDHB = allTokens?.find(t => t.symbol === 'DHB' && t.chainId === BNB_CHAIN_ID);
 
-  const sourceBalance = direction === 'base-to-bnb'
-    ? parseFloat(baseDHB?.formattedBalance ?? '0')
-    : parseFloat(bnbDHB?.formattedBalance ?? '0');
+  const sourceBalanceRaw = direction === 'base-to-bnb'
+    ? (baseDHB?.formattedBalance ?? '0')
+    : (bnbDHB?.formattedBalance ?? '0');
+  const sourceBalance = parseFloat(sourceBalanceRaw);
 
   const sourceChainLabel = direction === 'base-to-bnb' ? 'Base' : 'BNB Chain';
   const destChainLabel = direction === 'base-to-bnb' ? 'BNB Chain' : 'Base';
@@ -261,7 +262,7 @@ export default function BridgePage() {
               />
               <button
                 type="button"
-                onClick={() => setAmount(sourceBalance.toString())}
+                onClick={() => setAmount(sourceBalanceRaw)}
                 className="absolute right-0 top-1/2 -translate-y-1/2 px-1 text-white/50 text-[10px] font-bold uppercase hover:text-white transition-colors"
               >
                 MAX
