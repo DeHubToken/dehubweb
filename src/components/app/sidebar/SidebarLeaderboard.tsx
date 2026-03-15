@@ -295,14 +295,14 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
         </div>
       </div>
 
-      {/* Bottom action */}
-      <div className="px-4 pb-2">
+      {/* Bottom action — negative margin pulls into the faded zone */}
+      <div className="px-4 pb-2 -mt-6 relative z-10">
         <LiquidGlassBubble2
           label={t('commandCentre.viewAll')}
           onClick={() => navigate('/app/leaderboard')}
           width="100%"
           height="auto"
-          className="mt-3 [&>div]:!py-2 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
+          className="[&>div]:!py-2 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
         />
       </div>
     </div>
