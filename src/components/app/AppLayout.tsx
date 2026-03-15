@@ -181,16 +181,8 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
         <main className="flex-1 min-h-screen pt-11 pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black">
-          {/* Global feed nav — keep mounted and animate in/out to avoid rigid multi-step jumps */}
-          <div
-            className={cn(
-              'hidden lg:block overflow-hidden motion-reduce:transition-none',
-              isCollapsed
-                ? 'h-12 opacity-100 transition-[height,opacity] duration-500 ease-in-out'
-                : 'h-0 opacity-0 pointer-events-none transition-[height] duration-500 ease-in-out transition-opacity duration-150'
-            )}
-            style={!isCollapsed ? { transitionProperty: 'height, opacity', transitionDuration: '500ms, 150ms' } : undefined}
-          >
+          {/* Global feed nav — always visible on desktop, never remounts */}
+          <div className="hidden lg:block">
             <GlobalFeedNav />
           </div>
           {/* Persistent page cache — all visited pages stay mounted */}
