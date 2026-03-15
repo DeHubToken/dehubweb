@@ -332,6 +332,10 @@ export function PostContentArea({
     const editor = e?.currentTarget || editorRef.current;
     if (!editor) return;
     
+    // Mark that user is actively typing so the sync effect doesn't clobber the DOM
+    isUserTyping.current = true;
+    hasHydrated.current = true;
+    
     // Get plain text including URLs from chips and preserving line breaks
     let plainText = '';
     
