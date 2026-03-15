@@ -49,6 +49,7 @@ const MOCK_CATEGORIES = [
 
 interface LiveFeedProps {
   isRefreshing?: boolean;
+  showFilters?: boolean;
 }
 
 export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
