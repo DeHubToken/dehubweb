@@ -100,11 +100,24 @@ export function MarkdownText({ content, className = '' }: MarkdownTextProps) {
           // Empty line - add spacing
           elements.push(<br key={`br-${lineIndex}`} />);
         } else {
-          elements.push(
-            <span key={lineIndex} className="block">
-              {parseInlineMarkdown(line)}
-            </span>
-          );
+          // Check for headings (###, ##, #)
+          const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+          if (headingMatch) {
+            const level = headingMatch[1].length;
+            const headingText = headingMatch[2];
+            const sizeClass = level <= 1 ? 'text-lg font-bold' : level === 2 ? 'text-base font-bold' : 'text-sm font-bold';
+            elements.push(
+              <span key={lineIndex} className={`block ${sizeClass} mt-3 mb-1`}>
+                {parseInlineMarkdown(headingText)}
+              </span>
+            );
+          } else {
+            elements.push(
+              <span key={lineIndex} className="block">
+                {parseInlineMarkdown(line)}
+              </span>
+            );
+          }
         }
       }
     });
