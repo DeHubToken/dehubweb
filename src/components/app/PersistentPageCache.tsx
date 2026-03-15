@@ -14,6 +14,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
+import { preloadPriorityPages } from '@/lib/preload-priority-pages';
 import {
   FeedSkeleton,
   ExploreSkeleton,
