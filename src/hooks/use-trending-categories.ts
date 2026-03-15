@@ -41,11 +41,8 @@ function getPeriodCutoff(period: TopicPeriod): string {
   return now.toISOString();
 }
 
-function capitalize(s: string): string {
-  return s
-    .split(' ')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
+function formatCategoryName(s: string): string {
+  return s.toLowerCase();
 }
 
 function normalizeCategoryName(raw: string | null | undefined): string {
@@ -102,7 +99,7 @@ async function fetchFromLog(period: TopicPeriod): Promise<CategoryCount[]> {
   }
 
   return Array.from(counts.entries())
-    .map(([name, post_count]) => ({ name: capitalize(name), post_count }))
+    .map(([name, post_count]) => ({ name: formatCategoryName(name), post_count }))
     .sort((a, b) => b.post_count - a.post_count);
 }
 
@@ -127,7 +124,7 @@ async function fetchFromAggregateTable(): Promise<CategoryCount[]> {
   }
 
   return Array.from(counts.entries())
-    .map(([name, post_count]) => ({ name: capitalize(name), post_count }))
+    .map(([name, post_count]) => ({ name: formatCategoryName(name), post_count }))
     .sort((a, b) => b.post_count - a.post_count);
 }
 
