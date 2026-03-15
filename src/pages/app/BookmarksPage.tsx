@@ -164,7 +164,7 @@ export default function BookmarksPage() {
                   ref={setBookmarksTabRef(tab.value)}
                   onClick={() => setActiveTab(tab.value)}
                   className={`relative z-40 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
-                    isActive ? 'text-white' : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
+                    isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
                   }`}
                 >
                   <span className="relative z-10 flex items-center gap-2">
