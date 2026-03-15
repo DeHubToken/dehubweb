@@ -12,6 +12,7 @@
  */
 
 import { useParams, useNavigationType, useNavigate, useLocation } from 'react-router-dom';
+import { SEOHead } from '@/components/SEOHead';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef } from 'react';
 import { AlertCircle, Clock, ArrowLeft, Sparkles, MoreVertical, ListPlus, Flag, Download, Link2, Gem, Pencil, Trash2, Ban } from 'lucide-react';
