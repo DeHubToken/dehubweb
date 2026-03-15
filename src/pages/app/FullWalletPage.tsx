@@ -251,9 +251,9 @@ export default function FullWalletPage() {
           <Lock className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.stake')}</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => setImportDialogOpen(true)}>
-          <Plus className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.import')}</span>
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => navigate('/app/bridge')}>
+          <Globe className="w-5 h-5" />
+          <span className="text-xs whitespace-nowrap hidden lg:inline">Bridge</span>
         </Button>
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => toast.info(t('wallet.cashOutComingSoon'))}>
           <Minus className="w-5 h-5" />
