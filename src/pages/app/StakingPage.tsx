@@ -19,6 +19,7 @@ import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-
 import { getWalletAddress, switchChain } from '@/lib/contracts/aa-utils';
 import { toast } from 'sonner';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useTranslation } from 'react-i18next';
 
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -393,25 +394,14 @@ export default function StakingPage() {
                 </button>
               </div>
             </LiquidGlassBubble>
-            <LiquidGlassBubble
-              shimmer
-              noBorder
-              onClick={(isStaking || isApproving || !stakeAmount) ? undefined : handleStake}
-              className={cn(
-                "flex-shrink-0 w-[110px] h-[42px] cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl",
-                (isStaking || isApproving || !stakeAmount) && "opacity-40 cursor-not-allowed"
-              )}
-            >
-              <span className="flex items-center justify-center gap-2 text-white text-sm font-medium h-full">
-                {isApproving ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> {t('staking.approving')}</>
-                ) : isStaking ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> {t('staking.staking')}</>
-                ) : (
-                  <><ArrowDownToLine className="w-4 h-4" /> {t('staking.stake')}</>
-                )}
-              </span>
-            </LiquidGlassBubble>
+            <LiquidGlassBubble2
+              label={t('staking.stake')}
+              icon={<ArrowDownToLine className="w-4 h-4" />}
+              loading={isApproving || isStaking}
+              loadingLabel={isApproving ? t('staking.approving') : t('staking.staking')}
+              disabled={!stakeAmount}
+              onClick={handleStake}
+            />
           </div>
         </motion.div>
 
@@ -453,20 +443,13 @@ export default function StakingPage() {
                   </button>
                 </div>
               </LiquidGlassBubble>
-              <LiquidGlassBubble
-                shimmer
-                noBorder
-                onClick={(isUnstaking || !unstakeAmount) ? undefined : handleUnstake}
-                className={cn(
-                  "flex-shrink-0 w-[110px] h-[42px] cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl",
-                  (isUnstaking || !unstakeAmount) && "opacity-40 cursor-not-allowed"
-                )}
-              >
-                <span className="flex items-center justify-center gap-2 text-white text-sm font-medium h-full">
-                  {isUnstaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUpFromLine className="w-[18px] h-[18px]" />}
-                  {t('staking.unstake')}
-                </span>
-              </LiquidGlassBubble>
+              <LiquidGlassBubble2
+                label={t('staking.unstake')}
+                icon={<ArrowUpFromLine className="w-[18px] h-[18px]" />}
+                loading={isUnstaking}
+                disabled={!unstakeAmount}
+                onClick={handleUnstake}
+              />
             </div>
           </motion.div>
         )}
