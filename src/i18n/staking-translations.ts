@@ -431,7 +431,7 @@ const stakingTranslations: Record<string, StakingTranslation> = {
       earlyAccess: '기능 조기 액세스',
       earlyAccessDesc: '새로운 플랫폼 기능을 가장 먼저 체험하세요. 스테이커는 베타 버전에 우선 액세스합니다.',
       enhancedExperience: '향상된 경험',
-      enhancedExperienceDesc: '광고 없는 브라우징, 높은 업로드 한도, 독점 UI 커스터마이징으로 프리미엄 경험을 즐기세요.',
+      enhancedExperienceDesc: '높은 업로드 한도, 독점 UI 커스터마이징으로 프리미엄 경험을 즐기세요.',
       airdrops: '에어드롭',
       airdropsDesc: '스테이커는 독점 토큰 에어드롭 및 보너스 보상 배분에 자격이 있습니다. 더 많이 스테이크할수록 더 많이 받습니다.',
       justNow: '방금',
