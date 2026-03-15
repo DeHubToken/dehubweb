@@ -462,10 +462,15 @@ function BridgeQueue() {
                 <p className="text-[10px] text-white/25 mt-0.5 truncate">{t.txHash.slice(0, 18)}…</p>
               </div>
 
-              {/* Amount + time */}
+              {/* Amount + status + time */}
               <div className="text-right flex-shrink-0">
                 <p className="text-xs font-semibold text-white">{t.amount} DHB</p>
-                <p className="text-[10px] text-white/25">{timeAgo(t.timestamp)}</p>
+                <div className="flex items-center justify-end gap-1.5 mt-0.5">
+                  <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    {t.status || 'Complete'}
+                  </span>
+                  <p className="text-[10px] text-white/25">{timeAgo(t.timestamp)}</p>
+                </div>
               </div>
 
               <ExternalLink className="w-3 h-3 text-white/10 group-hover:text-white/30 transition-colors flex-shrink-0" />
