@@ -402,9 +402,9 @@ export function PostContentArea({
     // Trigger mention detection
     mention.handleInput(plainText);
     
-    // Process links with proper debounce — clear any pending timeout first
+    // Only process links after user stops typing for 1.5s to avoid cursor jumps
     if (linkDebounceRef.current) clearTimeout(linkDebounceRef.current);
-    linkDebounceRef.current = setTimeout(processLinks, 600);
+    linkDebounceRef.current = setTimeout(processLinks, 1500);
   }, [editorRef, setText, processLinks, mention]);
 
   // Handle paste - process links immediately
@@ -687,6 +687,11 @@ export function PostContentArea({
               contentEditable
               onInput={handleInput}
               onPaste={handlePaste}
+              onBlur={() => {
+                // Process links immediately when user leaves the editor
+                if (linkDebounceRef.current) clearTimeout(linkDebounceRef.current);
+                processLinks();
+              }}
               onClick={() => {
                 if (editorRef.current) {
                   editorRef.current.focus();
