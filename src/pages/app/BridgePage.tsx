@@ -6,6 +6,7 @@
  */
 
 import { useState, useMemo } from 'react';
+import { formatUnits } from 'viem';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { ArrowDownUp, RefreshCw, Loader2, ArrowRight, Search, ExternalLink, Copy } from 'lucide-react';
