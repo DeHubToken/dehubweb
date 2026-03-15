@@ -12,7 +12,7 @@ export default function CommandCentrePage() {
   }
 
   return (
-    <div className="px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-1 min-h-screen">
+    <div className="px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 min-h-screen">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-[1.1rem] sm:text-[1.32rem] font-bold text-white">{t('commandCentre.title')}</h1>
       </div>
