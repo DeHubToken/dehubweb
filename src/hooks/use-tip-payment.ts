@@ -84,7 +84,7 @@ export function useTipPayment({
           console.warn('[Tip] Failed to record tip in DB:', dbErr);
         }
 
-        toast.success(dhbText(`Tip of ${amount} DHB sent! 🎉`), { id: 'tip-payment' });
+        toast.success(dhbText(`Tip of ${amount} DHB sent!`), { id: 'tip-payment' });
         onSuccess?.();
       } catch (error: unknown) {
         console.error('[Tip] Payment failed:', error);
