@@ -181,8 +181,22 @@ export default function HomePage() {
       // Ignore storage errors
     }
   }, [activeTab]);
-  
-  
+
+  /**
+   * Reset all filter states.
+   */
+  const resetFilters = useCallback(() => {
+    setShowHomeFilters(false);
+    setShowShortsFilters(false);
+    setShowImagesCollage(true);
+    setShowImagesFilters(false);
+    setSelectedImageId(null);
+    setShowVideosFilters(false);
+    setShowMusicFilters(false);
+    setShowLiveFilters(false);
+  }, []);
+
+
   // Mobile touch gesture refs
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
