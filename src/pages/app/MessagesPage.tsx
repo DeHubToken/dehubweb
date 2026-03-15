@@ -280,7 +280,7 @@ export default function MessagesPage() {
   // If Public Chat is open, show full-screen chat
   if (showPublicChat) {
     return (
-      <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 overflow-x-hidden">
+      <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-1 overflow-x-hidden">
           <PublicChat
             onBack={() => setShowPublicChat(false)}
           />
@@ -291,7 +291,7 @@ export default function MessagesPage() {
   // If a DM conversation is selected, show it
   if (selectedConversation) {
     return (
-      <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
+      <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-1">
         <DirectMessageChat
           key={selectedConversation.id}
           conversation={selectedConversation}
@@ -302,7 +302,7 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="h-full px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 overflow-hidden">
+    <div className="h-full px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-1 overflow-hidden">
       <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] max-h-full">
         {/* Full Width Messages Panel */}
         <div className="w-full h-full bg-zinc-900 rounded-2xl flex flex-col">

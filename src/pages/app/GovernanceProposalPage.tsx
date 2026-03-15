@@ -128,7 +128,7 @@ export default function GovernanceProposalPage() {
   const { weight: userWeight } = getVoteWeight(userBadgeBalance, usernameVal);
 
   return (
-    <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 max-w-2xl mx-auto">
+    <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-1 max-w-2xl mx-auto">
       {/* Back button */}
       <button
         onClick={() => navigate('/app/governance')}

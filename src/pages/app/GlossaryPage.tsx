@@ -202,7 +202,7 @@ export default function GlossaryPage() {
   ];
 
   return (
-    <div className="px-2 pt-1 pb-6 sm:px-3 sm:pt-1 sm:pb-6 lg:pt-2 min-h-screen">
+    <div className="px-2 pt-1 pb-6 sm:px-3 sm:pt-1 sm:pb-6 lg:pt-1 min-h-screen">
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <img src={glossaryIcon} alt="Glossary" className="w-10 h-10 object-contain brightness-75" />
