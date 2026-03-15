@@ -340,6 +340,7 @@ interface BridgeTransfer {
   explorerUrl: string;
   blockNumber: number;
   timestamp: number;
+  status: string;
 }
 
 function useBridgeTransfers() {
