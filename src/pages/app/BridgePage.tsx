@@ -134,7 +134,7 @@ export default function BridgePage() {
   };
 
   const handleRefresh = () => {
-    // tokens auto-refetch via query
+    queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
   };
 
   return (
