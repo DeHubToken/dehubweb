@@ -1363,7 +1363,7 @@
     "stakeDhb": "Deposit",
     "unstakeDhb": "Withdraw",
     "stakeDesc": "Deposit your tokens to earn rewards.",
-    "unstakeDesc": "Withdraw your deposited tokens.",
+    "unstakeDesc": "Initiate withdrawal",
     "max": "Max",
     "stake": "Deposit",
     "approving": "Approving",
