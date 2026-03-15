@@ -60,7 +60,7 @@ export default function BridgePage() {
   const queryClient = useQueryClient();
   const { allTokens } = useAllChainsTokens();
 
-  const [direction, setDirection] = useState<BridgeDirection>('base-to-bnb');
+  const [direction, setDirection] = useState<BridgeDirection>('bnb-to-base');
   const [amount, setAmount] = useState('');
   const [isBridging, setIsBridging] = useState(false);
 
