@@ -104,7 +104,7 @@ Deno.serve(async (req: Request) => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${serviceKey}`,
             'apikey': serviceKey,
-            'Prefer': 'resolution=merge-duplicates',
+            'Prefer': 'resolution=ignore-duplicates,return=headers-only',
           },
           body: JSON.stringify(batch),
         },
