@@ -332,6 +332,10 @@ export function PostContentArea({
     const editor = e?.currentTarget || editorRef.current;
     if (!editor) return;
     
+    // Mark that user is actively typing so the sync effect doesn't clobber the DOM
+    isUserTyping.current = true;
+    hasHydrated.current = true;
+    
     // Get plain text including URLs from chips and preserving line breaks
     let plainText = '';
     
@@ -501,13 +505,16 @@ export function PostContentArea({
 
   // Sync contentEditable DOM with React text state (draft restore + form reset)
   const hasHydrated = useRef(false);
+  const isUserTyping = useRef(false);
   useEffect(() => {
     if (!editorRef.current) return;
+    // When text is cleared externally (e.g. after post submit), clear the editor
     if (text === '' && editorRef.current.innerHTML !== '') {
       editorRef.current.innerHTML = '';
       hasHydrated.current = false;
-    } else if (text && !hasHydrated.current) {
-      // Hydrate contentEditable with restored draft text (e.g., after drawer reopen)
+      isUserTyping.current = false;
+    } else if (text && !hasHydrated.current && !isUserTyping.current) {
+      // Only hydrate from draft restore / external text set, NOT from user typing
       editorRef.current.textContent = text;
       hasHydrated.current = true;
       setTimeout(processLinks, 0);
