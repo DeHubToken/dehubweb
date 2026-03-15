@@ -141,6 +141,7 @@ export default function HomePage() {
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [showMusicFilters, setShowMusicFilters] = useState(false);
+  const [showLiveFilters, setShowLiveFilters] = useState(false);
   const [showStagesModal, setShowStagesModal] = useState(false);
 
   // Reactively detect active filters by reading sessionStorage when filters change
