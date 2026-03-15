@@ -59,15 +59,15 @@ const LiquidGlassBubble2 = React.forwardRef<HTMLDivElement, LiquidGlassBubble2Pr
         )}
         style={{ width, height }}
       >
-        <span className="flex items-center justify-center gap-2 text-white text-sm font-medium h-full leading-none">
+        <span className="flex items-center justify-center gap-2 text-white text-sm font-medium h-full leading-none min-w-0">
           {loading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin shrink-0" />
               {loadingLabel || label}
             </>
           ) : (
             <>
-              {icon}
+              {icon ? <span className="shrink-0 flex items-center">{icon}</span> : null}
               {label}
             </>
           )}
