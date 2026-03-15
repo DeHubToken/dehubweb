@@ -387,7 +387,13 @@ export default function StakingPage() {
                 />
                 <button
                   type="button"
-                  onClick={() => setStakeAmount(userUnstaked.toString())}
+                  onClick={() => {
+                    // Use raw string balances for full precision
+                    const bnbBal = userData?.bnbBalance ?? '0';
+                    const baseBal = userData?.baseBalance ?? '0';
+                    const total = parseFloat(bnbBal) + parseFloat(baseBal);
+                    setStakeAmount(total.toFixed(18).replace(/\.?0+$/, ''));
+                  }}
                   className="absolute right-0 top-1/2 -translate-y-1/2 px-1 text-white/50 text-[10px] font-bold uppercase hover:text-white transition-colors"
                 >
                   {t('staking.max')}
