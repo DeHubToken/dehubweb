@@ -694,7 +694,7 @@ export default function StakingPage() {
             className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 cursor-pointer hover:bg-white/[0.06] transition-colors relative"
             onClick={() => { setShowDeposits(!showDeposits); if (!showDeposits) fetchDeposits(); }}
           >
-            <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.yourStaked')}</p>
+            <p className="text-[10px] text-white/40 uppercase tracking-wider">Deposits</p>
             <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)}</p>
             
           </div>
