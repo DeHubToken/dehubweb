@@ -24,6 +24,47 @@ import { useTranslation } from 'react-i18next';
 
 import dehubCoin from '@/assets/dehub-coin.png';
 
+const UNSTAKE_COOLDOWN_DAYS = 12;
+const UNSTAKE_COOLDOWN_MS = UNSTAKE_COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
+
+function UnstakeCountdown({ timestamp }: { timestamp: number }) {
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const createdAt = timestamp * 1000;
+  const endTime = createdAt + UNSTAKE_COOLDOWN_MS;
+  const remaining = endTime - now;
+
+  if (remaining <= 0) {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/20 text-emerald-400">
+        Ready
+      </span>
+    );
+  }
+
+  const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+  const secs = Math.floor((remaining % (1000 * 60)) / 1000);
+
+  const progress = 1 - remaining / UNSTAKE_COOLDOWN_MS;
+
+  return (
+    <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-amber-400/80">
+      <Clock className="w-3 h-3 shrink-0" />
+      {days}d {String(hours).padStart(2, '0')}h {String(mins).padStart(2, '0')}m {String(secs).padStart(2, '0')}s
+      <span className="w-12 h-1 rounded-full bg-white/10 overflow-hidden">
+        <span className="block h-full rounded-full bg-amber-400/60 transition-all" style={{ width: `${(progress * 100).toFixed(1)}%` }} />
+      </span>
+    </span>
+  );
+}
+
 function formatNumber(val: string | number, decimals = 0): string {
   const num = typeof val === 'string' ? parseFloat(val) : val;
   if (isNaN(num)) return '0';
