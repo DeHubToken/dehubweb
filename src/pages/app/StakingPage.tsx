@@ -443,20 +443,13 @@ export default function StakingPage() {
                   </button>
                 </div>
               </LiquidGlassBubble>
-              <LiquidGlassBubble
-                shimmer
-                noBorder
-                onClick={(isUnstaking || !unstakeAmount) ? undefined : handleUnstake}
-                className={cn(
-                  "flex-shrink-0 w-[110px] h-[42px] cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl",
-                  (isUnstaking || !unstakeAmount) && "opacity-40 cursor-not-allowed"
-                )}
-              >
-                <span className="flex items-center justify-center gap-2 text-white text-sm font-medium h-full">
-                  {isUnstaking ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUpFromLine className="w-[18px] h-[18px]" />}
-                  {t('staking.unstake')}
-                </span>
-              </LiquidGlassBubble>
+              <LiquidGlassBubble2
+                label={t('staking.unstake')}
+                icon={<ArrowUpFromLine className="w-[18px] h-[18px]" />}
+                loading={isUnstaking}
+                disabled={!unstakeAmount}
+                onClick={handleUnstake}
+              />
             </div>
           </motion.div>
         )}
