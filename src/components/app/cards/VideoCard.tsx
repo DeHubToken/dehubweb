@@ -662,6 +662,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
       videoRef.current?.pause();
       isPlayingRef.current = false;
       setIsPlaying(false);
+      setShowPlayIndicator('pause');
+      setTimeout(() => setShowPlayIndicator(null), 500);
       videoPlaybackManager.stop(instanceId);
       showControlsBriefly();
     } else {
