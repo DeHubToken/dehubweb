@@ -16,6 +16,15 @@ export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
   const { walletAddress, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
+  // Force live data whenever wallet token views mount
+  useEffect(() => {
+    if (!walletAddress || !isAuthenticated) return;
+    queryClient.invalidateQueries({
+      queryKey: ['wallet-tokens', walletAddress.toLowerCase()],
+      refetchType: 'all',
+    });
+  }, [walletAddress, isAuthenticated, queryClient]);
+
   // Prefetch other chains in background on mount
   useEffect(() => {
     if (!walletAddress || !isAuthenticated) return;
@@ -23,22 +32,23 @@ export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
       if (cid === chainId) return;
       queryClient.prefetchQuery({
         queryKey: ['wallet-tokens', walletAddress.toLowerCase(), cid],
-        queryFn: () => getAllTokenBalances(walletAddress, cid),
+        queryFn: () => getAllTokenBalances(walletAddress, cid, true),
         staleTime: 0,
-        gcTime: 60_000,
+        gcTime: 0,
       });
     });
   }, [walletAddress, isAuthenticated, chainId, queryClient]); // prefetch on mount/auth/chain change
 
   const { data: tokens = [], isLoading, isFetching, refetch } = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), chainId],
-    queryFn: () => getAllTokenBalances(walletAddress!, chainId, chainId === BASE_CHAIN_ID),
+    queryFn: () => getAllTokenBalances(walletAddress!, chainId, true),
     enabled: !!walletAddress && isAuthenticated,
     staleTime: 0,
-    gcTime: 60_000,
+    gcTime: 0,
+    networkMode: 'always',
     refetchOnMount: 'always',
-    refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
+    refetchOnWindowFocus: 'always',
+    refetchOnReconnect: 'always',
   });
 
   return { tokens, isLoading, isFetching, refetch };
@@ -49,38 +59,51 @@ export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
  */
 export function useAllChainsTokens() {
   const { walletAddress, isAuthenticated } = useAuth();
+  const queryClient = useQueryClient();
+
+  // Force fresh chain reads on wallet-related mounts
+  useEffect(() => {
+    if (!walletAddress || !isAuthenticated) return;
+    queryClient.invalidateQueries({
+      queryKey: ['wallet-tokens', walletAddress.toLowerCase()],
+      refetchType: 'all',
+    });
+  }, [walletAddress, isAuthenticated, queryClient]);
 
   const baseQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), BASE_CHAIN_ID],
     queryFn: () => getAllTokenBalances(walletAddress!, BASE_CHAIN_ID, true),
     enabled: !!walletAddress && isAuthenticated,
     staleTime: 0,
-    gcTime: 60_000,
+    gcTime: 0,
+    networkMode: 'always',
     refetchOnMount: 'always',
-    refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
+    refetchOnWindowFocus: 'always',
+    refetchOnReconnect: 'always',
   });
 
   const bnbQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), BNB_CHAIN_ID],
-    queryFn: () => getAllTokenBalances(walletAddress!, BNB_CHAIN_ID),
+    queryFn: () => getAllTokenBalances(walletAddress!, BNB_CHAIN_ID, true),
     enabled: !!walletAddress && isAuthenticated,
     staleTime: 0,
-    gcTime: 60_000,
+    gcTime: 0,
+    networkMode: 'always',
     refetchOnMount: 'always',
-    refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
+    refetchOnWindowFocus: 'always',
+    refetchOnReconnect: 'always',
   });
 
   const ethQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), ETH_CHAIN_ID],
-    queryFn: () => getAllTokenBalances(walletAddress!, ETH_CHAIN_ID),
+    queryFn: () => getAllTokenBalances(walletAddress!, ETH_CHAIN_ID, true),
     enabled: !!walletAddress && isAuthenticated,
     staleTime: 0,
-    gcTime: 60_000,
+    gcTime: 0,
+    networkMode: 'always',
     refetchOnMount: 'always',
-    refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
+    refetchOnWindowFocus: 'always',
+    refetchOnReconnect: 'always',
   });
 
   const allTokens = useMemo(() => [
