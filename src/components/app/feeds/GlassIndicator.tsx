@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface GlassIndicatorProps {
   rect: { x: number; y: number; width: number; height: number; ready: boolean };
@@ -6,6 +6,8 @@ interface GlassIndicatorProps {
   className?: string;
   /** When provided, changing this key instantly re-mounts the indicator (no transition) */
   layoutKey?: string;
+  /** Explicitly enable smooth transitions (set true only on user-initiated tab clicks) */
+  enableTransition?: boolean;
 }
 
 const GLASS_CLASSES = 'pointer-events-none absolute bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]';
@@ -17,53 +19,25 @@ const positionCache = new Map<string, { x: number; y: number; width: number; hei
  * Glass tab indicator.
  *
  * Renders instantly at correct position on page load with NO animation.
- * Smooth CSS transition only activates after user actively switches tabs.
- * Caches positions per layoutKey so navigating back never animates.
+ * Smooth CSS transition only activates when parent explicitly enables it
+ * (i.e. user clicked a different tab). Caches positions per layoutKey so
+ * navigating back never animates.
  */
-export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layoutKey }: GlassIndicatorProps) {
-  const prevRectRef = useRef<{ x: number; width: number } | null>(null);
-  const [userHasSwitched, setUserHasSwitched] = useState(false);
-  // Count how many rect updates we've absorbed after a reset before enabling transitions
-  const settleCountRef = useRef(0);
-  const SETTLE_THRESHOLD = 4; // absorb several layout-settling updates
-
-  // Reset on layoutKey change — suppress transitions for settling updates
-  useEffect(() => {
-    prevRectRef.current = null;
-    setUserHasSwitched(false);
-    settleCountRef.current = 0;
-  }, [layoutKey]);
-
+export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layoutKey, enableTransition = false }: GlassIndicatorProps) {
   // Cache every stable rect position
+  const prevLayoutKeyRef = useRef(layoutKey);
+
   useEffect(() => {
     if (rect.ready && layoutKey) {
       positionCache.set(layoutKey, { x: rect.x, y: rect.y, width: rect.width, height: rect.height });
     }
   }, [rect.x, rect.y, rect.width, rect.height, rect.ready, layoutKey]);
 
-  // Detect user-initiated tab switch (significant x/width change after settling)
+  // Suppress transition for one frame after layoutKey changes
+  const suppressTransition = prevLayoutKeyRef.current !== layoutKey;
   useEffect(() => {
-    if (!rect.ready) return;
-
-    if (!prevRectRef.current) {
-      prevRectRef.current = { x: rect.x, width: rect.width };
-      settleCountRef.current++;
-      return;
-    }
-
-    const prev = prevRectRef.current;
-    const significantChange = Math.abs(rect.x - prev.x) > 5 || Math.abs(rect.width - prev.width) > 5;
-    
-    if (significantChange) {
-      settleCountRef.current++;
-      // Only enable transitions after we've settled past the threshold
-      if (settleCountRef.current > SETTLE_THRESHOLD) {
-        setUserHasSwitched(true);
-      }
-    }
-    
-    prevRectRef.current = { x: rect.x, width: rect.width };
-  }, [rect.x, rect.width, rect.ready]);
+    prevLayoutKeyRef.current = layoutKey;
+  }, [layoutKey]);
 
   // Use cached position if rect isn't ready yet
   const cached = layoutKey ? positionCache.get(layoutKey) : null;
@@ -78,6 +52,8 @@ export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layo
     'height 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
   ].join(', ');
 
+  const shouldAnimate = enableTransition && !suppressTransition;
+
   return (
     <div
       className={`${GLASS_CLASSES} ${className ?? ''}`}
@@ -86,8 +62,8 @@ export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layo
         transform: `translate(${displayRect.x}px, ${displayRect.y}px)`,
         width: displayRect.width,
         height: displayRect.height,
-        transition: userHasSwitched ? SMOOTH_TRANSITION : 'none',
-        willChange: userHasSwitched ? 'transform, width' : 'auto',
+        transition: shouldAnimate ? SMOOTH_TRANSITION : 'none',
+        willChange: shouldAnimate ? 'transform, width' : 'auto',
       }}
     />
   );
