@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
+import { useUserStakingData } from '@/hooks/use-staking-data';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
 import { showWeb3AuthCheckout, isWeb3AuthConnected } from '@/lib/web3auth';
