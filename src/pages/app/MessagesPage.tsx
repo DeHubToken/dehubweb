@@ -280,7 +280,7 @@ export default function MessagesPage() {
   // If Public Chat is open, show full-screen chat
   if (showPublicChat) {
     return (
-      <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 overflow-x-hidden">
+      <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-1 overflow-x-hidden">
           <PublicChat
             onBack={() => setShowPublicChat(false)}
           />
