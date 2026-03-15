@@ -99,7 +99,7 @@ async function fetchFromLog(period: TopicPeriod): Promise<CategoryCount[]> {
   }
 
   return Array.from(counts.entries())
-    .map(([name, post_count]) => ({ name: capitalize(name), post_count }))
+    .map(([name, post_count]) => ({ name: formatCategoryName(name), post_count }))
     .sort((a, b) => b.post_count - a.post_count);
 }
 
