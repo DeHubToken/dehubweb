@@ -305,6 +305,8 @@ export default function HomePage() {
       }
     } else {
       setEnableHomeTransition(true);
+      // Auto-reset after animation completes to prevent stale transitions on page nav
+      setTimeout(() => setEnableHomeTransition(false), 450);
       setActiveTab(tabValue);
       resetFilters();
     }
