@@ -167,14 +167,14 @@ export function RelatedVideosFeed({ currentVideoId, scrollContainerRef }: Relate
       {/* Ad Video - First Slot */}
       {adVideo && (
         <div className="relative rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
-          <VideoCard video={{ ...toVideoItem(adVideo), isAd: true }} />
+          <VideoCard video={{ ...toVideoItem(adVideo), isAd: true }} disableAutoplay />
         </div>
       )}
 
       {/* Latest Videos */}
       {videos.map((video) => (
         <div key={video.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
-          <VideoCard video={video} />
+          <VideoCard video={video} disableAutoplay />
         </div>
       ))}
 
