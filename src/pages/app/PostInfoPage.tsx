@@ -10,6 +10,7 @@
  */
 
 import { useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageSquare, User, Loader2, Users, Tag, Hash, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio, Ticket, Coins } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
