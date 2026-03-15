@@ -34,7 +34,7 @@ import { TipModal } from '../modals/TipModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { useAuth } from '@/contexts/AuthContext';
-import { updateTokenVisibility, repostPost, type TokenVisibility } from '@/lib/api/dehub';
+import { updateTokenVisibility, repostPost, followUser, isFollowing as checkIsFollowing, type TokenVisibility } from '@/lib/api/dehub';
 import { cacheTextPostForNavigation } from '@/lib/post-cache';
 import {
   Drawer,
