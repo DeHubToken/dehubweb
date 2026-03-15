@@ -227,6 +227,24 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
               >
                 <Link2 className="w-5 h-5" /> {t('postOptions.copyPostUrl')}
               </button>
+              {!isOwnPost && isFollowingAuthor === false && (
+                <button
+                  onClick={handleFollowFromMenu}
+                  disabled={isFollowLoading}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  {isFollowLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <UserPlus className="w-5 h-5" />}
+                  Follow
+                </button>
+              )}
+              {!isOwnPost && isFollowingAuthor === true && (
+                <button
+                  disabled
+                  className="flex items-center gap-3 px-4 py-3 text-zinc-500 rounded-xl text-left cursor-default"
+                >
+                  <UserCheck className="w-5 h-5" /> Following
+                </button>
+              )}
               <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                 <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
               </button>
