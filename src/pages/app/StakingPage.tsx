@@ -137,6 +137,25 @@ export default function StakingPage() {
   const [stakingChainLabel, setStakingChainLabel] = useState('');
   const [currentWallet, setCurrentWallet] = useState('');
   const [cancellingTx, setCancellingTx] = useState<string | null>(null);
+  const [showDeposits, setShowDeposits] = useState(false);
+  const [depositRecords, setDepositRecords] = useState<{ amount: number; tx_hash: string; chain: string; created_at: string }[]>([]);
+  const [depositsLoading, setDepositsLoading] = useState(false);
+
+  const fetchDeposits = async () => {
+    if (!currentWallet) return;
+    setDepositsLoading(true);
+    try {
+      const { data } = await supabase
+        .from('staking_records')
+        .select('amount, tx_hash, chain, created_at')
+        .eq('wallet_address', currentWallet.toLowerCase())
+        .eq('action', 'stake')
+        .order('created_at', { ascending: false })
+        .limit(50);
+      setDepositRecords(data ?? []);
+    } catch { setDepositRecords([]); }
+    setDepositsLoading(false);
+  };
 
   function timeAgo(timestamp: number): string {
     if (!timestamp) return '—';
@@ -632,9 +651,13 @@ export default function StakingPage() {
           transition={{ delay: 0.2 }}
           className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6"
         >
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4">
+          <div
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 cursor-pointer hover:bg-white/[0.06] transition-colors relative"
+            onClick={() => { setShowDeposits(!showDeposits); if (!showDeposits) fetchDeposits(); }}
+          >
             <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.yourStaked')}</p>
             <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)}</p>
+            <p className="text-[9px] text-white/30 mt-0.5">Click to view deposits</p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4">
             <p className="text-[10px] text-white/40 uppercase tracking-wider">{t('staking.unstaking')}</p>
@@ -658,6 +681,67 @@ export default function StakingPage() {
               {t('staking.claim')}
             </span>
           </LiquidGlassBubble>
+        </motion.div>
+      )}
+
+      {/* Deposit History Panel */}
+      {showDeposits && userData && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden mb-6"
+        >
+          <div className="p-4 border-b border-white/5 flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Your Deposits</h2>
+              <p className="text-xs text-white/30 mt-0.5">All your stake transactions</p>
+            </div>
+            <button onClick={() => setShowDeposits(false)} className="text-white/40 hover:text-white transition-colors">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          {depositsLoading ? (
+            <div className="p-8 text-center">
+              <RefreshCw className="w-5 h-5 text-white/30 animate-spin mx-auto mb-2" />
+              <p className="text-xs text-white/30">Loading deposits…</p>
+            </div>
+          ) : !depositRecords.length ? (
+            <div className="p-8 text-center">
+              <Wallet className="w-6 h-6 text-white/20 mx-auto mb-2" />
+              <p className="text-sm text-white/30">No deposit records found</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-white/5">
+              <div className="hidden sm:grid grid-cols-4 gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
+                <span>Amount</span>
+                <span>Chain</span>
+                <span>Date</span>
+                <span className="text-right">Tx</span>
+              </div>
+              {depositRecords.map((rec, idx) => {
+                const explorer = rec.chain === 'BNB'
+                  ? `https://bscscan.com/tx/${rec.tx_hash}`
+                  : `https://basescan.org/tx/${rec.tx_hash}`;
+                return (
+                  <div key={idx} className="grid grid-cols-2 sm:grid-cols-4 gap-2 px-5 py-3 text-xs text-white/70 items-center">
+                    <span className="font-medium">{formatNumber(rec.amount)} DHB</span>
+                    <span className="text-white/50">{rec.chain}</span>
+                    <span className="text-white/40 hidden sm:block">{new Date(rec.created_at).toLocaleDateString()}</span>
+                    <a
+                      href={explorer}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-right flex items-center justify-end gap-1 text-white/50 hover:text-white transition-colors"
+                    >
+                      <span className="font-mono truncate max-w-[80px]">{rec.tx_hash.slice(0, 10)}…</span>
+                      <ExternalLink className="w-3 h-3 shrink-0" />
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </motion.div>
       )}
 
