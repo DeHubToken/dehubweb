@@ -225,15 +225,19 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
           {(['posts', 'tickers'] as Tab[]).map(tab => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => handleMainTabChange(tab)}
               className="relative flex-1 py-1.5 text-xs font-medium rounded-[10px] z-10 transition-colors duration-150"
             >
               {activeTab === tab && (
-                <motion.div
-                  layoutId="tott-tab-bg"
-                  className="absolute inset-0 rounded-[10px] bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                />
+                hasTabInteracted ? (
+                  <motion.div
+                    layoutId="tott-tab-bg"
+                    className="absolute inset-0 rounded-[10px] bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                ) : (
+                  <div className="absolute inset-0 rounded-[10px] bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.3)]" />
+                )
               )}
               <span className={cn(
                 'relative z-10 transition-colors duration-150',
