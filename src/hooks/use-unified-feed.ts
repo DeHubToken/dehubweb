@@ -463,6 +463,29 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
         !isBlockedCreator(item, blockedAddresses) && !isBlockedPost(item) && item.postType !== 'live'
       );
       
+      // Enrich quote posts that are missing their quotedPost data
+      const needsEnrich: { idx: number; item: any }[] = [];
+      for (let i = 0; i < filteredItems.length; i++) {
+        const item = filteredItems[i];
+        if (item.isQuotePost && item.quotedTokenId && !item.quotedPost) {
+          needsEnrich.push({ idx: i, item });
+        }
+      }
+      if (needsEnrich.length > 0) {
+        const BATCH_SIZE = 5;
+        for (let b = 0; b < needsEnrich.length; b += BATCH_SIZE) {
+          const batch = needsEnrich.slice(b, b + BATCH_SIZE);
+          const settled = await Promise.allSettled(
+            batch.map(({ item }) => getNFTInfo(String(item.quotedTokenId)))
+          );
+          settled.forEach((outcome, i) => {
+            if (outcome.status === 'fulfilled' && outcome.value) {
+              filteredItems[batch[i].idx] = { ...batch[i].item, quotedPost: outcome.value };
+            }
+          });
+        }
+      }
+      
       return {
         items: filteredItems,
         pagination: response.pagination,
