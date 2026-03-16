@@ -1343,7 +1343,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         {/* Center flash indicator removed — play/pause now in progress bar */}
 
         {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass */}
-        {isPlaying && (showControls || isTouchDevice) && (
+        {(isPlaying || showControls) && (showControls || isTouchDevice) && (
           <div className="absolute top-2 right-2 flex items-center gap-2 z-10">
             <button 
               className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
