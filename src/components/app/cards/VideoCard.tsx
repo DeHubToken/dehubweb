@@ -622,7 +622,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
     controlsTimerRef.current = setTimeout(() => {
       if (!isHoveringRef.current) setShowControls(false);
-    }, 3000);
+    }, 2000);
   }, []);
 
   // Cleanup controls timer on unmount
@@ -1155,7 +1155,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         onMouseLeave={() => {
           isHoveringRef.current = false;
           if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
-          controlsTimerRef.current = setTimeout(() => setShowControls(false), 3000);
+          controlsTimerRef.current = setTimeout(() => setShowControls(false), 2000);
         }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
@@ -1343,7 +1343,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         {/* Center flash indicator removed — play/pause now in progress bar */}
 
         {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass */}
-        {isPlaying && (showControls || isTouchDevice) && (
+        {(isPlaying || showControls) && (showControls || isTouchDevice) && (
           <div className="absolute top-2 right-2 flex items-center gap-2 z-10">
             <button 
               className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
@@ -1374,7 +1374,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         )}
 
         {/* Progress bar at bottom */}
-        {isPlaying && duration > 0 && (showControls || isTouchDevice) && (
+        {duration > 0 && (showControls || isTouchDevice) && (
           <div className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
             <div className="flex items-center gap-2">
               <button
@@ -1436,7 +1436,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         {/* Error state - show thumbnail naturally, toast on click */}
         
         {/* Duration badge - liquid glass - hide when progress bar visible */}
-        {!(isPlaying && duration > 0 && (showControls || isTouchDevice)) && (
+        {!(duration > 0 && (showControls || isTouchDevice)) && (
           <div className={`absolute ${video.isAudio ? 'top-2 left-2' : 'bottom-2 right-2'} bg-black/40 backdrop-blur-[24px] saturate-[180%] px-1.5 py-0.5 rounded border border-white/10 text-xs text-white font-medium z-10`}>
             {video.duration}
           </div>
