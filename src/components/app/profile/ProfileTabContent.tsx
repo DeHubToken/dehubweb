@@ -15,8 +15,7 @@ import { PlanCard } from '@/components/app/subscriptions';
 import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
 import { getUserComments, getNFTInfo, getMediaUrl, editComment, deleteComment } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
-import { buildImageUrl } from '@/lib/media-url';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { buildImageUrl, buildFeedImageUrls, buildAvatarUrl } from '@/lib/media-url';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { OptimisticPost } from '@/hooks/use-optimistic-posts';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
@@ -539,14 +538,16 @@ function CommentCard({ comment, parentPost, isOwnComment, onClick }: { comment: 
     : comment.address;
 
   // Parent post thumbnail - resolve through CDN helper
+  const feedImageUrls = parentPost ? buildFeedImageUrls(parentPost.imageUrls) : undefined;
+  const firstFeedImage = feedImageUrls?.[0];
   const rawThumb = parentPost
-    ? (parentPost.thumbnail_url || parentPost.imageUrl || (parentPost.videoUrl ? parentPost.imageUrl : null))
+    ? (parentPost.thumbnail_url || firstFeedImage || parentPost.imageUrl || (parentPost.videoUrl ? parentPost.imageUrl : null))
     : null;
   const parentThumbnail = rawThumb && parentPost
     ? (rawThumb.startsWith('http') ? rawThumb : buildImageUrl(parentPost.tokenId, rawThumb))
     : null;
   const parentTitle = parentPost?.title || parentPost?.name || parentPost?.description?.slice(0, 80);
-  const parentCreator = parentPost?.minterDisplayName || parentPost?.minterUsername || parentPost?.mintername;
+  const parentCreator = parentPost?.minterUsername || parentPost?.mintername || parentPost?.minterDisplayName;
   const parentIsVideo = parentPost?.postType === 'video' || parentPost?.media_type === 'video';
   const parentIsImage = parentPost?.postType === 'image' || parentPost?.media_type === 'image';
 
