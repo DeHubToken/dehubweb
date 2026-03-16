@@ -444,6 +444,16 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     onMentionInsert: (_user, newText) => setNewComment(newText),
   });
 
+  // Persist draft to localStorage on every keystroke
+  useEffect(() => {
+    saveDraft(tokenId, newComment, replyTo?.id);
+  }, [newComment, tokenId, replyTo?.id]);
+
+  // Restore draft when switching reply target
+  useEffect(() => {
+    setNewComment(loadDraft(tokenId, replyTo?.id));
+  }, [replyTo?.id, tokenId]);
+
   const MAX_VOICE_DURATION = 30;
 
   // Fetch comments from API
