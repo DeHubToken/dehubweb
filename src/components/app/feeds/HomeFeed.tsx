@@ -1310,10 +1310,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               <button
                 key={catId}
                 onClick={() => setSelectedCategories(prev => prev.filter(c => c !== catId))}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium leading-none bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+                className="inline-flex items-center gap-1 px-2.5 h-6 rounded-lg text-xs font-medium leading-none bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
-                <span className="leading-none">{catObj?.name || catId}</span>
-                <span className="text-white/40 hover:text-white text-[10px] leading-none flex items-center">✕</span>
+                <span className="translate-y-[0.5px]">{catObj?.name || catId}</span>
+                <span className="text-white/40 hover:text-white text-[10px] leading-none">✕</span>
               </button>
             );
           })}
