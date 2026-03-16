@@ -303,6 +303,8 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     repostCount: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
     isReposted: item.isReposted ?? false,
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
+    isQuotePost: !!(item as any).isQuotePost,
+    quotedPost: (item as any).quotedPost || null,
   };
 }
 

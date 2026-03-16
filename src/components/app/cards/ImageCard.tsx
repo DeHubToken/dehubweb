@@ -33,6 +33,7 @@ import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { QuotePostModal } from '../modals/QuotePostModal';
+import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
@@ -711,6 +712,11 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           isTranslated={isTranslated}
           translatedText={translatedText}
         />
+
+        {/* Quoted post embed (Twitter-style) */}
+        {post.isQuotePost && post.quotedPost && (
+          <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
+        )}
         
         {/* Metadata: timestamp and views */}
         <PostMetadata 
