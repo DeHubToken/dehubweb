@@ -11,6 +11,7 @@
  */
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { saveDraft, loadDraft, clearDraft } from '@/lib/comment-draft-cache';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
