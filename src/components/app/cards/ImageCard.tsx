@@ -396,7 +396,6 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
     if (isNaN(numericId)) return;
     try {
       await repostPost(numericId);
-      toast.success('Reposted!');
       queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
       queryClient.invalidateQueries({ queryKey: ['user-reposts'] });
     } catch {
