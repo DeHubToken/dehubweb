@@ -417,7 +417,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const { layerRef: commentsTabLayerRef, setRef: setCommentsTabRef, rect: commentsTabRect } = useTabIndicator(activeTab);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'recent' | 'oldest' | 'liked'>('recent');
-  const [newComment, setNewComment] = useState('');
+  const [newComment, setNewComment] = useState(() => loadDraft(tokenId));
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
