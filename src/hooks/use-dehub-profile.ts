@@ -248,9 +248,33 @@ export function useDeHubUserContent({ userId, viewerAddress, enabled = true, lim
       }
       
       const json = await response.json();
+      const items = json.result || [];
+      
+      // Enrich quote posts that are missing their quotedPost data
+      const needsEnrich: { idx: number; item: any }[] = [];
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.isQuotePost && item.quotedTokenId && !item.quotedPost) {
+          needsEnrich.push({ idx: i, item });
+        }
+      }
+      if (needsEnrich.length > 0) {
+        const BATCH_SIZE = 5;
+        for (let b = 0; b < needsEnrich.length; b += BATCH_SIZE) {
+          const batch = needsEnrich.slice(b, b + BATCH_SIZE);
+          const settled = await Promise.allSettled(
+            batch.map(({ item }) => getNFTInfo(String(item.quotedTokenId)))
+          );
+          settled.forEach((outcome, i) => {
+            if (outcome.status === 'fulfilled' && outcome.value) {
+              items[batch[i].idx] = { ...batch[i].item, quotedPost: outcome.value };
+            }
+          });
+        }
+      }
       
       return {
-        data: json.result || [],
+        data: items,
         page: pageParam,
         has_more: json.pagination?.hasMore ?? false,
         total: json.pagination?.totalCount ?? 0,
