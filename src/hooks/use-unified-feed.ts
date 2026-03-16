@@ -9,7 +9,7 @@
 
 import { useMemo } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { getAuthToken, DEHUB_CDN_BASE, type DeHubNFT, getBlockList } from '@/lib/api/dehub';
+import { getAuthToken, DEHUB_CDN_BASE, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
@@ -462,6 +462,30 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
       let filteredItems = (response.result || []).filter(item => 
         !isBlockedCreator(item, blockedAddresses) && !isBlockedPost(item) && item.postType !== 'live'
       );
+      
+      // Enrich quote posts that are missing their quotedPost data
+      const needsEnrich: { idx: number; item: any }[] = [];
+      for (let i = 0; i < filteredItems.length; i++) {
+        const item = filteredItems[i];
+        const raw = item as any;
+        if (raw.isQuotePost && raw.quotedTokenId && !raw.quotedPost) {
+          needsEnrich.push({ idx: i, item: raw });
+        }
+      }
+      if (needsEnrich.length > 0) {
+        const BATCH_SIZE = 5;
+        for (let b = 0; b < needsEnrich.length; b += BATCH_SIZE) {
+          const batch = needsEnrich.slice(b, b + BATCH_SIZE);
+          const settled = await Promise.allSettled(
+            batch.map(({ item }) => getNFTInfo(String(item.quotedTokenId)))
+          );
+          settled.forEach((outcome, i) => {
+            if (outcome.status === 'fulfilled' && outcome.value) {
+              filteredItems[batch[i].idx] = { ...batch[i].item, quotedPost: outcome.value };
+            }
+          });
+        }
+      }
       
       return {
         items: filteredItems,
