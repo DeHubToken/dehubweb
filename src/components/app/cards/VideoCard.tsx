@@ -1155,7 +1155,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         onMouseLeave={() => {
           isHoveringRef.current = false;
           if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
-          controlsTimerRef.current = setTimeout(() => setShowControls(false), 3000);
+          controlsTimerRef.current = setTimeout(() => setShowControls(false), 2000);
         }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
