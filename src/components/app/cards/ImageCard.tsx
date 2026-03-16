@@ -33,6 +33,7 @@ import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { QuotePostModal } from '../modals/QuotePostModal';
+import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
