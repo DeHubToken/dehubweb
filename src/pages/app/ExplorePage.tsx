@@ -232,6 +232,20 @@ const UserResultCard = ({
   const { walletAddress } = useAuth();
   const [isFollowing, setIsFollowing] = useState(user.isFollowing ?? false);
   const [isLoading, setIsLoading] = useState(false);
+  const resolvedRef = useRef(false);
+
+  // Resolve follow status when not provided by search results (e.g. creators from video/ticker results)
+  useEffect(() => {
+    if (user.isFollowing !== undefined || resolvedRef.current || !walletAddress || !user.id) return;
+    resolvedRef.current = true;
+    const cleanHandle = user.handle.replace('@', '');
+    if (!cleanHandle || cleanHandle.startsWith('0x')) return;
+    import('@/lib/api/dehub').then(({ getAccountByUsername }) => {
+      getAccountByUsername(cleanHandle).then((info) => {
+        if (info?.isFollowing) setIsFollowing(true);
+      }).catch(() => {});
+    });
+  }, [user.isFollowing, user.id, user.handle, walletAddress]);
   
   // user.avatar is already a fully built URL from mapAccountToCreator/extractUniqueCreators
   const avatarUrl = user.avatar;
