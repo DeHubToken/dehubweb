@@ -1384,7 +1384,7 @@
     "unstakeQueue": "Withdrawal Queue",
     "recentUnstakeTransactions": "Recent withdrawal transactions across all chains",
     "loadingEvents": "Loading events...",
-    "noRecentUnstakeEvents": "No recent withdrawal events",
+    "noRecentUnstakeEvents": "No withdrawals pending",
     "wallet": "Wallet",
     "amount": "Amount",
     "chain": "Chain",
