@@ -1374,7 +1374,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         )}
 
         {/* Progress bar at bottom */}
-        {isPlaying && duration > 0 && (showControls || isTouchDevice) && (
+        {duration > 0 && (showControls || isTouchDevice) && (
           <div className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
             <div className="flex items-center gap-2">
               <button
