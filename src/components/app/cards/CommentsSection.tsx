@@ -794,6 +794,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     setOptimisticComments(prev => [tempComment, ...prev]);
     const replyTarget = replyTo;
     const imageFile = commentImage;
+    clearDraft(tokenId, replyTo?.id);
     setReplyTo(null);
     setNewComment('');
     setVoiceNote(null);
