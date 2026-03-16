@@ -903,7 +903,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
               <button
                 type="button"
                 onClick={() => setSortBy(prev => prev === 'recent' ? 'oldest' : prev === 'oldest' ? 'liked' : 'recent')}
-                className="px-3 py-1.5 flex items-center justify-center gap-1.5 transition-all rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06]"
+                className="px-3 py-1.5 flex items-center justify-center gap-1.5 transition-colors rounded-xl text-zinc-400 hover:text-white"
               >
                 <ArrowUpDown className="w-[17px] h-[17px]" />
                 <span className="text-[11px]">{sortBy === 'recent' ? 'Recent' : sortBy === 'oldest' ? 'Oldest' : 'Liked'}</span>
