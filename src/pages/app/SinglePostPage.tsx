@@ -204,6 +204,8 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
     repostCount: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
+    isQuotePost: !!nft.isQuotePost,
+    quotedPost: nft.quotedPost || null,
   };
 }
 
