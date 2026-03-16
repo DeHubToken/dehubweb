@@ -467,8 +467,9 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
       const needsEnrich: { idx: number; item: any }[] = [];
       for (let i = 0; i < filteredItems.length; i++) {
         const item = filteredItems[i];
-        if (item.isQuotePost && item.quotedTokenId && !item.quotedPost) {
-          needsEnrich.push({ idx: i, item });
+        const raw = item as any;
+        if (raw.isQuotePost && raw.quotedTokenId && !raw.quotedPost) {
+          needsEnrich.push({ idx: i, item: raw });
         }
       }
       if (needsEnrich.length > 0) {
