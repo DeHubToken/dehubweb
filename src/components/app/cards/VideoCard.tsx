@@ -1151,11 +1151,18 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           isHoveringRef.current = true;
           setShowControls(true);
           if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+          controlsTimerRef.current = setTimeout(() => setShowControls(false), 2000);
+        }}
+        onMouseMove={() => {
+          if (!isHoveringRef.current) return;
+          setShowControls(true);
+          if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+          controlsTimerRef.current = setTimeout(() => setShowControls(false), 2000);
         }}
         onMouseLeave={() => {
           isHoveringRef.current = false;
           if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
-          controlsTimerRef.current = setTimeout(() => setShowControls(false), 2000);
+          setShowControls(false);
         }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
