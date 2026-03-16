@@ -607,7 +607,20 @@ export default function SinglePostPage() {
     queryFn: async () => {
       // Try NFT info first (works for minted posts with tokenIds)
       try {
-        return await getNFTInfo(id!);
+        const nft = await getNFTInfo(id!);
+        
+        // Enrich quote post if quotedPost data is missing
+        if (nft.isQuotePost && nft.quotedTokenId && !nft.quotedPost) {
+          try {
+            const quoted = await getNFTInfo(String(nft.quotedTokenId));
+            return { ...nft, quotedPost: quoted };
+          } catch {
+            // If we can't fetch the quoted post, still return the main post
+            return nft;
+          }
+        }
+        
+        return nft;
       } catch {
         // Fallback: try livestream API (stream IDs from /api/live are not NFT tokenIds)
         const liveRes = await getLiveStream(id!);
