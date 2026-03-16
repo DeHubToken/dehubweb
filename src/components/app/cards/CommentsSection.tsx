@@ -11,6 +11,7 @@
  */
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { saveDraft, loadDraft, clearDraft } from '@/lib/comment-draft-cache';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -416,7 +417,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const { layerRef: commentsTabLayerRef, setRef: setCommentsTabRef, rect: commentsTabRect } = useTabIndicator(activeTab);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'recent' | 'oldest' | 'liked'>('recent');
-  const [newComment, setNewComment] = useState('');
+  const [newComment, setNewComment] = useState(() => loadDraft(tokenId));
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
@@ -442,6 +443,16 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     inputRef,
     onMentionInsert: (_user, newText) => setNewComment(newText),
   });
+
+  // Persist draft to localStorage on every keystroke
+  useEffect(() => {
+    saveDraft(tokenId, newComment, replyTo?.id);
+  }, [newComment, tokenId, replyTo?.id]);
+
+  // Restore draft when switching reply target
+  useEffect(() => {
+    setNewComment(loadDraft(tokenId, replyTo?.id));
+  }, [replyTo?.id, tokenId]);
 
   const MAX_VOICE_DURATION = 30;
 
@@ -783,6 +794,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     setOptimisticComments(prev => [tempComment, ...prev]);
     const replyTarget = replyTo;
     const imageFile = commentImage;
+    clearDraft(tokenId, replyTo?.id);
     setReplyTo(null);
     setNewComment('');
     setVoiceNote(null);
