@@ -622,7 +622,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
     controlsTimerRef.current = setTimeout(() => {
       if (!isHoveringRef.current) setShowControls(false);
-    }, 3000);
+    }, 2000);
   }, []);
 
   // Cleanup controls timer on unmount
