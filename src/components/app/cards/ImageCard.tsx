@@ -711,6 +711,11 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           isTranslated={isTranslated}
           translatedText={translatedText}
         />
+
+        {/* Quoted post embed (Twitter-style) */}
+        {post.isQuotePost && post.quotedPost && (
+          <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
+        )}
         
         {/* Metadata: timestamp and views */}
         <PostMetadata 

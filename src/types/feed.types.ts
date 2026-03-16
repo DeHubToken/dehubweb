@@ -222,6 +222,10 @@ export interface ImagePost extends BaseFeedItem {
   chainId?: number;
   /** Post categories */
   categories?: string[];
+  /** Whether this is a quote post */
+  isQuotePost?: boolean;
+  /** The quoted post data (for rendering embedded quote) */
+  quotedPost?: import('@/lib/api/dehub/types').DeHubNFT | null;
 }
 
 /**
