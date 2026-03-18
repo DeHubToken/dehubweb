@@ -118,7 +118,7 @@ export function SidebarNavItem({
       to={item.path}
       onClick={handleClick}
       className={cn(
-        'relative flex items-center rounded-xl transition-colors text-white text-[15px]',
+        'relative flex items-center rounded-2xl transition-colors text-white text-[15px]',
         isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
         isActive ? 'font-semibold' : '',
         !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
