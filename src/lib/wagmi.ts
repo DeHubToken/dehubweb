@@ -14,7 +14,6 @@ import {
   metaMaskWallet,
   phantomWallet,
   trustWallet,
-  rabbyWallet,
   walletConnectWallet
 } from '@rainbow-me/rainbowkit/wallets'
 
@@ -62,7 +61,6 @@ const rainbowKitConnectors = connectorsForWallets(
         metaMaskWallet,
         phantomWallet,
         trustWallet,
-        rabbyWallet,
         walletConnectWallet,
       ],
     },

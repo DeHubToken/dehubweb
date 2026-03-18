@@ -258,10 +258,17 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     } else {
       const el = containerRef.current as any;
       if (!el) return;
+      const activateSimulated = () => {
+        if (!document.fullscreenElement && !(document as any).webkitFullscreenElement) {
+          setIsFullscreen(true);
+        }
+      };
       if (el.requestFullscreen) {
-        el.requestFullscreen().catch(() => setIsFullscreen(true));
+        el.requestFullscreen().catch(activateSimulated);
+        setTimeout(activateSimulated, 300);
       } else if (el.webkitRequestFullscreen) {
-        try { el.webkitRequestFullscreen(); } catch { setIsFullscreen(true); }
+        try { el.webkitRequestFullscreen(); } catch { activateSimulated(); }
+        setTimeout(activateSimulated, 300);
       } else {
         setIsFullscreen(true);
       }

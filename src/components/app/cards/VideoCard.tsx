@@ -761,19 +761,31 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
     // iOS Safari: only supports webkitEnterFullscreen on <video> element
     if (videoEl && typeof videoEl.webkitEnterFullscreen === 'function') {
-      videoEl.webkitEnterFullscreen();
-      return;
+      try {
+        videoEl.webkitEnterFullscreen();
+        return;
+      } catch {
+        // Fall through to container fullscreen or simulated
+      }
     }
 
     // Standard Fullscreen API on container — with fallback if blocked (e.g. SafePal WebView)
+    // Also adds a timeout to catch silent failures where the promise resolves but fullscreen never activates
     if (containerEl) {
+      const activateSimulated = () => {
+        if (!document.fullscreenElement && !(document as any).webkitFullscreenElement) {
+          setIsFullscreen(true);
+        }
+      };
       if (containerEl.requestFullscreen) {
-        containerEl.requestFullscreen().catch(() => setIsFullscreen(true));
+        containerEl.requestFullscreen().catch(activateSimulated);
+        setTimeout(activateSimulated, 300);
         return;
       } else if (containerEl.webkitRequestFullscreen) {
-        try { containerEl.webkitRequestFullscreen(); } catch { setIsFullscreen(true); }
+        try { containerEl.webkitRequestFullscreen(); } catch { activateSimulated(); }
+        setTimeout(activateSimulated, 300);
+        return;
       }
-      return;
     }
 
     // Fallback: simulated fullscreen (SafePal/WebView or iOS audio posts where no native API works)
@@ -791,7 +803,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (document.pictureInPictureElement) {
       document.exitPictureInPicture().catch(() => {});
     } else if (videoRef.current) {
-      videoRef.current.requestPictureInPicture().catch(() => {});
+      videoRef.current.requestPictureInPicture().catch(() => {
+        toast.error('Picture-in-picture not supported in this browser');
+      });
     }
   }, []);
 

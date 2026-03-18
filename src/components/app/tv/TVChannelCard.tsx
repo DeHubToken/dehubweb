@@ -269,11 +269,18 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
       document.exitFullscreen?.().catch(() => {});
       (document as any).webkitExitFullscreen?.();
     } else {
-      const el = container as HTMLElement & { webkitRequestFullscreen?: () => void };
+      const el = container as HTMLElement & { webkitRequestFullscreen?: () => void; requestFullscreen?: () => Promise<void> };
+      const activateSimulated = () => {
+        if (!document.fullscreenElement && !(document as any).webkitFullscreenElement) {
+          setIsFullscreen(true);
+        }
+      };
       if (el.requestFullscreen) {
-        el.requestFullscreen().catch(() => setIsFullscreen(true));
+        el.requestFullscreen().catch(activateSimulated);
+        setTimeout(activateSimulated, 300);
       } else if (el.webkitRequestFullscreen) {
-        try { el.webkitRequestFullscreen(); } catch { setIsFullscreen(true); }
+        try { el.webkitRequestFullscreen(); } catch { activateSimulated(); }
+        setTimeout(activateSimulated, 300);
       } else {
         setIsFullscreen(true);
       }

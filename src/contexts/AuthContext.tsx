@@ -51,7 +51,7 @@ const authLogger = createLogger('Auth');
 
 // Provider types for the custom login modal
 export type SocialProvider = 'google' | 'twitter' | 'telegram' | 'apple' | 'discord' | 'github';
-export type WalletProvider = 'metamask' | 'phantom' | 'trust' | 'rabby';
+export type WalletProvider = 'metamask' | 'phantom' | 'trust';
 
 interface AuthContextType {
   user: DeHubUser | null;
@@ -1038,7 +1038,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         metamask: ['metaMaskSDK', 'io.metamask', 'metaMask'],
         phantom: ['app.phantom', 'phantom'],
         trust: ['trust', 'trustWallet'],
-        rabby: ['rabby', 'rabbyWallet'],
       };
       const ids = walletMap[wallet] || [];
       let connector = connectors.find(c =>
@@ -1082,7 +1081,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (fullError.includes('rejected') || fullError.includes('denied')) {
         toast.error('Connection rejected');
       } else {
-        const names: Record<string, string> = { metamask: 'MetaMask', phantom: 'Phantom', trust: 'Trust Wallet', rabby: 'Rabby' };
+        const names: Record<string, string> = { metamask: 'MetaMask', phantom: 'Phantom', trust: 'Trust Wallet' };
         toast.error(`Failed to connect to ${names[wallet] || wallet}. Please try again.`);
       }
       return false;
