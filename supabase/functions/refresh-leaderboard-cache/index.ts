@@ -83,6 +83,42 @@ async function getOnChainBalance(address: string, baseRpc: string, bnbRpc: strin
   return getOnChainBalanceAtBlock(address, baseRpc, bnbRpc, "latest", "latest");
 }
 
+/**
+ * Fetch net staked amounts from staking_records DB table.
+ * New unified staking is transfer-based (no per-user on-chain query),
+ * so we rely on DB records which are inserted after verifying real Transfer events.
+ * @param beforeDate - If provided, only include records created before this ISO date string
+ */
+async function fetchNetStakedMap(supabase: any, beforeDate?: string): Promise<Map<string, number>> {
+  const map = new Map<string, number>();
+  let query = supabase.from("staking_records").select("wallet_address, amount, action");
+  if (beforeDate) {
+    query = query.lte("created_at", beforeDate);
+  }
+  // Fetch all records (staking_records should be manageable in size)
+  const { data, error } = await query;
+  if (error || !data) {
+    console.warn("[staking] Failed to fetch staking records:", error);
+    return map;
+  }
+  for (const record of data) {
+    const addr = (record.wallet_address as string).toLowerCase();
+    const amount = Number(record.amount) || 0;
+    const current = map.get(addr) || 0;
+    if (record.action === "stake") {
+      map.set(addr, current + amount);
+    } else if (record.action === "unstake") {
+      map.set(addr, current - amount);
+    }
+  }
+  // Remove zero/negative entries
+  for (const [addr, val] of map) {
+    if (val <= 0) map.delete(addr);
+  }
+  console.log(`[staking] Net staked map: ${map.size} wallets with positive stake${beforeDate ? ` (before ${beforeDate})` : ""}`);
+  return map;
+}
+
 /** Fetch on-chain balances for a batch of addresses at specific block heights, 10 at a time */
 async function batchOnChainBalancesAtBlock(
   addresses: string[],
@@ -244,17 +280,23 @@ async function computeSnapshotDelta(
       const addresses = entries.map(e => e.account.toLowerCase());
 
       // Fetch on-chain balances at BOTH time points
-      const [currentMap, pastMap] = await Promise.all([
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - daysAgo);
+      const pastDateISO = pastDate.toISOString();
+
+      const [currentMap, pastMap, currentStakedMap, pastStakedMap] = await Promise.all([
         batchOnChainBalancesAtBlock(addresses, rpcConfig!.baseRpc, rpcConfig!.bnbRpc, "latest", "latest"),
         batchOnChainBalancesAtBlock(addresses, rpcConfig!.baseRpc, rpcConfig!.bnbRpc, baseHistHex, bnbHistHex),
+        fetchNetStakedMap(supabase),
+        fetchNetStakedMap(supabase, pastDateISO),
       ]);
 
       console.log(`[delta] ${sortMode}/${period}: got ${currentMap.size} current + ${pastMap.size} historical on-chain balances`);
 
       const withDeltas: EnrichedEntry[] = entries.map((entry) => {
         const addr = entry.account.toLowerCase();
-        const currentVal = currentMap.get(addr) || 0;
-        const pastVal = pastMap.get(addr) || 0;
+        const currentVal = (currentMap.get(addr) || 0) + (currentStakedMap.get(addr) || 0);
+        const pastVal = (pastMap.get(addr) || 0) + (pastStakedMap.get(addr) || 0);
         const delta = currentVal - pastVal;
         return { ...entry, delta, total: currentVal, badgeBalance: currentVal };
       });
@@ -437,6 +479,18 @@ async function computeSnapshotDelta(
       console.log(`[delta] ${sortMode}/${period}: no today snapshot found, falling back to API values`);
     }
 
+    // For holdings sort mode: add DB staking records to current and past values
+    let snapshotStakedCurrent: Map<string, number> | null = null;
+    let snapshotStakedPast: Map<string, number> | null = null;
+    if (sortMode === "holdings") {
+      const pastDateForStaking = new Date();
+      pastDateForStaking.setDate(pastDateForStaking.getDate() - daysAgo);
+      [snapshotStakedCurrent, snapshotStakedPast] = await Promise.all([
+        fetchNetStakedMap(supabase),
+        fetchNetStakedMap(supabase, pastDateForStaking.toISOString()),
+      ]);
+    }
+
     const withDeltas: EnrichedEntry[] = entries
       .filter((e) => {
         if (sortMode === "followers" || sortMode === "likes" || sortMode === "subscribers") {
@@ -452,11 +506,19 @@ async function computeSnapshotDelta(
         } else {
           currentVal = getEntryValue(entry);
         }
+        // Add DB staking to current value for holdings
+        if (snapshotStakedCurrent) {
+          currentVal += snapshotStakedCurrent.get(addr) || 0;
+        }
 
         // Check snapshot first, then hybrid on-chain for new wallets
         let pastVal = pastMap.get(addr);
         if (pastVal === undefined && hybridPastMap) {
           pastVal = hybridPastMap.get(addr);
+        }
+        // Add DB staking to past value for holdings
+        if (snapshotStakedPast && pastVal !== undefined) {
+          pastVal += snapshotStakedPast.get(addr) || 0;
         }
         const isExtraWallet = EXTRA_WALLET_ADDRESSES.has(addr);
 
@@ -715,6 +777,22 @@ Deno.serve(async (req) => {
         } catch (err) {
           console.error(`Failed to fetch extra wallet ${username}:`, err);
         }
+      }
+
+      // ── Add net staked from DB (new unified staking, transfer-based) ──
+      const netStakedMap = await fetchNetStakedMap(supabase);
+      let stakingAdjustments = 0;
+      for (const entry of enriched) {
+        const addr = entry.account.toLowerCase();
+        const netStaked = netStakedMap.get(addr);
+        if (netStaked && netStaked > 0) {
+          entry.total += netStaked;
+          entry.badgeBalance = entry.total;
+          stakingAdjustments++;
+        }
+      }
+      if (stakingAdjustments > 0) {
+        console.log(`[staking] Applied DB staking adjustments to ${stakingAdjustments} wallets`);
       }
 
       enriched.sort((a, b) => b.total - a.total);
