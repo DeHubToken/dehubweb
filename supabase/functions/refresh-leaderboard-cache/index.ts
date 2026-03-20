@@ -479,6 +479,18 @@ async function computeSnapshotDelta(
       console.log(`[delta] ${sortMode}/${period}: no today snapshot found, falling back to API values`);
     }
 
+    // For holdings sort mode: add DB staking records to current and past values
+    let snapshotStakedCurrent: Map<string, number> | null = null;
+    let snapshotStakedPast: Map<string, number> | null = null;
+    if (sortMode === "holdings") {
+      const pastDateForStaking = new Date();
+      pastDateForStaking.setDate(pastDateForStaking.getDate() - daysAgo);
+      [snapshotStakedCurrent, snapshotStakedPast] = await Promise.all([
+        fetchNetStakedMap(supabase),
+        fetchNetStakedMap(supabase, pastDateForStaking.toISOString()),
+      ]);
+    }
+
     const withDeltas: EnrichedEntry[] = entries
       .filter((e) => {
         if (sortMode === "followers" || sortMode === "likes" || sortMode === "subscribers") {
@@ -493,6 +505,10 @@ async function computeSnapshotDelta(
           currentVal = currentMap.get(addr) || 0;
         } else {
           currentVal = getEntryValue(entry);
+        }
+        // Add DB staking to current value for holdings
+        if (snapshotStakedCurrent) {
+          currentVal += snapshotStakedCurrent.get(addr) || 0;
         }
 
         // Check snapshot first, then hybrid on-chain for new wallets
