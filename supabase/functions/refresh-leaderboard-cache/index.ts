@@ -753,6 +753,22 @@ Deno.serve(async (req) => {
         }
       }
 
+      // ── Add net staked from DB (new unified staking, transfer-based) ──
+      const netStakedMap = await fetchNetStakedMap(supabase);
+      let stakingAdjustments = 0;
+      for (const entry of enriched) {
+        const addr = entry.account.toLowerCase();
+        const netStaked = netStakedMap.get(addr);
+        if (netStaked && netStaked > 0) {
+          entry.total += netStaked;
+          entry.badgeBalance = entry.total;
+          stakingAdjustments++;
+        }
+      }
+      if (stakingAdjustments > 0) {
+        console.log(`[staking] Applied DB staking adjustments to ${stakingAdjustments} wallets`);
+      }
+
       enriched.sort((a, b) => b.total - a.total);
 
       // Deduplicate by lowercased address
