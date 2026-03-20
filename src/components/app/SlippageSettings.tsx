@@ -79,8 +79,8 @@ export function SlippageSettings({ slippageBps, onSlippageChange }: SlippageSett
             <span className="text-xs text-zinc-500">%</span>
           </div>
           {slippageBps > 500 && (
-            <p className="text-[10px] text-amber-400/80 flex items-center gap-1">
-              <span>⚠</span> High slippage, risk of loss, be very careful <span>⚠</span>
+            <p className="text-[10px] text-amber-400/80 flex items-center justify-center gap-1">
+              <span>⚠</span><span>High slippage, risk of loss, be very careful</span><span>⚠</span>
             </p>
           )}
           {slippageBps < 50 && (
