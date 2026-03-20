@@ -258,8 +258,8 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
               {/* Pay token display */}
               <div className="bg-white/[0.04] border border-white/10 rounded-xl p-4 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-zinc-400">You pay (incl. 2% slippage)</span>
-                  {payUsd > 0 && <span className="text-xs text-zinc-500">≈ ${payUsd.toFixed(2)}</span>}
+                  <span className="text-xs text-zinc-400">You pay</span>
+                  <SlippageSettings slippageBps={slippageBps} onSlippageChange={setSlippageBps} />
                 </div>
                 <div className="flex items-center gap-3">
                   {/* Token selector button */}
