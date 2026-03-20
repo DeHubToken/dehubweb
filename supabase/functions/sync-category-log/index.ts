@@ -64,14 +64,21 @@ Deno.serve(async (req: Request) => {
             : [];
 
         for (const raw of cats) {
-          const name = (raw || '').trim().toLowerCase();
-          if (!name || EXCLUDED.has(name)) continue;
+          const cleaned = (raw || '').trim().toLowerCase();
+          if (!cleaned) continue;
 
-          allRows.push({
-            token_id: item.tokenId,
-            name,
-            posted_at: item.createdAt,
-          });
+          // Split multi-word entries (e.g. "#home #web3 $dhb") into individual words
+          // and strip # / $ prefixes
+          const words = cleaned.split(/\s+/).map(w => w.replace(/^[#$]+/, '').trim()).filter(Boolean);
+
+          for (const name of words) {
+            if (!name || EXCLUDED.has(name)) continue;
+            allRows.push({
+              token_id: item.tokenId,
+              name,
+              posted_at: item.createdAt,
+            });
+          }
         }
       }
 
