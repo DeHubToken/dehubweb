@@ -280,17 +280,23 @@ async function computeSnapshotDelta(
       const addresses = entries.map(e => e.account.toLowerCase());
 
       // Fetch on-chain balances at BOTH time points
-      const [currentMap, pastMap] = await Promise.all([
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - daysAgo);
+      const pastDateISO = pastDate.toISOString();
+
+      const [currentMap, pastMap, currentStakedMap, pastStakedMap] = await Promise.all([
         batchOnChainBalancesAtBlock(addresses, rpcConfig!.baseRpc, rpcConfig!.bnbRpc, "latest", "latest"),
         batchOnChainBalancesAtBlock(addresses, rpcConfig!.baseRpc, rpcConfig!.bnbRpc, baseHistHex, bnbHistHex),
+        fetchNetStakedMap(supabase),
+        fetchNetStakedMap(supabase, pastDateISO),
       ]);
 
       console.log(`[delta] ${sortMode}/${period}: got ${currentMap.size} current + ${pastMap.size} historical on-chain balances`);
 
       const withDeltas: EnrichedEntry[] = entries.map((entry) => {
         const addr = entry.account.toLowerCase();
-        const currentVal = currentMap.get(addr) || 0;
-        const pastVal = pastMap.get(addr) || 0;
+        const currentVal = (currentMap.get(addr) || 0) + (currentStakedMap.get(addr) || 0);
+        const pastVal = (pastMap.get(addr) || 0) + (pastStakedMap.get(addr) || 0);
         const delta = currentVal - pastVal;
         return { ...entry, delta, total: currentVal, badgeBalance: currentVal };
       });
