@@ -70,7 +70,8 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
   const [buyTokenOpen, setBuyTokenOpen] = useState(false);
   const [crossChainOpen, setCrossChainOpen] = useState(false);
   const [tokenPickerOpen, setTokenPickerOpen] = useState(false);
-  const [selectedTokenAddress, setSelectedTokenAddress] = useState<string>('0x0'); // default ETH
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState<string>('0x0');
+  const [slippageBps, setSlippageBps] = useState(200);
 
   const debouncedAmount = useDebouncedValue(dhbAmount, 500);
 
