@@ -111,6 +111,9 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
         <div className="p-5 pb-8 space-y-4">
           <h3 className="text-white font-semibold text-base">Buy with Crypto</h3>
           <p className="text-xs text-white/40">Swap ETH → DHB on Base via Uniswap V3</p>
+          <div className="flex justify-end mt-1">
+            <SlippageSettings slippageBps={slippageBps} onSlippageChange={setSlippageBps} />
+          </div>
 
           {step === 'input' && (
             <>
