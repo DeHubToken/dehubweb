@@ -5,7 +5,7 @@
  */
 
 import { useState } from 'react';
-import { Settings2 } from 'lucide-react';
+import { Settings2, AlertTriangle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 const PRESETS = [
@@ -79,8 +79,10 @@ export function SlippageSettings({ slippageBps, onSlippageChange }: SlippageSett
             <span className="text-xs text-zinc-500">%</span>
           </div>
           {slippageBps > 500 && (
-            <p className="text-[10px] text-amber-400/80 flex items-center gap-1">
-              <span>⚠</span> High slippage, risk of loss, be very careful <span>⚠</span>
+            <p className="text-[10px] text-amber-400/80 flex items-center justify-center gap-1.5 leading-none">
+              <AlertTriangle className="w-3 h-3 shrink-0" />
+              <span>High slippage, risk of loss, be very careful</span>
+              <AlertTriangle className="w-3 h-3 shrink-0" />
             </p>
           )}
           {slippageBps < 50 && (
