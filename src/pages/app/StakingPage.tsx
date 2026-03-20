@@ -140,6 +140,7 @@ export default function StakingPage() {
   const [showDeposits, setShowDeposits] = useState(false);
   const [depositRecords, setDepositRecords] = useState<{ amount: number; tx_hash: string; chain: string; created_at: string; source: 'db' | 'chain' }[]>([]);
   const [depositsLoading, setDepositsLoading] = useState(false);
+  const [syncingDeposits, setSyncingDeposits] = useState(false);
   const [showWithdrawals, setShowWithdrawals] = useState(false);
   const [withdrawalRecords, setWithdrawalRecords] = useState<{ amount: number; tx_hash: string; chain: string; created_at: string }[]>([]);
   const [withdrawalsLoading, setWithdrawalsLoading] = useState(false);
@@ -752,9 +753,39 @@ export default function StakingPage() {
           className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden mb-6"
         >
           <div className="p-4 border-b border-white/5 flex items-center justify-between">
-            <div>
-              <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Your Deposits</h2>
-              <p className="text-xs text-white/30 mt-0.5">All your stake transactions</p>
+            <div className="flex items-center gap-2">
+              <div>
+                <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Your Deposits</h2>
+                <p className="text-xs text-white/30 mt-0.5">All your stake transactions</p>
+              </div>
+              <button
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  if (syncingDeposits || !currentWallet) return;
+                  setSyncingDeposits(true);
+                  try {
+                    const { data, error } = await supabase.functions.invoke('sync-staking-deposits', {
+                      body: { wallet: currentWallet },
+                    });
+                    if (error) throw error;
+                    if (data?.newRecords > 0) {
+                      toast.success(`Found ${data.newRecords} new deposit${data.newRecords > 1 ? 's' : ''} on-chain`);
+                      await fetchDeposits();
+                    } else {
+                      toast.success('Deposits are up to date');
+                    }
+                  } catch (err) {
+                    console.error('[Staking] Sync failed:', err);
+                    toast.error('Failed to sync deposits');
+                  }
+                  setSyncingDeposits(false);
+                }}
+                disabled={syncingDeposits}
+                className="p-1.5 rounded-lg text-white/30 hover:text-white/60 hover:bg-white/5 transition-colors disabled:opacity-50"
+                title="Scan on-chain for missing deposits"
+              >
+                <RefreshCw className={cn("w-3.5 h-3.5", syncingDeposits && "animate-spin")} />
+              </button>
             </div>
             <button onClick={() => setShowDeposits(false)} className="text-white/40 hover:text-white transition-colors">
               <X className="w-4 h-4" />
