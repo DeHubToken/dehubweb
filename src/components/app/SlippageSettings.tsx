@@ -5,7 +5,7 @@
  */
 
 import { useState } from 'react';
-import { Settings2 } from 'lucide-react';
+import { Settings2, AlertTriangle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 const PRESETS = [
