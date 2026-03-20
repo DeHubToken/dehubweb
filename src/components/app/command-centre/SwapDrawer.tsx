@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ArrowDownUp, Loader2, ExternalLink, AlertTriangle } from 'lucide-react';
+import { SlippageSettings } from '@/components/app/SlippageSettings';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
