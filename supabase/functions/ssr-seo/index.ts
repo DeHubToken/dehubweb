@@ -346,11 +346,14 @@ serve(async (req) => {
 
         // Default Fallback
         const html = generateMetaHTML({
-            title: "DeHub",
+            title: "DeHub — Open Source, User Owned & Censorship Resistant Media",
             description:
-                "DeHub is an open source, user owned alternative to legacy media for true censorship resistance with freedom of speech and reach.",
-            image: "https://dehub.io/og-image.png",
+                "dehub.io is open source, user owned and censorship resistant media. Join the future of free speech and reach.",
+            image: "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//Screenshot%202026-03-20%20225233.png",
             url: canonicalUrl,
+            twitterCard: "summary_large_image",
+            imageWidth: 1200,
+            imageHeight: 628,
             functionBaseUrl,
             isBot,
         });
