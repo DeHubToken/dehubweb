@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, ArrowDown, CheckCircle2, AlertCircle, CreditCard, Wallet, Plus, ChevronDown } from 'lucide-react';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
+import { SlippageSettings } from '@/components/app/SlippageSettings';
 import { getSwapQuote, applySlippage, swapTokenForDHB, getNativeBalance } from '@/lib/contracts/uniswap-swap';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTokenPrices } from '@/hooks/use-token-prices';
@@ -69,7 +70,8 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
   const [buyTokenOpen, setBuyTokenOpen] = useState(false);
   const [crossChainOpen, setCrossChainOpen] = useState(false);
   const [tokenPickerOpen, setTokenPickerOpen] = useState(false);
-  const [selectedTokenAddress, setSelectedTokenAddress] = useState<string>('0x0'); // default ETH
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState<string>('0x0');
+  const [slippageBps, setSlippageBps] = useState(200);
 
   const debouncedAmount = useDebouncedValue(dhbAmount, 500);
 
@@ -139,7 +141,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
       .finally(() => setQuoting(false));
   }, [debouncedAmount, selectedToken.address]);
 
-  const amountInWithSlippage = quoteResult ? applySlippage(quoteResult.amountIn) : null;
+  const amountInWithSlippage = quoteResult ? applySlippage(quoteResult.amountIn, slippageBps) : null;
   const amountInFormatted = amountInWithSlippage
     ? (Number(amountInWithSlippage) / 10 ** selectedToken.decimals).toFixed(selectedToken.decimals <= 8 ? selectedToken.decimals : 6)
     : null;
@@ -256,8 +258,8 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
               {/* Pay token display */}
               <div className="bg-white/[0.04] border border-white/10 rounded-xl p-4 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-zinc-400">You pay (incl. 2% slippage)</span>
-                  {payUsd > 0 && <span className="text-xs text-zinc-500">≈ ${payUsd.toFixed(2)}</span>}
+                  <span className="text-xs text-zinc-400">You pay</span>
+                  <SlippageSettings slippageBps={slippageBps} onSlippageChange={setSlippageBps} />
                 </div>
                 <div className="flex items-center gap-3">
                   {/* Token selector button */}

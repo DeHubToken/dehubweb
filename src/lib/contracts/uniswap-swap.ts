@@ -119,10 +119,11 @@ export async function getSwapQuote(
 
 /**
  * Apply slippage buffer to a token amount.
- * Adds 2% to cover price movement between quote and execution.
+ * @param amountWei - the raw amount in wei
+ * @param bps - slippage in basis points (default 200 = 2%)
  */
-export function applySlippage(amountWei: bigint): bigint {
-  return amountWei + (amountWei * BigInt(SLIPPAGE_BPS)) / BigInt(10000);
+export function applySlippage(amountWei: bigint, bps: number = SLIPPAGE_BPS): bigint {
+  return amountWei + (amountWei * BigInt(bps)) / BigInt(10000);
 }
 
 /**

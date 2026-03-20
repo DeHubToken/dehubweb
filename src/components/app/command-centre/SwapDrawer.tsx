@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ArrowDownUp, Loader2, ExternalLink, AlertTriangle } from 'lucide-react';
+import { SlippageSettings } from '@/components/app/SlippageSettings';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +31,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
   const [step, setStep] = useState<SwapStep>('input');
   const [txHash, setTxHash] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
+  const [slippageBps, setSlippageBps] = useState(200);
 
   // Fetch ETH balance on open
   useEffect(() => {
@@ -74,7 +76,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
     ? parseFloat(formatUnits(quoteEth, 18)).toFixed(6)
     : null;
 
-  const maxEthWithSlippage = quoteEth !== null ? applySlippage(quoteEth) : null;
+  const maxEthWithSlippage = quoteEth !== null ? applySlippage(quoteEth, slippageBps) : null;
 
   const insufficientBalance = ethBalance !== null && maxEthWithSlippage !== null && ethBalance < maxEthWithSlippage;
 
@@ -109,6 +111,9 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
         <div className="p-5 pb-8 space-y-4">
           <h3 className="text-white font-semibold text-base">Buy with Crypto</h3>
           <p className="text-xs text-white/40">Swap ETH → DHB on Base via Uniswap V3</p>
+          <div className="flex justify-end mt-1">
+            <SlippageSettings slippageBps={slippageBps} onSlippageChange={setSlippageBps} />
+          </div>
 
           {step === 'input' && (
             <>
@@ -145,7 +150,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
                   )}
                 </div>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/50">Max (incl. 2% slippage)</span>
+                  <span className="text-white/50">Max (incl. slippage)</span>
                   <span className="text-white/50 font-mono">
                     {maxEthWithSlippage ? parseFloat(formatUnits(maxEthWithSlippage, 18)).toFixed(6) + ' ETH' : '—'}
                   </span>
