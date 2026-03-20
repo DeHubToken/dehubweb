@@ -516,6 +516,10 @@ async function computeSnapshotDelta(
         if (pastVal === undefined && hybridPastMap) {
           pastVal = hybridPastMap.get(addr);
         }
+        // Add DB staking to past value for holdings
+        if (snapshotStakedPast && pastVal !== undefined) {
+          pastVal += snapshotStakedPast.get(addr) || 0;
+        }
         const isExtraWallet = EXTRA_WALLET_ADDRESSES.has(addr);
 
         let delta: number;
