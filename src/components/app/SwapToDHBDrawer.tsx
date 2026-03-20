@@ -141,7 +141,7 @@ export function SwapToDHBDrawer({ open, onOpenChange }: SwapToDHBDrawerProps) {
       .finally(() => setQuoting(false));
   }, [debouncedAmount, selectedToken.address]);
 
-  const amountInWithSlippage = quoteResult ? applySlippage(quoteResult.amountIn) : null;
+  const amountInWithSlippage = quoteResult ? applySlippage(quoteResult.amountIn, slippageBps) : null;
   const amountInFormatted = amountInWithSlippage
     ? (Number(amountInWithSlippage) / 10 ** selectedToken.decimals).toFixed(selectedToken.decimals <= 8 ? selectedToken.decimals : 6)
     : null;
