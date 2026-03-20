@@ -240,7 +240,19 @@ function EndlessScrollView({
   // Scroll to top when entering feed view from collage
   useEffect(() => {
     if (startFromId) {
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      // Reset scroll immediately and after a frame to catch any layout shifts
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      // Also scroll any overflow parent containers
+      const scrollParent = scrollTargetRef.current?.closest('[class*="overflow"]');
+      if (scrollParent) scrollParent.scrollTop = 0;
+      // After paint, ensure we're still at top
+      requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      });
     }
   }, [startFromId]);
 
