@@ -31,6 +31,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
   const [step, setStep] = useState<SwapStep>('input');
   const [txHash, setTxHash] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
+  const [slippageBps, setSlippageBps] = useState(200);
 
   // Fetch ETH balance on open
   useEffect(() => {
