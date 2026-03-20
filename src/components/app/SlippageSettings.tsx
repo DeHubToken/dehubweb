@@ -81,7 +81,7 @@ export function SlippageSettings({ slippageBps, onSlippageChange }: SlippageSett
           {slippageBps > 500 && (
             <p className="text-[10px] text-amber-400/80 text-center">
               <AlertTriangle className="w-2.5 h-2.5 inline-block align-[-.1em] mr-1" />
-              <span>High slippage, risk of loss, be very careful</span>
+              <span>HIGH SLIPPAGE - RISK OF LOSS</span>
               <AlertTriangle className="w-2.5 h-2.5 inline-block align-[-.1em] ml-1" />
             </p>
           )}
