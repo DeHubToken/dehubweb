@@ -76,7 +76,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
     ? parseFloat(formatUnits(quoteEth, 18)).toFixed(6)
     : null;
 
-  const maxEthWithSlippage = quoteEth !== null ? applySlippage(quoteEth) : null;
+  const maxEthWithSlippage = quoteEth !== null ? applySlippage(quoteEth, slippageBps) : null;
 
   const insufficientBalance = ethBalance !== null && maxEthWithSlippage !== null && ethBalance < maxEthWithSlippage;
 
