@@ -83,6 +83,42 @@ async function getOnChainBalance(address: string, baseRpc: string, bnbRpc: strin
   return getOnChainBalanceAtBlock(address, baseRpc, bnbRpc, "latest", "latest");
 }
 
+/**
+ * Fetch net staked amounts from staking_records DB table.
+ * New unified staking is transfer-based (no per-user on-chain query),
+ * so we rely on DB records which are inserted after verifying real Transfer events.
+ * @param beforeDate - If provided, only include records created before this ISO date string
+ */
+async function fetchNetStakedMap(supabase: any, beforeDate?: string): Promise<Map<string, number>> {
+  const map = new Map<string, number>();
+  let query = supabase.from("staking_records").select("wallet_address, amount, action");
+  if (beforeDate) {
+    query = query.lte("created_at", beforeDate);
+  }
+  // Fetch all records (staking_records should be manageable in size)
+  const { data, error } = await query;
+  if (error || !data) {
+    console.warn("[staking] Failed to fetch staking records:", error);
+    return map;
+  }
+  for (const record of data) {
+    const addr = (record.wallet_address as string).toLowerCase();
+    const amount = Number(record.amount) || 0;
+    const current = map.get(addr) || 0;
+    if (record.action === "stake") {
+      map.set(addr, current + amount);
+    } else if (record.action === "unstake") {
+      map.set(addr, current - amount);
+    }
+  }
+  // Remove zero/negative entries
+  for (const [addr, val] of map) {
+    if (val <= 0) map.delete(addr);
+  }
+  console.log(`[staking] Net staked map: ${map.size} wallets with positive stake${beforeDate ? ` (before ${beforeDate})` : ""}`);
+  return map;
+}
+
 /** Fetch on-chain balances for a batch of addresses at specific block heights, 10 at a time */
 async function batchOnChainBalancesAtBlock(
   addresses: string[],
