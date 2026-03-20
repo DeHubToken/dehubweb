@@ -31,10 +31,11 @@ export default {
     const isBot = BOT_AGENTS.some(bot => userAgent.toLowerCase().includes(bot));
 
     // Define paths that need dynamic SEO
+    const isRootPath = url.pathname === '/';
     const isProfilePath = url.pathname.length > 1 && !url.pathname.includes('.') && !url.pathname.startsWith('/app/') && !['explore', 'notifications', 'messages'].some(p => url.pathname.startsWith('/' + p));
     const isPostPath = url.pathname.includes('/post/') || url.pathname.includes('/video/');
 
-    if (isBot && (isProfilePath || isPostPath)) {
+    if (isBot && (isRootPath || isProfilePath || isPostPath)) {
       // Fetch from Supabase SSR function
       const ssrUrl = `${SUPABASE_FUNCTION_URL}?path=${encodeURIComponent(url.pathname)}`;
       

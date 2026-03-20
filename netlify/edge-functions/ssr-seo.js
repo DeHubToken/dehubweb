@@ -32,8 +32,10 @@ export default async (request, context) => {
   const isPostPath = url.pathname.includes('/post/');
   // Profile: any top-level path that isn't a system route (with or without @)
   const isProfilePath = firstSegment && !SYSTEM_ROUTES.includes(firstSegment.replace('@', '')) && !firstSegment.includes('.');
+  // Root URL: dehub.io/
+  const isRootPath = url.pathname === '/';
 
-  if (isBot && (isProfilePath || isPostPath)) {
+  if (isBot && (isRootPath || isProfilePath || isPostPath)) {
     // We pass both path and original_url to ensure Supabase has everything it needs
     const ssrUrl = `${SUPABASE_FUNCTION_URL}?path=${encodeURIComponent(url.pathname)}&original_url=${encodeURIComponent(request.url)}`;
     
