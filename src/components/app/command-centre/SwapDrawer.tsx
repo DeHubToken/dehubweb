@@ -147,7 +147,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
                   )}
                 </div>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/50">Max (incl. 2% slippage)</span>
+                  <span className="text-white/50">Max (incl. slippage)</span>
                   <span className="text-white/50 font-mono">
                     {maxEthWithSlippage ? parseFloat(formatUnits(maxEthWithSlippage, 18)).toFixed(6) + ' ETH' : '—'}
                   </span>
