@@ -1263,6 +1263,30 @@ export default function NotificationsPage() {
     markAllCustomAsRead.mutate();
   };
 
+  const handleClearAllNotifications = async () => {
+    setIsClearingAll(true);
+    try {
+      // Mark all as read first via API
+      markAllAsRead.mutate(undefined);
+      markAllCustomAsRead.mutate();
+      
+      // Store the "cleared at" timestamp — all notifications before this will be hidden
+      localStorage.setItem('notifications_cleared_at', String(Date.now()));
+      
+      // Clear query caches to force immediate UI update
+      queryClient.setQueryData(['notifications', 'unreadCount'], { total: 0, byCategory: { engagement: 0, social: 0, monetization: 0, content: 0, system: 0 } });
+      
+      // Force re-render to pick up the new localStorage timestamp
+      forceUpdate();
+      
+      toast.success('All notifications cleared');
+    } catch (error) {
+      toast.error('Failed to clear notifications');
+    } finally {
+      setIsClearingAll(false);
+    }
+  };
+
   const handleMarkAsRead = (notificationId: string) => {
     setMarkingNotificationId(notificationId);
     if (notificationId.startsWith('custom_')) {
