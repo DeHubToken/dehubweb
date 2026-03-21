@@ -72,7 +72,7 @@ export function MusicScreen() {
 
       {/* Up next */}
       <div className="px-4 flex-1">
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-3">
           <h3 className="text-white text-sm font-semibold">Up Next</h3>
           <ListMusic className="w-4 h-4 text-zinc-500" />
         </div>
