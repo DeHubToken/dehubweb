@@ -82,6 +82,11 @@ const COUNTRIES = [
   { code: 'tm', flag: '🇹🇲', name: 'Turkmenistan' },
   { code: 'kg', flag: '🇰🇬', name: 'Kyrgyzstan' },
   { code: 'nz', flag: '🇳🇿', name: 'New Zealand' },
+  { code: 'ps', flag: '🇵🇸', name: 'Palestine' },
+  { code: 'jo', flag: '🇯🇴', name: 'Jordan' },
+  { code: 'lb', flag: '🇱🇧', name: 'Lebanon' },
+  { code: 'iq', flag: '🇮🇶', name: 'Iraq' },
+  { code: 'eg', flag: '🇪🇬', name: 'Egypt' },
 ];
 
 type Tab = 'posts' | 'tickers';
