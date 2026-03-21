@@ -467,7 +467,7 @@ function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem
           >
             {visibleItems.map((item) => (
               <div key={item.id} className="flex-shrink-0 w-[280px]">
-                <VideoCard video={item} />
+                <VideoCard video={item} hideActions />
               </div>
             ))}
             {visibleCount < audioItems.length && (

@@ -444,9 +444,11 @@ interface VideoCardProps {
   isImmersive?: boolean;
   /** When true, disables intersection-based autoplay (video only plays on explicit click) */
   disableAutoplay?: boolean;
+  /** When true, hides the action bar (votes, comments, tips etc.) — useful for carousel thumbnails */
+  hideActions?: boolean;
 }
 
-export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false }: VideoCardProps) {
+export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false, hideActions = false }: VideoCardProps) {
   const instanceId = useId();
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
@@ -1547,30 +1549,34 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             }}
           />
         </div>
-        <ActionBar
-          postId={video.id} 
-          className="p-0" 
-          isLiked={video.isLiked} 
-          isDisliked={video.isDisliked}
-          onComment={() => setShowComments(!showComments)}
-          onRepost={handleRepost}
-          onQuote={handleQuote}
-          likeCount={video.likeCount}
-          dislikeCount={video.dislikeCount}
-          commentCount={video.commentCount}
-          repostCount={video.repostCount}
-          isReposted={video.isReposted}
-          isOptimistic={video.isOptimistic}
-          tipCount={tipCount}
-          onTip={() => setShowTipModal(true)}
-        />
+        {!hideActions && (
+          <>
+            <ActionBar
+              postId={video.id} 
+              className="p-0" 
+              isLiked={video.isLiked} 
+              isDisliked={video.isDisliked}
+              onComment={() => setShowComments(!showComments)}
+              onRepost={handleRepost}
+              onQuote={handleQuote}
+              likeCount={video.likeCount}
+              dislikeCount={video.dislikeCount}
+              commentCount={video.commentCount}
+              repostCount={video.repostCount}
+              isReposted={video.isReposted}
+              isOptimistic={video.isOptimistic}
+              tipCount={tipCount}
+              onTip={() => setShowTipModal(true)}
+            />
 
-        {/* Comments */}
-        <CommentsWrapper
-          open={showComments}
-          onOpenChange={setShowComments}
-          tokenId={video.id}
-        />
+            {/* Comments */}
+            <CommentsWrapper
+              open={showComments}
+              onOpenChange={setShowComments}
+              tokenId={video.id}
+            />
+          </>
+        )}
       </div>
 
       {/* AI Chat */}
