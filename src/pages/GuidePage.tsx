@@ -492,7 +492,7 @@ const SectionCard = React.forwardRef<HTMLDivElement, { section: GuideSection }>(
           </div>
         )}
 
-        <ScreenshotPlaceholder />
+        <ScreenshotImage src={section.screenshot} alt={`${section.title} screenshot`} />
       </div>
     );
   }
