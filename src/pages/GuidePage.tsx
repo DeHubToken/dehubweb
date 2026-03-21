@@ -7,6 +7,20 @@ import { ArrowLeft, ChevronRight, Lightbulb, Menu, X,
   BookOpen, ShoppingCart, LogIn
 } from "lucide-react";
 
+// Guide screenshots
+import screenshotLanding from "@/assets/guide/landing.png";
+import screenshotHomeFeed from "@/assets/guide/home-feed.png";
+import screenshotExplore from "@/assets/guide/explore.png";
+import screenshotMessages from "@/assets/guide/messages.png";
+import screenshotAssistant from "@/assets/guide/assistant.png";
+import screenshotNotifications from "@/assets/guide/notifications.png";
+import screenshotLeaderboard from "@/assets/guide/leaderboard.png";
+import screenshotBookmarks from "@/assets/guide/bookmarks.png";
+import screenshotSettings from "@/assets/guide/settings.png";
+import screenshotGovernance from "@/assets/guide/governance.png";
+import screenshotCommandCentre from "@/assets/guide/command-centre.png";
+import screenshotTv from "@/assets/guide/tv.png";
+
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
 /* ------------------------------------------------------------------ */
@@ -18,11 +32,13 @@ interface GuideSection {
   intro: string;
   steps: string[];
   tips?: string[];
+  screenshot?: string;
 }
 
 const sections: GuideSection[] = [
   {
     id: "getting-started",
+    screenshot: screenshotLanding,
     title: "Getting Started",
     icon: LogIn,
     intro: "DeHub supports two ways to sign in: social login via Web3Auth (email, Google, X, etc.) or connecting an external wallet like MetaMask. Social-login users get a smart account — the platform covers all gas fees. External-wallet users need to hold gas on the relevant chain.",
@@ -42,6 +58,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "home-feed",
+    screenshot: screenshotHomeFeed,
     title: "Home Feed",
     icon: Home,
     intro: "The home feed is where you see posts from people you follow and trending content. It supports multiple content-type tabs and sorting options.",
@@ -62,6 +79,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "creating-posts",
+    screenshot: screenshotHomeFeed,
     title: "Creating Posts",
     icon: PenSquare,
     intro: "Create text posts, share images, videos, voice notes, GIFs, and more. Use hashtags, cashtags, and mentions to increase reach.",
@@ -84,6 +102,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "interacting-with-posts",
+    screenshot: screenshotHomeFeed,
     title: "Interacting with Posts",
     icon: ThumbsUp,
     intro: "Engage with content by voting, commenting, tipping, bookmarking, sharing, and translating.",
@@ -105,6 +124,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "explore-search",
+    screenshot: screenshotExplore,
     title: "Explore & Search",
     icon: Search,
     intro: "Discover new content and users through the explore page and powerful search functionality.",
@@ -123,6 +143,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "profile",
+    screenshot: screenshotHomeFeed,
     title: "Profile",
     icon: User,
     intro: "Your profile showcases your posts, followers, following, and wallet information.",
@@ -142,6 +163,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "messages",
+    screenshot: screenshotMessages,
     title: "Messages",
     icon: MessageCircle,
     intro: "Send direct messages to other users on the platform.",
@@ -160,6 +182,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "ai-assistant",
+    screenshot: screenshotAssistant,
     title: "AI Assistant",
     icon: Bot,
     intro: "Chat with DeHub's built-in AI assistant for help, information, and creative tasks.",
@@ -179,6 +202,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "notifications",
+    screenshot: screenshotNotifications,
     title: "Notifications",
     icon: Bell,
     intro: "Stay updated with likes, comments, tips, follows, and other activity on your content.",
@@ -196,6 +220,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "wallet",
+    screenshot: screenshotCommandCentre,
     title: "Wallet",
     icon: Wallet,
     intro: "View your DHB balances across multiple chains, check staking deposits, and manage your assets.",
@@ -214,6 +239,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "staking",
+    screenshot: screenshotCommandCentre,
     title: "Staking",
     icon: Landmark,
     intro: "Stake your DHB tokens to earn rewards and increase your governance voting power.",
@@ -233,6 +259,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "leaderboard",
+    screenshot: screenshotLeaderboard,
     title: "Leaderboard",
     icon: Trophy,
     intro: "See who's on top! The leaderboard ranks users by balance, daily spending, and trending topics.",
@@ -252,6 +279,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "command-centre",
+    screenshot: screenshotCommandCentre,
     title: "Command Centre",
     icon: LayoutDashboard,
     intro: "A dashboard overview showing your key metrics and platform activity at a glance.",
@@ -267,6 +295,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "governance",
+    screenshot: screenshotGovernance,
     title: "Governance",
     icon: Vote,
     intro: "Participate in platform governance by creating proposals and voting on community decisions.",
@@ -286,6 +315,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "bookmarks",
+    screenshot: screenshotBookmarks,
     title: "Bookmarks",
     icon: Bookmark,
     intro: "Save posts to your bookmarks for easy access later.",
@@ -302,6 +332,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "settings",
+    screenshot: screenshotSettings,
     title: "Settings",
     icon: Settings,
     intro: "Customize your DeHub experience with language, privacy, and display preferences.",
@@ -319,6 +350,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "buying-dhb",
+    screenshot: screenshotCommandCentre,
     title: "Buying DHB",
     icon: ShoppingCart,
     intro: "Buy DHB tokens directly within the app using the built-in swap interface.",
@@ -339,6 +371,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "bridge",
+    screenshot: screenshotCommandCentre,
     title: "Bridge",
     icon: ArrowLeftRight,
     intro: "Move your DHB tokens between supported blockchains using the cross-chain bridge.",
@@ -359,6 +392,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "music-tv",
+    screenshot: screenshotTv,
     title: "Music & TV",
     icon: Music,
     intro: "Enjoy media content directly within DeHub — stream music and watch live TV channels.",
@@ -397,11 +431,20 @@ const sections: GuideSection[] = [
 /*  Sub-components                                                     */
 /* ------------------------------------------------------------------ */
 
-const ScreenshotPlaceholder = () => (
-  <div className="w-full h-48 rounded-xl border-2 border-dashed border-white/10 flex items-center justify-center text-white/30 text-sm select-none mt-4">
-    Screenshot coming soon
-  </div>
-);
+const ScreenshotImage = ({ src, alt }: { src?: string; alt: string }) => {
+  if (!src) {
+    return (
+      <div className="w-full h-48 rounded-xl border-2 border-dashed border-white/10 flex items-center justify-center text-white/30 text-sm select-none mt-4">
+        Screenshot coming soon
+      </div>
+    );
+  }
+  return (
+    <div className="mt-4 rounded-xl overflow-hidden border border-white/10">
+      <img src={src} alt={alt} className="w-full h-auto" loading="lazy" />
+    </div>
+  );
+};
 
 const SectionCard = React.forwardRef<HTMLDivElement, { section: GuideSection }>(
   ({ section }, ref) => {
@@ -449,7 +492,7 @@ const SectionCard = React.forwardRef<HTMLDivElement, { section: GuideSection }>(
           </div>
         )}
 
-        <ScreenshotPlaceholder />
+        <ScreenshotImage src={section.screenshot} alt={`${section.title} screenshot`} />
       </div>
     );
   }
