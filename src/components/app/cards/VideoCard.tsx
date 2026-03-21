@@ -1549,30 +1549,34 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             }}
           />
         </div>
-        <ActionBar
-          postId={video.id} 
-          className="p-0" 
-          isLiked={video.isLiked} 
-          isDisliked={video.isDisliked}
-          onComment={() => setShowComments(!showComments)}
-          onRepost={handleRepost}
-          onQuote={handleQuote}
-          likeCount={video.likeCount}
-          dislikeCount={video.dislikeCount}
-          commentCount={video.commentCount}
-          repostCount={video.repostCount}
-          isReposted={video.isReposted}
-          isOptimistic={video.isOptimistic}
-          tipCount={tipCount}
-          onTip={() => setShowTipModal(true)}
-        />
+        {!hideActions && (
+          <>
+            <ActionBar
+              postId={video.id} 
+              className="p-0" 
+              isLiked={video.isLiked} 
+              isDisliked={video.isDisliked}
+              onComment={() => setShowComments(!showComments)}
+              onRepost={handleRepost}
+              onQuote={handleQuote}
+              likeCount={video.likeCount}
+              dislikeCount={video.dislikeCount}
+              commentCount={video.commentCount}
+              repostCount={video.repostCount}
+              isReposted={video.isReposted}
+              isOptimistic={video.isOptimistic}
+              tipCount={tipCount}
+              onTip={() => setShowTipModal(true)}
+            />
 
-        {/* Comments */}
-        <CommentsWrapper
-          open={showComments}
-          onOpenChange={setShowComments}
-          tokenId={video.id}
-        />
+            {/* Comments */}
+            <CommentsWrapper
+              open={showComments}
+              onOpenChange={setShowComments}
+              tokenId={video.id}
+            />
+          </>
+        )}
       </div>
 
       {/* AI Chat */}
