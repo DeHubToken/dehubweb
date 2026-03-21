@@ -571,6 +571,9 @@ function getNavigationLink(notification: DeHubNotification): string | null {
         : notification.actorUsername 
           ? `/${notification.actorUsername}` 
           : null;
+    case 'follow_request':
+      // Follow requests don't navigate — they have inline accept/reject buttons
+      return null;
     case 'subscription':
     case 'ppv_purchase':
       return notification.actorAddress 
