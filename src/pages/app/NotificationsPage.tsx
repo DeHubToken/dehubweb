@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useTranslation } from 'react-i18next';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star } from 'lucide-react';
+import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -25,7 +26,7 @@ import notificationsIcon from '@/assets/icons/notifications-icon.png';
 import { useQueries } from '@tanstack/react-query';
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
-import { DEHUB_CDN_BASE, getNFTInfo } from '@/lib/api/dehub';
+import { DEHUB_CDN_BASE, getNFTInfo, getFollowRequests, approveFollowRequest, rejectFollowRequest } from '@/lib/api/dehub';
 import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -232,7 +233,7 @@ const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.Eleme
 const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
   likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
-  follows: ['following'],
+  follows: ['following', 'follow_request'],
   comments: ['comment', 'comment_reply', 'mention', 'feature_request_comment', 'governance_comment'],
   reposts: ['repost', 'quote'],
   subscriptions: ['subscription', 'ppv_purchase'],
@@ -258,6 +259,7 @@ function getNotificationIcon(type: string) {
     case 'ppv_purchase':
       return <Users className="w-4 h-4 text-white/70" />;
     case 'following':
+    case 'follow_request':
       return <UserPlus className="w-4 h-4 text-white/70" />;
     case 'video_milestone':
       return <Trophy className="w-4 h-4 text-white/70" />;
@@ -512,6 +514,8 @@ function getNotificationContent(
       return tr('notifications.purchasedContent', { name: actorName });
     case 'following':
       return tr('notifications.startedFollowing', { name: actorName });
+    case 'follow_request':
+      return `${actorName} requested to follow you`;
     case 'video_milestone':
       return tr('notifications.postMilestone');
     case 'livestream_start':
@@ -568,6 +572,9 @@ function getNavigationLink(notification: DeHubNotification): string | null {
         : notification.actorUsername 
           ? `/${notification.actorUsername}` 
           : null;
+    case 'follow_request':
+      // Follow requests don't navigate — they have inline accept/reject buttons
+      return null;
     case 'subscription':
     case 'ppv_purchase':
       return notification.actorAddress 
@@ -603,6 +610,48 @@ function NotificationItem({
   const [showActorsDrawer, setShowActorsDrawer] = useState(false);
   const [showPostsDrawer, setShowPostsDrawer] = useState(false);
   const drawerJustClosed = useRef(false);
+  const [followRequestAction, setFollowRequestAction] = useState<'accepted' | 'rejected' | null>(null);
+  const [followRequestLoading, setFollowRequestLoading] = useState<'accept' | 'reject' | null>(null);
+
+  const isFollowRequest = (notification.type as string) === 'follow_request' || 
+    ((notification.type as string) === 'following' && notification.content?.toLowerCase().includes('requested'));
+
+  const handleFollowRequestAction = async (action: 'accept' | 'reject') => {
+    if (!notification.actorAddress) return;
+    setFollowRequestLoading(action);
+    try {
+      // Fetch follow requests to find the matching request ID
+      const requests = await getFollowRequests();
+      const match = requests.find(
+        r => r.address?.toLowerCase() === notification.actorAddress?.toLowerCase()
+      );
+      const requestId = match?.id || notification.actorAddress;
+      
+      if (action === 'accept') {
+        await approveFollowRequest(requestId);
+        setFollowRequestAction('accepted');
+        toast.success(`Accepted ${notification.actorUsername || 'user'}'s follow request`);
+      } else {
+        await rejectFollowRequest(requestId);
+        setFollowRequestAction('rejected');
+        toast.success(`Rejected ${notification.actorUsername || 'user'}'s follow request`);
+      }
+      // Mark as read
+      if (!notification.read) {
+        bundle.allIds.forEach(id => onMarkAsRead(id));
+      }
+    } catch (err: any) {
+      const msg = err?.message?.toLowerCase() || '';
+      if (msg.includes('not found') || msg.includes('already')) {
+        setFollowRequestAction(action === 'accept' ? 'accepted' : 'rejected');
+        toast.info('Request already handled');
+      } else {
+        toast.error(`Failed to ${action} follow request`);
+      }
+    } finally {
+      setFollowRequestLoading(null);
+    }
+  };
 
   // Prefer fresh enriched avatar over stale API snapshot
   const enriched = notification.actorAddress ? enrichedAvatars.get(notification.actorAddress.toLowerCase()) : undefined;
@@ -683,6 +732,13 @@ function NotificationItem({
       bundle.allIds.forEach(id => onMarkAsRead(id));
     }
     
+    // Follow request notifications — clicking row navigates to requester's profile
+    if (isFollowRequest) {
+      const profileTarget = notification.actorAddress || notification.actorUsername;
+      if (profileTarget) navigate(`/${profileTarget}`);
+      return;
+    }
+
     // Aggregated follow notifications → open followers drawer inline
     const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 2;
     if (isAggregatedFollow && walletAddress) {
@@ -852,7 +908,35 @@ function NotificationItem({
         </Link>
       )}
 
-      {/* Mark as read button - only show for unread notifications */}
+      {/* Follow request accept/reject buttons */}
+      {isFollowRequest && !followRequestAction && (
+        <div className="flex items-center gap-1.5 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+          <button
+            onClick={() => handleFollowRequestAction('accept')}
+            disabled={followRequestLoading !== null}
+            className="h-7 px-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium flex items-center gap-1 transition-colors disabled:opacity-50"
+          >
+            {followRequestLoading === 'accept' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
+            Accept
+          </button>
+          <button
+            onClick={() => handleFollowRequestAction('reject')}
+            disabled={followRequestLoading !== null}
+            className="h-7 px-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 text-xs font-medium flex items-center gap-1 transition-colors disabled:opacity-50"
+          >
+            {followRequestLoading === 'reject' ? <Loader2 className="w-3 h-3 animate-spin" /> : <XIcon className="w-3 h-3" />}
+            Reject
+          </button>
+        </div>
+      )}
+      {isFollowRequest && followRequestAction && (
+        <span className={`text-xs font-medium flex-shrink-0 px-2 py-1 rounded-lg ${
+          followRequestAction === 'accepted' ? 'text-green-400 bg-green-500/10' : 'text-zinc-500 bg-zinc-800/50'
+        }`}>
+          {followRequestAction === 'accepted' ? '✓ Accepted' : '✗ Rejected'}
+        </span>
+      )}
+
       <AnimatePresence mode="wait">
         {hasUnread && (
           <motion.button
