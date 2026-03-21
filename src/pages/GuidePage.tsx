@@ -392,6 +392,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "music-tv",
+    screenshot: screenshotTv,
     title: "Music & TV",
     icon: Music,
     intro: "Enjoy media content directly within DeHub — stream music and watch live TV channels.",
