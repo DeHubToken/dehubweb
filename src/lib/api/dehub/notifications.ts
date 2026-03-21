@@ -8,6 +8,7 @@ export type NotificationType =
   | 'comment_like'
   | 'mention'
   | 'following'
+  | 'follow_request'
   | 'tip'
   | 'subscription'
   | 'ppv_purchase'
