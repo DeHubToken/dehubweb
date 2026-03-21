@@ -182,6 +182,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "ai-assistant",
+    screenshot: screenshotAssistant,
     title: "AI Assistant",
     icon: Bot,
     intro: "Chat with DeHub's built-in AI assistant for help, information, and creative tasks.",
