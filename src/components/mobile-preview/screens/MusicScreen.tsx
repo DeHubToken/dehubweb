@@ -18,7 +18,7 @@ export function MusicScreen() {
       <MobileTopBar title="Music" />
 
       {/* Category pills */}
-      <div className="flex gap-2 px-4 py-3 overflow-x-auto scrollbar-hide">
+      <div className="flex gap-2 px-4 py-3.5 overflow-x-auto scrollbar-hide">
         {['All', 'Music Videos', 'Radio', 'Tracks', 'Podcasts', 'Playlists'].map((cat, i) => (
           <button
             key={cat}
