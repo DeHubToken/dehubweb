@@ -260,6 +260,8 @@ function getNotificationIcon(type: string) {
       return <Users className="w-4 h-4 text-white/70" />;
     case 'following':
     case 'follow_request':
+    case 'followRequest':
+    case 'follow-request':
       return <UserPlus className="w-4 h-4 text-white/70" />;
     case 'video_milestone':
       return <Trophy className="w-4 h-4 text-white/70" />;
