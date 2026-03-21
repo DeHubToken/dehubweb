@@ -53,8 +53,7 @@ export function ProfileOptionsContent({
       toast.error(t('profileOptions.noWalletAddress'));
       return;
     }
-    const displayAddress = DISPLAY_WALLET_OVERRIDES[profile.walletAddress.toLowerCase()] || profile.walletAddress;
-    navigator.clipboard.writeText(displayAddress);
+    navigator.clipboard.writeText(profile.walletAddress);
     toast.success(t('profileOptions.addressCopied'));
     setShareSheetOpen(false);
   };
