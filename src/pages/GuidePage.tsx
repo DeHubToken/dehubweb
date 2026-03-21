@@ -38,6 +38,7 @@ interface GuideSection {
 const sections: GuideSection[] = [
   {
     id: "getting-started",
+    screenshot: screenshotLanding,
     title: "Getting Started",
     icon: LogIn,
     intro: "DeHub supports two ways to sign in: social login via Web3Auth (email, Google, X, etc.) or connecting an external wallet like MetaMask. Social-login users get a smart account — the platform covers all gas fees. External-wallet users need to hold gas on the relevant chain.",
