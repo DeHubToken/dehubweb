@@ -232,7 +232,7 @@ const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.Eleme
 const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
   likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
-  follows: ['following'],
+  follows: ['following', 'follow_request'],
   comments: ['comment', 'comment_reply', 'mention', 'feature_request_comment', 'governance_comment'],
   reposts: ['repost', 'quote'],
   subscriptions: ['subscription', 'ppv_purchase'],
