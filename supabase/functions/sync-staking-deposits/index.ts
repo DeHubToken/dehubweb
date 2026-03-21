@@ -7,10 +7,9 @@ const corsHeaders = {
 };
 
 // Staking addresses and DHB token contracts
-const BASE_STAKING = "0xcF573a682Bf7A7Cc58000e9eCA9c9d04dA102Da7".toLowerCase();
-const BNB_STAKING = "0x26d2cd7763106fdce443fadd36163e2ad33a76e6".toLowerCase();
+const UNIFIED_STAKING = "0xcF573a682Bf7A7Cc58000e9eCA9c9d04dA102Da7".toLowerCase();
 const DHB_BASE = "0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c";
-const DHB_BNB = "0x680D3113caf77B61b510f332d5Ef4cf5b41A761D";
+const DHB_BNB = "0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7";
 
 interface AlchemyTransfer {
   hash: string;
@@ -23,7 +22,6 @@ async function fetchAlchemyTransfers(
   rpcUrl: string,
   fromAddress: string,
   contractAddress: string,
-  stakingAddress: string,
 ): Promise<AlchemyTransfer[]> {
   const res = await fetch(rpcUrl, {
     method: "POST",
@@ -36,7 +34,7 @@ async function fetchAlchemyTransfers(
         fromBlock: "0x0",
         toBlock: "latest",
         fromAddress,
-        toAddress: stakingAddress,
+        toAddress: UNIFIED_STAKING,
         contractAddresses: [contractAddress],
         category: ["erc20"],
       }],
@@ -78,8 +76,8 @@ Deno.serve(async (req) => {
 
     // Fetch on-chain transfers to staking address on both chains
     const [baseTransfers, bnbTransfers] = await Promise.all([
-      fetchAlchemyTransfers(baseRpc, walletLower, DHB_BASE, BASE_STAKING),
-      fetchAlchemyTransfers(bnbRpc, walletLower, DHB_BNB, BNB_STAKING),
+      fetchAlchemyTransfers(baseRpc, walletLower, DHB_BASE),
+      fetchAlchemyTransfers(bnbRpc, walletLower, DHB_BNB),
     ]);
 
     console.log(`[sync-staking] ${walletLower}: ${baseTransfers.length} Base + ${bnbTransfers.length} BNB transfers to staking`);
