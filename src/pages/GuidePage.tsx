@@ -79,6 +79,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "creating-posts",
+    screenshot: screenshotHomeFeed,
     title: "Creating Posts",
     icon: PenSquare,
     intro: "Create text posts, share images, videos, voice notes, GIFs, and more. Use hashtags, cashtags, and mentions to increase reach.",
