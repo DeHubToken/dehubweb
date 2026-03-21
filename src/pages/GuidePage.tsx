@@ -163,6 +163,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "messages",
+    screenshot: screenshotMessages,
     title: "Messages",
     icon: MessageCircle,
     intro: "Send direct messages to other users on the platform.",
