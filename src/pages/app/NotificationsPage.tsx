@@ -626,10 +626,12 @@ function NotificationItem({
     try {
       // Fetch follow requests to find the matching request ID
       const requests = await getFollowRequests();
+      console.log('[FollowRequest] fetched requests:', requests.map(r => ({ id: r.id, _id: (r as any)._id, address: r.address })));
       const match = requests.find(
         r => r.address?.toLowerCase() === notification.actorAddress?.toLowerCase()
       );
-      const requestId = match?.id || notification.actorAddress;
+      const requestId = match?.id || match?._id || notification.actorAddress;
+      console.log('[FollowRequest] matched:', { match: !!match, requestId, actorAddress: notification.actorAddress });
       
       if (action === 'accept') {
         await approveFollowRequest(requestId);

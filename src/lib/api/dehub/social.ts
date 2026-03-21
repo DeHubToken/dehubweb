@@ -19,6 +19,7 @@ export interface FollowResponse {
 
 export interface FollowRequestItem {
   id: string;
+  _id?: string;
   address: string;
   username?: string;
   displayName?: string;
