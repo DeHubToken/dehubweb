@@ -33,7 +33,7 @@ export function MusicScreen() {
 
       {/* Now playing */}
       <div className="mx-4 mb-4 p-4 rounded-2xl border border-white/[0.1] bg-white/[0.03]">
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2 mb-4">
           <Radio className="w-3.5 h-3.5 text-white" />
           <span className="text-[10px] text-zinc-400 uppercase tracking-wider">Now Playing</span>
         </div>
