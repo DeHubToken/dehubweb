@@ -76,7 +76,7 @@ export function MusicScreen() {
           <h3 className="text-white text-sm font-semibold">Up Next</h3>
           <ListMusic className="w-4 h-4 text-zinc-500" />
         </div>
-        <div className="space-y-1">
+        <div className="space-y-2">
           {MOCK_TRACKS.slice(1).map((track) => (
             <div key={track.title} className="flex items-center gap-3 py-2">
               <div className="w-10 h-10 rounded-lg bg-zinc-900 flex items-center justify-center">
