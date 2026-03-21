@@ -279,7 +279,7 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
   };
 
   return (
-    <div className="flex-shrink-0 w-[280px] text-left group">
+    <div className="flex-shrink-0 w-[280px] text-left group rounded-xl border border-white/[0.12] bg-white/[0.03] p-2">
       <div 
         onClick={handleContainerClick}
         className="aspect-video rounded-xl overflow-hidden bg-zinc-800 mb-2 relative cursor-pointer"
