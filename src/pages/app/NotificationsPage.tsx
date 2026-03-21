@@ -1273,13 +1273,11 @@ export default function NotificationsPage() {
       markAllCustomAsRead.mutate();
       
       // Store the "cleared at" timestamp — all notifications before this will be hidden
-      localStorage.setItem('notifications_cleared_at', String(Date.now()));
+      const now = Date.now();
+      localStorage.setItem('notifications_cleared_at', String(now));
       
-      // Clear query caches to force immediate UI update
-      queryClient.setQueryData(['notifications', 'unreadCount'], { total: 0, byCategory: { engagement: 0, social: 0, monetization: 0, content: 0, system: 0 } });
-      
-      // Force re-render to pick up the new localStorage timestamp
-      forceUpdate();
+      // Update state to trigger memo recalculation
+      setClearedAtTs(now);
       
       toast.success('All notifications cleared');
     } catch (error) {
