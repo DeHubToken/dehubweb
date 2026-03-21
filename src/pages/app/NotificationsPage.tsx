@@ -1077,12 +1077,20 @@ export default function NotificationsPage() {
   // Merge DeHub + custom notifications, sorted by date (memoized to prevent re-triggering enrichment)
   // Filter out notifications where the actor is the current user (e.g. backend sends DM notif to sender)
   const allNotifications = useMemo(
-    () => [...dehubNotifications, ...customNotifications]
-      .filter(n => {
-        if (!pageWalletAddress || !n.actorAddress) return true;
-        return n.actorAddress.toLowerCase() !== pageWalletAddress.toLowerCase();
-      })
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    () => {
+      const clearedAt = localStorage.getItem('notifications_cleared_at');
+      const clearedTimestamp = clearedAt ? parseInt(clearedAt, 10) : 0;
+      
+      return [...dehubNotifications, ...customNotifications]
+        .filter(n => {
+          // Filter out notifications before the "clear all" timestamp
+          if (clearedTimestamp && new Date(n.createdAt).getTime() <= clearedTimestamp) return false;
+          // Filter out self-notifications
+          if (!pageWalletAddress || !n.actorAddress) return true;
+          return n.actorAddress.toLowerCase() !== pageWalletAddress.toLowerCase();
+        })
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    },
     [dehubNotifications, customNotifications, pageWalletAddress]
   );
   
