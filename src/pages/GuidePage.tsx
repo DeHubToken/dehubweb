@@ -332,6 +332,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "settings",
+    screenshot: screenshotSettings,
     title: "Settings",
     icon: Settings,
     intro: "Customize your DeHub experience with language, privacy, and display preferences.",
