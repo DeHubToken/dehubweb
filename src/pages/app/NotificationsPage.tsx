@@ -1076,8 +1076,10 @@ export default function NotificationsPage() {
   const markAllCustomAsRead = useMarkAllCustomNotificationsAsRead();
   
   const [isClearingAll, setIsClearingAll] = useState(false);
-  // Force re-render trigger after clearing
-  const [, forceUpdate] = useReducer(x => x + 1, 0);
+  const [clearedAtTs, setClearedAtTs] = useState(() => {
+    const stored = localStorage.getItem('notifications_cleared_at');
+    return stored ? parseInt(stored, 10) : 0;
+  });
   
   // Merge DeHub + custom notifications, sorted by date (memoized to prevent re-triggering enrichment)
   // Filter out notifications where the actor is the current user (e.g. backend sends DM notif to sender)
