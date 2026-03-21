@@ -429,6 +429,65 @@ const sections: GuideSection[] = [
 ];
 
 /* ------------------------------------------------------------------ */
+/*  Search utilities                                                   */
+/* ------------------------------------------------------------------ */
+
+/** Tokenize query into lowercase words for multi-term matching */
+function tokenize(raw: string): string[] {
+  return raw.toLowerCase().split(/\s+/).filter(Boolean);
+}
+
+/** Score a section against search tokens. Higher = better match.
+ *  Returns 0 if any token has no match (AND logic). */
+function scoreSection(section: GuideSection, tokens: string[]): number {
+  if (tokens.length === 0) return 1; // no filter
+
+  const titleLower = section.title.toLowerCase();
+  const introLower = section.intro.toLowerCase();
+  const stepsLower = section.steps.map(s => s.toLowerCase());
+  const tipsLower = (section.tips || []).map(t => t.toLowerCase());
+  const allText = [titleLower, introLower, ...stepsLower, ...tipsLower];
+
+  let total = 0;
+  for (const token of tokens) {
+    let tokenScore = 0;
+    // Title match is worth 10x
+    if (titleLower.includes(token)) tokenScore += 10;
+    // Intro match worth 3x
+    if (introLower.includes(token)) tokenScore += 3;
+    // Steps/tips match worth 1x each
+    for (const text of [...stepsLower, ...tipsLower]) {
+      if (text.includes(token)) tokenScore += 1;
+    }
+    if (tokenScore === 0) return 0; // AND logic: every token must hit
+    total += tokenScore;
+  }
+  return total;
+}
+
+/** Highlight matching tokens in text */
+const HighlightText: React.FC<{ text: string; tokens: string[] }> = ({ text, tokens }) => {
+  if (tokens.length === 0) return <>{text}</>;
+
+  // Build a regex that matches any token
+  const escaped = tokens.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const regex = new RegExp(`(${escaped.join('|')})`, 'gi');
+  const parts = text.split(regex);
+
+  return (
+    <>
+      {parts.map((part, i) =>
+        regex.test(part) ? (
+          <mark key={i} className="bg-yellow-400/20 text-yellow-300 rounded-sm px-0.5">{part}</mark>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </>
+  );
+};
+
+/* ------------------------------------------------------------------ */
 /*  Sub-components                                                     */
 /* ------------------------------------------------------------------ */
 
@@ -447,8 +506,8 @@ const ScreenshotImage = ({ src, alt }: { src?: string; alt: string }) => {
   );
 };
 
-const SectionCard = React.forwardRef<HTMLDivElement, { section: GuideSection }>(
-  ({ section }, ref) => {
+const SectionCard = React.forwardRef<HTMLDivElement, { section: GuideSection; tokens: string[] }>(
+  ({ section, tokens }, ref) => {
     const Icon = section.icon;
     return (
       <div
@@ -460,10 +519,14 @@ const SectionCard = React.forwardRef<HTMLDivElement, { section: GuideSection }>(
           <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
             <Icon className="w-5 h-5 text-white" />
           </div>
-          <h2 className="text-xl md:text-2xl font-bold text-white">{section.title}</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-white">
+            <HighlightText text={section.title} tokens={tokens} />
+          </h2>
         </div>
 
-        <p className="text-white/70 mb-6 leading-relaxed">{section.intro}</p>
+        <p className="text-white/70 mb-6 leading-relaxed">
+          <HighlightText text={section.intro} tokens={tokens} />
+        </p>
 
         <div className="space-y-3 mb-6">
           {section.steps.map((step, i) => (
@@ -471,7 +534,9 @@ const SectionCard = React.forwardRef<HTMLDivElement, { section: GuideSection }>(
               <span className="shrink-0 w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs text-white/60 mt-0.5">
                 {i + 1}
               </span>
-              <p className="text-white/80 text-sm leading-relaxed">{step}</p>
+              <p className="text-white/80 text-sm leading-relaxed">
+                <HighlightText text={step} tokens={tokens} />
+              </p>
             </div>
           ))}
         </div>
@@ -486,7 +551,7 @@ const SectionCard = React.forwardRef<HTMLDivElement, { section: GuideSection }>(
               {section.tips.map((tip, i) => (
                 <li key={i} className="text-sm text-white/60 flex gap-2">
                   <ChevronRight className="w-3.5 h-3.5 mt-0.5 shrink-0 text-yellow-400/50" />
-                  <span>{tip}</span>
+                  <span><HighlightText text={tip} tokens={tokens} /></span>
                 </li>
               ))}
             </ul>
