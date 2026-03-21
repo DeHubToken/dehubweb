@@ -124,6 +124,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/mobile-preview" element={<MobilePreview />} />
+            <Route path="/guide" element={<GuidePage />} />
             <Route path="/docs" element={<DocsPage />} />
             <Route path="/docs/*" element={<DocsPage />} />
             
