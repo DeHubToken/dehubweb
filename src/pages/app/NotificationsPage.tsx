@@ -609,6 +609,48 @@ function NotificationItem({
   const [showActorsDrawer, setShowActorsDrawer] = useState(false);
   const [showPostsDrawer, setShowPostsDrawer] = useState(false);
   const drawerJustClosed = useRef(false);
+  const [followRequestAction, setFollowRequestAction] = useState<'accepted' | 'rejected' | null>(null);
+  const [followRequestLoading, setFollowRequestLoading] = useState<'accept' | 'reject' | null>(null);
+
+  const isFollowRequest = (notification.type as string) === 'follow_request' || 
+    ((notification.type as string) === 'following' && notification.content?.toLowerCase().includes('requested'));
+
+  const handleFollowRequestAction = async (action: 'accept' | 'reject') => {
+    if (!notification.actorAddress) return;
+    setFollowRequestLoading(action);
+    try {
+      // Fetch follow requests to find the matching request ID
+      const requests = await getFollowRequests();
+      const match = requests.find(
+        r => r.address?.toLowerCase() === notification.actorAddress?.toLowerCase()
+      );
+      const requestId = match?.id || notification.actorAddress;
+      
+      if (action === 'accept') {
+        await approveFollowRequest(requestId);
+        setFollowRequestAction('accepted');
+        toast.success(`Accepted ${notification.actorUsername || 'user'}'s follow request`);
+      } else {
+        await rejectFollowRequest(requestId);
+        setFollowRequestAction('rejected');
+        toast.success(`Rejected ${notification.actorUsername || 'user'}'s follow request`);
+      }
+      // Mark as read
+      if (!notification.read) {
+        bundle.allIds.forEach(id => onMarkAsRead(id));
+      }
+    } catch (err: any) {
+      const msg = err?.message?.toLowerCase() || '';
+      if (msg.includes('not found') || msg.includes('already')) {
+        setFollowRequestAction(action === 'accept' ? 'accepted' : 'rejected');
+        toast.info('Request already handled');
+      } else {
+        toast.error(`Failed to ${action} follow request`);
+      }
+    } finally {
+      setFollowRequestLoading(null);
+    }
+  };
 
   // Prefer fresh enriched avatar over stale API snapshot
   const enriched = notification.actorAddress ? enrichedAvatars.get(notification.actorAddress.toLowerCase()) : undefined;
