@@ -7,7 +7,8 @@ const corsHeaders = {
 };
 
 // Staking addresses and DHB token contracts
-const UNIFIED_STAKING = "0xcF573a682Bf7A7Cc58000e9eCA9c9d04dA102Da7".toLowerCase();
+const BASE_STAKING = "0xcF573a682Bf7A7Cc58000e9eCA9c9d04dA102Da7".toLowerCase();
+const BNB_STAKING = "0x26d2cd7763106fdce443fadd36163e2ad33a76e6".toLowerCase();
 const DHB_BASE = "0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c";
 const DHB_BNB = "0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7";
 
