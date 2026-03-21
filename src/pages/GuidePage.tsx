@@ -315,6 +315,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "bookmarks",
+    screenshot: screenshotBookmarks,
     title: "Bookmarks",
     icon: Bookmark,
     intro: "Save posts to your bookmarks for easy access later.",
