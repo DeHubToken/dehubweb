@@ -900,7 +900,7 @@ When users ask "why are tokens minting?" or about token minting - DHB uses a bur
 - **Paid Messages**: Direct monetisation through premium DMs
 - **Token-Gated Content**: Exclusive content for token holders (hold X amount of DHB to access)
 - **No Wallet Setup Required**: Seamless Web2 experience - users don't need to understand crypto
-- **No Gas Fees**: Platform covers transaction costs for frictionless UX
+- **Gas Fees Covered for Platform Wallets**: The platform covers all gas costs for users who signed up through the platform (Web3Auth wallets). Users who connected their own external wallet (e.g. MetaMask, Coinbase Wallet) are responsible for their own gas fees.
 - **Public Leaderboards**: All creator earnings are blockchain-verified and transparent
 - **Multi-Chain**: Built on L1s and EVM L2s for speed and reliability
 
