@@ -614,6 +614,8 @@ function NotificationItem({
   const [followRequestLoading, setFollowRequestLoading] = useState<'accept' | 'reject' | null>(null);
 
   const isFollowRequest = (notification.type as string) === 'follow_request' || 
+    (notification.type as string) === 'followRequest' ||
+    (notification.type as string) === 'follow-request' ||
     ((notification.type as string) === 'following' && notification.content?.toLowerCase().includes('requested'));
 
   const handleFollowRequestAction = async (action: 'accept' | 'reject') => {
