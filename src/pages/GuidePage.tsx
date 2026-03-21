@@ -58,6 +58,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "home-feed",
+    screenshot: screenshotHomeFeed,
     title: "Home Feed",
     icon: Home,
     intro: "The home feed is where you see posts from people you follow and trending content. It supports multiple content-type tabs and sorting options.",
