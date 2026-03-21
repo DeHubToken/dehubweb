@@ -513,6 +513,8 @@ function getNotificationContent(
       return tr('notifications.purchasedContent', { name: actorName });
     case 'following':
       return tr('notifications.startedFollowing', { name: actorName });
+    case 'follow_request':
+      return `${actorName} requested to follow you`;
     case 'video_milestone':
       return tr('notifications.postMilestone');
     case 'livestream_start':
