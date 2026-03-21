@@ -78,8 +78,8 @@ Deno.serve(async (req) => {
 
     // Fetch on-chain transfers to staking address on both chains
     const [baseTransfers, bnbTransfers] = await Promise.all([
-      fetchAlchemyTransfers(baseRpc, walletLower, DHB_BASE),
-      fetchAlchemyTransfers(bnbRpc, walletLower, DHB_BNB),
+      fetchAlchemyTransfers(baseRpc, walletLower, DHB_BASE, BASE_STAKING),
+      fetchAlchemyTransfers(bnbRpc, walletLower, DHB_BNB, BNB_STAKING),
     ]);
 
     console.log(`[sync-staking] ${walletLower}: ${baseTransfers.length} Base + ${bnbTransfers.length} BNB transfers to staking`);
