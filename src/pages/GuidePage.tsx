@@ -102,6 +102,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "interacting-with-posts",
+    screenshot: screenshotHomeFeed,
     title: "Interacting with Posts",
     icon: ThumbsUp,
     intro: "Engage with content by voting, commenting, tipping, bookmarking, sharing, and translating.",
