@@ -1,54 +1,60 @@
 
 
-# Fix: Leaderboard Scanner Missing Base & New Staking Balances
+# User Guide Page — `/guide`
 
-## Root Cause
+## Summary
 
-The user staked 499,000 DHB on Base on March 15. Their leaderboard balance dropped from 1.63M to 1.13M because:
+Create a comprehensive, native in-app guide page at `/guide` that documents every DeHub feature with clear instructions. The page will use DeHub's liquid glass aesthetic, feature a sticky sidebar table of contents, and include placeholder screenshot slots for each feature section.
 
-- The scanner reads their Base wallet balance (which decreased by 499k after staking)
-- The scanner only reads staked amounts from the **legacy BNB contract** (`0x26d2...` via `userInfos`)
-- It does **not** check the **new unified staking address** (`0xcF573a682Bf7A7Cc58000e9eCA9c9d04dA102Da7`) or the **legacy Base staking address** (`0x7b10dd033Ac41B8AF85eE1701e344B86e446250B`)
+## Features to Document
 
-The wallet page correctly shows staked balance because it uses DB staking records + legacy BNB contract. But the leaderboard scanner is purely on-chain and misses the new staking flow entirely.
+Based on the full codebase, the guide will cover these sections:
 
-## Fix
+1. **Getting Started** — Sign up (Web3Auth vs external wallet), landing page, navigating to the app
+2. **Home Feed** — Feed tabs (Home, Videos, Images, Shorts, Music, Live), sorting/filtering, pull-to-refresh, swipe navigation
+3. **Creating Posts** — Text, images, videos, voice notes, GIFs, quote posts, hashtags, cashtags, mentions
+4. **Interacting with Posts** — Voting (upvote/downvote), commenting, tipping, bookmarking, sharing, translating text/images
+5. **Explore & Search** — Search tabs (All, People, Posts, Images, Videos, Music, Live), trending topics
+6. **Profile** — Viewing/editing profile, avatar, bio, wallet address, followers/following
+7. **Messages** — Direct messaging, conversations
+8. **AI Assistant** — Chat with AI, capabilities
+9. **Notifications** — Types of notifications, mark as read
+10. **Wallet** — Viewing balances, DHB across chains, staking deposits, refresh scan
+11. **Staking** — How to stake DHB, unstaking, viewing staked amounts
+12. **Leaderboard** — Tabs (balance, daily spent, talk of the town), rankings
+13. **Command Centre** — Dashboard overview
+14. **Governance** — Proposals, voting on proposals
+15. **Bookmarks** — Saving and managing bookmarks
+16. **Settings** — Language, preferences
+17. **Buying DHB** — Swap interface, slippage settings
+18. **Bridge** — Cross-chain bridging
+19. **Music & TV** — Media playback features
+20. **Glossary** — Crypto/platform terminology
 
-**File**: `supabase/functions/refresh-leaderboard-cache/index.ts`
+## Page Structure
 
-Update `getOnChainBalanceAtBlock` to also query staked DHB held at:
-1. The **new unified staking address** on both Base and BNB — read the user's share from DB `staking_records` (since it's a simple transfer, there's no on-chain `balanceOf` per user)
-2. OR better: query the **Supabase `staking_records` table** to add net staked amounts on top of the on-chain wallet scan
+- **Route**: `/guide` (outside AppLayout, standalone page with back-to-app link)
+- **Layout**: Full-width dark page with max-w-4xl content area
+- **Navigation**: Sticky left sidebar TOC on desktop, collapsible top nav on mobile
+- **Sections**: Each feature gets a card with:
+  - Section title + icon
+  - Step-by-step instructions
+  - Screenshot placeholder (gray bordered box with "Screenshot" label)
+  - Pro tips where relevant
+- **Styling**: Liquid glass cards (`bg-white/5 backdrop-blur border-white/10 rounded-2xl`)
 
-**Recommended approach**: Since the new staking is transfer-based (no per-user on-chain query possible), the scanner should:
+## Technical Changes
 
-1. After computing on-chain wallet balances, **fetch all `staking_records`** from the database
-2. Calculate net staked per wallet (sum of `stake` minus `unstake` actions)
-3. Add net staked to each user's `total` and `badgeBalance`
+1. **New file: `src/pages/GuidePage.tsx`**
+   - Full guide page component with all 20 sections
+   - Sticky TOC sidebar with smooth-scroll anchor links
+   - Responsive: sidebar collapses to horizontal scroll on mobile
+   - Screenshot placeholder components (styled empty boxes)
+   - Back-to-app button in header
 
-This matches exactly how the wallet page resolves totals (DB records + legacy BNB contract).
+2. **Update: `src/App.tsx`**
+   - Add lazy import for `GuidePage`
+   - Add route `<Route path="/guide" element={<GuidePage />} />`
 
-## Changes
-
-1. **`supabase/functions/refresh-leaderboard-cache/index.ts`**:
-   - After the main on-chain balance scan, query `staking_records` table for all wallets
-   - Build a map of `wallet_address → net_staked_amount`
-   - Add the net staked amount to each entry's `total` and `badgeBalance`
-   - Apply the same logic in `getOnChainBalanceAtBlock` paths (current and historical blocks)
-   - For historical block comparisons, filter staking records by `created_at` date
-
-2. **Re-run the leaderboard refresh** after deploying to update this user's entry
-
-## Technical Detail
-
-```text
-Current flow:
-  total = balanceOf(Base) + balanceOf(BNB) + userInfos(BNB legacy staking)
-
-Fixed flow:
-  total = balanceOf(Base) + balanceOf(BNB) + userInfos(BNB legacy staking)
-        + net_staked_from_db (sum of stake - unstake from staking_records)
-```
-
-The DB staking records are authoritative because each record is only inserted after verifying a real `Transfer` event on-chain.
+The page will be self-contained — no new dependencies needed. All content is hardcoded (not fetched from DB) since it's documentation.
 
