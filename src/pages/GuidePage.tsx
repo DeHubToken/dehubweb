@@ -295,6 +295,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "governance",
+    screenshot: screenshotGovernance,
     title: "Governance",
     icon: Vote,
     intro: "Participate in platform governance by creating proposals and voting on community decisions.",
