@@ -1386,10 +1386,9 @@ export default function NotificationsPage() {
                     </button>
                     
                     <button
-                      onClick={() => {
-                        console.log('Clear all notifications');
-                      }}
-                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-colors"
+                      onClick={handleClearAllNotifications}
+                      disabled={isClearingAll || allNotifications.length === 0}
+                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-colors disabled:opacity-50"
                     >
                       <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
                         <Trash2 className="w-5 h-5 text-white" />
