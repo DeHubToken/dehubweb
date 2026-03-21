@@ -44,7 +44,7 @@ export function usePrivacySettings() {
 
   const customs = profile?.customs;
   const { showFollowersFollowing, hideFollowerCounts } = parseVisibility(customs?.followVisibility);
-  const isPrivate = customs?.isPrivate === 'true' || customs?.isPrivate === true;
+  const isPrivate = profile?.isPrivate === true;
 
   const updateMutation = useMutation({
     mutationFn: async (updates: {
