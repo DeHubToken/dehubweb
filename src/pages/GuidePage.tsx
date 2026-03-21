@@ -431,11 +431,20 @@ const sections: GuideSection[] = [
 /*  Sub-components                                                     */
 /* ------------------------------------------------------------------ */
 
-const ScreenshotPlaceholder = () => (
-  <div className="w-full h-48 rounded-xl border-2 border-dashed border-white/10 flex items-center justify-center text-white/30 text-sm select-none mt-4">
-    Screenshot coming soon
-  </div>
-);
+const ScreenshotImage = ({ src, alt }: { src?: string; alt: string }) => {
+  if (!src) {
+    return (
+      <div className="w-full h-48 rounded-xl border-2 border-dashed border-white/10 flex items-center justify-center text-white/30 text-sm select-none mt-4">
+        Screenshot coming soon
+      </div>
+    );
+  }
+  return (
+    <div className="mt-4 rounded-xl overflow-hidden border border-white/10">
+      <img src={src} alt={alt} className="w-full h-auto" loading="lazy" />
+    </div>
+  );
+};
 
 const SectionCard = React.forwardRef<HTMLDivElement, { section: GuideSection }>(
   ({ section }, ref) => {
