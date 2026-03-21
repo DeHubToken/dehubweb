@@ -202,6 +202,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "notifications",
+    screenshot: screenshotNotifications,
     title: "Notifications",
     icon: Bell,
     intro: "Stay updated with likes, comments, tips, follows, and other activity on your content.",
