@@ -1059,8 +1059,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         : "overflow-hidden cursor-pointer isolate"
       }
     >
-      {/* Header with AI and menu buttons - hidden in immersive mode */}
-      {!isImmersive && (
+      {/* Header with AI and menu buttons - hidden in immersive mode and carousel (hideActions) mode */}
+      {!isImmersive && !hideActions && (
         <div className="flex items-start justify-between">
           <CardHeader
             username={video.channel}
