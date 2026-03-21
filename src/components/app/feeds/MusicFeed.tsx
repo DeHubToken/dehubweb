@@ -466,7 +466,7 @@ function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem
             className="flex gap-3 overflow-x-auto scrollbar-hide pr-8"
           >
             {visibleItems.map((item) => (
-              <div key={item.id} className="flex-shrink-0 w-[280px]">
+              <div key={item.id} className="flex-shrink-0 w-[280px] rounded-xl border border-white/[0.12] bg-white/[0.03] p-2">
                 <VideoCard video={item} hideActions />
               </div>
             ))}
