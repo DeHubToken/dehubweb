@@ -25,7 +25,7 @@ import notificationsIcon from '@/assets/icons/notifications-icon.png';
 import { useQueries } from '@tanstack/react-query';
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
-import { DEHUB_CDN_BASE, getNFTInfo } from '@/lib/api/dehub';
+import { DEHUB_CDN_BASE, getNFTInfo, getFollowRequests, approveFollowRequest, rejectFollowRequest } from '@/lib/api/dehub';
 import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
