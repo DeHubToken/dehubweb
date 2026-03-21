@@ -7,6 +7,20 @@ import { ArrowLeft, ChevronRight, Lightbulb, Menu, X,
   BookOpen, ShoppingCart, LogIn
 } from "lucide-react";
 
+// Guide screenshots
+import screenshotLanding from "@/assets/guide/landing.png";
+import screenshotHomeFeed from "@/assets/guide/home-feed.png";
+import screenshotExplore from "@/assets/guide/explore.png";
+import screenshotMessages from "@/assets/guide/messages.png";
+import screenshotAssistant from "@/assets/guide/assistant.png";
+import screenshotNotifications from "@/assets/guide/notifications.png";
+import screenshotLeaderboard from "@/assets/guide/leaderboard.png";
+import screenshotBookmarks from "@/assets/guide/bookmarks.png";
+import screenshotSettings from "@/assets/guide/settings.png";
+import screenshotGovernance from "@/assets/guide/governance.png";
+import screenshotCommandCentre from "@/assets/guide/command-centre.png";
+import screenshotTv from "@/assets/guide/tv.png";
+
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
 /* ------------------------------------------------------------------ */
@@ -18,6 +32,7 @@ interface GuideSection {
   intro: string;
   steps: string[];
   tips?: string[];
+  screenshot?: string;
 }
 
 const sections: GuideSection[] = [
