@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
 import { followUser, unfollowUser } from '@/lib/api/dehub';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 
@@ -23,6 +24,23 @@ export function useProfileFollow({
   setLoginModalOpen,
 }: UseProfileFollowParams) {
   const [isFollowLoading, setIsFollowLoading] = useState(false);
+  const queryClient = useQueryClient();
+
+  const invalidateProfileQueries = () => {
+    if (!profile?.walletAddress) return;
+    // Invalidate all profile queries for this user so any cached isFollowing is refreshed
+    queryClient.invalidateQueries({
+      queryKey: ['dehub-profile'],
+      predicate: (query) => {
+        const key = query.queryKey;
+        // Match queries where the userId/username matches this profile
+        return key[0] === 'dehub-profile' && (
+          key[1] === profile.walletAddress ||
+          key[1] === profile.handle?.replace('@', '')
+        );
+      },
+    });
+  };
 
   const handleFollow = async () => {
     if (!isAuthenticated) {
@@ -51,6 +69,7 @@ export function useProfileFollow({
       } else {
         toast.success(`Following ${profile.name}`);
       }
+      invalidateProfileQueries();
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       if (errorMessage.toLowerCase().includes('already') || errorMessage.toLowerCase().includes('following')) {
@@ -82,6 +101,7 @@ export function useProfileFollow({
     try {
       await unfollowUser(profile.walletAddress);
       toast.success(`Unfollowed ${profile.name}`);
+      invalidateProfileQueries();
     } catch (error) {
       setFollowStatus(true);
       handleApiError(error, 'Failed to unfollow. Please try again.');
