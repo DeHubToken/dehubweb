@@ -371,6 +371,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "bridge",
+    screenshot: screenshotCommandCentre,
     title: "Bridge",
     icon: ArrowLeftRight,
     intro: "Move your DHB tokens between supported blockchains using the cross-chain bridge.",
