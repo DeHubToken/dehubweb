@@ -350,6 +350,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "buying-dhb",
+    screenshot: screenshotCommandCentre,
     title: "Buying DHB",
     icon: ShoppingCart,
     intro: "Buy DHB tokens directly within the app using the built-in swap interface.",
