@@ -141,10 +141,15 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
 
   const handleCountrySelect = useCallback((code: string) => {
     setShowCountryDropdown(false);
+    setCountrySearch('');
     if (code !== 'global') {
       toast.info(t('sidebar.comingSoon'));
     }
   }, [t]);
+
+  const filteredCountries = countrySearch.trim()
+    ? COUNTRIES.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase()))
+    : COUNTRIES;
 
   // Prefetch all ticker periods
   useQuery({ queryKey: ['trending-tickers', '1d' as TickerPeriod], queryFn: () => getTopTickers(10, '1d'), staleTime: 60_000, refetchInterval: 120_000, placeholderData: (p: any) => p });
