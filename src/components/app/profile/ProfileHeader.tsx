@@ -383,7 +383,7 @@ export function ProfileHeader({
             return (
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText(displayAddr);
+                  navigator.clipboard.writeText(profile.walletAddress!);
                   toast.success('Address copied to clipboard');
                 }}
                 className="flex items-center gap-1.5 mt-1 text-zinc-500 text-sm hover:text-zinc-300 transition-colors group"
