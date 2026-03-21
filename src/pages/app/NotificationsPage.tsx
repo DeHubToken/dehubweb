@@ -928,6 +928,21 @@ function NotificationItem({
         )}
       </div>
 
+      {/* Post thumbnail if applicable */}
+      {postThumbnail && bundle.bundleType !== 'same-actor' && (
+        <Link 
+          to={`/app/post/${notification.tokenId}`}
+          onClick={(e) => e.stopPropagation()}
+          className="flex-shrink-0"
+        >
+          <img 
+            src={postThumbnail} 
+            alt={notification.tokenTitle || 'Post'} 
+            className="w-12 h-12 rounded-lg object-cover"
+          />
+        </Link>
+      )}
+
       <AnimatePresence mode="wait">
         {hasUnread && (
           <motion.button
