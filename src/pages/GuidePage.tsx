@@ -572,6 +572,36 @@ SectionCard.displayName = "SectionCard";
 const GuidePage: React.FC = () => {
   const [activeId, setActiveId] = useState(sections[0].id);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const debouncedQuery = useDebouncedValue(searchQuery, 200);
+  const tokens = useMemo(() => tokenize(debouncedQuery), [debouncedQuery]);
+
+  // Filter & rank sections by search relevance
+  const filteredSections = useMemo(() => {
+    if (tokens.length === 0) return sections;
+    return sections
+      .map(s => ({ section: s, score: scoreSection(s, tokens) }))
+      .filter(x => x.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map(x => x.section);
+  }, [tokens]);
+
+  // Keyboard shortcut: Cmd/Ctrl+K to focus search
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+      if (e.key === 'Escape' && document.activeElement === searchInputRef.current) {
+        setSearchQuery("");
+        searchInputRef.current?.blur();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -584,18 +614,20 @@ const GuidePage: React.FC = () => {
       { rootMargin: "-20% 0px -60% 0px", threshold: 0 }
     );
 
-    sections.forEach(s => {
+    filteredSections.forEach(s => {
       const el = document.getElementById(s.id);
       if (el) observer.observe(el);
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [filteredSections]);
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setMobileNavOpen(false);
   };
+
+  const isSearching = tokens.length > 0;
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -604,16 +636,41 @@ const GuidePage: React.FC = () => {
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8 h-16">
           <Link to="/app" className="flex items-center gap-2 text-white/70 hover:text-white transition-colors">
             <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm font-medium">Back to App</span>
+            <span className="text-sm font-medium hidden sm:inline">Back to App</span>
           </Link>
-          <h1 className="text-lg font-bold">DeHub User Guide</h1>
+          <h1 className="text-lg font-bold hidden sm:block">DeHub User Guide</h1>
+          
+          {/* Search bar */}
+          <div className="relative flex-1 max-w-xs mx-3 sm:mx-0 sm:flex-none sm:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 pointer-events-none" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search guide..."
+              className="w-full h-9 pl-9 pr-16 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/20 focus:bg-white/[0.08] transition-all"
+            />
+            {searchQuery ? (
+              <button
+                onClick={() => { setSearchQuery(""); searchInputRef.current?.focus(); }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-md bg-white/10 hover:bg-white/20 transition-colors"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            ) : (
+              <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-0.5 text-[10px] text-white/20 font-mono">
+                <span className="px-1 py-0.5 rounded bg-white/5 border border-white/10">⌘K</span>
+              </kbd>
+            )}
+          </div>
+
           <button
             className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-white/5"
             onClick={() => setMobileNavOpen(!mobileNavOpen)}
           >
             {mobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
-          <div className="hidden md:block w-24" />
         </div>
       </header>
 
@@ -621,7 +678,7 @@ const GuidePage: React.FC = () => {
       {mobileNavOpen && (
         <div className="md:hidden fixed inset-x-0 top-16 bottom-0 z-40 bg-black/95 backdrop-blur-xl overflow-y-auto p-4">
           <nav className="space-y-1">
-            {sections.map(s => {
+            {filteredSections.map(s => {
               const Icon = s.icon;
               return (
                 <button
@@ -644,7 +701,7 @@ const GuidePage: React.FC = () => {
         {/* Desktop TOC sidebar */}
         <aside className="hidden md:block w-60 shrink-0">
           <nav className="sticky top-24 space-y-0.5 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2 scrollbar-thin">
-            {sections.map(s => {
+            {filteredSections.map(s => {
               const Icon = s.icon;
               return (
                 <button
@@ -667,18 +724,48 @@ const GuidePage: React.FC = () => {
         {/* Content */}
         <main className="flex-1 min-w-0 space-y-6 pb-20">
           {/* Hero */}
-          <div className="bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-2xl p-6 md:p-10 mb-2">
-            <h1 className="text-3xl md:text-4xl font-bold mb-3">
-              Welcome to DeHub
-            </h1>
-            <p className="text-white/60 text-lg leading-relaxed max-w-2xl">
-              Your complete guide to using DeHub — the decentralized social media platform.
-              Learn how to create posts, tip creators, stake tokens, participate in governance, and more.
-            </p>
-          </div>
+          {!isSearching && (
+            <div className="bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-2xl p-6 md:p-10 mb-2">
+              <h1 className="text-3xl md:text-4xl font-bold mb-3">
+                Welcome to DeHub
+              </h1>
+              <p className="text-white/60 text-lg leading-relaxed max-w-2xl">
+                Your complete guide to using DeHub — the decentralized social media platform.
+                Learn how to create posts, tip creators, stake tokens, participate in governance, and more.
+              </p>
+            </div>
+          )}
 
-          {sections.map(s => (
-            <SectionCard key={s.id} section={s} />
+          {/* Search results count */}
+          {isSearching && (
+            <div className="flex items-center gap-2 text-sm text-white/40 px-1">
+              <Search className="w-3.5 h-3.5" />
+              <span>
+                {filteredSections.length === 0
+                  ? `No results for "${debouncedQuery}"`
+                  : `${filteredSections.length} section${filteredSections.length !== 1 ? 's' : ''} matching "${debouncedQuery}"`
+                }
+              </span>
+              <button
+                onClick={() => setSearchQuery("")}
+                className="ml-auto text-white/30 hover:text-white/60 underline underline-offset-2 text-xs"
+              >
+                Clear search
+              </button>
+            </div>
+          )}
+
+          {/* Empty state */}
+          {isSearching && filteredSections.length === 0 && (
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-10 text-center">
+              <Search className="w-10 h-10 text-white/10 mx-auto mb-4" />
+              <p className="text-white/40 text-sm mb-2">No matching sections found.</p>
+              <p className="text-white/20 text-xs">Try different keywords or browse all sections.</p>
+            </div>
+          )}
+
+          {filteredSections.map(s => (
+            <SectionCard key={s.id} section={s} tokens={tokens} />
           ))}
         </main>
       </div>
