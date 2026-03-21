@@ -18,7 +18,7 @@ export function MusicScreen() {
       <MobileTopBar title="Music" />
 
       {/* Category pills */}
-      <div className="flex gap-2 px-4 py-3 overflow-x-auto scrollbar-hide">
+      <div className="flex gap-2 px-4 py-3.5 overflow-x-auto scrollbar-hide">
         {['All', 'Music Videos', 'Radio', 'Tracks', 'Podcasts', 'Playlists'].map((cat, i) => (
           <button
             key={cat}
@@ -32,8 +32,8 @@ export function MusicScreen() {
       </div>
 
       {/* Now playing */}
-      <div className="mx-4 mb-4 p-4 rounded-2xl border border-white/[0.1] bg-white/[0.03]">
-        <div className="flex items-center gap-2 mb-3">
+      <div className="mx-4 mb-5 p-4 rounded-2xl border border-white/[0.1] bg-white/[0.03]">
+        <div className="flex items-center gap-2 mb-4">
           <Radio className="w-3.5 h-3.5 text-white" />
           <span className="text-[10px] text-zinc-400 uppercase tracking-wider">Now Playing</span>
         </div>
@@ -72,11 +72,11 @@ export function MusicScreen() {
 
       {/* Up next */}
       <div className="px-4 flex-1">
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-3">
           <h3 className="text-white text-sm font-semibold">Up Next</h3>
           <ListMusic className="w-4 h-4 text-zinc-500" />
         </div>
-        <div className="space-y-1">
+        <div className="space-y-2">
           {MOCK_TRACKS.slice(1).map((track) => (
             <div key={track.title} className="flex items-center gap-3 py-2">
               <div className="w-10 h-10 rounded-lg bg-zinc-900 flex items-center justify-center">
