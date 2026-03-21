@@ -220,6 +220,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "wallet",
+    screenshot: screenshotCommandCentre,
     title: "Wallet",
     icon: Wallet,
     intro: "View your DHB balances across multiple chains, check staking deposits, and manage your assets.",
