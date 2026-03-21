@@ -1475,6 +1475,43 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         
       </div>
 
+      {/* Compact avatar row for carousel mode (hideActions) - avatar + AI + dots below thumbnail */}
+      {hideActions && !isImmersive && (
+        <div className="flex items-center justify-between pt-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              const cleanUsername = video.creatorUsername?.replace('@', '');
+              if (cleanUsername) navigate(`/${cleanUsername}`);
+              else if (video.creatorId) navigate(`/app/profile?id=${video.creatorId}`);
+            }}
+            className="cursor-pointer"
+          >
+            <Avatar className="w-7 h-7 rounded-md">
+              {video.channelAvatar && <AvatarImage src={video.channelAvatar} className="rounded-md" />}
+              <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-md text-xs">{video.channel?.[0]?.toUpperCase()}</AvatarFallback>
+            </Avatar>
+          </button>
+          <div className="flex items-center gap-1">
+            <motion.button
+              onClick={(e) => { e.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
+              className="text-zinc-400 hover:text-white transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              aria-label="Ask AI about this video"
+            >
+              <Sparkles className="w-4 h-4" />
+            </motion.button>
+            <button 
+              onClick={(e) => { e.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
+              className="text-zinc-400 hover:text-white transition-colors"
+            >
+              <MoreVertical className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Info & Actions */}
       <div className={`pt-3${isImmersive ? ' px-3' : ''}`}>
         {/* Creator info with action buttons - mobile/tablet immersive view only (hidden on desktop where SinglePostPage renders DesktopCreatorInfo) */}
