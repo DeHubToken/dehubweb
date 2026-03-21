@@ -23,6 +23,7 @@ async function fetchAlchemyTransfers(
   rpcUrl: string,
   fromAddress: string,
   contractAddress: string,
+  stakingAddress: string,
 ): Promise<AlchemyTransfer[]> {
   const res = await fetch(rpcUrl, {
     method: "POST",
@@ -35,7 +36,7 @@ async function fetchAlchemyTransfers(
         fromBlock: "0x0",
         toBlock: "latest",
         fromAddress,
-        toAddress: UNIFIED_STAKING,
+        toAddress: stakingAddress,
         contractAddresses: [contractAddress],
         category: ["erc20"],
       }],
