@@ -531,6 +531,26 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     }
   }, [messages.length, markAsRead, resolvedConversationId]);
 
+  // Re-emit readReceipt when conversation is focused/visible to ensure persistence
+  useEffect(() => {
+    if (!resolvedConversationId || resolvedConversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(resolvedConversationId)) return;
+    
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        emitReadReceipt(resolvedConversationId);
+      }
+    };
+    
+    // Emit on mount (covers navigation back to chat)
+    const timer = setTimeout(() => emitReadReceipt(resolvedConversationId), 1000);
+    document.addEventListener('visibilitychange', handleVisibility);
+    
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [resolvedConversationId]);
+
   // Auto-scroll on new messages
   useEffect(() => {
     if (isInitialMount.current) return;

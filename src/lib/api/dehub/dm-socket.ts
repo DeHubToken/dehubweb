@@ -243,7 +243,19 @@ export function emitSendMessage(payload: SendMessagePayload): void {
 }
 
 export function emitReadReceipt(dmId: string): void {
-  getDmSocket().emit('readReceipt', { dmId });
+  const socket = getDmSocket();
+  if (socket.connected) {
+    socket.emit('readReceipt', { dmId });
+  } else {
+    // Wait for connection then emit
+    const handler = () => {
+      socket.emit('readReceipt', { dmId });
+      socket.off('connect', handler);
+    };
+    socket.on('connect', handler);
+    // Cleanup after 10s to avoid leaks
+    setTimeout(() => socket.off('connect', handler), 10000);
+  }
 }
 
 export function emitDeleteMessage(dmId: string, messageId: string): void {
