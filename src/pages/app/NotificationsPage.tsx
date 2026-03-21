@@ -630,8 +630,15 @@ function NotificationItem({
       const match = requests.find(
         r => r.address?.toLowerCase() === notification.actorAddress?.toLowerCase()
       );
-      const requestId = match?.id || match?._id || notification.actorAddress;
+      const requestId = match?.id || match?._id;
       console.log('[FollowRequest] matched:', { match: !!match, requestId, actorAddress: notification.actorAddress });
+      
+      if (!requestId) {
+        // No pending request found — it was likely already handled
+        setFollowRequestAction(action === 'accept' ? 'accepted' : 'rejected');
+        toast.info('Request already handled');
+        return;
+      }
       
       if (action === 'accept') {
         await approveFollowRequest(requestId);
@@ -647,6 +654,7 @@ function NotificationItem({
         bundle.allIds.forEach(id => onMarkAsRead(id));
       }
     } catch (err: any) {
+      console.error('[FollowRequest] Error:', err);
       const msg = err?.message?.toLowerCase() || '';
       if (msg.includes('not found') || msg.includes('already')) {
         setFollowRequestAction(action === 'accept' ? 'accepted' : 'rejected');
