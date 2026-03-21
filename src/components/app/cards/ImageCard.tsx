@@ -488,7 +488,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                   </button>
                 )}
                 <button
-                  onClick={handleTranslateImage}
+                  onClick={() => { setShowOptionsDrawer(false); setTimeout(() => handleTranslateImage(), 300); }}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                 >
                   <Languages className="w-5 h-5" /> {t('postOptions.translateImage')}
