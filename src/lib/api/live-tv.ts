@@ -355,6 +355,9 @@ const COUNTRY_NAME_TO_ISO: Record<string, string> = {
   iraq: 'IQ', 'saudi arabia': 'SA', 'united arab emirates': 'AE',
   egypt: 'EG', 'south africa': 'ZA', nigeria: 'NG', kenya: 'KE',
   morocco: 'MA', tunisia: 'TN', algeria: 'DZ', chad: 'TD',
+  palestine: 'PS', 'palestinian territory': 'PS', فلسطين: 'PS',
+  jordan: 'JO', lebanon: 'LB', syria: 'SY', yemen: 'YE',
+  qatar: 'QA', kuwait: 'KW', bahrain: 'BH', oman: 'OM',
 };
 
 /**
