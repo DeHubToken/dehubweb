@@ -64,20 +64,35 @@ export async function unfollowUser(walletAddress: string): Promise<{ result: boo
 }
 
 export async function getFollowRequests(): Promise<FollowRequestItem[]> {
-  const response = await apiCall<{ result: any[] } | any[]>(
+  const response = await apiCall<{ status: boolean; items: any[]; result?: any[] } | any[]>(
     "/api/follow-requests",
     { requiresAuth: true }
   );
-  
-  const items = (response && typeof response === 'object' && 'result' in response)
-    ? (response as { result: any[] }).result
-    : response as any[];
-  
-  // Normalize _id → id (MongoDB convention)
-  return (items || []).map((item: any) => ({
-    ...item,
-    id: item.id || item._id,
-  }));
+
+  let rawItems: any[];
+  if (response && typeof response === 'object' && 'items' in response) {
+    rawItems = (response as { items: any[] }).items;
+  } else if (response && typeof response === 'object' && 'result' in response) {
+    rawItems = (response as { result: any[] }).result;
+  } else {
+    rawItems = response as any[];
+  }
+
+  // API returns { requestId, requestedAt, user: { _id, address, ... } }
+  return (rawItems || []).map((item: any) => {
+    if (item.requestId && item.user) {
+      return {
+        id: item.requestId,
+        address: item.user.address,
+        displayName: item.user.displayName,
+        username: item.user.username,
+        avatarImageUrl: item.user.avatarImageUrl,
+        createdAt: item.requestedAt,
+      };
+    }
+    // Fallback for flat structure
+    return { ...item, id: item.id || item._id };
+  });
 }
 
 export async function approveFollowRequest(requestId: string): Promise<{ result: boolean }> {
