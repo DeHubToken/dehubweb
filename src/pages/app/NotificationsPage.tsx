@@ -732,6 +732,13 @@ function NotificationItem({
       bundle.allIds.forEach(id => onMarkAsRead(id));
     }
     
+    // Follow request notifications — clicking row navigates to requester's profile
+    if (isFollowRequest) {
+      const profileTarget = notification.actorAddress || notification.actorUsername;
+      if (profileTarget) navigate(`/${profileTarget}`);
+      return;
+    }
+
     // Aggregated follow notifications → open followers drawer inline
     const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 2;
     if (isAggregatedFollow && walletAddress) {
