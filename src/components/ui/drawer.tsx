@@ -21,6 +21,7 @@ const DrawerOverlay = React.forwardRef<
   <DrawerPrimitive.Overlay 
     ref={ref} 
     className={cn("fixed inset-0 z-[100] bg-black/80", className)} 
+    onClick={(e) => e.stopPropagation()}
     {...props} 
   />
 ));
