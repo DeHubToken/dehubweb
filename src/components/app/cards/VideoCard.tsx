@@ -444,9 +444,11 @@ interface VideoCardProps {
   isImmersive?: boolean;
   /** When true, disables intersection-based autoplay (video only plays on explicit click) */
   disableAutoplay?: boolean;
+  /** When true, hides the action bar (votes, comments, tips etc.) — useful for carousel thumbnails */
+  hideActions?: boolean;
 }
 
-export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false }: VideoCardProps) {
+export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false, hideActions = false }: VideoCardProps) {
   const instanceId = useId();
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
