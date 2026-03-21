@@ -259,6 +259,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "leaderboard",
+    screenshot: screenshotLeaderboard,
     title: "Leaderboard",
     icon: Trophy,
     intro: "See who's on top! The leaderboard ranks users by balance, daily spending, and trending topics.",
