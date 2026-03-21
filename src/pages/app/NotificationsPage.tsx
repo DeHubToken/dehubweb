@@ -23,7 +23,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
 import notificationsIcon from '@/assets/icons/notifications-icon.png';
-import { useQueries } from '@tanstack/react-query';
+import { useQueries, useQueryClient } from '@tanstack/react-query';
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { DEHUB_CDN_BASE, getNFTInfo, getFollowRequests, approveFollowRequest, rejectFollowRequest } from '@/lib/api/dehub';
