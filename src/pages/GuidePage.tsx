@@ -239,6 +239,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "staking",
+    screenshot: screenshotCommandCentre,
     title: "Staking",
     icon: Landmark,
     intro: "Stake your DHB tokens to earn rewards and increase your governance voting power.",
