@@ -279,6 +279,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "command-centre",
+    screenshot: screenshotCommandCentre,
     title: "Command Centre",
     icon: LayoutDashboard,
     intro: "A dashboard overview showing your key metrics and platform activity at a glance.",
