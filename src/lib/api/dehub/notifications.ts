@@ -96,13 +96,37 @@ interface UnreadCountApiResponse {
   };
 }
 
+/** Normalize API type strings to our canonical snake_case types */
+function normalizeNotificationType(rawType: string): NotificationType {
+  const typeMap: Record<string, NotificationType> = {
+    'followRequest': 'follow_request',
+    'follow-request': 'follow_request',
+    'follow_request': 'follow_request',
+    'commentReply': 'comment_reply',
+    'comment-reply': 'comment_reply',
+    'commentLike': 'comment_like',
+    'comment-like': 'comment_like',
+    'ppvPurchase': 'ppv_purchase',
+    'ppv-purchase': 'ppv_purchase',
+    'videoMilestone': 'video_milestone',
+    'video-milestone': 'video_milestone',
+    'livestreamStart': 'livestream_start',
+    'livestream-start': 'livestream_start',
+    'videoRemoval': 'video_removal',
+    'video-removal': 'video_removal',
+  };
+  return typeMap[rawType] || rawType as NotificationType;
+}
+
 function normalizeNotification(raw: RawNotification): DeHubNotification {
   // Resolve avatar: prefer nested actor object (from API), fall back to flat actorAvatar field
   const actorAvatarPath = raw.actor?.avatarImageUrl || raw.actor?.avatarUrl || raw.actorAvatar;
+  const normalizedType = normalizeNotificationType(raw.type as string);
   
   return {
     ...raw,
     id: raw._id,
+    type: normalizedType,
     actorAvatar: actorAvatarPath,
     actor: raw.actorUsername || raw.actorAddress ? {
       address: raw.actorAddress,
