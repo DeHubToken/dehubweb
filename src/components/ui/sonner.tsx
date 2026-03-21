@@ -16,6 +16,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
       position="top-center"
       duration={3000}
       offset={0}
+      visibleToasts={5}
+      expand={true}
       toastOptions={{
         classNames: {
           toast: `group toast group-[.toaster]:bg-white/10 group-[.toaster]:backdrop-blur-xl group-[.toaster]:border group-[.toaster]:border-white/20 group-[.toaster]:text-white group-[.toaster]:shadow-[0_8px_32px_rgba(0,0,0,0.4)] group-[.toaster]:rounded-2xl group-[.toaster]:min-w-0 group-[.toaster]:items-center ${isMobile ? 'group-[.toaster]:w-full' : 'group-[.toaster]:w-fit'}`,
