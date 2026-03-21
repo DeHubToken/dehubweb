@@ -124,6 +124,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "explore-search",
+    screenshot: screenshotExplore,
     title: "Explore & Search",
     icon: Search,
     intro: "Discover new content and users through the explore page and powerful search functionality.",
