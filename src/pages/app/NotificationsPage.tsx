@@ -23,7 +23,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
 import notificationsIcon from '@/assets/icons/notifications-icon.png';
-import { useQueries } from '@tanstack/react-query';
+import { useQueries, useQueryClient } from '@tanstack/react-query';
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { DEHUB_CDN_BASE, getNFTInfo, getFollowRequests, approveFollowRequest, rejectFollowRequest } from '@/lib/api/dehub';
@@ -1062,6 +1062,7 @@ export default function NotificationsPage() {
     livestreams: true,
   });
   
+  const queryClient = useQueryClient();
   // Fetch all notifications and filter client-side by type
   const { notifications: dehubNotifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useNotifications();
   const { data: unreadCount } = useUnreadNotificationCount();
@@ -1074,16 +1075,27 @@ export default function NotificationsPage() {
   const markCustomAsRead = useMarkCustomNotificationAsRead();
   const markAllCustomAsRead = useMarkAllCustomNotificationsAsRead();
   
+  const [isClearingAll, setIsClearingAll] = useState(false);
+  const [clearedAtTs, setClearedAtTs] = useState(() => {
+    const stored = localStorage.getItem('notifications_cleared_at');
+    return stored ? parseInt(stored, 10) : 0;
+  });
+  
   // Merge DeHub + custom notifications, sorted by date (memoized to prevent re-triggering enrichment)
   // Filter out notifications where the actor is the current user (e.g. backend sends DM notif to sender)
   const allNotifications = useMemo(
-    () => [...dehubNotifications, ...customNotifications]
-      .filter(n => {
-        if (!pageWalletAddress || !n.actorAddress) return true;
-        return n.actorAddress.toLowerCase() !== pageWalletAddress.toLowerCase();
-      })
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
-    [dehubNotifications, customNotifications, pageWalletAddress]
+    () => {
+      return [...dehubNotifications, ...customNotifications]
+        .filter(n => {
+          // Filter out notifications before the "clear all" timestamp
+          if (clearedAtTs && new Date(n.createdAt).getTime() <= clearedAtTs) return false;
+          // Filter out self-notifications
+          if (!pageWalletAddress || !n.actorAddress) return true;
+          return n.actorAddress.toLowerCase() !== pageWalletAddress.toLowerCase();
+        })
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    },
+    [dehubNotifications, customNotifications, pageWalletAddress, clearedAtTs]
   );
   
   // Batch-avatar enrichment for fresh profile pictures
@@ -1250,6 +1262,28 @@ export default function NotificationsPage() {
     markAllCustomAsRead.mutate();
   };
 
+  const handleClearAllNotifications = async () => {
+    setIsClearingAll(true);
+    try {
+      // Mark all as read first via API
+      markAllAsRead.mutate(undefined);
+      markAllCustomAsRead.mutate();
+      
+      // Store the "cleared at" timestamp — all notifications before this will be hidden
+      const now = Date.now();
+      localStorage.setItem('notifications_cleared_at', String(now));
+      
+      // Update state to trigger memo recalculation
+      setClearedAtTs(now);
+      
+      toast.success('All notifications cleared');
+    } catch (error) {
+      toast.error('Failed to clear notifications');
+    } finally {
+      setIsClearingAll(false);
+    }
+  };
+
   const handleMarkAsRead = (notificationId: string) => {
     setMarkingNotificationId(notificationId);
     if (notificationId.startsWith('custom_')) {
@@ -1349,13 +1383,12 @@ export default function NotificationsPage() {
                     </button>
                     
                     <button
-                      onClick={() => {
-                        console.log('Clear all notifications');
-                      }}
-                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-colors"
+                      onClick={handleClearAllNotifications}
+                      disabled={isClearingAll || allNotifications.length === 0}
+                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-colors disabled:opacity-50"
                     >
                       <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                        <Trash2 className="w-5 h-5 text-white" />
+                        {isClearingAll ? <Loader2 className="w-5 h-5 text-white animate-spin" /> : <Trash2 className="w-5 h-5 text-white" />}
                       </div>
                       <div className="flex-1 text-left">
                         <p className="text-white font-medium">{t('notifications.clearAll')}</p>
