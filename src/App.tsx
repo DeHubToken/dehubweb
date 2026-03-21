@@ -28,6 +28,7 @@ const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
 const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));
 const GovernanceProposalPage = React.lazy(() => import("./pages/app/GovernanceProposalPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
+const GuidePage = React.lazy(() => import("./pages/GuidePage"));
 
 
 // Preload critical dynamic-route chunks after initial render so first navigation is instant
