@@ -897,51 +897,36 @@ function NotificationItem({
         <p className="text-xs text-zinc-500 mt-1">
           {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
         </p>
+
+        {/* Follow request accept/reject buttons — inline under text on mobile */}
+        {isFollowRequest && !followRequestAction && (
+          <div className="flex items-center gap-1.5 mt-2" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => handleFollowRequestAction('accept')}
+              disabled={followRequestLoading !== null}
+              className="h-7 px-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium flex items-center gap-1 transition-colors disabled:opacity-50"
+            >
+              {followRequestLoading === 'accept' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
+              Accept
+            </button>
+            <button
+              onClick={() => handleFollowRequestAction('reject')}
+              disabled={followRequestLoading !== null}
+              className="h-7 px-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 text-xs font-medium flex items-center gap-1 transition-colors disabled:opacity-50"
+            >
+              {followRequestLoading === 'reject' ? <Loader2 className="w-3 h-3 animate-spin" /> : <XIcon className="w-3 h-3" />}
+              Reject
+            </button>
+          </div>
+        )}
+        {isFollowRequest && followRequestAction && (
+          <span className={`text-xs font-medium mt-2 inline-block px-2 py-1 rounded-lg ${
+            followRequestAction === 'accepted' ? 'text-green-400 bg-green-500/10' : 'text-zinc-500 bg-zinc-800/50'
+          }`}>
+            {followRequestAction === 'accepted' ? '✓ Accepted' : '✗ Rejected'}
+          </span>
+        )}
       </div>
-
-      {/* Post thumbnail if applicable (only for single or same-actor with 1 post) */}
-      {postThumbnail && bundle.bundleType !== 'same-actor' && (
-        <Link 
-          to={`/app/post/${notification.tokenId}`}
-          onClick={(e) => e.stopPropagation()}
-          className="flex-shrink-0"
-        >
-          <img 
-            src={postThumbnail} 
-            alt={notification.tokenTitle || 'Post'} 
-            className="w-12 h-12 rounded-lg object-cover"
-          />
-        </Link>
-      )}
-
-      {/* Follow request accept/reject buttons */}
-      {isFollowRequest && !followRequestAction && (
-        <div className="flex items-center gap-1.5 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
-          <button
-            onClick={() => handleFollowRequestAction('accept')}
-            disabled={followRequestLoading !== null}
-            className="h-7 px-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium flex items-center gap-1 transition-colors disabled:opacity-50"
-          >
-            {followRequestLoading === 'accept' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
-            Accept
-          </button>
-          <button
-            onClick={() => handleFollowRequestAction('reject')}
-            disabled={followRequestLoading !== null}
-            className="h-7 px-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 text-xs font-medium flex items-center gap-1 transition-colors disabled:opacity-50"
-          >
-            {followRequestLoading === 'reject' ? <Loader2 className="w-3 h-3 animate-spin" /> : <XIcon className="w-3 h-3" />}
-            Reject
-          </button>
-        </div>
-      )}
-      {isFollowRequest && followRequestAction && (
-        <span className={`text-xs font-medium flex-shrink-0 px-2 py-1 rounded-lg ${
-          followRequestAction === 'accepted' ? 'text-green-400 bg-green-500/10' : 'text-zinc-500 bg-zinc-800/50'
-        }`}>
-          {followRequestAction === 'accepted' ? '✓ Accepted' : '✗ Rejected'}
-        </span>
-      )}
 
       <AnimatePresence mode="wait">
         {hasUnread && (
