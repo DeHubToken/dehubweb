@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ChevronRight, Lightbulb, Menu, X,
   Home, PenSquare, ThumbsUp, Search, User, MessageCircle,
@@ -6,6 +6,7 @@ import { ArrowLeft, ChevronRight, Lightbulb, Menu, X,
   Vote, Bookmark, Settings, ArrowLeftRight, Music, Tv,
   BookOpen, ShoppingCart, LogIn
 } from "lucide-react";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 
 // Guide screenshots
 import screenshotLanding from "@/assets/guide/landing.png";
