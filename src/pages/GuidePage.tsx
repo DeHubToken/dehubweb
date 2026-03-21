@@ -45,7 +45,7 @@ const sections: GuideSection[] = [
     steps: [
       "Visit dehub.io and click 'Launch App' or navigate to /app.",
       "Choose 'Sign In' — you'll see social login options (Google, X, Email, etc.) and a 'Connect Wallet' option for external wallets.",
-      "If using social login, complete the sign-in flow. A smart account is created for you automatically — no gas needed.",
+      "If using social login, complete the sign-in flow. A smart account is created for you automatically.",
       "If connecting an external wallet, approve the connection in your wallet extension or mobile app.",
       "After signing in, you'll be prompted to set a username. This is required to interact on the platform.",
       "You're in! Explore the feed, set up your profile, and start posting."
