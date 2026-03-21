@@ -143,6 +143,7 @@ const sections: GuideSection[] = [
   },
   {
     id: "profile",
+    screenshot: screenshotHomeFeed,
     title: "Profile",
     icon: User,
     intro: "Your profile showcases your posts, followers, following, and wallet information.",
