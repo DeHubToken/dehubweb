@@ -64,15 +64,20 @@ export async function unfollowUser(walletAddress: string): Promise<{ result: boo
 }
 
 export async function getFollowRequests(): Promise<FollowRequestItem[]> {
-  const response = await apiCall<{ result: FollowRequestItem[] } | FollowRequestItem[]>(
+  const response = await apiCall<{ result: any[] } | any[]>(
     "/api/follow-requests",
     { requiresAuth: true }
   );
   
-  if (response && typeof response === 'object' && 'result' in response) {
-    return response.result;
-  }
-  return response as FollowRequestItem[];
+  const items = (response && typeof response === 'object' && 'result' in response)
+    ? (response as { result: any[] }).result
+    : response as any[];
+  
+  // Normalize _id → id (MongoDB convention)
+  return (items || []).map((item: any) => ({
+    ...item,
+    id: item.id || item._id,
+  }));
 }
 
 export async function approveFollowRequest(requestId: string): Promise<{ result: boolean }> {
