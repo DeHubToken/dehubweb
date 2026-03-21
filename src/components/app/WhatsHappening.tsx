@@ -122,6 +122,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
   const tickerDirRef = useRef(0);
   const [isTickerAutoRotating, setIsTickerAutoRotating] = useState(true);
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+  const [countrySearch, setCountrySearch] = useState('');
   const countryDropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown on click outside
