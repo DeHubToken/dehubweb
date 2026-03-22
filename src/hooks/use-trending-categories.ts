@@ -138,7 +138,7 @@ async function fetchTrendingCategories(period: TopicPeriod, fetchAll = false): P
     // 1D/1W/1M/1Y use the time-filtered event log (synced from feed API)
     const logData = await fetchFromLog(period);
     // Fall back to aggregate if log is too sparse (sync hasn't run yet)
-    computed = logData.length >= 3 ? logData : await fetchFromAggregateTable();
+    computed = logData;
   }
 
   if (fetchAll) return computed;
