@@ -112,9 +112,10 @@ export function useConversations(searchQuery: string = '') {
       // Apply localStorage read overrides so unread badges don't reappear after refresh
       const readOverrides = getReadConversations();
       return items.map(conv => {
-        if (conv._id && readOverrides[conv._id] && conv.unreadCount > 0) {
+        const convId = conv.id || (conv as any)._id;
+        if (convId && readOverrides[convId] && conv.unreadCount > 0) {
           const lastMsgTime = conv.lastMessage?.createdAt ? new Date(conv.lastMessage.createdAt).getTime() : 0;
-          if (lastMsgTime <= readOverrides[conv._id]) {
+          if (lastMsgTime <= readOverrides[convId]) {
             return { ...conv, unreadCount: 0 };
           }
         }
