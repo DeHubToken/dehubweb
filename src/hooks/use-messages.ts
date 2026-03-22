@@ -97,13 +97,14 @@ export function useConversations(searchQuery: string = '') {
     queryKey: [...messagesKeys.conversations(), searchQuery, walletAddress],
     queryFn: async () => {
       console.log('[useConversations] Fetching...', { searchQuery, walletAddress });
+      let items: DeHubConversation[] = [];
       try {
         if (searchQuery) {
           const response = await getConversations(0, 50, searchQuery);
-          return response.items || [];
+          items = response.items || [];
+        } else if (walletAddress) {
+          items = await getContacts(walletAddress, 0, 50);
         }
-        if (!walletAddress) return [];
-        return await getContacts(walletAddress, 0, 50);
       } catch (error) {
         console.error('[useConversations] Error:', error);
         throw error;
@@ -112,7 +113,6 @@ export function useConversations(searchQuery: string = '') {
       const readOverrides = getReadConversations();
       return items.map(conv => {
         if (conv._id && readOverrides[conv._id] && conv.unreadCount > 0) {
-          // Check if the last message is older than when we marked it read
           const lastMsgTime = conv.lastMessage?.createdAt ? new Date(conv.lastMessage.createdAt).getTime() : 0;
           if (lastMsgTime <= readOverrides[conv._id]) {
             return { ...conv, unreadCount: 0 };
