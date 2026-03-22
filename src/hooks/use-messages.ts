@@ -46,6 +46,37 @@ import {
   type SendMessagePayload,
 } from '@/lib/api/dehub/dm-socket';
 
+// ─── Read-state persistence (survives refresh) ───────────────────────────────
+
+const READ_CONVOS_KEY = 'dehub-read-conversations';
+const READ_STATE_TTL = 60 * 60 * 1000; // 1 hour — long enough for server to catch up
+
+function getReadConversations(): Record<string, number> {
+  try {
+    const raw = localStorage.getItem(READ_CONVOS_KEY);
+    if (!raw) return {};
+    const store = JSON.parse(raw) as Record<string, number>;
+    const now = Date.now();
+    // Prune expired entries
+    const pruned: Record<string, number> = {};
+    for (const [id, ts] of Object.entries(store)) {
+      if (now - ts < READ_STATE_TTL) pruned[id] = ts;
+    }
+    if (Object.keys(pruned).length !== Object.keys(store).length) {
+      localStorage.setItem(READ_CONVOS_KEY, JSON.stringify(pruned));
+    }
+    return pruned;
+  } catch { return {}; }
+}
+
+function persistReadConversation(conversationId: string): void {
+  try {
+    const store = getReadConversations();
+    store[conversationId] = Date.now();
+    localStorage.setItem(READ_CONVOS_KEY, JSON.stringify(store));
+  } catch { /* storage full */ }
+}
+
 // ─── Query keys ───────────────────────────────────────────────────────────────
 
 export const messagesKeys = {
@@ -66,23 +97,31 @@ export function useConversations(searchQuery: string = '') {
     queryKey: [...messagesKeys.conversations(), searchQuery, walletAddress],
     queryFn: async () => {
       console.log('[useConversations] Fetching...', { searchQuery, walletAddress });
+      let items: DeHubConversation[] = [];
       try {
         if (searchQuery) {
           const response = await getConversations(0, 50, searchQuery);
-          return response.items || [];
+          items = response.items || [];
+        } else if (walletAddress) {
+          items = await getContacts(walletAddress, 0, 50);
         }
-        if (!walletAddress) return [];
-        return await getContacts(walletAddress, 0, 50);
       } catch (error) {
         console.error('[useConversations] Error:', error);
         throw error;
       }
+      // Apply localStorage read overrides so unread badges don't reappear after refresh
+      const readOverrides = getReadConversations();
+      return items.map(conv => {
+        const convId = conv.id || (conv as any)._id;
+        if (convId && readOverrides[convId] && conv.unreadCount > 0) {
+          const lastMsgTime = conv.lastMessage?.createdAt ? new Date(conv.lastMessage.createdAt).getTime() : 0;
+          if (lastMsgTime <= readOverrides[convId]) {
+            return { ...conv, unreadCount: 0 };
+          }
+        }
+        return conv;
+      });
     },
-    enabled: isAuthenticated && !!walletAddress,
-    staleTime: 15 * 1000,
-    refetchOnWindowFocus: false,
-    // Poll to pick up new Supabase conversations (when other user sends first)
-    refetchInterval: 20 * 1000,
   });
 
   // Real-time: when any DM message arrives, refresh the conversations list.
@@ -238,16 +277,38 @@ export function useMessages(conversationId: string | null) {
     };
   }, [conversationId, isAuthenticated, queryClient]);
 
-  // Mark as read via socket
+  // Mark as read via socket + persist to localStorage
   const markAsRead = useMutation({
     mutationFn: () => {
       if (conversationId && !conversationId.startsWith('new_') && !/^0x[0-9a-fA-F]{40}$/i.test(conversationId)) {
         emitReadReceipt(conversationId);
+        // Persist to localStorage so it survives page refresh
+        persistReadConversation(conversationId);
       }
       return markConversationAsRead(conversationId!);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+    onMutate: async () => {
+      // Optimistically set unreadCount to 0 in the conversations cache
+      await queryClient.cancelQueries({ queryKey: messagesKeys.conversations() });
+      queryClient.setQueriesData(
+        { queryKey: messagesKeys.conversations() },
+        (old: any) => {
+          if (!Array.isArray(old)) return old;
+          return old.map((conv: any) => {
+            const convId = conv.id || conv._id;
+            if (convId === conversationId) {
+              return { ...conv, unreadCount: 0 };
+            }
+            return conv;
+          });
+        }
+      );
+    },
+    onSettled: () => {
+      // Delay refetch to give server time to process readReceipt
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+      }, 3000);
     },
   });
 
