@@ -432,12 +432,21 @@ export function useSendMessage(conversationId: string) {
     },
 
     onSettled: (_data, _err, variables) => {
-      queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
-      // Media/voice uploads return pending initially; backend updates when CDN job completes. Refetch after delay.
+      // Don't immediately invalidate messages — the optimistic message is already visible.
+      // The socket event (onDmSendMessage) will trigger a refetch when the server confirms.
+      // Immediate invalidation causes the optimistic message to vanish briefly because
+      // the server hasn't processed the fire-and-forget socket emit yet.
+      
+      // For media/voice, delay refetch to allow CDN processing
       if (variables?.mediaFile && (variables?.msgType === 'media' || variables?.msgType === 'voice')) {
         setTimeout(() => {
           queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
         }, 3000);
+      } else {
+        // For text/gif messages, delay the refetch so the server has time to persist
+        setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
+        }, 2000);
       }
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
     },
