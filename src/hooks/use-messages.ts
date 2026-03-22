@@ -108,12 +108,19 @@ export function useConversations(searchQuery: string = '') {
         console.error('[useConversations] Error:', error);
         throw error;
       }
+      // Apply localStorage read overrides so unread badges don't reappear after refresh
+      const readOverrides = getReadConversations();
+      return items.map(conv => {
+        if (conv._id && readOverrides[conv._id] && conv.unreadCount > 0) {
+          // Check if the last message is older than when we marked it read
+          const lastMsgTime = conv.lastMessage?.createdAt ? new Date(conv.lastMessage.createdAt).getTime() : 0;
+          if (lastMsgTime <= readOverrides[conv._id]) {
+            return { ...conv, unreadCount: 0 };
+          }
+        }
+        return conv;
+      });
     },
-    enabled: isAuthenticated && !!walletAddress,
-    staleTime: 15 * 1000,
-    refetchOnWindowFocus: false,
-    // Poll to pick up new Supabase conversations (when other user sends first)
-    refetchInterval: 20 * 1000,
   });
 
   // Real-time: when any DM message arrives, refresh the conversations list.
