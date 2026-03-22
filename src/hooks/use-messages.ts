@@ -277,16 +277,38 @@ export function useMessages(conversationId: string | null) {
     };
   }, [conversationId, isAuthenticated, queryClient]);
 
-  // Mark as read via socket
+  // Mark as read via socket + persist to localStorage
   const markAsRead = useMutation({
     mutationFn: () => {
       if (conversationId && !conversationId.startsWith('new_') && !/^0x[0-9a-fA-F]{40}$/i.test(conversationId)) {
         emitReadReceipt(conversationId);
+        // Persist to localStorage so it survives page refresh
+        persistReadConversation(conversationId);
       }
       return markConversationAsRead(conversationId!);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+    onMutate: async () => {
+      // Optimistically set unreadCount to 0 in the conversations cache
+      await queryClient.cancelQueries({ queryKey: messagesKeys.conversations() });
+      queryClient.setQueriesData(
+        { queryKey: messagesKeys.conversations() },
+        (old: any) => {
+          if (!Array.isArray(old)) return old;
+          return old.map((conv: any) => {
+            const convId = conv.id || conv._id;
+            if (convId === conversationId) {
+              return { ...conv, unreadCount: 0 };
+            }
+            return conv;
+          });
+        }
+      );
+    },
+    onSettled: () => {
+      // Delay refetch to give server time to process readReceipt
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+      }, 3000);
     },
   });
 
