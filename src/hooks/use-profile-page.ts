@@ -49,6 +49,7 @@ export function useProfilePage() {
     data: apiProfile,
     isLoading: isLoadingProfile,
     isError: isProfileError,
+    isFetchingProfile,
     setFollowStatus,
   } = useDeHubProfile({
     userId: lookupUserId,
