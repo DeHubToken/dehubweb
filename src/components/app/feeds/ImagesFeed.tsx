@@ -405,31 +405,42 @@ export function ImagesFeed({
     onPostSelected?.(postId);
   };
 
-  // Infinite scroll observer - uses ref-based guard to prevent race conditions
-  // Now works in BOTH collage and feed view
-  // Store hasNextPage in a ref to avoid stale closures in the observer callback
+  // Infinite scroll observer - uses callback ref to handle DOM element changes
+  // when switching between collage and feed views
   const hasNextPageRef = useRef(hasNextPage);
   hasNextPageRef.current = hasNextPage;
   
-  useEffect(() => {
-    if (!loaderRef.current) return;
+  const fetchNextPageRef = useRef(fetchNextPage);
+  fetchNextPageRef.current = fetchNextPage;
 
-    const observer = new IntersectionObserver(
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  
+  const loaderCallbackRef = useCallback((node: HTMLDivElement | null) => {
+    // Store on the existing ref so children still see it
+    (loaderRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+
+    // Disconnect previous observer
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+      observerRef.current = null;
+    }
+
+    if (!node) return;
+
+    observerRef.current = new IntersectionObserver(
       (entries) => {
-        // Use refs for synchronous check - prevents multiple fetches from stale closures
         if (entries[0].isIntersecting && hasNextPageRef.current && !isFetchingRef.current) {
           isFetchingRef.current = true;
-          fetchNextPage().finally(() => {
+          fetchNextPageRef.current().finally(() => {
             isFetchingRef.current = false;
           });
         }
       },
-      { threshold: 0.1, rootMargin: '200px' }
+      { threshold: 0.1, rootMargin: '400px' }
     );
 
-    observer.observe(loaderRef.current);
-    return () => observer.disconnect();
-  }, [fetchNextPage, showCollage, selectedPostId]); // Re-attach when view mode changes
+    observerRef.current.observe(node);
+  }, [loaderRef]);
   
   // Only animate after first render (when switching views)
   const shouldAnimate = hasAnimated.current;
