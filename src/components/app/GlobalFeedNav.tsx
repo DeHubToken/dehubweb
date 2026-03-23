@@ -76,7 +76,7 @@ export function GlobalFeedNav() {
 
   // ── Drag-to-swipe state ──────────────────────────────────────────────
   const tabButtonPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
-  const dragState = useRef<{ startX: number; startRectX: number; startWidth: number } | null>(null);
+  const dragState = useRef<{ startX: number; startRectX: number; startWidth: number; hasMoved: boolean } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffsetX, setDragOffsetX] = useState(0);
 
@@ -112,7 +112,7 @@ export function GlobalFeedNav() {
     if (e.button !== 0) return;
     e.preventDefault();
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    dragState.current = { startX: e.clientX, startRectX: rect.x, startWidth: rect.width };
+    dragState.current = { startX: e.clientX, startRectX: rect.x, startWidth: rect.width, hasMoved: false };
     setIsDragging(true);
     setDragOffsetX(0);
   }, [rect.x, rect.width]);
@@ -120,6 +120,7 @@ export function GlobalFeedNav() {
   const handleDragMove = useCallback((e: React.PointerEvent) => {
     if (!dragState.current) return;
     const dx = e.clientX - dragState.current.startX;
+    if (Math.abs(dx) > 3) dragState.current.hasMoved = true;
     setDragOffsetX(dx);
     const currentCenterX = dragState.current.startRectX + dx + dragState.current.startWidth / 2;
     const nearest = findNearestTab(currentCenterX);
@@ -130,11 +131,14 @@ export function GlobalFeedNav() {
 
   const handleDragEnd = useCallback(() => {
     if (!dragState.current) return;
+    const wasDrag = dragState.current.hasMoved;
     dragState.current = null;
     setIsDragging(false);
     setDragOffsetX(0);
-    setEnableTransition(true);
-    setTimeout(() => setEnableTransition(false), 450);
+    if (wasDrag) {
+      setEnableTransition(true);
+      setTimeout(() => setEnableTransition(false), 450);
+    }
   }, []);
 
   const dragDisplayRect = isDragging
@@ -168,7 +172,7 @@ export function GlobalFeedNav() {
           {/* Drag handle overlay */}
           {dragDisplayRect.ready && (
             <div
-              className="absolute z-30 cursor-grab active:cursor-grabbing"
+              className="absolute z-50 cursor-grab active:cursor-grabbing"
               style={{
                 transform: `translate(${dragDisplayRect.x}px, ${dragDisplayRect.y}px)`,
                 width: dragDisplayRect.width,
@@ -179,7 +183,14 @@ export function GlobalFeedNav() {
               }}
               onPointerDown={handleDragStart}
               onPointerMove={handleDragMove}
-              onPointerUp={handleDragEnd}
+              onPointerUp={(e) => {
+                const wasDrag = dragState.current?.hasMoved;
+                handleDragEnd();
+                if (!wasDrag) {
+                  // Was a click, not a drag — trigger the active tab's reclick
+                  handleTabClick(activeTab);
+                }
+              }}
               onPointerCancel={handleDragEnd}
             />
           )}
