@@ -558,7 +558,7 @@ export function ImagesFeed({
       {showFeedView ? (
         <EndlessScrollView 
           posts={imagePosts} 
-          loaderRef={loaderRef}
+          loaderRef={loaderCallbackRef}
           isFetchingNextPage={isFetchingNextPage}
           hasNextPage={hasNextPage ?? false}
           startFromId={selectedPostId}
@@ -568,7 +568,7 @@ export function ImagesFeed({
         <CollageView 
           posts={imagePosts} 
           onImageClick={handleImageClick}
-          loaderRef={loaderRef}
+          loaderRef={loaderCallbackRef}
           isFetchingNextPage={isFetchingNextPage}
           hasNextPage={hasNextPage ?? false}
         />
