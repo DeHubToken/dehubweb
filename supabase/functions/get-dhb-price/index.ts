@@ -8,7 +8,7 @@ const corsHeaders = {
 /** Core tokens to always look up on DexScreener */
 const CORE_TOKENS: { address: string; symbol: string }[] = [
   { address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c', symbol: 'DHB' },
-  { address: '0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7', symbol: 'DHB' },
+  { address: '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D', symbol: 'DHB' },
   { address: '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2', symbol: 'USDT' },
   { address: '0x55d398326f99059fF775485246999027B3197955', symbol: 'USDT' },
   { address: '0xdAC17F958D2ee523a2206206994597C13D831ec7', symbol: 'USDT' },
