@@ -158,7 +158,12 @@ export function GlobalFeedNav() {
     : rect;
 
   const handleTabClick = useCallback((tabValue: string) => {
+    if (suppressClickRef.current) {
+      suppressClickRef.current = false;
+      return;
+    }
     if (isDragging) return;
+
     if (isHomePage) {
       if (tabValue === activeTab) {
         // Same tab clicked — dispatch event so HomePage toggles filters
