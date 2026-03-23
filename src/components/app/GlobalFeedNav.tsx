@@ -77,6 +77,7 @@ export function GlobalFeedNav() {
   // ── Drag-to-swipe state ──────────────────────────────────────────────
   const tabButtonPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
   const dragState = useRef<{ startX: number; startRectX: number; startWidth: number; hasMoved: boolean } | null>(null);
+  const suppressClickRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffsetX, setDragOffsetX] = useState(0);
 
@@ -108,45 +109,68 @@ export function GlobalFeedNav() {
     setActiveTab(tabValue);
   }, [isHomePage]);
 
-  const handleDragStart = useCallback((e: React.PointerEvent) => {
+  const handleRowPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
+    const pressedButton = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-feed-tab]');
+    if (!pressedButton || pressedButton.dataset.feedTab !== activeTab) return;
+
     e.preventDefault();
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    suppressClickRef.current = false;
     dragState.current = { startX: e.clientX, startRectX: rect.x, startWidth: rect.width, hasMoved: false };
     setIsDragging(true);
     setDragOffsetX(0);
-  }, [rect.x, rect.width]);
+  }, [activeTab, rect.x, rect.width]);
 
-  const handleDragMove = useCallback((e: React.PointerEvent) => {
-    if (!dragState.current) return;
-    const dx = e.clientX - dragState.current.startX;
-    if (Math.abs(dx) > 3) dragState.current.hasMoved = true;
-    setDragOffsetX(dx);
-    const currentCenterX = dragState.current.startRectX + dx + dragState.current.startWidth / 2;
-    const nearest = findNearestTab(currentCenterX);
-    if (nearest !== activeTab) {
-      applyTab(nearest);
-    }
-  }, [activeTab, findNearestTab, applyTab]);
+  useEffect(() => {
+    if (!isDragging) return;
 
-  const handleDragEnd = useCallback(() => {
-    if (!dragState.current) return;
-    const wasDrag = dragState.current.hasMoved;
-    dragState.current = null;
-    setIsDragging(false);
-    setDragOffsetX(0);
-    if (wasDrag) {
-      setEnableTransition(true);
-      setTimeout(() => setEnableTransition(false), 450);
-    }
-  }, []);
+    const handleWindowPointerMove = (event: PointerEvent) => {
+      if (!dragState.current) return;
+      const dx = event.clientX - dragState.current.startX;
+      if (Math.abs(dx) > 3) dragState.current.hasMoved = true;
+      setDragOffsetX(dx);
+      const currentCenterX = dragState.current.startRectX + dx + dragState.current.startWidth / 2;
+      const nearest = findNearestTab(currentCenterX);
+      if (nearest !== activeTab) {
+        applyTab(nearest);
+      }
+    };
 
+    const handleWindowPointerEnd = () => {
+      if (!dragState.current) return;
+      const wasDrag = dragState.current.hasMoved;
+      dragState.current = null;
+      setIsDragging(false);
+      setDragOffsetX(0);
+
+      if (wasDrag) {
+        suppressClickRef.current = true;
+        setEnableTransition(true);
+        setTimeout(() => setEnableTransition(false), 450);
+      }
+    };
+
+    window.addEventListener('pointermove', handleWindowPointerMove);
+    window.addEventListener('pointerup', handleWindowPointerEnd);
+    window.addEventListener('pointercancel', handleWindowPointerEnd);
+
+    return () => {
+      window.removeEventListener('pointermove', handleWindowPointerMove);
+      window.removeEventListener('pointerup', handleWindowPointerEnd);
+      window.removeEventListener('pointercancel', handleWindowPointerEnd);
+    };
+  }, [isDragging, activeTab, findNearestTab, applyTab]);
   const dragDisplayRect = isDragging
     ? { ...rect, x: (dragState.current?.startRectX ?? rect.x) + dragOffsetX, ready: true }
     : rect;
 
   const handleTabClick = useCallback((tabValue: string) => {
+    if (suppressClickRef.current) {
+      suppressClickRef.current = false;
+      return;
+    }
     if (isDragging) return;
+
     if (isHomePage) {
       if (tabValue === activeTab) {
         // Same tab clicked — dispatch event so HomePage toggles filters
@@ -169,46 +193,31 @@ export function GlobalFeedNav() {
       <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
         <div ref={layerRef} className="relative overflow-visible">
           <GlassIndicator rect={dragDisplayRect} borderRadius="0.75rem" layoutKey={`global-nav-${activeTab}`} enableTransition={!isDragging && enableTransition} />
-          {/* Drag handle overlay */}
+          {/* Visual drag handle overlay (pointer events handled by row below) */}
           {dragDisplayRect.ready && (
             <div
-              className="absolute z-50 cursor-grab active:cursor-grabbing"
+              className="absolute z-30 pointer-events-none"
               style={{
                 transform: `translate(${dragDisplayRect.x}px, ${dragDisplayRect.y}px)`,
                 width: dragDisplayRect.width,
                 height: dragDisplayRect.height,
-                touchAction: 'none',
-                background: 'transparent',
                 transition: !isDragging && enableTransition
                   ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                   : 'none',
               }}
-              onPointerDown={(e) => {
-                if (e.button !== 0) return;
-                e.preventDefault();
-                e.stopPropagation();
-                (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-                dragState.current = { startX: e.clientX, startRectX: rect.x, startWidth: rect.width, hasMoved: false };
-                setIsDragging(true);
-                setDragOffsetX(0);
-              }}
-              onPointerMove={handleDragMove}
-              onPointerUp={(e) => {
-                const wasDrag = dragState.current?.hasMoved;
-                handleDragEnd();
-                if (!wasDrag) {
-                  handleTabClick(activeTab);
-                }
-              }}
-              onPointerCancel={handleDragEnd}
             />
           )}
-          <div className="relative z-20 flex scrollbar-hide">
+          <div
+            className="relative z-20 flex scrollbar-hide"
+            style={{ touchAction: 'pan-x' }}
+            onPointerDown={handleRowPointerDown}
+          >
             {FEED_TABS.map((tab) => {
               const isActive = activeTab === tab.value;
               return (
                 <button
                   key={tab.value}
+                  data-feed-tab={tab.value}
                   ref={(el) => {
                     setRef(tab.value)(el);
                     tabButtonPositions.current[tab.value] = el;
@@ -216,7 +225,7 @@ export function GlobalFeedNav() {
                   onClick={() => handleTabClick(tab.value)}
                   className={cn(
                     'relative z-40 flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 rounded-xl',
-                    isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
+                    isActive ? 'text-white cursor-grab active:cursor-grabbing' : 'text-zinc-400 hover:text-white'
                   )}
                 >
                   <tab.icon className="relative z-10 w-4 h-4" />
