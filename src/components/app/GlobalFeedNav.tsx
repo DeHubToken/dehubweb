@@ -181,46 +181,34 @@ export function GlobalFeedNav() {
       <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
         <div ref={layerRef} className="relative overflow-visible">
           <GlassIndicator rect={dragDisplayRect} borderRadius="0.75rem" layoutKey={`global-nav-${activeTab}`} enableTransition={!isDragging && enableTransition} />
-          {/* Drag handle overlay */}
+          {/* Visual drag handle overlay (pointer events handled by row below) */}
           {dragDisplayRect.ready && (
             <div
-              className="absolute z-50 cursor-grab active:cursor-grabbing"
+              className="absolute z-30 pointer-events-none"
               style={{
                 transform: `translate(${dragDisplayRect.x}px, ${dragDisplayRect.y}px)`,
                 width: dragDisplayRect.width,
                 height: dragDisplayRect.height,
-                touchAction: 'none',
-                background: 'transparent',
                 transition: !isDragging && enableTransition
                   ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                   : 'none',
               }}
-              onPointerDown={(e) => {
-                if (e.button !== 0) return;
-                e.preventDefault();
-                e.stopPropagation();
-                (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-                dragState.current = { startX: e.clientX, startRectX: rect.x, startWidth: rect.width, hasMoved: false };
-                setIsDragging(true);
-                setDragOffsetX(0);
-              }}
-              onPointerMove={handleDragMove}
-              onPointerUp={(e) => {
-                const wasDrag = dragState.current?.hasMoved;
-                handleDragEnd();
-                if (!wasDrag) {
-                  handleTabClick(activeTab);
-                }
-              }}
-              onPointerCancel={handleDragEnd}
             />
           )}
-          <div className="relative z-20 flex scrollbar-hide">
+          <div
+            className="relative z-20 flex scrollbar-hide"
+            style={{ touchAction: 'pan-x' }}
+            onPointerDown={handleRowPointerDown}
+            onPointerMove={handleDragMove}
+            onPointerUp={(e) => finishDrag(e.pointerId, e.currentTarget)}
+            onPointerCancel={(e) => finishDrag(e.pointerId, e.currentTarget)}
+          >
             {FEED_TABS.map((tab) => {
               const isActive = activeTab === tab.value;
               return (
                 <button
                   key={tab.value}
+                  data-feed-tab={tab.value}
                   ref={(el) => {
                     setRef(tab.value)(el);
                     tabButtonPositions.current[tab.value] = el;
@@ -228,7 +216,7 @@ export function GlobalFeedNav() {
                   onClick={() => handleTabClick(tab.value)}
                   className={cn(
                     'relative z-40 flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 rounded-xl',
-                    isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
+                    isActive ? 'text-white cursor-grab active:cursor-grabbing' : 'text-zinc-400 hover:text-white'
                   )}
                 >
                   <tab.icon className="relative z-10 w-4 h-4" />
