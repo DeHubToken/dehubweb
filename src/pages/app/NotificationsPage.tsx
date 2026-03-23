@@ -1577,10 +1577,28 @@ export default function NotificationsPage() {
             </div>
           </div>
 
-          {/* Tabs - merged into header bento */}
+           {/* Tabs - merged into header bento */}
           <div className="mt-3 -mx-2" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
             <div ref={notifTabLayerRef} className="relative overflow-visible">
-              <GlassIndicator rect={notifTabRect} enableTransition={notifTabTransition} />
+              <GlassIndicator rect={dragDisplayRect} enableTransition={!isDragging && notifTabTransition} />
+              {/* Drag handle overlay - sits on top of indicator for pointer capture */}
+              {dragDisplayRect.ready && (
+                <div
+                  className="absolute z-30 cursor-grab active:cursor-grabbing"
+                  style={{
+                    transform: `translate(${dragDisplayRect.x}px, ${dragDisplayRect.y}px)`,
+                    width: dragDisplayRect.width,
+                    height: dragDisplayRect.height,
+                    transition: !isDragging && notifTabTransition
+                      ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+                      : 'none',
+                  }}
+                  onPointerDown={handleDragStart}
+                  onPointerMove={handleDragMove}
+                  onPointerUp={handleDragEnd}
+                  onPointerCancel={handleDragEnd}
+                />
+              )}
               <div 
                 className="relative z-20 flex gap-1 overflow-y-visible px-1 py-1"
                 onScroll={onNotifTabScroll}
@@ -1590,7 +1608,10 @@ export default function NotificationsPage() {
                   return (
                     <button
                       key={tab.value}
-                      ref={setNotifTabRef(tab.value)}
+                      ref={(el) => {
+                        setNotifTabRef(tab.value)(el);
+                        tabButtonPositions.current[tab.value] = el;
+                      }}
                       onClick={() => handleTabClick(tab.value)}
                       className={`relative z-40 flex-1 min-w-0 flex items-center justify-center px-1 py-[10.4px] rounded-xl transition-colors duration-200 ${
                         activeTab === tab.value
