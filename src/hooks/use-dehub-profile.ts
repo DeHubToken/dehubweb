@@ -148,7 +148,7 @@ export function useDeHubProfile({ userId, username, address, enabled = true }: U
   
   const query = useQuery({
     queryKey: ['dehub-profile', userId || username, address],
-    queryFn: async () => {
+    queryFn: async ({ queryKey }) => {
       let user: DeHubUser;
       
       if (username) {
@@ -191,6 +191,7 @@ export function useDeHubProfile({ userId, username, address, enabled = true }: U
 
   return {
     ...query,
+    isFetchingProfile: query.isFetching,
     setFollowStatus,
   };
 }
