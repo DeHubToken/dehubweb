@@ -109,57 +109,51 @@ export function GlobalFeedNav() {
     setActiveTab(tabValue);
   }, [isHomePage]);
 
-  const handleRowPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.button !== 0) return;
-    const pressedButton = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-feed-tab]');
-    if (!pressedButton || pressedButton.dataset.feedTab !== activeTab) return;
+  const handleDragStart = useCallback((e: React.PointerEvent<HTMLButtonElement>, tabValue: string) => {
+    if (e.button !== 0 || tabValue !== activeTab) return;
 
     e.preventDefault();
+    e.stopPropagation();
+    (e.currentTarget as HTMLButtonElement).setPointerCapture(e.pointerId);
+
     suppressClickRef.current = false;
     dragState.current = { startX: e.clientX, startRectX: rect.x, startWidth: rect.width, hasMoved: false };
     setIsDragging(true);
     setDragOffsetX(0);
   }, [activeTab, rect.x, rect.width]);
 
-  useEffect(() => {
-    if (!isDragging) return;
+  const handleDragMove = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
+    if (!dragState.current) return;
 
-    const handleWindowPointerMove = (event: PointerEvent) => {
-      if (!dragState.current) return;
-      const dx = event.clientX - dragState.current.startX;
-      if (Math.abs(dx) > 3) dragState.current.hasMoved = true;
-      setDragOffsetX(dx);
-      const currentCenterX = dragState.current.startRectX + dx + dragState.current.startWidth / 2;
-      const nearest = findNearestTab(currentCenterX);
-      if (nearest !== activeTab) {
-        applyTab(nearest);
-      }
-    };
+    const dx = e.clientX - dragState.current.startX;
+    if (Math.abs(dx) > 3) dragState.current.hasMoved = true;
+    setDragOffsetX(dx);
 
-    const handleWindowPointerEnd = () => {
-      if (!dragState.current) return;
-      const wasDrag = dragState.current.hasMoved;
-      dragState.current = null;
-      setIsDragging(false);
-      setDragOffsetX(0);
+    const currentCenterX = dragState.current.startRectX + dx + dragState.current.startWidth / 2;
+    const nearest = findNearestTab(currentCenterX);
+    if (nearest !== activeTab) {
+      applyTab(nearest);
+    }
+  }, [activeTab, findNearestTab, applyTab]);
 
-      if (wasDrag) {
-        suppressClickRef.current = true;
-        setEnableTransition(true);
-        setTimeout(() => setEnableTransition(false), 450);
-      }
-    };
+  const handleDragEnd = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
+    if (!dragState.current) return;
 
-    window.addEventListener('pointermove', handleWindowPointerMove);
-    window.addEventListener('pointerup', handleWindowPointerEnd);
-    window.addEventListener('pointercancel', handleWindowPointerEnd);
+    const wasDrag = dragState.current.hasMoved;
+    if ((e.currentTarget as HTMLButtonElement).hasPointerCapture(e.pointerId)) {
+      (e.currentTarget as HTMLButtonElement).releasePointerCapture(e.pointerId);
+    }
 
-    return () => {
-      window.removeEventListener('pointermove', handleWindowPointerMove);
-      window.removeEventListener('pointerup', handleWindowPointerEnd);
-      window.removeEventListener('pointercancel', handleWindowPointerEnd);
-    };
-  }, [isDragging, activeTab, findNearestTab, applyTab]);
+    dragState.current = null;
+    setIsDragging(false);
+    setDragOffsetX(0);
+
+    if (wasDrag) {
+      suppressClickRef.current = true;
+      setEnableTransition(true);
+      setTimeout(() => setEnableTransition(false), 450);
+    }
+  }, []);
   const dragDisplayRect = isDragging
     ? { ...rect, x: (dragState.current?.startRectX ?? rect.x) + dragOffsetX, ready: true }
     : rect;
