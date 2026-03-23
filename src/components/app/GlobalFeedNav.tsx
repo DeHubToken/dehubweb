@@ -211,9 +211,6 @@ export function GlobalFeedNav() {
             className="relative z-20 flex scrollbar-hide"
             style={{ touchAction: 'pan-x' }}
             onPointerDown={handleRowPointerDown}
-            onPointerMove={handleDragMove}
-            onPointerUp={(e) => finishDrag(e.pointerId, e.currentTarget)}
-            onPointerCancel={(e) => finishDrag(e.pointerId, e.currentTarget)}
           >
             {FEED_TABS.map((tab) => {
               const isActive = activeTab === tab.value;
