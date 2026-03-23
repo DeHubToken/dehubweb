@@ -177,10 +177,10 @@ export function GlobalFeedNav() {
       <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
         <div ref={layerRef} className="relative overflow-visible">
           <GlassIndicator rect={dragDisplayRect} borderRadius="0.75rem" layoutKey={`global-nav-${activeTab}`} enableTransition={!isDragging && enableTransition} />
-          {/* Visual drag handle overlay (pointer events handled by row below) */}
+          {/* Drag handle overlay */}
           {dragDisplayRect.ready && (
             <div
-              className="absolute z-30 pointer-events-none"
+              className="absolute z-30 cursor-grab active:cursor-grabbing"
               style={{
                 transform: `translate(${dragDisplayRect.x}px, ${dragDisplayRect.y}px)`,
                 width: dragDisplayRect.width,
@@ -189,6 +189,10 @@ export function GlobalFeedNav() {
                   ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                   : 'none',
               }}
+              onPointerDown={handleDragStart}
+              onPointerMove={handleDragMove}
+              onPointerUp={handleDragEnd}
+              onPointerCancel={handleDragEnd}
             />
           )}
           <div className="relative z-20 flex scrollbar-hide" style={{ touchAction: 'pan-x' }}>
@@ -202,14 +206,10 @@ export function GlobalFeedNav() {
                     setRef(tab.value)(el);
                     tabButtonPositions.current[tab.value] = el;
                   }}
-                  onPointerDown={(e) => handleDragStart(e, tab.value)}
-                  onPointerMove={handleDragMove}
-                  onPointerUp={handleDragEnd}
-                  onPointerCancel={handleDragEnd}
                   onClick={() => handleTabClick(tab.value)}
                   className={cn(
-                    'relative z-40 flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 rounded-xl',
-                    isActive ? 'text-white cursor-grab active:cursor-grabbing' : 'text-zinc-400 hover:text-white'
+                    'relative z-10 flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 rounded-xl',
+                    isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
                   )}
                 >
                   <tab.icon className="relative z-10 w-4 h-4" />
