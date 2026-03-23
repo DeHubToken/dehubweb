@@ -77,6 +77,7 @@ export function GlobalFeedNav() {
   // ── Drag-to-swipe state ──────────────────────────────────────────────
   const tabButtonPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
   const dragState = useRef<{ startX: number; startRectX: number; startWidth: number; hasMoved: boolean } | null>(null);
+  const suppressClickRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffsetX, setDragOffsetX] = useState(0);
 
@@ -108,16 +109,21 @@ export function GlobalFeedNav() {
     setActiveTab(tabValue);
   }, [isHomePage]);
 
-  const handleDragStart = useCallback((e: React.PointerEvent) => {
+  const handleRowPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
+    const pressedButton = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-feed-tab]');
+    if (!pressedButton) return;
+    if (pressedButton.dataset.feedTab !== activeTab) return;
+
     e.preventDefault();
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
+    suppressClickRef.current = false;
     dragState.current = { startX: e.clientX, startRectX: rect.x, startWidth: rect.width, hasMoved: false };
     setIsDragging(true);
     setDragOffsetX(0);
-  }, [rect.x, rect.width]);
+  }, [activeTab, rect.x, rect.width]);
 
-  const handleDragMove = useCallback((e: React.PointerEvent) => {
+  const handleDragMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (!dragState.current) return;
     const dx = e.clientX - dragState.current.startX;
     if (Math.abs(dx) > 3) dragState.current.hasMoved = true;
@@ -129,18 +135,24 @@ export function GlobalFeedNav() {
     }
   }, [activeTab, findNearestTab, applyTab]);
 
-  const handleDragEnd = useCallback(() => {
+  const finishDrag = useCallback((pointerId: number, currentTarget: HTMLDivElement) => {
     if (!dragState.current) return;
+
     const wasDrag = dragState.current.hasMoved;
+    if (currentTarget.hasPointerCapture(pointerId)) {
+      currentTarget.releasePointerCapture(pointerId);
+    }
+
     dragState.current = null;
     setIsDragging(false);
     setDragOffsetX(0);
+
     if (wasDrag) {
+      suppressClickRef.current = true;
       setEnableTransition(true);
       setTimeout(() => setEnableTransition(false), 450);
     }
   }, []);
-
   const dragDisplayRect = isDragging
     ? { ...rect, x: (dragState.current?.startRectX ?? rect.x) + dragOffsetX, ready: true }
     : rect;
