@@ -206,7 +206,7 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
 
 interface EndlessScrollViewProps {
   posts: ImagePost[];
-  loaderRef: React.RefObject<HTMLDivElement>;
+  loaderRef: React.RefCallback<HTMLDivElement>;
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
   startFromId?: string | null;
