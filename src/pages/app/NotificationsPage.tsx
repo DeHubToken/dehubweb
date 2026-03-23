@@ -1620,10 +1620,10 @@ export default function NotificationsPage() {
                           : 'text-zinc-400 hover:text-white'
                       }`}
                     >
-                      <span className="relative z-10 flex items-center gap-1">
+                      <span className="relative z-10">
                         <tab.icon className="w-[22.5px] h-[22.5px]" />
                         {count > 0 && (
-                          <span className={`px-1.5 py-0.5 text-xs rounded-lg transition-colors duration-200 ${
+                          <span className={`absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-1 flex items-center justify-center text-[10px] font-bold rounded-full leading-none transition-colors duration-200 ${
                             activeTab === tab.value
                               ? 'bg-white/20 text-white'
                               : 'bg-red-500 text-white'
