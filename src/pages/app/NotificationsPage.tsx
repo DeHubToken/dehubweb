@@ -1621,7 +1621,7 @@ export default function NotificationsPage() {
                       }`}
                     >
                       <span className="relative z-10">
-                        <tab.icon className="w-[22.5px] h-[22.5px]" />
+                        <tab.icon className={tab.value === 'reposts' ? 'w-[26.5px] h-[26.5px]' : 'w-[22.5px] h-[22.5px]'} />
                         {count > 0 && (
                           <span className={`absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-1 flex items-center justify-center text-[10px] font-bold rounded-full leading-none transition-colors duration-200 ${
                             activeTab === tab.value
