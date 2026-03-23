@@ -177,17 +177,26 @@ export function GlobalFeedNav() {
                 transform: `translate(${dragDisplayRect.x}px, ${dragDisplayRect.y}px)`,
                 width: dragDisplayRect.width,
                 height: dragDisplayRect.height,
+                touchAction: 'none',
+                background: 'transparent',
                 transition: !isDragging && enableTransition
                   ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                   : 'none',
               }}
-              onPointerDown={handleDragStart}
+              onPointerDown={(e) => {
+                if (e.button !== 0) return;
+                e.preventDefault();
+                e.stopPropagation();
+                (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+                dragState.current = { startX: e.clientX, startRectX: rect.x, startWidth: rect.width, hasMoved: false };
+                setIsDragging(true);
+                setDragOffsetX(0);
+              }}
               onPointerMove={handleDragMove}
               onPointerUp={(e) => {
                 const wasDrag = dragState.current?.hasMoved;
                 handleDragEnd();
                 if (!wasDrag) {
-                  // Was a click, not a drag — trigger the active tab's reclick
                   handleTabClick(activeTab);
                 }
               }}
