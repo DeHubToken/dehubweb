@@ -1050,11 +1050,69 @@ export default function NotificationsPage() {
   const [notifTabTransition, setNotifTabTransition] = useState(false);
   const { layerRef: notifTabLayerRef, setRef: setNotifTabRef, rect: notifTabRect, onScroll: onNotifTabScroll } = useTabIndicator(activeTab);
 
+  // Drag-to-swipe state
+  const tabButtonPositions = useRef<Partial<Record<NotificationTypeFilter, HTMLElement | null>>>({});
+  const dragState = useRef<{ startX: number; startRectX: number; startWidth: number } | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffsetX, setDragOffsetX] = useState(0);
+
   const handleTabClick = useCallback((tab: NotificationTypeFilter) => {
+    if (isDragging) return;
     setNotifTabTransition(true);
     setActiveTab(tab);
     setTimeout(() => setNotifTabTransition(false), 450);
+  }, [isDragging]);
+
+  const findNearestTab = useCallback((indicatorCenterX: number) => {
+    const layer = notifTabLayerRef.current;
+    if (!layer) return activeTab;
+    const layerRect = layer.getBoundingClientRect();
+    let nearest: NotificationTypeFilter = activeTab;
+    let minDist = Infinity;
+    for (const tab of tabs) {
+      const el = tabButtonPositions.current[tab.value];
+      if (!el) continue;
+      const br = el.getBoundingClientRect();
+      const btnCenter = br.left - layerRect.left + br.width / 2;
+      const dist = Math.abs(indicatorCenterX - btnCenter);
+      if (dist < minDist) { minDist = dist; nearest = tab.value; }
+    }
+    return nearest;
+  }, [activeTab, notifTabLayerRef]);
+
+  const handleDragStart = useCallback((e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    dragState.current = { startX: e.clientX, startRectX: notifTabRect.x, startWidth: notifTabRect.width };
+    setIsDragging(true);
+    setDragOffsetX(0);
+  }, [notifTabRect.x, notifTabRect.width]);
+
+  const handleDragMove = useCallback((e: React.PointerEvent) => {
+    if (!dragState.current) return;
+    const dx = e.clientX - dragState.current.startX;
+    setDragOffsetX(dx);
+    const currentCenterX = dragState.current.startRectX + dx + dragState.current.startWidth / 2;
+    const nearest = findNearestTab(currentCenterX);
+    if (nearest !== activeTab) {
+      setActiveTab(nearest);
+    }
+  }, [activeTab, findNearestTab]);
+
+  const handleDragEnd = useCallback(() => {
+    if (!dragState.current) return;
+    dragState.current = null;
+    setIsDragging(false);
+    setDragOffsetX(0);
+    setNotifTabTransition(true);
+    setTimeout(() => setNotifTabTransition(false), 450);
   }, []);
+
+  // Compute the display rect: during drag, override with manual position
+  const dragDisplayRect = isDragging
+    ? { ...notifTabRect, x: (dragState.current?.startRectX ?? notifTabRect.x) + dragOffsetX, ready: true }
+    : notifTabRect;
   const { isAuthenticated, walletAddress: pageWalletAddress } = useAuth();
   
   // Followers drawer state (opened inline from aggregated follow notifications)
