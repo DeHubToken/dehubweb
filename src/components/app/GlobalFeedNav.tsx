@@ -201,11 +201,7 @@ export function GlobalFeedNav() {
               }}
             />
           )}
-          <div
-            className="relative z-20 flex scrollbar-hide"
-            style={{ touchAction: 'pan-x' }}
-            onPointerDown={handleRowPointerDown}
-          >
+          <div className="relative z-20 flex scrollbar-hide" style={{ touchAction: 'pan-x' }}>
             {FEED_TABS.map((tab) => {
               const isActive = activeTab === tab.value;
               return (
@@ -216,6 +212,10 @@ export function GlobalFeedNav() {
                     setRef(tab.value)(el);
                     tabButtonPositions.current[tab.value] = el;
                   }}
+                  onPointerDown={(e) => handleDragStart(e, tab.value)}
+                  onPointerMove={handleDragMove}
+                  onPointerUp={handleDragEnd}
+                  onPointerCancel={handleDragEnd}
                   onClick={() => handleTabClick(tab.value)}
                   className={cn(
                     'relative z-40 flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 rounded-xl',
