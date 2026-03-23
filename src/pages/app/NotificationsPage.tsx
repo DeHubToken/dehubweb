@@ -1522,7 +1522,7 @@ export default function NotificationsPage() {
           {/* Tabs - merged into header bento */}
           <div className="mt-3 -mx-2" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
             <div ref={notifTabLayerRef} className="relative overflow-visible">
-              <GlassIndicator rect={notifTabRect} />
+              <GlassIndicator rect={notifTabRect} enableTransition={notifTabTransition} />
               <div 
                 className="relative z-20 flex gap-1 overflow-y-visible px-1 py-1"
                 onScroll={onNotifTabScroll}
