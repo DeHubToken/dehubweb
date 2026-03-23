@@ -145,7 +145,9 @@ export default function ProfilePage() {
 
   // Loading state — show skeleton only if we don't have profile data yet.
   // Don't re-show skeleton when auth resolves (keepPreviousData handles the transition).
-  if (!data.profile && (data.isAuthLoading || data.isLoadingProfile)) {
+  // Also show skeleton if profile errored but auth is still loading or profile is refetching
+  // (race condition: private profiles return empty shell before auth token is available).
+  if (!data.profile && (data.isAuthLoading || data.isLoadingProfile || data.isFetchingProfile)) {
     return <ProfileSkeleton />;
   }
 
