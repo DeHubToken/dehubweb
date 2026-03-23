@@ -248,6 +248,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [wagmiAuthIntentState, setWagmiAuthIntentState] = useState(false);
   // Ref to prevent concurrent auth flows (handleWagmiConnect fires multiple times due to deps)
   const wagmiAuthInProgressRef = useRef(false);
+  // Ref to prevent repeated silent-reconnect attempts within one session
+  const wagmiSilentReconnectAttemptedRef = useRef(false);
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
 
@@ -611,6 +613,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     autoConnectInAppBrowser();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Run ONCE on mount - no deps to avoid re-runs
+
+  // Silent wagmi reconnect for wallet in-app browsers (Trust Wallet, MetaMask mobile).
+  // Handles the case where the user has a valid DeHub session (wagmi source) but the
+  // wagmi/WalletConnect connection dropped — e.g. Trust Wallet browser got stuck on a
+  // gas error, user closed and reopened the app. autoConnectInAppBrowser skips when
+  // hasExistingSession=true, so without this effect posting would fail with "No wallet connected".
+  useEffect(() => {
+    if (!isAuthenticated || connectionSource !== 'wagmi' || isLoading || isConnecting) return;
+    if (isWagmiConnected) return; // Wagmi is fine — nothing to do
+
+    const eth = (window as any).ethereum;
+    const isInWalletBrowser = isMobileDevice() || !!eth?.isTrust || !!eth?.isTrustWallet;
+    if (!isInWalletBrowser || !eth) return;
+
+    if (wagmiSilentReconnectAttemptedRef.current) return;
+    wagmiSilentReconnectAttemptedRef.current = true;
+
+    const injectedConnector = connectors.find(c => c.id === 'injected');
+    if (!injectedConnector) return;
+
+    console.log('[Auth] Stale wagmi detected — silently reconnecting for existing session...');
+    connectAsync({ connector: injectedConnector }).catch((err: any) => {
+      const isAlreadyConnected =
+        err?.name === 'ConnectorAlreadyConnectedError' ||
+        err?.message?.toLowerCase().includes('already connected');
+      if (isAlreadyConnected) {
+        // Already connected — handleWagmiConnect CASE A will sync the state
+        return;
+      }
+      // Reconnect genuinely failed — wallet is not available.
+      // Log the user out so they land in a clean state instead of being
+      // stuck "logged in" but unable to sign or send transactions.
+      console.warn('[Auth] Silent wagmi reconnect failed, logging out:', err);
+      toast.info('Your wallet connection was lost. Please log in again.');
+      disconnect();
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, connectionSource, isWagmiConnected, isLoading, isConnecting]);
 
   /**
    * Complete DeHub auth using Wagmi (Sign Message)

@@ -359,7 +359,17 @@ export async function writeContractAA(
     const estimateBigInt = BigInt(gasEstimate);
     gasLimitBigInt = applyGasMargin(estimateBigInt);
     gasLimit = toHex(gasLimitBigInt);
-  } catch (estimateError) {
+  } catch (estimateError: any) {
+    const estimateMsg = (estimateError?.message || estimateError?.error?.message || '').toLowerCase();
+    // For external wallets (EOA), insufficient funds means the user genuinely cannot pay gas.
+    // Throw immediately so the wallet popup never opens and the tx doesn't get stuck.
+    if (!isWeb3Auth && (
+      estimateMsg.includes('insufficient funds') ||
+      estimateMsg.includes('insufficient balance') ||
+      estimateMsg.includes('gas required exceeds allowance')
+    )) {
+      throw new Error('INSUFFICIENT_GAS_FUNDS');
+    }
     console.warn('[AA] Gas estimation failed, using default:', estimateError);
     gasLimitBigInt = BigInt(500_000);
     gasLimit = toHex(gasLimitBigInt);

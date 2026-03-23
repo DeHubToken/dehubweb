@@ -132,7 +132,7 @@ interface UsePostFormReturn {
 export function usePostForm(onClose: () => void): UsePostFormReturn {
   const navigate = useNavigate();
   const { addOptimisticPost } = useOptimisticPosts();
-  const { user } = useAuth();
+  const { user, connectionSource } = useAuth();
   
   // Restore active draft from localStorage
   const savedDraft = useRef(loadActiveDraft());
@@ -1240,7 +1240,27 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         chainId,
         hadBounty: !!(isWatch2Earn && w2eTotal && w2eViews),
       }, error instanceof Error ? error : undefined);
-      toast.error(`Post failed: ${errorMsg}`);
+
+      // "No wallet connected" after a wagmi session means the WalletConnect/injected
+      // connection dropped (e.g. wallet app was closed mid-flow). Show a targeted message
+      // with a reconnect action instead of the raw technical error.
+      const isWalletGone = errorMsg.toLowerCase().includes('no wallet connected') ||
+        errorMsg.toLowerCase().includes('please sign in first');
+      const isGasFunds = errorMsg === 'INSUFFICIENT_GAS_FUNDS' ||
+        errorMsg.toLowerCase().includes('insufficient funds') ||
+        errorMsg.toLowerCase().includes('insufficient balance') ||
+        errorMsg.toLowerCase().includes('gas required exceeds allowance');
+
+      if (isGasFunds && connectionSource === 'wagmi') {
+        toast.error('Post failed: Insufficient Base ETH for gas fees. Please add ETH to your wallet on Base network and try again.');
+      } else if (isWalletGone && connectionSource === 'wagmi') {
+        // Wallet connection dropped mid-session. The silent reconnect effect in AuthContext
+        // will have already triggered a logout with a toast. Just silently swallow this error
+        // to avoid showing a second confusing toast on top of the logout one.
+        console.warn('[Post] Wallet gone during post attempt — auth context handling logout');
+      } else {
+        toast.error(`Post failed: ${errorMsg}`);
+      }
     } finally {
       setIsPosting(false);
       setUploadProgress(0);
@@ -1250,7 +1270,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
     isTokenGated, tokenAmount, liveMode, scheduledDate,
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
-    showTitle, titleText
+    showTitle, titleText, connectionSource
   ]);
 
   return {
