@@ -125,7 +125,7 @@ function ContentTypeFilterSection({
 interface CollageViewProps {
   posts: ImagePost[];
   onImageClick: (postId: string) => void;
-  loaderRef: React.RefObject<HTMLDivElement>;
+  loaderRef: React.RefCallback<HTMLDivElement>;
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
 }
