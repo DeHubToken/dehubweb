@@ -191,6 +191,7 @@ export function useDeHubProfile({ userId, username, address, enabled = true }: U
 
   return {
     ...query,
+    isFetchingProfile: query.isFetching,
     setFollowStatus,
   };
 }
