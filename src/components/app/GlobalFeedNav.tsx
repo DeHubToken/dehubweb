@@ -109,26 +109,20 @@ export function GlobalFeedNav() {
     setActiveTab(tabValue);
   }, [isHomePage]);
 
-  const handleDragStart = useCallback((e: React.PointerEvent<HTMLButtonElement>, tabValue: string) => {
-    if (e.button !== 0 || tabValue !== activeTab) return;
-
+  const handleDragStart = useCallback((e: React.PointerEvent) => {
+    if (e.button !== 0) return;
     e.preventDefault();
-    e.stopPropagation();
-    (e.currentTarget as HTMLButtonElement).setPointerCapture(e.pointerId);
-
-    suppressClickRef.current = false;
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     dragState.current = { startX: e.clientX, startRectX: rect.x, startWidth: rect.width, hasMoved: false };
     setIsDragging(true);
     setDragOffsetX(0);
-  }, [activeTab, rect.x, rect.width]);
+  }, [rect.x, rect.width]);
 
-  const handleDragMove = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
+  const handleDragMove = useCallback((e: React.PointerEvent) => {
     if (!dragState.current) return;
-
     const dx = e.clientX - dragState.current.startX;
     if (Math.abs(dx) > 3) dragState.current.hasMoved = true;
     setDragOffsetX(dx);
-
     const currentCenterX = dragState.current.startRectX + dx + dragState.current.startWidth / 2;
     const nearest = findNearestTab(currentCenterX);
     if (nearest !== activeTab) {
@@ -136,14 +130,10 @@ export function GlobalFeedNav() {
     }
   }, [activeTab, findNearestTab, applyTab]);
 
-  const handleDragEnd = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
+  const handleDragEnd = useCallback(() => {
     if (!dragState.current) return;
 
     const wasDrag = dragState.current.hasMoved;
-    if ((e.currentTarget as HTMLButtonElement).hasPointerCapture(e.pointerId)) {
-      (e.currentTarget as HTMLButtonElement).releasePointerCapture(e.pointerId);
-    }
-
     dragState.current = null;
     setIsDragging(false);
     setDragOffsetX(0);
