@@ -149,7 +149,7 @@ export function useConversations(searchQuery: string = '') {
 // ─── Messages ─────────────────────────────────────────────────────────────────
 
 export function useMessages(conversationId: string | null) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress, user } = useAuth();
   const queryClient = useQueryClient();
 
   const isVirtual = conversationId?.startsWith('new_') || (conversationId ? /^0x[0-9a-fA-F]{40}$/i.test(conversationId) : false);
@@ -194,6 +194,12 @@ export function useMessages(conversationId: string | null) {
             ...msg,
             conversation: dmId || conversationId,
           } as DmMessage;
+          const ownAddress = walletAddress?.toLowerCase();
+          const incomingAddress = normalizedMsg.sender?.address?.toLowerCase();
+          const ownUserId = user?._id;
+          const incomingUserId = normalizedMsg.sender?._id;
+          const incomingCreatedAt = new Date(normalizedMsg.createdAt ?? '').getTime();
+
           if (existingIdx >= 0) {
             // Update in place (e.g. media upload completed — merge mediaUrls, uploadStatus)
             const merged = {
@@ -204,7 +210,48 @@ export function useMessages(conversationId: string | null) {
             };
             newPages[0].items[existingIdx] = merged;
           } else {
-            newPages[0] = { ...newPages[0], items: [normalizedMsg, ...firstItems] };
+            // Reconcile optimistic temp message (same sender + type + content within short window)
+            // so we don't briefly render duplicates (temp + server copy).
+            const optimisticIdx = firstItems.findIndex((candidate) => {
+              if (!candidate._id?.startsWith('temp-')) return false;
+
+              const sameType = (candidate.msgType ?? 'msg') === (normalizedMsg.msgType ?? 'msg');
+              if (!sameType) return false;
+
+              const candidateAddress = candidate.sender?.address?.toLowerCase();
+              const candidateUserId = candidate.sender?._id;
+
+              const isIncomingFromCurrentUser =
+                (!!incomingAddress && !!ownAddress && incomingAddress === ownAddress) ||
+                (!!incomingUserId && !!ownUserId && incomingUserId === ownUserId);
+              if (!isIncomingFromCurrentUser) return false;
+
+              const sameSender =
+                (!!incomingAddress && !!candidateAddress && incomingAddress === candidateAddress) ||
+                (!!incomingUserId && !!candidateUserId && incomingUserId === candidateUserId);
+              if (!sameSender) return false;
+
+              const candidateContent = (candidate.content || '').trim();
+              const incomingContent = (normalizedMsg.content || '').trim();
+              const sameContent = candidateContent === incomingContent;
+              const isMediaLike = ['media', 'voice', 'gif'].includes(normalizedMsg.msgType as string);
+
+              const candidateCreatedAt = new Date(candidate.createdAt ?? '').getTime();
+              const closeInTime =
+                Number.isFinite(candidateCreatedAt) && Number.isFinite(incomingCreatedAt)
+                  ? Math.abs(candidateCreatedAt - incomingCreatedAt) < 30_000
+                  : Number.isFinite(candidateCreatedAt)
+                    ? Date.now() - candidateCreatedAt < 30_000
+                    : true;
+
+              return (sameContent || isMediaLike) && closeInTime;
+            });
+
+            if (optimisticIdx >= 0) {
+              newPages[0].items[optimisticIdx] = normalizedMsg;
+            } else {
+              newPages[0] = { ...newPages[0], items: [normalizedMsg, ...firstItems] };
+            }
           }
           return { ...old, pages: newPages };
         }
@@ -275,7 +322,7 @@ export function useMessages(conversationId: string | null) {
       unsubFeeConfirmed();
       unsubRevalidate();
     };
-  }, [conversationId, isAuthenticated, queryClient]);
+  }, [conversationId, isAuthenticated, queryClient, walletAddress, user?._id]);
 
   // Mark as read via socket + persist to localStorage
   const markAsRead = useMutation({
