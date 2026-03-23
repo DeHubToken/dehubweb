@@ -74,11 +74,17 @@ export function SidebarNavItem({
   const labelClass = isForceCollapsed ? "hidden" : collapsed ? "hidden lg:inline" : "";
 
   // Shared glass indicator element — key forces full remount on collapse toggle
+  // Use smaller radius in collapsed mode so 36×36 icons don't look circular
+  const indicatorRadius = (collapsed && !isForceCollapsed) ? 'rounded-2xl lg:rounded-2xl' : isForceCollapsed ? 'rounded-xl' : 'rounded-2xl';
+  const isCollapsedSquare = isDesktop && (isForceCollapsed || (collapsed));
   const glassIndicator = isActive && (
     <motion.div
       key={layoutId}
       layoutId={layoutId}
-      className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+      className={cn(
+        "absolute inset-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]",
+        isCollapsedSquare ? 'rounded-xl' : 'rounded-2xl'
+      )}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
     />
   );
