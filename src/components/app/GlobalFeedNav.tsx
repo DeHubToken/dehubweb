@@ -4,6 +4,9 @@
  * Renders the feed tab bar (Home, Videos, Images, etc.) at the top of every page
  * when in collapsed/fullscreen desktop mode. On the home page it controls the
  * active feed tab; on other pages clicking a tab navigates to /app with that tab.
+ *
+ * Supports drag-to-swipe: users can grab the active indicator and drag it
+ * between tabs for a tactile, interactive experience.
  */
 
 import { useRef, useCallback, useState, useEffect } from 'react';
@@ -71,7 +74,75 @@ export function GlobalFeedNav() {
 
   const { layerRef, setRef, rect } = useTabIndicator(activeTab, true);
 
+  // ── Drag-to-swipe state ──────────────────────────────────────────────
+  const tabButtonPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
+  const dragState = useRef<{ startX: number; startRectX: number; startWidth: number } | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffsetX, setDragOffsetX] = useState(0);
+
+  const findNearestTab = useCallback((indicatorCenterX: number) => {
+    const layer = layerRef.current;
+    if (!layer) return activeTab;
+    const layerRect = layer.getBoundingClientRect();
+    let nearest = activeTab;
+    let minDist = Infinity;
+    for (const tab of FEED_TABS) {
+      const el = tabButtonPositions.current[tab.value];
+      if (!el) continue;
+      const br = el.getBoundingClientRect();
+      const btnCenter = br.left - layerRect.left + br.width / 2;
+      const dist = Math.abs(indicatorCenterX - btnCenter);
+      if (dist < minDist) { minDist = dist; nearest = tab.value; }
+    }
+    return nearest;
+  }, [activeTab, layerRef]);
+
+  const applyTab = useCallback((tabValue: string) => {
+    if (isHomePage) {
+      sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: tabValue }));
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: HOME_STATE_STORAGE_KEY,
+        newValue: JSON.stringify({ tab: tabValue }),
+      }));
+    }
+    setActiveTab(tabValue);
+  }, [isHomePage]);
+
+  const handleDragStart = useCallback((e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    dragState.current = { startX: e.clientX, startRectX: rect.x, startWidth: rect.width };
+    setIsDragging(true);
+    setDragOffsetX(0);
+  }, [rect.x, rect.width]);
+
+  const handleDragMove = useCallback((e: React.PointerEvent) => {
+    if (!dragState.current) return;
+    const dx = e.clientX - dragState.current.startX;
+    setDragOffsetX(dx);
+    const currentCenterX = dragState.current.startRectX + dx + dragState.current.startWidth / 2;
+    const nearest = findNearestTab(currentCenterX);
+    if (nearest !== activeTab) {
+      applyTab(nearest);
+    }
+  }, [activeTab, findNearestTab, applyTab]);
+
+  const handleDragEnd = useCallback(() => {
+    if (!dragState.current) return;
+    dragState.current = null;
+    setIsDragging(false);
+    setDragOffsetX(0);
+    setEnableTransition(true);
+    setTimeout(() => setEnableTransition(false), 450);
+  }, []);
+
+  const dragDisplayRect = isDragging
+    ? { ...rect, x: (dragState.current?.startRectX ?? rect.x) + dragOffsetX, ready: true }
+    : rect;
+
   const handleTabClick = useCallback((tabValue: string) => {
+    if (isDragging) return;
     if (isHomePage) {
       if (tabValue === activeTab) {
         // Same tab clicked — dispatch event so HomePage toggles filters
@@ -80,31 +151,48 @@ export function GlobalFeedNav() {
         // Different tab — enable smooth transition, auto-reset after animation
         setEnableTransition(true);
         setTimeout(() => setEnableTransition(false), 450);
-        sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: tabValue }));
-        window.dispatchEvent(new StorageEvent('storage', {
-          key: HOME_STATE_STORAGE_KEY,
-          newValue: JSON.stringify({ tab: tabValue }),
-        }));
+        applyTab(tabValue);
       }
     } else {
       // Navigate to home with the desired tab
       sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: tabValue }));
       navigate('/app');
     }
-  }, [isHomePage, navigate, activeTab]);
+  }, [isHomePage, navigate, activeTab, isDragging, applyTab]);
 
   return (
     <div className="sticky top-0 bg-black z-50 p-2 sm:p-3 pb-2 sm:pb-2">
       <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
         <div ref={layerRef} className="relative overflow-visible">
-          <GlassIndicator rect={rect} borderRadius="0.75rem" layoutKey={`global-nav-${activeTab}`} enableTransition={enableTransition} />
+          <GlassIndicator rect={dragDisplayRect} borderRadius="0.75rem" layoutKey={`global-nav-${activeTab}`} enableTransition={!isDragging && enableTransition} />
+          {/* Drag handle overlay */}
+          {dragDisplayRect.ready && (
+            <div
+              className="absolute z-30 cursor-grab active:cursor-grabbing"
+              style={{
+                transform: `translate(${dragDisplayRect.x}px, ${dragDisplayRect.y}px)`,
+                width: dragDisplayRect.width,
+                height: dragDisplayRect.height,
+                transition: !isDragging && enableTransition
+                  ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+                  : 'none',
+              }}
+              onPointerDown={handleDragStart}
+              onPointerMove={handleDragMove}
+              onPointerUp={handleDragEnd}
+              onPointerCancel={handleDragEnd}
+            />
+          )}
           <div className="relative z-20 flex scrollbar-hide">
             {FEED_TABS.map((tab) => {
               const isActive = activeTab === tab.value;
               return (
                 <button
                   key={tab.value}
-                  ref={setRef(tab.value)}
+                  ref={(el) => {
+                    setRef(tab.value)(el);
+                    tabButtonPositions.current[tab.value] = el;
+                  }}
                   onClick={() => handleTabClick(tab.value)}
                   className={cn(
                     'relative z-40 flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 rounded-xl',
