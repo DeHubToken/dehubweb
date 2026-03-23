@@ -1047,7 +1047,14 @@ function NotificationItem({
 export default function NotificationsPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<NotificationTypeFilter>('all');
+  const [notifTabTransition, setNotifTabTransition] = useState(false);
   const { layerRef: notifTabLayerRef, setRef: setNotifTabRef, rect: notifTabRect, onScroll: onNotifTabScroll } = useTabIndicator(activeTab);
+
+  const handleTabClick = useCallback((tab: NotificationTypeFilter) => {
+    setNotifTabTransition(true);
+    setActiveTab(tab);
+    setTimeout(() => setNotifTabTransition(false), 450);
+  }, []);
   const { isAuthenticated, walletAddress: pageWalletAddress } = useAuth();
   
   // Followers drawer state (opened inline from aggregated follow notifications)
@@ -1515,7 +1522,7 @@ export default function NotificationsPage() {
           {/* Tabs - merged into header bento */}
           <div className="mt-3 -mx-2" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
             <div ref={notifTabLayerRef} className="relative overflow-visible">
-              <GlassIndicator rect={notifTabRect} />
+              <GlassIndicator rect={notifTabRect} enableTransition={notifTabTransition} />
               <div 
                 className="relative z-20 flex gap-1 overflow-y-visible px-1 py-1"
                 onScroll={onNotifTabScroll}
@@ -1526,7 +1533,7 @@ export default function NotificationsPage() {
                     <button
                       key={tab.value}
                       ref={setNotifTabRef(tab.value)}
-                      onClick={() => setActiveTab(tab.value)}
+                      onClick={() => handleTabClick(tab.value)}
                       className={`relative z-40 flex-1 min-w-0 flex items-center justify-center px-1 py-[10.4px] rounded-xl transition-colors duration-200 ${
                         activeTab === tab.value
                           ? 'text-white'
