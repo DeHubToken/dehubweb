@@ -18,6 +18,7 @@ import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 
 const HOME_STATE_STORAGE_KEY = 'home-feed-state';
+const HOME_TAB_SWITCH_EVENT = 'switch-home-tab';
 
 /** Read the currently persisted home tab from sessionStorage */
 function getPersistedTab(): string {
@@ -38,6 +39,12 @@ export function GlobalFeedNav() {
 
   const [activeTab, setActiveTab] = useState(() => isHomePage ? getPersistedTab() : '');
   const [enableTransition, setEnableTransition] = useState(false);
+
+  // Keep a ref in sync so drag handlers avoid stale activeTab closures.
+  const activeTabRef = useRef(activeTab);
+  useEffect(() => {
+    activeTabRef.current = activeTab;
+  }, [activeTab]);
 
   // Reset transition on page change
   useEffect(() => {
@@ -83,9 +90,9 @@ export function GlobalFeedNav() {
 
   const findNearestTab = useCallback((indicatorCenterX: number) => {
     const layer = layerRef.current;
-    if (!layer) return activeTab;
+    if (!layer) return activeTabRef.current;
     const layerRect = layer.getBoundingClientRect();
-    let nearest = activeTab;
+    let nearest = activeTabRef.current;
     let minDist = Infinity;
     for (const tab of FEED_TABS) {
       const el = tabButtonPositions.current[tab.value];
@@ -96,21 +103,22 @@ export function GlobalFeedNav() {
       if (dist < minDist) { minDist = dist; nearest = tab.value; }
     }
     return nearest;
-  }, [activeTab, layerRef]);
+  }, [layerRef]);
 
   const applyTab = useCallback((tabValue: string) => {
     if (isHomePage) {
       sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: tabValue }));
-      window.dispatchEvent(new StorageEvent('storage', {
-        key: HOME_STATE_STORAGE_KEY,
-        newValue: JSON.stringify({ tab: tabValue }),
-      }));
+      // Directly sync HomePage while dragging — avoids relying on synthetic storage events.
+      window.dispatchEvent(new CustomEvent(HOME_TAB_SWITCH_EVENT, { detail: tabValue }));
+      window.dispatchEvent(new CustomEvent('home-tab-changed'));
     }
+    activeTabRef.current = tabValue;
     setActiveTab(tabValue);
   }, [isHomePage]);
 
   const handleDragStart = useCallback((e: React.PointerEvent) => {
-    if (e.button !== 0) return;
+    // Allow all touch drags, but only primary mouse button for mouse.
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
     e.preventDefault();
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     dragState.current = { startX: e.clientX, startRectX: rect.x, startWidth: rect.width, hasMoved: false };
@@ -125,10 +133,10 @@ export function GlobalFeedNav() {
     setDragOffsetX(dx);
     const currentCenterX = dragState.current.startRectX + dx + dragState.current.startWidth / 2;
     const nearest = findNearestTab(currentCenterX);
-    if (nearest !== activeTab) {
+    if (nearest !== activeTabRef.current) {
       applyTab(nearest);
     }
-  }, [activeTab, findNearestTab, applyTab]);
+  }, [findNearestTab, applyTab]);
 
   const handleDragEnd = useCallback(() => {
     if (!dragState.current) return;
@@ -144,6 +152,7 @@ export function GlobalFeedNav() {
       setTimeout(() => setEnableTransition(false), 450);
     }
   }, []);
+
   const dragDisplayRect = isDragging
     ? { ...rect, x: (dragState.current?.startRectX ?? rect.x) + dragOffsetX, ready: true }
     : rect;
@@ -185,6 +194,8 @@ export function GlobalFeedNav() {
                 transform: `translate(${dragDisplayRect.x}px, ${dragDisplayRect.y}px)`,
                 width: dragDisplayRect.width,
                 height: dragDisplayRect.height,
+                touchAction: 'none',
+                userSelect: 'none',
                 transition: !isDragging && enableTransition
                   ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                   : 'none',
