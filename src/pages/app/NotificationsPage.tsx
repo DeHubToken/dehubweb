@@ -1533,7 +1533,7 @@ export default function NotificationsPage() {
                     <button
                       key={tab.value}
                       ref={setNotifTabRef(tab.value)}
-                      onClick={() => setActiveTab(tab.value)}
+                      onClick={() => handleTabClick(tab.value)}
                       className={`relative z-40 flex-1 min-w-0 flex items-center justify-center px-1 py-[10.4px] rounded-xl transition-colors duration-200 ${
                         activeTab === tab.value
                           ? 'text-white'
