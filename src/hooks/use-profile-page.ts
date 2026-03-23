@@ -332,6 +332,7 @@ export function useProfilePage() {
     profile,
     apiProfile,
     isLoadingProfile,
+    isFetchingProfile,
     isProfileError,
     isOwnProfile,
     isViewingOwnProfile,
