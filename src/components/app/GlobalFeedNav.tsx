@@ -184,12 +184,12 @@ export function GlobalFeedNav() {
               onPointerDown={handleDragStart}
               onPointerMove={handleDragMove}
               onPointerUp={(e) => {
-                if (!dragState.current) {
-                  // No drag happened — find and click the underlying button
-                  const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
-                  el?.closest('button')?.click();
-                }
+                const wasDrag = dragState.current?.hasMoved;
                 handleDragEnd();
+                if (!wasDrag) {
+                  // Was a click, not a drag — trigger the active tab's reclick
+                  handleTabClick(activeTab);
+                }
               }}
               onPointerCancel={handleDragEnd}
             />
