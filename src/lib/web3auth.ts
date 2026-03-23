@@ -84,10 +84,11 @@ export function isWalletInAppBrowser(): boolean {
   const ua = navigator.userAgent.toLowerCase();
   const win = window as any;
   const hasEthereum = !!win.ethereum;
+  // Phantom injects window.phantom.ethereum in BOTH its mobile DApp browser and its desktop
+  // extension. Only treat it as an in-app browser when we're actually on mobile — otherwise
+  // a desktop user with the Phantom extension installed is incorrectly flagged as in-app.
   const hasPhantomEthereum = !!win.phantom?.ethereum;
-
-  // Phantom injects window.phantom.ethereum (and sometimes window.ethereum)
-  if (hasPhantomEthereum) return true;
+  if (hasPhantomEthereum && isMobileDevice()) return true;
 
   // Check known wallet in-app browser UA strings
   const walletUAs = [

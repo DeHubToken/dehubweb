@@ -44,6 +44,7 @@ import {
   WALLET_CONNECTORS,
   getOrInitWeb3Auth,
   isMobileDevice,
+  isWalletInAppBrowser,
 } from '@/lib/web3auth';
 import type { Web3Auth } from '@web3auth/modal';
 
@@ -561,19 +562,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const autoConnectInAppBrowser = async () => {
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       const hasInjected = typeof window !== 'undefined' && !!(window as any).ethereum;
+      // Trust Wallet injects isTrust/isTrustWallet on window.ethereum even when the user
+      // enables "Desktop Mode" in its in-app browser (which changes the UA to desktop).
+      // Coinbase Wallet desktop extension ALSO sets isCoinbaseWallet, so we deliberately
+      // do NOT include it here to avoid triggering auto-connect for desktop extension users.
+      const eth = (window as any).ethereum;
+      const isWalletInAppBrowser = hasInjected && (!!eth?.isTrust || !!eth?.isTrustWallet);
       const alreadyAttempted = sessionStorage.getItem('dehub_wallet_auto_connect_attempted');
       // Check existing session synchronously (no API call)
       const hasExistingSession = !!getAuthToken() && !isTokenExpired();
 
       // Don't auto-connect if we're returning from a Web3Auth redirect (email/SMS login)
-      if (!isMobile || !hasInjected || hasExistingSession || alreadyAttempted || hasRedirectResult()) {
+      if (!(isMobile || isWalletInAppBrowser) || !hasInjected || hasExistingSession || alreadyAttempted || hasRedirectResult()) {
         return;
       }
 
       // Mark as attempted to prevent retry loops
       sessionStorage.setItem('dehub_wallet_auto_connect_attempted', 'true');
 
-      console.log('[Auth] Mobile in-app browser detected, auto-connecting immediately...');
+      console.log('[Auth] Mobile/wallet in-app browser detected, auto-connecting immediately...');
       // Find the best connector for in-app browser auto-connect:
       // prefer the generic injected() which picks up the wallet's window.ethereum
       const injectedConnector = connectors.find(c => c.id === 'injected')
@@ -586,9 +593,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         await connectAsync({ connector: injectedConnector });
         // wagmi useEffect will pick up the connection and start DeHub auth
-      } catch (err) {
-        console.warn('[Auth] In-app browser auto-connect failed:', err);
-        setWagmiAuthIntent(false);
+      } catch (err: any) {
+        const isAlreadyConnected =
+          err?.name === 'ConnectorAlreadyConnectedError' ||
+          err?.message?.toLowerCase().includes('already connected');
+        if (isAlreadyConnected) {
+          // Connector is already connected (returning user / page reload).
+          // wagmiAuthIntent is still true → handleWagmiConnect will fire and complete DeHub auth.
+          console.log('[Auth] In-app browser: connector already connected, DeHub auth will proceed');
+        } else {
+          console.warn('[Auth] In-app browser auto-connect failed:', err);
+          setWagmiAuthIntent(false);
+        }
       }
     };
 
@@ -1042,7 +1058,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const ids = walletMap[wallet] || [];
       let connector = connectors.find(c =>
         ids.some(id => c.id === id || c.name.toLowerCase().includes(id.toLowerCase()))
-      ) || connectors.find(c => c.id === 'injected');
+      );
+
+      // Only fall back to the generic injected connector when we are actually inside
+      // a wallet's in-app browser (e.g. Trust Wallet DApp browser, MetaMask mobile).
+      // On desktop the injected connector is whatever extension the user has installed
+      // (could be Phantom, MetaMask, etc.) — using it as a fallback for an explicitly
+      // chosen wallet (e.g. Trust Wallet) would open the wrong wallet.
+      if (!connector && isWalletInAppBrowser()) {
+        connector = connectors.find(c => c.id === 'injected');
+      }
 
       if (!connector) {
         throw new Error(`Connector for ${wallet} not found`);
