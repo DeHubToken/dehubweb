@@ -1600,7 +1600,7 @@ export default function NotificationsPage() {
                 />
               )}
               <div 
-                className="relative z-20 flex gap-1 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap px-1 py-1"
+                className="relative z-20 flex gap-1 sm:gap-1.5 overflow-x-auto sm:overflow-x-visible overflow-y-visible scrollbar-hide whitespace-nowrap px-1 py-1"
                 style={{ touchAction: 'pan-x' }}
                 onScroll={onNotifTabScroll}
               >
@@ -1614,7 +1614,7 @@ export default function NotificationsPage() {
                         tabButtonPositions.current[tab.value] = el;
                       }}
                       onClick={() => handleTabClick(tab.value)}
-                      className={`relative z-40 flex-shrink-0 w-11 h-11 flex items-center justify-center rounded-xl transition-colors duration-200 ${
+                      className={`relative z-40 flex-shrink-0 sm:flex-shrink sm:flex-1 w-[46px] h-[46px] sm:w-auto sm:h-auto sm:py-2.5 flex items-center justify-center rounded-xl transition-colors duration-200 ${
                         activeTab === tab.value
                           ? 'text-white'
                           : 'text-zinc-400 hover:text-white'
