@@ -168,7 +168,7 @@ export function GlobalFeedNav() {
           {/* Drag handle overlay */}
           {dragDisplayRect.ready && (
             <div
-              className="absolute z-30 cursor-grab active:cursor-grabbing"
+              className="absolute z-50 cursor-grab active:cursor-grabbing"
               style={{
                 transform: `translate(${dragDisplayRect.x}px, ${dragDisplayRect.y}px)`,
                 width: dragDisplayRect.width,
@@ -179,7 +179,14 @@ export function GlobalFeedNav() {
               }}
               onPointerDown={handleDragStart}
               onPointerMove={handleDragMove}
-              onPointerUp={handleDragEnd}
+              onPointerUp={(e) => {
+                if (!dragState.current) {
+                  // No drag happened — find and click the underlying button
+                  const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
+                  el?.closest('button')?.click();
+                }
+                handleDragEnd();
+              }}
               onPointerCancel={handleDragEnd}
             />
           )}
