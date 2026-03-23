@@ -1047,7 +1047,14 @@ function NotificationItem({
 export default function NotificationsPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<NotificationTypeFilter>('all');
+  const [notifTabTransition, setNotifTabTransition] = useState(false);
   const { layerRef: notifTabLayerRef, setRef: setNotifTabRef, rect: notifTabRect, onScroll: onNotifTabScroll } = useTabIndicator(activeTab);
+
+  const handleTabClick = useCallback((tab: NotificationTypeFilter) => {
+    setNotifTabTransition(true);
+    setActiveTab(tab);
+    setTimeout(() => setNotifTabTransition(false), 450);
+  }, []);
   const { isAuthenticated, walletAddress: pageWalletAddress } = useAuth();
   
   // Followers drawer state (opened inline from aggregated follow notifications)
