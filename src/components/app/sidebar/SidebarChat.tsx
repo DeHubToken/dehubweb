@@ -377,7 +377,7 @@ export function SidebarChat() {
 
       {/* Input */}
       <div className="pl-3 pr-[14px] py-3">
-        <div className="relative">
+        <div>
           <Textarea
             ref={textareaRef}
             placeholder="Type a message..."
@@ -389,10 +389,14 @@ export function SidebarChat() {
                 setNewMessage(processed);
                 mention.handleInput(processed, e.target.selectionStart);
               }
+              // Auto-resize
+              const ta = e.target;
+              ta.style.height = 'auto';
+              ta.style.height = `${Math.min(ta.scrollHeight, 128)}px`;
             }}
             onKeyDown={handleKeyDown}
             maxLength={169}
-            className="min-h-[44px] resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-24 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
+            className="min-h-[36px] max-h-32 resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
             rows={1}
             style={{ fieldSizing: 'content' } as React.CSSProperties}
           />
@@ -405,7 +409,7 @@ export function SidebarChat() {
             onSelect={mention.handleSelect}
             onClose={mention.handleClose}
           />
-          <div className="absolute bottom-0 right-0 flex items-center gap-0.5">
+          <div className="flex items-center justify-end gap-0.5 pt-1">
             <EmojiGifPicker
               onEmojiSelect={handleEmojiSelect}
               onGifSelect={handleGifSelect}
