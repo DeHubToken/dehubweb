@@ -57,7 +57,7 @@ function useAdaptiveDrawerHeight(enabled: boolean) {
   return drawerHeight;
 }
 
-export function CommentsWrapper({ open, onOpenChange, tokenId }: CommentsWrapperProps) {
+export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab }: CommentsWrapperProps) {
   const isTabletOrMobile = useIsTabletOrMobile();
   const adaptiveDrawerHeight = useAdaptiveDrawerHeight(isTabletOrMobile);
   const { isCollapsed } = useSidebarCollapse();
