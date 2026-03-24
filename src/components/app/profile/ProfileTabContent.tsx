@@ -13,6 +13,7 @@ import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { PlanCard } from '@/components/app/subscriptions';
 import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
+import { ProfileImageGrid } from '@/components/app/profile/ProfileImageGrid';
 import { getUserComments, getNFTInfo, getMediaUrl, editComment, deleteComment } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import { buildImageUrl, buildFeedImageUrls, buildAvatarUrl } from '@/lib/media-url';
@@ -181,6 +182,8 @@ export function ProfileTabContent({
       <TabPanel tab="images">
         {showLoading ? null : PROFILE_IMAGES.length === 0 ? (
           <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" title="No images yet" subtitle="Image posts will appear here" />
+        ) : PROFILE_IMAGES.length >= 4 ? (
+          <ProfileImageGrid images={PROFILE_IMAGES} />
         ) : (
           <div className="space-y-3">
             {PROFILE_IMAGES.map((image) => (
