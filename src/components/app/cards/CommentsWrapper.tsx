@@ -109,6 +109,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab }: Com
             <CommentsSection
               tokenId={tokenId}
               onClose={() => onOpenChange(false)}
+              initialTab={initialTab}
             />
           </div>
         </motion.div>
