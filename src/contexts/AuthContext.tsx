@@ -1161,6 +1161,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const disconnect = async () => {
+    // Best-effort server-side token revocation (fire-and-forget)
+    logoutFromServer().catch(() => {});
+
     // Clean up local state FIRST for immediate UI feedback
     clearAuthSession();
     localStorage.removeItem('dehub_user');
