@@ -1428,12 +1428,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 <TooltipContent>Picture in Picture (P)</TooltipContent>
               </Tooltip>
             )}
-            <button 
-              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
-              onClick={handleFullscreen}
-            >
-              {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
-            </button>
             <button
               className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
               onClick={cyclePlaybackRate}
@@ -1454,6 +1448,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               </TooltipTrigger>
               <TooltipContent>{isLooping ? 'Loop on' : 'Loop off'}</TooltipContent>
             </Tooltip>
+            <button 
+              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+              onClick={handleFullscreen}
+            >
+              {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+            </button>
           </div>
         )}
 
