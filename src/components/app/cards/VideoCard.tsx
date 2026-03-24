@@ -837,10 +837,28 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, []);
 
   const handleVideoEnded = useCallback(() => {
+    if (isLooping && videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+      return;
+    }
     isPlayingRef.current = false;
     setIsPlaying(false);
     videoPlaybackManager.stop(instanceId);
-  }, [instanceId]);
+  }, [instanceId, isLooping]);
+
+  const cyclePlaybackRate = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
+    const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
+    setPlaybackRate(nextRate);
+    if (videoRef.current) videoRef.current.playbackRate = nextRate;
+  }, [playbackRate]);
+
+  const toggleLoop = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsLooping(prev => !prev);
+  }, []);
 
   const handleVideoError = useCallback((e: React.SyntheticEvent<HTMLVideoElement>) => {
     const videoEl = e.currentTarget;
