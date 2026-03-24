@@ -218,7 +218,6 @@ export async function getUserComments(
 ): Promise<UserCommentsResponse> {
   const response = await apiCall<any>(`/api/users/${encodeURIComponent(address)}/comments`, {
     params: { page, limit },
-    requiresAuth: true,
   });
   // Normalize: API may return { result: { items, ... } } or { data, ... }
   if (response?.result?.items) {
