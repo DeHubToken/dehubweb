@@ -18,6 +18,7 @@ import Hls from 'hls.js';
 import { TVChannel } from '@/lib/api/live-tv';
 import { getCountryFlag, reportBrokenChannel } from '@/lib/api/live-tv';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
+import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES } from '@/lib/video-preferences';
 import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('TVChannelCard');
