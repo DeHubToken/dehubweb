@@ -66,6 +66,7 @@ interface PostCardProps {
 
 export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
+  const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   useAutoOpenComments(setShowComments);
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
