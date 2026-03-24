@@ -24,9 +24,12 @@ import {
   authenticateWallet,
   getAccountInfo,
   getAuthToken,
+  getRefreshToken,
   clearAuthSession,
   isTokenExpired,
   apiCall,
+  refreshAccessToken,
+  logoutFromServer,
   type DeHubUser,
   type Web3AuthMeta,
 } from '@/lib/api/dehub';
