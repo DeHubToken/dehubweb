@@ -786,7 +786,13 @@ function NotificationItem({
     // Navigate to appropriate destination
     const navLink = getNavigationLink(notification);
     if (navLink) {
-      navigate(navLink);
+      // Seed profile cache for profile-bound navigations
+      const isProfileNav = ['following', 'subscription', 'ppv_purchase'].includes(notification.type);
+      if (isProfileNav) {
+        seedAndNavigateToProfile(notification);
+      } else {
+        navigate(navLink);
+      }
     }
   };
 
