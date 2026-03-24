@@ -254,7 +254,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Ref to prevent repeated silent-reconnect attempts within one session
   const wagmiSilentReconnectAttemptedRef = useRef(false);
 
-  const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
+  // User is "authenticated" if they have a valid access token OR a refresh token
+  // (refresh token means we can silently get a new access token without wallet interaction)
+  const isAuthenticated = !!user && !!walletAddress && (
+    (!!getAuthToken() && !isTokenExpired()) || !!getRefreshToken()
+  );
 
   const setWagmiAuthIntent = useCallback((value: boolean) => {
     console.log('[Auth] Setting wagmiAuthIntent:', value);
