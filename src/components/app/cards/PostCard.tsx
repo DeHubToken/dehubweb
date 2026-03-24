@@ -329,7 +329,10 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           <ActionBar 
             postId={post.id} 
             className="p-0"
-            onComment={() => setShowComments(prev => !prev)}
+            onComment={() => {
+              setCommentsInitialTab(undefined);
+              setShowComments(prev => !prev);
+            }}
             onRepost={handleRepost}
             onQuote={handleQuote}
             isLiked={post.isLiked}
