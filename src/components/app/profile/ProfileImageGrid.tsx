@@ -1,13 +1,15 @@
 /**
  * ProfileImageGrid
  * ================
- * Instagram-style 3-column image grid for profile pages.
+ * Natural collage-style image grid for profile pages (matches public image feed).
+ * Every 4th image spans 2×2 for visual flow. Tapping opens the full ImageCard.
  * Unlocked when a user has 4+ image posts.
  */
 
 import { useState, memo } from 'react';
-import { X } from 'lucide-react';
+import { X, ThumbsUp, ThumbsDown, MessageSquare, Ticket } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 import type { ImagePost } from '@/types/feed.types';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 
@@ -20,22 +22,57 @@ export const ProfileImageGrid = memo(function ProfileImageGrid({ images }: Profi
 
   return (
     <>
-      {/* Grid */}
-      <div className="grid grid-cols-3 gap-0.5">
-        {images.map((image) => (
-          <button
-            key={image.id}
-            className="relative aspect-square overflow-hidden bg-white/[0.03] focus:outline-none"
-            onClick={() => setSelectedImage(image)}
-          >
-            <img
-              src={image.image}
-              alt={image.description || image.caption || 'Image post'}
-              className="w-full h-full object-cover transition-opacity hover:opacity-80"
-              loading="lazy"
-            />
-          </button>
-        ))}
+      {/* Collage grid — matches public ImagesFeed CollageView */}
+      <div
+        className="grid grid-cols-3 gap-0.5 sm:gap-1 overflow-hidden rounded-xl"
+        style={{ gridAutoFlow: 'dense' }}
+      >
+        {images.map((post, index) => {
+          const isLargeTile = index % 4 === 0;
+
+          return (
+            <div
+              key={post.id}
+              onClick={() => setSelectedImage(post)}
+              className={cn(
+                'relative aspect-square bg-zinc-800 overflow-hidden group cursor-pointer',
+                isLargeTile && 'col-span-2 row-span-2'
+              )}
+            >
+              <img
+                src={post.image}
+                alt={post.description || post.caption || ''}
+                className={cn(
+                  "w-full h-full object-cover transition-transform duration-300 group-hover:scale-105",
+                  post.isPPV && "blur-lg"
+                )}
+                loading="lazy"
+              />
+              {/* PPV overlay */}
+              {post.isPPV && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                  <div className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+                    <Ticket className="h-5 w-5 text-white" />
+                  </div>
+                </div>
+              )}
+              {/* Hover overlay with stats */}
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 sm:gap-5">
+                <div className="flex items-center gap-1 sm:gap-1.5 text-white">
+                  <ThumbsUp className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="font-semibold text-xs sm:text-sm">{post.likes.toLocaleString()}</span>
+                </div>
+                <div className="flex items-center gap-1 sm:gap-1.5 text-white">
+                  <ThumbsDown className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                <div className="flex items-center gap-1 sm:gap-1.5 text-white">
+                  <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="font-semibold text-xs sm:text-sm">{post.comments}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Expanded view overlay */}
