@@ -408,7 +408,7 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
 // MAIN COMPONENT
 // ============================================================================
 
-export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
+export function CommentsSection({ tokenId, onClose, initialTab }: CommentsSectionProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, isAuthenticated, walletAddress } = useAuth();
