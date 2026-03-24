@@ -26,6 +26,7 @@ import notificationsIcon from '@/assets/icons/notifications-icon.png';
 import { useQueries, useQueryClient } from '@tanstack/react-query';
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
+import { seedProfileCache } from '@/lib/profile-cache-seed';
 import { DEHUB_CDN_BASE, getNFTInfo, getFollowRequests, approveFollowRequest, rejectFollowRequest } from '@/lib/api/dehub';
 import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 
@@ -607,6 +608,7 @@ function NotificationItem({
   enrichedAvatars: Map<string, EnrichedAvatar>;
 }) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { t } = useTranslation();
   const [isClosing, setIsClosing] = useState(false);
   const [showActorsDrawer, setShowActorsDrawer] = useState(false);
@@ -737,6 +739,22 @@ function NotificationItem({
 
   const { walletAddress } = useAuth();
 
+  // Seed profile cache before navigating to a profile so the header renders instantly
+  const seedAndNavigateToProfile = (n: DeHubNotification) => {
+    const username = n.actorUsername?.replace('@', '');
+    const address = n.actorAddress;
+    if (username || address) {
+      seedProfileCache(queryClient, {
+        address: address || '',
+        username,
+        avatarUrl: n.actorAvatar || (n.actor as any)?.avatar,
+        displayName: (n.actor as any)?.displayName || username,
+      }, walletAddress || undefined);
+    }
+    const target = username || address;
+    if (target) navigate(`/${target}`);
+  };
+
   const handleClick = () => {
     // If a drawer is open or just closed, don't navigate
     if (showActorsDrawer || showPostsDrawer || drawerJustClosed.current) return;
@@ -748,8 +766,7 @@ function NotificationItem({
     
     // Follow request notifications — clicking row navigates to requester's profile
     if (isFollowRequest) {
-      const profileTarget = notification.actorAddress || notification.actorUsername;
-      if (profileTarget) navigate(`/${profileTarget}`);
+      seedAndNavigateToProfile(notification);
       return;
     }
 
@@ -769,7 +786,13 @@ function NotificationItem({
     // Navigate to appropriate destination
     const navLink = getNavigationLink(notification);
     if (navLink) {
-      navigate(navLink);
+      // Seed profile cache for profile-bound navigations
+      const isProfileNav = ['following', 'subscription', 'ppv_purchase'].includes(notification.type);
+      if (isProfileNav) {
+        seedAndNavigateToProfile(notification);
+      } else {
+        navigate(navLink);
+      }
     }
   };
 
