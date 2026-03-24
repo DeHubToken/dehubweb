@@ -747,8 +747,8 @@ function NotificationItem({
       seedProfileCache(queryClient, {
         address: address || '',
         username,
-        avatarUrl: n.actorAvatar || n.actor?.avatar,
-        displayName: n.actorDisplayName || n.actor?.displayName || username,
+        avatarUrl: n.actorAvatar || (n.actor as any)?.avatar,
+        displayName: (n.actor as any)?.displayName || username,
       }, walletAddress || undefined);
     }
     const target = username || address;
