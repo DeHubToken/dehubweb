@@ -309,6 +309,7 @@ function FeedDescription({
 
 export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [showComments, setShowComments] = useState(false);
+  const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   useAutoOpenComments(setShowComments);
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
@@ -734,7 +735,10 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         <ActionBar 
           postId={post.id} 
           className="p-0" 
-          onComment={() => setShowComments(prev => !prev)} 
+          onComment={() => {
+            setCommentsInitialTab(undefined);
+            setShowComments(prev => !prev);
+          }} 
           onRepost={handleRepost}
           onQuote={handleQuote}
           isLiked={post.isLiked} 
@@ -746,6 +750,10 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           isOptimistic={post.isOptimistic}
           tipCount={tipCount}
           onTip={() => setShowTipModal(true)}
+          onSeeEngagements={() => {
+            setCommentsInitialTab('reposts');
+            setShowComments(true);
+          }}
         />
         
 
@@ -754,6 +762,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           open={showComments}
           onOpenChange={setShowComments}
           tokenId={post.id}
+          initialTab={commentsInitialTab}
         />
       </div>
 
