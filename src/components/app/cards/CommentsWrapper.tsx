@@ -16,6 +16,7 @@ interface CommentsWrapperProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   tokenId: string;
+  initialTab?: 'replies' | 'quotes' | 'reposts' | 'search';
 }
 
 function useIsTabletOrMobile() {
@@ -56,7 +57,7 @@ function useAdaptiveDrawerHeight(enabled: boolean) {
   return drawerHeight;
 }
 
-export function CommentsWrapper({ open, onOpenChange, tokenId }: CommentsWrapperProps) {
+export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab }: CommentsWrapperProps) {
   const isTabletOrMobile = useIsTabletOrMobile();
   const adaptiveDrawerHeight = useAdaptiveDrawerHeight(isTabletOrMobile);
   const { isCollapsed } = useSidebarCollapse();
@@ -81,6 +82,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId }: CommentsWrapper
             <CommentsSection
               tokenId={tokenId}
               onClose={() => onOpenChange(false)}
+              initialTab={initialTab}
             />
           </div>
         </DrawerContent>
@@ -107,6 +109,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId }: CommentsWrapper
             <CommentsSection
               tokenId={tokenId}
               onClose={() => onOpenChange(false)}
+              initialTab={initialTab}
             />
           </div>
         </motion.div>
