@@ -148,7 +148,7 @@ export async function logoutFromServer(): Promise<void> {
   if (!refreshToken || !accessToken) return;
 
   try {
-    await fetch(`${DEHUB_API_BASE}/auth/logout`, {
+    await fetch(`${DEHUB_API_BASE}/api/auth/logout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
