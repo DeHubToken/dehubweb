@@ -92,7 +92,12 @@ describe('Token management', () => {
     expect(isTokenExpired()).toBe(true);
   });
 
-  it('isTokenExpired returns false for fresh token', () => {
+  it('isTokenExpired returns false for fresh token (new format)', () => {
+    setTokenExpiresAt(900); // 15 min from now
+    expect(isTokenExpired()).toBe(false);
+  });
+
+  it('isTokenExpired returns false for fresh token (legacy format)', () => {
     localStorage.setItem('dehub_token_timestamp', String(Date.now()));
     expect(isTokenExpired()).toBe(false);
   });
