@@ -515,7 +515,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
                 vpSetPlaybackRate(nextRate);
                 if (videoRef.current) videoRef.current.playbackRate = nextRate;
               }}
-              className="h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors px-3 text-white text-sm font-medium"
+              className="h-10 w-[58px] rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors text-white text-sm font-medium"
             >
               {formatRate(playbackRate)}x
             </button>

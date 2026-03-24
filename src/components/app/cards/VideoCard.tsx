@@ -1435,7 +1435,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
             </button>
             <button
-              className="h-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 px-2 text-xs font-medium"
+              className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
               onClick={cyclePlaybackRate}
             >
               {formatRate(playbackRate)}x

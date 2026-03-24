@@ -918,7 +918,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     }}
                     className="flex flex-col items-center gap-1"
                   >
-                    <span className="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white text-xs font-bold drop-shadow-lg">
+                    <span className="w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white text-[10px] font-bold drop-shadow-lg">
                       {formatRate(playbackRate)}x
                     </span>
                   </button>
