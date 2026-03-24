@@ -517,7 +517,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
               }}
               className="h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors px-3 text-white text-sm font-medium"
             >
-              {playbackRate}x
+              {formatRate(playbackRate)}x
             </button>
 
             {/* Fullscreen Button */}

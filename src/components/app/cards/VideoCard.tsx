@@ -1438,7 +1438,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               className="h-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 px-2 text-xs font-medium"
               onClick={cyclePlaybackRate}
             >
-              {playbackRate}x
+              {formatRate(playbackRate)}x
             </button>
             <Tooltip>
               <TooltipTrigger asChild>
