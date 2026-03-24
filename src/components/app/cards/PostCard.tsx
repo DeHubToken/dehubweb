@@ -228,6 +228,15 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
               >
                 <Link2 className="w-5 h-5" /> {t('postOptions.copyPostUrl')}
               </button>
+              <button
+                onClick={() => {
+                  setCommentsInitialTab('reposts');
+                  setShowComments(true);
+                }}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              >
+                <Repeat2 className="w-5 h-5" /> See Engagements
+              </button>
               {!isOwnPost && isFollowingAuthor === false && (
                 <button
                   onClick={handleFollowFromMenu}
