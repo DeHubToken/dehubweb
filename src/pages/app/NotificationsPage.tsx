@@ -766,8 +766,7 @@ function NotificationItem({
     
     // Follow request notifications — clicking row navigates to requester's profile
     if (isFollowRequest) {
-      const profileTarget = notification.actorAddress || notification.actorUsername;
-      if (profileTarget) navigate(`/${profileTarget}`);
+      seedAndNavigateToProfile(notification);
       return;
     }
 
