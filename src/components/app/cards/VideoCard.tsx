@@ -1595,7 +1595,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               className="p-0" 
               isLiked={video.isLiked} 
               isDisliked={video.isDisliked}
-              onComment={() => setShowComments(!showComments)}
+              onComment={() => {
+                setCommentsInitialTab(undefined);
+                setShowComments(!showComments);
+              }}
               onRepost={handleRepost}
               onQuote={handleQuote}
               likeCount={video.likeCount}
@@ -1606,6 +1609,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               isOptimistic={video.isOptimistic}
               tipCount={tipCount}
               onTip={() => setShowTipModal(true)}
+              onSeeEngagements={() => {
+                setCommentsInitialTab('reposts');
+                setShowComments(true);
+              }}
+            />
             />
 
             {/* Comments */}
