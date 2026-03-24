@@ -29,6 +29,7 @@ export const VideoSlide = memo(function VideoSlide({
   short,
   isActive,
   isMuted,
+  playbackRate = 1,
   onTimeUpdate,
   onTap,
   onSeekStart,
