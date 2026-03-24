@@ -913,6 +913,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
                       const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
                       setPlaybackRate(nextRate);
+                      vpSetPlaybackRate(nextRate);
                     }}
                     className="flex flex-col items-center gap-1"
                   >

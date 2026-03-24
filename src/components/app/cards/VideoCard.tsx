@@ -852,12 +852,28 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
     const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
     setPlaybackRate(nextRate);
+    vpSetPlaybackRate(nextRate);
     if (videoRef.current) videoRef.current.playbackRate = nextRate;
   }, [playbackRate]);
 
   const toggleLoop = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsLooping(prev => !prev);
+    setIsLooping(prev => {
+      vpSetIsLooping(!prev);
+      return !prev;
+    });
+  }, []);
+
+  // Listen for preference changes from other players
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const prefs = (e as CustomEvent).detail;
+      setPlaybackRate(prefs.playbackRate);
+      setIsLooping(prefs.isLooping);
+      if (videoRef.current) videoRef.current.playbackRate = prefs.playbackRate;
+    };
+    window.addEventListener('video-prefs-changed', handler);
+    return () => window.removeEventListener('video-prefs-changed', handler);
   }, []);
 
   const handleVideoError = useCallback((e: React.SyntheticEvent<HTMLVideoElement>) => {

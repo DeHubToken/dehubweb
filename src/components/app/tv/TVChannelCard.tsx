@@ -500,6 +500,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
                 const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
                 const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
                 setPlaybackRate(nextRate);
+                vpSetPlaybackRate(nextRate);
                 if (videoRef.current) videoRef.current.playbackRate = nextRate;
               }}
               className="h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors px-3 text-white text-sm font-medium"
