@@ -108,13 +108,17 @@ describe('Token management', () => {
     expect(isTokenExpired()).toBe(true);
   });
 
-  it('clearAuthSession removes all auth keys', () => {
+  it('clearAuthSession removes all auth keys including refresh token', () => {
     localStorage.setItem('dehub_token', 'x');
     localStorage.setItem('dehub_token_timestamp', 'y');
-    localStorage.setItem('dehub_wallet', 'z');
+    localStorage.setItem('dehub_token_expires_at', 'z');
+    localStorage.setItem('dehub_refresh_token', 'rt');
+    localStorage.setItem('dehub_wallet', 'w');
     clearAuthSession();
     expect(localStorage.getItem('dehub_token')).toBeNull();
     expect(localStorage.getItem('dehub_token_timestamp')).toBeNull();
+    expect(localStorage.getItem('dehub_token_expires_at')).toBeNull();
+    expect(localStorage.getItem('dehub_refresh_token')).toBeNull();
     expect(localStorage.getItem('dehub_wallet')).toBeNull();
   });
 });
