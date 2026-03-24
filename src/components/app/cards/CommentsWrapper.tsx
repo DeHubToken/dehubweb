@@ -16,6 +16,7 @@ interface CommentsWrapperProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   tokenId: string;
+  initialTab?: 'replies' | 'quotes' | 'reposts' | 'search';
 }
 
 function useIsTabletOrMobile() {
