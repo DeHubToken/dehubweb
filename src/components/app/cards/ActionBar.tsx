@@ -79,6 +79,8 @@ interface ActionBarProps {
   tipCount?: number;
   /** Handler for tip action */
   onTip?: () => void;
+  /** Handler for see engagements action */
+  onSeeEngagements?: () => void;
   /** Whether voting buttons should be disabled (e.g. mutation pending) */
   disabled?: boolean;
 }
