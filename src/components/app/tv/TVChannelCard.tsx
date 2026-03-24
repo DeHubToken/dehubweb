@@ -61,6 +61,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     return () => window.removeEventListener('video-prefs-changed', handler);
   }, []);
 
+  /**
    * Full stop — destroys HLS instance, clears video source.
    * Used when another video takes over or on unmount.
    */
