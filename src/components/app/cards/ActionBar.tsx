@@ -116,6 +116,7 @@ export function ActionBar({
   voteWeight = 1,
   tipCount,
   onTip,
+  onSeeEngagements,
   disabled: externalDisabled = false,
 }: ActionBarProps) {
   // Add localStorage delta to comment count for instant feedback
