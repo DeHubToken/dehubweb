@@ -28,7 +28,7 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { VideoSlide } from './VideoSlide';
 import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
-import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES } from '@/lib/video-preferences';
+import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
 
