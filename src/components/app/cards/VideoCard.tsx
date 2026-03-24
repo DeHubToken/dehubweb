@@ -44,7 +44,7 @@ import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
-import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES } from '@/lib/video-preferences';
+import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 import { AudioVisualizer } from '../audio';
@@ -1438,7 +1438,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               className="h-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 px-2 text-xs font-medium"
               onClick={cyclePlaybackRate}
             >
-              {playbackRate}x
+              {formatRate(playbackRate)}x
             </button>
             <Tooltip>
               <TooltipTrigger asChild>

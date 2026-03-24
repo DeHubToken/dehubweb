@@ -28,7 +28,7 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { VideoSlide } from './VideoSlide';
 import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
-import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES } from '@/lib/video-preferences';
+import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
 
@@ -919,7 +919,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     className="flex flex-col items-center gap-1"
                   >
                     <span className="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white text-xs font-bold drop-shadow-lg">
-                      {playbackRate}x
+                      {formatRate(playbackRate)}x
                     </span>
                   </button>
                 </div>

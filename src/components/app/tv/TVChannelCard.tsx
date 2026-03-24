@@ -18,7 +18,7 @@ import Hls from 'hls.js';
 import { TVChannel } from '@/lib/api/live-tv';
 import { getCountryFlag, reportBrokenChannel } from '@/lib/api/live-tv';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
-import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES } from '@/lib/video-preferences';
+import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
 import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('TVChannelCard');
@@ -517,7 +517,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
               }}
               className="h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors px-3 text-white text-sm font-medium"
             >
-              {playbackRate}x
+              {formatRate(playbackRate)}x
             </button>
 
             {/* Fullscreen Button */}
