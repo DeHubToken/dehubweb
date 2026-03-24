@@ -1,26 +1,11 @@
 
 
-## Fix: Talk of the Town 1D Fallback Behavior
+## ✅ Refresh Token Integration — IMPLEMENTED
 
-**Problem**: When the `category_post_log` has fewer than 3 entries for a time period (1D, 1W, etc.), the code falls back to the aggregate "All" table, making it look like 1D stats are the same as All.
+All changes from the approved plan have been applied:
 
-**Solution**: Remove the fallback — show actual time-filtered data even if sparse. If there are 0 results, show the empty/placeholder state instead of misleading aggregate data.
-
-### Changes
-
-**File: `src/hooks/use-trending-categories.ts`**
-- Remove the `logData.length >= 3` fallback check
-- Always use time-filtered log data for 1D/1W/1M/1Y periods
-- Only use the aggregate table for the "All" period
-- The `withTopTenPlaceholders` function already handles padding with `-` placeholders when fewer than 10 results exist
-
-```typescript
-// Before
-computed = logData.length >= 3 ? logData : await fetchFromAggregateTable();
-
-// After
-computed = logData;
-```
-
-One-line change.
-
+1. **`core.ts`** — Added `setRefreshToken`/`getRefreshToken`/`setTokenExpiresAt`, dynamic expiry via `dehub_token_expires_at`, automatic 401 retry with `attemptTokenRefresh()` + failed queue pattern
+2. **`auth.ts`** — `authenticateWallet()` now stores refresh token + dynamic expiry; added `refreshAccessToken()`, `logoutFromServer()`, `logoutAllSessions()`
+3. **`types.ts`** — Added `refreshToken?: string` and `expiresIn?: number` to `AuthResponse`
+4. **`AuthContext.tsx`** — Proactive 60s timer refreshes token when <2min until expiry; `refreshSession()` tries refresh token before wallet re-sign; `disconnect()` calls `logoutFromServer()`; `isAuthenticated` considers refresh token presence
+5. **Tests** — Updated `core.test.ts` for new storage functions (22/22 passing)
