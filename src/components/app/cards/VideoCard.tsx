@@ -483,6 +483,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [volume, setVolume] = useState(1);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
+  const PLAYBACK_RATES = [0.5, 1, 1.25, 1.5, 2] as const;
+  const [playbackRate, setPlaybackRate] = useState(1);
+  const [isLooping, setIsLooping] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
