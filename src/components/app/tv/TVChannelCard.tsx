@@ -50,7 +50,17 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
   const isMutedRef = useRef(isMuted);
   isMutedRef.current = isMuted;
 
-  /**
+  // Sync preferences from other players
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const prefs = (e as CustomEvent).detail;
+      setPlaybackRate(prefs.playbackRate);
+      if (videoRef.current) videoRef.current.playbackRate = prefs.playbackRate;
+    };
+    window.addEventListener('video-prefs-changed', handler);
+    return () => window.removeEventListener('video-prefs-changed', handler);
+  }, []);
+
    * Full stop — destroys HLS instance, clears video source.
    * Used when another video takes over or on unmount.
    */
