@@ -119,7 +119,7 @@ async function attemptTokenRefresh(): Promise<boolean> {
   if (!refreshToken) return false;
 
   try {
-    const response = await fetch(`${DEHUB_API_BASE}/auth/refresh`, {
+    const response = await fetch(`${DEHUB_API_BASE}/api/auth/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refreshToken }),
@@ -201,7 +201,7 @@ export async function apiCall<T>(
 
     // Auto-retry on 401 using refresh token (skip for the refresh endpoint itself)
     if ((response.status === 401 || (response.status === 403 && isAuthError)) &&
-        !endpoint.includes('/auth/refresh')) {
+        !endpoint.includes('/api/auth/refresh')) {
       
       if (!isRefreshing) {
         isRefreshing = true;

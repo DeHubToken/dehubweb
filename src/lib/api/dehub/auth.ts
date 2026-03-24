@@ -109,7 +109,7 @@ export async function refreshAccessToken(): Promise<RefreshTokenResponse | null>
   if (!refreshToken) return null;
 
   try {
-    const response = await fetch(`${DEHUB_API_BASE}/auth/refresh`, {
+    const response = await fetch(`${DEHUB_API_BASE}/api/auth/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refreshToken }),
@@ -148,7 +148,7 @@ export async function logoutFromServer(): Promise<void> {
   if (!refreshToken || !accessToken) return;
 
   try {
-    await fetch(`${DEHUB_API_BASE}/auth/logout`, {
+    await fetch(`${DEHUB_API_BASE}/api/auth/logout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ export async function logoutAllSessions(): Promise<void> {
   if (!accessToken) return;
 
   try {
-    await fetch(`${DEHUB_API_BASE}/auth/logout-all`, {
+    await fetch(`${DEHUB_API_BASE}/api/auth/logout-all`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
