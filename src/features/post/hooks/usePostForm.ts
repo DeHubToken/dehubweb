@@ -1135,7 +1135,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           thumbnail: media[0].thumbnail || media[0].preview,
           videoUrl: media[0].preview,
           duration: media[0].duration ? `${Math.floor(media[0].duration / 60)}:${String(Math.floor(media[0].duration % 60)).padStart(2, '0')}` : '0:00',
-          title: text.trim().split('\n')[0] || '',
+          title: titleText.trim() || text.trim().split('\n')[0] || '',
           channel: username,
           channelAvatar: avatar || '', // Must be string for VideoItem type
           verified: false,
@@ -1161,7 +1161,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           avatar: avatar || '', // Must be string for ImagePost type
           image: media[0].preview,
           imageUrls: media.filter(m => m.type === 'image').map(m => m.preview),
-          title: text.trim().split('\n')[0] || '',
+          title: titleText.trim() || text.trim().split('\n')[0] || '',
           description: text.trim(),
           likes: 0,
           caption: text.trim(),
