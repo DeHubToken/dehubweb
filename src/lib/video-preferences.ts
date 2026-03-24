@@ -59,7 +59,7 @@ export function setVolume(volume: number) {
 }
 
 export function formatRate(rate: number): string {
-  return rate % 1 === 0 ? rate.toFixed(2) : String(rate);
+  return rate.toFixed(2);
 }
 
 export const PLAYBACK_RATES = [0.5, 1, 1.25, 1.5, 2] as const;
