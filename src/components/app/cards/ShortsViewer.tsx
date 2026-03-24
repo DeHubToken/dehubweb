@@ -99,6 +99,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [isPaused, setIsPaused] = useState(false);
   const [overlaysHidden, setOverlaysHidden] = useState(false);
   const [isTimelineSeeking, setIsTimelineSeeking] = useState(false);
+  const PLAYBACK_RATES = [0.5, 1, 1.25, 1.5, 2] as const;
+  const [playbackRate, setPlaybackRate] = useState(1);
   
   // Gesture tracking for overlay hide/show
   const overlaySwipeStartY = useRef<number | null>(null);
