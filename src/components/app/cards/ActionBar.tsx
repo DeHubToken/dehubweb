@@ -376,6 +376,15 @@ export function ActionBar({
         <Link className="w-5 h-5" />
         <span className="font-medium">Copy Link</span>
       </button>
+      {onSeeEngagements && (
+        <button
+          onClick={(e) => { e.stopPropagation(); setSheetOpen(false); onSeeEngagements(); }}
+          className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+        >
+          <Repeat2 className="w-5 h-5" />
+          <span className="font-medium">See Engagements</span>
+        </button>
+      )}
     </>
   );
 
