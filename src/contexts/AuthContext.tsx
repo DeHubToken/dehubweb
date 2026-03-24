@@ -24,9 +24,12 @@ import {
   authenticateWallet,
   getAccountInfo,
   getAuthToken,
+  getRefreshToken,
   clearAuthSession,
   isTokenExpired,
   apiCall,
+  refreshAccessToken,
+  logoutFromServer,
   type DeHubUser,
   type Web3AuthMeta,
 } from '@/lib/api/dehub';
@@ -251,7 +254,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Ref to prevent repeated silent-reconnect attempts within one session
   const wagmiSilentReconnectAttemptedRef = useRef(false);
 
-  const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
+  // User is "authenticated" if they have a valid access token OR a refresh token
+  // (refresh token means we can silently get a new access token without wallet interaction)
+  const isAuthenticated = !!user && !!walletAddress && (
+    (!!getAuthToken() && !isTokenExpired()) || !!getRefreshToken()
+  );
 
   const setWagmiAuthIntent = useCallback((value: boolean) => {
     console.log('[Auth] Setting wagmiAuthIntent:', value);
@@ -400,6 +407,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (user && walletAddress && getAuthToken()) {
       reconnectDmSocket();
     }
+  }, [user, walletAddress]);
+
+  // ── Proactive Token Refresh Timer ──
+  // Checks every 60s if the access token will expire within 2 minutes.
+  // If so, refreshes silently using the refresh token — user never sees a 401.
+  useEffect(() => {
+    if (!user || !walletAddress) return;
+
+    const intervalId = setInterval(async () => {
+      const expiresAtStr = localStorage.getItem('dehub_token_expires_at');
+      if (!expiresAtStr) return;
+
+      const expiresAt = parseInt(expiresAtStr, 10);
+      const timeUntilExpiry = expiresAt - Date.now();
+
+      // Refresh if token expires within 2 minutes
+      if (timeUntilExpiry > 0 && timeUntilExpiry < 2 * 60 * 1000) {
+        console.log('[Auth] Proactive refresh — token expires in', Math.round(timeUntilExpiry / 1000), 's');
+        const result = await refreshAccessToken();
+        if (result) {
+          console.log('[Auth] ✓ Proactive token refresh succeeded');
+        } else {
+          console.warn('[Auth] Proactive refresh failed — will retry or fall back on next 401');
+        }
+      }
+    }, 60 * 1000);
+
+    return () => clearInterval(intervalId);
   }, [user, walletAddress]);
 
   // Wagmi Auto-connect logic
@@ -1154,6 +1189,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const disconnect = async () => {
+    // Best-effort server-side token revocation (fire-and-forget)
+    logoutFromServer().catch(() => {});
+
     // Clean up local state FIRST for immediate UI feedback
     clearAuthSession();
     localStorage.removeItem('dehub_user');
@@ -1212,6 +1250,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const token = getAuthToken();
     if (token && !isTokenExpired()) return true;
 
+    // ── Step 1: Try refresh token (no wallet interaction needed) ──
+    const rt = getRefreshToken();
+    if (rt) {
+      console.log('[Auth] Attempting token refresh via refresh token...');
+      const result = await refreshAccessToken();
+      if (result) {
+        console.log('[Auth] ✓ Token refreshed successfully');
+        return true;
+      }
+      console.warn('[Auth] Refresh token failed, falling back to wallet re-sign');
+    }
+
+    // ── Step 2: Fallback — wallet re-sign (requires user interaction) ──
     // Capture current wallet before refresh to detect silent swaps
     const walletBefore = walletAddress || localStorage.getItem('dehub_wallet');
 

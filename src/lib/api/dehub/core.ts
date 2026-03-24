@@ -29,17 +29,35 @@ export class AuthenticationError extends Error {
   }
 }
 
-// Token expiry duration in milliseconds (24 hours)
-const TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000;
+// ── Token Storage ──
 
 export const setAuthToken = (token: string | null) => {
   if (token) {
     localStorage.setItem("dehub_token", token);
-    localStorage.setItem("dehub_token_timestamp", String(Date.now()));
   } else {
     localStorage.removeItem("dehub_token");
-    localStorage.removeItem("dehub_token_timestamp");
   }
+};
+
+export const setRefreshToken = (token: string | null) => {
+  if (token) {
+    localStorage.setItem("dehub_refresh_token", token);
+  } else {
+    localStorage.removeItem("dehub_refresh_token");
+  }
+};
+
+export const getRefreshToken = (): string | null => {
+  return localStorage.getItem("dehub_refresh_token");
+};
+
+/**
+ * Store the absolute timestamp (ms) at which the access token expires.
+ * Called after login or token refresh with the server's `expiresIn` (seconds).
+ */
+export const setTokenExpiresAt = (expiresInSeconds: number) => {
+  const expiresAt = Date.now() + expiresInSeconds * 1000;
+  localStorage.setItem("dehub_token_expires_at", String(expiresAt));
 };
 
 /**
@@ -51,18 +69,83 @@ export const getAuthToken = (): string | null => {
 };
 
 export const isTokenExpired = (): boolean => {
+  const expiresAt = localStorage.getItem("dehub_token_expires_at");
+  if (expiresAt) {
+    return Date.now() >= parseInt(expiresAt, 10);
+  }
+  // Legacy fallback: check old timestamp-based expiry (24h)
   const timestamp = localStorage.getItem("dehub_token_timestamp");
   if (!timestamp) return true;
-  
-  const tokenAge = Date.now() - parseInt(timestamp, 10);
-  return tokenAge >= TOKEN_EXPIRY_MS;
+  const TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000;
+  return Date.now() - parseInt(timestamp, 10) >= TOKEN_EXPIRY_MS;
 };
 
 export const clearAuthSession = () => {
   localStorage.removeItem("dehub_token");
   localStorage.removeItem("dehub_token_timestamp");
+  localStorage.removeItem("dehub_token_expires_at");
+  localStorage.removeItem("dehub_refresh_token");
   localStorage.removeItem("dehub_wallet");
 };
+
+// ── 401 Auto-Retry with Refresh Token ──
+
+type QueueEntry = {
+  resolve: (value: unknown) => void;
+  reject: (reason?: unknown) => void;
+};
+
+let isRefreshing = false;
+let failedQueue: QueueEntry[] = [];
+
+const processQueue = (error: Error | null) => {
+  failedQueue.forEach(({ resolve, reject }) => {
+    if (error) {
+      reject(error);
+    } else {
+      resolve(undefined); // signal retry
+    }
+  });
+  failedQueue = [];
+};
+
+/**
+ * Attempt to refresh the access token using the stored refresh token.
+ * Updates localStorage on success. Returns true if refresh succeeded.
+ * This is a standalone fetch (not apiCall) to avoid recursion.
+ */
+async function attemptTokenRefresh(): Promise<boolean> {
+  const refreshToken = getRefreshToken();
+  if (!refreshToken) return false;
+
+  try {
+    const response = await fetch(`${DEHUB_API_BASE}/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (!response.ok) {
+      // Refresh token invalid/reused — server revoked all tokens
+      console.warn('[Auth] Refresh token rejected, clearing session');
+      clearAuthSession();
+      return false;
+    }
+
+    const data = await response.json();
+    // Server returns { accessToken, refreshToken, expiresIn }
+    if (data.accessToken) {
+      setAuthToken(data.accessToken);
+      if (data.refreshToken) setRefreshToken(data.refreshToken);
+      if (data.expiresIn) setTokenExpiresAt(data.expiresIn);
+      return true;
+    }
+    return false;
+  } catch (e) {
+    console.error('[Auth] Token refresh network error:', e);
+    return false;
+  }
+}
 
 // Base API call function - calls DeHub API directly
 export async function apiCall<T>(
@@ -116,9 +199,36 @@ export async function apiCall<T>(
       errorMessage.includes('token expired') ||
       errorMessage.includes('jwt');
 
+    // Auto-retry on 401 using refresh token (skip for the refresh endpoint itself)
+    if ((response.status === 401 || (response.status === 403 && isAuthError)) &&
+        !endpoint.includes('/auth/refresh')) {
+      
+      if (!isRefreshing) {
+        isRefreshing = true;
+        const refreshed = await attemptTokenRefresh();
+        isRefreshing = false;
+
+        if (refreshed) {
+          processQueue(null);
+          // Retry the original request with the new token
+          return apiCall<T>(endpoint, options);
+        } else {
+          const authErr = new AuthenticationError('Session expired. Please sign in again.');
+          processQueue(authErr);
+          throw authErr;
+        }
+      } else {
+        // Another refresh is in progress — queue this request
+        return new Promise<T>((resolve, reject) => {
+          failedQueue.push({
+            resolve: () => resolve(apiCall<T>(endpoint, options)),
+            reject,
+          });
+        });
+      }
+    }
+
     if ((response.status === 403 && isAuthError) || response.status === 401) {
-      // Don't clear auth session here — let the useReauthHandler attempt
-      // a silent re-sign first. Only clear on explicit disconnect.
       throw new AuthenticationError('Session expired. Please sign in again.');
     }
     

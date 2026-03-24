@@ -60,6 +60,8 @@ export interface DeHubUser {
 export interface AuthResponse {
   status: boolean;
   token: string;
+  refreshToken?: string;
+  expiresIn?: number;
   user: DeHubUser;
   result: {
     address: string;

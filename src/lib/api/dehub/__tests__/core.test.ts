@@ -9,6 +9,9 @@ import {
   isTokenExpired,
   clearAuthSession,
   apiCall,
+  setRefreshToken,
+  getRefreshToken,
+  setTokenExpiresAt,
 } from '@/lib/api/dehub/core';
 
 // ── getMediaUrl ──
@@ -53,10 +56,23 @@ describe('Token management', () => {
     localStorage.clear();
   });
 
-  it('setAuthToken stores token and timestamp', () => {
+  it('setAuthToken stores token', () => {
     setAuthToken('abc123');
     expect(localStorage.getItem('dehub_token')).toBe('abc123');
-    expect(localStorage.getItem('dehub_token_timestamp')).toBeTruthy();
+  });
+
+  it('setTokenExpiresAt stores expiry timestamp', () => {
+    setTokenExpiresAt(900); // 15 min
+    const stored = localStorage.getItem('dehub_token_expires_at');
+    expect(stored).toBeTruthy();
+    expect(parseInt(stored!, 10)).toBeGreaterThan(Date.now());
+  });
+
+  it('setRefreshToken stores and retrieves refresh token', () => {
+    setRefreshToken('rt_abc');
+    expect(getRefreshToken()).toBe('rt_abc');
+    setRefreshToken(null);
+    expect(getRefreshToken()).toBeNull();
   });
 
   it('setAuthToken(null) clears storage', () => {
@@ -76,7 +92,12 @@ describe('Token management', () => {
     expect(isTokenExpired()).toBe(true);
   });
 
-  it('isTokenExpired returns false for fresh token', () => {
+  it('isTokenExpired returns false for fresh token (new format)', () => {
+    setTokenExpiresAt(900); // 15 min from now
+    expect(isTokenExpired()).toBe(false);
+  });
+
+  it('isTokenExpired returns false for fresh token (legacy format)', () => {
     localStorage.setItem('dehub_token_timestamp', String(Date.now()));
     expect(isTokenExpired()).toBe(false);
   });
@@ -87,13 +108,17 @@ describe('Token management', () => {
     expect(isTokenExpired()).toBe(true);
   });
 
-  it('clearAuthSession removes all auth keys', () => {
+  it('clearAuthSession removes all auth keys including refresh token', () => {
     localStorage.setItem('dehub_token', 'x');
     localStorage.setItem('dehub_token_timestamp', 'y');
-    localStorage.setItem('dehub_wallet', 'z');
+    localStorage.setItem('dehub_token_expires_at', 'z');
+    localStorage.setItem('dehub_refresh_token', 'rt');
+    localStorage.setItem('dehub_wallet', 'w');
     clearAuthSession();
     expect(localStorage.getItem('dehub_token')).toBeNull();
     expect(localStorage.getItem('dehub_token_timestamp')).toBeNull();
+    expect(localStorage.getItem('dehub_token_expires_at')).toBeNull();
+    expect(localStorage.getItem('dehub_refresh_token')).toBeNull();
     expect(localStorage.getItem('dehub_wallet')).toBeNull();
   });
 });
