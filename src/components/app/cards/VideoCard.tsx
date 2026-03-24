@@ -10,6 +10,7 @@
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
+import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
