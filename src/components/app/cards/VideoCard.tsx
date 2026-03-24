@@ -1614,7 +1614,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 setShowComments(true);
               }}
             />
-            />
 
             {/* Comments */}
             <CommentsWrapper
