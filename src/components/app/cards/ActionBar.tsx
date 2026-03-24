@@ -125,6 +125,16 @@ export function ActionBar({
   
   // Optimistic repost count: increment locally on repost for instant feedback
   const [repostDelta, setRepostDelta] = useState(0);
+  const prevRepostCountRef = useRef(repostCount);
+  
+  // Reset delta when server data refreshes (prevents double-counting)
+  if (repostCount !== prevRepostCountRef.current) {
+    prevRepostCountRef.current = repostCount;
+    if (repostDelta !== 0) {
+      setRepostDelta(0);
+    }
+  }
+  
   const displayRepostCount = (repostCount ?? 0) + repostDelta;
   // On mount, check global vote cache for recent votes on this post
   const cachedVote = postId ? getVoteCache(postId) : null;
