@@ -18,6 +18,7 @@ import Hls from 'hls.js';
 import { TVChannel } from '@/lib/api/live-tv';
 import { getCountryFlag, reportBrokenChannel } from '@/lib/api/live-tv';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
+import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES } from '@/lib/video-preferences';
 import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('TVChannelCard');
@@ -45,10 +46,20 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
   const [retryCount, setRetryCount] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isInPiP, setIsInPiP] = useState(false);
-  const PLAYBACK_RATES = [0.5, 1, 1.25, 1.5, 2] as const;
-  const [playbackRate, setPlaybackRate] = useState(1);
+  const [playbackRate, setPlaybackRate] = useState(() => getVideoPreferences().playbackRate);
   const isMutedRef = useRef(isMuted);
   isMutedRef.current = isMuted;
+
+  // Sync preferences from other players
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const prefs = (e as CustomEvent).detail;
+      setPlaybackRate(prefs.playbackRate);
+      if (videoRef.current) videoRef.current.playbackRate = prefs.playbackRate;
+    };
+    window.addEventListener('video-prefs-changed', handler);
+    return () => window.removeEventListener('video-prefs-changed', handler);
+  }, []);
 
   /**
    * Full stop — destroys HLS instance, clears video source.
@@ -501,6 +512,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
                 const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
                 const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
                 setPlaybackRate(nextRate);
+                vpSetPlaybackRate(nextRate);
                 if (videoRef.current) videoRef.current.playbackRate = nextRate;
               }}
               className="h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors px-3 text-white text-sm font-medium"

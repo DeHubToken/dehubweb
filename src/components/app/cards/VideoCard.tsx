@@ -44,6 +44,7 @@ import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
+import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES } from '@/lib/video-preferences';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 import { AudioVisualizer } from '../audio';
@@ -481,12 +482,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [hasError, setHasError] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useState(() => getVideoPreferences().volume);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
-  const PLAYBACK_RATES = [0.5, 1, 1.25, 1.5, 2] as const;
-  const [playbackRate, setPlaybackRate] = useState(1);
-  const [isLooping, setIsLooping] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(() => getVideoPreferences().playbackRate);
+  const [isLooping, setIsLooping] = useState(() => getVideoPreferences().isLooping);
   const [isFocused, setIsFocused] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -821,6 +821,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (videoRef.current) {
       const newVolume = Math.max(0, Math.min(1, volume + delta));
       setVolume(newVolume);
+      vpSetVolume(newVolume);
       videoRef.current.volume = newVolume;
       if (newVolume > 0 && isMuted) {
         setIsMuted(false);
@@ -853,12 +854,28 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
     const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
     setPlaybackRate(nextRate);
+    vpSetPlaybackRate(nextRate);
     if (videoRef.current) videoRef.current.playbackRate = nextRate;
   }, [playbackRate]);
 
   const toggleLoop = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsLooping(prev => !prev);
+    setIsLooping(prev => {
+      vpSetIsLooping(!prev);
+      return !prev;
+    });
+  }, []);
+
+  // Listen for preference changes from other players
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const prefs = (e as CustomEvent).detail;
+      setPlaybackRate(prefs.playbackRate);
+      setIsLooping(prefs.isLooping);
+      if (videoRef.current) videoRef.current.playbackRate = prefs.playbackRate;
+    };
+    window.addEventListener('video-prefs-changed', handler);
+    return () => window.removeEventListener('video-prefs-changed', handler);
   }, []);
 
   const handleVideoError = useCallback((e: React.SyntheticEvent<HTMLVideoElement>) => {

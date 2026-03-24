@@ -28,6 +28,7 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { VideoSlide } from './VideoSlide';
 import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
+import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES } from '@/lib/video-preferences';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
 
@@ -99,8 +100,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [isPaused, setIsPaused] = useState(false);
   const [overlaysHidden, setOverlaysHidden] = useState(false);
   const [isTimelineSeeking, setIsTimelineSeeking] = useState(false);
-  const PLAYBACK_RATES = [0.5, 1, 1.25, 1.5, 2] as const;
-  const [playbackRate, setPlaybackRate] = useState(1);
+  const [playbackRate, setPlaybackRate] = useState(() => getVideoPreferences().playbackRate);
   
   // Gesture tracking for overlay hide/show
   const overlaySwipeStartY = useRef<number | null>(null);
@@ -914,6 +914,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
                       const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
                       setPlaybackRate(nextRate);
+                      vpSetPlaybackRate(nextRate);
                     }}
                     className="flex flex-col items-center gap-1"
                   >
