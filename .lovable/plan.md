@@ -1,16 +1,19 @@
 
 
-## ✅ Refresh Token Integration — IMPLEMENTED
+## Root Cause
 
-All changes from the approved plan have been applied:
+When you add a video, the form auto-moves your typed text into `titleText` and clears `text` (line 298-302). But when building the optimistic post, line 1138 reads `text` (now empty) instead of `titleText` for the title. Same bug on line 1164 for image posts.
 
-1. **`core.ts`** — Added `setRefreshToken`/`getRefreshToken`/`setTokenExpiresAt`, dynamic expiry via `dehub_token_expires_at`, automatic 401 retry with `attemptTokenRefresh()` + failed queue pattern
-2. **`auth.ts`** — `authenticateWallet()` now stores refresh token + dynamic expiry; added `refreshAccessToken()`, `logoutFromServer()`, `logoutAllSessions()`
-3. **`types.ts`** — Added `refreshToken?: string` and `expiresIn?: number` to `AuthResponse`
-4. **`AuthContext.tsx`** — Proactive 60s timer refreshes token when <2min until expiry; `refreshSession()` tries refresh token before wallet re-sign; `disconnect()` calls `logoutFromServer()`; `isAuthenticated` considers refresh token presence
-5. **Tests** — Updated `core.test.ts` for new storage functions (22/22 passing)
+The actual mint call on lines 987-996 correctly uses `titleText` — so after refresh the title appears. The optimistic preview just has the wrong source field.
 
-## ✅ DM Notification Badge Fix — IMPLEMENTED
+## Fix
 
-1. **`use-messages.ts`** — Removed 1-hour TTL pruning; read timestamps now persist durably. Storage is wallet-scoped (`dehub-read-conversations:<wallet>`) to prevent cross-account contamination.
-2. **`dm-socket.ts`** — `emitReadReceipt` now uses a pending queue (in-memory + localStorage backup). Missed receipts auto-flush on socket reconnect.
+**File: `src/features/post/hooks/usePostForm.ts`**
+
+Update the optimistic post construction to mirror the same title/description logic used by the mint call (lines 987-1001):
+
+- **Video post (line 1138)**: Change `title: text.trim().split('\n')[0] || ''` → use `titleText.trim() || text.trim().split('\n')[0] || ''` and add `description: text.trim()`.
+- **Image post (line 1164-1165)**: Same fix — use `titleText.trim()` when `showTitle && titleText.trim()`, otherwise fall back to first line of `text`.
+
+This is a 2-line fix in one file. No other changes needed.
+
