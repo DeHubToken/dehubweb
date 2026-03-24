@@ -44,7 +44,7 @@ import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
-import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES } from '@/lib/video-preferences';
+import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 import { AudioVisualizer } from '../audio';
