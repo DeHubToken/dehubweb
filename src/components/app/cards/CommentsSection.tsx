@@ -73,6 +73,7 @@ export interface Comment {
 interface CommentsSectionProps {
   tokenId: string;
   onClose: () => void;
+  initialTab?: 'replies' | 'quotes' | 'reposts' | 'search';
 }
 
 // formatTimeAgo is now imported from @/lib/feed-utils
