@@ -181,6 +181,8 @@ export function ProfileTabContent({
       <TabPanel tab="images">
         {showLoading ? null : PROFILE_IMAGES.length === 0 ? (
           <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" title="No images yet" subtitle="Image posts will appear here" />
+        ) : PROFILE_IMAGES.length >= 4 ? (
+          <ProfileImageGrid images={PROFILE_IMAGES} />
         ) : (
           <div className="space-y-3">
             {PROFILE_IMAGES.map((image) => (
