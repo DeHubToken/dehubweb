@@ -229,7 +229,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
       )}
 
       {/* Input Area */}
-      <div className="relative">
+      <div>
         <Textarea
           ref={textareaRef}
           placeholder="Type a message..."
@@ -238,10 +238,14 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             const val = e.target.value;
             setMessage(val);
             mention.handleInput(val, e.target.selectionStart);
+            // Auto-resize
+            const ta = e.target;
+            ta.style.height = 'auto';
+            ta.style.height = `${Math.min(ta.scrollHeight, 128)}px`;
           }}
           onKeyDown={handleKeyDown}
-          className="min-h-[56px] max-h-32 resize-none bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-28 focus-visible:ring-0 focus-visible:ring-offset-0"
-          rows={2}
+          className="min-h-[40px] max-h-32 resize-none bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0"
+          rows={1}
         />
 
         <UserMentionDropdown
@@ -255,7 +259,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
         />
 
         {/* Action buttons */}
-        <div className="absolute bottom-0 right-0 flex items-center gap-0.5">
+        <div className="flex items-center justify-end gap-0.5 pt-1">
           {onTipClick && (
             <Tooltip>
               <TooltipTrigger asChild>
