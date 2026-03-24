@@ -1409,25 +1409,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass */}
         {(isPlaying || showControls) && (showControls || isTouchDevice) && (
           <div className="absolute top-2 right-2 flex items-center gap-2 z-10">
-            <button 
-              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
-              onClick={toggleMute}
-            >
-              {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-            </button>
-            {document.pictureInPictureEnabled && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
-                    onClick={handlePictureInPicture}
-                  >
-                    <PictureInPicture2 className="h-4 w-4" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Picture in Picture (P)</TooltipContent>
-              </Tooltip>
-            )}
             <button
               className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
               onClick={cyclePlaybackRate}
@@ -1448,6 +1429,25 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               </TooltipTrigger>
               <TooltipContent>{isLooping ? 'Loop on' : 'Loop off'}</TooltipContent>
             </Tooltip>
+            {document.pictureInPictureEnabled && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+                    onClick={handlePictureInPicture}
+                  >
+                    <PictureInPicture2 className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Picture in Picture (P)</TooltipContent>
+              </Tooltip>
+            )}
+            <button 
+              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+              onClick={toggleMute}
+            >
+              {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+            </button>
             <button 
               className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
               onClick={handleFullscreen}
