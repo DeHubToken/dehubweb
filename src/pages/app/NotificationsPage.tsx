@@ -608,6 +608,7 @@ function NotificationItem({
   enrichedAvatars: Map<string, EnrichedAvatar>;
 }) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { t } = useTranslation();
   const [isClosing, setIsClosing] = useState(false);
   const [showActorsDrawer, setShowActorsDrawer] = useState(false);
