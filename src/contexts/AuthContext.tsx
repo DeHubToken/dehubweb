@@ -409,6 +409,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user, walletAddress]);
 
+  // ── Proactive Token Refresh Timer ──
+  // Checks every 60s if the access token will expire within 2 minutes.
+  // If so, refreshes silently using the refresh token — user never sees a 401.
+  useEffect(() => {
+    if (!user || !walletAddress) return;
+
+    const intervalId = setInterval(async () => {
+      const expiresAtStr = localStorage.getItem('dehub_token_expires_at');
+      if (!expiresAtStr) return;
+
+      const expiresAt = parseInt(expiresAtStr, 10);
+      const timeUntilExpiry = expiresAt - Date.now();
+
+      // Refresh if token expires within 2 minutes
+      if (timeUntilExpiry > 0 && timeUntilExpiry < 2 * 60 * 1000) {
+        console.log('[Auth] Proactive refresh — token expires in', Math.round(timeUntilExpiry / 1000), 's');
+        const result = await refreshAccessToken();
+        if (result) {
+          console.log('[Auth] ✓ Proactive token refresh succeeded');
+        } else {
+          console.warn('[Auth] Proactive refresh failed — will retry or fall back on next 401');
+        }
+      }
+    }, 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, [user, walletAddress]);
+
   // Wagmi Auto-connect logic
   useEffect(() => {
     const handleWagmiConnect = async () => {
