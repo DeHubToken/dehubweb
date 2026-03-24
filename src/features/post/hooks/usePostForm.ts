@@ -1161,7 +1161,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           avatar: avatar || '', // Must be string for ImagePost type
           image: media[0].preview,
           imageUrls: media.filter(m => m.type === 'image').map(m => m.preview),
-          title: text.trim().split('\n')[0] || '',
+          title: titleText.trim() || text.trim().split('\n')[0] || '',
           description: text.trim(),
           likes: 0,
           caption: text.trim(),
