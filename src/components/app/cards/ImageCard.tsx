@@ -735,7 +735,10 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         <ActionBar 
           postId={post.id} 
           className="p-0" 
-          onComment={() => setShowComments(prev => !prev)} 
+          onComment={() => {
+            setCommentsInitialTab(undefined);
+            setShowComments(prev => !prev);
+          }} 
           onRepost={handleRepost}
           onQuote={handleQuote}
           isLiked={post.isLiked} 
@@ -747,6 +750,10 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           isOptimistic={post.isOptimistic}
           tipCount={tipCount}
           onTip={() => setShowTipModal(true)}
+          onSeeEngagements={() => {
+            setCommentsInitialTab('reposts');
+            setShowComments(true);
+          }}
         />
         
 
