@@ -762,6 +762,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           open={showComments}
           onOpenChange={setShowComments}
           tokenId={post.id}
+          initialTab={commentsInitialTab}
         />
       </div>
 
