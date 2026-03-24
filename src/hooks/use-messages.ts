@@ -348,10 +348,10 @@ export function useMessages(conversationId: string | null) {
       );
     },
     onSettled: () => {
-      // Delay refetch to give server time to process readReceipt
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
-      }, 3000);
+      // Don't force-refetch here — the optimistic update already cleared the badge,
+      // and the localStorage override protects against stale server counts on next
+      // natural refetch. An immediate invalidation risks the server returning
+      // unreadCount > 0 before the readReceipt socket event is fully processed.
     },
   });
 

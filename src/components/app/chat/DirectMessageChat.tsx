@@ -525,11 +525,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       isInitialMount.current = false;
       prevMessagesLenRef.current = messages.length;
       markAsRead();
-      if (resolvedConversationId && !resolvedConversationId.startsWith('new_')) {
-        emitReadReceipt(resolvedConversationId);
-      }
     }
-  }, [messages.length, markAsRead, resolvedConversationId]);
+  }, [messages.length, markAsRead]);
 
   // Re-emit readReceipt when conversation is focused/visible to ensure persistence
   useEffect(() => {
@@ -551,11 +548,13 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     };
   }, [resolvedConversationId]);
 
-  // Auto-scroll on new messages
+  // Auto-scroll on new messages + auto-mark as read while chat is open
   useEffect(() => {
     if (isInitialMount.current) return;
     const prevLen = prevMessagesLenRef.current;
     if (messages.length > prevLen) {
+      // Auto-read: user is actively viewing this chat
+      markAsRead();
       const container = scrollContainerRef.current;
       if (container) {
         const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
@@ -567,7 +566,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       }
     }
     prevMessagesLenRef.current = messages.length;
-  }, [messages.length]);
+  }, [messages.length, markAsRead]);
 
   // If createAndStart failed and conversation ID is still virtual, resolve it from incoming messages
   useEffect(() => {
