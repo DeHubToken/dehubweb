@@ -17,6 +17,7 @@ interface VideoSlideProps {
   short: ShortVideo;
   isActive: boolean;
   isMuted: boolean;
+  playbackRate?: number;
   onTimeUpdate?: (currentTime: number, duration: number) => void;
   onTap?: () => void;
   onSeekStart?: () => void;
@@ -28,6 +29,7 @@ export const VideoSlide = memo(function VideoSlide({
   short,
   isActive,
   isMuted,
+  playbackRate = 1,
   onTimeUpdate,
   onTap,
   onSeekStart,
@@ -90,6 +92,13 @@ export const VideoSlide = memo(function VideoSlide({
       videoRef.current.muted = isMuted;
     }
   }, [isMuted]);
+
+  // Update playback rate
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = playbackRate;
+    }
+  }, [playbackRate]);
 
   // Handle time update for view tracking + progress
   const handleTimeUpdate = useCallback(() => {

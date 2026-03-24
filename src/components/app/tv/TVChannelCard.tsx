@@ -45,6 +45,8 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
   const [retryCount, setRetryCount] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isInPiP, setIsInPiP] = useState(false);
+  const PLAYBACK_RATES = [0.5, 1, 1.25, 1.5, 2] as const;
+  const [playbackRate, setPlaybackRate] = useState(1);
   const isMutedRef = useRef(isMuted);
   isMutedRef.current = isMuted;
 
@@ -490,6 +492,20 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
               )}
             >
               <PictureInPicture2 className="w-5 h-5 text-white" />
+            </button>
+
+            {/* Speed Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
+                const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
+                setPlaybackRate(nextRate);
+                if (videoRef.current) videoRef.current.playbackRate = nextRate;
+              }}
+              className="h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors px-3 text-white text-sm font-medium"
+            >
+              {playbackRate}x
             </button>
 
             {/* Fullscreen Button */}

@@ -10,11 +10,12 @@
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
+import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Pencil, Trash2, Gem } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Pencil, Trash2, Gem, Repeat } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -483,6 +484,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [volume, setVolume] = useState(1);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
+  const PLAYBACK_RATES = [0.5, 1, 1.25, 1.5, 2] as const;
+  const [playbackRate, setPlaybackRate] = useState(1);
+  const [isLooping, setIsLooping] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -834,10 +838,28 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, []);
 
   const handleVideoEnded = useCallback(() => {
+    if (isLooping && videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+      return;
+    }
     isPlayingRef.current = false;
     setIsPlaying(false);
     videoPlaybackManager.stop(instanceId);
-  }, [instanceId]);
+  }, [instanceId, isLooping]);
+
+  const cyclePlaybackRate = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
+    const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
+    setPlaybackRate(nextRate);
+    if (videoRef.current) videoRef.current.playbackRate = nextRate;
+  }, [playbackRate]);
+
+  const toggleLoop = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsLooping(prev => !prev);
+  }, []);
 
   const handleVideoError = useCallback((e: React.SyntheticEvent<HTMLVideoElement>) => {
     const videoEl = e.currentTarget;
@@ -1395,6 +1417,26 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             >
               {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
             </button>
+            <button
+              className="h-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 px-2 text-xs font-medium"
+              onClick={cyclePlaybackRate}
+            >
+              {playbackRate}x
+            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className={cn(
+                    "h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10",
+                    isLooping && "bg-white/20"
+                  )}
+                  onClick={toggleLoop}
+                >
+                  <Repeat className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>{isLooping ? 'Loop on' : 'Loop off'}</TooltipContent>
+            </Tooltip>
           </div>
         )}
 
