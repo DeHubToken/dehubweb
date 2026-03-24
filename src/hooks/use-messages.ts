@@ -48,24 +48,20 @@ import {
 
 // ─── Read-state persistence (survives refresh) ───────────────────────────────
 
-const READ_CONVOS_KEY = 'dehub-read-conversations';
-const READ_STATE_TTL = 60 * 60 * 1000; // 1 hour — long enough for server to catch up
+const READ_CONVOS_KEY_PREFIX = 'dehub-read-conversations';
 
+/** Wallet-scoped storage key to prevent cross-account contamination */
+function getReadConvosKey(): string {
+  const wallet = typeof window !== 'undefined' ? localStorage.getItem('dehub_wallet') : null;
+  return wallet ? `${READ_CONVOS_KEY_PREFIX}:${wallet.toLowerCase()}` : READ_CONVOS_KEY_PREFIX;
+}
+
+/** Get durable read timestamps — no TTL pruning, entries persist until explicitly cleared */
 function getReadConversations(): Record<string, number> {
   try {
-    const raw = localStorage.getItem(READ_CONVOS_KEY);
+    const raw = localStorage.getItem(getReadConvosKey());
     if (!raw) return {};
-    const store = JSON.parse(raw) as Record<string, number>;
-    const now = Date.now();
-    // Prune expired entries
-    const pruned: Record<string, number> = {};
-    for (const [id, ts] of Object.entries(store)) {
-      if (now - ts < READ_STATE_TTL) pruned[id] = ts;
-    }
-    if (Object.keys(pruned).length !== Object.keys(store).length) {
-      localStorage.setItem(READ_CONVOS_KEY, JSON.stringify(pruned));
-    }
-    return pruned;
+    return JSON.parse(raw) as Record<string, number>;
   } catch { return {}; }
 }
 
@@ -73,7 +69,7 @@ function persistReadConversation(conversationId: string): void {
   try {
     const store = getReadConversations();
     store[conversationId] = Date.now();
-    localStorage.setItem(READ_CONVOS_KEY, JSON.stringify(store));
+    localStorage.setItem(getReadConvosKey(), JSON.stringify(store));
   } catch { /* storage full */ }
 }
 

@@ -242,20 +242,46 @@ export function emitSendMessage(payload: SendMessagePayload): void {
   getDmSocket().emit('sendMessage', payload);
 }
 
+// ─── Read-receipt queue (survives disconnect/reconnect) ──────────────────────
+
+const pendingReadReceipts = new Set<string>();
+const PENDING_RR_KEY = 'dehub-pending-read-receipts';
+
+function loadPendingReceipts(): void {
+  try {
+    const raw = localStorage.getItem(PENDING_RR_KEY);
+    if (raw) {
+      const ids = JSON.parse(raw) as string[];
+      ids.forEach(id => pendingReadReceipts.add(id));
+    }
+  } catch { /* ignore */ }
+}
+
+function savePendingReceipts(): void {
+  try {
+    localStorage.setItem(PENDING_RR_KEY, JSON.stringify([...pendingReadReceipts]));
+  } catch { /* storage full */ }
+}
+
+function flushReadReceiptQueue(socket: Socket): void {
+  if (!socket.connected || pendingReadReceipts.size === 0) return;
+  for (const dmId of pendingReadReceipts) {
+    socket.emit('readReceipt', { dmId });
+  }
+  pendingReadReceipts.clear();
+  savePendingReceipts();
+  console.log('[DM Socket] Flushed pending read receipts');
+}
+
 export function emitReadReceipt(dmId: string): void {
   const socket = getDmSocket();
+  pendingReadReceipts.add(dmId);
+  savePendingReceipts();
+
   if (socket.connected) {
-    socket.emit('readReceipt', { dmId });
-  } else {
-    // Wait for connection then emit
-    const handler = () => {
-      socket.emit('readReceipt', { dmId });
-      socket.off('connect', handler);
-    };
-    socket.on('connect', handler);
-    // Cleanup after 10s to avoid leaks
-    setTimeout(() => socket.off('connect', handler), 10000);
+    flushReadReceiptQueue(socket);
   }
+  // Queue will be flushed on next 'connect' event (see getDmSocket connect handler)
 }
 
 export function emitDeleteMessage(dmId: string, messageId: string): void {
