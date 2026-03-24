@@ -730,6 +730,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       short={short}
                       isActive={isActive && !isPaused}
                       isMuted={isMuted}
+                      playbackRate={playbackRate}
                       onTimeUpdate={isActive ? trackView : undefined}
                       onTap={togglePlayPause}
                       onSeekStart={() => setIsTimelineSeeking(true)}
