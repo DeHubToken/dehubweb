@@ -83,6 +83,7 @@ function getDmSocket(): Socket {
 
   if (!dmSocket) {
     currentToken = token;
+    loadPendingReceipts();
     const address = getWalletAddress();
     const handshakeAuth: Record<string, string> = {};
     if (token) handshakeAuth.token = `Bearer ${token}`;
