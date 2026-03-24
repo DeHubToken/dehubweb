@@ -1416,6 +1416,26 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             >
               {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
             </button>
+            <button
+              className="h-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 px-2 text-xs font-medium"
+              onClick={cyclePlaybackRate}
+            >
+              {playbackRate}x
+            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className={cn(
+                    "h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10",
+                    isLooping && "bg-white/20"
+                  )}
+                  onClick={toggleLoop}
+                >
+                  <Repeat className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>{isLooping ? 'Loop on' : 'Loop off'}</TooltipContent>
+            </Tooltip>
           </div>
         )}
 

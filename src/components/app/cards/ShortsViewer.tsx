@@ -907,6 +907,20 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   >
                     <Share2 className="w-8 h-8 drop-shadow-lg" />
                   </button>
+
+                  {/* Speed */}
+                  <button
+                    onClick={() => {
+                      const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
+                      const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
+                      setPlaybackRate(nextRate);
+                    }}
+                    className="flex flex-col items-center gap-1"
+                  >
+                    <span className="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white text-xs font-bold drop-shadow-lg">
+                      {playbackRate}x
+                    </span>
+                  </button>
                 </div>
               </motion.div>
             </>

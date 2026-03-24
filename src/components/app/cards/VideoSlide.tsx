@@ -93,6 +93,13 @@ export const VideoSlide = memo(function VideoSlide({
     }
   }, [isMuted]);
 
+  // Update playback rate
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = playbackRate;
+    }
+  }, [playbackRate]);
+
   // Handle time update for view tracking + progress
   const handleTimeUpdate = useCallback(() => {
     if (videoRef.current && !isSeeking) {
