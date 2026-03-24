@@ -56,10 +56,23 @@ describe('Token management', () => {
     localStorage.clear();
   });
 
-  it('setAuthToken stores token and timestamp', () => {
+  it('setAuthToken stores token', () => {
     setAuthToken('abc123');
     expect(localStorage.getItem('dehub_token')).toBe('abc123');
-    expect(localStorage.getItem('dehub_token_timestamp')).toBeTruthy();
+  });
+
+  it('setTokenExpiresAt stores expiry timestamp', () => {
+    setTokenExpiresAt(900); // 15 min
+    const stored = localStorage.getItem('dehub_token_expires_at');
+    expect(stored).toBeTruthy();
+    expect(parseInt(stored!, 10)).toBeGreaterThan(Date.now());
+  });
+
+  it('setRefreshToken stores and retrieves refresh token', () => {
+    setRefreshToken('rt_abc');
+    expect(getRefreshToken()).toBe('rt_abc');
+    setRefreshToken(null);
+    expect(getRefreshToken()).toBeNull();
   });
 
   it('setAuthToken(null) clears storage', () => {
