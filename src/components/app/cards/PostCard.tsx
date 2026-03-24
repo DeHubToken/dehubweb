@@ -352,6 +352,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           open={showComments}
           onOpenChange={setShowComments}
           tokenId={post.id}
+          initialTab={commentsInitialTab}
         />
       </div>
 
