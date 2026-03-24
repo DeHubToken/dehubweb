@@ -79,6 +79,8 @@ interface ActionBarProps {
   tipCount?: number;
   /** Handler for tip action */
   onTip?: () => void;
+  /** Handler for see engagements action */
+  onSeeEngagements?: () => void;
   /** Whether voting buttons should be disabled (e.g. mutation pending) */
   disabled?: boolean;
 }
@@ -114,6 +116,7 @@ export function ActionBar({
   voteWeight = 1,
   tipCount,
   onTip,
+  onSeeEngagements,
   disabled: externalDisabled = false,
 }: ActionBarProps) {
   // Add localStorage delta to comment count for instant feedback
@@ -373,6 +376,15 @@ export function ActionBar({
         <Link className="w-5 h-5" />
         <span className="font-medium">Copy Link</span>
       </button>
+      {onSeeEngagements && (
+        <button
+          onClick={(e) => { e.stopPropagation(); setSheetOpen(false); onSeeEngagements(); }}
+          className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+        >
+          <Repeat2 className="w-5 h-5" />
+          <span className="font-medium">See Engagements</span>
+        </button>
+      )}
     </>
   );
 

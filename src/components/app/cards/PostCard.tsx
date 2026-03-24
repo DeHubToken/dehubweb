@@ -344,6 +344,10 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             isOptimistic={post.isOptimistic}
             tipCount={tipCount}
             onTip={() => setShowTipModal(true)}
+            onSeeEngagements={() => {
+              setCommentsInitialTab('reposts');
+              setShowComments(true);
+            }}
           />
         </div>
 
