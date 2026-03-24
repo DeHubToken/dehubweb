@@ -17,6 +17,7 @@ interface VideoSlideProps {
   short: ShortVideo;
   isActive: boolean;
   isMuted: boolean;
+  playbackRate?: number;
   onTimeUpdate?: (currentTime: number, duration: number) => void;
   onTap?: () => void;
   onSeekStart?: () => void;
