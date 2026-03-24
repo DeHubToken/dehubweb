@@ -111,6 +111,8 @@ function getDmSocket(): Socket {
 
     dmSocket.on('connect', () => {
       console.log('[DM Socket] Connected', dmSocket?.id);
+      // Flush any queued read receipts from previous sessions
+      if (dmSocket) flushReadReceiptQueue(dmSocket);
     });
 
     dmSocket.on('disconnect', (reason) => {
