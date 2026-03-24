@@ -202,16 +202,19 @@ export function useProfilePage() {
   });
   const commentCount = commentCountData?.total || commentCountData?.data?.length || 0;
 
-  const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
-    { icon: Home, label: 'All', value: 'home', count: ALL_CONTENT.length },
-    { icon: MessageSquare, label: 'Posts', value: 'posts', count: PROFILE_POSTS.length + commentCount },
-    { icon: Image, label: 'Images', value: 'images', count: PROFILE_IMAGES.length },
-    { icon: Film, label: 'Videos', value: 'videos', count: ALL_PROFILE_VIDEOS.length },
-    { icon: Star, label: 'Subs', value: 'subscribers', count: 0 },
-    { icon: Play, label: 'Audio', value: 'songs', count: 0 },
-    { icon: Radio, label: 'Live', value: 'live', count: 0 },
-    { icon: PieChart, label: 'Fractions', value: 'fractions', count: 0 },
-  ];
+  const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = useMemo(() => {
+    const homeTab = { icon: Home, label: 'All', value: 'home' as TabValue, count: ALL_CONTENT.length };
+    const restTabs = [
+      { icon: MessageSquare, label: 'Posts', value: 'posts' as TabValue, count: PROFILE_POSTS.length + commentCount },
+      { icon: Image, label: 'Images', value: 'images' as TabValue, count: PROFILE_IMAGES.length },
+      { icon: Film, label: 'Videos', value: 'videos' as TabValue, count: ALL_PROFILE_VIDEOS.length },
+      { icon: Star, label: 'Subs', value: 'subscribers' as TabValue, count: 0 },
+      { icon: Play, label: 'Audio', value: 'songs' as TabValue, count: 0 },
+      { icon: Radio, label: 'Live', value: 'live' as TabValue, count: 0 },
+      { icon: PieChart, label: 'Fractions', value: 'fractions' as TabValue, count: 0 },
+    ].sort((a, b) => b.count - a.count);
+    return [homeTab, ...restTabs];
+  }, [ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, commentCount]);
 
   // Subscriptions
   const { plans, isLoading: isLoadingPlans, hasPlans, isOwnPlans } = useCreatorPlans(apiProfile?.walletAddress);
