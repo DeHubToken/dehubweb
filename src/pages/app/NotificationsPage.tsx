@@ -739,6 +739,22 @@ function NotificationItem({
 
   const { walletAddress } = useAuth();
 
+  // Seed profile cache before navigating to a profile so the header renders instantly
+  const seedAndNavigateToProfile = (n: DeHubNotification) => {
+    const username = n.actorUsername?.replace('@', '');
+    const address = n.actorAddress;
+    if (username || address) {
+      seedProfileCache(queryClient, {
+        address: address || '',
+        username,
+        avatarUrl: n.actorAvatar || n.actor?.avatar,
+        displayName: n.actorDisplayName || n.actor?.displayName || username,
+      }, walletAddress || undefined);
+    }
+    const target = username || address;
+    if (target) navigate(`/${target}`);
+  };
+
   const handleClick = () => {
     // If a drawer is open or just closed, don't navigate
     if (showActorsDrawer || showPostsDrawer || drawerJustClosed.current) return;
