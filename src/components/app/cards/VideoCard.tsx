@@ -821,6 +821,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (videoRef.current) {
       const newVolume = Math.max(0, Math.min(1, volume + delta));
       setVolume(newVolume);
+      vpSetVolume(newVolume);
       videoRef.current.volume = newVolume;
       if (newVolume > 0 && isMuted) {
         setIsMuted(false);
