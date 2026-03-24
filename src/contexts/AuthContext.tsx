@@ -1222,6 +1222,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const token = getAuthToken();
     if (token && !isTokenExpired()) return true;
 
+    // ── Step 1: Try refresh token (no wallet interaction needed) ──
+    const rt = getRefreshToken();
+    if (rt) {
+      console.log('[Auth] Attempting token refresh via refresh token...');
+      const result = await refreshAccessToken();
+      if (result) {
+        console.log('[Auth] ✓ Token refreshed successfully');
+        return true;
+      }
+      console.warn('[Auth] Refresh token failed, falling back to wallet re-sign');
+    }
+
+    // ── Step 2: Fallback — wallet re-sign (requires user interaction) ──
     // Capture current wallet before refresh to detect silent swaps
     const walletBefore = walletAddress || localStorage.getItem('dehub_wallet');
 
