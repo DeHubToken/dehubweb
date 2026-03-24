@@ -201,7 +201,7 @@ export async function apiCall<T>(
 
     // Auto-retry on 401 using refresh token (skip for the refresh endpoint itself)
     if ((response.status === 401 || (response.status === 403 && isAuthError)) &&
-        !endpoint.includes('/auth/refresh')) {
+        !endpoint.includes('/api/auth/refresh')) {
       
       if (!isRefreshing) {
         isRefreshing = true;

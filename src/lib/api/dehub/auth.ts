@@ -170,7 +170,7 @@ export async function logoutAllSessions(): Promise<void> {
   if (!accessToken) return;
 
   try {
-    await fetch(`${DEHUB_API_BASE}/auth/logout-all`, {
+    await fetch(`${DEHUB_API_BASE}/api/auth/logout-all`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
