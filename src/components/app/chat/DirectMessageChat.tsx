@@ -25,11 +25,10 @@ import { DmTipDialog } from './DmTipDialog';
 import { DmFeeInfoBanner } from './DmFeeInfoBanner';
 import { formatDistanceToNow } from 'date-fns';
 import {
-  getWalletAddress,
   getERC20Balance,
   parseTxError,
 } from '@/lib/contracts/aa-utils';
-import { DHB_TOKEN, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
 import {
   DropdownMenu,
