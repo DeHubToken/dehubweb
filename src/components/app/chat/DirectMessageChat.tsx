@@ -344,7 +344,23 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
-  const [dmFee, setDmFee] = useState<DmFee | null>(conversation.dmFee || null);
+  const dmFeeCacheKey = `dehub-dm-fee-${conversation.id}`;
+  const [dmFee, setDmFeeRaw] = useState<DmFee | null>(() => {
+    try {
+      const cached = localStorage.getItem(dmFeeCacheKey);
+      if (cached) return JSON.parse(cached) as DmFee;
+    } catch {}
+    return conversation.dmFee || null;
+  });
+  const setDmFee: React.Dispatch<React.SetStateAction<DmFee | null>> = (valOrFn) => {
+    setDmFeeRaw(prev => {
+      const next = typeof valOrFn === 'function' ? (valOrFn as (p: DmFee | null) => DmFee | null)(prev) : valOrFn;
+      if (next) {
+        try { localStorage.setItem(dmFeeCacheKey, JSON.stringify(next)); } catch {}
+      }
+      return next;
+    });
+  };
   const [isFreeAccessGranted, setIsFreeAccessGranted] = useState(false);
   const [isFreeAccessProcessing, setIsFreeAccessProcessing] = useState(false);
   const [resolvedConversationId, setResolvedConversationId] = useState(conversation.id);
