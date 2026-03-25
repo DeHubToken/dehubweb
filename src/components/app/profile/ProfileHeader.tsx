@@ -1,6 +1,7 @@
 import { 
   UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check, Ban
 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
