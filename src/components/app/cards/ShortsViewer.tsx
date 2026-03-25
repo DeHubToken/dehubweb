@@ -927,6 +927,15 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     <Eye className="w-8 h-8 text-white drop-shadow-lg" />
                     <span className="text-white text-xs font-medium drop-shadow-lg">{currentShort.views || '0'}</span>
                   </div>
+
+                  {/* Tip */}
+                  <button
+                    onClick={() => setShowTipModal(true)}
+                    className="flex flex-col items-center gap-1"
+                  >
+                    <Gem className="w-8 h-8 text-white drop-shadow-lg" />
+                    <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(tipCount)}</span>
+                  </button>
                   
                   {/* Bookmark */}
                   <motion.button
