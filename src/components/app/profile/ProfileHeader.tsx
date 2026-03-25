@@ -133,16 +133,20 @@ export function ProfileHeader({
   return (
     <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
       {/* Cover Photo */}
-      <button 
-        className="aspect-[3/1] bg-zinc-800 w-full cursor-pointer"
-        onClick={() => setFullscreenImage(profile.coverUrl || getDefaultBanner(profile.walletAddress))}
-      >
-        <img 
-          src={profile.coverUrl || getDefaultBanner(profile.walletAddress)} 
-          alt="Cover" 
-          className="w-full h-full object-cover" 
-        />
-      </button>
+      {isFetchingProfile && !profile.coverUrl ? (
+        <Skeleton className="aspect-[3/1] w-full bg-white/[0.06] rounded-none" />
+      ) : (
+        <button 
+          className="aspect-[3/1] bg-zinc-800 w-full cursor-pointer"
+          onClick={() => setFullscreenImage(profile.coverUrl || getDefaultBanner(profile.walletAddress))}
+        >
+          <img 
+            src={profile.coverUrl || getDefaultBanner(profile.walletAddress)} 
+            alt="Cover" 
+            className="w-full h-full object-cover" 
+          />
+        </button>
+      )}
       
       {/* Profile Content */}
       <div className="px-4 sm:px-6 pb-4">
