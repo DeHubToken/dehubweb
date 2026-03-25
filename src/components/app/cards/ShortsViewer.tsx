@@ -19,6 +19,8 @@ import { voteOnPost, getNFTComments, postComment, followUser, isFollowing as che
 import { toast } from 'sonner';
 import { CommentsWrapper } from './CommentsWrapper';
 import { CommentsSection } from './CommentsSection';
+import { TipModal } from '../modals/TipModal';
+import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Repeat2, Quote, Link } from 'lucide-react';
 import { cn } from '@/lib/utils';
