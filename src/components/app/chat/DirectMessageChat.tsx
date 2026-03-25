@@ -350,7 +350,14 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       const cached = localStorage.getItem(dmFeeCacheKey);
       if (cached) return JSON.parse(cached) as DmFee;
     } catch {}
-    return conversation.dmFee || null;
+    if (conversation.dmFee) return conversation.dmFee;
+    // Detect fee immediately from otherUser search data so banner shows before any API call
+    const otherRaw = otherUser as any;
+    const dmS = otherRaw?.dmSettings || otherRaw?.dmSetting;
+    const settings = Array.isArray(dmS) ? dmS[0] : dmS;
+    const pmFee = settings?.perMessageFee;
+    if (pmFee && pmFee > 0) return { required: true, fee: pmFee, hasFreeAccess: false };
+    return null;
   });
   const setDmFee: React.Dispatch<React.SetStateAction<DmFee | null>> = (valOrFn) => {
     setDmFeeRaw(prev => {
