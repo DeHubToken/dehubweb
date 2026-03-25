@@ -344,7 +344,23 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
-  const [dmFee, setDmFee] = useState<DmFee | null>(conversation.dmFee || null);
+  const [dmFee, setDmFeeRaw] = useState<DmFee | null>(() => {
+    // Hydrate from cache first, then fall back to conversation prop
+    const cacheKey = `dehub-dm-fee-${conversation.id}`;
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) return JSON.parse(cached) as DmFee;
+    } catch {}
+    return conversation.dmFee || null;
+  });
+  // Wrap setter to persist to localStorage
+  const setDmFee = (fee: DmFee | null) => {
+    setDmFeeRaw(fee);
+    const cacheKey = `dehub-dm-fee-${conversation.id}`;
+    if (fee) {
+      try { localStorage.setItem(cacheKey, JSON.stringify(fee)); } catch {}
+    }
+  };
   const [isFreeAccessGranted, setIsFreeAccessGranted] = useState(false);
   const [isFreeAccessProcessing, setIsFreeAccessProcessing] = useState(false);
   const [resolvedConversationId, setResolvedConversationId] = useState(conversation.id);
