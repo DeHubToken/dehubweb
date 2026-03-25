@@ -76,7 +76,19 @@ export function TipModal({
     }
   }, [open, walletAddress]);
 
-  const parsedAmount = parseFloat(amount);
+  /** Parse abbreviated amounts like 1k, 1.5k, 2m, 500 */
+  function parseAbbreviatedAmount(val: string): number {
+    const trimmed = val.trim().toLowerCase();
+    const match = trimmed.match(/^(\d+(?:\.\d+)?)\s*(k|m)?$/);
+    if (!match) return NaN;
+    const num = parseFloat(match[1]);
+    const suffix = match[2];
+    if (suffix === 'k') return num * 1000;
+    if (suffix === 'm') return num * 1000000;
+    return num;
+  }
+
+  const parsedAmount = parseAbbreviatedAmount(amount);
   const isValidAmount =
     !Number.isNaN(parsedAmount) && parsedAmount >= MIN_TIP_DHB;
 
