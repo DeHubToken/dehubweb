@@ -529,13 +529,11 @@ function NotificationItem({
   bundle,
   onMarkAsRead,
   isMarkingAsRead,
-  enrichedAvatars,
 }: { 
   notification: DeHubNotification;
   bundle: BundledNotification;
   onMarkAsRead: (id: string) => void;
   isMarkingAsRead: boolean;
-  enrichedAvatars: Map<string, EnrichedAvatar>;
 }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
