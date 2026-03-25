@@ -171,7 +171,13 @@ export function useDeHubProfile({ userId, username, address, enabled = true }: U
     },
     enabled: enabled && !!(userId || username),
     staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 2,
+    retry: (failureCount, error) => {
+      // Retry up to 4 times for "not found" (transient empty-shell responses)
+      // and up to 3 times for network errors
+      if (error?.message === 'Profile not found') return failureCount < 4;
+      return failureCount < 3;
+    },
+    retryDelay: (attemptIndex) => Math.min(800 * 2 ** attemptIndex, 5000),
     // Keep showing previous profile data when address changes (auth resolves)
     // instead of flashing skeleton while refetching with the new address
     placeholderData: keepPreviousData,
