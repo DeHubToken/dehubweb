@@ -631,13 +631,25 @@ function NotificationItem({
   const resolveActorAvatar = (actor: CanonicalActor | null | undefined): string | undefined => {
     if (!actor) return undefined;
 
-    // Critical: for backend multi-actor aggregates, never borrow the primary actor avatar
-    // for other actors (this causes "wrong face under correct name" mismatches).
-    if (isBackendAggregatedMultiActor) return undefined;
-
     const actorAddress = actor.address?.toLowerCase();
-    if (primaryAddress && actorAddress && actorAddress === primaryAddress) return avatarUrl;
 
+    // For multi-actor aggregates: only match if the actor IS the primary notification actor
+    // Never borrow the primary avatar for a different actor
+    if (isBackendAggregatedMultiActor) {
+      if (primaryAddress && actorAddress && actorAddress === primaryAddress) return avatarUrl;
+      // For secondary actors, check if any notification in the bundle has their avatar
+      if (actorAddress) {
+        const match = bundle.allNotifications.find(
+          n => n.actorAddress?.toLowerCase() === actorAddress && n.actorAvatar
+        );
+        if (match) {
+          return buildAvatarUrl(actorAddress, extractAvatarPath(match) || match.actorAvatar);
+        }
+      }
+      return undefined;
+    }
+
+    if (primaryAddress && actorAddress && actorAddress === primaryAddress) return avatarUrl;
     return actor.key === primaryKey ? avatarUrl : undefined;
   };
 
