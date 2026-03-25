@@ -29,11 +29,12 @@ export function DmFeeInfoBanner({
   balanceBnb,
   balanceLoading,
 }: DmFeeInfoBannerProps) {
+  const totalBalance = (balanceBase ?? 0) + (balanceBnb ?? 0);
+  const totalAvailable = balanceBase !== null || balanceBnb !== null ? totalBalance : null;
   const tipAmount = customTipAmount ? parseFloat(customTipAmount) : fee;
   const isAboveMinimum = !Number.isNaN(tipAmount) && tipAmount > fee;
-  const bestBalance = Math.max(balanceBase ?? -1, balanceBnb ?? -1);
-  const hasSufficientBalance = bestBalance >= fee;
-  const hasCustomSufficient = !Number.isNaN(tipAmount) && bestBalance >= tipAmount;
+  const hasSufficientBalance = totalAvailable !== null && totalAvailable >= fee;
+  const hasCustomSufficient = !Number.isNaN(tipAmount) && totalAvailable !== null && totalAvailable >= tipAmount;
 
   return (
     <div className="px-4 py-4 space-y-4">
@@ -54,42 +55,27 @@ export function DmFeeInfoBanner({
         </div>
 
         {/* Balance info */}
-        <div className="px-3 py-2 rounded-xl bg-zinc-900/60 border border-white/5 space-y-1.5">
+        <div className="px-3 py-2 rounded-xl bg-zinc-900/60 border border-white/5">
           {balanceLoading ? (
             <div className="flex items-center gap-2">
               <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-              <span className="text-xs text-zinc-500">Loading balances...</span>
+              <span className="text-xs text-zinc-500">Loading balance...</span>
             </div>
           ) : (
-            <>
-              {/* Base balance */}
-              <div className="flex items-center gap-2">
-                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-                <span className="text-xs text-zinc-400">Base:</span>
-                {balanceBase !== null ? (
-                  <span className={`text-xs font-medium ${balanceBase >= fee ? 'text-green-400' : 'text-red-400'}`}>
-                    {balanceBase.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB
-                  </span>
-                ) : (
-                  <span className="text-xs text-zinc-500">Unavailable</span>
-                )}
-              </div>
-              {/* BNB balance */}
-              <div className="flex items-center gap-2">
-                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-                <span className="text-xs text-zinc-400">BNB:</span>
-                {balanceBnb !== null ? (
-                  <span className={`text-xs font-medium ${balanceBnb >= fee ? 'text-green-400' : 'text-red-400'}`}>
-                    {balanceBnb.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB
-                  </span>
-                ) : (
-                  <span className="text-xs text-zinc-500">Unavailable</span>
-                )}
-              </div>
-              {!hasSufficientBalance && (
-                <span className="text-xs text-red-400">Insufficient on both chains</span>
+            <div className="flex items-center gap-2">
+              <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+              <span className="text-xs text-zinc-400">Your balance:</span>
+              {totalBalance !== null ? (
+                <span className={`text-xs font-medium ${hasSufficientBalance ? 'text-green-400' : 'text-red-400'}`}>
+                  {totalBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB
+                </span>
+              ) : (
+                <span className="text-xs text-zinc-500">Unavailable</span>
               )}
-            </>
+              {!hasSufficientBalance && totalBalance !== null && (
+                <span className="text-xs text-red-400 ml-auto">Insufficient</span>
+              )}
+            </div>
           )}
         </div>
       </div>
