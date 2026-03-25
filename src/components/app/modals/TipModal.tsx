@@ -76,7 +76,19 @@ export function TipModal({
     }
   }, [open, walletAddress]);
 
-  const parsedAmount = parseFloat(amount);
+  /** Parse abbreviated amounts like 1k, 1.5k, 2m, 500 */
+  function parseAbbreviatedAmount(val: string): number {
+    const trimmed = val.trim().toLowerCase();
+    const match = trimmed.match(/^(\d+(?:\.\d+)?)\s*(k|m)?$/);
+    if (!match) return NaN;
+    const num = parseFloat(match[1]);
+    const suffix = match[2];
+    if (suffix === 'k') return num * 1000;
+    if (suffix === 'm') return num * 1000000;
+    return num;
+  }
+
+  const parsedAmount = parseAbbreviatedAmount(amount);
   const isValidAmount =
     !Number.isNaN(parsedAmount) && parsedAmount >= MIN_TIP_DHB;
 
@@ -145,10 +157,9 @@ export function TipModal({
               <div className="relative flex-1">
                 <img src={dehubCoin} alt="DHB" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
                 <Input
-                  type="number"
-                  min={MIN_TIP_DHB}
-                  step={0.1}
-                  placeholder="Enter amount"
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="e.g. 500, 1.5k, 2m"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   className="pl-11 bg-white/5 border-white/10 text-white placeholder:text-white/40 h-12 rounded-xl"
