@@ -168,6 +168,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const { isAuthenticated, walletAddress } = useAuth();
 
   const currentShort = shorts[currentIndex];
+  const [showTipModal, setShowTipModal] = useState(false);
+  const { data: tipCount = 0 } = usePostTipCount(currentShort?.id);
   
   // View tracking for the current short
   const { onTimeUpdate: trackView } = useVideoViewTracking(currentShort?.id);
