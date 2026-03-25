@@ -661,8 +661,51 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   }) => {
     let feeTxHash: string | undefined;
 
-    // If fee is required, process on-chain payment first
+    // If fee is required, show optimistic message immediately, then process payment
+    const paymentTempId = `temp-pay-${Date.now()}`;
     if (feeRequired) {
+      // Inject optimistic "pending payment" message into the cache so user sees it immediately
+      const optimisticPayMsg: DmMessage = {
+        _id: paymentTempId,
+        conversation: resolvedConversationId,
+        sender: {
+          _id: user?._id || '',
+          username: user?.username || '',
+          address: walletAddress || '',
+          displayName: user?.displayName || user?.display_name || '',
+          avatarImageUrl: user?.avatarImageUrl || '',
+        },
+        content,
+        msgType: type || 'msg',
+        mediaUrls: mediaFile
+          ? [{ url: URL.createObjectURL(mediaFile), type: type === 'voice' ? 'audio' : 'image', mimeType: mediaFile.type }]
+          : gifUrl ? [{ url: gifUrl, type: 'image', mimeType: 'image/gif' }] : [],
+        voiceDuration: duration ?? null,
+        isRead: false,
+        isEdited: false,
+        editedAt: null,
+        isForwarded: false,
+        replyTo: null,
+        paymentStatus: 'pending',
+        paymentTxHash: null,
+        tipAmount: activeFee,
+        tipSymbol: 'DHB',
+        isDeleted: false,
+        author: 'me',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      queryClient.setQueryData(messagesKeys.messages(resolvedConversationId), (old: any) => {
+        if (!old?.pages) return old;
+        const newPages = [...old.pages];
+        if (newPages[0]) {
+          newPages[0] = { ...newPages[0], items: [optimisticPayMsg, ...newPages[0].items] };
+        }
+        return { ...old, pages: newPages };
+      });
+      setTimeout(scrollToBottom, 50);
+
       setIsSendingFee(true);
       try {
         // Auto-select chain: prefer Base, fall back to BNB
@@ -673,6 +716,15 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         const recipientAddress = otherUser?.address || '';
         if (!recipientAddress) {
           toast.error('Cannot process payment: recipient address unknown');
+          // Remove optimistic message
+          queryClient.setQueryData(messagesKeys.messages(resolvedConversationId), (old: any) => {
+            if (!old?.pages) return old;
+            const newPages = [...old.pages];
+            if (newPages[0]) {
+              newPages[0] = { ...newPages[0], items: newPages[0].items.filter((m: any) => m._id !== paymentTempId) };
+            }
+            return { ...old, pages: newPages };
+          });
           setIsSendingFee(false);
           return;
         }
@@ -690,8 +742,6 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
 
         // Track this tx as locally confirmed so we don't show "confirming payment..." forever
         if (feeTxHash) confirmedTxHashes.current.add(feeTxHash.toLowerCase());
-        // txHash is bundled directly into sendMessage socket event below — backend verifies inline.
-        // Do NOT call verify-dm-fee separately: it marks txHash as used, causing "already used" error on sendMessage.
 
         toast.success(dhbText(`Paid ${activeFee.toLocaleString()} DHB`), { id: 'dm-fee-send', duration: 2000 });
 
@@ -705,11 +755,32 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         console.error('[DM] Fee payment failed:', error);
         const message = parseTxError(error as Error);
         toast.error(message || 'Payment failed', { id: 'dm-fee-send' });
+        // Remove optimistic message on failure
+        queryClient.setQueryData(messagesKeys.messages(resolvedConversationId), (old: any) => {
+          if (!old?.pages) return old;
+          const newPages = [...old.pages];
+          if (newPages[0]) {
+            newPages[0] = { ...newPages[0], items: newPages[0].items.filter((m: any) => m._id !== paymentTempId) };
+          }
+          return { ...old, pages: newPages };
+        });
         setIsSendingFee(false);
         return;
       } finally {
         setIsSendingFee(false);
       }
+    }
+
+    // Remove the payment-optimistic temp message before mutate adds its own optimistic entry
+    if (feeRequired) {
+      queryClient.setQueryData(messagesKeys.messages(resolvedConversationId), (old: any) => {
+        if (!old?.pages) return old;
+        const newPages = [...old.pages];
+        if (newPages[0]) {
+          newPages[0] = { ...newPages[0], items: newPages[0].items.filter((m: any) => m._id !== paymentTempId) };
+        }
+        return { ...old, pages: newPages };
+      });
     }
 
     // Now send the actual message (with txHash so server unlocks it)
