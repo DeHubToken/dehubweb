@@ -29,11 +29,12 @@ export function DmFeeInfoBanner({
   balanceBnb,
   balanceLoading,
 }: DmFeeInfoBannerProps) {
+  const totalBalance = (balanceBase ?? 0) + (balanceBnb ?? 0);
+  const totalAvailable = balanceBase !== null || balanceBnb !== null ? totalBalance : null;
   const tipAmount = customTipAmount ? parseFloat(customTipAmount) : fee;
   const isAboveMinimum = !Number.isNaN(tipAmount) && tipAmount > fee;
-  const bestBalance = Math.max(balanceBase ?? -1, balanceBnb ?? -1);
-  const hasSufficientBalance = bestBalance >= fee;
-  const hasCustomSufficient = !Number.isNaN(tipAmount) && bestBalance >= tipAmount;
+  const hasSufficientBalance = totalAvailable !== null && totalAvailable >= fee;
+  const hasCustomSufficient = !Number.isNaN(tipAmount) && totalAvailable !== null && totalAvailable >= tipAmount;
 
   return (
     <div className="px-4 py-4 space-y-4">
