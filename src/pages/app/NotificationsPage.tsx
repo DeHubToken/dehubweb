@@ -934,7 +934,7 @@ function NotificationItem({
           </DrawerHeader>
           <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[50vh]" data-vaul-no-drag>
             {canonicalActors.map((actor) => {
-              const actorLink = resolveActorProfileLink(actor, enrichedAvatars);
+              const actorLink = resolveActorProfileLink(actor);
               const actorAvatar = resolveActorAvatar(actor);
               const actorHandle = normalizeUsername(actor.resolvedUsername || actor.key || actor.display) || actor.display;
 
