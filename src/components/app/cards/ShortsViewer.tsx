@@ -652,7 +652,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         
         {/* Left Side Panel - Desktop Only: Action buttons */}
         {!isMobile && (
-          <div className="w-[80px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col items-center justify-center gap-6">
+          <div className="w-[60px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col items-center justify-center gap-3">
             {/* Navigation */}
             <button
               onClick={goToPrev}
