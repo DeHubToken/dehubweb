@@ -326,7 +326,7 @@ function buildCanonicalActors(
   };
 
   latestActorNames?.forEach((name) => addActorCandidate(name));
-  addActorCandidate(enrichedUsername || primaryUsername, enrichedUsername || primaryUsername);
+  addActorCandidate(primaryUsername, primaryUsername);
 
   return actors;
 }
