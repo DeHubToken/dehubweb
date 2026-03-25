@@ -974,6 +974,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               <CommentsSection
                 tokenId={currentShort.id}
                 onClose={() => {}}
+                bottomAlignInput
               />
             </div>
           </div>
