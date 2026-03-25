@@ -382,8 +382,9 @@ export function useVoteFeatureRequest() {
       toast.error('Vote failed. Please try again.');
     },
     onSettled: () => {
-      // Only refresh votes, not the full list — avoids reordering cards mid-session
       queryClient.invalidateQueries({ queryKey: ['feature-request-votes'] });
+      // Also refresh feature requests to pick up DB-computed like/dislike counts
+      queryClient.invalidateQueries({ queryKey: ['feature-requests'], refetchType: 'none' });
     },
   });
 }
