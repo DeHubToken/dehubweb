@@ -969,8 +969,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     }}
                     className="flex flex-col items-center gap-1"
                   >
-                    <span className="w-9 h-9 rounded-xl bg-black/60 backdrop-blur-[24px] border border-white/10 flex items-center justify-center text-white text-[10px] font-bold drop-shadow-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
-                      {formatRate(playbackRate)}x
+                    <span className="w-9 h-9 rounded-xl bg-black/60 backdrop-blur-[24px] border border-white/10 flex items-center justify-center text-white text-[10px] font-bold leading-none drop-shadow-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
+                      <span className="min-w-[32px] text-center">{formatRate(playbackRate)}x</span>
                     </span>
                   </button>
                 </div>
