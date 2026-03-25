@@ -310,6 +310,7 @@ export default function ProfilePage() {
           translatedBio={data.translatedBio}
           setTranslatedBio={data.setTranslatedBio}
           isBlocked={data.isBlocked}
+          isFetchingProfile={data.isFetchingProfile}
         />
 
         {/* Profile Tabs Bento */}
