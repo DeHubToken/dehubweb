@@ -665,32 +665,19 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     if (feeRequired) {
       setIsSendingFee(true);
       try {
-        const amountWei = toWei(activeFee, DHB_TOKEN.decimals);
-
         // Auto-select chain: prefer Base, fall back to BNB
         const chainId = (feeBalanceBase !== null && feeBalanceBase >= activeFee)
           ? BASE_CHAIN_ID
           : BNB_CHAIN_ID;
-        const chainConfig = getChainConfig(chainId);
-        await switchChain(chainId);
-        const signerAddress = await getWalletAddress();
-        const balance = await getERC20Balance(chainConfig.dhbToken, signerAddress, chainId);
-
-        if (balance < amountWei) {
-          const balanceHuman = Number(balance) / 1e18;
-          toast.error(dhbText(`Insufficient DHB on ${chainConfig.name}. Need ${activeFee.toLocaleString()} but have ${balanceHuman.toFixed(2)}`));
-          setIsSendingFee(false);
-          return;
-        }
 
         const recipientAddress = otherUser?.address || '';
-        console.log('[DM Fee] Paying', activeFee, 'DHB to recipient:', recipientAddress, '| chain:', chainConfig.name);
         if (!recipientAddress) {
           toast.error('Cannot process payment: recipient address unknown');
           setIsSendingFee(false);
           return;
         }
 
+        console.log('[DM Fee] Paying', activeFee, 'DHB to recipient:', recipientAddress, '| chain:', chainId);
         toast.loading('Processing payment...', { id: 'dm-fee-send' });
 
         feeTxHash = await sendTip({
@@ -698,6 +685,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           amount: activeFee,
           to: recipientAddress,
           chainId,
+          skipBalanceCheck: true,
         });
 
         // Track this tx as locally confirmed so we don't show "confirming payment..." forever

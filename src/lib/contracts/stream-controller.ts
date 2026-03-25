@@ -100,7 +100,10 @@ export interface SendTipParams {
  * Emits SendFunds(FundType.TIP) so backend can detect tips (unlike direct ERC20 transfer).
  * Requires prior DHB approval for StreamController — will approve if needed.
  */
-export async function sendTip(params: SendTipParams): Promise<string> {
+// Cache of chains where max-approval has already been granted this session
+const approvedChains = new Set<string>();
+
+export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boolean }): Promise<string> {
   const chainId = params.chainId || BASE_CHAIN_ID;
   const chainConfig = getChainConfig(chainId);
 
@@ -109,20 +112,30 @@ export async function sendTip(params: SendTipParams): Promise<string> {
   const signerAddress = await getWalletAddress();
   const amountWei = toWei(params.amount, DHB_TOKEN.decimals);
 
-  // Check balance
-  const balance = await getDHBBalance(signerAddress, chainId);
-  if (balance < amountWei) {
-    throw new Error(
-      `Insufficient DHB balance. Need ${params.amount} DHB but have ${Number(balance) / 1e18} DHB`
-    );
-  }
+  // Parallelize balance + allowance checks (skip balance if UI already verified)
+  const chainKey = `${chainId}-${signerAddress}`;
+  const needsAllowanceCheck = !approvedChains.has(chainKey);
 
-  // Check allowance and approve if needed
-  const allowance = await getDHBAllowance(signerAddress, chainId);
-  if (allowance < amountWei) {
-    console.log('[StreamController] Approving DHB for sendTip...');
-    const maxApproval = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
-    await approveDHB(maxApproval, chainId);
+  if (!params.skipBalanceCheck || needsAllowanceCheck) {
+    const [balance, allowance] = await Promise.all([
+      params.skipBalanceCheck ? Promise.resolve(amountWei) : getDHBBalance(signerAddress, chainId),
+      needsAllowanceCheck ? getDHBAllowance(signerAddress, chainId) : Promise.resolve(amountWei),
+    ]);
+
+    if (!params.skipBalanceCheck && balance < amountWei) {
+      throw new Error(
+        `Insufficient DHB balance. Need ${params.amount} DHB but have ${Number(balance) / 1e18} DHB`
+      );
+    }
+
+    if (needsAllowanceCheck && allowance < amountWei) {
+      console.log('[StreamController] Approving DHB for sendTip...');
+      const maxApproval = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+      await approveDHB(maxApproval, chainId);
+      approvedChains.add(chainKey);
+    } else if (needsAllowanceCheck) {
+      approvedChains.add(chainKey);
+    }
   }
 
   const tokenId = BigInt(params.tokenId);
