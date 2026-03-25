@@ -5,6 +5,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
