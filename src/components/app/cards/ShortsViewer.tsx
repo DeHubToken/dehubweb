@@ -53,6 +53,37 @@ function formatCount(count?: number | string): string {
   return value.toString();
 }
 
+/** Expandable post description with Show more / Show less */
+function ExpandableDescription({ text }: { text: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const ref = useRef<HTMLParagraphElement>(null);
+  const [clamped, setClamped] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (el) setClamped(el.scrollHeight > el.clientHeight + 1);
+  }, [text]);
+
+  return (
+    <div className="mt-2 lg:mt-3">
+      <p
+        ref={ref}
+        className={cn("text-white/80 text-xs lg:text-sm", !expanded && "line-clamp-2")}
+      >
+        {text}
+      </p>
+      {(clamped || expanded) && (
+        <button
+          onClick={() => setExpanded(p => !p)}
+          className="text-white/50 hover:text-white text-[11px] mt-0.5 transition-colors"
+        >
+          {expanded ? 'Show less' : 'Show more'}
+        </button>
+      )}
+    </div>
+  );
+}
+
 /** Map API comment to display format */
 interface InlineComment {
   id: string;
@@ -949,7 +980,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 </div>
               </button>
               {currentShort.description && (
-                <p className="text-white/80 text-xs lg:text-sm mt-2 lg:mt-3 line-clamp-2">{currentShort.description}</p>
+                <ExpandableDescription text={currentShort.description} />
               )}
               {currentShort.creatorId && followCheckingCreators.has(currentShort.creatorId) ? (
                 <div className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white/40 text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/10 text-center animate-pulse">
