@@ -1124,6 +1124,16 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           tokenId={currentShort.id}
         />
       )}
+
+      {/* Tip Modal */}
+      <TipModal
+        open={showTipModal}
+        onOpenChange={setShowTipModal}
+        creatorAddress={currentShort?.creatorId || ''}
+        creatorName={currentShort?.creatorUsername || currentShort?.username || ''}
+        tokenId={currentShort?.id}
+        context="post"
+      />
     </motion.div>
   );
 }
