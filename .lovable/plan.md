@@ -1,19 +1,47 @@
 
 
-## Root Cause
+## Why Tip Payment Takes So Long + Speed Optimization
 
-When you add a video, the form auto-moves your typed text into `titleText` and clears `text` (line 298-302). But when building the optimistic post, line 1138 reads `text` (now empty) instead of `titleText` for the title. Same bug on line 1164 for image posts.
+### Root Cause
 
-The actual mint call on lines 987-996 correctly uses `titleText` — so after refresh the title appears. The optimistic preview just has the wrong source field.
+The delay is **not an API limitation** — the on-chain transaction itself confirms in ~2 seconds (as you've seen). The slowness comes from **7+ sequential RPC calls** before and after the transaction, each adding 500ms-1.5s of latency:
 
-## Fix
+1. Switch chain (~500ms)
+2. Get wallet address (~500ms)
+3. Check DHB balance (~800ms)
+4. Check DHB allowance (~800ms)
+5. First-time only: approval transaction + wait (~3-4s)
+6. Gas estimation (~800ms)
+7. Send transaction (~1s)
+8. Wait for receipt/confirmation polling (~2-3s)
 
-**File: `src/features/post/hooks/usePostForm.ts`**
+Total: ~7-10s even though the actual tx confirms fast.
 
-Update the optimistic post construction to mirror the same title/description logic used by the mint call (lines 987-1001):
+### Plan to Cut It Down to ~3-4s
 
-- **Video post (line 1138)**: Change `title: text.trim().split('\n')[0] || ''` → use `titleText.trim() || text.trim().split('\n')[0] || ''` and add `description: text.trim()`.
-- **Image post (line 1164-1165)**: Same fix — use `titleText.trim()` when `showTitle && titleText.trim()`, otherwise fall back to first line of `text`.
+**File: `src/lib/contracts/stream-controller.ts`**
 
-This is a 2-line fix in one file. No other changes needed.
+1. **Parallelize balance + allowance checks** — run `getDHBBalance` and `getDHBAllowance` simultaneously instead of sequentially (saves ~800ms)
+
+2. **Skip balance check when we already checked in the UI** — the DM fee gate already checks balance before showing the pay button. Add an optional `skipBalanceCheck` flag to `sendTip` so it skips the redundant on-chain balance read (saves ~800ms)
+
+3. **Cache allowance state** — after the first max-approval, cache that we've approved so subsequent tips skip the allowance check entirely (saves ~800ms per subsequent tip)
+
+**File: `src/components/app/chat/DirectMessageChat.tsx`**
+
+4. **Remove redundant balance check in handleSend** — the fee gate UI already validates balance. Remove the second `getERC20Balance` call inside `handleSend` before calling `sendTip` (saves ~800ms)
+
+### Technical Details
+
+```text
+Current flow (sequential):
+  switchChain → getAddress → getBalance → getAllowance → [approve] → estimateGas → sendTx → waitReceipt
+  ~~~500ms~~ + ~~500ms~~ + ~~800ms~~ + ~~800ms~~ + [3s] + ~~800ms~~ + ~~1s~~ + ~~2s~~
+
+Optimized flow:
+  switchChain → getAddress → [balance+allowance parallel] → estimateGas → sendTx → waitReceipt
+  ~~~500ms~~ + ~~500ms~~ + ~~~~~~800ms~~~~~~ + ~~800ms~~ + ~~1s~~ + ~~2s~~
+```
+
+Net savings: ~1.5-2.5s on every tip, more on repeat tips with cached allowance.
 
