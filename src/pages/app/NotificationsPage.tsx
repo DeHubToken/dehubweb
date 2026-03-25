@@ -134,7 +134,7 @@ interface BundledNotification {
  * 1. Same actor + same type within 24h → "Frank liked 5 of your posts"
  * 2. Same type (follows) from different actors within 24h → "okanbey and 2 others started following you"
  */
-function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars: Map<string, EnrichedAvatar>): BundledNotification[] {
+function bundleNotifications(notifications: DeHubNotification[]): BundledNotification[] {
   if (!notifications.length) return [];
 
   // Deduplicate: when API sends both 'mention' and 'comment_reply' for the same commentId
