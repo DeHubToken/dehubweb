@@ -676,7 +676,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           return;
         }
 
-        toast.loading('Processing payment... (confirming on-chain)', { id: 'dm-fee-send' });
+        toast.loading('Processing payment...', { id: 'dm-fee-send' });
 
         feeTxHash = await sendTip({
           tokenId: 0,
