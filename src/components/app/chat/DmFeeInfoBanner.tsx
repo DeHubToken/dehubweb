@@ -48,7 +48,7 @@ export function DmFeeInfoBanner({
             <h3 className="text-white font-semibold text-sm mb-1">Tip to Message</h3>
             <p className="text-zinc-400 text-xs leading-relaxed">
               {recipientName} requires a minimum tip of{' '}
-              <span className="text-amber-400 font-semibold">{fee.toLocaleString()} DHB</span>{' '}
+              <span className="text-white font-semibold">{fee.toLocaleString()} DHB</span>{' '}
               per message. Each message you send will deduct this amount.
             </p>
           </div>
