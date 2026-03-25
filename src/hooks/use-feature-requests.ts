@@ -327,7 +327,7 @@ export function useVoteFeatureRequest() {
         return newVotes;
       });
 
-      // Optimistically update vote count on feature requests (InfiniteData shape)
+      // Optimistically update vote count + like/dislike counts on feature requests (InfiniteData shape)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueriesData({ queryKey: ['feature-requests'] }, (old: any) => {
         if (!old?.pages) return old;
@@ -336,13 +336,32 @@ export function useVoteFeatureRequest() {
           pages: old.pages.map((page: FeatureRequest[]) =>
             page.map((fr) => {
               if (fr.id !== featureRequestId) return fr;
-              let delta: number = voteType;
+              let voteDelta: number = voteType;
+              let likeDelta = 0;
+              let dislikeDelta = 0;
+
               if (currentVote === voteType) {
-                delta = -voteType;
+                // Toggle off
+                voteDelta = -voteType as number;
+                likeDelta = voteType === 1 ? -1 : 0;
+                dislikeDelta = voteType === -1 ? -1 : 0;
               } else if (currentVote) {
-                delta = voteType - currentVote;
+                // Switching
+                voteDelta = voteType - currentVote;
+                likeDelta = voteType === 1 ? 1 : -1;
+                dislikeDelta = voteType === -1 ? 1 : -1;
+              } else {
+                // New vote
+                likeDelta = voteType === 1 ? 1 : 0;
+                dislikeDelta = voteType === -1 ? 1 : 0;
               }
-              return { ...fr, vote_count: fr.vote_count + delta };
+
+              return {
+                ...fr,
+                vote_count: fr.vote_count + voteDelta,
+                like_count: Math.max(0, (fr.like_count ?? 0) + likeDelta),
+                dislike_count: Math.max(0, (fr.dislike_count ?? 0) + dislikeDelta),
+              };
             })
           ),
         };
@@ -363,8 +382,9 @@ export function useVoteFeatureRequest() {
       toast.error('Vote failed. Please try again.');
     },
     onSettled: () => {
-      // Only refresh votes, not the full list — avoids reordering cards mid-session
       queryClient.invalidateQueries({ queryKey: ['feature-request-votes'] });
+      // Also refresh feature requests to pick up DB-computed like/dislike counts
+      queryClient.invalidateQueries({ queryKey: ['feature-requests'], refetchType: 'none' });
     },
   });
 }
