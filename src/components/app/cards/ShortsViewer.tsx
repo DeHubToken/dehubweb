@@ -949,7 +949,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 </div>
               </button>
               {currentShort.description && (
-                <p className="text-white/80 text-xs lg:text-sm mt-2 lg:mt-3 line-clamp-2">{currentShort.description}</p>
+                <ExpandableDescription text={currentShort.description} />
               )}
               {currentShort.creatorId && followCheckingCreators.has(currentShort.creatorId) ? (
                 <div className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white/40 text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/10 text-center animate-pulse">
