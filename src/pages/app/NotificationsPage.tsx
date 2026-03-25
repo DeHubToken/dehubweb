@@ -597,24 +597,14 @@ function NotificationItem({
     }
   };
 
-  // Prefer fresh enriched avatar over stale API snapshot
-  const enriched = notification.actorAddress ? enrichedAvatars.get(notification.actorAddress.toLowerCase()) : undefined;
-  const freshAvatarPath = enriched?.avatarUrl;
-  const staleAvatarPath = extractAvatarPath(notification) || notification.actorAvatar;
+  // Use notification API data directly — no enrichment needed
+  const apiAvatarPath = extractAvatarPath(notification) || notification.actorAvatar;
+  const avatarUrl = notification.actorAddress && apiAvatarPath
+    ? buildAvatarUrl(notification.actorAddress, apiAvatarPath)
+    : undefined;
   
-  // Use fresh if available, otherwise fall back to stale (don't discard stale just because enrichment ran with null)
-  const effectiveAvatarPath = freshAvatarPath || staleAvatarPath;
-  
-  // If enriched avatar is already a full URL, use it directly with cache-busting
-  const cacheBust = Math.floor(Date.now() / 300000);
-  const avatarUrl = effectiveAvatarPath?.startsWith('http')
-    ? `${effectiveAvatarPath}${effectiveAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`
-    : notification.actorAddress && effectiveAvatarPath
-      ? buildAvatarUrl(notification.actorAddress, effectiveAvatarPath)
-      : undefined;
-  
-   // No dicebear fallback — let AvatarFallback show the greyed-out letter
-  const fallbackLetter = (enriched?.displayName || enriched?.username || notification.actorUsername || 'U').charAt(0).toUpperCase();
+  // No dicebear fallback — let AvatarFallback show the greyed-out letter
+  const fallbackLetter = (notification.actorUsername || 'U').charAt(0).toUpperCase();
     
   const postThumbnail = notification.tokenThumbnail 
     ? (notification.tokenThumbnail.startsWith('http') ? notification.tokenThumbnail : `${DEHUB_CDN_BASE}${notification.tokenThumbnail}`)
@@ -628,9 +618,9 @@ function NotificationItem({
 
   const aggregatedActorNames = (notification as any).latestActorNames as string[] | undefined;
   const canonicalActors = (() => {
-    const fromAggregated = buildCanonicalActors(aggregatedActorNames, undefined, undefined, enrichedAvatars);
+    const fromAggregated = buildCanonicalActors(aggregatedActorNames, undefined);
     if (fromAggregated.length > 0) return fromAggregated;
-    return buildCanonicalActors(undefined, notification.actorUsername, enriched?.username, enrichedAvatars);
+    return buildCanonicalActors(undefined, notification.actorUsername);
   })();
   const aggregatedCount = (notification as any).aggregatedCount || 1;
   const isBackendAggregatedMultiActor =
