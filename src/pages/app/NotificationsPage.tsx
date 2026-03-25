@@ -286,48 +286,17 @@ interface CanonicalActor {
   address?: string;
 }
 
-function findActorEnrichment(actor: CanonicalActor, enrichedAvatarsMap?: Map<string, EnrichedAvatar>): EnrichedAvatar | undefined {
-  if (!enrichedAvatarsMap) return undefined;
-
-  const candidateKeys = new Set<string>();
-  if (actor.address) candidateKeys.add(actor.address.toLowerCase());
-  if (actor.canonicalId) {
-    candidateKeys.add(actor.canonicalId);
-    const canonicalUsernameKey = toUsernameCacheKey(actor.canonicalId);
-    if (canonicalUsernameKey) candidateKeys.add(canonicalUsernameKey);
-  }
-  const actorUsernameKey = toUsernameCacheKey(actor.key);
-  if (actorUsernameKey) candidateKeys.add(actorUsernameKey);
-  const resolvedUsernameKey = toUsernameCacheKey(actor.resolvedUsername);
-  if (resolvedUsernameKey) candidateKeys.add(resolvedUsernameKey);
-
-  for (const key of candidateKeys) {
-    const hit = enrichedAvatarsMap.get(key);
-    if (hit) return hit;
-  }
-
-  const normalizedActorKey = normalizeUsername(actor.resolvedUsername || actor.key || actor.display);
-  const actorAddress = (actor.address || '').toLowerCase();
-
-  for (const [, entry] of enrichedAvatarsMap) {
-    if (!entry) continue;
-    if (actorAddress && entry.address?.toLowerCase() === actorAddress) return entry;
-    if (normalizeUsername(entry.username) === normalizedActorKey) return entry;
-  }
-
+function findActorEnrichment(): undefined {
   return undefined;
 }
 
 /**
  * Build a canonical, deduplicated actor list from latestActorNames + primary actor.
- * Deduplicates by RESOLVED IDENTITY (address or canonical username from enrichment),
- * not by raw display text — so the same person under different name forms only gets one slot.
  */
 function buildCanonicalActors(
   latestActorNames: string[] | undefined,
   primaryUsername: string | null | undefined,
-  enrichedUsername: string | null | undefined,
-  enrichedAvatarsMap?: Map<string, EnrichedAvatar>,
+  _enrichedUsername?: string | null | undefined,
 ): CanonicalActor[] {
   const actors: CanonicalActor[] = [];
   const seenCanonicalIds = new Set<string>();
@@ -335,34 +304,6 @@ function buildCanonicalActors(
   const resolveCanonicalIdentity = (nameOrKey: string): { canonicalId: string; resolvedUsername?: string; address?: string } => {
     const normalized = normalizeUsername(nameOrKey);
     if (!normalized) return { canonicalId: '' };
-
-    const usernameKey = toUsernameCacheKey(normalized);
-    const byUsername = usernameKey ? enrichedAvatarsMap?.get(usernameKey) : undefined;
-
-    if (byUsername) {
-      const resolvedAddress = byUsername.address?.toLowerCase();
-      const resolvedUsername = normalizeUsername(byUsername.username);
-      return {
-        canonicalId: resolvedAddress || resolvedUsername || normalized,
-        resolvedUsername: byUsername.username || undefined,
-        address: resolvedAddress || undefined,
-      };
-    }
-
-    if (enrichedAvatarsMap) {
-      for (const [, candidate] of enrichedAvatarsMap) {
-        if (normalizeUsername(candidate.username) === normalized || candidate.address?.toLowerCase() === normalized) {
-          const resolvedAddress = candidate.address?.toLowerCase();
-          const resolvedUsername = normalizeUsername(candidate.username);
-          return {
-            canonicalId: resolvedAddress || resolvedUsername || normalized,
-            resolvedUsername: candidate.username || undefined,
-            address: resolvedAddress || undefined,
-          };
-        }
-      }
-    }
-
     return { canonicalId: normalized };
   };
 
