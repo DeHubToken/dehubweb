@@ -635,9 +635,6 @@ function NotificationItem({
   const resolveActorAvatar = (actor: CanonicalActor | null | undefined): string | undefined => {
     if (!actor) return undefined;
 
-    const resolved = resolveActorAvatarUrl(actor, enrichedAvatars);
-    if (resolved) return resolved;
-
     // Critical: for backend multi-actor aggregates, never borrow the primary actor avatar
     // for other actors (this causes "wrong face under correct name" mismatches).
     if (isBackendAggregatedMultiActor) return undefined;
