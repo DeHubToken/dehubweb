@@ -8,7 +8,7 @@
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Volume2, VolumeX, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye } from 'lucide-react';
+import { X, Volume2, VolumeX, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye, Gem } from 'lucide-react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -19,6 +19,8 @@ import { voteOnPost, getNFTComments, postComment, followUser, isFollowing as che
 import { toast } from 'sonner';
 import { CommentsWrapper } from './CommentsWrapper';
 import { CommentsSection } from './CommentsSection';
+import { TipModal } from '../modals/TipModal';
+import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Repeat2, Quote, Link } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -166,6 +168,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const { isAuthenticated, walletAddress } = useAuth();
 
   const currentShort = shorts[currentIndex];
+  const [showTipModal, setShowTipModal] = useState(false);
+  const { data: tipCount = 0 } = usePostTipCount(currentShort?.id);
   
   // View tracking for the current short
   const { onTimeUpdate: trackView } = useVideoViewTracking(currentShort?.id);
@@ -622,12 +626,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
       <div className={cn(
-        "w-12 h-12 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center transition-colors",
+        "w-10 h-10 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center transition-colors",
         active && activeColor
       )}>
-        <Icon className={cn("w-6 h-6", active ? activeColor : "text-white", active && "fill-current")} />
+        <Icon className={cn("w-5 h-5", active ? activeColor : "text-white", active && "fill-current")} />
       </div>
-      {count !== undefined && <span className="text-white text-xs">{formatCount(count)}</span>}
+      {count !== undefined && <span className="text-white text-[11px]">{formatCount(count)}</span>}
     </motion.button>
   );
 
@@ -648,7 +652,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         
         {/* Left Side Panel - Desktop Only: Action buttons */}
         {!isMobile && (
-          <div className="w-[80px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col items-center justify-center gap-6">
+          <div className="w-[60px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col items-center justify-center gap-3">
             {/* Navigation */}
             <button
               onClick={goToPrev}
@@ -659,7 +663,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             </button>
 
             {/* Action buttons */}
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-2.5">
               <ActionButton
                 icon={ThumbsUp}
                 count={localLikeCount}
@@ -682,11 +686,18 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
               {/* View count */}
               <div className="flex flex-col items-center gap-1">
-                <div className="w-12 h-12 bg-zinc-800/80 rounded-xl flex items-center justify-center">
-                  <Eye className="w-6 h-6 text-white" />
+                <div className="w-10 h-10 bg-zinc-800/80 rounded-xl flex items-center justify-center">
+                  <Eye className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-white text-xs">{currentShort.views || '0'}</span>
+                <span className="text-white text-[11px]">{currentShort.views || '0'}</span>
               </div>
+
+              {/* Tip */}
+              <ActionButton
+                icon={Gem}
+                count={tipCount}
+                onClick={() => setShowTipModal(true)}
+              />
 
               <ActionButton
                 icon={Share2}
@@ -704,12 +715,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
               <button
                 onClick={() => setIsMuted(prev => !prev)}
-                className="w-12 h-12 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center transition-colors"
+                className="w-10 h-10 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center transition-colors"
               >
                 {isMuted ? (
-                  <VolumeX className="w-6 h-6 text-white" />
+                  <VolumeX className="w-5 h-5 text-white" />
                 ) : (
-                  <Volume2 className="w-6 h-6 text-white" />
+                  <Volume2 className="w-5 h-5 text-white" />
                 )}
               </button>
             </div>
@@ -916,6 +927,15 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     <Eye className="w-8 h-8 text-white drop-shadow-lg" />
                     <span className="text-white text-xs font-medium drop-shadow-lg">{currentShort.views || '0'}</span>
                   </div>
+
+                  {/* Tip */}
+                  <button
+                    onClick={() => setShowTipModal(true)}
+                    className="flex flex-col items-center gap-1"
+                  >
+                    <Gem className="w-8 h-8 text-white drop-shadow-lg" />
+                    <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(tipCount)}</span>
+                  </button>
                   
                   {/* Bookmark */}
                   <motion.button
@@ -1104,6 +1124,16 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           tokenId={currentShort.id}
         />
       )}
+
+      {/* Tip Modal */}
+      <TipModal
+        open={showTipModal}
+        onOpenChange={setShowTipModal}
+        creatorAddress={currentShort?.creatorId || ''}
+        creatorName={currentShort?.creatorUsername || currentShort?.username || ''}
+        tokenId={currentShort?.id}
+        context="post"
+      />
     </motion.div>
   );
 }
