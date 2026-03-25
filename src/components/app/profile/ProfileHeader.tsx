@@ -120,6 +120,7 @@ export function ProfileHeader({
   translatedBio,
   setTranslatedBio,
   isBlocked = false,
+  isFetchingProfile = false,
 }: ProfileHeaderProps) {
   const navigate = useNavigate();
 
