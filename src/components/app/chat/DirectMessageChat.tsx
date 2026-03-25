@@ -344,22 +344,22 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
+  const dmFeeCacheKey = `dehub-dm-fee-${conversation.id}`;
   const [dmFee, setDmFeeRaw] = useState<DmFee | null>(() => {
-    // Hydrate from cache first, then fall back to conversation prop
-    const cacheKey = `dehub-dm-fee-${conversation.id}`;
     try {
-      const cached = localStorage.getItem(cacheKey);
+      const cached = localStorage.getItem(dmFeeCacheKey);
       if (cached) return JSON.parse(cached) as DmFee;
     } catch {}
     return conversation.dmFee || null;
   });
-  // Wrap setter to persist to localStorage
-  const setDmFee = (fee: DmFee | null) => {
-    setDmFeeRaw(fee);
-    const cacheKey = `dehub-dm-fee-${conversation.id}`;
-    if (fee) {
-      try { localStorage.setItem(cacheKey, JSON.stringify(fee)); } catch {}
-    }
+  const setDmFee: React.Dispatch<React.SetStateAction<DmFee | null>> = (valOrFn) => {
+    setDmFeeRaw(prev => {
+      const next = typeof valOrFn === 'function' ? (valOrFn as (p: DmFee | null) => DmFee | null)(prev) : valOrFn;
+      if (next) {
+        try { localStorage.setItem(dmFeeCacheKey, JSON.stringify(next)); } catch {}
+      }
+      return next;
+    });
   };
   const [isFreeAccessGranted, setIsFreeAccessGranted] = useState(false);
   const [isFreeAccessProcessing, setIsFreeAccessProcessing] = useState(false);
