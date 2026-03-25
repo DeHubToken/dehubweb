@@ -187,7 +187,7 @@ export function TipModal({
             </Button>
             <Button
               variant="glass"
-              className="flex-1 bg-yellow-500/25 hover:bg-yellow-500/35 border-yellow-500/40 text-yellow-300"
+              className="flex-1"
               onClick={handleSendTip}
               disabled={isTipping || !isValidAmount}
             >
