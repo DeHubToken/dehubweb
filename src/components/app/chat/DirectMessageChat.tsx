@@ -327,6 +327,7 @@ function MessagesSkeleton() {
 
 export function DirectMessageChat({ conversation, onBack }: DirectMessageChatProps) {
   const { user, walletAddress } = useAuth();
+  const queryClient = useQueryClient();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const [showJumpToLatest, setShowJumpToLatest] = useState(false);
