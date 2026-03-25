@@ -273,10 +273,6 @@ function normalizeUsername(name: string | null | undefined): string {
   return name.trim().replace(/^@/, '').toLowerCase();
 }
 
-function toUsernameCacheKey(name: string | null | undefined): string | null {
-  const normalized = normalizeUsername(name);
-  return normalized ? `username:${normalized}` : null;
-}
 
 interface CanonicalActor {
   display: string;
