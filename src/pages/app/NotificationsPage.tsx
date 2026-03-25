@@ -331,20 +331,19 @@ function buildCanonicalActors(
   return actors;
 }
 
-function resolveActorAvatarUrl(actor: CanonicalActor, enrichedAvatarsMap?: Map<string, EnrichedAvatar>): string | undefined {
-  return findActorEnrichment(actor, enrichedAvatarsMap)?.avatarUrl || undefined;
+function resolveActorAvatarUrl(_actor: CanonicalActor): string | undefined {
+  return undefined;
 }
 
 /** Resolve a safe profile link for an actor, avoiding broken display-name URLs */
-function resolveActorProfileLink(actor: CanonicalActor, enrichedAvatarsMap?: Map<string, EnrichedAvatar>): string | null {
-  const enriched = findActorEnrichment(actor, enrichedAvatarsMap);
-  const resolvedHandle = normalizeUsername(actor.resolvedUsername || enriched?.username);
+function resolveActorProfileLink(actor: CanonicalActor): string | null {
+  const resolvedHandle = normalizeUsername(actor.resolvedUsername);
   if (resolvedHandle && /^[a-z0-9._]+$/.test(resolvedHandle)) return `/${resolvedHandle}`;
 
   const safeKey = normalizeUsername(actor.key);
   if (safeKey && /^[a-z0-9._]+$/.test(safeKey)) return `/${safeKey}`;
 
-  const address = (actor.address || enriched?.address || '').toLowerCase();
+  const address = (actor.address || '').toLowerCase();
   return address ? `/${address}` : null;
 }
 function getNotificationContent(
