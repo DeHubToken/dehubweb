@@ -74,6 +74,7 @@ interface CommentsSectionProps {
   tokenId: string;
   onClose: () => void;
   initialTab?: 'replies' | 'quotes' | 'reposts' | 'search';
+  bottomAlignInput?: boolean;
 }
 
 // formatTimeAgo is now imported from @/lib/feed-utils
