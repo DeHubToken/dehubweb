@@ -968,13 +968,15 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
             {/* Desktop: Inline comments */}
             <div
-              className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0 overflow-y-auto"
+              className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0 overflow-hidden"
               onWheelCapture={(e) => e.stopPropagation()}
             >
-              <CommentsSection
-                tokenId={currentShort.id}
-                onClose={() => {}}
-              />
+              <div className="flex-1 min-h-0 [&>div]:h-full [&>div]:max-h-none [&>div]:mt-0 [&>div]:p-0">
+                <CommentsSection
+                  tokenId={currentShort.id}
+                  onClose={() => {}}
+                />
+              </div>
             </div>
           </div>
         )}
