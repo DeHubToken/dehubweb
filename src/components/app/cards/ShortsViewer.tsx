@@ -626,12 +626,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
       <div className={cn(
-        "w-12 h-12 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center transition-colors",
+        "w-10 h-10 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center transition-colors",
         active && activeColor
       )}>
-        <Icon className={cn("w-6 h-6", active ? activeColor : "text-white", active && "fill-current")} />
+        <Icon className={cn("w-5 h-5", active ? activeColor : "text-white", active && "fill-current")} />
       </div>
-      {count !== undefined && <span className="text-white text-xs">{formatCount(count)}</span>}
+      {count !== undefined && <span className="text-white text-[11px]">{formatCount(count)}</span>}
     </motion.button>
   );
 
