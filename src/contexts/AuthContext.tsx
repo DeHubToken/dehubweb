@@ -382,11 +382,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
           }
         } else if (token && isTokenExpired()) {
-          console.log('Token expired, clearing session');
-          clearAuthSession();
-          localStorage.removeItem('dehub_user');
-          setUser(null);
-          setWalletAddress(null);
+          // Token expired — try refresh token before logging user out
+          console.log('[Auth] Token expired on mount, attempting silent refresh...');
+          const refreshed = await refreshAccessToken();
+          if (refreshed && savedWallet) {
+            console.log('[Auth] ✓ Silent refresh on mount succeeded, restoring session');
+            try {
+              const userData = await getAccountInfo(savedWallet);
+              const normalizedUser = normalizeUser(userData, savedWallet);
+              setUser(normalizedUser);
+              setWalletAddress(savedWallet);
+              localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
+              if (!normalizedUser.username) setRequiresUsername(true);
+            } catch {
+              // If account fetch fails, at least keep the cached user
+              const cachedUser = localStorage.getItem('dehub_user');
+              if (cachedUser) {
+                try {
+                  const parsed = JSON.parse(cachedUser);
+                  setUser(parsed);
+                  setWalletAddress(savedWallet);
+                } catch { /* ignore */ }
+              }
+            }
+          } else {
+            console.log('[Auth] Refresh failed, clearing expired session');
+            clearAuthSession();
+            localStorage.removeItem('dehub_user');
+            setUser(null);
+            setWalletAddress(null);
+          }
         } else if (!token) {
           // No token at all — clear any stale hydrated state
           setUser(null);
