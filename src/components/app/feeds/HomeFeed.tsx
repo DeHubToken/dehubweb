@@ -1301,9 +1301,27 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         )}
       </AnimatePresence>
 
-      {/* Active category chips bar */}
-      {selectedCategories.length > 0 && (
+      {/* Active filter chips bar (sort, date, categories) */}
+      {(selectedSort.value !== 'latest' || selectedDate.value !== 'all' || selectedCategories.length > 0) && (
         <div className="flex items-center gap-1.5 flex-wrap px-1">
+          {selectedSort.value !== 'latest' && (
+            <button
+              onClick={() => setSelectedSort(SORT_OPTIONS[0])}
+              className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+            >
+              <span className="leading-[1]">{selectedSort.label}</span>
+              <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
+            </button>
+          )}
+          {selectedDate.value !== 'all' && (
+            <button
+              onClick={() => setSelectedDate(DATE_FILTER_OPTIONS[0])}
+              className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+            >
+              <span className="leading-[1]">{selectedDate.label}</span>
+              <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
+            </button>
+          )}
           {selectedCategories.map(catId => {
             const catObj = categories.find(c => c.id === catId);
             return (
@@ -1318,7 +1336,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             );
           })}
           <button
-            onClick={() => setSelectedCategories([])}
+            onClick={() => {
+              setSelectedSort(SORT_OPTIONS[0]);
+              setSelectedDate(DATE_FILTER_OPTIONS[0]);
+              setSelectedCategories([]);
+            }}
             className="px-2 py-1 rounded-lg text-[10px] text-zinc-500 hover:text-white transition-colors"
           >
             Clear all
