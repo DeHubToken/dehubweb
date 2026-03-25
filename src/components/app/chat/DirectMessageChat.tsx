@@ -292,11 +292,13 @@ function MessageBubble({
             (Date.now() - new Date(message.createdAt).getTime() < 90_000) && (
             <span className="text-amber-500/70">· confirming payment...</span>
           )}
-          {isOwnMessage && message.isRead && 
-            (message.paymentStatus !== 'pending' || 
+          {isOwnMessage &&
+            (message.paymentStatus !== 'pending' ||
               (message.paymentTxHash && confirmedTxHashes.current.has(message.paymentTxHash.toLowerCase())) ||
               (Date.now() - new Date(message.createdAt).getTime() >= 90_000)) && (
-            <span className="text-white">✓✓</span>
+            <span className={message.isRead ? "text-white" : "text-zinc-500"}>
+              {message.isRead ? "✓✓" : "✓"}
+            </span>
           )}
         </div>
       </div>
