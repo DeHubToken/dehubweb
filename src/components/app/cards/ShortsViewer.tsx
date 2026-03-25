@@ -8,7 +8,7 @@
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Volume2, VolumeX, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye, Gem } from 'lucide-react';
+import { X, Volume2, VolumeX, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye, Gem, Info } from 'lucide-react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -983,10 +983,17 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         {!isMobile && (
           <div className="w-[268px] lg:w-[320px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col">
             {/* Creator Info - Top */}
-            <div className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3">
+            <div className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3 relative">
+              <button
+                onClick={() => { navigate(`/app/post/${currentShort.id}/info`); onClose(); }}
+                className="absolute top-3 right-3 lg:top-4 lg:right-4 w-8 h-8 bg-white/[0.08] hover:bg-white/15 rounded-lg flex items-center justify-center transition-colors"
+                aria-label="Post info"
+              >
+                <Info className="w-4 h-4 text-white/60" />
+              </button>
               <button
                 onClick={() => handleNavigateToProfile()}
-                className="flex items-center gap-2 lg:gap-3 w-full text-left"
+                className="flex items-center gap-2 lg:gap-3 w-full text-left pr-10"
               >
                 <Avatar className="w-10 h-10 lg:w-12 lg:h-12 border-2 border-white/20 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
                   <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
