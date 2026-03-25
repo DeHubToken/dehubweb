@@ -336,13 +336,13 @@ export function useVoteFeatureRequest() {
           pages: old.pages.map((page: FeatureRequest[]) =>
             page.map((fr) => {
               if (fr.id !== featureRequestId) return fr;
-              let voteDelta = voteType;
+              let voteDelta: number = voteType;
               let likeDelta = 0;
               let dislikeDelta = 0;
 
               if (currentVote === voteType) {
                 // Toggle off
-                voteDelta = -voteType;
+                voteDelta = -voteType as number;
                 likeDelta = voteType === 1 ? -1 : 0;
                 dislikeDelta = voteType === -1 ? -1 : 0;
               } else if (currentVote) {
