@@ -252,6 +252,8 @@ export function ProfileHeader({
                   <Ban className="w-4 h-4" />
                   Blocked
                 </Button>
+              ) : isFetchingProfile && !isFollowing && !isPending ? (
+                <Skeleton className="h-9 w-24 rounded-xl bg-white/10" />
               ) : (
                 <>
                   {isPending && !isFollowing && (
