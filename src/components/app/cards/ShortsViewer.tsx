@@ -941,7 +941,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
                   <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                 </Avatar>
-                <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                <div className="flex flex-col flex-1 min-w-0">
                   {currentShort.displayName && (
                     <span className="text-white font-semibold text-sm lg:text-base truncate hover:underline">{currentShort.displayName}</span>
                   )}
