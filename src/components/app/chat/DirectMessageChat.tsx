@@ -292,6 +292,11 @@ function MessageBubble({
             (Date.now() - new Date(message.createdAt).getTime() < 90_000) && (
             <span className="text-amber-500/70">· confirming payment...</span>
           )}
+          {isOwnMessage && message.paymentStatus === 'pending' &&
+            !(message.paymentTxHash && confirmedTxHashes.current.has(message.paymentTxHash.toLowerCase())) &&
+            (Date.now() - new Date(message.createdAt).getTime() < 90_000) && (
+            <Loader2 className="w-3 h-3 animate-spin text-zinc-500" />
+          )}
           {isOwnMessage &&
             (message.paymentStatus !== 'pending' ||
               (message.paymentTxHash && confirmedTxHashes.current.has(message.paymentTxHash.toLowerCase())) ||
