@@ -663,7 +663,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             </button>
 
             {/* Action buttons */}
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-2.5">
               <ActionButton
                 icon={ThumbsUp}
                 count={localLikeCount}
