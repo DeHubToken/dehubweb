@@ -629,7 +629,7 @@ function NotificationItem({
     ['like', 'comment', 'repost', 'following'].includes(notification.type as string) &&
     bundle.bundleType !== 'same-actor';
 
-  const primaryKey = normalizeUsername(enriched?.username || notification.actorUsername);
+  const primaryKey = normalizeUsername(notification.actorUsername);
   const primaryAddress = notification.actorAddress?.toLowerCase();
 
   const resolveActorAvatar = (actor: CanonicalActor | null | undefined): string | undefined => {
