@@ -800,7 +800,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     </button>
                     <button
                       onClick={() => handleNavigateToProfile()}
-                      className="flex items-center gap-1.5 min-w-0"
+                      className="flex flex-col min-w-0"
                     >
                       {currentShort.displayName && (
                         <span className="text-white font-semibold text-base drop-shadow-lg truncate leading-tight">{currentShort.displayName}</span>
