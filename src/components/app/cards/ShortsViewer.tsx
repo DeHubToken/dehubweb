@@ -686,11 +686,18 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
               {/* View count */}
               <div className="flex flex-col items-center gap-1">
-                <div className="w-12 h-12 bg-zinc-800/80 rounded-xl flex items-center justify-center">
-                  <Eye className="w-6 h-6 text-white" />
+                <div className="w-10 h-10 bg-zinc-800/80 rounded-xl flex items-center justify-center">
+                  <Eye className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-white text-xs">{currentShort.views || '0'}</span>
+                <span className="text-white text-[11px]">{currentShort.views || '0'}</span>
               </div>
+
+              {/* Tip */}
+              <ActionButton
+                icon={Gem}
+                count={tipCount}
+                onClick={() => setShowTipModal(true)}
+              />
 
               <ActionButton
                 icon={Share2}
@@ -708,12 +715,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
               <button
                 onClick={() => setIsMuted(prev => !prev)}
-                className="w-12 h-12 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center transition-colors"
+                className="w-10 h-10 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center transition-colors"
               >
                 {isMuted ? (
-                  <VolumeX className="w-6 h-6 text-white" />
+                  <VolumeX className="w-5 h-5 text-white" />
                 ) : (
-                  <Volume2 className="w-6 h-6 text-white" />
+                  <Volume2 className="w-5 h-5 text-white" />
                 )}
               </button>
             </div>
