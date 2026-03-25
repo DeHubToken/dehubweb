@@ -75,12 +75,14 @@ function persistReadConversation(conversationId: string): void {
 
 // ─── Query keys ───────────────────────────────────────────────────────────────
 
+const MESSAGES_BASE_KEY = ['messages'] as const;
+
 export const messagesKeys = {
-  all: ['messages'] as const,
-  conversations: () => [...messagesKeys.all, 'conversations'] as const,
-  conversation: (id: string) => [...messagesKeys.all, 'conversation', id] as const,
-  messages: (conversationId: string) => [...messagesKeys.all, 'thread', conversationId] as const,
-  userSearch: (query: string) => [...messagesKeys.all, 'userSearch', query] as const,
+  all: MESSAGES_BASE_KEY,
+  conversations: () => [...MESSAGES_BASE_KEY, 'conversations'] as const,
+  conversation: (id: string) => [...MESSAGES_BASE_KEY, 'conversation', id] as const,
+  messages: (conversationId: string) => [...MESSAGES_BASE_KEY, 'thread', conversationId] as const,
+  userSearch: (query: string) => [...MESSAGES_BASE_KEY, 'userSearch', query] as const,
 };
 
 // ─── Conversations ────────────────────────────────────────────────────────────

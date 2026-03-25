@@ -24,8 +24,8 @@ export function getSocket(): Socket {
 
   if (!socket) {
     socket = io(`${DEHUB_API_BASE}/livechat`, {
-      auth: { token: token || undefined },
-      query: { token: token || undefined },
+      auth: token ? { token } : {},
+      query: token ? { token } : {},
       transports: ['polling', 'websocket'],
       upgrade: true,
       forceNew: true,
