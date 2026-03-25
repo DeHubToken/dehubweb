@@ -352,7 +352,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     } catch {}
     if (conversation.dmFee) return conversation.dmFee;
     // Detect fee immediately from otherUser search data so banner shows before any API call
-    const otherRaw = otherUser as any;
+    const otherRaw = (conversation.otherUser || conversation.participants?.[0]) as any;
     const dmS = otherRaw?.dmSettings || otherRaw?.dmSetting;
     const settings = Array.isArray(dmS) ? dmS[0] : dmS;
     const pmFee = settings?.perMessageFee;
