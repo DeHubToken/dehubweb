@@ -1444,7 +1444,7 @@ export default function NotificationsPage() {
           ) : (
             <div className="divide-y divide-zinc-800">
               {(() => {
-                const bundled = bundleNotifications(notifications.filter(n => n && n.id), enrichedAvatars);
+                const bundled = bundleNotifications(notifications.filter(n => n && n.id));
                 return bundled.map((bundle) => (
                   <NotificationItem
                     key={bundle.primary.id}
@@ -1452,7 +1452,6 @@ export default function NotificationsPage() {
                     bundle={bundle}
                     onMarkAsRead={handleMarkAsRead}
                     isMarkingAsRead={bundle.allIds.includes(markingNotificationId || '')}
-                    enrichedAvatars={enrichedAvatars}
                   />
                 ));
               })()}
