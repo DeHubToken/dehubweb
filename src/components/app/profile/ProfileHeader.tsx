@@ -1,6 +1,7 @@
 import { 
   UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2, Check, Ban
 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -425,13 +426,19 @@ export function ProfileHeader({
                   }}
                   className="hover:underline"
                 >
-                  <span className="font-bold text-white">{profile.following != null ? profile.following.toLocaleString() : '–'}</span>
-                  <span className="text-zinc-500 ml-1">{t('profile.following')}</span>
+                  {profile.following != null ? (
+                    <><span className="font-bold text-white">{profile.following.toLocaleString()}</span><span className="text-zinc-500 ml-1">{t('profile.following')}</span></>
+                  ) : (
+                    <Skeleton className="h-4 w-16 rounded bg-white/10" />
+                  )}
                 </button>
               ) : (
-                <div>
-                  <span className="font-bold text-white">{profile.following != null ? profile.following.toLocaleString() : '–'}</span>
-                  <span className="text-zinc-500 ml-1">{t('profile.following')}</span>
+                <div className="flex items-center">
+                  {profile.following != null ? (
+                    <><span className="font-bold text-white">{profile.following.toLocaleString()}</span><span className="text-zinc-500 ml-1">{t('profile.following')}</span></>
+                  ) : (
+                    <Skeleton className="h-4 w-16 rounded bg-white/10" />
+                  )}
                 </div>
               )}
               {(showFollowersFollowing || isViewingOwnProfile) ? (
@@ -442,13 +449,19 @@ export function ProfileHeader({
                   }}
                   className="hover:underline"
                 >
-                  <span className="font-bold text-white">{profile.followers != null ? profile.followers.toLocaleString() : '–'}</span>
-                  <span className="text-zinc-500 ml-1">{t('profile.followers')}</span>
+                  {profile.followers != null ? (
+                    <><span className="font-bold text-white">{profile.followers.toLocaleString()}</span><span className="text-zinc-500 ml-1">{t('profile.followers')}</span></>
+                  ) : (
+                    <Skeleton className="h-4 w-16 rounded bg-white/10" />
+                  )}
                 </button>
               ) : (
-                <div>
-                  <span className="font-bold text-white">{profile.followers != null ? profile.followers.toLocaleString() : '–'}</span>
-                  <span className="text-zinc-500 ml-1">{t('profile.followers')}</span>
+                <div className="flex items-center">
+                  {profile.followers != null ? (
+                    <><span className="font-bold text-white">{profile.followers.toLocaleString()}</span><span className="text-zinc-500 ml-1">{t('profile.followers')}</span></>
+                  ) : (
+                    <Skeleton className="h-4 w-16 rounded bg-white/10" />
+                  )}
                 </div>
               )}
             </div>
