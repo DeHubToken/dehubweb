@@ -83,6 +83,7 @@ interface ProfileHeaderProps {
   setTranslatedBio: (bio: string | null) => void;
   // Block state
   isBlocked?: boolean;
+  isFetchingProfile?: boolean;
 }
 
 export function ProfileHeader({
