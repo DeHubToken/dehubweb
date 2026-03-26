@@ -73,6 +73,22 @@ export interface DmSocketError {
 let dmSocket: Socket | null = null;
 let currentToken: string | null = null;
 
+// Persistent listener registry — survives socket replacement on token refresh.
+// Maps event name → set of callbacks that must always be attached to the active socket.
+type AnyFn = (...args: any[]) => void;
+const persistentListeners: Map<string, Set<AnyFn>> = new Map();
+
+/** Register a persistent listener that auto-reattaches to new socket instances. */
+function addPersistentListener(event: string, cb: AnyFn): () => void {
+  if (!persistentListeners.has(event)) persistentListeners.set(event, new Set());
+  persistentListeners.get(event)!.add(cb);
+  getDmSocket().on(event, cb);
+  return () => {
+    persistentListeners.get(event)?.delete(cb);
+    dmSocket?.off(event, cb); // use current dmSocket at cleanup time
+  };
+}
+
 function getDmSocket(): Socket {
   const token = getAuthToken();
 
@@ -109,6 +125,13 @@ function getDmSocket(): Socket {
         'X-Platform': 'web',
       },
     });
+
+    // Re-attach all persistent listeners to the new socket instance
+    for (const [event, cbs] of persistentListeners) {
+      for (const cb of cbs) {
+        dmSocket.on(event, cb);
+      }
+    }
 
     dmSocket.on('connect', () => {
       console.log('[DM Socket] Connected', dmSocket?.id);
@@ -298,39 +321,27 @@ export function emitDownloadReceipt(dmId: string, messageId: string): void {
 // ─── Event listeners (all return an unsubscribe fn for useEffect cleanup) ─────
 
 export function onDmSendMessage(cb: (msg: DmMessage) => void): () => void {
-  const socket = getDmSocket();
-  socket.on('sendMessage', cb);
-  return () => socket.off('sendMessage', cb);
+  return addPersistentListener('sendMessage', cb as AnyFn);
 }
 
 export function onEditMessage(cb: (data: EditedMessage) => void): () => void {
-  const socket = getDmSocket();
-  socket.on('editMessage', cb);
-  return () => socket.off('editMessage', cb);
+  return addPersistentListener('editMessage', cb as AnyFn);
 }
 
 export function onDmDeleteMessage(cb: (data: DeletedMessage) => void): () => void {
-  const socket = getDmSocket();
-  socket.on('deleteMessage', cb);
-  return () => socket.off('deleteMessage', cb);
+  return addPersistentListener('deleteMessage', cb as AnyFn);
 }
 
 export function onReadReceipt(cb: (data: ReadReceiptData) => void): () => void {
-  const socket = getDmSocket();
-  socket.on('readReceipt', cb);
-  return () => socket.off('readReceipt', cb);
+  return addPersistentListener('readReceipt', cb as AnyFn);
 }
 
 export function onConversationDeleted(cb: (data: ConversationDeletedData) => void): () => void {
-  const socket = getDmSocket();
-  socket.on('conversationDeleted', cb);
-  return () => socket.off('conversationDeleted', cb);
+  return addPersistentListener('conversationDeleted', cb as AnyFn);
 }
 
 export function onFeeConfirmed(cb: (data: FeeConfirmedData) => void): () => void {
-  const socket = getDmSocket();
-  socket.on('feeConfirmed', cb);
-  return () => socket.off('feeConfirmed', cb);
+  return addPersistentListener('feeConfirmed', cb as AnyFn);
 }
 
 /** Revalidated message (e.g. after media upload completes). */
@@ -340,9 +351,7 @@ export interface ReValidateMessageData {
 }
 
 export function onReValidateMessage(cb: (data: ReValidateMessageData) => void): () => void {
-  const socket = getDmSocket();
-  socket.on('ReValidateMessage', cb);
-  return () => socket.off('ReValidateMessage', cb);
+  return addPersistentListener('ReValidateMessage', cb as AnyFn);
 }
 
 export function onDmError(cb: (err: DmSocketError) => void): () => void {
