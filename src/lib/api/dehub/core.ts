@@ -155,9 +155,10 @@ export async function apiCall<T>(
     body?: Record<string, unknown>;
     params?: Record<string, string | number | undefined>;
     requiresAuth?: boolean;
+    _retry?: boolean;
   } = {},
 ): Promise<T> {
-  const { method = "GET", body, params = {}, requiresAuth = false } = options;
+  const { method = "GET", body, params = {}, requiresAuth = false, _retry = false } = options;
 
   const url = new URL(endpoint, DEHUB_API_BASE);
   Object.entries(params).forEach(([key, value]) => {
