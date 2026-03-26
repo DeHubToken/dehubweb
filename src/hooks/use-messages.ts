@@ -247,7 +247,9 @@ export function useMessages(conversationId: string | null) {
             });
 
             if (optimisticIdx >= 0) {
-              newPages[0].items[optimisticIdx] = normalizedMsg;
+              // Preserve `author` from the temp message — the server socket event doesn't
+              // include it, but we need it later so onReadReceipt can identify sent messages.
+              newPages[0].items[optimisticIdx] = { author: firstItems[optimisticIdx].author, ...normalizedMsg };
             } else {
               newPages[0] = { ...newPages[0], items: [normalizedMsg, ...firstItems] };
             }
@@ -325,6 +327,7 @@ export function useMessages(conversationId: string | null) {
           const pages = old.pages.map((page: any) => ({
             ...page,
             items: page.items.map((m: DmMessage) => {
+              // author is 'me' for own messages (set by parseDmMessage or preserved on reconcile)
               if (m.author !== 'me' || m.isRead) return m;
               return { ...m, isRead: true };
             }),
@@ -332,7 +335,9 @@ export function useMessages(conversationId: string | null) {
           return { ...old, pages };
         }
       );
-      queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
+      // Do NOT invalidate here — an immediate refetch races with backend processing
+      // and overwrites the optimistic isRead:true with the still-stale server value.
+      // The 5s refetchInterval will sync naturally once the backend has caught up.
     });
 
     return () => {
