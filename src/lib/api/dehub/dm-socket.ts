@@ -100,8 +100,11 @@ function getDmSocket(): Socket {
     const tokenTrim = token?.replace(/^Bearer\s+/i, '').trim();
     if (tokenTrim) handshakeAuth.token = `Bearer ${tokenTrim}`;
     if (address) handshakeAuth.address = address.toLowerCase();
-    // Include MongoDB _id so the server can register the Redis session under user:{_id},
-    // which is the key it uses when looking up who to push readReceipt events to.
+    // Server checks clientType === 'mobile' before processing readReceipt events
+    // (updating isRead in DB + pushing readReceipt to the sender). Without this,
+    // web clients' readReceipts are silently dropped.
+    handshakeAuth.clientType = 'mobile';
+    // Include MongoDB _id for Redis session lookup (readReceipt push uses user:{_id} key)
     try {
       const userJson = typeof window !== 'undefined' ? localStorage.getItem('dehub_user') : null;
       if (userJson) {
