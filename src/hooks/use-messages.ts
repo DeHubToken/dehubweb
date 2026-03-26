@@ -181,6 +181,33 @@ export function useMessages(conversationId: string | null) {
         (conversationId.startsWith('new_') &&
           msg.sender?.address?.toLowerCase() === conversationId.replace('new_', '').toLowerCase());
       if (!isMatch) return;
+
+      // Implied read receipt: if the OTHER user just sent a message, they clearly
+      // have the chat open and have read our earlier messages. The server doesn't
+      // push readReceipt for web clients, so we infer it from their reply.
+      const senderAddress = msg.sender?.address?.toLowerCase();
+      const senderUserId = msg.sender?._id;
+      const isFromOther =
+        (senderAddress && walletAddress && senderAddress !== walletAddress.toLowerCase()) ||
+        (senderUserId && user?._id && senderUserId !== user._id);
+      if (isFromOther) {
+        const msgTime = new Date(msg.createdAt ?? '').getTime();
+        queryClient.setQueryData(messagesKeys.messages(conversationId), (old: any) => {
+          if (!old?.pages) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page: any) => ({
+              ...page,
+              items: page.items.map((m: DmMessage) => {
+                if (m.author !== 'me' || m.isRead) return m;
+                const mTime = new Date(m.createdAt ?? '').getTime();
+                // Mark as read any of our messages sent before their reply
+                return mTime <= msgTime ? { ...m, isRead: true } : m;
+              }),
+            })),
+          };
+        });
+      }
       queryClient.setQueryData(
         messagesKeys.messages(conversationId),
         (old: any) => {
