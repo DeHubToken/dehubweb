@@ -525,6 +525,9 @@ export async function getMessages(
       .map(raw => parseDmMessage(raw, myAddress))
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
+    const isReadCount = items.filter(m => m.isRead).length;
+    const myMsgCount = items.filter(m => m.author === 'me').length;
+    console.log('[DM API] getMessages parsed', { total: items.length, isReadCount, myMsgCount });
     return { items, totalCount, hasMore };
   } catch (error) {
     console.error('[DM API] getMessages failed:', error);
