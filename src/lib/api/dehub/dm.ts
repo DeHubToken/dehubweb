@@ -483,8 +483,6 @@ export async function getMessages(
   page: number = 0,
   limit: number = 30
 ): Promise<{ items: DmMessage[]; totalCount: number; hasMore: boolean }> {
-  console.log('[DM API] getMessages called', { conversationId, page, limit });
-
   const myAddress = (localStorage.getItem('dehub_wallet') || '').toLowerCase();
 
   // Virtual conversations no longer supported (legacy Supabase DMs removed)
@@ -497,8 +495,6 @@ export async function getMessages(
       params: { page, limit },
       requiresAuth: true,
     });
-    console.log('[DM API] getMessages raw response:', response);
-
     let rawItems: any[] = [];
     let hasMore = false;
     let totalCount = 0;
@@ -528,10 +524,6 @@ export async function getMessages(
     const items = rawItems
       .map(raw => parseDmMessage(raw, myAddress))
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-    const readCount = items.filter(m => m.isRead).length;
-    const myMsgCount = items.filter(m => m.author === 'me').length;
-    console.log('[DM API] getMessages parsed', { total: items.length, isReadCount: readCount, myMsgCount });
 
     return { items, totalCount, hasMore };
   } catch (error) {

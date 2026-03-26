@@ -96,16 +96,23 @@ function getDmSocket(): Socket {
     loadPendingReceipts();
     const address = typeof window !== 'undefined' ? localStorage.getItem('dehub_wallet') : null;
 
+    // Match mobile WebSocketClient in chat-system.md: raw JWT (not "Bearer …"), plus address for Redis user:{address} sessions.
+    const rawJwt = token?.replace(/^Bearer\s+/i, '').trim() ?? '';
+
     const handshakeAuth: Record<string, string> = {};
-    if (token) handshakeAuth.token = `Bearer ${token}`;
+    if (rawJwt) handshakeAuth.token = rawJwt;
     if (address) handshakeAuth.address = address.toLowerCase();
+    handshakeAuth.clientType = 'web';
+    handshakeAuth.platform = 'web';
+    handshakeAuth.appVersion = '0.0.0';
 
     dmSocket = io(`${DEHUB_API_BASE}/dm`, {
       auth: handshakeAuth,
       query: handshakeAuth,
       path: '/socket.io',
-      transports: ['polling'],
-      upgrade: false,
+      // Same as mobile: polling then upgrade to websocket (long-polling-only was unreliable for server push)
+      transports: ['polling', 'websocket'],
+      upgrade: true,
       forceNew: true,
       autoConnect: true,
       reconnection: true,
@@ -285,14 +292,12 @@ function flushReadReceiptQueue(socket: Socket): void {
   }
   pendingReadReceipts.clear();
   savePendingReceipts();
-  console.log('[DM Socket] Flushed pending read receipts');
 }
 
 export function emitReadReceipt(dmId: string): void {
   const socket = getDmSocket();
   pendingReadReceipts.add(dmId);
   savePendingReceipts();
-  console.log('[DM Socket] emitReadReceipt', { dmId, connected: socket.connected });
 
   if (socket.connected) {
     flushReadReceiptQueue(socket);
