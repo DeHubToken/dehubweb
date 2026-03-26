@@ -78,7 +78,7 @@ export function ChainSelector({
       className={cn(
         "flex items-center justify-center transition-all",
         variant === 'icon' 
-          ? "w-9 h-9 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40"
+          ? "w-7 h-7 hover:opacity-80"
           : "gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10",
         className
       )}
