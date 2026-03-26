@@ -295,6 +295,7 @@ export function emitReadReceipt(dmId: string): void {
   pendingReadReceipts.add(dmId);
   savePendingReceipts();
 
+  console.log('[DM Socket] emitReadReceipt', { dmId, connected: socket.connected });
   if (socket.connected) {
     flushReadReceiptQueue(socket);
   }

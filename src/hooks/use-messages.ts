@@ -318,6 +318,7 @@ export function useMessages(conversationId: string | null) {
 
     // When the other person reads, mark all our sent messages as read
     const unsubReadReceipt = onReadReceipt((data: any) => {
+      console.log('[DM] onReadReceipt fired', { data, conversationId });
       const dmId = data?.dmId || data?.conversationId;
       if (!dmId || dmId !== conversationId) return;
       queryClient.setQueryData(
