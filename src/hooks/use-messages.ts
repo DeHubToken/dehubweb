@@ -43,6 +43,7 @@ import {
   onDmDeleteMessage,
   onReValidateMessage,
   onFeeConfirmed,
+  onReadReceipt,
   type SendMessagePayload,
 } from '@/lib/api/dehub/dm-socket';
 
@@ -313,12 +314,29 @@ export function useMessages(conversationId: string | null) {
       );
     });
 
+    // When the other person reads, mark all our sent messages as read
+    const unsubReadReceipt = onReadReceipt(({ dmId }) => {
+      if (dmId !== conversationId) return;
+      queryClient.setQueryData(
+        messagesKeys.messages(conversationId),
+        (old: any) => {
+          if (!old?.pages) return old;
+          const pages = old.pages.map((page: any) => ({
+            ...page,
+            items: page.items.map((m: DmMessage) => m.isRead ? m : { ...m, isRead: true }),
+          }));
+          return { ...old, pages };
+        }
+      );
+    });
+
     return () => {
       unsubSend();
       unsubEdit();
       unsubDelete();
       unsubFeeConfirmed();
       unsubRevalidate();
+      unsubReadReceipt();
     };
   }, [conversationId, isAuthenticated, queryClient, walletAddress, user?._id]);
 
