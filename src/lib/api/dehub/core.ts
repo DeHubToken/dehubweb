@@ -193,16 +193,15 @@ export async function apiCall<T>(
     const errorData = await response.json().catch(() => ({}));
     
     const errorMessage = (errorData.message || errorData.error || '').toLowerCase();
-    const isAuthError = 
-      response.status === 401 || 
-      errorMessage.includes('unauthorized') ||
-      errorMessage.includes('invalid token') ||
-      errorMessage.includes('token expired') ||
-      errorMessage.includes('jwt');
+    
+    // Only attempt refresh on explicit "access token expired" 401s
+    const isExpiredToken =
+      response.status === 401 &&
+      errorMessage.includes('access token expired');
 
-    // Auto-retry on 401 using refresh token (skip for the refresh endpoint itself)
-    if ((response.status === 401 || (response.status === 403 && isAuthError)) &&
-        !endpoint.includes('/api/auth/refresh')) {
+    // Auto-retry on expired token using refresh token
+    // Skip if: already retried, refresh endpoint itself, or not an expiry error
+    if (isExpiredToken && !_retry && !endpoint.includes('/api/auth/refresh')) {
       
       if (!isRefreshing) {
         isRefreshing = true;
@@ -211,8 +210,8 @@ export async function apiCall<T>(
 
         if (refreshed) {
           processQueue(null);
-          // Retry the original request with the new token
-          return apiCall<T>(endpoint, options);
+          // Retry the original request with the new token and _retry flag
+          return apiCall<T>(endpoint, { ...options, _retry: true });
         } else {
           const authErr = new AuthenticationError('Session expired. Please sign in again.');
           processQueue(authErr);
@@ -222,14 +221,22 @@ export async function apiCall<T>(
         // Another refresh is in progress — queue this request
         return new Promise<T>((resolve, reject) => {
           failedQueue.push({
-            resolve: () => resolve(apiCall<T>(endpoint, options)),
+            resolve: () => resolve(apiCall<T>(endpoint, { ...options, _retry: true })),
             reject,
           });
         });
       }
     }
 
-    if ((response.status === 403 && isAuthError) || response.status === 401) {
+    // Any 401 or auth-related 403 that isn't a refreshable expiry → throw AuthenticationError
+    const isAuthError = 
+      response.status === 401 || 
+      errorMessage.includes('unauthorized') ||
+      errorMessage.includes('invalid token') ||
+      errorMessage.includes('token expired') ||
+      errorMessage.includes('jwt');
+
+    if (response.status === 401 || (response.status === 403 && isAuthError)) {
       throw new AuthenticationError('Session expired. Please sign in again.');
     }
     

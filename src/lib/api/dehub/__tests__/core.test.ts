@@ -202,4 +202,37 @@ describe('apiCall', () => {
     expect(opts?.method).toBe('POST');
     expect(opts?.body).toBe(JSON.stringify({ foo: 'bar' }));
   });
+
+  it('does not retry twice on repeated 401 after refresh', async () => {
+    localStorage.setItem('dehub_token', 'old-token');
+    localStorage.setItem('dehub_refresh_token', 'rt_valid');
+
+    const expiredResponse = () =>
+      new Response(JSON.stringify({ message: 'Access token expired' }), { status: 401 });
+
+    // First call: 401 expired → refresh succeeds → retry also 401 expired → should NOT refresh again
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(expiredResponse()) // original request
+      .mockResolvedValueOnce( // refresh endpoint succeeds
+        new Response(JSON.stringify({ accessToken: 'new-token', refreshToken: 'rt_new', expiresIn: 900 }), { status: 200 })
+      )
+      .mockResolvedValueOnce(expiredResponse()); // retried request still 401
+
+    await expect(apiCall('/api/test')).rejects.toThrow(AuthenticationError);
+    // Should have called fetch exactly 3 times (original, refresh, retry) — no second refresh
+    expect(fetchSpy).toHaveBeenCalledTimes(3);
+  });
+
+  it('only refreshes on "Access token expired" message, not other 401s', async () => {
+    localStorage.setItem('dehub_token', 'some-token');
+    localStorage.setItem('dehub_refresh_token', 'rt_valid');
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ message: 'Unauthorized' }), { status: 401 })
+    );
+
+    await expect(apiCall('/api/test')).rejects.toThrow(AuthenticationError);
+    // Should only call fetch once — no refresh attempt
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
 });
