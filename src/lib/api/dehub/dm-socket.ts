@@ -14,12 +14,6 @@ import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
 import type { DmMessage, DmConversation, DmMsgType } from './dm';
 
-/** Get wallet address from localStorage (set on login). */
-function getWalletAddress(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem('dehub_wallet');
-}
-
 // ─── Socket event payload types ───────────────────────────────────────────────
 
 export interface SendMessagePayload {
@@ -100,15 +94,14 @@ function getDmSocket(): Socket {
   if (!dmSocket) {
     currentToken = token;
     loadPendingReceipts();
-    const address = getWalletAddress();
+    const address = typeof window !== 'undefined' ? localStorage.getItem('dehub_wallet') : null;
+
     const handshakeAuth: Record<string, string> = {};
     if (token) handshakeAuth.token = `Bearer ${token}`;
     if (address) handshakeAuth.address = address.toLowerCase();
-    handshakeAuth.clientType = 'web';
-    handshakeAuth.platform = 'web';
 
     dmSocket = io(`${DEHUB_API_BASE}/dm`, {
-      auth: Object.keys(handshakeAuth).length ? handshakeAuth : undefined,
+      auth: handshakeAuth,
       query: handshakeAuth,
       path: '/socket.io',
       transports: ['polling'],
@@ -120,10 +113,6 @@ function getDmSocket(): Socket {
       reconnectionDelayMax: 5000,
       reconnectionAttempts: 20,
       timeout: 20000,
-      extraHeaders: {
-        'X-Client-Type': 'web',
-        'X-Platform': 'web',
-      },
     });
 
     // Re-attach all persistent listeners to the new socket instance
