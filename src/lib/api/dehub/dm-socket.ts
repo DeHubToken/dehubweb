@@ -96,23 +96,19 @@ function getDmSocket(): Socket {
     loadPendingReceipts();
     const address = typeof window !== 'undefined' ? localStorage.getItem('dehub_wallet') : null;
 
-    // Match mobile WebSocketClient in chat-system.md: raw JWT (not "Bearer …"), plus address for Redis user:{address} sessions.
-    const rawJwt = token?.replace(/^Bearer\s+/i, '').trim() ?? '';
-
     const handshakeAuth: Record<string, string> = {};
-    if (rawJwt) handshakeAuth.token = rawJwt;
+    const tokenTrim = token?.replace(/^Bearer\s+/i, '').trim();
+    if (tokenTrim) handshakeAuth.token = `Bearer ${tokenTrim}`;
     if (address) handshakeAuth.address = address.toLowerCase();
-    handshakeAuth.clientType = 'web';
-    handshakeAuth.platform = 'web';
-    handshakeAuth.appVersion = '0.0.0';
 
     dmSocket = io(`${DEHUB_API_BASE}/dm`, {
       auth: handshakeAuth,
       query: handshakeAuth,
       path: '/socket.io',
-      // Same as mobile: polling then upgrade to websocket (long-polling-only was unreliable for server push)
-      transports: ['polling', 'websocket'],
-      upgrade: true,
+      // Polling-only: websocket upgrade to api.dehub.io often fails in browsers (see console wss errors);
+      // paid/pending messages depend on a stable /dm socket.
+      transports: ['polling'],
+      upgrade: false,
       forceNew: true,
       autoConnect: true,
       reconnection: true,
