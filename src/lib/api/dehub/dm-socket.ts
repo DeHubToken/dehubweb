@@ -100,6 +100,16 @@ function getDmSocket(): Socket {
     const tokenTrim = token?.replace(/^Bearer\s+/i, '').trim();
     if (tokenTrim) handshakeAuth.token = `Bearer ${tokenTrim}`;
     if (address) handshakeAuth.address = address.toLowerCase();
+    // Include MongoDB _id so the server can register the Redis session under user:{_id},
+    // which is the key it uses when looking up who to push readReceipt events to.
+    try {
+      const userJson = typeof window !== 'undefined' ? localStorage.getItem('dehub_user') : null;
+      if (userJson) {
+        const userObj = JSON.parse(userJson);
+        const userId = userObj?._id || userObj?.id;
+        if (userId) handshakeAuth.userId = String(userId);
+      }
+    } catch { /* ignore parse errors */ }
 
     dmSocket = io(`${DEHUB_API_BASE}/dm`, {
       auth: handshakeAuth,
