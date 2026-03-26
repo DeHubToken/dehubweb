@@ -30,6 +30,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     videoUrl: videoUrl || nft.videoUrl || undefined,
     duration: formatDuration(nft.videoDuration || nft.duration),
     title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
+    description: nft.description || undefined,
     channel: nft.minterDisplayName || nft.mintername || 'Unknown Creator',
     channelAvatar,
     verified: false,
