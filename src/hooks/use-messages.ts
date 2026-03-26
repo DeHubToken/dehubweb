@@ -318,18 +318,33 @@ export function useMessages(conversationId: string | null) {
     const unsubReadReceipt = onReadReceipt((data: any) => {
       const dmId = data?.dmId || data?.conversationId;
       console.log('[readReceipt] received', { dmId, conversationId, data });
-      if (!dmId || dmId !== conversationId) return;
+      if (!dmId || dmId !== conversationId) {
+        console.log('[readReceipt] SKIPPED — dmId mismatch or missing', { dmId, conversationId });
+        return;
+      }
+      console.log('[readReceipt] MATCH — updating cache');
       queryClient.setQueryData(
         messagesKeys.messages(conversationId),
         (old: any) => {
-          if (!old?.pages) return old;
+          if (!old?.pages) {
+            console.log('[readReceipt] setQueryData: no pages in cache');
+            return old;
+          }
+          let updated = 0;
           const pages = old.pages.map((page: any) => ({
             ...page,
-            items: page.items.map((m: DmMessage) => m.isRead ? m : { ...m, isRead: true }),
+            items: page.items.map((m: DmMessage) => {
+              if (m.isRead) return m;
+              updated++;
+              return { ...m, isRead: true };
+            }),
           }));
+          console.log('[readReceipt] marked', updated, 'messages as read');
           return { ...old, pages };
         }
       );
+      // Also force a refetch so the server's confirmed isRead state syncs up
+      queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
     });
 
     return () => {
