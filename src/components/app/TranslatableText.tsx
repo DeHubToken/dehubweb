@@ -156,6 +156,26 @@ export function renderTextWithLinks(text: string): ReactNode[] {
           {tag}
         </a>
       );
+    } else if (fullMatch.startsWith('#')) {
+      // #hashtag — render as clickable bold white, navigates to feed filtered by category
+      const tag = fullMatch.slice(1).toLowerCase(); // Remove # and lowercase
+      parts.push(
+        <a
+          key={`hashtag-${tag}-${match.index}`}
+          href={`/app?category=${encodeURIComponent(tag)}`}
+          className="text-white font-bold hover:underline transition-colors"
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            // Dispatch category filter event that HomeFeed listens for
+            window.dispatchEvent(new CustomEvent('category-filter-changed', { detail: { categoryId: tag } }));
+            clientNavigate('/app');
+          }}
+          data-no-navigate="true"
+        >
+          {fullMatch}
+        </a>
+      );
     } else {
       // URL — render as link emoji
       const url = fullMatch;
