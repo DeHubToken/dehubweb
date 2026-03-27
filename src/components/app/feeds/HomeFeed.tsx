@@ -344,22 +344,56 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const [isCategoryTransitioning, setIsCategoryTransitioning] = useState(false);
 
   useEffect(() => {
-    const handler = (e: Event) => {
-      const categoryId = (e as CustomEvent).detail;
-      if (categoryId) {
-        setIsCategoryTransitioning(true);
-        queryClient.removeQueries({ queryKey: ['unified-feed'] });
-        // Add category to selection (toggle if already present)
-        setSelectedCategories(prev => {
-          if (prev.includes(categoryId)) return prev;
-          return [...prev, categoryId];
-        });
-        window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+    const getCategoryId = (detail: unknown): string | null => {
+      if (typeof detail === 'string') return detail.toLowerCase();
+      if (detail && typeof detail === 'object' && 'categoryId' in detail) {
+        const value = (detail as { categoryId?: unknown }).categoryId;
+        return typeof value === 'string' ? value.toLowerCase() : null;
       }
+      return null;
     };
+
+    const handler = (e: Event) => {
+      const categoryId = getCategoryId((e as CustomEvent).detail);
+      if (!categoryId) return;
+
+      setIsCategoryTransitioning(true);
+      queryClient.removeQueries({ queryKey: ['unified-feed'] });
+      // Add category to selection (toggle if already present)
+      setSelectedCategories(prev => {
+        if (prev.includes(categoryId)) return prev;
+        return [...prev, categoryId];
+      });
+      window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+    };
+
     window.addEventListener('category-filter-changed', handler);
     return () => window.removeEventListener('category-filter-changed', handler);
   }, [setSelectedCategories, queryClient]);
+
+  // Safety: normalize any legacy/corrupted persisted category entries (e.g. { categoryId: 'music' })
+  useEffect(() => {
+    const normalized = Array.from(new Set(
+      (selectedCategories as unknown[])
+        .map((cat) => {
+          if (typeof cat === 'string') return cat.toLowerCase();
+          if (cat && typeof cat === 'object' && 'categoryId' in cat) {
+            const value = (cat as { categoryId?: unknown }).categoryId;
+            return typeof value === 'string' ? value.toLowerCase() : null;
+          }
+          return null;
+        })
+        .filter((cat): cat is string => Boolean(cat))
+    ));
+
+    const isSame =
+      normalized.length === selectedCategories.length &&
+      normalized.every((cat, index) => cat === selectedCategories[index]);
+
+    if (!isSame) {
+      setSelectedCategories(normalized);
+    }
+  }, [selectedCategories, setSelectedCategories]);
 
   // Fetch categories
   const { data: categories = [] } = useQuery({
