@@ -1383,11 +1383,19 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
             </button>
           )}
-          {selectedCategories.map(catId => {
+          {selectedCategories.map((rawCatId, index) => {
+            const catId = typeof rawCatId === 'string'
+              ? rawCatId
+              : (rawCatId && typeof rawCatId === 'object' && 'categoryId' in rawCatId && typeof (rawCatId as { categoryId?: unknown }).categoryId === 'string')
+                ? ((rawCatId as { categoryId: string }).categoryId)
+                : null;
+
+            if (!catId) return null;
+
             const catObj = categories.find(c => c.id === catId);
             return (
               <button
-                key={catId}
+                key={`${catId}-${index}`}
                 onClick={() => setSelectedCategories(prev => prev.filter(c => c !== catId))}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
