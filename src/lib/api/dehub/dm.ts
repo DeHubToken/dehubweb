@@ -615,9 +615,9 @@ export async function uploadChatImage(file: File): Promise<{ url: string }> {
 }
 
 /**
- * Mark conversation as read.
- * Per chat-system.md, read receipts are via Socket: socket.emit('readReceipt', { dmId }).
- * No REST endpoint exists for this — emitReadReceipt in dm-socket handles it.
+ * Mark conversation as read (companion to socket).
+ * Server expects: socket.emit('markAsRead', { dmId }); incoming updates use `readReceipt`.
+ * No REST for this path — emitReadReceipt in dm-socket emits `markAsRead`.
  */
 export async function markConversationAsRead(conversationId: string): Promise<{ success: boolean }> {
   if (conversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(conversationId)) {

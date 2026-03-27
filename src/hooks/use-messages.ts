@@ -182,9 +182,8 @@ export function useMessages(conversationId: string | null) {
           msg.sender?.address?.toLowerCase() === conversationId.replace('new_', '').toLowerCase());
       if (!isMatch) return;
 
-      // Implied read receipt: if the OTHER user just sent a message, they clearly
-      // have the chat open and have read our earlier messages. The server doesn't
-      // push readReceipt for web clients, so we infer it from their reply.
+      // Implied read: if the OTHER user just sent a message, treat earlier sent lines as read
+      // when we never got a `readReceipt` broadcast (fallback UX).
       const senderAddress = msg.sender?.address?.toLowerCase();
       const senderUserId = msg.sender?._id;
       const isFromOther =
@@ -409,7 +408,7 @@ export function useMessages(conversationId: string | null) {
       // Don't force-refetch here — the optimistic update already cleared the badge,
       // and the localStorage override protects against stale server counts on next
       // natural refetch. An immediate invalidation risks the server returning
-      // unreadCount > 0 before the readReceipt socket event is fully processed.
+      // unreadCount > 0 before markAsRead/readReceipt is fully processed on the server.
     },
   });
 

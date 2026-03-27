@@ -39,10 +39,13 @@ export interface DeletedMessage {
   dmId: string;
 }
 
+/** Server → client after someone marks read (`readReceipt`). */
 export interface ReadReceiptData {
   dmId: string;
-  userId: string;
-  readAt: string;
+  readBy?: string;
+  count?: number;
+  userId?: string;
+  readAt?: string;
 }
 
 export interface ConversationDeletedData {
@@ -100,11 +103,9 @@ function getDmSocket(): Socket {
     const tokenTrim = token?.replace(/^Bearer\s+/i, '').trim();
     if (tokenTrim) handshakeAuth.token = `Bearer ${tokenTrim}`;
     if (address) handshakeAuth.address = address.toLowerCase();
-    // Server checks clientType === 'mobile' before processing readReceipt events
-    // (updating isRead in DB + pushing readReceipt to the sender). Without this,
-    // web clients' readReceipts are silently dropped.
+    // Parity with mobile DM socket handshake (see chat-system.md embedded client).
     handshakeAuth.clientType = 'mobile';
-    // Include MongoDB _id for Redis session lookup (readReceipt push uses user:{_id} key)
+    // Optional userId; chat-system.md documents Redis key user:{address} for sessions
     try {
       const userJson = typeof window !== 'undefined' ? localStorage.getItem('dehub_user') : null;
       if (userJson) {
@@ -297,18 +298,19 @@ function savePendingReceipts(): void {
 function flushReadReceiptQueue(socket: Socket): void {
   if (!socket.connected || pendingReadReceipts.size === 0) return;
   for (const dmId of pendingReadReceipts) {
-    socket.emit('readReceipt', { dmId });
+    socket.emit('markAsRead', { dmId });
   }
   pendingReadReceipts.clear();
   savePendingReceipts();
 }
 
+/** Tell server this DM is read (emits `markAsRead`). Listen for `readReceipt` for UI sync. */
 export function emitReadReceipt(dmId: string): void {
   const socket = getDmSocket();
   pendingReadReceipts.add(dmId);
   savePendingReceipts();
 
-  console.log('[DM Socket] emitReadReceipt', { dmId, connected: socket.connected });
+  console.log('[DM Socket] emit markAsRead', { dmId, connected: socket.connected });
   if (socket.connected) {
     flushReadReceiptQueue(socket);
   }
@@ -337,6 +339,7 @@ export function onDmDeleteMessage(cb: (data: DeletedMessage) => void): () => voi
   return addPersistentListener('deleteMessage', cb as AnyFn);
 }
 
+/** Server broadcasts `readReceipt` after `markAsRead` is processed. */
 export function onReadReceipt(cb: (data: ReadReceiptData) => void): () => void {
   return addPersistentListener('readReceipt', cb as AnyFn);
 }

@@ -542,7 +542,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const sendMessageMutation = useSendMessage(resolvedConversationId);
   const deleteConversationMutation = useDeleteConversation();
 
-  // Emit readReceipt + scroll on initial load
+  // Emit markAsRead (socket) + scroll on initial load
   useEffect(() => {
     if (isInitialMount.current && messages.length > 0) {
       bottomRef.current?.scrollIntoView({ behavior: 'auto' });
@@ -552,7 +552,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     }
   }, [messages.length, markAsRead]);
 
-  // Re-emit readReceipt when conversation is focused/visible to ensure persistence
+  // Re-emit markAsRead when conversation is focused/visible
   useEffect(() => {
     if (!resolvedConversationId || resolvedConversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(resolvedConversationId)) return;
     

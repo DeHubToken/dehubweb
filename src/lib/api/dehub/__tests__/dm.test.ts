@@ -120,7 +120,7 @@ describe('markConversationAsRead', () => {
     const { markConversationAsRead } = await import('@/lib/api/dehub/dm');
     const result = await markConversationAsRead('conv-1');
     expect(result.success).toBe(true);
-    // No fetch call — read receipts use socket only per chat-system.md
+    // No fetch — read path uses DM socket emit `markAsRead` (see dm-socket)
   });
 });
 
