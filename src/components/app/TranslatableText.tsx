@@ -96,9 +96,9 @@ export function renderTextWithLinks(text: string): ReactNode[] {
   const parts: ReactNode[] = [];
   let lastIndex = 0;
   
-  // Combined regex: match emails, URLs, @mentions, or $cashtags
+  // Combined regex: match emails, URLs, @mentions, $cashtags, or #hashtags
   const combinedRegex = new RegExp(
-    `([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})|(${URL_REGEX.source})|(@[a-zA-Z0-9_][a-zA-Z0-9_.-]*)|(\\$[a-zA-Z]{1,20})`,
+    `([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})|(${URL_REGEX.source})|(@[a-zA-Z0-9_][a-zA-Z0-9_.-]*)|(\\$[a-zA-Z]{1,20})|(#[a-zA-Z][a-zA-Z0-9_]*)`,
     'gi'
   );
   
@@ -154,6 +154,26 @@ export function renderTextWithLinks(text: string): ReactNode[] {
           data-no-navigate="true"
         >
           {tag}
+        </a>
+      );
+    } else if (fullMatch.startsWith('#')) {
+      // #hashtag — render as clickable bold white, navigates to feed filtered by category
+      const tag = fullMatch.slice(1).toLowerCase(); // Remove # and lowercase
+      parts.push(
+        <a
+          key={`hashtag-${tag}-${match.index}`}
+          href={`/app?category=${encodeURIComponent(tag)}`}
+          className="text-white font-bold hover:underline transition-colors"
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            // Dispatch category filter event that HomeFeed listens for
+            window.dispatchEvent(new CustomEvent('category-filter-changed', { detail: { categoryId: tag } }));
+            clientNavigate('/app');
+          }}
+          data-no-navigate="true"
+        >
+          {fullMatch}
         </a>
       );
     } else {
