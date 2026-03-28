@@ -402,7 +402,7 @@ async function computeSnapshotDelta(
 
     // ── Hybrid on-chain: fetch historical balances for NEW wallets not in past snapshot ──
     let hybridPastMap: Map<string, number> | null = null;
-    if (useHybridOnChain && pastMap.size > 0) {
+    if (useHybridOnChain) {
       const newAddresses = entries
         .map(e => e.account.toLowerCase())
         .filter(addr => !pastMap.has(addr));
