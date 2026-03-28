@@ -1,37 +1,52 @@
 
 
-# Plan: Add Retry Flag to Token Refresh Interceptor
+# Fix: Yearly Holdings Leaderboard Shows Only 5 Entries
 
-## Summary
-Update the 401 interceptor in `apiCall` to use a `_retry` flag pattern, preventing infinite retry loops. The current implementation lacks per-request retry tracking, which could cause repeated refresh attempts if the retried request also returns 401.
+## Problem
+The yearly leaderboard only shows ~5 people because no valid snapshot exists from 365 days ago. The hybrid on-chain fallback (which could fetch historical balances) is gated by `pastMap.size > 0` — meaning it only runs when there IS a snapshot. When there's no snapshot, every wallet gets `delta = 0` and gets filtered out, except a handful of hardcoded "extra wallets."
 
-## Current Issue
-The interceptor retries on any 401/403 auth error without tracking whether a request has already been retried. If a refreshed token is still rejected, this could loop.
-
-## Changes
-
-### 1. `src/lib/api/dehub/core.ts` — Add retry flag to `apiCall`
-
-- Add an internal `_retry` flag to the options to track whether a request has already been retried after a token refresh.
-- Only attempt refresh when `response.data.message` matches `'Access token expired'` (per updated API docs), not on all 401s — other 401s (e.g., invalid permissions) should not trigger refresh.
-- On retry, pass `_retry: true` so the same request won't attempt refresh again.
-- Skip refresh for requests to `/auth/refresh` endpoint (already done).
-
-Key logic change:
-```typescript
-// In apiCall options, add internal _retry tracking
-const isExpiredToken =
-  response.status === 401 &&
-  errorMessage.includes('access token expired');
-
-if (isExpiredToken && !options._retry && !endpoint.includes('/auth/refresh')) {
-  // attempt refresh, then retry with _retry: true
-  return apiCall<T>(endpoint, { ...options, _retry: true });
-}
+## Root Cause
+Line 405 in `refresh-leaderboard-cache/index.ts`:
 ```
+if (useHybridOnChain && pastMap.size > 0) {
+```
+This condition prevents hybrid on-chain lookups when no snapshot exists. For yearly period, if snapshots don't go back far enough, all users are silently dropped.
 
-### 2. `src/lib/api/dehub/__tests__/core.test.ts` — Add retry flag test
+## Fix
 
-- Add test: "does not retry twice on repeated 401 after refresh" — verifies `_retry` prevents infinite loops.
-- Add test: "only refreshes on 'Access token expired' message" — verifies other 401 messages (e.g., "Unauthorized") don't trigger refresh.
+### File: `supabase/functions/refresh-leaderboard-cache/index.ts`
+
+1. **Remove the `pastMap.size > 0` gate on hybrid on-chain** — when `useHybridOnChain` is true and `pastMap` is empty, treat ALL addresses as "new" and fetch their historical on-chain balances. This is effectively a full on-chain fallback for the yearly period.
+
+2. **Change the condition** from:
+   ```ts
+   if (useHybridOnChain && pastMap.size > 0) {
+   ```
+   to:
+   ```ts
+   if (useHybridOnChain) {
+   ```
+   And adjust the `newAddresses` logic: when `pastMap` is empty, ALL addresses need on-chain lookup.
+
+3. **Also handle the case where both `pastVal` is undefined AND `hybridPastMap` returns nothing** — for yearly with on-chain, treat missing historical balance as 0 (meaning the user's entire current balance is their yearly gain). This matches how a new holder would naturally appear.
+
+   Change lines 529-535 from:
+   ```ts
+   } else if (isExtraWallet && currentVal > 0) {
+     delta = currentVal;
+   } else {
+     delta = 0;
+   }
+   ```
+   to also include the hybrid on-chain case: if `useHybridOnChain` is active and on-chain was attempted but the wallet truly had 0, treat the full balance as delta.
+
+4. **Redeploy the edge function** so the next cache refresh picks up all holders.
+
+## Technical Detail
+- The on-chain historical lookup estimates blocks from ~365 days ago using `BASE_BLOCKS_PER_DAY * 365` and `BNB_BLOCKS_PER_DAY * 365`
+- Alchemy supports `eth_call` at historical blocks, so this will work even for a year back
+- The batch RPC logic already handles large address lists in chunks of 50
+
+## Result
+After the fix and a cache refresh, the yearly leaderboard will show all holders who gained or lost tokens over the past year, including @aaron.
 
