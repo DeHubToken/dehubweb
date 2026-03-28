@@ -6,6 +6,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
 import { Interface } from 'ethers';
@@ -52,6 +53,7 @@ export function usePPVPayment({
 }: UsePPVPaymentOptions) {
   const [isPaying, setIsPaying] = useState(false);
   const { walletAddress, openLoginModal } = useAuth();
+  const queryClient = useQueryClient();
 
   const pay = useCallback(async () => {
     if (!walletAddress) {
@@ -180,6 +182,9 @@ export function usePPVPayment({
       
       toast.success('Content unlocked! 🎉', { id: 'ppv-payment' });
       console.log('[PPV] Payment confirmed:', receipt.hash);
+      
+      // Immediately invalidate bookmarks PPV cache so it shows without refresh
+      queryClient.invalidateQueries({ queryKey: ['bookmarks', 'ppv'] });
       
       onSuccess?.();
     } catch (error: any) {
