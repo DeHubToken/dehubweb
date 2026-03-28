@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, RefreshCw, ThumbsUp, Loader2, History, Ticket } from 'lucide-react';
+import { BookmarksEmptyContent } from '@/components/app/bookmarks/BookmarksEmptyContent';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -201,26 +202,7 @@ export default function BookmarksPage() {
         </div>
       ) : bookmarks.length === 0 ? (
         <div className="bg-zinc-900 rounded-2xl p-8 sm:p-12 flex flex-col items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className={`w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6 ${activeTab === 'ppv' ? 'bg-emerald-500/10' : 'bg-zinc-800'}`}>
-              {activeTab === 'ppv' ? <Ticket className="w-8 h-8 text-emerald-400" /> : <Bookmark className="w-8 h-8 text-zinc-400" />}
-            </div>
-            <h2 className="text-xl font-bold text-white mb-3">
-              {searchQuery 
-                ? t('bookmarks.noMatchingBookmarks') 
-                : activeTab === 'ppv' 
-                  ? t('bookmarks.noPpvYet') 
-                  : t('bookmarks.noBookmarksYet')}
-            </h2>
-            <p className="text-zinc-500 max-w-sm">
-              {searchQuery 
-                ? t('bookmarks.noMatchSearch', { query: searchQuery })
-                : activeTab === 'ppv'
-                  ? t('bookmarks.ppvStartSaving')
-                  : t('bookmarks.startSaving')
-              }
-            </p>
-          </div>
+          <BookmarksEmptyContent activeTab={activeTab} searchQuery={searchQuery} />
         </div>
       ) : (
         <div className="space-y-4">
