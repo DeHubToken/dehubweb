@@ -528,7 +528,7 @@ async function computeSnapshotDelta(
           delta = hasTruePastData ? currentVal - pastVal! : 0;
         } else if (pastVal !== undefined) {
           delta = currentVal - pastVal;
-        } else if (isExtraWallet && currentVal > 0) {
+        } else if ((isExtraWallet || useHybridOnChain) && currentVal > 0) {
           delta = currentVal;
         } else {
           delta = 0;
