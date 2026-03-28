@@ -402,13 +402,13 @@ async function computeSnapshotDelta(
 
     // ── Hybrid on-chain: fetch historical balances for NEW wallets not in past snapshot ──
     let hybridPastMap: Map<string, number> | null = null;
-    if (useHybridOnChain && pastMap.size > 0) {
+    if (useHybridOnChain) {
       const newAddresses = entries
         .map(e => e.account.toLowerCase())
         .filter(addr => !pastMap.has(addr));
 
       if (newAddresses.length > 0) {
-        console.log(`[delta] ${sortMode}/${period}: HYBRID mode — ${pastMap.size} from snapshot, ${newAddresses.length} new wallets need on-chain lookup`);
+        console.log(`[delta] ${sortMode}/${period}: HYBRID mode — ${pastMap.size} from snapshot, ${newAddresses.length} wallets need on-chain lookup`);
 
         try {
           const [baseCurrentBlock, bnbCurrentBlock] = await Promise.all([
@@ -528,7 +528,7 @@ async function computeSnapshotDelta(
           delta = hasTruePastData ? currentVal - pastVal! : 0;
         } else if (pastVal !== undefined) {
           delta = currentVal - pastVal;
-        } else if (isExtraWallet && currentVal > 0) {
+        } else if ((isExtraWallet || useHybridOnChain) && currentVal > 0) {
           delta = currentVal;
         } else {
           delta = 0;
