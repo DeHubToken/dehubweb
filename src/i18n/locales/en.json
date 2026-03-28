@@ -649,6 +649,8 @@
     "noBookmarksYet": "No bookmarks yet",
     "noMatchSearch": "No bookmarks match \"{{query}}\". Try a different search.",
     "startSaving": "Start saving posts by tapping the bookmark icon on any post you want to save.",
+    "noPpvYet": "No purchased content yet",
+    "ppvStartSaving": "Purchase Pay-Per-View content from your favorite creators for it to appear here.",
     "reachedEnd": "You've reached the end of your bookmarks",
     "loginDescription": "Log in to view and manage your saved bookmarks."
   },

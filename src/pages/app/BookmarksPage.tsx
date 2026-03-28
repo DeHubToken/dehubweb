@@ -206,12 +206,18 @@ export default function BookmarksPage() {
               <Bookmark className="w-8 h-8 text-zinc-400" />
             </div>
             <h2 className="text-xl font-bold text-white mb-3">
-              {searchQuery ? t('bookmarks.noMatchingBookmarks') : t('bookmarks.noBookmarksYet')}
+              {searchQuery 
+                ? t('bookmarks.noMatchingBookmarks') 
+                : activeTab === 'ppv' 
+                  ? t('bookmarks.noPpvYet') 
+                  : t('bookmarks.noBookmarksYet')}
             </h2>
             <p className="text-zinc-500 max-w-sm">
               {searchQuery 
                 ? t('bookmarks.noMatchSearch', { query: searchQuery })
-                : t('bookmarks.startSaving')
+                : activeTab === 'ppv'
+                  ? t('bookmarks.ppvStartSaving')
+                  : t('bookmarks.startSaving')
               }
             </p>
           </div>
