@@ -132,13 +132,18 @@ function mapCountryToCategory(groupTitle: string): string {
   return COUNTRY_TO_CATEGORY[normalized] || "other";
 }
 
+function isFromTrustedDomain(url: string): boolean {
+  const lowerUrl = url.toLowerCase();
+  return TRUSTED_HTTP_DOMAINS.some((domain) => lowerUrl.includes(domain));
+}
+
 function isValidStreamUrl(url: string, name: string): boolean {
   const lowerUrl = url.toLowerCase();
   if (lowerUrl.includes(".mpd")) return false;
   if (lowerUrl.includes("youtube.com") || lowerUrl.includes("youtu.be")) return false;
   if (lowerUrl.includes("twitch.tv")) return false;
   if (lowerUrl.includes("dailymotion.com")) return false;
-  if (url.startsWith("http://")) return false;
+  if (url.startsWith("http://") && !isFromTrustedDomain(url)) return false;
   if (name.includes("Ⓖ")) return false;
   return lowerUrl.includes(".m3u8");
 }
