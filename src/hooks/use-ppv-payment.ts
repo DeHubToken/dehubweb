@@ -53,6 +53,7 @@ export function usePPVPayment({
 }: UsePPVPaymentOptions) {
   const [isPaying, setIsPaying] = useState(false);
   const { walletAddress, openLoginModal } = useAuth();
+  const queryClient = useQueryClient();
 
   const pay = useCallback(async () => {
     if (!walletAddress) {
