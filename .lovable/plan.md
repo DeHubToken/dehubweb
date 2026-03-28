@@ -1,52 +1,42 @@
 
 
-# Fix: Yearly Holdings Leaderboard Shows Only 5 Entries
+# Add Pakistani TV Channels Support
 
 ## Problem
-The yearly leaderboard only shows ~5 people because no valid snapshot exists from 365 days ago. The hybrid on-chain fallback (which could fetch historical balances) is gated by `pastMap.size > 0` — meaning it only runs when there IS a snapshot. When there's no snapshot, every wallet gets `delta = 0` and gets filtered out, except a handful of hardcoded "extra wallets."
+Pakistani TV channels are absent from the verified database because the validation function filters them out — most Pakistani TV streams from the playlist sources use `http://` (not HTTPS) or non-`.m3u8` stream formats, causing them to fail the `isValidStreamUrl` check.
 
-## Root Cause
-Line 405 in `refresh-leaderboard-cache/index.ts`:
+## Solution
+Relax the stream validation rules slightly and add a curated list of known-working Pakistani TV channel streams as a supplementary source.
+
+### Changes
+
+### 1. Edge Function: `supabase/functions/validate-tv-channels/index.ts`
+
+**Allow HTTP streams from trusted domains**: Pakistani government broadcasters (e.g., `ptv.com.pk`, `radio.gov.pk`) and other known providers often only serve over HTTP. Add a whitelist of trusted domains where HTTP is acceptable:
+
 ```
-if (useHybridOnChain && pastMap.size > 0) {
+const TRUSTED_HTTP_DOMAINS = [
+  'ptv.com.pk',
+  'arynews.tv',
+  'geo.tv',
+  'humtv.com',
+  'radio.gov.pk',
+];
 ```
-This condition prevents hybrid on-chain lookups when no snapshot exists. For yearly period, if snapshots don't go back far enough, all users are silently dropped.
 
-## Fix
+Update `isValidStreamUrl` to allow HTTP for these trusted domains.
 
-### File: `supabase/functions/refresh-leaderboard-cache/index.ts`
+**Add curated Pakistani TV playlist source**: Add `https://iptv-org.github.io/iptv/countries/pk.m3u` as a third playlist source. The iptv-org project maintains per-country playlists that include Pakistani channels specifically (ARY News, Geo News, Hum TV, PTV, Express News, Dunya News, BOL News, Samaa TV, etc.).
 
-1. **Remove the `pastMap.size > 0` gate on hybrid on-chain** — when `useHybridOnChain` is true and `pastMap` is empty, treat ALL addresses as "new" and fetch their historical on-chain balances. This is effectively a full on-chain fallback for the yearly period.
+### 2. Redeploy the edge function
 
-2. **Change the condition** from:
-   ```ts
-   if (useHybridOnChain && pastMap.size > 0) {
-   ```
-   to:
-   ```ts
-   if (useHybridOnChain) {
-   ```
-   And adjust the `newAddresses` logic: when `pastMap` is empty, ALL addresses need on-chain lookup.
+After updating, trigger a re-validation to populate the database with Pakistani TV channels.
 
-3. **Also handle the case where both `pastVal` is undefined AND `hybridPastMap` returns nothing** — for yearly with on-chain, treat missing historical balance as 0 (meaning the user's entire current balance is their yearly gain). This matches how a new holder would naturally appear.
-
-   Change lines 529-535 from:
-   ```ts
-   } else if (isExtraWallet && currentVal > 0) {
-     delta = currentVal;
-   } else {
-     delta = 0;
-   }
-   ```
-   to also include the hybrid on-chain case: if `useHybridOnChain` is active and on-chain was attempted but the wallet truly had 0, treat the full balance as delta.
-
-4. **Redeploy the edge function** so the next cache refresh picks up all holders.
+## Expected Result
+After revalidation, Pakistani channels like ARY News, Geo News, PTV News, Hum TV, Express News, Dunya News, BOL News, and Samaa TV should appear in the TV section under a "Pakistan" country filter.
 
 ## Technical Detail
-- The on-chain historical lookup estimates blocks from ~365 days ago using `BASE_BLOCKS_PER_DAY * 365` and `BNB_BLOCKS_PER_DAY * 365`
-- Alchemy supports `eth_call` at historical blocks, so this will work even for a year back
-- The batch RPC logic already handles large address lists in chunks of 50
-
-## Result
-After the fix and a cache refresh, the yearly leaderboard will show all holders who gained or lost tokens over the past year, including @aaron.
+- The iptv-org country-specific playlist (`/countries/pk.m3u`) contains ~30-50 Pakistani channels
+- Some may still fail stream validation if their servers are down, but the major news/entertainment channels should pass
+- The country will be correctly mapped to category `pk` via the existing `COUNTRY_TO_CATEGORY` mapping
 
