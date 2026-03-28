@@ -153,7 +153,7 @@ export default function BookmarksPage() {
         </div>
 
         {/* Filter Tabs */}
-        <div ref={bookmarksTabLayerRef} className="relative overflow-visible">
+        <div ref={bookmarksTabLayerRef} className="relative overflow-x-clip overflow-y-visible">
           <GlassIndicator rect={bookmarksTabRect} />
           <div className="relative z-20 flex gap-2 overflow-x-auto scrollbar-hide" onScroll={onBookmarksTabScroll}>
             {tabKeys.map((tab) => {
