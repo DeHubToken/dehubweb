@@ -183,6 +183,9 @@ export function usePPVPayment({
       toast.success('Content unlocked! 🎉', { id: 'ppv-payment' });
       console.log('[PPV] Payment confirmed:', receipt.hash);
       
+      // Immediately invalidate bookmarks PPV cache so it shows without refresh
+      queryClient.invalidateQueries({ queryKey: ['bookmarks', 'ppv'] });
+      
       onSuccess?.();
     } catch (error: any) {
       console.error('[PPV] Payment failed:', error);
