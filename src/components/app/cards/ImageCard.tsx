@@ -851,7 +851,6 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
             onUnlocked={() => {
               setLocallyUnlocked(true);
               markTokenUnlocked(post.id);
-              toast.success('Content unlocked!');
               queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
               queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
               queryClient.invalidateQueries({ queryKey: ['nft-info', post.id] });
