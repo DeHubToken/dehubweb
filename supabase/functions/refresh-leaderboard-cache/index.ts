@@ -408,7 +408,7 @@ async function computeSnapshotDelta(
         .filter(addr => !pastMap.has(addr));
 
       if (newAddresses.length > 0) {
-        console.log(`[delta] ${sortMode}/${period}: HYBRID mode — ${pastMap.size} from snapshot, ${newAddresses.length} new wallets need on-chain lookup`);
+        console.log(`[delta] ${sortMode}/${period}: HYBRID mode — ${pastMap.size} from snapshot, ${newAddresses.length} wallets need on-chain lookup`);
 
         try {
           const [baseCurrentBlock, bnbCurrentBlock] = await Promise.all([
