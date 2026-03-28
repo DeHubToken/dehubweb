@@ -180,7 +180,7 @@ export function usePPVPayment({
         console.warn('[PPV] Failed to record purchase:', e);
       }
       
-      toast.success('Content unlocked! 🎉', { id: 'ppv-payment' });
+      toast.success('Content unlocked!', { id: 'ppv-payment' });
       console.log('[PPV] Payment confirmed:', receipt.hash);
       
       // Immediately invalidate bookmarks PPV cache so it shows without refresh
