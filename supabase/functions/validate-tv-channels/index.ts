@@ -26,6 +26,19 @@ interface ParsedChannel {
 const PLAYLIST_SOURCES = [
   { name: "Free-TV", url: "https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8" },
   { name: "iptv-org", url: "https://iptv-org.github.io/iptv/index.m3u" },
+  { name: "iptv-org-pk", url: "https://iptv-org.github.io/iptv/countries/pk.m3u" },
+];
+
+const TRUSTED_HTTP_DOMAINS = [
+  "ptv.com.pk",
+  "arynews.tv",
+  "geo.tv",
+  "humtv.com",
+  "radio.gov.pk",
+  "bolnetwork.com",
+  "dunyanews.tv",
+  "expressnews.tv",
+  "samaadigital.tv",
 ];
 
 const BATCH_SIZE = 20;
