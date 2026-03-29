@@ -1,65 +1,41 @@
 
 
-# Play Sound Over Upload — Overlay Approach
+# Fix: Stale Optimistic Posts Persisting at Top of Feed
 
-## How It Works
+## Problem
 
-Instead of muxing audio into the video file, we **play a hidden `<audio>` element in sync with the `<video>` element**. When a post has an attached soundtrack, the player:
+Optimistic posts are stored in `localStorage` with **no expiry**. They're only removed when their real counterpart appears in the currently loaded feed page. If the API is slow to index the post, or the user refreshes before the post appears in the feed, the optimistic post lingers at the top of the feed indefinitely — even days later.
 
-1. **Mutes the video's original audio** and plays the soundtrack `<audio>` element simultaneously
-2. **Syncs play/pause/seek** — when the video pauses, the audio pauses; when the user seeks, the audio seeks to the same timestamp
-3. **Trims to shortest** — if the soundtrack is shorter than the video, it stops; if longer, it stops when the video ends
+## Root Cause
 
-## Will It Feel Native?
+`loadFromStorage()` in `use-optimistic-posts.tsx` restores all saved posts without checking their age. The auto-removal in `HomeFeed.tsx` only runs when a matching ID appears in the loaded feed items, which may never happen if the post was created long ago and is no longer on the first pages.
 
-**Yes, for the viewer it's seamless:**
-- Both elements start/pause/seek together — no perceptible delay (they share the same `timeupdate` event loop)
-- The video player controls (play, pause, seek bar, volume) control both simultaneously
-- A small "♪ Track Name" badge appears on the video (like TikTok/Reels) so viewers know a sound is attached
-- Volume slider controls the soundtrack audio, video's own audio is muted
+## Solution
 
-**Edge cases handled:**
-- Buffering: if audio buffers, video waits (and vice versa) via `waiting`/`playing` events
-- Seek: `seeked` event on video triggers `audio.currentTime = video.currentTime`
-- Loop: if video loops, audio restarts from 0
+Add a **TTL of 10 minutes** to optimistic posts. On load from storage, discard any posts older than 10 minutes. This is long enough for the API to index the post and for the auto-removal to kick in, but short enough that stale ghosts don't linger.
 
-## What Gets Built
+## Changes
 
-### 1. Sound Picker Component
-- Bottom sheet to browse/search DeHub audio posts via `searchNFTs({ postType: 'audio' })`
-- Inline preview playback, select to attach
+**`src/hooks/use-optimistic-posts.tsx`** — In `loadFromStorage()`, filter out posts where `createdAt` is older than 10 minutes:
 
-### 2. Post Form State
-- New state: `attachedSound: { url, title, creator, tokenId } | null`
-- Stored as metadata alongside the post (not as a file upload)
+```typescript
+const MAX_AGE_MS = 10 * 60 * 1000; // 10 minutes
 
-### 3. Post Submission
-- Include `soundtrackTokenId` or `soundtrackUrl` in the mint payload metadata (description or streamInfo)
-- The soundtrack reference is stored in the post's metadata so the player knows to load it
-
-### 4. Video Player Enhancement
-- When a post has an attached soundtrack URL, render a hidden `<audio>` element
-- Sync its playback with the video element using event listeners
-- Show a "♪ Track Name" overlay badge on the video
-- Mute the video's native audio track
-
-### 5. Feed/Single Post Page
-- Feed normalizer extracts soundtrack metadata from post description/metadata
-- Passes `soundtrackUrl` prop to the video player component
-
-## Technical Sync Logic (Simple)
-```text
-video.onplay   → audio.play()
-video.onpause  → audio.pause()
-video.onseeked → audio.currentTime = video.currentTime
-video.onended  → audio.pause(); audio.currentTime = 0
+function loadFromStorage(): OptimisticPost[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const now = Date.now();
+    const parsed = JSON.parse(raw);
+    return parsed
+      .map(p => ({ ...p, createdAt: new Date(p.createdAt) }))
+      .filter(p => now - p.createdAt.getTime() < MAX_AGE_MS) // discard stale
+      .map(p => ({ ...p, mediaExpired: true }));
+  } catch {
+    return [];
+  }
+}
 ```
 
-## Files
-- **New**: `src/features/post/components/SoundPicker.tsx`
-- **New**: `src/features/post/hooks/usePostSound.ts`  
-- **New**: `src/hooks/use-synced-audio.ts` — reusable hook for audio-video sync
-- **Edit**: Video player component — add synced audio support + badge
-- **Edit**: Post form — add sound picker trigger + state
-- **Edit**: Feed normalizers — extract soundtrack metadata
+That's it — one filter line addition. No other files need changes.
 
