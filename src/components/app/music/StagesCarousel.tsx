@@ -62,8 +62,9 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
           </div>
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-zinc-400 text-xs truncate">
-            Hosted by @{space.host_username || space.host_wallet_address?.slice(0, 6)}
+          <p className="text-zinc-500 text-[10px]">Hosted by</p>
+          <p className="text-white text-xs font-medium truncate">
+            @{space.host_username || space.host_wallet_address?.slice(0, 6)}
           </p>
         </div>
       </div>
