@@ -61,6 +61,7 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
   const [view, setView] = useState<View>(initialView ?? 'browse');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [showSoundboard, setShowSoundboard] = useState(false);
 
   // Reset to initialView each time the modal opens
   useEffect(() => {
