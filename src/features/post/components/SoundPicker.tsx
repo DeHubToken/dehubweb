@@ -113,7 +113,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
 
     onSelect({
       url: audioUrl,
-      title: nft.name || nft.title || 'Untitled',
+      title: nft.name || nft.title || nft.description?.slice(0, 60) || 'Untitled',
       creator: nft.minterUsername || nft.minterDisplayName || nft.mintername || 'Unknown',
       creatorAvatar: buildAvatarUrl(minterAddress, nft.minterAvatarUrl),
       tokenId,
@@ -197,7 +197,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
                     {/* Track info */}
                     <div className="flex-1 min-w-0">
                       <div className="text-sm text-white font-medium truncate">
-                        {nft.name || nft.title || 'Untitled'}
+                        {nft.name || nft.title || nft.description?.slice(0, 60) || 'Untitled'}
                       </div>
                       <div className="text-xs text-white/50 truncate flex items-center gap-1.5">
                         <Avatar className="w-3.5 h-3.5">
