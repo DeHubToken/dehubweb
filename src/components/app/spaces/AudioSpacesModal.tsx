@@ -12,7 +12,7 @@
 import { useState, useEffect } from 'react';
 import { 
   Mic, MicOff, Users, Hand, X, ChevronLeft,
-  Loader2, Phone, PhoneOff, Crown, Volume2 
+  Loader2, Phone, PhoneOff, Crown, Volume2, Music 
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
