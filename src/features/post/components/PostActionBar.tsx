@@ -386,7 +386,24 @@ export function PostActionBar({
 
         {/* Removed audio buttons when hasImage - functionality is on the image thumbnail */}
 
-        
+        {/* Add Sound button - available when video or images are attached */}
+        {!isLive && (hasVideo || hasImage) && onOpenSoundPicker && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                type="button" 
+                onClick={onOpenSoundPicker} 
+                className={cn(
+                  "p-2 hover:bg-white/10 rounded-xl transition-colors",
+                  attachedSound && "bg-white/15"
+                )}
+              >
+                <Music className="w-5 h-5 text-white" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{attachedSound ? 'Change sound' : 'Add sound'}</TooltipContent>
+          </Tooltip>
+        )}
 
         {/* Emoji/GIF picker - single working button */}
         <EmojiGifPicker 
