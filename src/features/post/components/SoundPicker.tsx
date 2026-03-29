@@ -113,7 +113,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
 
     onSelect({
       url: audioUrl,
-      title: nft.name || nft.title || 'Untitled',
+      title: nft.name || nft.title || nft.description?.slice(0, 60) || 'Untitled',
       creator: nft.minterUsername || nft.minterDisplayName || nft.mintername || 'Unknown',
       creatorAvatar: buildAvatarUrl(minterAddress, nft.minterAvatarUrl),
       tokenId,
