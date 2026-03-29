@@ -194,13 +194,20 @@ export function AudioVisualizer({
     animationRef.current = requestAnimationFrame(draw);
   }, [style, hue, seed]);
 
-  useEffect(() => {
-    if (isPlaying && !isInitialized) {
+  // Handle play/pause synchronously from the user gesture via onPlayPause
+  // We wrap the original callback so that setupAudio + play() happen in the same
+  // synchronous call-stack as the click, satisfying browser autoplay policy.
+  const handlePlayPause = useCallback(() => {
+    // If we're about to play and haven't initialised yet, do it now (synchronously)
+    if (!isPlaying && !isConnectedRef.current) {
       setupAudio();
     }
-  }, [isPlaying, isInitialized, setupAudio]);
 
-  // Separate effect for playback control
+    // Toggle via parent
+    onPlayPauseRef.current();
+  }, [isPlaying, setupAudio]);
+
+  // Separate effect for playback control — runs AFTER state update from parent
   useEffect(() => {
     if (!audioRef.current) return;
 
@@ -263,7 +270,7 @@ export function AudioVisualizer({
         width={320}
         height={160}
         className="w-full h-full rounded-xl bg-black/40"
-        onClick={onPlayPause}
+        onClick={handlePlayPause}
       />
 
       {/* Controls overlay */}
@@ -331,7 +338,7 @@ export function AudioVisualizer({
           className={`w-12 h-12 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 transition-all pointer-events-auto ${
             isPlaying ? 'opacity-0 hover:opacity-100' : ''
           }`}
-          onClick={onPlayPause}
+          onClick={handlePlayPause}
         >
           {isPlaying ? (
             <Pause className="w-5 h-5 text-white fill-white" />
