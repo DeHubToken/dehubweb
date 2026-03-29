@@ -270,7 +270,7 @@ export function AudioVisualizer({
         width={320}
         height={160}
         className="w-full h-full rounded-xl bg-black/40"
-        onClick={onPlayPause}
+        onClick={handlePlayPause}
       />
 
       {/* Controls overlay */}
