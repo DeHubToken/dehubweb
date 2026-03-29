@@ -233,7 +233,7 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
       );
       return nfts.filter(Boolean) as DeHubNFT[];
     },
-    enabled: isAuthenticated && type === 'ppv' && !!walletAddress,
+    enabled: isAuthenticated && (type === 'ppv' || type === 'all') && !!walletAddress,
     staleTime: 2 * 60 * 1000,
   });
 
