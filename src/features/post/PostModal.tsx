@@ -193,6 +193,13 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         onVideoRecorded={actions.handleCameraVideoRecorded}
         onPhotoCaptured={actions.handleCameraPhotoCaptured}
       />
+
+      <SoundPicker
+        isOpen={soundPickerOpen}
+        onClose={() => setSoundPickerOpen(false)}
+        onSelect={selectSound}
+        currentSound={attachedSound}
+      />
     </>
   );
 }
