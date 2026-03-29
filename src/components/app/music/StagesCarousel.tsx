@@ -6,9 +6,8 @@
  * @module components/app/music/StagesCarousel
  */
 
-import { useEffect } from 'react';
+import { Mic2, Users, ChevronRight, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Mic2, Users, ChevronRight } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -96,24 +95,20 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
       if (error) throw error;
       return (data || []) as AudioSpace[];
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes — feature not active yet
-    enabled: false, // Disabled: audio spaces not functional yet, saves cloud credits
+    staleTime: 30_000,
   });
-
-  // Don't render if no live stages
-  if (liveSpaces.length === 0) {
-    return null;
-  }
 
   return (
     <div>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-bold text-white flex items-center gap-2">
+        <h2 className="font-bold text-white flex items-center gap-2">
           <img src={stagesMicIcon} alt="" className="w-5 h-5 object-contain" />
           Stages
-          <span className="text-zinc-500 font-normal text-sm">({liveSpaces.length})</span>
-        </h3>
+          {liveSpaces.length > 0 && (
+            <span className="text-zinc-500 font-normal text-sm">({liveSpaces.length})</span>
+          )}
+        </h2>
         <button 
           onClick={onOpenStages}
           className="text-zinc-400 text-sm hover:text-white flex items-center gap-1"
@@ -123,18 +118,33 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
       </div>
       
       {/* Carousel */}
-      <div className="relative">
-        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black to-transparent pointer-events-none z-10" />
-        <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
-          {liveSpaces.map((space) => (
-            <StageCard 
-              key={space.id} 
-              space={space} 
-              onClick={onOpenStages}
-            />
-          ))}
-        </SwipeableCarousel>
-      </div>
+      {liveSpaces.length === 0 ? (
+        <button
+          onClick={onOpenStages}
+          className="w-full flex items-center gap-3 p-4 bg-zinc-800/60 border border-dashed border-white/10 rounded-2xl hover:border-white/20 hover:bg-zinc-800/80 transition-all group"
+        >
+          <div className="w-12 h-12 rounded-xl bg-zinc-700/60 flex items-center justify-center group-hover:bg-zinc-700 transition-colors">
+            <Plus className="w-5 h-5 text-zinc-400 group-hover:text-white transition-colors" />
+          </div>
+          <div className="text-left">
+            <p className="text-white text-sm font-medium">No live stages right now</p>
+            <p className="text-zinc-500 text-xs">Start a stage and go live with your audience</p>
+          </div>
+        </button>
+      ) : (
+        <div className="relative">
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black to-transparent pointer-events-none z-10" />
+          <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
+            {liveSpaces.map((space) => (
+              <StageCard 
+                key={space.id} 
+                space={space} 
+                onClick={onOpenStages}
+              />
+            ))}
+          </SwipeableCarousel>
+        </div>
+      )}
     </div>
   );
 }
