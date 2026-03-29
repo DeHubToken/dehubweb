@@ -62,13 +62,17 @@ function ExpandableDescription({ text }: { text: string }) {
   const [clamped, setClamped] = useState(false);
 
   useEffect(() => {
+    setExpanded(false);
+  }, [text]);
+
+  useEffect(() => {
     const el = ref.current;
     if (el) setClamped(el.scrollHeight > el.clientHeight + 1);
   }, [text]);
 
   return (
     <div className="mt-2 lg:mt-3 flex-shrink-0">
-      <div className={cn(expanded && "max-h-[7.5rem] overflow-y-auto scrollbar-thin scrollbar-thumb-white/20")}>
+      <div className={cn(expanded && "max-h-[7.5rem] overflow-y-auto") }>
         <p
           ref={ref}
           className={cn("text-white/80 text-xs lg:text-sm", !expanded && "line-clamp-2")}
@@ -1031,10 +1035,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0 overflow-hidden"
               onWheelCapture={(e) => e.stopPropagation()}
             >
-              <div className="flex-1 min-h-0 [&>div]:h-full [&>div]:max-h-none [&>div]:mt-0 [&>div]:p-0">
+          <div className="flex-1 min-h-0 [&>div]:h-full [&>div]:min-h-0 [&>div]:max-h-none [&>div]:mt-0 [&>div]:p-0">
                 <CommentsSection
                   tokenId={currentShort.id}
                   onClose={() => {}}
+              embedded
                 />
               </div>
             </div>
