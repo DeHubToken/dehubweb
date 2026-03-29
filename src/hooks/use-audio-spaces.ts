@@ -20,7 +20,8 @@ interface UseAudioSpacesReturn {
   isConnected: boolean;
   isMuted: boolean;
   myRole: SpaceRole | null;
-  
+  hasRaisedHand: boolean;
+
   // Actions
   createSpace: (title: string, description?: string) => Promise<AudioSpace | null>;
   joinSpace: (spaceId: string) => Promise<boolean>;
@@ -46,11 +47,18 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [myRole, setMyRole] = useState<SpaceRole | null>(null);
-  
+  const [hasRaisedHand, setHasRaisedHand] = useState(false);
+
   // Refs for Agora
   const agoraClientRef = useRef<any>(null);
   const localAudioTrackRef = useRef<any>(null);
   const channelRef = useRef<any>(null);
+
+  // Refs to avoid stale closures in realtime callbacks
+  const walletAddressRef = useRef(walletAddress);
+  const myRoleRef = useRef(myRole);
+  useEffect(() => { walletAddressRef.current = walletAddress; }, [walletAddress]);
+  useEffect(() => { myRoleRef.current = myRole; }, [myRole]);
 
   // Fetch live stages
   const refreshSpaces = useCallback(async () => {
@@ -81,10 +89,17 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
       });
 
       if (error) throw error;
-      return data as AgoraTokenResponse;
+      if (data?.error) throw new Error(data.error);
+
+      const tokenData = data as AgoraTokenResponse;
+      if (!tokenData?.appId || !tokenData?.token) {
+        throw new Error('Agora credentials not configured — check AGORA_APP_ID and AGORA_APP_CERTIFICATE in Supabase secrets');
+      }
+      return tokenData;
     } catch (err) {
       console.error('Error getting Agora token:', err);
-      toast.error('Failed to get audio token');
+      const msg = err instanceof Error ? err.message : 'Failed to get audio token';
+      toast.error(msg);
       return null;
     }
   };
@@ -146,6 +161,26 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
     }
   };
 
+  // Upgrade current user from listener → speaker (called when host approves)
+  const upgradeSpeaker = useCallback(async () => {
+    if (!agoraClientRef.current) return;
+    try {
+      const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
+      await agoraClientRef.current.setClientRole('host');
+      const localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+      localAudioTrackRef.current = localAudioTrack;
+      localAudioTrack.setMuted(true);
+      await agoraClientRef.current.publish([localAudioTrack]);
+      setMyRole('speaker');
+      setIsMuted(true);
+      setHasRaisedHand(false);
+      toast.success('You\'re now a speaker! Unmute to talk.');
+    } catch (err) {
+      console.error('Error upgrading to speaker:', err);
+      toast.error('Failed to enable microphone');
+    }
+  }, []);
+
   // Create a new stage
   const createSpace = useCallback(async (title: string, description?: string): Promise<AudioSpace | null> => {
     if (!walletAddress) {
@@ -190,19 +225,29 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
 
       // Get token and connect
       const tokenData = await getAgoraToken(channelName, 'publisher');
-      if (!tokenData) throw new Error('Failed to get token');
+      if (!tokenData) {
+        // Clean up the DB record so it doesn't show as a ghost stage
+        await supabase.from('audio_spaces').update({ status: 'ended' }).eq('id', space.id);
+        throw new Error('Failed to get audio token');
+      }
 
       const connected = await initializeAgora(tokenData, 'host');
-      if (!connected) throw new Error('Failed to connect');
+      if (!connected) {
+        await supabase.from('audio_spaces').update({ status: 'ended' }).eq('id', space.id);
+        throw new Error('Failed to connect to audio');
+      }
 
       setCurrentSpace(space as AudioSpace);
       setMyRole('host');
-      
+
       toast.success('Stage created! You\'re now live.');
       return space as AudioSpace;
     } catch (err) {
       console.error('Error creating stage:', err);
-      toast.error('Failed to create stage');
+      // Don't double-toast if getAgoraToken already toasted
+      if (err instanceof Error && !err.message.includes('token')) {
+        toast.error('Failed to create stage');
+      }
       return null;
     } finally {
       setIsLoading(false);
@@ -259,7 +304,8 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
 
       setCurrentSpace(space as AudioSpace);
       setMyRole('listener');
-      
+      setHasRaisedHand(false);
+
       toast.success('Joined the stage!');
       return true;
     } catch (err) {
@@ -307,7 +353,8 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
       setIsConnected(false);
       setMyRole(null);
       setParticipants([]);
-      
+      setHasRaisedHand(false);
+
       toast.success('Left the stage');
     } catch (err) {
       console.error('Error leaving stage:', err);
@@ -354,10 +401,10 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
 
   // Raise hand
   const raiseHand = useCallback(async () => {
-    if (!currentSpace || !walletAddress || myRole !== 'listener') return;
+    if (!currentSpace || !walletAddress || myRole !== 'listener' || hasRaisedHand) return;
 
     try {
-      await supabase
+      const { error } = await supabase
         .from('raise_hand_requests')
         .insert({
           space_id: currentSpace.id,
@@ -367,12 +414,14 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
           status: 'pending'
         });
 
+      if (error) throw error;
+      setHasRaisedHand(true);
       toast.success('Hand raised! Waiting for host approval.');
     } catch (err) {
       console.error('Error raising hand:', err);
       toast.error('Failed to raise hand');
     }
-  }, [currentSpace, walletAddress, user, myRole]);
+  }, [currentSpace, walletAddress, user, myRole, hasRaisedHand]);
 
   // Lower hand
   const lowerHand = useCallback(async () => {
@@ -381,13 +430,15 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
     try {
       await supabase
         .from('raise_hand_requests')
-        .update({ 
+        .update({
           status: 'rejected',
           resolved_at: new Date().toISOString()
         })
         .eq('space_id', currentSpace.id)
         .eq('wallet_address', walletAddress)
         .eq('status', 'pending');
+
+      setHasRaisedHand(false);
     } catch (err) {
       console.error('Error lowering hand:', err);
     }
@@ -485,6 +536,12 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
             setParticipants(prev => prev.filter(p => p.id !== updated.id));
           } else {
             setParticipants(prev => prev.map(p => p.id === updated.id ? updated : p));
+            // If current user was just promoted to speaker by the host
+            if (updated.wallet_address === walletAddressRef.current &&
+                updated.role === 'speaker' &&
+                myRoleRef.current === 'listener') {
+              upgradeSpeaker();
+            }
           }
         } else if (payload.eventType === 'DELETE') {
           const removed = payload.old as SpaceParticipant;
@@ -514,6 +571,10 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
           const updated = payload.new as RaiseHandRequest;
           if (updated.status !== 'pending') {
             setHandRequests(prev => prev.filter(r => r.id !== updated.id));
+            // Clear raised hand state if it was current user's request resolved
+            if (updated.wallet_address === walletAddressRef.current) {
+              setHasRaisedHand(false);
+            }
           } else {
             setHandRequests(prev => prev.map(r => r.id === updated.id ? updated : r));
           }
@@ -601,6 +662,7 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
     isConnected,
     isMuted,
     myRole,
+    hasRaisedHand,
     createSpace,
     joinSpace,
     leaveSpace,

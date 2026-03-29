@@ -197,6 +197,7 @@ export function PostActionBar({
       <AudioSpacesModal
         isOpen={audioSpacesModalOpen}
         onClose={handleAudioSpacesModalClose}
+        initialView="create"
       />
 
       {/* Upload progress bar — liquid glass bubble style */}

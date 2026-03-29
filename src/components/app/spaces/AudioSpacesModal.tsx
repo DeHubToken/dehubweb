@@ -9,7 +9,7 @@
  * - Raise hand to become speaker
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Mic, MicOff, Users, Hand, X, ChevronLeft,
   Loader2, Phone, PhoneOff, Crown, Volume2 
@@ -29,11 +29,12 @@ import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/aud
 interface AudioSpacesModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialView?: View;
 }
 
 type View = 'browse' | 'create' | 'live';
 
-export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
+export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesModalProps) {
   const { isAuthenticated } = useAuth();
   const {
     liveSpaces,
@@ -44,6 +45,7 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
     isConnected,
     isMuted,
     myRole,
+    hasRaisedHand,
     createSpace,
     joinSpace,
     leaveSpace,
@@ -55,9 +57,16 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
     removeSpeaker
   } = useAudioSpaces();
 
-  const [view, setView] = useState<View>('browse');
+  const [view, setView] = useState<View>(initialView ?? 'browse');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+
+  // Reset to initialView each time the modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setView(initialView ?? 'browse');
+    }
+  }, [isOpen, initialView]);
 
   const handleClose = () => {
     if (currentSpace) {
@@ -322,16 +331,21 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
                     </Button>
                   )}
 
-                  {/* Raise Hand (listeners only) */}
+                  {/* Raise/Lower Hand (listeners only) */}
                   {myRole === 'listener' && (
                     <Button
-                      onClick={raiseHand}
+                      onClick={hasRaisedHand ? lowerHand : raiseHand}
                       size="lg"
                       variant="outline"
-                      className="rounded-full bg-white/10 hover:bg-white/20 border-white/10 text-white"
+                      className={cn(
+                        "rounded-full border-white/10 text-white",
+                        hasRaisedHand
+                          ? "bg-yellow-500/20 hover:bg-yellow-500/30 border-yellow-500/30"
+                          : "bg-white/10 hover:bg-white/20"
+                      )}
                     >
                       <Hand className="w-5 h-5 mr-2" />
-                      Raise Hand
+                      {hasRaisedHand ? 'Lower Hand' : 'Raise Hand'}
                     </Button>
                   )}
 
