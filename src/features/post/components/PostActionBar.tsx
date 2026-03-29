@@ -73,6 +73,9 @@ export function PostActionBar({
   isScheduled,
   onCloseModal,
   onOpenCategories,
+  onOpenSoundPicker,
+  attachedSound,
+  onClearSound,
 }: PostActionBarProps) {
   const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
