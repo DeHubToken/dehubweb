@@ -41,6 +41,9 @@ interface PostActionBarProps {
   isScheduled?: boolean;
   onCloseModal?: () => void;
   onOpenCategories?: () => void;
+  onOpenSoundPicker?: () => void;
+  attachedSound?: AttachedSound | null;
+  onClearSound?: () => void;
 }
 
 export function PostActionBar({
