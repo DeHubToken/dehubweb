@@ -177,6 +177,9 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
             )}
           </div>
 
+          {/* Stages Carousel - between Streams and TV */}
+          <StagesCarousel onOpenStages={() => setShowStagesModal(true)} />
+
           {/* TV Carousel */}
           {tvChannels.length > 0 && (
             <div className="space-y-3">
@@ -205,9 +208,6 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
               </SwipeableCarousel>
             </div>
           )}
-
-          {/* Stages Carousel */}
-          <StagesCarousel onOpenStages={() => setShowStagesModal(true)} />
 
           {/* Categories Carousel - at bottom */}
           <div className="space-y-3">
