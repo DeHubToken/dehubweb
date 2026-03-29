@@ -12,6 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { cn } from '@/lib/utils';
+import { buildAvatarUrl } from '@/lib/media-url';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 // Import the 3D mic icon
@@ -45,13 +46,16 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
       <div className="flex items-center gap-3 mb-3">
         <div className="relative">
           <div className="w-10 h-10 rounded-full ring-2 ring-white/20 overflow-hidden">
-            {space.host_avatar ? (
-              <img src={space.host_avatar} alt="" className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-zinc-700 flex items-center justify-center text-white font-medium text-sm">
-                {(space.host_username || space.host_wallet_address || 'U').charAt(0).toUpperCase()}
-              </div>
-            )}
+            {(() => {
+              const resolvedAvatar = buildAvatarUrl(space.host_wallet_address || '', space.host_avatar);
+              return resolvedAvatar ? (
+                <img src={resolvedAvatar} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-zinc-700 flex items-center justify-center text-white font-medium text-sm">
+                  {(space.host_username || space.host_wallet_address || 'U').charAt(0).toUpperCase()}
+                </div>
+              );
+            })()}
           </div>
           <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-zinc-700 rounded-full flex items-center justify-center">
             <Mic2 className="w-3 h-3 text-white" />
