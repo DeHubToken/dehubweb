@@ -12,7 +12,7 @@
 import { useState, useEffect } from 'react';
 import { 
   Mic, MicOff, Users, Hand, X, ChevronLeft,
-  Loader2, Phone, PhoneOff, Crown, Volume2 
+  Loader2, Phone, PhoneOff, Crown, Volume2, Music 
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils';
 import { useAudioSpaces } from '@/hooks/use-audio-spaces';
 import { useAuth } from '@/contexts/AuthContext';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
+import { StageSoundboard } from './StageSoundboard';
 import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/audio-spaces.types';
 
 interface AudioSpacesModalProps {
@@ -60,6 +61,7 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
   const [view, setView] = useState<View>(initialView ?? 'browse');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [showSoundboard, setShowSoundboard] = useState(false);
 
   // Reset to initialView each time the modal opens
   useEffect(() => {
@@ -312,9 +314,33 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
                 </div>
               )}
 
+              {/* Soundboard (Host only) */}
+              {myRole === 'host' && (
+                <StageSoundboard 
+                  isVisible={showSoundboard} 
+                  onClose={() => setShowSoundboard(false)} 
+                />
+              )}
+
               {/* Controls */}
               <div className="fixed bottom-0 left-0 right-0 p-4 bg-black/60 backdrop-blur-[24px] border-t border-white/10">
                 <div className="flex items-center justify-center gap-4 max-w-md mx-auto">
+                  {/* Soundboard Toggle (host only) */}
+                  {myRole === 'host' && (
+                    <Button
+                      onClick={() => setShowSoundboard(!showSoundboard)}
+                      size="lg"
+                      className={cn(
+                        "rounded-full w-14 h-14",
+                        showSoundboard 
+                          ? "bg-white/20 hover:bg-white/30 text-white" 
+                          : "bg-white/10 hover:bg-white/20 text-white"
+                      )}
+                    >
+                      <Music className="w-6 h-6" />
+                    </Button>
+                  )}
+
                   {/* Mute Button (speakers only) */}
                   {(myRole === 'host' || myRole === 'speaker') && (
                     <Button
