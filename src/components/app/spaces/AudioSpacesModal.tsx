@@ -226,7 +226,7 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
 
           {/* Live View */}
           {(view === 'live' || currentSpace) && currentSpace && (
-            <div className="space-y-4 pb-20">
+            <div className="space-y-4 pb-28 relative">
               {/* Stage Info */}
               <div className="text-center pb-4">
                 <div className="flex items-center justify-center gap-2 text-white mb-1">
