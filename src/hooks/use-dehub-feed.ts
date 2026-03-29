@@ -112,9 +112,10 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
           ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4`
           : getMediaUrl(nft.videoUrl) || undefined);
 
-  // Build audio URL from API audioUrl field
-  const audioUrl = isAudioPost && (nft as any).audioUrl
-    ? ((nft as any).audioUrl.startsWith('http') ? (nft as any).audioUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${(nft as any).audioUrl}`)
+  // Build audio URL from API audioUrl field, fallback to videoUrl/media_url for audio posts
+  const rawAudioSource = (nft as any).audioUrl || (isAudioPost ? (nft.videoUrl || nft.media_url) : undefined);
+  const audioUrl = isAudioPost && rawAudioSource
+    ? (rawAudioSource.startsWith('http') ? rawAudioSource : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawAudioSource}`)
     : undefined;
 
   // Get duration from various fields
