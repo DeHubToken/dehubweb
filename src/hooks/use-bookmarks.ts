@@ -242,9 +242,20 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
   const activeQuery = type === 'liked' ? likedQuery : type === 'history' ? historyQuery : savedQuery;
   
   // Flatten all pages into a single array
-  const allNFTs = isPPVTab
-    ? (ppvQuery.data || [])
-    : (activeQuery.data?.pages.flatMap(page => page.items) || []);
+  const savedNFTs = activeQuery.data?.pages.flatMap(page => page.items) || [];
+  const ppvNFTs = ppvQuery.data || [];
+  
+  let allNFTs: DeHubNFT[];
+  if (isPPVTab) {
+    allNFTs = ppvNFTs;
+  } else if (type === 'all') {
+    // Merge saved posts + PPV purchases, deduplicating by tokenId
+    const seenIds = new Set(savedNFTs.map(n => String(n.tokenId)));
+    const uniquePPV = ppvNFTs.filter(n => !seenIds.has(String(n.tokenId)));
+    allNFTs = [...savedNFTs, ...uniquePPV];
+  } else {
+    allNFTs = savedNFTs;
+  }
   
   // Fetch user's PPV purchases to cross-reference unlock state
   const ppvPurchasesQuery = useQuery({
