@@ -39,18 +39,36 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfiniteQuery({
     queryKey: ['sound-picker', debouncedSearch],
     queryFn: async ({ pageParam = 0 }) => {
-      const result = await searchNFTs({
-        postType: 'audio',
+      // Fetch both 'audio' and 'feed-audio' post types and merge
+      const searchParams = {
         page: pageParam,
         unit: 20,
-        sortMode: 'new',
-        status: 'minted',
+        sortMode: 'new' as const,
+        status: 'minted' as const,
         ...(debouncedSearch ? { search: debouncedSearch } : {}),
+      };
+      const [audioRes, feedAudioRes] = await Promise.all([
+        searchNFTs({ ...searchParams, postType: 'audio' }).catch(() => ({ data: [], total: 0, page: 0, limit: 20, has_more: false })),
+        searchNFTs({ ...searchParams, postType: 'feed-audio' }).catch(() => ({ data: [], total: 0, page: 0, limit: 20, has_more: false })),
+      ]);
+      // Merge and dedupe by tokenId
+      const seen = new Set<string>();
+      const merged = [...audioRes.data, ...feedAudioRes.data].filter((nft) => {
+        const id = String(nft.tokenId || nft.id);
+        if (seen.has(id)) return false;
+        seen.add(id);
+        return true;
       });
-      return result;
+      return {
+        data: merged,
+        total: audioRes.total + feedAudioRes.total,
+        page: pageParam,
+        limit: 20,
+        has_more: audioRes.has_more || feedAudioRes.has_more,
+      };
     },
     getNextPageParam: (lastPage, pages) => {
-      if (lastPage.data.length < 20) return undefined;
+      if (!lastPage.has_more && lastPage.data.length < 20) return undefined;
       return pages.length;
     },
     initialPageParam: 0,
