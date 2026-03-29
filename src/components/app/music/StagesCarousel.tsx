@@ -46,8 +46,11 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
       <div className="flex items-center gap-3 mb-3">
         <div className="relative">
           <div className="w-10 h-10 rounded-full ring-2 ring-white/20 overflow-hidden">
-            {space.host_avatar ? (
-              <img src={space.host_avatar} alt="" className="w-full h-full object-cover" />
+            {(() => {
+              const resolvedAvatar = buildAvatarUrl(space.host_wallet_address || '', space.host_avatar);
+              return resolvedAvatar ? (
+                <img src={resolvedAvatar} alt="" className="w-full h-full object-cover" />
+              ) : (
             ) : (
               <div className="w-full h-full bg-zinc-700 flex items-center justify-center text-white font-medium text-sm">
                 {(space.host_username || space.host_wallet_address || 'U').charAt(0).toUpperCase()}
