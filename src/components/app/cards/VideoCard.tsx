@@ -50,6 +50,7 @@ import { useAutoplay } from '@/contexts/AutoplayContext';
 import { AudioVisualizer } from '../audio';
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { repostPost } from '@/lib/api/dehub';
+import { useSyncedAudio } from '@/hooks/use-synced-audio';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import {
   Drawer,

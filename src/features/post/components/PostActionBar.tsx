@@ -241,6 +241,25 @@ export function PostActionBar({
         </div>
       )}
 
+      {/* Attached sound chip */}
+      {attachedSound && (
+        <div className="px-4 py-1.5 border-t border-white/10">
+          <div className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-1.5">
+            <Music className="w-3.5 h-3.5 text-white/60 flex-shrink-0" />
+            <span className="text-xs text-white/80 truncate flex-1">
+              ♪ {attachedSound.title} — {attachedSound.creator}
+            </span>
+            <button
+              type="button"
+              onClick={onClearSound}
+              className="p-0.5 hover:bg-white/10 rounded transition-colors flex-shrink-0"
+            >
+              <X className="w-3.5 h-3.5 text-white/50" />
+            </button>
+          </div>
+        </div>
+      )}
+
     <div className="px-4 py-2 border-t border-white/10 flex items-center justify-between">
       <div className="flex items-center gap-0.5">
         <input ref={imageInputRef} type="file" accept="image/*" multiple onChange={onImageSelect} className="hidden" />
