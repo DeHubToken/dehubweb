@@ -100,9 +100,11 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   const resolvedAddress = nft.minter || creatorObj?.id || creatorObj?.address;
   const avatar = rawAvatarPath && resolvedAddress ? buildAvatarUrl(resolvedAddress, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
   
-  // Build audio URL for audio posts (same logic as feed normalizer)
-  const audioUrl = isAudioPost && rawAudioUrl
-    ? (rawAudioUrl.startsWith('http') ? rawAudioUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawAudioUrl}`)
+  // Build audio URL for audio posts — try audioUrl first, then fall back to videoUrl/media_url
+  // The API sometimes returns the audio file path in videoUrl for audio posts
+  const rawAudioSource = rawAudioUrl || (isAudioPost ? (nft.videoUrl || nft.media_url) : undefined);
+  const audioUrl = isAudioPost && rawAudioSource
+    ? (rawAudioSource.startsWith('http') ? rawAudioSource : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawAudioSource}`)
     : undefined;
   
   return {
