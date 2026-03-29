@@ -500,6 +500,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // View tracking - fires view after watching threshold
   const { onTimeUpdate: trackView } = useVideoViewTracking(video.id);
 
+  // Synced audio overlay — plays a soundtrack over the video
+  const { audioRef: syncedAudioRef, hasSoundtrack } = useSyncedAudio({
+    soundtrackUrl: video.soundtrackUrl,
+    isPlaying,
+    isMuted,
+    volume,
+    videoRef: videoRef as React.RefObject<HTMLVideoElement>,
+  });
+
   // Translation hook for video text content
   const videoText = [video.title, video.description].filter(Boolean).join('\n\n');
   const {
