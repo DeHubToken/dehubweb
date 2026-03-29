@@ -27,7 +27,7 @@ export interface UnifiedFeedParams {
   limit?: number;
   sortBy?: 'views' | 'likes' | 'createdAt' | 'tips' | 'comments' | 'random';
   sortOrder?: 'asc' | 'desc';
-  postType?: 'all' | 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio';
+  postType?: 'all' | 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' | 'feed-audio';
   status?: 'minted' | 'signed' | 'all' | 'pending' | 'failed';
   search?: string;
   owner?: string;
