@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X } from 'lucide-react';
+import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -354,6 +354,19 @@ export function PostActionBar({
                 >
                   <Mic className="w-5 h-5 text-white" />
                 </button>
+                {onOpenSoundPicker && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onOpenSoundPicker();
+                      setAudioPopoverOpen(false);
+                    }}
+                    className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
+                    title="Search Sounds"
+                  >
+                    <Search className="w-5 h-5 text-white" />
+                  </button>
+                )}
               </div>
             </PopoverContent>
           </Popover>
@@ -405,24 +418,6 @@ export function PostActionBar({
 
         {/* Removed audio buttons when hasImage - functionality is on the image thumbnail */}
 
-        {/* Add Sound button - available when video or images are attached */}
-        {!isLive && (hasVideo || hasImage) && onOpenSoundPicker && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button 
-                type="button" 
-                onClick={onOpenSoundPicker} 
-                className={cn(
-                  "p-2 hover:bg-white/10 rounded-xl transition-colors",
-                  attachedSound && "bg-white/15"
-                )}
-              >
-                <Music className="w-5 h-5 text-white" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>{attachedSound ? 'Change sound' : 'Add sound'}</TooltipContent>
-          </Tooltip>
-        )}
 
         {/* Emoji/GIF picker - single working button */}
         <EmojiGifPicker 
