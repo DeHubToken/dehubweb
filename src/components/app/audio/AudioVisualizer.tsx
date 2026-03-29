@@ -194,13 +194,20 @@ export function AudioVisualizer({
     animationRef.current = requestAnimationFrame(draw);
   }, [style, hue, seed]);
 
-  useEffect(() => {
-    if (isPlaying && !isInitialized) {
+  // Handle play/pause synchronously from the user gesture via onPlayPause
+  // We wrap the original callback so that setupAudio + play() happen in the same
+  // synchronous call-stack as the click, satisfying browser autoplay policy.
+  const handlePlayPause = useCallback(() => {
+    // If we're about to play and haven't initialised yet, do it now (synchronously)
+    if (!isPlaying && !isConnectedRef.current) {
       setupAudio();
     }
-  }, [isPlaying, isInitialized, setupAudio]);
 
-  // Separate effect for playback control
+    // Toggle via parent
+    onPlayPauseRef.current();
+  }, [isPlaying, setupAudio]);
+
+  // Separate effect for playback control — runs AFTER state update from parent
   useEffect(() => {
     if (!audioRef.current) return;
 
