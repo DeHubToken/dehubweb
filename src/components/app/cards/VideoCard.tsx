@@ -1382,7 +1382,27 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             ) : (
               <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
             )}
-          </>
+           </>
+        )}
+
+        {/* Hidden synced audio element for soundtrack overlay */}
+        {hasSoundtrack && video.soundtrackUrl && (
+          <audio
+            ref={syncedAudioRef}
+            src={video.soundtrackUrl}
+            preload="auto"
+            className="hidden"
+          />
+        )}
+
+        {/* Soundtrack badge — like TikTok "♪ Song Name" */}
+        {hasSoundtrack && video.soundtrackTitle && (
+          <div className="absolute bottom-2 left-2 z-10 flex items-center gap-1.5 bg-black/40 backdrop-blur-[16px] px-2 py-1 rounded-lg border border-white/10 max-w-[60%]">
+            <Music className="w-3 h-3 text-white flex-shrink-0" />
+            <span className="text-white text-[10px] truncate">
+              {video.soundtrackTitle}{video.soundtrackCreator ? ` — ${video.soundtrackCreator}` : ''}
+            </span>
+          </div>
         )}
         
         {/* Content Type Badges - PPV/Bounty/Locked - show all that apply - hide in immersive mode */}
