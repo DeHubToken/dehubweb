@@ -28,7 +28,7 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
   return (
     <button
       onClick={onClick}
-      className="flex-shrink-0 w-[260px] bg-zinc-800/80 rounded-2xl p-4 text-left border border-white/10 hover:border-white/20 transition-all group"
+      className="flex-shrink-0 w-[260px] rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3 text-left hover:border-white/20 transition-all group"
     >
       {/* Live badge and listeners */}
       <div className="flex items-center justify-between mb-3">
