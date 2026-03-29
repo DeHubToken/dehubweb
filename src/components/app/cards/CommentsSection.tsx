@@ -74,6 +74,7 @@ interface CommentsSectionProps {
   tokenId: string;
   onClose: () => void;
   initialTab?: 'replies' | 'quotes' | 'reposts' | 'search';
+  embedded?: boolean;
 }
 
 // formatTimeAgo is now imported from @/lib/feed-utils
@@ -408,7 +409,7 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
 // MAIN COMPONENT
 // ============================================================================
 
-export function CommentsSection({ tokenId, onClose, initialTab }: CommentsSectionProps) {
+export function CommentsSection({ tokenId, onClose, initialTab, embedded = false }: CommentsSectionProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, isAuthenticated, walletAddress } = useAuth();
@@ -862,7 +863,13 @@ export function CommentsSection({ tokenId, onClose, initialTab }: CommentsSectio
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className={isMobile ? "flex flex-col h-full px-2 pt-2 pb-2 relative" : "flex flex-col min-h-[400px] max-h-[600px] p-4 mt-3 relative"}
+      className={cn(
+        isMobile
+          ? "flex flex-col h-full px-2 pt-2 pb-2 relative"
+          : embedded
+            ? "flex flex-col h-full min-h-0 p-0 mt-0 relative"
+            : "flex flex-col min-h-[400px] max-h-[600px] p-4 mt-3 relative"
+      )}
     >
 
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
