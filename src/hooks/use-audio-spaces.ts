@@ -121,28 +121,12 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
         await client.setClientRole('audience');
       }
 
-      // Join channel
-      await client.join(tokenData.appId, tokenData.channel, tokenData.token, tokenData.uid);
-      
-      console.log('Joined Agora channel:', tokenData.channel);
-
-      // If publisher, create and publish audio track
-      if (role === 'host' || role === 'speaker') {
-        const localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-        localAudioTrackRef.current = localAudioTrack;
-        
-        // Start muted
-        localAudioTrack.setMuted(true);
-        
-        await client.publish([localAudioTrack]);
-        console.log('Published local audio track');
-      }
-
-      // Listen for remote users - use 'audio' | 'video' type assertion
+      // Register event listeners BEFORE joining so we don't miss events from
+      // users who are already publishing when we enter the channel.
       client.on('user-published', async (remoteUser: any, mediaType: 'audio' | 'video') => {
         await client.subscribe(remoteUser, mediaType);
         console.log('Subscribed to user:', remoteUser.uid);
-        
+
         if (mediaType === 'audio') {
           remoteUser.audioTrack?.play();
         }
@@ -151,6 +135,23 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
       client.on('user-unpublished', (remoteUser: any) => {
         console.log('User unpublished:', remoteUser.uid);
       });
+
+      // Join channel
+      await client.join(tokenData.appId, tokenData.channel, tokenData.token, tokenData.uid);
+
+      console.log('Joined Agora channel:', tokenData.channel);
+
+      // If publisher, create and publish audio track
+      if (role === 'host' || role === 'speaker') {
+        const localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+        localAudioTrackRef.current = localAudioTrack;
+
+        // Start muted
+        localAudioTrack.setMuted(true);
+
+        await client.publish([localAudioTrack]);
+        console.log('Published local audio track');
+      }
 
       setIsConnected(true);
       return true;
