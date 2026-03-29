@@ -1,42 +1,65 @@
 
 
-# Add Pakistani TV Channels Support
+# Play Sound Over Upload — Overlay Approach
 
-## Problem
-Pakistani TV channels are absent from the verified database because the validation function filters them out — most Pakistani TV streams from the playlist sources use `http://` (not HTTPS) or non-`.m3u8` stream formats, causing them to fail the `isValidStreamUrl` check.
+## How It Works
 
-## Solution
-Relax the stream validation rules slightly and add a curated list of known-working Pakistani TV channel streams as a supplementary source.
+Instead of muxing audio into the video file, we **play a hidden `<audio>` element in sync with the `<video>` element**. When a post has an attached soundtrack, the player:
 
-### Changes
+1. **Mutes the video's original audio** and plays the soundtrack `<audio>` element simultaneously
+2. **Syncs play/pause/seek** — when the video pauses, the audio pauses; when the user seeks, the audio seeks to the same timestamp
+3. **Trims to shortest** — if the soundtrack is shorter than the video, it stops; if longer, it stops when the video ends
 
-### 1. Edge Function: `supabase/functions/validate-tv-channels/index.ts`
+## Will It Feel Native?
 
-**Allow HTTP streams from trusted domains**: Pakistani government broadcasters (e.g., `ptv.com.pk`, `radio.gov.pk`) and other known providers often only serve over HTTP. Add a whitelist of trusted domains where HTTP is acceptable:
+**Yes, for the viewer it's seamless:**
+- Both elements start/pause/seek together — no perceptible delay (they share the same `timeupdate` event loop)
+- The video player controls (play, pause, seek bar, volume) control both simultaneously
+- A small "♪ Track Name" badge appears on the video (like TikTok/Reels) so viewers know a sound is attached
+- Volume slider controls the soundtrack audio, video's own audio is muted
 
+**Edge cases handled:**
+- Buffering: if audio buffers, video waits (and vice versa) via `waiting`/`playing` events
+- Seek: `seeked` event on video triggers `audio.currentTime = video.currentTime`
+- Loop: if video loops, audio restarts from 0
+
+## What Gets Built
+
+### 1. Sound Picker Component
+- Bottom sheet to browse/search DeHub audio posts via `searchNFTs({ postType: 'audio' })`
+- Inline preview playback, select to attach
+
+### 2. Post Form State
+- New state: `attachedSound: { url, title, creator, tokenId } | null`
+- Stored as metadata alongside the post (not as a file upload)
+
+### 3. Post Submission
+- Include `soundtrackTokenId` or `soundtrackUrl` in the mint payload metadata (description or streamInfo)
+- The soundtrack reference is stored in the post's metadata so the player knows to load it
+
+### 4. Video Player Enhancement
+- When a post has an attached soundtrack URL, render a hidden `<audio>` element
+- Sync its playback with the video element using event listeners
+- Show a "♪ Track Name" overlay badge on the video
+- Mute the video's native audio track
+
+### 5. Feed/Single Post Page
+- Feed normalizer extracts soundtrack metadata from post description/metadata
+- Passes `soundtrackUrl` prop to the video player component
+
+## Technical Sync Logic (Simple)
+```text
+video.onplay   → audio.play()
+video.onpause  → audio.pause()
+video.onseeked → audio.currentTime = video.currentTime
+video.onended  → audio.pause(); audio.currentTime = 0
 ```
-const TRUSTED_HTTP_DOMAINS = [
-  'ptv.com.pk',
-  'arynews.tv',
-  'geo.tv',
-  'humtv.com',
-  'radio.gov.pk',
-];
-```
 
-Update `isValidStreamUrl` to allow HTTP for these trusted domains.
-
-**Add curated Pakistani TV playlist source**: Add `https://iptv-org.github.io/iptv/countries/pk.m3u` as a third playlist source. The iptv-org project maintains per-country playlists that include Pakistani channels specifically (ARY News, Geo News, Hum TV, PTV, Express News, Dunya News, BOL News, Samaa TV, etc.).
-
-### 2. Redeploy the edge function
-
-After updating, trigger a re-validation to populate the database with Pakistani TV channels.
-
-## Expected Result
-After revalidation, Pakistani channels like ARY News, Geo News, PTV News, Hum TV, Express News, Dunya News, BOL News, and Samaa TV should appear in the TV section under a "Pakistan" country filter.
-
-## Technical Detail
-- The iptv-org country-specific playlist (`/countries/pk.m3u`) contains ~30-50 Pakistani channels
-- Some may still fail stream validation if their servers are down, but the major news/entertainment channels should pass
-- The country will be correctly mapped to category `pk` via the existing `COUNTRY_TO_CATEGORY` mapping
+## Files
+- **New**: `src/features/post/components/SoundPicker.tsx`
+- **New**: `src/features/post/hooks/usePostSound.ts`  
+- **New**: `src/hooks/use-synced-audio.ts` — reusable hook for audio-video sync
+- **Edit**: Video player component — add synced audio support + badge
+- **Edit**: Post form — add sound picker trigger + state
+- **Edit**: Feed normalizers — extract soundtrack metadata
 
