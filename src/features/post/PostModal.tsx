@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
+import { usePostSound } from './hooks/usePostSound';
 import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
+import { SoundPicker } from './components/SoundPicker';
 import { cn } from '@/lib/utils';
 
 interface PostModalProps {

@@ -149,6 +149,14 @@ export interface VideoItem extends BaseFeedItem {
   isAudio?: boolean;
   /** Post categories */
   categories?: string[];
+  /** Soundtrack URL (plays over the video via synced audio overlay) */
+  soundtrackUrl?: string;
+  /** Soundtrack display title */
+  soundtrackTitle?: string;
+  /** Soundtrack creator name */
+  soundtrackCreator?: string;
+  /** Soundtrack token ID (source audio post) */
+  soundtrackTokenId?: string;
 }
 
 /**
