@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useCallback, useEffect, ReactNode 
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 
 const STORAGE_KEY = 'dehub-optimistic-posts';
+const MAX_AGE_MS = 10 * 60 * 1000; // 10 minutes
 
 
 export type OptimisticPost = {
