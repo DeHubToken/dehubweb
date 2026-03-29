@@ -67,13 +67,15 @@ function ExpandableDescription({ text }: { text: string }) {
   }, [text]);
 
   return (
-    <div className="mt-2 lg:mt-3">
-      <p
-        ref={ref}
-        className={cn("text-white/80 text-xs lg:text-sm", !expanded && "line-clamp-2")}
-      >
-        {text}
-      </p>
+    <div className="mt-2 lg:mt-3 flex-shrink-0">
+      <div className={cn(expanded && "max-h-[7.5rem] overflow-y-auto scrollbar-thin scrollbar-thumb-white/20")}>
+        <p
+          ref={ref}
+          className={cn("text-white/80 text-xs lg:text-sm", !expanded && "line-clamp-2")}
+        >
+          {text}
+        </p>
+      </div>
       {(clamped || expanded) && (
         <button
           onClick={() => setExpanded(p => !p)}
