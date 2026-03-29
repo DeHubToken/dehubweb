@@ -315,6 +315,9 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
                 </div>
               )}
 
+              {/* Live Reactions */}
+              <StageReactions spaceId={currentSpace.id} />
+
               {/* Soundboard (Host only) */}
               {myRole === 'host' && (
                 <StageSoundboard 
