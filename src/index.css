@@ -671,3 +671,23 @@ html.reduce-motion .hover-scale {
     filter: blur(0px);
   }
 }
+
+/* Stage floating reactions */
+@keyframes float-up-reaction {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  70% {
+    opacity: 0.8;
+    transform: translateY(-120px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-160px) scale(0.8);
+  }
+}
+
+.animate-float-up {
+  animation: float-up-reaction 2s ease-out forwards;
+}
