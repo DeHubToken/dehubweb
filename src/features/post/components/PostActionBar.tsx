@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash } from 'lucide-react';
+import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -12,6 +12,7 @@ import { GoLiveModal } from '@/components/app/modals';
 import { AudioSpacesModal } from '@/components/app/spaces';
 import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
 import type { LiveMode } from '../types';
+import type { AttachedSound } from '../hooks/usePostSound';
 
 interface PostActionBarProps {
   imageInputRef: React.RefObject<HTMLInputElement>;
@@ -40,6 +41,9 @@ interface PostActionBarProps {
   isScheduled?: boolean;
   onCloseModal?: () => void;
   onOpenCategories?: () => void;
+  onOpenSoundPicker?: () => void;
+  attachedSound?: AttachedSound | null;
+  onClearSound?: () => void;
 }
 
 export function PostActionBar({
@@ -69,6 +73,9 @@ export function PostActionBar({
   isScheduled,
   onCloseModal,
   onOpenCategories,
+  onOpenSoundPicker,
+  attachedSound,
+  onClearSound,
 }: PostActionBarProps) {
   const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
@@ -234,6 +241,25 @@ export function PostActionBar({
         </div>
       )}
 
+      {/* Attached sound chip */}
+      {attachedSound && (
+        <div className="px-4 py-1.5 border-t border-white/10">
+          <div className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-1.5">
+            <Music className="w-3.5 h-3.5 text-white/60 flex-shrink-0" />
+            <span className="text-xs text-white/80 truncate flex-1">
+              ♪ {attachedSound.title} — {attachedSound.creator}
+            </span>
+            <button
+              type="button"
+              onClick={onClearSound}
+              className="p-0.5 hover:bg-white/10 rounded transition-colors flex-shrink-0"
+            >
+              <X className="w-3.5 h-3.5 text-white/50" />
+            </button>
+          </div>
+        </div>
+      )}
+
     <div className="px-4 py-2 border-t border-white/10 flex items-center justify-between">
       <div className="flex items-center gap-0.5">
         <input ref={imageInputRef} type="file" accept="image/*" multiple onChange={onImageSelect} className="hidden" />
@@ -379,7 +405,24 @@ export function PostActionBar({
 
         {/* Removed audio buttons when hasImage - functionality is on the image thumbnail */}
 
-        
+        {/* Add Sound button - available when video or images are attached */}
+        {!isLive && (hasVideo || hasImage) && onOpenSoundPicker && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                type="button" 
+                onClick={onOpenSoundPicker} 
+                className={cn(
+                  "p-2 hover:bg-white/10 rounded-xl transition-colors",
+                  attachedSound && "bg-white/15"
+                )}
+              >
+                <Music className="w-5 h-5 text-white" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{attachedSound ? 'Change sound' : 'Add sound'}</TooltipContent>
+          </Tooltip>
+        )}
 
         {/* Emoji/GIF picker - single working button */}
         <EmojiGifPicker 

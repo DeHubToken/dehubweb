@@ -161,6 +161,25 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const lockedPrice = nft.locked_price;
   const lockedCurrency = nft.locked_currency || 'DHB';
 
+  // Extract soundtrack metadata from description (format: [soundtrack:tokenId:title:creator])
+  const descText = nft.description || '';
+  const soundtrackMatch = descText.match(/\[soundtrack:(\d+):([^:]*):([^\]]*)\]/);
+  let soundtrackUrl: string | undefined;
+  let soundtrackTitle: string | undefined;
+  let soundtrackCreator: string | undefined;
+  let soundtrackTokenId: string | undefined;
+  if (soundtrackMatch) {
+    soundtrackTokenId = soundtrackMatch[1];
+    soundtrackTitle = soundtrackMatch[2] || 'Sound';
+    soundtrackCreator = soundtrackMatch[3] || '';
+    soundtrackUrl = `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/audios/${soundtrackTokenId}.mp3`;
+  }
+
+  // Clean soundtrack tag from description for display
+  const cleanDescription = soundtrackMatch
+    ? descText.replace(/\[soundtrack:[^\]]*\]/, '').trim()
+    : undefined;
+
   return {
     id,
     type: 'video',
@@ -172,6 +191,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     duration: formatDuration(duration),
     durationSeconds: typeof duration === 'number' ? duration : 0,
     title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
+    description: cleanDescription ?? undefined,
     channel,
     channelAvatar,
     verified,
@@ -194,6 +214,10 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
     chainId: nft.chainId,
+    soundtrackUrl,
+    soundtrackTitle,
+    soundtrackCreator,
+    soundtrackTokenId,
   };
 }
 

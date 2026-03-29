@@ -15,7 +15,7 @@ import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Pencil, Trash2, Gem, Repeat } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Pencil, Trash2, Gem, Repeat, Music } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -50,6 +50,7 @@ import { useAutoplay } from '@/contexts/AutoplayContext';
 import { AudioVisualizer } from '../audio';
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { repostPost } from '@/lib/api/dehub';
+import { useSyncedAudio } from '@/hooks/use-synced-audio';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import {
   Drawer,
@@ -498,6 +499,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   
   // View tracking - fires view after watching threshold
   const { onTimeUpdate: trackView } = useVideoViewTracking(video.id);
+
+  // Synced audio overlay — plays a soundtrack over the video
+  const { audioRef: syncedAudioRef, hasSoundtrack } = useSyncedAudio({
+    soundtrackUrl: video.soundtrackUrl,
+    isPlaying,
+    isMuted,
+    volume,
+    videoRef: videoRef as React.RefObject<HTMLVideoElement>,
+  });
 
   // Translation hook for video text content
   const videoText = [video.title, video.description].filter(Boolean).join('\n\n');
@@ -1372,7 +1382,27 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             ) : (
               <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
             )}
-          </>
+           </>
+        )}
+
+        {/* Hidden synced audio element for soundtrack overlay */}
+        {hasSoundtrack && video.soundtrackUrl && (
+          <audio
+            ref={syncedAudioRef}
+            src={video.soundtrackUrl}
+            preload="auto"
+            className="hidden"
+          />
+        )}
+
+        {/* Soundtrack badge — like TikTok "♪ Song Name" */}
+        {hasSoundtrack && video.soundtrackTitle && (
+          <div className="absolute bottom-2 left-2 z-10 flex items-center gap-1.5 bg-black/40 backdrop-blur-[16px] px-2 py-1 rounded-lg border border-white/10 max-w-[60%]">
+            <Music className="w-3 h-3 text-white flex-shrink-0" />
+            <span className="text-white text-[10px] truncate">
+              {video.soundtrackTitle}{video.soundtrackCreator ? ` — ${video.soundtrackCreator}` : ''}
+            </span>
+          </div>
         )}
         
         {/* Content Type Badges - PPV/Bounty/Locked - show all that apply - hide in immersive mode */}

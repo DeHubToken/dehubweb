@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
+import { usePostSound } from './hooks/usePostSound';
 import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
+import { SoundPicker } from './components/SoundPicker';
 import { cn } from '@/lib/utils';
 
 interface PostModalProps {
@@ -17,7 +19,9 @@ interface PostModalProps {
 
 export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: PostModalProps) {
   const { state, actions, computed, refs } = usePostForm(onClose);
+  const { attachedSound, selectSound, clearSound } = usePostSound();
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
+  const [soundPickerOpen, setSoundPickerOpen] = useState(false);
 
   // Process initial files when modal opens with pending files
   useEffect(() => {
@@ -129,7 +133,18 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         onInsertGif={actions.insertGif}
         onCameraCapture={actions.openCameraCapture}
         onEnhanceWithAI={actions.handleEnhanceWithAI}
-        onPost={actions.handlePost}
+        onPost={() => {
+          // Inject soundtrack metadata into description before posting
+          if (attachedSound) {
+            const tag = `[soundtrack:${attachedSound.tokenId}:${attachedSound.title}:${attachedSound.creator}]`;
+            const currentDesc = state.text;
+            if (!currentDesc.includes('[soundtrack:')) {
+              actions.setText(currentDesc + (currentDesc ? '\n' : '') + tag);
+            }
+          }
+          // Small delay to let state update, then post
+          setTimeout(() => actions.handlePost(), 50);
+        }}
         canPost={computed.canPost}
         isEnhancing={state.isEnhancing}
         isPosting={state.isPosting}
@@ -140,6 +155,9 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         hasVideo={computed.hasVideo}
         isScheduled={!!state.scheduledDate}
         onOpenCategories={() => setCategoryDrawerOpen(true)}
+        onOpenSoundPicker={() => setSoundPickerOpen(true)}
+        attachedSound={attachedSound}
+        onClearSound={clearSound}
       />
     </>
   );
@@ -174,6 +192,13 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         onClose={actions.closeCameraCapture}
         onVideoRecorded={actions.handleCameraVideoRecorded}
         onPhotoCaptured={actions.handleCameraPhotoCaptured}
+      />
+
+      <SoundPicker
+        isOpen={soundPickerOpen}
+        onClose={() => setSoundPickerOpen(false)}
+        onSelect={selectSound}
+        currentSound={attachedSound}
       />
     </>
   );
