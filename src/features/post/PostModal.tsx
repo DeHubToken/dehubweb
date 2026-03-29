@@ -133,7 +133,18 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         onInsertGif={actions.insertGif}
         onCameraCapture={actions.openCameraCapture}
         onEnhanceWithAI={actions.handleEnhanceWithAI}
-        onPost={actions.handlePost}
+        onPost={() => {
+          // Inject soundtrack metadata into description before posting
+          if (attachedSound) {
+            const tag = `[soundtrack:${attachedSound.tokenId}:${attachedSound.title}:${attachedSound.creator}]`;
+            const currentDesc = state.text;
+            if (!currentDesc.includes('[soundtrack:')) {
+              actions.setText(currentDesc + (currentDesc ? '\n' : '') + tag);
+            }
+          }
+          // Small delay to let state update, then post
+          setTimeout(() => actions.handlePost(), 50);
+        }}
         canPost={computed.canPost}
         isEnhancing={state.isEnhancing}
         isPosting={state.isPosting}
@@ -144,6 +155,9 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         hasVideo={computed.hasVideo}
         isScheduled={!!state.scheduledDate}
         onOpenCategories={() => setCategoryDrawerOpen(true)}
+        onOpenSoundPicker={() => setSoundPickerOpen(true)}
+        attachedSound={attachedSound}
+        onClearSound={clearSound}
       />
     </>
   );
