@@ -190,9 +190,10 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
       ? undefined
       : (item.videoUrl?.startsWith('http') ? item.videoUrl : buildVideoUrl(item.tokenId));
   
-  // Build audio URL from API audioUrl field
-  const audioUrl = isAudioPost && item.audioUrl
-    ? (item.audioUrl.startsWith('http') ? item.audioUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.audioUrl}`)
+  // Build audio URL from API audioUrl field, fallback to videoUrl for audio posts
+  const rawAudioSource = item.audioUrl || (isAudioPost ? item.videoUrl : undefined);
+  const audioUrl = isAudioPost && rawAudioSource
+    ? (rawAudioSource.startsWith('http') ? rawAudioSource : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawAudioSource}`)
     : undefined;
   const rawAvatarPath = extractAvatarPath(item);
   const channelAvatar = rawAvatarPath 
