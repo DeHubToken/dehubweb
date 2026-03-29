@@ -25,6 +25,7 @@ import { useAudioSpaces } from '@/hooks/use-audio-spaces';
 import { useAuth } from '@/contexts/AuthContext';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { StageSoundboard } from './StageSoundboard';
+import { StageReactions } from './StageReactions';
 import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/audio-spaces.types';
 
 interface AudioSpacesModalProps {
