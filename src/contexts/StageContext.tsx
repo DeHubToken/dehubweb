@@ -515,10 +515,6 @@ export function StageProvider({ children }: { children: ReactNode }) {
         console.warn('Direct end failed (will auto-end via trigger):', updateErr.message);
       }
 
-      if (mediaRecorderRef.current) {
-        toast.info('Saving recording…');
-      }
-
       await leaveSpace();
       toast.success('Stage ended');
     } catch (err) {
