@@ -798,6 +798,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         isMuted,
         myRole,
         hasRaisedHand,
+        volumeLevel,
         isModalOpen,
         openModal,
         closeModal,
