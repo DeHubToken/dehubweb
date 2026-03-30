@@ -8,7 +8,7 @@
 
 import { Mic2, Users, ChevronRight, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { cn } from '@/lib/utils';
