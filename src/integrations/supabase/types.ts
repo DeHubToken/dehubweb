@@ -191,6 +191,7 @@ export type Database = {
           host_wallet_address: string
           id: string
           listener_count: number
+          recording_url: string | null
           speaker_count: number
           started_at: string
           status: string
@@ -206,6 +207,7 @@ export type Database = {
           host_wallet_address: string
           id?: string
           listener_count?: number
+          recording_url?: string | null
           speaker_count?: number
           started_at?: string
           status?: string
@@ -221,6 +223,7 @@ export type Database = {
           host_wallet_address?: string
           id?: string
           listener_count?: number
+          recording_url?: string | null
           speaker_count?: number
           started_at?: string
           status?: string
