@@ -11,6 +11,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
   Loader2, Phone, PhoneOff, Crown, Volume2,
@@ -31,6 +32,8 @@ import { StageReactions, type AvatarReactions } from './StageReactions';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/audio-spaces.types';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { formatDistanceToNow } from 'date-fns';
 
 type View = 'browse' | 'create' | 'live';
 
@@ -66,7 +69,22 @@ export function AudioSpacesModal() {
   const [description, setDescription] = useState('');
   const [avatarReactions, setAvatarReactions] = useState<AvatarReactions>({});
 
-  // Sync view when modal opens or initialModalView changes
+  // Fetch past (ended) stages for browse view
+  const { data: pastStages = [] } = useQuery({
+    queryKey: ['past-stages'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('audio_spaces')
+        .select('*')
+        .eq('status', 'ended')
+        .order('ended_at', { ascending: false })
+        .limit(20);
+      return (data as AudioSpace[]) || [];
+    },
+    enabled: isModalOpen && !currentSpace,
+    staleTime: 30_000,
+  });
+
   useEffect(() => {
     if (isModalOpen) {
       if (currentSpace) {
@@ -202,6 +220,36 @@ export function AudioSpacesModal() {
                   </div>
                 )}
               </div>
+
+              {/* Past Stages */}
+              {pastStages.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="text-sm font-medium text-white/60">Past Stages</h3>
+                  <div className="space-y-2">
+                    {pastStages.map((space) => (
+                      <div
+                        key={space.id}
+                        className="p-3 bg-white/5 rounded-xl border border-white/10"
+                      >
+                        <h4 className="font-medium text-white text-sm truncate">{space.title}</h4>
+                        <div className="flex items-center gap-3 mt-1.5 text-xs text-white/40">
+                          <span className="flex items-center gap-1">
+                            <Crown className="w-3 h-3" />
+                            {space.host_username || 'Anonymous'}
+                          </span>
+                          {space.ended_at && (
+                            <span>{formatDistanceToNow(new Date(space.ended_at), { addSuffix: true })}</span>
+                          )}
+                          <span className="flex items-center gap-1">
+                            <Users className="w-3 h-3" />
+                            {(space.speaker_count || 0) + (space.listener_count || 0)}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
