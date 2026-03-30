@@ -427,7 +427,7 @@ export function AudioSpacesModal() {
                     size="lg"
                     className="rounded-full bg-red-500/80 hover:bg-red-500 w-12 h-12 text-white"
                   >
-                    {myRole === 'host' ? <PhoneOff className="w-5 h-5" /> : <Phone className="w-5 h-5" />}
+                    {myRole === 'host' ? <PhoneOff className="w-5 h-5" /> : <X className="w-5 h-5" />}
                   </Button>
                 </div>
               </div>
