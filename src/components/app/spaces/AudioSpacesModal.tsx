@@ -369,6 +369,16 @@ export function AudioSpacesModal() {
               {/* Live Reactions */}
               <StageReactions spaceId={currentSpace.id} />
 
+              {/* Soundboard — always visible for hosts, below reactions */}
+              {myRole === 'host' && (
+                <div className="mt-3">
+                  <StageSoundboard
+                    isVisible={true}
+                    onClose={() => {}}
+                  />
+                </div>
+              )}
+
               {/* Controls */}
               <div className="fixed bottom-0 left-0 right-0 p-4 bg-black/60 backdrop-blur-[24px] border-t border-white/10">
                 <div className="flex items-center justify-center gap-4 max-w-md mx-auto">
