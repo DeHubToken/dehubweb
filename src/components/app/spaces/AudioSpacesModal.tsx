@@ -10,12 +10,12 @@
  * - Minimize to floating StageMiniPlayer
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
   Loader2, Volume2,
-  Link, UserPlus, Minimize2, Play,
+  Link, UserPlus, Minimize2, Play, Square,
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -71,6 +71,8 @@ export function AudioSpacesModal() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [avatarReactions, setAvatarReactions] = useState<AvatarReactions>({});
+  const [playingStageId, setPlayingStageId] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Fetch past (ended) stages for browse view
   const { data: pastStages = [] } = useQuery({
@@ -252,20 +254,39 @@ export function AudioSpacesModal() {
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           <button
                             onClick={() => {
-                              if (space.recording_url) {
-                                window.open(space.recording_url, '_blank');
-                              } else {
+                              if (!space.recording_url) {
                                 toast.info('Recording not available for this stage');
+                                return;
+                              }
+                              if (playingStageId === space.id) {
+                                // Stop
+                                audioRef.current?.pause();
+                                audioRef.current = null;
+                                setPlayingStageId(null);
+                              } else {
+                                // Stop previous
+                                audioRef.current?.pause();
+                                const audio = new Audio(space.recording_url);
+                                audio.onended = () => setPlayingStageId(null);
+                                audio.play();
+                                audioRef.current = audio;
+                                setPlayingStageId(space.id);
                               }
                             }}
                             className={cn(
                               "shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all",
-                              space.recording_url
-                                ? "bg-white/10 hover:bg-white/20 text-white"
-                                : "bg-white/5 text-white/20"
+                              playingStageId === space.id
+                                ? "bg-white/20 text-white"
+                                : space.recording_url
+                                  ? "bg-white/10 hover:bg-white/20 text-white"
+                                  : "bg-white/5 text-white/20"
                             )}
                           >
-                            <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
+                            {playingStageId === space.id ? (
+                              <Square className="w-3.5 h-3.5" fill="currentColor" />
+                            ) : (
+                              <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
+                            )}
                           </button>
                           <div className="flex-1 min-w-0">
                             <h4 className="font-medium text-white text-sm truncate">{space.title}</h4>
