@@ -88,6 +88,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
   // Stable refs for realtime callbacks
   const walletAddressRef = useRef(walletAddress);
   const myRoleRef = useRef(myRole);
+  const hasHandledStageEndRef = useRef(false);
   useEffect(() => { walletAddressRef.current = walletAddress; }, [walletAddress]);
   useEffect(() => { myRoleRef.current = myRole; }, [myRole]);
 
