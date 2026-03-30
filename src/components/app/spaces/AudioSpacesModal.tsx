@@ -69,7 +69,22 @@ export function AudioSpacesModal() {
   const [description, setDescription] = useState('');
   const [avatarReactions, setAvatarReactions] = useState<AvatarReactions>({});
 
-  // Sync view when modal opens or initialModalView changes
+  // Fetch past (ended) stages for browse view
+  const { data: pastStages = [] } = useQuery({
+    queryKey: ['past-stages'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('audio_spaces')
+        .select('*')
+        .eq('status', 'ended')
+        .order('ended_at', { ascending: false })
+        .limit(20);
+      return (data as AudioSpace[]) || [];
+    },
+    enabled: isModalOpen && !currentSpace,
+    staleTime: 30_000,
+  });
+
   useEffect(() => {
     if (isModalOpen) {
       if (currentSpace) {
