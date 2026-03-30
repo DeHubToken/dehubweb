@@ -72,7 +72,11 @@ export function AudioSpacesModal() {
   const [description, setDescription] = useState('');
   const [avatarReactions, setAvatarReactions] = useState<AvatarReactions>({});
   const [playingStageId, setPlayingStageId] = useState<string | null>(null);
+  const [playbackVolume, setPlaybackVolume] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const rafRef = useRef<number>(0);
 
   // Fetch past (ended) stages for browse view
   const { data: pastStages = [] } = useQuery({
@@ -251,7 +255,7 @@ export function AudioSpacesModal() {
                         key={space.id}
                         className="p-3 bg-white/5 rounded-xl border border-white/10 flex flex-col sm:flex-row sm:items-center gap-3"
                       >
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="flex items-center gap-3 shrink-0 min-w-0 sm:max-w-[260px]">
                           <button
                             onClick={() => {
                               if (!space.recording_url) {
@@ -260,15 +264,47 @@ export function AudioSpacesModal() {
                               }
                               if (playingStageId === space.id) {
                                 // Stop
+                                cancelAnimationFrame(rafRef.current);
                                 audioRef.current?.pause();
                                 audioRef.current = null;
+                                analyserRef.current = null;
                                 setPlayingStageId(null);
+                                setPlaybackVolume(0);
                               } else {
                                 // Stop previous
+                                cancelAnimationFrame(rafRef.current);
                                 audioRef.current?.pause();
+
                                 const audio = new Audio(space.recording_url);
-                                audio.onended = () => setPlayingStageId(null);
-                                audio.play();
+                                audio.crossOrigin = 'anonymous';
+                                audio.onended = () => {
+                                  cancelAnimationFrame(rafRef.current);
+                                  setPlayingStageId(null);
+                                  setPlaybackVolume(0);
+                                };
+
+                                // Set up analyser for volume
+                                const ctx = audioCtxRef.current || new AudioContext();
+                                audioCtxRef.current = ctx;
+                                const source = ctx.createMediaElementSource(audio);
+                                const analyser = ctx.createAnalyser();
+                                analyser.fftSize = 256;
+                                source.connect(analyser);
+                                analyser.connect(ctx.destination);
+                                analyserRef.current = analyser;
+
+                                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+                                const pump = () => {
+                                  analyser.getByteFrequencyData(dataArray);
+                                  let sum = 0;
+                                  for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+                                  setPlaybackVolume(sum / dataArray.length / 255);
+                                  rafRef.current = requestAnimationFrame(pump);
+                                };
+
+                                audio.play().then(() => {
+                                  rafRef.current = requestAnimationFrame(pump);
+                                });
                                 audioRef.current = audio;
                                 setPlayingStageId(space.id);
                               }
@@ -327,11 +363,19 @@ export function AudioSpacesModal() {
                           </div>
                         </div>
                         {/* Waveform - right side on desktop, below on mobile */}
-                        <div className="hidden sm:flex flex-1 h-8 min-w-0">
-                          <StaticWaveform seed={space.id} className="w-full h-full" />
+                        <div className="hidden sm:flex flex-1 h-10 min-w-0">
+                          {playingStageId === space.id ? (
+                            <LiveWaveform active={true} barCount={60} volumeLevel={playbackVolume} className="w-full h-full" />
+                          ) : (
+                            <StaticWaveform seed={space.id} className="w-full h-full" />
+                          )}
                         </div>
                         <div className="sm:hidden w-full h-12">
-                          <StaticWaveform seed={space.id} className="w-full h-full" />
+                          {playingStageId === space.id ? (
+                            <LiveWaveform active={true} barCount={60} volumeLevel={playbackVolume} className="w-full h-full" />
+                          ) : (
+                            <StaticWaveform seed={space.id} className="w-full h-full" />
+                          )}
                         </div>
                       </div>
                     ))}
