@@ -11,7 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useStage } from '@/contexts/StageContext';
 import { getFollowList } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
-import { Mic } from 'lucide-react';
+
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import type { AudioSpace, SpaceParticipant } from '@/types/audio-spaces.types';
 
