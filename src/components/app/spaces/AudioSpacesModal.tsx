@@ -166,18 +166,29 @@ export function AudioSpacesModal() {
               <img src={stagesMicIcon} alt="" className="w-7 h-7 object-contain" />
               {currentSpace ? currentSpace.title : 'Stages'}
             </DrawerTitle>
-            <div className="flex items-center gap-1">
-              {currentSpace && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleMinimize}
-                  className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
-                  title="Minimize — stage keeps running"
-                >
-                  <Minimize2 className="w-4 h-4" />
-                </Button>
-              )}
+              <div className="flex items-center gap-1">
+                {currentSpace && (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleCopyInviteLink}
+                      className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
+                      title="Share invite link"
+                    >
+                      <Link className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleMinimize}
+                      className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
+                      title="Minimize — stage keeps running"
+                    >
+                      <Minimize2 className="w-4 h-4" />
+                    </Button>
+                  </>
+                )}
               <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-xl text-white hover:bg-white/10">
                 <X className="w-5 h-5" />
               </Button>
@@ -365,15 +376,6 @@ export function AudioSpacesModal() {
                     {listeners.length} listening
                   </span>
                 </div>
-
-                {/* Invite link button */}
-                <button
-                  onClick={handleCopyInviteLink}
-                  className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white text-xs transition-all border border-white/10"
-                >
-                  <Link className="w-3 h-3" />
-                  Copy Invite Link
-                </button>
               </div>
 
               {/* Speakers Section */}
