@@ -13,7 +13,7 @@
 import { useState, useEffect } from 'react';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
-  Loader2, Phone, PhoneOff, Crown, Volume2, Music,
+  Loader2, Phone, PhoneOff, Crown, Volume2,
   Link, UserPlus, Minimize2,
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -27,7 +27,8 @@ import { useStage } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { StageSoundboard } from './StageSoundboard';
-import { StageReactions } from './StageReactions';
+import { StageReactions, type AvatarReactions } from './StageReactions';
+import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/audio-spaces.types';
 import { toast } from 'sonner';
 
@@ -63,12 +64,11 @@ export function AudioSpacesModal() {
   const [view, setView] = useState<View>(initialModalView);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  // showSoundboard state removed — soundboard is always visible for hosts
+  const [avatarReactions, setAvatarReactions] = useState<AvatarReactions>({});
 
   // Sync view when modal opens or initialModalView changes
   useEffect(() => {
     if (isModalOpen) {
-      // If currently in a space, always go to live view
       if (currentSpace) {
         setView('live');
       } else {
@@ -77,7 +77,6 @@ export function AudioSpacesModal() {
     }
   }, [isModalOpen, initialModalView, currentSpace]);
 
-  // When a space is created/joined while modal is open, switch to live view
   useEffect(() => {
     if (currentSpace && isModalOpen) {
       setView('live');
@@ -86,15 +85,13 @@ export function AudioSpacesModal() {
 
   // ─── Handlers ─────────────────────────────────────────────────────────────
 
-  // Minimize: close the drawer, keep the stage running
   const handleMinimize = () => {
     closeModal();
   };
 
-  // Hard close: leave if in a stage, then close
   const handleClose = () => {
     if (currentSpace) {
-      closeModal(); // just minimize — user can leave via mini player
+      closeModal();
     } else {
       setView('browse');
       closeModal();
@@ -107,14 +104,12 @@ export function AudioSpacesModal() {
     if (space) {
       setTitle('');
       setDescription('');
-      // Auto-minimize after going live — user browses the app with the mini player
       closeModal();
     }
   };
 
   const handleJoin = async (spaceId: string) => {
     const success = await joinSpace(spaceId);
-    // Auto-minimize after joining — same UX as radio
     if (success) closeModal();
   };
 
@@ -136,7 +131,6 @@ export function AudioSpacesModal() {
     navigator.clipboard.writeText(url).then(() => {
       toast.success('Invite link copied!');
     }).catch(() => {
-      // Fallback for browsers that block clipboard
       toast.info(`Share this link: ${url}`);
     });
   };
@@ -156,7 +150,6 @@ export function AudioSpacesModal() {
               {currentSpace ? currentSpace.title : 'Stages'}
             </DrawerTitle>
             <div className="flex items-center gap-1">
-              {/* Minimize button: close drawer but keep stage alive */}
               {currentSpace && (
                 <Button
                   variant="ghost"
@@ -174,8 +167,6 @@ export function AudioSpacesModal() {
             </div>
           </div>
         </DrawerHeader>
-
-        {/* Soundboard removed from here — now inline below reactions */}
 
         <ScrollArea className="flex-1 p-4">
 
@@ -264,7 +255,7 @@ export function AudioSpacesModal() {
 
           {/* ── Live View ───────────────────────────────────────────────── */}
           {(view === 'live' || currentSpace) && currentSpace && (
-            <div className="space-y-4 pb-28 relative">
+            <div className="space-y-4 pb-24 relative">
 
               {/* Stage Info */}
               <div className="text-center pb-2">
@@ -314,6 +305,7 @@ export function AudioSpacesModal() {
                       isHost={speaker.role === 'host'}
                       canRemove={myRole === 'host' && speaker.role === 'speaker'}
                       onRemove={() => removeSpeaker(speaker.wallet_address)}
+                      reactionEmoji={avatarReactions[speaker.wallet_address]}
                     />
                   ))}
                 </div>
@@ -366,37 +358,36 @@ export function AudioSpacesModal() {
                 </div>
               )}
 
-              {/* Live Reactions */}
-              <StageReactions spaceId={currentSpace.id} />
+              {/* Reactions bento card */}
+              <StageReactions
+                spaceId={currentSpace.id}
+                onAvatarReaction={setAvatarReactions}
+              />
 
-              {/* Soundboard — always visible for hosts, below reactions */}
+              {/* Soundboard — always visible for hosts */}
               {myRole === 'host' && (
-                <div className="mt-3">
-                  <StageSoundboard
-                    isVisible={true}
-                    onClose={() => {}}
-                  />
-                </div>
+                <StageSoundboard
+                  isVisible={true}
+                  onClose={() => {}}
+                />
               )}
 
               {/* Controls */}
-              <div className="fixed bottom-0 left-0 right-0 p-4 bg-black/60 backdrop-blur-[24px] border-t border-white/10">
-                <div className="flex items-center justify-center gap-4 max-w-md mx-auto">
-                  {/* Soundboard toggle removed — now always visible inline */}
-
+              <div className="fixed bottom-0 left-0 right-0 p-3 bg-black/60 backdrop-blur-[24px] border-t border-white/10 z-50">
+                <div className="flex items-center justify-center gap-3 max-w-md mx-auto">
                   {/* Mute Button (speakers only) */}
                   {(myRole === 'host' || myRole === 'speaker') && (
                     <Button
                       onClick={toggleMute}
                       size="lg"
                       className={cn(
-                        "rounded-full w-14 h-14",
+                        "rounded-full w-12 h-12",
                         isMuted
                           ? "bg-white/10 hover:bg-white/20 text-white"
                           : "bg-white/20 hover:bg-white/30 text-white",
                       )}
                     >
-                      {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+                      {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
                     </Button>
                   )}
 
@@ -404,17 +395,17 @@ export function AudioSpacesModal() {
                   {myRole === 'listener' && (
                     <Button
                       onClick={hasRaisedHand ? lowerHand : raiseHand}
-                      size="lg"
+                      size="sm"
                       variant="outline"
                       className={cn(
-                        "rounded-full border-white/10 text-white",
+                        "rounded-full border-white/10 text-white h-10 px-4",
                         hasRaisedHand
                           ? "bg-yellow-500/20 hover:bg-yellow-500/30 border-yellow-500/30"
                           : "bg-white/10 hover:bg-white/20",
                       )}
                     >
-                      <Hand className="w-5 h-5 mr-2" />
-                      {hasRaisedHand ? 'Lower Hand' : 'Raise Hand'}
+                      <Hand className="w-4 h-4 mr-1.5" />
+                      {hasRaisedHand ? 'Lower' : 'Raise Hand'}
                     </Button>
                   )}
 
@@ -423,19 +414,19 @@ export function AudioSpacesModal() {
                     onClick={handleMinimize}
                     size="lg"
                     variant="outline"
-                    className="rounded-full border-white/10 bg-white/5 hover:bg-white/15 text-white/70 hover:text-white w-14 h-14"
+                    className="rounded-full border-white/10 bg-white/5 hover:bg-white/15 text-white/70 hover:text-white w-12 h-12"
                     title="Minimize"
                   >
-                    <Minimize2 className="w-5 h-5" />
+                    <Minimize2 className="w-4 h-4" />
                   </Button>
 
                   {/* Leave/End Button */}
                   <Button
                     onClick={handleEndOrLeave}
                     size="lg"
-                    className="rounded-full bg-red-500/80 hover:bg-red-500 w-14 h-14 text-white"
+                    className="rounded-full bg-red-500/80 hover:bg-red-500 w-12 h-12 text-white"
                   >
-                    {myRole === 'host' ? <PhoneOff className="w-6 h-6" /> : <Phone className="w-6 h-6" />}
+                    {myRole === 'host' ? <PhoneOff className="w-5 h-5" /> : <Phone className="w-5 h-5" />}
                   </Button>
                 </div>
               </div>
@@ -497,17 +488,31 @@ function StageCard({
   );
 }
 
+function resolveParticipantAvatar(participant: SpaceParticipant): string | undefined {
+  const raw = participant.avatar;
+  if (!raw) return undefined;
+  // Try canonical CDN resolution
+  return buildAvatarUrl(participant.wallet_address, raw) || raw;
+}
+
 function ParticipantAvatar({
   participant,
   isHost,
   canRemove,
   onRemove,
+  reactionEmoji,
 }: {
   participant: SpaceParticipant;
   isHost: boolean;
   canRemove: boolean;
   onRemove: () => void;
+  reactionEmoji?: string;
 }) {
+  const [imgFailed, setImgFailed] = useState(false);
+  const resolvedAvatar = resolveParticipantAvatar(participant);
+  const cdnFallback = buildAvatarCdnFallbackUrl(participant.wallet_address, participant.avatar ?? undefined);
+  const activeSrc = imgFailed ? cdnFallback : resolvedAvatar;
+
   return (
     <div className="flex flex-col items-center gap-1 group relative">
       <div className={cn(
@@ -515,7 +520,10 @@ function ParticipantAvatar({
         !participant.is_muted && "ring-2 ring-white/50 ring-offset-2 ring-offset-black/60",
       )}>
         <Avatar className="w-12 h-12">
-          <AvatarImage src={participant.avatar || undefined} />
+          <AvatarImage
+            src={activeSrc}
+            onError={() => setImgFailed(true)}
+          />
           <AvatarFallback className="bg-white/10 text-white">
             {participant.username?.[0]?.toUpperCase() || '?'}
           </AvatarFallback>
@@ -528,6 +536,12 @@ function ParticipantAvatar({
         {participant.is_muted && (
           <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
             <MicOff className="w-3 h-3 text-white" />
+          </div>
+        )}
+        {/* Reaction emoji overlay */}
+        {reactionEmoji && (
+          <div className="absolute -bottom-1 -left-1 w-6 h-6 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center text-sm animate-bounce border border-white/20">
+            {reactionEmoji}
           </div>
         )}
       </div>
@@ -555,10 +569,18 @@ function ListenerItem({
   canInvite: boolean;
   onInvite: () => void;
 }) {
+  const [imgFailed, setImgFailed] = useState(false);
+  const resolvedAvatar = resolveParticipantAvatar(participant);
+  const cdnFallback = buildAvatarCdnFallbackUrl(participant.wallet_address, participant.avatar ?? undefined);
+  const activeSrc = imgFailed ? cdnFallback : resolvedAvatar;
+
   return (
     <div className="relative group">
       <Avatar className="w-8 h-8">
-        <AvatarImage src={participant.avatar || undefined} />
+        <AvatarImage
+          src={activeSrc}
+          onError={() => setImgFailed(true)}
+        />
         <AvatarFallback className="bg-white/10 text-white text-xs">
           {participant.username?.[0]?.toUpperCase() || '?'}
         </AvatarFallback>
