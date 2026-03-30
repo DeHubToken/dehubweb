@@ -94,7 +94,7 @@ export function StageMiniPlayer() {
         </div>
 
         {/* Controls */}
-        <div className="flex items-center justify-center gap-2 px-3 pb-2.5 pt-1">
+        <div className="relative flex items-center justify-center gap-2 px-3 pb-2.5 pt-1">
           {/* Mute (speakers only) */}
           {(myRole === 'host' || myRole === 'speaker') && (
             <button
@@ -123,7 +123,7 @@ export function StageMiniPlayer() {
           {/* Maximize - bottom right */}
           <button
             onClick={() => openModal('live')}
-            className="ml-auto text-white/50 hover:text-white transition-colors"
+            className="absolute right-3 text-white/50 hover:text-white transition-colors"
             title="Expand stage"
           >
             <Maximize2 className="w-3.5 h-3.5" />
