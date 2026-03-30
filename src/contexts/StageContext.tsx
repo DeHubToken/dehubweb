@@ -77,6 +77,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const agoraClientRef = useRef<any>(null);
   const localAudioTrackRef = useRef<any>(null);
 
+  // Recording refs (host only)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recordingChunksRef = useRef<Blob[]>([]);
+  const recordingSpaceIdRef = useRef<string | null>(null);
+
   // Stable refs for realtime callbacks
   const walletAddressRef = useRef(walletAddress);
   const myRoleRef = useRef(myRole);
@@ -92,6 +97,91 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
+  }, []);
+
+  // ─── Recording helpers (host only) ──────────────────────────────────────
+
+  const startRecording = useCallback((spaceId: string) => {
+    try {
+      // Capture all audio playing in the tab (what the host hears = all speakers mixed)
+      const audioCtx = new AudioContext();
+      const dest = audioCtx.createMediaStreamDestination();
+
+      // Connect system audio (tab capture) if available, otherwise use a silent stream
+      // The Agora remote tracks play through the speaker — we capture via getDisplayMedia
+      // For simplicity and broad compatibility we use getUserMedia with echoCancellation off
+      navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false }, video: false })
+        .then((stream) => {
+          const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+            ? 'audio/webm;codecs=opus'
+            : 'audio/webm';
+
+          const recorder = new MediaRecorder(stream, { mimeType });
+          recordingChunksRef.current = [];
+          recordingSpaceIdRef.current = spaceId;
+
+          recorder.ondataavailable = (e) => {
+            if (e.data.size > 0) recordingChunksRef.current.push(e.data);
+          };
+
+          recorder.start(1000); // collect chunks every 1s
+          mediaRecorderRef.current = recorder;
+          console.log('[Stage] Recording started');
+        })
+        .catch((err) => {
+          console.warn('[Stage] Could not start recording:', err.message);
+        });
+    } catch (err) {
+      console.warn('[Stage] Recording setup failed:', err);
+    }
+  }, []);
+
+  const stopAndUploadRecording = useCallback(async (spaceId: string) => {
+    const recorder = mediaRecorderRef.current;
+    if (!recorder || recorder.state === 'inactive') return;
+
+    return new Promise<void>((resolve) => {
+      recorder.onstop = async () => {
+        try {
+          const chunks = recordingChunksRef.current;
+          if (chunks.length === 0) { resolve(); return; }
+
+          const blob = new Blob(chunks, { type: 'audio/webm' });
+          const path = `${spaceId}/recording.webm`;
+
+          const { error: uploadErr } = await supabase.storage
+            .from('stage-recordings')
+            .upload(path, blob, { contentType: 'audio/webm', upsert: true });
+
+          if (uploadErr) {
+            console.error('[Stage] Upload failed:', uploadErr.message);
+            resolve();
+            return;
+          }
+
+          const { data: urlData } = supabase.storage
+            .from('stage-recordings')
+            .getPublicUrl(path);
+
+          if (urlData?.publicUrl) {
+            await supabase
+              .from('audio_spaces')
+              .update({ recording_url: urlData.publicUrl })
+              .eq('id', spaceId);
+            console.log('[Stage] Recording saved:', urlData.publicUrl);
+          }
+        } catch (err) {
+          console.error('[Stage] Recording upload error:', err);
+        } finally {
+          recordingChunksRef.current = [];
+          recordingSpaceIdRef.current = null;
+          mediaRecorderRef.current = null;
+          resolve();
+        }
+      };
+
+      recorder.stop();
+    });
   }, []);
 
   // ─── Fetch live stages ───────────────────────────────────────────────────
@@ -246,6 +336,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
         setCurrentSpace(space as AudioSpace);
         setMyRole('host');
+        // Start recording (host side — captures all audio they hear)
+        startRecording(space.id);
         toast.success("Stage created! You're now live.");
         return space as AudioSpace;
       } catch (err) {
@@ -320,6 +412,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const leaveSpace = useCallback(async () => {
     if (!currentSpace || !walletAddress) return;
     try {
+      // If host is leaving, stop and upload recording first
+      if (myRoleRef.current === 'host' && mediaRecorderRef.current) {
+        await stopAndUploadRecording(currentSpace.id);
+      }
+
       if (localAudioTrackRef.current) {
         localAudioTrackRef.current.stop();
         localAudioTrackRef.current.close();
@@ -360,17 +457,17 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const endSpace = useCallback(async () => {
     if (!currentSpace || myRole !== 'host') return;
     try {
-      // Try direct update first; the DB trigger (auto_end_audio_space_on_participant_leave)
-      // also handles this when the host's left_at is set, so we silently swallow RLS errors
-      // and rely on the trigger as fallback.
       const { error: updateErr } = await supabase
         .from('audio_spaces')
         .update({ status: 'ended', ended_at: new Date().toISOString() })
         .eq('id', currentSpace.id);
 
       if (updateErr) {
-        // Non-fatal — DB trigger will auto-end when host leaves
         console.warn('Direct end failed (will auto-end via trigger):', updateErr.message);
+      }
+
+      if (mediaRecorderRef.current) {
+        toast.info('Saving recording…');
       }
 
       await leaveSpace();

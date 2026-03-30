@@ -7,10 +7,10 @@
  * @module components/app/feeds/LiveFeed
  */
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
-import { RefreshCw, Radio, Eye, Tv, ChevronRight } from 'lucide-react';
+import { RefreshCw, Radio, Eye, Tv, ChevronRight, Play, MicOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { LiveFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
@@ -279,33 +279,71 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
 
 // Past Stages (recordings) section
 function PastStagesSection({ stages }: { stages: AudioSpace[] }) {
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handlePlay = (stage: AudioSpace) => {
+    if (!stage.recording_url) return;
+
+    if (playingId === stage.id) {
+      audioRef.current?.pause();
+      setPlayingId(null);
+      return;
+    }
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+
+    const audio = new Audio(stage.recording_url);
+    audio.onended = () => setPlayingId(null);
+    audio.play();
+    audioRef.current = audio;
+    setPlayingId(stage.id);
+  };
+
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between px-1">
-        <h2 className="font-bold text-white flex items-center gap-2">
-          <span className="w-2 h-2 bg-white/40 rounded-full" />
-          Past Stages
-        </h2>
+      <div className="flex items-center gap-2 px-1">
+        <span className="w-2 h-2 bg-white/40 rounded-full" />
+        <h2 className="font-bold text-white">Past Stages</h2>
       </div>
       <div className="space-y-2">
         {stages.map(stage => (
           <div key={stage.id} className="p-3 bg-white/5 rounded-xl border border-white/10">
-            <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center gap-3">
+              {/* Play button if recording exists */}
+              {stage.recording_url ? (
+                <button
+                  onClick={() => handlePlay(stage)}
+                  className="shrink-0 w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-all"
+                >
+                  {playingId === stage.id ? (
+                    <span className="flex gap-0.5">
+                      <span className="w-1 h-3 bg-white rounded-full animate-pulse" />
+                      <span className="w-1 h-3 bg-white rounded-full animate-pulse [animation-delay:0.15s]" />
+                      <span className="w-1 h-3 bg-white rounded-full animate-pulse [animation-delay:0.3s]" />
+                    </span>
+                  ) : (
+                    <Play className="w-4 h-4 text-white ml-0.5" />
+                  )}
+                </button>
+              ) : (
+                <div className="shrink-0 w-9 h-9 rounded-full bg-white/5 flex items-center justify-center">
+                  <MicOff className="w-4 h-4 text-white/20" />
+                </div>
+              )}
+
               <div className="flex-1 min-w-0">
                 <p className="text-white font-medium text-sm truncate">{stage.title}</p>
                 <p className="text-white/50 text-xs mt-0.5">
-                  Hosted by {stage.host_username || 'Anonymous'} ·{' '}
-                  {stage.speaker_count || 0} speakers · {stage.listener_count || 0} listeners
+                  {stage.host_username || 'Anonymous'} · {stage.speaker_count || 0} speakers
+                  {stage.ended_at && ` · ${new Date(stage.ended_at).toLocaleDateString()}`}
                 </p>
-                {stage.ended_at && (
-                  <p className="text-white/30 text-xs mt-0.5">
-                    {new Date(stage.ended_at).toLocaleDateString()}
-                  </p>
+                {!stage.recording_url && (
+                  <p className="text-white/25 text-xs mt-0.5">No recording</p>
                 )}
               </div>
-              <span className="shrink-0 px-2 py-0.5 rounded-full bg-white/10 text-white/40 text-xs">
-                Ended
-              </span>
             </div>
           </div>
         ))}

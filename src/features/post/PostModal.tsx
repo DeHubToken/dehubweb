@@ -158,6 +158,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         onOpenSoundPicker={() => setSoundPickerOpen(true)}
         attachedSound={attachedSound}
         onClearSound={clearSound}
+        onCloseModal={handleClose}
       />
     </>
   );

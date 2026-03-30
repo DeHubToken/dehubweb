@@ -107,13 +107,15 @@ export function AudioSpacesModal() {
     if (space) {
       setTitle('');
       setDescription('');
-      setView('live');
+      // Auto-minimize after going live — user browses the app with the mini player
+      closeModal();
     }
   };
 
   const handleJoin = async (spaceId: string) => {
     const success = await joinSpace(spaceId);
-    if (success) setView('live');
+    // Auto-minimize after joining — same UX as radio
+    if (success) closeModal();
   };
 
   const handleEndOrLeave = () => {
