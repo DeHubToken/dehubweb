@@ -485,7 +485,7 @@ export function AudioSpacesModal() {
                       onClick={hasRaisedHand ? lowerHand : raiseHand}
                       size="lg"
                       className={cn(
-                        "rounded-full w-12 h-12",
+                        "rounded-xl w-12 h-12",
                         hasRaisedHand
                           ? "bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400"
                           : "bg-white/10 hover:bg-white/20 text-white",
