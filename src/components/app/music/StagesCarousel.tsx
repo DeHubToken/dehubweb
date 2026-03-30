@@ -87,6 +87,7 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
 
 export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   
   // Fetch live stages
   const { data: liveSpaces = [], refetch } = useQuery({
@@ -103,6 +104,33 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
     },
     staleTime: 30_000,
   });
+
+  // Realtime: remove ended stages instantly
+  React.useEffect(() => {
+    const channel = supabase
+      .channel('stages-carousel-realtime')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'audio_spaces' },
+        (payload) => {
+          const updated = payload.new as any;
+          if (updated.status === 'ended') {
+            // Immediately remove from cache
+            queryClient.setQueryData<AudioSpace[]>(['live-stages-carousel'], (old) =>
+              old ? old.filter(s => s.id !== updated.id) : []
+            );
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'audio_spaces' },
+        () => { refetch(); }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [queryClient, refetch]);
 
   return (
     <div>
