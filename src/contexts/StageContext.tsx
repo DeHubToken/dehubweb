@@ -429,6 +429,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         setCurrentSpace(space as AudioSpace);
         setMyRole('listener');
         setHasRaisedHand(false);
+        hasHandledStageEndRef.current = false;
         toast.success('Joined the stage!');
         return true;
       } catch (err) {
