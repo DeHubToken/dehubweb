@@ -380,9 +380,27 @@ export function StageProvider({ children }: { children: ReactNode }) {
           { onConflict: 'space_id,wallet_address' },
         );
 
+        // Recount listeners from actual participants to avoid drift on rejoin
+        const { count: listenerCount } = await supabase
+          .from('space_participants')
+          .select('*', { count: 'exact', head: true })
+          .eq('space_id', spaceId)
+          .eq('role', 'listener')
+          .is('left_at', null);
+
+        const { count: speakerCount } = await supabase
+          .from('space_participants')
+          .select('*', { count: 'exact', head: true })
+          .eq('space_id', spaceId)
+          .in('role', ['host', 'speaker'])
+          .is('left_at', null);
+
         await supabase
           .from('audio_spaces')
-          .update({ listener_count: (space.listener_count || 0) + 1 })
+          .update({
+            listener_count: listenerCount ?? 0,
+            speaker_count: speakerCount ?? 1,
+          })
           .eq('id', spaceId);
 
         const tokenData = await getAgoraToken(space.channel_name, 'subscriber');
