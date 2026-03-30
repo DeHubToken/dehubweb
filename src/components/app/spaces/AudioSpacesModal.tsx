@@ -1,18 +1,20 @@
 /**
  * AudioSpacesModal - Twitter Spaces-like audio rooms (Stages)
- * 
- * MVP Features:
- * - Create a new audio stage
- * - Browse live stages
- * - Join as listener
- * - Host controls for speakers
- * - Raise hand to become speaker
+ *
+ * Uses StageContext so stage persists while browsing the app.
+ * Features:
+ * - Create / browse / join stages
+ * - Invite links
+ * - Add speakers directly
+ * - Reactions & Soundboard
+ * - Minimize to floating StageMiniPlayer
  */
 
 import { useState, useEffect } from 'react';
-import { 
+import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
-  Loader2, Phone, PhoneOff, Crown, Volume2, Music 
+  Loader2, Phone, PhoneOff, Crown, Volume2, Music,
+  Link, UserPlus, Minimize2,
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -21,22 +23,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { useAudioSpaces } from '@/hooks/use-audio-spaces';
+import { useStage } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { StageSoundboard } from './StageSoundboard';
 import { StageReactions } from './StageReactions';
 import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/audio-spaces.types';
-
-interface AudioSpacesModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  initialView?: View;
-}
+import { toast } from 'sonner';
 
 type View = 'browse' | 'create' | 'live';
 
-export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesModalProps) {
+export function AudioSpacesModal() {
   const { isAuthenticated } = useAuth();
   const {
     liveSpaces,
@@ -44,10 +41,13 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
     participants,
     handRequests,
     isLoading,
-    isConnected,
     isMuted,
     myRole,
     hasRaisedHand,
+    isModalOpen,
+    openModal,
+    closeModal,
+    initialModalView,
     createSpace,
     joinSpace,
     leaveSpace,
@@ -56,37 +56,53 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
     raiseHand,
     lowerHand,
     approveSpeaker,
-    removeSpeaker
-  } = useAudioSpaces();
+    removeSpeaker,
+    inviteSpeaker,
+  } = useStage();
 
-  const [view, setView] = useState<View>(initialView ?? 'browse');
+  const [view, setView] = useState<View>(initialModalView);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [showSoundboard, setShowSoundboard] = useState(false);
 
-  // Reset to initialView each time the modal opens
+  // Sync view when modal opens or initialModalView changes
   useEffect(() => {
-    if (isOpen) {
-      setView(initialView ?? 'browse');
+    if (isModalOpen) {
+      // If currently in a space, always go to live view
+      if (currentSpace) {
+        setView('live');
+      } else {
+        setView(initialModalView);
+      }
     }
-  }, [isOpen, initialView]);
+  }, [isModalOpen, initialModalView, currentSpace]);
 
+  // When a space is created/joined while modal is open, switch to live view
+  useEffect(() => {
+    if (currentSpace && isModalOpen) {
+      setView('live');
+    }
+  }, [currentSpace, isModalOpen]);
+
+  // ─── Handlers ─────────────────────────────────────────────────────────────
+
+  // Minimize: close the drawer, keep the stage running
+  const handleMinimize = () => {
+    closeModal();
+  };
+
+  // Hard close: leave if in a stage, then close
   const handleClose = () => {
     if (currentSpace) {
-      if (window.confirm('Leave this stage?')) {
-        leaveSpace();
-        setView('browse');
-        onClose();
-      }
+      closeModal(); // just minimize — user can leave via mini player
     } else {
       setView('browse');
-      onClose();
+      closeModal();
     }
   };
 
   const handleCreate = async () => {
     if (!title.trim()) return;
-    
     const space = await createSpace(title.trim(), description.trim() || undefined);
     if (space) {
       setTitle('');
@@ -97,9 +113,7 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
 
   const handleJoin = async (spaceId: string) => {
     const success = await joinSpace(spaceId);
-    if (success) {
-      setView('live');
-    }
+    if (success) setView('live');
   };
 
   const handleEndOrLeave = () => {
@@ -114,12 +128,24 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
     }
   };
 
-  // Get speakers and listeners
+  const handleCopyInviteLink = () => {
+    if (!currentSpace) return;
+    const url = `${window.location.origin}/stage/${currentSpace.id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      toast.success('Invite link copied!');
+    }).catch(() => {
+      // Fallback for browsers that block clipboard
+      toast.info(`Share this link: ${url}`);
+    });
+  };
+
+  // ─── Derived ──────────────────────────────────────────────────────────────
+
   const speakers = participants.filter(p => p.role === 'host' || p.role === 'speaker');
   const listeners = participants.filter(p => p.role === 'listener');
 
   return (
-    <Drawer open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+    <Drawer open={isModalOpen} onOpenChange={(open) => !open && handleClose()}>
       <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh] [&>div:first-child]:hidden">
         <DrawerHeader className="border-b-0 pb-2">
           <div className="flex items-center justify-between">
@@ -127,19 +153,33 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
               <img src={stagesMicIcon} alt="" className="w-7 h-7 object-contain" />
               {currentSpace ? currentSpace.title : 'Stages'}
             </DrawerTitle>
-            <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-xl text-white hover:bg-white/10">
-              <X className="w-5 h-5" />
-            </Button>
+            <div className="flex items-center gap-1">
+              {/* Minimize button: close drawer but keep stage alive */}
+              {currentSpace && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleMinimize}
+                  className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
+                  title="Minimize — stage keeps running"
+                >
+                  <Minimize2 className="w-4 h-4" />
+                </Button>
+              )}
+              <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-xl text-white hover:bg-white/10">
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
         </DrawerHeader>
 
         <ScrollArea className="flex-1 p-4">
-          {/* Browse View */}
+
+          {/* ── Browse View ─────────────────────────────────────────────── */}
           {view === 'browse' && !currentSpace && (
             <div className="space-y-4">
-              {/* Start Stage Button */}
               {isAuthenticated && (
-                <Button 
+                <Button
                   onClick={() => setView('create')}
                   className="w-full bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl"
                 >
@@ -148,10 +188,8 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
                 </Button>
               )}
 
-              {/* Live Stages */}
               <div className="space-y-2">
                 <h3 className="text-sm font-medium text-white/60">Live Now</h3>
-                
                 {liveSpaces.length === 0 ? (
                   <div className="text-center py-8 text-white/50">
                     <img src={stagesMicIcon} alt="" className="w-12 h-12 mx-auto mb-3 opacity-50" />
@@ -174,7 +212,7 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
             </div>
           )}
 
-          {/* Create View */}
+          {/* ── Create View ─────────────────────────────────────────────── */}
           {view === 'create' && (
             <div className="space-y-4">
               <div className="space-y-2">
@@ -205,16 +243,12 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
                 disabled={!title.trim() || isLoading}
                 className="w-full bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl"
               >
-                {isLoading ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                  <Mic className="w-4 h-4 mr-2" />
-                )}
+                {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Mic className="w-4 h-4 mr-2" />}
                 Go Live
               </Button>
 
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 onClick={() => setView('browse')}
                 className="w-full text-white/60 hover:text-white hover:bg-white/10 rounded-xl"
               >
@@ -224,15 +258,16 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
             </div>
           )}
 
-          {/* Live View */}
+          {/* ── Live View ───────────────────────────────────────────────── */}
           {(view === 'live' || currentSpace) && currentSpace && (
             <div className="space-y-4 pb-28 relative">
+
               {/* Stage Info */}
-              <div className="text-center pb-4">
+              <div className="text-center pb-2">
                 <div className="flex items-center justify-center gap-2 text-white mb-1">
                   <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
                   </span>
                   <span className="text-xs font-medium">LIVE</span>
                 </div>
@@ -250,6 +285,15 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
                     {listeners.length} listening
                   </span>
                 </div>
+
+                {/* Invite link button */}
+                <button
+                  onClick={handleCopyInviteLink}
+                  className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white text-xs transition-all border border-white/10"
+                >
+                  <Link className="w-3 h-3" />
+                  Copy Invite Link
+                </button>
               </div>
 
               {/* Speakers Section */}
@@ -296,15 +340,18 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
                   <h3 className="text-sm font-medium text-white/60 flex items-center gap-2">
                     <Users className="w-4 h-4" />
                     Listeners ({listeners.length})
+                    {myRole === 'host' && (
+                      <span className="text-[10px] text-white/30 ml-1">(tap + to invite as speaker)</span>
+                    )}
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {listeners.slice(0, 20).map((listener) => (
-                      <Avatar key={listener.id} className="w-8 h-8">
-                        <AvatarImage src={listener.avatar || undefined} />
-                        <AvatarFallback className="bg-white/10 text-white text-xs">
-                          {listener.username?.[0]?.toUpperCase() || '?'}
-                        </AvatarFallback>
-                      </Avatar>
+                      <ListenerItem
+                        key={listener.id}
+                        participant={listener}
+                        canInvite={myRole === 'host'}
+                        onInvite={() => inviteSpeaker(listener.wallet_address)}
+                      />
                     ))}
                     {listeners.length > 20 && (
                       <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs text-white/60">
@@ -320,9 +367,9 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
 
               {/* Soundboard (Host only) */}
               {myRole === 'host' && (
-                <StageSoundboard 
-                  isVisible={showSoundboard} 
-                  onClose={() => setShowSoundboard(false)} 
+                <StageSoundboard
+                  isVisible={showSoundboard}
+                  onClose={() => setShowSoundboard(false)}
                 />
               )}
 
@@ -336,9 +383,9 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
                       size="lg"
                       className={cn(
                         "rounded-full w-14 h-14",
-                        showSoundboard 
-                          ? "bg-white/20 hover:bg-white/30 text-white" 
-                          : "bg-white/10 hover:bg-white/20 text-white"
+                        showSoundboard
+                          ? "bg-white/20 hover:bg-white/30 text-white"
+                          : "bg-white/10 hover:bg-white/20 text-white",
                       )}
                     >
                       <Music className="w-6 h-6" />
@@ -352,9 +399,9 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
                       size="lg"
                       className={cn(
                         "rounded-full w-14 h-14",
-                        isMuted 
-                          ? "bg-white/10 hover:bg-white/20 text-white" 
-                          : "bg-white/20 hover:bg-white/30 text-white"
+                        isMuted
+                          ? "bg-white/10 hover:bg-white/20 text-white"
+                          : "bg-white/20 hover:bg-white/30 text-white",
                       )}
                     >
                       {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
@@ -371,7 +418,7 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
                         "rounded-full border-white/10 text-white",
                         hasRaisedHand
                           ? "bg-yellow-500/20 hover:bg-yellow-500/30 border-yellow-500/30"
-                          : "bg-white/10 hover:bg-white/20"
+                          : "bg-white/10 hover:bg-white/20",
                       )}
                     >
                       <Hand className="w-5 h-5 mr-2" />
@@ -379,17 +426,24 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
                     </Button>
                   )}
 
+                  {/* Minimize */}
+                  <Button
+                    onClick={handleMinimize}
+                    size="lg"
+                    variant="outline"
+                    className="rounded-full border-white/10 bg-white/5 hover:bg-white/15 text-white/70 hover:text-white w-14 h-14"
+                    title="Minimize"
+                  >
+                    <Minimize2 className="w-5 h-5" />
+                  </Button>
+
                   {/* Leave/End Button */}
                   <Button
                     onClick={handleEndOrLeave}
                     size="lg"
                     className="rounded-full bg-red-500/80 hover:bg-red-500 w-14 h-14 text-white"
                   >
-                    {myRole === 'host' ? (
-                      <PhoneOff className="w-6 h-6" />
-                    ) : (
-                      <Phone className="w-6 h-6" />
-                    )}
+                    {myRole === 'host' ? <PhoneOff className="w-6 h-6" /> : <Phone className="w-6 h-6" />}
                   </Button>
                 </div>
               </div>
@@ -401,13 +455,14 @@ export function AudioSpacesModal({ isOpen, onClose, initialView }: AudioSpacesMo
   );
 }
 
-// Stage Card Component
-function StageCard({ 
-  space, 
-  onJoin, 
-  isLoading 
-}: { 
-  space: AudioSpace; 
+// ─── Sub-components ──────────────────────────────────────────────────────────
+
+function StageCard({
+  space,
+  onJoin,
+  isLoading,
+}: {
+  space: AudioSpace;
   onJoin: () => void;
   isLoading: boolean;
 }) {
@@ -417,8 +472,8 @@ function StageCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
             </span>
             <span className="text-xs text-white font-medium">LIVE</span>
           </div>
@@ -437,7 +492,7 @@ function StageCard({
             </span>
           </div>
         </div>
-        <Button 
+        <Button
           onClick={onJoin}
           disabled={isLoading}
           size="sm"
@@ -450,13 +505,12 @@ function StageCard({
   );
 }
 
-// Participant Avatar Component
-function ParticipantAvatar({ 
-  participant, 
+function ParticipantAvatar({
+  participant,
   isHost,
   canRemove,
-  onRemove
-}: { 
+  onRemove,
+}: {
   participant: SpaceParticipant;
   isHost: boolean;
   canRemove: boolean;
@@ -466,7 +520,7 @@ function ParticipantAvatar({
     <div className="flex flex-col items-center gap-1 group relative">
       <div className={cn(
         "relative rounded-full p-0.5",
-        !participant.is_muted && "ring-2 ring-white/50 ring-offset-2 ring-offset-black/60"
+        !participant.is_muted && "ring-2 ring-white/50 ring-offset-2 ring-offset-black/60",
       )}>
         <Avatar className="w-12 h-12">
           <AvatarImage src={participant.avatar || undefined} />
@@ -500,11 +554,40 @@ function ParticipantAvatar({
   );
 }
 
-// Hand Request Item Component
-function HandRequestItem({ 
-  request, 
-  onApprove 
-}: { 
+function ListenerItem({
+  participant,
+  canInvite,
+  onInvite,
+}: {
+  participant: SpaceParticipant;
+  canInvite: boolean;
+  onInvite: () => void;
+}) {
+  return (
+    <div className="relative group">
+      <Avatar className="w-8 h-8">
+        <AvatarImage src={participant.avatar || undefined} />
+        <AvatarFallback className="bg-white/10 text-white text-xs">
+          {participant.username?.[0]?.toUpperCase() || '?'}
+        </AvatarFallback>
+      </Avatar>
+      {canInvite && (
+        <button
+          onClick={onInvite}
+          title={`Invite ${participant.username || 'listener'} as speaker`}
+          className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full items-center justify-center hidden group-hover:flex"
+        >
+          <UserPlus className="w-2.5 h-2.5 text-white" />
+        </button>
+      )}
+    </div>
+  );
+}
+
+function HandRequestItem({
+  request,
+  onApprove,
+}: {
   request: RaiseHandRequest;
   onApprove: () => void;
 }) {

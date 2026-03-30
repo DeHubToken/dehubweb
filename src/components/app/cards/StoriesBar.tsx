@@ -20,7 +20,7 @@ import {
 import { useAuthPrompt } from '@/components/app/AuthPrompt';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { GoLiveModal } from '@/components/app/modals';
-import { AudioSpacesModal } from '@/components/app/spaces';
+import { useStage } from '@/contexts/StageContext';
 import { StoryRecorderModal, StoryViewerModal, ShimmerBorder } from '@/components/app/stories';
 import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
 import { PostModal } from '@/features/post';
@@ -47,7 +47,7 @@ interface StoriesBarProps {
 export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: StoriesBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isGoLiveOpen, setIsGoLiveOpen] = useState(false);
-  const [isStagesOpen, setIsStagesOpen] = useState(false);
+  const { openModal: openStagesModal } = useStage();
   const [showLiveOptions, setShowLiveOptions] = useState(false);
   const [isStoryRecorderOpen, setIsStoryRecorderOpen] = useState(false);
   const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
@@ -81,7 +81,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
     setShowLiveOptions(false);
     setIsOpen(false);
     requireAuth(() => {
-      setIsStagesOpen(true);
+      openStagesModal('create');
     });
   };
 
@@ -259,10 +259,6 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
       <GoLiveModal 
         isOpen={isGoLiveOpen} 
         onClose={() => setIsGoLiveOpen(false)} 
-      />
-      <AudioSpacesModal
-        isOpen={isStagesOpen}
-        onClose={() => setIsStagesOpen(false)}
       />
       <StoryRecorderModal
         isOpen={isStoryRecorderOpen}

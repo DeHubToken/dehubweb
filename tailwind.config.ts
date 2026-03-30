@@ -134,6 +134,10 @@ export default {
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" },
         },
+        "float-up": {
+          "0%": { transform: "translateY(0)", opacity: "1" },
+          "100%": { transform: "translateY(-140px)", opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -141,6 +145,7 @@ export default {
         "close-button-glitch": "close-button-glitch 0.4s ease-in-out",
         "story-shimmer": "story-shimmer-rotate 4s linear infinite",
         "lava-flow": "lava-flow 4s ease infinite",
+        "float-up": "float-up 2s ease-out forwards",
       },
     },
   },

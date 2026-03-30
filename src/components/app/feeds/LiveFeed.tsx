@@ -19,10 +19,12 @@ import { useDeHubLive, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { TVPreviewCard } from '@/components/app/tv';
 import { StagesCarousel } from '@/components/app/music/StagesCarousel';
-import { AudioSpacesModal } from '@/components/app/spaces';
 import { useQuery } from '@tanstack/react-query';
 import { getTVChannelsByCountry } from '@/lib/api/live-tv';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
+import { useStage } from '@/contexts/StageContext';
+import { supabase } from '@/integrations/supabase/client';
+import type { AudioSpace } from '@/types/audio-spaces.types';
 
 // Category images
 import apexCategory from '@/assets/apex-category.png';
@@ -54,9 +56,24 @@ interface LiveFeedProps {
 }
 
 export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeedProps) {
-  const [showStagesModal, setShowStagesModal] = useState(false);
+  const { openModal: openStagesModal } = useStage();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  // Fetch past (ended) stages for recordings section
+  const { data: pastStages = [] } = useQuery({
+    queryKey: ['past-stages'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('audio_spaces')
+        .select('*')
+        .eq('status', 'ended')
+        .order('ended_at', { ascending: false })
+        .limit(10);
+      return (data as AudioSpace[]) || [];
+    },
+    staleTime: 2 * 60 * 1000,
+  });
 
   // Fetch 5 TV channels for the carousel preview
   const { data: tvChannels = [] } = useQuery({
@@ -178,7 +195,7 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
           </div>
 
           {/* Stages Carousel - between Streams and TV */}
-          <StagesCarousel onOpenStages={() => setShowStagesModal(true)} />
+          <StagesCarousel onOpenStages={() => openStagesModal('browse')} />
 
           {/* TV Carousel */}
           {tvChannels.length > 0 && (
@@ -248,14 +265,51 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
               </div>
             </SwipeableCarousel>
           </div>
+
+          {/* Past Stages (Recordings) */}
+          {pastStages.length > 0 && (
+            <PastStagesSection stages={pastStages} />
+          )}
         </>
       )}
 
-      {/* Stages Modal */}
-      <AudioSpacesModal 
-        isOpen={showStagesModal} 
-        onClose={() => setShowStagesModal(false)} 
-      />
+    </div>
+  );
+}
+
+// Past Stages (recordings) section
+function PastStagesSection({ stages }: { stages: AudioSpace[] }) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between px-1">
+        <h2 className="font-bold text-white flex items-center gap-2">
+          <span className="w-2 h-2 bg-white/40 rounded-full" />
+          Past Stages
+        </h2>
+      </div>
+      <div className="space-y-2">
+        {stages.map(stage => (
+          <div key={stage.id} className="p-3 bg-white/5 rounded-xl border border-white/10">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex-1 min-w-0">
+                <p className="text-white font-medium text-sm truncate">{stage.title}</p>
+                <p className="text-white/50 text-xs mt-0.5">
+                  Hosted by {stage.host_username || 'Anonymous'} ·{' '}
+                  {stage.speaker_count || 0} speakers · {stage.listener_count || 0} listeners
+                </p>
+                {stage.ended_at && (
+                  <p className="text-white/30 text-xs mt-0.5">
+                    {new Date(stage.ended_at).toLocaleDateString()}
+                  </p>
+                )}
+              </div>
+              <span className="shrink-0 px-2 py-0.5 rounded-full bg-white/10 text-white/40 text-xs">
+                Ended
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -19,7 +19,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { RadioSection } from '@/components/app/radio';
 import { StagesCarousel } from '@/components/app/music/StagesCarousel';
-import { AudioSpacesModal } from '@/components/app/spaces';
+import { useStage } from '@/contexts/StageContext';
 
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -650,7 +650,7 @@ interface MusicFeedProps {
 export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFeedProps) {
   const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('all');
   const { layerRef: musicSubTabLayerRef, setRef: setMusicSubTabRef, rect: musicSubTabRect, onScroll: onMusicSubTabScroll } = useTabIndicator(activeSubTab);
-  const [showStagesModal, setShowStagesModal] = useState(false);
+  const { openModal: openStagesModal } = useStage();
   const { walletAddress, isAuthenticated } = useAuth();
 
   // Fetch dynamic block list for authenticated users
@@ -775,7 +775,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
             isLoadingAudio={isLoadingAudio}
             onGoToRadio={() => setActiveSubTab('radio')}
             onGoToVideos={() => setActiveSubTab('videos')}
-            onOpenStages={() => setShowStagesModal(true)}
+            onOpenStages={() => openStagesModal('browse')}
           />
         );
       case 'videos':
@@ -785,7 +785,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
       case 'stages':
         return (
           <div className="pb-32">
-            <StagesCarousel onOpenStages={() => setShowStagesModal(true)} />
+            <StagesCarousel onOpenStages={() => openStagesModal('browse')} />
           </div>
         );
       case 'tracks':
@@ -844,11 +844,6 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
         {renderContent()}
       </div>
 
-      {/* Stages Modal */}
-      <AudioSpacesModal 
-        isOpen={showStagesModal} 
-        onClose={() => setShowStagesModal(false)} 
-      />
     </div>
   );
 }

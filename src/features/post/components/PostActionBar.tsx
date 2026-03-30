@@ -9,7 +9,7 @@ import { GLASS_STYLES } from '@/constants/app.constants';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { GoLiveModal } from '@/components/app/modals';
-import { AudioSpacesModal } from '@/components/app/spaces';
+import { useStage } from '@/contexts/StageContext';
 import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
 import type { LiveMode } from '../types';
 import type { AttachedSound } from '../hooks/usePostSound';
@@ -82,15 +82,16 @@ export function PostActionBar({
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
   const [goLiveModalOpen, setGoLiveModalOpen] = useState(false);
-  const [audioSpacesModalOpen, setAudioSpacesModalOpen] = useState(false);
   const isLive = liveMode !== null;
+  const { openModal: openStagesModal } = useStage();
 
   const handleSelectLiveMode = (mode: LiveMode) => {
     setLiveMode(mode);
     setLivePopoverOpen(false);
-    // Open the appropriate modal based on mode
     if (mode === 'townhall') {
-      setAudioSpacesModalOpen(true);
+      // Close the post modal and open the Stages modal globally
+      onCloseModal?.();
+      openStagesModal('create');
     } else {
       setGoLiveModalOpen(true);
     }
@@ -182,14 +183,6 @@ export function PostActionBar({
   const handleGoLiveModalClose = () => {
     setGoLiveModalOpen(false);
     setLiveMode(null);
-    // Close the parent post modal if provided
-    onCloseModal?.();
-  };
-
-  const handleAudioSpacesModalClose = () => {
-    setAudioSpacesModalOpen(false);
-    setLiveMode(null);
-    // Close the parent post modal if provided
     onCloseModal?.();
   };
 
@@ -200,11 +193,6 @@ export function PostActionBar({
       <GoLiveModal
         isOpen={goLiveModalOpen}
         onClose={handleGoLiveModalClose}
-      />
-      <AudioSpacesModal
-        isOpen={audioSpacesModalOpen}
-        onClose={handleAudioSpacesModalClose}
-        initialView="create"
       />
 
       {/* Upload progress bar — liquid glass bubble style */}

@@ -37,8 +37,6 @@ import {
   MusicFeed,
 } from '@/components/app/feeds';
 
-// Modal components
-import { AudioSpacesModal } from '@/components/app/spaces/AudioSpacesModal';
 // ============================================================================
 // CONSTANTS
 // ============================================================================
@@ -142,8 +140,6 @@ export default function HomePage() {
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [showMusicFilters, setShowMusicFilters] = useState(false);
   const [showLiveFilters, setShowLiveFilters] = useState(false);
-  const [showStagesModal, setShowStagesModal] = useState(false);
-
   // Reactively detect active filters by reading sessionStorage when filters change
   const [hasActiveFilters, setHasActiveFilters] = useState(false);
 
@@ -713,8 +709,6 @@ export default function HomePage() {
         {/* end feed tabs */}
       </div>
 
-      {/* Stages Modal */}
-      <AudioSpacesModal isOpen={showStagesModal} onClose={() => setShowStagesModal(false)} />
     </div>
   );
 }
