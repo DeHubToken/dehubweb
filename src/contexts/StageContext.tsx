@@ -451,12 +451,28 @@ export function StageProvider({ children }: { children: ReactNode }) {
         .eq('space_id', currentSpace.id)
         .eq('wallet_address', walletAddress);
 
-      if (myRole === 'listener') {
-        await supabase
-          .from('audio_spaces')
-          .update({ listener_count: Math.max(0, (currentSpace.listener_count || 1) - 1) })
-          .eq('id', currentSpace.id);
-      }
+      // Recount from actual participants
+      const { count: remainingListeners } = await supabase
+        .from('space_participants')
+        .select('*', { count: 'exact', head: true })
+        .eq('space_id', currentSpace.id)
+        .eq('role', 'listener')
+        .is('left_at', null);
+
+      const { count: remainingSpeakers } = await supabase
+        .from('space_participants')
+        .select('*', { count: 'exact', head: true })
+        .eq('space_id', currentSpace.id)
+        .in('role', ['host', 'speaker'])
+        .is('left_at', null);
+
+      await supabase
+        .from('audio_spaces')
+        .update({
+          listener_count: remainingListeners ?? 0,
+          speaker_count: remainingSpeakers ?? 1,
+        })
+        .eq('id', currentSpace.id);
 
       setCurrentSpace(null);
       setIsConnected(false);
