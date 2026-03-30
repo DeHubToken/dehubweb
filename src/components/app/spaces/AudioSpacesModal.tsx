@@ -195,7 +195,7 @@ export function AudioSpacesModal() {
                   className="w-full bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl"
                 >
                   <Mic className="w-4 h-4 mr-2" />
-                  Start a Stage
+                  Start Stage
                 </Button>
               )}
 
