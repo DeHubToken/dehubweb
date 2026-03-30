@@ -1,37 +1,36 @@
 
 
-# Fix: Inaccurate CMC Chart Timeframes
+## Plan: Add Static Waveform to Past Stages Thumbnails
 
-## Problem
+### What
+Add the existing `StaticWaveform` component (the white lines visualization used for audio post thumbnails) to past stage entries in the "See All" drawer. On desktop/tablet it appears to the right of the listener count; on mobile, the card layout stacks vertically with a larger waveform below the metadata.
 
-The `cmc-chart` edge function has two bugs causing misleading charts:
+### Changes
 
-1. **1D chart shows 7 days of data** — the code sets `effectiveDays = 7` for a 1-day request, so the chart displays a week-long price drop (~15%) instead of the actual daily change.
-2. **7D chart shows 14 days** — same issue, `effectiveDays = 14` for 7-day requests.
-3. **All intervals use `daily` candles** — for 1D, there's only ~1 completed daily candle, so the workaround was to pad with extra days. The real fix is to use `hourly` interval for short timeframes.
+**File: `src/components/app/spaces/AudioSpacesModal.tsx`**
 
-The original comment explains the intent: "CMC OHLCV historical only returns completed candles (daily). For 1D, show last 7 days so the chart isn't empty." But this makes the price change look wrong.
+1. Import `StaticWaveform` from `@/components/app/audio/StaticWaveform`
+2. Modify the past stages card layout (lines 230-277):
+   - Add responsive classes: horizontal layout on `sm:` and up, vertical on mobile
+   - On **desktop/tablet** (`sm:` breakpoint): append a `StaticWaveform` to the right side of the row after the listener count, sized ~120×40px
+   - On **mobile** (below `sm:`): stack the card vertically — play button + text info on top, then a wider waveform below spanning full width, ~full-width × 48px
+   - Use `space.id` as the `seed` prop so each stage gets a unique deterministic waveform pattern
+   - Use `white` color with the existing subtle opacity (component default)
 
-## Fix
+### Layout sketch
 
-In `supabase/functions/cmc-chart/index.ts`:
+```text
+Desktop/Tablet:
+┌─────────────────────────────────────────────────┐
+│ [▶]  Title                        🎵🎵🎵🎵🎵🎵 │
+│      @host · 2h ago · 👥 3                      │
+└─────────────────────────────────────────────────┘
 
-- **1D**: Use `interval: 'hourly'` and fetch exactly 1 day (24 hours). CMC's v2 OHLCV historical endpoint supports `hourly` intervals, giving ~24 data points for a proper intraday chart.
-- **7D**: Use `interval: 'daily'` and fetch exactly 7 days (not 14).
-- **30D+**: Keep `interval: 'daily'` with exact day count (no padding).
-- Remove the `effectiveDays` override logic entirely.
-
-### Technical Details
-
+Mobile:
+┌──────────────────────────┐
+│ [▶]  Title               │
+│      @host · 2h ago · 👥 │
+│ 🎵🎵🎵🎵🎵🎵🎵🎵🎵🎵🎵🎵│
+└──────────────────────────┘
 ```
-// Before:
-const effectiveDays = days <= 1 ? 7 : days <= 7 ? 14 : days;
-const interval = 'daily';
-
-// After:
-const effectiveDays = days;
-const interval = days <= 1 ? 'hourly' : 'daily';
-```
-
-Single file change: `supabase/functions/cmc-chart/index.ts` (lines 51-62).
 
