@@ -372,7 +372,7 @@ export function AudioSpacesModal() {
 
               {/* Live Waveform Visualizer */}
               <div className="w-full h-24 sm:h-32 rounded-xl bg-white/5 border border-white/10 overflow-hidden p-2">
-                <LiveWaveform active={true} barCount={80} />
+                <LiveWaveform active={true} barCount={80} volumeLevel={volumeLevel} />
               </div>
 
               {/* Speakers Section */}
