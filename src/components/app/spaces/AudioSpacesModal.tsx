@@ -599,6 +599,11 @@ function ListenerItem({
             {reactionEmoji}
           </div>
         )}
+        {!reactionEmoji && participant.hand_raised && (
+          <div className="absolute -bottom-1 -left-1 w-5 h-5 rounded-full bg-yellow-500/30 backdrop-blur-sm flex items-center justify-center text-xs border border-yellow-500/40">
+            ✋
+          </div>
+        )}
         {canInvite && (
           <button
             onClick={onInvite}
