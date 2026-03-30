@@ -1,8 +1,14 @@
 
 
-# Drop RLS Policy on audio_spaces
+# End All Live Audio Spaces
 
-Run a single migration to drop the policy `"Anyone can view live audio spaces"` from `public.audio_spaces`.
+Run a single SQL statement to set all currently-live audio spaces to `ended`:
 
-This removes the SELECT restriction that only shows spaces where `status = 'live'`, allowing all audio spaces to be queried regardless of status.
+```sql
+UPDATE public.audio_spaces
+SET status = 'ended', ended_at = now()
+WHERE status = 'live';
+```
+
+This is a data update (not a schema change), so it will be executed via the data operation tool.
 
