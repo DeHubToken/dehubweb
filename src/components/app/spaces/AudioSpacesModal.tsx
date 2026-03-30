@@ -166,18 +166,29 @@ export function AudioSpacesModal() {
               <img src={stagesMicIcon} alt="" className="w-7 h-7 object-contain" />
               {currentSpace ? currentSpace.title : 'Stages'}
             </DrawerTitle>
-            <div className="flex items-center gap-1">
-              {currentSpace && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleMinimize}
-                  className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
-                  title="Minimize — stage keeps running"
-                >
-                  <Minimize2 className="w-4 h-4" />
-                </Button>
-              )}
+              <div className="flex items-center gap-1">
+                {currentSpace && (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleCopyInviteLink}
+                      className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
+                      title="Share invite link"
+                    >
+                      <Link className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleMinimize}
+                      className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
+                      title="Minimize — stage keeps running"
+                    >
+                      <Minimize2 className="w-4 h-4" />
+                    </Button>
+                  </>
+                )}
               <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-xl text-white hover:bg-white/10">
                 <X className="w-5 h-5" />
               </Button>
