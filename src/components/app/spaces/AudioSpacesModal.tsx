@@ -73,6 +73,7 @@ export function AudioSpacesModal() {
   const [avatarReactions, setAvatarReactions] = useState<AvatarReactions>({});
   const [playingStageId, setPlayingStageId] = useState<string | null>(null);
   const [playbackVolume, setPlaybackVolume] = useState(0);
+  const [playbackProgress, setPlaybackProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -272,6 +273,7 @@ export function AudioSpacesModal() {
                                 analyserRef.current = null;
                                 setPlayingStageId(null);
                                 setPlaybackVolume(0);
+                                setPlaybackProgress(0);
                               } else {
                                 // Stop previous
                                 cancelAnimationFrame(rafRef.current);
@@ -283,6 +285,7 @@ export function AudioSpacesModal() {
                                   cancelAnimationFrame(rafRef.current);
                                   setPlayingStageId(null);
                                   setPlaybackVolume(0);
+                                  setPlaybackProgress(0);
                                 };
 
                                 // Set up analyser for volume
@@ -301,6 +304,10 @@ export function AudioSpacesModal() {
                                   let sum = 0;
                                   for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
                                   setPlaybackVolume(sum / dataArray.length / 255);
+                                  // Track progress
+                                  if (audio.duration && isFinite(audio.duration)) {
+                                    setPlaybackProgress(audio.currentTime / audio.duration);
+                                  }
                                   rafRef.current = requestAnimationFrame(pump);
                                 };
 
@@ -380,13 +387,37 @@ export function AudioSpacesModal() {
                           "hidden sm:flex flex-1 h-10 min-w-0 transition-all duration-300",
                           playingStageId === space.id ? "opacity-100 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" : "opacity-40"
                         )}>
-                          <StaticWaveform seed={space.id} className="w-full h-full" animated={playingStageId === space.id} volumeLevel={playingStageId === space.id ? playbackVolume : 0} color={playingStageId === space.id ? 'rgba(255,255,255,0.95)' : undefined} />
+                          <StaticWaveform
+                            seed={space.id}
+                            className="w-full h-full"
+                            animated={playingStageId === space.id}
+                            volumeLevel={playingStageId === space.id ? playbackVolume : 0}
+                            color={playingStageId === space.id ? 'rgba(255,255,255,0.95)' : undefined}
+                            progress={playingStageId === space.id ? playbackProgress : undefined}
+                            onSeek={playingStageId === space.id ? (pos) => {
+                              if (audioRef.current && isFinite(audioRef.current.duration)) {
+                                audioRef.current.currentTime = pos * audioRef.current.duration;
+                              }
+                            } : undefined}
+                          />
                         </div>
                         <div className={cn(
                           "sm:hidden w-full h-12 transition-all duration-300",
                           playingStageId === space.id ? "opacity-100 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" : "opacity-40"
                         )}>
-                          <StaticWaveform seed={space.id} className="w-full h-full" animated={playingStageId === space.id} volumeLevel={playingStageId === space.id ? playbackVolume : 0} color={playingStageId === space.id ? 'rgba(255,255,255,0.95)' : undefined} />
+                          <StaticWaveform
+                            seed={space.id}
+                            className="w-full h-full"
+                            animated={playingStageId === space.id}
+                            volumeLevel={playingStageId === space.id ? playbackVolume : 0}
+                            color={playingStageId === space.id ? 'rgba(255,255,255,0.95)' : undefined}
+                            progress={playingStageId === space.id ? playbackProgress : undefined}
+                            onSeek={playingStageId === space.id ? (pos) => {
+                              if (audioRef.current && isFinite(audioRef.current.duration)) {
+                                audioRef.current.currentTime = pos * audioRef.current.duration;
+                              }
+                            } : undefined}
+                          />
                         </div>
                       </div>
                     ))}
