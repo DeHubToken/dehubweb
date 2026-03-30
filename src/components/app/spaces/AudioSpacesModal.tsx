@@ -15,7 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
   Loader2, Volume2,
-  Link, UserPlus, Minimize2, Play,
+  Link, UserPlus, Minimize2, Play, Square,
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
