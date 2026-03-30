@@ -252,10 +252,6 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
             </SwipeableCarousel>
           </div>
 
-          {/* Past Stages (Recordings) */}
-          {pastStages.length > 0 && (
-            <PastStagesSection stages={pastStages} />
-          )}
         </>
       )}
 
