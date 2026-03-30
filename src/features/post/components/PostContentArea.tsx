@@ -754,7 +754,7 @@ export function PostContentArea({
               >
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                 <span className="text-red-400 text-sm font-medium">
-                  {liveMode === 'video' ? 'Live Video' : 'Town Hall'} stream will be created
+                  {liveMode === 'video' ? 'Live Video' : 'Stages'} stream will be created
                 </span>
               </motion.div>
             )}
