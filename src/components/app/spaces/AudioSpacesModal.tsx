@@ -264,15 +264,47 @@ export function AudioSpacesModal() {
                               }
                               if (playingStageId === space.id) {
                                 // Stop
+                                cancelAnimationFrame(rafRef.current);
                                 audioRef.current?.pause();
                                 audioRef.current = null;
+                                analyserRef.current = null;
                                 setPlayingStageId(null);
+                                setPlaybackVolume(0);
                               } else {
                                 // Stop previous
+                                cancelAnimationFrame(rafRef.current);
                                 audioRef.current?.pause();
+
                                 const audio = new Audio(space.recording_url);
-                                audio.onended = () => setPlayingStageId(null);
-                                audio.play();
+                                audio.crossOrigin = 'anonymous';
+                                audio.onended = () => {
+                                  cancelAnimationFrame(rafRef.current);
+                                  setPlayingStageId(null);
+                                  setPlaybackVolume(0);
+                                };
+
+                                // Set up analyser for volume
+                                const ctx = audioCtxRef.current || new AudioContext();
+                                audioCtxRef.current = ctx;
+                                const source = ctx.createMediaElementSource(audio);
+                                const analyser = ctx.createAnalyser();
+                                analyser.fftSize = 256;
+                                source.connect(analyser);
+                                analyser.connect(ctx.destination);
+                                analyserRef.current = analyser;
+
+                                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+                                const pump = () => {
+                                  analyser.getByteFrequencyData(dataArray);
+                                  let sum = 0;
+                                  for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+                                  setPlaybackVolume(sum / dataArray.length / 255);
+                                  rafRef.current = requestAnimationFrame(pump);
+                                };
+
+                                audio.play().then(() => {
+                                  rafRef.current = requestAnimationFrame(pump);
+                                });
                                 audioRef.current = audio;
                                 setPlayingStageId(space.id);
                               }
