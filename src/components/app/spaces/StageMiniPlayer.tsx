@@ -5,7 +5,7 @@
  * Draggable, similar to RadioMiniPlayer.
  */
 
-import { Mic, MicOff, PhoneOff, Maximize2, Users, Volume2 } from 'lucide-react';
+import { Mic, MicOff, X, Maximize2, Users, Volume2 } from 'lucide-react';
 import { motion, useDragControls } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useStage } from '@/contexts/StageContext';
