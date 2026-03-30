@@ -469,10 +469,10 @@ export function AudioSpacesModal() {
                       onClick={toggleMute}
                       size="lg"
                       className={cn(
-                        "rounded-full w-12 h-12",
+                        "rounded-xl w-12 h-12",
                         isMuted
-                          ? "bg-white/10 hover:bg-white/20 text-white"
-                          : "bg-white/20 hover:bg-white/30 text-white",
+                          ? "bg-red-500/80 hover:bg-red-500 text-white"
+                          : "bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white/20 text-white",
                       )}
                     >
                       {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
