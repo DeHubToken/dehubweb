@@ -66,6 +66,7 @@ import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
 import { LeaderboardCarousel } from '@/components/app/feeds/LeaderboardCarousel';
+import { FriendsOnStageBar } from '@/components/app/feeds/FriendsOnStageBar';
 
 import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.types';
 
