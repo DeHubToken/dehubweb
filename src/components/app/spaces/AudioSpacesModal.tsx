@@ -375,6 +375,7 @@ export function AudioSpacesModal() {
                     <Users className="w-4 h-4" />
                     {listeners.length} listening
                   </span>
+                </div>
               </div>
 
               {/* Speakers Section */}
