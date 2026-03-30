@@ -539,55 +539,47 @@ function StageCard({
   isLoading: boolean;
 }) {
   return (
-    <div className="p-4 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-colors">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
-            </span>
-            <span className="text-xs text-white font-medium">LIVE</span>
-          </div>
-          <h4 className="font-medium text-white truncate">{space.title}</h4>
-          {space.description && (
-            <p className="text-sm text-white/50 line-clamp-2 mt-1">{space.description}</p>
-          )}
-          <div className="flex items-center gap-3 mt-2 text-sm text-white/50">
-            <span className="flex items-center gap-1">
-              {(() => {
-                const avatar = buildAvatarUrl(space.host_wallet_address || '', space.host_avatar)
-                  || buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
-                return avatar ? (
-                  <img src={avatar} alt="" className="w-4 h-4 rounded-md object-cover" />
-                ) : (
-                  <span className="w-4 h-4 rounded-md bg-zinc-700 flex items-center justify-center text-[8px] text-white font-medium">
-                    {(space.host_username || 'A').charAt(0).toUpperCase()}
-                  </span>
-                );
-              })()}
-              @{space.host_username || 'Anonymous'}
-            </span>
-            <span className="flex items-center gap-1">
-              <Users className="w-3 h-3" />
-              {(space.speaker_count || 0) + (space.listener_count || 0)}
-            </span>
-          </div>
-        </div>
-        <Button
-          onClick={onJoin}
-          disabled={isLoading}
-          size="sm"
-          className="bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl shrink-0"
-        >
-          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Join'}
-        </Button>
+    <button
+      onClick={onJoin}
+      disabled={isLoading}
+      className="w-full text-left p-4 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-colors cursor-pointer disabled:opacity-50"
+    >
+      <div className="flex items-center gap-2 mb-1">
+        <span className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+        </span>
+        <span className="text-xs text-white font-medium">LIVE</span>
+        {isLoading && <Loader2 className="w-3 h-3 animate-spin text-white/50" />}
       </div>
-      {/* Live waveform */}
+      <h4 className="font-medium text-white truncate">{space.title}</h4>
+      {space.description && (
+        <p className="text-sm text-white/50 line-clamp-2 mt-1">{space.description}</p>
+      )}
+      <div className="flex items-center gap-3 mt-2 text-sm text-white/50">
+        <span className="flex items-center gap-1">
+          {(() => {
+            const avatar = buildAvatarUrl(space.host_wallet_address || '', space.host_avatar)
+              || buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
+            return avatar ? (
+              <img src={avatar} alt="" className="w-4 h-4 rounded-md object-cover" />
+            ) : (
+              <span className="w-4 h-4 rounded-md bg-zinc-700 flex items-center justify-center text-[8px] text-white font-medium">
+                {(space.host_username || 'A').charAt(0).toUpperCase()}
+              </span>
+            );
+          })()}
+          @{space.host_username || 'Anonymous'}
+        </span>
+        <span className="flex items-center gap-1">
+          <Users className="w-3 h-3" />
+          {(space.speaker_count || 0) + (space.listener_count || 0)}
+        </span>
+      </div>
       <div className="mt-3 w-full h-10 rounded-lg overflow-hidden">
         <LiveWaveform active={true} barCount={60} />
       </div>
-    </div>
+    </button>
   );
 }
 
