@@ -173,6 +173,9 @@ importers:
       hls.js:
         specifier: ^1.6.15
         version: 1.6.15
+      howler:
+        specifier: ^2.2.4
+        version: 2.2.4
       i18next:
         specifier: ^25.8.10
         version: 25.8.10(typescript@5.9.3)
@@ -4341,6 +4344,9 @@ packages:
   hono@4.11.10:
     resolution: {integrity: sha512-kyWP5PAiMooEvGrA9jcD3IXF7ATu8+o7B3KCbPXid5se52NPqnOpM/r9qeW2heMnOekF4kqR1fXJqCYeCLKrZg==}
     engines: {node: '>=16.9.0'}
+
+  howler@2.2.4:
+    resolution: {integrity: sha512-iARIBPgcQrwtEr+tALF+rapJ8qSc+Set2GJQl7xT1MQzWaVkFebdJhR3alVlSiUf5U7nAANKuj3aWpwerocD5w==}
 
   html-encoding-sniffer@3.0.0:
     resolution: {integrity: sha512-oWv4T4yJ52iKrufjnyZPkrN0CH3QnrUqdB6In1g5Fe1mia8GmF36gnfNySxoZtxD5+NmYw1EElVXiBk93UeskA==}
@@ -12761,6 +12767,8 @@ snapshots:
       minimalistic-crypto-utils: 1.0.1
 
   hono@4.11.10: {}
+
+  howler@2.2.4: {}
 
   html-encoding-sniffer@3.0.0:
     dependencies:
