@@ -97,8 +97,6 @@ export function FriendsOnStageBar() {
     return results;
   }, [followingData, allParticipants, liveStages, walletAddress]);
 
-  if (friendsOnStage.length === 0) return null;
-
   // Group by stage
   const stageGroups = useMemo(() => {
     const map = new Map<string, { stage: AudioSpace; friends: FriendOnStage[] }>();
@@ -112,6 +110,8 @@ export function FriendsOnStageBar() {
     }
     return Array.from(map.values());
   }, [friendsOnStage]);
+
+  if (friendsOnStage.length === 0) return null;
 
   // Show first stage group (most relevant)
   const primary = stageGroups[0];
