@@ -11,6 +11,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
   Loader2, Phone, PhoneOff, Crown, Volume2,
