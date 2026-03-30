@@ -70,6 +70,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const [isMuted, setIsMuted] = useState(true);
   const [myRole, setMyRole] = useState<SpaceRole | null>(null);
   const [hasRaisedHand, setHasRaisedHand] = useState(false);
+  const [volumeLevel, setVolumeLevel] = useState(0);
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
