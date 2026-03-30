@@ -47,7 +47,8 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
         <div className="relative">
           <div className="w-10 h-10 rounded-full ring-2 ring-white/20 overflow-hidden">
             {(() => {
-              const resolvedAvatar = buildAvatarUrl(space.host_wallet_address || '', space.host_avatar);
+              const resolvedAvatar = buildAvatarUrl(space.host_wallet_address || '', space.host_avatar)
+                || buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
               return resolvedAvatar ? (
                 <img src={resolvedAvatar} alt="" className="w-full h-full object-cover" />
               ) : (
