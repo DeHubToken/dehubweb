@@ -466,15 +466,18 @@ export default function ExplorePage() {
 
   // Update URL when search query changes (one-way: state → URL)
   const prevUrlQuery = useRef(searchParams.get('q') || '');
+  const weSetParams = useRef(false);
   useEffect(() => {
     const trimmed = searchQuery.trim();
     if (trimmed.length >= 3) {
       if (prevUrlQuery.current !== trimmed) {
         prevUrlQuery.current = trimmed;
+        weSetParams.current = true;
         setSearchParams({ q: trimmed }, { replace: true });
       }
     } else if (prevUrlQuery.current) {
       prevUrlQuery.current = '';
+      weSetParams.current = true;
       setSearchParams({}, { replace: true });
     }
   }, [searchQuery, setSearchParams]);
