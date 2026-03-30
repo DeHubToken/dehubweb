@@ -14,7 +14,7 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
-  Loader2, Phone, PhoneOff, Crown, Volume2,
+  Loader2, Volume2,
   Link, UserPlus, Minimize2, Play,
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
