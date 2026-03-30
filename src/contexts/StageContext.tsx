@@ -495,7 +495,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       setParticipants([]);
       setHandRequests([]);
       setHasRaisedHand(false);
-      toast.success('Left the stage');
+      // Toast handled by caller (endSpace or realtime listener)
     } catch (err) {
       console.error('Error leaving stage:', err);
     }
