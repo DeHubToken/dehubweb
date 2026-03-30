@@ -60,20 +60,6 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // Fetch past (ended) stages for recordings section
-  const { data: pastStages = [] } = useQuery({
-    queryKey: ['past-stages'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('audio_spaces')
-        .select('*')
-        .eq('status', 'ended')
-        .order('ended_at', { ascending: false })
-        .limit(10);
-      return (data as AudioSpace[]) || [];
-    },
-    staleTime: 2 * 60 * 1000,
-  });
 
   // Fetch 5 TV channels for the carousel preview
   const { data: tvChannels = [] } = useQuery({
@@ -266,10 +252,6 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
             </SwipeableCarousel>
           </div>
 
-          {/* Past Stages (Recordings) */}
-          {pastStages.length > 0 && (
-            <PastStagesSection stages={pastStages} />
-          )}
         </>
       )}
 
