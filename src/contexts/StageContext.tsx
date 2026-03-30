@@ -31,6 +31,8 @@ interface StageContextType {
   myRole: SpaceRole | null;
   hasRaisedHand: boolean;
   isModalOpen: boolean;
+  /** Aggregate audio volume level 0-1 from all speakers */
+  volumeLevel: number;
 
   // Modal controls
   openModal: (view?: 'browse' | 'create' | 'live') => void;
@@ -68,6 +70,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const [isMuted, setIsMuted] = useState(true);
   const [myRole, setMyRole] = useState<SpaceRole | null>(null);
   const [hasRaisedHand, setHasRaisedHand] = useState(false);
+  const [volumeLevel, setVolumeLevel] = useState(0);
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -232,6 +235,18 @@ export function StageProvider({ children }: { children: ReactNode }) {
       const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
       const client = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
       agoraClientRef.current = client;
+
+      // Enable volume indicator for live waveform
+      client.enableAudioVolumeIndicator();
+      client.on('volume-indicator', (volumes: any[]) => {
+        if (!volumes || volumes.length === 0) {
+          setVolumeLevel(0);
+          return;
+        }
+        const maxVol = Math.max(...volumes.map((v: any) => v.level || 0));
+        // Agora levels are 0-100, normalize to 0-1
+        setVolumeLevel(maxVol / 100);
+      });
 
       if (role === 'host' || role === 'speaker') {
         await client.setClientRole('host');
@@ -783,6 +798,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         isMuted,
         myRole,
         hasRaisedHand,
+        volumeLevel,
         isModalOpen,
         openModal,
         closeModal,
