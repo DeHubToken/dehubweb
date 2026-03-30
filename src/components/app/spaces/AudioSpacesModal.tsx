@@ -378,7 +378,7 @@ export function AudioSpacesModal() {
               <div className="space-y-2">
                 <h3 className="text-sm font-medium text-white/60 flex items-center gap-2">
                   <Volume2 className="w-4 h-4" />
-                  Speakers
+                  Speakers ({speakers.length})
                 </h3>
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                   {speakers.map((speaker) => (
