@@ -88,6 +88,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
   // Stable refs for realtime callbacks
   const walletAddressRef = useRef(walletAddress);
   const myRoleRef = useRef(myRole);
+  const hasHandledStageEndRef = useRef(false);
   useEffect(() => { walletAddressRef.current = walletAddress; }, [walletAddress]);
   useEffect(() => { myRoleRef.current = myRole; }, [myRole]);
 
@@ -351,6 +352,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
         setCurrentSpace(space as AudioSpace);
         setMyRole('host');
+        hasHandledStageEndRef.current = false;
         // Start recording (host side — captures all audio they hear)
         startRecording(space.id);
         toast.success("Stage created! You're now live.");
@@ -427,6 +429,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         setCurrentSpace(space as AudioSpace);
         setMyRole('listener');
         setHasRaisedHand(false);
+        hasHandledStageEndRef.current = false;
         toast.success('Joined the stage!');
         return true;
       } catch (err) {
@@ -504,7 +507,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
   // ─── End stage (host) ────────────────────────────────────────────────────
 
   const endSpace = useCallback(async () => {
-    if (!currentSpace || myRole !== 'host') return;
+    if (!currentSpace || myRole !== 'host' || hasHandledStageEndRef.current) return;
+    hasHandledStageEndRef.current = true;
+
     try {
       const { error: updateErr } = await supabase
         .from('audio_spaces')
@@ -516,8 +521,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
       }
 
       await leaveSpace();
-      toast.success('Stage ended');
+      toast.success('Host ended space.');
     } catch (err) {
+      hasHandledStageEndRef.current = false;
       console.error('Error ending stage:', err);
     }
   }, [currentSpace, myRole, leaveSpace]);
@@ -739,7 +745,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
         (payload) => {
           const updated = payload.new as AudioSpace;
           if (updated.status === 'ended') {
-            toast.info('Host ended the stage');
+            if (hasHandledStageEndRef.current) return;
+            hasHandledStageEndRef.current = true;
+            if (myRoleRef.current !== 'host') {
+              toast.info('Host ended space.');
+            }
             leaveSpace();
           } else {
             setCurrentSpace(updated);

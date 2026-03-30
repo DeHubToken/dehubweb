@@ -14,6 +14,7 @@ import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
 import { SEOHead } from "@/components/SEOHead";
+import { StageProvider } from "@/contexts/StageContext";
 
 // Pages — lazy loaded
 const Index = React.lazy(() => import("./pages/Index"));
@@ -199,11 +200,13 @@ const App = () => (
         <WagmiProvider config={wagmiConfig}>
           <RainbowKitProvider theme={darkTheme()} modalSize="compact">
             <AuthProvider>
-              <OptimisticPostsProvider>
-                <TooltipProvider>
-                  <AppContent />
-                </TooltipProvider>
-              </OptimisticPostsProvider>
+              <StageProvider>
+                <OptimisticPostsProvider>
+                  <TooltipProvider>
+                    <AppContent />
+                  </TooltipProvider>
+                </OptimisticPostsProvider>
+              </StageProvider>
             </AuthProvider>
           </RainbowKitProvider>
         </WagmiProvider>

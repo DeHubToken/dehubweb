@@ -19,7 +19,6 @@ import { DevelopmentNoticeModal } from './modals';
 import { RadioMiniPlayer } from '@/components/app/radio';
 import { StageMiniPlayer, AudioSpacesModal } from '@/components/app/spaces';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
-import { StageProvider } from '@/contexts/StageContext';
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { cn } from '@/lib/utils';
@@ -243,16 +242,14 @@ export function AppLayout({ children }: AppLayoutProps) {
           <PiPProvider>
             <ChartPiPProvider>
               <RadioPlayerProvider>
-                <StageProvider>
-                  <CoinPlacementProvider>
-                    <GlobalDropZoneProvider>
-                      <AppLayoutContent>{children}</AppLayoutContent>
-                      <FloatingPiPOverlay />
-                      <FloatingChartPiPOverlay />
-                      <UserFeedbackSurvey />
-                    </GlobalDropZoneProvider>
-                  </CoinPlacementProvider>
-                </StageProvider>
+                <CoinPlacementProvider>
+                  <GlobalDropZoneProvider>
+                    <AppLayoutContent>{children}</AppLayoutContent>
+                    <FloatingPiPOverlay />
+                    <FloatingChartPiPOverlay />
+                    <UserFeedbackSurvey />
+                  </GlobalDropZoneProvider>
+                </CoinPlacementProvider>
               </RadioPlayerProvider>
             </ChartPiPProvider>
           </PiPProvider>
