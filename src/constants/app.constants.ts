@@ -16,6 +16,7 @@ import {
   FileTextIcon,
   Coins,
   Play,
+  Mic,
   LayoutDashboard,
   Sparkles,
   Wallet,
