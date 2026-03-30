@@ -109,8 +109,7 @@ export function AudioSpacesModal() {
   };
 
   const handleJoin = async (spaceId: string) => {
-    const success = await joinSpace(spaceId);
-    if (success) closeModal();
+    await joinSpace(spaceId);
   };
 
   const handleEndOrLeave = () => {
