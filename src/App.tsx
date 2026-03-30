@@ -14,6 +14,7 @@ import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
 import { SEOHead } from "@/components/SEOHead";
+import { StageProvider } from "@/contexts/StageContext";
 
 // Pages — lazy loaded
 const Index = React.lazy(() => import("./pages/Index"));

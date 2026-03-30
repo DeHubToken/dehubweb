@@ -242,16 +242,14 @@ export function AppLayout({ children }: AppLayoutProps) {
           <PiPProvider>
             <ChartPiPProvider>
               <RadioPlayerProvider>
-                <StageProvider>
-                  <CoinPlacementProvider>
-                    <GlobalDropZoneProvider>
-                      <AppLayoutContent>{children}</AppLayoutContent>
-                      <FloatingPiPOverlay />
-                      <FloatingChartPiPOverlay />
-                      <UserFeedbackSurvey />
-                    </GlobalDropZoneProvider>
-                  </CoinPlacementProvider>
-                </StageProvider>
+                <CoinPlacementProvider>
+                  <GlobalDropZoneProvider>
+                    <AppLayoutContent>{children}</AppLayoutContent>
+                    <FloatingPiPOverlay />
+                    <FloatingChartPiPOverlay />
+                    <UserFeedbackSurvey />
+                  </GlobalDropZoneProvider>
+                </CoinPlacementProvider>
               </RadioPlayerProvider>
             </ChartPiPProvider>
           </PiPProvider>
