@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { cn } from '@/lib/utils';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 // Import the 3D mic icon
