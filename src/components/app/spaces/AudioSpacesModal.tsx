@@ -165,8 +165,12 @@ export function AudioSpacesModal() {
         <DrawerHeader className="border-b-0 pb-2">
           <div className="flex items-center justify-between">
             <DrawerTitle className="text-white flex items-center gap-2">
-              <img src={stagesMicIcon} alt="" className="w-7 h-7 object-contain" />
-              {currentSpace ? currentSpace.title : 'Stages'}
+              {!currentSpace && (
+                <>
+                  <img src={stagesMicIcon} alt="" className="w-7 h-7 object-contain" />
+                  Stages
+                </>
+              )}
             </DrawerTitle>
               <div className="flex items-center gap-1">
                 {currentSpace && (
