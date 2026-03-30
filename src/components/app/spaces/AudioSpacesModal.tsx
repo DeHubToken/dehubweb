@@ -552,7 +552,7 @@ function ParticipantAvatar({
         )}
       </div>
       <span className="text-xs text-white/60 truncate max-w-full">
-        {participant.username || 'Anonymous'}
+        @{participant.username || 'anon'}
       </span>
       {canRemove && (
         <button
