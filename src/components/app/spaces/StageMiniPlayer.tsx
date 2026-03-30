@@ -50,7 +50,7 @@ export function StageMiniPlayer() {
       className="fixed bottom-20 right-4 z-50 select-none"
       style={{ touchAction: 'none' }}
     >
-      <div className="bg-black/80 backdrop-blur-xl border border-white/15 rounded-2xl shadow-2xl overflow-hidden min-w-[200px]">
+      <div className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl shadow-2xl overflow-hidden min-w-[200px]">
         {/* Drag handle + title */}
         <div
           className="flex items-center gap-2 px-3 pt-2.5 pb-1 cursor-grab active:cursor-grabbing"
