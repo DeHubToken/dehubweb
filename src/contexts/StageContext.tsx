@@ -507,7 +507,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
   // ─── End stage (host) ────────────────────────────────────────────────────
 
   const endSpace = useCallback(async () => {
-    if (!currentSpace || myRole !== 'host') return;
+    if (!currentSpace || myRole !== 'host' || hasHandledStageEndRef.current) return;
+    hasHandledStageEndRef.current = true;
+
     try {
       const { error: updateErr } = await supabase
         .from('audio_spaces')
@@ -519,8 +521,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
       }
 
       await leaveSpace();
-      toast.success('Stage ended');
+      toast.success('Host ended space.');
     } catch (err) {
+      hasHandledStageEndRef.current = false;
       console.error('Error ending stage:', err);
     }
   }, [currentSpace, myRole, leaveSpace]);
