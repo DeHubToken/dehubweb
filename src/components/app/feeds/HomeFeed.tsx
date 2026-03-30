@@ -66,6 +66,7 @@ import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
 import { LeaderboardCarousel } from '@/components/app/feeds/LeaderboardCarousel';
+import { FriendsOnStageBar } from '@/components/app/feeds/FriendsOnStageBar';
 
 import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.types';
 
@@ -1427,6 +1428,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             <StoriesBar users={storyUsers} isLoading={isLoadingState} shorts={shorts} />
           </div> */}
 
+      {/* Friends on Stage notification */}
+      <FriendsOnStageBar />
 
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
