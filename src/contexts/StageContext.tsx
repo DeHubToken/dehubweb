@@ -495,7 +495,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       setParticipants([]);
       setHandRequests([]);
       setHasRaisedHand(false);
-      toast.success('Left the stage');
+      // Toast handled by caller (endSpace or realtime listener)
     } catch (err) {
       console.error('Error leaving stage:', err);
     }
@@ -513,10 +513,6 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
       if (updateErr) {
         console.warn('Direct end failed (will auto-end via trigger):', updateErr.message);
-      }
-
-      if (mediaRecorderRef.current) {
-        toast.info('Saving recording…');
       }
 
       await leaveSpace();
@@ -743,7 +739,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         (payload) => {
           const updated = payload.new as AudioSpace;
           if (updated.status === 'ended') {
-            toast.info('The host ended this stage');
+            toast.info('Host ended the stage');
             leaveSpace();
           } else {
             setCurrentSpace(updated);
