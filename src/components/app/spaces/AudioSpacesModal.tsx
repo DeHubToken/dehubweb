@@ -168,47 +168,49 @@ export function AudioSpacesModal() {
   return (
     <Drawer open={isModalOpen} onOpenChange={(open) => !open && handleClose()}>
       <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh] flex flex-col [&>div:first-child]:hidden">
-        <DrawerHeader className="border-b-0 p-3 pb-1">
-          <div className="flex items-center justify-between">
-            <DrawerTitle className="text-white flex items-center gap-2">
-              {!currentSpace && (
+        {!currentSpace ? (
+          <DrawerHeader className="border-b-0 p-3 pb-1">
+            <div className="flex items-center justify-between">
+              <DrawerTitle className="text-white flex items-center gap-2">
                 <>
                   <img src={stagesMicIcon} alt="" className="w-7 h-7 object-contain" />
                   Stages
                 </>
-              )}
-            </DrawerTitle>
+              </DrawerTitle>
               <div className="flex items-center gap-1">
-                {currentSpace && (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={handleCopyInviteLink}
-                      className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
-                      title="Share invite link"
-                    >
-                      <Link className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={handleMinimize}
-                      className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
-                      title="Minimize — stage keeps running"
-                    >
-                      <Minimize2 className="w-4 h-4" />
-                    </Button>
-                  </>
-                )}
-              <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-xl text-white hover:bg-white/10">
-                <X className="w-5 h-5" />
-              </Button>
+                <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-xl text-white hover:bg-white/10">
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
             </div>
+          </DrawerHeader>
+        ) : (
+          <div className="absolute top-3 right-3 z-10 flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleCopyInviteLink}
+              className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
+              title="Share invite link"
+            >
+              <Link className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleMinimize}
+              className="rounded-xl text-white/60 hover:text-white hover:bg-white/10"
+              title="Minimize — stage keeps running"
+            >
+              <Minimize2 className="w-4 h-4" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-xl text-white hover:bg-white/10">
+              <X className="w-5 h-5" />
+            </Button>
           </div>
-        </DrawerHeader>
+        )}
 
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className={cn("flex-1 overflow-y-auto p-4", currentSpace && "pt-2")}>
 
           {/* ── Browse View ─────────────────────────────────────────────── */}
           {view === 'browse' && !currentSpace && (
