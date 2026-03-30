@@ -382,21 +382,7 @@ export function AudioSpacesModal() {
               {/* Controls */}
               <div className="fixed bottom-0 left-0 right-0 p-4 bg-black/60 backdrop-blur-[24px] border-t border-white/10">
                 <div className="flex items-center justify-center gap-4 max-w-md mx-auto">
-                  {/* Soundboard Toggle (host only) */}
-                  {myRole === 'host' && (
-                    <Button
-                      onClick={() => setShowSoundboard(!showSoundboard)}
-                      size="lg"
-                      className={cn(
-                        "rounded-full w-14 h-14",
-                        showSoundboard
-                          ? "bg-white/20 hover:bg-white/30 text-white"
-                          : "bg-white/10 hover:bg-white/20 text-white",
-                      )}
-                    >
-                      <Music className="w-6 h-6" />
-                    </Button>
-                  )}
+                  {/* Soundboard toggle removed — now always visible inline */}
 
                   {/* Mute Button (speakers only) */}
                   {(myRole === 'host' || myRole === 'speaker') && (
