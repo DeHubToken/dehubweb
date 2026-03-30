@@ -389,7 +389,7 @@ export function AudioSpacesModal() {
 
           {/* ── Live View ───────────────────────────────────────────────── */}
           {(view === 'live' || currentSpace) && currentSpace && (
-            <div className="space-y-4 pb-24 relative">
+            <div className="space-y-4 pb-4 relative">
 
               {/* Stage Info - top left */}
               <div className="pb-2">
@@ -494,66 +494,68 @@ export function AudioSpacesModal() {
                   onClose={() => {}}
                 />
               )}
-
-              {/* Controls */}
-              <div className="fixed bottom-0 left-0 right-0 p-3 bg-black/60 backdrop-blur-[24px] border-t border-white/10 z-50">
-                <div className="flex items-center justify-center gap-3 max-w-md mx-auto">
-                  {/* Mute Button (speakers only) */}
-                  {(myRole === 'host' || myRole === 'speaker') && (
-                    <Button
-                      onClick={toggleMute}
-                      size="lg"
-                      className={cn(
-                        "rounded-xl w-12 h-12",
-                        isMuted
-                          ? "bg-red-500/80 hover:bg-red-500 text-white"
-                          : "bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white/20 text-white",
-                      )}
-                    >
-                      {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-                    </Button>
-                  )}
-
-                  {/* Raise/Lower Hand (listeners only) */}
-                  {myRole === 'listener' && (
-                    <Button
-                      onClick={hasRaisedHand ? lowerHand : raiseHand}
-                      size="lg"
-                      className={cn(
-                        "rounded-xl w-12 h-12",
-                        hasRaisedHand
-                          ? "bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400"
-                          : "bg-white/10 hover:bg-white/20 text-white",
-                      )}
-                    >
-                      <Hand className="w-5 h-5" />
-                    </Button>
-                  )}
-
-                  {/* Minimize */}
-                  <Button
-                    onClick={handleMinimize}
-                    size="lg"
-                    variant="outline"
-                    className="rounded-xl border-white/10 bg-white/5 hover:bg-white/15 text-white/70 hover:text-white w-12 h-12"
-                    title="Minimize"
-                  >
-                    <Minimize2 className="w-4 h-4" />
-                  </Button>
-
-                  {/* Leave/End Button */}
-                  <Button
-                    onClick={handleEndOrLeave}
-                    size="lg"
-                    className="rounded-xl bg-red-500/80 hover:bg-red-500 w-12 h-12 text-white"
-                  >
-                    <X className="w-5 h-5" />
-                  </Button>
-                </div>
-              </div>
             </div>
           )}
         </ScrollArea>
+
+        {/* Anchored Controls Bar — outside ScrollArea */}
+        {currentSpace && (
+          <div className="shrink-0 p-3 bg-black/60 backdrop-blur-[24px] border-t border-white/10">
+            <div className="flex items-center justify-center gap-3 max-w-md mx-auto">
+              {/* Mute Button (speakers only) */}
+              {(myRole === 'host' || myRole === 'speaker') && (
+                <Button
+                  onClick={toggleMute}
+                  size="lg"
+                  className={cn(
+                    "rounded-xl w-12 h-12",
+                    isMuted
+                      ? "bg-red-500/80 hover:bg-red-500 text-white"
+                      : "bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white/20 text-white",
+                  )}
+                >
+                  {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                </Button>
+              )}
+
+              {/* Raise/Lower Hand (listeners only) */}
+              {myRole === 'listener' && (
+                <Button
+                  onClick={hasRaisedHand ? lowerHand : raiseHand}
+                  size="lg"
+                  className={cn(
+                    "rounded-xl w-12 h-12",
+                    hasRaisedHand
+                      ? "bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400"
+                      : "bg-white/10 hover:bg-white/20 text-white",
+                  )}
+                >
+                  <Hand className="w-5 h-5" />
+                </Button>
+              )}
+
+              {/* Minimize */}
+              <Button
+                onClick={handleMinimize}
+                size="lg"
+                variant="outline"
+                className="rounded-xl border-white/10 bg-white/5 hover:bg-white/15 text-white/70 hover:text-white w-12 h-12"
+                title="Minimize"
+              >
+                <Minimize2 className="w-4 h-4" />
+              </Button>
+
+              {/* Leave/End Button */}
+              <Button
+                onClick={handleEndOrLeave}
+                size="lg"
+                className="rounded-xl bg-red-500/80 hover:bg-red-500 w-12 h-12 text-white"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+          </div>
+        )}
       </DrawerContent>
     </Drawer>
   );
