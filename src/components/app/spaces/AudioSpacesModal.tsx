@@ -570,10 +570,12 @@ function ListenerItem({
   participant,
   canInvite,
   onInvite,
+  reactionEmoji,
 }: {
   participant: SpaceParticipant;
   canInvite: boolean;
   onInvite: () => void;
+  reactionEmoji?: string;
 }) {
   const [imgFailed, setImgFailed] = useState(false);
   const resolvedAvatar = resolveParticipantAvatar(participant);
@@ -581,25 +583,35 @@ function ListenerItem({
   const activeSrc = imgFailed ? cdnFallback : resolvedAvatar;
 
   return (
-    <div className="relative group">
-      <Avatar className="w-8 h-8">
-        <AvatarImage
-          src={activeSrc}
-          onError={() => setImgFailed(true)}
-        />
-        <AvatarFallback className="bg-white/10 text-white text-xs">
-          {participant.username?.[0]?.toUpperCase() || '?'}
-        </AvatarFallback>
-      </Avatar>
-      {canInvite && (
-        <button
-          onClick={onInvite}
-          title={`Invite ${participant.username || 'listener'} as speaker`}
-          className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full items-center justify-center hidden group-hover:flex"
-        >
-          <UserPlus className="w-2.5 h-2.5 text-white" />
-        </button>
-      )}
+    <div className="relative group flex flex-col items-center gap-1">
+      <div className="relative">
+        <Avatar className="w-8 h-8">
+          <AvatarImage
+            src={activeSrc}
+            onError={() => setImgFailed(true)}
+          />
+          <AvatarFallback className="bg-white/10 text-white text-xs">
+            {participant.username?.[0]?.toUpperCase() || '?'}
+          </AvatarFallback>
+        </Avatar>
+        {reactionEmoji && (
+          <div className="absolute -bottom-1 -left-1 w-5 h-5 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center text-xs animate-bounce border border-white/20">
+            {reactionEmoji}
+          </div>
+        )}
+        {canInvite && (
+          <button
+            onClick={onInvite}
+            title={`Invite ${participant.username || 'listener'} as speaker`}
+            className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full items-center justify-center hidden group-hover:flex"
+          >
+            <UserPlus className="w-2.5 h-2.5 text-white" />
+          </button>
+        )}
+      </div>
+      <span className="text-[10px] text-white/40 truncate max-w-[60px]">
+        @{participant.username || 'anon'}
+      </span>
     </div>
   );
 }
