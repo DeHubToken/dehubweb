@@ -745,7 +745,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
         (payload) => {
           const updated = payload.new as AudioSpace;
           if (updated.status === 'ended') {
-            toast.info('Host ended the stage');
+            if (hasHandledStageEndRef.current) return;
+            hasHandledStageEndRef.current = true;
+            if (myRoleRef.current !== 'host') {
+              toast.info('Host ended space.');
+            }
             leaveSpace();
           } else {
             setCurrentSpace(updated);

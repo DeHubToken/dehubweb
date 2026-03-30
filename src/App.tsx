@@ -199,11 +199,13 @@ const App = () => (
         <WagmiProvider config={wagmiConfig}>
           <RainbowKitProvider theme={darkTheme()} modalSize="compact">
             <AuthProvider>
-              <OptimisticPostsProvider>
-                <TooltipProvider>
-                  <AppContent />
-                </TooltipProvider>
-              </OptimisticPostsProvider>
+              <StageProvider>
+                <OptimisticPostsProvider>
+                  <TooltipProvider>
+                    <AppContent />
+                  </TooltipProvider>
+                </OptimisticPostsProvider>
+              </StageProvider>
             </AuthProvider>
           </RainbowKitProvider>
         </WagmiProvider>
