@@ -500,7 +500,7 @@ export function AudioSpacesModal() {
                     onClick={handleMinimize}
                     size="lg"
                     variant="outline"
-                    className="rounded-full border-white/10 bg-white/5 hover:bg-white/15 text-white/70 hover:text-white w-12 h-12"
+                    className="rounded-xl border-white/10 bg-white/5 hover:bg-white/15 text-white/70 hover:text-white w-12 h-12"
                     title="Minimize"
                   >
                     <Minimize2 className="w-4 h-4" />
@@ -510,9 +510,9 @@ export function AudioSpacesModal() {
                   <Button
                     onClick={handleEndOrLeave}
                     size="lg"
-                    className="rounded-full bg-red-500/80 hover:bg-red-500 w-12 h-12 text-white"
+                    className="rounded-xl bg-red-500/80 hover:bg-red-500 w-12 h-12 text-white"
                   >
-                    {myRole === 'host' ? <PhoneOff className="w-5 h-5" /> : <X className="w-5 h-5" />}
+                    <X className="w-5 h-5" />
                   </Button>
                 </div>
               </div>
