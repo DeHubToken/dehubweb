@@ -64,6 +64,7 @@ export function AudioSpacesModal() {
     approveSpeaker,
     removeSpeaker,
     inviteSpeaker,
+    volumeLevel,
   } = useStage();
 
   const [view, setView] = useState<View>(initialModalView);
