@@ -63,7 +63,7 @@ export function AudioSpacesModal() {
   const [view, setView] = useState<View>(initialModalView);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [showSoundboard, setShowSoundboard] = useState(false);
+  // showSoundboard state removed — soundboard is always visible for hosts
 
   // Sync view when modal opens or initialModalView changes
   useEffect(() => {
@@ -175,18 +175,7 @@ export function AudioSpacesModal() {
           </div>
         </DrawerHeader>
 
-        {/* Soundboard — rendered OUTSIDE ScrollArea so it's never hidden behind the controls bar */}
-        {myRole === 'host' && currentSpace && (
-          <div className={cn(
-            "mx-4 mb-2 transition-all duration-200",
-            showSoundboard ? "block" : "hidden"
-          )}>
-            <StageSoundboard
-              isVisible={showSoundboard}
-              onClose={() => setShowSoundboard(false)}
-            />
-          </div>
-        )}
+        {/* Soundboard removed from here — now inline below reactions */}
 
         <ScrollArea className="flex-1 p-4">
 
@@ -380,24 +369,20 @@ export function AudioSpacesModal() {
               {/* Live Reactions */}
               <StageReactions spaceId={currentSpace.id} />
 
+              {/* Soundboard — always visible for hosts, below reactions */}
+              {myRole === 'host' && (
+                <div className="mt-3">
+                  <StageSoundboard
+                    isVisible={true}
+                    onClose={() => {}}
+                  />
+                </div>
+              )}
+
               {/* Controls */}
               <div className="fixed bottom-0 left-0 right-0 p-4 bg-black/60 backdrop-blur-[24px] border-t border-white/10">
                 <div className="flex items-center justify-center gap-4 max-w-md mx-auto">
-                  {/* Soundboard Toggle (host only) */}
-                  {myRole === 'host' && (
-                    <Button
-                      onClick={() => setShowSoundboard(!showSoundboard)}
-                      size="lg"
-                      className={cn(
-                        "rounded-full w-14 h-14",
-                        showSoundboard
-                          ? "bg-white/20 hover:bg-white/30 text-white"
-                          : "bg-white/10 hover:bg-white/20 text-white",
-                      )}
-                    >
-                      <Music className="w-6 h-6" />
-                    </Button>
-                  )}
+                  {/* Soundboard toggle removed — now always visible inline */}
 
                   {/* Mute Button (speakers only) */}
                   {(myRole === 'host' || myRole === 'speaker') && (
