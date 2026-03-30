@@ -380,7 +380,7 @@ export function AudioSpacesModal() {
                   <Volume2 className="w-4 h-4" />
                   Speakers ({speakers.length})
                 </h3>
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                <div className="flex flex-wrap gap-3">
                   {speakers.map((speaker) => (
                     <ParticipantAvatar
                       key={speaker.id}
