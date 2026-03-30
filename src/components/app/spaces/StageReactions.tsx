@@ -146,14 +146,14 @@ export function StageReactions({ spaceId, onAvatarReaction }: StageReactionsProp
           <Smile className="w-4 h-4" />
           Reactions
         </h3>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(0,1fr))] gap-1.5 w-full">
+        <div className="flex items-center gap-1.5 w-full">
           {REACTIONS.map(r => (
             <button
               key={r.id}
               onClick={() => sendReaction(r.emoji)}
               disabled={cooldown}
               className={cn(
-                "aspect-square rounded-full flex items-center justify-center text-base",
+                "flex-1 h-9 rounded-md flex items-center justify-center text-lg",
                 "bg-white/[0.07] hover:bg-white/20 active:scale-90 transition-all border border-white/[0.12]",
                 "backdrop-blur-sm shadow-sm",
                 cooldown && "opacity-40",
