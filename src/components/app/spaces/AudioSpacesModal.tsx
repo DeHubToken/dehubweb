@@ -175,18 +175,7 @@ export function AudioSpacesModal() {
           </div>
         </DrawerHeader>
 
-        {/* Soundboard — rendered OUTSIDE ScrollArea so it's never hidden behind the controls bar */}
-        {myRole === 'host' && currentSpace && (
-          <div className={cn(
-            "mx-4 mb-2 transition-all duration-200",
-            showSoundboard ? "block" : "hidden"
-          )}>
-            <StageSoundboard
-              isVisible={showSoundboard}
-              onClose={() => setShowSoundboard(false)}
-            />
-          </div>
-        )}
+        {/* Soundboard removed from here — now inline below reactions */}
 
         <ScrollArea className="flex-1 p-4">
 
