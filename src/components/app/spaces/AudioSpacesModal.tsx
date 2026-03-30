@@ -63,7 +63,7 @@ export function AudioSpacesModal() {
   const [view, setView] = useState<View>(initialModalView);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [showSoundboard, setShowSoundboard] = useState(false);
+  // showSoundboard state removed — soundboard is always visible for hosts
 
   // Sync view when modal opens or initialModalView changes
   useEffect(() => {
