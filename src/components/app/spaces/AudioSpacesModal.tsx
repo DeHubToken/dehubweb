@@ -469,10 +469,10 @@ export function AudioSpacesModal() {
                       onClick={toggleMute}
                       size="lg"
                       className={cn(
-                        "rounded-full w-12 h-12",
+                        "rounded-xl w-12 h-12",
                         isMuted
-                          ? "bg-white/10 hover:bg-white/20 text-white"
-                          : "bg-white/20 hover:bg-white/30 text-white",
+                          ? "bg-red-500/80 hover:bg-red-500 text-white"
+                          : "bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white/20 text-white",
                       )}
                     >
                       {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
@@ -485,7 +485,7 @@ export function AudioSpacesModal() {
                       onClick={hasRaisedHand ? lowerHand : raiseHand}
                       size="lg"
                       className={cn(
-                        "rounded-full w-12 h-12",
+                        "rounded-xl w-12 h-12",
                         hasRaisedHand
                           ? "bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400"
                           : "bg-white/10 hover:bg-white/20 text-white",
@@ -500,7 +500,7 @@ export function AudioSpacesModal() {
                     onClick={handleMinimize}
                     size="lg"
                     variant="outline"
-                    className="rounded-full border-white/10 bg-white/5 hover:bg-white/15 text-white/70 hover:text-white w-12 h-12"
+                    className="rounded-xl border-white/10 bg-white/5 hover:bg-white/15 text-white/70 hover:text-white w-12 h-12"
                     title="Minimize"
                   >
                     <Minimize2 className="w-4 h-4" />
@@ -510,9 +510,9 @@ export function AudioSpacesModal() {
                   <Button
                     onClick={handleEndOrLeave}
                     size="lg"
-                    className="rounded-full bg-red-500/80 hover:bg-red-500 w-12 h-12 text-white"
+                    className="rounded-xl bg-red-500/80 hover:bg-red-500 w-12 h-12 text-white"
                   >
-                    {myRole === 'host' ? <PhoneOff className="w-5 h-5" /> : <X className="w-5 h-5" />}
+                    <X className="w-5 h-5" />
                   </Button>
                 </div>
               </div>
