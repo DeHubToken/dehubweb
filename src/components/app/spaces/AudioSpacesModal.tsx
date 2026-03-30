@@ -375,16 +375,6 @@ export function AudioSpacesModal() {
                     <Users className="w-4 h-4" />
                     {listeners.length} listening
                   </span>
-                </div>
-
-                {/* Invite link button */}
-                <button
-                  onClick={handleCopyInviteLink}
-                  className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white text-xs transition-all border border-white/10"
-                >
-                  <Link className="w-3 h-3" />
-                  Copy Invite Link
-                </button>
               </div>
 
               {/* Speakers Section */}
