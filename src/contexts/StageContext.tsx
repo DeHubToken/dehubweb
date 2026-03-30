@@ -352,6 +352,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
         setCurrentSpace(space as AudioSpace);
         setMyRole('host');
+        hasHandledStageEndRef.current = false;
         // Start recording (host side — captures all audio they hear)
         startRecording(space.id);
         toast.success("Stage created! You're now live.");
