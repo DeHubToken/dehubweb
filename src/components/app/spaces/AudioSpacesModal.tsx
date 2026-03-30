@@ -490,7 +490,10 @@ function StageCard({
 
 function resolveParticipantAvatar(participant: SpaceParticipant): string | undefined {
   const raw = participant.avatar;
-  if (!raw) return undefined;
+  if (!raw) {
+    // No avatar stored — try CDN fallback using wallet address
+    return buildAvatarCdnFallbackUrl(participant.wallet_address);
+  }
   // Try canonical CDN resolution
   return buildAvatarUrl(participant.wallet_address, raw) || raw;
 }
