@@ -236,6 +236,18 @@ export function StageProvider({ children }: { children: ReactNode }) {
       const client = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
       agoraClientRef.current = client;
 
+      // Enable volume indicator for live waveform
+      client.enableAudioVolumeIndicator();
+      client.on('volume-indicator', (volumes: any[]) => {
+        if (!volumes || volumes.length === 0) {
+          setVolumeLevel(0);
+          return;
+        }
+        const maxVol = Math.max(...volumes.map((v: any) => v.level || 0));
+        // Agora levels are 0-100, normalize to 0-1
+        setVolumeLevel(maxVol / 100);
+      });
+
       if (role === 'host' || role === 'speaker') {
         await client.setClientRole('host');
       } else {
