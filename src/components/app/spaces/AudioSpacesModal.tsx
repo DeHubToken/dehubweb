@@ -71,6 +71,9 @@ export function AudioSpacesModal() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [avatarReactions, setAvatarReactions] = useState<AvatarReactions>({});
+  const [playingStageId, setPlayingStageId] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [avatarReactions, setAvatarReactions] = useState<AvatarReactions>({});
 
   // Fetch past (ended) stages for browse view
   const { data: pastStages = [] } = useQuery({
