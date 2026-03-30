@@ -29,6 +29,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { StageSoundboard } from './StageSoundboard';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
+import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { StageReactions, type AvatarReactions } from './StageReactions';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/audio-spaces.types';
