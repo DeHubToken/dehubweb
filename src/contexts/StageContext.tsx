@@ -739,7 +739,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         (payload) => {
           const updated = payload.new as AudioSpace;
           if (updated.status === 'ended') {
-            toast.info('The host ended this stage');
+            toast.info('Host ended the stage');
             leaveSpace();
           } else {
             setCurrentSpace(updated);
