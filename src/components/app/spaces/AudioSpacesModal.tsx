@@ -342,7 +342,18 @@ export function AudioSpacesModal() {
                                 @{space.host_username || 'Anonymous'}
                               </span>
                               {space.ended_at && (
-                                <span>{formatDistanceToNow(new Date(space.ended_at), { addSuffix: true })}</span>
+                                <span>
+                                  {(() => {
+                                    const diff = Date.now() - new Date(space.ended_at).getTime();
+                                    const mins = Math.floor(diff / 60000);
+                                    const hrs = Math.floor(mins / 60);
+                                    const days = Math.floor(hrs / 24);
+                                    if (days > 0) return `${days}d ago`;
+                                    if (hrs > 0) return `${hrs}h ago`;
+                                    if (mins > 0) return `${mins}m ago`;
+                                    return 'just now';
+                                  })()}
+                                </span>
                               )}
                               <span className="flex items-center gap-1">
                                 <Users className="w-3 h-3" />
