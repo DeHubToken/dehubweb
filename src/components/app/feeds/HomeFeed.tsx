@@ -1428,6 +1428,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             <StoriesBar users={storyUsers} isLoading={isLoadingState} shorts={shorts} />
           </div> */}
 
+      {/* Friends on Stage notification */}
+      <FriendsOnStageBar />
 
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
