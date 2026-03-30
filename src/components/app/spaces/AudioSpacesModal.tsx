@@ -15,7 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
   Loader2, Volume2,
-  Link, UserPlus, Minimize2, Play, Square,
+  Link, UserPlus, Minimize2, Play, Square, Clock,
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -312,11 +312,22 @@ export function AudioSpacesModal() {
                                 <Users className="w-3 h-3" />
                                 {(space.speaker_count || 0) + (space.listener_count || 0)}
                               </span>
+                              {space.started_at && space.ended_at && (
+                                <span className="flex items-center gap-1">
+                                  <Clock className="w-3 h-3" />
+                                  {(() => {
+                                    const dur = Math.round((new Date(space.ended_at).getTime() - new Date(space.started_at).getTime()) / 1000);
+                                    const m = Math.floor(dur / 60);
+                                    const s = dur % 60;
+                                    return m > 0 ? `${m}m ${s}s` : `${s}s`;
+                                  })()}
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
                         {/* Waveform - right side on desktop, below on mobile */}
-                        <div className="hidden sm:block w-28 h-8 shrink-0">
+                        <div className="hidden sm:flex flex-1 h-8 min-w-0">
                           <StaticWaveform seed={space.id} className="w-full h-full" />
                         </div>
                         <div className="sm:hidden w-full h-12">
