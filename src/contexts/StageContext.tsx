@@ -31,6 +31,8 @@ interface StageContextType {
   myRole: SpaceRole | null;
   hasRaisedHand: boolean;
   isModalOpen: boolean;
+  /** Aggregate audio volume level 0-1 from all speakers */
+  volumeLevel: number;
 
   // Modal controls
   openModal: (view?: 'browse' | 'create' | 'live') => void;
