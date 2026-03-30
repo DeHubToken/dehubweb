@@ -384,13 +384,33 @@ export function StageProvider({ children }: { children: ReactNode }) {
           .single();
         if (spaceError || !space) throw new Error('Stage not found');
 
+        // Determine role: if this user is the host, preserve host/speaker role on rejoin
+        const isHost = space.host_wallet_address === walletAddress;
+
+        // Check if user already has an active participant record (e.g. was speaker before disconnect)
+        const { data: existingParticipant } = await supabase
+          .from('space_participants')
+          .select('role')
+          .eq('space_id', spaceId)
+          .eq('wallet_address', walletAddress)
+          .is('left_at', null)
+          .maybeSingle();
+
+        const rejoiningRole = isHost
+          ? 'host'
+          : existingParticipant?.role === 'speaker' || existingParticipant?.role === 'host'
+            ? 'speaker'
+            : 'listener';
+
+        const isSpeakerRole = rejoiningRole === 'host' || rejoiningRole === 'speaker';
+
         await supabase.from('space_participants').upsert(
           {
             space_id: spaceId,
             wallet_address: walletAddress,
             username: user?.username || null,
             avatar: user?.avatarImageUrl || null,
-            role: 'listener',
+            role: rejoiningRole,
             is_muted: true,
             left_at: null,
           },
@@ -420,17 +440,18 @@ export function StageProvider({ children }: { children: ReactNode }) {
           })
           .eq('id', spaceId);
 
-        const tokenData = await getAgoraToken(space.channel_name, 'subscriber');
+        const agoraRole = isSpeakerRole ? 'publisher' : 'subscriber';
+        const tokenData = await getAgoraToken(space.channel_name, agoraRole);
         if (!tokenData) throw new Error('Failed to get token');
 
-        const connected = await initializeAgora(tokenData, 'listener');
+        const connected = await initializeAgora(tokenData, rejoiningRole === 'listener' ? 'listener' : 'speaker');
         if (!connected) throw new Error('Failed to connect');
 
         setCurrentSpace(space as AudioSpace);
-        setMyRole('listener');
+        setMyRole(rejoiningRole as any);
         setHasRaisedHand(false);
         hasHandledStageEndRef.current = false;
-        toast.success('Joined the stage!');
+        toast.success(isHost ? 'Rejoined as host!' : 'Joined the stage!');
         return true;
       } catch (err) {
         console.error('Error joining stage:', err);
