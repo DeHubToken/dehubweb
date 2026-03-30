@@ -456,6 +456,11 @@ export default function ExplorePage() {
       initializedFromUrl.current = true;
       return; // Already set in useState initializer
     }
+    // Skip if we triggered this URL change ourselves
+    if (weSetParams.current) {
+      weSetParams.current = false;
+      return;
+    }
     // Handle browser back/forward navigation
     const urlQuery = searchParams.get('q') || '';
     if (urlQuery !== searchQuery) {
