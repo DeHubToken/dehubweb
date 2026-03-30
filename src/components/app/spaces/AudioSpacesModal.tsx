@@ -354,29 +354,24 @@ export function AudioSpacesModal() {
           {(view === 'live' || currentSpace) && currentSpace && (
             <div className="space-y-4 pb-24 relative">
 
-              {/* Stage Info */}
-              <div className="text-center pb-2">
-                <div className="flex items-center justify-center gap-2 text-white mb-1">
+              {/* Stage Info - top left */}
+              <div className="pb-2">
+                <div className="flex items-center gap-2 mb-1">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
                   </span>
-                  <span className="text-xs font-medium">LIVE</span>
+                  <span className="text-xs font-medium text-white">LIVE</span>
+                  <h2 className="text-lg font-semibold text-white">{currentSpace.title}</h2>
                 </div>
-                <h2 className="text-lg font-semibold text-white">{currentSpace.title}</h2>
                 {currentSpace.description && (
-                  <p className="text-sm text-white/60 mt-1">{currentSpace.description}</p>
+                  <p className="text-sm text-white/60 ml-4">{currentSpace.description}</p>
                 )}
-                <div className="flex items-center justify-center gap-4 mt-2 text-sm text-white/50">
-                  <span className="flex items-center gap-1">
-                    <Volume2 className="w-4 h-4" />
-                    {speakers.length} speaking
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Users className="w-4 h-4" />
-                    {listeners.length} listening
-                  </span>
-                </div>
+              </div>
+
+              {/* Live Waveform Visualizer */}
+              <div className="w-full h-24 sm:h-32 rounded-xl bg-white/5 border border-white/10 overflow-hidden p-2">
+                <LiveWaveform active={true} barCount={80} />
               </div>
 
               {/* Speakers Section */}
