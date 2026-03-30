@@ -255,7 +255,7 @@ export function AudioSpacesModal() {
                         key={space.id}
                         className="p-3 bg-white/5 rounded-xl border border-white/10 flex flex-col sm:flex-row sm:items-center gap-3"
                       >
-                        <div className="flex items-center gap-3 shrink-0 min-w-0 sm:max-w-[260px]">
+                        <div className="flex items-center gap-3 shrink-0 min-w-0 sm:max-w-[380px]">
                           <button
                             onClick={() => {
                               if (!space.recording_url) {
@@ -326,7 +326,7 @@ export function AudioSpacesModal() {
                           </button>
                           <div className="flex-1 min-w-0">
                             <h4 className="font-medium text-white text-sm truncate">{space.title}</h4>
-                            <div className="flex items-center gap-3 mt-1 text-xs text-white/40">
+                            <div className="flex items-center gap-3 mt-1 text-xs text-white/40 whitespace-nowrap">
                               <span className="flex items-center gap-1">
                                 {(() => {
                                   const avatar = buildAvatarUrl(space.host_wallet_address || '', space.host_avatar)
