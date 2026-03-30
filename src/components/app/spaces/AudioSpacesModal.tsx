@@ -363,11 +363,19 @@ export function AudioSpacesModal() {
                           </div>
                         </div>
                         {/* Waveform - right side on desktop, below on mobile */}
-                        <div className="hidden sm:flex flex-1 h-8 min-w-0">
-                          <StaticWaveform seed={space.id} className="w-full h-full" />
+                        <div className="hidden sm:flex flex-1 h-10 min-w-0">
+                          {playingStageId === space.id ? (
+                            <LiveWaveform active={true} barCount={60} volumeLevel={playbackVolume} className="w-full h-full" />
+                          ) : (
+                            <StaticWaveform seed={space.id} className="w-full h-full" />
+                          )}
                         </div>
                         <div className="sm:hidden w-full h-12">
-                          <StaticWaveform seed={space.id} className="w-full h-full" />
+                          {playingStageId === space.id ? (
+                            <LiveWaveform active={true} barCount={60} volumeLevel={playbackVolume} className="w-full h-full" />
+                          ) : (
+                            <StaticWaveform seed={space.id} className="w-full h-full" />
+                          )}
                         </div>
                       </div>
                     ))}
