@@ -229,21 +229,40 @@ export function AudioSpacesModal() {
                     {pastStages.map((space) => (
                       <div
                         key={space.id}
-                        className="p-3 bg-white/5 rounded-xl border border-white/10"
+                        className="p-3 bg-white/5 rounded-xl border border-white/10 flex items-center gap-3"
                       >
-                        <h4 className="font-medium text-white text-sm truncate">{space.title}</h4>
-                        <div className="flex items-center gap-3 mt-1.5 text-xs text-white/40">
-                          <span className="flex items-center gap-1">
-                            <Crown className="w-3 h-3" />
-                            {space.host_username || 'Anonymous'}
-                          </span>
-                          {space.ended_at && (
-                            <span>{formatDistanceToNow(new Date(space.ended_at), { addSuffix: true })}</span>
+                        <button
+                          onClick={() => {
+                            if (space.recording_url) {
+                              window.open(space.recording_url, '_blank');
+                            } else {
+                              toast.info('Recording not available for this stage');
+                            }
+                          }}
+                          className={cn(
+                            "shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all",
+                            space.recording_url
+                              ? "bg-white/10 hover:bg-white/20 text-white"
+                              : "bg-white/5 text-white/20"
                           )}
-                          <span className="flex items-center gap-1">
-                            <Users className="w-3 h-3" />
-                            {(space.speaker_count || 0) + (space.listener_count || 0)}
-                          </span>
+                        >
+                          <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
+                        </button>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-white text-sm truncate">{space.title}</h4>
+                          <div className="flex items-center gap-3 mt-1 text-xs text-white/40">
+                            <span className="flex items-center gap-1">
+                              <Crown className="w-3 h-3" />
+                              {space.host_username || 'Anonymous'}
+                            </span>
+                            {space.ended_at && (
+                              <span>{formatDistanceToNow(new Date(space.ended_at), { addSuffix: true })}</span>
+                            )}
+                            <span className="flex items-center gap-1">
+                              <Users className="w-3 h-3" />
+                              {(space.speaker_count || 0) + (space.listener_count || 0)}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     ))}
