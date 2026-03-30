@@ -167,7 +167,7 @@ export function AudioSpacesModal() {
 
   return (
     <Drawer open={isModalOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh] overflow-y-auto [&>div:first-child]:hidden">
+      <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh] flex flex-col overflow-hidden [&>div:first-child]:hidden">
         <DrawerHeader className="border-b-0 pb-2">
           <div className="flex items-center justify-between">
             <DrawerTitle className="text-white flex items-center gap-2">
@@ -208,7 +208,7 @@ export function AudioSpacesModal() {
           </div>
         </DrawerHeader>
 
-        <ScrollArea className="flex-1 p-4">
+        <ScrollArea className="flex-1 min-h-0 p-4">
 
           {/* ── Browse View ─────────────────────────────────────────────── */}
           {view === 'browse' && !currentSpace && (
