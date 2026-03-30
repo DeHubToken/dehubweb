@@ -49,14 +49,12 @@ export function StageReactions({ spaceId, onAvatarReaction }: StageReactionsProp
   const avatarTimeoutsRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
   const setAvatarReaction = useCallback((wallet: string, emoji: string) => {
-    // Clear existing timeout for this wallet
     if (avatarTimeoutsRef.current[wallet]) {
       clearTimeout(avatarTimeoutsRef.current[wallet]);
     }
     avatarReactionsRef.current = { ...avatarReactionsRef.current, [wallet]: emoji };
     onAvatarReaction?.({ ...avatarReactionsRef.current });
 
-    // Clear after 3 seconds
     avatarTimeoutsRef.current[wallet] = setTimeout(() => {
       const { [wallet]: _, ...rest } = avatarReactionsRef.current;
       avatarReactionsRef.current = rest;
@@ -66,11 +64,12 @@ export function StageReactions({ spaceId, onAvatarReaction }: StageReactionsProp
 
   const spawnFloating = useCallback((emoji: string) => {
     const id = ++reactionCounter;
-    const x = Math.random() * 60 - 30;
+    // Spread across a wider horizontal range for multiple simultaneous reactions
+    const x = Math.random() * 80 - 40;
     setFloating(prev => [...prev, { id, emoji, x }]);
     setTimeout(() => {
       setFloating(prev => prev.filter(r => r.id !== id));
-    }, 2000);
+    }, 2200);
   }, []);
 
   // Subscribe to reactions channel
@@ -94,7 +93,6 @@ export function StageReactions({ spaceId, onAvatarReaction }: StageReactionsProp
     return () => {
       supabase.removeChannel(channel);
       channelRef.current = null;
-      // Clear all avatar timeouts
       Object.values(avatarTimeoutsRef.current).forEach(clearTimeout);
     };
   }, [spaceId, spawnFloating, setAvatarReaction]);
@@ -109,38 +107,38 @@ export function StageReactions({ spaceId, onAvatarReaction }: StageReactionsProp
       setCooldown(false);
     }, 300);
 
-    // Show locally immediately
     spawnFloating(emoji);
     if (walletAddress) {
       setAvatarReaction(walletAddress, emoji);
     }
 
-    // Broadcast to others via the subscribed channel
     if (channelRef.current) {
       channelRef.current.send({
         type: 'broadcast',
         event: 'reaction',
         payload: { emoji, wallet: walletAddress },
-      }).catch(() => {
-        // Non-critical
-      });
+      }).catch(() => {});
     }
   }, [spawnFloating, walletAddress, setAvatarReaction]);
 
   return (
     <>
-      {/* Floating reactions overlay */}
-      <div className="absolute bottom-24 right-4 w-12 pointer-events-none overflow-hidden" style={{ height: 160 }}>
-        {floating.map(r => (
-          <span
-            key={r.id}
-            className="absolute bottom-0 text-2xl animate-float-up"
-            style={{ left: `calc(50% + ${r.x}%)`, animationDuration: '2s' }}
-          >
-            {r.emoji}
-          </span>
-        ))}
-      </div>
+      {/* Floating reactions — centered in stage area */}
+      {floating.length > 0 && (
+        <div className="flex justify-center pointer-events-none" style={{ height: 0 }}>
+          <div className="relative w-48" style={{ height: 140 }}>
+            {floating.map(r => (
+              <span
+                key={r.id}
+                className="absolute bottom-0 text-2xl animate-float-up"
+                style={{ left: `calc(50% + ${r.x}px)`, animationDuration: '2.2s' }}
+              >
+                {r.emoji}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Reactions bento card */}
       <div className="p-3 bg-white/5 rounded-xl border border-white/10">
