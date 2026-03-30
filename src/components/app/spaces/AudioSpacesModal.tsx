@@ -549,7 +549,7 @@ export function AudioSpacesModal() {
               )}
             </div>
           )}
-        </ScrollArea>
+        </div>
 
         {/* Anchored Controls Bar — outside ScrollArea */}
         {currentSpace && (
