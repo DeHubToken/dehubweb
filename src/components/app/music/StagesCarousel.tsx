@@ -106,7 +106,7 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
   });
 
   // Realtime: remove ended stages instantly
-  React.useEffect(() => {
+  useEffect(() => {
     const channel = supabase
       .channel('stages-carousel-realtime')
       .on(
