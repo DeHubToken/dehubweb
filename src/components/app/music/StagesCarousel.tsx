@@ -6,6 +6,7 @@
  * @module components/app/music/StagesCarousel
  */
 
+import { useEffect } from 'react';
 import { Mic2, Users, ChevronRight, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
