@@ -14,7 +14,7 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
-  Loader2, Phone, PhoneOff, Crown, Volume2,
+  Loader2, Volume2,
   Link, UserPlus, Minimize2, Play,
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -555,8 +555,18 @@ function StageCard({
           )}
           <div className="flex items-center gap-3 mt-2 text-sm text-white/50">
             <span className="flex items-center gap-1">
-              <Crown className="w-3 h-3" />
-              {space.host_username || 'Anonymous'}
+              {(() => {
+                const avatar = buildAvatarUrl(space.host_wallet_address || '', space.host_avatar)
+                  || buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
+                return avatar ? (
+                  <img src={avatar} alt="" className="w-4 h-4 rounded-md object-cover" />
+                ) : (
+                  <span className="w-4 h-4 rounded-md bg-zinc-700 flex items-center justify-center text-[8px] text-white font-medium">
+                    {(space.host_username || 'A').charAt(0).toUpperCase()}
+                  </span>
+                );
+              })()}
+              @{space.host_username || 'Anonymous'}
             </span>
             <span className="flex items-center gap-1">
               <Users className="w-3 h-3" />
@@ -572,6 +582,10 @@ function StageCard({
         >
           {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Join'}
         </Button>
+      </div>
+      {/* Live waveform */}
+      <div className="mt-3 w-full h-10 rounded-lg overflow-hidden">
+        <LiveWaveform active={true} barCount={60} />
       </div>
     </div>
   );
@@ -621,8 +635,8 @@ function ParticipantAvatar({
           </AvatarFallback>
         </Avatar>
         {isHost && (
-          <div className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center">
-            <Crown className="w-3 h-3 text-yellow-900" />
+          <div className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center text-[10px]">
+            👑
           </div>
         )}
         {participant.is_muted && (
