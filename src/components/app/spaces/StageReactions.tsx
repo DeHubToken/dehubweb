@@ -106,17 +106,18 @@ export function StageReactions({ spaceId }: StageReactionsProps) {
         ))}
       </div>
 
-      {/* Reaction bar */}
-      <div className="flex items-center justify-center gap-1 flex-wrap">
+      {/* Reaction bar — wraps inside container, no overflow */}
+      <div className="relative z-10 flex items-center justify-center gap-1.5 flex-wrap w-full">
         {REACTIONS.map(r => (
           <button
             key={r.id}
             onClick={() => sendReaction(r.emoji)}
             disabled={cooldown}
             className={cn(
-              "w-9 h-9 rounded-full flex items-center justify-center text-lg",
-              "bg-white/5 hover:bg-white/15 active:scale-90 transition-all border border-white/10",
-              cooldown && "opacity-50",
+              "w-8 h-8 rounded-full flex items-center justify-center text-base",
+              "bg-white/[0.07] hover:bg-white/20 active:scale-90 transition-all border border-white/[0.12]",
+              "backdrop-blur-sm shadow-sm",
+              cooldown && "opacity-40",
             )}
           >
             {r.emoji}
