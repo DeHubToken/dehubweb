@@ -360,10 +360,19 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const endSpace = useCallback(async () => {
     if (!currentSpace || myRole !== 'host') return;
     try {
-      await supabase
+      // Try direct update first; the DB trigger (auto_end_audio_space_on_participant_leave)
+      // also handles this when the host's left_at is set, so we silently swallow RLS errors
+      // and rely on the trigger as fallback.
+      const { error: updateErr } = await supabase
         .from('audio_spaces')
         .update({ status: 'ended', ended_at: new Date().toISOString() })
         .eq('id', currentSpace.id);
+
+      if (updateErr) {
+        // Non-fatal — DB trigger will auto-end when host leaves
+        console.warn('Direct end failed (will auto-end via trigger):', updateErr.message);
+      }
+
       await leaveSpace();
       toast.success('Stage ended');
     } catch (err) {
