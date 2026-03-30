@@ -340,18 +340,21 @@ export function AudioSpacesModal() {
                       <span className="text-[10px] text-white/30 ml-1">(tap + to invite as speaker)</span>
                     )}
                   </h3>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-3">
                     {listeners.slice(0, 20).map((listener) => (
                       <ListenerItem
                         key={listener.id}
                         participant={listener}
                         canInvite={myRole === 'host'}
                         onInvite={() => inviteSpeaker(listener.wallet_address)}
+                        reactionEmoji={avatarReactions[listener.wallet_address]}
                       />
                     ))}
                     {listeners.length > 20 && (
-                      <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs text-white/60">
-                        +{listeners.length - 20}
+                      <div className="flex flex-col items-center gap-1">
+                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs text-white/60">
+                          +{listeners.length - 20}
+                        </div>
                       </div>
                     )}
                   </div>
