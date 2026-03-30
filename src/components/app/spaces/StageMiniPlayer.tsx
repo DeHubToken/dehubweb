@@ -50,7 +50,7 @@ export function StageMiniPlayer() {
       className="fixed bottom-20 right-4 z-50 select-none"
       style={{ touchAction: 'none' }}
     >
-      <div className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl shadow-2xl overflow-hidden min-w-[200px]">
+      <div className="bg-black/40 backdrop-blur-[24px] border border-white/10 rounded-2xl shadow-2xl overflow-hidden min-w-[200px]">
         {/* Drag handle + title */}
         <div
           className="flex items-center gap-2 px-3 pt-2.5 pb-1 cursor-grab active:cursor-grabbing"
@@ -68,14 +68,17 @@ export function StageMiniPlayer() {
             {currentSpace.title}
           </span>
 
-          {/* Expand button */}
-          <button
-            onClick={() => openModal('live')}
-            className="ml-auto text-white/50 hover:text-white transition-colors"
-            title="Expand stage"
-          >
-            <Maximize2 className="w-3.5 h-3.5" />
-          </button>
+          {/* Role label - top right */}
+          {myRole && (
+            <span className={cn(
+              "ml-auto text-[9px] font-medium",
+              myRole === 'host' ? "text-yellow-400" :
+              myRole === 'speaker' ? "text-blue-400" :
+              "text-white/50"
+            )}>
+              {myRole}
+            </span>
+          )}
         </div>
 
         {/* Stats row */}
@@ -88,16 +91,6 @@ export function StageMiniPlayer() {
             <Users className="w-3 h-3" />
             {totalCount}
           </span>
-          {myRole && (
-            <span className={cn(
-              "ml-auto px-1.5 py-0.5 rounded-full text-[9px] font-medium",
-              myRole === 'host' ? "bg-yellow-500/20 text-yellow-400" :
-              myRole === 'speaker' ? "bg-blue-500/20 text-blue-400" :
-              "bg-white/10 text-white/50"
-            )}>
-              {myRole}
-            </span>
-          )}
         </div>
 
         {/* Controls */}
@@ -125,6 +118,15 @@ export function StageMiniPlayer() {
             title={myRole === 'host' ? 'End stage' : 'Leave stage'}
           >
             <X className="w-4 h-4" />
+          </button>
+
+          {/* Maximize - bottom right */}
+          <button
+            onClick={() => openModal('live')}
+            className="ml-auto text-white/50 hover:text-white transition-colors"
+            title="Expand stage"
+          >
+            <Maximize2 className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
