@@ -104,7 +104,6 @@ export function AudioSpacesModal() {
     if (space) {
       setTitle('');
       setDescription('');
-      closeModal();
     }
   };
 
