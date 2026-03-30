@@ -124,7 +124,7 @@ export function StageMiniPlayer() {
             className="w-8 h-8 rounded-full bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
             title={myRole === 'host' ? 'End stage' : 'Leave stage'}
           >
-            <PhoneOff className="w-4 h-4" />
+            <X className="w-4 h-4" />
           </button>
         </div>
       </div>
