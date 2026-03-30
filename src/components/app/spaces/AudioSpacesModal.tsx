@@ -285,6 +285,7 @@ export function AudioSpacesModal() {
                                   cancelAnimationFrame(rafRef.current);
                                   setPlayingStageId(null);
                                   setPlaybackVolume(0);
+                                  setPlaybackProgress(0);
                                 };
 
                                 // Set up analyser for volume
