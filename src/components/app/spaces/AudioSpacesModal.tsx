@@ -396,17 +396,15 @@ export function AudioSpacesModal() {
                   {myRole === 'listener' && (
                     <Button
                       onClick={hasRaisedHand ? lowerHand : raiseHand}
-                      size="sm"
-                      variant="outline"
+                      size="lg"
                       className={cn(
-                        "rounded-full border-white/10 text-white h-10 px-4",
+                        "rounded-full w-12 h-12",
                         hasRaisedHand
-                          ? "bg-yellow-500/20 hover:bg-yellow-500/30 border-yellow-500/30"
-                          : "bg-white/10 hover:bg-white/20",
+                          ? "bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400"
+                          : "bg-white/10 hover:bg-white/20 text-white",
                       )}
                     >
-                      <Hand className="w-4 h-4 mr-1.5" />
-                      {hasRaisedHand ? 'Lower' : 'Raise Hand'}
+                      <Hand className="w-5 h-5" />
                     </Button>
                   )}
 
