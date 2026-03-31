@@ -98,6 +98,65 @@ export default function ProfilePage() {
 
 
   const { layerRef: tabsIndicatorLayerRef, setRef: setTabRef, rect: tabIndicator, onScroll: handleTabsScroll } = useTabIndicator(activeTab);
+  const [tabTransition, setTabTransition] = useState(false);
+
+  // Drag-to-swipe state for profile tab indicator
+  const profileTabButtonPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
+  const profileDragState = useRef<{ startX: number; startRectX: number; startWidth: number; currentX: number } | null>(null);
+  const [isProfileDragging, setIsProfileDragging] = useState(false);
+  const [profileDragOffsetX, setProfileDragOffsetX] = useState(0);
+
+  const findNearestProfileTab = useCallback((indicatorCenterX: number) => {
+    const layer = tabsIndicatorLayerRef.current;
+    if (!layer) return activeTab;
+    const layerRect = layer.getBoundingClientRect();
+    let nearest: TabValue = activeTab;
+    let minDist = Infinity;
+    for (const [key, el] of Object.entries(profileTabButtonPositions.current)) {
+      if (!el) continue;
+      const br = el.getBoundingClientRect();
+      const btnCenter = br.left - layerRect.left + br.width / 2;
+      const dist = Math.abs(indicatorCenterX - btnCenter);
+      if (dist < minDist) { minDist = dist; nearest = key as TabValue; }
+    }
+    return nearest;
+  }, [activeTab, tabsIndicatorLayerRef]);
+
+  const handleProfileDragStart = useCallback((e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    profileDragState.current = { startX: e.clientX, startRectX: tabIndicator.x, startWidth: tabIndicator.width, currentX: e.clientX };
+    setIsProfileDragging(true);
+    setProfileDragOffsetX(0);
+  }, [tabIndicator.x, tabIndicator.width]);
+
+  const handleProfileDragMove = useCallback((e: React.PointerEvent) => {
+    if (!profileDragState.current) return;
+    profileDragState.current.currentX = e.clientX;
+    const dx = e.clientX - profileDragState.current.startX;
+    setProfileDragOffsetX(dx);
+    const currentCenterX = profileDragState.current.startRectX + dx + profileDragState.current.startWidth / 2;
+    const nearest = findNearestProfileTab(currentCenterX);
+    if (nearest !== activeTab) {
+      setTabTransition(true);
+      setActiveTab(nearest);
+      setTimeout(() => setTabTransition(false), 450);
+    }
+  }, [activeTab, findNearestProfileTab]);
+
+  const handleProfileDragEnd = useCallback(() => {
+    if (!profileDragState.current) return;
+    profileDragState.current = null;
+    setIsProfileDragging(false);
+    setProfileDragOffsetX(0);
+    setTabTransition(true);
+    setTimeout(() => setTabTransition(false), 450);
+  }, []);
+
+  const profileDragDisplayRect = isProfileDragging
+    ? { ...tabIndicator, x: (profileDragState.current?.startRectX ?? tabIndicator.x) + profileDragOffsetX, ready: true }
+    : tabIndicator;
 
 
   // Follow logic
@@ -316,8 +375,25 @@ export default function ProfilePage() {
         {/* Profile Tabs Bento */}
         <div className="bg-zinc-900 rounded-xl relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <div ref={tabsIndicatorLayerRef} className="relative overflow-visible">
-            <GlassIndicator rect={tabIndicator} borderRadius="0.75rem" />
-
+            <GlassIndicator rect={profileDragDisplayRect} borderRadius="0.75rem" enableTransition={!isProfileDragging && tabTransition} />
+            {/* Drag handle overlay */}
+            {profileDragDisplayRect.ready && (
+              <div
+                className="absolute z-30 cursor-grab active:cursor-grabbing"
+                style={{
+                  transform: `translate(${profileDragDisplayRect.x}px, ${profileDragDisplayRect.y}px)`,
+                  width: profileDragDisplayRect.width,
+                  height: profileDragDisplayRect.height,
+                  transition: !isProfileDragging && tabTransition
+                    ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+                    : 'none',
+                }}
+                onPointerDown={handleProfileDragStart}
+                onPointerMove={handleProfileDragMove}
+                onPointerUp={handleProfileDragEnd}
+                onPointerCancel={handleProfileDragEnd}
+              />
+            )}
             <div
               className="relative z-20 flex overflow-x-auto scrollbar-hide"
               style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch', willChange: 'scroll-position' } as React.CSSProperties}
@@ -328,7 +404,10 @@ export default function ProfilePage() {
                 return (
                   <button
                     key={tab.value}
-                    ref={setTabRef(tab.value)}
+                    ref={(el) => {
+                      setTabRef(tab.value)(el);
+                      profileTabButtonPositions.current[tab.value] = el;
+                    }}
                     onClick={() => setActiveTab(tab.value)}
                     className={cn(
                       'relative z-40 flex-1 flex flex-col items-center justify-center gap-px px-2 py-[9px] rounded-xl transition-colors min-w-[52px]',
