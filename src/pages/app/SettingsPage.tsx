@@ -133,6 +133,58 @@ export default function SettingsPage() {
     }
   };
 
+  // Drag-to-swipe for settings tab indicator (before conditional return to satisfy hooks rules)
+  const settingsTabPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
+  const settingsDragState = useRef<{ startX: number; startRectX: number; startWidth: number; currentX: number } | null>(null);
+  const [isSettingsDragging, setIsSettingsDragging] = useState(false);
+  const [settingsDragOffsetX, setSettingsDragOffsetX] = useState(0);
+
+  const findNearestSettingsTab = useCallback((indicatorCenterX: number) => {
+    const layer = settingsTabLayerRef.current;
+    if (!layer) return activeTab;
+    const layerRect = layer.getBoundingClientRect();
+    let nearest: string = activeTab;
+    let minDist = Infinity;
+    for (const [key, el] of Object.entries(settingsTabPositions.current)) {
+      if (!el) continue;
+      const br = el.getBoundingClientRect();
+      const btnCenter = br.left - layerRect.left + br.width / 2;
+      const dist = Math.abs(indicatorCenterX - btnCenter);
+      if (dist < minDist) { minDist = dist; nearest = key; }
+    }
+    return nearest;
+  }, [activeTab, settingsTabLayerRef]);
+
+  const handleSettingsDragStart = useCallback((e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    settingsDragState.current = { startX: e.clientX, startRectX: settingsTabRect.x, startWidth: settingsTabRect.width, currentX: e.clientX };
+    setIsSettingsDragging(true);
+    setSettingsDragOffsetX(0);
+  }, [settingsTabRect.x, settingsTabRect.width]);
+
+  const handleSettingsDragMove = useCallback((e: React.PointerEvent) => {
+    if (!settingsDragState.current) return;
+    settingsDragState.current.currentX = e.clientX;
+    const dx = e.clientX - settingsDragState.current.startX;
+    setSettingsDragOffsetX(dx);
+    const currentCenterX = settingsDragState.current.startRectX + dx + settingsDragState.current.startWidth / 2;
+    const nearest = findNearestSettingsTab(currentCenterX);
+    if (nearest !== activeTab) setActiveTab(nearest);
+  }, [activeTab, findNearestSettingsTab]);
+
+  const handleSettingsDragEnd = useCallback(() => {
+    if (!settingsDragState.current) return;
+    settingsDragState.current = null;
+    setIsSettingsDragging(false);
+    setSettingsDragOffsetX(0);
+  }, []);
+
+  const settingsDragDisplayRect = isSettingsDragging
+    ? { ...settingsTabRect, x: (settingsDragState.current?.startRectX ?? settingsTabRect.x) + settingsDragOffsetX, ready: true }
+    : settingsTabRect;
+
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
     return (
@@ -170,14 +222,32 @@ export default function SettingsPage() {
 
         {/* Tab Icons */}
         <div ref={settingsTabLayerRef} className="relative overflow-visible">
-          <GlassIndicator rect={settingsTabRect} />
+          <GlassIndicator rect={settingsDragDisplayRect} enableTransition={!isSettingsDragging} />
+          {settingsDragDisplayRect.ready && (
+            <div
+              className="absolute z-30 cursor-grab active:cursor-grabbing"
+              style={{
+                transform: `translate(${settingsDragDisplayRect.x}px, ${settingsDragDisplayRect.y}px)`,
+                width: settingsDragDisplayRect.width,
+                height: settingsDragDisplayRect.height,
+                transition: !isSettingsDragging ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+              }}
+              onPointerDown={handleSettingsDragStart}
+              onPointerMove={handleSettingsDragMove}
+              onPointerUp={handleSettingsDragEnd}
+              onPointerCancel={handleSettingsDragEnd}
+            />
+          )}
           <div className="relative z-20 flex gap-[6px] sm:gap-2">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.value}
-                  ref={setSettingsTabRef(tab.value)}
+                  ref={(el) => {
+                    setSettingsTabRef(tab.value)(el);
+                    settingsTabPositions.current[tab.value] = el;
+                  }}
                   onClick={() => setActiveTab(tab.value)}
                   className={`relative z-40 p-[11px] sm:p-3 rounded-xl transition-colors ${
                     activeTab === tab.value

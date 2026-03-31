@@ -110,6 +110,58 @@ export default function BookmarksPage() {
     return () => observer.disconnect();
   }, [handleLoadMore]);
 
+  // Drag-to-swipe for bookmarks tab indicator
+  const bookmarksTabPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
+  const bookmarksDragState = useRef<{ startX: number; startRectX: number; startWidth: number; currentX: number } | null>(null);
+  const [isBookmarksDragging, setIsBookmarksDragging] = useState(false);
+  const [bookmarksDragOffsetX, setBookmarksDragOffsetX] = useState(0);
+
+  const findNearestBookmarksTab = useCallback((indicatorCenterX: number) => {
+    const layer = bookmarksTabLayerRef.current;
+    if (!layer) return activeTab;
+    const layerRect = layer.getBoundingClientRect();
+    let nearest: BookmarkType = activeTab;
+    let minDist = Infinity;
+    for (const [key, el] of Object.entries(bookmarksTabPositions.current)) {
+      if (!el) continue;
+      const br = el.getBoundingClientRect();
+      const btnCenter = br.left - layerRect.left + br.width / 2;
+      const dist = Math.abs(indicatorCenterX - btnCenter);
+      if (dist < minDist) { minDist = dist; nearest = key as BookmarkType; }
+    }
+    return nearest;
+  }, [activeTab, bookmarksTabLayerRef]);
+
+  const handleBookmarksDragStart = useCallback((e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    bookmarksDragState.current = { startX: e.clientX, startRectX: bookmarksTabRect.x, startWidth: bookmarksTabRect.width, currentX: e.clientX };
+    setIsBookmarksDragging(true);
+    setBookmarksDragOffsetX(0);
+  }, [bookmarksTabRect.x, bookmarksTabRect.width]);
+
+  const handleBookmarksDragMove = useCallback((e: React.PointerEvent) => {
+    if (!bookmarksDragState.current) return;
+    bookmarksDragState.current.currentX = e.clientX;
+    const dx = e.clientX - bookmarksDragState.current.startX;
+    setBookmarksDragOffsetX(dx);
+    const currentCenterX = bookmarksDragState.current.startRectX + dx + bookmarksDragState.current.startWidth / 2;
+    const nearest = findNearestBookmarksTab(currentCenterX);
+    if (nearest !== activeTab) setActiveTab(nearest);
+  }, [activeTab, findNearestBookmarksTab]);
+
+  const handleBookmarksDragEnd = useCallback(() => {
+    if (!bookmarksDragState.current) return;
+    bookmarksDragState.current = null;
+    setIsBookmarksDragging(false);
+    setBookmarksDragOffsetX(0);
+  }, []);
+
+  const bookmarksDragDisplayRect = isBookmarksDragging
+    ? { ...bookmarksTabRect, x: (bookmarksDragState.current?.startRectX ?? bookmarksTabRect.x) + bookmarksDragOffsetX, ready: true }
+    : bookmarksTabRect;
+
   // Block access for unauthenticated users
   if (!isAuthenticated) {
     return (
@@ -154,7 +206,22 @@ export default function BookmarksPage() {
 
         {/* Filter Tabs */}
         <div ref={bookmarksTabLayerRef} className="relative overflow-x-clip overflow-y-visible">
-          <GlassIndicator rect={bookmarksTabRect} />
+          <GlassIndicator rect={bookmarksDragDisplayRect} enableTransition={!isBookmarksDragging} />
+          {bookmarksDragDisplayRect.ready && (
+            <div
+              className="absolute z-30 cursor-grab active:cursor-grabbing"
+              style={{
+                transform: `translate(${bookmarksDragDisplayRect.x}px, ${bookmarksDragDisplayRect.y}px)`,
+                width: bookmarksDragDisplayRect.width,
+                height: bookmarksDragDisplayRect.height,
+                transition: !isBookmarksDragging ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+              }}
+              onPointerDown={handleBookmarksDragStart}
+              onPointerMove={handleBookmarksDragMove}
+              onPointerUp={handleBookmarksDragEnd}
+              onPointerCancel={handleBookmarksDragEnd}
+            />
+          )}
           <div className="relative z-20 flex gap-2 overflow-x-auto scrollbar-hide" onScroll={onBookmarksTabScroll}>
             {tabKeys.map((tab) => {
               const Icon = tab.icon;
@@ -162,7 +229,10 @@ export default function BookmarksPage() {
               return (
                 <button
                   key={tab.value}
-                  ref={setBookmarksTabRef(tab.value)}
+                  ref={(el) => {
+                    setBookmarksTabRef(tab.value)(el);
+                    bookmarksTabPositions.current[tab.value] = el;
+                  }}
                   onClick={() => setActiveTab(tab.value)}
                   className={`relative z-40 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
                     isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
