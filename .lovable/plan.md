@@ -1,36 +1,22 @@
 
 
-## Plan: Add Static Waveform to Past Stages Thumbnails
+## Fix: Hide video controls by default, show only on interaction
 
-### What
-Add the existing `StaticWaveform` component (the white lines visualization used for audio post thumbnails) to past stage entries in the "See All" drawer. On desktop/tablet it appears to the right of the listener count; on mobile, the card layout stacks vertically with a larger waveform below the metadata.
+**Problem**: On mobile (`isTouchDevice`), video controls (speed, loop, PiP, fullscreen, progress bar) are always visible while a video is playing. They should be hidden by default and only appear when the user taps the video.
 
-### Changes
+**Root cause**: Line 1440 in `VideoCard.tsx` uses `(isPlaying || showControls) && (showControls || isTouchDevice)` — the `isTouchDevice` flag bypasses the `showControls` state, making controls permanently visible on touch devices.
 
-**File: `src/components/app/spaces/AudioSpacesModal.tsx`**
+### Changes (1 file)
 
-1. Import `StaticWaveform` from `@/components/app/audio/StaticWaveform`
-2. Modify the past stages card layout (lines 230-277):
-   - Add responsive classes: horizontal layout on `sm:` and up, vertical on mobile
-   - On **desktop/tablet** (`sm:` breakpoint): append a `StaticWaveform` to the right side of the row after the listener count, sized ~120×40px
-   - On **mobile** (below `sm:`): stack the card vertically — play button + text info on top, then a wider waveform below spanning full width, ~full-width × 48px
-   - Use `space.id` as the `seed` prop so each stage gets a unique deterministic waveform pattern
-   - Use `white` color with the existing subtle opacity (component default)
+**`src/components/app/cards/VideoCard.tsx`**
 
-### Layout sketch
+1. **Top controls condition** (line 1440): Change from `(isPlaying || showControls) && (showControls || isTouchDevice)` to simply `showControls`. Controls only render when the user has interacted (hover on desktop, tap on mobile).
 
-```text
-Desktop/Tablet:
-┌─────────────────────────────────────────────────┐
-│ [▶]  Title                        🎵🎵🎵🎵🎵🎵 │
-│      @host · 2h ago · 👥 3                      │
-└─────────────────────────────────────────────────┘
+2. **Progress bar condition** (line 1491): Same fix — change `(showControls || isTouchDevice)` to just `showControls`.
 
-Mobile:
-┌──────────────────────────┐
-│ [▶]  Title               │
-│      @host · 2h ago · 👥 │
-│ 🎵🎵🎵🎵🎵🎵🎵🎵🎵🎵🎵🎵│
-└──────────────────────────┘
-```
+3. **Duration badge condition** (line 1553): Update the inverse condition accordingly — show duration badge when controls are hidden.
+
+4. **Add tap-to-toggle on mobile**: Ensure the existing `onClick` / touch handler on the video container calls `showControlsBriefly()` so tapping on mobile reveals controls for 2 seconds, matching the desktop hover behavior.
+
+This keeps the existing 2-second auto-hide timer and hover logic intact — just removes the permanent-on behavior for touch devices.
 
