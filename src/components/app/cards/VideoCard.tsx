@@ -1552,7 +1552,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         {/* Duration badge - liquid glass - hide when progress bar visible */}
         {!(duration > 0 && showControls) && (
           <div className={`absolute ${video.isAudio ? 'top-2 left-2 text-xs text-white font-medium z-10' : 'bottom-2 right-2 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-1.5 py-0.5 rounded border border-white/10 text-xs text-white font-medium z-10'}`}>
-            {video.duration}
+            {isPlaying && duration > 0 ? formatTime(Math.max(0, duration - currentTime)) : video.duration}
           </div>
         )}
         </>}
