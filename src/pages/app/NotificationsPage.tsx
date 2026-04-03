@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
+import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
 import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
@@ -1075,9 +1076,15 @@ export default function NotificationsPage() {
 
   // Drag-to-swipe state
   const tabButtonPositions = useRef<Partial<Record<NotificationTypeFilter, HTMLElement | null>>>({});
-  const dragState = useRef<{ startX: number; startRectX: number; startWidth: number } | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragOffsetX, setDragOffsetX] = useState(0);
+
+  const { isDragging, indicatorRef, handleDragStart, handleDragMove, handleDragEnd } = useDragTabIndicator({
+    tabRect: notifTabRect,
+    tabLayerRef: notifTabLayerRef,
+    tabButtonPositions,
+    tabValues: tabs.map(t => t.value) as NotificationTypeFilter[],
+    activeTab,
+    onTabChange: setActiveTab,
+  });
 
   const handleTabClick = useCallback((tab: NotificationTypeFilter) => {
     if (isDragging) return;
@@ -1085,57 +1092,6 @@ export default function NotificationsPage() {
     setActiveTab(tab);
     setTimeout(() => setNotifTabTransition(false), 450);
   }, [isDragging]);
-
-  const findNearestTab = useCallback((indicatorCenterX: number) => {
-    const layer = notifTabLayerRef.current;
-    if (!layer) return activeTab;
-    const layerRect = layer.getBoundingClientRect();
-    let nearest: NotificationTypeFilter = activeTab;
-    let minDist = Infinity;
-    for (const tab of tabs) {
-      const el = tabButtonPositions.current[tab.value];
-      if (!el) continue;
-      const br = el.getBoundingClientRect();
-      const btnCenter = br.left - layerRect.left + br.width / 2;
-      const dist = Math.abs(indicatorCenterX - btnCenter);
-      if (dist < minDist) { minDist = dist; nearest = tab.value; }
-    }
-    return nearest;
-  }, [activeTab, notifTabLayerRef]);
-
-  const handleDragStart = useCallback((e: React.PointerEvent) => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    dragState.current = { startX: e.clientX, startRectX: notifTabRect.x, startWidth: notifTabRect.width };
-    setIsDragging(true);
-    setDragOffsetX(0);
-  }, [notifTabRect.x, notifTabRect.width]);
-
-  const handleDragMove = useCallback((e: React.PointerEvent) => {
-    if (!dragState.current) return;
-    const dx = e.clientX - dragState.current.startX;
-    setDragOffsetX(dx);
-    const currentCenterX = dragState.current.startRectX + dx + dragState.current.startWidth / 2;
-    const nearest = findNearestTab(currentCenterX);
-    if (nearest !== activeTab) {
-      setActiveTab(nearest);
-    }
-  }, [activeTab, findNearestTab]);
-
-  const handleDragEnd = useCallback(() => {
-    if (!dragState.current) return;
-    dragState.current = null;
-    setIsDragging(false);
-    setDragOffsetX(0);
-    setNotifTabTransition(true);
-    setTimeout(() => setNotifTabTransition(false), 450);
-  }, []);
-
-  // Compute the display rect: during drag, override with manual position
-  const dragDisplayRect = isDragging
-    ? { ...notifTabRect, x: (dragState.current?.startRectX ?? notifTabRect.x) + dragOffsetX, ready: true }
-    : notifTabRect;
   const { isAuthenticated, walletAddress: pageWalletAddress } = useAuth();
   
   // Followers drawer state (opened inline from aggregated follow notifications)
@@ -1603,18 +1559,15 @@ export default function NotificationsPage() {
            {/* Tabs - merged into header bento */}
           <div className="mt-3 -mx-2" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
             <div ref={notifTabLayerRef} className="relative overflow-visible">
-              <GlassIndicator rect={dragDisplayRect} enableTransition={!isDragging && notifTabTransition} />
+              <GlassIndicator ref={indicatorRef} rect={notifTabRect} enableTransition={!isDragging && notifTabTransition} />
               {/* Drag handle overlay - sits on top of indicator for pointer capture */}
-              {dragDisplayRect.ready && (
+              {notifTabRect.ready && (
                 <div
                   className="absolute z-30 cursor-grab active:cursor-grabbing"
                   style={{
-                    transform: `translate(${dragDisplayRect.x}px, ${dragDisplayRect.y}px)`,
-                    width: dragDisplayRect.width,
-                    height: dragDisplayRect.height,
-                    transition: !isDragging && notifTabTransition
-                      ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
-                      : 'none',
+                    transform: `translate(${notifTabRect.x}px, ${notifTabRect.y}px)`,
+                    width: notifTabRect.width,
+                    height: notifTabRect.height,
                   }}
                   onPointerDown={handleDragStart}
                   onPointerMove={handleDragMove}

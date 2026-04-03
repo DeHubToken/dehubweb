@@ -8,6 +8,7 @@
 import governanceShieldIcon from '@/assets/governance-shield.png';
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useNavigate } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTranslation } from 'react-i18next';
@@ -673,56 +674,16 @@ export default function GovernancePage() {
   );
 
   // Drag-to-swipe for governance page tabs indicator
-  const govTabPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
-  const govDragState = useRef<{ startX: number; startRectX: number; startWidth: number; currentX: number } | null>(null);
-  const [isGovDragging, setIsGovDragging] = useState(false);
-  const [govDragOffsetX, setGovDragOffsetX] = useState(0);
+  const govTabPositions = useRef<Partial<Record<PageTab, HTMLElement | null>>>({});
 
-  const findNearestGovTab = useCallback((indicatorCenterX: number) => {
-    const layer = tabLayerRef.current;
-    if (!layer) return activeTab;
-    const layerRect = layer.getBoundingClientRect();
-    let nearest: PageTab = activeTab;
-    let minDist = Infinity;
-    for (const [key, el] of Object.entries(govTabPositions.current)) {
-      if (!el) continue;
-      const br = el.getBoundingClientRect();
-      const btnCenter = br.left - layerRect.left + br.width / 2;
-      const dist = Math.abs(indicatorCenterX - btnCenter);
-      if (dist < minDist) { minDist = dist; nearest = key as PageTab; }
-    }
-    return nearest;
-  }, [activeTab, tabLayerRef]);
-
-  const handleGovDragStart = useCallback((e: React.PointerEvent) => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    govDragState.current = { startX: e.clientX, startRectX: tabRect.x, startWidth: tabRect.width, currentX: e.clientX };
-    setIsGovDragging(true);
-    setGovDragOffsetX(0);
-  }, [tabRect.x, tabRect.width]);
-
-  const handleGovDragMove = useCallback((e: React.PointerEvent) => {
-    if (!govDragState.current) return;
-    govDragState.current.currentX = e.clientX;
-    const dx = e.clientX - govDragState.current.startX;
-    setGovDragOffsetX(dx);
-    const currentCenterX = govDragState.current.startRectX + dx + govDragState.current.startWidth / 2;
-    const nearest = findNearestGovTab(currentCenterX);
-    if (nearest !== activeTab) setActiveTab(nearest);
-  }, [activeTab, findNearestGovTab]);
-
-  const handleGovDragEnd = useCallback(() => {
-    if (!govDragState.current) return;
-    govDragState.current = null;
-    setIsGovDragging(false);
-    setGovDragOffsetX(0);
-  }, []);
-
-  const govDragDisplayRect = isGovDragging
-    ? { ...tabRect, x: (govDragState.current?.startRectX ?? tabRect.x) + govDragOffsetX, ready: true }
-    : tabRect;
+  const { isDragging: isGovDragging, indicatorRef: govIndicatorRef, handleDragStart: handleGovDragStart, handleDragMove: handleGovDragMove, handleDragEnd: handleGovDragEnd } = useDragTabIndicator({
+    tabRect,
+    tabLayerRef,
+    tabButtonPositions: govTabPositions,
+    tabValues: ['proposals', 'passed', 'rejected'] as PageTab[],
+    activeTab,
+    onTabChange: setActiveTab,
+  });
 
   const handleSubmitClick = () => {
     if (!isAuthenticated) {
@@ -779,15 +740,14 @@ export default function GovernancePage() {
 
         {/* Page Tabs */}
         <div ref={tabLayerRef} className="relative mb-3" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
-          <GlassIndicator rect={govDragDisplayRect} borderRadius="0.5rem" enableTransition={!isGovDragging} />
-          {govDragDisplayRect.ready && (
+          <GlassIndicator ref={govIndicatorRef} rect={tabRect} borderRadius="0.5rem" enableTransition={!isGovDragging} />
+          {tabRect.ready && (
             <div
               className="absolute z-30 cursor-grab active:cursor-grabbing"
               style={{
-                transform: `translate(${govDragDisplayRect.x}px, ${govDragDisplayRect.y}px)`,
-                width: govDragDisplayRect.width,
-                height: govDragDisplayRect.height,
-                transition: !isGovDragging ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+                transform: `translate(${tabRect.x}px, ${tabRect.y}px)`,
+                width: tabRect.width,
+                height: tabRect.height,
               }}
               onPointerDown={handleGovDragStart}
               onPointerMove={handleGovDragMove}

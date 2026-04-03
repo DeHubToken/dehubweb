@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, forwardRef } from 'react';
 
 interface GlassIndicatorProps {
   rect: { x: number; y: number; width: number; height: number; ready: boolean };
@@ -21,8 +21,10 @@ const positionCache = new Map<string, { x: number; y: number; width: number; hei
  * Renders instantly at correct position on page load with NO animation.
  * Smooth CSS transition only activates when parent explicitly sets enableTransition.
  * Caches positions per layoutKey so navigating back renders at correct spot.
+ * Supports forwardRef so parents can update transform directly during drag (bypassing React state).
  */
-export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layoutKey, enableTransition = false }: GlassIndicatorProps) {
+export const GlassIndicator = forwardRef<HTMLDivElement, GlassIndicatorProps>(
+  function GlassIndicator({ rect, borderRadius = '0.75rem', className, layoutKey, enableTransition = false }, ref) {
   // Cache every stable rect position
   useEffect(() => {
     if (rect.ready && layoutKey) {
@@ -45,6 +47,7 @@ export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layo
 
   return (
     <div
+      ref={ref}
       className={`${GLASS_CLASSES} ${className ?? ''}`}
       style={{
         borderRadius,
@@ -56,4 +59,4 @@ export function GlassIndicator({ rect, borderRadius = '0.75rem', className, layo
       }}
     />
   );
-}
+});

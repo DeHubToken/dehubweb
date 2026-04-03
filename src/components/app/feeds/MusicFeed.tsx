@@ -7,6 +7,7 @@
  */
 
 import { useState, useMemo, useRef, useCallback, useEffect, useId } from 'react';
+import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useNavigate } from 'react-router-dom';
 import { Play, Music, Mic2, Radio, Disc3, ChevronRight, Pause, Volume2, VolumeX, Loader2, Headphones } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -755,56 +756,16 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
   };
 
   // Drag-to-swipe for music sub-tab indicator (must be before conditional returns)
-  const musicSubTabPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
-  const musicSubDragState = useRef<{ startX: number; startRectX: number; startWidth: number; currentX: number } | null>(null);
-  const [isMusicSubDragging, setIsMusicSubDragging] = useState(false);
-  const [musicSubDragOffsetX, setMusicSubDragOffsetX] = useState(0);
+  const musicSubTabPositions = useRef<Partial<Record<MusicSubTab, HTMLElement | null>>>({});
 
-  const findNearestMusicSubTab = useCallback((indicatorCenterX: number) => {
-    const layer = musicSubTabLayerRef.current;
-    if (!layer) return activeSubTab;
-    const layerRect = layer.getBoundingClientRect();
-    let nearest: MusicSubTab = activeSubTab;
-    let minDist = Infinity;
-    for (const [key, el] of Object.entries(musicSubTabPositions.current)) {
-      if (!el) continue;
-      const br = el.getBoundingClientRect();
-      const btnCenter = br.left - layerRect.left + br.width / 2;
-      const dist = Math.abs(indicatorCenterX - btnCenter);
-      if (dist < minDist) { minDist = dist; nearest = key as MusicSubTab; }
-    }
-    return nearest;
-  }, [activeSubTab, musicSubTabLayerRef]);
-
-  const handleMusicSubDragStart = useCallback((e: React.PointerEvent) => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    musicSubDragState.current = { startX: e.clientX, startRectX: musicSubTabRect.x, startWidth: musicSubTabRect.width, currentX: e.clientX };
-    setIsMusicSubDragging(true);
-    setMusicSubDragOffsetX(0);
-  }, [musicSubTabRect.x, musicSubTabRect.width]);
-
-  const handleMusicSubDragMove = useCallback((e: React.PointerEvent) => {
-    if (!musicSubDragState.current) return;
-    musicSubDragState.current.currentX = e.clientX;
-    const dx = e.clientX - musicSubDragState.current.startX;
-    setMusicSubDragOffsetX(dx);
-    const currentCenterX = musicSubDragState.current.startRectX + dx + musicSubDragState.current.startWidth / 2;
-    const nearest = findNearestMusicSubTab(currentCenterX);
-    if (nearest !== activeSubTab) setActiveSubTab(nearest);
-  }, [activeSubTab, findNearestMusicSubTab]);
-
-  const handleMusicSubDragEnd = useCallback(() => {
-    if (!musicSubDragState.current) return;
-    musicSubDragState.current = null;
-    setIsMusicSubDragging(false);
-    setMusicSubDragOffsetX(0);
-  }, []);
-
-  const musicSubDragDisplayRect = isMusicSubDragging
-    ? { ...musicSubTabRect, x: (musicSubDragState.current?.startRectX ?? musicSubTabRect.x) + musicSubDragOffsetX, ready: true }
-    : musicSubTabRect;
+  const { isDragging: isMusicSubDragging, indicatorRef: musicSubIndicatorRef, handleDragStart: handleMusicSubDragStart, handleDragMove: handleMusicSubDragMove, handleDragEnd: handleMusicSubDragEnd } = useDragTabIndicator({
+    tabRect: musicSubTabRect,
+    tabLayerRef: musicSubTabLayerRef,
+    tabButtonPositions: musicSubTabPositions,
+    tabValues: MUSIC_SUB_TABS.map(t => t.value) as MusicSubTab[],
+    activeTab: activeSubTab,
+    onTabChange: setActiveSubTab,
+  });
 
   if (isRefreshing) {
     return (
@@ -860,15 +821,14 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
             className="flex-shrink-0 px-2 sm:px-3 pb-2 bg-black overflow-y-clip overflow-x-visible"
           >
             <div ref={musicSubTabLayerRef} className="relative overflow-visible">
-              <GlassIndicator rect={musicSubDragDisplayRect} borderRadius="0.5rem" enableTransition={!isMusicSubDragging} />
-              {musicSubDragDisplayRect.ready && (
+              <GlassIndicator ref={musicSubIndicatorRef} rect={musicSubTabRect} borderRadius="0.5rem" enableTransition={!isMusicSubDragging} />
+              {musicSubTabRect.ready && (
                 <div
                   className="absolute z-30 cursor-grab active:cursor-grabbing"
                   style={{
-                    transform: `translate(${musicSubDragDisplayRect.x}px, ${musicSubDragDisplayRect.y}px)`,
-                    width: musicSubDragDisplayRect.width,
-                    height: musicSubDragDisplayRect.height,
-                    transition: !isMusicSubDragging ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+                    transform: `translate(${musicSubTabRect.x}px, ${musicSubTabRect.y}px)`,
+                    width: musicSubTabRect.width,
+                    height: musicSubTabRect.height,
                   }}
                   onPointerDown={handleMusicSubDragStart}
                   onPointerMove={handleMusicSubDragMove}

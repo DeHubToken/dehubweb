@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -135,55 +136,15 @@ export default function SettingsPage() {
 
   // Drag-to-swipe for settings tab indicator (before conditional return to satisfy hooks rules)
   const settingsTabPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
-  const settingsDragState = useRef<{ startX: number; startRectX: number; startWidth: number; currentX: number } | null>(null);
-  const [isSettingsDragging, setIsSettingsDragging] = useState(false);
-  const [settingsDragOffsetX, setSettingsDragOffsetX] = useState(0);
 
-  const findNearestSettingsTab = useCallback((indicatorCenterX: number) => {
-    const layer = settingsTabLayerRef.current;
-    if (!layer) return activeTab;
-    const layerRect = layer.getBoundingClientRect();
-    let nearest: string = activeTab;
-    let minDist = Infinity;
-    for (const [key, el] of Object.entries(settingsTabPositions.current)) {
-      if (!el) continue;
-      const br = el.getBoundingClientRect();
-      const btnCenter = br.left - layerRect.left + br.width / 2;
-      const dist = Math.abs(indicatorCenterX - btnCenter);
-      if (dist < minDist) { minDist = dist; nearest = key; }
-    }
-    return nearest;
-  }, [activeTab, settingsTabLayerRef]);
-
-  const handleSettingsDragStart = useCallback((e: React.PointerEvent) => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    settingsDragState.current = { startX: e.clientX, startRectX: settingsTabRect.x, startWidth: settingsTabRect.width, currentX: e.clientX };
-    setIsSettingsDragging(true);
-    setSettingsDragOffsetX(0);
-  }, [settingsTabRect.x, settingsTabRect.width]);
-
-  const handleSettingsDragMove = useCallback((e: React.PointerEvent) => {
-    if (!settingsDragState.current) return;
-    settingsDragState.current.currentX = e.clientX;
-    const dx = e.clientX - settingsDragState.current.startX;
-    setSettingsDragOffsetX(dx);
-    const currentCenterX = settingsDragState.current.startRectX + dx + settingsDragState.current.startWidth / 2;
-    const nearest = findNearestSettingsTab(currentCenterX);
-    if (nearest !== activeTab) setActiveTab(nearest);
-  }, [activeTab, findNearestSettingsTab]);
-
-  const handleSettingsDragEnd = useCallback(() => {
-    if (!settingsDragState.current) return;
-    settingsDragState.current = null;
-    setIsSettingsDragging(false);
-    setSettingsDragOffsetX(0);
-  }, []);
-
-  const settingsDragDisplayRect = isSettingsDragging
-    ? { ...settingsTabRect, x: (settingsDragState.current?.startRectX ?? settingsTabRect.x) + settingsDragOffsetX, ready: true }
-    : settingsTabRect;
+  const { isDragging: isSettingsDragging, indicatorRef: settingsIndicatorRef, handleDragStart: handleSettingsDragStart, handleDragMove: handleSettingsDragMove, handleDragEnd: handleSettingsDragEnd } = useDragTabIndicator({
+    tabRect: settingsTabRect,
+    tabLayerRef: settingsTabLayerRef,
+    tabButtonPositions: settingsTabPositions,
+    tabValues: tabs.map(t => t.value),
+    activeTab,
+    onTabChange: setActiveTab,
+  });
 
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
@@ -222,15 +183,14 @@ export default function SettingsPage() {
 
         {/* Tab Icons */}
         <div ref={settingsTabLayerRef} className="relative overflow-visible">
-          <GlassIndicator rect={settingsDragDisplayRect} enableTransition={!isSettingsDragging} />
-          {settingsDragDisplayRect.ready && (
+          <GlassIndicator ref={settingsIndicatorRef} rect={settingsTabRect} enableTransition={!isSettingsDragging} />
+          {settingsTabRect.ready && (
             <div
               className="absolute z-30 cursor-grab active:cursor-grabbing"
               style={{
-                transform: `translate(${settingsDragDisplayRect.x}px, ${settingsDragDisplayRect.y}px)`,
-                width: settingsDragDisplayRect.width,
-                height: settingsDragDisplayRect.height,
-                transition: !isSettingsDragging ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+                transform: `translate(${settingsTabRect.x}px, ${settingsTabRect.y}px)`,
+                width: settingsTabRect.width,
+                height: settingsTabRect.height,
               }}
               onPointerDown={handleSettingsDragStart}
               onPointerMove={handleSettingsDragMove}

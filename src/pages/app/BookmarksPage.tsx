@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
@@ -111,56 +112,16 @@ export default function BookmarksPage() {
   }, [handleLoadMore]);
 
   // Drag-to-swipe for bookmarks tab indicator
-  const bookmarksTabPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
-  const bookmarksDragState = useRef<{ startX: number; startRectX: number; startWidth: number; currentX: number } | null>(null);
-  const [isBookmarksDragging, setIsBookmarksDragging] = useState(false);
-  const [bookmarksDragOffsetX, setBookmarksDragOffsetX] = useState(0);
+  const bookmarksTabPositions = useRef<Partial<Record<BookmarkType, HTMLElement | null>>>({});
 
-  const findNearestBookmarksTab = useCallback((indicatorCenterX: number) => {
-    const layer = bookmarksTabLayerRef.current;
-    if (!layer) return activeTab;
-    const layerRect = layer.getBoundingClientRect();
-    let nearest: BookmarkType = activeTab;
-    let minDist = Infinity;
-    for (const [key, el] of Object.entries(bookmarksTabPositions.current)) {
-      if (!el) continue;
-      const br = el.getBoundingClientRect();
-      const btnCenter = br.left - layerRect.left + br.width / 2;
-      const dist = Math.abs(indicatorCenterX - btnCenter);
-      if (dist < minDist) { minDist = dist; nearest = key as BookmarkType; }
-    }
-    return nearest;
-  }, [activeTab, bookmarksTabLayerRef]);
-
-  const handleBookmarksDragStart = useCallback((e: React.PointerEvent) => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    bookmarksDragState.current = { startX: e.clientX, startRectX: bookmarksTabRect.x, startWidth: bookmarksTabRect.width, currentX: e.clientX };
-    setIsBookmarksDragging(true);
-    setBookmarksDragOffsetX(0);
-  }, [bookmarksTabRect.x, bookmarksTabRect.width]);
-
-  const handleBookmarksDragMove = useCallback((e: React.PointerEvent) => {
-    if (!bookmarksDragState.current) return;
-    bookmarksDragState.current.currentX = e.clientX;
-    const dx = e.clientX - bookmarksDragState.current.startX;
-    setBookmarksDragOffsetX(dx);
-    const currentCenterX = bookmarksDragState.current.startRectX + dx + bookmarksDragState.current.startWidth / 2;
-    const nearest = findNearestBookmarksTab(currentCenterX);
-    if (nearest !== activeTab) setActiveTab(nearest);
-  }, [activeTab, findNearestBookmarksTab]);
-
-  const handleBookmarksDragEnd = useCallback(() => {
-    if (!bookmarksDragState.current) return;
-    bookmarksDragState.current = null;
-    setIsBookmarksDragging(false);
-    setBookmarksDragOffsetX(0);
-  }, []);
-
-  const bookmarksDragDisplayRect = isBookmarksDragging
-    ? { ...bookmarksTabRect, x: (bookmarksDragState.current?.startRectX ?? bookmarksTabRect.x) + bookmarksDragOffsetX, ready: true }
-    : bookmarksTabRect;
+  const { isDragging: isBookmarksDragging, indicatorRef: bookmarksIndicatorRef, handleDragStart: handleBookmarksDragStart, handleDragMove: handleBookmarksDragMove, handleDragEnd: handleBookmarksDragEnd } = useDragTabIndicator({
+    tabRect: bookmarksTabRect,
+    tabLayerRef: bookmarksTabLayerRef,
+    tabButtonPositions: bookmarksTabPositions,
+    tabValues: tabKeys.map(t => t.value) as BookmarkType[],
+    activeTab,
+    onTabChange: setActiveTab,
+  });
 
   // Block access for unauthenticated users
   if (!isAuthenticated) {
@@ -206,15 +167,14 @@ export default function BookmarksPage() {
 
         {/* Filter Tabs */}
         <div ref={bookmarksTabLayerRef} className="relative overflow-x-clip overflow-y-visible">
-          <GlassIndicator rect={bookmarksDragDisplayRect} enableTransition={!isBookmarksDragging} />
-          {bookmarksDragDisplayRect.ready && (
+          <GlassIndicator ref={bookmarksIndicatorRef} rect={bookmarksTabRect} enableTransition={!isBookmarksDragging} />
+          {bookmarksTabRect.ready && (
             <div
               className="absolute z-30 cursor-grab active:cursor-grabbing"
               style={{
-                transform: `translate(${bookmarksDragDisplayRect.x}px, ${bookmarksDragDisplayRect.y}px)`,
-                width: bookmarksDragDisplayRect.width,
-                height: bookmarksDragDisplayRect.height,
-                transition: !isBookmarksDragging ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+                transform: `translate(${bookmarksTabRect.x}px, ${bookmarksTabRect.y}px)`,
+                width: bookmarksTabRect.width,
+                height: bookmarksTabRect.height,
               }}
               onPointerDown={handleBookmarksDragStart}
               onPointerMove={handleBookmarksDragMove}

@@ -11,6 +11,7 @@
  */
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { saveDraft, loadDraft, clearDraft } from '@/lib/comment-draft-cache';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
@@ -856,56 +857,17 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const canPost = (newComment.trim() || voiceNote || commentImage) && !isSubmitting;
 
   // Drag-to-swipe for comments tab indicator (after all hooks)
-  const commentsTabPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
-  const commentsDragState = useRef<{ startX: number; startRectX: number; startWidth: number; currentX: number } | null>(null);
-  const [isCommentsDragging, setIsCommentsDragging] = useState(false);
-  const [commentsDragOffsetX, setCommentsDragOffsetX] = useState(0);
+  type CommentsTab = 'replies' | 'quotes' | 'reposts' | 'search';
+  const commentsTabPositions = useRef<Partial<Record<CommentsTab, HTMLElement | null>>>({});
 
-  const findNearestCommentsTab = useCallback((indicatorCenterX: number) => {
-    const layer = commentsTabLayerRef.current;
-    if (!layer) return activeTab;
-    const layerRect = layer.getBoundingClientRect();
-    let nearest: 'replies' | 'quotes' | 'reposts' | 'search' = activeTab;
-    let minDist = Infinity;
-    for (const [key, el] of Object.entries(commentsTabPositions.current)) {
-      if (!el) continue;
-      const br = el.getBoundingClientRect();
-      const btnCenter = br.left - layerRect.left + br.width / 2;
-      const dist = Math.abs(indicatorCenterX - btnCenter);
-      if (dist < minDist) { minDist = dist; nearest = key as typeof activeTab; }
-    }
-    return nearest;
-  }, [activeTab, commentsTabLayerRef]);
-
-  const handleCommentsDragStart = useCallback((e: React.PointerEvent) => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    commentsDragState.current = { startX: e.clientX, startRectX: commentsTabRect.x, startWidth: commentsTabRect.width, currentX: e.clientX };
-    setIsCommentsDragging(true);
-    setCommentsDragOffsetX(0);
-  }, [commentsTabRect.x, commentsTabRect.width]);
-
-  const handleCommentsDragMove = useCallback((e: React.PointerEvent) => {
-    if (!commentsDragState.current) return;
-    commentsDragState.current.currentX = e.clientX;
-    const dx = e.clientX - commentsDragState.current.startX;
-    setCommentsDragOffsetX(dx);
-    const currentCenterX = commentsDragState.current.startRectX + dx + commentsDragState.current.startWidth / 2;
-    const nearest = findNearestCommentsTab(currentCenterX);
-    if (nearest !== activeTab) setActiveTab(nearest);
-  }, [activeTab, findNearestCommentsTab]);
-
-  const handleCommentsDragEnd = useCallback(() => {
-    if (!commentsDragState.current) return;
-    commentsDragState.current = null;
-    setIsCommentsDragging(false);
-    setCommentsDragOffsetX(0);
-  }, []);
-
-  const commentsDragDisplayRect = isCommentsDragging
-    ? { ...commentsTabRect, x: (commentsDragState.current?.startRectX ?? commentsTabRect.x) + commentsDragOffsetX, ready: true }
-    : commentsTabRect;
+  const { isDragging: isCommentsDragging, indicatorRef: commentsIndicatorRef, handleDragStart: handleCommentsDragStart, handleDragMove: handleCommentsDragMove, handleDragEnd: handleCommentsDragEnd } = useDragTabIndicator({
+    tabRect: commentsTabRect,
+    tabLayerRef: commentsTabLayerRef,
+    tabButtonPositions: commentsTabPositions,
+    tabValues: ['replies', 'quotes', 'reposts', 'search'] as CommentsTab[],
+    activeTab,
+    onTabChange: setActiveTab,
+  });
 
   return (
     <motion.div
@@ -936,15 +898,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         )}
         {/* Left side - Tab buttons */}
         <div ref={commentsTabLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
-          <GlassIndicator rect={commentsDragDisplayRect} enableTransition={!isCommentsDragging} />
-          {commentsDragDisplayRect.ready && (
+          <GlassIndicator ref={commentsIndicatorRef} rect={commentsTabRect} enableTransition={!isCommentsDragging} />
+          {commentsTabRect.ready && (
             <div
               className="absolute z-30 cursor-grab active:cursor-grabbing"
               style={{
-                transform: `translate(${commentsDragDisplayRect.x}px, ${commentsDragDisplayRect.y}px)`,
-                width: commentsDragDisplayRect.width,
-                height: commentsDragDisplayRect.height,
-                transition: !isCommentsDragging ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+                transform: `translate(${commentsTabRect.x}px, ${commentsTabRect.y}px)`,
+                width: commentsTabRect.width,
+                height: commentsTabRect.height,
               }}
               onPointerDown={handleCommentsDragStart}
               onPointerMove={handleCommentsDragMove}

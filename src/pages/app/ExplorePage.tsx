@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
+import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { SEOHead } from '@/components/SEOHead';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { WhatsHappening } from '@/components/app/WhatsHappening';
@@ -811,59 +812,15 @@ export default function ExplorePage() {
 
   // Drag-to-swipe for explore tab indicator (after all hooks to avoid TDZ)
   const exploreTabPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
-  const exploreDragState = useRef<{ startX: number; startRectX: number; startWidth: number; currentX: number } | null>(null);
-  const [isExploreDragging, setIsExploreDragging] = useState(false);
-  const [exploreDragOffsetX, setExploreDragOffsetX] = useState(0);
 
-  const findNearestExploreTab = useCallback((indicatorCenterX: number) => {
-    const layer = exploreTabLayerRef.current;
-    if (!layer) return activeTab;
-    const layerRect = layer.getBoundingClientRect();
-    let nearest: string = activeTab;
-    let minDist = Infinity;
-    for (const [key, el] of Object.entries(exploreTabPositions.current)) {
-      if (!el) continue;
-      const br = el.getBoundingClientRect();
-      const btnCenter = br.left - layerRect.left + br.width / 2;
-      const dist = Math.abs(indicatorCenterX - btnCenter);
-      if (dist < minDist) { minDist = dist; nearest = key; }
-    }
-    return nearest;
-  }, [activeTab, exploreTabLayerRef]);
-
-  const handleExploreDragStart = useCallback((e: React.PointerEvent) => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    exploreDragState.current = { startX: e.clientX, startRectX: exploreTabRect.x, startWidth: exploreTabRect.width, currentX: e.clientX };
-    setIsExploreDragging(true);
-    setExploreDragOffsetX(0);
-  }, [exploreTabRect.x, exploreTabRect.width]);
-
-  const handleExploreDragMove = useCallback((e: React.PointerEvent) => {
-    if (!exploreDragState.current) return;
-    exploreDragState.current.currentX = e.clientX;
-    const dx = e.clientX - exploreDragState.current.startX;
-    setExploreDragOffsetX(dx);
-    const currentCenterX = exploreDragState.current.startRectX + dx + exploreDragState.current.startWidth / 2;
-    const nearest = findNearestExploreTab(currentCenterX);
-    if (nearest !== activeTab) {
-      setEnableExploreTransition(true);
-      setActiveTab(nearest);
-      setTimeout(() => setEnableExploreTransition(false), 450);
-    }
-  }, [activeTab, findNearestExploreTab, setEnableExploreTransition]);
-
-  const handleExploreDragEnd = useCallback(() => {
-    if (!exploreDragState.current) return;
-    exploreDragState.current = null;
-    setIsExploreDragging(false);
-    setExploreDragOffsetX(0);
-  }, []);
-
-  const exploreDragDisplayRect = isExploreDragging
-    ? { ...exploreTabRect, x: (exploreDragState.current?.startRectX ?? exploreTabRect.x) + exploreDragOffsetX, ready: true }
-    : exploreTabRect;
+  const { isDragging: isExploreDragging, indicatorRef: exploreIndicatorRef, handleDragStart: handleExploreDragStart, handleDragMove: handleExploreDragMove, handleDragEnd: handleExploreDragEnd } = useDragTabIndicator({
+    tabRect: exploreTabRect,
+    tabLayerRef: exploreTabLayerRef,
+    tabButtonPositions: exploreTabPositions,
+    tabValues: EXPLORE_TABS.map(t => t.value),
+    activeTab,
+    onTabChange: setActiveTab,
+  });
 
   return (
     <div className="min-h-screen">
@@ -913,15 +870,14 @@ export default function ExplorePage() {
           <div className="mt-3 -mx-1">
             <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
               <div ref={exploreTabLayerRef} className="relative overflow-visible">
-                <GlassIndicator rect={exploreDragDisplayRect} borderRadius="0.75rem" layoutKey={`explore-nav-${activeTab}`} enableTransition={!isExploreDragging && enableExploreTransition} />
-                {exploreDragDisplayRect.ready && (
+                <GlassIndicator ref={exploreIndicatorRef} rect={exploreTabRect} borderRadius="0.75rem" layoutKey={`explore-nav-${activeTab}`} enableTransition={!isExploreDragging && enableExploreTransition} />
+                {exploreTabRect.ready && (
                   <div
                     className="absolute z-30 cursor-grab active:cursor-grabbing"
                     style={{
-                      transform: `translate(${exploreDragDisplayRect.x}px, ${exploreDragDisplayRect.y}px)`,
-                      width: exploreDragDisplayRect.width,
-                      height: exploreDragDisplayRect.height,
-                      transition: !isExploreDragging && enableExploreTransition ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+                      transform: `translate(${exploreTabRect.x}px, ${exploreTabRect.y}px)`,
+                      width: exploreTabRect.width,
+                      height: exploreTabRect.height,
                     }}
                     onPointerDown={handleExploreDragStart}
                     onPointerMove={handleExploreDragMove}

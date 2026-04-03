@@ -6,7 +6,8 @@
  * @module pages/app/MusicPage
  */
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -333,56 +334,16 @@ export default function MusicPage() {
   };
 
   // Drag-to-swipe for music tab indicator (after all hooks to avoid TDZ)
-  const musicTabPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
-  const musicDragState = useRef<{ startX: number; startRectX: number; startWidth: number; currentX: number } | null>(null);
-  const [isMusicDragging, setIsMusicDragging] = useState(false);
-  const [musicDragOffsetX, setMusicDragOffsetX] = useState(0);
+  const musicTabPositions = useRef<Partial<Record<MusicTabValue, HTMLElement | null>>>({});
 
-  const findNearestMusicTab = useCallback((indicatorCenterX: number) => {
-    const layer = musicTabLayerRef.current;
-    if (!layer) return activeTab;
-    const layerRect = layer.getBoundingClientRect();
-    let nearest: MusicTabValue = activeTab;
-    let minDist = Infinity;
-    for (const [key, el] of Object.entries(musicTabPositions.current)) {
-      if (!el) continue;
-      const br = el.getBoundingClientRect();
-      const btnCenter = br.left - layerRect.left + br.width / 2;
-      const dist = Math.abs(indicatorCenterX - btnCenter);
-      if (dist < minDist) { minDist = dist; nearest = key as MusicTabValue; }
-    }
-    return nearest;
-  }, [activeTab, musicTabLayerRef]);
-
-  const handleMusicDragStart = useCallback((e: React.PointerEvent) => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    musicDragState.current = { startX: e.clientX, startRectX: musicTabRect.x, startWidth: musicTabRect.width, currentX: e.clientX };
-    setIsMusicDragging(true);
-    setMusicDragOffsetX(0);
-  }, [musicTabRect.x, musicTabRect.width]);
-
-  const handleMusicDragMove = useCallback((e: React.PointerEvent) => {
-    if (!musicDragState.current) return;
-    musicDragState.current.currentX = e.clientX;
-    const dx = e.clientX - musicDragState.current.startX;
-    setMusicDragOffsetX(dx);
-    const currentCenterX = musicDragState.current.startRectX + dx + musicDragState.current.startWidth / 2;
-    const nearest = findNearestMusicTab(currentCenterX);
-    if (nearest !== activeTab) setActiveTab(nearest);
-  }, [activeTab, findNearestMusicTab]);
-
-  const handleMusicDragEnd = useCallback(() => {
-    if (!musicDragState.current) return;
-    musicDragState.current = null;
-    setIsMusicDragging(false);
-    setMusicDragOffsetX(0);
-  }, []);
-
-  const musicDragDisplayRect = isMusicDragging
-    ? { ...musicTabRect, x: (musicDragState.current?.startRectX ?? musicTabRect.x) + musicDragOffsetX, ready: true }
-    : musicTabRect;
+  const { isDragging: isMusicDragging, indicatorRef: musicIndicatorRef, handleDragStart: handleMusicDragStart, handleDragMove: handleMusicDragMove, handleDragEnd: handleMusicDragEnd } = useDragTabIndicator({
+    tabRect: musicTabRect,
+    tabLayerRef: musicTabLayerRef,
+    tabButtonPositions: musicTabPositions,
+    tabValues: MUSIC_TABS.map(t => t.value) as MusicTabValue[],
+    activeTab,
+    onTabChange: setActiveTab,
+  });
 
   return (
     <div className="min-h-screen">
@@ -390,15 +351,14 @@ export default function MusicPage() {
       <div className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
         <div className="bg-zinc-900 rounded-2xl p-2 overflow-visible">
           <div ref={musicTabLayerRef} className="relative overflow-visible">
-            <GlassIndicator rect={musicDragDisplayRect} enableTransition={!isMusicDragging} />
-            {musicDragDisplayRect.ready && (
+            <GlassIndicator ref={musicIndicatorRef} rect={musicTabRect} enableTransition={!isMusicDragging} />
+            {musicTabRect.ready && (
               <div
                 className="absolute z-30 cursor-grab active:cursor-grabbing"
                 style={{
-                  transform: `translate(${musicDragDisplayRect.x}px, ${musicDragDisplayRect.y}px)`,
-                  width: musicDragDisplayRect.width,
-                  height: musicDragDisplayRect.height,
-                  transition: !isMusicDragging ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+                  transform: `translate(${musicTabRect.x}px, ${musicTabRect.y}px)`,
+                  width: musicTabRect.width,
+                  height: musicTabRect.height,
                 }}
                 onPointerDown={handleMusicDragStart}
                 onPointerMove={handleMusicDragMove}
