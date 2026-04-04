@@ -49,69 +49,59 @@ serve(async (req) => {
     }
 
     const now = new Date();
-    const preferHourly = days <= 1;
-    const interval = preferHourly ? 'hourly' : 'daily';
-    const start = new Date(now.getTime() - days * 86400 * 1000);
+    const effectiveDays = Math.max(days, 2); // CMC daily needs at least 2-day window
+    const start = new Date(now.getTime() - effectiveDays * 86400 * 1000);
 
-    async function fetchOhlcv(int: string, startDate: Date) {
-      const params = new URLSearchParams({
-        symbol: clean,
-        time_start: startDate.toISOString().split('T')[0],
-        time_end: now.toISOString().split('T')[0],
-        interval: int,
-        convert: 'USD',
-      });
+    const params = new URLSearchParams({
+      symbol: clean,
+      time_start: start.toISOString().split('T')[0],
+      time_end: now.toISOString().split('T')[0],
+      interval: 'daily',
+      convert: 'USD',
+    });
 
-      const url = `https://pro-api.coinmarketcap.com/v2/cryptocurrency/ohlcv/historical?${params}`;
-      const res = await fetch(url, {
-        headers: { 'X-CMC_PRO_API_KEY': apiKey, Accept: 'application/json' },
-      });
+    const url = `https://pro-api.coinmarketcap.com/v2/cryptocurrency/ohlcv/historical?${params}`;
 
-      if (!res.ok) {
-        const text = await res.text();
-        return { error: true, status: res.status, text };
-      }
+    const res = await fetch(url, {
+      headers: { 'X-CMC_PRO_API_KEY': apiKey, Accept: 'application/json' },
+    });
 
-      const data = await res.json();
-      if (data?.status?.error_code && data.status.error_code !== 0) {
-        return { error: true, status: 502, text: data.status.error_message || 'CMC response error' };
-      }
-
-      const symbolData = data.data?.[clean];
-      if (!symbolData || !Array.isArray(symbolData) || symbolData.length === 0) return { points: [] };
-
-      const quotes = symbolData[0]?.quotes;
-      if (!quotes || !Array.isArray(quotes)) return { points: [] };
-
-      const points = quotes
-        .map((q: any) => ({
-          time: new Date(q.time_close || q.time_open).getTime(),
-          price: Number(q.quote?.USD?.close ?? q.quote?.USD?.open ?? 0),
-        }))
-        .filter((p: { time: number; price: number }) => Number.isFinite(p.time) && Number.isFinite(p.price) && p.price > 0);
-
-      return { points };
-    }
-
-    // First attempt
-    let result = await fetchOhlcv(interval, start);
-    if ('error' in result && result.error) {
-      return new Response(JSON.stringify({ error: `CMC API error: ${result.status}`, details: result.text }), {
+    if (!res.ok) {
+      const text = await res.text();
+      return new Response(JSON.stringify({ error: `CMC API error: ${res.status}`, details: text }), {
         status: 502,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    let points = result.points || [];
-
-    // Fallback: if hourly returned empty, retry with daily over 2 days
-    if (points.length === 0 && preferHourly) {
-      const fallbackStart = new Date(now.getTime() - 2 * 86400 * 1000);
-      const fallbackResult = await fetchOhlcv('daily', fallbackStart);
-      if (!('error' in fallbackResult && fallbackResult.error)) {
-        points = fallbackResult.points || [];
-      }
+    const data = await res.json();
+    if (data?.status?.error_code && data.status.error_code !== 0) {
+      return new Response(JSON.stringify({ error: data.status.error_message || 'CMC response error' }), {
+        status: 502,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
+
+    const symbolData = data.data?.[clean];
+    if (!symbolData || !Array.isArray(symbolData) || symbolData.length === 0) {
+      return new Response(JSON.stringify({ prices: [] }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const quotes = symbolData[0]?.quotes;
+    if (!quotes || !Array.isArray(quotes)) {
+      return new Response(JSON.stringify({ prices: [] }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    let points = quotes
+      .map((q: any) => ({
+        time: new Date(q.time_close || q.time_open).getTime(),
+        price: Number(q.quote?.USD?.close ?? q.quote?.USD?.open ?? 0),
+      }))
+      .filter((p: { time: number; price: number }) => Number.isFinite(p.time) && Number.isFinite(p.price) && p.price > 0);
 
 
 
