@@ -81,7 +81,7 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
     chartTimeframe
   );
 
-  const categoryTag = `community:${communitySlug}`;
+  const categoryTag = communitySlug;
 
   useEffect(() => {
     let cancelled = false;

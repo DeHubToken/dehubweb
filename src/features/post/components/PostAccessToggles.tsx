@@ -516,9 +516,9 @@ export function PostAccessToggles({
                   key={community.id}
                   type="button"
                   onClick={() => {
-                    // Remove any existing community tag, add this one
-                    const withoutCommunity = selectedCategoriesArray.filter(c => !c.startsWith('community:'));
-                    const next = [...withoutCommunity, `community:${community.slug}`].join('|||');
+                    // Remove any existing community slug, add this one as a plain category
+                    const withoutCommunity = selectedCategoriesArray.filter(c => !communitySlugs.has(c));
+                    const next = [...withoutCommunity, community.slug].join('|||');
                     setSelectedCategory(next);
                     setCommunityDrawerOpen(false);
                   }}
