@@ -26,6 +26,7 @@ import {
 } from '@/lib/api/dpay';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { SEOHead } from '@/components/SEOHead';
 import { format } from 'date-fns';
 
 const PRESET_AMOUNTS = [10, 25, 50, 100, 250, 500];
