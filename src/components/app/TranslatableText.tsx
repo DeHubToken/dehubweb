@@ -177,8 +177,13 @@ export function renderTextWithLinks(text: string): ReactNode[] {
         </a>
       );
     } else {
-      // URL — render as link emoji
+      // URL — render as link emoji (skip community links since they get a card embed)
       const url = fullMatch;
+      if (/\/app\/communities\/[a-zA-Z0-9_-]+/.test(url)) {
+        // Community link — don't show 🔗, the CommunityLinkEmbed handles it
+        lastIndex = combinedRegex.lastIndex;
+        continue;
+      }
       const href = url.match(/^https?:\/\//i) ? url : `https://${url}`;
       parts.push(
         <Tooltip key={`${url}-${match.index}`}>
