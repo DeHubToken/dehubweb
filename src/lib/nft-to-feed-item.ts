@@ -37,7 +37,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     views: formatViews(nft.views || nft.view_count),
     uploadedAgo: formatTimeAgo(nft.createdAt || nft.created_at),
     creatorId: nft.minter,
-    creatorUsername: nft.mintername,
+    creatorUsername: nft.minterUsername || nft.mintername,
     isLiked: nft.isLiked ?? false,
     likeCount: nft.totalVotes?.for || nft.like_count || 0,
     dislikeCount: nft.totalVotes?.against || 0,
