@@ -94,7 +94,7 @@ export default function Top100CryptosPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-6">
       <SEOHead title="Top 100 — Live Crypto Prices & Market Data" description="Track the top 100 cryptocurrencies by market cap with live prices, 24h changes and market data on DeHub." url="https://dehub.io/app/top-100" jsonLd={{ '@context': 'https://schema.org', '@type': 'Table', name: 'Top 100 Cryptocurrencies', url: 'https://dehub.io/app/top-100', description: 'Live prices and market data for the top 100 cryptocurrencies by market cap.' }} />
-      <h1 className="sr-only">DeHub Top 100 Crypto — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <h1 className="text-xs text-zinc-500 mb-2 px-3 sm:px-4 pt-2 font-medium">DeHub Top 100 Crypto — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       <div className="flex items-center gap-3 mb-6">
         <button onClick={() => navigate(-1)} className="text-zinc-400 hover:text-white transition-colors">
           <ArrowLeft className="w-5 h-5" />
