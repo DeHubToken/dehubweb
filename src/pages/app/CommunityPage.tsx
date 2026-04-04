@@ -6,7 +6,7 @@
 
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Users, Shield, Info, ArrowLeft, LogIn } from 'lucide-react';
+import { Users, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCommunity, useCommunityMembers, useIsCommunityMember, useJoinCommunity, useLeaveCommunity } from '@/hooks/use-communities';
@@ -18,6 +18,7 @@ import { CommunityChat } from '@/components/app/communities/CommunityChat';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
+import { useTranslation } from 'react-i18next';
 
 type Tab = 'posts' | 'members' | 'about' | 'chat';
 
@@ -26,6 +27,7 @@ export default function CommunityPage() {
   const navigate = useNavigate();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const [tab, setTab] = useState<Tab>('posts');
+  const { t } = useTranslation();
 
   const { data: community, isLoading } = useCommunity(slug);
   const { data: members = [] } = useCommunityMembers(community?.id);
@@ -50,9 +52,9 @@ export default function CommunityPage() {
   if (!community) {
     return (
       <div className="max-w-2xl mx-auto px-3 py-12 text-center">
-        <p className="text-zinc-500">Community not found</p>
+        <p className="text-zinc-500">{t('communities.communityNotFound')}</p>
         <Button variant="outline" size="sm" className="mt-3 rounded-xl border-white/10 text-white" onClick={() => navigate('/app/communities')}>
-          Back to Communities
+          {t('communities.backButton')}
         </Button>
       </div>
     );
@@ -63,11 +65,11 @@ export default function CommunityPage() {
     if (isMember) {
       if (isOwner) return;
       leaveMutation.mutate(community.id, {
-        onSuccess: () => { toast.success('Left community'); },
+        onSuccess: () => { toast.success(t('communities.leftCommunity')); },
       });
     } else if (isPendingMember) {
       leaveMutation.mutate(community.id, {
-        onSuccess: () => { toast.success('Request cancelled'); },
+        onSuccess: () => { toast.success(t('communities.requestCancelled')); },
       });
     } else {
       joinMutation.mutate({ communityId: community.id, isPrivate: community.is_private });
@@ -81,13 +83,12 @@ export default function CommunityPage() {
         description={community.description || `Join ${community.name} on DeHub`}
       />
 
-      {/* Back button */}
       <button
         onClick={() => navigate('/app/communities')}
         className="flex items-center gap-1.5 px-3 pt-3 text-sm text-zinc-500 hover:text-white transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        Communities
+        {t('communities.backToCommunities')}
       </button>
 
       <CommunityHeader
@@ -102,27 +103,26 @@ export default function CommunityPage() {
       {/* Tabs */}
       <div className="flex border-b border-white/[0.08] px-3">
         {([
-          { key: 'posts' as Tab, label: 'Posts' },
-          { key: 'chat' as Tab, label: 'Chat' },
-          { key: 'members' as Tab, label: `Members (${community.member_count})` },
-          { key: 'about' as Tab, label: 'About' },
-        ]).map(t => (
+          { key: 'posts' as Tab, label: t('communities.posts') },
+          { key: 'chat' as Tab, label: t('communities.chat') },
+          { key: 'members' as Tab, label: t('communities.membersTab', { count: community.member_count }) },
+          { key: 'about' as Tab, label: t('communities.about') },
+        ]).map(tItem => (
           <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
+            key={tItem.key}
+            onClick={() => setTab(tItem.key)}
             className={cn(
               'px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-[1px]',
-              tab === t.key
+              tab === tItem.key
                 ? 'text-white border-white'
                 : 'text-zinc-500 border-transparent hover:text-white'
             )}
           >
-            {t.label}
+            {tItem.label}
           </button>
         ))}
       </div>
 
-      {/* Tab content */}
       <div className="px-3 py-4">
         {tab === 'posts' && (
           <CommunityFeed

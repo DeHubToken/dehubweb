@@ -1,4 +1,5 @@
 import { Shield, Calendar, Lock, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';
 
 interface CommunityAboutProps {
@@ -6,39 +7,37 @@ interface CommunityAboutProps {
 }
 
 export function CommunityAbout({ community }: CommunityAboutProps) {
+  const { t } = useTranslation();
   const rules = Array.isArray(community.rules) ? community.rules : [];
 
   return (
     <div className="space-y-6">
-      {/* Description */}
       {community.description && (
         <div>
-          <h3 className="text-white font-medium text-sm mb-2">Description</h3>
+          <h3 className="text-white font-medium text-sm mb-2">{t('communities.description')}</h3>
           <p className="text-zinc-400 text-sm">{community.description}</p>
         </div>
       )}
 
-      {/* Info */}
       <div className="space-y-2">
         <div className="flex items-center gap-2 text-zinc-400 text-sm">
           {community.is_private ? (
-            <><Lock className="w-4 h-4" /> Private community</>
+            <><Lock className="w-4 h-4" /> {t('communities.privateLabel')}</>
           ) : (
-            <><Globe className="w-4 h-4" /> Public community</>
+            <><Globe className="w-4 h-4" /> {t('communities.publicLabel')}</>
           )}
         </div>
         <div className="flex items-center gap-2 text-zinc-400 text-sm">
           <Calendar className="w-4 h-4" />
-          Created {new Date(community.created_at).toLocaleDateString()}
+          {t('communities.createdDate', { date: new Date(community.created_at).toLocaleDateString() })}
         </div>
       </div>
 
-      {/* Rules */}
       {rules.length > 0 && (
         <div>
           <h3 className="text-white font-medium text-sm mb-2 flex items-center gap-1.5">
             <Shield className="w-4 h-4" />
-            Community Rules
+            {t('communities.communityRules')}
           </h3>
           <ol className="space-y-2">
             {rules.map((rule: any, i: number) => (

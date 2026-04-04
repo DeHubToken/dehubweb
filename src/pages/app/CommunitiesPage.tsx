@@ -5,7 +5,7 @@
  * with infinite scroll pagination.
  */
 
-import { useState, useCallback, useRef } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -14,12 +14,14 @@ import { useUserCommunities, useDiscoverCommunities } from '@/hooks/use-communit
 import { CommunityCard } from '@/components/app/communities/CommunityCard';
 import { CreateCommunityModal } from '@/components/app/communities/CreateCommunityModal';
 import { SEOHead } from '@/components/SEOHead';
+import { useTranslation } from 'react-i18next';
 
 export default function CommunitiesPage() {
   const { isAuthenticated, openLoginModal } = useAuth();
   const [createOpen, setCreateOpen] = useState(false);
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const { data: userCommunities = [], isLoading: loadingUser } = useUserCommunities();
   const { data: allCommunities = [], isLoading: loadingAll } = useDiscoverCommunities();
@@ -27,10 +29,8 @@ export default function CommunitiesPage() {
   const userCommunityIds = new Set(userCommunities.map(m => m.community_id));
   const myCommunities = userCommunities.map(m => m.communities).filter(Boolean);
 
-  // Filter out user's communities from the "all" list to avoid duplicates
   const otherCommunities = allCommunities.filter(c => !userCommunityIds.has(c.id));
 
-  // Apply search filter
   const filterBySearch = (list: typeof allCommunities) =>
     search.trim()
       ? list.filter(c => c.name.toLowerCase().includes(search.toLowerCase()))
@@ -52,7 +52,7 @@ export default function CommunitiesPage() {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Users className="w-6 h-6 text-white" />
-          <h1 className="text-xl font-bold text-white">Communities</h1>
+          <h1 className="text-xl font-bold text-white">{t('communities.title')}</h1>
         </div>
         <Button
           size="sm"
@@ -63,7 +63,7 @@ export default function CommunitiesPage() {
           }}
         >
           <Plus className="w-4 h-4" />
-          Create
+          {t('communities.create')}
         </Button>
       </div>
 
@@ -74,7 +74,7 @@ export default function CommunitiesPage() {
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="Search communities..."
+          placeholder={t('communities.searchPlaceholder')}
           className="w-full h-10 pl-10 pr-4 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 outline-none focus:border-white/20 text-sm"
         />
       </div>
@@ -87,7 +87,6 @@ export default function CommunitiesPage() {
         </div>
       ) : (
         <div>
-          {/* User's communities */}
           {isAuthenticated && filteredMine.length > 0 && (
             <div className="space-y-2">
               {filteredMine.map(community => (
@@ -101,12 +100,10 @@ export default function CommunitiesPage() {
             </div>
           )}
 
-          {/* Gap between sections */}
           {isAuthenticated && filteredMine.length > 0 && filteredOthers.length > 0 && (
             <div className="my-6 border-t border-white/[0.06]" />
           )}
 
-          {/* All other communities */}
           {filteredOthers.length > 0 ? (
             <div className="space-y-2">
               {filteredOthers.map(community => (
@@ -121,7 +118,7 @@ export default function CommunitiesPage() {
           ) : filteredMine.length === 0 ? (
             <div className="text-center py-12">
               <Users className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
-              <p className="text-zinc-500 text-sm">No communities found</p>
+              <p className="text-zinc-500 text-sm">{t('communities.noCommunities')}</p>
             </div>
           ) : null}
         </div>

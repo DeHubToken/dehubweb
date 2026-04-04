@@ -9,6 +9,7 @@ import type { Community } from '@/hooks/use-communities';
 import { useAuth } from '@/contexts/AuthContext';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 interface CommunityHeaderProps {
   community: Community;
@@ -31,6 +32,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
   const [editingDesc, setEditingDesc] = useState(false);
   const [nameInput, setNameInput] = useState(community.name);
   const [descInput, setDescInput] = useState(community.description || '');
+  const { t } = useTranslation();
 
   const { data: pinned = [] } = usePinnedCommunities(walletAddress);
   const pinMutation = usePinCommunity();
@@ -46,11 +48,11 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
         [type === 'avatar' ? 'avatar_url' : 'banner_url']: url,
       });
     } catch {
-      toast.error(`Failed to upload ${type}`);
+      toast.error(t('communities.failedUpload', { type }));
     } finally {
       setUploading(null);
     }
-  }, [community.id, community.slug, updateMutation]);
+  }, [community.id, community.slug, updateMutation, t]);
 
   const handlePinToggle = () => {
     if (isPinned) {
@@ -58,7 +60,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
     } else if (pinned.length < 3) {
       pinMutation.mutate({ communityId: community.id, displayOrder: pinned.length });
     } else {
-      toast.error('You can only pin up to 3 communities');
+      toast.error(t('communities.maxPins'));
     }
   };
 
@@ -145,7 +147,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
                 className="rounded-xl gap-1.5 h-9 px-3 bg-white/[0.06] border border-white/[0.1] text-zinc-400 hover:text-white hover:bg-white/10"
               >
                 <Share2 className="w-3.5 h-3.5" />
-                Share
+                {t('communities.share')}
               </Button>
             </PopoverTrigger>
             <PopoverContent align="end" className="w-48 p-1.5">
@@ -157,18 +159,18 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-white hover:bg-white/10 transition-colors"
               >
                 <FileText className="w-4 h-4 text-zinc-400" />
-                Post
+                {t('communities.post')}
               </button>
               <button
                 onClick={() => {
                   const url = `${window.location.origin}/app/communities/${community.slug}`;
                   navigator.clipboard.writeText(url);
-                  toast.success('Link copied!');
+                  toast.success(t('communities.linkCopied'));
                 }}
                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-white hover:bg-white/10 transition-colors"
               >
                 <Link2 className="w-4 h-4 text-zinc-400" />
-                Copy Link
+                {t('communities.copyLink')}
               </button>
             </PopoverContent>
           </Popover>
@@ -185,7 +187,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
               }`}
             >
               {isPinned ? <PinOff className="w-3.5 h-3.5" /> : <Pin className="w-3.5 h-3.5" />}
-              {isPinned ? 'Unpin' : 'Pin'}
+              {isPinned ? t('communities.unpin') : t('communities.pin')}
             </Button>
           )}
           <Button
@@ -201,19 +203,19 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
             }`}
           >
             {isOwner ? (
-              <><Crown className="w-3.5 h-3.5" /> Owner</>
+              <><Crown className="w-3.5 h-3.5" /> {t('communities.owner')}</>
             ) : isMember ? (
-              <><LogOut className="w-3.5 h-3.5" /> Leave</>
+              <><LogOut className="w-3.5 h-3.5" /> {t('communities.leave')}</>
             ) : isPendingMember ? (
-              <><X className="w-3.5 h-3.5" /> Requested</>
+              <><X className="w-3.5 h-3.5" /> {t('communities.requested')}</>
             ) : (
-              <><LogIn className="w-3.5 h-3.5" /> Join</>
+              <><LogIn className="w-3.5 h-3.5" /> {t('communities.join')}</>
             )}
           </Button>
         </div>
       </div>
 
-      {/* Name + member count below avatar */}
+      {/* Name + member count */}
       <div className="px-2 mt-2">
         {isOwner && editingName ? (
           <div className="flex items-center gap-1.5">
@@ -244,17 +246,17 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
             )}
           </div>
         )}
-        <p className="text-zinc-500 text-sm">{community.member_count.toLocaleString()} members</p>
+        <p className="text-zinc-500 text-sm">{community.member_count.toLocaleString()} {t('communities.members')}</p>
       </div>
 
-      {/* Ticker assignment for owners */}
+      {/* Ticker */}
       {isOwner && (
         <div className="px-2 mt-2">
           {community.ticker_symbol ? (
             <div className="flex items-center gap-2">
               <span className="text-xs text-zinc-400 flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
-                Ticker: <span className="text-white font-medium">${community.ticker_symbol}</span>
+                {t('communities.ticker')}: <span className="text-white font-medium">${community.ticker_symbol}</span>
               </span>
               <button
                 onClick={() => updateMutation.mutate({
@@ -292,7 +294,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
               className="text-xs text-zinc-500 hover:text-white flex items-center gap-1 transition-colors"
             >
               <TrendingUp className="w-3 h-3" />
-              Assign ticker chart
+              {t('communities.assignTicker')}
             </button>
           )}
         </div>
@@ -305,7 +307,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
             onChange={e => setDescInput(e.target.value)}
             rows={2}
             className="flex-1 bg-white/[0.06] border border-white/[0.1] rounded-lg px-2.5 py-1.5 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-white/20 resize-none"
-            placeholder="Community description..."
+            placeholder={t('communities.communityDescription')}
             autoFocus
           />
           <button onClick={() => {
@@ -318,7 +320,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
           {community.description ? (
             <p className="text-zinc-400 text-sm">{community.description}</p>
           ) : isOwner ? (
-            <p className="text-zinc-600 text-sm italic">Add a description...</p>
+            <p className="text-zinc-600 text-sm italic">{t('communities.addDescription')}</p>
           ) : null}
           {isOwner && (
             <button onClick={() => setEditingDesc(true)} className="opacity-0 group-hover/desc:opacity-100 text-zinc-500 hover:text-white transition-all flex-shrink-0 mt-0.5">

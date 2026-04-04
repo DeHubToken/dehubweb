@@ -21,11 +21,11 @@ import { useCommunityChat, type CommunityChatMessage } from '@/hooks/use-communi
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { replaceLinksWithEmoji, TranslatableText, SharedTranslationContext } from '../TranslatableText';
+import { useTranslation } from 'react-i18next';
 
 
 const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
 
-/** Avatar with cascading fallback */
 function ChatAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
   const [failed, setFailed] = useState(false);
   const [cdnFailed, setCdnFailed] = useState(false);
@@ -46,7 +46,6 @@ function ChatAvatar({ src, address, name }: { src?: string | null; address?: str
   );
 }
 
-/** Reaction pills */
 function ChatReactions({
   reactions,
   currentUserAddress,
@@ -110,6 +109,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const profileData = user ? {
     handle: user.username,
     name: user.displayName || user.display_name,
@@ -118,7 +118,6 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
 
   const { messages, isLoading, sendMessage, editMessage, addReaction, removeReaction } = useCommunityChat(communityId);
 
-  // Auto-scroll to bottom on new messages
   useEffect(() => {
     if (messages.length > 0 && bottomRef.current) {
       const scrollContainer = bottomRef.current.closest('.overflow-y-auto');
@@ -215,8 +214,8 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                 <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
                   <MessageSquare className="w-6 h-6 text-zinc-500" />
                 </div>
-                <p className="text-zinc-500 text-sm">No messages yet</p>
-                <p className="text-zinc-600 text-xs mt-1">Be the first to say something!</p>
+                <p className="text-zinc-500 text-sm">{t('communities.noMessagesYet')}</p>
+                <p className="text-zinc-600 text-xs mt-1">{t('communities.beFirstToChat')}</p>
               </div>
             ) : (
               messages.map((msg) => {
@@ -227,7 +226,6 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
 
                 return (
                   <div key={msg.id} className="group relative px-3">
-                    {/* Reply indicator */}
                     {msg.reply_to && (
                       <div className="flex items-center gap-1 text-[10px] text-zinc-500 ml-9 mb-0.5">
                         <CornerDownRight className="w-2.5 h-2.5" />
@@ -282,7 +280,6 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                         ) : (
                           <TranslatableText text={msg.content} className="text-xs text-zinc-300 break-words" as="p" />
                         )}
-                        {/* Reactions */}
                         {msg.reactions && Object.keys(msg.reactions).length > 0 && (
                           <ChatReactions
                             reactions={msg.reactions}
@@ -293,7 +290,6 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                           />
                         )}
                       </div>
-                      {/* Hover action buttons */}
                       {isAuthenticated && isMember && (
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 flex-shrink-0 mt-0.5">
                           {walletAddress && msg.wallet_address.toLowerCase() === walletAddress.toLowerCase() && msg.message_type !== 'gif' && (
@@ -306,7 +302,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                                   <Pencil className="w-3.5 h-3.5" />
                                 </button>
                               </TooltipTrigger>
-                              <TooltipContent side="top">Edit</TooltipContent>
+                              <TooltipContent side="top">{t('communities.edit')}</TooltipContent>
                             </Tooltip>
                           )}
                           <Tooltip>
@@ -318,7 +314,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                                 <Reply className="w-3.5 h-3.5" />
                               </button>
                             </TooltipTrigger>
-                            <TooltipContent side="top">Reply</TooltipContent>
+                            <TooltipContent side="top">{t('communities.reply')}</TooltipContent>
                           </Tooltip>
                           <Popover>
                             <Tooltip>
@@ -329,7 +325,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                                   </button>
                                 </PopoverTrigger>
                               </TooltipTrigger>
-                              <TooltipContent side="top">React</TooltipContent>
+                              <TooltipContent side="top">{t('communities.react')}</TooltipContent>
                             </Tooltip>
                             <PopoverContent
                               side="top"
@@ -390,7 +386,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
           <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2">
             <Textarea
               ref={textareaRef}
-              placeholder="Type a message..."
+              placeholder={t('communities.typeMessage')}
               value={newMessage}
               onChange={(e) => {
                 const val = e.target.value;
@@ -437,7 +433,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-500 text-sm hover:text-white transition-colors"
           >
             <LogIn className="w-4 h-4" />
-            Join this community to chat
+            {t('communities.joinToChat')}
           </button>
         </div>
       )}

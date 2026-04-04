@@ -7,13 +7,13 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { useCreateCommunity, uploadCommunityMedia } from '@/hooks/use-communities';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 interface CreateCommunityModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-/** Generate a unique slug by appending 2, 3, etc. if the base slug already exists */
 async function resolveUniqueSlug(baseSlug: string): Promise<string> {
   const { data } = await supabase
     .from('communities')
@@ -41,6 +41,7 @@ export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModa
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const { t } = useTranslation();
 
   const baseSlug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -53,11 +54,11 @@ export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModa
 
   const handleSubmit = async () => {
     if (!name.trim() || name.trim().length < 3) {
-      toast.error('Name must be at least 3 characters');
+      toast.error(t('communities.nameMinLength'));
       return;
     }
     if (!baseSlug) {
-      toast.error('Invalid community name');
+      toast.error(t('communities.invalidName'));
       return;
     }
 
@@ -99,7 +100,7 @@ export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModa
           <DrawerHeader className="p-0">
             <DrawerTitle className="text-white font-medium flex items-center gap-2">
               <Users className="w-5 h-5" />
-              Create Community
+              {t('communities.createCommunity')}
             </DrawerTitle>
           </DrawerHeader>
           <button onClick={() => onOpenChange(false)} className="text-zinc-500 hover:text-white">
@@ -107,7 +108,6 @@ export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModa
           </button>
         </div>
         <div className="px-4 pb-6 space-y-4">
-          {/* Avatar */}
           <div className="flex items-center gap-3">
             <label className="w-14 h-14 rounded-xl bg-white/[0.06] border border-white/[0.1] flex items-center justify-center cursor-pointer overflow-hidden hover:bg-white/[0.1] transition-colors">
               {avatarPreview ? (
@@ -122,7 +122,7 @@ export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModa
                 type="text"
                 value={name}
                 onChange={e => setName(e.target.value)}
-                placeholder="Community name"
+                placeholder={t('communities.communityName')}
                 maxLength={50}
                 className="w-full h-10 px-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 outline-none focus:border-white/20 text-sm"
               />
@@ -132,19 +132,17 @@ export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModa
             </div>
           </div>
 
-          {/* Description */}
           <textarea
             value={description}
             onChange={e => setDescription(e.target.value)}
-            placeholder="What's this community about?"
+            placeholder={t('communities.whatsItAbout')}
             maxLength={500}
             rows={3}
             className="w-full px-3 py-2 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 outline-none focus:border-white/20 text-sm resize-none"
           />
 
-          {/* Private toggle */}
           <label className="flex items-center justify-between py-1 cursor-pointer">
-            <span className="text-sm text-white">Private community</span>
+            <span className="text-sm text-white">{t('communities.privateCommunity')}</span>
             <Switch checked={isPrivate} onCheckedChange={setIsPrivate} className="data-[state=checked]:bg-white scale-75" />
           </label>
 
@@ -153,7 +151,7 @@ export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModa
             disabled={submitting || !name.trim()}
             className="w-full rounded-xl bg-white text-black hover:bg-white/90 font-medium"
           >
-            {submitting ? 'Creating...' : 'Create Community'}
+            {submitting ? t('communities.creating') : t('communities.createCommunity')}
           </Button>
         </div>
       </DrawerContent>

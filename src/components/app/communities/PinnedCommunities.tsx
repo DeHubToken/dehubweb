@@ -4,10 +4,11 @@
 
 import { useNavigate } from 'react-router-dom';
 import { Users, Plus, X, Pin } from 'lucide-react';
-import { usePinnedCommunities, useUserCommunities, usePinCommunity, useUnpinCommunity, useCommunityMembers } from '@/hooks/use-communities';
+import { usePinnedCommunities, useUserCommunities, usePinCommunity, useUnpinCommunity } from '@/hooks/use-communities';
 import { useState } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import type { Community } from '@/hooks/use-communities';
+import { useTranslation } from 'react-i18next';
 
 interface PinnedCommunitiesProps {
   walletAddress: string;
@@ -18,6 +19,7 @@ export function PinnedCommunities({ walletAddress, isOwnProfile }: PinnedCommuni
   const navigate = useNavigate();
   const { data: pinned = [] } = usePinnedCommunities(walletAddress);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const { t } = useTranslation();
 
   if (pinned.length === 0 && !isOwnProfile) return null;
 
@@ -44,7 +46,7 @@ export function PinnedCommunities({ walletAddress, isOwnProfile }: PinnedCommuni
           className="mt-2 inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-dashed border-white/[0.1] hover:bg-white/[0.08] transition-colors text-xs text-zinc-500"
         >
           <Plus className="w-3 h-3" />
-          Pin community
+          {t('communities.pinCommunity')}
         </button>
       )}
       {isOwnProfile && (
@@ -60,15 +62,15 @@ export function PinnedCommunities({ walletAddress, isOwnProfile }: PinnedCommuni
   );
 }
 
-/** X-style community card */
 function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins }: { community: Community; onClick: () => void; isOwnProfile?: boolean; onManagePins?: () => void }) {
+  const { t } = useTranslation();
+
   return (
     <div className="relative">
       <button
         onClick={onClick}
         className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.07] transition-colors text-left relative overflow-hidden"
       >
-        {/* Subtle banner background fade */}
         {community.banner_url && (
           <div
             className="absolute inset-0 pointer-events-none"
@@ -82,7 +84,6 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins }:
             }}
           />
         )}
-        {/* Community avatar */}
         <div className="w-12 h-12 rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden flex-shrink-0">
           {community.avatar_url ? (
             <img src={community.avatar_url} alt="" className="w-full h-full object-cover" />
@@ -91,7 +92,6 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins }:
           )}
         </div>
 
-        {/* Info */}
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-white truncate">{community.name}</p>
           {community.description && (
@@ -100,7 +100,7 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins }:
           <div className="flex items-center gap-1.5 mt-1">
             <Users className="w-3 h-3 text-zinc-500" />
             <span className="text-xs text-zinc-500">
-              <span className="font-semibold text-zinc-300">{community.member_count.toLocaleString()}</span> Members
+              <span className="font-semibold text-zinc-300">{community.member_count.toLocaleString()}</span> {t('communities.membersLabel')}
             </span>
           </div>
         </div>
@@ -127,6 +127,7 @@ function PinPickerDrawer({ open, onOpenChange, walletAddress, pinnedIds, nextOrd
   const { data: userCommunities = [] } = useUserCommunities();
   const pinMutation = usePinCommunity();
   const unpinMutation = useUnpinCommunity();
+  const { t } = useTranslation();
 
   const communities = userCommunities.map(m => m.communities).filter(Boolean);
 
@@ -135,12 +136,12 @@ function PinPickerDrawer({ open, onOpenChange, walletAddress, pinnedIds, nextOrd
       <DrawerContent glass hideHandle>
         <div className="px-4 pt-4 pb-2">
           <DrawerHeader className="p-0">
-            <DrawerTitle className="text-white font-medium text-sm">Pin communities to profile</DrawerTitle>
+            <DrawerTitle className="text-white font-medium text-sm">{t('communities.pinToProfile')}</DrawerTitle>
           </DrawerHeader>
         </div>
         <div className="px-4 pb-6 space-y-1 max-h-[50vh] overflow-y-auto">
           {communities.length === 0 ? (
-            <p className="text-zinc-500 text-sm py-4 text-center">Join communities first to pin them</p>
+            <p className="text-zinc-500 text-sm py-4 text-center">{t('communities.joinFirst')}</p>
           ) : (
             communities.map(c => {
               const isPinned = pinnedIds.has(c.id);
