@@ -838,7 +838,7 @@ export default function FeaturesPage() {
 
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
-      <SEOHead title="Features — Submit & Vote on Ideas" description="Submit feature requests, vote on community ideas, and help shape DeHub's roadmap. Your voice drives the platform's development." url="https://dehub.io/app/features" />
+      <SEOHead title="Features — Submit & Vote on Ideas" description="Submit feature requests, vote on community ideas, and help shape DeHub's roadmap. Your voice drives the platform's development." url="https://dehub.io/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Feature Requests', url: 'https://dehub.io/app/features', description: 'Submit and vote on feature requests to shape DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">Features — Submit & Vote on Ideas</h1>
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
