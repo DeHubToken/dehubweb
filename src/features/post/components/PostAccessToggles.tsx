@@ -1,6 +1,15 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Lock, Ticket, Gift, Shield, Eye, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type } from 'lucide-react';
+import { Lock, Ticket, Gift, Shield, Eye, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type, Users } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { getCategories, type DeHubCategory } from '@/lib/api/dehub';
+import { toast } from 'sonner';
+import { useUserCommunities } from '@/hooks/use-communities';
+import { useAuth } from '@/contexts/AuthContext';
+import type { Currency } from '../types';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
