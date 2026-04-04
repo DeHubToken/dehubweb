@@ -169,8 +169,10 @@ export default function LeaderboardPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['leaderboard', apiSortMode, timePeriod],
     queryFn: () => getLeaderboard(apiSortMode, timePeriod),
-    staleTime: 60 * 60 * 1000,
+    staleTime: 60_000,
     gcTime: 2 * 60 * 60 * 1000,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: 'always',
   });
 
 
