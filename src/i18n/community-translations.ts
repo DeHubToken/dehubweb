@@ -81,6 +81,7 @@ const communityTranslations: Record<string, CommunityTranslation> = {
     },
   },
   fr: {
+    nav: { communities: 'Communautés' },
     communities: {
       title: 'Communautés',
       create: 'Créer',
@@ -146,6 +147,7 @@ const communityTranslations: Record<string, CommunityTranslation> = {
     },
   },
   de: {
+    nav: { communities: 'Gemeinschaften' },
     communities: {
       title: 'Gemeinschaften',
       create: 'Erstellen',
@@ -211,6 +213,7 @@ const communityTranslations: Record<string, CommunityTranslation> = {
     },
   },
   pt: {
+    nav: { communities: 'Comunidades' },
     communities: {
       title: 'Comunidades',
       create: 'Criar',
@@ -276,6 +279,7 @@ const communityTranslations: Record<string, CommunityTranslation> = {
     },
   },
   zh: {
+    nav: { communities: '社区' },
     communities: {
       title: '社区',
       create: '创建',
@@ -341,6 +345,7 @@ const communityTranslations: Record<string, CommunityTranslation> = {
     },
   },
   ja: {
+    nav: { communities: 'コミュニティ' },
     communities: {
       title: 'コミュニティ',
       create: '作成',
@@ -406,6 +411,7 @@ const communityTranslations: Record<string, CommunityTranslation> = {
     },
   },
   ko: {
+    nav: { communities: '커뮤니티' },
     communities: {
       title: '커뮤니티',
       create: '만들기',
@@ -471,6 +477,7 @@ const communityTranslations: Record<string, CommunityTranslation> = {
     },
   },
   ru: {
+    nav: { communities: 'Сообщества' },
     communities: {
       title: 'Сообщества',
       create: 'Создать',
@@ -536,6 +543,7 @@ const communityTranslations: Record<string, CommunityTranslation> = {
     },
   },
   ar: {
+    nav: { communities: 'المجتمعات' },
     communities: {
       title: 'المجتمعات',
       create: 'إنشاء',
@@ -601,6 +609,7 @@ const communityTranslations: Record<string, CommunityTranslation> = {
     },
   },
   hi: {
+    nav: { communities: 'समुदाय' },
     communities: {
       title: 'समुदाय',
       create: 'बनाएं',
