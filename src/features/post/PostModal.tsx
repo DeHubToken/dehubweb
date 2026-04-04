@@ -109,6 +109,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         titleText={state.titleText}
         setTitleText={actions.setTitleText}
         onOpenCategories={() => setCategoryDrawerOpen(true)}
+        communitySlug={communitySlug}
       />
 
       <PostAccessToggles
