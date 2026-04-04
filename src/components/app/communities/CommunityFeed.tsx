@@ -11,11 +11,14 @@ import { searchNFTs } from '@/lib/api/dehub';
 import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 import type { FeedItem, TextPost, VideoItem, ImagePost, ShortVideo } from '@/types/feed.types';
 import { Skeleton } from '@/components/ui/skeleton';
+import { TokenPriceChart } from '@/components/app/TokenPriceChart';
+import { useTokenChart, type ChartTimeframe } from '@/hooks/use-token-chart';
 
 interface CommunityFeedProps {
   communitySlug: string;
   memberAddresses: Set<string>;
   isMember: boolean;
+  tickerSymbol?: string | null;
 }
 
 /** Extract creator address from any feed item type */
