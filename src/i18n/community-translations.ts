@@ -2,12 +2,14 @@
  * Community Translations
  * =======================
  * Runtime injection of community-related translations for all languages.
- * Batch 1: es, fr, de, pt, zh, ja, ko, ru, ar, hi (10 languages)
+ * Batch 1: es, fr, de, pt, zh, ja, ko, ru, ar, hi
+ * Batch 2: tr, it, nl, pl, uk, vi, th, id, bn, ta
  */
 
 import type { i18n as I18nInstance } from 'i18next';
 
 interface CommunityTranslation {
+  nav?: Record<string, string>;
   communities: Record<string, string>;
 }
 
