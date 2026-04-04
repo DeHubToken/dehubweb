@@ -16,22 +16,7 @@ const BOT_AGENTS = [
   'bingbot',
   'crawler',
   'facebot',
-  'oggrabber',
-  'semrushbot',
-  'ahrefsbot',
-  'screaming frog',
-  'mj12bot',
-  'dotbot',
-  'rogerbot',
-  'sitebulb',
-  'seobilitybot',
-  'petalbot',
-  'yandexbot',
-  'duckduckbot',
-  'baiduspider',
-  'sogou',
-  'ia_archiver',
-  'archive.org_bot'
+  'oggrabber'
 ];
 
 const SYSTEM_ROUTES = ['app', 'post', 'explore', 'notifications', 'messages', 'settings', 'delete-account', 'creators', 'jobs', 'features', 'skill.md', '_netlify', 'favicon.ico', 'assets', 'og-image.png'];

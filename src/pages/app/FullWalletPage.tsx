@@ -207,7 +207,7 @@ export default function FullWalletPage() {
   return (
     <div className="px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 min-h-screen">
       <SEOHead title="Wallet — Manage Your Crypto Assets" description="View balances, send and receive tokens, and manage your crypto assets across multiple chains on DeHub." url="https://dehub.io/app/wallet" />
-      <h1 className="text-xs text-zinc-500 mb-2 px-3 sm:px-4 pt-2 font-medium">DeHub Wallet — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <h1 className="sr-only">DeHub Wallet — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Header - only show back button and title when navigated from command centre */}
       {location.state?.from === 'command-centre' && (
         <div className="flex items-center gap-3 mb-5">

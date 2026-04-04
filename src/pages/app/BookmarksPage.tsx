@@ -136,7 +136,7 @@ export default function BookmarksPage() {
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
       <SEOHead title="Bookmarks — Your Saved Content" description="Access your saved posts, liked content, watch history and pay-per-view purchases all in one place on DeHub. Never lose track of content you love." url="https://dehub.io/app/bookmarks" />
-      <h1 className="text-xs text-zinc-500 mb-2 px-3 sm:px-4 pt-2 font-medium">DeHub Bookmarks — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <h1 className="sr-only">DeHub Bookmarks — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
