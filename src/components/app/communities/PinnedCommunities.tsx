@@ -66,7 +66,7 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins }:
     <div className="relative">
       <button
         onClick={onClick}
-        className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.07] transition-colors text-left"
+        className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.07] transition-colors text-left relative overflow-hidden"
       >
         {/* Community avatar */}
         <div className="w-12 h-12 rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden flex-shrink-0">
