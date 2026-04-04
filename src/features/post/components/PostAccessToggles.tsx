@@ -313,8 +313,8 @@ export function PostAccessToggles({
                   if (checked) {
                     setCommunityDrawerOpen(true);
                   } else {
-                    // Remove community tag from categories
-                    const next = selectedCategoriesArray.filter(c => !c.startsWith('community:')).join('|||');
+                    // Remove community slug from categories
+                    const next = selectedCategoriesArray.filter(c => !communitySlugs.has(c)).join('|||');
                     setSelectedCategory(next);
                   }
                 }}
