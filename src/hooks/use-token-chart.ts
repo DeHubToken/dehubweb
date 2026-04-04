@@ -82,6 +82,8 @@ async function fetchGeckoTerminalBySymbol(
       .filter((p: any) => p.baseToken?.symbol?.toUpperCase() === symbol)
       .sort((a: any, b: any) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0));
 
+    const minPoints = timeframe === '1D' ? 12 : 2;
+
     // Try top 3 pairs until we get enough candles
     for (const pair of exact.slice(0, 3)) {
       const network = DEX_TO_GECKO_NETWORK[pair.chainId];
@@ -90,8 +92,43 @@ async function fetchGeckoTerminalBySymbol(
       if (!pairAddr) continue;
 
       const points = await fetchGeckoTerminalOHLCV(pairAddr, pair.chainId, timeframe);
-      if (points.length >= 2) return points;
+      if (points.length >= minPoints) return points;
     }
+    return [];
+  } catch {
+    return [];
+  }
+}
+
+async function fetchGeckoTerminalByTokenAddress(
+  contractAddress: string,
+  timeframe: ChartTimeframe,
+  preferredChainId?: string
+): Promise<PricePoint[]> {
+  try {
+    const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${encodeURIComponent(contractAddress)}`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    const pairs = Array.isArray(data?.pairs) ? data.pairs : [];
+    if (pairs.length === 0) return [];
+
+    const minPoints = timeframe === '1D' ? 12 : 2;
+
+    const ranked = pairs.sort((a: any, b: any) => {
+      const aPreferred = a.chainId === preferredChainId ? 1 : 0;
+      const bPreferred = b.chainId === preferredChainId ? 1 : 0;
+      if (aPreferred !== bPreferred) return bPreferred - aPreferred;
+      return (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0);
+    });
+
+    for (const pair of ranked.slice(0, 5)) {
+      const pairAddr = (pair.pairAddress || '').split(':')[0];
+      if (!pairAddr || !DEX_TO_GECKO_NETWORK[pair.chainId]) continue;
+
+      const points = await fetchGeckoTerminalOHLCV(pairAddr, pair.chainId, timeframe);
+      if (points.length >= minPoints) return points;
+    }
+
     return [];
   } catch {
     return [];
@@ -118,12 +155,22 @@ async function fetchTokenChart(
   // Fallback: GeckoTerminal OHLCV via pair address
   if (options?.pairAddress && options?.chainId) {
     const points = await fetchGeckoTerminalOHLCV(options.pairAddress, options.chainId, timeframe);
-    if (points.length >= 2) return points;
+    if (points.length >= minPoints) return points;
+  }
+
+  // Better fallback: same token address, best available pool
+  if (options?.contractAddress) {
+    const tokenFallback = await fetchGeckoTerminalByTokenAddress(
+      options.contractAddress,
+      timeframe,
+      options.chainId
+    );
+    if (tokenFallback.length >= minPoints) return tokenFallback;
   }
 
   // Last resort: search DexScreener for best pair and try GeckoTerminal
   const fallback = await fetchGeckoTerminalBySymbol(symbol, timeframe);
-  if (fallback.length >= 2) return fallback;
+  if (fallback.length >= minPoints) return fallback;
 
   return [];
 }
