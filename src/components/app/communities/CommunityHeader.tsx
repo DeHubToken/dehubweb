@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from 'react';
-import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X } from 'lucide-react';
+import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { uploadCommunityMedia, useUpdateCommunity, usePinnedCommunities, usePinCommunity, useUnpinCommunity } from '@/hooks/use-communities';
 import type { Community } from '@/hooks/use-communities';
@@ -22,6 +22,10 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
   const [uploading, setUploading] = useState<'avatar' | 'banner' | null>(null);
   const [tickerInput, setTickerInput] = useState('');
   const [showTickerInput, setShowTickerInput] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [editingDesc, setEditingDesc] = useState(false);
+  const [nameInput, setNameInput] = useState(community.name);
+  const [descInput, setDescInput] = useState(community.description || '');
 
   const { data: pinned = [] } = usePinnedCommunities(walletAddress);
   const pinMutation = usePinCommunity();
@@ -167,7 +171,35 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
 
       {/* Name + member count below avatar */}
       <div className="px-2 mt-2">
-        <h1 className="text-lg font-bold text-white truncate">{community.name}</h1>
+        {isOwner && editingName ? (
+          <div className="flex items-center gap-1.5">
+            <input
+              value={nameInput}
+              onChange={e => setNameInput(e.target.value)}
+              className="flex-1 bg-white/[0.06] border border-white/[0.1] rounded-lg px-2 py-1 text-lg font-bold text-white outline-none focus:border-white/20"
+              autoFocus
+              onKeyDown={e => {
+                if (e.key === 'Enter' && nameInput.trim()) {
+                  updateMutation.mutate({ id: community.id, name: nameInput.trim() } as any, { onSuccess: () => setEditingName(false) });
+                }
+                if (e.key === 'Escape') { setNameInput(community.name); setEditingName(false); }
+              }}
+            />
+            <button onClick={() => {
+              if (nameInput.trim()) updateMutation.mutate({ id: community.id, name: nameInput.trim() } as any, { onSuccess: () => setEditingName(false) });
+            }} className="text-white hover:text-green-400"><Check className="w-4 h-4" /></button>
+            <button onClick={() => { setNameInput(community.name); setEditingName(false); }} className="text-zinc-500 hover:text-white"><X className="w-3.5 h-3.5" /></button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 group/name">
+            <h1 className="text-lg font-bold text-white truncate">{community.name}</h1>
+            {isOwner && (
+              <button onClick={() => setEditingName(true)} className="opacity-0 group-hover/name:opacity-100 text-zinc-500 hover:text-white transition-all">
+                <Pencil className="w-3 h-3" />
+              </button>
+            )}
+          </div>
+        )}
         <p className="text-zinc-500 text-sm">{community.member_count.toLocaleString()} members</p>
       </div>
 
@@ -229,8 +261,34 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
         </div>
       )}
 
-      {community.description && (
-        <p className="text-zinc-400 text-sm mt-3 px-2">{community.description}</p>
+      {isOwner && editingDesc ? (
+        <div className="px-2 mt-3 flex items-start gap-1.5">
+          <textarea
+            value={descInput}
+            onChange={e => setDescInput(e.target.value)}
+            rows={2}
+            className="flex-1 bg-white/[0.06] border border-white/[0.1] rounded-lg px-2.5 py-1.5 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-white/20 resize-none"
+            placeholder="Community description..."
+            autoFocus
+          />
+          <button onClick={() => {
+            updateMutation.mutate({ id: community.id, description: descInput.trim() || null } as any, { onSuccess: () => setEditingDesc(false) });
+          }} className="text-white hover:text-green-400 mt-1"><Check className="w-4 h-4" /></button>
+          <button onClick={() => { setDescInput(community.description || ''); setEditingDesc(false); }} className="text-zinc-500 hover:text-white mt-1"><X className="w-3.5 h-3.5" /></button>
+        </div>
+      ) : (
+        <div className="px-2 mt-3 group/desc flex items-start gap-1.5">
+          {community.description ? (
+            <p className="text-zinc-400 text-sm">{community.description}</p>
+          ) : isOwner ? (
+            <p className="text-zinc-600 text-sm italic">Add a description...</p>
+          ) : null}
+          {isOwner && (
+            <button onClick={() => setEditingDesc(true)} className="opacity-0 group-hover/desc:opacity-100 text-zinc-500 hover:text-white transition-all flex-shrink-0 mt-0.5">
+              <Pencil className="w-3 h-3" />
+            </button>
+          )}
+        </div>
       )}
     </div>
   );
