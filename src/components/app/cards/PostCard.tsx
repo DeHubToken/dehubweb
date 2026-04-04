@@ -313,8 +313,14 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
         )}
 
-        {/* Link previews for URLs in content */}
-        {post.content && <FeedLinkPreviews text={post.content} />}
+        {/* Community link embed */}
+        {post.content && hasCommunityLink(post.content) && (() => {
+          const slug = extractCommunitySlug(post.content);
+          return slug ? <CommunityLinkEmbed slug={slug} /> : null;
+        })()}
+
+        {/* Link previews for URLs in content (skip if community link is shown) */}
+        {post.content && !hasCommunityLink(post.content) && <FeedLinkPreviews text={post.content} />}
 
         {/* Metadata: timestamp and views */}
         <PostMetadata 
