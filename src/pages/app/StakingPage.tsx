@@ -535,7 +535,7 @@ export default function StakingPage() {
 
   return (
     <div className={cn("min-h-screen pb-24 px-3 sm:px-4 max-w-5xl mx-auto", isCollapsed && "pt-16 md:pt-0")}>
-      <SEOHead title="Stake DHB — Earn Rewards & Unlock Badges" description="Stake your DHB tokens on DeHub to earn BNB rewards, unlock staking badges, and gain governance voting weight. 12-day cooldown on unstaking." url="https://dehub.io/app/stake" />
+      <SEOHead title="Stake DHB — Earn Rewards & Unlock Badges" description="Stake your DHB tokens on DeHub to earn BNB rewards, unlock staking badges, and gain governance voting weight. 12-day cooldown on unstaking." url="https://dehub.io/app/stake" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DHB Staking', url: 'https://dehub.io/app/stake', description: 'Stake DHB tokens to earn BNB rewards and unlock badges on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">Stake DHB — Earn Rewards & Unlock Badges</h1>
       {/* Header */}
       <motion.div
