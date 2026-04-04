@@ -54,19 +54,10 @@ export default defineConfig(({ mode }) => ({
           if (id.includes('/three/') || id.includes('/three@')) {
             return 'vendor-three';
           }
-          // All wallet/auth libs in ONE chunk — circular deps between wagmi/rainbowkit/web3auth
-          // require them to stay together; splitting causes TDZ (before initialization) errors
-          if (
-            id.includes('@web3auth/') ||
-            id.includes('@toruslabs/') ||
-            id.includes('/wagmi/') ||
-            id.includes('/viem/') ||
-            id.includes('@wagmi/') ||
-            id.includes('@rainbow-me/rainbowkit') ||
-            id.includes('@metamask/sdk')
-          ) {
-            return 'vendor-wallet';
-          }
+          // NOTE: wagmi / viem / rainbowkit / web3auth are NOT manually chunked here.
+          // They have deep internal circular deps that Rollup cannot safely reorder when
+          // forced into a named chunk — results in TDZ "Cannot access before initialization".
+          // WalletProviders React.lazy() already moves them into an async chunk naturally.
           // Framer Motion — animation library
           if (id.includes('framer-motion')) {
             return 'vendor-animation';
