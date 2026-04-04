@@ -68,21 +68,22 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins }:
         onClick={onClick}
         className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.07] transition-colors text-left relative overflow-hidden"
       >
-      {/* Subtle banner background fade */}
-      {community.banner_url && (
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: `url(${community.banner_url})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            opacity: 0.42,
-            maskImage: 'linear-gradient(to right, transparent 30%, black 70%)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent 30%, black 70%)',
-          }}
-        />
-      )}
+        {/* Subtle banner background fade */}
+        {community.banner_url && (
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: `url(${community.banner_url})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              opacity: 0.42,
+              maskImage: 'linear-gradient(to right, transparent 30%, black 70%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 30%, black 70%)',
+            }}
+          />
+        )}
         {/* Community avatar */}
+        <div className="w-12 h-12 rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden flex-shrink-0">
           {community.avatar_url ? (
             <img src={community.avatar_url} alt="" className="w-full h-full object-cover" />
           ) : (
