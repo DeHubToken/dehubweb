@@ -39,6 +39,13 @@
 
   <body>
     <div id="root"></div>
+    <!-- Buffer/process polyfills deferred to avoid render-blocking -->
+    <script type="module">
+      import { Buffer } from 'buffer'
+      import process from 'process'
+      window.Buffer = Buffer
+      window.process = process
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
