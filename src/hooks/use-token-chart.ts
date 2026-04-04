@@ -39,10 +39,11 @@ async function fetchGeckoTerminalOHLCV(
   const network = DEX_TO_GECKO_NETWORK[chainId];
   if (!network) return [];
 
+  // Strip suffixes like ":4meme" from pair addresses
+  const cleanPairAddress = pairAddress.split(':')[0];
   const days = TIMEFRAME_DAYS[timeframe];
-  // GeckoTerminal: day candles, limit = days
   const limit = Math.min(days, 1000);
-  const url = `https://api.geckoterminal.com/api/v2/networks/${network}/pools/${pairAddress}/ohlcv/day?limit=${limit}`;
+  const url = `https://api.geckoterminal.com/api/v2/networks/${network}/pools/${cleanPairAddress}/ohlcv/day?limit=${limit}`;
 
   try {
     const res = await fetch(url);
