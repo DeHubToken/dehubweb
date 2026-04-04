@@ -297,6 +297,46 @@ export function PostAccessToggles({
           )}
         </div>
 
+        {/* Community */}
+        {hasCommunities && (
+          <div className="space-y-1.5">
+            <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => { if (!selectedCommunitySlug) setCommunityDrawerOpen(true); }}>
+              <div className="flex items-center gap-2 shrink-0">
+                <Users className="w-4 h-4 text-white" />
+                <span className="text-sm text-white">Community</span>
+              </div>
+              <Switch
+                checked={!!selectedCommunitySlug}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    setCommunityDrawerOpen(true);
+                  } else {
+                    // Remove community tag from categories
+                    const next = selectedCategoriesArray.filter(c => !c.startsWith('community:')).join('|||');
+                    setSelectedCategory(next);
+                  }
+                }}
+                className="data-[state=checked]:bg-white scale-75"
+                onClick={e => e.stopPropagation()}
+              />
+            </label>
+            {selectedCommunitySlug && (
+              <div className="flex items-center gap-1.5 pl-6">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-white/10 text-white/80 border border-white/10">
+                  <Users className="w-2.5 h-2.5" />
+                  {userCommunities.find(m => m.communities.slug === selectedCommunitySlug)?.communities.name || selectedCommunitySlug}
+                  <button type="button" onClick={() => {
+                    const next = selectedCategoriesArray.filter(c => !c.startsWith('community:')).join('|||');
+                    setSelectedCategory(next);
+                  }} className="hover:text-red-400 transition-colors">
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Subscribers */}
         <label className="flex items-center justify-between py-0.5 cursor-pointer">
           <div className="flex items-center gap-2">
