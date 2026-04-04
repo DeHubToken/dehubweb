@@ -4,6 +4,7 @@
  * Runtime injection of community-related translations for all languages.
  * Batch 1: es, fr, de, pt, zh, ja, ko, ru, ar, hi
  * Batch 2: tr, it, nl, pl, uk, vi, th, id, bn, ta
+ * Batch 3: sv, da, cs, ro, hu, fi, no, sk, sr, hr
  */
 
 import type { i18n as I18nInstance } from 'i18next';
