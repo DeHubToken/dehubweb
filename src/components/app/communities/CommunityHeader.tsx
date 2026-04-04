@@ -20,6 +20,7 @@ interface CommunityHeaderProps {
 
 export function CommunityHeader({ community, isMember, isOwner, isPending, onJoinLeave }: CommunityHeaderProps) {
   const { walletAddress } = useAuth();
+  const { openPostModal } = useGlobalDropZone();
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const updateMutation = useUpdateCommunity();
