@@ -494,6 +494,59 @@ export function PostAccessToggles({
         </DrawerContent>
       </Drawer>
 
+      {/* Community Drawer */}
+      <Drawer open={communityDrawerOpen} onOpenChange={setCommunityDrawerOpen}>
+        <DrawerContent glass hideHandle>
+          <div className="flex items-center justify-between px-4 pt-4 pb-2">
+            <div className="flex items-center gap-2 text-white font-medium">
+              <Users className="w-5 h-5" />
+              Select Community
+            </div>
+            <button type="button" onClick={() => setCommunityDrawerOpen(false)} className="text-sm text-white/60 hover:text-white transition-colors">
+              Done
+            </button>
+          </div>
+          <div className="px-4 pb-6 space-y-1 max-h-[50vh] overflow-y-auto">
+            {userCommunities.map(membership => {
+              const community = membership.communities;
+              if (!community) return null;
+              const isSelected = selectedCommunitySlug === community.slug;
+              return (
+                <button
+                  key={community.id}
+                  type="button"
+                  onClick={() => {
+                    // Remove any existing community tag, add this one
+                    const withoutCommunity = selectedCategoriesArray.filter(c => !c.startsWith('community:'));
+                    const next = [...withoutCommunity, `community:${community.slug}`].join('|||');
+                    setSelectedCategory(next);
+                    setCommunityDrawerOpen(false);
+                  }}
+                  className={cn(
+                    "w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-colors",
+                    isSelected
+                      ? "bg-white/15 text-white border border-white/20"
+                      : "text-zinc-300 hover:bg-white/5 border border-transparent"
+                  )}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden">
+                      {community.avatar_url ? (
+                        <img src={community.avatar_url} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <Users className="w-3.5 h-3.5 text-zinc-500" />
+                      )}
+                    </div>
+                    <span>{community.name}</span>
+                  </div>
+                  {isSelected && <Check className="w-4 h-4 text-white" />}
+                </button>
+              );
+            })}
+          </div>
+        </DrawerContent>
+      </Drawer>
+
       {/* PPV Drawer */}
       <Drawer open={ppvDrawerOpen} onOpenChange={setPpvDrawerOpen}>
         <DrawerContent glass className="max-h-[90dvh] flex flex-col overflow-hidden">
