@@ -15,8 +15,14 @@ export function LinkPreviews({ text }: LinkPreviewsProps) {
   const [removedUrls, setRemovedUrls] = useState<Set<string>>(new Set());
   const fetchedUrls = useRef<Set<string>>(new Set());
 
-  // Check for community links first
-  const communitySlug = extractCommunitySlug(text);
+  // Remember community slug once detected so it persists while user types
+  const [communitySlug, setCommunitySlug] = useState<string | null>(null);
+  useEffect(() => {
+    const slug = extractCommunitySlug(text);
+    if (slug && !communitySlug) {
+      setCommunitySlug(slug);
+    }
+  }, [text, communitySlug]);
 
   useEffect(() => {
     const urls = extractUrlsFromText(text);
