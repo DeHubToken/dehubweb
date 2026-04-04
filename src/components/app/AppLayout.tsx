@@ -222,10 +222,11 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       
       <PostModal 
         isOpen={isPostModalOpen} 
-        onClose={() => { closePostModal(); clearInitialText(); }}
+        onClose={() => { closePostModal(); clearInitialText(); clearInitialCategory(); }}
         initialFiles={pendingFiles}
         onFilesProcessed={clearPendingFiles}
         initialText={initialText}
+        initialCategory={initialCategory}
       />
     </div>
   );

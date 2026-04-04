@@ -16,9 +16,10 @@ interface PostModalProps {
   initialFiles?: FileList | null;
   onFilesProcessed?: () => void;
   initialText?: string;
+  initialCategory?: string;
 }
 
-export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, initialText }: PostModalProps) {
+export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory }: PostModalProps) {
   const { state, actions, computed, refs } = usePostForm(onClose);
   const { attachedSound, selectSound, clearSound } = usePostSound();
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
@@ -30,6 +31,13 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
       actions.setText(initialText);
     }
   }, [isOpen, initialText]);
+
+  // Set initial category when modal opens
+  useEffect(() => {
+    if (isOpen && initialCategory) {
+      actions.setSelectedCategory(initialCategory);
+    }
+  }, [isOpen, initialCategory]);
 
   // Process initial files when modal opens with pending files
   useEffect(() => {
