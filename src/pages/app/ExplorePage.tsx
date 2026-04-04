@@ -826,7 +826,8 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Explore" description="Discover trending content, creators and topics on DeHub." url="https://dehub.io/app/explore" />
+      <SEOHead title="Explore Trending Creators, Posts & Topics" description="Discover trending content, viral posts, top creators and popular topics on DeHub — the open source, user owned and censorship resistant social media platform." url="https://dehub.io/app/explore" />
+      <h1 className="sr-only">Explore Trending Creators, Posts & Topics on DeHub</h1>
       {/* Search Header - Bento Style */}
       <div className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 space-y-2 sm:space-y-3">
         {/* Search Input Bento */}
