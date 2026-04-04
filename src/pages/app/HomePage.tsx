@@ -627,7 +627,7 @@ export default function HomePage() {
   return (
     <div>
       <SEOHead title="Home — DeHub's Home Feed" description="Censorship resistant and chronological, with no shady algorithm. Your feed on DeHub — the open source, user owned social media platform." url="https://dehub.io/app" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Home Feed', url: 'https://dehub.io/app', description: 'Censorship resistant, chronological social media feed with no algorithm.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
-      <h1 className="sr-only">Home — DeHub's Home Feed</h1>
+      <h1 className="sr-only">DeHub Home — Decentralised Social Media Feed, Censorship Resistant & Freedom of Speech</h1>
       {/* Tab Navigation */}
       <div className={cn("sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 lg:mt-0", isCollapsed && "pl-2 pr-0", isCollapsed && "lg:hidden")}>
         <div className="bg-zinc-900 rounded-xl overflow-visible">
