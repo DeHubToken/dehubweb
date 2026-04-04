@@ -66,7 +66,7 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
   return {
     id,
     type: 'image',
-    username: nft.mintername || nft.minterDisplayName || 'unknown',
+    username: nft.minterUsername || nft.mintername || nft.minterDisplayName || 'unknown',
     verified: false,
     avatar,
     image,
