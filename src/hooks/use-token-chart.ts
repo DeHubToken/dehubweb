@@ -27,6 +27,40 @@ const DEX_TO_GECKO_NETWORK: Record<string, string> = {
   optimism: 'optimism',
 };
 
+function getH24TxnCount(pair: any): number {
+  return (pair?.txns?.h24?.buys || 0) + (pair?.txns?.h24?.sells || 0);
+}
+
+function compareDexPairs(a: any, b: any, preferredChainId?: string) {
+  const aPreferred = preferredChainId && a?.chainId === preferredChainId ? 1 : 0;
+  const bPreferred = preferredChainId && b?.chainId === preferredChainId ? 1 : 0;
+  if (aPreferred !== bPreferred) return bPreferred - aPreferred;
+
+  const aIsBase = a?.chainId === 'base' ? 1 : 0;
+  const bIsBase = b?.chainId === 'base' ? 1 : 0;
+  if (aIsBase !== bIsBase) return bIsBase - aIsBase;
+
+  const aVolume = a?.volume?.h24 || 0;
+  const bVolume = b?.volume?.h24 || 0;
+  if (aVolume !== bVolume) return bVolume - aVolume;
+
+  const aTxns = getH24TxnCount(a);
+  const bTxns = getH24TxnCount(b);
+  if (aTxns !== bTxns) return bTxns - aTxns;
+
+  const aLiquidity = a?.liquidity?.usd || 0;
+  const bLiquidity = b?.liquidity?.usd || 0;
+  if (aLiquidity !== bLiquidity) return bLiquidity - aLiquidity;
+
+  const aCreated = a?.pairCreatedAt || 0;
+  const bCreated = b?.pairCreatedAt || 0;
+  return aCreated - bCreated;
+}
+
+function pickLongerSeries(current: PricePoint[], candidate: PricePoint[]): PricePoint[] {
+  return candidate.length > current.length ? candidate : current;
+}
+
 function extractCashtagSymbol(input: string): string | null {
   const match = input.trim().match(/^\$([a-zA-Z0-9]+)/);
   return match?.[1]?.toUpperCase() ?? null;
@@ -77,24 +111,25 @@ async function fetchGeckoTerminalBySymbol(
     const pairs = data?.pairs;
     if (!Array.isArray(pairs) || pairs.length === 0) return [];
 
-    // Find exact symbol matches sorted by liquidity
+    // Find exact symbol matches and prefer active/liquid markets
     const exact = pairs
       .filter((p: any) => p.baseToken?.symbol?.toUpperCase() === symbol)
-      .sort((a: any, b: any) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0));
+      .sort((a: any, b: any) => compareDexPairs(a, b));
 
-    const minPoints = timeframe === '1D' ? 12 : 2;
+    let best: PricePoint[] = [];
+    const targetPoints = timeframe === '1D' ? 24 : TIMEFRAME_DAYS[timeframe];
 
-    // Try top 3 pairs until we get enough candles
-    for (const pair of exact.slice(0, 3)) {
+    for (const pair of exact.slice(0, 8)) {
       const network = DEX_TO_GECKO_NETWORK[pair.chainId];
       if (!network) continue;
       const pairAddr = (pair.pairAddress || '').split(':')[0];
       if (!pairAddr) continue;
 
       const points = await fetchGeckoTerminalOHLCV(pairAddr, pair.chainId, timeframe);
-      if (points.length >= minPoints) return points;
+      best = pickLongerSeries(best, points);
+      if (best.length >= targetPoints) return best;
     }
-    return [];
+    return best;
   } catch {
     return [];
   }
@@ -112,24 +147,20 @@ async function fetchGeckoTerminalByTokenAddress(
     const pairs = Array.isArray(data?.pairs) ? data.pairs : [];
     if (pairs.length === 0) return [];
 
-    const minPoints = timeframe === '1D' ? 12 : 2;
+    const ranked = pairs.sort((a: any, b: any) => compareDexPairs(a, b, preferredChainId));
+    let best: PricePoint[] = [];
+    const targetPoints = timeframe === '1D' ? 24 : TIMEFRAME_DAYS[timeframe];
 
-    const ranked = pairs.sort((a: any, b: any) => {
-      const aPreferred = a.chainId === preferredChainId ? 1 : 0;
-      const bPreferred = b.chainId === preferredChainId ? 1 : 0;
-      if (aPreferred !== bPreferred) return bPreferred - aPreferred;
-      return (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0);
-    });
-
-    for (const pair of ranked.slice(0, 5)) {
+    for (const pair of ranked.slice(0, 8)) {
       const pairAddr = (pair.pairAddress || '').split(':')[0];
       if (!pairAddr || !DEX_TO_GECKO_NETWORK[pair.chainId]) continue;
 
       const points = await fetchGeckoTerminalOHLCV(pairAddr, pair.chainId, timeframe);
-      if (points.length >= minPoints) return points;
+      best = pickLongerSeries(best, points);
+      if (best.length >= targetPoints) return best;
     }
 
-    return [];
+    return best;
   } catch {
     return [];
   }
@@ -141,21 +172,23 @@ async function fetchTokenChart(
   options?: UseTokenChartOptions
 ): Promise<PricePoint[]> {
   const days = TIMEFRAME_DAYS[timeframe];
+  const minPoints = timeframe === '1D' ? 1 : 1;
 
-  const { data, error } = await supabase.functions.invoke('cmc-chart', {
-    body: { symbol, days },
-  });
+  if (timeframe !== '1D') {
+    const { data, error } = await supabase.functions.invoke('cmc-chart', {
+      body: { symbol, days },
+    });
 
-  const cmcPrices: PricePoint[] = (!error && data?.prices?.length) ? data.prices : [];
+    const cmcPrices: PricePoint[] = (!error && data?.prices?.length) ? data.prices : [];
+    if (cmcPrices.length >= minPoints) return cmcPrices;
+  }
 
-  // For 1D, require at least 12 points for a useful chart; for others require > 0
-  const minPoints = timeframe === '1D' ? 12 : 1;
-  if (cmcPrices.length >= minPoints) return cmcPrices;
+  let best: PricePoint[] = [];
 
   // Fallback: GeckoTerminal OHLCV via pair address
   if (options?.pairAddress && options?.chainId) {
     const points = await fetchGeckoTerminalOHLCV(options.pairAddress, options.chainId, timeframe);
-    if (points.length >= minPoints) return points;
+    best = pickLongerSeries(best, points);
   }
 
   // Better fallback: same token address, best available pool
@@ -165,14 +198,14 @@ async function fetchTokenChart(
       timeframe,
       options.chainId
     );
-    if (tokenFallback.length >= minPoints) return tokenFallback;
+    best = pickLongerSeries(best, tokenFallback);
   }
 
   // Last resort: search DexScreener for best pair and try GeckoTerminal
   const fallback = await fetchGeckoTerminalBySymbol(symbol, timeframe);
-  if (fallback.length >= minPoints) return fallback;
+  best = pickLongerSeries(best, fallback);
 
-  return [];
+  return best;
 }
 
 export interface UseTokenChartOptions {

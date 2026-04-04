@@ -57,6 +57,32 @@ interface DexSearchResponse {
   pairs: DexPair[] | null;
 }
 
+function getH24TxnCount(pair: DexPair): number {
+  return (pair.txns?.h24?.buys || 0) + (pair.txns?.h24?.sells || 0);
+}
+
+function compareDexPairs(a: DexPair, b: DexPair) {
+  const aIsBase = a.chainId === 'base' ? 1 : 0;
+  const bIsBase = b.chainId === 'base' ? 1 : 0;
+  if (aIsBase !== bIsBase) return bIsBase - aIsBase;
+
+  const aVolume = a.volume?.h24 || 0;
+  const bVolume = b.volume?.h24 || 0;
+  if (aVolume !== bVolume) return bVolume - aVolume;
+
+  const aTxns = getH24TxnCount(a);
+  const bTxns = getH24TxnCount(b);
+  if (aTxns !== bTxns) return bTxns - aTxns;
+
+  const aLiquidity = a.liquidity?.usd || 0;
+  const bLiquidity = b.liquidity?.usd || 0;
+  if (aLiquidity !== bLiquidity) return bLiquidity - aLiquidity;
+
+  const aCreated = a.pairCreatedAt || 0;
+  const bCreated = b.pairCreatedAt || 0;
+  return aCreated - bCreated;
+}
+
 async function searchDexScreenerMulti(query: string): Promise<DexPair[]> {
   const symbol = query.replace(/^\$/, '').toUpperCase();
   if (!symbol) return [];
@@ -73,13 +99,8 @@ async function searchDexScreenerMulti(query: string): Promise<DexPair[]> {
 
   if (exactMatches.length === 0) return [];
 
-  // Sort: Base chain first, then by liquidity
-  exactMatches.sort((a, b) => {
-    const aIsBase = a.chainId === 'base' ? 1 : 0;
-    const bIsBase = b.chainId === 'base' ? 1 : 0;
-    if (aIsBase !== bIsBase) return bIsBase - aIsBase;
-    return (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0);
-  });
+  // Sort: Base chain first, then prefer active/liquid markets over spoof pools
+  exactMatches.sort(compareDexPairs);
 
   // Deduplicate by chain — keep highest-liquidity pair per chain
   const seenChains = new Set<string>();
