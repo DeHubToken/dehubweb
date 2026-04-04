@@ -15,14 +15,18 @@ export function LinkPreviews({ text }: LinkPreviewsProps) {
   const [removedUrls, setRemovedUrls] = useState<Set<string>>(new Set());
   const fetchedUrls = useRef<Set<string>>(new Set());
 
-  // Remember community slug once detected so it persists while user types
+  // Derive community slug from text, but latch it so it persists while typing.
+  // Reset if text no longer contains ANY URL with /app/communities/
   const [communitySlug, setCommunitySlug] = useState<string | null>(null);
   useEffect(() => {
     const slug = extractCommunitySlug(text);
-    if (slug && !communitySlug) {
+    if (slug) {
       setCommunitySlug(slug);
+    } else if (communitySlug && !text.includes('/app/communities/')) {
+      // Text was fully cleared of community links — remove the card
+      setCommunitySlug(null);
     }
-  }, [text, communitySlug]);
+  }, [text]);
 
   useEffect(() => {
     const urls = extractUrlsFromText(text);
