@@ -54,27 +54,18 @@ export default defineConfig(({ mode }) => ({
           if (id.includes('/three/') || id.includes('/three@')) {
             return 'vendor-three';
           }
-          // Web3Auth + Torus — heavy auth SDK, loaded after user interaction
+          // All wallet/auth libs in ONE chunk — circular deps between wagmi/rainbowkit/web3auth
+          // require them to stay together; splitting causes TDZ (before initialization) errors
           if (
             id.includes('@web3auth/') ||
-            id.includes('@toruslabs/')
-          ) {
-            return 'vendor-web3auth';
-          }
-          // Wagmi + Viem — wallet state management
-          if (
+            id.includes('@toruslabs/') ||
             id.includes('/wagmi/') ||
             id.includes('/viem/') ||
-            id.includes('@wagmi/')
-          ) {
-            return 'vendor-wagmi';
-          }
-          // RainbowKit + MetaMask SDK — wallet UI connectors
-          if (
+            id.includes('@wagmi/') ||
             id.includes('@rainbow-me/rainbowkit') ||
             id.includes('@metamask/sdk')
           ) {
-            return 'vendor-rainbowkit';
+            return 'vendor-wallet';
           }
           // Framer Motion — animation library
           if (id.includes('framer-motion')) {
