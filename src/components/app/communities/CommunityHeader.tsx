@@ -1,6 +1,8 @@
 import { useRef, useState, useCallback } from 'react';
 import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { CommunityTickerSearch } from './CommunityTickerSearch';
+import type { DexPair } from '@/hooks/use-dexscreener';
 import { uploadCommunityMedia, useUpdateCommunity, usePinnedCommunities, usePinCommunity, useUnpinCommunity } from '@/hooks/use-communities';
 import type { Community } from '@/hooks/use-communities';
 import { useAuth } from '@/contexts/AuthContext';
