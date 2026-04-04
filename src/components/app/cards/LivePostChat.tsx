@@ -6,6 +6,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { MessageSquare, Send, Loader2, Users, Mic, Languages, RotateCcw } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { UserMentionDropdown } from '@/components/app/mentions';
