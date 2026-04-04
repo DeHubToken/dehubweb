@@ -205,10 +205,39 @@ export function useCommunityChat(communityId: string | undefined) {
     );
   }, [rawMessages, walletAddress, communityId, queryClient]);
 
+  // Edit message
+  const editMessage = useCallback(async (messageId: string, newContent: string) => {
+    if (!walletAddress || !communityId) return;
+    const trimmed = newContent.trim();
+    if (!trimmed) return;
+
+    // Optimistic update
+    queryClient.setQueryData<CommunityChatMessage[]>(
+      [QUERY_KEY, communityId],
+      (old = []) => old.map(m => m.id === messageId ? { ...m, content: trimmed } : m)
+    );
+
+    const { error } = await withWalletHeader(
+      supabase
+        .from('community_chat_messages')
+        .update({ content: trimmed } as any)
+        .eq('id', messageId)
+        .eq('wallet_address', walletAddress.toLowerCase()),
+      walletAddress
+    );
+
+    if (error) {
+      console.error('[CommunityChat] Edit error:', error);
+      toast.error('Failed to edit message');
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY, communityId] });
+    }
+  }, [walletAddress, communityId, queryClient]);
+
   return {
     messages,
     isLoading,
     sendMessage,
+    editMessage,
     addReaction,
     removeReaction,
   };
