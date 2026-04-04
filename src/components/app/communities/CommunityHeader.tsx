@@ -212,9 +212,6 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
               <span className="text-xs text-zinc-400 flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
                 Ticker: <span className="text-white font-medium">${community.ticker_symbol}</span>
-                {community.ticker_chain_id && (
-                  <span className="text-zinc-600 text-[10px] bg-zinc-800 px-1 py-0.5 rounded">{community.ticker_chain_id.toUpperCase()}</span>
-                )}
               </span>
               <button
                 onClick={() => updateMutation.mutate({
