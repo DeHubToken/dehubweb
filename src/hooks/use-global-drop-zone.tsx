@@ -139,6 +139,8 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
       clearPendingFiles,
       initialText,
       clearInitialText,
+      initialCategory,
+      clearInitialCategory,
       suppressGlobalDrop,
       unsuppressGlobalDrop,
     }}>
