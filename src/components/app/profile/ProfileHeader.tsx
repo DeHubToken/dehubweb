@@ -410,6 +410,14 @@ export function ProfileHeader({
           {profile.bio && (
             <TranslatableText text={translatedBio || profile.bio} className="mt-3 text-white/90 text-sm sm:text-base block" as="p" />
           )}
+
+          {/* Pinned Communities */}
+          {profile.walletAddress && (
+            <PinnedCommunities
+              walletAddress={profile.walletAddress}
+              isOwnProfile={!!isViewingOwnProfile}
+            />
+          )}
           
           <div className="flex items-center gap-2 mt-3 text-zinc-500 text-sm">
             <span>{t('profile.joined')} {profile.joinedDate}</span>
