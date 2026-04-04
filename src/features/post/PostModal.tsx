@@ -15,13 +15,21 @@ interface PostModalProps {
   onClose: () => void;
   initialFiles?: FileList | null;
   onFilesProcessed?: () => void;
+  initialText?: string;
 }
 
-export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: PostModalProps) {
+export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, initialText }: PostModalProps) {
   const { state, actions, computed, refs } = usePostForm(onClose);
   const { attachedSound, selectSound, clearSound } = usePostSound();
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
+
+  // Set initial text when modal opens with pre-filled text
+  useEffect(() => {
+    if (isOpen && initialText) {
+      actions.setText(initialText);
+    }
+  }, [isOpen, initialText]);
 
   // Process initial files when modal opens with pending files
   useEffect(() => {
