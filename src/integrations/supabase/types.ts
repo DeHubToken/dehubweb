@@ -298,6 +298,7 @@ export type Database = {
           name: string
           rules: Json | null
           slug: string
+          ticker_symbol: string | null
           updated_at: string
         }
         Insert: {
@@ -312,6 +313,7 @@ export type Database = {
           name: string
           rules?: Json | null
           slug: string
+          ticker_symbol?: string | null
           updated_at?: string
         }
         Update: {
@@ -326,6 +328,7 @@ export type Database = {
           name?: string
           rules?: Json | null
           slug?: string
+          ticker_symbol?: string | null
           updated_at?: string
         }
         Relationships: []
