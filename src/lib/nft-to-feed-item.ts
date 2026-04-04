@@ -79,7 +79,7 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
     views: formatViews(nft.views || nft.view_count).replace(' views', ''),
     timeAgo: formatTimeAgo(nft.createdAt || nft.created_at),
     creatorId: nft.minter,
-    creatorUsername: nft.mintername,
+    creatorUsername: nft.minterUsername || nft.mintername,
     isLiked: nft.isLiked ?? false,
     isPPV: nft.is_ppv || nft.streamInfo?.isPayPerView || false,
     ppvPrice: nft.ppv_price || nft.streamInfo?.payPerViewAmount,
