@@ -24,7 +24,7 @@ export function SEOHead({
   type = 'website',
   jsonLd,
 }: SEOHeadProps) {
-  const fullTitle = title ? `${title} | DeHub` : defaults.title;
+  const fullTitle = title || defaults.title;
   const canonicalUrl = url || defaults.url;
 
   return (
