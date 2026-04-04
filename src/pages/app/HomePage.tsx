@@ -560,7 +560,6 @@ export default function HomePage() {
       resetFilters();
     },
     isDraggingRef: homeIsDraggingRef,
-    onTap: () => handleTabClick(activeTab),
   });
 
   // --------------------------------------------------------------------------

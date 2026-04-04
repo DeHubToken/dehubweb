@@ -9,9 +9,9 @@
  * - Engagement stats
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageSquare, User, Loader2, Users, Tag, Hash, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio, Ticket, Coins } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -292,6 +292,7 @@ const getChainInfo = (chainId: number) => {
 export default function PostInfoPage() {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { walletAddress } = useAuth();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -324,6 +325,14 @@ export default function PostInfoPage() {
   // Check if current user is the owner/minter
   const isOwner = walletAddress && nftInfo?.minter?.toLowerCase() === walletAddress.toLowerCase();
   const [showEditModal, setShowEditModal] = useState(false);
+  const shouldAutoOpenEdit = searchParams.get('edit') === '1';
+
+  useEffect(() => {
+    if (!shouldAutoOpenEdit || !isOwner || !nftInfo || !postId) return;
+
+    setShowEditModal(true);
+    navigate(`/app/post/${postId}/info`, { replace: true });
+  }, [shouldAutoOpenEdit, isOwner, nftInfo, postId, navigate]);
   
   // PPV status and purchase count
   const isPPV = nftInfo?.is_ppv || nftInfo?.streamInfo?.isPayPerView || false;
