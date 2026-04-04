@@ -15,7 +15,7 @@ export default function CommandCentrePage() {
   return (
     <div className="px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 min-h-screen">
       <SEOHead title="Command — Your Dashboard & Wallet" description="Your command centre on DeHub. Manage your wallet, track balances, and oversee your account in one dashboard." url="https://dehub.io/app/command-centre" />
-      <h1 className="sr-only">Command — Your Dashboard & Wallet</h1>
+      <h1 className="sr-only">DeHub Command — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-[1.1rem] sm:text-[1.32rem] font-bold text-white">{t('commandCentre.title')}</h1>
       </div>
