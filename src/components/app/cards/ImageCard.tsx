@@ -173,13 +173,15 @@ function ImageCarousel({
                   onImageClick(idx);
                 }}
               >
-                {/* Blurred background fill — CSS background-image so browser never
-                    counts this decorative element as an LCP candidate */}
-                <div
-                  className="absolute inset-0 scale-110 blur-[24px] saturate-[180%] opacity-60"
-                  style={{ backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-                  aria-hidden="true"
-                />
+                {/* Blurred background fill — skipped on above-fold cards so it
+                    never delays LCP (background-image is an LCP candidate in Chrome 96+) */}
+                {!(aboveFold && idx === 0) && (
+                  <div
+                    className="absolute inset-0 scale-110 blur-[24px] saturate-[180%] opacity-60"
+                    style={{ backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+                    aria-hidden="true"
+                  />
+                )}
                 <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
                 {/* Actual image — first few feed items load eagerly for LCP */}
                 <img

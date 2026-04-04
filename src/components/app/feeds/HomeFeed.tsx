@@ -884,7 +884,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               : `bento-image-${(item.data as ImagePost).id}`;
 
     return (
-      <div key={key} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+      <div
+        key={key}
+        className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
+        style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: '0 400px' } : undefined}
+      >
         {card}
       </div>
     );

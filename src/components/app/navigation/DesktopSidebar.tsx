@@ -133,7 +133,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         </div>
 
         {/* Navigation Bento - scrollable */}
-        <div className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0">
+        <motion.div layoutRoot className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0">
           <div className={cn(
             "p-1 space-y-2 flex flex-col items-center overflow-y-auto overflow-x-hidden scrollbar-invisible h-full",
             !isCollapsed && "lg:p-2.5 lg:space-y-[2px] lg:items-stretch"
@@ -192,7 +192,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           </div>
           {/* Bottom fade overlay */}
           <div className={cn("pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent rounded-b-2xl z-10")} />
-        </div>
+        </motion.div>
 
         {/* Post / Login Button */}
         <div className="mt-3 flex items-center justify-center lg:block">
