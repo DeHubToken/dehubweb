@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
@@ -9,7 +9,7 @@ import { PostActionBar } from './components/PostActionBar';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
 import { SoundPicker } from './components/SoundPicker';
 import { cn } from '@/lib/utils';
-import { extractCommunitySlug } from '@/components/app/communities/CommunityLinkEmbed';
+
 
 interface PostModalProps {
   isOpen: boolean;
@@ -26,11 +26,6 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
 
-  // Extract community slug from initialText (if it's a community share link)
-  const communitySlug = useMemo(() => {
-    if (!initialText) return null;
-    return extractCommunitySlug(initialText);
-  }, [initialText]);
 
   // Set initial text when modal opens — put it straight in the editor
   useEffect(() => {
@@ -104,7 +99,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         titleText={state.titleText}
         setTitleText={actions.setTitleText}
         onOpenCategories={() => setCategoryDrawerOpen(true)}
-        communitySlug={communitySlug}
+        
       />
 
       <PostAccessToggles
