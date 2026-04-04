@@ -102,12 +102,14 @@ async function searchDexScreenerMulti(query: string): Promise<DexPair[]> {
   // Sort: Base chain first, then prefer active/liquid markets over spoof pools
   exactMatches.sort(compareDexPairs);
 
-  // Deduplicate by chain — keep highest-liquidity pair per chain
-  const seenChains = new Set<string>();
+  // Deduplicate by token address — keep best pool per unique token
+  // This ensures different tokens with the same symbol each get a card
+  const seenTokens = new Set<string>();
   const deduped: DexPair[] = [];
   for (const pair of exactMatches) {
-    if (seenChains.has(pair.chainId)) continue;
-    seenChains.add(pair.chainId);
+    const tokenKey = `${pair.chainId}:${pair.baseToken.address.toLowerCase()}`;
+    if (seenTokens.has(tokenKey)) continue;
+    seenTokens.add(tokenKey);
     deduped.push(pair);
     if (deduped.length >= 4) break;
   }
