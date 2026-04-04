@@ -32,6 +32,8 @@ export function PinnedCommunities({ walletAddress, isOwnProfile }: PinnedCommuni
               key={pin.id}
               community={community}
               onClick={() => navigate(`/app/communities/${community.slug}`)}
+              isOwnProfile={isOwnProfile}
+              onManagePins={() => setPickerOpen(true)}
             />
           );
         })}
