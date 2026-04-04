@@ -20,7 +20,7 @@ import { useCommunityChat, type CommunityChatMessage } from '@/hooks/use-communi
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { replaceLinksWithEmoji, TranslatableText, SharedTranslationContext } from '../TranslatableText';
-import { useDeHubProfile } from '@/hooks/use-dehub-profile';
+
 
 const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
 
@@ -106,7 +106,12 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
-  const { data: profileData } = useDeHubProfile({ address: walletAddress || undefined, enabled: !!walletAddress });
+  const { user } = useAuth();
+  const profileData = user ? {
+    handle: user.username,
+    name: user.displayName || user.display_name,
+    avatarUrl: user.avatarImageUrl || user.avatarUrl || user.avatar_url,
+  } : null;
 
   const { messages, isLoading, sendMessage, addReaction, removeReaction } = useCommunityChat(communityId);
 

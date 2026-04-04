@@ -241,7 +241,6 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
                 } as any, {
                   onSuccess: () => {
                     setShowTickerInput(false);
-                    toast.success(`Ticker set to $${pair.baseToken.symbol}`);
                   }
                 });
               }}
