@@ -1,7 +1,7 @@
 /**
  * Single Community Page
  * ======================
- * Header with banner/avatar, member-filtered feed, members tab, about tab.
+ * Header with banner/avatar, member-filtered feed, members tab, about tab, chat tab.
  */
 
 import { useState, useMemo } from 'react';
@@ -14,10 +14,11 @@ import { CommunityHeader } from '@/components/app/communities/CommunityHeader';
 import { CommunityFeed } from '@/components/app/communities/CommunityFeed';
 import { CommunityMembers } from '@/components/app/communities/CommunityMembers';
 import { CommunityAbout } from '@/components/app/communities/CommunityAbout';
+import { CommunityChat } from '@/components/app/communities/CommunityChat';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
 
-type Tab = 'posts' | 'members' | 'about';
+type Tab = 'posts' | 'members' | 'about' | 'chat';
 
 export default function CommunityPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -93,6 +94,7 @@ export default function CommunityPage() {
       <div className="flex border-b border-white/[0.08] px-3">
         {([
           { key: 'posts' as Tab, label: 'Posts' },
+          { key: 'chat' as Tab, label: 'Chat' },
           { key: 'members' as Tab, label: `Members (${community.member_count})` },
           { key: 'about' as Tab, label: 'About' },
         ]).map(t => (
@@ -122,6 +124,12 @@ export default function CommunityPage() {
             tickerContractAddress={community.ticker_contract_address}
             tickerChainId={community.ticker_chain_id}
             tickerPairAddress={community.ticker_pair_address}
+          />
+        )}
+        {tab === 'chat' && (
+          <CommunityChat
+            communityId={community.id}
+            isMember={isMember}
           />
         )}
         {tab === 'members' && (
