@@ -73,6 +73,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showReportModal, setShowReportModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
   const { data: tipCount = 0 } = usePostTipCount(post.id);
