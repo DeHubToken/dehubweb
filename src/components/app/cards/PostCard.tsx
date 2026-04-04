@@ -73,6 +73,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showReportModal, setShowReportModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
   const { data: tipCount = 0 } = usePostTipCount(post.id);
@@ -201,7 +202,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           <Sparkles className="w-5 h-5" />
         </motion.button>
         
-        <Drawer>
+        <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
           <DrawerTrigger asChild>
             <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); openLoginModal(); } }} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
               <MoreVertical className="w-5 h-5" />
@@ -262,13 +263,13 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
                 <>
                   <div className="border-t border-white/10 my-1" />
                   <button
-                    onClick={() => setShowEditModal(true)}
+                    onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowEditModal(true), 300); }}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                   >
                     <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
                   </button>
                   <button
-                    onClick={() => setShowDeleteModal(true)}
+                    onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowDeleteModal(true), 300); }}
                     className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-white/10 rounded-xl transition-colors text-left"
                   >
                     <Trash2 className="w-5 h-5" /> {t('postOptions.deletePost')}
