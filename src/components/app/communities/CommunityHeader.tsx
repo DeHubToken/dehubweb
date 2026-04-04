@@ -22,6 +22,10 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
   const [uploading, setUploading] = useState<'avatar' | 'banner' | null>(null);
   const [tickerInput, setTickerInput] = useState('');
   const [showTickerInput, setShowTickerInput] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [editingDesc, setEditingDesc] = useState(false);
+  const [nameInput, setNameInput] = useState(community.name);
+  const [descInput, setDescInput] = useState(community.description || '');
 
   const { data: pinned = [] } = usePinnedCommunities(walletAddress);
   const pinMutation = usePinCommunity();
