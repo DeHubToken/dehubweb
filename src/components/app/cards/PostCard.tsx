@@ -201,7 +201,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           <Sparkles className="w-5 h-5" />
         </motion.button>
         
-        <Drawer>
+        <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
           <DrawerTrigger asChild>
             <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); openLoginModal(); } }} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
               <MoreVertical className="w-5 h-5" />
