@@ -28,6 +28,7 @@ import type { ChainId } from '@/components/app/ChainSelector';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
+import { SEOHead } from '@/components/SEOHead';
 import ethLogo from '@/assets/eth-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
 import usdcLogo from '@/assets/usdc-logo.png';
