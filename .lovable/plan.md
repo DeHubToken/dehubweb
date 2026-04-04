@@ -1,68 +1,33 @@
 
 
-## Improving Lighthouse Performance Scores
+## Add Seedance 1.5 Pro as a Video Generation Option
 
-**Current scores**: Mobile 41, Desktop 8 (!) — LCP 30.4s, FCP 10.0s, TBT 600ms
+Seedance 1.5 Pro by ByteDance is available on Replicate at `bytedance/seedance-1.5-pro`. It supports text-to-video and image-to-video with native audio generation, 720p/1080p, up to 12 seconds, and multiple aspect ratios. It's a strong competitor to Kling 2.6 Pro.
 
-### Root Causes (in order of impact)
+### Changes
 
-**1. Massive JS bundle — no code splitting for Web3 libraries**
-The app eagerly loads 16+ heavy Web3 packages (wagmi, viem, ethers, RainbowKit, Web3Auth, WalletConnect, Agora RTC, buffer/process polyfills) in the critical path. These are all required at the root `<App>` level via `WagmiProvider` and `RainbowKitProvider`. This is the #1 cause of the 30s LCP and 10s FCP.
+**1. `src/constants/video-models.constants.ts`** — Add Seedance entry:
+- ID: `seedance-1.5-pro`
+- Supports: text-to-video, image-to-video
+- Duration: 2-12s
+- Tier: premium
+- hasAudio: true
+- baseCostUsd: ~$0.80 (estimated from Replicate's per-second pricing, ~5s default)
 
-**2. Render-blocking polyfill in `<head>`**
-`index.html` has a synchronous `<script type="module">` in `<head>` that imports `buffer` and `process` — this blocks parsing of the entire page.
+**2. `supabase/functions/generate-video/index.ts`** — Add backend support:
+- Add `seedance-1.5-pro` to the `VIDEO_MODELS` map with Replicate model ID `bytedance/seedance-1.5-pro`
+- Add a `case 'seedance-1.5-pro'` in the input builder switch with parameters: `prompt`, `duration` (integer seconds), `aspect_ratio`, `generate_audio: true`, and optional `image` for I2V mode
+- No version hash needed — uses the standard model path
 
-**3. 26+ 3D icon images preloaded at module-load time**
-`use-preload-icons.ts` imports 26+ PNG images as static imports, meaning they're all bundled into the main chunk or trigger network requests immediately.
+### Seedance Input Parameters
+- `prompt` (string) — text prompt
+- `duration` (integer, 2-12, default 5) — video length in seconds
+- `aspect_ratio` (string, default "16:9")
+- `resolution` (string, default "720p")
+- `generate_audio` (boolean, default true)
+- `image` (uri, optional) — for image-to-video
+- `seed` (integer, optional)
 
-**4. Render-blocking Google Fonts**
-`index.css` line 1: `@import url('https://fonts.googleapis.com/css2?family=Exo:...')` — CSS `@import` is render-blocking.
-
-**5. No Vite build optimization**
-`vite.config.ts` has zero `build` configuration — no `rollupOptions.output.manualChunks`, meaning Vite puts everything into one or two giant chunks.
-
----
-
-### Proposed Fixes
-
-#### Fix 1: Add manual chunk splitting in Vite (HIGH IMPACT)
-Split Web3, Agora, and UI libraries into separate chunks so the main app JS is much smaller.
-
-**File: `vite.config.ts`** — Add `build.rollupOptions.output.manualChunks`:
-- `vendor-web3`: wagmi, viem, ethers, @web3auth/*, @walletconnect/*, @rainbow-me/rainbowkit, @coinbase/wallet-sdk, buffer, process
-- `vendor-agora`: agora-rtc-sdk-ng
-- `vendor-ui`: recharts, framer-motion, @radix-ui/*
-- `vendor-react`: react, react-dom, react-router-dom
-
-#### Fix 2: Make Google Fonts non-render-blocking (HIGH IMPACT)
-**File: `index.html`** — Move the font from CSS `@import` to a `<link>` tag with `rel="preload"` + font-display swap, or use `&display=swap` and `<link rel="preconnect">`.
-
-**File: `src/index.css`** — Remove line 1 (`@import url(...)`)
-
-#### Fix 3: Defer the buffer/process polyfill (MEDIUM IMPACT)
-**File: `index.html`** — Move the `<script type="module">` block from `<head>` to just before `</body>`, or add `async` behavior. These polyfills are only needed when Web3 code runs, not at parse time.
-
-#### Fix 4: Lazy-load 3D icon preloading (MEDIUM IMPACT)
-**File: `src/hooks/use-preload-icons.ts`** — Convert static `import` statements to dynamic `new Image().src = url` calls inside a `requestIdleCallback` after first paint, so they don't block the main bundle.
-
-#### Fix 5: Lazy-load Web3 providers (HIGHEST IMPACT but most complex)
-**File: `src/App.tsx`** — Wrap `WagmiProvider` + `RainbowKitProvider` in a lazy-loaded component that only mounts when the user needs wallet functionality (e.g., clicks "Connect Wallet"). Until then, render the app without the Web3 provider tree. This is the most impactful change but requires ensuring auth/wallet checks degrade gracefully when providers aren't yet loaded.
-
----
-
-### Recommended Implementation Order
-
-| Priority | Fix | Est. Impact on LCP | Complexity |
-|----------|-----|-------------------|------------|
-| 1 | Vite manual chunks | -5-10s | Low |
-| 2 | Non-blocking Google Font | -2-4s | Low |
-| 3 | Defer buffer/process polyfill | -1-2s | Low |
-| 4 | Lazy icon preloading | -1s TBT | Low |
-| 5 | Lazy Web3 providers | -10-15s | High |
-
-Fixes 1-4 are low-risk, quick wins. Fix 5 is the nuclear option that would bring scores into green but requires careful refactoring of the auth flow.
-
-### What this won't fix
-- The scores are measured on the **Lovable preview domain** which has inherent latency. Production (`dehub.io`) with a CDN will score better.
-- Server-side rendering (SSR) would help FCP dramatically but isn't available in this stack.
+### Pricing Note
+Replicate prices Seedance per second of output. Estimated ~$0.10-0.16/sec. For a 5s default video, base cost is roughly $0.50-0.80. Will set baseCostUsd to $0.65 (middle estimate) — can be adjusted after observing actual costs.
 

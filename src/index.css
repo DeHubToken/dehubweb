@@ -1,4 +1,4 @@
-/* Google Fonts loaded via <link> in index.html for non-render-blocking behavior */
+@import url('https://fonts.googleapis.com/css2?family=Exo:wght@400;700;900&display=swap');
 
 @tailwind base;
 @tailwind components;

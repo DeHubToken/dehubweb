@@ -12,8 +12,8 @@ import { useState, useEffect, useRef, useCallback, useDeferredValue } from 'reac
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
-import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
+import { flushSync } from 'react-dom';
 import { useSearchParams, useNavigationType } from 'react-router-dom';
 import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
@@ -94,8 +94,7 @@ export default function HomePage() {
   
   // Tab state - initialized from sessionStorage for back navigation
   const [activeTab, setActiveTab] = useState(getInitialTab);
-  const homeIsDraggingRef = useRef(false);
-  const { layerRef: homeTabLayerRef, setRef: setHomeTabRef, rect: homeTabRect, onScroll: onHomeTabScroll } = useTabIndicator(activeTab, isCollapsed, homeIsDraggingRef);
+  const { layerRef: homeTabLayerRef, setRef: setHomeTabRef, rect: homeTabRect, onScroll: onHomeTabScroll } = useTabIndicator(activeTab, isCollapsed);
   // Deferred tab value: tab indicator moves instantly, content swap is deferred
   // so heavy feeds (e.g. Videos) don't block the tab animation
   const deferredTab = useDeferredValue(activeTab);
@@ -481,11 +480,15 @@ export default function HomePage() {
       touchGestureTriggered.current = true;
       
       if (isLeftSwipe && currentIndex < tabValues.length - 1) {
-        setActiveTab(tabValues[currentIndex + 1]);
+        flushSync(() => {
+          setActiveTab(tabValues[currentIndex + 1]);
+        });
         setTabSwitchTime(); // Mark tab switch for carousel cooldown
         resetFilters();
       } else if (isRightSwipe && currentIndex > 0) {
-        setActiveTab(tabValues[currentIndex - 1]);
+        flushSync(() => {
+          setActiveTab(tabValues[currentIndex - 1]);
+        });
         setTabSwitchTime(); // Mark tab switch for carousel cooldown
         resetFilters();
       }
@@ -521,12 +524,12 @@ export default function HomePage() {
       const currentIndex = tabValues.indexOf(activeTab);
       
       if (e.deltaX > 0 && currentIndex < tabValues.length - 1) {
-        setActiveTab(tabValues[currentIndex + 1]);
+        flushSync(() => setActiveTab(tabValues[currentIndex + 1]));
         setTabSwitchTime(); // Mark tab switch for carousel cooldown
         resetFilters();
         gestureTriggered.current = true;
       } else if (e.deltaX < 0 && currentIndex > 0) {
-        setActiveTab(tabValues[currentIndex - 1]);
+        flushSync(() => setActiveTab(tabValues[currentIndex - 1]));
         setTabSwitchTime(); // Mark tab switch for carousel cooldown
         resetFilters();
         gestureTriggered.current = true;
@@ -547,20 +550,68 @@ export default function HomePage() {
   // --------------------------------------------------------------------------
 
   const homeTabButtonPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
+  const homeDragState = useRef<{ startX: number; startRectX: number; startWidth: number; currentX: number } | null>(null);
+  const [isHomeDragging, setIsHomeDragging] = useState(false);
+  const [homeDragOffsetX, setHomeDragOffsetX] = useState(0);
 
-  const { isDragging: isHomeDragging, indicatorRef: homeIndicatorRef, handleDragStart: handleHomeDragStart, handleDragMove: handleHomeDragMove, handleDragEnd: handleHomeDragEnd } = useDragTabIndicator({
-    tabRect: homeTabRect,
-    tabLayerRef: homeTabLayerRef,
-    tabButtonPositions: homeTabButtonPositions,
-    tabValues: FEED_TABS.map(t => t.value),
-    activeTab,
-    onTabChange: (tab) => {
-      setActiveTab(tab);
-      resetFilters();
-    },
-    isDraggingRef: homeIsDraggingRef,
-    onTap: () => handleTabClick(activeTab),
-  });
+  const findNearestHomeTab = useCallback((indicatorCenterX: number) => {
+    const layer = homeTabLayerRef.current;
+    if (!layer) return activeTab;
+    const layerRect = layer.getBoundingClientRect();
+    let nearest: string = activeTab;
+    let minDist = Infinity;
+    for (const tab of FEED_TABS) {
+      const el = homeTabButtonPositions.current[tab.value];
+      if (!el) continue;
+      const br = el.getBoundingClientRect();
+      const btnCenter = br.left - layerRect.left + br.width / 2;
+      const dist = Math.abs(indicatorCenterX - btnCenter);
+      if (dist < minDist) { minDist = dist; nearest = tab.value; }
+    }
+    return nearest;
+  }, [activeTab, homeTabLayerRef]);
+
+  const handleHomeDragStart = useCallback((e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    homeDragState.current = { startX: e.clientX, startRectX: homeTabRect.x, startWidth: homeTabRect.width, currentX: e.clientX };
+    setIsHomeDragging(true);
+    setHomeDragOffsetX(0);
+  }, [homeTabRect.x, homeTabRect.width]);
+
+  const handleHomeDragMove = useCallback((e: React.PointerEvent) => {
+    if (!homeDragState.current) return;
+    homeDragState.current.currentX = e.clientX;
+    const dx = e.clientX - homeDragState.current.startX;
+    setHomeDragOffsetX(dx);
+    const currentCenterX = homeDragState.current.startRectX + dx + homeDragState.current.startWidth / 2;
+    const nearest = findNearestHomeTab(currentCenterX);
+    if (nearest !== activeTab) {
+      setEnableHomeTransition(true);
+      setActiveTab(nearest);
+      setTimeout(() => setEnableHomeTransition(false), 450);
+    }
+  }, [activeTab, findNearestHomeTab, setEnableHomeTransition]);
+
+  const handleHomeDragEnd = useCallback(() => {
+    if (!homeDragState.current) return;
+    const totalDx = Math.abs(homeDragState.current.currentX - homeDragState.current.startX);
+    const wasTap = totalDx < 5;
+    homeDragState.current = null;
+    setIsHomeDragging(false);
+    setHomeDragOffsetX(0);
+    setEnableHomeTransition(true);
+    setTimeout(() => setEnableHomeTransition(false), 450);
+    // Tap (no real drag): forward to handleTabClick so sort menu / scroll-to-top still works
+    if (wasTap) {
+      handleTabClick(activeTab);
+    }
+  }, [activeTab, handleTabClick, setEnableHomeTransition]);
+
+  const homeDragDisplayRect = isHomeDragging
+    ? { ...homeTabRect, x: (homeDragState.current?.startRectX ?? homeTabRect.x) + homeDragOffsetX, ready: true }
+    : homeTabRect;
 
   // --------------------------------------------------------------------------
   // RENDER FEED BASED ON ACTIVE TAB
@@ -578,15 +629,18 @@ export default function HomePage() {
       <div className={cn("sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 lg:mt-0", isCollapsed && "pl-2 pr-0", isCollapsed && "lg:hidden")}>
         <div className="bg-zinc-900 rounded-xl overflow-visible">
           <div ref={homeTabLayerRef} className="relative overflow-visible">
-            <GlassIndicator ref={homeIndicatorRef} rect={homeTabRect} borderRadius="0.75rem" layoutKey={`home-${isCollapsed}-${activeTab}`} enableTransition={!isHomeDragging && enableHomeTransition} />
+            <GlassIndicator rect={homeDragDisplayRect} borderRadius="0.75rem" layoutKey={`home-${isCollapsed}-${activeTab}`} enableTransition={!isHomeDragging && enableHomeTransition} />
             {/* Drag handle overlay */}
-            {homeTabRect.ready && (
+            {homeDragDisplayRect.ready && (
               <div
                 className="absolute z-30 cursor-grab active:cursor-grabbing"
                 style={{
-                  transform: `translate(${homeTabRect.x}px, ${homeTabRect.y}px)`,
-                  width: homeTabRect.width,
-                  height: homeTabRect.height,
+                  transform: `translate(${homeDragDisplayRect.x}px, ${homeDragDisplayRect.y}px)`,
+                  width: homeDragDisplayRect.width,
+                  height: homeDragDisplayRect.height,
+                  transition: !isHomeDragging && enableHomeTransition
+                    ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+                    : 'none',
                 }}
                 onPointerDown={handleHomeDragStart}
                 onPointerMove={handleHomeDragMove}

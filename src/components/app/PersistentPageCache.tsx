@@ -143,23 +143,18 @@ export function PersistentPageCache() {
   const location = useLocation();
   const pathname = location.pathname;
 
-  // Find which cached page matches current path
-  const activeCachedPage = CACHED_PAGES.find(p => matchesPath(p, pathname));
-
-  // Track which pages have been visited — seed with the initial active page so first paint is never blank
-  const [mountedPages, setMountedPages] = useState<Set<string>>(() => {
-    const initial = new Set<string>();
-    const initialActive = CACHED_PAGES.find(p => matchesPath(p, window.location.pathname));
-    if (initialActive) initial.add(initialActive.key);
-    return initial;
-  });
+  // Track which pages have been visited (mount on first visit, keep forever)
+  const [mountedPages, setMountedPages] = useState<Set<string>>(() => new Set());
 
   // Background-preload priority page chunks after initial render
   useEffect(() => {
     preloadPriorityPages();
   }, []);
 
-  // Mount the active page if not yet mounted (handles subsequent navigations)
+  // Find which cached page matches current path
+  const activeCachedPage = CACHED_PAGES.find(p => matchesPath(p, pathname));
+
+  // Mount the active page if not yet mounted
   useEffect(() => {
     if (activeCachedPage && !mountedPages.has(activeCachedPage.key)) {
       setMountedPages(prev => new Set(prev).add(activeCachedPage.key));
