@@ -749,7 +749,14 @@ export function PostContentArea({
 
         {/* Link previews - with proper indent on desktop */}
         <div className="sm:pl-[52px]">
-          <LinkPreviews text={text} />
+          <LinkPreviews 
+            text={text} 
+            onRemoveCommunityLink={() => {
+              // Remove community URL from text
+              const cleaned = text.replace(/https?:\/\/[^\s]*\/app\/communities\/[a-zA-Z0-9_-]+/g, '').trim();
+              setText(cleaned);
+            }}
+          />
 
           <AnimatePresence>
             {isLive && (
