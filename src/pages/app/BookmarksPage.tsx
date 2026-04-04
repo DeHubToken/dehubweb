@@ -16,6 +16,7 @@ import { PostCard } from '@/components/app/cards/PostCard';
 import type { FeedItem } from '@/types/feed.types';
 import bookmark3dIcon from '@/assets/icons/bookmark-3d-icon.png';
 import { useTranslation } from 'react-i18next';
+import { SEOHead } from '@/components/SEOHead';
 
 const tabKeys = [
   { labelKey: 'bookmarks.all', value: 'all' as BookmarkType, icon: LayoutGrid },
