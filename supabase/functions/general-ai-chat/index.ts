@@ -153,6 +153,32 @@ const TOKEN_PURCHASE_KEYWORDS = [
   'swap for dhb', 'exchange for dhb', 'get dhb'
 ];
 
+// Keywords that indicate a real swap request the AI should extract structured params for
+const SWAP_INTENT_KEYWORDS = [
+  'swap', 'exchange', 'convert', 'trade',
+  'swap eth', 'swap usdc', 'swap weth',
+  'buy dhb', 'buy $dhb', 'purchase dhb',
+  'swap for dhb', 'exchange for dhb', 'convert to dhb',
+  'swap eth for', 'swap usdc for', 'trade eth for',
+  'buy tokens', 'swap tokens',
+];
+
+// Well-known token addresses on Base
+const KNOWN_TOKENS: Record<string, { address: string; symbol: string; decimals: number }> = {
+  'eth': { address: '0x0', symbol: 'ETH', decimals: 18 },
+  'weth': { address: '0x4200000000000000000000000000000000000006', symbol: 'WETH', decimals: 18 },
+  'dhb': { address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c', symbol: 'DHB', decimals: 18 },
+  'usdc': { address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', symbol: 'USDC', decimals: 6 },
+  '$eth': { address: '0x0', symbol: 'ETH', decimals: 18 },
+  '$dhb': { address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c', symbol: 'DHB', decimals: 18 },
+  '$usdc': { address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', symbol: 'USDC', decimals: 6 },
+};
+
+function hasSwapIntent(message: string): boolean {
+  const lower = message.toLowerCase();
+  return SWAP_INTENT_KEYWORDS.some(kw => lower.includes(kw));
+}
+
 // Parse token transaction from message
 function parseTokenTransaction(message: string): { type: 'transfer' | 'purchase' | null; amount?: string; recipient?: string; token?: string } {
   const lowerMessage = message.toLowerCase();
