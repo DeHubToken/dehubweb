@@ -5,7 +5,7 @@
  * detected by the AI assistant. Uses the existing Uniswap V3 swap engine.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { ArrowRightLeft, Check, Loader2, AlertTriangle, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
