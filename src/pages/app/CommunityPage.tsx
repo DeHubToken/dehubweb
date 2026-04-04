@@ -62,8 +62,11 @@ export default function CommunityPage() {
     if (isMember) {
       if (isOwner) return; // owners can't leave
       leaveMutation.mutate(community.id);
+    } else if (isPendingMember) {
+      // Cancel pending request
+      leaveMutation.mutate(community.id);
     } else {
-      joinMutation.mutate(community.id);
+      joinMutation.mutate({ communityId: community.id, isPrivate: community.is_private });
     }
   };
 
