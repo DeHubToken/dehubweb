@@ -9,6 +9,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -126,6 +127,8 @@ export default function CareersPage() {
 
   return (
     <div className="min-h-screen p-3 sm:p-4">
+      <SEOHead title="Careers — Join the DeHub Team" description="Join the team building the future of decentralized media. Explore open positions at DeHub and help shape Web3 social." url="https://dehub.io/app/careers" />
+      <h1 className="sr-only">Careers — Join the DeHub Team</h1>
       {/* Header bento */}
       <div className="rounded-2xl p-4 sm:p-6 mb-4 bg-gradient-to-br from-white/[0.06] via-white/[0.03] to-transparent backdrop-blur-xl border border-white/[0.08]">
         <div className="flex items-center gap-3 mb-3">

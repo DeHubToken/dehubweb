@@ -28,6 +28,7 @@ import type { ChainId } from '@/components/app/ChainSelector';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
+import { SEOHead } from '@/components/SEOHead';
 import ethLogo from '@/assets/eth-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
 import usdcLogo from '@/assets/usdc-logo.png';
@@ -205,6 +206,8 @@ export default function FullWalletPage() {
 
   return (
     <div className="px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 min-h-screen">
+      <SEOHead title="Wallet — Manage Your Crypto Assets" description="View balances, send and receive tokens, and manage your crypto assets across multiple chains on DeHub." url="https://dehub.io/app/wallet" />
+      <h1 className="sr-only">Wallet — Manage Your Crypto Assets</h1>
       {/* Header - only show back button and title when navigated from command centre */}
       {location.state?.from === 'command-centre' && (
         <div className="flex items-center gap-3 mb-5">

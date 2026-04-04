@@ -109,6 +109,8 @@ const tabs = [
   { icon: Wallet, value: 'assets', label: 'settings.assets' },
 ];
 
+import { SEOHead } from '@/components/SEOHead';
+
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
   const settingsIsDraggingRef = useRef(false);
@@ -157,6 +159,8 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
+      <SEOHead title="Settings — Manage Your Account" description="Customize your DeHub experience. Update your profile, privacy settings, notification preferences, and connected wallets." url="https://dehub.io/app/settings" />
+      <h1 className="sr-only">Settings — Manage Your Account</h1>
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">

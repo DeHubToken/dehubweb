@@ -20,7 +20,8 @@ export default function TVPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="TV" description="Watch free live TV channels from around the world on DeHub." url="https://dehub.io/app/tv" />
+      <SEOHead title="Live TV — Free Channels From Around the World" description="Watch 100+ free live TV channels from around the world on DeHub. News, sports, entertainment and more — no subscription needed." url="https://dehub.io/app/tv" />
+      <h1 className="sr-only">Live TV — Free Channels From Around the World</h1>
       <PageHeader title={t('tv.title')} />
       <div className="p-2 sm:p-3">
         <LiveTVSection />

@@ -18,6 +18,7 @@ import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { RadioSection } from '@/components/app/radio';
 import { cn } from '@/lib/utils';
 import type { VideoItem } from '@/types/feed.types';
+import { SEOHead } from '@/components/SEOHead';
 
 // ============================================================================
 // MOCK DATA
@@ -349,6 +350,8 @@ export default function MusicPage() {
 
   return (
     <div className="min-h-screen">
+      <SEOHead title="Music — Listen & Discover on DeHub" description="Stream music, discover new artists, listen to live radio and watch music videos on DeHub — the decentralized open source media platform." url="https://dehub.io/app/music" />
+      <h1 className="sr-only">Music — Listen & Discover on DeHub</h1>
       {/* Tab Navigation */}
       <div className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
         <div className="bg-zinc-900 rounded-2xl p-2 overflow-visible">

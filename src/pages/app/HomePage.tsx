@@ -23,6 +23,7 @@ import { setTabSwitchTime } from '@/lib/gesture-state';
 import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
 import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { SORT_OPTIONS } from '@/lib/feed-utils';
+import { SEOHead } from '@/components/SEOHead';
 
 
 // Feed components
@@ -625,6 +626,8 @@ export default function HomePage() {
 
   return (
     <div>
+      <SEOHead title="Home — DeHub's Home Feed" description="Censorship resistant and chronological, with no shady algorithm." url="https://dehub.io/app" />
+      <h1 className="sr-only">Home — DeHub's Home Feed</h1>
       {/* Tab Navigation */}
       <div className={cn("sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 lg:mt-0", isCollapsed && "pl-2 pr-0", isCollapsed && "lg:hidden")}>
         <div className="bg-zinc-900 rounded-xl overflow-visible">

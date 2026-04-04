@@ -28,6 +28,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
+import { SEOHead } from '@/components/SEOHead';
 import { getBadgeName, getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useMention } from '@/hooks/use-mention';
@@ -703,6 +704,8 @@ export default function GovernancePage() {
 
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
+      <SEOHead title="Governance — Vote on Community Proposals" description="Participate in decentralized governance on DeHub. Submit proposals, vote with your staking badge weight, and shape the platform's future." url="https://dehub.io/app/governance" />
+      <h1 className="sr-only">Governance — Vote on Community Proposals</h1>
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">

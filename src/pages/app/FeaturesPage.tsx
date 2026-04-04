@@ -44,6 +44,7 @@ import { z } from 'zod';
 import { useFeatureRequestComments, useSubmitComment, useDeleteComment } from '@/hooks/use-feature-request-comments';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
+import { SEOHead } from '@/components/SEOHead';
 
 const featureSchema = z.object({
   title: z.string().trim().min(1, 'Title is required').max(100, 'Title must be under 100 characters'),
@@ -837,6 +838,8 @@ export default function FeaturesPage() {
 
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
+      <SEOHead title="Features — Submit & Vote on Ideas" description="Submit feature requests, vote on community ideas, and help shape DeHub's roadmap. Your voice drives the platform's development." url="https://dehub.io/app/features" />
+      <h1 className="sr-only">Features — Submit & Vote on Ideas</h1>
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">

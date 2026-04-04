@@ -32,6 +32,7 @@ import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type L
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { SEOHead } from '@/components/SEOHead';
 
 
 type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
@@ -312,6 +313,8 @@ export default function LeaderboardPage() {
 
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
+      <SEOHead title="Leaderboard — Top Creators & Earners" description="See who's leading on DeHub. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods." url="https://dehub.io/app/leaderboard" />
+      <h1 className="sr-only">Leaderboard — Top Creators & Earners</h1>
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-2">
         <div className="flex items-center gap-4 mb-4">

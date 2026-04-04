@@ -21,6 +21,7 @@ import { useDMRealtime } from '@/hooks/use-dm-realtime';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
 import dehubLogo from '@/assets/dehub-logo.png';
+import { SEOHead } from '@/components/SEOHead';
 
 function ConversationBadge({ badgeBalance }: { badgeBalance?: number }) {
   const badgeUrl = getBadgeUrl(badgeBalance);
@@ -303,6 +304,8 @@ export default function MessagesPage() {
 
   return (
     <div className="h-full px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 overflow-hidden">
+      <SEOHead title="Messages — Direct & Group Chat" description="Send direct messages, create group chats, and connect with other users privately on DeHub." url="https://dehub.io/app/messages" />
+      <h1 className="sr-only">Messages — Direct & Group Chat</h1>
       <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] max-h-full">
         {/* Full Width Messages Panel */}
         <div className="w-full h-full bg-zinc-900 rounded-2xl flex flex-col">

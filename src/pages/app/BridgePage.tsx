@@ -22,6 +22,7 @@ import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { useTranslation } from 'react-i18next';
+import { SEOHead } from '@/components/SEOHead';
 import dehubCoin from '@/assets/dehub-coin.png';
 
 const BRIDGE_ADDRESS = '0x11D79aE9a0F8a8f9Fcf5BE71e403ed203EC2394d';
@@ -187,6 +188,8 @@ export default function BridgePage() {
 
   return (
     <div className={cn("min-h-screen pb-24 px-3 sm:px-4 max-w-5xl mx-auto", isCollapsed && "pt-16 md:pt-0")}>
+      <SEOHead title="Bridge — Transfer DHB Cross-Chain" description="Bridge your DHB tokens between Base and BNB Chain seamlessly on DeHub. Fast, secure cross-chain transfers with live transaction tracking." url="https://dehub.io/app/bridge" />
+      <h1 className="sr-only">Bridge — Transfer DHB Cross-Chain</h1>
       {/* Header */}
       <motion.div
         initial={{ opacity: 0 }}

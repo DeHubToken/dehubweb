@@ -28,6 +28,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { supabase } from '@/integrations/supabase/client';
+import { SEOHead } from '@/components/SEOHead';
 import { MarkdownText } from '@/lib/markdown';
 
 import { AI_ASSISTANT_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
@@ -1154,6 +1155,8 @@ export default function AssistantPage() {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
+      <SEOHead title="AI Assistant — Chat, Generate Images & Video" description="Chat with DeHub's AI assistant. Generate images, create videos, get web search results, and explore AI capabilities — all in one place." url="https://dehub.io/app/assistant" />
+      <h1 className="sr-only">AI Assistant — Chat, Generate Images & Video</h1>
       {/* Drag overlay */}
       <AnimatePresence>
         {isDragging && (

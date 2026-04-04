@@ -16,6 +16,7 @@ import { PostCard } from '@/components/app/cards/PostCard';
 import type { FeedItem } from '@/types/feed.types';
 import bookmark3dIcon from '@/assets/icons/bookmark-3d-icon.png';
 import { useTranslation } from 'react-i18next';
+import { SEOHead } from '@/components/SEOHead';
 
 const tabKeys = [
   { labelKey: 'bookmarks.all', value: 'all' as BookmarkType, icon: LayoutGrid },
@@ -134,6 +135,8 @@ export default function BookmarksPage() {
 
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
+      <SEOHead title="Bookmarks — Your Saved Content" description="Access your saved posts, liked content, watch history and PPV purchases all in one place on DeHub." url="https://dehub.io/app/bookmarks" />
+      <h1 className="sr-only">Bookmarks — Your Saved Content</h1>
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
