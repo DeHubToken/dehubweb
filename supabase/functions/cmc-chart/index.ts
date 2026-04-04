@@ -49,7 +49,7 @@ serve(async (req) => {
     }
 
     const now = new Date();
-    const effectiveDays = Math.max(days, 2); // CMC daily needs at least 2-day window
+    const effectiveDays = days === 1 ? 3 : Math.max(days, 2); // 1D needs a wider daily window so CMC returns at least 2 closes
     const start = new Date(now.getTime() - effectiveDays * 86400 * 1000);
 
     const params = new URLSearchParams({
