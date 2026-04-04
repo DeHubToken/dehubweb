@@ -21,6 +21,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { MarkdownText } from '@/lib/markdown';
 import { PostModal } from '@/features/post';
+import { SwapActionCard } from './SwapActionCard';
 import ftvLogoSymbol from '@/assets/ftv-logo-symbol.png';
 
 interface SwapAction {
