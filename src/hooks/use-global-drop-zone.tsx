@@ -2,10 +2,12 @@ import { createContext, useContext, useState, useCallback, useEffect, useRef, Re
 
 interface GlobalDropZoneContextType {
   isPostModalOpen: boolean;
-  openPostModal: () => void;
+  openPostModal: (initialText?: string) => void;
   closePostModal: () => void;
   pendingFiles: FileList | null;
   clearPendingFiles: () => void;
+  initialText: string;
+  clearInitialText: () => void;
   suppressGlobalDrop: () => void;
   unsuppressGlobalDrop: () => void;
 }
