@@ -49,7 +49,9 @@ if (typeof window !== 'undefined') {
 }
 
 const PageLoader = () => (
-  <div className="min-h-screen bg-black" />
+  <div className="min-h-screen bg-black flex items-center justify-center">
+    <div className="animate-pulse text-white/60 text-sm tracking-widest font-medium">DEHUB</div>
+  </div>
 );
 
 
