@@ -65,6 +65,39 @@ async function fetchGeckoTerminalOHLCV(
   }
 }
 
+/** Find the best DexScreener pair for a symbol and fetch its GeckoTerminal OHLCV */
+async function fetchGeckoTerminalBySymbol(
+  symbol: string,
+  timeframe: ChartTimeframe
+): Promise<PricePoint[]> {
+  try {
+    const res = await fetch(`https://api.dexscreener.com/latest/dex/search?q=${encodeURIComponent(symbol)}`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    const pairs = data?.pairs;
+    if (!Array.isArray(pairs) || pairs.length === 0) return [];
+
+    // Find exact symbol matches sorted by liquidity
+    const exact = pairs
+      .filter((p: any) => p.baseToken?.symbol?.toUpperCase() === symbol)
+      .sort((a: any, b: any) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0));
+
+    // Try top 3 pairs until we get enough candles
+    for (const pair of exact.slice(0, 3)) {
+      const network = DEX_TO_GECKO_NETWORK[pair.chainId];
+      if (!network) continue;
+      const pairAddr = (pair.pairAddress || '').split(':')[0];
+      if (!pairAddr) continue;
+
+      const points = await fetchGeckoTerminalOHLCV(pairAddr, pair.chainId, timeframe);
+      if (points.length >= 2) return points;
+    }
+    return [];
+  } catch {
+    return [];
+  }
+}
+
 async function fetchTokenChart(
   symbol: string,
   timeframe: ChartTimeframe,
@@ -84,8 +117,13 @@ async function fetchTokenChart(
 
   // Fallback: GeckoTerminal OHLCV via pair address
   if (options?.pairAddress && options?.chainId) {
-    return fetchGeckoTerminalOHLCV(options.pairAddress, options.chainId, timeframe);
+    const points = await fetchGeckoTerminalOHLCV(options.pairAddress, options.chainId, timeframe);
+    if (points.length >= 2) return points;
   }
+
+  // Last resort: search DexScreener for best pair and try GeckoTerminal
+  const fallback = await fetchGeckoTerminalBySymbol(symbol, timeframe);
+  if (fallback.length >= 2) return fallback;
 
   return [];
 }
