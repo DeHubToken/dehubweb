@@ -342,6 +342,66 @@ export type Database = {
         }
         Relationships: []
       }
+      community_chat_messages: {
+        Row: {
+          avatar_url: string | null
+          community_id: string
+          content: string
+          created_at: string
+          display_name: string | null
+          id: string
+          image_url: string | null
+          message_type: string
+          reactions: Json | null
+          reply_to_id: string | null
+          username: string | null
+          wallet_address: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          community_id: string
+          content?: string
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          image_url?: string | null
+          message_type?: string
+          reactions?: Json | null
+          reply_to_id?: string | null
+          username?: string | null
+          wallet_address: string
+        }
+        Update: {
+          avatar_url?: string | null
+          community_id?: string
+          content?: string
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          image_url?: string | null
+          message_type?: string
+          reactions?: Json | null
+          reply_to_id?: string | null
+          username?: string | null
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_chat_messages_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_chat_messages_reply_to_id_fkey"
+            columns: ["reply_to_id"]
+            isOneToOne: false
+            referencedRelation: "community_chat_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       community_members: {
         Row: {
           community_id: string
