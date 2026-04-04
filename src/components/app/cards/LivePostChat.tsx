@@ -230,7 +230,7 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
                         <span className="text-xs font-semibold text-white truncate max-w-[120px]">
                           {displayName}
                         </span>
-                        <LiveChatBadge address={msg.sender_address} />
+                        <LiveChatBadge badgeBalance={msg.sender_badge_balance} username={msg.sender_username} />
                       </span>
                     </div>
                     {msg.message_type === 'voice' && msg.image_url ? (
