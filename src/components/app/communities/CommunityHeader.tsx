@@ -171,7 +171,35 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
 
       {/* Name + member count below avatar */}
       <div className="px-2 mt-2">
-        <h1 className="text-lg font-bold text-white truncate">{community.name}</h1>
+        {isOwner && editingName ? (
+          <div className="flex items-center gap-1.5">
+            <input
+              value={nameInput}
+              onChange={e => setNameInput(e.target.value)}
+              className="flex-1 bg-white/[0.06] border border-white/[0.1] rounded-lg px-2 py-1 text-lg font-bold text-white outline-none focus:border-white/20"
+              autoFocus
+              onKeyDown={e => {
+                if (e.key === 'Enter' && nameInput.trim()) {
+                  updateMutation.mutate({ id: community.id, name: nameInput.trim() } as any, { onSuccess: () => setEditingName(false) });
+                }
+                if (e.key === 'Escape') { setNameInput(community.name); setEditingName(false); }
+              }}
+            />
+            <button onClick={() => {
+              if (nameInput.trim()) updateMutation.mutate({ id: community.id, name: nameInput.trim() } as any, { onSuccess: () => setEditingName(false) });
+            }} className="text-white hover:text-green-400"><Check className="w-4 h-4" /></button>
+            <button onClick={() => { setNameInput(community.name); setEditingName(false); }} className="text-zinc-500 hover:text-white"><X className="w-3.5 h-3.5" /></button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 group/name">
+            <h1 className="text-lg font-bold text-white truncate">{community.name}</h1>
+            {isOwner && (
+              <button onClick={() => setEditingName(true)} className="opacity-0 group-hover/name:opacity-100 text-zinc-500 hover:text-white transition-all">
+                <Pencil className="w-3 h-3" />
+              </button>
+            )}
+          </div>
+        )}
         <p className="text-zinc-500 text-sm">{community.member_count.toLocaleString()} members</p>
       </div>
 
