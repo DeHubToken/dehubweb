@@ -131,6 +131,7 @@ export function useCommunityChat(communityId: string | undefined) {
       username: userProfile?.username || null,
       display_name: userProfile?.displayName || null,
       avatar_url: userProfile?.avatarUrl || null,
+      badge_balance: userProfile?.badgeBalance || null,
       content,
       message_type: messageType,
       image_url: imageUrl || null,
