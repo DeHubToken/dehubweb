@@ -1,22 +1,33 @@
 
 
-## Fix: Hide video controls by default, show only on interaction
+## Add Seedance 1.5 Pro as a Video Generation Option
 
-**Problem**: On mobile (`isTouchDevice`), video controls (speed, loop, PiP, fullscreen, progress bar) are always visible while a video is playing. They should be hidden by default and only appear when the user taps the video.
+Seedance 1.5 Pro by ByteDance is available on Replicate at `bytedance/seedance-1.5-pro`. It supports text-to-video and image-to-video with native audio generation, 720p/1080p, up to 12 seconds, and multiple aspect ratios. It's a strong competitor to Kling 2.6 Pro.
 
-**Root cause**: Line 1440 in `VideoCard.tsx` uses `(isPlaying || showControls) && (showControls || isTouchDevice)` — the `isTouchDevice` flag bypasses the `showControls` state, making controls permanently visible on touch devices.
+### Changes
 
-### Changes (1 file)
+**1. `src/constants/video-models.constants.ts`** — Add Seedance entry:
+- ID: `seedance-1.5-pro`
+- Supports: text-to-video, image-to-video
+- Duration: 2-12s
+- Tier: premium
+- hasAudio: true
+- baseCostUsd: ~$0.80 (estimated from Replicate's per-second pricing, ~5s default)
 
-**`src/components/app/cards/VideoCard.tsx`**
+**2. `supabase/functions/generate-video/index.ts`** — Add backend support:
+- Add `seedance-1.5-pro` to the `VIDEO_MODELS` map with Replicate model ID `bytedance/seedance-1.5-pro`
+- Add a `case 'seedance-1.5-pro'` in the input builder switch with parameters: `prompt`, `duration` (integer seconds), `aspect_ratio`, `generate_audio: true`, and optional `image` for I2V mode
+- No version hash needed — uses the standard model path
 
-1. **Top controls condition** (line 1440): Change from `(isPlaying || showControls) && (showControls || isTouchDevice)` to simply `showControls`. Controls only render when the user has interacted (hover on desktop, tap on mobile).
+### Seedance Input Parameters
+- `prompt` (string) — text prompt
+- `duration` (integer, 2-12, default 5) — video length in seconds
+- `aspect_ratio` (string, default "16:9")
+- `resolution` (string, default "720p")
+- `generate_audio` (boolean, default true)
+- `image` (uri, optional) — for image-to-video
+- `seed` (integer, optional)
 
-2. **Progress bar condition** (line 1491): Same fix — change `(showControls || isTouchDevice)` to just `showControls`.
-
-3. **Duration badge condition** (line 1553): Update the inverse condition accordingly — show duration badge when controls are hidden.
-
-4. **Add tap-to-toggle on mobile**: Ensure the existing `onClick` / touch handler on the video container calls `showControlsBriefly()` so tapping on mobile reveals controls for 2 seconds, matching the desktop hover behavior.
-
-This keeps the existing 2-second auto-hide timer and hover logic intact — just removes the permanent-on behavior for touch devices.
+### Pricing Note
+Replicate prices Seedance per second of output. Estimated ~$0.10-0.16/sec. For a 5s default video, base cost is roughly $0.50-0.80. Will set baseCostUsd to $0.65 (middle estimate) — can be adjusted after observing actual costs.
 
