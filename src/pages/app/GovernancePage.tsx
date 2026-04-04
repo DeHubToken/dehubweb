@@ -704,7 +704,7 @@ export default function GovernancePage() {
 
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
-      <SEOHead title="Governance — Vote on Community Proposals" description="Participate in decentralized governance on DeHub. Submit proposals, vote with your staking badge weight, and shape the platform's future." url="https://dehub.io/app/governance" />
+      <SEOHead title="Governance — Vote on Community Proposals" description="Participate in decentralized governance on DeHub. Submit proposals, vote with your staking badge weight, and shape the platform's future." url="https://dehub.io/app/governance" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Governance', url: 'https://dehub.io/app/governance', description: 'Decentralized governance — submit and vote on proposals to shape DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">Governance — Vote on Community Proposals</h1>
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
