@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import { LinkPreviewCard } from './LinkPreviewCard';
 import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/lib/api/link-preview';
 import { Skeleton } from '@/components/ui/skeleton';
+import { CommunityLinkEmbed, extractCommunitySlug } from '@/components/app/communities/CommunityLinkEmbed';
 
 interface LinkPreviewsProps {
   text: string;
@@ -14,11 +15,17 @@ export function LinkPreviews({ text }: LinkPreviewsProps) {
   const [removedUrls, setRemovedUrls] = useState<Set<string>>(new Set());
   const fetchedUrls = useRef<Set<string>>(new Set());
 
+  // Check for community links first
+  const communitySlug = extractCommunitySlug(text);
+
   useEffect(() => {
     const urls = extractUrlsFromText(text);
     
+    // Skip community URLs - they get their own embed
+    const nonCommunityUrls = urls.filter(url => !extractCommunitySlug(url));
+    
     // Filter out removed and already fetched URLs
-    const newUrls = urls.filter(
+    const newUrls = nonCommunityUrls.filter(
       url => !removedUrls.has(url) && !fetchedUrls.current.has(url) && !previews.has(url)
     );
 
@@ -58,19 +65,22 @@ export function LinkPreviews({ text }: LinkPreviewsProps) {
     });
   };
 
-  // Get URLs that should be displayed (in text, not removed)
-  const currentUrls = extractUrlsFromText(text).filter(url => !removedUrls.has(url));
+  // Get URLs that should be displayed (in text, not removed, not community links)
+  const currentUrls = extractUrlsFromText(text)
+    .filter(url => !removedUrls.has(url) && !extractCommunitySlug(url));
   const visiblePreviews = currentUrls
     .map(url => previews.get(url))
     .filter((p): p is LinkPreviewData => !!p);
   const loadingUrls = currentUrls.filter(url => loading.has(url));
 
-  if (visiblePreviews.length === 0 && loadingUrls.length === 0) {
-    return null;
-  }
+  const hasContent = communitySlug || visiblePreviews.length > 0 || loadingUrls.length > 0;
+  if (!hasContent) return null;
 
   return (
     <div className="mt-3 space-y-2">
+      {/* Community link embed */}
+      {communitySlug && <CommunityLinkEmbed slug={communitySlug} />}
+
       <AnimatePresence mode="popLayout">
         {visiblePreviews.map((preview) => (
           <LinkPreviewCard
