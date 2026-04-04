@@ -44,9 +44,9 @@ function SidebarAvatar({ src, address, name }: { src?: string | null; address?: 
   );
 }
 
-/** Sidebar chat badge — livechat messages have no badge data */
-function SidebarChatBadge({ address: _address }: { address: string }) {
-  return null;
+/** Sidebar chat badge */
+function SidebarChatBadge({ badgeBalance, username }: { badgeBalance?: number | null; username?: string | null }) {
+  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] ml-0.5" />;
 }
 
 /** Compact reaction pills for sidebar */
