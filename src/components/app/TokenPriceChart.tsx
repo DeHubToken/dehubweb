@@ -14,10 +14,13 @@ interface TokenPriceChartProps {
   externalUrl?: string;
 }
 
-const SELECTABLE_TIMEFRAMES: ChartTimeframe[] = ['7D', '30D', '90D', '1Y'];
+const SELECTABLE_TIMEFRAMES: ChartTimeframe[] = ['1D', '7D', '30D', '90D', '1Y'];
 
 function formatTime(timestamp: number, timeframe: ChartTimeframe = '7D'): string {
   const d = new Date(timestamp);
+  if (timeframe === '1D') {
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
   if (timeframe === '7D' || timeframe === '30D') {
     return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
   }
