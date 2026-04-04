@@ -65,6 +65,8 @@ interface PostContentAreaProps {
   setTitleText: (text: string) => void;
   // Category
   onOpenCategories?: () => void;
+  // Community share
+  communitySlug?: string | null;
 }
 
 // URL regex pattern - create fresh each time to avoid state issues with global flag
