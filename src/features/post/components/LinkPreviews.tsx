@@ -16,18 +16,19 @@ export function LinkPreviews({ text, communitySlug: externalCommunitySlug }: Lin
   const [removedUrls, setRemovedUrls] = useState<Set<string>>(new Set());
   const fetchedUrls = useRef<Set<string>>(new Set());
 
-  // Derive community slug from text, but latch it so it persists while typing.
-  // Reset if text no longer contains ANY URL with /app/communities/
-  const [communitySlug, setCommunitySlug] = useState<string | null>(null);
+  // Use externally provided community slug (from share), or detect from text
+  const [textCommunitySlug, setTextCommunitySlug] = useState<string | null>(null);
   useEffect(() => {
     const slug = extractCommunitySlug(text);
     if (slug) {
-      setCommunitySlug(slug);
-    } else if (communitySlug && !text.includes('/app/communities/')) {
-      // Text was fully cleared of community links — remove the card
-      setCommunitySlug(null);
+      setTextCommunitySlug(slug);
+    } else if (textCommunitySlug && !text.includes('/app/communities/')) {
+      setTextCommunitySlug(null);
     }
   }, [text]);
+
+  // External slug (from share button) takes priority and never disappears
+  const communitySlug = externalCommunitySlug || textCommunitySlug;
 
   useEffect(() => {
     const urls = extractUrlsFromText(text);
