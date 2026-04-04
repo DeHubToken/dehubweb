@@ -140,7 +140,7 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
   return (
     <div className="space-y-3">
       {tickerSymbol && matchedPair && (
-        <CashtagPriceCard pair={matchedPair} symbol={tickerSymbol} cmcData={cmcData} />
+        <CashtagPriceCard pair={matchedPair} symbol={`$${tickerSymbol}`} cmcData={cmcData} />
       )}
       {memberPosts.map((post, index) => {
         let card: React.ReactNode = null;
