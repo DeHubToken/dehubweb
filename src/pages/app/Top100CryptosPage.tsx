@@ -93,6 +93,8 @@ export default function Top100CryptosPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6">
+      <SEOHead title="Top 100 — Live Crypto Prices & Market Data" description="Track the top 100 cryptocurrencies by market cap with live prices, 24h changes and market data on DeHub." url="https://dehub.io/app/top-100" />
+      <h1 className="sr-only">Top 100 — Live Crypto Prices & Market Data</h1>
       <div className="flex items-center gap-3 mb-6">
         <button onClick={() => navigate(-1)} className="text-zinc-400 hover:text-white transition-colors">
           <ArrowLeft className="w-5 h-5" />

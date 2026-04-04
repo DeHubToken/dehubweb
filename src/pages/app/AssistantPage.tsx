@@ -1151,7 +1151,9 @@ export default function AssistantPage() {
   return (
     <div 
       className="flex flex-col h-full lg:h-screen relative overflow-hidden"
-      onDragOver={handleDragOver}
+      onDragOver={handleDragOver}>
+      <SEOHead title="AI Assistant — Chat, Generate Images & Video" description="Chat with DeHub's AI assistant. Generate images, create videos, get web search results, and explore AI capabilities — all in one place." url="https://dehub.io/app/assistant" />
+      <h1 className="sr-only">AI Assistant — Chat, Generate Images & Video</h1>
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >

@@ -273,6 +273,8 @@ export default function BuyCoinsPage() {
 
   return (
     <div className="min-h-screen p-3 sm:p-4">
+      <SEOHead title="Buy — Purchase Crypto on DeHub" description="Buy DHB and other cryptocurrencies directly on DeHub with your credit card. Fast checkout, multiple chains supported." url="https://dehub.io/app/buy" />
+      <h1 className="sr-only">Buy — Purchase Crypto on DeHub</h1>
       <div className="max-w-lg mx-auto space-y-4">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">

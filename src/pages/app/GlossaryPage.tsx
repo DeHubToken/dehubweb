@@ -204,6 +204,8 @@ export default function GlossaryPage() {
 
   return (
     <div className="px-2 pt-1 pb-6 sm:px-3 sm:pt-1 sm:pb-6 lg:pt-2 min-h-screen">
+      <SEOHead title="Glossary — Icons, Features & Web3 Terms" description="Learn what every icon, button and feature means on DeHub. A complete guide to the platform's UI, Web3 terms, staking badges and more." url="https://dehub.io/app/glossary" />
+      <h1 className="sr-only">Glossary — Icons, Features & Web3 Terms</h1>
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <img src={glossaryIcon} alt="Glossary" className="w-10 h-10 object-contain brightness-75" />
