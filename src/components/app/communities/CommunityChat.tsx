@@ -150,9 +150,9 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
     setReplyTo(null);
     try {
       await sendMessage(gifUrl, 'gif', gifUrl, replyToId, {
-        username: profile?.username || undefined,
-        displayName: profile?.displayName || undefined,
-        avatarUrl: profile?.avatarImageUrl || undefined,
+        username: profileData?.username || undefined,
+        displayName: profileData?.displayName || undefined,
+        avatarUrl: profileData?.avatarImageUrl || undefined,
       });
     } catch {
       // Error handled in hook
