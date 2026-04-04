@@ -1,5 +1,6 @@
 import { Crown, Shield, User, Check, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { CommunityMember } from '@/hooks/use-communities';
 import { usePendingCommunityMembers, useApproveMember, useRejectMember } from '@/hooks/use-communities';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
@@ -58,6 +59,7 @@ function PendingMemberRow({ member, communityId }: { member: CommunityMember; co
   const { data: profile } = useDeHubProfile({ userId: member.wallet_address });
   const approveMutation = useApproveMember();
   const rejectMutation = useRejectMember();
+  const { t } = useTranslation();
 
   const displayName = profile?.name || `${member.wallet_address.slice(0, 6)}...${member.wallet_address.slice(-4)}`;
   const handle = profile?.handle;
@@ -86,7 +88,7 @@ function PendingMemberRow({ member, communityId }: { member: CommunityMember; co
           disabled={approveMutation.isPending || rejectMutation.isPending}
           className="h-7 px-2.5 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/30 gap-1"
         >
-          <Check className="w-3.5 h-3.5" /> Approve
+          <Check className="w-3.5 h-3.5" /> {t('communities.approve')}
         </Button>
         <Button
           size="sm"
@@ -95,7 +97,7 @@ function PendingMemberRow({ member, communityId }: { member: CommunityMember; co
           disabled={approveMutation.isPending || rejectMutation.isPending}
           className="h-7 px-2.5 rounded-lg text-red-400 hover:bg-red-500/20 border border-white/[0.08] gap-1"
         >
-          <X className="w-3.5 h-3.5" /> Reject
+          <X className="w-3.5 h-3.5" /> {t('communities.reject')}
         </Button>
       </div>
     </div>
@@ -106,13 +108,14 @@ export function CommunityMembers({ members, communityId, isOwner }: CommunityMem
   const roleOrder: Record<string, number> = { owner: 0, admin: 1, moderator: 2, member: 3 };
   const sorted = [...members].sort((a, b) => (roleOrder[a.role] ?? 4) - (roleOrder[b.role] ?? 4));
   const { data: pendingMembers = [] } = usePendingCommunityMembers(isOwner ? communityId : undefined);
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-1">
       {isOwner && pendingMembers.length > 0 && (
         <div className="mb-4">
           <h3 className="text-sm font-medium text-amber-400 mb-2 px-1">
-            Pending Requests ({pendingMembers.length})
+            {t('communities.pendingRequests', { count: pendingMembers.length })}
           </h3>
           <div className="space-y-1.5">
             {pendingMembers.map(member => (

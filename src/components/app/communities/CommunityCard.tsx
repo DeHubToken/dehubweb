@@ -1,4 +1,5 @@
 import { Users, Lock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';
 
 interface CommunityCardProps {
@@ -8,12 +9,13 @@ interface CommunityCardProps {
 }
 
 export function CommunityCard({ community, isMember, onClick }: CommunityCardProps) {
+  const { t } = useTranslation();
+
   return (
     <button
       onClick={onClick}
       className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] transition-colors text-left relative overflow-hidden"
     >
-      {/* Subtle banner background fade */}
       {community.banner_url && (
         <div
           className="absolute inset-0 pointer-events-none"
@@ -27,7 +29,6 @@ export function CommunityCard({ community, isMember, onClick }: CommunityCardPro
           }}
         />
       )}
-      {/* Avatar */}
       <div className="w-12 h-12 rounded-xl bg-white/[0.08] flex items-center justify-center flex-shrink-0 overflow-hidden">
         {community.avatar_url ? (
           <img src={community.avatar_url} alt={community.name} className="w-full h-full object-cover" />
@@ -36,17 +37,16 @@ export function CommunityCard({ community, isMember, onClick }: CommunityCardPro
         )}
       </div>
 
-      {/* Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
           <span className="text-white font-medium text-sm truncate">{community.name}</span>
           {community.is_private && <Lock className="w-3 h-3 text-zinc-500 flex-shrink-0" />}
         </div>
-        <p className="text-zinc-500 text-xs truncate">{community.description || 'No description'}</p>
+        <p className="text-zinc-500 text-xs truncate">{community.description || t('communities.noDescription')}</p>
         <div className="flex items-center gap-3 mt-0.5">
-          <span className="text-zinc-600 text-xs">{community.member_count.toLocaleString()} members</span>
+          <span className="text-zinc-600 text-xs">{community.member_count.toLocaleString()} {t('communities.members')}</span>
           {isMember && (
-            <span className="text-xs text-emerald-500/80">Joined</span>
+            <span className="text-xs text-emerald-500/80">{t('communities.joined')}</span>
           )}
         </div>
       </div>

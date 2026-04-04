@@ -19,6 +19,7 @@ import { CashtagResultSwitcher } from '@/components/app/CashtagResultSwitcher';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
+import { useTranslation } from 'react-i18next';
 
 interface CommunityFeedProps {
   communitySlug: string;
@@ -30,7 +31,6 @@ interface CommunityFeedProps {
   tickerPairAddress?: string | null;
 }
 
-/** Extract creator address from any feed item type */
 function getCreatorId(post: FeedItem): string | undefined {
   switch (post.type) {
     case 'post': return (post as TextPost).author?.id?.toLowerCase();
@@ -44,8 +44,8 @@ function getCreatorId(post: FeedItem): string | undefined {
 export function CommunityFeed({ communitySlug, memberAddresses, isMember, tickerSymbol, tickerContractAddress, tickerChainId, tickerPairAddress }: CommunityFeedProps) {
   const [posts, setPosts] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
-  // Fetch live DexScreener data for the assigned ticker
   const { data: dexPairs = [] } = useDexScreenerSearchMulti(
     tickerSymbol ? `$${tickerSymbol}` : '',
     !!tickerSymbol
@@ -55,7 +55,6 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
     !!tickerSymbol
   );
 
-  // Find the exact pair matching saved contract address, or fall back to first result
   const matchedPair = useMemo(() => {
     if (!tickerSymbol || dexPairs.length === 0) return null;
     if (tickerContractAddress) {
@@ -89,7 +88,6 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
     return () => { cancelled = true; };
   }, [categoryTag]);
 
-  // Only show posts from members
   const memberPosts = useMemo(() => {
     return posts.filter(post => {
       const addr = getCreatorId(post);
@@ -116,7 +114,6 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
   if (memberPosts.length === 0) {
     return (
       <div className="space-y-3">
-        {/* Still show chart even with no posts */}
         {tickerSymbol && matchedPair && (
           <CashtagPriceCard pair={matchedPair} symbol={`$${tickerSymbol}`} cmcData={cmcData} />
         )}
@@ -124,12 +121,12 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
           <PenSquare className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
           <p className="text-zinc-500 text-sm">
             {isMember
-              ? 'No posts yet. Be the first to post in this community!'
-              : 'Join this community to see and create posts.'}
+              ? t('communities.noPosts')
+              : t('communities.joinToSeePosts')}
           </p>
           {isMember && (
             <p className="text-zinc-600 text-xs mt-2">
-              Select this community when creating a post to tag it here.
+              {t('communities.selectCommunityHint')}
             </p>
           )}
         </div>
