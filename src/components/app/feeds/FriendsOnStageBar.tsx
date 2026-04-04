@@ -116,17 +116,9 @@ export function FriendsOnStageBar() {
   const hostFriend = primary?.friends.find(f => f.role === 'host');
   const otherFriends = primary?.friends.filter(f => f !== hostFriend) ?? [];
 
-  // Render a zero-height placeholder when no friends on stage so layout never shifts
-  // when the bar eventually appears. The bar slides down from above the feed via
-  // a CSS transition on max-height (no layout shift to elements below).
+  // Fixed-height slot so the feed does not jump when this bar appears (CLS on /app).
   return (
-    <div
-      style={{
-        maxHeight: friendsOnStage.length > 0 ? '80px' : '0px',
-        overflow: 'hidden',
-        transition: 'max-height 0.3s ease',
-      }}
-    >
+    <div className="min-h-[52px] w-full shrink-0 mb-2 flex items-start">
     {friendsOnStage.length > 0 && <button
       onClick={() => openModal('browse')}
       className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl bg-white/[0.05] backdrop-blur-sm border border-white/[0.08] hover:bg-white/[0.08] transition-all group"

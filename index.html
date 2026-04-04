@@ -44,6 +44,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    <!-- LCP: header logo — same URL as DesktopSidebar / MobileHeader so browser discovers early -->
+    <link rel="preload" as="image" href="/dehub-header-logo.png" fetchpriority="high">
+
     <!-- Critical CSS — prevents white flash and CLS from unstyled root -->
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

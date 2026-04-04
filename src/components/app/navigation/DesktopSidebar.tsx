@@ -12,7 +12,6 @@ import { useAuth } from '@/contexts/AuthContext';
 
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
-import dehubLogo from '@/assets/dehub-logo-white.png';
 import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
 import { cn } from '@/lib/utils';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -112,9 +111,22 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             </button>
             <button onClick={handleLogoClick} className="block cursor-pointer">
               {isCollapsed ? (
-                <img src={dehubLogoCompact} alt="dehub" className="h-[32px] w-auto" />
+                <img
+                  src={dehubLogoCompact}
+                  alt="dehub"
+                  className="h-[32px] w-auto"
+                  decoding="async"
+                />
               ) : (
-                <img src={dehubLogo} alt="dehub" className="h-[40.6px] w-auto relative -top-[3px]" />
+                <img
+                  src="/dehub-header-logo.png"
+                  alt="dehub"
+                  className="h-[40.6px] w-auto relative -top-[3px]"
+                  fetchPriority="high"
+                  width={135}
+                  height={41}
+                  decoding="async"
+                />
               )}
             </button>
           </div>
