@@ -21,6 +21,7 @@ export interface Community {
   is_private: boolean;
   member_count: number;
   rules: any[];
+  ticker_symbol: string | null;
   created_at: string;
   updated_at: string;
 }
