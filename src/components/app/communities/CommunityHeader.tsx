@@ -1,8 +1,9 @@
 import { useRef, useState, useCallback } from 'react';
-import { Users, LogIn, LogOut, Crown, Camera } from 'lucide-react';
+import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { uploadCommunityMedia, useUpdateCommunity } from '@/hooks/use-communities';
+import { uploadCommunityMedia, useUpdateCommunity, usePinnedCommunities, usePinCommunity, useUnpinCommunity } from '@/hooks/use-communities';
 import type { Community } from '@/hooks/use-communities';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
 interface CommunityHeaderProps {
@@ -14,10 +15,16 @@ interface CommunityHeaderProps {
 }
 
 export function CommunityHeader({ community, isMember, isOwner, isPending, onJoinLeave }: CommunityHeaderProps) {
+  const { walletAddress } = useAuth();
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const updateMutation = useUpdateCommunity();
   const [uploading, setUploading] = useState<'avatar' | 'banner' | null>(null);
+
+  const { data: pinned = [] } = usePinnedCommunities(walletAddress);
+  const pinMutation = usePinCommunity();
+  const unpinMutation = useUnpinCommunity();
+  const isPinned = pinned.some(p => p.community_id === community.id);
 
   const handleMediaChange = useCallback(async (file: File, type: 'avatar' | 'banner') => {
     setUploading(type);
@@ -33,6 +40,16 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
       setUploading(null);
     }
   }, [community.id, community.slug, updateMutation]);
+
+  const handlePinToggle = () => {
+    if (isPinned) {
+      unpinMutation.mutate(community.id);
+    } else if (pinned.length < 3) {
+      pinMutation.mutate({ communityId: community.id, displayOrder: pinned.length });
+    } else {
+      toast.error('You can only pin up to 3 communities');
+    }
+  };
 
   return (
     <div className="px-3 pt-3 pb-4">
@@ -112,24 +129,42 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
           <h1 className="text-lg font-bold text-white truncate">{community.name}</h1>
           <p className="text-zinc-500 text-sm">{community.member_count.toLocaleString()} members</p>
         </div>
-        <Button
-          size="sm"
-          disabled={isPending || isOwner}
-          onClick={onJoinLeave}
-          className={`rounded-xl gap-1.5 flex-shrink-0 ${
-            isMember 
-              ? 'bg-white/10 border border-white/20 text-white hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30'
-              : 'bg-white text-black hover:bg-white/90'
-          }`}
-        >
-          {isOwner ? (
-            <><Crown className="w-3.5 h-3.5" /> Owner</>
-          ) : isMember ? (
-            <><LogOut className="w-3.5 h-3.5" /> Leave</>
-          ) : (
-            <><LogIn className="w-3.5 h-3.5" /> Join</>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {isMember && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handlePinToggle}
+              disabled={pinMutation.isPending || unpinMutation.isPending}
+              className={`rounded-xl gap-1.5 h-9 px-3 ${
+                isPinned
+                  ? 'bg-white/10 border border-white/20 text-white hover:bg-white/15'
+                  : 'bg-white/[0.06] border border-white/[0.1] text-zinc-400 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              {isPinned ? <PinOff className="w-3.5 h-3.5" /> : <Pin className="w-3.5 h-3.5" />}
+              {isPinned ? 'Unpin' : 'Pin'}
+            </Button>
           )}
-        </Button>
+          <Button
+            size="sm"
+            disabled={isPending || isOwner}
+            onClick={onJoinLeave}
+            className={`rounded-xl gap-1.5 ${
+              isMember 
+                ? 'bg-white/10 border border-white/20 text-white hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30'
+                : 'bg-white text-black hover:bg-white/90'
+            }`}
+          >
+            {isOwner ? (
+              <><Crown className="w-3.5 h-3.5" /> Owner</>
+            ) : isMember ? (
+              <><LogOut className="w-3.5 h-3.5" /> Leave</>
+            ) : (
+              <><LogIn className="w-3.5 h-3.5" /> Join</>
+            )}
+          </Button>
+        </div>
       </div>
 
       {community.description && (
