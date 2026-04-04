@@ -118,7 +118,7 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
       <div className="space-y-3">
         {/* Still show chart even with no posts */}
         {tickerSymbol && matchedPair && (
-          <CashtagPriceCard pair={matchedPair} symbol={tickerSymbol} cmcData={cmcData} />
+          <CashtagPriceCard pair={matchedPair} symbol={`$${tickerSymbol}`} cmcData={cmcData} />
         )}
         <div className="text-center py-12">
           <PenSquare className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
