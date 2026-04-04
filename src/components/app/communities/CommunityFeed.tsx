@@ -124,16 +124,25 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
         </div>
       )}
       {memberPosts.map((post, index) => {
+        let card: React.ReactNode = null;
         switch (post.type) {
           case 'post':
-            return <PostCard key={post.id} post={post as TextPost} />;
+            card = <PostCard key={post.id} post={post as TextPost} />;
+            break;
           case 'video':
-            return <VideoCard key={post.id} video={post as VideoItem} aboveFold={index < 2} />;
+            card = <VideoCard key={post.id} video={post as VideoItem} aboveFold={index < 2} />;
+            break;
           case 'image':
-            return <ImageCard key={post.id} post={post as ImagePost} aboveFold={index < 2} />;
+            card = <ImageCard key={post.id} post={post as ImagePost} aboveFold={index < 2} />;
+            break;
           default:
             return null;
         }
+        return (
+          <div key={post.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+            {card}
+          </div>
+        );
       })}
     </div>
   );

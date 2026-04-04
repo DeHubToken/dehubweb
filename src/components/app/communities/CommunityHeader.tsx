@@ -261,8 +261,34 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
         </div>
       )}
 
-      {community.description && (
-        <p className="text-zinc-400 text-sm mt-3 px-2">{community.description}</p>
+      {isOwner && editingDesc ? (
+        <div className="px-2 mt-3 flex items-start gap-1.5">
+          <textarea
+            value={descInput}
+            onChange={e => setDescInput(e.target.value)}
+            rows={2}
+            className="flex-1 bg-white/[0.06] border border-white/[0.1] rounded-lg px-2.5 py-1.5 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-white/20 resize-none"
+            placeholder="Community description..."
+            autoFocus
+          />
+          <button onClick={() => {
+            updateMutation.mutate({ id: community.id, description: descInput.trim() || null } as any, { onSuccess: () => setEditingDesc(false) });
+          }} className="text-white hover:text-green-400 mt-1"><Check className="w-4 h-4" /></button>
+          <button onClick={() => { setDescInput(community.description || ''); setEditingDesc(false); }} className="text-zinc-500 hover:text-white mt-1"><X className="w-3.5 h-3.5" /></button>
+        </div>
+      ) : (
+        <div className="px-2 mt-3 group/desc flex items-start gap-1.5">
+          {community.description ? (
+            <p className="text-zinc-400 text-sm">{community.description}</p>
+          ) : isOwner ? (
+            <p className="text-zinc-600 text-sm italic">Add a description...</p>
+          ) : null}
+          {isOwner && (
+            <button onClick={() => setEditingDesc(true)} className="opacity-0 group-hover/desc:opacity-100 text-zinc-500 hover:text-white transition-all flex-shrink-0 mt-0.5">
+              <Pencil className="w-3 h-3" />
+            </button>
+          )}
+        </div>
       )}
     </div>
   );
