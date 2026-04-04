@@ -19,6 +19,7 @@ export interface CommunityChatMessage {
   username: string | null;
   display_name: string | null;
   avatar_url: string | null;
+  badge_balance: number | null;
   content: string;
   message_type: string;
   image_url: string | null;
@@ -120,7 +121,7 @@ export function useCommunityChat(communityId: string | undefined) {
     messageType: string = 'text',
     imageUrl?: string,
     replyToId?: string,
-    userProfile?: { username?: string; displayName?: string; avatarUrl?: string }
+    userProfile?: { username?: string; displayName?: string; avatarUrl?: string; badgeBalance?: number }
   ) => {
     if (!communityId || !walletAddress) return;
 
@@ -130,6 +131,7 @@ export function useCommunityChat(communityId: string | undefined) {
       username: userProfile?.username || null,
       display_name: userProfile?.displayName || null,
       avatar_url: userProfile?.avatarUrl || null,
+      badge_balance: userProfile?.badgeBalance || null,
       content,
       message_type: messageType,
       image_url: imageUrl || null,

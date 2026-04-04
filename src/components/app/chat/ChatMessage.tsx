@@ -6,6 +6,7 @@ import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { TranslatableText, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useTextTranslation } from '../TranslatableText';
 import { useNavigate } from 'react-router-dom';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,6 +57,7 @@ export interface Message {
   userName: string;
   userHandle?: string;
   userAvatar?: string;
+  badgeBalance?: number | null;
   content: string;
   timestamp: Date;
   type: 'text' | 'image' | 'gif';
@@ -100,9 +102,9 @@ function ModeratorBadge({ address, moderators }: { address: string; moderators?:
   );
 }
 
-/** Inline staking badge — no longer fetched via edge function (livechat has no badge data) */
-function StakingBadgeInline({ address: _address }: { address: string }) {
-  return null;
+/** Inline staking badge for chat messages */
+function StakingBadgeInline({ badgeBalance, username }: { badgeBalance?: number | null; username?: string }) {
+  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] ml-1" />;
 }
 
 /** Reaction pills displayed below a message */
@@ -262,7 +264,7 @@ export function ChatMessage({
             >
               {message.userName}
             </button>
-            <StakingBadgeInline address={message.userId} />
+            <StakingBadgeInline badgeBalance={message.badgeBalance} username={message.userHandle} />
           </span>
           <ModeratorBadge address={message.userId} moderators={moderators} />
           {message.isPinned && (

@@ -18,6 +18,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { toast } from 'sonner';
 import type { ReactionData } from '../chat/ChatMessage';
 
@@ -44,9 +45,9 @@ function SidebarAvatar({ src, address, name }: { src?: string | null; address?: 
   );
 }
 
-/** Sidebar chat badge — livechat messages have no badge data */
-function SidebarChatBadge({ address: _address }: { address: string }) {
-  return null;
+/** Sidebar chat badge */
+function SidebarChatBadge({ badgeBalance, username }: { badgeBalance?: number | null; username?: string | null }) {
+  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] ml-0.5" />;
 }
 
 /** Compact reaction pills for sidebar */
@@ -269,7 +270,7 @@ export function SidebarChat() {
                     <div className="min-w-0 flex-1">
                       <span className="relative inline-flex items-baseline gap-1.5">
                         <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>{name}</button>
-                        <SidebarChatBadge address={msg.sender_address} />
+                        <SidebarChatBadge badgeBalance={msg.sender_badge_balance} username={msg.sender_username} />
                         <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
                       </span>
                       {msg.message_type === 'image' && msg.image_url ? (

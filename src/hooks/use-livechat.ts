@@ -27,6 +27,7 @@ export interface SupabaseLiveChatMessage {
   sender_username: string | null;
   sender_display_name: string | null;
   sender_avatar_url: string | null;
+  sender_badge_balance?: number | null;
   content: string;
   message_type: string;
   image_url: string | null;
@@ -126,6 +127,7 @@ function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId
     sender_username: (sender?.username ?? raw.senderUsername ?? raw.sender_username ?? null) as string | null,
     sender_display_name: (sender?.displayName ?? sender?.display_name ?? raw.senderDisplayName ?? raw.sender_display_name ?? null) as string | null,
     sender_avatar_url: (sender?.avatarUrl ?? sender?.avatarImageUrl ?? sender?.avatar_url ?? sender?.avatar_image_url ?? raw.senderAvatarUrl ?? raw.sender_avatar_url ?? null) as string | null,
+    sender_badge_balance: Number(sender?.badgeBalance ?? sender?.badge_balance ?? raw.senderBadgeBalance ?? raw.sender_badge_balance ?? 0) || null,
     content: msg.content || (typeof gifUrl === 'string' ? gifUrl : ''),
     message_type: normalizeMsgType(msg.type || msg.messageType),
     image_url: msg.imageUrl || (typeof gifUrl === 'string' ? gifUrl : null) || ((raw as any).media?.[0]?.url ?? null),
@@ -191,6 +193,7 @@ function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChatMessage
     sender_username: (sender?.username ?? m.senderUsername ?? m.sender_username ?? null) as string | null,
     sender_display_name: (sender?.displayName ?? sender?.display_name ?? m.senderDisplayName ?? m.sender_display_name ?? null) as string | null,
     sender_avatar_url: (sender?.avatarUrl ?? sender?.avatarImageUrl ?? sender?.avatar_url ?? sender?.avatar_image_url ?? m.senderAvatarUrl ?? m.sender_avatar_url ?? null) as string | null,
+    sender_badge_balance: Number(sender?.badgeBalance ?? sender?.badge_balance ?? m.senderBadgeBalance ?? m.sender_badge_balance ?? 0) || null,
     content: (m.content ?? '') as string,
     message_type: normalizeMsgType((m.type ?? m.messageType ?? m.message_type) as string | undefined),
     image_url: (m.imageUrl ?? m.image_url ?? (Array.isArray(m.media) ? (m.media as any[])[0]?.url : null) ?? null) as string | null,

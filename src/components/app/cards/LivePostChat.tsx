@@ -6,6 +6,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { MessageSquare, Send, Loader2, Users, Mic, Languages, RotateCcw } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { UserMentionDropdown } from '@/components/app/mentions';
@@ -44,9 +45,9 @@ function LiveChatAvatar({ src, address, name }: { src?: string | null; address?:
   );
 }
 
-/** Live chat badge — livechat messages have no badge data, removed edge function call */
-function LiveChatBadge({ address: _address }: { address: string }) {
-  return null;
+/** Live chat badge */
+function LiveChatBadge({ badgeBalance, username }: { badgeBalance?: number | null; username?: string | null }) {
+  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] ml-0.5" />;
 }
 
 /** Translatable text message with inline translate button */
@@ -229,7 +230,7 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
                         <span className="text-xs font-semibold text-white truncate max-w-[120px]">
                           {displayName}
                         </span>
-                        <LiveChatBadge address={msg.sender_address} />
+                        <LiveChatBadge badgeBalance={msg.sender_badge_balance} username={msg.sender_username} />
                       </span>
                     </div>
                     {msg.message_type === 'voice' && msg.image_url ? (

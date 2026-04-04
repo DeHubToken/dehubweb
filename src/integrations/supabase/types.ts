@@ -345,6 +345,7 @@ export type Database = {
       community_chat_messages: {
         Row: {
           avatar_url: string | null
+          badge_balance: number | null
           community_id: string
           content: string
           created_at: string
@@ -359,6 +360,7 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          badge_balance?: number | null
           community_id: string
           content?: string
           created_at?: string
@@ -373,6 +375,7 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          badge_balance?: number | null
           community_id?: string
           content?: string
           created_at?: string

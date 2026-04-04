@@ -7,6 +7,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Users, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn } from 'lucide-react';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -139,6 +140,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
         username: profileData?.handle || undefined,
         displayName: profileData?.name || undefined,
         avatarUrl: profileData?.avatarUrl || undefined,
+        badgeBalance: user?.badgeBalance || undefined,
       });
     } catch {
       // Error handled in hook
@@ -158,6 +160,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
         username: profileData?.handle || undefined,
         displayName: profileData?.name || undefined,
         avatarUrl: profileData?.avatarUrl || undefined,
+        badgeBalance: user?.badgeBalance || undefined,
       });
     } catch {
       // Error handled in hook
@@ -239,6 +242,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                           <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>
                             {name}
                           </button>
+                          <BadgeIcon badgeBalance={(msg as any).badge_balance} username={msg.username} className="w-[9px] h-[9px]" />
                           <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
                         </span>
                         {msg.message_type === 'gif' && msg.image_url ? (
