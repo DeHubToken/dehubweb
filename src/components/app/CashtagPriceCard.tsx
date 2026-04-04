@@ -159,6 +159,8 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                 symbol: pair.baseToken.symbol,
                 displayName: cmcData?.name || pair.baseToken.name,
                 logo: cmcData?.logo || pair.info?.imageUrl,
+                pairAddress: pair.pairAddress,
+                chainId: pair.chainId,
               });
             }}
             className={cn(
