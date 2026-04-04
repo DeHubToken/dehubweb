@@ -215,6 +215,11 @@ function generateMetaHTML(data: {
   `
             : ""
         }
+
+  ${data.jsonLd ? `
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">${JSON.stringify(data.jsonLd)}</script>
+  ` : ""}
 </head>
 <body style="font-family: sans-serif; background: black; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
   <div style="max-width: 600px; text-align: center; padding: 20px;">
