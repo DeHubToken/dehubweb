@@ -161,8 +161,9 @@ function ImageCarousel({
         <div className="flex">
           {images.map((img, idx) => (
             <div key={idx} className="flex-[0_0_100%] min-w-0">
-              <div 
+              <div
                 className="relative cursor-pointer max-h-[600px] overflow-hidden"
+                style={{ minHeight: '200px' }}
                 onClick={(e) => {
                   e.stopPropagation();
                   onImageClick(idx);
@@ -174,7 +175,6 @@ function ImageCarousel({
                   alt=""
                   className="absolute inset-0 w-full h-full object-cover scale-110 blur-[24px] saturate-[180%] opacity-60"
                   aria-hidden="true"
-                  loading="lazy"
                   decoding="async"
                 />
                 <div className="absolute inset-0 bg-black/40" aria-hidden="true" />

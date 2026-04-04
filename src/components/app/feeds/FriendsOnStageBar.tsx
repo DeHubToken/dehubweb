@@ -111,15 +111,23 @@ export function FriendsOnStageBar() {
     return Array.from(map.values());
   }, [friendsOnStage]);
 
-  if (friendsOnStage.length === 0) return null;
-
   // Show first stage group (most relevant)
   const primary = stageGroups[0];
-  const hostFriend = primary.friends.find(f => f.role === 'host');
-  const otherFriends = primary.friends.filter(f => f !== hostFriend);
+  const hostFriend = primary?.friends.find(f => f.role === 'host');
+  const otherFriends = primary?.friends.filter(f => f !== hostFriend) ?? [];
 
+  // Render a zero-height placeholder when no friends on stage so layout never shifts
+  // when the bar eventually appears. The bar slides down from above the feed via
+  // a CSS transition on max-height (no layout shift to elements below).
   return (
-    <button
+    <div
+      style={{
+        maxHeight: friendsOnStage.length > 0 ? '80px' : '0px',
+        overflow: 'hidden',
+        transition: 'max-height 0.3s ease',
+      }}
+    >
+    {friendsOnStage.length > 0 && <button
       onClick={() => openModal('browse')}
       className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl bg-white/[0.05] backdrop-blur-sm border border-white/[0.08] hover:bg-white/[0.08] transition-all group"
     >
@@ -177,7 +185,8 @@ export function FriendsOnStageBar() {
         </span>
         <span className="text-[10px] font-semibold text-red-400 uppercase tracking-wide">Live</span>
       </div>
-    </button>
+    </button>}
+    </div>
   );
 }
 
