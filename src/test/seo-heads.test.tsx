@@ -224,16 +224,6 @@ vi.mock('@/assets/trophy-icon.png', () => ({ default: '' }));
 vi.mock('@/assets/features-lightbulb.png', () => ({ default: '' }));
 vi.mock('@/assets/glossary-icon.png', () => ({ default: '' }));
 
-// Wrapper for rendering with required providers
-function Wrapper({ children }: { children: React.ReactNode }) {
-  return (
-    <HelmetProvider>
-      <MemoryRouter>
-        {children}
-      </MemoryRouter>
-    </HelmetProvider>
-  );
-}
 
 // List of pages that should have SEOHead + hidden H1
 const PAGE_CASES: { name: string; path: string; h1Substring: string }[] = [
