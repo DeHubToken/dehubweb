@@ -34,7 +34,7 @@ const HOME_SCROLL_POSITION_KEY = 'home-scroll-position';
 
 function AppLayoutContent({ children }: AppLayoutContentProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { isPostModalOpen, closePostModal, pendingFiles, clearPendingFiles, initialText, clearInitialText } = useGlobalDropZone();
+  const { isPostModalOpen, closePostModal, pendingFiles, clearPendingFiles, initialText, clearInitialText, initialCategory, clearInitialCategory } = useGlobalDropZone();
   const { isCollapsed } = useSidebarCollapse();
   const location = useLocation();
   const navigate = useNavigate();
