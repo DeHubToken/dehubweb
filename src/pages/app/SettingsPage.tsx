@@ -160,7 +160,7 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
       <SEOHead title="Settings — Manage Your Account" description="Customize your DeHub experience. Update your profile, privacy settings, notification preferences, and connected wallets." url="https://dehub.io/app/settings" />
-      <h1 className="sr-only">DeHub Settings — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <h1 className="text-xs text-zinc-500 mb-2 px-3 sm:px-4 pt-2 font-medium">DeHub Settings — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">

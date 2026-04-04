@@ -827,7 +827,7 @@ export default function ExplorePage() {
   return (
     <div className="min-h-screen">
       <SEOHead title="Explore - Trending Creators, Posts & Topics" description="Discover trending content, viral posts, top creators and popular topics on DeHub — the open source, user owned and censorship resistant social media platform." url="https://dehub.io/app/explore" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Explore DeHub', url: 'https://dehub.io/app/explore', description: 'Discover trending content, creators and topics on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
-      <h1 className="sr-only">Explore DeHub — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <h1 className="text-xs text-zinc-500 mb-2 px-3 sm:px-4 pt-2 font-medium">Explore DeHub — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Search Header - Bento Style */}
       <div className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 space-y-2 sm:space-y-3">
         {/* Search Input Bento */}
