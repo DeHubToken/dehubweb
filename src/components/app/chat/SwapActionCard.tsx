@@ -49,6 +49,14 @@ export function SwapActionCard({ action, autoQuote = false }: SwapActionCardProp
   const [error, setError] = useState<string | null>(null);
   const [autoQuoteDone, setAutoQuoteDone] = useState(false);
 
+  // Auto-fetch quote on mount if autoQuote is enabled
+  useEffect(() => {
+    if (autoQuote && !autoQuoteDone && status === 'idle') {
+      setAutoQuoteDone(true);
+      handleGetQuote();
+    }
+  }, [autoQuote, autoQuoteDone, status]);
+
   const handleGetQuote = useCallback(async () => {
     if (!isAutoSwapSupported(BASE_CHAIN_ID)) {
       setError('Swaps are only supported on Base chain');
