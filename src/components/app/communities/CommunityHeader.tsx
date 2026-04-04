@@ -136,6 +136,41 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
           )}
         </div>
         <div className="flex items-center gap-2 flex-shrink-0 pt-[39px]">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="rounded-xl gap-1.5 h-9 px-3 bg-white/[0.06] border border-white/[0.1] text-zinc-400 hover:text-white hover:bg-white/10"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                Share
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-48 p-1.5">
+              <button
+                onClick={() => {
+                  const url = `${window.location.origin}/app/communities/${community.slug}`;
+                  openPostModal(url);
+                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-white hover:bg-white/10 transition-colors"
+              >
+                <FileText className="w-4 h-4 text-zinc-400" />
+                Post
+              </button>
+              <button
+                onClick={() => {
+                  const url = `${window.location.origin}/app/communities/${community.slug}`;
+                  navigator.clipboard.writeText(url);
+                  toast.success('Link copied!');
+                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-white hover:bg-white/10 transition-colors"
+              >
+                <Link2 className="w-4 h-4 text-zinc-400" />
+                Copy Link
+              </button>
+            </PopoverContent>
+          </Popover>
           {isMember && (
             <Button
               size="sm"
