@@ -19,6 +19,7 @@ export interface CommunityChatMessage {
   username: string | null;
   display_name: string | null;
   avatar_url: string | null;
+  badge_balance: number | null;
   content: string;
   message_type: string;
   image_url: string | null;
