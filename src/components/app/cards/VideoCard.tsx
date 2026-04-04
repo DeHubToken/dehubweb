@@ -34,8 +34,6 @@ import { TranslatableText, SharedTranslationProvider, useTranslation } from '../
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
-import { EditPostModal } from '../modals/EditPostModal';
-import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { QuotePostModal } from '../modals/QuotePostModal';
 import { TipModal } from '../modals/TipModal';
@@ -463,7 +461,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [showPPVDrawer, setShowPPVDrawer] = useState(false);
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
@@ -477,6 +474,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const { walletAddress, openLoginModal } = useAuth();
   const { autoplayEnabled } = useAutoplay();
   const isOwnPost = walletAddress && video.creatorId?.toLowerCase() === walletAddress.toLowerCase();
+  const openEditPostPage = useCallback(() => {
+    setShowOptionsDrawer(false);
+    navigate(`/app/post/${video.id}/info?edit=1`);
+  }, [navigate, video.id]);
   const [isMuted, setIsMuted] = useState(() => video.isAudio ? false : videoPlaybackManager.globalMuted);
   const [showControls, setShowControls] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -1186,7 +1187,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     <>
                       <div className="border-t border-white/10 my-1" />
                       <button
-                        onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowEditModal(true), 300); }}
+                        onClick={openEditPostPage}
                         className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                       >
                         <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
@@ -1785,7 +1786,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               <>
                 <div className="border-t border-white/10 my-1" />
                 <button
-                  onClick={() => { setShowOptionsDrawer(false); setShowEditModal(true); }}
+                  onClick={openEditPostPage}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                 >
                   <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
@@ -1801,19 +1802,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </div>
         </DrawerContent>
       </Drawer>
-
-      {/* Edit Post Modal */}
-      <EditPostModal
-        open={showEditModal}
-        onOpenChange={setShowEditModal}
-        tokenId={video.id}
-        currentTitle={video.title}
-        currentDescription={video.description}
-        currentCategories={video.categories}
-        onSuccess={(edited) => {
-          applyOptimisticEdit(queryClient, video.id, edited);
-        }}
-      />
 
       {/* Delete Post Modal */}
       <DeletePostModal

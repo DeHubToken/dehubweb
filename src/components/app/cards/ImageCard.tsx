@@ -28,8 +28,6 @@ import { useTranslation, LANGUAGE_NAMES, renderTextWithLinks } from '../Translat
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
-import { EditPostModal } from '../modals/EditPostModal';
-import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { QuotePostModal } from '../modals/QuotePostModal';
@@ -317,7 +315,6 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [showReportModal, setShowReportModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showTranslationSheet, setShowTranslationSheet] = useState(false);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
@@ -333,6 +330,10 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
   const isOwnPost = walletAddress && post.creatorId?.toLowerCase() === walletAddress.toLowerCase();
+  const openEditPostPage = useCallback(() => {
+    setShowOptionsDrawer(false);
+    navigate(`/app/post/${post.id}/info?edit=1`);
+  }, [navigate, post.id]);
   
   // PPV/Bounty/Locked status - bypass for owners & already-unlocked content
   const [locallyUnlocked, setLocallyUnlocked] = useState(false);
@@ -525,7 +526,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                   <>
                     <div className="border-t border-white/10 my-1" />
                     <button
-                      onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowEditModal(true), 300); }}
+                      onClick={openEditPostPage}
                       className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                     >
                       <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
@@ -803,19 +804,6 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         onOpenChange={setShowReportModal}
         tokenId={post.id}
         contentType="image"
-      />
-
-      {/* Edit Post Modal */}
-      <EditPostModal
-        open={showEditModal}
-        onOpenChange={setShowEditModal}
-        tokenId={post.id}
-        currentTitle={post.title}
-        currentDescription={post.description}
-        currentCategories={post.categories}
-        onSuccess={(edited) => {
-          applyOptimisticEdit(queryClient, post.id, edited);
-        }}
       />
 
       {/* Delete Post Modal */}
