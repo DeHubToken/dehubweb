@@ -5,10 +5,7 @@
  *   2. A meta description
  *   3. A visually-hidden <h1> element
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { HelmetProvider } from 'react-helmet-async';
-import { MemoryRouter } from 'react-router-dom';
+import { describe, it, expect, vi } from 'vitest';
 
 // ---- Heavy mocks to avoid pulling in wallets, supabase, etc. ----
 
