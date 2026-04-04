@@ -23,11 +23,11 @@ const MIN_W = 220;
 const MIN_H = 160;
 const DEFAULT_W = 320;
 const DEFAULT_H = 220;
-const TIMEFRAMES: ChartTimeframe[] = ['1D', '7D', '30D', '90D', '1Y'];
+const TIMEFRAMES: ChartTimeframe[] = ['7D', '30D', '90D', '1Y'];
 
 export function FloatingChartPiP({ item, index, onClose, onUpdate }: FloatingChartPiPProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [timeframe, setTimeframe] = useState<ChartTimeframe>('1D');
+  const [timeframe, setTimeframe] = useState<ChartTimeframe>('7D');
 
   const [size, setSize] = useState({ w: item.width || DEFAULT_W, h: item.height || DEFAULT_H });
   const [position, setPosition] = useState({
@@ -208,7 +208,7 @@ export function FloatingChartPiP({ item, index, onClose, onUpdate }: FloatingCha
                 }}
                 labelFormatter={(t: number) => {
                   const d = new Date(t);
-                  if (timeframe === '1D') return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                  if (timeframe === '7D') return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
                   return d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 }}
                 formatter={(value: number) => {

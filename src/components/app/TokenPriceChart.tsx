@@ -1,5 +1,5 @@
 import { useMemo, useRef, useEffect, useState } from 'react';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceDot } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import type { PricePoint, ChartTimeframe } from '@/hooks/use-token-chart';
 import { Loader2, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -14,13 +14,10 @@ interface TokenPriceChartProps {
   externalUrl?: string;
 }
 
-const SELECTABLE_TIMEFRAMES: ChartTimeframe[] = ['1D', '7D', '30D', '90D', '1Y'];
+const SELECTABLE_TIMEFRAMES: ChartTimeframe[] = ['7D', '30D', '90D', '1Y'];
 
-function formatTime(timestamp: number, timeframe: ChartTimeframe = '1D'): string {
+function formatTime(timestamp: number, timeframe: ChartTimeframe = '7D'): string {
   const d = new Date(timestamp);
-  if (timeframe === '1D') {
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
   if (timeframe === '7D' || timeframe === '30D') {
     return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
   }
@@ -33,18 +30,13 @@ function formatTooltipPrice(value: number): string {
   return `$${value.toFixed(8)}`;
 }
 
-function formatTooltipLabel(timestamp: number, timeframe: ChartTimeframe = '1D'): string {
+function formatTooltipLabel(timestamp: number, timeframe: ChartTimeframe = '7D'): string {
   const d = new Date(timestamp);
-  if (timeframe === '1D') {
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
   return d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) +
     ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframeChange, externalUrl }: TokenPriceChartProps) {
-  const isSinglePoint = data.length === 1;
-
+export function TokenPriceChart({ data, isLoading, timeframe = '7D', onTimeframeChange, externalUrl }: TokenPriceChartProps) {
   const isPositive = useMemo(() => {
     if (data.length < 2) return true;
     return data[data.length - 1].price >= data[0].price;
@@ -109,17 +101,6 @@ export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframe
             dot={false}
             activeDot={{ r: 4, fill: color, stroke: '#18181b', strokeWidth: 2 }}
           />
-          {isSinglePoint && (
-            <ReferenceDot
-              x={data[0].time}
-              y={data[0].price}
-              r={4}
-              fill={color}
-              stroke="#18181b"
-              strokeWidth={2}
-              isFront
-            />
-          )}
         </AreaChart>
       </ResponsiveContainer>
     </div>
