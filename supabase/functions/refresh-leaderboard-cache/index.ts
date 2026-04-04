@@ -501,23 +501,34 @@ async function computeSnapshotDelta(
       .map((entry) => {
         const addr = entry.account.toLowerCase();
         let currentVal: number;
+        let currentFromOnChain = false;
         if (currentMap) {
           currentVal = currentMap.get(addr) || 0;
+          // If currentMap came from on-chain lookup (no today snapshot), staking is NOT included
+          // If currentMap came from today's snapshot, staking IS already included
+          // We track this: snapshot path sets currentMap from snapshot data which already has staking baked in
+          // The on-chain path (line ~476) fetches raw on-chain — staking NOT included
+          if (!currentSnaps || currentSnaps.length === 0) {
+            currentFromOnChain = true;
+          }
         } else {
           currentVal = getEntryValue(entry);
+          // API enriched entries already have staking added (line ~789)
         }
-        // Add DB staking to current value for holdings
-        if (snapshotStakedCurrent) {
+        // Only add DB staking if current value came from raw on-chain (not from snapshot/API which already includes it)
+        if (snapshotStakedCurrent && currentFromOnChain) {
           currentVal += snapshotStakedCurrent.get(addr) || 0;
         }
 
         // Check snapshot first, then hybrid on-chain for new wallets
         let pastVal = pastMap.get(addr);
+        let pastFromOnChain = false;
         if (pastVal === undefined && hybridPastMap) {
           pastVal = hybridPastMap.get(addr);
+          pastFromOnChain = true;
         }
-        // Add DB staking to past value for holdings
-        if (snapshotStakedPast && pastVal !== undefined) {
+        // Only add DB staking to past value if it came from on-chain (not from snapshot which already includes it)
+        if (snapshotStakedPast && pastVal !== undefined && pastFromOnChain) {
           pastVal += snapshotStakedPast.get(addr) || 0;
         }
         const isExtraWallet = EXTRA_WALLET_ADDRESSES.has(addr);
