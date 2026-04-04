@@ -10,13 +10,6 @@ import { toast } from 'sonner';
 import { useUserCommunities } from '@/hooks/use-communities';
 import { useAuth } from '@/contexts/AuthContext';
 import type { Currency } from '../types';
-import { Switch } from '@/components/ui/switch';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { getCategories, type DeHubCategory } from '@/lib/api/dehub';
-import { toast } from 'sonner';
-import type { Currency } from '../types';
 
 // DHB is the only supported token
 const DHB_INFO = {
