@@ -101,9 +101,9 @@ function ModeratorBadge({ address, moderators }: { address: string; moderators?:
   );
 }
 
-/** Inline staking badge — no longer fetched via edge function (livechat has no badge data) */
-function StakingBadgeInline({ address: _address }: { address: string }) {
-  return null;
+/** Inline staking badge for chat messages */
+function StakingBadgeInline({ badgeBalance, username }: { badgeBalance?: number | null; username?: string }) {
+  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] ml-1" />;
 }
 
 /** Reaction pills displayed below a message */
