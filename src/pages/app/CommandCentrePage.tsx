@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { OverviewTab } from '@/components/app/command-centre/OverviewTab';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
+import { SEOHead } from '@/components/SEOHead';
 
 export default function CommandCentrePage() {
   const { t } = useTranslation();
