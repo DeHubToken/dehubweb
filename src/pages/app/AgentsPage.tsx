@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Bot, Plus, Copy, Trash2, Eye, EyeOff, ExternalLink } from 'lucide-react';
 import { PageHeader } from '@/components/app/PageHeader';
+import { SEOHead } from '@/components/SEOHead';
 
 interface AIAgent {
   id: string;
