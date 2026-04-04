@@ -22,6 +22,7 @@ import { toast } from 'sonner';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useTranslation } from 'react-i18next';
+import { SEOHead } from '@/components/SEOHead';
 
 import dehubCoin from '@/assets/dehub-coin.png';
 
