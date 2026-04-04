@@ -18,6 +18,7 @@ import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { RadioSection } from '@/components/app/radio';
 import { cn } from '@/lib/utils';
 import type { VideoItem } from '@/types/feed.types';
+import { SEOHead } from '@/components/SEOHead';
 
 // ============================================================================
 // MOCK DATA
