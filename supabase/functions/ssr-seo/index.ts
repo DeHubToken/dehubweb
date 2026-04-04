@@ -137,6 +137,7 @@ function generateMetaHTML(data: {
     functionBaseUrl?: string;
     isBot: boolean;
     videoUrl?: string | null;
+    jsonLd?: Record<string, unknown>;
 }): string {
     const title = data.title.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const description = data.description.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
