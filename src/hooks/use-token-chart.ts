@@ -9,7 +9,6 @@ export interface PricePoint {
 export type ChartTimeframe = '1D' | '7D' | '30D' | '90D' | '1Y';
 
 const TIMEFRAME_DAYS: Record<ChartTimeframe, number> = {
-  '1D': 1,
   '7D': 7,
   '30D': 30,
   '90D': 90,
@@ -44,7 +43,7 @@ export interface UseTokenChartOptions {
 export function useTokenChart(
   symbol: string,
   enabled: boolean,
-  timeframe: ChartTimeframe = '1D',
+  timeframe: ChartTimeframe = '7D',
   _options?: UseTokenChartOptions
 ) {
   const normalizedSymbol = extractCashtagSymbol(symbol);

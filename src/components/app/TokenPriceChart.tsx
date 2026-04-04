@@ -14,7 +14,7 @@ interface TokenPriceChartProps {
   externalUrl?: string;
 }
 
-const SELECTABLE_TIMEFRAMES: ChartTimeframe[] = ['1D', '7D', '30D', '90D', '1Y'];
+const SELECTABLE_TIMEFRAMES: ChartTimeframe[] = ['7D', '30D', '90D', '1Y'];
 
 function formatTime(timestamp: number, timeframe: ChartTimeframe = '1D'): string {
   const d = new Date(timestamp);
@@ -42,9 +42,7 @@ function formatTooltipLabel(timestamp: number, timeframe: ChartTimeframe = '1D')
     ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframeChange, externalUrl }: TokenPriceChartProps) {
-  const isSinglePoint = data.length === 1;
-
+export function TokenPriceChart({ data, isLoading, timeframe = '7D', onTimeframeChange, externalUrl }: TokenPriceChartProps) {
   const isPositive = useMemo(() => {
     if (data.length < 2) return true;
     return data[data.length - 1].price >= data[0].price;
