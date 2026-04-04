@@ -70,10 +70,16 @@ function getThumbnail(post: FeedItem): string | undefined {
   }
 }
 
-export function CommunityFeed({ communitySlug, memberAddresses, isMember }: CommunityFeedProps) {
+export function CommunityFeed({ communitySlug, memberAddresses, isMember, tickerSymbol }: CommunityFeedProps) {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>('7D');
+  const { data: chartData = [], isLoading: chartLoading } = useTokenChart(
+    tickerSymbol || '',
+    !!tickerSymbol,
+    chartTimeframe
+  );
 
   const categoryTag = `community:${communitySlug}`;
 
