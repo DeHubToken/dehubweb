@@ -58,6 +58,15 @@ interface SimulationData {
   timestamp: string;
 }
 
+interface SwapAction {
+  tokenIn: string;
+  tokenOut: string;
+  tokenInSymbol: string;
+  tokenOutSymbol: string;
+  amount: string;
+  amountType: 'input' | 'output';
+}
+
 interface Message {
   id: string;
   role: 'user' | 'assistant';
@@ -72,6 +81,7 @@ interface Message {
   simulationData?: SimulationData;
   simulationStatus?: 'pending' | 'approved' | 'rejected';
   isError?: boolean;
+  swapAction?: SwapAction;
 }
 
 // Keywords that indicate image generation/editing request
