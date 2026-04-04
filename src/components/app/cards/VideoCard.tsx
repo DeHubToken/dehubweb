@@ -448,9 +448,11 @@ interface VideoCardProps {
   disableAutoplay?: boolean;
   /** When true, hides the action bar (votes, comments, tips etc.) — useful for carousel thumbnails */
   hideActions?: boolean;
+  /** First few feed items — skip lazy loading so LCP thumbnail loads immediately */
+  aboveFold?: boolean;
 }
 
-export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false, hideActions = false }: VideoCardProps) {
+export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false }: VideoCardProps) {
   const instanceId = useId();
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
@@ -1362,7 +1364,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               </div>
             ) : video.videoUrl ? (
               hasError ? (
-                <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+                <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading={aboveFold ? 'eager' : 'lazy'} fetchPriority={aboveFold ? 'high' : 'auto'} />
               ) :
               <video
                 ref={videoRef}
@@ -1371,7 +1373,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 muted={isMuted}
                 playsInline
                 {...{"webkit-playsinline": ""}}
-                preload="metadata"
+                preload={aboveFold ? 'auto' : 'metadata'}
                 crossOrigin="anonymous"
                 onEnded={handleVideoEnded}
                 onError={handleVideoError}
@@ -1381,7 +1383,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 className={`w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`}
               />
             ) : (
-              <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+              <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading={aboveFold ? 'eager' : 'lazy'} fetchPriority={aboveFold ? 'high' : 'auto'} />
             )}
            </>
         )}

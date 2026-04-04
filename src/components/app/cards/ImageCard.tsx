@@ -71,20 +71,24 @@ function useIsTabletOrMobile() {
 
 interface ImageCardProps {
   post: ImagePost;
+  /** First few feed items — skip lazy loading so LCP image loads immediately */
+  aboveFold?: boolean;
 }
 
 /**
  * Instagram-style image carousel component
  * Supports swipe navigation with dot indicators
  */
-function ImageCarousel({ 
-  images, 
+function ImageCarousel({
+  images,
   onImageClick,
-  onIndexChange 
-}: { 
+  onIndexChange,
+  aboveFold = false,
+}: {
   images: string[];
   onImageClick: (index: number) => void;
   onIndexChange?: (index: number) => void;
+  aboveFold?: boolean;
 }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -177,12 +181,14 @@ function ImageCarousel({
                   aria-hidden="true"
                 />
                 <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
-                {/* Actual image - natural aspect ratio */}
-                <img 
-                  src={img} 
-                  alt="" 
+                {/* Actual image — first few feed items load eagerly for LCP */}
+                <img
+                  src={img}
+                  alt=""
                   className="relative w-full max-h-[600px] object-contain"
-                  loading="lazy"
+                  loading={aboveFold && idx === 0 ? 'eager' : 'lazy'}
+                  fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}
+                  decoding={aboveFold && idx === 0 ? 'sync' : 'async'}
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/placeholder.svg';
                   }}
@@ -306,7 +312,7 @@ function FeedDescription({
   );
 }
 
-export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
+export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: ImageCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   useAutoOpenComments(setShowComments);
@@ -653,7 +659,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           </>
         ) : (
           <SwipeableCarousel>
-            <ImageCarousel images={images} onImageClick={handleImageClick} onIndexChange={setActiveImageIndex} />
+            <ImageCarousel images={images} onImageClick={handleImageClick} onIndexChange={setActiveImageIndex} aboveFold={aboveFold} />
           </SwipeableCarousel>
         )}
 

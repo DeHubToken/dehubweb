@@ -866,9 +866,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         case 'post':
           return <PostCard key={`post-${item.data.id}`} post={item.data} />;
         case 'video':
-          return <VideoCard key={`video-${item.data.id}`} video={item.data} />;
+          return <VideoCard key={`video-${item.data.id}`} video={item.data} aboveFold={index < 3} />;
         case 'image':
-          return <ImageCard key={`image-${item.data.id}`} post={item.data} />;
+          return <ImageCard key={`image-${item.data.id}`} post={item.data} aboveFold={index < 3} />;
         case 'shorts':
           return <ShortsReel key={`shorts-${index}`} shorts={item.data} />;
         default:
