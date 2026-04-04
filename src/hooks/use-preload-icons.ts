@@ -55,19 +55,19 @@ import medal9 from '@/assets/medal-9.png';
 import medal10 from '@/assets/medal-10.png';
 
 // ── Badge assets (staking tiers) ──
-import TortoiseBadge from '@/assets/badges/Tortoise.png';
-import CrabBadge from '@/assets/badges/Crab.png';
-import PiranhaBadge from '@/assets/badges/Piranha.png';
-import LobsterBadge from '@/assets/badges/Lobster.png';
-import OctopusBadge from '@/assets/badges/Octopus.png';
-import CobraBadge from '@/assets/badges/Cobra.png';
-import CrocoditeBadge from '@/assets/badges/Crocodite.png';
-import DolphinBadge from '@/assets/badges/Dolphin.png';
-import TigerSharkBadge from '@/assets/badges/Tiger Shark.png';
-import GreatWhiteSharkBadge from '@/assets/badges/Great White Shark.png';
-import KillerWhaleBadge from '@/assets/badges/Killer Whale.png';
-import BlueWhaleBadge from '@/assets/badges/Blue Whale.png';
-import MeglodonBadge from '@/assets/badges/Meglodon.png';
+import TortoiseBadge from '@/assets/badges/Tortoise.webp';
+import CrabBadge from '@/assets/badges/Crab.webp';
+import PiranhaBadge from '@/assets/badges/Piranha.webp';
+import LobsterBadge from '@/assets/badges/Lobster.webp';
+import OctopusBadge from '@/assets/badges/Octopus.webp';
+import CobraBadge from '@/assets/badges/Cobra.webp';
+import CrocoditeBadge from '@/assets/badges/Crocodite.webp';
+import DolphinBadge from '@/assets/badges/Dolphin.webp';
+import TigerSharkBadge from '@/assets/badges/Tiger Shark.webp';
+import GreatWhiteSharkBadge from '@/assets/badges/Great White Shark.webp';
+import KillerWhaleBadge from '@/assets/badges/Killer Whale.webp';
+import BlueWhaleBadge from '@/assets/badges/Blue Whale.webp';
+import MeglodonBadge from '@/assets/badges/Meglodon.webp';
 
 // ── Coin / currency logos (Command Centre wallet) ──
 import dehubCoin from '@/assets/dehub-coin.png';

@@ -56,11 +56,12 @@ export function bumpProfileImageVersion(address: string): void {
  * Build a direct CDN avatar URL: cdn/avatars/{address}.{ext}
  * Used as a cascading fallback when the primary API-server URL fails.
  */
-export function buildAvatarCdnFallbackUrl(address: string, apiAvatarPath?: string | null): string | undefined {
+export function buildAvatarCdnFallbackUrl(address: string, apiAvatarPath?: string | null, size?: number): string | undefined {
   if (!address) return undefined;
   const ext = apiAvatarPath ? getExtension(apiAvatarPath) : 'jpg';
   const cacheBust = getProfileImageVersion(address.toLowerCase());
-  return `${DEHUB_CDN_BASE}avatars/${address.toLowerCase()}.${ext}?v=${cacheBust}`;
+  const sizeParam = size ? `&w=${size}&h=${size}` : '';
+  return `${DEHUB_CDN_BASE}avatars/${address.toLowerCase()}.${ext}?v=${cacheBust}${sizeParam}`;
 }
 
 /**

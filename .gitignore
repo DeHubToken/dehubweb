@@ -23,3 +23,21 @@ cosmic-echo-hero-main
 *.sln
 *.sw?
 dehub-nx
+
+# ── Local / unpushed tooling (not pushed to GitHub) ─────────────────────────
+# code-review-graph + Claude Code / Cursor MCP & injected rules
+.code-review-graph/
+.claude/
+.cursor/
+.mcp.json
+.cursorrules
+.windsurfrules
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+
+# Root scratch & notes (keep out of repo)
+AuthContext.tsx
+chat-system.md
+doc.md
+scripts/

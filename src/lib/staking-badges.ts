@@ -39,19 +39,19 @@ const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
 };
 
 // Import all badge images
-import TortoiseBadge from '@/assets/badges/Tortoise.png';
-import CrabBadge from '@/assets/badges/Crab.png';
-import PiranhaBadge from '@/assets/badges/Piranha.png';
-import LobsterBadge from '@/assets/badges/Lobster.png';
-import OctopusBadge from '@/assets/badges/Octopus.png';
-import CobraBadge from '@/assets/badges/Cobra.png';
-import CrocoditeBadge from '@/assets/badges/Crocodite.png';
-import DolphinBadge from '@/assets/badges/Dolphin.png';
-import TigerSharkBadge from '@/assets/badges/Tiger Shark.png';
-import GreatWhiteSharkBadge from '@/assets/badges/Great White Shark.png';
-import KillerWhaleBadge from '@/assets/badges/Killer Whale.png';
-import BlueWhaleBadge from '@/assets/badges/Blue Whale.png';
-import MeglodonBadge from '@/assets/badges/Meglodon.png';
+import TortoiseBadge from '@/assets/badges/Tortoise.webp';
+import CrabBadge from '@/assets/badges/Crab.webp';
+import PiranhaBadge from '@/assets/badges/Piranha.webp';
+import LobsterBadge from '@/assets/badges/Lobster.webp';
+import OctopusBadge from '@/assets/badges/Octopus.webp';
+import CobraBadge from '@/assets/badges/Cobra.webp';
+import CrocoditeBadge from '@/assets/badges/Crocodite.webp';
+import DolphinBadge from '@/assets/badges/Dolphin.webp';
+import TigerSharkBadge from '@/assets/badges/Tiger Shark.webp';
+import GreatWhiteSharkBadge from '@/assets/badges/Great White Shark.webp';
+import KillerWhaleBadge from '@/assets/badges/Killer Whale.webp';
+import BlueWhaleBadge from '@/assets/badges/Blue Whale.webp';
+import MeglodonBadge from '@/assets/badges/Meglodon.webp';
 
 const BADGE_IMAGES: Record<string, string> = {
   "Tortoise": TortoiseBadge,
