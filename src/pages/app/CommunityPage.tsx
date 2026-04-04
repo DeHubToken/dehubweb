@@ -138,7 +138,7 @@ export default function CommunityPage() {
           />
         )}
         {tab === 'members' && (
-          <CommunityMembers members={members} communityId={community.id} />
+          <CommunityMembers members={members} communityId={community.id} isOwner={isOwner} />
         )}
         {tab === 'about' && (
           <CommunityAbout community={community} />
