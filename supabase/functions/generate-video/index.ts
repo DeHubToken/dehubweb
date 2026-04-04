@@ -49,6 +49,14 @@ const VIDEO_MODELS = {
     supports: ['text-to-video', 'image-to-video'],
     duration: '5s',
   },
+  // Seedance 1.5 Pro by ByteDance - cinematic with native audio
+  'seedance-1.5-pro': {
+    id: 'bytedance/seedance-1.5-pro',
+    name: 'Seedance 1.5 Pro',
+    description: 'ByteDance cinematic quality with native audio generation',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '2-12s',
+  },
 } as const;
 
 type ModelKey = keyof typeof VIDEO_MODELS;
