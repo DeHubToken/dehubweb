@@ -6,7 +6,7 @@ export interface PricePoint {
   price: number;
 }
 
-export type ChartTimeframe = '1D' | '7D' | '30D' | '90D' | '1Y';
+export type ChartTimeframe = '7D' | '30D' | '90D' | '1Y';
 
 const TIMEFRAME_DAYS: Record<ChartTimeframe, number> = {
   '7D': 7,

@@ -1,5 +1,5 @@
 import { useMemo, useRef, useEffect, useState } from 'react';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceDot } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import type { PricePoint, ChartTimeframe } from '@/hooks/use-token-chart';
 import { Loader2, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -107,17 +107,6 @@ export function TokenPriceChart({ data, isLoading, timeframe = '7D', onTimeframe
             dot={false}
             activeDot={{ r: 4, fill: color, stroke: '#18181b', strokeWidth: 2 }}
           />
-          {isSinglePoint && (
-            <ReferenceDot
-              x={data[0].time}
-              y={data[0].price}
-              r={4}
-              fill={color}
-              stroke="#18181b"
-              strokeWidth={2}
-              isFront
-            />
-          )}
         </AreaChart>
       </ResponsiveContainer>
     </div>
