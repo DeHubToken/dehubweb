@@ -7,9 +7,10 @@ import { CommunityLinkEmbed, extractCommunitySlug } from '@/components/app/commu
 
 interface LinkPreviewsProps {
   text: string;
+  communitySlug?: string | null;
 }
 
-export function LinkPreviews({ text }: LinkPreviewsProps) {
+export function LinkPreviews({ text, communitySlug: externalCommunitySlug }: LinkPreviewsProps) {
   const [previews, setPreviews] = useState<Map<string, LinkPreviewData>>(new Map());
   const [loading, setLoading] = useState<Set<string>>(new Set());
   const [removedUrls, setRemovedUrls] = useState<Set<string>>(new Set());

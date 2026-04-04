@@ -747,7 +747,7 @@ export function PostContentArea({
 
         {/* Link previews - with proper indent on desktop */}
         <div className="sm:pl-[52px]">
-          <LinkPreviews text={text} />
+          <LinkPreviews text={text} communitySlug={communitySlug} />
 
           <AnimatePresence>
             {isLive && (
