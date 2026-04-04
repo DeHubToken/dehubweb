@@ -61,8 +61,10 @@ export default function CommunityPage() {
   const handleJoinLeave = () => {
     if (!isAuthenticated) { openLoginModal(); return; }
     if (isMember) {
-      if (isOwner) return; // owners can't leave
-      leaveMutation.mutate(community.id);
+      if (isOwner) return;
+      leaveMutation.mutate(community.id, {
+        onSuccess: () => { toast.success('Left community'); },
+      });
     } else if (isPendingMember) {
       leaveMutation.mutate(community.id, {
         onSuccess: () => { toast.success('Request cancelled'); },

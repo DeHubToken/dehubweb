@@ -342,9 +342,8 @@ export function useLeaveCommunity() {
       );
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_data, _vars, _ctx) => {
       qc.invalidateQueries({ queryKey: ['communities'] });
-      toast.success('Left community');
     },
     onError: () => toast.error('Failed to leave'),
   });
