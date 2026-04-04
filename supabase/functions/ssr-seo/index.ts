@@ -137,6 +137,7 @@ function generateMetaHTML(data: {
     functionBaseUrl?: string;
     isBot: boolean;
     videoUrl?: string | null;
+    jsonLd?: Record<string, unknown>;
 }): string {
     const title = data.title.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const description = data.description.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -214,6 +215,11 @@ function generateMetaHTML(data: {
   `
             : ""
         }
+
+  ${data.jsonLd ? `
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">${JSON.stringify(data.jsonLd)}</script>
+  ` : ""}
 </head>
 <body style="font-family: sans-serif; background: black; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
   <div style="max-width: 600px; text-align: center; padding: 20px;">
@@ -316,6 +322,15 @@ serve(async (req) => {
                     imageHeight: isLogoFallback ? 200 : 400,
                     functionBaseUrl,
                     isBot,
+                    jsonLd: {
+                        '@context': 'https://schema.org',
+                        '@type': 'Person',
+                        name: displayName,
+                        url: profileUrl,
+                        ...(user.aboutMe && { description: user.aboutMe }),
+                        ...(avatarUrl !== DEHUB_LOGO && { image: avatarUrl }),
+                        sameAs: profileUrl,
+                    },
                 });
                 return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
             }
@@ -357,6 +372,16 @@ serve(async (req) => {
                     functionBaseUrl,
                     isBot,
                     videoUrl,
+                    jsonLd: {
+                        '@context': 'https://schema.org',
+                        '@type': 'Article',
+                        headline: title,
+                        description,
+                        url: postUrl,
+                        ...(nft.minterDisplayName && { author: { '@type': 'Person', name: nft.minterDisplayName } }),
+                        publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
+                        ...(postImage && { image: postImage }),
+                    },
                 });
                 return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
             }
@@ -374,6 +399,29 @@ serve(async (req) => {
             imageHeight: 628,
             functionBaseUrl,
             isBot,
+            jsonLd: {
+                '@context': 'https://schema.org',
+                '@graph': [
+                    {
+                        '@type': 'WebSite',
+                        name: 'DeHub',
+                        url: 'https://dehub.io',
+                        description: 'Open source, user owned and censorship resistant media.',
+                        potentialAction: {
+                            '@type': 'SearchAction',
+                            target: 'https://dehub.io/app/explore?q={search_term_string}',
+                            'query-input': 'required name=search_term_string',
+                        },
+                    },
+                    {
+                        '@type': 'Organization',
+                        name: 'DeHub',
+                        url: 'https://dehub.io',
+                        logo: 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/default-icon.png',
+                        sameAs: ['https://x.com/DeHubApp'],
+                    },
+                ],
+            },
         });
         return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
     } catch (e) {

@@ -313,7 +313,7 @@ export default function LeaderboardPage() {
 
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
-      <SEOHead title="Leaderboard — Top Creators & Earners" description="See who's leading on DeHub. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods." url="https://dehub.io/app/leaderboard" />
+      <SEOHead title="Leaderboard — Top Creators & Earners" description="See who's leading on DeHub. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods." url="https://dehub.io/app/leaderboard" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Leaderboard', url: 'https://dehub.io/app/leaderboard', description: 'Track top DHB holders, tippers and creators on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">Leaderboard — Top Creators & Earners</h1>
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-2">
