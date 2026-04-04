@@ -1156,6 +1156,8 @@ const communityTranslations: Record<string, CommunityTranslation> = {
       pinToProfile: 'Prikvači zajednice na profil', joinFirst: 'Pridružite se zajednicama da ih prikvačite', pinCommunity: 'Prikvači zajednicu',
     },
   },
+};
+
 export function injectCommunityTranslations(i18nInstance: I18nInstance) {
   Object.entries(communityTranslations).forEach(([lang, translations]) => {
     if (i18nInstance.hasResourceBundle(lang, 'translation')) {
