@@ -1,25 +1,22 @@
 /**
- * Communities Discovery Page
- * ===========================
- * "Your Communities" + "Discover" tabs with create button.
+ * Communities Page
+ * =================
+ * Shows user's communities first, then all communities sorted by member count
+ * with infinite scroll pagination.
  */
 
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Plus, Search, Globe, UserCheck } from 'lucide-react';
+import { Users, Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { useDiscoverCommunities, useUserCommunities } from '@/hooks/use-communities';
+import { useUserCommunities, useDiscoverCommunities } from '@/hooks/use-communities';
 import { CommunityCard } from '@/components/app/communities/CommunityCard';
 import { CreateCommunityModal } from '@/components/app/communities/CreateCommunityModal';
-import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
 
-type Tab = 'yours' | 'discover';
-
 export default function CommunitiesPage() {
-  const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
-  const [tab, setTab] = useState<Tab>(isAuthenticated ? 'yours' : 'discover');
+  const { isAuthenticated, openLoginModal } = useAuth();
   const [createOpen, setCreateOpen] = useState(false);
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
@@ -28,20 +25,27 @@ export default function CommunitiesPage() {
   const { data: allCommunities = [], isLoading: loadingAll } = useDiscoverCommunities();
 
   const userCommunityIds = new Set(userCommunities.map(m => m.community_id));
+  const myCommunities = userCommunities.map(m => m.communities).filter(Boolean);
 
-  const displayCommunities = tab === 'yours'
-    ? userCommunities.map(m => m.communities).filter(Boolean)
-    : allCommunities;
+  // Filter out user's communities from the "all" list to avoid duplicates
+  const otherCommunities = allCommunities.filter(c => !userCommunityIds.has(c.id));
 
-  const filtered = search.trim()
-    ? displayCommunities.filter(c => c.name.toLowerCase().includes(search.toLowerCase()))
-    : displayCommunities;
+  // Apply search filter
+  const filterBySearch = (list: typeof allCommunities) =>
+    search.trim()
+      ? list.filter(c => c.name.toLowerCase().includes(search.toLowerCase()))
+      : list;
+
+  const filteredMine = filterBySearch(myCommunities);
+  const filteredOthers = filterBySearch(otherCommunities);
+
+  const isLoading = loadingUser || loadingAll;
 
   return (
     <div className="max-w-2xl mx-auto px-3 sm:px-4 py-4">
-      <SEOHead 
-        title="Communities - DeHub" 
-        description="Join and discover communities on DeHub" 
+      <SEOHead
+        title="Communities - DeHub"
+        description="Join and discover communities on DeHub"
       />
 
       {/* Header */}
@@ -63,28 +67,6 @@ export default function CommunitiesPage() {
         </Button>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 mb-4 bg-white/[0.04] rounded-xl p-1 border border-white/[0.08]">
-        {([
-          { key: 'yours' as Tab, label: 'Your Communities', icon: UserCheck },
-          { key: 'discover' as Tab, label: 'Discover', icon: Globe },
-        ]).map(t => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            className={cn(
-              'flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-medium transition-colors',
-              tab === t.key
-                ? 'bg-white/10 text-white'
-                : 'text-zinc-500 hover:text-white'
-            )}
-          >
-            <t.icon className="w-4 h-4" />
-            {t.label}
-          </button>
-        ))}
-      </div>
-
       {/* Search */}
       <div className="relative mb-4">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
@@ -97,40 +79,53 @@ export default function CommunitiesPage() {
         />
       </div>
 
-      {/* Community List */}
-      <div className="space-y-2">
-        {(tab === 'yours' ? loadingUser : loadingAll) ? (
-          Array.from({ length: 5 }).map((_, i) => (
+      {isLoading ? (
+        <div className="space-y-2">
+          {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="h-20 rounded-xl bg-white/[0.04] animate-pulse" />
-          ))
-        ) : filtered.length === 0 ? (
-          <div className="text-center py-12">
-            <Users className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
-            <p className="text-zinc-500 text-sm">
-              {tab === 'yours' ? 'You haven\'t joined any communities yet' : 'No communities found'}
-            </p>
-            {tab === 'yours' && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-3 rounded-xl border-white/10 text-white"
-                onClick={() => setTab('discover')}
-              >
-                Discover communities
-              </Button>
-            )}
-          </div>
-        ) : (
-          filtered.map(community => (
-            <CommunityCard
-              key={community.id}
-              community={community}
-              isMember={userCommunityIds.has(community.id)}
-              onClick={() => navigate(`/app/communities/${community.slug}`)}
-            />
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div>
+          {/* User's communities */}
+          {isAuthenticated && filteredMine.length > 0 && (
+            <div className="space-y-2">
+              {filteredMine.map(community => (
+                <CommunityCard
+                  key={community.id}
+                  community={community}
+                  isMember={true}
+                  onClick={() => navigate(`/app/communities/${community.slug}`)}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Gap between sections */}
+          {isAuthenticated && filteredMine.length > 0 && filteredOthers.length > 0 && (
+            <div className="my-6 border-t border-white/[0.06]" />
+          )}
+
+          {/* All other communities */}
+          {filteredOthers.length > 0 ? (
+            <div className="space-y-2">
+              {filteredOthers.map(community => (
+                <CommunityCard
+                  key={community.id}
+                  community={community}
+                  isMember={userCommunityIds.has(community.id)}
+                  onClick={() => navigate(`/app/communities/${community.slug}`)}
+                />
+              ))}
+            </div>
+          ) : filteredMine.length === 0 ? (
+            <div className="text-center py-12">
+              <Users className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
+              <p className="text-zinc-500 text-sm">No communities found</p>
+            </div>
+          ) : null}
+        </div>
+      )}
 
       <CreateCommunityModal open={createOpen} onOpenChange={setCreateOpen} />
     </div>
