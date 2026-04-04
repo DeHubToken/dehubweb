@@ -27,10 +27,14 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
 
 
-  // Set initial text when modal opens — put it straight in the editor
+  // When opening from share (initialText provided), reset form first for a fresh start
   useEffect(() => {
     if (isOpen && initialText) {
-      actions.setText(initialText);
+      actions.resetForm();
+      // Small delay to let reset take effect, then set the text
+      setTimeout(() => {
+        actions.setText(initialText);
+      }, 0);
     }
   }, [isOpen, initialText]);
 

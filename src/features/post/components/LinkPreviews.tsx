@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
 import { LinkPreviewCard } from './LinkPreviewCard';
 import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/lib/api/link-preview';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -7,16 +8,31 @@ import { CommunityLinkEmbed, extractCommunitySlug } from '@/components/app/commu
 
 interface LinkPreviewsProps {
   text: string;
+  onRemoveCommunityLink?: () => void;
 }
 
-export function LinkPreviews({ text }: LinkPreviewsProps) {
+export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps) {
   const [previews, setPreviews] = useState<Map<string, LinkPreviewData>>(new Map());
   const [loading, setLoading] = useState<Set<string>>(new Set());
   const [removedUrls, setRemovedUrls] = useState<Set<string>>(new Set());
+  const [communityDismissed, setCommunityDismissed] = useState(false);
   const fetchedUrls = useRef<Set<string>>(new Set());
 
   // Detect community slug from text
-  const communitySlug = extractCommunitySlug(text);
+  const communitySlug = communityDismissed ? null : extractCommunitySlug(text);
+
+  // Reset dismissed state when text changes to a different community or no community
+  const prevSlugRef = useRef<string | null>(null);
+  useEffect(() => {
+    const currentSlug = extractCommunitySlug(text);
+    if (currentSlug !== prevSlugRef.current) {
+      prevSlugRef.current = currentSlug;
+      if (currentSlug && communityDismissed) {
+        // New community link added — un-dismiss
+        setCommunityDismissed(false);
+      }
+    }
+  }, [text, communityDismissed]);
 
   useEffect(() => {
     const urls = extractUrlsFromText(text);
@@ -31,14 +47,12 @@ export function LinkPreviews({ text }: LinkPreviewsProps) {
 
     if (newUrls.length === 0) return;
 
-    // Mark as loading
     setLoading(prev => {
       const next = new Set(prev);
       newUrls.forEach(url => next.add(url));
       return next;
     });
 
-    // Fetch previews
     newUrls.forEach(async (url) => {
       fetchedUrls.current.add(url);
       
@@ -65,6 +79,11 @@ export function LinkPreviews({ text }: LinkPreviewsProps) {
     });
   };
 
+  const handleRemoveCommunity = () => {
+    setCommunityDismissed(true);
+    onRemoveCommunityLink?.();
+  };
+
   // Get URLs that should be displayed (in text, not removed, not community links)
   const currentUrls = extractUrlsFromText(text)
     .filter(url => !removedUrls.has(url) && !extractCommunitySlug(url));
@@ -78,8 +97,22 @@ export function LinkPreviews({ text }: LinkPreviewsProps) {
 
   return (
     <div className="mt-3 space-y-2">
-      {/* Community link embed */}
-      {communitySlug && <CommunityLinkEmbed slug={communitySlug} />}
+      {/* Community link embed with dismiss button */}
+      {communitySlug && (
+        <div className="relative">
+          <CommunityLinkEmbed slug={communitySlug} />
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRemoveCommunity();
+            }}
+            className="absolute top-2 right-2 p-1 rounded-full bg-black/60 hover:bg-black/80 text-white/70 hover:text-white transition-colors z-10"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
 
       <AnimatePresence mode="popLayout">
         {visiblePreviews.map((preview) => (
