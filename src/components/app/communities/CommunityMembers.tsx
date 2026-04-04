@@ -10,7 +10,7 @@ interface CommunityMembersProps {
 
 function MemberRow({ member }: { member: CommunityMember }) {
   const navigate = useNavigate();
-  const { data: profile } = useDehubProfile(member.wallet_address);
+  const { data: profile } = useDeHubProfile(member.wallet_address);
 
   const roleIcon = member.role === 'owner' 
     ? <Crown className="w-3.5 h-3.5 text-amber-400" />
