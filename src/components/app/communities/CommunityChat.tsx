@@ -103,6 +103,8 @@ interface CommunityChatProps {
 export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
   const [newMessage, setNewMessage] = useState('');
   const [replyTo, setReplyTo] = useState<CommunityChatMessage | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
