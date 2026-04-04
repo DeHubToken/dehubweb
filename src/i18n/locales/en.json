@@ -23,7 +23,8 @@
     "create": "Create",
     "login": "Log in",
     "connecting": "Connecting...",
-    "signMessage": "Sign message"
+    "signMessage": "Sign message",
+    "communities": "Communities"
   },
   "feed": {
     "home": "Home",
