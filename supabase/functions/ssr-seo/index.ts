@@ -224,8 +224,20 @@ function generateMetaHTML(data: {
     <nav style="margin-top: 20px; font-size: 14px;">
       <a href="${APP_URL}/app/explore" style="color: #aaa; margin: 0 8px;">Explore</a>
       <a href="${APP_URL}/app/stages" style="color: #aaa; margin: 0 8px;">Stages</a>
-      <a href="${APP_URL}/app/tv" style="color: #aaa; margin: 0 8px;">TV</a>
+      <a href="${APP_URL}/app/tv" style="color: #aaa; margin: 0 8px;">Live TV</a>
       <a href="${APP_URL}/app/governance" style="color: #aaa; margin: 0 8px;">Governance</a>
+      <a href="${APP_URL}/app/stake" style="color: #aaa; margin: 0 8px;">Staking</a>
+      <a href="${APP_URL}/app/leaderboard" style="color: #aaa; margin: 0 8px;">Leaderboard</a>
+      <a href="${APP_URL}/app/music" style="color: #aaa; margin: 0 8px;">Music</a>
+      <a href="${APP_URL}/app/features" style="color: #aaa; margin: 0 8px;">Features</a>
+      <a href="${APP_URL}/app/top-100" style="color: #aaa; margin: 0 8px;">Top 100 Cryptos</a>
+      <a href="${APP_URL}/app/glossary" style="color: #aaa; margin: 0 8px;">Glossary</a>
+      <a href="${APP_URL}/app/bridge" style="color: #aaa; margin: 0 8px;">Bridge</a>
+      <a href="${APP_URL}/app/agents" style="color: #aaa; margin: 0 8px;">AI Agents</a>
+      <a href="${APP_URL}/app/assistant" style="color: #aaa; margin: 0 8px;">AI Assistant</a>
+      <a href="${APP_URL}/app/buy" style="color: #aaa; margin: 0 8px;">Buy Crypto</a>
+      <a href="${APP_URL}/creators" style="color: #aaa; margin: 0 8px;">Become a Creator</a>
+      <a href="${APP_URL}/jobs" style="color: #aaa; margin: 0 8px;">Careers</a>
     </nav>
   </div>
 </body>
