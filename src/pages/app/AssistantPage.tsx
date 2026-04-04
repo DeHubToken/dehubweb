@@ -1716,6 +1716,10 @@ export default function AssistantPage() {
                           /* Assistant message - no bubble */
                           <div className="text-white">
                             <MarkdownText content={message.content} className="text-sm" />
+                            {/* Swap action card */}
+                            {message.swapAction && (
+                              <SwapActionCard action={message.swapAction} autoQuote />
+                            )}
                             {message.isError && (
                               <button
                                 onClick={() => {
