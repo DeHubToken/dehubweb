@@ -16,6 +16,7 @@ import { CommunityMembers } from '@/components/app/communities/CommunityMembers'
 import { CommunityAbout } from '@/components/app/communities/CommunityAbout';
 import { CommunityChat } from '@/components/app/communities/CommunityChat';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 
 type Tab = 'posts' | 'members' | 'about' | 'chat';
