@@ -44,6 +44,7 @@ import { z } from 'zod';
 import { useFeatureRequestComments, useSubmitComment, useDeleteComment } from '@/hooks/use-feature-request-comments';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
+import { SEOHead } from '@/components/SEOHead';
 
 const featureSchema = z.object({
   title: z.string().trim().min(1, 'Title is required').max(100, 'Title must be under 100 characters'),
