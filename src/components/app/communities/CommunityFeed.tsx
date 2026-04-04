@@ -3,6 +3,7 @@
  * ===============
  * Fetches posts tagged with the community slug and filters to member-only posts.
  * Renders full feed cards (PostCard, VideoCard, ImageCard) identical to the main feed.
+ * Shows full CashtagPriceCard at top when a ticker is assigned.
  */
 
 import { useState, useEffect, useMemo } from 'react';
@@ -11,8 +12,10 @@ import { searchNFTs } from '@/lib/api/dehub';
 import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 import type { FeedItem, TextPost, VideoItem, ImagePost, ShortVideo } from '@/types/feed.types';
 import { Skeleton } from '@/components/ui/skeleton';
-import { TokenPriceChart } from '@/components/app/TokenPriceChart';
-import { useTokenChart, type ChartTimeframe } from '@/hooks/use-token-chart';
+import { CashtagPriceCard } from '@/components/app/CashtagPriceCard';
+import { useDexScreenerSearchMulti, type DexPair } from '@/hooks/use-dexscreener';
+import { useCmcMarketCap } from '@/hooks/use-cmc-market-cap';
+import { CashtagResultSwitcher } from '@/components/app/CashtagResultSwitcher';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
@@ -22,6 +25,9 @@ interface CommunityFeedProps {
   memberAddresses: Set<string>;
   isMember: boolean;
   tickerSymbol?: string | null;
+  tickerContractAddress?: string | null;
+  tickerChainId?: string | null;
+  tickerPairAddress?: string | null;
 }
 
 /** Extract creator address from any feed item type */
@@ -35,15 +41,32 @@ function getCreatorId(post: FeedItem): string | undefined {
   }
 }
 
-export function CommunityFeed({ communitySlug, memberAddresses, isMember, tickerSymbol }: CommunityFeedProps) {
+export function CommunityFeed({ communitySlug, memberAddresses, isMember, tickerSymbol, tickerContractAddress, tickerChainId, tickerPairAddress }: CommunityFeedProps) {
   const [posts, setPosts] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>('7D');
-  const { data: chartData = [], isLoading: chartLoading } = useTokenChart(
-    tickerSymbol || '',
-    !!tickerSymbol,
-    chartTimeframe
+
+  // Fetch live DexScreener data for the assigned ticker
+  const { data: dexPairs = [] } = useDexScreenerSearchMulti(
+    tickerSymbol ? `$${tickerSymbol}` : '',
+    !!tickerSymbol
   );
+  const { data: cmcData } = useCmcMarketCap(
+    tickerSymbol ? `$${tickerSymbol}` : '',
+    !!tickerSymbol
+  );
+
+  // Find the exact pair matching saved contract address, or fall back to first result
+  const matchedPair = useMemo(() => {
+    if (!tickerSymbol || dexPairs.length === 0) return null;
+    if (tickerContractAddress) {
+      const exact = dexPairs.find(
+        p => p.baseToken.address.toLowerCase() === tickerContractAddress.toLowerCase() &&
+             (!tickerChainId || p.chainId === tickerChainId)
+      );
+      if (exact) return exact;
+    }
+    return dexPairs[0];
+  }, [dexPairs, tickerContractAddress, tickerChainId, tickerSymbol]);
 
   const categoryTag = communitySlug;
 
@@ -92,36 +115,32 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
 
   if (memberPosts.length === 0) {
     return (
-      <div className="text-center py-12">
-        <PenSquare className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
-        <p className="text-zinc-500 text-sm">
-          {isMember
-            ? 'No posts yet. Be the first to post in this community!'
-            : 'Join this community to see and create posts.'}
-        </p>
-        {isMember && (
-          <p className="text-zinc-600 text-xs mt-2">
-            Select this community when creating a post to tag it here.
-          </p>
+      <div className="space-y-3">
+        {/* Still show chart even with no posts */}
+        {tickerSymbol && matchedPair && (
+          <CashtagPriceCard pair={matchedPair} symbol={tickerSymbol} cmcData={cmcData} />
         )}
+        <div className="text-center py-12">
+          <PenSquare className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
+          <p className="text-zinc-500 text-sm">
+            {isMember
+              ? 'No posts yet. Be the first to post in this community!'
+              : 'Join this community to see and create posts.'}
+          </p>
+          {isMember && (
+            <p className="text-zinc-600 text-xs mt-2">
+              Select this community when creating a post to tag it here.
+            </p>
+          )}
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-3">
-      {tickerSymbol && (
-        <div className="rounded-xl overflow-hidden border border-white/[0.08] bg-white/[0.02]">
-          <div className="px-3 py-2 flex items-center gap-1.5 border-b border-white/[0.06]">
-            <span className="text-xs font-medium text-white">${tickerSymbol}</span>
-          </div>
-          <TokenPriceChart
-            data={chartData}
-            isLoading={chartLoading}
-            timeframe={chartTimeframe}
-            onTimeframeChange={setChartTimeframe}
-          />
-        </div>
+      {tickerSymbol && matchedPair && (
+        <CashtagPriceCard pair={matchedPair} symbol={tickerSymbol} cmcData={cmcData} />
       )}
       {memberPosts.map((post, index) => {
         let card: React.ReactNode = null;

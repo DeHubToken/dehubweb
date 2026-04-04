@@ -119,6 +119,9 @@ export default function CommunityPage() {
             memberAddresses={memberAddresses}
             isMember={isMember}
             tickerSymbol={community.ticker_symbol}
+            tickerContractAddress={community.ticker_contract_address}
+            tickerChainId={community.ticker_chain_id}
+            tickerPairAddress={community.ticker_pair_address}
           />
         )}
         {tab === 'members' && (
