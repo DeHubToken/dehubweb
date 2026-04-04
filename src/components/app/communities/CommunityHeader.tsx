@@ -13,12 +13,13 @@ import { toast } from 'sonner';
 interface CommunityHeaderProps {
   community: Community;
   isMember: boolean;
+  isPendingMember: boolean;
   isOwner: boolean;
   isPending: boolean;
   onJoinLeave: () => void;
 }
 
-export function CommunityHeader({ community, isMember, isOwner, isPending, onJoinLeave }: CommunityHeaderProps) {
+export function CommunityHeader({ community, isMember, isPendingMember, isOwner, isPending, onJoinLeave }: CommunityHeaderProps) {
   const { walletAddress } = useAuth();
   const { openPostModal } = useGlobalDropZone();
   const bannerInputRef = useRef<HTMLInputElement>(null);
