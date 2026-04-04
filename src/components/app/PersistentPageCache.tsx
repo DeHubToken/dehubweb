@@ -51,6 +51,7 @@ const GlossaryPage = lazyWithRetry(() => import('@/pages/app/GlossaryPage'));
 const StakingPage = lazyWithRetry(() => import('@/pages/app/StakingPage'));
 const BridgePage = lazyWithRetry(() => import('@/pages/app/BridgePage'));
 const Top100CryptosPage = lazyWithRetry(() => import('@/pages/app/Top100CryptosPage'));
+const CommunitiesPage = lazyWithRetry(() => import('@/pages/app/CommunitiesPage'));
 
 // Pages that get cached (mount-once, hide with CSS)
 interface CachedPageConfig {
@@ -82,6 +83,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'stake', path: ['/app/stake', '/stake'], component: StakingPage, skeleton: GenericPageSkeleton },
   { key: 'bridge', path: '/app/bridge', component: BridgePage, skeleton: GenericPageSkeleton },
   { key: 'top-100', path: '/app/top-100', component: Top100CryptosPage, skeleton: LeaderboardSkeleton },
+  { key: 'communities', path: '/app/communities', component: CommunitiesPage, skeleton: GenericPageSkeleton },
   { key: 'profile', path: '/app/profile', component: ProfilePage, skeleton: ProfileSkeleton },
 ];
 

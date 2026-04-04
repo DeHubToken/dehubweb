@@ -42,6 +42,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Lightbulb, label: 'Feature Requests', path: '/features' },
   { icon: Vault, label: 'Staking', path: '/app/stake' },
   { icon: ShieldCheck, label: 'Governance', path: '/governance' },
+  { icon: Users, label: 'Communities', path: '/app/communities' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: BookOpen, label: 'Glossary', path: '/app/glossary' },
   { icon: BookOpen, label: 'Docs', path: 'https://dehub.io/docs', external: true },

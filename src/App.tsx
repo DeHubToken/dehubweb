@@ -171,6 +171,8 @@ function AppContent() {
                 <Route path="top-100" element={null} />
                 <Route path="jobs" element={null} />
                 <Route path="glossary" element={null} />
+                <Route path="communities" element={null} />
+                <Route path="communities/:slug" element={<Suspense fallback={<PageLoader />}>{React.createElement(React.lazy(() => import('./pages/app/CommunityPage')))}</Suspense>} />
                 <Route path="post/:postId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
                 <Route path="video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
                 <Route path="post/:postId/info" element={<Suspense fallback={<PageLoader />}><PostInfoPage /></Suspense>} />

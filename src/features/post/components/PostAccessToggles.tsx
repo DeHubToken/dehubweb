@@ -1,12 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Lock, Ticket, Gift, Shield, Eye, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type } from 'lucide-react';
+import { Lock, Ticket, Gift, Shield, Eye, MessageCircle, Check, Info, Hash, Search, X, Plus, Save, Type, Users } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { getCategories, type DeHubCategory } from '@/lib/api/dehub';
 import { toast } from 'sonner';
+import { useUserCommunities } from '@/hooks/use-communities';
+import { useAuth } from '@/contexts/AuthContext';
 import type { Currency } from '../types';
 
 // DHB is the only supported token
@@ -84,13 +86,21 @@ export function PostAccessToggles({
   setCategoryDrawerOpen: setCategoryDrawerOpenProp,
 }: PostAccessTogglesProps) {
   const { t } = useI18n();
+  const { walletAddress } = useAuth();
+  const { data: userCommunities = [] } = useUserCommunities();
   // Mobile drawer states
   const [ppvDrawerOpen, setPpvDrawerOpen] = useState(false);
   const [bountyDrawerOpen, setBountyDrawerOpen] = useState(false);
   const [tokenDrawerOpen, setTokenDrawerOpen] = useState(false);
+  const [communityDrawerOpen, setCommunityDrawerOpen] = useState(false);
   const [categoryDrawerOpenLocal, setCategoryDrawerOpenLocal] = useState(false);
   const categoryDrawerOpen = categoryDrawerOpenProp ?? categoryDrawerOpenLocal;
   const setCategoryDrawerOpen = setCategoryDrawerOpenProp ?? setCategoryDrawerOpenLocal;
+
+  // Community tag helpers
+  const selectedCommunityTag = selectedCategory.split('|||').find(c => c.startsWith('community:'));
+  const selectedCommunitySlug = selectedCommunityTag?.replace('community:', '') || null;
+  const hasCommunities = userCommunities.length > 0 && !!walletAddress;
 
   // Temp states for drawer inputs
   const [tempPpvAmount, setTempPpvAmount] = useState(ppvAmount);
@@ -287,6 +297,46 @@ export function PostAccessToggles({
           )}
         </div>
 
+        {/* Community */}
+        {hasCommunities && (
+          <div className="space-y-1.5">
+            <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => { if (!selectedCommunitySlug) setCommunityDrawerOpen(true); }}>
+              <div className="flex items-center gap-2 shrink-0">
+                <Users className="w-4 h-4 text-white" />
+                <span className="text-sm text-white">Community</span>
+              </div>
+              <Switch
+                checked={!!selectedCommunitySlug}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    setCommunityDrawerOpen(true);
+                  } else {
+                    // Remove community tag from categories
+                    const next = selectedCategoriesArray.filter(c => !c.startsWith('community:')).join('|||');
+                    setSelectedCategory(next);
+                  }
+                }}
+                className="data-[state=checked]:bg-white scale-75"
+                onClick={e => e.stopPropagation()}
+              />
+            </label>
+            {selectedCommunitySlug && (
+              <div className="flex items-center gap-1.5 pl-6">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-white/10 text-white/80 border border-white/10">
+                  <Users className="w-2.5 h-2.5" />
+                  {userCommunities.find(m => m.communities.slug === selectedCommunitySlug)?.communities.name || selectedCommunitySlug}
+                  <button type="button" onClick={() => {
+                    const next = selectedCategoriesArray.filter(c => !c.startsWith('community:')).join('|||');
+                    setSelectedCategory(next);
+                  }} className="hover:text-red-400 transition-colors">
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Subscribers */}
         <label className="flex items-center justify-between py-0.5 cursor-pointer">
           <div className="flex items-center gap-2">
@@ -440,6 +490,59 @@ export function PostAccessToggles({
                 </>
               )}
             </div>
+          </div>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Community Drawer */}
+      <Drawer open={communityDrawerOpen} onOpenChange={setCommunityDrawerOpen}>
+        <DrawerContent glass hideHandle>
+          <div className="flex items-center justify-between px-4 pt-4 pb-2">
+            <div className="flex items-center gap-2 text-white font-medium">
+              <Users className="w-5 h-5" />
+              Select Community
+            </div>
+            <button type="button" onClick={() => setCommunityDrawerOpen(false)} className="text-sm text-white/60 hover:text-white transition-colors">
+              Done
+            </button>
+          </div>
+          <div className="px-4 pb-6 space-y-1 max-h-[50vh] overflow-y-auto">
+            {userCommunities.map(membership => {
+              const community = membership.communities;
+              if (!community) return null;
+              const isSelected = selectedCommunitySlug === community.slug;
+              return (
+                <button
+                  key={community.id}
+                  type="button"
+                  onClick={() => {
+                    // Remove any existing community tag, add this one
+                    const withoutCommunity = selectedCategoriesArray.filter(c => !c.startsWith('community:'));
+                    const next = [...withoutCommunity, `community:${community.slug}`].join('|||');
+                    setSelectedCategory(next);
+                    setCommunityDrawerOpen(false);
+                  }}
+                  className={cn(
+                    "w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-colors",
+                    isSelected
+                      ? "bg-white/15 text-white border border-white/20"
+                      : "text-zinc-300 hover:bg-white/5 border border-transparent"
+                  )}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden">
+                      {community.avatar_url ? (
+                        <img src={community.avatar_url} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <Users className="w-3.5 h-3.5 text-zinc-500" />
+                      )}
+                    </div>
+                    <span>{community.name}</span>
+                  </div>
+                  {isSelected && <Check className="w-4 h-4 text-white" />}
+                </button>
+              );
+            })}
           </div>
         </DrawerContent>
       </Drawer>
