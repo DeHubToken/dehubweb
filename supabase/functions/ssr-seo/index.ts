@@ -219,8 +219,14 @@ function generateMetaHTML(data: {
   <div style="max-width: 600px; text-align: center; padding: 20px;">
     <h1>${title}</h1>
     <p>${description}</p>
-    <img src="${imageUrl}" style="max-width: 100%; border-radius: 12px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+    <img src="${imageUrl}" style="max-width: 100%; border-radius: 12px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" alt="${title}" />
     <p style="margin-top: 30px;"><a href="${data.url}" style="color: #00ff00; text-decoration: none; font-weight: bold; border: 1px solid #00ff00; padding: 10px 20px; border-radius: 5px;">View on DeHub</a></p>
+    <nav style="margin-top: 20px; font-size: 14px;">
+      <a href="${APP_URL}/app/explore" style="color: #aaa; margin: 0 8px;">Explore</a>
+      <a href="${APP_URL}/app/stages" style="color: #aaa; margin: 0 8px;">Stages</a>
+      <a href="${APP_URL}/app/tv" style="color: #aaa; margin: 0 8px;">TV</a>
+      <a href="${APP_URL}/app/governance" style="color: #aaa; margin: 0 8px;">Governance</a>
+    </nav>
   </div>
 </body>
 </html>`;
