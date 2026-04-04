@@ -100,7 +100,7 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
       </div>
 
       {/* Avatar + buttons row */}
-      <div className="flex items-start justify-between -mt-8 px-2">
+      <div className="flex items-start justify-between -mt-8">
         <div
           className="w-16 h-16 rounded-xl bg-black border-2 border-black flex items-center justify-center overflow-hidden flex-shrink-0 relative group"
           onClick={isOwner ? () => avatarInputRef.current?.click() : undefined}
