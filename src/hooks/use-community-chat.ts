@@ -6,10 +6,10 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { withWalletHeader } from '@/lib/supabase-helpers';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
 
 export interface CommunityChatMessage {
@@ -25,7 +25,6 @@ export interface CommunityChatMessage {
   reply_to_id: string | null;
   reactions: Record<string, string[]>;
   created_at: string;
-  // Joined reply data (resolved client-side)
   reply_to?: {
     id: string;
     content: string;
@@ -36,9 +35,8 @@ export interface CommunityChatMessage {
 const QUERY_KEY = 'community-chat-messages';
 
 export function useCommunityChat(communityId: string | undefined) {
-  const { walletAddress, isAuthenticated } = useAuth();
+  const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
-  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
 
   // Fetch messages
   const { data: rawMessages = [], isLoading } = useQuery({
@@ -92,7 +90,6 @@ export function useCommunityChat(communityId: string | undefined) {
             queryClient.setQueryData<CommunityChatMessage[]>(
               [QUERY_KEY, communityId],
               (old = []) => {
-                // Dedupe
                 if (old.some(m => m.id === (payload.new as CommunityChatMessage).id)) return old;
                 return [...old, payload.new as CommunityChatMessage];
               }
@@ -112,7 +109,6 @@ export function useCommunityChat(communityId: string | undefined) {
       )
       .subscribe();
 
-    channelRef.current = channel;
     return () => {
       supabase.removeChannel(channel);
     };
@@ -141,10 +137,12 @@ export function useCommunityChat(communityId: string | undefined) {
       reactions: {},
     };
 
-    const { error } = await supabase
-      .from('community_chat_messages')
-      .insert(msg as any)
-      .headers(withWalletHeader(walletAddress));
+    const { error } = await withWalletHeader(
+      supabase
+        .from('community_chat_messages')
+        .insert(msg as any),
+      walletAddress
+    );
 
     if (error) {
       console.error('[CommunityChat] Send error:', error);
@@ -164,12 +162,20 @@ export function useCommunityChat(communityId: string | undefined) {
     if (addresses.some(a => a.toLowerCase() === walletAddress.toLowerCase())) return;
     reactions[emoji] = [...addresses, walletAddress.toLowerCase()];
 
-    await supabase
-      .from('community_chat_messages')
-      .update({ reactions } as any)
-      .eq('id', messageId)
-      .headers(withWalletHeader(walletAddress));
-  }, [rawMessages, walletAddress, communityId]);
+    // Optimistic update
+    queryClient.setQueryData<CommunityChatMessage[]>(
+      [QUERY_KEY, communityId],
+      (old = []) => old.map(m => m.id === messageId ? { ...m, reactions } : m)
+    );
+
+    await withWalletHeader(
+      supabase
+        .from('community_chat_messages')
+        .update({ reactions } as any)
+        .eq('id', messageId),
+      walletAddress
+    );
+  }, [rawMessages, walletAddress, communityId, queryClient]);
 
   // Remove reaction
   const removeReaction = useCallback(async (messageId: string, emoji: string) => {
@@ -182,12 +188,20 @@ export function useCommunityChat(communityId: string | undefined) {
     reactions[emoji] = addresses.filter(a => a.toLowerCase() !== walletAddress.toLowerCase());
     if (reactions[emoji].length === 0) delete reactions[emoji];
 
-    await supabase
-      .from('community_chat_messages')
-      .update({ reactions } as any)
-      .eq('id', messageId)
-      .headers(withWalletHeader(walletAddress));
-  }, [rawMessages, walletAddress, communityId]);
+    // Optimistic update
+    queryClient.setQueryData<CommunityChatMessage[]>(
+      [QUERY_KEY, communityId],
+      (old = []) => old.map(m => m.id === messageId ? { ...m, reactions } : m)
+    );
+
+    await withWalletHeader(
+      supabase
+        .from('community_chat_messages')
+        .update({ reactions } as any)
+        .eq('id', messageId),
+      walletAddress
+    );
+  }, [rawMessages, walletAddress, communityId, queryClient]);
 
   return {
     messages,
