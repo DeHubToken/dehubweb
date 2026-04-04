@@ -67,7 +67,8 @@ function BookmarksSkeleton() {
 export default function BookmarksPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<BookmarkType>('all');
-  const { layerRef: bookmarksTabLayerRef, setRef: setBookmarksTabRef, rect: bookmarksTabRect, onScroll: onBookmarksTabScroll } = useTabIndicator(activeTab);
+  const bookmarksIsDraggingRef = useRef(false);
+  const { layerRef: bookmarksTabLayerRef, setRef: setBookmarksTabRef, rect: bookmarksTabRect, onScroll: onBookmarksTabScroll } = useTabIndicator(activeTab, undefined, bookmarksIsDraggingRef);
   const [searchQuery, setSearchQuery] = useState('');
   const { isAuthenticated } = useAuth();
   const { 
@@ -121,6 +122,7 @@ export default function BookmarksPage() {
     tabValues: tabKeys.map(t => t.value) as BookmarkType[],
     activeTab,
     onTabChange: setActiveTab,
+    isDraggingRef: bookmarksIsDraggingRef,
   });
 
   // Block access for unauthenticated users

@@ -417,7 +417,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const isMobile = useIsMobile();
   
   const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'reposts' | 'search'>(initialTab ?? 'replies');
-  const { layerRef: commentsTabLayerRef, setRef: setCommentsTabRef, rect: commentsTabRect } = useTabIndicator(activeTab);
+  const commentsIsDraggingRef = useRef(false);
+  const { layerRef: commentsTabLayerRef, setRef: setCommentsTabRef, rect: commentsTabRect } = useTabIndicator(activeTab, undefined, commentsIsDraggingRef);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'recent' | 'oldest' | 'liked'>('recent');
   const [newComment, setNewComment] = useState(() => loadDraft(tokenId));
@@ -867,6 +868,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     tabValues: ['replies', 'quotes', 'reposts', 'search'] as CommentsTab[],
     activeTab,
     onTabChange: setActiveTab,
+    isDraggingRef: commentsIsDraggingRef,
   });
 
   return (

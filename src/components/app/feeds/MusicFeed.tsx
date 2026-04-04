@@ -650,7 +650,8 @@ interface MusicFeedProps {
 
 export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFeedProps) {
   const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('all');
-  const { layerRef: musicSubTabLayerRef, setRef: setMusicSubTabRef, rect: musicSubTabRect, onScroll: onMusicSubTabScroll } = useTabIndicator(activeSubTab);
+  const musicSubIsDraggingRef = useRef(false);
+  const { layerRef: musicSubTabLayerRef, setRef: setMusicSubTabRef, rect: musicSubTabRect, onScroll: onMusicSubTabScroll } = useTabIndicator(activeSubTab, undefined, musicSubIsDraggingRef);
   const { openModal: openStagesModal } = useStage();
   const { walletAddress, isAuthenticated } = useAuth();
 
@@ -765,6 +766,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     tabValues: MUSIC_SUB_TABS.map(t => t.value) as MusicSubTab[],
     activeTab: activeSubTab,
     onTabChange: setActiveSubTab,
+    isDraggingRef: musicSubIsDraggingRef,
   });
 
   if (isRefreshing) {

@@ -1072,7 +1072,8 @@ export default function NotificationsPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<NotificationTypeFilter>('all');
   const [notifTabTransition, setNotifTabTransition] = useState(false);
-  const { layerRef: notifTabLayerRef, setRef: setNotifTabRef, rect: notifTabRect, onScroll: onNotifTabScroll } = useTabIndicator(activeTab);
+  const isDraggingRef = useRef(false);
+  const { layerRef: notifTabLayerRef, setRef: setNotifTabRef, rect: notifTabRect, onScroll: onNotifTabScroll } = useTabIndicator(activeTab, undefined, isDraggingRef);
 
   // Drag-to-swipe state
   const tabButtonPositions = useRef<Partial<Record<NotificationTypeFilter, HTMLElement | null>>>({});
@@ -1084,6 +1085,7 @@ export default function NotificationsPage() {
     tabValues: tabs.map(t => t.value) as NotificationTypeFilter[],
     activeTab,
     onTabChange: setActiveTab,
+    isDraggingRef,
   });
 
   const handleTabClick = useCallback((tab: NotificationTypeFilter) => {

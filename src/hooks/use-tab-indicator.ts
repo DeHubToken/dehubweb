@@ -1,11 +1,12 @@
 import { useState, useRef, useCallback, useLayoutEffect, useEffect } from 'react';
+import type React from 'react';
 
 /**
  * Hook that manages a floating overlay indicator for tab rows.
  * The indicator is rendered in an overflow-visible layer ABOVE the
  * scroll container so spring animations are never clipped.
  */
-export function useTabIndicator<T extends string>(activeTab: T, layoutShiftKey?: string | number | boolean) {
+export function useTabIndicator<T extends string>(activeTab: T, layoutShiftKey?: string | number | boolean, isDraggingRef?: React.RefObject<boolean>) {
   const layerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<Partial<Record<T, HTMLElement | null>>>({});
   const trackingRafRef = useRef<number | null>(null);
@@ -91,6 +92,10 @@ export function useTabIndicator<T extends string>(activeTab: T, layoutShiftKey?:
       });
       return () => cancelAnimationFrame(raf);
     }
+    // Skip polling during drag — drag controls indicator position directly via DOM.
+    // When activeTab changes mid-drag (boundary crossing), we don't want the RAF loop
+    // fighting our imperative transform updates.
+    if (isDraggingRef?.current) { stopTracking(); return; }
     // User switched tabs or layout shifted — track to stay synced
     trackForDuration(700);
     return stopTracking;

@@ -634,7 +634,8 @@ export default function GovernancePage() {
   const { isAuthenticated, openLoginModal, user } = useAuth();
   const [activeTab, setActiveTab] = useState<PageTab>('proposals');
   const [sort, setSort] = useState<GovernanceSort>('most_voted');
-  const { layerRef: tabLayerRef, setRef: setTabRef, rect: tabRect, onScroll: onTabScroll } = useTabIndicator(activeTab);
+  const govIsDraggingRef = useRef(false);
+  const { layerRef: tabLayerRef, setRef: setTabRef, rect: tabRect, onScroll: onTabScroll } = useTabIndicator(activeTab, undefined, govIsDraggingRef);
   const { layerRef: sortLayerRef, setRef: setSortRef, rect: sortRect, onScroll: onSortScroll } = useTabIndicator(sort);
   const [searchInput, setSearchInput] = useState('');
   const search = useDebouncedValue(searchInput, 300);
@@ -683,6 +684,7 @@ export default function GovernancePage() {
     tabValues: ['proposals', 'passed', 'rejected'] as PageTab[],
     activeTab,
     onTabChange: setActiveTab,
+    isDraggingRef: govIsDraggingRef,
   });
 
   const handleSubmitClick = () => {

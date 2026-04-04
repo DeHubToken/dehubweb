@@ -249,7 +249,8 @@ function AudioTrackCard({ track }: { track: AudioTrack }) {
 export default function MusicPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<MusicTabValue>('all');
-  const { layerRef: musicTabLayerRef, setRef: setMusicTabRef, rect: musicTabRect, onScroll: onMusicTabScroll } = useTabIndicator(activeTab);
+  const musicIsDraggingRef = useRef(false);
+  const { layerRef: musicTabLayerRef, setRef: setMusicTabRef, rect: musicTabRect, onScroll: onMusicTabScroll } = useTabIndicator(activeTab, undefined, musicIsDraggingRef);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -343,6 +344,7 @@ export default function MusicPage() {
     tabValues: MUSIC_TABS.map(t => t.value) as MusicTabValue[],
     activeTab,
     onTabChange: setActiveTab,
+    isDraggingRef: musicIsDraggingRef,
   });
 
   return (

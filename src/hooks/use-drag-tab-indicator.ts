@@ -1,4 +1,5 @@
-import { useRef, useCallback, useState } from 'react';
+import { useRef, useCallback, useState, startTransition } from 'react';
+import type React from 'react';
 
 interface DragState {
   startX: number;
@@ -14,6 +15,8 @@ interface UseDragTabIndicatorOptions<T extends string> {
   tabValues: readonly T[];
   activeTab: T;
   onTabChange: (tab: T) => void;
+  /** Shared ref passed to useTabIndicator so it skips trackForDuration during drag */
+  isDraggingRef: React.MutableRefObject<boolean>;
 }
 
 export function useDragTabIndicator<T extends string>({
@@ -23,6 +26,7 @@ export function useDragTabIndicator<T extends string>({
   tabValues,
   activeTab,
   onTabChange,
+  isDraggingRef,
 }: UseDragTabIndicatorOptions<T>) {
   const dragStateRef = useRef<DragState | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -58,8 +62,13 @@ export function useDragTabIndicator<T extends string>({
       startWidth: tabRect.width,
       rectY: tabRect.y,
     };
+    isDraggingRef.current = true;
     setIsDragging(true);
-  }, [tabRect.x, tabRect.width, tabRect.y]);
+    // Promote to compositor layer for the duration of the drag
+    if (indicatorRef.current) {
+      indicatorRef.current.style.willChange = 'transform';
+    }
+  }, [tabRect.x, tabRect.width, tabRect.y, isDraggingRef]);
 
   const handleDragMove = useCallback((e: React.PointerEvent) => {
     const drag = dragStateRef.current;
@@ -67,27 +76,36 @@ export function useDragTabIndicator<T extends string>({
     const dx = e.clientX - drag.startX;
     const newX = drag.startRectX + dx;
 
-    // Direct DOM update — NO React re-render for indicator position
+    // Direct DOM update — NO React re-render for indicator position.
+    // This runs on every pointermove without touching React.
     if (indicatorRef.current) {
       indicatorRef.current.style.transform = `translate(${newX}px, ${drag.rectY}px)`;
       indicatorRef.current.style.transition = 'none';
     }
 
-    // React state update only on tab boundary crossing (content switch)
+    // Content switch: wrap in startTransition so React yields to pointer events
+    // during heavy re-renders (feeds, cards, etc.). isDraggingRef prevents
+    // useTabIndicator's trackForDuration from fighting our imperative position.
     const centerX = drag.startRectX + dx + drag.startWidth / 2;
     const nearest = findNearest(centerX);
     if (nearest !== activeTabRef.current) {
-      onTabChange(nearest);
+      startTransition(() => {
+        onTabChange(nearest);
+      });
     }
   }, [findNearest, onTabChange]);
 
   const handleDragEnd = useCallback(() => {
     if (!dragStateRef.current) return;
     dragStateRef.current = null;
+    isDraggingRef.current = false;
     setIsDragging(false);
-    // GlassIndicator React render takes over with spring transition
-    // indicatorRef.current.style.transform will be overridden by React's next render
-  }, []);
+    // Clear compositor promotion — React's next render will set correct transform
+    // with spring transition (enableTransition=true after isDragging=false)
+    if (indicatorRef.current) {
+      indicatorRef.current.style.willChange = '';
+    }
+  }, [isDraggingRef]);
 
   return { isDragging, indicatorRef, handleDragStart, handleDragMove, handleDragEnd };
 }

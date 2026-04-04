@@ -337,7 +337,8 @@ export default function ExplorePage() {
   
   const [activeTab, setActiveTab] = useState('all');
   const [enableExploreTransition, setEnableExploreTransition] = useState(false);
-  const { layerRef: exploreTabLayerRef, setRef: setExploreTabRef, rect: exploreTabRect } = useTabIndicator(activeTab);
+  const exploreIsDraggingRef = useRef(false);
+  const { layerRef: exploreTabLayerRef, setRef: setExploreTabRef, rect: exploreTabRect } = useTabIndicator(activeTab, undefined, exploreIsDraggingRef);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -820,6 +821,7 @@ export default function ExplorePage() {
     tabValues: EXPLORE_TABS.map(t => t.value),
     activeTab,
     onTabChange: setActiveTab,
+    isDraggingRef: exploreIsDraggingRef,
   });
 
   return (

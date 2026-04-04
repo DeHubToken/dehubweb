@@ -111,7 +111,8 @@ const tabs = [
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
-  const { layerRef: settingsTabLayerRef, setRef: setSettingsTabRef, rect: settingsTabRect } = useTabIndicator(activeTab);
+  const settingsIsDraggingRef = useRef(false);
+  const { layerRef: settingsTabLayerRef, setRef: setSettingsTabRef, rect: settingsTabRect } = useTabIndicator(activeTab, undefined, settingsIsDraggingRef);
   const [theme, setTheme] = useState('system');
   const [selectedChainId, setSelectedChainId] = useState<ChainId>(() => {
     const stored = localStorage.getItem('preferred-chain-id');
@@ -144,6 +145,7 @@ export default function SettingsPage() {
     tabValues: tabs.map(t => t.value),
     activeTab,
     onTabChange: setActiveTab,
+    isDraggingRef: settingsIsDraggingRef,
   });
 
   // Block access for unauthenticated users (AuthGate handles loading state internally)
