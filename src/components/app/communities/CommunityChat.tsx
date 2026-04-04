@@ -108,9 +108,9 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { user } = useAuth();
   const profileData = user ? {
-    handle: user.username || user.handle,
-    name: user.displayName || user.name,
-    avatarUrl: user.avatarUrl || user.avatar,
+    handle: user.username,
+    name: user.displayName || user.display_name,
+    avatarUrl: user.avatarImageUrl || user.avatarUrl || user.avatar_url,
   } : null;
 
   const { messages, isLoading, sendMessage, addReaction, removeReaction } = useCommunityChat(communityId);
