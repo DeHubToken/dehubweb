@@ -97,9 +97,9 @@ export function PostAccessToggles({
   const categoryDrawerOpen = categoryDrawerOpenProp ?? categoryDrawerOpenLocal;
   const setCategoryDrawerOpen = setCategoryDrawerOpenProp ?? setCategoryDrawerOpenLocal;
 
-  // Community tag helpers
-  const selectedCommunityTag = selectedCategory.split('|||').find(c => c.startsWith('community:'));
-  const selectedCommunitySlug = selectedCommunityTag?.replace('community:', '') || null;
+  // Community tag helpers — community slug is stored as a plain category (e.g. "dehub")
+  const communitySlugs = new Set(userCommunities.map(m => m.communities?.slug).filter(Boolean));
+  const selectedCommunitySlug = selectedCategoriesArray.find(c => communitySlugs.has(c)) || null;
   const hasCommunities = userCommunities.length > 0 && !!walletAddress;
 
   // Temp states for drawer inputs
