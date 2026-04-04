@@ -1,5 +1,5 @@
 import { useMemo, useRef, useEffect, useState } from 'react';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceDot } from 'recharts';
 import type { PricePoint, ChartTimeframe } from '@/hooks/use-token-chart';
 import { Loader2, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -43,6 +43,8 @@ function formatTooltipLabel(timestamp: number, timeframe: ChartTimeframe = '1D')
 }
 
 export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframeChange, externalUrl }: TokenPriceChartProps) {
+  const isSinglePoint = data.length === 1;
+
   const isPositive = useMemo(() => {
     if (data.length < 2) return true;
     return data[data.length - 1].price >= data[0].price;
@@ -107,6 +109,17 @@ export function TokenPriceChart({ data, isLoading, timeframe = '1D', onTimeframe
             dot={false}
             activeDot={{ r: 4, fill: color, stroke: '#18181b', strokeWidth: 2 }}
           />
+          {isSinglePoint && (
+            <ReferenceDot
+              x={data[0].time}
+              y={data[0].price}
+              r={4}
+              fill={color}
+              stroke="#18181b"
+              strokeWidth={2}
+              isFront
+            />
+          )}
         </AreaChart>
       </ResponsiveContainer>
     </div>
