@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Smile, Search } from 'lucide-react';
+import { Smile, Search, Loader2 } from 'lucide-react';
 
 const EMOJI_CATEGORIES = {
   'Smileys': ['😀', '😃', '😄', '😁', '😅', '😂', '🤣', '😊', '😇', '🙂', '😉', '😍', '🥰', '😘', '😋', '😛', '🤪', '😎', '🤩', '🥳'],
@@ -11,23 +11,37 @@ const EMOJI_CATEGORIES = {
   'Objects': ['🔥', '⭐', '✨', '💫', '🌟', '💥', '💯', '🎉', '🎊', '🎁', '🏆', '🥇', '🎮', '🎯', '🎨', '🎬', '📸', '💰', '💎', '🚀'],
 };
 
-const TRENDING_GIFS = [
-  'https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif',
-  'https://media.giphy.com/media/3o6Zt6ML6BklcajjsA/giphy.gif',
-  'https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif',
-  'https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif',
-  'https://media.giphy.com/media/l0MYAs5E2oIDCq9So/giphy.gif',
-  'https://media.giphy.com/media/3o7TKSjRrfIPjeiVyM/giphy.gif',
-];
+// GIPHY public beta key (intended for client-side use)
+const GIPHY_API_KEY = 'GlVGYHkr3WSBnllca54iNt0yFbjz7L65';
 
-const MOCK_GIFS = [
-  'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif',
-  'https://media.giphy.com/media/xT9IgG50Fb7Mi0prBC/giphy.gif',
-  'https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif',
-  'https://media.giphy.com/media/l46Cy1rHbQ92uuLXa/giphy.gif',
-  'https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif',
-  'https://media.giphy.com/media/xUPGcguWZHRC2HyBRS/giphy.gif',
-];
+interface GiphyGif {
+  id: string;
+  images: {
+    fixed_width: { url: string };
+    original: { url: string };
+  };
+  title: string;
+}
+
+async function fetchTrendingGifs(): Promise<string[]> {
+  try {
+    const res = await fetch(`https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}&limit=20&rating=pg-13`);
+    const data = await res.json();
+    return (data.data || []).map((g: GiphyGif) => g.images.fixed_width.url);
+  } catch {
+    return [];
+  }
+}
+
+async function searchGifs(query: string): Promise<string[]> {
+  try {
+    const res = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(query)}&limit=20&rating=pg-13`);
+    const data = await res.json();
+    return (data.data || []).map((g: GiphyGif) => g.images.fixed_width.url);
+  } catch {
+    return [];
+  }
+}
 
 interface EmojiGifPickerProps {
   onEmojiSelect: (emoji: string) => void;
@@ -39,6 +53,46 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect }: EmojiGifPickerPro
   const [activeTab, setActiveTab] = useState<'emoji' | 'gif'>('emoji');
   const [activeCategory, setActiveCategory] = useState('Smileys');
   const [gifSearchQuery, setGifSearchQuery] = useState('');
+  const [gifs, setGifs] = useState<string[]>([]);
+  const [loadingGifs, setLoadingGifs] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Load trending GIFs when GIF tab opens
+  useEffect(() => {
+    if (open && activeTab === 'gif' && gifs.length === 0 && !gifSearchQuery) {
+      setLoadingGifs(true);
+      fetchTrendingGifs().then(results => {
+        setGifs(results);
+        setLoadingGifs(false);
+      });
+    }
+  }, [open, activeTab]);
+
+  // Debounced search
+  const debouncedSearch = useCallback((query: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (!query.trim()) {
+      setLoadingGifs(true);
+      fetchTrendingGifs().then(results => {
+        setGifs(results);
+        setLoadingGifs(false);
+      });
+      return;
+    }
+    setLoadingGifs(true);
+    debounceRef.current = setTimeout(() => {
+      searchGifs(query).then(results => {
+        setGifs(results);
+        setLoadingGifs(false);
+      });
+    }, 500);
+  }, []);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setGifSearchQuery(value);
+    debouncedSearch(value);
+  };
 
   const handleEmojiClick = (emoji: string) => {
     onEmojiSelect(emoji);
@@ -51,7 +105,13 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect }: EmojiGifPickerPro
     setGifSearchQuery('');
   };
 
-  const displayGifs = gifSearchQuery ? MOCK_GIFS : TRENDING_GIFS;
+  // Reset on close
+  useEffect(() => {
+    if (!open) {
+      setGifSearchQuery('');
+      setGifs([]);
+    }
+  }, [open]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -136,7 +196,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect }: EmojiGifPickerPro
                 <Input
                   placeholder="Search GIFs..."
                   value={gifSearchQuery}
-                  onChange={(e) => setGifSearchQuery(e.target.value)}
+                  onChange={handleSearchChange}
                   className="pl-8 h-8 bg-white/5 border-white/10 text-white text-sm placeholder:text-zinc-500"
                 />
               </div>
@@ -148,22 +208,30 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect }: EmojiGifPickerPro
             
             {/* GIF grid */}
             <div className="p-2 pt-0 max-h-64 overflow-y-auto">
-              <div className="grid grid-cols-2 gap-2">
-                {displayGifs.map((gif, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleGifClick(gif)}
-                    className="aspect-video rounded-lg overflow-hidden hover:ring-2 hover:ring-white transition-all"
-                  >
-                    <img 
-                      src={gif} 
-                      alt="GIF" 
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                  </button>
-                ))}
-              </div>
+              {loadingGifs ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+                </div>
+              ) : gifs.length === 0 ? (
+                <p className="text-center text-zinc-500 text-xs py-8">No GIFs found</p>
+              ) : (
+                <div className="grid grid-cols-2 gap-2">
+                  {gifs.map((gif, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleGifClick(gif)}
+                      className="aspect-video rounded-lg overflow-hidden hover:ring-2 hover:ring-white transition-all"
+                    >
+                      <img 
+                        src={gif} 
+                        alt="GIF" 
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             
             <div className="p-2 border-t border-white/10 text-center">
