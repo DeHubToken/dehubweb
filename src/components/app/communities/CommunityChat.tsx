@@ -249,6 +249,36 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                         </span>
                         {msg.message_type === 'gif' && msg.image_url ? (
                           <img src={msg.image_url} alt="GIF" className="max-w-[280px] max-h-32 rounded mt-0.5" loading="lazy" />
+                        ) : editingId === msg.id ? (
+                          <div className="flex items-center gap-1 mt-0.5">
+                            <input
+                              autoFocus
+                              value={editText}
+                              onChange={(e) => setEditText(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  editMessage(msg.id, editText);
+                                  setEditingId(null);
+                                } else if (e.key === 'Escape') {
+                                  setEditingId(null);
+                                }
+                              }}
+                              className="flex-1 text-xs text-white bg-white/5 border border-white/10 rounded px-1.5 py-0.5 outline-none focus:border-white/20"
+                              maxLength={500}
+                            />
+                            <button
+                              onClick={() => { editMessage(msg.id, editText); setEditingId(null); }}
+                              className="p-0.5 text-emerald-400 hover:text-emerald-300"
+                            >
+                              <Check className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => setEditingId(null)}
+                              className="p-0.5 text-zinc-500 hover:text-white"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         ) : (
                           <TranslatableText text={msg.content} className="text-xs text-zinc-300 break-words" as="p" />
                         )}
@@ -266,6 +296,19 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                       {/* Hover action buttons */}
                       {isAuthenticated && isMember && (
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 flex-shrink-0 mt-0.5">
+                          {walletAddress && msg.wallet_address.toLowerCase() === walletAddress.toLowerCase() && msg.message_type !== 'gif' && (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button
+                                  onClick={() => { setEditingId(msg.id); setEditText(msg.content); }}
+                                  className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded"
+                                >
+                                  <Pencil className="w-3.5 h-3.5" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent side="top">Edit</TooltipContent>
+                            </Tooltip>
+                          )}
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button
