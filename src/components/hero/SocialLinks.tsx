@@ -58,12 +58,10 @@ const SocialIcon = ({ icon }: { icon: string }) => {
       );
     case 'scroll':
       return (
-        <div
-          className="w-9 h-9 md:w-9 md:h-9 flex items-center justify-center -translate-y-[2px] [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.6))]"
-          style={{ fontSize: '32px' }}
-        >
-          <span className="md:text-[32px]">📜</span>
-        </div>
+        <svg {...svgProps} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M8 21h12a2 2 0 0 0 2-2v-2H10v2a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v3h4" />
+          <path d="M19 17V5a2 2 0 0 0-2-2H4" />
+        </svg>
       );
     default:
       return null;
