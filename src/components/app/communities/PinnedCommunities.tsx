@@ -36,7 +36,7 @@ export function PinnedCommunities({ walletAddress, isOwnProfile }: PinnedCommuni
           );
         })}
       </div>
-      {isOwnProfile && pinned.length < 3 && (
+      {isOwnProfile && pinned.length === 0 && (
         <button
           onClick={() => setPickerOpen(true)}
           className="mt-2 inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-dashed border-white/[0.1] hover:bg-white/[0.08] transition-colors text-xs text-zinc-500"
