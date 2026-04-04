@@ -191,6 +191,16 @@ serve(async (req) => {
         };
         break;
 
+      case 'seedance-1.5-pro':
+        input = {
+          prompt,
+          duration: Math.min(Math.max(parseInt(duration) || 5, 2), 12),
+          aspect_ratio: aspectRatio,
+          resolution: '720p',
+          generate_audio: true,
+          ...(sourceImage && { image: sourceImage }),
+        };
+        break;
 
       default:
         input = { prompt };
