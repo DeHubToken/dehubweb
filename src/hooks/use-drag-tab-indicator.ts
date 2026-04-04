@@ -35,6 +35,10 @@ interface UseDragTabIndicatorOptions<T extends string> {
   onTabChange: (tab: T) => void;
   /** Shared ref passed to useTabIndicator so it skips trackForDuration during drag */
   isDraggingRef: React.MutableRefObject<boolean>;
+  /** Called when pointer released with minimal movement (tap, not drag) */
+  onTap?: () => void;
+  /** Called when drag ends — use to trigger spring transition or other cleanup */
+  onDragEnd?: () => void;
 }
 
 /** Rubber-band resistance: apply 35% of overshoot past the edge */
@@ -57,6 +61,8 @@ export function useDragTabIndicator<T extends string>({
   activeTab,
   onTabChange,
   isDraggingRef,
+  onTap,
+  onDragEnd,
 }: UseDragTabIndicatorOptions<T>) {
   const dragStateRef = useRef<DragState<T> | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -197,6 +203,9 @@ export function useDragTabIndicator<T extends string>({
       }
     }
 
+    // Tap detection: minimal movement = tap, not drag
+    if (Math.abs(drag.lastX - drag.startX) < 5) onTap?.();
+
     setIsDragging(false);
     // Do NOT clear style.width or style.willChange here.
     // React's next render (triggered by setIsDragging above) will set all styles
@@ -204,7 +213,8 @@ export function useDragTabIndicator<T extends string>({
     // causes a blank frame before React renders (glass disappears briefly).
     // The spring transition will animate from current imperative values to the
     // new tabRect values naturally.
-  }, [isDraggingRef, onTabChange]);
+    onDragEnd?.();
+  }, [isDraggingRef, onTabChange, onTap, onDragEnd]);
 
   return { isDragging, indicatorRef, handleDragStart, handleDragMove, handleDragEnd };
 }

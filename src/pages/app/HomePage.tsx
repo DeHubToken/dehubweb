@@ -171,6 +171,9 @@ export default function HomePage() {
   }, [checkActiveFilters]);
   // Save tab state to sessionStorage whenever it changes and notify GlobalFeedNav
   useEffect(() => {
+    // Skip during drag — avoid synchronous I/O and global event dispatch
+    // on every boundary crossing. Will save when drag ends (isDragging becomes false).
+    if (homeIsDraggingRef.current) return;
     try {
       sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: activeTab }));
       // Dispatch custom event so GlobalFeedNav updates its indicator
@@ -394,11 +397,15 @@ export default function HomePage() {
     }
     
     prevTabRef.current = activeTab;
-    
+
+    // Skip scroll-to-top during drag — scrolling mid-drag causes layout reflow
+    // which is the biggest source of lag on the home page.
+    if (homeIsDraggingRef.current) return;
+
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
-    
+
     // Also reset any scrollable containers
     const mainContent = document.querySelector('main');
     if (mainContent) {
@@ -560,6 +567,19 @@ export default function HomePage() {
       resetFilters();
     },
     isDraggingRef: homeIsDraggingRef,
+    onTap: () => handleTabClick(activeTab),
+    onDragEnd: () => {
+      // Trigger spring transition after drag ends
+      setEnableHomeTransition(true);
+      setTimeout(() => setEnableHomeTransition(false), 450);
+      // Now safe to persist tab + notify GlobalFeedNav
+      try {
+        sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: activeTab }));
+        window.dispatchEvent(new CustomEvent('home-tab-changed'));
+      } catch { /* ignore */ }
+      // Scroll to top for the final settled tab
+      window.scrollTo(0, 0);
+    },
   });
 
   // --------------------------------------------------------------------------
