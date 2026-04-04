@@ -16,12 +16,14 @@ export const createScene = (canvas: HTMLCanvasElement): SceneSetup => {
   );
   const renderer = new THREE.WebGLRenderer({
     canvas,
-    antialias: true,
+    antialias: window.devicePixelRatio < 2, // skip antialiasing on hi-DPI (looks fine, saves GPU)
     alpha: true,
+    powerPreference: 'high-performance',
   });
 
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  // Cap pixel ratio at 1.5 on mobile/low-end — halves GPU fill rate on Retina screens
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   camera.position.z = 5;
 
   return { scene, camera, renderer };

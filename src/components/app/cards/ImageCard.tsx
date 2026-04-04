@@ -169,11 +169,13 @@ function ImageCarousel({
                 }}
               >
                 {/* Blurred background fill - liquid glass effect from image colors */}
-                <img 
-                  src={img} 
-                  alt="" 
+                <img
+                  src={img}
+                  alt=""
                   className="absolute inset-0 w-full h-full object-cover scale-110 blur-[24px] saturate-[180%] opacity-60"
                   aria-hidden="true"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
                 {/* Actual image - natural aspect ratio */}

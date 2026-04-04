@@ -133,11 +133,13 @@ export const FuturisticAlienHero = () => {
       const delta = elapsedTime - previousTime;
       previousTime = elapsedTime;
 
-      // Camera follows mouse
-      const { mouseX, mouseY } = mouseInteraction.getMousePosition();
-      camera.position.x += (mouseX - camera.position.x) * 0.05;
-      camera.position.y += (-mouseY - camera.position.y) * 0.05;
-      camera.lookAt(scene.position);
+      // Camera follows mouse — only update every 2nd frame to halve GPU draw calls
+      if (Math.round(elapsedTime * 60) % 2 === 0) {
+        const { mouseX, mouseY } = mouseInteraction.getMousePosition();
+        camera.position.x += (mouseX - camera.position.x) * 0.05;
+        camera.position.y += (-mouseY - camera.position.y) * 0.05;
+        camera.lookAt(scene.position);
+      }
 
       // Animate systems
       animateArtifact(artifactSystem, elapsedTime);

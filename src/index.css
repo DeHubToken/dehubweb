@@ -404,7 +404,7 @@ html {
   backdrop-filter: blur(12px) !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
   border-radius: 12px !important;
-  transition: all 0.2s ease !important;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease !important;
 }
 
 .w3a-button:hover {
