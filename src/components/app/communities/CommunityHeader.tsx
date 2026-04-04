@@ -131,7 +131,7 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
           <h1 className="text-lg font-bold text-white truncate">{community.name}</h1>
           <p className="text-zinc-500 text-sm">{community.member_count.toLocaleString()} members</p>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0 pt-[39px] pr-[7px]">
+        <div className="flex items-center gap-2 flex-shrink-0 pt-[39px] -mr-[3px]">
           {isMember && (
             <Button
               size="sm"
