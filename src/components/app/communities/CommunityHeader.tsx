@@ -139,12 +139,28 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
           )}
         </div>
         <div className="flex items-center gap-2 flex-shrink-0 pt-[39px]">
+          {isMember && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handlePinToggle}
+              disabled={pinMutation.isPending || unpinMutation.isPending}
+              className={`rounded-xl gap-1.5 h-9 px-3 ${
+                isPinned
+                  ? 'bg-white/10 border border-white/20 text-white hover:bg-white/15'
+                  : 'bg-white/[0.06] border border-white/[0.1] text-zinc-400 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              {isPinned ? <PinOff className="w-3.5 h-3.5" /> : <Pin className="w-3.5 h-3.5" />}
+              {isPinned ? t('communities.unpin') : t('communities.pin')}
+            </Button>
+          )}
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 size="sm"
                 variant="ghost"
-                className="rounded-xl gap-1.5 h-9 px-3 bg-white/[0.06] border border-white/[0.1] text-zinc-400 hover:text-white hover:bg-white/10"
+                className="rounded-xl gap-1.5 h-9 px-3 bg-white/10 border border-white/20 text-white hover:bg-white/15"
               >
                 <Share2 className="w-3.5 h-3.5" />
                 {t('communities.share')}
@@ -174,22 +190,6 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
               </button>
             </PopoverContent>
           </Popover>
-          {isMember && (
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={handlePinToggle}
-              disabled={pinMutation.isPending || unpinMutation.isPending}
-              className={`rounded-xl gap-1.5 h-9 px-3 ${
-                isPinned
-                  ? 'bg-white/10 border border-white/20 text-white hover:bg-white/15'
-                  : 'bg-white/[0.06] border border-white/[0.1] text-zinc-400 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              {isPinned ? <PinOff className="w-3.5 h-3.5" /> : <Pin className="w-3.5 h-3.5" />}
-              {isPinned ? t('communities.unpin') : t('communities.pin')}
-            </Button>
-          )}
           <Button
             size="sm"
             disabled={isPending || isOwner}
