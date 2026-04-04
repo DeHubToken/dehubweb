@@ -926,8 +926,6 @@ const communityTranslations: Record<string, CommunityTranslation> = {
       pinToProfile: 'சுயவிவரத்தில் சமூகங்களைப் பின் செய்', joinFirst: 'பின் செய்ய முதலில் சமூகங்களில் இணையுங்கள்', pinCommunity: 'சமூகத்தைப் பின் செய்',
     },
   },
-};
-
   sv: {
     nav: { communities: 'Gemenskaper' },
     communities: {
