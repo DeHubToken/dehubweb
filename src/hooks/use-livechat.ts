@@ -27,6 +27,7 @@ export interface SupabaseLiveChatMessage {
   sender_username: string | null;
   sender_display_name: string | null;
   sender_avatar_url: string | null;
+  sender_badge_balance?: number | null;
   content: string;
   message_type: string;
   image_url: string | null;
