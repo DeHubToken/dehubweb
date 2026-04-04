@@ -23,7 +23,7 @@ const MIN_W = 220;
 const MIN_H = 160;
 const DEFAULT_W = 320;
 const DEFAULT_H = 220;
-const TIMEFRAMES: ChartTimeframe[] = ['7D', '30D', '90D', '1Y'];
+const TIMEFRAMES: ChartTimeframe[] = ['1D', '7D', '30D', '90D', '1Y'];
 
 export function FloatingChartPiP({ item, index, onClose, onUpdate }: FloatingChartPiPProps) {
   const containerRef = useRef<HTMLDivElement>(null);

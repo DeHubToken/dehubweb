@@ -6,9 +6,10 @@ export interface PricePoint {
   price: number;
 }
 
-export type ChartTimeframe = '7D' | '30D' | '90D' | '1Y';
+export type ChartTimeframe = '1D' | '7D' | '30D' | '90D' | '1Y';
 
 const TIMEFRAME_DAYS: Record<ChartTimeframe, number> = {
+  '1D': 1,
   '7D': 7,
   '30D': 30,
   '90D': 90,
@@ -42,8 +43,12 @@ async function fetchGeckoTerminalOHLCV(
   // Strip suffixes like ":4meme" from pair addresses
   const cleanPairAddress = pairAddress.split(':')[0];
   const days = TIMEFRAME_DAYS[timeframe];
-  const limit = Math.min(days, 1000);
-  const url = `https://api.geckoterminal.com/api/v2/networks/${network}/pools/${cleanPairAddress}/ohlcv/day?limit=${limit}`;
+
+  // Use hourly candles for 1D, daily for everything else
+  const isHourly = timeframe === '1D';
+  const limit = isHourly ? 24 : Math.min(days, 1000);
+  const period = isHourly ? 'hour' : 'day';
+  const url = `https://api.geckoterminal.com/api/v2/networks/${network}/pools/${cleanPairAddress}/ohlcv/${period}?limit=${limit}`;
 
   try {
     const res = await fetch(url);
@@ -73,7 +78,9 @@ async function fetchTokenChart(
 
   const cmcPrices: PricePoint[] = (!error && data?.prices?.length) ? data.prices : [];
 
-  if (cmcPrices.length > 0) return cmcPrices;
+  // For 1D, require at least 12 points for a useful chart; for others require > 0
+  const minPoints = timeframe === '1D' ? 12 : 1;
+  if (cmcPrices.length >= minPoints) return cmcPrices;
 
   // Fallback: GeckoTerminal OHLCV via pair address
   if (options?.pairAddress && options?.chainId) {
