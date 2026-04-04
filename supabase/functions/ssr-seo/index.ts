@@ -322,6 +322,15 @@ serve(async (req) => {
                     imageHeight: isLogoFallback ? 200 : 400,
                     functionBaseUrl,
                     isBot,
+                    jsonLd: {
+                        '@context': 'https://schema.org',
+                        '@type': 'Person',
+                        name: displayName,
+                        url: profileUrl,
+                        ...(user.aboutMe && { description: user.aboutMe }),
+                        ...(avatarUrl !== DEHUB_LOGO && { image: avatarUrl }),
+                        sameAs: profileUrl,
+                    },
                 });
                 return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
             }
