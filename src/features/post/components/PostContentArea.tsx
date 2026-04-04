@@ -515,11 +515,16 @@ export function PostContentArea({
       editorRef.current.innerHTML = '';
       hasHydrated.current = false;
       isUserTyping.current = false;
-    } else if (text && !hasHydrated.current && !isUserTyping.current) {
-      // Only hydrate from draft restore / external text set, NOT from user typing
-      editorRef.current.textContent = text;
-      hasHydrated.current = true;
-      setTimeout(processLinks, 0);
+    } else if (text && !isUserTyping.current) {
+      // Check if DOM content matches — if not, sync it (handles external setText like share)
+      const currentContent = editorRef.current.textContent || '';
+      if (currentContent !== text) {
+        editorRef.current.textContent = text;
+        hasHydrated.current = true;
+        setTimeout(processLinks, 0);
+      } else if (!hasHydrated.current) {
+        hasHydrated.current = true;
+      }
     }
   }, [text, editorRef, processLinks]);
 
