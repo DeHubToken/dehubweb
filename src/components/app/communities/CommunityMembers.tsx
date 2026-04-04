@@ -1,7 +1,7 @@
 import { Crown, Shield, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { CommunityMember } from '@/hooks/use-communities';
-import { useDehubProfile } from '@/hooks/use-dehub-profile';
+import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 
 interface CommunityMembersProps {
   members: CommunityMember[];
