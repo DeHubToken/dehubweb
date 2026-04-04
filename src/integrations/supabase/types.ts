@@ -298,6 +298,9 @@ export type Database = {
           name: string
           rules: Json | null
           slug: string
+          ticker_chain_id: string | null
+          ticker_contract_address: string | null
+          ticker_pair_address: string | null
           ticker_symbol: string | null
           updated_at: string
         }
@@ -313,6 +316,9 @@ export type Database = {
           name: string
           rules?: Json | null
           slug: string
+          ticker_chain_id?: string | null
+          ticker_contract_address?: string | null
+          ticker_pair_address?: string | null
           ticker_symbol?: string | null
           updated_at?: string
         }
@@ -328,6 +334,9 @@ export type Database = {
           name?: string
           rules?: Json | null
           slug?: string
+          ticker_chain_id?: string | null
+          ticker_contract_address?: string | null
+          ticker_pair_address?: string | null
           ticker_symbol?: string | null
           updated_at?: string
         }
