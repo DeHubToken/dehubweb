@@ -11,8 +11,22 @@ export function CommunityCard({ community, isMember, onClick }: CommunityCardPro
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] transition-colors text-left"
+      className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] transition-colors text-left relative overflow-hidden"
     >
+      {/* Subtle banner background fade */}
+      {community.banner_url && (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `url(${community.banner_url})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            opacity: 0.12,
+            maskImage: 'linear-gradient(to right, transparent 30%, black 70%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 30%, black 70%)',
+          }}
+        />
+      )}
       {/* Avatar */}
       <div className="w-12 h-12 rounded-xl bg-white/[0.08] flex items-center justify-center flex-shrink-0 overflow-hidden">
         {community.avatar_url ? (
