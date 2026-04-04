@@ -11,11 +11,14 @@ import { searchNFTs } from '@/lib/api/dehub';
 import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 import type { FeedItem, TextPost, VideoItem, ImagePost, ShortVideo } from '@/types/feed.types';
 import { Skeleton } from '@/components/ui/skeleton';
+import { TokenPriceChart } from '@/components/app/TokenPriceChart';
+import { useTokenChart, type ChartTimeframe } from '@/hooks/use-token-chart';
 
 interface CommunityFeedProps {
   communitySlug: string;
   memberAddresses: Set<string>;
   isMember: boolean;
+  tickerSymbol?: string | null;
 }
 
 /** Extract creator address from any feed item type */
@@ -67,10 +70,16 @@ function getThumbnail(post: FeedItem): string | undefined {
   }
 }
 
-export function CommunityFeed({ communitySlug, memberAddresses, isMember }: CommunityFeedProps) {
+export function CommunityFeed({ communitySlug, memberAddresses, isMember, tickerSymbol }: CommunityFeedProps) {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>('7D');
+  const { data: chartData = [], isLoading: chartLoading } = useTokenChart(
+    tickerSymbol || '',
+    !!tickerSymbol,
+    chartTimeframe
+  );
 
   const categoryTag = `community:${communitySlug}`;
 
@@ -137,6 +146,19 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember }: Comm
 
   return (
     <div className="space-y-3">
+      {tickerSymbol && (
+        <div className="rounded-xl overflow-hidden border border-white/[0.08] bg-white/[0.02]">
+          <div className="px-3 py-2 flex items-center gap-1.5 border-b border-white/[0.06]">
+            <span className="text-xs font-medium text-white">${tickerSymbol}</span>
+          </div>
+          <TokenPriceChart
+            data={chartData}
+            isLoading={chartLoading}
+            timeframe={chartTimeframe}
+            onTimeframeChange={setChartTimeframe}
+          />
+        </div>
+      )}
       {memberPosts.map(post => {
         const avatar = getAvatar(post);
         const name = getDisplayName(post);

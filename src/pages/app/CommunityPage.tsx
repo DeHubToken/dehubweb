@@ -118,6 +118,7 @@ export default function CommunityPage() {
             communitySlug={community.slug}
             memberAddresses={memberAddresses}
             isMember={isMember}
+            tickerSymbol={community.ticker_symbol}
           />
         )}
         {tab === 'members' && (
