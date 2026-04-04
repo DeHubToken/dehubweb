@@ -15,6 +15,7 @@ interface CommunityTranslation {
 
 const communityTranslations: Record<string, CommunityTranslation> = {
   es: {
+    nav: { communities: 'Comunidades' },
     communities: {
       title: 'Comunidades',
       create: 'Crear',
