@@ -270,7 +270,7 @@ export function SidebarChat() {
                     <div className="min-w-0 flex-1">
                       <span className="relative inline-flex items-baseline gap-1.5">
                         <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>{name}</button>
-                        <SidebarChatBadge address={msg.sender_address} />
+                        <SidebarChatBadge badgeBalance={msg.sender_badge_balance} username={msg.sender_username} />
                         <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
                       </span>
                       {msg.message_type === 'image' && msg.image_url ? (
