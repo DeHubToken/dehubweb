@@ -26,6 +26,7 @@ type SwapStatus = 'idle' | 'quoting' | 'quoted' | 'swapping' | 'success' | 'erro
 
 interface SwapActionCardProps {
   action: SwapAction;
+  autoQuote?: boolean;
 }
 
 // Well-known token decimals
