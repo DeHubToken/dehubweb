@@ -279,6 +279,8 @@ export function PostContentArea({
       // Merge all matches and sort by index
       const allMatches: { index: number; length: number; type: 'url' | 'cashtag'; text: string }[] = [];
       for (const m of urlMatches) {
+        // Skip community URLs - they get a card embed below instead of a chip
+        if (/\/app\/communities\/[a-zA-Z0-9_-]+/.test(m[0])) continue;
         allMatches.push({ index: m.index!, length: m[0].length, type: 'url', text: m[0] });
       }
       for (const m of cashtagMatches) {
