@@ -372,6 +372,16 @@ serve(async (req) => {
                     functionBaseUrl,
                     isBot,
                     videoUrl,
+                    jsonLd: {
+                        '@context': 'https://schema.org',
+                        '@type': 'Article',
+                        headline: title,
+                        description,
+                        url: postUrl,
+                        ...(nft.minterDisplayName && { author: { '@type': 'Person', name: nft.minterDisplayName } }),
+                        publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
+                        ...(postImage && { image: postImage }),
+                    },
                 });
                 return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
             }
