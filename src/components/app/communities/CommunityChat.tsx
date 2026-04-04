@@ -131,9 +131,9 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
     setNewMessage('');
     try {
       await sendMessage(trimmed, 'text', undefined, replyToId, {
-        username: profileData?.username || undefined,
-        displayName: profileData?.displayName || undefined,
-        avatarUrl: profileData?.avatarImageUrl || undefined,
+        username: profileData?.handle || undefined,
+        displayName: profileData?.name || undefined,
+        avatarUrl: profileData?.avatarUrl || undefined,
       });
     } catch {
       // Error handled in hook
