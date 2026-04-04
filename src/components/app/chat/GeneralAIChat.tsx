@@ -23,12 +23,22 @@ import { MarkdownText } from '@/lib/markdown';
 import { PostModal } from '@/features/post';
 import ftvLogoSymbol from '@/assets/ftv-logo-symbol.png';
 
+interface SwapAction {
+  tokenIn: string;
+  tokenOut: string;
+  tokenInSymbol: string;
+  tokenOutSymbol: string;
+  amount: string;
+  amountType: 'input' | 'output';
+}
+
 interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   imageUrl?: string;
   attachedImage?: string;
+  swapAction?: SwapAction;
 }
 
 // Keywords that indicate image generation/editing request
