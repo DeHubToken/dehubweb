@@ -44,6 +44,7 @@ import { AuthPrompt } from '@/components/app/AuthPrompt';
 import { AuthGate } from '@/components/app/AuthGate';
 import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
 import { ConversationHistoryDrawer } from '@/components/app/assistant/ConversationHistoryDrawer';
+import { SwapActionCard } from '@/components/app/chat/SwapActionCard';
 import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
