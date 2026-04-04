@@ -23,9 +23,6 @@ export function PinnedCommunities({ walletAddress, isOwnProfile }: PinnedCommuni
 
   return (
     <div className="mt-3">
-      {(pinned.length > 0 || isOwnProfile) && (
-        <h3 className="text-sm font-bold text-white mb-2">Communities</h3>
-      )}
       <div className="space-y-2">
         {pinned.map(pin => {
           const community = pin.communities as Community | undefined;

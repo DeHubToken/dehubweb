@@ -129,7 +129,10 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
           <h1 className="text-lg font-bold text-white truncate">{community.name}</h1>
           <p className="text-zinc-500 text-sm">{community.member_count.toLocaleString()} members</p>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
+      </div>
+
+      {/* Action buttons - below avatar row */}
+      <div className="flex items-center gap-2 justify-end px-2 mt-2">
           {isMember && (
             <Button
               size="sm"
@@ -164,7 +167,6 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
               <><LogIn className="w-3.5 h-3.5" /> Join</>
             )}
           </Button>
-        </div>
       </div>
 
       {community.description && (
