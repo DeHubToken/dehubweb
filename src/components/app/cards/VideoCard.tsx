@@ -1186,7 +1186,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     <>
                       <div className="border-t border-white/10 my-1" />
                       <button
-                        onClick={() => setShowEditModal(true)}
+                        onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowEditModal(true), 300); }}
                         className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                       >
                         <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
