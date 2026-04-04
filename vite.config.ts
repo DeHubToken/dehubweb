@@ -44,6 +44,9 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
+        // Prevents Rollup from hoisting transitive imports across chunk boundaries,
+        // which causes TDZ errors when web3 packages have circular dependencies.
+        hoistTransitiveImports: false,
         manualChunks(id) {
           // Web3 / wallet libraries — largest chunk
           if (
