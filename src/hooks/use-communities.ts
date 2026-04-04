@@ -229,7 +229,7 @@ export function useJoinCommunity() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (communityId: string) => {
+    mutationFn: async ({ communityId, isPrivate }: { communityId: string; isPrivate?: boolean }) => {
       if (!walletAddress) throw new Error('Not connected');
       const { error } = await withWalletHeader(
         supabase
@@ -238,15 +238,16 @@ export function useJoinCommunity() {
             community_id: communityId,
             wallet_address: walletAddress,
             role: 'member',
-            status: 'active',
+            status: isPrivate ? 'pending' : 'active',
           }),
         walletAddress
       );
       if (error) throw error;
+      return { isPrivate };
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       qc.invalidateQueries({ queryKey: ['communities'] });
-      toast.success('Joined community!');
+      toast.success(result?.isPrivate ? 'Join request sent!' : 'Joined community!');
     },
     onError: () => toast.error('Failed to join'),
   });

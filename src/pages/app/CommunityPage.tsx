@@ -33,6 +33,7 @@ export default function CommunityPage() {
   const leaveMutation = useLeaveCommunity();
 
   const isMember = !!membership && membership.status === 'active';
+  const isPendingMember = !!membership && membership.status === 'pending';
   const isOwner = membership?.role === 'owner';
   const memberAddresses = useMemo(() => new Set(members.map(m => m.wallet_address.toLowerCase())), [members]);
 
