@@ -41,6 +41,54 @@ export default defineConfig(({ mode }) => ({
       "@rainbow-me/rainbowkit",
     ],
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // Web3 / wallet libraries — largest chunk
+          if (
+            id.includes('node_modules/wagmi') ||
+            id.includes('node_modules/viem') ||
+            id.includes('node_modules/ethers') ||
+            id.includes('node_modules/@web3auth') ||
+            id.includes('node_modules/@walletconnect') ||
+            id.includes('node_modules/@rainbow-me') ||
+            id.includes('node_modules/@coinbase/wallet-sdk') ||
+            id.includes('node_modules/@metamask') ||
+            id.includes('node_modules/@wagmi') ||
+            id.includes('node_modules/@toruslabs') ||
+            id.includes('node_modules/permissionless') ||
+            id.includes('node_modules/buffer') ||
+            id.includes('node_modules/process')
+          ) {
+            return 'vendor-web3';
+          }
+          // Agora RTC
+          if (id.includes('node_modules/agora-rtc-sdk-ng')) {
+            return 'vendor-agora';
+          }
+          // Heavy UI libraries
+          if (
+            id.includes('node_modules/recharts') ||
+            id.includes('node_modules/framer-motion') ||
+            id.includes('node_modules/motion') ||
+            id.includes('node_modules/@radix-ui') ||
+            id.includes('node_modules/three')
+          ) {
+            return 'vendor-ui';
+          }
+          // React core
+          if (
+            id.includes('node_modules/react/') ||
+            id.includes('node_modules/react-dom') ||
+            id.includes('node_modules/react-router')
+          ) {
+            return 'vendor-react';
+          }
+        },
+      },
+    },
+  },
   define: {
     global: 'globalThis',
   },
