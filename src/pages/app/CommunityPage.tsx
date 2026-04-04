@@ -89,6 +89,7 @@ export default function CommunityPage() {
       <CommunityHeader
         community={community}
         isMember={isMember}
+        isPendingMember={isPendingMember}
         isOwner={isOwner}
         isPending={joinMutation.isPending || leaveMutation.isPending}
         onJoinLeave={handleJoinLeave}
