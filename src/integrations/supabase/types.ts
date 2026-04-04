@@ -285,6 +285,86 @@ export type Database = {
         }
         Relationships: []
       }
+      communities: {
+        Row: {
+          avatar_url: string | null
+          banner_url: string | null
+          created_at: string
+          creator_wallet_address: string
+          description: string | null
+          id: string
+          is_private: boolean
+          member_count: number
+          name: string
+          rules: Json | null
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          banner_url?: string | null
+          created_at?: string
+          creator_wallet_address: string
+          description?: string | null
+          id?: string
+          is_private?: boolean
+          member_count?: number
+          name: string
+          rules?: Json | null
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          banner_url?: string | null
+          created_at?: string
+          creator_wallet_address?: string
+          description?: string | null
+          id?: string
+          is_private?: boolean
+          member_count?: number
+          name?: string
+          rules?: Json | null
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      community_members: {
+        Row: {
+          community_id: string
+          id: string
+          joined_at: string
+          role: string
+          status: string
+          wallet_address: string
+        }
+        Insert: {
+          community_id: string
+          id?: string
+          joined_at?: string
+          role?: string
+          status?: string
+          wallet_address: string
+        }
+        Update: {
+          community_id?: string
+          id?: string
+          joined_at?: string
+          role?: string
+          status?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_members_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       creator_applications: {
         Row: {
           created_at: string
@@ -742,6 +822,38 @@ export type Database = {
           token_id?: string
         }
         Relationships: []
+      }
+      pinned_communities: {
+        Row: {
+          community_id: string
+          created_at: string
+          display_order: number
+          id: string
+          wallet_address: string
+        }
+        Insert: {
+          community_id: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          wallet_address: string
+        }
+        Update: {
+          community_id?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pinned_communities_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ppv_purchases: {
         Row: {
@@ -1315,6 +1427,10 @@ export type Database = {
       cleanup_old_client_error_logs: { Args: never; Returns: undefined }
       cleanup_old_leaderboard_snapshots: { Args: never; Returns: undefined }
       cleanup_old_story_views: { Args: never; Returns: undefined }
+      get_community_role: {
+        Args: { _community_id: string; _wallet_address: string }
+        Returns: string
+      }
       get_request_wallet_address: { Args: never; Returns: string }
       increment_category_count: { Args: { p_name: string }; Returns: undefined }
       increment_ticker_search: {
