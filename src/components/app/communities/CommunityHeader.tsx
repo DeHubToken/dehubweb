@@ -171,6 +171,64 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
           </Button>
       </div>
 
+      {/* Ticker assignment for owners */}
+      {isOwner && (
+        <div className="px-2 mt-2">
+          {community.ticker_symbol ? (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-zinc-400 flex items-center gap-1">
+                <TrendingUp className="w-3 h-3" />
+                Ticker: <span className="text-white font-medium">${community.ticker_symbol}</span>
+              </span>
+              <button
+                onClick={() => updateMutation.mutate({ id: community.id, ticker_symbol: null } as any)}
+                className="text-zinc-600 hover:text-red-400 transition-colors"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          ) : showTickerInput ? (
+            <div className="flex items-center gap-2">
+              <input
+                value={tickerInput}
+                onChange={e => setTickerInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))}
+                placeholder="e.g. DHB, ETH, BTC"
+                className="flex-1 bg-white/[0.06] border border-white/[0.1] rounded-lg px-2.5 py-1.5 text-xs text-white placeholder:text-zinc-600 outline-none focus:border-white/20"
+                maxLength={10}
+                autoFocus
+              />
+              <Button
+                size="sm"
+                className="rounded-lg h-7 px-3 text-xs bg-white text-black hover:bg-white/90"
+                disabled={!tickerInput || updateMutation.isPending}
+                onClick={() => {
+                  updateMutation.mutate({ id: community.id, ticker_symbol: tickerInput } as any, {
+                    onSuccess: () => {
+                      setShowTickerInput(false);
+                      setTickerInput('');
+                      toast.success(`Ticker set to $${tickerInput}`);
+                    }
+                  });
+                }}
+              >
+                Save
+              </Button>
+              <button onClick={() => { setShowTickerInput(false); setTickerInput(''); }} className="text-zinc-500 hover:text-white">
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowTickerInput(true)}
+              className="text-xs text-zinc-500 hover:text-white flex items-center gap-1 transition-colors"
+            >
+              <TrendingUp className="w-3 h-3" />
+              Assign ticker chart
+            </button>
+          )}
+        </div>
+      )}
+
       {community.description && (
         <p className="text-zinc-400 text-sm mt-3 px-2">{community.description}</p>
       )}
