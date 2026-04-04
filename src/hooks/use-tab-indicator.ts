@@ -77,10 +77,14 @@ export function useTabIndicator<T extends string>(activeTab: T, layoutShiftKey?:
     }
   }, [update]);
 
-  // Single layout update on mount
+  // Single layout update on mount and whenever activeTab changes.
+  // Skip during drag — drag controls the indicator position directly via DOM,
+  // and calling update() here would make GlassIndicator jump to the new tab's
+  // position mid-drag, fighting the imperative transform.
   useLayoutEffect(() => {
+    if (isDraggingRef?.current) return;
     update();
-  }, [update]);
+  }, [update, isDraggingRef]);
 
   // Only track for duration AFTER user switches tabs (not on initial mount)
   useEffect(() => {

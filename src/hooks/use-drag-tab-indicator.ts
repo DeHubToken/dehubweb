@@ -199,13 +199,12 @@ export function useDragTabIndicator<T extends string>({
     }
 
     setIsDragging(false);
-    // Clear compositor promotion — React's next render sets correct transform
-    // with spring transition (enableTransition=true after isDragging=false)
-    if (indicatorRef.current) {
-      indicatorRef.current.style.willChange = '';
-      // Reset width so GlassIndicator React render takes full control again
-      indicatorRef.current.style.width = '';
-    }
+    // Do NOT clear style.width or style.willChange here.
+    // React's next render (triggered by setIsDragging above) will set all styles
+    // correctly via GlassIndicator's style prop. Clearing width imperatively
+    // causes a blank frame before React renders (glass disappears briefly).
+    // The spring transition will animate from current imperative values to the
+    // new tabRect values naturally.
   }, [isDraggingRef, onTabChange]);
 
   return { isDragging, indicatorRef, handleDragStart, handleDragMove, handleDragEnd };
