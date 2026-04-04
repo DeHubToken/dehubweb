@@ -974,11 +974,21 @@ export default function AssistantPage() {
             simulationStatus: 'pending'
           };
           setMessages(prev => [...prev, assistantMessage]);
+        // Check if this is a swap action response
+        if (data.swapAction) {
+          const assistantMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: data.response || '',
+            swapAction: data.swapAction,
+          };
+          setMessages(prev => [...prev, assistantMessage]);
+          queueMessage(assistantMessage);
         } else {
           const assistantMessage: Message = {
             id: (Date.now() + 1).toString(),
             role: 'assistant',
-            content: data.response || t('assistant.noResponse')
+            content: data.response || t('assistant.noResponse'),
           };
 
           setMessages(prev => [...prev, assistantMessage]);
