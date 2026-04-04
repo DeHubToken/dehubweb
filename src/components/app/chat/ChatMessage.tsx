@@ -264,7 +264,7 @@ export function ChatMessage({
             >
               {message.userName}
             </button>
-            <StakingBadgeInline address={message.userId} />
+            <StakingBadgeInline badgeBalance={message.badgeBalance} username={message.userHandle} />
           </span>
           <ModeratorBadge address={message.userId} moderators={moderators} />
           {message.isPinned && (
