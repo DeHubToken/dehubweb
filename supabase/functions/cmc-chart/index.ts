@@ -49,7 +49,8 @@ serve(async (req) => {
     }
 
     const now = new Date();
-    const start = new Date(now.getTime() - days * 86400 * 1000);
+    const effectiveDays = Math.max(days, 2); // CMC daily needs at least 2-day window
+    const start = new Date(now.getTime() - effectiveDays * 86400 * 1000);
 
     const params = new URLSearchParams({
       symbol: clean,
