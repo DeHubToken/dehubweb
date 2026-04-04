@@ -41,12 +41,13 @@ function getDecimals(address: string): number {
   return TOKEN_DECIMALS[address] ?? 18;
 }
 
-export function SwapActionCard({ action }: SwapActionCardProps) {
+export function SwapActionCard({ action, autoQuote = false }: SwapActionCardProps) {
   const { walletAddress } = useAuth();
   const [status, setStatus] = useState<SwapStatus>('idle');
   const [quote, setQuote] = useState<{ amountIn: bigint; feeTier: number } | null>(null);
   const [txHash, setTxHash] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [autoQuoteDone, setAutoQuoteDone] = useState(false);
 
   const handleGetQuote = useCallback(async () => {
     if (!isAutoSwapSupported(BASE_CHAIN_ID)) {
