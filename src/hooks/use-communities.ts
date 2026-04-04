@@ -189,6 +189,35 @@ export function useCreateCommunity() {
   });
 }
 
+// ─── Update community ────────────────────────────────────────────────────────
+
+export function useUpdateCommunity() {
+  const { walletAddress } = useAuth();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, ...updates }: Partial<Community> & { id: string }) => {
+      if (!walletAddress) throw new Error('Not connected');
+      const { data, error } = await withWalletHeader(
+        supabase
+          .from('communities')
+          .update(updates)
+          .eq('id', id)
+          .select()
+          .single(),
+        walletAddress
+      );
+      if (error) throw error;
+      return data as Community;
+    },
+    onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: ['communities'] });
+      toast.success('Community updated');
+    },
+    onError: () => toast.error('Failed to update community'),
+  });
+}
+
 // ─── Join community ──────────────────────────────────────────────────────────
 
 export function useJoinCommunity() {
