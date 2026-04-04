@@ -74,7 +74,7 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
     let cancelled = false;
     setLoading(true);
 
-    searchNFTs({ category: categoryTag, unit: 50 })
+    searchNFTs({ category: categoryTag, unit: 50, sortMode: 'new' })
       .then(results => {
         if (cancelled) return;
         const mapped = (results.data || []).map(mapNFTToFeedItem).filter(Boolean) as FeedItem[];
