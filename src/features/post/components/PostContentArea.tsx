@@ -65,8 +65,6 @@ interface PostContentAreaProps {
   setTitleText: (text: string) => void;
   // Category
   onOpenCategories?: () => void;
-  // Community share
-  communitySlug?: string | null;
 }
 
 // URL regex pattern - create fresh each time to avoid state issues with global flag
@@ -146,7 +144,6 @@ export function PostContentArea({
   titleText,
   setTitleText,
   onOpenCategories,
-  communitySlug,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
   const isProcessingLinks = useRef(false);
@@ -747,7 +744,7 @@ export function PostContentArea({
 
         {/* Link previews - with proper indent on desktop */}
         <div className="sm:pl-[52px]">
-          <LinkPreviews text={text} communitySlug={communitySlug} />
+          <LinkPreviews text={text} />
 
           <AnimatePresence>
             {isLive && (

@@ -7,28 +7,16 @@ import { CommunityLinkEmbed, extractCommunitySlug } from '@/components/app/commu
 
 interface LinkPreviewsProps {
   text: string;
-  communitySlug?: string | null;
 }
 
-export function LinkPreviews({ text, communitySlug: externalCommunitySlug }: LinkPreviewsProps) {
+export function LinkPreviews({ text }: LinkPreviewsProps) {
   const [previews, setPreviews] = useState<Map<string, LinkPreviewData>>(new Map());
   const [loading, setLoading] = useState<Set<string>>(new Set());
   const [removedUrls, setRemovedUrls] = useState<Set<string>>(new Set());
   const fetchedUrls = useRef<Set<string>>(new Set());
 
-  // Use externally provided community slug (from share), or detect from text
-  const [textCommunitySlug, setTextCommunitySlug] = useState<string | null>(null);
-  useEffect(() => {
-    const slug = extractCommunitySlug(text);
-    if (slug) {
-      setTextCommunitySlug(slug);
-    } else if (textCommunitySlug && !text.includes('/app/communities/')) {
-      setTextCommunitySlug(null);
-    }
-  }, [text]);
-
-  // External slug (from share button) takes priority and never disappears
-  const communitySlug = externalCommunitySlug || textCommunitySlug;
+  // Detect community slug from text
+  const communitySlug = extractCommunitySlug(text);
 
   useEffect(() => {
     const urls = extractUrlsFromText(text);

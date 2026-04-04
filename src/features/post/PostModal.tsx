@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
@@ -9,7 +9,7 @@ import { PostActionBar } from './components/PostActionBar';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
 import { SoundPicker } from './components/SoundPicker';
 import { cn } from '@/lib/utils';
-import { extractCommunitySlug } from '@/components/app/communities/CommunityLinkEmbed';
+
 
 interface PostModalProps {
   isOpen: boolean;
@@ -26,23 +26,13 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
 
-  // Extract community slug from initialText (if it's a community share link)
-  const communitySlug = useMemo(() => {
-    if (!initialText) return null;
-    return extractCommunitySlug(initialText);
-  }, [initialText]);
 
-  // Set initial text when modal opens — but DON'T put community URLs in the editor
+  // Set initial text when modal opens — put it straight in the editor
   useEffect(() => {
     if (isOpen && initialText) {
-      if (communitySlug) {
-        // Community share — don't put URL in editor, it shows as a card below
-        // Leave text empty so user can type their own message
-      } else {
-        actions.setText(initialText);
-      }
+      actions.setText(initialText);
     }
-  }, [isOpen, initialText, communitySlug]);
+  }, [isOpen, initialText]);
 
   // Set initial category when modal opens
   useEffect(() => {
@@ -87,7 +77,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onClearCrop={actions.clearCropFromMedia}
         onApplyTrim={actions.applyTrimToMedia}
         liveMode={state.liveMode}
-        canPost={computed.canPost || !!communitySlug}
+        canPost={computed.canPost}
         destinations={computed.destinations}
         hasVideo={computed.hasVideo}
         hasImage={computed.hasImage}
@@ -109,7 +99,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         titleText={state.titleText}
         setTitleText={actions.setTitleText}
         onOpenCategories={() => setCategoryDrawerOpen(true)}
-        communitySlug={communitySlug}
+        
       />
 
       <PostAccessToggles
@@ -171,17 +161,10 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
               actions.setText(currentDesc + (currentDesc ? '\n' : '') + tag);
             }
           }
-          // Inject community link into text so it appears in the published post
-          if (communitySlug && initialText) {
-            const currentText = state.text;
-            if (!currentText.includes('/app/communities/')) {
-              actions.setText(currentText + (currentText ? '\n' : '') + initialText);
-            }
-          }
           // Small delay to let state update, then post
           setTimeout(() => actions.handlePost(), 50);
         }}
-        canPost={computed.canPost || !!communitySlug}
+        canPost={computed.canPost}
         isEnhancing={state.isEnhancing}
         isPosting={state.isPosting}
         uploadProgress={state.uploadProgress}
