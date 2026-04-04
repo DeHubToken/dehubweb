@@ -63,7 +63,7 @@ export function TokenPriceChart({ data, isLoading, timeframe = '7D', onTimeframe
   ) : (
     <div className="w-full h-[180px] bg-zinc-900/50">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data} margin={{ top: 8, right: 0, left: 0, bottom: 0 }}>
+        <AreaChart data={data} margin={{ top: 8, right: 16, left: 16, bottom: 4 }}>
           <defs>
             <linearGradient id={`chartGrad-${isPositive ? 'up' : 'down'}`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={color} stopOpacity={0.3} />
@@ -76,7 +76,8 @@ export function TokenPriceChart({ data, isLoading, timeframe = '7D', onTimeframe
             axisLine={false}
             tickLine={false}
             tick={{ fill: '#71717a', fontSize: 10 }}
-            minTickGap={40}
+            minTickGap={20}
+            padding={{ left: 10, right: 10 }}
           />
           <YAxis domain={['auto', 'auto']} hide />
           <Tooltip
