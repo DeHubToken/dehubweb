@@ -116,7 +116,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
     avatarUrl: user.avatarImageUrl || user.avatarUrl || user.avatar_url,
   } : null;
 
-  const { messages, isLoading, sendMessage, addReaction, removeReaction } = useCommunityChat(communityId);
+  const { messages, isLoading, sendMessage, editMessage, addReaction, removeReaction } = useCommunityChat(communityId);
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
