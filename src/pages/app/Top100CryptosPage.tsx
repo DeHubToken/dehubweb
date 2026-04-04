@@ -3,6 +3,7 @@ import { useCmcTop100, type CmcCoin } from '@/hooks/use-cmc-top-100';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SEOHead } from '@/components/SEOHead';
 
 const PAGE_SIZE = 100;
 
