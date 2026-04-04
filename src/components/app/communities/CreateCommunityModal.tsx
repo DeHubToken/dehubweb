@@ -5,11 +5,31 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useCreateCommunity, uploadCommunityMedia } from '@/hooks/use-communities';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 interface CreateCommunityModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+}
+
+/** Generate a unique slug by appending 2, 3, etc. if the base slug already exists */
+async function resolveUniqueSlug(baseSlug: string): Promise<string> {
+  const { data } = await supabase
+    .from('communities')
+    .select('slug')
+    .ilike('slug', `${baseSlug}%`);
+
+  if (!data || data.length === 0) return baseSlug;
+
+  const taken = new Set(data.map(d => d.slug.toLowerCase()));
+  if (!taken.has(baseSlug)) return baseSlug;
+
+  for (let i = 2; i < 100; i++) {
+    const candidate = `${baseSlug}${i}`;
+    if (!taken.has(candidate)) return candidate;
+  }
+  return `${baseSlug}${Date.now()}`;
 }
 
 export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModalProps) {
@@ -22,7 +42,7 @@ export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModa
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const baseSlug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -36,13 +56,15 @@ export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModa
       toast.error('Name must be at least 3 characters');
       return;
     }
-    if (!slug) {
+    if (!baseSlug) {
       toast.error('Invalid community name');
       return;
     }
 
     setSubmitting(true);
     try {
+      const slug = await resolveUniqueSlug(baseSlug);
+
       let avatar_url: string | undefined;
       if (avatarFile) {
         avatar_url = await uploadCommunityMedia(avatarFile, slug, 'avatar');
@@ -104,8 +126,8 @@ export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModa
                 maxLength={50}
                 className="w-full h-10 px-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 outline-none focus:border-white/20 text-sm"
               />
-              {slug && (
-                <p className="text-zinc-600 text-xs mt-1 pl-1">dehub.io/app/communities/{slug}</p>
+              {baseSlug && (
+                <p className="text-zinc-600 text-xs mt-1 pl-1">dehub.io/app/communities/{baseSlug}</p>
               )}
             </div>
           </div>
