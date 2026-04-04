@@ -41,7 +41,10 @@ export function FloatingChartPiP({ item, index, onClose, onUpdate }: FloatingCha
   const resizeStart = useRef({ x: 0, y: 0, w: 0, h: 0 });
 
   const cleanSymbol = useMemo(() => `$${item.symbol.replace(/^\$/, '').toUpperCase()}`, [item.symbol]);
-  const { data: chartData } = useTokenChart(cleanSymbol, true, timeframe);
+  const { data: chartData } = useTokenChart(cleanSymbol, true, timeframe, {
+    pairAddress: item.pairAddress,
+    chainId: item.chainId,
+  });
 
   const isPositive = useMemo(() => {
     if (!chartData || chartData.length < 2) return true;

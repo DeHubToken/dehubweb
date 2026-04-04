@@ -74,6 +74,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
   const { data: chartData, isLoading: isChartLoading } = useTokenChart(symbol, true, chartTimeframe, {
     contractAddress: pair.baseToken.address,
     chainId: pair.chainId,
+    pairAddress: pair.pairAddress,
   });
   
   const change24h = cmcData?.percentChange24h ?? pair.priceChange?.h24;
@@ -158,6 +159,8 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                 symbol: pair.baseToken.symbol,
                 displayName: cmcData?.name || pair.baseToken.name,
                 logo: cmcData?.logo || pair.info?.imageUrl,
+                pairAddress: pair.pairAddress,
+                chainId: pair.chainId,
               });
             }}
             className={cn(

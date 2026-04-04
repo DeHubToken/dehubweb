@@ -13,6 +13,8 @@ export interface ChartPiPItem {
   symbol: string;
   displayName: string;
   logo?: string | null;
+  pairAddress?: string;
+  chainId?: string;
   /** Position persisted */
   x?: number;
   y?: number;
