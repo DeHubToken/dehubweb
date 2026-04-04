@@ -121,7 +121,7 @@ export function useCommunityChat(communityId: string | undefined) {
     messageType: string = 'text',
     imageUrl?: string,
     replyToId?: string,
-    userProfile?: { username?: string; displayName?: string; avatarUrl?: string }
+    userProfile?: { username?: string; displayName?: string; avatarUrl?: string; badgeBalance?: number }
   ) => {
     if (!communityId || !walletAddress) return;
 
