@@ -2,12 +2,14 @@ import { createContext, useContext, useState, useCallback, useEffect, useRef, Re
 
 interface GlobalDropZoneContextType {
   isPostModalOpen: boolean;
-  openPostModal: (initialText?: string) => void;
+  openPostModal: (initialText?: string, initialCategory?: string) => void;
   closePostModal: () => void;
   pendingFiles: FileList | null;
   clearPendingFiles: () => void;
   initialText: string;
   clearInitialText: () => void;
+  initialCategory: string;
+  clearInitialCategory: () => void;
   suppressGlobalDrop: () => void;
   unsuppressGlobalDrop: () => void;
 }
@@ -22,14 +24,20 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
   const suppressCountRef = useRef(0);
 
   const [initialText, setInitialText] = useState('');
+  const [initialCategory, setInitialCategory] = useState('');
 
-  const openPostModal = useCallback((text?: string) => {
+  const openPostModal = useCallback((text?: string, category?: string) => {
     if (text) setInitialText(text);
+    if (category) setInitialCategory(category);
     setIsPostModalOpen(true);
   }, []);
 
   const clearInitialText = useCallback(() => {
     setInitialText('');
+  }, []);
+
+  const clearInitialCategory = useCallback(() => {
+    setInitialCategory('');
   }, []);
 
   const closePostModal = useCallback(() => {
@@ -131,6 +139,8 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
       clearPendingFiles,
       initialText,
       clearInitialText,
+      initialCategory,
+      clearInitialCategory,
       suppressGlobalDrop,
       unsuppressGlobalDrop,
     }}>
