@@ -21,8 +21,15 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
   const [isSuppressed, setIsSuppressed] = useState(false);
   const suppressCountRef = useRef(0);
 
-  const openPostModal = useCallback(() => {
+  const [initialText, setInitialText] = useState('');
+
+  const openPostModal = useCallback((text?: string) => {
+    if (text) setInitialText(text);
     setIsPostModalOpen(true);
+  }, []);
+
+  const clearInitialText = useCallback(() => {
+    setInitialText('');
   }, []);
 
   const closePostModal = useCallback(() => {
