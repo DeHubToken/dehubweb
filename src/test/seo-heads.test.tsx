@@ -337,3 +337,50 @@ describe('SSR: Internal nav has 15+ links', () => {
     expect(linkCount, `Only ${linkCount} links in SSR nav, expected >= 15`).toBeGreaterThanOrEqual(15);
   });
 });
+
+describe('SEO: JSON-LD structured data on key pages', () => {
+  const JSON_LD_PAGES = [
+    { name: 'Index', path: 'src/pages/Index.tsx', schemaType: 'WebSite' },
+    { name: 'Home', path: 'src/pages/app/HomePage.tsx', schemaType: 'CollectionPage' },
+    { name: 'Explore', path: 'src/pages/app/ExplorePage.tsx', schemaType: 'CollectionPage' },
+    { name: 'TV', path: 'src/pages/app/TVPage.tsx', schemaType: 'WebApplication' },
+    { name: 'Governance', path: 'src/pages/app/GovernancePage.tsx', schemaType: 'WebPage' },
+    { name: 'Staking', path: 'src/pages/app/StakingPage.tsx', schemaType: 'WebPage' },
+    { name: 'Leaderboard', path: 'src/pages/app/LeaderboardPage.tsx', schemaType: 'WebPage' },
+    { name: 'Music', path: 'src/pages/app/MusicPage.tsx', schemaType: 'MusicPlaylist' },
+    { name: 'Bridge', path: 'src/pages/app/BridgePage.tsx', schemaType: 'WebApplication' },
+    { name: 'Agents', path: 'src/pages/app/AgentsPage.tsx', schemaType: 'SoftwareApplication' },
+    { name: 'Assistant', path: 'src/pages/app/AssistantPage.tsx', schemaType: 'SoftwareApplication' },
+    { name: 'Buy', path: 'src/pages/app/BuyCoinsPage.tsx', schemaType: 'WebPage' },
+    { name: 'Glossary', path: 'src/pages/app/GlossaryPage.tsx', schemaType: 'DefinedTermSet' },
+    { name: 'Top 100', path: 'src/pages/app/Top100CryptosPage.tsx', schemaType: 'Table' },
+    { name: 'Features', path: 'src/pages/app/FeaturesPage.tsx', schemaType: 'WebPage' },
+    { name: 'Careers', path: 'src/pages/app/CareersPage.tsx', schemaType: 'WebPage' },
+    { name: 'Profile', path: 'src/pages/app/ProfilePage.tsx', schemaType: 'Person' },
+    { name: 'SinglePost', path: 'src/pages/app/SinglePostPage.tsx', schemaType: 'Article' },
+  ];
+
+  for (const { name, path: filePath, schemaType } of JSON_LD_PAGES) {
+    it(`${name} has JSON-LD with @type "${schemaType}"`, async () => {
+      const fs = await import('fs');
+      const source = fs.readFileSync(filePath, 'utf-8');
+      
+      expect(source).toContain('jsonLd');
+      expect(source).toContain('schema.org');
+      expect(source).toContain(schemaType);
+    });
+  }
+});
+
+describe('SSR: JSON-LD in edge function', () => {
+  it('ssr-seo generates JSON-LD for profiles, posts, and fallback', async () => {
+    const fs = await import('fs');
+    const source = fs.readFileSync('supabase/functions/ssr-seo/index.ts', 'utf-8');
+    
+    expect(source).toContain('application/ld+json');
+    expect(source).toContain("'@type': 'Person'");
+    expect(source).toContain("'@type': 'Article'");
+    expect(source).toContain("'@type': 'WebSite'");
+    expect(source).toContain("'@type': 'Organization'");
+  });
+});
