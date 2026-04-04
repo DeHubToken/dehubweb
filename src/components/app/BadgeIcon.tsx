@@ -30,6 +30,10 @@ export function BadgeIcon({ badgeBalance, username, src, className = 'w-[9px] h-
         <img
           src={resolvedUrl}
           alt={resolvedName || 'Badge'}
+          width={9}
+          height={9}
+          loading="lazy"
+          decoding="async"
           className={`shrink-0 brightness-0 invert cursor-pointer hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.8)] transition-all ${big ? 'scale-110' : ''} ${className}`}
           onClick={(e) => {
             e.stopPropagation();

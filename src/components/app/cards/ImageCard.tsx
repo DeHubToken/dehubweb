@@ -169,13 +169,12 @@ function ImageCarousel({
                   onImageClick(idx);
                 }}
               >
-                {/* Blurred background fill - liquid glass effect from image colors */}
-                <img
-                  src={img}
-                  alt=""
-                  className="absolute inset-0 w-full h-full object-cover scale-110 blur-[24px] saturate-[180%] opacity-60"
+                {/* Blurred background fill — CSS background-image so browser never
+                    counts this decorative element as an LCP candidate */}
+                <div
+                  className="absolute inset-0 scale-110 blur-[24px] saturate-[180%] opacity-60"
+                  style={{ backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                   aria-hidden="true"
-                  decoding="async"
                 />
                 <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
                 {/* Actual image - natural aspect ratio */}

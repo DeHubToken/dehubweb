@@ -75,49 +75,53 @@ import bnbLogo from '@/assets/bnb-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
 import ethLogo from '@/assets/eth-logo.png';
 
-// Complete list of all 3D/PNG icons that should be browser-cached
-const ALL_ICONS = [
-  aiStarIcon,
-  aiSparkleIcon,
-  bookmarkIcon,
-  bookmark3dIcon,
+// Critical icons needed immediately on any page — preloaded eagerly
+const CRITICAL_ICONS = [
+  aiStarIcon, aiSparkleIcon,
+  bookmarkIcon, bookmark3dIcon,
   chatBubbleIcon,
-  messagesIcon,
-  messages3dIcon,
-  messagesBubbleIcon,
+  messagesIcon, messages3dIcon, messagesBubbleIcon,
   notificationsIcon,
   settingsIcon,
-  searchIcon,
-  search3dIcon,
-  fractions3dIcon,
-  live3dIcon,
-  audio3dIcon,
-  subs3dIcon,
-  star3dIcon,
-  filmstrip3dIcon,
-  imageFrame3dIcon,
-  home3dIcon,
-  comment3dIcon,
+  searchIcon, search3dIcon,
   stagesMicIcon,
   trendingFireIcon,
-  translateGlobeIcon,
-  nailIcon,
-  lock3dIcon,
-  // Medals
-  medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10,
-  // Badges
-  TortoiseBadge, CrabBadge, PiranhaBadge, LobsterBadge, OctopusBadge,
-  CobraBadge, CrocoditeBadge, DolphinBadge, TigerSharkBadge,
-  GreatWhiteSharkBadge, KillerWhaleBadge, BlueWhaleBadge, MeglodonBadge,
-  // Coin logos
+  // Coin logos (wallet visible on first render)
   dehubCoin, bnbLogo, usdtLogo, ethLogo,
 ];
 
-// ── MODULE-LEVEL PRELOAD (runs immediately on import, before any render) ──
-ALL_ICONS.forEach((src) => {
+// Non-critical icons — deferred until browser is idle to avoid competing with LCP
+// Badges (600x600px PNGs, ~1.5 MB total) and medals (~700 KB total) only needed
+// in leaderboard/feed cards which load after the critical path.
+const DEFERRED_ICONS = [
+  fractions3dIcon, live3dIcon, audio3dIcon, subs3dIcon, star3dIcon,
+  filmstrip3dIcon, imageFrame3dIcon, home3dIcon, comment3dIcon,
+  translateGlobeIcon, nailIcon, lock3dIcon,
+  medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10,
+  TortoiseBadge, CrabBadge, PiranhaBadge, LobsterBadge, OctopusBadge,
+  CobraBadge, CrocoditeBadge, DolphinBadge, TigerSharkBadge,
+  GreatWhiteSharkBadge, KillerWhaleBadge, BlueWhaleBadge, MeglodonBadge,
+];
+
+// ── MODULE-LEVEL PRELOAD — only critical icons fire immediately ──
+CRITICAL_ICONS.forEach((src) => {
   const img = new Image();
   img.src = src;
 });
+
+// ── Deferred preload — runs when browser has idle time after first paint ──
+if (typeof window !== 'undefined') {
+  const scheduleDeferred = typeof requestIdleCallback === 'function'
+    ? (cb: () => void) => requestIdleCallback(cb, { timeout: 3000 })
+    : (cb: () => void) => setTimeout(cb, 2000);
+
+  scheduleDeferred(() => {
+    DEFERRED_ICONS.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  });
+}
 
 /**
  * Hook kept for backwards compatibility. The actual preloading happens
