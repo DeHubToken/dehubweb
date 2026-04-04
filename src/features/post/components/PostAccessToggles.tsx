@@ -326,7 +326,7 @@ export function PostAccessToggles({
                   <Users className="w-2.5 h-2.5" />
                   {userCommunities.find(m => m.communities.slug === selectedCommunitySlug)?.communities.name || selectedCommunitySlug}
                   <button type="button" onClick={() => {
-                    const next = selectedCategoriesArray.filter(c => !c.startsWith('community:')).join('|||');
+                    const next = selectedCategoriesArray.filter(c => !communitySlugs.has(c)).join('|||');
                     setSelectedCategory(next);
                   }} className="hover:text-red-400 transition-colors">
                     <X className="w-2.5 h-2.5" />
