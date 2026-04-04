@@ -56,6 +56,7 @@ export interface Message {
   userName: string;
   userHandle?: string;
   userAvatar?: string;
+  badgeBalance?: number | null;
   content: string;
   timestamp: Date;
   type: 'text' | 'image' | 'gif';
