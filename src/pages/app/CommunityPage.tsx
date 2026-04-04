@@ -63,8 +63,9 @@ export default function CommunityPage() {
       if (isOwner) return; // owners can't leave
       leaveMutation.mutate(community.id);
     } else if (isPendingMember) {
-      // Cancel pending request
-      leaveMutation.mutate(community.id);
+      leaveMutation.mutate(community.id, {
+        onSuccess: () => { toast.success('Request cancelled'); },
+      });
     } else {
       joinMutation.mutate({ communityId: community.id, isPrivate: community.is_private });
     }
