@@ -975,8 +975,8 @@ export default function AssistantPage() {
             simulationStatus: 'pending'
           };
           setMessages(prev => [...prev, assistantMessage]);
-        // Check if this is a swap action response
-        if (data.swapAction) {
+        } else if (data.swapAction) {
+          // Swap action response
           const assistantMessage: Message = {
             id: (Date.now() + 1).toString(),
             role: 'assistant',
