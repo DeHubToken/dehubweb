@@ -1,18 +1,21 @@
 /**
  * Community Feed
  * ===============
- * Fetches posts tagged with `community:{slug}` and filters to member-only posts.
+ * Fetches posts tagged with the community slug and filters to member-only posts.
+ * Renders full feed cards (PostCard, VideoCard, ImageCard) identical to the main feed.
  */
 
 import { useState, useEffect, useMemo } from 'react';
 import { PenSquare } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { searchNFTs } from '@/lib/api/dehub';
 import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 import type { FeedItem, TextPost, VideoItem, ImagePost, ShortVideo } from '@/types/feed.types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TokenPriceChart } from '@/components/app/TokenPriceChart';
 import { useTokenChart, type ChartTimeframe } from '@/hooks/use-token-chart';
+import { PostCard } from '@/components/app/cards/PostCard';
+import { VideoCard } from '@/components/app/cards/VideoCard';
+import { ImageCard } from '@/components/app/cards/ImageCard';
 
 interface CommunityFeedProps {
   communitySlug: string;
@@ -32,46 +35,7 @@ function getCreatorId(post: FeedItem): string | undefined {
   }
 }
 
-function getDisplayName(post: FeedItem): string {
-  switch (post.type) {
-    case 'post': return (post as TextPost).author?.name || 'Anonymous';
-    case 'video': return (post as VideoItem).channel || 'Anonymous';
-    case 'image': return (post as ImagePost).username || 'Anonymous';
-    case 'short': return (post as ShortVideo).username || 'Anonymous';
-    default: return 'Anonymous';
-  }
-}
-
-function getAvatar(post: FeedItem): string | undefined {
-  switch (post.type) {
-    case 'post': return (post as TextPost).author?.avatarSeed;
-    case 'video': return (post as VideoItem).channelAvatar;
-    case 'image': return (post as ImagePost).avatar;
-    case 'short': return (post as ShortVideo).avatar;
-    default: return undefined;
-  }
-}
-
-function getText(post: FeedItem): string | undefined {
-  switch (post.type) {
-    case 'post': return (post as TextPost).content;
-    case 'video': return (post as VideoItem).title;
-    case 'image': return (post as ImagePost).caption;
-    default: return undefined;
-  }
-}
-
-function getThumbnail(post: FeedItem): string | undefined {
-  switch (post.type) {
-    case 'video': return (post as VideoItem).thumbnail;
-    case 'image': return (post as ImagePost).image;
-    case 'short': return (post as ShortVideo).thumbnail;
-    default: return undefined;
-  }
-}
-
 export function CommunityFeed({ communitySlug, memberAddresses, isMember, tickerSymbol }: CommunityFeedProps) {
-  const navigate = useNavigate();
   const [posts, setPosts] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>('7D');
@@ -159,37 +123,17 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
           />
         </div>
       )}
-      {memberPosts.map(post => {
-        const avatar = getAvatar(post);
-        const name = getDisplayName(post);
-        const text = getText(post);
-        const thumb = getThumbnail(post);
-
-        return (
-          <button
-            key={post.id}
-            onClick={() => navigate(`/app/post/${post.id}`)}
-            className="w-full block rounded-xl bg-white/[0.04] border border-white/[0.06] p-3 hover:bg-white/[0.08] transition-colors text-left"
-          >
-            <div className="flex items-center gap-2 mb-2">
-              {avatar && avatar !== 'user' ? (
-                <img src={avatar} alt="" className="w-7 h-7 rounded-full object-cover" />
-              ) : (
-                <div className="w-7 h-7 rounded-full bg-white/[0.08]" />
-              )}
-              <span className="text-sm text-white font-medium">{name}</span>
-              {post.createdAt && (
-                <span className="text-xs text-zinc-600">{post.createdAt}</span>
-              )}
-            </div>
-            {text && <p className="text-zinc-400 text-sm line-clamp-3">{text}</p>}
-            {thumb && (
-              <div className="mt-2 rounded-lg overflow-hidden max-h-48">
-                <img src={thumb} alt="" className="w-full h-full object-cover" />
-              </div>
-            )}
-          </button>
-        );
+      {memberPosts.map((post, index) => {
+        switch (post.type) {
+          case 'post':
+            return <PostCard key={post.id} post={post as TextPost} />;
+          case 'video':
+            return <VideoCard key={post.id} video={post as VideoItem} aboveFold={index < 2} />;
+          case 'image':
+            return <ImageCard key={post.id} post={post as ImagePost} aboveFold={index < 2} />;
+          default:
+            return null;
+        }
       })}
     </div>
   );
