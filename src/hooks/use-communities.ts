@@ -129,6 +129,76 @@ export function useCommunityMembers(communityId: string | undefined) {
   });
 }
 
+// ─── Fetch pending members of a community ────────────────────────────────────
+
+export function usePendingCommunityMembers(communityId: string | undefined) {
+  return useQuery({
+    queryKey: ['communities', 'pending-members', communityId],
+    queryFn: async () => {
+      if (!communityId) return [];
+      const { data, error } = await supabase
+        .from('community_members')
+        .select('*')
+        .eq('community_id', communityId)
+        .eq('status', 'pending')
+        .order('joined_at', { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as CommunityMember[];
+    },
+    enabled: !!communityId,
+  });
+}
+
+// ─── Approve / reject pending member ─────────────────────────────────────────
+
+export function useApproveMember() {
+  const { walletAddress } = useAuth();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ memberId, communityId }: { memberId: string; communityId: string }) => {
+      if (!walletAddress) throw new Error('Not connected');
+      const { error } = await withWalletHeader(
+        supabase
+          .from('community_members')
+          .update({ status: 'active' })
+          .eq('id', memberId),
+        walletAddress
+      );
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['communities'] });
+      toast.success('Member approved');
+    },
+    onError: () => toast.error('Failed to approve'),
+  });
+}
+
+export function useRejectMember() {
+  const { walletAddress } = useAuth();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ memberId, communityId }: { memberId: string; communityId: string }) => {
+      if (!walletAddress) throw new Error('Not connected');
+      const { error } = await withWalletHeader(
+        supabase
+          .from('community_members')
+          .delete()
+          .eq('id', memberId),
+        walletAddress
+      );
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['communities'] });
+      toast.success('Request rejected');
+    },
+    onError: () => toast.error('Failed to reject'),
+  });
+}
+
 // ─── Check if user is member ─────────────────────────────────────────────────
 
 export function useIsCommunityMember(communityId: string | undefined) {
@@ -229,7 +299,7 @@ export function useJoinCommunity() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (communityId: string) => {
+    mutationFn: async ({ communityId, isPrivate }: { communityId: string; isPrivate?: boolean }) => {
       if (!walletAddress) throw new Error('Not connected');
       const { error } = await withWalletHeader(
         supabase
@@ -238,15 +308,16 @@ export function useJoinCommunity() {
             community_id: communityId,
             wallet_address: walletAddress,
             role: 'member',
-            status: 'active',
+            status: isPrivate ? 'pending' : 'active',
           }),
         walletAddress
       );
       if (error) throw error;
+      return { isPrivate };
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       qc.invalidateQueries({ queryKey: ['communities'] });
-      toast.success('Joined community!');
+      toast.success(result?.isPrivate ? 'Join request sent!' : 'Joined community!');
     },
     onError: () => toast.error('Failed to join'),
   });

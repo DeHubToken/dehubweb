@@ -33,6 +33,7 @@ export default function CommunityPage() {
   const leaveMutation = useLeaveCommunity();
 
   const isMember = !!membership && membership.status === 'active';
+  const isPendingMember = !!membership && membership.status === 'pending';
   const isOwner = membership?.role === 'owner';
   const memberAddresses = useMemo(() => new Set(members.map(m => m.wallet_address.toLowerCase())), [members]);
 
@@ -61,8 +62,11 @@ export default function CommunityPage() {
     if (isMember) {
       if (isOwner) return; // owners can't leave
       leaveMutation.mutate(community.id);
+    } else if (isPendingMember) {
+      // Cancel pending request
+      leaveMutation.mutate(community.id);
     } else {
-      joinMutation.mutate(community.id);
+      joinMutation.mutate({ communityId: community.id, isPrivate: community.is_private });
     }
   };
 
@@ -85,6 +89,7 @@ export default function CommunityPage() {
       <CommunityHeader
         community={community}
         isMember={isMember}
+        isPendingMember={isPendingMember}
         isOwner={isOwner}
         isPending={joinMutation.isPending || leaveMutation.isPending}
         onJoinLeave={handleJoinLeave}
@@ -133,7 +138,7 @@ export default function CommunityPage() {
           />
         )}
         {tab === 'members' && (
-          <CommunityMembers members={members} communityId={community.id} />
+          <CommunityMembers members={members} communityId={community.id} isOwner={isOwner} />
         )}
         {tab === 'about' && (
           <CommunityAbout community={community} />

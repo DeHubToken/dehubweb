@@ -13,12 +13,13 @@ import { toast } from 'sonner';
 interface CommunityHeaderProps {
   community: Community;
   isMember: boolean;
+  isPendingMember: boolean;
   isOwner: boolean;
   isPending: boolean;
   onJoinLeave: () => void;
 }
 
-export function CommunityHeader({ community, isMember, isOwner, isPending, onJoinLeave }: CommunityHeaderProps) {
+export function CommunityHeader({ community, isMember, isPendingMember, isOwner, isPending, onJoinLeave }: CommunityHeaderProps) {
   const { walletAddress } = useAuth();
   const { openPostModal } = useGlobalDropZone();
   const bannerInputRef = useRef<HTMLInputElement>(null);
@@ -194,6 +195,8 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
             className={`rounded-xl gap-1.5 ${
               isMember 
                 ? 'bg-white/10 border border-white/20 text-white hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30'
+                : isPendingMember
+                ? 'bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30'
                 : 'bg-white text-black hover:bg-white/90'
             }`}
           >
@@ -201,6 +204,8 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
               <><Crown className="w-3.5 h-3.5" /> Owner</>
             ) : isMember ? (
               <><LogOut className="w-3.5 h-3.5" /> Leave</>
+            ) : isPendingMember ? (
+              <><X className="w-3.5 h-3.5" /> Requested</>
             ) : (
               <><LogIn className="w-3.5 h-3.5" /> Join</>
             )}
