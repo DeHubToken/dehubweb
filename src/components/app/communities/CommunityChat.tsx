@@ -20,7 +20,7 @@ import { useCommunityChat, type CommunityChatMessage } from '@/hooks/use-communi
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { replaceLinksWithEmoji, TranslatableText, SharedTranslationContext } from '../TranslatableText';
-import { useProfile } from '@/hooks/use-profile';
+import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 
 const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
 
