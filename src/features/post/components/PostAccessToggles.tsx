@@ -267,14 +267,14 @@ export function PostAccessToggles({
             </div>
             <Switch checked={selectedCategoriesArray.length > 0} onCheckedChange={handleCategoryToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
           </label>
-          {selectedCategoriesArray.length > 0 && (
+            {selectedCategoriesArray.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5 pl-6">
               {selectedCategoriesArray.length < MAX_CATEGORIES && (
                 <button type="button" onClick={() => { setCategorySearch(''); setCategoryDrawerOpen(true); }} className="text-xs text-white/50 hover:text-white">
                   <Plus className="w-3.5 h-3.5" />
                 </button>
               )}
-              {selectedCategoriesArray.map((cat) => (
+              {selectedCategoriesArray.filter(cat => !communitySlugs.has(cat)).map((cat) => (
                 <span key={cat} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-white/10 text-white/80 border border-white/10">
                   {cat}
                   <button type="button" onClick={() => removeCategory(cat)} className="hover:text-red-400 transition-colors">
