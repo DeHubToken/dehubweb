@@ -60,7 +60,7 @@ export const SOCIAL_LINKS = [
   { icon: "music", url: "https://tiktok.com/@dehub_official", label: "TikTok" },
   { icon: "instagram", url: "https://instagram.com/dehub_official", label: "Instagram" },
   { icon: "twitter", url: "https://x.com/dehub_official", label: "Twitter" },
-  { icon: "scroll", url: "https://docs.dhb.gg", label: "Documentation" },
+  { icon: "scroll", url: "https://dehub.io/docs", label: "Documentation" },
 ];
 
 // Animation timings
