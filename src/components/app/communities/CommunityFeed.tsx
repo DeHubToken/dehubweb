@@ -146,6 +146,19 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
 
   return (
     <div className="space-y-3">
+      {tickerSymbol && (
+        <div className="rounded-xl overflow-hidden border border-white/[0.08] bg-white/[0.02]">
+          <div className="px-3 py-2 flex items-center gap-1.5 border-b border-white/[0.06]">
+            <span className="text-xs font-medium text-white">${tickerSymbol}</span>
+          </div>
+          <TokenPriceChart
+            data={chartData}
+            isLoading={chartLoading}
+            timeframe={chartTimeframe}
+            onTimeframeChange={setChartTimeframe}
+          />
+        </div>
+      )}
       {memberPosts.map(post => {
         const avatar = getAvatar(post);
         const name = getDisplayName(post);
