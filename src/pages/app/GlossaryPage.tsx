@@ -8,6 +8,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { SEOHead } from '@/components/SEOHead';
 import glossaryIcon from '@/assets/glossary-icon.png';
 import dhbCoinIcon from '@/assets/dehub-coin.png';
 import { BADGE_LEVELS, getBadgeUrl } from '@/lib/staking-badges';
