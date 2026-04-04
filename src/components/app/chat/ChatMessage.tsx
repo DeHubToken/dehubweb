@@ -6,6 +6,7 @@ import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { TranslatableText, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useTextTranslation } from '../TranslatableText';
 import { useNavigate } from 'react-router-dom';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import {
   DropdownMenu,
   DropdownMenuContent,
