@@ -97,9 +97,7 @@ export function PostAccessToggles({
   const categoryDrawerOpen = categoryDrawerOpenProp ?? categoryDrawerOpenLocal;
   const setCategoryDrawerOpen = setCategoryDrawerOpenProp ?? setCategoryDrawerOpenLocal;
 
-  // Community tag helpers
-  const selectedCommunityTag = selectedCategory.split('|||').find(c => c.startsWith('community:'));
-  const selectedCommunitySlug = selectedCommunityTag?.replace('community:', '') || null;
+  // Community helpers are defined after selectedCategoriesArray below
   const hasCommunities = userCommunities.length > 0 && !!walletAddress;
 
   // Temp states for drawer inputs
@@ -130,6 +128,10 @@ export function PostAccessToggles({
     selectedCategory ? selectedCategory.split('|||').filter(Boolean) : [],
     [selectedCategory]
   );
+
+  // Community slug is stored as a plain category (e.g. "dehub" not "community:dehub")
+  const communitySlugs = new Set(userCommunities.map(m => m.communities?.slug).filter(Boolean));
+  const selectedCommunitySlug = selectedCategoriesArray.find(c => communitySlugs.has(c)) || null;
 
   const MAX_CATEGORIES = 5;
 
@@ -267,14 +269,14 @@ export function PostAccessToggles({
             </div>
             <Switch checked={selectedCategoriesArray.length > 0} onCheckedChange={handleCategoryToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
           </label>
-          {selectedCategoriesArray.length > 0 && (
+            {selectedCategoriesArray.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5 pl-6">
               {selectedCategoriesArray.length < MAX_CATEGORIES && (
                 <button type="button" onClick={() => { setCategorySearch(''); setCategoryDrawerOpen(true); }} className="text-xs text-white/50 hover:text-white">
                   <Plus className="w-3.5 h-3.5" />
                 </button>
               )}
-              {selectedCategoriesArray.map((cat) => (
+              {selectedCategoriesArray.filter(cat => !communitySlugs.has(cat)).map((cat) => (
                 <span key={cat} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-white/10 text-white/80 border border-white/10">
                   {cat}
                   <button type="button" onClick={() => removeCategory(cat)} className="hover:text-red-400 transition-colors">
@@ -311,8 +313,8 @@ export function PostAccessToggles({
                   if (checked) {
                     setCommunityDrawerOpen(true);
                   } else {
-                    // Remove community tag from categories
-                    const next = selectedCategoriesArray.filter(c => !c.startsWith('community:')).join('|||');
+                    // Remove community slug from categories
+                    const next = selectedCategoriesArray.filter(c => !communitySlugs.has(c)).join('|||');
                     setSelectedCategory(next);
                   }
                 }}
@@ -326,7 +328,7 @@ export function PostAccessToggles({
                   <Users className="w-2.5 h-2.5" />
                   {userCommunities.find(m => m.communities.slug === selectedCommunitySlug)?.communities.name || selectedCommunitySlug}
                   <button type="button" onClick={() => {
-                    const next = selectedCategoriesArray.filter(c => !c.startsWith('community:')).join('|||');
+                    const next = selectedCategoriesArray.filter(c => !communitySlugs.has(c)).join('|||');
                     setSelectedCategory(next);
                   }} className="hover:text-red-400 transition-colors">
                     <X className="w-2.5 h-2.5" />
@@ -399,7 +401,7 @@ export function PostAccessToggles({
             {/* Selected chips */}
             {selectedCategoriesArray.length > 0 && (
               <div className="flex flex-wrap gap-1.5">
-                {selectedCategoriesArray.map((cat) => (
+                {selectedCategoriesArray.filter(cat => !communitySlugs.has(cat)).map((cat) => (
                   <span key={cat} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs bg-white/15 text-white border border-white/20">
                     {cat}
                     <button type="button" onClick={() => removeCategory(cat)} className="hover:text-red-400 transition-colors">
@@ -516,9 +518,9 @@ export function PostAccessToggles({
                   key={community.id}
                   type="button"
                   onClick={() => {
-                    // Remove any existing community tag, add this one
-                    const withoutCommunity = selectedCategoriesArray.filter(c => !c.startsWith('community:'));
-                    const next = [...withoutCommunity, `community:${community.slug}`].join('|||');
+                    // Remove any existing community slug, add this one as a plain category
+                    const withoutCommunity = selectedCategoriesArray.filter(c => !communitySlugs.has(c));
+                    const next = [...withoutCommunity, community.slug].join('|||');
                     setSelectedCategory(next);
                     setCommunityDrawerOpen(false);
                   }}
