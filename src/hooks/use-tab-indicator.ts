@@ -1,12 +1,12 @@
 import { useState, useRef, useCallback, useLayoutEffect, useEffect } from 'react';
-import type React from 'react';
+import type { RefObject } from 'react';
 
 /**
  * Hook that manages a floating overlay indicator for tab rows.
  * The indicator is rendered in an overflow-visible layer ABOVE the
  * scroll container so spring animations are never clipped.
  */
-export function useTabIndicator<T extends string>(activeTab: T, layoutShiftKey?: string | number | boolean, isDraggingRef?: React.RefObject<boolean>) {
+export function useTabIndicator<T extends string>(activeTab: T, layoutShiftKey?: string | number | boolean, isDraggingRef?: RefObject<boolean>) {
   const layerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<Partial<Record<T, HTMLElement | null>>>({});
   const trackingRafRef = useRef<number | null>(null);

@@ -1,5 +1,4 @@
-import { useRef, useCallback, useState, startTransition } from 'react';
-import type React from 'react';
+import React, { useRef, useCallback, useState, startTransition } from 'react';
 
 /** Tab rect cached at drag-start — avoids getBoundingClientRect on every pointermove */
 interface CachedTabRect<T> {
