@@ -44,6 +44,7 @@ import { AuthPrompt } from '@/components/app/AuthPrompt';
 import { AuthGate } from '@/components/app/AuthGate';
 import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
 import { ConversationHistoryDrawer } from '@/components/app/assistant/ConversationHistoryDrawer';
+import { SwapActionCard } from '@/components/app/chat/SwapActionCard';
 import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
@@ -56,6 +57,15 @@ interface SimulationData {
   recipient?: string;
   token: string;
   timestamp: string;
+}
+
+interface SwapAction {
+  tokenIn: string;
+  tokenOut: string;
+  tokenInSymbol: string;
+  tokenOutSymbol: string;
+  amount: string;
+  amountType: 'input' | 'output';
 }
 
 interface Message {
@@ -72,6 +82,7 @@ interface Message {
   simulationData?: SimulationData;
   simulationStatus?: 'pending' | 'approved' | 'rejected';
   isError?: boolean;
+  swapAction?: SwapAction;
 }
 
 // Keywords that indicate image generation/editing request
@@ -964,11 +975,21 @@ export default function AssistantPage() {
             simulationStatus: 'pending'
           };
           setMessages(prev => [...prev, assistantMessage]);
+        } else if (data.swapAction) {
+          // Swap action response
+          const assistantMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: data.response || '',
+            swapAction: data.swapAction,
+          };
+          setMessages(prev => [...prev, assistantMessage]);
+          queueMessage(assistantMessage);
         } else {
           const assistantMessage: Message = {
             id: (Date.now() + 1).toString(),
             role: 'assistant',
-            content: data.response || t('assistant.noResponse')
+            content: data.response || t('assistant.noResponse'),
           };
 
           setMessages(prev => [...prev, assistantMessage]);
@@ -1696,6 +1717,10 @@ export default function AssistantPage() {
                           /* Assistant message - no bubble */
                           <div className="text-white">
                             <MarkdownText content={message.content} className="text-sm" />
+                            {/* Swap action card */}
+                            {message.swapAction && (
+                              <SwapActionCard action={message.swapAction} autoQuote />
+                            )}
                             {message.isError && (
                               <button
                                 onClick={() => {

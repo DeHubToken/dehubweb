@@ -5,7 +5,7 @@
  * detected by the AI assistant. Uses the existing Uniswap V3 swap engine.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { ArrowRightLeft, Check, Loader2, AlertTriangle, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -26,6 +26,7 @@ type SwapStatus = 'idle' | 'quoting' | 'quoted' | 'swapping' | 'success' | 'erro
 
 interface SwapActionCardProps {
   action: SwapAction;
+  autoQuote?: boolean;
 }
 
 // Well-known token decimals
@@ -40,12 +41,21 @@ function getDecimals(address: string): number {
   return TOKEN_DECIMALS[address] ?? 18;
 }
 
-export function SwapActionCard({ action }: SwapActionCardProps) {
+export function SwapActionCard({ action, autoQuote = false }: SwapActionCardProps) {
   const { walletAddress } = useAuth();
   const [status, setStatus] = useState<SwapStatus>('idle');
   const [quote, setQuote] = useState<{ amountIn: bigint; feeTier: number } | null>(null);
   const [txHash, setTxHash] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [autoQuoteDone, setAutoQuoteDone] = useState(false);
+
+  // Auto-fetch quote on mount if autoQuote is enabled
+  useEffect(() => {
+    if (autoQuote && !autoQuoteDone && status === 'idle') {
+      setAutoQuoteDone(true);
+      handleGetQuote();
+    }
+  }, [autoQuote, autoQuoteDone, status]);
 
   const handleGetQuote = useCallback(async () => {
     if (!isAutoSwapSupported(BASE_CHAIN_ID)) {

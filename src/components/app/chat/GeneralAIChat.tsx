@@ -326,7 +326,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
                       <MarkdownText content={message.content} className="text-sm" />
                       {/* Show swap action card */}
                       {message.swapAction && (
-                        <SwapActionCard action={message.swapAction} />
+                        <SwapActionCard action={message.swapAction} autoQuote />
                       )}
                       {/* Show generated image for assistant messages */}
                       {message.imageUrl && (
