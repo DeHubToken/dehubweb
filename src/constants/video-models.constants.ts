@@ -90,6 +90,17 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     emoji: '💨',
     baseCostUsd: 0.085, // ~$0.085
   },
+  'seedance-1.5-pro': {
+    id: 'seedance-1.5-pro',
+    name: 'Seedance 1.5 Pro',
+    description: 'ByteDance cinematic with native audio',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '2-12s',
+    tier: 'premium',
+    emoji: '🌊',
+    baseCostUsd: 0.65,
+    hasAudio: true,
+  },
 };
 
 export const VIDEO_MODEL_OPTIONS = Object.values(VIDEO_MODELS);
