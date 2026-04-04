@@ -21,7 +21,17 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { MarkdownText } from '@/lib/markdown';
 import { PostModal } from '@/features/post';
+import { SwapActionCard } from './SwapActionCard';
 import ftvLogoSymbol from '@/assets/ftv-logo-symbol.png';
+
+interface SwapAction {
+  tokenIn: string;
+  tokenOut: string;
+  tokenInSymbol: string;
+  tokenOutSymbol: string;
+  amount: string;
+  amountType: 'input' | 'output';
+}
 
 interface Message {
   id: string;
@@ -29,6 +39,7 @@ interface Message {
   content: string;
   imageUrl?: string;
   attachedImage?: string;
+  swapAction?: SwapAction;
 }
 
 // Keywords that indicate image generation/editing request
@@ -230,7 +241,8 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: data.response || t('aiChat.noResponse')
+          content: data.response || t('aiChat.noResponse'),
+          swapAction: data.swapAction || undefined,
         };
 
         setMessages(prev => [...prev, assistantMessage]);
@@ -312,6 +324,10 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
                   {message.role === 'assistant' ? (
                     <>
                       <MarkdownText content={message.content} className="text-sm" />
+                      {/* Show swap action card */}
+                      {message.swapAction && (
+                        <SwapActionCard action={message.swapAction} />
+                      )}
                       {/* Show generated image for assistant messages */}
                       {message.imageUrl && (
                         <div className="mt-2 space-y-2">

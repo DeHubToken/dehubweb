@@ -153,6 +153,32 @@ const TOKEN_PURCHASE_KEYWORDS = [
   'swap for dhb', 'exchange for dhb', 'get dhb'
 ];
 
+// Keywords that indicate a real swap request the AI should extract structured params for
+const SWAP_INTENT_KEYWORDS = [
+  'swap', 'exchange', 'convert', 'trade',
+  'swap eth', 'swap usdc', 'swap weth',
+  'buy dhb', 'buy $dhb', 'purchase dhb',
+  'swap for dhb', 'exchange for dhb', 'convert to dhb',
+  'swap eth for', 'swap usdc for', 'trade eth for',
+  'buy tokens', 'swap tokens',
+];
+
+// Well-known token addresses on Base
+const KNOWN_TOKENS: Record<string, { address: string; symbol: string; decimals: number }> = {
+  'eth': { address: '0x0', symbol: 'ETH', decimals: 18 },
+  'weth': { address: '0x4200000000000000000000000000000000000006', symbol: 'WETH', decimals: 18 },
+  'dhb': { address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c', symbol: 'DHB', decimals: 18 },
+  'usdc': { address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', symbol: 'USDC', decimals: 6 },
+  '$eth': { address: '0x0', symbol: 'ETH', decimals: 18 },
+  '$dhb': { address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c', symbol: 'DHB', decimals: 18 },
+  '$usdc': { address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', symbol: 'USDC', decimals: 6 },
+};
+
+function hasSwapIntent(message: string): boolean {
+  const lower = message.toLowerCase();
+  return SWAP_INTENT_KEYWORDS.some(kw => lower.includes(kw));
+}
+
 // Parse token transaction from message
 function parseTokenTransaction(message: string): { type: 'transfer' | 'purchase' | null; amount?: string; recipient?: string; token?: string } {
   const lowerMessage = message.toLowerCase();
@@ -776,7 +802,95 @@ serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-    
+
+    // ── Swap Intent Detection ──────────────────────────────────
+    // If the user is authenticated and the message looks like a swap request,
+    // use AI tool-calling to extract structured swap params and return them.
+    if (isAuthenticated && hasSwapIntent(userQuery)) {
+      console.log('[Swap] Detected swap intent, extracting params...');
+      try {
+        const swapExtractionResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${lovableApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'google/gemini-2.5-flash',
+            messages: [
+              { role: 'system', content: 'You are a swap intent parser. Extract token swap parameters from the user message. Known tokens: ETH (native, address 0x0), WETH (0x4200000000000000000000000000000000000006), DHB (0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c), USDC (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913). If the user says "buy DHB" or "buy $DHB", tokenOut is DHB. Default tokenIn is ETH if not specified. Default amountType is "output" when buying a specific amount of a token, "input" when swapping a specific amount of input token.' },
+              { role: 'user', content: userQuery }
+            ],
+            tools: [{
+              type: 'function',
+              function: {
+                name: 'execute_swap',
+                description: 'Execute a token swap on Uniswap V3 (Base chain)',
+                parameters: {
+                  type: 'object',
+                  properties: {
+                    tokenIn: { type: 'string', description: 'Input token address (0x0 for native ETH)' },
+                    tokenOut: { type: 'string', description: 'Output token address' },
+                    tokenInSymbol: { type: 'string', description: 'Input token symbol (e.g. ETH, USDC)' },
+                    tokenOutSymbol: { type: 'string', description: 'Output token symbol (e.g. DHB, ETH)' },
+                    amount: { type: 'string', description: 'Amount as a decimal string (e.g. "0.01", "1000")' },
+                    amountType: { type: 'string', enum: ['input', 'output'], description: 'Whether amount refers to input or output token' },
+                  },
+                  required: ['tokenIn', 'tokenOut', 'tokenInSymbol', 'tokenOutSymbol', 'amount', 'amountType'],
+                  additionalProperties: false,
+                },
+              },
+            }],
+            tool_choice: { type: 'function', function: { name: 'execute_swap' } },
+            max_completion_tokens: 200,
+          }),
+        });
+
+        if (swapExtractionResponse.ok) {
+          const swapData = await swapExtractionResponse.json();
+          const toolCall = swapData.choices?.[0]?.message?.tool_calls?.[0];
+          
+          if (toolCall?.function?.arguments) {
+            const swapParams = JSON.parse(toolCall.function.arguments);
+            console.log('[Swap] Extracted params:', swapParams);
+
+            // Validate the extracted params have real addresses
+            const validIn = swapParams.tokenIn && (swapParams.tokenIn === '0x0' || swapParams.tokenIn.startsWith('0x'));
+            const validOut = swapParams.tokenOut && swapParams.tokenOut.startsWith('0x');
+            const validAmount = swapParams.amount && parseFloat(swapParams.amount) > 0;
+
+            if (validIn && validOut && validAmount) {
+              const friendlyText = swapParams.amountType === 'output'
+                ? `I'll help you buy ${swapParams.amount} ${swapParams.tokenOutSymbol} using ${swapParams.tokenInSymbol}! Tap "Get Quote" below to see the current price, then confirm to execute the swap.`
+                : `I'll help you swap ${swapParams.amount} ${swapParams.tokenInSymbol} for ${swapParams.tokenOutSymbol}! Tap "Get Quote" below to see how much you'll receive, then confirm to execute.`;
+
+              return new Response(
+                JSON.stringify({
+                  response: friendlyText,
+                  swapAction: {
+                    tokenIn: swapParams.tokenIn,
+                    tokenOut: swapParams.tokenOut,
+                    tokenInSymbol: swapParams.tokenInSymbol || 'ETH',
+                    tokenOutSymbol: swapParams.tokenOutSymbol || 'DHB',
+                    amount: swapParams.amount,
+                    amountType: swapParams.amountType || 'output',
+                  },
+                  modelUsed: 'google/gemini-2.5-flash',
+                  modelTier: 'free',
+                  modelReason: 'Swap intent extraction',
+                }),
+                { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+              );
+            }
+          }
+        }
+        console.log('[Swap] Extraction failed or incomplete, falling through to normal chat');
+      } catch (swapError) {
+        console.error('[Swap] Error extracting swap params:', swapError);
+        // Fall through to normal chat
+      }
+    }
+
     // Smart auto-model selection based on query complexity
     const isAutoMode = model === 'auto' || model === 'gemini-2.5-flash'; // Default to auto
     const autoSelection = selectOptimalModel(userQuery, !!perplexityKey);
