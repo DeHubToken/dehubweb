@@ -241,7 +241,8 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: data.response || t('aiChat.noResponse')
+          content: data.response || t('aiChat.noResponse'),
+          swapAction: data.swapAction || undefined,
         };
 
         setMessages(prev => [...prev, assistantMessage]);
