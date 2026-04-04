@@ -127,6 +127,7 @@ function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId
     sender_username: (sender?.username ?? raw.senderUsername ?? raw.sender_username ?? null) as string | null,
     sender_display_name: (sender?.displayName ?? sender?.display_name ?? raw.senderDisplayName ?? raw.sender_display_name ?? null) as string | null,
     sender_avatar_url: (sender?.avatarUrl ?? sender?.avatarImageUrl ?? sender?.avatar_url ?? sender?.avatar_image_url ?? raw.senderAvatarUrl ?? raw.sender_avatar_url ?? null) as string | null,
+    sender_badge_balance: Number(sender?.badgeBalance ?? sender?.badge_balance ?? raw.senderBadgeBalance ?? raw.sender_badge_balance ?? 0) || null,
     content: msg.content || (typeof gifUrl === 'string' ? gifUrl : ''),
     message_type: normalizeMsgType(msg.type || msg.messageType),
     image_url: msg.imageUrl || (typeof gifUrl === 'string' ? gifUrl : null) || ((raw as any).media?.[0]?.url ?? null),
