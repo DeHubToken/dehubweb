@@ -27,6 +27,9 @@ export function useUserLanguage() {
       
       setLanguage(lang);
       
+      // Keep <html lang="..."> in sync for SEO/accessibility audits
+      document.documentElement.lang = lang;
+      
       // Always ensure i18n is synced to the correct language
       if (lang !== 'en' && i18n.language !== lang) {
         const ok = await loadLanguage(lang);
