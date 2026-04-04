@@ -8,7 +8,7 @@
  * @module pages/app/HomePage
  */
 
-import { useState, useEffect, useRef, useCallback, useDeferredValue } from 'react';
+import { useState, useEffect, useRef, useCallback, useDeferredValue, memo } from 'react';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -37,6 +37,18 @@ import {
   W2EFeed,
   MusicFeed,
 } from '@/components/app/feeds';
+
+// Memoized wrappers — prevent feed re-renders during drag tab switches.
+// React.memo skips re-render when props are unchanged, so heavy feeds
+// (infinite scroll lists, media cards, etc.) stay frozen during drag.
+const MemoHomeFeed    = memo(HomeFeed);
+const MemoVideosFeed  = memo(VideosFeed);
+const MemoImagesFeed  = memo(ImagesFeed);
+const MemoShortsFeed  = memo(ShortsFeed);
+const MemoLiveFeed    = memo(LiveFeed);
+const MemoMusicFeed   = memo(MusicFeed);
+const MemoPPVFeed     = memo(PPVFeed);
+const MemoW2EFeed     = memo(W2EFeed);
 
 // ============================================================================
 // CONSTANTS
@@ -714,20 +726,21 @@ export default function HomePage() {
           </div>
         )}
         {/* Feeds mount lazily on first tab visit, then stay alive (CSS display toggle).
-            This prevents all 8 feeds from firing queries simultaneously on page load. */}
+            Memo wrappers prevent re-renders during drag — feeds only update when
+            their own props change, not when activeTab/deferredTab changes. */}
         {visitedTabs.has('home') && (
           <div style={{ display: deferredTab === 'home' ? 'block' : 'none' }}>
-            <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} pinnedPostId={pinnedPostId} />
+            <MemoHomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} pinnedPostId={pinnedPostId} />
           </div>
         )}
         {visitedTabs.has('videos') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'videos' ? 'block' : 'none' }}>
-            <VideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+            <MemoVideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
           </div>
         )}
         {visitedTabs.has('images') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'images' ? 'block' : 'none' }}>
-            <ImagesFeed
+            <MemoImagesFeed
               showCollage={showImagesCollage}
               showFilters={showImagesFilters}
               isRefreshing={isRefreshing}
@@ -740,27 +753,27 @@ export default function HomePage() {
         )}
         {visitedTabs.has('shorts') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'shorts' ? 'block' : 'none' }}>
-            <ShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+            <MemoShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
           </div>
         )}
         {visitedTabs.has('live') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'live' ? 'block' : 'none' }}>
-            <LiveFeed key={refreshKey} isRefreshing={isRefreshing} showFilters={showLiveFilters} />
+            <MemoLiveFeed key={refreshKey} isRefreshing={isRefreshing} showFilters={showLiveFilters} />
           </div>
         )}
         {visitedTabs.has('music') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'music' ? 'block' : 'none' }}>
-            <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+            <MemoMusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
           </div>
         )}
         {visitedTabs.has('ppv') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'ppv' ? 'block' : 'none' }}>
-            <PPVFeed />
+            <MemoPPVFeed />
           </div>
         )}
         {visitedTabs.has('w2e') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'w2e' ? 'block' : 'none' }}>
-            <W2EFeed />
+            <MemoW2EFeed />
           </div>
         )}
         {/* end feed tabs */}
