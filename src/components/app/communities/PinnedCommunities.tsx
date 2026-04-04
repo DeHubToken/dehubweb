@@ -3,7 +3,7 @@
  */
 
 import { useNavigate } from 'react-router-dom';
-import { Users, Plus, X } from 'lucide-react';
+import { Users, Plus, X, Pin } from 'lucide-react';
 import { usePinnedCommunities, useUserCommunities, usePinCommunity, useUnpinCommunity, useCommunityMembers } from '@/hooks/use-communities';
 import { useState } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -32,11 +32,13 @@ export function PinnedCommunities({ walletAddress, isOwnProfile }: PinnedCommuni
               key={pin.id}
               community={community}
               onClick={() => navigate(`/app/communities/${community.slug}`)}
+              isOwnProfile={isOwnProfile}
+              onManagePins={() => setPickerOpen(true)}
             />
           );
         })}
       </div>
-      {isOwnProfile && pinned.length < 3 && (
+      {isOwnProfile && pinned.length === 0 && (
         <button
           onClick={() => setPickerOpen(true)}
           className="mt-2 inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-dashed border-white/[0.1] hover:bg-white/[0.08] transition-colors text-xs text-zinc-500"
@@ -59,35 +61,45 @@ export function PinnedCommunities({ walletAddress, isOwnProfile }: PinnedCommuni
 }
 
 /** X-style community card */
-function PinnedCommunityCard({ community, onClick }: { community: Community; onClick: () => void }) {
+function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins }: { community: Community; onClick: () => void; isOwnProfile?: boolean; onManagePins?: () => void }) {
   return (
-    <button
-      onClick={onClick}
-      className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.07] transition-colors text-left"
-    >
-      {/* Community avatar */}
-      <div className="w-12 h-12 rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden flex-shrink-0">
-        {community.avatar_url ? (
-          <img src={community.avatar_url} alt="" className="w-full h-full object-cover" />
-        ) : (
-          <Users className="w-5 h-5 text-zinc-500" />
-        )}
-      </div>
-
-      {/* Info */}
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-white truncate">{community.name}</p>
-        {community.description && (
-          <p className="text-xs text-zinc-500 truncate mt-0.5">{community.description}</p>
-        )}
-        <div className="flex items-center gap-1.5 mt-1">
-          <Users className="w-3 h-3 text-zinc-500" />
-          <span className="text-xs text-zinc-500">
-            <span className="font-semibold text-zinc-300">{community.member_count.toLocaleString()}</span> Members
-          </span>
+    <div className="relative">
+      <button
+        onClick={onClick}
+        className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.07] transition-colors text-left"
+      >
+        {/* Community avatar */}
+        <div className="w-12 h-12 rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden flex-shrink-0">
+          {community.avatar_url ? (
+            <img src={community.avatar_url} alt="" className="w-full h-full object-cover" />
+          ) : (
+            <Users className="w-5 h-5 text-zinc-500" />
+          )}
         </div>
-      </div>
-    </button>
+
+        {/* Info */}
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-white truncate">{community.name}</p>
+          {community.description && (
+            <p className="text-xs text-zinc-500 truncate mt-0.5">{community.description}</p>
+          )}
+          <div className="flex items-center gap-1.5 mt-1">
+            <Users className="w-3 h-3 text-zinc-500" />
+            <span className="text-xs text-zinc-500">
+              <span className="font-semibold text-zinc-300">{community.member_count.toLocaleString()}</span> Members
+            </span>
+          </div>
+        </div>
+      </button>
+      {isOwnProfile && onManagePins && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onManagePins(); }}
+          className="absolute top-2 right-2 w-7 h-7 rounded-lg bg-black/60 backdrop-blur-sm border border-white/[0.1] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+        >
+          <Pin className="w-3.5 h-3.5" />
+        </button>
+      )}
+    </div>
   );
 }
 
