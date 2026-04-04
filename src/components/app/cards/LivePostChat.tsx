@@ -45,9 +45,9 @@ function LiveChatAvatar({ src, address, name }: { src?: string | null; address?:
   );
 }
 
-/** Live chat badge — livechat messages have no badge data, removed edge function call */
-function LiveChatBadge({ address: _address }: { address: string }) {
-  return null;
+/** Live chat badge */
+function LiveChatBadge({ badgeBalance, username }: { badgeBalance?: number | null; username?: string | null }) {
+  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] ml-0.5" />;
 }
 
 /** Translatable text message with inline translate button */
