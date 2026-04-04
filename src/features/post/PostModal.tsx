@@ -171,6 +171,13 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
               actions.setText(currentDesc + (currentDesc ? '\n' : '') + tag);
             }
           }
+          // Inject community link into text so it appears in the published post
+          if (communitySlug && initialText) {
+            const currentText = state.text;
+            if (!currentText.includes('/app/communities/')) {
+              actions.setText(currentText + (currentText ? '\n' : '') + initialText);
+            }
+          }
           // Small delay to let state update, then post
           setTimeout(() => actions.handlePost(), 50);
         }}
