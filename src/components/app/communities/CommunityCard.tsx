@@ -21,7 +21,7 @@ export function CommunityCard({ community, isMember, onClick }: CommunityCardPro
             backgroundImage: `url(${community.banner_url})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            opacity: 0.12,
+            opacity: 0.26,
             maskImage: 'linear-gradient(to right, transparent 30%, black 70%)',
             WebkitMaskImage: 'linear-gradient(to right, transparent 30%, black 70%)',
           }}
