@@ -51,6 +51,7 @@ const GlossaryPage = lazyWithRetry(() => import('@/pages/app/GlossaryPage'));
 const StakingPage = lazyWithRetry(() => import('@/pages/app/StakingPage'));
 const BridgePage = lazyWithRetry(() => import('@/pages/app/BridgePage'));
 const Top100CryptosPage = lazyWithRetry(() => import('@/pages/app/Top100CryptosPage'));
+const CommunitiesPage = lazyWithRetry(() => import('@/pages/app/CommunitiesPage'));
 
 // Pages that get cached (mount-once, hide with CSS)
 interface CachedPageConfig {
