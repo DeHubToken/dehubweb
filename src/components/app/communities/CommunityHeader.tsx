@@ -1,6 +1,8 @@
 import { useRef, useState, useCallback } from 'react';
 import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { CommunityTickerSearch } from './CommunityTickerSearch';
+import type { DexPair } from '@/hooks/use-dexscreener';
 import { uploadCommunityMedia, useUpdateCommunity, usePinnedCommunities, usePinCommunity, useUnpinCommunity } from '@/hooks/use-communities';
 import type { Community } from '@/hooks/use-communities';
 import { useAuth } from '@/contexts/AuthContext';
@@ -20,7 +22,6 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const updateMutation = useUpdateCommunity();
   const [uploading, setUploading] = useState<'avatar' | 'banner' | null>(null);
-  const [tickerInput, setTickerInput] = useState('');
   const [showTickerInput, setShowTickerInput] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [editingDesc, setEditingDesc] = useState(false);
@@ -211,44 +212,41 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
               <span className="text-xs text-zinc-400 flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
                 Ticker: <span className="text-white font-medium">${community.ticker_symbol}</span>
+                {community.ticker_chain_id && (
+                  <span className="text-zinc-600 text-[10px] bg-zinc-800 px-1 py-0.5 rounded">{community.ticker_chain_id.toUpperCase()}</span>
+                )}
               </span>
               <button
-                onClick={() => updateMutation.mutate({ id: community.id, ticker_symbol: null } as any)}
+                onClick={() => updateMutation.mutate({
+                  id: community.id,
+                  ticker_symbol: null,
+                  ticker_contract_address: null,
+                  ticker_chain_id: null,
+                  ticker_pair_address: null,
+                } as any)}
                 className="text-zinc-600 hover:text-red-400 transition-colors"
               >
                 <X className="w-3 h-3" />
               </button>
             </div>
           ) : showTickerInput ? (
-            <div className="flex items-center gap-2">
-              <input
-                value={tickerInput}
-                onChange={e => setTickerInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))}
-                placeholder="e.g. DHB, ETH, BTC"
-                className="flex-1 bg-white/[0.06] border border-white/[0.1] rounded-lg px-2.5 py-1.5 text-xs text-white placeholder:text-zinc-600 outline-none focus:border-white/20"
-                maxLength={10}
-                autoFocus
-              />
-              <Button
-                size="sm"
-                className="rounded-lg h-7 px-3 text-xs bg-white text-black hover:bg-white/90"
-                disabled={!tickerInput || updateMutation.isPending}
-                onClick={() => {
-                  updateMutation.mutate({ id: community.id, ticker_symbol: tickerInput } as any, {
-                    onSuccess: () => {
-                      setShowTickerInput(false);
-                      setTickerInput('');
-                      toast.success(`Ticker set to $${tickerInput}`);
-                    }
-                  });
-                }}
-              >
-                Save
-              </Button>
-              <button onClick={() => { setShowTickerInput(false); setTickerInput(''); }} className="text-zinc-500 hover:text-white">
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
+            <CommunityTickerSearch
+              onSelect={(pair: DexPair) => {
+                updateMutation.mutate({
+                  id: community.id,
+                  ticker_symbol: pair.baseToken.symbol,
+                  ticker_contract_address: pair.baseToken.address,
+                  ticker_chain_id: pair.chainId,
+                  ticker_pair_address: pair.pairAddress,
+                } as any, {
+                  onSuccess: () => {
+                    setShowTickerInput(false);
+                    toast.success(`Ticker set to $${pair.baseToken.symbol}`);
+                  }
+                });
+              }}
+              onCancel={() => setShowTickerInput(false)}
+            />
           ) : (
             <button
               onClick={() => setShowTickerInput(true)}
