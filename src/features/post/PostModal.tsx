@@ -77,7 +77,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onClearCrop={actions.clearCropFromMedia}
         onApplyTrim={actions.applyTrimToMedia}
         liveMode={state.liveMode}
-        canPost={computed.canPost || !!communitySlug}
+        canPost={computed.canPost}
         destinations={computed.destinations}
         hasVideo={computed.hasVideo}
         hasImage={computed.hasImage}
