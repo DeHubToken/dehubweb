@@ -86,13 +86,21 @@ export function PostAccessToggles({
   setCategoryDrawerOpen: setCategoryDrawerOpenProp,
 }: PostAccessTogglesProps) {
   const { t } = useI18n();
+  const { walletAddress } = useAuth();
+  const { data: userCommunities = [] } = useUserCommunities();
   // Mobile drawer states
   const [ppvDrawerOpen, setPpvDrawerOpen] = useState(false);
   const [bountyDrawerOpen, setBountyDrawerOpen] = useState(false);
   const [tokenDrawerOpen, setTokenDrawerOpen] = useState(false);
+  const [communityDrawerOpen, setCommunityDrawerOpen] = useState(false);
   const [categoryDrawerOpenLocal, setCategoryDrawerOpenLocal] = useState(false);
   const categoryDrawerOpen = categoryDrawerOpenProp ?? categoryDrawerOpenLocal;
   const setCategoryDrawerOpen = setCategoryDrawerOpenProp ?? setCategoryDrawerOpenLocal;
+
+  // Community tag helpers
+  const selectedCommunityTag = selectedCategory.split('|||').find(c => c.startsWith('community:'));
+  const selectedCommunitySlug = selectedCommunityTag?.replace('community:', '') || null;
+  const hasCommunities = userCommunities.length > 0 && !!walletAddress;
 
   // Temp states for drawer inputs
   const [tempPpvAmount, setTempPpvAmount] = useState(ppvAmount);
