@@ -109,6 +109,8 @@ const tabs = [
   { icon: Wallet, value: 'assets', label: 'settings.assets' },
 ];
 
+import { SEOHead } from '@/components/SEOHead';
+
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
   const settingsIsDraggingRef = useRef(false);

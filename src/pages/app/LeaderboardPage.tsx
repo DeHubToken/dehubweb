@@ -32,6 +32,7 @@ import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type L
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { SEOHead } from '@/components/SEOHead';
 
 
 type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
