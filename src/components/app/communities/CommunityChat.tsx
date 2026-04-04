@@ -240,6 +240,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                           <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>
                             {name}
                           </button>
+                          <BadgeIcon badgeBalance={(msg as any).badge_balance} username={msg.username} className="w-[9px] h-[9px]" />
                           <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
                         </span>
                         {msg.message_type === 'gif' && msg.image_url ? (
