@@ -87,7 +87,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onClearCrop={actions.clearCropFromMedia}
         onApplyTrim={actions.applyTrimToMedia}
         liveMode={state.liveMode}
-        canPost={computed.canPost}
+        canPost={computed.canPost || !!communitySlug}
         destinations={computed.destinations}
         hasVideo={computed.hasVideo}
         hasImage={computed.hasImage}
@@ -181,7 +181,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
           // Small delay to let state update, then post
           setTimeout(() => actions.handlePost(), 50);
         }}
-        canPost={computed.canPost}
+        canPost={computed.canPost || !!communitySlug}
         isEnhancing={state.isEnhancing}
         isPosting={state.isPosting}
         uploadProgress={state.uploadProgress}
