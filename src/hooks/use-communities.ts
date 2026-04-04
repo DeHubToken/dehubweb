@@ -22,6 +22,9 @@ export interface Community {
   member_count: number;
   rules: any[];
   ticker_symbol: string | null;
+  ticker_contract_address: string | null;
+  ticker_chain_id: string | null;
+  ticker_pair_address: string | null;
   created_at: string;
   updated_at: string;
 }
