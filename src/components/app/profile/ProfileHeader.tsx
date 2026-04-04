@@ -12,6 +12,7 @@ import { TranslatableText } from '@/components/app/TranslatableText';
 import { BioTranslateButton } from '@/components/app/profile/BioTranslateButton';
 import { ProfileSocialLinks } from '@/components/app/profile/ProfileSocialLinks';
 import { MutualFollowers } from '@/components/app/profile/MutualFollowers';
+import { PinnedCommunities } from '@/components/app/communities/PinnedCommunities';
 import {
   AlertDialog,
   AlertDialogAction,
