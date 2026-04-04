@@ -109,8 +109,8 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     type: 'post',
     author: {
       id: nft.minter,
-      name: nft.minterDisplayName || nft.mintername || 'Unknown',
-      handle: nft.mintername || nft.minter,
+      name: nft.minterDisplayName || nft.minterUsername || nft.mintername || 'Unknown',
+      handle: nft.minterUsername || nft.mintername || nft.minter,
       avatarSeed: avatarUrl,
       verified: false,
     },
