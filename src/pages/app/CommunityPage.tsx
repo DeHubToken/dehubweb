@@ -16,6 +16,7 @@ import { CommunityMembers } from '@/components/app/communities/CommunityMembers'
 import { CommunityAbout } from '@/components/app/communities/CommunityAbout';
 import { CommunityChat } from '@/components/app/communities/CommunityChat';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 
 type Tab = 'posts' | 'members' | 'about' | 'chat';
@@ -60,11 +61,14 @@ export default function CommunityPage() {
   const handleJoinLeave = () => {
     if (!isAuthenticated) { openLoginModal(); return; }
     if (isMember) {
-      if (isOwner) return; // owners can't leave
-      leaveMutation.mutate(community.id);
+      if (isOwner) return;
+      leaveMutation.mutate(community.id, {
+        onSuccess: () => { toast.success('Left community'); },
+      });
     } else if (isPendingMember) {
-      // Cancel pending request
-      leaveMutation.mutate(community.id);
+      leaveMutation.mutate(community.id, {
+        onSuccess: () => { toast.success('Request cancelled'); },
+      });
     } else {
       joinMutation.mutate({ communityId: community.id, isPrivate: community.is_private });
     }
