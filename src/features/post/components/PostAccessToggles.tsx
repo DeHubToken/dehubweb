@@ -129,6 +129,10 @@ export function PostAccessToggles({
     [selectedCategory]
   );
 
+  // Community slug is stored as a plain category (e.g. "dehub" not "community:dehub")
+  const communitySlugs = new Set(userCommunities.map(m => m.communities?.slug).filter(Boolean));
+  const selectedCommunitySlug = selectedCategoriesArray.find(c => communitySlugs.has(c)) || null;
+
   const MAX_CATEGORIES = 5;
 
   const filteredCategories = useMemo(() => {
