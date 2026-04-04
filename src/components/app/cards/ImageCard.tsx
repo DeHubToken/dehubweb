@@ -531,7 +531,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                       <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
                     </button>
                     <button
-                      onClick={() => setShowDeleteModal(true)}
+                      onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowDeleteModal(true), 300); }}
                       className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-white/10 rounded-xl transition-colors text-left"
                     >
                       <Trash2 className="w-5 h-5" /> {t('postOptions.deletePost')}
