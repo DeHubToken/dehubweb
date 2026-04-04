@@ -91,8 +91,8 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
         )}
       </div>
 
-      {/* Avatar + info + buttons */}
-      <div className="flex items-start gap-3 -mt-8 px-2">
+      {/* Avatar + buttons row */}
+      <div className="flex items-start justify-between -mt-8 px-2">
         <div
           className="w-16 h-16 rounded-xl bg-black border-2 border-black flex items-center justify-center overflow-hidden flex-shrink-0 relative group"
           onClick={isOwner ? () => avatarInputRef.current?.click() : undefined}
@@ -127,11 +127,7 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
             </div>
           )}
         </div>
-        <div className="flex-1 min-w-0 pt-9">
-          <h1 className="text-lg font-bold text-white truncate">{community.name}</h1>
-          <p className="text-zinc-500 text-sm">{community.member_count.toLocaleString()} members</p>
-        </div>
-        <div className="flex items-center gap-2 flex-shrink-0 pt-[39px] -mr-[6.9px]">
+        <div className="flex items-center gap-2 flex-shrink-0 pt-[39px]">
           {isMember && (
             <Button
               size="sm"
@@ -167,6 +163,12 @@ export function CommunityHeader({ community, isMember, isOwner, isPending, onJoi
             )}
           </Button>
         </div>
+      </div>
+
+      {/* Name + member count below avatar */}
+      <div className="px-2 mt-2">
+        <h1 className="text-lg font-bold text-white truncate">{community.name}</h1>
+        <p className="text-zinc-500 text-sm">{community.member_count.toLocaleString()} members</p>
       </div>
 
       {/* Ticker assignment for owners */}
