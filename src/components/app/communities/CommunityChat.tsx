@@ -106,7 +106,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
-  const { data: profile } = useProfile(walletAddress);
+  const { data: profileData } = useDeHubProfile({ address: walletAddress || undefined, enabled: !!walletAddress });
 
   const { messages, isLoading, sendMessage, addReaction, removeReaction } = useCommunityChat(communityId);
 
