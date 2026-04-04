@@ -32,17 +32,12 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
     return extractCommunitySlug(initialText);
   }, [initialText]);
 
-  // Set initial text when modal opens — but DON'T put community URLs in the editor
+  // Set initial text when modal opens — put it straight in the editor
   useEffect(() => {
     if (isOpen && initialText) {
-      if (communitySlug) {
-        // Community share — don't put URL in editor, it shows as a card below
-        // Leave text empty so user can type their own message
-      } else {
-        actions.setText(initialText);
-      }
+      actions.setText(initialText);
     }
-  }, [isOpen, initialText, communitySlug]);
+  }, [isOpen, initialText]);
 
   // Set initial category when modal opens
   useEffect(() => {
@@ -171,17 +166,10 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
               actions.setText(currentDesc + (currentDesc ? '\n' : '') + tag);
             }
           }
-          // Inject community link into text so it appears in the published post
-          if (communitySlug && initialText) {
-            const currentText = state.text;
-            if (!currentText.includes('/app/communities/')) {
-              actions.setText(currentText + (currentText ? '\n' : '') + initialText);
-            }
-          }
           // Small delay to let state update, then post
           setTimeout(() => actions.handlePost(), 50);
         }}
-        canPost={computed.canPost || !!communitySlug}
+        canPost={computed.canPost}
         isEnhancing={state.isEnhancing}
         isPosting={state.isPosting}
         uploadProgress={state.uploadProgress}
