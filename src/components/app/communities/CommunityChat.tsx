@@ -160,6 +160,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
         username: profileData?.handle || undefined,
         displayName: profileData?.name || undefined,
         avatarUrl: profileData?.avatarUrl || undefined,
+        badgeBalance: user?.badgeBalance || undefined,
       });
     } catch {
       // Error handled in hook
