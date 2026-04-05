@@ -60,7 +60,7 @@ async function fetchPosts(token: string, page: number): Promise<any[]> {
     });
     if (!res.ok) return [];
     const data = await res.json();
-    return data.data || data.posts || data || [];
+    return data.result || data.data || data.posts || [];
   } catch {
     return [];
   }
