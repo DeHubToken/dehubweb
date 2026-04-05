@@ -36,6 +36,7 @@ const MIN_BADGE_THRESHOLD = 10000;
 const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
   "maldoteth": "Meglodon",
   "mal": "Meglodon",
+  "aaron": "Meglodon",
 };
 
 // Import all badge images
