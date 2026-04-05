@@ -9,7 +9,8 @@ const DEHUB_API_BASE = "https://api.dehub.io";
 const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
 const APP_URL = "https://dehub.io"; // Change to actual production URL if different
 
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "https://aigxuutjaqsywioxjefr.supabase.co";
+const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpZ3h1dXRqYXFzeXdpb3hqZWZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2MzY0MzIsImV4cCI6MjA4MzIxMjQzMn0.hjMx0kShuJlaZ26UoG7RFGu3OC_aLR0C1Sf1qdk3x0I";
 const IMAGE_PROXY_BASE = `${SUPABASE_URL}/functions/v1/ssr-seo`;
 const DEHUB_LOGO = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/default-icon.png";
 const AUDIO_OG_IMAGE = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/audio-wave%20(1).png";
@@ -38,6 +39,35 @@ interface DeHubNFT {
     minterDisplayName?: string;
     minterAvatarUrl?: string;
     minterUser?: DeHubUser;
+}
+
+interface DeHubCommunity {
+    id: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    avatar_url: string | null;
+    banner_url: string | null;
+    member_count: number;
+}
+
+async function fetchCommunity(slug: string): Promise<DeHubCommunity | null> {
+    try {
+        const res = await fetch(
+            `${SUPABASE_URL}/rest/v1/communities?slug=eq.${encodeURIComponent(slug)}&select=id,name,slug,description,avatar_url,banner_url,member_count&limit=1`,
+            {
+                headers: {
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+                },
+            }
+        );
+        if (!res.ok) return null;
+        const rows: DeHubCommunity[] = await res.json();
+        return rows[0] ?? null;
+    } catch {
+        return null;
+    }
 }
 
 function getExtension(path: string): string {
@@ -345,7 +375,48 @@ serve(async (req) => {
             }
         }
 
-        // 2. Unified Post Handling (/app/post/{tokenId} for both image and video posts)
+        // 2. Community Handling (/app/communities/{slug})
+        if (cleanPath.includes("/communities/")) {
+            const slug = cleanPath.split("/communities/")[1].split("/")[0];
+            const community = await fetchCommunity(slug);
+
+            if (community) {
+                const communityUrl = `${APP_URL}/app/communities/${community.slug}`;
+                // Prefer banner (landscape) for summary_large_image, fall back to avatar
+                const ogImage = community.banner_url || community.avatar_url || DEHUB_LOGO;
+                const hasRealImage = !!(community.banner_url || community.avatar_url);
+                const twitterCard = community.banner_url ? "summary_large_image" : "summary";
+                const title = `Join ${community.name}'s community on DeHub today`;
+                const memberText = community.member_count > 0 ? ` • ${community.member_count} members` : "";
+                const description = community.description
+                    ? `${community.description}${memberText}`
+                    : `Join the ${community.name} community on DeHub — open source, censorship resistant media.${memberText}`;
+
+                const html = generateMetaHTML({
+                    title,
+                    description,
+                    image: ogImage,
+                    url: communityUrl,
+                    type: "website",
+                    twitterCard,
+                    imageWidth: community.banner_url ? 1200 : 400,
+                    imageHeight: community.banner_url ? 630 : 400,
+                    functionBaseUrl,
+                    isBot,
+                    jsonLd: {
+                        "@context": "https://schema.org",
+                        "@type": "Organization",
+                        name: community.name,
+                        url: communityUrl,
+                        ...(community.description && { description: community.description }),
+                        ...(hasRealImage && { image: ogImage }),
+                    },
+                });
+                return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
+            }
+        }
+
+        // 3. Unified Post Handling (/app/post/{tokenId} for both image and video posts)
         if (cleanPath.includes("/post/")) {
             const postId = cleanPath.split("/post/")[1].split("/")[0];
 
