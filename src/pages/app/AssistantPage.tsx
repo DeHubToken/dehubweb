@@ -419,6 +419,19 @@ export default function AssistantPage() {
     model: ImageModelKey;
     sourceImage?: string;
   } | null>(null);
+  // AI Tools state
+  const [aiToolPaywallOpen, setAiToolPaywallOpen] = useState(false);
+  const [selectedAiToolId, setSelectedAiToolId] = useState<string>('minimax-music');
+  const [aiToolCategory, setAiToolCategory] = useState<AiToolCategory>('music');
+  const [isAiToolProcessing, setIsAiToolProcessing] = useState(false);
+  const [pendingAiToolRequest, setPendingAiToolRequest] = useState<{
+    prompt: string;
+    tool: string;
+    category: AiToolCategory;
+    sourceImage?: string;
+    audioUrl?: string;
+  } | null>(null);
+
   const [voiceAutoReply, setVoiceAutoReply] = useState(true); // Auto-speak AI replies when using voice
   const [alwaysSpeakReplies, setAlwaysSpeakReplies] = useState(false); // Speak ALL AI replies, not just voice responses
   const [inputGlow, setInputGlow] = useState(false); // Glow effect for input focus hint
