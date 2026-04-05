@@ -113,13 +113,13 @@ Deno.serve(async (req) => {
 
     logs.push(`🎯 Posts to like: ${tokenIds.length}`);
 
-    // Like with 1.5s delay (10 posts x 3 agents x 1.5s = ~45s)
+    // Like with 1s delay (5 posts x 3 agents x 1s = ~15s)
     let ok = 0, fail = 0;
     for (const tokenId of tokenIds) {
       for (const agent of authedAgents) {
         const success = await likePost(agent.token, tokenId);
         if (success) ok++; else fail++;
-        await sleep(1500);
+        await sleep(1000);
       }
     }
 
