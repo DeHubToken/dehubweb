@@ -879,6 +879,128 @@ export default function AssistantPage() {
     }
   };
 
+  // ─── AI Tool Handlers ───
+
+  const pollAiToolStatus = useCallback(async (requestId: string, appId: string, messageId: string, toolKey: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('fal-ai-tools', {
+        body: { requestId, appId }
+      });
+
+      if (error) throw error;
+
+      if (data.status === 'succeeded') {
+        clearInterval(pollingRef.current[requestId]);
+        delete pollingRef.current[requestId];
+
+        const toolModel = AI_TOOL_MODELS[toolKey];
+        const category = toolModel?.category;
+
+        setMessages(prev => prev.map(m => {
+          if (m.id !== messageId) return m;
+          const updated: Message = {
+            ...m,
+            isToolProcessing: false,
+            content: '',
+          };
+          if (data.audioUrl) updated.audioUrl = data.audioUrl;
+          if (data.imageUrl) updated.imageUrl = data.imageUrl;
+          if (data.text) updated.content = `📝 **Transcription:**\n\n${data.text}`;
+          if (!data.audioUrl && !data.imageUrl && !data.text) {
+            updated.content = `✅ ${toolModel?.name || 'Tool'} completed successfully.`;
+          }
+          return updated;
+        }));
+
+        setIsAiToolProcessing(false);
+        toast.success(`${toolModel?.name || 'AI Tool'} completed!`);
+      } else if (data.status === 'failed') {
+        clearInterval(pollingRef.current[requestId]);
+        delete pollingRef.current[requestId];
+
+        setMessages(prev => prev.map(m =>
+          m.id === messageId ? { ...m, isToolProcessing: false, content: `❌ Processing failed: ${data.error || 'Unknown error'}` } : m
+        ));
+        setIsAiToolProcessing(false);
+      }
+    } catch (err) {
+      console.error('[AI Tool] Polling error:', err);
+    }
+  }, []);
+
+  const handleAiToolConfirm = async () => {
+    if (!pendingAiToolRequest) return;
+
+    const { prompt, tool, category, sourceImage } = pendingAiToolRequest;
+    const toolModel = AI_TOOL_MODELS[tool];
+
+    setAiToolPaywallOpen(false);
+    setIsAiToolProcessing(true);
+
+    try {
+      const body: Record<string, unknown> = { tool, prompt };
+      if (sourceImage) body.image_url = sourceImage;
+      if (category === 'tts') body.text = prompt;
+
+      const { data, error } = await supabase.functions.invoke('fal-ai-tools', { body });
+
+      if (error) throw error;
+
+      if (data.error) {
+        setMessages(prev => [...prev, {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: `❌ ${data.error}`
+        }]);
+        setIsAiToolProcessing(false);
+        setPendingAiToolRequest(null);
+        return;
+      }
+
+      if (data.status === 'succeeded') {
+        // Synchronous tool — result is ready
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: '',
+          ...(data.audioUrl && { audioUrl: data.audioUrl }),
+          ...(data.imageUrl && { imageUrl: data.imageUrl }),
+          ...(data.text && { content: `📝 **Transcription:**\n\n${data.text}` }),
+        };
+        if (!assistantMessage.audioUrl && !assistantMessage.imageUrl && !assistantMessage.content) {
+          assistantMessage.content = `✅ ${toolModel.name} completed.`;
+        }
+        setMessages(prev => [...prev, assistantMessage]);
+        queueMessage(assistantMessage);
+        setIsAiToolProcessing(false);
+        toast.success(`${toolModel.name} completed!`);
+      } else {
+        // Async tool — start polling
+        const messageId = (Date.now() + 1).toString();
+        const assistantMessage: Message = {
+          id: messageId,
+          role: 'assistant',
+          content: `${toolModel.emoji} Processing with **${toolModel.name}**...\n\n_This may take a minute_`,
+          isToolProcessing: true,
+          toolRequestId: data.requestId,
+          toolAppId: data.appId,
+          toolType: tool,
+        };
+        setMessages(prev => [...prev, assistantMessage]);
+
+        pollingRef.current[data.requestId] = setInterval(() => {
+          pollAiToolStatus(data.requestId, data.appId, messageId, tool);
+        }, 5000);
+      }
+    } catch (err) {
+      console.error('[AI Tool] Error:', err);
+      toast.error('AI tool processing failed.');
+      setIsAiToolProcessing(false);
+    }
+
+    setPendingAiToolRequest(null);
+  };
+
   // Cleanup polling on unmount
   useEffect(() => {
     return () => {
