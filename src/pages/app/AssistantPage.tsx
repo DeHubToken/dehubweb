@@ -1063,11 +1063,25 @@ export default function AssistantPage() {
         effectiveSourceImage = await imageUrlToBase64(ftvLogoSymbol);
       }
 
-      // Check request type
-      const isVideoRequest = requiresVideoGeneration(currentInput);
-      const isImageRequest = isCreativeLogo || requiresImageGeneration(currentInput, !!currentAttachedImage);
+      // Check request type — AI tools first, then video/image
+      const aiToolCategory = detectAiToolRequest(currentInput, !!currentAttachedImage);
+      const isVideoRequest = !aiToolCategory && requiresVideoGeneration(currentInput);
+      const isImageRequest = !aiToolCategory && (isCreativeLogo || requiresImageGeneration(currentInput, !!currentAttachedImage));
       
-      if (isVideoRequest) {
+      if (aiToolCategory) {
+        const defaultTool = DEFAULT_TOOL_FOR_CATEGORY[aiToolCategory];
+        setPendingAiToolRequest({
+          prompt: currentInput,
+          tool: defaultTool,
+          category: aiToolCategory,
+          sourceImage: currentAttachedImage || undefined,
+        });
+        setSelectedAiToolId(defaultTool);
+        setAiToolCategory(aiToolCategory);
+        setAiToolPaywallOpen(true);
+        setIsLoading(false);
+        return;
+      } else if (isVideoRequest) {
         // Validate Runway requires an image
         if (selectedVideoModel === 'runway-gen4' && !currentAttachedImage) {
           toast.error('Runway Gen-4 requires an image to animate. Please attach an image or select a different model.');
