@@ -91,6 +91,7 @@ export function useAIConversation() {
             image_url: message.imageUrl || null,
             video_url: message.videoUrl || null,
             attached_image: message.attachedImage || null,
+            audio_url: (message as any).audioUrl || null,
           }),
         walletAddress
       );

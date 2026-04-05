@@ -180,9 +180,9 @@ export function ConversationHistoryDrawer({
       const { data: messages, error: msgError } = await withWalletHeader(
         supabase
           .from('ai_messages')
-          .select('id, image_url, video_url, conversation_id, created_at')
+          .select('id, image_url, video_url, audio_url, conversation_id, created_at')
           .in('conversation_id', convoIds)
-          .or('image_url.neq.,video_url.neq.')
+          .or('image_url.neq.,video_url.neq.,audio_url.neq.')
           .order('created_at', { ascending: false })
           .limit(100),
         walletAddress
@@ -197,6 +197,9 @@ export function ConversationHistoryDrawer({
         }
         if (msg.video_url) {
           items.push({ id: msg.id + '-vid', url: msg.video_url, type: 'video', conversation_id: msg.conversation_id, created_at: msg.created_at });
+        }
+        if ((msg as any).audio_url) {
+          items.push({ id: msg.id + '-aud', url: (msg as any).audio_url, type: 'audio' as any, conversation_id: msg.conversation_id, created_at: msg.created_at });
         }
       });
 
@@ -226,6 +229,7 @@ export function ConversationHistoryDrawer({
         imageUrl: msg.image_url || undefined,
         videoUrl: msg.video_url || undefined,
         attachedImage: msg.attached_image || undefined,
+        audioUrl: (msg as any).audio_url || undefined,
       }));
 
       onLoadConversation(conversationId, formattedMessages);
