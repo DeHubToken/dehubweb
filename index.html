@@ -51,6 +51,17 @@
     <!-- LCP: header logo — same URL as DesktopSidebar / MobileHeader so browser discovers early -->
     <link rel="preload" as="image" href="/dehub-header-logo.png" fetchpriority="high">
 
+    <!-- Exo font: non-blocking load (avoids @import in index.css blocking Tailwind parse / main thread) -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700;900&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700;900&display=swap" />
+    </noscript>
+
     <!-- Critical CSS — prevents white flash and CLS from unstyled root -->
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

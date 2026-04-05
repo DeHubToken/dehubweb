@@ -48,6 +48,12 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# LCP logo lives at site root (not hashed) — long cache; change filename when asset changes
+[[headers]]
+  for = "/dehub-header-logo.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
 # SPA fallback - redirect all routes to index.html
 [[redirects]]
   from = "/*"
