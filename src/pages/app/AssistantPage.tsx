@@ -1674,7 +1674,42 @@ export default function AssistantPage() {
                         className="w-7 h-7 rounded-full shrink-0 mt-0.5"
                       />
                     )}
-                    {message.role === 'assistant' && message.videoUrl ? (
+                    {message.role === 'assistant' && message.audioUrl ? (
+                      /* Audio messages (music/TTS) */
+                      <div className="max-w-[85%] flex flex-col gap-2">
+                        {message.content && (
+                          <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
+                            <MarkdownText content={message.content} className="text-sm" />
+                          </div>
+                        )}
+                        <div className="bg-white/10 rounded-2xl p-3">
+                          <audio src={message.audioUrl} controls className="w-full" />
+                          <div className="flex items-center gap-2 mt-2">
+                            <a
+                              href={message.audioUrl}
+                              download="dehub-audio.mp3"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-white bg-white/10 hover:bg-white/20 transition-colors"
+                            >
+                              <Download className="w-3.5 h-3.5" />
+                              Download
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    ) : message.role === 'assistant' && message.isToolProcessing ? (
+                      /* AI tool processing placeholder */
+                      <div className="max-w-[85%] flex flex-col gap-2">
+                        <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
+                          <MarkdownText content={message.content} className="text-sm" />
+                        </div>
+                        <div className="flex items-center gap-2 px-4 py-2">
+                          <Loader2 className="w-4 h-4 animate-spin text-purple-400" />
+                          <span className="text-xs text-zinc-400">Processing...</span>
+                        </div>
+                      </div>
+                    ) : message.role === 'assistant' && message.videoUrl ? (
                       /* Video messages */
                       <div className="max-w-[85%] flex flex-col gap-2">
                         <div className="relative rounded-lg overflow-hidden">
