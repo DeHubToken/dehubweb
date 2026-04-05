@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { History, Trash2, Loader2, MessageCircle, ChevronRight, Image as ImageIcon, Play } from 'lucide-react';
+import { History, Trash2, Loader2, MessageCircle, ChevronRight, Image as ImageIcon, Play, Search, X } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
@@ -50,6 +50,10 @@ export function ConversationHistoryDrawer({
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isClearingAll, setIsClearingAll] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Conversation[] | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { walletAddress, isAuthenticated } = useAuth();
   const mediaScrollRef = useRef<HTMLDivElement>(null);
 
@@ -60,6 +64,75 @@ export function ConversationHistoryDrawer({
       fetchMedia();
     }
   }, [open, walletAddress, isAuthenticated]);
+
+  // Reset search when drawer closes
+  useEffect(() => {
+    if (!open) {
+      setSearchQuery('');
+      setSearchResults(null);
+    }
+  }, [open]);
+
+  // Debounced search through conversation messages
+  useEffect(() => {
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+
+    if (!searchQuery.trim()) {
+      setSearchResults(null);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+    searchTimeoutRef.current = setTimeout(async () => {
+      if (!walletAddress) return;
+
+      try {
+        // First filter conversations by title
+        const titleMatches = conversations.filter(c =>
+          c.title?.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+        // Then search message content
+        const convoIds = conversations.map(c => c.id);
+        if (convoIds.length === 0) {
+          setSearchResults(titleMatches);
+          setIsSearching(false);
+          return;
+        }
+
+        const { data: messages } = await withWalletHeader(
+          supabase
+            .from('ai_messages')
+            .select('conversation_id')
+            .in('conversation_id', convoIds)
+            .ilike('content', `%${searchQuery}%`)
+            .limit(200),
+          walletAddress
+        );
+
+        const messageConvoIds = new Set((messages || []).map(m => m.conversation_id));
+        const combined = new Set([
+          ...titleMatches.map(c => c.id),
+          ...messageConvoIds,
+        ]);
+
+        const results = conversations.filter(c => combined.has(c.id));
+        setSearchResults(results);
+      } catch (error) {
+        console.error('Search error:', error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => {
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+    };
+  }, [searchQuery, conversations, walletAddress]);
+
+  const displayedConversations = searchResults ?? conversations;
 
   const fetchConversations = async () => {
     if (!walletAddress) return;
@@ -237,6 +310,28 @@ export function ConversationHistoryDrawer({
                 </button>
               )}
             </div>
+
+            {/* Search bar */}
+            {conversations.length > 0 && (
+              <div className="relative mt-3">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search conversations…"
+                  className="w-full pl-9 pr-9 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/25 transition-colors"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            )}
           </DrawerHeader>
 
           <ScrollArea className="h-[70vh]">
@@ -249,7 +344,7 @@ export function ConversationHistoryDrawer({
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-6 h-6 animate-spin text-white/60" />
               </div>
-            ) : conversations.length === 0 ? (
+            ) : displayedConversations.length === 0 && !searchQuery ? (
               <div className="flex flex-col items-center justify-center py-12 text-center px-4">
                 <MessageCircle className="w-12 h-12 text-white/20 mb-3" />
                 <p className="text-white/60">No conversations yet</p>
@@ -257,8 +352,24 @@ export function ConversationHistoryDrawer({
               </div>
             ) : (
               <div>
+                {/* Search status */}
+                {searchQuery && (
+                  <div className="px-4 pt-3 pb-1">
+                    {isSearching ? (
+                      <div className="flex items-center gap-2 text-white/40 text-xs">
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                        Searching…
+                      </div>
+                    ) : (
+                      <p className="text-white/40 text-xs">
+                        {displayedConversations.length} result{displayedConversations.length !== 1 ? 's' : ''} for "{searchQuery}"
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 {/* Media Carousel */}
-                {mediaItems.length > 0 && (
+                {mediaItems.length > 0 && !searchQuery && (
                   <div className="px-3 pt-3 pb-1">
                     <div className="flex items-center gap-1.5 mb-2 px-1">
                       <ImageIcon className="w-3.5 h-3.5 text-white/50" />
@@ -306,7 +417,7 @@ export function ConversationHistoryDrawer({
                 {/* Conversation List */}
                 <div className="p-2">
                   <AnimatePresence mode="popLayout">
-                    {conversations.map((conversation) => (
+                    {displayedConversations.map((conversation) => (
                       <motion.button
                         key={conversation.id}
                         initial={{ opacity: 0, y: 10 }}
