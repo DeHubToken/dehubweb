@@ -624,10 +624,10 @@ export default function AssistantPage() {
   };
 
   // Poll for video generation status
-  const pollVideoStatus = useCallback(async (predictionId: string, messageId: string, provider?: string) => {
+  const pollVideoStatus = useCallback(async (predictionId: string, messageId: string, provider?: string, falAppId?: string) => {
     try {
       const { data, error } = await supabase.functions.invoke('generate-video', {
-        body: { predictionId, provider }
+        body: { predictionId, provider, falAppId }
       });
 
       if (error) throw error;
@@ -720,7 +720,7 @@ export default function AssistantPage() {
 
       // Start polling for video status
       pollingRef.current[data.predictionId] = setInterval(() => {
-        pollVideoStatus(data.predictionId, messageId, data.provider);
+        pollVideoStatus(data.predictionId, messageId, data.provider, data.falAppId);
       }, 5000);
 
       toast.success(t('assistant.paymentSuccessGenerating'));
