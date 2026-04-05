@@ -94,22 +94,19 @@ Deno.serve(async (req) => {
     }
     if (!authedAgents.length) return jsonResponse({ error: "Auth failed", logs }, 500);
 
-    // Fetch posts
+    // Fetch posts for requested page
     const tokenIds: string[] = [];
-    for (let p = startPage; p < startPage + pagesToFetch; p++) {
-      const res = await fetch(`${DEHUB_API}/api/feed?page=${p}&limit=50`, {
-        headers: { Authorization: `Bearer ${authedAgents[0].token}` },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const posts = data.result || data.data || [];
-        for (const post of posts) {
-          const tid = post.streamTokenId || post.tokenId || post.id;
-          if (tid) tokenIds.push(String(tid));
-        }
-        logs.push(`📄 Page ${p}: ${posts.length} posts`);
+    const res = await fetch(`${DEHUB_API}/api/feed?page=${startPage}&limit=10`, {
+      headers: { Authorization: `Bearer ${authedAgents[0].token}` },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const posts = data.result || data.data || [];
+      for (const post of posts) {
+        const tid = post.streamTokenId || post.tokenId || post.id;
+        if (tid) tokenIds.push(String(tid));
       }
-      await sleep(500);
+      logs.push(`📄 Page ${startPage}: ${posts.length} posts`);
     }
 
     logs.push(`🎯 Posts to like: ${tokenIds.length}`);
