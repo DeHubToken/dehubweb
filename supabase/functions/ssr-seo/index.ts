@@ -349,28 +349,39 @@ serve(async (req) => {
 
             if (nft) {
                 const posterName = nft.minterDisplayName || nft.mintername || nft.minterUsername || "someone";
-                const title = nft.title || nft.name || `Post by ${posterName} on DeHub`;
-                const description = `View this post by ${posterName} on DeHub` + (nft.description ? ` — ${nft.description}` : "");
+                // trim() prevents nft.name=" " (whitespace-only) from being used as title —
+                // X/Twitter ignores cards with blank titles
+                const title = (nft.title || nft.name || "").trim() || `Post by ${posterName} on DeHub`;
+                const description = (`View this post by ${posterName} on DeHub` + (nft.description ? ` — ${nft.description}` : "")).trim();
                 const postUrl = `${APP_URL}/app/post/${postId}`;
 
                 const isAudio = nft.postType === "feed-audio";
                 const videoUrl = isAudio ? null : buildVideoUrl(nft);
 
                 let postImage: string;
+                let hasRealImage = false;
                 if (isAudio) {
                     postImage = buildProxiedImageUrl(IMAGE_PROXY_BASE, AUDIO_OG_IMAGE);
+                    hasRealImage = true;
                 } else if (videoUrl) {
                     postImage = ensureAbsoluteUrl(nft.thumbnail_url || nft.imageUrl || "") || DEHUB_LOGO;
+                    hasRealImage = !!(nft.thumbnail_url || nft.imageUrl);
                 } else {
                     const builtImage = buildPostImageUrl(nft);
                     if (builtImage) {
                         postImage = builtImage;
+                        hasRealImage = true;
                     } else {
-                        // No post image — use minterUser data already present in NFT response
+                        // No post image — use minterUser avatar already in NFT response
                         const minter = nft.minterUser;
                         postImage = minter ? buildAvatarUrl(minter) : DEHUB_LOGO;
+                        hasRealImage = false; // avatar is square — use summary, not summary_large_image
                     }
                 }
+
+                // summary_large_image expects landscape images (posts with real images/video)
+                // summary works for square avatars and logo fallbacks
+                const twitterCardType = hasRealImage ? "summary_large_image" : "summary";
 
                 const html = generateMetaHTML({
                     title,
@@ -378,7 +389,7 @@ serve(async (req) => {
                     image: postImage,
                     url: postUrl,
                     type: "article",
-                    twitterCard: "summary_large_image",
+                    twitterCard: twitterCardType,
                     functionBaseUrl,
                     isBot,
                     videoUrl,
