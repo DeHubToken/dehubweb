@@ -96,17 +96,19 @@ Deno.serve(async (req) => {
 
     // Fetch posts for requested page
     const tokenIds: string[] = [];
-    const res = await fetch(`${DEHUB_API}/api/feed?page=${startPage}&limit=10`, {
+    const feedRes = await fetch(`${DEHUB_API}/api/feed?page=${startPage}&limit=5`, {
       headers: { Authorization: `Bearer ${authedAgents[0].token}` },
     });
-    if (res.ok) {
-      const data = await res.json();
+    if (feedRes.ok) {
+      const data = await feedRes.json();
       const posts = data.result || data.data || [];
       for (const post of posts) {
         const tid = post.streamTokenId || post.tokenId || post.id;
         if (tid) tokenIds.push(String(tid));
       }
       logs.push(`📄 Page ${startPage}: ${posts.length} posts`);
+    } else {
+      logs.push(`📄 Feed error: ${feedRes.status}`);
     }
 
     logs.push(`🎯 Posts to like: ${tokenIds.length}`);
