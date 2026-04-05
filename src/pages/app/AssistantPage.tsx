@@ -39,6 +39,8 @@ import { CHAT_MODEL_OPTIONS, DEFAULT_CHAT_MODEL, type ChatModelKey } from '@/con
 import { PostModal } from '@/features/post';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
 import { ImagePaywallModal } from '@/components/app/image/ImagePaywallModal';
+import { AiToolPaywallModal } from '@/components/app/ai-tools/AiToolPaywallModal';
+import { AI_TOOL_MODELS, type AiToolCategory, type AiToolModel } from '@/constants/ai-tools.constants';
 import { OverviewTab } from '@/components/app/command-centre';
 import { AuthPrompt } from '@/components/app/AuthPrompt';
 import { AuthGate } from '@/components/app/AuthGate';
