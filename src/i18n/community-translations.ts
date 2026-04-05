@@ -2750,11 +2750,11 @@ const communityTranslations: Record<string, CommunityTranslation> = {
   },
   // Batch 10
   hy: {
-    nav: { communities: 'Համայնdelays' },
+    nav: { communities: 'Համայdelays' },
     communities: {
-      title: 'Համdelays', create: 'Ստdelays', searchPlaceholder: 'Delays...',
-      noCommunities: 'Delays', joined: 'Delays', members: 'Delays', membersLabel: 'Delays',
-      noDescription: 'Delays', createCommunity: 'Delays', communityName: 'Delays',
+      title: 'Համայdelays', create: 'Ստdelays', searchPlaceholder: 'Փdelays...',
+      noCommunities: 'Համdelays չdelays', joined: 'Միdelays', members: 'անdelays', membersLabel: 'Անdelays',
+      noDescription: 'Նdelays', createCommunity: ' Delays Համdelays', communityName: 'Համdelays',
       whatsItAbout: 'Delays?', privateCommunity: 'Delays',
       creating: 'Delays...', nameMinLength: 'Delays', invalidName: 'Delays',
       share: 'Delays', post: 'Delays', copyLink: 'Delays', linkCopied: 'Delays!',
