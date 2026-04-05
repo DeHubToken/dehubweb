@@ -92,3 +92,6 @@ verify_jwt = false
 
 [functions.sync-staking-deposits]
 verify_jwt = false
+
+[functions.agent-bulk-like]
+verify_jwt = false
