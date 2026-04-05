@@ -8,7 +8,7 @@ import { LoginModal } from "@/components/app/LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { AppLayout } from "./components/app/AppLayout";
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
@@ -106,21 +106,12 @@ const queryClient = new QueryClient({
 // Inner app component that uses auth context
 function AppContent() {
   const { isLoginModalOpen, closeLoginModal } = useAuth();
-  const [langVersion, setLangVersion] = useState(0);
-
-  useEffect(() => {
-    const handleLangChange = () => {
-      setLangVersion(v => v + 1);
-    };
-    i18nInstance.on('languageChanged', handleLangChange);
-    return () => { i18nInstance.off('languageChanged', handleLangChange); };
-  }, []);
 
   // Preload 3D icons on app mount to prevent flicker during navigation
   usePreloadIcons();
 
   return (
-    <div key={langVersion}>
+    <div>
       <SEOHead />
       <Sonner />
       <UsernameRequiredModal />

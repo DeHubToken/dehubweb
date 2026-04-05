@@ -30,10 +30,12 @@ export function useUserLanguage() {
       // Keep <html lang="..."> in sync for SEO/accessibility audits
       document.documentElement.lang = lang;
       
-      // Always ensure i18n is synced to the correct language
+      // Always ensure i18n is synced to the correct language.
+      // Re-check i18n.language AFTER the async load in case the module-level
+      // initializer in i18n/index.ts already called changeLanguage while we awaited.
       if (lang !== 'en' && i18n.language !== lang) {
         const ok = await loadLanguage(lang);
-        if (ok) {
+        if (ok && i18n.language !== lang) {
           await i18n.changeLanguage(lang);
         }
       }
