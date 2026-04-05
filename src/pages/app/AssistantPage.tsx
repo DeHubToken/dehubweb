@@ -171,7 +171,63 @@ function requiresVideoGeneration(message: string): boolean {
   return VIDEO_KEYWORDS.some(keyword => lower.includes(keyword));
 }
 
-// Image generation loading animation component
+// ─── AI Tool Keywords ───
+
+const MUSIC_KEYWORDS = [
+  'generate music', 'create music', 'make music', 'compose', 'song',
+  'create a song', 'make a song', 'generate a song', 'write a song',
+  'music for', 'beat', 'track', 'melody', 'instrumental',
+  'make me a beat', 'create a beat', 'generate a beat',
+  'write music', 'compose music', 'create a track'
+];
+
+const TTS_KEYWORDS = [
+  'text to speech', 'text-to-speech', 'tts', 'read this aloud',
+  'say this', 'speak this', 'convert to speech', 'voice over',
+  'voiceover', 'narrate', 'narration', 'read out loud',
+  'generate speech', 'create speech', 'make speech',
+  'dialogue', 'voice this', 'read this text'
+];
+
+const BG_REMOVAL_KEYWORDS = [
+  'remove background', 'remove the background', 'remove bg',
+  'background removal', 'cut out', 'cutout', 'transparent background',
+  'make transparent', 'isolate subject', 'extract subject',
+  'no background', 'delete background', 'erase background'
+];
+
+const UPSCALE_KEYWORDS = [
+  'upscale', 'upscale this', 'enhance image', 'increase resolution',
+  'make higher resolution', 'make hd', 'make 4k', 'sharpen image',
+  'improve quality', 'super resolution', 'enlarge image',
+  'make bigger', 'enhance this', 'enhance quality'
+];
+
+const STT_KEYWORDS = [
+  'transcribe', 'transcription', 'speech to text', 'speech-to-text',
+  'stt', 'convert audio', 'audio to text', 'what does this say',
+  'what is being said', 'convert speech', 'transcribe audio',
+  'transcribe this'
+];
+
+function detectAiToolRequest(message: string, hasImage: boolean): AiToolCategory | null {
+  const lower = message.toLowerCase();
+  // Order matters — check more specific patterns first
+  if (MUSIC_KEYWORDS.some(k => lower.includes(k))) return 'music';
+  if (TTS_KEYWORDS.some(k => lower.includes(k))) return 'tts';
+  if (STT_KEYWORDS.some(k => lower.includes(k))) return 'speech-to-text';
+  if (hasImage && BG_REMOVAL_KEYWORDS.some(k => lower.includes(k))) return 'background-removal';
+  if (hasImage && UPSCALE_KEYWORDS.some(k => lower.includes(k))) return 'upscale';
+  return null;
+}
+
+const DEFAULT_TOOL_FOR_CATEGORY: Record<AiToolCategory, string> = {
+  'music': 'minimax-music',
+  'tts': 'dia-tts',
+  'background-removal': 'birefnet',
+  'upscale': 'creative-upscaler',
+  'speech-to-text': 'whisper',
+};
 function ImageGenerationLoader({ startTime }: { startTime: number }) {
   const [phase, setPhase] = useState<'spinner' | 'skeleton'>('spinner');
   const [progress, setProgress] = useState(0);
