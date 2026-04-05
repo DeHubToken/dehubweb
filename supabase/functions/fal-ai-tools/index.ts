@@ -20,31 +20,28 @@ interface ToolConfig {
 const TOOLS: Record<string, ToolConfig> = {
   // ─── Music Generation ───
   'minimax-music': {
-    appId: 'fal-ai/minimax-music/text-to-music',
+    appId: 'fal-ai/minimax-music/v2',
     name: 'MiniMax Music 2.0',
     async: true,
     buildInput: (p) => ({
-      prompt: p.prompt || '',
-      lyrics: p.lyrics || '',
-      duration: p.duration || 60,
-      ...(p.instrumental && { instrumental: true }),
+      prompt: p.prompt || 'upbeat pop song',
+      lyrics_prompt: p.lyrics || p.lyrics_prompt || '[verse]\nLa la la\n[chorus]\nOh oh oh',
     }),
     extractResult: (d) => ({
-      audioUrl: (d.audio_file as Record<string, unknown>)?.url || (d.audio as Record<string, unknown>)?.url,
+      audioUrl: (d.audio as Record<string, unknown>)?.url,
     }),
   },
   'ace-step': {
-    appId: 'fal-ai/ace-step/prompt-to-audio',
+    appId: 'fal-ai/ace-step',
     name: 'ACE-Step',
     async: true,
     buildInput: (p) => ({
-      prompt: p.prompt || '',
-      lyrics: p.lyrics || '',
-      duration: p.duration || 60,
+      lyrics: p.lyrics || p.prompt || '',
       ...(p.tags && { tags: p.tags }),
+      ...(p.duration && { duration: p.duration }),
     }),
     extractResult: (d) => ({
-      audioUrl: (d.audio_file as Record<string, unknown>)?.url || (d.audio as Record<string, unknown>)?.url,
+      audioUrl: (d.audio as Record<string, unknown>)?.url || (d.audio_file as Record<string, unknown>)?.url,
     }),
   },
 
@@ -154,7 +151,7 @@ async function falQueueSubmit(
   falKey: string,
   appId: string,
   input: Record<string, unknown>,
-): Promise<{ request_id: string }> {
+): Promise<{ request_id: string; status_url?: string; response_url?: string }> {
   const res = await fetch(`https://queue.fal.run/${appId}`, {
     method: 'POST',
     headers: {
@@ -172,13 +169,11 @@ async function falQueueSubmit(
 
 async function falQueueStatus(
   falKey: string,
-  appId: string,
-  requestId: string,
+  statusUrl: string,
 ): Promise<{ status: string }> {
-  const res = await fetch(
-    `https://queue.fal.run/${appId}/requests/${requestId}/status`,
-    { headers: { Authorization: `Key ${falKey}` } },
-  );
+  const res = await fetch(statusUrl, {
+    headers: { Authorization: `Key ${falKey}` },
+  });
   if (!res.ok) {
     const text = await res.text();
     throw new Error(`fal.ai status error (${res.status}): ${text}`);
@@ -188,13 +183,11 @@ async function falQueueStatus(
 
 async function falQueueResult(
   falKey: string,
-  appId: string,
-  requestId: string,
+  responseUrl: string,
 ): Promise<Record<string, unknown>> {
-  const res = await fetch(
-    `https://queue.fal.run/${appId}/requests/${requestId}`,
-    { headers: { Authorization: `Key ${falKey}` } },
-  );
+  const res = await fetch(responseUrl, {
+    headers: { Authorization: `Key ${falKey}` },
+  });
   if (!res.ok) {
     const text = await res.text();
     throw new Error(`fal.ai result error (${res.status}): ${text}`);
@@ -224,18 +217,21 @@ serve(async (req) => {
     if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
 
     const body = await req.json();
-    const { tool, requestId, appId: statusAppId, ...params } = body;
+    const { tool, requestId, appId: statusAppId, statusUrl, responseUrl, ...params } = body;
 
     // ─── Status check for async tools ───
-    if (requestId && statusAppId) {
-      console.log(`[fal-tools] Checking status for ${requestId} on ${statusAppId}`);
-      const statusData = await falQueueStatus(FAL_KEY, statusAppId, requestId);
+    if (requestId && (statusUrl || statusAppId)) {
+      // Use provided URLs or construct fallback
+      const sUrl = statusUrl || `https://queue.fal.run/${statusAppId}/requests/${requestId}/status`;
+      const rUrl = responseUrl || `https://queue.fal.run/${statusAppId}/requests/${requestId}`;
+      
+      console.log(`[fal-tools] Checking status at: ${sUrl}`);
+      const statusData = await falQueueStatus(FAL_KEY, sUrl);
       const mappedStatus = mapFalStatus(statusData.status);
 
       let result: Record<string, unknown> = {};
       if (mappedStatus === 'succeeded') {
-        const resultData = await falQueueResult(FAL_KEY, statusAppId, requestId);
-        // Try to find the tool config to extract result properly
+        const resultData = await falQueueResult(FAL_KEY, rUrl);
         const toolConfig = Object.values(TOOLS).find(t => t.appId === statusAppId);
         result = toolConfig ? toolConfig.extractResult(resultData) : resultData;
       }
@@ -263,11 +259,14 @@ serve(async (req) => {
       // Queue-based async execution
       const submission = await falQueueSubmit(FAL_KEY, toolConfig.appId, input);
       console.log(`[fal-tools] ${toolConfig.name} queued: ${submission.request_id}`);
+      console.log(`[fal-tools] status_url: ${submission.status_url}, response_url: ${submission.response_url}`);
 
       return new Response(JSON.stringify({
         status: 'starting',
         requestId: submission.request_id,
         appId: toolConfig.appId,
+        statusUrl: submission.status_url,
+        responseUrl: submission.response_url,
         tool,
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
