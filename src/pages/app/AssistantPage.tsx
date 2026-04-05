@@ -39,6 +39,8 @@ import { CHAT_MODEL_OPTIONS, DEFAULT_CHAT_MODEL, type ChatModelKey } from '@/con
 import { PostModal } from '@/features/post';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
 import { ImagePaywallModal } from '@/components/app/image/ImagePaywallModal';
+import { AiToolPaywallModal } from '@/components/app/ai-tools/AiToolPaywallModal';
+import { AI_TOOL_MODELS, type AiToolCategory, type AiToolModel } from '@/constants/ai-tools.constants';
 import { OverviewTab } from '@/components/app/command-centre';
 import { AuthPrompt } from '@/components/app/AuthPrompt';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -74,9 +76,14 @@ interface Message {
   content: string;
   imageUrl?: string;       // For generated/edited images in responses
   videoUrl?: string;       // For generated videos
+  audioUrl?: string;       // For generated audio (music/TTS)
   attachedImage?: string;  // For user-attached images to edit
   isVideoGenerating?: boolean;
   videoPredictionId?: string;
+  isToolProcessing?: boolean;   // For async AI tool processing
+  toolRequestId?: string;       // fal.ai request ID for polling
+  toolAppId?: string;           // fal.ai app ID for polling
+  toolType?: string;            // tool identifier
   isSimulation?: boolean;  // For transaction simulations
   simulationType?: 'transfer' | 'purchase';
   simulationData?: SimulationData;
@@ -164,7 +171,63 @@ function requiresVideoGeneration(message: string): boolean {
   return VIDEO_KEYWORDS.some(keyword => lower.includes(keyword));
 }
 
-// Image generation loading animation component
+// ─── AI Tool Keywords ───
+
+const MUSIC_KEYWORDS = [
+  'generate music', 'create music', 'make music', 'compose', 'song',
+  'create a song', 'make a song', 'generate a song', 'write a song',
+  'music for', 'beat', 'track', 'melody', 'instrumental',
+  'make me a beat', 'create a beat', 'generate a beat',
+  'write music', 'compose music', 'create a track'
+];
+
+const TTS_KEYWORDS = [
+  'text to speech', 'text-to-speech', 'tts', 'read this aloud',
+  'say this', 'speak this', 'convert to speech', 'voice over',
+  'voiceover', 'narrate', 'narration', 'read out loud',
+  'generate speech', 'create speech', 'make speech',
+  'dialogue', 'voice this', 'read this text'
+];
+
+const BG_REMOVAL_KEYWORDS = [
+  'remove background', 'remove the background', 'remove bg',
+  'background removal', 'cut out', 'cutout', 'transparent background',
+  'make transparent', 'isolate subject', 'extract subject',
+  'no background', 'delete background', 'erase background'
+];
+
+const UPSCALE_KEYWORDS = [
+  'upscale', 'upscale this', 'enhance image', 'increase resolution',
+  'make higher resolution', 'make hd', 'make 4k', 'sharpen image',
+  'improve quality', 'super resolution', 'enlarge image',
+  'make bigger', 'enhance this', 'enhance quality'
+];
+
+const STT_KEYWORDS = [
+  'transcribe', 'transcription', 'speech to text', 'speech-to-text',
+  'stt', 'convert audio', 'audio to text', 'what does this say',
+  'what is being said', 'convert speech', 'transcribe audio',
+  'transcribe this'
+];
+
+function detectAiToolRequest(message: string, hasImage: boolean): AiToolCategory | null {
+  const lower = message.toLowerCase();
+  // Order matters — check more specific patterns first
+  if (MUSIC_KEYWORDS.some(k => lower.includes(k))) return 'music';
+  if (TTS_KEYWORDS.some(k => lower.includes(k))) return 'tts';
+  if (STT_KEYWORDS.some(k => lower.includes(k))) return 'speech-to-text';
+  if (hasImage && BG_REMOVAL_KEYWORDS.some(k => lower.includes(k))) return 'background-removal';
+  if (hasImage && UPSCALE_KEYWORDS.some(k => lower.includes(k))) return 'upscale';
+  return null;
+}
+
+const DEFAULT_TOOL_FOR_CATEGORY: Record<AiToolCategory, string> = {
+  'music': 'minimax-music',
+  'tts': 'dia-tts',
+  'background-removal': 'birefnet',
+  'upscale': 'creative-upscaler',
+  'speech-to-text': 'whisper',
+};
 function ImageGenerationLoader({ startTime }: { startTime: number }) {
   const [phase, setPhase] = useState<'spinner' | 'skeleton'>('spinner');
   const [progress, setProgress] = useState(0);
@@ -356,6 +419,19 @@ export default function AssistantPage() {
     model: ImageModelKey;
     sourceImage?: string;
   } | null>(null);
+  // AI Tools state
+  const [aiToolPaywallOpen, setAiToolPaywallOpen] = useState(false);
+  const [selectedAiToolId, setSelectedAiToolId] = useState<string>('minimax-music');
+  const [aiToolCategory, setAiToolCategory] = useState<AiToolCategory>('music');
+  const [isAiToolProcessing, setIsAiToolProcessing] = useState(false);
+  const [pendingAiToolRequest, setPendingAiToolRequest] = useState<{
+    prompt: string;
+    tool: string;
+    category: AiToolCategory;
+    sourceImage?: string;
+    audioUrl?: string;
+  } | null>(null);
+
   const [voiceAutoReply, setVoiceAutoReply] = useState(true); // Auto-speak AI replies when using voice
   const [alwaysSpeakReplies, setAlwaysSpeakReplies] = useState(false); // Speak ALL AI replies, not just voice responses
   const [inputGlow, setInputGlow] = useState(false); // Glow effect for input focus hint
@@ -803,6 +879,128 @@ export default function AssistantPage() {
     }
   };
 
+  // ─── AI Tool Handlers ───
+
+  const pollAiToolStatus = useCallback(async (requestId: string, appId: string, messageId: string, toolKey: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('fal-ai-tools', {
+        body: { requestId, appId }
+      });
+
+      if (error) throw error;
+
+      if (data.status === 'succeeded') {
+        clearInterval(pollingRef.current[requestId]);
+        delete pollingRef.current[requestId];
+
+        const toolModel = AI_TOOL_MODELS[toolKey];
+        const category = toolModel?.category;
+
+        setMessages(prev => prev.map(m => {
+          if (m.id !== messageId) return m;
+          const updated: Message = {
+            ...m,
+            isToolProcessing: false,
+            content: '',
+          };
+          if (data.audioUrl) updated.audioUrl = data.audioUrl;
+          if (data.imageUrl) updated.imageUrl = data.imageUrl;
+          if (data.text) updated.content = `📝 **Transcription:**\n\n${data.text}`;
+          if (!data.audioUrl && !data.imageUrl && !data.text) {
+            updated.content = `✅ ${toolModel?.name || 'Tool'} completed successfully.`;
+          }
+          return updated;
+        }));
+
+        setIsAiToolProcessing(false);
+        toast.success(`${toolModel?.name || 'AI Tool'} completed!`);
+      } else if (data.status === 'failed') {
+        clearInterval(pollingRef.current[requestId]);
+        delete pollingRef.current[requestId];
+
+        setMessages(prev => prev.map(m =>
+          m.id === messageId ? { ...m, isToolProcessing: false, content: `❌ Processing failed: ${data.error || 'Unknown error'}` } : m
+        ));
+        setIsAiToolProcessing(false);
+      }
+    } catch (err) {
+      console.error('[AI Tool] Polling error:', err);
+    }
+  }, []);
+
+  const handleAiToolConfirm = async () => {
+    if (!pendingAiToolRequest) return;
+
+    const { prompt, tool, category, sourceImage } = pendingAiToolRequest;
+    const toolModel = AI_TOOL_MODELS[tool];
+
+    setAiToolPaywallOpen(false);
+    setIsAiToolProcessing(true);
+
+    try {
+      const body: Record<string, unknown> = { tool, prompt };
+      if (sourceImage) body.image_url = sourceImage;
+      if (category === 'tts') body.text = prompt;
+
+      const { data, error } = await supabase.functions.invoke('fal-ai-tools', { body });
+
+      if (error) throw error;
+
+      if (data.error) {
+        setMessages(prev => [...prev, {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: `❌ ${data.error}`
+        }]);
+        setIsAiToolProcessing(false);
+        setPendingAiToolRequest(null);
+        return;
+      }
+
+      if (data.status === 'succeeded') {
+        // Synchronous tool — result is ready
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: '',
+          ...(data.audioUrl && { audioUrl: data.audioUrl }),
+          ...(data.imageUrl && { imageUrl: data.imageUrl }),
+          ...(data.text && { content: `📝 **Transcription:**\n\n${data.text}` }),
+        };
+        if (!assistantMessage.audioUrl && !assistantMessage.imageUrl && !assistantMessage.content) {
+          assistantMessage.content = `✅ ${toolModel.name} completed.`;
+        }
+        setMessages(prev => [...prev, assistantMessage]);
+        queueMessage(assistantMessage);
+        setIsAiToolProcessing(false);
+        toast.success(`${toolModel.name} completed!`);
+      } else {
+        // Async tool — start polling
+        const messageId = (Date.now() + 1).toString();
+        const assistantMessage: Message = {
+          id: messageId,
+          role: 'assistant',
+          content: `${toolModel.emoji} Processing with **${toolModel.name}**...\n\n_This may take a minute_`,
+          isToolProcessing: true,
+          toolRequestId: data.requestId,
+          toolAppId: data.appId,
+          toolType: tool,
+        };
+        setMessages(prev => [...prev, assistantMessage]);
+
+        pollingRef.current[data.requestId] = setInterval(() => {
+          pollAiToolStatus(data.requestId, data.appId, messageId, tool);
+        }, 5000);
+      }
+    } catch (err) {
+      console.error('[AI Tool] Error:', err);
+      toast.error('AI tool processing failed.');
+      setIsAiToolProcessing(false);
+    }
+
+    setPendingAiToolRequest(null);
+  };
+
   // Cleanup polling on unmount
   useEffect(() => {
     return () => {
@@ -865,11 +1063,25 @@ export default function AssistantPage() {
         effectiveSourceImage = await imageUrlToBase64(ftvLogoSymbol);
       }
 
-      // Check request type
-      const isVideoRequest = requiresVideoGeneration(currentInput);
-      const isImageRequest = isCreativeLogo || requiresImageGeneration(currentInput, !!currentAttachedImage);
+      // Check request type — AI tools first, then video/image
+      const aiToolCategory = detectAiToolRequest(currentInput, !!currentAttachedImage);
+      const isVideoRequest = !aiToolCategory && requiresVideoGeneration(currentInput);
+      const isImageRequest = !aiToolCategory && (isCreativeLogo || requiresImageGeneration(currentInput, !!currentAttachedImage));
       
-      if (isVideoRequest) {
+      if (aiToolCategory) {
+        const defaultTool = DEFAULT_TOOL_FOR_CATEGORY[aiToolCategory];
+        setPendingAiToolRequest({
+          prompt: currentInput,
+          tool: defaultTool,
+          category: aiToolCategory,
+          sourceImage: currentAttachedImage || undefined,
+        });
+        setSelectedAiToolId(defaultTool);
+        setAiToolCategory(aiToolCategory);
+        setAiToolPaywallOpen(true);
+        setIsLoading(false);
+        return;
+      } else if (isVideoRequest) {
         // Validate Runway requires an image
         if (selectedVideoModel === 'runway-gen4' && !currentAttachedImage) {
           toast.error('Runway Gen-4 requires an image to animate. Please attach an image or select a different model.');
@@ -1462,7 +1674,42 @@ export default function AssistantPage() {
                         className="w-7 h-7 rounded-full shrink-0 mt-0.5"
                       />
                     )}
-                    {message.role === 'assistant' && message.videoUrl ? (
+                    {message.role === 'assistant' && message.audioUrl ? (
+                      /* Audio messages (music/TTS) */
+                      <div className="max-w-[85%] flex flex-col gap-2">
+                        {message.content && (
+                          <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
+                            <MarkdownText content={message.content} className="text-sm" />
+                          </div>
+                        )}
+                        <div className="bg-white/10 rounded-2xl p-3">
+                          <audio src={message.audioUrl} controls className="w-full" />
+                          <div className="flex items-center gap-2 mt-2">
+                            <a
+                              href={message.audioUrl}
+                              download="dehub-audio.mp3"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-white bg-white/10 hover:bg-white/20 transition-colors"
+                            >
+                              <Download className="w-3.5 h-3.5" />
+                              Download
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    ) : message.role === 'assistant' && message.isToolProcessing ? (
+                      /* AI tool processing placeholder */
+                      <div className="max-w-[85%] flex flex-col gap-2">
+                        <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
+                          <MarkdownText content={message.content} className="text-sm" />
+                        </div>
+                        <div className="flex items-center gap-2 px-4 py-2">
+                          <Loader2 className="w-4 h-4 animate-spin text-purple-400" />
+                          <span className="text-xs text-zinc-400">Processing...</span>
+                        </div>
+                      </div>
+                    ) : message.role === 'assistant' && message.videoUrl ? (
                       /* Video messages */
                       <div className="max-w-[85%] flex flex-col gap-2">
                         <div className="relative rounded-lg overflow-hidden">
@@ -2092,6 +2339,26 @@ export default function AssistantPage() {
           }}
           onConfirm={handleImageGenerationConfirm}
           isGenerating={isImageLoading}
+        />
+      )}
+
+      {/* AI Tool Paywall Modal */}
+      {pendingAiToolRequest && (
+        <AiToolPaywallModal
+          open={aiToolPaywallOpen}
+          onOpenChange={(open) => {
+            setAiToolPaywallOpen(open);
+            if (!open) setPendingAiToolRequest(null);
+          }}
+          model={AI_TOOL_MODELS[selectedAiToolId]}
+          selectedModelId={selectedAiToolId}
+          onModelChange={(modelId) => {
+            setSelectedAiToolId(modelId);
+            setPendingAiToolRequest(prev => prev ? { ...prev, tool: modelId } : null);
+          }}
+          onConfirm={handleAiToolConfirm}
+          isProcessing={isAiToolProcessing}
+          category={aiToolCategory}
         />
       )}
 
