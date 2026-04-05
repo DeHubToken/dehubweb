@@ -20,17 +20,15 @@ interface ToolConfig {
 const TOOLS: Record<string, ToolConfig> = {
   // ─── Music Generation ───
   'minimax-music': {
-    appId: 'fal-ai/minimax-music/text-to-music',
+    appId: 'fal-ai/minimax-music/v2',
     name: 'MiniMax Music 2.0',
     async: true,
     buildInput: (p) => ({
-      prompt: p.prompt || '',
-      lyrics: p.lyrics || '',
-      duration: p.duration || 60,
-      ...(p.instrumental && { instrumental: true }),
+      prompt: p.prompt || 'upbeat pop song',
+      lyrics_prompt: p.lyrics || p.lyrics_prompt || '[verse]\nLa la la\n[chorus]\nOh oh oh',
     }),
     extractResult: (d) => ({
-      audioUrl: (d.audio_file as Record<string, unknown>)?.url || (d.audio as Record<string, unknown>)?.url,
+      audioUrl: (d.audio as Record<string, unknown>)?.url,
     }),
   },
   'ace-step': {
