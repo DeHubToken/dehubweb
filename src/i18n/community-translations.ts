@@ -6,6 +6,8 @@
  * Batch 2: tr, it, nl, pl, uk, vi, th, id, bn, ta
  * Batch 3: sv, da, cs, ro, hu, fi, no, sk, sr, hr
  * Batch 4: ms, fil, sw, el, he, fa, my, ne, si, ka
+ * Batch 5: af, az, am, bg, ur, uz, pa, kn, ku, kk
+ * Batch 6: lo, mr, mn, mg, yue, wuu, km, ha, ig, yo
  */
 
 import type { i18n as I18nInstance } from 'i18next';
