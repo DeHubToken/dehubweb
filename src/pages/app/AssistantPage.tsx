@@ -881,10 +881,10 @@ export default function AssistantPage() {
 
   // ─── AI Tool Handlers ───
 
-  const pollAiToolStatus = useCallback(async (requestId: string, appId: string, messageId: string, toolKey: string) => {
+  const pollAiToolStatus = useCallback(async (requestId: string, appId: string, messageId: string, toolKey: string, statusUrl?: string, responseUrl?: string) => {
     try {
       const { data, error } = await supabase.functions.invoke('fal-ai-tools', {
-        body: { requestId, appId }
+        body: { requestId, appId, statusUrl, responseUrl }
       });
 
       if (error) throw error;
@@ -989,7 +989,7 @@ export default function AssistantPage() {
         setMessages(prev => [...prev, assistantMessage]);
 
         pollingRef.current[data.requestId] = setInterval(() => {
-          pollAiToolStatus(data.requestId, data.appId, messageId, tool);
+          pollAiToolStatus(data.requestId, data.appId, messageId, tool, data.statusUrl, data.responseUrl);
         }, 5000);
       }
     } catch (err) {
