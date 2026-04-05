@@ -8,6 +8,8 @@
  * Batch 4: ms, fil, sw, el, he, fa, my, ne, si, ka
  * Batch 5: af, az, am, bg, ur, uz, pa, kn, ku, kk
  * Batch 6: lo, mr, mn, mg, yue, wuu, km, ha, ig, yo
+ * Batch 7: om, dcc, dyu, bho, be, acm, acw, aec, ajp, ayn
+ * Batch 8: apd, arz, ary, jv, ctg, hne, mnp, pcm, wes, pbt
  */
 
 import type { i18n as I18nInstance } from 'i18next';
