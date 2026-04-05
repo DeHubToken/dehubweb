@@ -717,7 +717,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext, dehubToken } = await req.json() as { 
+    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext, dehubToken, stream: streamRequested = false } = await req.json() as { 
       messages: Message[]; 
       style?: string;
       postContext?: PostContext;
