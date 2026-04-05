@@ -35,6 +35,7 @@ export interface OnchainDHBTransfer {
   timestamp: number; // unix seconds
   blockNumber: bigint;
   isFiatPurchase: boolean;
+  isAiPayment: boolean;
   isIncoming: boolean;
 }
 
