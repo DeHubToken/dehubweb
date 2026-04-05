@@ -12,6 +12,7 @@
  * Batch 8: apd, arz, ary, jv, ctg, hne, mnp, pcm, wes, pbt
  * Batch 9: te, rkt, skr, sdr, syl, sd, sq, ug, tg, tk
  * Batch 10: hy, ky, et, lv, lt, mi, gu, ml, or, ca
+ * Batch 11: cjy, gsw, mag, qu, sa, so, ti, tl, tts, zu
  */
 
 import type { i18n as I18nInstance } from 'i18next';
