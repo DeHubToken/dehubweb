@@ -282,7 +282,13 @@ serve(async (req) => {
         }
 
         const userAgent = req.headers.get("user-agent") || "";
-        const isBot = /bot|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber/i.test(userAgent);
+        // X-Is-Bot header set by Netlify edge function (more reliable than UA sniffing here)
+        // because the edge function always serves SSR HTML for shareable routes — it knows
+        // whether the original requester was a bot and tells us via this header.
+        const xIsBot = req.headers.get("x-is-bot");
+        const isBot = xIsBot !== null
+            ? xIsBot === "1"
+            : /bot|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber/i.test(userAgent);
 
         const functionBaseUrl = IMAGE_PROXY_BASE;
 
