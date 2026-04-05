@@ -18,6 +18,9 @@ verify_jwt = false
 [functions.generate-video]
 verify_jwt = false
 
+[functions.fal-ai-tools]
+verify_jwt = false
+
 [functions.get-dhb-price]
 verify_jwt = false
 

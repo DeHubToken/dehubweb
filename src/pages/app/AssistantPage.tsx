@@ -2307,6 +2307,26 @@ export default function AssistantPage() {
         />
       )}
 
+      {/* AI Tool Paywall Modal */}
+      {pendingAiToolRequest && (
+        <AiToolPaywallModal
+          open={aiToolPaywallOpen}
+          onOpenChange={(open) => {
+            setAiToolPaywallOpen(open);
+            if (!open) setPendingAiToolRequest(null);
+          }}
+          model={AI_TOOL_MODELS[selectedAiToolId]}
+          selectedModelId={selectedAiToolId}
+          onModelChange={(modelId) => {
+            setSelectedAiToolId(modelId);
+            setPendingAiToolRequest(prev => prev ? { ...prev, tool: modelId } : null);
+          }}
+          onConfirm={handleAiToolConfirm}
+          isProcessing={isAiToolProcessing}
+          category={aiToolCategory}
+        />
+      )}
+
       {/* Conversation History Drawer */}
       <ConversationHistoryDrawer
         open={historyDrawerOpen}
