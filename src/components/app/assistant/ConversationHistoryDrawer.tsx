@@ -47,6 +47,7 @@ export function ConversationHistoryDrawer({
 }: ConversationHistoryDrawerProps) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
+  const [activeTab, setActiveTab] = useState<'chats' | 'media'>('chats');
   const [isLoading, setIsLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isClearingAll, setIsClearingAll] = useState(false);
