@@ -108,6 +108,7 @@ async function fetchRecentDHBTransfers(walletAddress: string): Promise<OnchainDH
     const amount = parseFloat(formatUnits(value, DHB_DECIMALS));
     const isIncoming = to === addr.toLowerCase();
     const isFiatPurchase = isIncoming && FIAT_GATEWAY_WALLETS.has(from);
+    const isAiPayment = !isIncoming && to === AI_TREASURY_WALLET;
 
     return {
       txHash: log.transactionHash!,
