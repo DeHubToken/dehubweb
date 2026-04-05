@@ -124,7 +124,7 @@ export default function CommunityPage() {
       </div>
 
       <div className="px-3 py-4">
-        {tab === 'posts' && (
+        <div className={tab === 'posts' ? '' : 'hidden'}>
           <CommunityFeed
             communitySlug={community.slug}
             memberAddresses={memberAddresses}
@@ -134,19 +134,19 @@ export default function CommunityPage() {
             tickerChainId={community.ticker_chain_id}
             tickerPairAddress={community.ticker_pair_address}
           />
-        )}
-        {tab === 'chat' && (
+        </div>
+        <div className={tab === 'chat' ? '' : 'hidden'}>
           <CommunityChat
             communityId={community.id}
             isMember={isMember}
           />
-        )}
-        {tab === 'members' && (
+        </div>
+        <div className={tab === 'members' ? '' : 'hidden'}>
           <CommunityMembers members={members} communityId={community.id} isOwner={isOwner} />
-        )}
-        {tab === 'about' && (
+        </div>
+        <div className={tab === 'about' ? '' : 'hidden'}>
           <CommunityAbout community={community} />
-        )}
+        </div>
       </div>
     </div>
   );
