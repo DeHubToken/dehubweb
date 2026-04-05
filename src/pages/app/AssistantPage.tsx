@@ -49,6 +49,7 @@ import { ConversationHistoryDrawer } from '@/components/app/assistant/Conversati
 import { GeneratedAudioPlayer } from '@/components/app/assistant/GeneratedAudioPlayer';
 import { SwapActionCard } from '@/components/app/chat/SwapActionCard';
 import { useAIConversation } from '@/hooks/use-ai-conversation';
+import { streamChat } from '@/lib/stream-chat';
 import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
