@@ -240,7 +240,9 @@ export function RecentTransactions() {
 
       const amountStr = transfer.formattedAmount;
       let description: string;
-      if (transfer.isIncoming) {
+      if (transfer.isAiPayment) {
+        description = `Spent ${amountStr} DHB on AI prompt`;
+      } else if (transfer.isIncoming) {
         const fromShort = `${transfer.from.slice(0, 6)}...${transfer.from.slice(-4)}`;
         description = `Received ${amountStr} DHB from ${fromShort}`;
       } else {
