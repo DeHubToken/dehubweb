@@ -15,6 +15,9 @@ const FIAT_GATEWAY_WALLETS = new Set([
   '0x1be95b03ef8f10f78e078a74b0080b7e9af4c02b', // DPay sender
 ]);
 
+// DeHub AI Treasury — receives DHB payments for AI prompt/generation usage
+const AI_TREASURY_WALLET = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
+
 const DHB_TOKEN_BASE = '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c' as Address;
 const DHB_DECIMALS = 18;
 
