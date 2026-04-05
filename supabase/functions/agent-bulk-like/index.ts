@@ -25,7 +25,7 @@ async function authenticateAgent(
 
     const res = await fetch(`${DEHUB_API}/api/web/auth`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
       body: JSON.stringify({
         address,
         sig: signature,
@@ -35,7 +35,8 @@ async function authenticateAgent(
     });
 
     if (!res.ok) {
-      console.error(`Auth failed for ${address}: ${res.status}`);
+      const errBody = await res.text();
+      console.error(`Auth failed for ${address}: ${res.status} - ${errBody}`);
       return null;
     }
 
