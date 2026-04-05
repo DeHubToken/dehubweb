@@ -12,7 +12,7 @@ interface SEOHeadProps {
 const defaults = {
   title: 'DeHub',
   description: 'DeHub is open source, user owned and censorship resistant media.',
-  image: 'https://dehub.io/og-image.png',
+  image: 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//Screenshot%202026-03-20%20225233.png',
   url: 'https://dehub.io',
 };
 

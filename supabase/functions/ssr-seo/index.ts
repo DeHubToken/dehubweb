@@ -67,7 +67,7 @@ function buildAvatarUrl(user: DeHubUser): string {
     return `${DEHUB_CDN_BASE}${apiPath.replace(/^statics\//, "")}`;
 }
 
-function buildPostImageUrl(nft: DeHubNFT): string {
+function buildPostImageUrl(nft: DeHubNFT): string | null {
     // 1. Multi-image feed posts: imageUrls array → cdn/feed-images/{filename}
     if (nft.imageUrls && nft.imageUrls.length > 0) {
         const firstImg = nft.imageUrls[0];
@@ -78,7 +78,7 @@ function buildPostImageUrl(nft: DeHubNFT): string {
 
     // 2. Single NFT image: imageUrl → cdn/images/{tokenId}.{ext}
     const apiPath = nft.imageUrl || nft.thumbnail_url;
-    if (!apiPath) return "https://dehub.io/og-image.png";
+    if (!apiPath) return null; // No image — caller should fall back to minter avatar
     if (apiPath.startsWith("http")) return apiPath;
     const ext = getExtension(apiPath);
     return `${DEHUB_CDN_BASE}images/${nft.tokenId}.${ext}`;
@@ -359,7 +359,25 @@ serve(async (req) => {
                 } else if (videoUrl) {
                     postImage = ensureAbsoluteUrl(nft.thumbnail_url || nft.imageUrl || "") || DEHUB_LOGO;
                 } else {
-                    postImage = buildPostImageUrl(nft);
+                    const builtImage = buildPostImageUrl(nft);
+                    if (builtImage) {
+                        postImage = builtImage;
+                    } else {
+                        // No post image — fall back to minter's profile picture
+                        const minterUsername = nft.minterUsername;
+                        if (minterUsername) {
+                            try {
+                                const minterResp = await fetch(`${DEHUB_API_BASE}/api/account_info/${minterUsername}`);
+                                const minterData = await minterResp.json();
+                                const minter: DeHubUser = minterData.result || minterData;
+                                postImage = buildAvatarUrl(minter);
+                            } catch {
+                                postImage = DEHUB_LOGO;
+                            }
+                        } else {
+                            postImage = DEHUB_LOGO;
+                        }
+                    }
                 }
 
                 const html = generateMetaHTML({
