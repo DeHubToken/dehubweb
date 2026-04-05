@@ -217,18 +217,21 @@ serve(async (req) => {
     if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
 
     const body = await req.json();
-    const { tool, requestId, appId: statusAppId, ...params } = body;
+    const { tool, requestId, appId: statusAppId, statusUrl, responseUrl, ...params } = body;
 
     // ─── Status check for async tools ───
-    if (requestId && statusAppId) {
-      console.log(`[fal-tools] Checking status for ${requestId} on ${statusAppId}`);
-      const statusData = await falQueueStatus(FAL_KEY, statusAppId, requestId);
+    if (requestId && (statusUrl || statusAppId)) {
+      // Use provided URLs or construct fallback
+      const sUrl = statusUrl || `https://queue.fal.run/${statusAppId}/requests/${requestId}/status`;
+      const rUrl = responseUrl || `https://queue.fal.run/${statusAppId}/requests/${requestId}`;
+      
+      console.log(`[fal-tools] Checking status at: ${sUrl}`);
+      const statusData = await falQueueStatus(FAL_KEY, sUrl);
       const mappedStatus = mapFalStatus(statusData.status);
 
       let result: Record<string, unknown> = {};
       if (mappedStatus === 'succeeded') {
-        const resultData = await falQueueResult(FAL_KEY, statusAppId, requestId);
-        // Try to find the tool config to extract result properly
+        const resultData = await falQueueResult(FAL_KEY, rUrl);
         const toolConfig = Object.values(TOOLS).find(t => t.appId === statusAppId);
         result = toolConfig ? toolConfig.extractResult(resultData) : resultData;
       }
@@ -256,11 +259,14 @@ serve(async (req) => {
       // Queue-based async execution
       const submission = await falQueueSubmit(FAL_KEY, toolConfig.appId, input);
       console.log(`[fal-tools] ${toolConfig.name} queued: ${submission.request_id}`);
+      console.log(`[fal-tools] status_url: ${submission.status_url}, response_url: ${submission.response_url}`);
 
       return new Response(JSON.stringify({
         status: 'starting',
         requestId: submission.request_id,
         appId: toolConfig.appId,
+        statusUrl: submission.status_url,
+        responseUrl: submission.response_url,
         tool,
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
