@@ -62,14 +62,14 @@ const VIDEO_MODELS: Record<string, {
     duration: '2-12s',
   },
   'seedance-2.0': {
-    id: 'fal-ai/seedance-2.0',
+    id: 'bytedance/seedance-2.0',
     name: 'Seedance 2.0',
     description: 'Latest ByteDance model via fal.ai, superior quality & audio',
     supports: ['text-to-video', 'image-to-video'],
     duration: '4-12s',
     provider: 'fal',
-    falTextModel: 'fal-ai/seedance-2.0/text-to-video',
-    falImageModel: 'fal-ai/seedance-2.0/reference-to-video',
+    falTextModel: 'bytedance/seedance-2.0/text-to-video',
+    falImageModel: 'bytedance/seedance-2.0/image-to-video',
   },
 };
 
