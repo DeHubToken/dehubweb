@@ -64,7 +64,8 @@ Deno.serve(async (req) => {
   try {
     const url = new URL(req.url);
     const startPage = parseInt(url.searchParams.get("page") || "1");
-    const specificTokenId = url.searchParams.get("tokenId"); // like a specific post
+    const feedLimit = parseInt(url.searchParams.get("limit") || "5");
+    const specificTokenId = url.searchParams.get("tokenId");
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
@@ -101,7 +102,7 @@ Deno.serve(async (req) => {
       logs.push(`🎯 Targeting specific post: ${specificTokenId}`);
     } else {
       // Fetch posts from feed page
-      const feedRes = await fetch(`${DEHUB_API}/api/feed?page=${startPage}&limit=5`, {
+      const feedRes = await fetch(`${DEHUB_API}/api/feed?page=${startPage}&limit=${feedLimit}`, {
         headers: { Authorization: `Bearer ${authedAgents[0].token}` },
       });
       if (feedRes.ok) {
