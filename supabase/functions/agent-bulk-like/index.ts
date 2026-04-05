@@ -87,78 +87,86 @@ Deno.serve(async (req) => {
     return jsonResponse("ok");
   }
 
-  const supabase = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-  );
+  try {
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
 
-  // 1. Fetch first 3 agents
-  const { data: agents, error } = await supabase
-    .from("ai_agents")
-    .select("id, name, wallet_private_key")
-    .order("created_at", { ascending: true })
-    .limit(3);
+    // 1. Fetch first 3 agents
+    const { data: agents, error } = await supabase
+      .from("ai_agents")
+      .select("id, name, wallet_private_key")
+      .order("created_at", { ascending: true })
+      .limit(3);
 
-  if (error || !agents?.length) {
-    return jsonResponse({ error: "Failed to fetch agents", detail: error }, 500);
-  }
-
-  const logs: string[] = [];
-  logs.push(`Found ${agents.length} agents: ${agents.map((a: any) => a.name).join(", ")}`);
-
-  // 2. Authenticate all agents
-  const authedAgents: { name: string; token: string; address: string }[] = [];
-  for (const agent of agents) {
-    if (!agent.wallet_private_key) {
-      logs.push(`⚠️ ${agent.name}: no private key, skipping`);
-      continue;
+    if (error || !agents?.length) {
+      return jsonResponse({ error: "Failed to fetch agents", detail: String(error) }, 500);
     }
-    const auth = await authenticateAgent(agent.wallet_private_key);
-    if (auth) {
-      authedAgents.push({ name: agent.name, ...auth });
-      logs.push(`✅ ${agent.name} authenticated (${auth.address})`);
-    } else {
-      logs.push(`❌ ${agent.name} auth failed`);
+
+    const logs: string[] = [];
+    logs.push(`Found ${agents.length} agents: ${agents.map((a: any) => a.name).join(", ")}`);
+
+    // 2. Authenticate all agents
+    const authedAgents: { name: string; token: string; address: string }[] = [];
+    for (const agent of agents) {
+      if (!agent.wallet_private_key) {
+        logs.push(`⚠️ ${agent.name}: no private key, skipping`);
+        continue;
+      }
+      const auth = await authenticateAgent(agent.wallet_private_key);
+      if (auth) {
+        authedAgents.push({ name: agent.name, token: auth.token, address: auth.address });
+        logs.push(`✅ ${agent.name} authenticated (${auth.address})`);
+      } else {
+        logs.push(`❌ ${agent.name} auth failed`);
+      }
     }
-  }
 
-  if (!authedAgents.length) {
-    return jsonResponse({ error: "No agents authenticated", logs }, 500);
-  }
-
-  // 3. Fetch 200 posts (4 pages of 50)
-  const allPosts: any[] = [];
-  for (let page = 1; page <= 4; page++) {
-    const posts = await fetchPosts(authedAgents[0].token, page);
-    allPosts.push(...posts);
-    logs.push(`📄 Page ${page}: fetched ${posts.length} posts`);
-    await sleep(1000);
-  }
-
-  // Extract token IDs
-  const tokenIds = allPosts
-    .map((p: any) => p.streamTokenId || p.tokenId || p.id)
-    .filter(Boolean)
-    .map(String)
-    .slice(0, 200);
-
-  logs.push(`🎯 Total posts to like: ${tokenIds.length}`);
-
-  // 4. Like loop — 3s delay between each call
-  let successCount = 0;
-  let failCount = 0;
-
-  for (let i = 0; i < tokenIds.length; i++) {
-    const tokenId = tokenIds[i];
-    for (const agent of authedAgents) {
-      const ok = await likePost(agent.token, tokenId);
-      if (ok) successCount++;
-      else failCount++;
-      logs.push(`${ok ? "👍" : "❌"} ${agent.name} → post ${tokenId} (${i + 1}/${tokenIds.length})`);
-      await sleep(3000);
+    if (!authedAgents.length) {
+      return jsonResponse({ error: "No agents authenticated", logs }, 500);
     }
-  }
 
-  logs.push(`\n🏁 Done! Success: ${successCount}, Failed: ${failCount}`);
-  return jsonResponse({ success: true, successCount, failCount, logs });
+    // 3. Fetch 200 posts (4 pages of 50)
+    const allPosts: any[] = [];
+    for (let page = 1; page <= 4; page++) {
+      const posts = await fetchPosts(authedAgents[0].token, page);
+      if (Array.isArray(posts)) {
+        for (const p of posts) allPosts.push(p);
+      }
+      logs.push(`📄 Page ${page}: fetched ${Array.isArray(posts) ? posts.length : 0} posts`);
+      await sleep(1000);
+    }
+
+    // Extract token IDs
+    const tokenIds: string[] = [];
+    for (const p of allPosts) {
+      const tid = p.streamTokenId || p.tokenId || p.id;
+      if (tid) tokenIds.push(String(tid));
+      if (tokenIds.length >= 200) break;
+    }
+
+    logs.push(`🎯 Total posts to like: ${tokenIds.length}`);
+
+    // 4. Like loop — 3s delay between each call
+    let successCount = 0;
+    let failCount = 0;
+
+    for (let i = 0; i < tokenIds.length; i++) {
+      const tokenId = tokenIds[i];
+      for (const agent of authedAgents) {
+        const ok = await likePost(agent.token, tokenId);
+        if (ok) successCount++;
+        else failCount++;
+        logs.push(`${ok ? "👍" : "❌"} ${agent.name} → post ${tokenId} (${i + 1}/${tokenIds.length})`);
+        await sleep(3000);
+      }
+    }
+
+    logs.push(`\n🏁 Done! Success: ${successCount}, Failed: ${failCount}`);
+    return jsonResponse({ success: true, successCount, failCount, logs });
+  } catch (e) {
+    console.error("Top-level error:", e);
+    return jsonResponse({ error: String(e) }, 500);
+  }
 });
