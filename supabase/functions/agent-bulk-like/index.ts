@@ -1,15 +1,26 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
 import { ethers } from "npm:ethers@^6.16.0";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
-
 const DEHUB_API = "https://api.dehub.io";
 
 function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
+}
+
+function jsonResponse(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+      "Content-Type": "application/json",
+    },
+  });
+}
+
+function buildAuthMessage(address: string, timestamp: number): string {
+  const displayedDate = new Date(timestamp * 1000);
+  return `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${address}.\nIt is ${displayedDate.toUTCString()}.`;
 }
 
 async function authenticateAgent(
@@ -19,19 +30,13 @@ async function authenticateAgent(
     const wallet = new ethers.Wallet(privateKey);
     const address = wallet.address.toLowerCase();
     const timestamp = Math.floor(Date.now() / 1000);
-    const displayedDate = new Date(timestamp * 1000);
-    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${address}.\nIt is ${displayedDate.toUTCString()}.`;
+    const message = buildAuthMessage(address, timestamp);
     const signature = await wallet.signMessage(message);
 
     const res = await fetch(`${DEHUB_API}/api/web/auth`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify({
-        address,
-        sig: signature,
-        timestamp,
-        chainId: 8453,
-      }),
+      body: JSON.stringify({ address, sig: signature, timestamp, chainId: 8453 }),
     });
 
     if (!res.ok) {
@@ -50,12 +55,9 @@ async function authenticateAgent(
 
 async function fetchPosts(token: string, page: number): Promise<any[]> {
   try {
-    const res = await fetch(
-      `${DEHUB_API}/api/feed?page=${page}&limit=50`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
-    );
+    const res = await fetch(`${DEHUB_API}/api/feed?page=${page}&limit=50`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     if (!res.ok) return [];
     const data = await res.json();
     return data.data || data.posts || data || [];
@@ -64,10 +66,7 @@ async function fetchPosts(token: string, page: number): Promise<any[]> {
   }
 }
 
-async function likePost(
-  token: string,
-  streamTokenId: string | number,
-): Promise<boolean> {
+async function likePost(token: string, streamTokenId: string): Promise<boolean> {
   try {
     const res = await fetch(`${DEHUB_API}/api/request_vote`, {
       method: "POST",
@@ -75,7 +74,7 @@ async function likePost(
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ streamTokenId: String(streamTokenId), vote: true }),
+      body: JSON.stringify({ streamTokenId, vote: true }),
     });
     return res.ok;
   } catch {
@@ -85,7 +84,7 @@ async function likePost(
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return jsonResponse("ok");
   }
 
   const supabase = createClient(
@@ -101,14 +100,11 @@ Deno.serve(async (req) => {
     .limit(3);
 
   if (error || !agents?.length) {
-    return new Response(
-      JSON.stringify({ error: "Failed to fetch agents", detail: error }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-    );
+    return jsonResponse({ error: "Failed to fetch agents", detail: error }, 500);
   }
 
   const logs: string[] = [];
-  logs.push(`Found ${agents.length} agents: ${agents.map((a) => a.name).join(", ")}`);
+  logs.push(`Found ${agents.length} agents: ${agents.map((a: any) => a.name).join(", ")}`);
 
   // 2. Authenticate all agents
   const authedAgents: { name: string; token: string; address: string }[] = [];
@@ -127,10 +123,7 @@ Deno.serve(async (req) => {
   }
 
   if (!authedAgents.length) {
-    return new Response(
-      JSON.stringify({ error: "No agents authenticated", logs }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-    );
+    return jsonResponse({ error: "No agents authenticated", logs }, 500);
   }
 
   // 3. Fetch 200 posts (4 pages of 50)
@@ -144,8 +137,9 @@ Deno.serve(async (req) => {
 
   // Extract token IDs
   const tokenIds = allPosts
-    .map((p) => p.streamTokenId || p.tokenId || p.id)
+    .map((p: any) => p.streamTokenId || p.tokenId || p.id)
     .filter(Boolean)
+    .map(String)
     .slice(0, 200);
 
   logs.push(`🎯 Total posts to like: ${tokenIds.length}`);
@@ -158,21 +152,13 @@ Deno.serve(async (req) => {
     const tokenId = tokenIds[i];
     for (const agent of authedAgents) {
       const ok = await likePost(agent.token, tokenId);
-      if (ok) {
-        successCount++;
-      } else {
-        failCount++;
-      }
-      logs.push(
-        `${ok ? "👍" : "❌"} ${agent.name} → post ${tokenId} (${i + 1}/${tokenIds.length})`,
-      );
-      await sleep(3000); // 3 second delay
+      if (ok) successCount++;
+      else failCount++;
+      logs.push(`${ok ? "👍" : "❌"} ${agent.name} → post ${tokenId} (${i + 1}/${tokenIds.length})`);
+      await sleep(3000);
     }
   }
 
   logs.push(`\n🏁 Done! Success: ${successCount}, Failed: ${failCount}`);
-
-  return new Response(JSON.stringify({ success: true, successCount, failCount, logs }), {
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
+  return jsonResponse({ success: true, successCount, failCount, logs });
 });
