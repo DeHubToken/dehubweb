@@ -23,9 +23,7 @@ function buildAuthMessage(address: string, timestamp: number): string {
   return `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${address}.\nIt is ${displayedDate.toUTCString()}.`;
 }
 
-async function authenticateAgent(
-  privateKey: string,
-): Promise<{ token: string; address: string } | null> {
+async function authenticateAgent(privateKey: string): Promise<{ token: string; address: string } | null> {
   try {
     const wallet = new ethers.Wallet(privateKey);
     const address = wallet.address.toLowerCase();
@@ -39,30 +37,11 @@ async function authenticateAgent(
       body: JSON.stringify({ address, sig: signature, timestamp, chainId: 8453 }),
     });
 
-    if (!res.ok) {
-      const errBody = await res.text();
-      console.error(`Auth failed for ${address}: ${res.status} - ${errBody}`);
-      return null;
-    }
-
+    if (!res.ok) return null;
     const data = await res.json();
     return { token: data.token, address };
-  } catch (e) {
-    console.error("Auth error:", e);
-    return null;
-  }
-}
-
-async function fetchPosts(token: string, page: number): Promise<any[]> {
-  try {
-    const res = await fetch(`${DEHUB_API}/api/feed?page=${page}&limit=50`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.result || data.data || data.posts || [];
   } catch {
-    return [];
+    return null;
   }
 }
 
@@ -70,10 +49,7 @@ async function likePost(token: string, streamTokenId: string): Promise<boolean> 
   try {
     const res = await fetch(`${DEHUB_API}/api/request_vote`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({ streamTokenId, vote: true }),
     });
     return res.ok;
@@ -83,90 +59,75 @@ async function likePost(token: string, streamTokenId: string): Promise<boolean> 
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return jsonResponse("ok");
-  }
+  if (req.method === "OPTIONS") return jsonResponse("ok");
 
   try {
+    // Accept page param to process in batches (default page 1, 50 posts per call)
+    const url = new URL(req.url);
+    const startPage = parseInt(url.searchParams.get("page") || "1");
+    const pagesToFetch = parseInt(url.searchParams.get("pages") || "1"); // 1 page = 50 posts at a time
+
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    // 1. Fetch first 3 agents
-    const { data: agents, error } = await supabase
+    const { data: agents } = await supabase
       .from("ai_agents")
       .select("id, name, wallet_private_key")
       .order("created_at", { ascending: true })
       .limit(3);
 
-    if (error || !agents?.length) {
-      return jsonResponse({ error: "Failed to fetch agents", detail: String(error) }, 500);
-    }
+    if (!agents?.length) return jsonResponse({ error: "No agents found" }, 500);
 
     const logs: string[] = [];
-    logs.push(`Found ${agents.length} agents: ${agents.map((a: any) => a.name).join(", ")}`);
 
-    // 2. Authenticate all agents
-    const authedAgents: { name: string; token: string; address: string }[] = [];
+    // Authenticate
+    const authedAgents: { name: string; token: string }[] = [];
     for (const agent of agents) {
-      if (!agent.wallet_private_key) {
-        logs.push(`⚠️ ${agent.name}: no private key, skipping`);
-        continue;
-      }
+      if (!agent.wallet_private_key) continue;
       const auth = await authenticateAgent(agent.wallet_private_key);
       if (auth) {
-        authedAgents.push({ name: agent.name, token: auth.token, address: auth.address });
-        logs.push(`✅ ${agent.name} authenticated (${auth.address})`);
-      } else {
-        logs.push(`❌ ${agent.name} auth failed`);
+        authedAgents.push({ name: agent.name, token: auth.token });
+        logs.push(`✅ ${agent.name} authed`);
       }
     }
+    if (!authedAgents.length) return jsonResponse({ error: "Auth failed", logs }, 500);
 
-    if (!authedAgents.length) {
-      return jsonResponse({ error: "No agents authenticated", logs }, 500);
-    }
-
-    // 3. Fetch 200 posts (4 pages of 50)
-    const allPosts: any[] = [];
-    for (let page = 1; page <= 4; page++) {
-      const posts = await fetchPosts(authedAgents[0].token, page);
-      if (Array.isArray(posts)) {
-        for (const p of posts) allPosts.push(p);
-      }
-      logs.push(`📄 Page ${page}: fetched ${Array.isArray(posts) ? posts.length : 0} posts`);
-      await sleep(1000);
-    }
-
-    // Extract token IDs
+    // Fetch posts
     const tokenIds: string[] = [];
-    for (const p of allPosts) {
-      const tid = p.streamTokenId || p.tokenId || p.id;
-      if (tid) tokenIds.push(String(tid));
-      if (tokenIds.length >= 200) break;
+    for (let p = startPage; p < startPage + pagesToFetch; p++) {
+      const res = await fetch(`${DEHUB_API}/api/feed?page=${p}&limit=50`, {
+        headers: { Authorization: `Bearer ${authedAgents[0].token}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const posts = data.result || data.data || [];
+        for (const post of posts) {
+          const tid = post.streamTokenId || post.tokenId || post.id;
+          if (tid) tokenIds.push(String(tid));
+        }
+        logs.push(`📄 Page ${p}: ${posts.length} posts`);
+      }
+      await sleep(500);
     }
 
-    logs.push(`🎯 Total posts to like: ${tokenIds.length}`);
+    logs.push(`🎯 Posts to like: ${tokenIds.length}`);
 
-    // 4. Like loop — 3s delay between each call
-    let successCount = 0;
-    let failCount = 0;
-
-    for (let i = 0; i < tokenIds.length; i++) {
-      const tokenId = tokenIds[i];
+    // Like with 2s delay (50 posts x 3 agents x 2s = ~5 min per page)
+    let ok = 0, fail = 0;
+    for (const tokenId of tokenIds) {
       for (const agent of authedAgents) {
-        const ok = await likePost(agent.token, tokenId);
-        if (ok) successCount++;
-        else failCount++;
-        logs.push(`${ok ? "👍" : "❌"} ${agent.name} → post ${tokenId} (${i + 1}/${tokenIds.length})`);
-        await sleep(3000);
+        const success = await likePost(agent.token, tokenId);
+        if (success) ok++; else fail++;
+        await sleep(2000);
       }
     }
 
-    logs.push(`\n🏁 Done! Success: ${successCount}, Failed: ${failCount}`);
-    return jsonResponse({ success: true, successCount, failCount, logs });
+    logs.push(`🏁 Done! ✅${ok} ❌${fail}`);
+    return jsonResponse({ success: true, ok, fail, page: startPage, logs });
   } catch (e) {
-    console.error("Top-level error:", e);
+    console.error("Error:", e);
     return jsonResponse({ error: String(e) }, 500);
   }
 });
