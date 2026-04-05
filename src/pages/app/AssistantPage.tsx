@@ -1113,7 +1113,7 @@ export default function AssistantPage() {
         setIsLoading(false);
         return;
       } else {
-        // Regular chat - use general-ai-chat endpoint with retry
+        // Regular chat - use streaming for token-by-token rendering
         const chatBody = {
           messages: [...messages, userMessage].map(m => ({
             role: m.role,
@@ -1127,95 +1127,60 @@ export default function AssistantPage() {
           dehubToken: localStorage.getItem('dehub_token') || undefined,
         };
 
-        let data: any = null;
-        let lastError: any = null;
-        const maxRetries = 2;
+        const streamingMsgId = (Date.now() + 1).toString();
+        let streamedContent = '';
+        let isFirstToken = true;
 
-        for (let attempt = 0; attempt <= maxRetries; attempt++) {
-          try {
-            const result = await supabase.functions.invoke('general-ai-chat', { body: chatBody });
-            if (result.error) {
-              // supabase.functions.invoke wraps non-2xx as FunctionsHttpError
-              // Check if the response body has details
-              const errBody = result.data;
-              if (errBody?.errorCode) {
-                const enrichedError = new Error(errBody.error || result.error.message);
-                (enrichedError as any).errorCode = errBody.errorCode;
-                (enrichedError as any).statusCode = errBody.statusCode;
-                throw enrichedError;
-              }
-              throw result.error;
+        await streamChat({
+          body: chatBody,
+          onDelta: (text) => {
+            streamedContent += text;
+            if (isFirstToken) {
+              // Create the assistant message on first token
+              isFirstToken = false;
+              setMessages(prev => [...prev, {
+                id: streamingMsgId,
+                role: 'assistant',
+                content: streamedContent,
+              }]);
+            } else {
+              // Update the last assistant message content
+              setMessages(prev => {
+                const updated = [...prev];
+                const lastIdx = updated.length - 1;
+                if (lastIdx >= 0 && updated[lastIdx].id === streamingMsgId) {
+                  updated[lastIdx] = { ...updated[lastIdx], content: streamedContent };
+                }
+                return updated;
+              });
             }
-            // Check for error in response body (e.g. 429, 504 forwarded as JSON)
-            if (result.data?.error && !result.data?.response) {
-              const bodyError = new Error(result.data.error);
-              (bodyError as any).errorCode = result.data.errorCode;
-              (bodyError as any).statusCode = result.data.statusCode;
-              throw bodyError;
+          },
+          onMeta: (meta) => {
+            if (meta.fallbackUsed) {
+              toast.info(t('assistant.fallbackGrokNotConfigured'));
             }
-            data = result.data;
-            lastError = null;
-            break;
-          } catch (err: any) {
-            lastError = err;
-            const errorCode = err?.errorCode || 'UNKNOWN';
-            console.warn(`[Assistant] Attempt ${attempt + 1}/${maxRetries + 1} failed [${errorCode}]:`, err?.message || err);
-            // Don't retry rate limits or credit issues
-            if (errorCode === 'RATE_LIMIT' || errorCode === 'CREDITS_EXHAUSTED') {
-              break;
+          },
+          onDone: () => {
+            // Save to conversation history
+            const finalMessage: Message = {
+              id: streamingMsgId,
+              role: 'assistant',
+              content: streamedContent || t('assistant.noResponse'),
+            };
+            queueMessage(finalMessage);
+
+            // Auto-speak if enabled
+            if (alwaysSpeakReplies && streamedContent) {
+              setTimeout(() => {
+                speak(streamedContent);
+              }, 300);
             }
-            if (attempt < maxRetries) {
-              await new Promise(r => setTimeout(r, 1000 * (attempt + 1))); // 1s, 2s backoff
-            }
-          }
-        }
-
-        if (lastError || !data) throw lastError || new Error('No response from AI');
-
-        // Show fallback toast if Grok was requested but not available
-        if (data.fallbackUsed) {
-          toast.info(t('assistant.fallbackGrokNotConfigured'));
-        }
-
-        // Check if this is a transaction simulation response
-        if (data.isSimulation) {
-          const assistantMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            role: 'assistant',
-            content: data.response,
-            isSimulation: true,
-            simulationType: data.simulationType,
-            simulationData: data.simulationData,
-            simulationStatus: 'pending'
-          };
-          setMessages(prev => [...prev, assistantMessage]);
-        } else if (data.swapAction) {
-          // Swap action response
-          const assistantMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            role: 'assistant',
-            content: data.response || '',
-            swapAction: data.swapAction,
-          };
-          setMessages(prev => [...prev, assistantMessage]);
-          queueMessage(assistantMessage);
-        } else {
-          const assistantMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            role: 'assistant',
-            content: data.response || t('assistant.noResponse'),
-          };
-
-          setMessages(prev => [...prev, assistantMessage]);
-          queueMessage(assistantMessage);
-          
-          // Auto-speak the response if always speak replies is enabled
-          if (alwaysSpeakReplies) {
-            setTimeout(() => {
-              speak(assistantMessage.content);
-            }, 300);
-          }
-        }
+          },
+          onError: (err) => {
+            throw err; // Let the outer catch handle it
+          },
+        });
+      }
       }
     } catch (error: any) {
       console.error('AI chat error:', error);
