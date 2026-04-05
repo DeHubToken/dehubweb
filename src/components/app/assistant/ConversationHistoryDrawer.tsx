@@ -72,6 +72,7 @@ export function ConversationHistoryDrawer({
     if (!open) {
       setSearchQuery('');
       setSearchResults(null);
+      setActiveTab('chats');
     }
   }, [open]);
 
