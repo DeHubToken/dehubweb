@@ -749,6 +749,7 @@ serve(async (req) => {
         }>;
       };
       dehubToken?: string;
+      stream?: boolean;
     };
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
