@@ -112,6 +112,7 @@ export type Database = {
       ai_messages: {
         Row: {
           attached_image: string | null
+          audio_url: string | null
           content: string
           conversation_id: string
           created_at: string
@@ -122,6 +123,7 @@ export type Database = {
         }
         Insert: {
           attached_image?: string | null
+          audio_url?: string | null
           content: string
           conversation_id: string
           created_at?: string
@@ -132,6 +134,7 @@ export type Database = {
         }
         Update: {
           attached_image?: string | null
+          audio_url?: string | null
           content?: string
           conversation_id?: string
           created_at?: string

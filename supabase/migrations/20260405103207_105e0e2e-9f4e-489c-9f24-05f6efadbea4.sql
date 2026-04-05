@@ -1,0 +1,1 @@
+ALTER TABLE public.ai_messages ADD COLUMN audio_url text;
