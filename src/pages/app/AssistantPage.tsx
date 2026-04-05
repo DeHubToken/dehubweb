@@ -1177,10 +1177,33 @@ export default function AssistantPage() {
             }
           },
           onError: (err) => {
-            throw err; // Let the outer catch handle it
+            // Surface error to the UI
+            const errorCode = (err as any)?.errorCode || 'UNKNOWN';
+            let userErrorMessage: string;
+            switch (errorCode) {
+              case 'RATE_LIMIT':
+                userErrorMessage = t('assistant.errorRateLimit');
+                break;
+              case 'CREDITS_EXHAUSTED':
+                userErrorMessage = t('assistant.errorCreditsExhausted');
+                break;
+              case 'TIMEOUT':
+                userErrorMessage = t('assistant.errorTimeout');
+                break;
+              default:
+                userErrorMessage = t('assistant.errorUnknown', { message: err?.message || 'Unknown error' });
+                break;
+            }
+            const errorId = (Date.now() + 2).toString();
+            setMessages(prev => [...prev, {
+              id: errorId,
+              role: 'assistant',
+              content: userErrorMessage,
+              isError: true,
+            }]);
+            setIsLoading(false);
           },
         });
-      }
       }
     } catch (error: any) {
       console.error('AI chat error:', error);
