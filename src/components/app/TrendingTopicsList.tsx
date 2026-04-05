@@ -129,7 +129,7 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
   return (
     <div style={{ minHeight }} className="relative overflow-hidden">
       {/* Period tabs */}
-      <div className="flex mb-2 sticky top-0 z-20 bg-black/90 backdrop-blur-sm">
+      <div className="flex mb-2">
         {TOPIC_PERIODS.map(p => (
           <button
             key={p.value}
