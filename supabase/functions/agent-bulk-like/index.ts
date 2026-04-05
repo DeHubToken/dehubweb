@@ -62,10 +62,9 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return jsonResponse("ok");
 
   try {
-    // Accept page param to process in batches (default page 1, 50 posts per call)
     const url = new URL(req.url);
     const startPage = parseInt(url.searchParams.get("page") || "1");
-    const pagesToFetch = parseInt(url.searchParams.get("pages") || "1"); // 1 page = 50 posts at a time
+    const specificTokenId = url.searchParams.get("tokenId"); // like a specific post
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
@@ -94,21 +93,28 @@ Deno.serve(async (req) => {
     }
     if (!authedAgents.length) return jsonResponse({ error: "Auth failed", logs }, 500);
 
-    // Fetch posts for requested page
     const tokenIds: string[] = [];
-    const feedRes = await fetch(`${DEHUB_API}/api/feed?page=${startPage}&limit=5`, {
-      headers: { Authorization: `Bearer ${authedAgents[0].token}` },
-    });
-    if (feedRes.ok) {
-      const data = await feedRes.json();
-      const posts = data.result || data.data || [];
-      for (const post of posts) {
-        const tid = post.streamTokenId || post.tokenId || post.id;
-        if (tid) tokenIds.push(String(tid));
-      }
-      logs.push(`📄 Page ${startPage}: ${posts.length} posts`);
+
+    if (specificTokenId) {
+      // Like a specific post by token ID
+      tokenIds.push(specificTokenId);
+      logs.push(`🎯 Targeting specific post: ${specificTokenId}`);
     } else {
-      logs.push(`📄 Feed error: ${feedRes.status}`);
+      // Fetch posts from feed page
+      const feedRes = await fetch(`${DEHUB_API}/api/feed?page=${startPage}&limit=5`, {
+        headers: { Authorization: `Bearer ${authedAgents[0].token}` },
+      });
+      if (feedRes.ok) {
+        const data = await feedRes.json();
+        const posts = data.result || data.data || [];
+        for (const post of posts) {
+          const tid = post.streamTokenId || post.tokenId || post.id;
+          if (tid) tokenIds.push(String(tid));
+        }
+        logs.push(`📄 Page ${startPage}: ${posts.length} posts`);
+      } else {
+        logs.push(`📄 Feed error: ${feedRes.status}`);
+      }
     }
 
     logs.push(`🎯 Posts to like: ${tokenIds.length}`);
