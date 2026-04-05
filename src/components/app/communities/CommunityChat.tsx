@@ -237,12 +237,14 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                       <button onClick={goToProfile} disabled={!handle} className={`flex-shrink-0 ${handle ? 'cursor-pointer' : 'cursor-default'}`}>
                         <ChatAvatar src={avatarUrl} address={msg.wallet_address} name={name} />
                       </button>
-                      <div className="min-w-0 flex-1">
-                        <span className="relative inline-flex items-baseline gap-1.5">
-                          <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>
-                            {name}
-                          </button>
-                          <BadgeIcon badgeBalance={(msg as any).badge_balance} username={msg.username} className="w-[9px] h-[9px]" />
+                       <div className="min-w-0 flex-1">
+                        <span className="inline-flex items-baseline gap-1.5">
+                          <span className="relative inline-flex items-baseline shrink min-w-0 pr-3">
+                            <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white truncate ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>
+                              {name}
+                            </button>
+                            <BadgeIcon badgeBalance={(msg as any).badge_balance} username={msg.username} className="w-[9px] h-[9px] absolute -top-0.5 -right-0" />
+                          </span>
                           <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
                         </span>
                         {msg.message_type === 'gif' && msg.image_url ? (

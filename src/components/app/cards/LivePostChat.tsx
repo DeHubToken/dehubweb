@@ -47,7 +47,7 @@ function LiveChatAvatar({ src, address, name }: { src?: string | null; address?:
 
 /** Live chat badge */
 function LiveChatBadge({ badgeBalance, username }: { badgeBalance?: number | null; username?: string | null }) {
-  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] ml-0.5" />;
+  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] absolute -top-0.5 -right-0" />;
 }
 
 /** Translatable text message with inline translate button */
@@ -226,7 +226,7 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
                   <LiveChatAvatar src={avatarUrl} address={msg.sender_address} name={displayName} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-1.5">
-                      <span className="relative inline-flex items-baseline">
+                      <span className="relative inline-flex items-baseline shrink min-w-0 pr-3">
                         <span className="text-xs font-semibold text-white truncate max-w-[120px]">
                           {displayName}
                         </span>
