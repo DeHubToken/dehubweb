@@ -1,12 +1,15 @@
 /**
  * Netlify Edge Function for DeHub Dynamic SEO/SSR
  *
- * Fix for X (Twitter): always serve SSR HTML for post/profile/root routes.
- * X's link-preview crawler doesn't always send "Twitterbot" as UA, so the old
- * bot-UA check was letting X fall through to the bare SPA (no meta tags → no card).
+ * Serves pre-rendered HTML with OG meta tags to social crawlers (bots) for:
+ *   - Root /
+ *   - /app/post/:id
+ *   - /app/communities/:slug
+ *   - /:username (profile pages)
  *
- * The Supabase SSR function already handles regular browsers via a JS redirect,
- * so serving SSR HTML to everyone on these routes is safe.
+ * Regular browsers always fall through to the React SPA via context.next().
+ * Serving SSR HTML to browsers caused an infinite reload loop because the
+ * embedded `window.location.href` redirect pointed back to the same URL.
  */
 
 const SUPABASE_FUNCTION_URL = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/ssr-seo';
@@ -51,11 +54,11 @@ export default async (request, context) => {
   const userAgent = request.headers.get('User-Agent') || '';
   const isBot = BOT_UA_PATTERN.test(userAgent);
 
-  // Root path: only bots need SSR (for OG meta tags).
-  // Regular browsers visiting / would receive the SSR HTML which contains
-  // `window.location.href = 'https://dehub.io/'` — a self-redirect that creates
-  // an infinite reload loop. Let browsers fall through to the React SPA.
-  if (pathname === '/' && !isBot) {
+  // Non-bots (regular browsers) always get the React SPA directly.
+  // The SSR HTML contains `window.location.href = '<same-url>'` for non-bots,
+  // which causes an infinite reload loop on every route (/, /app/communities/x,
+  // /app/post/x, /username, etc.). The React SPA handles all routing itself.
+  if (!isBot) {
     return context.next();
   }
 
