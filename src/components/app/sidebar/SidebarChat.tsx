@@ -47,7 +47,7 @@ function SidebarAvatar({ src, address, name }: { src?: string | null; address?: 
 
 /** Sidebar chat badge */
 function SidebarChatBadge({ badgeBalance, username }: { badgeBalance?: number | null; username?: string | null }) {
-  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] ml-0.5" />;
+  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] absolute -top-0.5 -right-0" />;
 }
 
 /** Compact reaction pills for sidebar */
@@ -268,9 +268,11 @@ export function SidebarChat() {
                       <SidebarAvatar src={avatarUrl} address={msg.sender_address} name={name} />
                     </button>
                     <div className="min-w-0 flex-1">
-                      <span className="relative inline-flex items-baseline gap-1.5">
-                        <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>{name}</button>
-                        <SidebarChatBadge badgeBalance={msg.sender_badge_balance} username={msg.sender_username} />
+                      <span className="inline-flex items-baseline gap-1.5">
+                        <span className="relative inline-flex items-baseline shrink min-w-0 pr-3">
+                          <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white truncate ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>{name}</button>
+                          <SidebarChatBadge badgeBalance={msg.sender_badge_balance} username={msg.sender_username} />
+                        </span>
                         <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
                       </span>
                       {msg.message_type === 'image' && msg.image_url ? (

@@ -104,7 +104,7 @@ function ModeratorBadge({ address, moderators }: { address: string; moderators?:
 
 /** Inline staking badge for chat messages */
 function StakingBadgeInline({ badgeBalance, username }: { badgeBalance?: number | null; username?: string }) {
-  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] ml-1" />;
+  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[9px] h-[9px] absolute -top-0.5 -right-0" />;
 }
 
 /** Reaction pills displayed below a message */
@@ -256,11 +256,11 @@ export function ChatMessage({
         )}
 
         <div className="flex items-baseline gap-2">
-          <span className="relative inline-flex items-baseline">
+          <span className="relative inline-flex items-baseline shrink min-w-0 pr-3">
             <button
               onClick={handleProfileClick}
               disabled={!isClickable}
-              className={`font-semibold text-white text-sm ${isClickable ? 'hover:underline cursor-pointer' : 'cursor-default'}`}
+              className={`font-semibold text-white text-sm truncate ${isClickable ? 'hover:underline cursor-pointer' : 'cursor-default'}`}
             >
               {message.userName}
             </button>
