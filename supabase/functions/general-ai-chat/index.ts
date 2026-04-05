@@ -717,7 +717,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext, dehubToken } = await req.json() as { 
+    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext, dehubToken, stream: streamRequested = false } = await req.json() as { 
       messages: Message[]; 
       style?: string;
       postContext?: PostContext;
@@ -749,6 +749,7 @@ serve(async (req) => {
         }>;
       };
       dehubToken?: string;
+      stream?: boolean;
     };
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
@@ -1286,6 +1287,7 @@ IMPORTANT FORMATTING RULES:
           model: modelName,
           messages: apiMessages,
           max_completion_tokens: (requiresPostAnalysis(userQuery) || requiresOtherUserLookup(userQuery)) ? 3000 : 1500,
+          ...(streamRequested ? { stream: true } : {}),
         }),
         signal: controller.signal,
       });
@@ -1332,14 +1334,76 @@ IMPORTANT FORMATTING RULES:
       );
     }
 
+    // ── STREAMING PATH ──────────────────────────────────────────
+    if (streamRequested && response.body) {
+      console.log('[Streaming] Passing through SSE stream to client');
+
+      // We need to collect the full response for memory extraction
+      // We'll use a TransformStream to tee the content
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let fullContent = '';
+
+      const stream = new ReadableStream({
+        async pull(controller) {
+          const { done, value } = await reader.read();
+          if (done) {
+            // Send metadata as final SSE event before [DONE]
+            const metaEvent = `data: ${JSON.stringify({
+              choices: [{ delta: {} }],
+              __meta: {
+                modelUsed: modelName,
+                modelTier,
+                modelReason,
+                fallbackUsed,
+              }
+            })}\n\n`;
+            controller.enqueue(new TextEncoder().encode(metaEvent));
+            controller.close();
+
+            // Fire-and-forget: extract memories
+            if (userContext?.walletAddress && messages.length >= 3 && fullContent) {
+              const userMsgs = messages
+                .filter((m: Message) => m.role === 'user')
+                .map((m: Message) => typeof m.content === 'string' ? m.content : (m.content as any)?.find((c: any) => c.type === 'text')?.text || '');
+              extractAndSaveMemories(userContext.walletAddress, userMsgs, fullContent).catch(e =>
+                console.error('[Memory] Background extraction error:', e)
+              );
+            }
+            return;
+          }
+
+          // Collect content for memory extraction
+          const text = decoder.decode(value, { stream: true });
+          const lines = text.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('data: ') && line.trim() !== 'data: [DONE]') {
+              try {
+                const parsed = JSON.parse(line.slice(6));
+                const content = parsed.choices?.[0]?.delta?.content;
+                if (content) fullContent += content;
+              } catch { /* partial JSON, ignore */ }
+            }
+          }
+
+          controller.enqueue(value);
+        },
+      });
+
+      return new Response(stream, {
+        headers: { ...corsHeaders, 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' },
+      });
+    }
+
+    // ── NON-STREAMING PATH (existing) ───────────────────────────
     const data = await response.json();
     const aiResponse = data.choices?.[0]?.message?.content || 'I apologize, I couldn\'t generate a response.';
 
     // Fire-and-forget: extract memories from this conversation
     if (userContext?.walletAddress && messages.length >= 3) {
       const userMsgs = messages
-        .filter(m => m.role === 'user')
-        .map(m => typeof m.content === 'string' ? m.content : m.content?.find(c => c.type === 'text')?.text || '');
+        .filter((m: Message) => m.role === 'user')
+        .map((m: Message) => typeof m.content === 'string' ? m.content : (m.content as any)?.find((c: any) => c.type === 'text')?.text || '');
       extractAndSaveMemories(userContext.walletAddress, userMsgs, aiResponse).catch(e => 
         console.error('[Memory] Background extraction error:', e)
       );
