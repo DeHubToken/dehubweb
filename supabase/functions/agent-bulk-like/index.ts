@@ -64,7 +64,8 @@ Deno.serve(async (req) => {
   try {
     const url = new URL(req.url);
     const startPage = parseInt(url.searchParams.get("page") || "1");
-    const specificTokenId = url.searchParams.get("tokenId"); // like a specific post
+    const feedLimit = parseInt(url.searchParams.get("limit") || "5");
+    const specificTokenId = url.searchParams.get("tokenId");
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
