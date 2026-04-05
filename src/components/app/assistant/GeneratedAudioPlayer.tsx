@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { Download, Pause, Play } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import { decodeAudioWaveform } from '@/components/app/audio/visualizer-styles';
@@ -99,7 +99,7 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
     audio.pause();
   };
 
-  const handleWaveformSeek = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleWaveformSeek = (event: MouseEvent<HTMLButtonElement>) => {
     if (!duration) return;
 
     const bounds = event.currentTarget.getBoundingClientRect();
