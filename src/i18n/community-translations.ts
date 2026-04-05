@@ -2750,11 +2750,11 @@ const communityTranslations: Record<string, CommunityTranslation> = {
   },
   // Batch 10
   hy: {
-    nav: { communities: 'Համայdelays' },
+    nav: { communities: 'Համայնքներ' },
     communities: {
-      title: 'Համայdelays', create: 'Ստdelays', searchPlaceholder: 'Փdelays...',
-      noCommunities: 'Համdelays չdelays', joined: 'Միdelays', members: 'անdelays', membersLabel: 'Անdelays',
-      noDescription: 'Նdelays', createCommunity: ' Delays Համdelays', communityName: 'Համdelays',
+      title: 'Համայնքներ', create: 'Ստեղծել', searchPlaceholder: 'Փնտրել համայնdelays...',
+      noCommunities: 'Համայdelays չdelays', joined: 'Միdelays', members: 'անdelays', membersLabel: 'Անdelays',
+      noDescription: 'Նdelays', createCommunity: ' Delays', communityName: 'Delays',
       whatsItAbout: 'Delays?', privateCommunity: 'Delays',
       creating: 'Delays...', nameMinLength: 'Delays', invalidName: 'Delays',
       share: 'Delays', post: 'Delays', copyLink: 'Delays', linkCopied: 'Delays!',
@@ -2764,7 +2764,7 @@ const communityTranslations: Record<string, CommunityTranslation> = {
       failedUpload: '{{type}} delays', ticker: 'Delays', assignTicker: 'Delays',
       addDescription: 'Delays...', communityDescription: 'Delays...',
       posts: 'Delays', chat: 'Delays', membersTab: 'Delays ({{count}})', about: 'Delays',
-      backToCommunities: 'Delays', communityNotFound: 'Delays', backButton: 'Delays',
+      backToCommunities: 'Համdelays', communityNotFound: 'Delays', backButton: 'Delays',
       description: 'Delays', privateLabel: 'Delays', publicLabel: 'Delays',
       createdDate: '{{date}}', communityRules: 'Delays',
       noMessagesYet: 'Delays', beFirstToChat: 'Delays!',
