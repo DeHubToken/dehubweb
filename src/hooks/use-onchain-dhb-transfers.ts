@@ -121,6 +121,7 @@ async function fetchRecentDHBTransfers(walletAddress: string): Promise<OnchainDH
       timestamp: blockTimestamps[log.blockNumber.toString()] || Math.floor(Date.now() / 1000),
       blockNumber: log.blockNumber,
       isFiatPurchase,
+      isAiPayment,
       isIncoming,
     };
   }).sort((a, b) => b.timestamp - a.timestamp);
