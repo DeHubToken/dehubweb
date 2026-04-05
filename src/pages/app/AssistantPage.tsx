@@ -46,6 +46,7 @@ import { AuthPrompt } from '@/components/app/AuthPrompt';
 import { AuthGate } from '@/components/app/AuthGate';
 import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
 import { ConversationHistoryDrawer } from '@/components/app/assistant/ConversationHistoryDrawer';
+import { GeneratedAudioPlayer } from '@/components/app/assistant/GeneratedAudioPlayer';
 import { SwapActionCard } from '@/components/app/chat/SwapActionCard';
 import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
@@ -1676,27 +1677,13 @@ export default function AssistantPage() {
                     )}
                     {message.role === 'assistant' && message.audioUrl ? (
                       /* Audio messages (music/TTS) */
-                      <div className="max-w-[85%] flex flex-col gap-2">
+                      <div className="w-full min-w-0 flex-1 flex flex-col gap-2">
                         {message.content && (
-                          <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
+                          <div className="rounded-2xl border border-border/60 bg-card/60 px-4 py-2.5 text-card-foreground backdrop-blur-xl">
                             <MarkdownText content={message.content} className="text-sm" />
                           </div>
                         )}
-                        <div className="bg-white/10 rounded-2xl p-3">
-                          <audio src={message.audioUrl} controls className="w-full" />
-                          <div className="flex items-center gap-2 mt-2">
-                            <a
-                              href={message.audioUrl}
-                              download="dehub-audio.mp3"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-white bg-white/10 hover:bg-white/20 transition-colors"
-                            >
-                              <Download className="w-3.5 h-3.5" />
-                              Download
-                            </a>
-                          </div>
-                        </div>
+                        <GeneratedAudioPlayer audioUrl={message.audioUrl} />
                       </div>
                     ) : message.role === 'assistant' && message.isToolProcessing ? (
                       /* AI tool processing placeholder */
