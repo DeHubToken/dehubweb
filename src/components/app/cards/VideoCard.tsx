@@ -388,14 +388,16 @@ function ExpandableDescription({ description: rawDescription, isImmersive }: Exp
   const [needsExpansion, setNeedsExpansion] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Check if text overflows (needs expansion) after render
+  // Check overflow via ResizeObserver to avoid forced reflow from direct scrollHeight reads
   useEffect(() => {
-    if (isImmersive && containerRef.current) {
-      const el = containerRef.current;
-      // Compare scrollHeight with clientHeight to detect overflow
+    if (!isImmersive || !containerRef.current) return;
+    const el = containerRef.current;
+    const ro = new ResizeObserver(() => {
       setNeedsExpansion(el.scrollHeight > el.clientHeight);
-    }
-  }, [description, isImmersive]);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [isImmersive, description]);
 
   if (!isImmersive) {
     // Non-immersive: simple 1-line truncation

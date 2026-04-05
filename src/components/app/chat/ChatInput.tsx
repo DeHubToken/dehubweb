@@ -238,10 +238,12 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             const val = e.target.value;
             setMessage(val);
             mention.handleInput(val, e.target.selectionStart);
-            // Auto-resize
+            // Auto-resize — deferred to avoid forced synchronous reflow
             const ta = e.target;
-            ta.style.height = 'auto';
-            ta.style.height = `${Math.min(ta.scrollHeight, 128)}px`;
+            requestAnimationFrame(() => {
+              ta.style.height = 'auto';
+              ta.style.height = `${Math.min(ta.scrollHeight, 128)}px`;
+            });
           }}
           onKeyDown={handleKeyDown}
           className="min-h-[40px] max-h-32 resize-none bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0"

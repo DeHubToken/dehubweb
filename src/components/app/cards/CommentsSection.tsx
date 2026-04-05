@@ -1344,9 +1344,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                   onInput={(e) => {
                     if (!isInputExpanded) return;
                     const target = e.target as HTMLTextAreaElement;
-                    target.style.height = 'auto';
                     const maxHeight = isMobile ? 144 : 160;
-                    target.style.height = Math.min(target.scrollHeight, maxHeight) + 'px';
+                    requestAnimationFrame(() => {
+                      target.style.height = 'auto';
+                      target.style.height = Math.min(target.scrollHeight, maxHeight) + 'px';
+                    });
                   }}
                 />
                 <UserMentionDropdown

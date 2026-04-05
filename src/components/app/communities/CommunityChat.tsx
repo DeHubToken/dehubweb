@@ -395,8 +395,10 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                   setNewMessage(processed);
                 }
                 const ta = e.target;
-                ta.style.height = 'auto';
-                ta.style.height = `${Math.min(ta.scrollHeight, 128)}px`;
+                requestAnimationFrame(() => {
+                  ta.style.height = 'auto';
+                  ta.style.height = `${Math.min(ta.scrollHeight, 128)}px`;
+                });
               }}
               onKeyDown={handleKeyDown}
               maxLength={500}

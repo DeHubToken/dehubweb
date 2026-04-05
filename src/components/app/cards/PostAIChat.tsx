@@ -406,10 +406,12 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
               if (!isRecording) {
                 setInput(e.target.value);
                 // Auto-resize
-                e.target.style.height = 'auto';
-                const maxHeight = window.innerHeight * 0.3;
-                const newHeight = Math.min(e.target.scrollHeight, maxHeight);
-                e.target.style.height = `${newHeight}px`;
+                const t = e.target;
+                requestAnimationFrame(() => {
+                  t.style.height = 'auto';
+                  const maxHeight = window.innerHeight * 0.3;
+                  t.style.height = `${Math.min(t.scrollHeight, maxHeight)}px`;
+                });
               }
             }}
             onKeyDown={handleKeyDown}

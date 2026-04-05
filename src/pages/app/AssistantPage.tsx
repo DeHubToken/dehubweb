@@ -1913,10 +1913,12 @@ export default function AssistantPage() {
                       const newValue = e.target.value;
                       setInput(newValue);
                       mention.handleInput(newValue, e.target.selectionStart);
-                      e.target.style.height = 'auto';
-                      const maxHeight = window.innerHeight * 0.45;
-                      const newHeight = Math.min(e.target.scrollHeight, maxHeight);
-                      e.target.style.height = `${newHeight}px`;
+                      const t = e.target;
+                      requestAnimationFrame(() => {
+                        t.style.height = 'auto';
+                        const maxHeight = window.innerHeight * 0.45;
+                        t.style.height = `${Math.min(t.scrollHeight, maxHeight)}px`;
+                      });
                     }
                   }}
                   onKeyDown={(e) => {

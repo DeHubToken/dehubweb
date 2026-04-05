@@ -390,10 +390,12 @@ export function SidebarChat() {
                 setNewMessage(processed);
                 mention.handleInput(processed, e.target.selectionStart);
               }
-              // Auto-resize
+              // Auto-resize — deferred to avoid forced synchronous reflow
               const ta = e.target;
-              ta.style.height = 'auto';
-              ta.style.height = `${Math.min(ta.scrollHeight, 128)}px`;
+              requestAnimationFrame(() => {
+                ta.style.height = 'auto';
+                ta.style.height = `${Math.min(ta.scrollHeight, 128)}px`;
+              });
             }}
             onKeyDown={handleKeyDown}
             maxLength={169}
