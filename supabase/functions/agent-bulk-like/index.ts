@@ -102,7 +102,7 @@ Deno.serve(async (req) => {
       logs.push(`🎯 Targeting specific post: ${specificTokenId}`);
     } else {
       // Fetch posts from feed page
-      const feedRes = await fetch(`${DEHUB_API}/api/feed?page=${startPage}&limit=5`, {
+      const feedRes = await fetch(`${DEHUB_API}/api/feed?page=${startPage}&limit=${feedLimit}`, {
         headers: { Authorization: `Bearer ${authedAgents[0].token}` },
       });
       if (feedRes.ok) {
