@@ -34,7 +34,10 @@ interface DeHubNFT {
     thumbnail_url?: string;
     postType?: string;
     minterUsername?: string;
+    mintername?: string;
     minterDisplayName?: string;
+    minterAvatarUrl?: string;
+    minterUser?: DeHubUser;
 }
 
 function getExtension(path: string): string {
@@ -345,7 +348,7 @@ serve(async (req) => {
             const nft: DeHubNFT = nftData.result || nftData;
 
             if (nft) {
-                const posterName = nft.minterDisplayName || nft.minterUsername || "someone";
+                const posterName = nft.minterDisplayName || nft.mintername || nft.minterUsername || "someone";
                 const title = nft.title || nft.name || `Post by ${posterName} on DeHub`;
                 const description = `View this post by ${posterName} on DeHub` + (nft.description ? ` — ${nft.description}` : "");
                 const postUrl = `${APP_URL}/app/post/${postId}`;
@@ -363,20 +366,9 @@ serve(async (req) => {
                     if (builtImage) {
                         postImage = builtImage;
                     } else {
-                        // No post image — fall back to minter's profile picture
-                        const minterUsername = nft.minterUsername;
-                        if (minterUsername) {
-                            try {
-                                const minterResp = await fetch(`${DEHUB_API_BASE}/api/account_info/${minterUsername}`);
-                                const minterData = await minterResp.json();
-                                const minter: DeHubUser = minterData.result || minterData;
-                                postImage = buildAvatarUrl(minter);
-                            } catch {
-                                postImage = DEHUB_LOGO;
-                            }
-                        } else {
-                            postImage = DEHUB_LOGO;
-                        }
+                        // No post image — use minterUser data already present in NFT response
+                        const minter = nft.minterUser;
+                        postImage = minter ? buildAvatarUrl(minter) : DEHUB_LOGO;
                     }
                 }
 
