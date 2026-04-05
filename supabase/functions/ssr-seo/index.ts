@@ -382,10 +382,10 @@ serve(async (req) => {
 
             if (community) {
                 const communityUrl = `${APP_URL}/app/communities/${community.slug}`;
-                // Prefer banner (landscape) for summary_large_image, fall back to avatar
-                const ogImage = community.banner_url || community.avatar_url || DEHUB_LOGO;
-                const hasRealImage = !!(community.banner_url || community.avatar_url);
-                const twitterCard = community.banner_url ? "summary_large_image" : "summary";
+                // Use avatar (profile image) for community OG card
+                const ogImage = community.avatar_url || DEHUB_LOGO;
+                const hasRealImage = !!community.avatar_url;
+                const twitterCard = "summary";
                 const title = `Join ${community.name}'s community on DeHub today`;
                 const memberText = community.member_count > 0 ? ` • ${community.member_count} members` : "";
                 const description = community.description
@@ -399,8 +399,8 @@ serve(async (req) => {
                     url: communityUrl,
                     type: "website",
                     twitterCard,
-                    imageWidth: community.banner_url ? 1200 : 400,
-                    imageHeight: community.banner_url ? 630 : 400,
+                    imageWidth: 400,
+                    imageHeight: 400,
                     functionBaseUrl,
                     isBot,
                     jsonLd: {
