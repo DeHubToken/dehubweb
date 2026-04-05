@@ -151,7 +151,7 @@ async function falQueueSubmit(
   falKey: string,
   appId: string,
   input: Record<string, unknown>,
-): Promise<{ request_id: string }> {
+): Promise<{ request_id: string; status_url?: string; response_url?: string }> {
   const res = await fetch(`https://queue.fal.run/${appId}`, {
     method: 'POST',
     headers: {
@@ -169,13 +169,11 @@ async function falQueueSubmit(
 
 async function falQueueStatus(
   falKey: string,
-  appId: string,
-  requestId: string,
+  statusUrl: string,
 ): Promise<{ status: string }> {
-  const res = await fetch(
-    `https://queue.fal.run/${appId}/requests/${requestId}/status`,
-    { headers: { Authorization: `Key ${falKey}` } },
-  );
+  const res = await fetch(statusUrl, {
+    headers: { Authorization: `Key ${falKey}` },
+  });
   if (!res.ok) {
     const text = await res.text();
     throw new Error(`fal.ai status error (${res.status}): ${text}`);
@@ -185,13 +183,11 @@ async function falQueueStatus(
 
 async function falQueueResult(
   falKey: string,
-  appId: string,
-  requestId: string,
+  responseUrl: string,
 ): Promise<Record<string, unknown>> {
-  const res = await fetch(
-    `https://queue.fal.run/${appId}/requests/${requestId}`,
-    { headers: { Authorization: `Key ${falKey}` } },
-  );
+  const res = await fetch(responseUrl, {
+    headers: { Authorization: `Key ${falKey}` },
+  });
   if (!res.ok) {
     const text = await res.text();
     throw new Error(`fal.ai result error (${res.status}): ${text}`);
