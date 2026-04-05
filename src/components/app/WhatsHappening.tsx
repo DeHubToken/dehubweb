@@ -302,7 +302,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
           )}
         >
           {/* Period tabs */}
-          <div className="flex mb-2">
+          <div className="flex mb-2 sticky top-0 z-20 bg-black/90 backdrop-blur-sm">
             {TICKER_PERIODS.map(p => (
               <button
                 key={p.value}
