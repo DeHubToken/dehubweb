@@ -38,15 +38,15 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
 
-    <!-- Preconnect: max 4, only the highest-impact origins (Lighthouse recommendations) -->
+    <!-- Preconnect: max 4, highest-impact origins (Lighthouse candidates sorted by est LCP savings) -->
+    <link rel="preconnect" href="https://api.web3auth.io">
     <link rel="preconnect" href="https://api.dehub.io">
-    <link rel="preconnect" href="https://aigxuutjaqsywioxjefr.supabase.co">
+    <link rel="preconnect" href="https://pulse.walletconnect.org">
     <link rel="preconnect" href="https://api.web3modal.org">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- DNS prefetch for secondary origins (cheaper than preconnect, no connection kept open) -->
+    <!-- DNS prefetch for secondary origins (cheaper, no open connection kept alive) -->
+    <link rel="dns-prefetch" href="https://aigxuutjaqsywioxjefr.supabase.co">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://pulse.walletconnect.org">
-    <link rel="dns-prefetch" href="https://api.web3auth.io">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
     <!-- LCP: header logo — same URL as DesktopSidebar / MobileHeader so browser discovers early -->
     <link rel="preload" as="image" href="/dehub-header-logo.png" fetchpriority="high">

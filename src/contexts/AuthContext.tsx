@@ -299,16 +299,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Exception: returning Web3Auth users on mobile need it for session refresh.
       const savedConnectionSource = localStorage.getItem('dehub_connection_source');
       const hasValidSession = getAuthToken() && !isTokenExpired();
+      // Delay Web3Auth pre-warm until browser is idle (or 5s max) so it doesn't compete
+      // with LCP resources. auth.web3auth.io loads ~1.7MB of assets on init.
+      const schedulePreWarm = (cb: () => void, timeout: number) => {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(cb, { timeout });
+        } else {
+          setTimeout(cb, timeout);
+        }
+      };
+
       if (!isMobileDevice()) {
-        console.log('[Auth] Pre-warming Web3Auth (Desktop)...');
-        initWeb3Auth()
-          .then((instance) => setWeb3auth(instance))
-          .catch((err) => console.warn('Web3Auth pre-init failed:', err));
+        schedulePreWarm(() => {
+          console.log('[Auth] Pre-warming Web3Auth (Desktop, idle)...');
+          initWeb3Auth()
+            .then((instance) => setWeb3auth(instance))
+            .catch((err) => console.warn('Web3Auth pre-init failed:', err));
+        }, 5000);
       } else if (savedConnectionSource === 'web3auth' && hasValidSession) {
-        console.log('[Auth] Pre-warming Web3Auth (Mobile - returning social login user)...');
-        initWeb3Auth()
-          .then((instance) => setWeb3auth(instance))
-          .catch((err) => console.warn('Web3Auth mobile pre-init failed:', err));
+        schedulePreWarm(() => {
+          console.log('[Auth] Pre-warming Web3Auth (Mobile - returning social login user)...');
+          initWeb3Auth()
+            .then((instance) => setWeb3auth(instance))
+            .catch((err) => console.warn('Web3Auth mobile pre-init failed:', err));
+        }, 5000);
       }
 
       // Check if this is a redirect return from Web3Auth (mobile email/SMS login)

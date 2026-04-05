@@ -13,27 +13,21 @@ import { useRadioPlayer } from '@/hooks';
 import type { RadioStation } from '@/lib/api/radio-browser';
 import { getCountryFlag, getPrimaryTags, formatBitrate } from '@/lib/api/radio-browser';
 
-// Custom station logos
-import reyfmLogo from '@/assets/radio/reyfm-logo.png';
-import lofi247Logo from '@/assets/radio/lofi247-logo.png';
-import moewifiLogo from '@/assets/radio/moewifi-logo.png';
-import niaLofiLogo from '@/assets/radio/nia-lofi-logo.png';
-import nightwavePlazaLogo from '@/assets/radio/nightwave-plaza-logo.png';
-
-// Map station name patterns to custom logos
+// Radio station logos — served from /public/radio/ so they are NOT bundled into JS
+// and only fetched by the browser when an <img> renders them (lazy by default).
 const CUSTOM_LOGOS: Record<string, string> = {
-  'reyfm': reyfmLogo,
-  'rey fm': reyfmLogo,
-  'lofi 24': lofi247Logo,
-  'lofi girl': lofi247Logo,
-  'lofi hip hop': lofi247Logo,
-  'moe wifi': moewifiLogo,
-  'moewifi': moewifiLogo,
-  'moe lofi': moewifiLogo,
-  'nia radio': niaLofiLogo,
-  'nia lofi': niaLofiLogo,
-  'nightwave plaza': nightwavePlazaLogo,
-  'nightwave': nightwavePlazaLogo,
+  'reyfm': '/radio/reyfm-logo.png',
+  'rey fm': '/radio/reyfm-logo.png',
+  'lofi 24': '/radio/lofi247-logo.png',
+  'lofi girl': '/radio/lofi247-logo.png',
+  'lofi hip hop': '/radio/lofi247-logo.png',
+  'moe wifi': '/radio/moewifi-logo.png',
+  'moewifi': '/radio/moewifi-logo.png',
+  'moe lofi': '/radio/moewifi-logo.png',
+  'nia radio': '/radio/nia-lofi-logo.png',
+  'nia lofi': '/radio/nia-lofi-logo.png',
+  'nightwave plaza': '/radio/nightwave-plaza-logo.png',
+  'nightwave': '/radio/nightwave-plaza-logo.png',
 };
 
 function getCustomLogo(stationName: string): string | null {
@@ -84,10 +78,11 @@ export function RadioStationCard({ station }: RadioStationCardProps) {
       {/* Station Logo */}
       <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden flex-shrink-0 bg-zinc-800">
         {logoSrc ? (
-          <img 
-            src={logoSrc} 
+          <img
+            src={logoSrc}
             alt={station.name}
             className="w-full h-full object-cover"
+            loading="lazy"
             onError={(e) => {
               (e.target as HTMLImageElement).style.display = 'none';
               (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
