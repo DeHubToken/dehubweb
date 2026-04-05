@@ -51,6 +51,14 @@ export default async (request, context) => {
   const userAgent = request.headers.get('User-Agent') || '';
   const isBot = BOT_UA_PATTERN.test(userAgent);
 
+  // Root path: only bots need SSR (for OG meta tags).
+  // Regular browsers visiting / would receive the SSR HTML which contains
+  // `window.location.href = 'https://dehub.io/'` — a self-redirect that creates
+  // an infinite reload loop. Let browsers fall through to the React SPA.
+  if (pathname === '/' && !isBot) {
+    return context.next();
+  }
+
   const ssrUrl = `${SUPABASE_FUNCTION_URL}?path=${encodeURIComponent(pathname)}&original_url=${encodeURIComponent(request.url)}`;
 
   try {
