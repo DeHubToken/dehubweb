@@ -15,6 +15,8 @@ export interface VideoModel {
   baseCostUsd: number;
   /** Whether the model supports native audio generation */
   hasAudio?: boolean;
+  /** Provider for the model (defaults to 'replicate') */
+  provider?: 'replicate' | 'fal';
 }
 
 /**
@@ -100,6 +102,18 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     emoji: '🌊',
     baseCostUsd: 0.65,
     hasAudio: true,
+  },
+  'seedance-2.0': {
+    id: 'seedance-2.0',
+    name: 'Seedance 2.0',
+    description: 'Latest ByteDance model, superior quality & audio',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '4-12s',
+    tier: 'premium',
+    emoji: '🌊',
+    baseCostUsd: 0.70,
+    hasAudio: true,
+    provider: 'fal',
   },
 };
 
