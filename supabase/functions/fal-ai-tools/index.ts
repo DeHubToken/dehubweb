@@ -32,17 +32,16 @@ const TOOLS: Record<string, ToolConfig> = {
     }),
   },
   'ace-step': {
-    appId: 'fal-ai/ace-step/prompt-to-audio',
+    appId: 'fal-ai/ace-step',
     name: 'ACE-Step',
     async: true,
     buildInput: (p) => ({
-      prompt: p.prompt || '',
-      lyrics: p.lyrics || '',
-      duration: p.duration || 60,
+      lyrics: p.lyrics || p.prompt || '',
       ...(p.tags && { tags: p.tags }),
+      ...(p.duration && { duration: p.duration }),
     }),
     extractResult: (d) => ({
-      audioUrl: (d.audio_file as Record<string, unknown>)?.url || (d.audio as Record<string, unknown>)?.url,
+      audioUrl: (d.audio as Record<string, unknown>)?.url || (d.audio_file as Record<string, unknown>)?.url,
     }),
   },
 
