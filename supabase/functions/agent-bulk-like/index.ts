@@ -19,7 +19,8 @@ async function authenticateAgent(
     const wallet = new ethers.Wallet(privateKey);
     const address = wallet.address.toLowerCase();
     const timestamp = Math.floor(Date.now() / 1000);
-    const message = `Sign this message to verify your wallet ownership.\n\nTimestamp: ${timestamp}\nValid for: 24 hours`;
+    const displayedDate = new Date(timestamp * 1000);
+    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${address}.\nIt is ${displayedDate.toUTCString()}.`;
     const signature = await wallet.signMessage(message);
 
     const res = await fetch(`${DEHUB_API}/api/web/auth`, {
