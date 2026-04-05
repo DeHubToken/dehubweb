@@ -76,9 +76,14 @@ interface Message {
   content: string;
   imageUrl?: string;       // For generated/edited images in responses
   videoUrl?: string;       // For generated videos
+  audioUrl?: string;       // For generated audio (music/TTS)
   attachedImage?: string;  // For user-attached images to edit
   isVideoGenerating?: boolean;
   videoPredictionId?: string;
+  isToolProcessing?: boolean;   // For async AI tool processing
+  toolRequestId?: string;       // fal.ai request ID for polling
+  toolAppId?: string;           // fal.ai app ID for polling
+  toolType?: string;            // tool identifier
   isSimulation?: boolean;  // For transaction simulations
   simulationType?: 'transfer' | 'purchase';
   simulationData?: SimulationData;
