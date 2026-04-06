@@ -118,7 +118,7 @@ export function AiToolPaywallModal({
       const chainConfig = getChainConfig(payChainId);
       await switchChain(payChainId);
 
-      toast.loading(dhbText('Processing DHB payment...'), { id: 'ai-tool-payment' });
+      toast.loading('Processing payment...', { id: 'ai-tool-payment' });
       const result = await writeContractAA(
         chainConfig.dhbToken,
         erc20TransferInterface,
