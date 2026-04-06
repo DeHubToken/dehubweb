@@ -175,6 +175,13 @@ function requiresVideoGeneration(message: string): boolean {
 
 // ─── AI Tool Keywords ───
 
+const MUSIC_VIDEO_KEYWORDS = [
+  'music video', 'create a music video', 'make a music video', 'generate a music video',
+  'create music video', 'make music video', 'generate music video',
+  'song with video', 'song and video', 'music with video',
+  'video with music', 'mv', 'music clip'
+];
+
 const MUSIC_KEYWORDS = [
   'generate music', 'create music', 'make music', 'compose', 'song',
   'create a song', 'make a song', 'generate a song', 'write a song',
@@ -214,7 +221,8 @@ const STT_KEYWORDS = [
 
 function detectAiToolRequest(message: string, hasImage: boolean): AiToolCategory | null {
   const lower = message.toLowerCase();
-  // Order matters — check more specific patterns first
+  // Order matters — check more specific patterns first (music video before music)
+  if (MUSIC_VIDEO_KEYWORDS.some(k => lower.includes(k))) return 'music-video';
   if (MUSIC_KEYWORDS.some(k => lower.includes(k))) return 'music';
   if (TTS_KEYWORDS.some(k => lower.includes(k))) return 'tts';
   if (STT_KEYWORDS.some(k => lower.includes(k))) return 'speech-to-text';
@@ -225,6 +233,7 @@ function detectAiToolRequest(message: string, hasImage: boolean): AiToolCategory
 
 const DEFAULT_TOOL_FOR_CATEGORY: Record<AiToolCategory, string> = {
   'music': 'minimax-music',
+  'music-video': 'music-video-standard',
   'tts': 'dia-tts',
   'background-removal': 'birefnet',
   'upscale': 'creative-upscaler',
@@ -449,6 +458,8 @@ export default function AssistantPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pollingRef = useRef<Record<string, NodeJS.Timeout>>({});
+  // Track music-video pipeline: when music completes, auto-chain video generation
+  const musicVideoRef = useRef<{ prompt: string; videoModel: string; musicMessageId?: string } | null>(null);
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
   const { isAuthenticated } = useAuth();
@@ -896,8 +907,73 @@ export default function AssistantPage() {
         delete pollingRef.current[requestId];
 
         const toolModel = AI_TOOL_MODELS[toolKey];
-        const category = toolModel?.category;
 
+        // Check if this is part of a music-video pipeline
+        const mvState = musicVideoRef.current;
+        const isMusicVideoPipeline = mvState && mvState.musicMessageId === messageId;
+
+        if (isMusicVideoPipeline && data.audioUrl) {
+          // Music step complete — update message and chain video generation
+          setMessages(prev => prev.map(m => {
+            if (m.id !== messageId) return m;
+            return {
+              ...m,
+              audioUrl: data.audioUrl,
+              content: '🎬 Step 1/2 complete! Music generated.\n\n_Step 2/2: Generating video..._',
+              isToolProcessing: false,
+            };
+          }));
+          toast.success('🎵 Music generated! Now creating video...');
+
+          // Chain video generation
+          try {
+            const { data: videoData, error: videoError } = await supabase.functions.invoke('generate-video', {
+              body: {
+                prompt: mvState.prompt,
+                model: mvState.videoModel,
+                duration: '5s',
+                aspectRatio: '16:9'
+              }
+            });
+
+            if (videoError) throw videoError;
+
+            if (videoData.error) {
+              setMessages(prev => [...prev, {
+                id: (Date.now() + 1).toString(),
+                role: 'assistant',
+                content: `❌ Video generation failed: ${videoData.error}`
+              }]);
+              setIsAiToolProcessing(false);
+              musicVideoRef.current = null;
+              return;
+            }
+
+            // Create video placeholder message
+            const videoMsgId = (Date.now() + 1).toString();
+            setMessages(prev => [...prev, {
+              id: videoMsgId,
+              role: 'assistant',
+              content: `🎬 Step 2/2: Generating video...\n\n_This may take 1-3 minutes_`,
+              isVideoGenerating: true,
+              videoPredictionId: videoData.predictionId,
+            }]);
+
+            pollingRef.current[videoData.predictionId] = setInterval(() => {
+              pollVideoStatus(videoData.predictionId, videoMsgId, videoData.provider, videoData.falAppId);
+            }, 5000);
+
+            musicVideoRef.current = null;
+          } catch (videoErr) {
+            console.error('[Music Video] Video chain error:', videoErr);
+            toast.error('Video generation failed.');
+            setIsAiToolProcessing(false);
+            musicVideoRef.current = null;
+          }
+          return;
+        }
+
+        // Regular (non-music-video) completion
         setMessages(prev => prev.map(m => {
           if (m.id !== messageId) return m;
           const updated: Message = {
@@ -924,11 +1000,12 @@ export default function AssistantPage() {
           m.id === messageId ? { ...m, isToolProcessing: false, content: `❌ Processing failed: ${data.error || 'Unknown error'}` } : m
         ));
         setIsAiToolProcessing(false);
+        musicVideoRef.current = null;
       }
     } catch (err) {
       console.error('[AI Tool] Polling error:', err);
     }
-  }, []);
+  }, [pollVideoStatus]);
 
   const handleAiToolConfirm = async () => {
     if (!pendingAiToolRequest) return;
@@ -939,8 +1016,14 @@ export default function AssistantPage() {
     setAiToolPaywallOpen(false);
     setIsAiToolProcessing(true);
 
+    // Music-video pipeline: generate music first, then chain video
+    const isMusicVideo = category === 'music-video';
+    const musicTool = 'minimax-music'; // Always use MiniMax for music part
+    const videoModel = tool === 'music-video-premium' ? 'seedance-2.0' : 'minimax-video';
+
     try {
-      const body: Record<string, unknown> = { tool, prompt };
+      const actualTool = isMusicVideo ? musicTool : tool;
+      const body: Record<string, unknown> = { tool: actualTool, prompt };
       if (sourceImage) body.image_url = sourceImage;
       if (category === 'tts') body.text = prompt;
 
@@ -979,19 +1062,26 @@ export default function AssistantPage() {
       } else {
         // Async tool — start polling
         const messageId = (Date.now() + 1).toString();
+        const label = isMusicVideo ? 'Music Video' : toolModel.name;
+        const desc = isMusicVideo ? 'Step 1/2: Generating music...' : 'This may take a minute';
         const assistantMessage: Message = {
           id: messageId,
           role: 'assistant',
-          content: `${toolModel.emoji} Processing with **${toolModel.name}**...\n\n_This may take a minute_`,
+          content: `${isMusicVideo ? '🎬' : toolModel.emoji} Processing with **${label}**...\n\n_${desc}_`,
           isToolProcessing: true,
           toolRequestId: data.requestId,
           toolAppId: data.appId,
-          toolType: tool,
+          toolType: isMusicVideo ? musicTool : tool,
         };
         setMessages(prev => [...prev, assistantMessage]);
 
+        // Store music-video pipeline state
+        if (isMusicVideo) {
+          musicVideoRef.current = { prompt, videoModel, musicMessageId: messageId };
+        }
+
         pollingRef.current[data.requestId] = setInterval(() => {
-          pollAiToolStatus(data.requestId, data.appId, messageId, tool, data.statusUrl, data.responseUrl);
+          pollAiToolStatus(data.requestId, data.appId, messageId, isMusicVideo ? musicTool : tool, data.statusUrl, data.responseUrl);
         }, 5000);
       }
     } catch (err) {
@@ -2023,6 +2113,18 @@ export default function AssistantPage() {
                       label="🎵 Create a Song"
                       onClick={() => {
                         setInput('Create a song about ');
+                        inputRef.current?.focus();
+                        setInputGlow(true);
+                        setTimeout(() => setInputGlow(false), 2000);
+                      }}
+                      width="auto"
+                      height="32px"
+                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                    />
+                    <LiquidGlassBubble2
+                      label="🎬 Create Music Video"
+                      onClick={() => {
+                        setInput('Create a music video about ');
                         inputRef.current?.focus();
                         setInputGlow(true);
                         setTimeout(() => setInputGlow(false), 2000);
