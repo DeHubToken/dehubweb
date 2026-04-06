@@ -17,10 +17,14 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
   const [loading, setLoading] = useState<Set<string>>(new Set());
   const [removedUrls, setRemovedUrls] = useState<Set<string>>(new Set());
   const [communityDismissed, setCommunityDismissed] = useState(false);
+  const [eventDismissed, setEventDismissed] = useState(false);
   const fetchedUrls = useRef<Set<string>>(new Set());
 
   // Detect community slug from text
   const communitySlug = communityDismissed ? null : extractCommunitySlug(text);
+  
+  // Detect event ID from text
+  const eventId = eventDismissed ? null : extractEventId(text);
 
   // Reset dismissed state when text changes to a different community or no community
   const prevSlugRef = useRef<string | null>(null);
