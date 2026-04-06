@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 
 export interface CommunityEvent {
   id: string;
+  event_number: number;
   community_id: string | null;
   creator_wallet_address: string;
   creator_username: string | null;
