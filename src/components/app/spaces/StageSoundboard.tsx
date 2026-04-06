@@ -7,7 +7,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Howl } from 'howler';
 import { 
   Music, Volume2, VolumeX, X, Upload, Trash2, Loader2,
-  Megaphone, PartyPopper, Drum, Bug,
+  Megaphone, PartyPopper, Drum, Bug, Laugh,
   ThumbsUp, ThumbsDown, AlertTriangle, Timer, FileAudio
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -37,6 +37,7 @@ const BUILT_IN_EFFECTS: BuiltInEffect[] = [
   { id: 'boo', label: 'Boo', icon: <ThumbsDown className="w-4 h-4" />, frequency: 100, type: 'sawtooth', duration: 600 },
   { id: 'cricket', label: 'Crickets', icon: <Bug className="w-4 h-4" />, frequency: 4000, type: 'sine', duration: 2000 },
   { id: 'countdown', label: 'Countdown', icon: <Timer className="w-4 h-4" />, frequency: 440, type: 'sine', duration: 3000 },
+  { id: 'lol', label: 'LOL', icon: <Laugh className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
 ];
 
 // ---------- Custom sound type ----------
@@ -254,6 +255,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     applause: '/sounds/applause.wav',
     cricket: '/sounds/crickets.wav',
     drumroll: '/sounds/drumroll.wav',
+    lol: '/sounds/lol.wav',
   };
 
   const playBuiltIn = useCallback((effect: BuiltInEffect) => {
