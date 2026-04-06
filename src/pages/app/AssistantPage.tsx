@@ -2445,7 +2445,7 @@ export default function AssistantPage() {
                     <button
                       type="button"
                       onClick={isRecording ? stopRecording : startRecording}
-                      disabled={isLoading}
+                      disabled={isLoading || voiceAssistant.isVoiceMode}
                       className={`transition-colors p-1 disabled:opacity-30 ${
                         isRecording ? 'text-red-500' : 'text-white/60 hover:text-white'
                       }`}
@@ -2459,6 +2459,20 @@ export default function AssistantPage() {
                       )}
                     </button>
                   )}
+                  
+                  {/* Voice Assistant Mode (mobile) */}
+                  <button
+                    type="button"
+                    onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : voiceAssistant.startVoiceMode}
+                    disabled={isLoading && !voiceAssistant.isVoiceMode}
+                    className={`transition-colors p-1 disabled:opacity-30 ${
+                      voiceAssistant.isVoiceMode
+                        ? 'text-cyan-400 animate-pulse'
+                        : 'text-white/60 hover:text-white'
+                    }`}
+                  >
+                    <AudioLines className="w-4 h-4" />
+                  </button>
                   
                   {/* Stop speaking button */}
                   {isSpeaking && (
