@@ -448,6 +448,8 @@ export default function AssistantPage() {
     sourceImage?: string;
     audioUrl?: string;
   } | null>(null);
+  const [musicConfirmOpen, setMusicConfirmOpen] = useState(false);
+  const [pendingMusicPrompt, setPendingMusicPrompt] = useState('');
 
   const [voiceAutoReply, setVoiceAutoReply] = useState(true); // Auto-speak AI replies when using voice
   const [alwaysSpeakReplies, setAlwaysSpeakReplies] = useState(false); // Speak ALL AI replies, not just voice responses
