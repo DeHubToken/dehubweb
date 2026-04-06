@@ -495,6 +495,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
         await agoraClientRef.current.leave();
         agoraClientRef.current = null;
       }
+      // Clean up voice effects
+      voiceEffectsHook.cleanup();
+      setVoiceEffectState('none');
 
       await supabase
         .from('space_participants')

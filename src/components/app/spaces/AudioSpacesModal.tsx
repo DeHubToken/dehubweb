@@ -28,6 +28,7 @@ import { useStage } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { StageSoundboard } from './StageSoundboard';
+import { VoiceEffectSelector } from '@/components/app/stages/VoiceEffectSelector';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
 import { StageReactions, type AvatarReactions } from './StageReactions';
