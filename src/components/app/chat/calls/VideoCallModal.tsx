@@ -61,32 +61,43 @@ const VideoCallModal: React.FC = () => {
             ) : (
               <div className="w-full h-full bg-white/5 backdrop-blur-sm rounded-lg flex items-center justify-center">
                 <div className="text-center">
-                  <LiquidGlassBubble shimmer className="w-24 h-24 !rounded-full mx-auto mb-4">
-                    <div className="w-full h-full flex items-center justify-center">
-                      <Video className="h-8 w-8 text-white" />
-                    </div>
-                  </LiquidGlassBubble>
+                  <div className="w-48 h-36 rounded-xl overflow-hidden border border-white/20 bg-black/40 backdrop-blur-md mx-auto mb-4">
+                    <video
+                      ref={localVideoRef}
+                      autoPlay
+                      playsInline
+                      muted
+                      className={`w-full h-full object-cover ${isCameraOff ? 'hidden' : ''}`}
+                    />
+                    {isCameraOff && (
+                      <div className="w-full h-full bg-white/5 flex items-center justify-center">
+                        <VideoOff className="h-8 w-8 text-white/40" />
+                      </div>
+                    )}
+                  </div>
                   <p className="text-lg font-semibold text-white">{getCallAddress()}</p>
                   {isConnecting && <p className="text-sm text-white/50">Connecting...</p>}
                 </div>
               </div>
             )}
 
-            {/* Local video preview */}
-            <div className="absolute top-4 right-4 w-48 h-36 rounded-xl overflow-hidden border border-white/20 bg-black/40 backdrop-blur-md">
-              <video
-                ref={localVideoRef}
-                autoPlay
-                playsInline
-                muted
-                className={`w-full h-full object-cover ${isCameraOff ? 'hidden' : ''}`}
-              />
-              {isCameraOff && (
-                <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                  <VideoOff className="h-8 w-8 text-white/40" />
-                </div>
-              )}
-            </div>
+            {/* Local video preview (during active call only) */}
+            {isCallActive && (
+              <div className="absolute top-4 right-4 w-48 h-36 rounded-xl overflow-hidden border border-white/20 bg-black/40 backdrop-blur-md">
+                <video
+                  ref={localVideoRef}
+                  autoPlay
+                  playsInline
+                  muted
+                  className={`w-full h-full object-cover ${isCameraOff ? 'hidden' : ''}`}
+                />
+                {isCameraOff && (
+                  <div className="w-full h-full bg-white/5 flex items-center justify-center">
+                    <VideoOff className="h-8 w-8 text-white/40" />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Controls */}
