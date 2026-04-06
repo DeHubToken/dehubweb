@@ -22,7 +22,7 @@ interface CreateEventDrawerProps {
 }
 
 export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEventDrawerProps) {
-  const { walletAddress, profile } = useAuth();
+  const { walletAddress, user } = useAuth();
   const createEvent = useCreateEvent();
   const { t } = useTranslation();
 
@@ -84,8 +84,8 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
         ends_at,
         cover_image_url,
         community_id: communityId,
-        creator_username: (profile as any)?.username ?? undefined,
-        creator_avatar: (profile as any)?.avatar ?? undefined,
+        creator_username: user?.username ?? undefined,
+        creator_avatar: user?.avatar ?? undefined,
       },
       {
         onSuccess: () => {
