@@ -76,8 +76,9 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   const views = formatViews(nft.views || 0).replace(' views', '');
   const title = nft.title || nft.name || '';
   const description = nft.description && nft.description !== title ? nft.description : undefined;
-  const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
-  
+  const rawTimestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
+  const timestamp = rawTimestamp && !/^(just now|\d+[smhdwy]|\d+mo)$/i.test(String(rawTimestamp).trim()) ? rawTimestamp : undefined;
+
   // Detect audio posts
   const postType = (nft as any).postType as string | undefined;
   const rawAudioUrl = (nft as any).audioUrl as string | undefined;
@@ -217,6 +218,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
  * Transform API NFT data to TextPost format
  */
 function toTextPost(nft: DeHubNFT): TextPost {
+  const views = formatViews(nft.views || 0).replace(' views', '');
   const rawTimestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   const timestamp = rawTimestamp && !/^(just now|\d+[smhdwy]|\d+mo)$/i.test(String(rawTimestamp).trim()) ? rawTimestamp : undefined;
   
