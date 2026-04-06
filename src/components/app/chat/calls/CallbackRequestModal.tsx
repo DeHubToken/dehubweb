@@ -72,13 +72,11 @@ const CallbackRequestModal: React.FC<CallbackRequestModalProps> = ({ isOpen, onC
           </div>
 
           <div className="flex gap-2 justify-end">
-            <button
-              onClick={handleClose}
-              disabled={isSubmitting}
-              className="flex-1 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-all border border-white/10 disabled:opacity-40"
-            >
-              Cancel
-            </button>
+            <LiquidGlassBubble shimmer noBorder className="flex-1 cursor-pointer" onClick={isSubmitting ? undefined : handleClose}>
+              <span className="flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-medium">
+                Cancel
+              </span>
+            </LiquidGlassBubble>
             <LiquidGlassBubble shimmer noBorder className="flex-1 cursor-pointer" onClick={isSubmitting ? undefined : handleSubmit}>
               <span className="flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-medium">
                 {callType === 'video' ? <Video className="h-4 w-4" /> : <Phone className="h-4 w-4" />}
