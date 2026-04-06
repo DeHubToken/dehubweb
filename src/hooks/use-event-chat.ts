@@ -50,7 +50,7 @@ export function useEventChat(eventId: string | undefined) {
         .order('created_at', { ascending: true })
         .limit(200);
       if (error) throw error;
-      return (data || []) as EventChatMessage[];
+      return (data || []) as unknown as EventChatMessage[];
     },
     enabled: !!eventId,
     staleTime: 30_000,
