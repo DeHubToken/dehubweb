@@ -343,7 +343,7 @@ export function EventChat({ eventId }: EventChatProps) {
 
       {/* Input */}
       {isAuthenticated ? (
-        <div className="px-1 py-2">
+        <div className="px-2 py-2">
           <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 relative">
             <span className="absolute top-2 right-3 text-[10px] text-zinc-600">{newMessage.length}/500</span>
             <Textarea
