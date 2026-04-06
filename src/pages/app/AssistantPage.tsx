@@ -478,6 +478,17 @@ export default function AssistantPage() {
   const clearPendingTool = useCallback(() => {
     try { localStorage.removeItem(PENDING_TOOL_KEY); } catch {}
   }, []);
+
+  // Persist/restore pending video generation across reloads
+  const PENDING_VIDEO_KEY = 'dehub-pending-video';
+  const savePendingVideo = useCallback((data: {
+    predictionId: string; messageId: string; provider?: string; falAppId?: string; content: string;
+  }) => {
+    try { localStorage.setItem(PENDING_VIDEO_KEY, JSON.stringify(data)); } catch {}
+  }, []);
+  const clearPendingVideo = useCallback(() => {
+    try { localStorage.removeItem(PENDING_VIDEO_KEY); } catch {}
+  }, []);
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
   const { isAuthenticated, walletAddress } = useAuth();
@@ -829,6 +840,36 @@ export default function AssistantPage() {
       }
       console.log('[AI Tool] Restored pending request from localStorage:', pending.requestId);
     } catch {}
+
+    // Restore pending video generation
+    try {
+      const rawVideo = localStorage.getItem(PENDING_VIDEO_KEY);
+      if (rawVideo) {
+        const pending = JSON.parse(rawVideo) as {
+          predictionId: string; messageId: string; provider?: string; falAppId?: string; content: string;
+        };
+        const restoredMsg: Message = {
+          id: pending.messageId,
+          role: 'assistant',
+          content: pending.content || '🎬 Resuming video generation...',
+          isVideoGenerating: true,
+          videoPredictionId: pending.predictionId,
+        };
+        setMessages(prev => {
+          if (prev.some(m => m.id === pending.messageId)) return prev;
+          return [...prev, restoredMsg];
+        });
+        setIsVideoLoading(true);
+
+        if (!pollingRef.current[pending.predictionId]) {
+          pollingRef.current[pending.predictionId] = setInterval(() => {
+            pollVideoStatus(pending.predictionId, pending.messageId, pending.provider, pending.falAppId);
+          }, 5000);
+          pollVideoStatus(pending.predictionId, pending.messageId, pending.provider, pending.falAppId);
+        }
+        console.log('[Video] Restored pending video from localStorage:', pending.predictionId);
+      }
+    } catch {}
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 
@@ -920,6 +961,7 @@ export default function AssistantPage() {
             : m
         ));
         setIsVideoLoading(false);
+        clearPendingVideo();
         toast.success('Video generated!');
       } else if (data.status === 'failed') {
         // Clear polling
@@ -935,13 +977,14 @@ export default function AssistantPage() {
             : m
         ));
         setIsVideoLoading(false);
+        clearPendingVideo();
         toast.error(t('assistant.errorVideoGenFailed'));
       }
       // If still processing, keep polling
     } catch (err) {
       console.error('Polling error:', err);
     }
-  }, []);
+  }, [clearPendingVideo]);
 
   // Handle video generation after payment confirmation
   const handleVideoGenerationConfirm = async () => {
@@ -996,6 +1039,15 @@ export default function AssistantPage() {
       pollingRef.current[data.predictionId] = setInterval(() => {
         pollVideoStatus(data.predictionId, messageId, data.provider, data.falAppId);
       }, 5000);
+
+      // Persist so it survives reloads
+      savePendingVideo({
+        predictionId: data.predictionId,
+        messageId,
+        provider: data.provider,
+        falAppId: data.falAppId,
+        content: `🎬 Generating video with **${videoModel.name}**...\n\n_This may take 1-3 minutes_`,
+      });
 
       toast.success(t('assistant.paymentSuccessGenerating'));
     } catch (err) {
@@ -1149,6 +1201,15 @@ export default function AssistantPage() {
               pollVideoStatus(videoData.predictionId, videoMsgId, videoData.provider, videoData.falAppId);
             }, 5000);
 
+            // Persist video polling for reload recovery
+            savePendingVideo({
+              predictionId: videoData.predictionId,
+              messageId: videoMsgId,
+              provider: videoData.provider,
+              falAppId: videoData.falAppId,
+              content: `🎬 Step 2/2: Generating video...\n\n_This may take 1-3 minutes_`,
+            });
+
             musicVideoRef.current = null;
           } catch (videoErr) {
             console.error('[Music Video] Video chain error:', videoErr);
@@ -1194,7 +1255,7 @@ export default function AssistantPage() {
     } catch (err) {
       console.error('[AI Tool] Polling error:', err);
     }
-  }, [pollVideoStatus, clearPendingTool, queueMessage]);
+  }, [pollVideoStatus, clearPendingTool, clearPendingVideo, savePendingVideo, queueMessage]);
 
   const handleAiToolConfirm = async () => {
     if (!pendingAiToolRequest) return;
