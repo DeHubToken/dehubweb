@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, PhoneOff, Mic, MicOff, Volume2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { useCall } from '@/contexts/CallContext';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { getAccountInfo } from '@/lib/api/dehub/users';
+import { cn } from '@/lib/utils';
 
 const VoiceCallModal: React.FC = () => {
   const {
@@ -53,25 +53,13 @@ const VoiceCallModal: React.FC = () => {
     return null;
   }
 
-  const getCallTitle = () => {
-    if (isIncoming) return 'Incoming Call';
-    if (isConnecting) return 'Connecting...';
-    if (isCallActive) return 'Voice Call Active';
-    return 'Voice Call';
-  };
-
   const displayName = peerName || (peerAddress ? `${peerAddress.slice(0, 6)}...${peerAddress.slice(-4)}` : '');
 
-  return (
-    <Dialog open={isVisible} onOpenChange={() => {}}>
-      <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-white text-center">{getCallTitle()}</DialogTitle>
-          <DialogDescription className="sr-only">
-            Use the controls to accept, mute, or end the call.
-          </DialogDescription>
-        </DialogHeader>
+  const statusText = isIncoming ? 'Incoming call' : isConnecting ? 'Connecting...' : callDuration !== '00:00' ? callDuration : 'Connected';
 
+  return (
+    <Drawer open={isVisible} onOpenChange={() => {}}>
+      <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-t border-white/10 shadow-2xl mx-auto max-w-md">
         <audio
           ref={remoteAudioRef}
           autoPlay
@@ -81,76 +69,74 @@ const VoiceCallModal: React.FC = () => {
           onAbort={() => setAudioNeedsInteraction(true)}
         />
 
-        <div className="flex flex-col items-center space-y-6 py-4" onClick={handleUserInteraction}>
-          <LiquidGlassBubble shimmer className="w-24 h-24 !rounded-full">
+        <div className="flex flex-col items-center gap-3 px-6 pb-6 pt-2" onClick={handleUserInteraction}>
+          {/* Avatar + info */}
+          <LiquidGlassBubble shimmer className="w-16 h-16 !rounded-full">
             <div className="w-full h-full flex items-center justify-center">
-              <Phone className="h-8 w-8 text-white" />
+              <Phone className="h-6 w-6 text-white" />
             </div>
           </LiquidGlassBubble>
 
           <div className="text-center">
-            <p className="text-lg font-semibold text-white">{displayName}</p>
-            {isConnecting && <p className="text-sm text-white/50">Connecting...</p>}
-            {isCallActive && callDuration !== '00:00' && (
-              <p className="text-sm text-white font-medium">{callDuration}</p>
-            )}
+            <p className="text-base font-semibold text-white">{displayName}</p>
+            <p className="text-sm text-white/50">{statusText}</p>
           </div>
 
-          <div className="flex items-center space-x-4">
+          {/* Controls */}
+          <div className="flex items-center gap-4 pt-1">
             {isIncoming ? (
               <>
-                <Button onClick={rejectCall} variant="destructive" size="lg" className="rounded-full w-16 h-16">
+                <button
+                  onClick={rejectCall}
+                  className="rounded-full w-14 h-14 bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
+                >
                   <PhoneOff className="h-6 w-6" />
-                </Button>
-                <Button
-                  onClick={() => {
-                    acceptCall();
-                    handleUserInteraction();
-                  }}
-                  size="lg"
-                  className="rounded-full w-16 h-16 bg-green-600 hover:bg-green-700 text-white"
+                </button>
+                <button
+                  onClick={() => { acceptCall(); handleUserInteraction(); }}
+                  className="rounded-full w-14 h-14 bg-green-600/80 hover:bg-green-600 flex items-center justify-center text-white transition-all"
                 >
                   <Phone className="h-6 w-6" />
-                </Button>
+                </button>
               </>
             ) : (
               <>
                 {isCallActive && (
                   <button
-                    onClick={() => {
-                      toggleMute();
-                      handleUserInteraction();
-                    }}
-                    className={`rounded-full w-12 h-12 flex items-center justify-center transition-all ${
+                    onClick={() => { toggleMute(); handleUserInteraction(); }}
+                    className={cn(
+                      "rounded-full w-12 h-12 flex items-center justify-center transition-all",
                       isMuted
-                        ? 'bg-red-500/80 hover:bg-red-500 text-white'
-                        : 'bg-white/10 hover:bg-white/20 text-white'
-                    }`}
+                        ? "bg-red-500/80 hover:bg-red-500 text-white"
+                        : "bg-white/10 hover:bg-white/20 text-white border border-white/10"
+                    )}
                   >
                     {isMuted ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
                   </button>
                 )}
-                <Button onClick={endCall} variant="destructive" size="lg" className="rounded-full w-16 h-16">
+                <button
+                  onClick={endCall}
+                  className="rounded-full w-14 h-14 bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
+                >
                   <PhoneOff className="h-6 w-6" />
-                </Button>
+                </button>
               </>
             )}
           </div>
 
-          {isCallActive && (
-            <div className="text-center">
-              <p className="text-sm text-white/50">{isMuted ? 'Muted' : 'Unmuted'}</p>
-              {audioNeedsInteraction && (
-                <div className="flex items-center justify-center gap-2 mt-2 p-2 bg-white/10 rounded-lg">
-                  <Volume2 className="h-4 w-4 text-white/60" />
-                  <p className="text-xs text-white/60">Click to enable audio</p>
-                </div>
-              )}
+          {isCallActive && isMuted && (
+            <p className="text-xs text-white/40">Muted</p>
+          )}
+
+          {audioNeedsInteraction && (
+            <div className="flex items-center gap-2 p-2 bg-white/10 rounded-lg">
+              <Volume2 className="h-4 w-4 text-white/60" />
+              <p className="text-xs text-white/60">Tap to enable audio</p>
             </div>
           )}
         </div>
-      </DialogContent>
-    </Dialog>
+      </DrawerContent>
+    </Drawer>
   );
 };
 
