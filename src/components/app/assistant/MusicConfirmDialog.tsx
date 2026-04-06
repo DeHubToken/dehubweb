@@ -4,12 +4,15 @@
  * Pre-generation confirm for music requests.
  * Auto-detects title, lyrics, style, voice gender from the user prompt.
  * Lets user review/edit before confirming.
+ * Includes AI lyrics generation via Lovable AI.
  */
 
 import { useState, useEffect, useCallback } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 export interface MusicParams {
   title: string;
@@ -28,20 +31,16 @@ interface MusicConfirmDialogProps {
 // ─── Smart auto-detection from user prompt ───
 
 function extractTitle(prompt: string): string {
-  // "called X", "titled X", "named X"
   const titleMatch = prompt.match(/(?:called|titled|named)\s+["']?([^"'\n,.]+)["']?/i);
   if (titleMatch) return titleMatch[1].trim();
-  // "title: X" or "title - X"
   const labelMatch = prompt.match(/title\s*[:\-]\s*["']?([^"'\n,.]+)["']?/i);
   if (labelMatch) return labelMatch[1].trim();
   return '';
 }
 
 function extractLyrics(prompt: string): string {
-  // Text after "lyrics:" or "lyrics are:" or "with lyrics"
   const lyricsMatch = prompt.match(/(?:lyrics?\s*(?:are|is)?\s*[:\-]\s*)([\s\S]+)/i);
   if (lyricsMatch) return lyricsMatch[1].trim();
-  // Text inside quotes if long enough (likely lyrics)
   const quotedMatch = prompt.match(/"([^"]{20,})"/);
   if (quotedMatch) return quotedMatch[1].trim();
   return '';
@@ -50,7 +49,6 @@ function extractLyrics(prompt: string): string {
 function extractStyle(prompt: string): string {
   const styleMatch = prompt.match(/(?:style|genre|vibe|mood)\s*[:\-]\s*["']?([^"'\n,.]+)["']?/i);
   if (styleMatch) return styleMatch[1].trim();
-  // Detect common genre keywords
   const genres = ['pop', 'rock', 'hip hop', 'hip-hop', 'rap', 'jazz', 'classical', 'r&b', 'country', 'electronic', 'edm', 'lo-fi', 'lofi', 'reggae', 'metal', 'punk', 'soul', 'funk', 'blues', 'indie', 'folk', 'trap', 'drill', 'afrobeat', 'latin', 'k-pop', 'anime', 'ambient', 'chill', 'upbeat', 'sad', 'romantic', 'dark', 'energetic', 'acoustic', 'synthwave', 'house', 'techno'];
   const lower = prompt.toLowerCase();
   const found = genres.filter(g => lower.includes(g));
@@ -70,8 +68,8 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
   const [lyrics, setLyrics] = useState('');
   const [style, setStyle] = useState('');
   const [voiceGender, setVoiceGender] = useState<'male' | 'female' | 'auto'>('auto');
+  const [isGeneratingLyrics, setIsGeneratingLyrics] = useState(false);
 
-  // Auto-detect fields from prompt when dialog opens
   useEffect(() => {
     if (!open || !userPrompt) return;
     setTitle(extractTitle(userPrompt));
@@ -83,6 +81,34 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
   const handleConfirm = useCallback(() => {
     onConfirm({ title, lyrics, style, voiceGender });
   }, [title, lyrics, style, voiceGender, onConfirm]);
+
+  const handleGenerateLyrics = useCallback(async () => {
+    setIsGeneratingLyrics(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-lyrics', {
+        body: {
+          title,
+          style,
+          voiceGender,
+          existingLyrics: lyrics,
+          userPrompt,
+        },
+      });
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      if (data?.lyrics) {
+        setLyrics(data.lyrics);
+        toast.success('Lyrics generated!');
+      }
+    } catch (err: any) {
+      console.error('Lyrics generation error:', err);
+      toast.error(err?.message || 'Failed to generate lyrics');
+    } finally {
+      setIsGeneratingLyrics(false);
+    }
+  }, [title, style, voiceGender, lyrics, userPrompt]);
 
   const genderOptions: { value: 'male' | 'female' | 'auto'; label: string; emoji: string }[] = [
     { value: 'auto', label: 'Auto', emoji: '🎤' },
@@ -148,9 +174,30 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
 
           {/* Lyrics */}
           <div>
-            <label className="text-xs font-medium text-white/60 mb-1.5 block">
-              Lyrics <span className="text-white/25">(optional — AI writes if blank)</span>
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-medium text-white/60">
+                Lyrics <span className="text-white/25">(optional — AI writes if blank)</span>
+              </label>
+              <button
+                onClick={handleGenerateLyrics}
+                disabled={isGeneratingLyrics}
+                className={cn(
+                  'px-3 py-1 rounded-lg text-[11px] font-semibold border transition-all',
+                  isGeneratingLyrics
+                    ? 'border-white/10 bg-white/5 text-white/30 cursor-not-allowed'
+                    : 'border-white/20 bg-white/10 text-white hover:bg-white/15 hover:border-white/30 active:scale-95'
+                )}
+              >
+                {isGeneratingLyrics ? (
+                  <span className="flex items-center gap-1.5">
+                    <span className="inline-block w-3 h-3 border-2 border-white/30 border-t-white/80 rounded-full animate-spin" />
+                    Writing...
+                  </span>
+                ) : (
+                  '✨ Generate Lyrics'
+                )}
+              </button>
+            </div>
             <textarea
               value={lyrics}
               onChange={(e) => setLyrics(e.target.value)}
