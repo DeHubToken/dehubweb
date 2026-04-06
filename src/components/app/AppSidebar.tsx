@@ -21,6 +21,7 @@ interface AppSidebarProps {
 export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   const location = useLocation();
   const { isAuthenticated, disconnect } = useAuth();
+  const { openModal: openStagesModal } = useStage();
   const { t } = useTranslation();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [selectedChainId, setSelectedChainId] = useState<ChainId>(() => {
