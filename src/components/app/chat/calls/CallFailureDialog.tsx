@@ -27,6 +27,7 @@ const CallFailureDialog: React.FC<CallFailureDialogProps> = ({
   callType,
   failureReason,
   recipientAddress,
+}) => {
   const [displayName, setDisplayName] = useState(recipientAddress.slice(0, 6) + '...');
 
   useEffect(() => {
