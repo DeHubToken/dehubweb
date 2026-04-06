@@ -13,7 +13,7 @@ import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Pencil, Trash2, Ticket, Gift, Lock, MessageCircle, Gem } from 'lucide-react';
+import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Pencil, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -861,11 +861,14 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
       {isW2E && (
         <Drawer open={showBountyDrawer} onOpenChange={setShowBountyDrawer}>
           <DrawerContent glass className="px-4 pb-6">
-            <DrawerHeader className="pb-3">
+            <DrawerHeader className="pb-3 relative">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Gift className="w-5 h-5 text-white" />
                 {t('drawers.bountyTitle')}
               </DrawerTitle>
+              <button onClick={() => setShowBountyDrawer(false)} className="absolute top-3 right-0 p-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] transition-colors">
+                <X className="w-4 h-4 text-zinc-400" />
+              </button>
             </DrawerHeader>
             <div className="flex flex-col gap-4">
               <div className="space-y-3">
@@ -913,11 +916,14 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
       {isLocked && (
         <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
           <DrawerContent glass className="px-4 pb-6">
-            <DrawerHeader className="pb-3">
+            <DrawerHeader className="pb-3 relative">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Lock className="w-5 h-5 text-white" />
                 {t('drawers.gatedTitle')}
               </DrawerTitle>
+              <button onClick={() => setShowLockedDrawer(false)} className="absolute top-3 right-0 p-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] transition-colors">
+                <X className="w-4 h-4 text-zinc-400" />
+              </button>
             </DrawerHeader>
             <div className="flex flex-col gap-4">
               {post.lockedPrice && post.lockedPrice > 0 && (

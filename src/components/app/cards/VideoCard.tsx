@@ -15,7 +15,7 @@ import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Pencil, Trash2, Gem, Repeat, Music } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Pencil, Trash2, Gem, Repeat, Music, X } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -263,11 +263,14 @@ function MobileCreatorInfo({
       {/* Bounty Drawer */}
       <Drawer open={showBountyDrawer} onOpenChange={setShowBountyDrawer}>
         <DrawerContent glass className="px-4 pb-6">
-          <DrawerHeader className="pb-3">
+          <DrawerHeader className="pb-3 relative">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Gift className="w-5 h-5 text-white" />
                 {t('drawers.bountyTitle')}
               </DrawerTitle>
+              <button onClick={() => setShowBountyDrawer(false)} className="absolute top-3 right-0 p-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] transition-colors">
+                <X className="w-4 h-4 text-zinc-400" />
+              </button>
             </DrawerHeader>
             <div className="flex flex-col gap-4">
               <div className="space-y-3">
@@ -339,11 +342,14 @@ function MobileCreatorInfo({
       {/* Gated Content Drawer */}
       <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
         <DrawerContent glass className="px-4 pb-6">
-          <DrawerHeader className="pb-3">
+          <DrawerHeader className="pb-3 relative">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Lock className="w-5 h-5 text-white" />
                 {t('drawers.gatedTitle')}
               </DrawerTitle>
+              <button onClick={() => setShowLockedDrawer(false)} className="absolute top-3 right-0 p-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] transition-colors">
+                <X className="w-4 h-4 text-zinc-400" />
+              </button>
             </DrawerHeader>
             <div className="flex flex-col gap-4">
               {lockedPrice && lockedPrice > 0 && (
@@ -1853,11 +1859,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       {video.isW2E && (
         <Drawer open={showBountyDrawer} onOpenChange={setShowBountyDrawer}>
           <DrawerContent glass className="px-4 pb-6">
-            <DrawerHeader className="pb-3">
+            <DrawerHeader className="pb-3 relative">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Gift className="w-5 h-5 text-white" />
                 {t('drawers.bountyTitle')}
               </DrawerTitle>
+              <button onClick={() => setShowBountyDrawer(false)} className="absolute top-3 right-0 p-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] transition-colors">
+                <X className="w-4 h-4 text-zinc-400" />
+              </button>
             </DrawerHeader>
             <div className="flex flex-col gap-4">
               <div className="space-y-3">
@@ -1930,11 +1939,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       {video.isLocked && !canBypassGating && (
         <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
           <DrawerContent glass className="px-4 pb-6">
-            <DrawerHeader className="pb-3">
+            <DrawerHeader className="pb-3 relative">
               <DrawerTitle className="text-white text-lg flex items-center gap-2">
                 <Lock className="w-5 h-5 text-white" />
                 {t('drawers.gatedTitle')}
               </DrawerTitle>
+              <button onClick={() => setShowLockedDrawer(false)} className="absolute top-3 right-0 p-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] transition-colors">
+                <X className="w-4 h-4 text-zinc-400" />
+              </button>
             </DrawerHeader>
             <div className="flex flex-col gap-4">
               {video.lockedPrice && video.lockedPrice > 0 && (
