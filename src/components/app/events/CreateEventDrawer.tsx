@@ -85,7 +85,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
         cover_image_url,
         community_id: communityId,
         creator_username: user?.username ?? undefined,
-        creator_avatar: user?.avatar ?? undefined,
+        creator_avatar: user?.avatarImageUrl ?? user?.avatarUrl ?? undefined,
       },
       {
         onSuccess: () => {
