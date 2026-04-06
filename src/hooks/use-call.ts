@@ -562,6 +562,7 @@ export const useCall = (): UseCallReturn => {
     isMinimized,
     minimizeCall: () => setIsMinimized(true),
     maximizeCall: () => setIsMinimized(false),
+    callDuration,
     localVideoRef,
     remoteVideoRef,
     remoteAudioRef,
