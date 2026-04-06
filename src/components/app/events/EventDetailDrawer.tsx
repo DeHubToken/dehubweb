@@ -129,7 +129,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                   height="42px"
                   className={cn(
                     'flex-1',
-                    myRsvp?.status === 'going' && '!bg-white/20 ring-1 ring-white/30'
+                    myRsvp?.status === 'going' && 'opacity-100 [&>div]:!border [&>div]:!border-white/30'
                   )}
                 />
                 <LiquidGlassBubble2
@@ -141,7 +141,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                   height="42px"
                   className={cn(
                     'flex-1',
-                    myRsvp?.status === 'interested' && '!bg-white/20 ring-1 ring-white/30'
+                    myRsvp?.status === 'interested' && 'opacity-100 [&>div]:!border [&>div]:!border-white/30'
                   )}
                 />
               </div>
