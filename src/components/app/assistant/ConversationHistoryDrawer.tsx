@@ -267,7 +267,7 @@ export function ConversationHistoryDrawer({
       const { data: messages, error: msgError } = await withWalletHeader(
         supabase
           .from('ai_messages')
-          .select('id, image_url, video_url, audio_url, conversation_id, created_at')
+          .select('id, content, image_url, video_url, audio_url, conversation_id, created_at, role')
           .in('conversation_id', convoIds)
           .or('image_url.neq.,video_url.neq.,audio_url.neq.')
           .order('created_at', { ascending: false })
@@ -277,8 +277,30 @@ export function ConversationHistoryDrawer({
 
       if (msgError) throw msgError;
 
+      // Build a map of conversation_id -> latest user message content for audio titles
+      const allMsgs = messages || [];
+      const userPromptMap: Record<string, string> = {};
+      // Also fetch user messages from same conversations for title context
+      const audioConvoIds = [...new Set(allMsgs.filter(m => (m as any).audio_url).map(m => m.conversation_id))];
+      if (audioConvoIds.length > 0) {
+        const { data: userMsgs } = await withWalletHeader(
+          supabase
+            .from('ai_messages')
+            .select('conversation_id, content, created_at')
+            .in('conversation_id', audioConvoIds)
+            .eq('role', 'user')
+            .order('created_at', { ascending: false }),
+          walletAddress
+        );
+        (userMsgs || []).forEach(m => {
+          if (!userPromptMap[m.conversation_id]) {
+            userPromptMap[m.conversation_id] = m.content;
+          }
+        });
+      }
+
       const items: MediaItem[] = [];
-      (messages || []).forEach((msg) => {
+      allMsgs.forEach((msg) => {
         if (msg.image_url) {
           items.push({ id: msg.id + '-img', url: msg.image_url, type: 'image', conversation_id: msg.conversation_id, created_at: msg.created_at });
         }
@@ -286,7 +308,12 @@ export function ConversationHistoryDrawer({
           items.push({ id: msg.id + '-vid', url: msg.video_url, type: 'video', conversation_id: msg.conversation_id, created_at: msg.created_at });
         }
         if ((msg as any).audio_url) {
-          items.push({ id: msg.id + '-aud', url: (msg as any).audio_url, type: 'audio', conversation_id: msg.conversation_id, created_at: msg.created_at });
+          // Try to extract a title from the user's prompt
+          const prompt = userPromptMap[msg.conversation_id] || '';
+          const titleMatch = prompt.match(/(?:called|titled|named)\s+["']?([^"'\n,.]+)["']?/i)
+            || prompt.match(/title\s*[:\-]\s*["']?([^"'\n,.]+)["']?/i);
+          const title = titleMatch ? titleMatch[1].trim() : (prompt.split('\n')[0]?.slice(0, 50) || undefined);
+          items.push({ id: msg.id + '-aud', url: (msg as any).audio_url, type: 'audio', conversation_id: msg.conversation_id, created_at: msg.created_at, title });
         }
       });
 
