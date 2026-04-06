@@ -1222,6 +1222,15 @@ export default function AssistantPage() {
           musicVideoRef.current = { prompt, videoModel, musicMessageId: messageId };
         }
 
+        // Persist pending request for reload recovery
+        savePendingTool({
+          requestId: data.requestId, appId: data.appId, messageId,
+          toolKey: isMusicVideo ? musicTool : tool,
+          statusUrl: data.statusUrl, responseUrl: data.responseUrl,
+          content: assistantMessage.content,
+          ...(isMusicVideo && { musicVideo: { prompt, videoModel } }),
+        });
+
         pollingRef.current[data.requestId] = setInterval(() => {
           pollAiToolStatus(data.requestId, data.appId, messageId, isMusicVideo ? musicTool : tool, data.statusUrl, data.responseUrl);
         }, 5000);
