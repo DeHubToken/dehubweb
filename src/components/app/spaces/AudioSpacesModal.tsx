@@ -11,11 +11,11 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
   Loader2, Volume2,
-  Link, UserPlus, Minimize2, Play, Square, Clock,
+  Link, UserPlus, Minimize2, Play, Square, Clock, Trash2,
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -41,7 +41,8 @@ import { formatDistanceToNow } from 'date-fns';
 type View = 'browse' | 'create' | 'live';
 
 export function AudioSpacesModal() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
+  const queryClient = useQueryClient();
   const {
     liveSpaces,
     currentSpace,
@@ -422,6 +423,35 @@ export function AudioSpacesModal() {
                             } : undefined}
                           />
                         </div>
+                        {/* Delete button — only for the host */}
+                        {walletAddress && space.host_wallet_address &&
+                          walletAddress.toLowerCase() === space.host_wallet_address.toLowerCase() && (
+                          <button
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              if (!confirm('Delete this stage recording?')) return;
+                              if (playingStageId === space.id) {
+                                cancelAnimationFrame(rafRef.current);
+                                audioRef.current?.pause();
+                                audioRef.current = null;
+                                setPlayingStageId(null);
+                              }
+                              if (space.recording_url) {
+                                const path = space.recording_url.split('/stage-recordings/')[1];
+                                if (path) {
+                                  await supabase.storage.from('stage-recordings').remove([decodeURIComponent(path)]);
+                                }
+                              }
+                              await supabase.from('audio_spaces').delete().eq('id', space.id);
+                              queryClient.invalidateQueries({ queryKey: ['past-stages'] });
+                              toast.success('Stage deleted');
+                            }}
+                            className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                            title="Delete stage"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
                       </div>
                     ))}
                   </div>
