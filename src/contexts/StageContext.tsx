@@ -561,6 +561,34 @@ export function StageProvider({ children }: { children: ReactNode }) {
     }
   }, [currentSpace, myRole, leaveSpace]);
 
+  // ─── Set voice effect ─────────────────────────────────────────────────────
+
+  const setVoiceEffect = useCallback(async (effectId: VoiceEffectId) => {
+    setVoiceEffectState(effectId);
+    if (!agoraClientRef.current || !localAudioTrackRef.current) return;
+    try {
+      const newTrack = voiceEffectsHook.switchEffect(effectId);
+      if (!newTrack) return;
+
+      const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
+      const wasMuted = localAudioTrackRef.current.muted;
+
+      // Unpublish old, create new custom track, publish
+      await agoraClientRef.current.unpublish([localAudioTrackRef.current]);
+      localAudioTrackRef.current.close();
+
+      const customTrack = AgoraRTC.createCustomAudioTrack({ mediaStreamTrack: newTrack });
+      customTrack.setMuted(wasMuted);
+      localAudioTrackRef.current = customTrack;
+      await agoraClientRef.current.publish([customTrack]);
+
+      toast.success(`Voice: ${effectId === 'none' ? 'Normal' : effectId}`);
+    } catch (err) {
+      console.error('Error switching voice effect:', err);
+      toast.error('Failed to switch voice effect');
+    }
+  }, [voiceEffectsHook]);
+
   // ─── Toggle mute ─────────────────────────────────────────────────────────
 
   const toggleMute = useCallback(() => {
