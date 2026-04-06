@@ -188,6 +188,7 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
               <button
                 onClick={handleGenerateLyrics}
                 disabled={isGeneratingLyrics}
+                style={{ bottom: '11px' }}
                 className={cn(
                   'absolute bottom-2 right-2 px-3 py-1 rounded-lg text-[11px] font-semibold border transition-all',
                   isGeneratingLyrics
