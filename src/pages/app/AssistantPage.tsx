@@ -613,7 +613,104 @@ export default function AssistantPage() {
     }
   };
 
-  // Initialize with welcome message on mount
+  // Wire up voice assistant transcript handler
+  // When voice assistant gets a transcript, send it through the regular chat flow
+  // and then speak the response with Dia TTS
+  voiceTranscriptHandlerRef.current = useCallback(async (text: string) => {
+    if (!text.trim() || isLoading) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: text.trim(),
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    queueMessage(userMessage);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      const chatBody = {
+        messages: [...messages, userMessage].map(m => ({
+          role: m.role,
+          content: m.content,
+        })),
+        style: selectedStyle,
+        model: selectedChatModel,
+        isAuthenticated,
+        userLanguage,
+        userContext,
+        dehubToken: localStorage.getItem('dehub_token') || undefined,
+      };
+
+      const streamingMsgId = (Date.now() + 1).toString();
+      let streamedContent = '';
+      let isFirstToken = true;
+
+      await streamChat({
+        body: chatBody,
+        onDelta: (delta) => {
+          streamedContent += delta;
+          if (isFirstToken) {
+            isFirstToken = false;
+            setMessages(prev => [...prev, {
+              id: streamingMsgId,
+              role: 'assistant',
+              content: streamedContent,
+            }]);
+          } else {
+            setMessages(prev => {
+              const updated = [...prev];
+              const lastIdx = updated.length - 1;
+              if (lastIdx >= 0 && updated[lastIdx].id === streamingMsgId) {
+                updated[lastIdx] = { ...updated[lastIdx], content: streamedContent };
+              }
+              return updated;
+            });
+          }
+        },
+        onDone: () => {
+          const finalMessage: Message = {
+            id: streamingMsgId,
+            role: 'assistant',
+            content: streamedContent || 'No response',
+          };
+          queueMessage(finalMessage);
+          setIsLoading(false);
+
+          // Speak the response via Dia TTS
+          if (streamedContent && voiceAssistant.isVoiceMode) {
+            voiceAssistant.speakResponse(streamedContent);
+          }
+        },
+        onError: (err) => {
+          setMessages(prev => [...prev, {
+            id: (Date.now() + 2).toString(),
+            role: 'assistant',
+            content: `❌ ${err?.message || 'Voice chat error'}`,
+            isError: true,
+          }]);
+          setIsLoading(false);
+          // Restart listening even on error
+          if (voiceAssistant.isVoiceMode) {
+            voiceAssistant.speakResponse('Sorry, I encountered an error. Please try again.');
+          }
+        },
+      });
+    } catch (error: any) {
+      console.error('[VoiceAssistant] Chat error:', error);
+      setMessages(prev => [...prev, {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: `❌ ${error?.message || 'Unknown error'}`,
+        isError: true,
+      }]);
+      setIsLoading(false);
+    }
+  }, [messages, selectedStyle, selectedChatModel, isAuthenticated, userLanguage, userContext, isLoading, voiceAssistant]);
+
+
   useEffect(() => {
     setMessages([
       {
