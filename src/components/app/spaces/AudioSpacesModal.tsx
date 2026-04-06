@@ -312,9 +312,13 @@ export function AudioSpacesModal() {
                                   let sum = 0;
                                   for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
                                   setPlaybackVolume(sum / dataArray.length / 255);
-                                  // Track progress
+                                  // Track progress + time
                                   if (audio.duration && isFinite(audio.duration)) {
                                     setPlaybackProgress(audio.currentTime / audio.duration);
+                                    const remaining = Math.ceil(audio.duration - audio.currentTime);
+                                    const m = Math.floor(remaining / 60);
+                                    const s = remaining % 60;
+                                    setPlaybackTimeLeft(`-${m}:${s.toString().padStart(2, '0')}`);
                                   }
                                   rafRef.current = requestAnimationFrame(pump);
                                 };
