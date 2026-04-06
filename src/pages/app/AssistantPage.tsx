@@ -907,8 +907,73 @@ export default function AssistantPage() {
         delete pollingRef.current[requestId];
 
         const toolModel = AI_TOOL_MODELS[toolKey];
-        const category = toolModel?.category;
 
+        // Check if this is part of a music-video pipeline
+        const mvState = musicVideoRef.current;
+        const isMusicVideoPipeline = mvState && mvState.musicMessageId === messageId;
+
+        if (isMusicVideoPipeline && data.audioUrl) {
+          // Music step complete — update message and chain video generation
+          setMessages(prev => prev.map(m => {
+            if (m.id !== messageId) return m;
+            return {
+              ...m,
+              audioUrl: data.audioUrl,
+              content: '🎬 Step 1/2 complete! Music generated.\n\n_Step 2/2: Generating video..._',
+              isToolProcessing: false,
+            };
+          }));
+          toast.success('🎵 Music generated! Now creating video...');
+
+          // Chain video generation
+          try {
+            const { data: videoData, error: videoError } = await supabase.functions.invoke('generate-video', {
+              body: {
+                prompt: mvState.prompt,
+                model: mvState.videoModel,
+                duration: '5s',
+                aspectRatio: '16:9'
+              }
+            });
+
+            if (videoError) throw videoError;
+
+            if (videoData.error) {
+              setMessages(prev => [...prev, {
+                id: (Date.now() + 1).toString(),
+                role: 'assistant',
+                content: `❌ Video generation failed: ${videoData.error}`
+              }]);
+              setIsAiToolProcessing(false);
+              musicVideoRef.current = null;
+              return;
+            }
+
+            // Create video placeholder message
+            const videoMsgId = (Date.now() + 1).toString();
+            setMessages(prev => [...prev, {
+              id: videoMsgId,
+              role: 'assistant',
+              content: `🎬 Step 2/2: Generating video...\n\n_This may take 1-3 minutes_`,
+              isVideoGenerating: true,
+              videoPredictionId: videoData.predictionId,
+            }]);
+
+            pollingRef.current[videoData.predictionId] = setInterval(() => {
+              pollVideoStatus(videoData.predictionId, videoMsgId, videoData.provider, videoData.falAppId);
+            }, 5000);
+
+            musicVideoRef.current = null;
+          } catch (videoErr) {
+            console.error('[Music Video] Video chain error:', videoErr);
+            toast.error('Video generation failed.');
+            setIsAiToolProcessing(false);
+            musicVideoRef.current = null;
+          }
+          return;
+        }
+
+        // Regular (non-music-video) completion
         setMessages(prev => prev.map(m => {
           if (m.id !== messageId) return m;
           const updated: Message = {
@@ -935,6 +1000,7 @@ export default function AssistantPage() {
           m.id === messageId ? { ...m, isToolProcessing: false, content: `❌ Processing failed: ${data.error || 'Unknown error'}` } : m
         ));
         setIsAiToolProcessing(false);
+        musicVideoRef.current = null;
       }
     } catch (err) {
       console.error('[AI Tool] Polling error:', err);
